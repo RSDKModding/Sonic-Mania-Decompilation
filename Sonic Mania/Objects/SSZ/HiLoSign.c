@@ -75,7 +75,7 @@ void HiLoSign_StageLoad(void)
     HiLoSign->hitboxes[1].top    = -24;
     HiLoSign->hitboxes[1].right  = 6;
     HiLoSign->hitboxes[1].bottom = 24;
-    HiLoSign->sfxSignPost = RSDK.GetSFX("Global/SignPost.wav");
+    HiLoSign->sfxSignPost = RSDK.GetSfx("Global/SignPost.wav");
     DEBUGMODE_ADD_OBJ(HiLoSign);
 }
 

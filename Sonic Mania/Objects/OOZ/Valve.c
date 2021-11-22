@@ -52,7 +52,7 @@ void Valve_StageLoad(void)
     Valve->hitbox.top    = -16;
     Valve->hitbox.right  = 16;
     Valve->hitbox.bottom = 16;
-    Valve->sfxClick      = RSDK.GetSFX("Stage/Click.wav");
+    Valve->sfxClick      = RSDK.GetSfx("Stage/Click.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

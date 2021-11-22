@@ -82,10 +82,10 @@ void CPZSetup_StageLoad(void)
         }
         else {
             flag                    = true;
-            Zone->screenBoundsB1[0] = 0x1980;
-            Zone->screenBoundsB1[1] = 0x1980;
-            Zone->screenBoundsB1[2] = 0x1980;
-            Zone->screenBoundsB1[3] = 0x1980;
+            Zone->cameraBoundsB[0] = 0x1980;
+            Zone->cameraBoundsB[1] = 0x1980;
+            Zone->cameraBoundsB[2] = 0x1980;
+            Zone->cameraBoundsB[3] = 0x1980;
         }
 
         if (isMainGameMode() && globals->atlEnabled) {

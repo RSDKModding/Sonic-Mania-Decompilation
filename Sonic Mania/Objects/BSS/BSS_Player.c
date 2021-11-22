@@ -140,7 +140,7 @@ void BSS_Player_StageLoad(void)
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
     RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, NULL);
-    BSS_Player->sfxJump = RSDK.GetSFX("Global/Jump.wav");
+    BSS_Player->sfxJump = RSDK.GetSfx("Global/Jump.wav");
 }
 
 void BSS_Player_ProcessP1Input(void)

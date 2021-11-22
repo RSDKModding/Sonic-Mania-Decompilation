@@ -90,21 +90,21 @@ typedef struct {
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
 #if RETRO_USE_EGS
-    void (*EGS_Checkout)(int32 a1);
-    void (*ShowEncorePage)(int32 a1);
-    void (*EGS_Unknown4)(int32 a1);
+    void (*ShowCheckoutPage)(int32 value);
+    void (*ShowEncorePage)(int32 value);
+    void (*CoreUnknown4)(int32 value);
     void (*RegisterHIDDevice)(void);
 #endif
     void (*UnlockAchievement)(const char *achName);
     void (*GetAchievementStatus)(void);
-    void (*SetAchievementStatus)(int32 a1);
+    void (*SetAchievementStatus)(int32 status);
 #if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(TextInfo *names, int32 count);
 #endif
     void (*LeaderboardsUnknown4)(void);
 #if RETRO_USE_EGS
-    void (*EGS_LeaderboardUnknown1)(void);
+    void (*LeaderboardUnknown1)(void);
 #endif
     void (*FetchLeaderboard)(const char *name, int32 a2);
     void (*TrackScore)(const char *name, int32 score, void (*callback)(int32 status, int32 rank));
@@ -117,7 +117,7 @@ typedef struct {
     void (*SetRichPresence)(int32, TextInfo *text);
     void (*TryTrackStat)(StatInfo *stat);
     int32 (*GetStatsStatus)(void);
-    void (*SetStatsStatus)(int32 a1);
+    void (*SetStatsStatus)(int32 status);
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
@@ -142,13 +142,13 @@ typedef struct {
     void (*ClearAllUserDBs)(void);
     void (*SetupUserDBRowSorting)(uint16 tableID);
     bool32 (*GetUserDBRowsChanged)(uint16 tableID);
-    void (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
-    void (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 flag);
+    void (*AddRowSortFilter)(uint16 tableID, int32 size, const char *name, void *value);
+    void (*SortDBRows)(uint16 tableID, int32 size, const char *name, bool32 flag);
     int32 (*GetSortedUserDBRowCount)(uint16 tableID);
     int32 (*GetSortedUserDBRowID)(uint16 tableID, uint16 row);
     int32 (*AddUserDBRow)(uint16 tableID);
-    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
-    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
+    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 size, const char *name, void *value);
+    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 size, const char *name, void *value);
     uint32 (*GetUserDBRowUUID)(uint16 tableID, uint16 row);
     int32 (*GetUserDBByID)(uint16 tableID, uint32 uuid);
     void (*GetUserDBCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 sizeInBytes, const char *format);
@@ -293,18 +293,18 @@ typedef struct {
     void (*EditSpriteAnimation)(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
                                 uint8 loopIndex, uint8 rotationFlag);
     void (*SetSpriteString)(uint16 aniFrames, uint16 animID, TextInfo *info);
-    void *(*GetSpriteAnimation)(uint16 sprIndex, const char *name);
-    SpriteFrame *(*GetFrame)(uint16 sprIndex, uint16 anim, int32 frame);
+    void *(*GetSpriteAnimation)(uint16 aniFrames, const char *name);
+    SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 anim, int32 frame);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
     int16 (*GetFrameID)(Animator *animator);
-    int32 (*GetStringWidth)(uint16 sprIndex, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
+    int32 (*GetStringWidth)(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
     void (*ProcessAnimation)(Animator *animator);
     int32 (*GetSceneLayerID)(const char *name);
     TileLayer *(*GetSceneLayer)(int32 layerID);
     void (*GetLayerSize)(uint16 layer, Vector2 *size, bool32 pixelSize);
     uint16 (*GetTileInfo)(uint16 layer, int32 x, int32 y);
     void (*SetTileInfo)(uint16 layer, int32 x, int32 y, uint16 tile);
-    int32 (*CopyTileLayer)(uint16 dstLayer, int32 startX1, int32 startY1, uint16 srcLayer, int32 startX2, int32 startY2, int32 countX, int32 countY);
+    int32 (*CopyTileLayer)(uint16 dstLayer, int32 startX1, int32 startY1, uint16 srcLayer, int32 startX2, int32 startY2, int32 sizeX, int32 sizeY);
     void (*ProcessParallax)(TileLayer *TileLayer);
     ScanlineInfo *(*GetScanlines)(void);
     bool32 (*CheckObjectCollisionTouchBox)(void *thisEntity, Hitbox *thisHitbox, void *otherEntity, Hitbox *otherHitbox);
@@ -317,20 +317,20 @@ typedef struct {
                              int32 tolerance);
     void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
     int32 (*GetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode);
-    void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 value);
+    void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
     uint8 (*GetTileBehaviour)(uint16 tileID, uint8 cPlane);
-    void (*SetTileBehaviour)(uint16 tileID, uint8 cPlane, uint8 value);
-    int32 (*GetSFX)(const char *path);
-    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 unknown);
-    void (*StopSFX)(uint16 sfx);
-    int32 (*PlayStream)(const char *filename, uint32 slot, uint32 startPos, uint32 loopPoint, bool32 loadASync);
-    int32 (*SetChannelAttributes)(uint8 slot, float volume, float pan, float speed);
-    void (*StopChannel)(uint8 slot);
-    void (*PauseChannel)(uint8 slot);
-    void (*ResumeChannel)(uint8 slot);
-    bool32 (*IsSFXPlaying)(uint8 slot);
-    bool32 (*ChannelActive)(uint8 slot);
-    uint32 (*GetChannelPos)(uint8 slot);
+    void (*SetTileBehaviour)(uint16 tileID, uint8 cPlane, uint8 behaviour);
+    int32 (*GetSfx)(const char *path);
+    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 priority);
+    void (*StopSfx)(uint16 sfx);
+    int32 (*PlayStream)(const char *filename, uint32 channel, uint32 startPos, uint32 loopPoint, bool32 loadASync);
+    int32 (*SetChannelAttributes)(uint8 channel, float volume, float pan, float speed);
+    void (*StopChannel)(uint8 channel);
+    void (*PauseChannel)(uint8 channel);
+    void (*ResumeChannel)(uint8 channel);
+    bool32 (*IsSfxPlaying)(uint8 channel);
+    bool32 (*ChannelActive)(uint8 channel);
+    uint32 (*GetChannelPos)(uint8 channel);
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS

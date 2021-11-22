@@ -116,7 +116,7 @@ void TryAgainE_Unknown1(void)
     foreach_all(TAEmerald, emerald)
     {
         int32 store      = timer;
-        emerald->state = TAEmerald_Unknown2;
+        emerald->state = TAEmerald_State_MoveCircle;
         emerald->timer = timer;
         timer += 8;
         if (SaveGame->saveRAM) {

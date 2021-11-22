@@ -7,9 +7,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    bool32 flag;
-    int32 field_C;
+    int32 unused1;
+    bool32 initialized;
+    int32 unused2;
     Entity *charSelControl;
     Entity *zoneControl;
 } ObjectE3MenuSetup;
@@ -18,13 +18,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(timedState);
+    StateMachine(stateDelay);
     int32 timer;
-    int32 timeOut;
-    int32 field_70;
+    int32 delay;
+    int32 fadeSpeed;
     int32 fadeTimer;
     int32 fadeColour;
-    int32 field_7C;
+    int32 unused1;
 } EntityE3MenuSetup;
 
 // Object Entity
@@ -42,14 +42,14 @@ void E3MenuSetup_EditorLoad(void);
 void E3MenuSetup_Serialize(void);
 
 // Extra Entity Functions
-void E3MenuSetup_Unknown1(void);
-void E3MenuSetup_Unknown2(void);
-void E3MenuSetup_Unknown3(void);
-void E3MenuSetup_Unknown4(void);
-void E3MenuSetup_Unknown5(void);
-void E3MenuSetup_Unknown6(void);
-void E3MenuSetup_Unknown7(void);
-void E3MenuSetup_Unknown8(void);
+void E3MenuSetup_SetupUI(void);
+void E3MenuSetup_SetupButtons(void);
+void E3MenuSetup_Delay_LoadScene(void);
+void E3MenuSetup_ZoneSelectCB(void);
+void E3MenuSetup_SelectCB_Sonic(void);
+void E3MenuSetup_SelectCB_Tails(void);
+void E3MenuSetup_SelectCB_Knux(void);
+void E3MenuSetup_State_FadeOut(void);
 
 #endif
 

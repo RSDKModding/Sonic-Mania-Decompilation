@@ -29,7 +29,7 @@ void PSZ2Intro_Create(void *data)
 
 void PSZ2Intro_StageLoad(void)
 {
-    PSZ2Intro->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
+    PSZ2Intro->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
     foreach_all(FXFade, fxFade)
     {
         PSZ2Intro->fxFade = fxFade;
@@ -49,8 +49,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     EntityFXFade *fxFade = PSZ2Intro->fxFade;
     EntitySignPost *post = (EntitySignPost *)PSZ2Intro->signPost;
     if (!host->timer) {
-        Zone->screenBoundsR1[0]     = 1024;
-        Zone->screenBoundsR1[1]     = 1024;
+        Zone->cameraBoundsR[0]     = 1024;
+        Zone->cameraBoundsR[1]     = 1024;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveR[1] = true;
         player1->pushing            = false;
@@ -96,8 +96,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     if (!host->timer) {
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
-        Zone->screenBoundsR1[0] = size.x;
-        Zone->screenBoundsR1[1] = size.x;
+        Zone->cameraBoundsR[0] = size.x;
+        Zone->cameraBoundsR[1] = size.x;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
         player1->state      = Player_State_Ground;
         player1->up         = false;
@@ -123,8 +123,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     }
     if (player1->position.x >= 0x3800000) {
         player1->right          = false;
-        Zone->screenBoundsL1[0] = 1024;
-        Zone->screenBoundsL1[1] = 1024;
+        Zone->cameraBoundsL[0] = 1024;
+        Zone->cameraBoundsL[1] = 1024;
         return true;
     }
     else {
@@ -138,7 +138,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    if (ScreenInfo->position.x < Zone->screenBoundsL1[0]) {
+    if (ScreenInfo->position.x < Zone->cameraBoundsL[0]) {
         if (player1->groundVel < 0x20000)
             player1->groundVel = 0x20000;
         if (player2->objectID == Player->objectID) {

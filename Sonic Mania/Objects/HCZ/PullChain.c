@@ -75,7 +75,7 @@ void PullChain_Update(void)
                     self->activePlayers1 &= ~(1 << plrID);
                     if (player->jumpPress) {
                         if (self->chainOffset < 0x100000 && !player->sidekick)
-                            RSDK.StopSFX(PullChain->sfxPullChain);
+                            RSDK.StopSfx(PullChain->sfxPullChain);
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         player->velocity.x = 0;
                         player->velocity.y = -0x20000;
@@ -152,7 +152,7 @@ void PullChain_Create(void *data)
 void PullChain_StageLoad(void)
 {
     PullChain->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/PullChain.bin", SCOPE_STAGE);
-    PullChain->sfxPullChain = RSDK.GetSFX("HCZ/PullChain.wav");
+    PullChain->sfxPullChain = RSDK.GetSfx("HCZ/PullChain.wav");
 }
 
 #if RETRO_GAMEVER == VER_100

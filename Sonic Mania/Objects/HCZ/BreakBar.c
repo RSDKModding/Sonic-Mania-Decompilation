@@ -42,7 +42,7 @@ void BreakBar_Create(void *data)
 void BreakBar_StageLoad(void)
 {
     BreakBar->aniFrames = RSDK.LoadSpriteAnimation("HCZ/BreakBar.bin", SCOPE_STAGE);
-    BreakBar->sfxBreak  = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    BreakBar->sfxBreak  = RSDK.GetSfx("Stage/LedgeBreak.wav");
 }
 
 void BreakBar_DrawSprites(void)

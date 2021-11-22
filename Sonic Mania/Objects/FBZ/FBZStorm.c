@@ -66,7 +66,7 @@ void FBZStorm_StaticUpdate(void)
 
     if (!flag || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
         if (FBZStorm->playingRainSFX) {
-            RSDK.StopSFX(FBZStorm->sfxRain);
+            RSDK.StopSfx(FBZStorm->sfxRain);
             FBZStorm->playingRainSFX = false;
         }
     }
@@ -118,8 +118,8 @@ void FBZStorm_StageLoad(void)
 {
     FBZStorm->active     = ACTIVE_ALWAYS;
     FBZStorm->aniFrames  = RSDK.LoadSpriteAnimation("FBZ/Storm.bin", SCOPE_STAGE);
-    FBZStorm->sfxRain    = RSDK.GetSFX("FBZ/Rain.wav");
-    FBZStorm->sfxThunder = RSDK.GetSFX("FBZ/Thunder.wav");
+    FBZStorm->sfxRain    = RSDK.GetSfx("FBZ/Rain.wav");
+    FBZStorm->sfxThunder = RSDK.GetSfx("FBZ/Thunder.wav");
 }
 
 void FBZStorm_Unknown1(void)
@@ -154,7 +154,7 @@ void FBZStorm_Unknown2(void)
 
     if (FBZStorm->playingRainSFX) {
         if (!flag || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
-            RSDK.StopSFX(FBZStorm->sfxRain);
+            RSDK.StopSfx(FBZStorm->sfxRain);
             FBZStorm->playingRainSFX = false;
         }
     }
@@ -171,7 +171,7 @@ void FBZStorm_Unknown3(void)
     if (self->alpha <= 0) {
         self->visible = false;
         if (FBZStorm->playingRainSFX) {
-            RSDK.StopSFX(FBZStorm->sfxRain);
+            RSDK.StopSfx(FBZStorm->sfxRain);
         }
         self->state = FBZStorm_Unknown1;
     }

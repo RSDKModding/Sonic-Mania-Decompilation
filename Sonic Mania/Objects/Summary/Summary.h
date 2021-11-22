@@ -28,7 +28,7 @@ typedef struct {
     void *textEntities[32];
     void *pictureA;
     void *pictureB;
-    void *unknownPtr;
+    void *unusedPtr;
 } EntitySummary;
 
 // Object Struct

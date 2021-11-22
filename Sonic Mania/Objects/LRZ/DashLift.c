@@ -35,7 +35,7 @@ void DashLift_Create(void *data)
     }
 }
 
-void DashLift_StageLoad(void) { DashLift->sfxPulley = RSDK.GetSFX("Stage/Pulley.wav"); }
+void DashLift_StageLoad(void) { DashLift->sfxPulley = RSDK.GetSfx("Stage/Pulley.wav"); }
 
 void DashLift_CheckOnScreen(void)
 {

@@ -187,10 +187,10 @@ void TVVan_StageLoad(void)
     TVVan->hitbox5.right  = 24;
     TVVan->hitbox5.top    = -24;
     TVVan->hitbox5.bottom = 24;
-    TVVan->sfxDoor        = RSDK.GetSFX("Stage/Door.wav");
-    TVVan->sfxSatellite1  = RSDK.GetSFX("Stage/Satellite1.wav");
-    TVVan->sfxSatellite2  = RSDK.GetSFX("Stage/Satellite2.wav");
-    TVVan->sfxExplosion   = RSDK.GetSFX("Stage/Explosion3.wav");
+    TVVan->sfxDoor        = RSDK.GetSfx("Stage/Door.wav");
+    TVVan->sfxSatellite1  = RSDK.GetSfx("Stage/Satellite1.wav");
+    TVVan->sfxSatellite2  = RSDK.GetSfx("Stage/Satellite2.wav");
+    TVVan->sfxExplosion   = RSDK.GetSfx("Stage/Explosion3.wav");
 }
 
 void TVVan_Unknown1(void)

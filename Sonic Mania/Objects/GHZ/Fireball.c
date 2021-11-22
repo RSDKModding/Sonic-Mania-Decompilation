@@ -54,7 +54,7 @@ void Fireball_StageLoad(void)
     Fireball->hitbox.top    = -6;
     Fireball->hitbox.right  = 6;
     Fireball->hitbox.bottom = 6;
-    Fireball->sfxFireball   = RSDK.GetSFX("Stage/Fireball.wav");
+    Fireball->sfxFireball   = RSDK.GetSfx("Stage/Fireball.wav");
 }
 
 void Fireball_HandlePlayerInteractions(void)

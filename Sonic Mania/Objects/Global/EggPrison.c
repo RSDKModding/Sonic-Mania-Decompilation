@@ -197,8 +197,8 @@ void EggPrison_Create(void *data)
 void EggPrison_StageLoad(void)
 {
     EggPrison->aniFrames = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
-    EggPrison->sfxDestroy  = RSDK.GetSFX("Global/Destroy.wav");
-    EggPrison->sfxSpring   = RSDK.GetSFX("Global/Spring.wav");
+    EggPrison->sfxDestroy  = RSDK.GetSfx("Global/Destroy.wav");
+    EggPrison->sfxSpring   = RSDK.GetSfx("Global/Spring.wav");
 }
 
 void EggPrison_HandleMovement(void)
@@ -370,12 +370,12 @@ void EggPrison_State_HandleBounds(void)
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
             if (abs(self->position.x - player->position.x) < 0x1000000) {
-                if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
+                if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
                     if (self->type == EGGPRISON_NORMAL) {
-                        Zone->screenBoundsL1[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                        Zone->screenBoundsR1[p] = (self->position.x >> 0x10) + ScreenInfo[p].centerX;
+                        Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
+                        Zone->cameraBoundsR[p] = (self->position.x >> 0x10) + ScreenInfo[p].centerX;
                     }
                 }
             }

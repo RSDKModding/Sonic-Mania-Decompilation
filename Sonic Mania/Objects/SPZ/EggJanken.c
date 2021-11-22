@@ -117,15 +117,15 @@ void EggJanken_StageLoad(void)
     EggJanken->stateJankenResult[5] = EggJanken_StateResult_Win;
     EggJanken->stateJankenResult[8] = EggJanken_StateResult_Draw;
     RSDK.SetSpriteAnimation(EggJanken->aniFrames, 3, &EggJanken->animator, true, 0);
-    EggJanken->sfxBeep3     = RSDK.GetSFX("Stage/Beep3.wav");
-    EggJanken->sfxBeep4     = RSDK.GetSFX("Stage/Beep4.wav");
-    EggJanken->sfxFail      = RSDK.GetSFX("Stage/Fail.wav");
-    EggJanken->sfxClick     = RSDK.GetSFX("Stage/Click.wav");
-    EggJanken->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    EggJanken->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    EggJanken->sfxDrop      = RSDK.GetSFX("Stage/Drop.wav");
-    EggJanken->sfxImpact4   = RSDK.GetSFX("Stage/Impact4.wav");
-    EggJanken->sfxImpact3   = RSDK.GetSFX("Stage/Impact3.wav");
+    EggJanken->sfxBeep3     = RSDK.GetSfx("Stage/Beep3.wav");
+    EggJanken->sfxBeep4     = RSDK.GetSfx("Stage/Beep4.wav");
+    EggJanken->sfxFail      = RSDK.GetSfx("Stage/Fail.wav");
+    EggJanken->sfxClick     = RSDK.GetSfx("Stage/Click.wav");
+    EggJanken->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    EggJanken->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    EggJanken->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
+    EggJanken->sfxImpact4   = RSDK.GetSfx("Stage/Impact4.wav");
+    EggJanken->sfxImpact3   = RSDK.GetSfx("Stage/Impact3.wav");
 }
 
 void EggJanken_CheckPlayerCollisions(void)
@@ -162,7 +162,7 @@ void EggJanken_CheckPlayerCollisions(void)
                 if (player->velocity.y < 0 && !self->animator3.frameID) {
                     self->animator3.frameID = 1;
                     if (self->state1 != EggJanken_State1_Unknown2) {
-                        RSDK.StopSFX(EggJanken->sfxBeep3);
+                        RSDK.StopSfx(EggJanken->sfxBeep3);
                         RSDK.PlaySfx(EggJanken->sfxClick, false, 255);
                         self->state1           = EggJanken_State1_Unknown7;
                         self->stateArm[0]      = EggJanken_StateArm_Unknown8;
@@ -243,8 +243,8 @@ void EggJanken_State1_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 208;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 208;
         self->startPos.y -= 0x1000000;
         self->active = ACTIVE_NORMAL;
         self->state1 = EggJanken_State1_StartFight;
@@ -256,12 +256,12 @@ void EggJanken_State1_StartFight(void)
     RSDK_THIS(EggJanken);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         self->visible             = true;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         self->state1              = EggJanken_State1_Unknown1;
         self->stateDraw           = EggJanken_StateDraw_Unknown1;
         self->timer               = 272;

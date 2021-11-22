@@ -51,8 +51,8 @@ void PlaneSeeSaw_Create(void *data)
 void PlaneSeeSaw_StageLoad(void)
 {
     PlaneSeeSaw->aniFrames  = RSDK.LoadSpriteAnimation("MMZ/SeeSaw.bin", SCOPE_STAGE);
-    PlaneSeeSaw->sfxSpring  = RSDK.GetSFX("Global/Spring.wav");
-    PlaneSeeSaw->sfxFlipper = RSDK.GetSFX("Stage/Flipper.wav");
+    PlaneSeeSaw->sfxSpring  = RSDK.GetSfx("Global/Spring.wav");
+    PlaneSeeSaw->sfxFlipper = RSDK.GetSfx("Stage/Flipper.wav");
 }
 
 void PlaneSeeSaw_State_WaitForPlayer(void)

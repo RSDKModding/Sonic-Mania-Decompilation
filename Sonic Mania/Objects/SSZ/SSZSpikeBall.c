@@ -114,7 +114,7 @@ void SSZSpikeBall_StageLoad(void)
     SSZSpikeBall->hitboxBase[3].right  = 0;
     SSZSpikeBall->hitboxBase[3].bottom = 16;
 
-    SSZSpikeBall->sfxPon = RSDK.GetSFX("Stage/Pon.wav");
+    SSZSpikeBall->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
 void SSZSpikeBall_State_Setup(void)

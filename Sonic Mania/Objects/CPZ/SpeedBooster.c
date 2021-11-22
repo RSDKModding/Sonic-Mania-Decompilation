@@ -58,7 +58,7 @@ void SpeedBooster_StageLoad(void)
         SpeedBooster->hitbox.top    = -16;
         SpeedBooster->hitbox.right  = 16;
         SpeedBooster->hitbox.bottom = 16;
-        SpeedBooster->sfxID         = RSDK.GetSFX("Global/Spring.wav");
+        SpeedBooster->sfxID         = RSDK.GetSfx("Global/Spring.wav");
         SpeedBooster->defaultState  = SpeedBooster_State_Main;
     }
     else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
@@ -68,7 +68,7 @@ void SpeedBooster_StageLoad(void)
         SpeedBooster->hitbox.top    = -16;
         SpeedBooster->hitbox.right  = 32;
         SpeedBooster->hitbox.bottom = 0;
-        SpeedBooster->sfxID         = RSDK.GetSFX("Stage/SpeedBooster.wav");
+        SpeedBooster->sfxID         = RSDK.GetSfx("Stage/SpeedBooster.wav");
         SpeedBooster->defaultState  = SpeedBooster_State_SSZFire;
     }
     DEBUGMODE_ADD_OBJ(SpeedBooster);

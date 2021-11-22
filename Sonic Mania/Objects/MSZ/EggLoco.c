@@ -131,8 +131,8 @@ void EggLoco_Create(void *data)
 void EggLoco_StageLoad(void)
 {
     EggLoco->aniFrames  = RSDK.LoadSpriteAnimation("MSZ/Train.bin", SCOPE_STAGE);
-    EggLoco->sfxSmoke   = RSDK.GetSFX("MSZ/LocoSmoke.wav");
-    EggLoco->sfxWhistle = RSDK.GetSFX("MSZ/LocoWhistle.wav");
+    EggLoco->sfxSmoke   = RSDK.GetSfx("MSZ/LocoSmoke.wav");
+    EggLoco->sfxWhistle = RSDK.GetSfx("MSZ/LocoWhistle.wav");
     Soundboard_LoadSFX("MSZ/LocoChugga.wav", true, EggLoco_CheckCB, EggLoco_UpdateCB);
 }
 

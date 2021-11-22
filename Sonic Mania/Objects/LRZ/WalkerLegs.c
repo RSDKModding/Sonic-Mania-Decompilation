@@ -58,8 +58,8 @@ void WalkerLegs_StageLoad(void)
     WalkerLegs->hitbox.right   = 27;
     WalkerLegs->hitbox.top     = -40;
     WalkerLegs->hitbox.bottom  = -32;
-    WalkerLegs->sfxWalkerLegs  = RSDK.GetSFX("LRZ/WalkerLegs.wav");
-    WalkerLegs->sfxWalkerLegs2 = RSDK.GetSFX("LRZ/WalkerLegs2.wav");
+    WalkerLegs->sfxWalkerLegs  = RSDK.GetSfx("LRZ/WalkerLegs.wav");
+    WalkerLegs->sfxWalkerLegs2 = RSDK.GetSfx("LRZ/WalkerLegs2.wav");
 }
 
 void WalkerLegs_DrawSprites(void)

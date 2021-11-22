@@ -67,9 +67,9 @@ void TitleSetup_StageLoad(void)
     globals->taTableLoaded     = STATUS_NONE;
 #endif
     TitleSetup->aniFrames    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
-    TitleSetup->sfxMenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
-    TitleSetup->sfxMenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
-    TitleSetup->sfxRing       = RSDK.GetSFX("Global/Ring.wav");
+    TitleSetup->sfxMenuBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
+    TitleSetup->sfxMenuAccept = RSDK.GetSfx("Global/MenuAccept.wav");
+    TitleSetup->sfxRing       = RSDK.GetSfx("Global/Ring.wav");
     RSDK.ResetEntitySlot(0, TitleSetup->objectID, NULL);
 }
 

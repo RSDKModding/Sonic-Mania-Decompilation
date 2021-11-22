@@ -77,8 +77,8 @@ void EscapeCar_StageLoad(void)
     EscapeCar->hitbox.right  = 16;
     EscapeCar->hitbox.bottom = 16;
 
-    EscapeCar->sfxBumper = RSDK.GetSFX("Stage/Bumper3.wav");
-    EscapeCar->sfxDrop   = RSDK.GetSFX("Stage/Drop.wav");
+    EscapeCar->sfxBumper = RSDK.GetSfx("Stage/Bumper3.wav");
+    EscapeCar->sfxDrop   = RSDK.GetSfx("Stage/Drop.wav");
 }
 
 void EscapeCar_StateMania_Unknown1(void)

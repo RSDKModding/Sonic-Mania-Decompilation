@@ -115,7 +115,7 @@ void StickyPlatform_Create(void *data)
 void StickyPlatform_StageLoad(void)
 {
     StickyPlatform->animID = RSDK.LoadSpriteAnimation("CPZ/StickyPlatform.bin", SCOPE_STAGE);
-    StickyPlatform->sfxID  = RSDK.GetSFX("Puyo/Land.wav");
+    StickyPlatform->sfxID  = RSDK.GetSfx("Puyo/Land.wav");
 }
 
 void StickyPlatform_Interact(void)

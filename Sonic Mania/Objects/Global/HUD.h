@@ -30,7 +30,7 @@ typedef struct {
     uint16 sfxStarpost;
     bool32 showTAPrompt;
     int32 replaySaveEnabled;
-    int32 compSession[PLAYER_MAX];
+    int32 screenBorderType[PLAYER_MAX];
     int32 swapCooldown;
     int32 stockFlashTimers[PLAYER_MAX];
 #endif

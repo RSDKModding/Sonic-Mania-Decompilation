@@ -277,10 +277,10 @@ void Ice_StageLoad(void)
     Ice->playerTimers[1]  = 0;
     Ice->playerTimers[2]  = 0;
     Ice->playerTimers[3]  = 0;
-    Ice->sfxFreeze        = RSDK.GetSFX("PSZ/Freeze.wav");
-    Ice->sfxLedgeBreak    = RSDK.GetSFX("Stage/LedgeBreak.wav");
-    Ice->sfxWindowShatter = RSDK.GetSFX("Stage/WindowShatter.wav");
-    Ice->sfxStruggle      = RSDK.GetSFX("PSZ/Struggle.wav");
+    Ice->sfxFreeze        = RSDK.GetSfx("PSZ/Freeze.wav");
+    Ice->sfxLedgeBreak    = RSDK.GetSfx("Stage/LedgeBreak.wav");
+    Ice->sfxWindowShatter = RSDK.GetSfx("Stage/WindowShatter.wav");
+    Ice->sfxStruggle      = RSDK.GetSfx("PSZ/Struggle.wav");
     Zone->timeOverCallback   = Ice_TimeOverCB;
     Zone_AddCallback(Ice_ZoneCB);
 }

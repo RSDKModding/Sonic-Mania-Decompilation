@@ -76,7 +76,7 @@ void TetherBall_StageLoad(void)
 {
     TetherBall->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TetherBall.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(TetherBall->aniFrames, 0, &TetherBall->animator, true, 0);
-    TetherBall->sfxWhack = RSDK.GetSFX("Stage/Whack.wav");
+    TetherBall->sfxWhack = RSDK.GetSfx("Stage/Whack.wav");
 }
 
 void TetherBall_Unknown1(void)

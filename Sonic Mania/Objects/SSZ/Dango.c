@@ -51,7 +51,7 @@ void Dango_StageLoad(void)
     Dango->hitbox2.left   = -112;
     Dango->hitbox2.right  = -18;
     Dango->hitbox2.bottom = 128;
-    Dango->sfxBumper      = RSDK.GetSFX("Stage/Bumper3.wav");
+    Dango->sfxBumper      = RSDK.GetSfx("Stage/Bumper3.wav");
     DEBUGMODE_ADD_OBJ(Dango);
 }
 

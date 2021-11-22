@@ -57,7 +57,7 @@ void TurretSwitch_StageLoad(void)
     TurretSwitch->hitboxProjectile.top    = -3;
     TurretSwitch->hitboxProjectile.right  = 3;
     TurretSwitch->hitboxProjectile.bottom = 3;
-    TurretSwitch->sfxShot                 = RSDK.GetSFX("Stage/Shot.wav");
+    TurretSwitch->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
 }
 
 void TurretSwitch_CheckPlayerCollisions(void)

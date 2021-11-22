@@ -59,7 +59,7 @@ void Crate_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         Crate->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Crate.bin", SCOPE_STAGE);
-    Crate->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
+    Crate->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void Crate_Break(EntityCrate *entity)

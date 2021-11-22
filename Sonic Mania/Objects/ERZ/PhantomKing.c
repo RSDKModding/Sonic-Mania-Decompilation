@@ -81,8 +81,8 @@ void PhantomKing_Create(void *data)
 void PhantomKing_StageLoad(void)
 {
     PhantomKing->aniFrames    = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
-    PhantomKing->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    PhantomKing->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
+    PhantomKing->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    PhantomKing->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void PhantomKing_CheckPlayerCollisions(void)
@@ -273,8 +273,8 @@ void PhantomKing_SetupKing(EntityPhantomKing *king)
     PhantomKing->boundsM = king->position.x;
     PhantomKing->boundsL = PhantomKing->boundsM - 0x800000;
     PhantomKing->boundsR = PhantomKing->boundsM + 0x800000;
-    PhantomKing->boundsT = (Zone->screenBoundsT1[0] + 48) << 16;
-    PhantomKing->boundsB = (Zone->screenBoundsB1[0] - 96) << 16;
+    PhantomKing->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
+    PhantomKing->boundsB = (Zone->cameraBoundsB[0] - 96) << 16;
 
     int slot                                      = RSDK.GetEntityID(king);
     RSDK_GET_ENTITY(slot - 1, PhantomKing)->state = PhantomKing_StateArm1_Unknown2;
@@ -503,7 +503,7 @@ void PhantomKing_State_Unknown8(void)
             self->velocity.x += 0x800;
     }
 
-    int bottom = Zone->screenBoundsB1[0] << 16;
+    int bottom = Zone->cameraBoundsB[0] << 16;
     if (y > bottom - 0x400000)
         y = bottom - 0x800000;
 

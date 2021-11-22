@@ -97,7 +97,7 @@ void Ring_StageLoad(void)
 
     DEBUGMODE_ADD_OBJ(Ring);
 
-    Ring->sfxRing = RSDK.GetSFX("Global/Ring.wav");
+    Ring->sfxRing = RSDK.GetSfx("Global/Ring.wav");
 }
 
 void Ring_DebugSpawn(void)

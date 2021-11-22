@@ -83,7 +83,7 @@ void CircleBumper_StageLoad(void)
     CircleBumper->hitbox.top    = -6;
     CircleBumper->hitbox.right  = 7;
     CircleBumper->hitbox.bottom = 6;
-    CircleBumper->sfxBumper     = RSDK.GetSFX("Stage/Bumper.wav");
+    CircleBumper->sfxBumper     = RSDK.GetSfx("Stage/Bumper.wav");
 
     DEBUGMODE_ADD_OBJ(CircleBumper);
 }

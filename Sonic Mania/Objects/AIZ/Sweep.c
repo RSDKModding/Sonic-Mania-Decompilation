@@ -93,7 +93,7 @@ void Sweep_StageLoad(void)
     Sweep->hitboxProjectile.top    = -3;
     Sweep->hitboxProjectile.right  = -8;
     Sweep->hitboxProjectile.bottom = 3;
-    Sweep->sfxPon                  = RSDK.GetSFX("Stage/Pon.wav");
+    Sweep->sfxPon                  = RSDK.GetSfx("Stage/Pon.wav");
     DEBUGMODE_ADD_OBJ(Sweep);
 }
 

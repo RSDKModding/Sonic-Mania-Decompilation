@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { UIBACKGROUND_UNUSED } UIBackgroundTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -21,14 +23,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(stateDraw);
-    int32 type;
+    UIBackgroundTypes type;
     int32 timer;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    Animator animator; //probably editor-only
 } EntityUIBackground;
 
 // Object Struct

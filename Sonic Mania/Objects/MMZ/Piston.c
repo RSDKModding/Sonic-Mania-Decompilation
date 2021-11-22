@@ -60,8 +60,8 @@ void Piston_Create(void *data)
 
 void Piston_StageLoad(void)
 {
-    Piston->landSFX   = RSDK.GetSFX("MMZ/PistonLand.wav");
-    Piston->launchSFX = RSDK.GetSFX("MMZ/PistonLaunch.wav");
+    Piston->landSFX   = RSDK.GetSfx("MMZ/PistonLand.wav");
+    Piston->launchSFX = RSDK.GetSfx("MMZ/PistonLaunch.wav");
 }
 
 void Piston_EditorDraw(void) { Piston_Draw(); }
@@ -202,14 +202,14 @@ void Piston_PrepareLaunch(void)
         self->drawPos.y += 0x10000;
         self->velocity.y = 0x10000;
         if (++self->moveTimer >= 16) {
-            RSDK.StopSFX(Piston->landSFX);
+            RSDK.StopSfx(Piston->landSFX);
             RSDK.PlaySfx(Piston->launchSFX, false, 255);
             self->state = Piston_LaunchAndWait;
         }
     }
     else {
         self->state = Piston_PullbackOrLaunch;
-        RSDK.StopSFX(Piston->landSFX);
+        RSDK.StopSfx(Piston->landSFX);
     }
 }
 

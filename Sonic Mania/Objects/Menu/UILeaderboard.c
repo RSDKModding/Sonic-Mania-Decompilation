@@ -375,7 +375,7 @@ void UILeaderboard_DrawRank(int32 id)
         case 2: colour = 0x98C0C8; break;
         case 3: colour = 0xC05802; break;
     }
-    UIWidgets_DrawRhombus(15, 169, 15, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(15, 169, 15, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, drawPos.x, drawPos.y);
 
     drawPos.x -= 0x7A0000;
     if (!self->isUser[id] || !(UIControl->timer & 4)) {

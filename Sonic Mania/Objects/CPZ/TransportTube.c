@@ -37,7 +37,7 @@ void TransportTube_Create(void *data)
     }
 }
 
-void TransportTube_StageLoad(void) { TransportTube->sfxTravel = RSDK.GetSFX("Tube/Travel.wav"); }
+void TransportTube_StageLoad(void) { TransportTube->sfxTravel = RSDK.GetSfx("Tube/Travel.wav"); }
 
 void TransportTube_SetupDirections(EntityTransportTube *entity)
 {

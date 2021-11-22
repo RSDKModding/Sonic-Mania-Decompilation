@@ -28,7 +28,7 @@ void UISubHeading_Draw(void)
     int32 size  = self->size.y + self->size.x;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    UIWidgets_DrawRhombus(self->size.y, size >> 16, self->shiftedY, 0, 0, 0, self->position.x, self->position.y);
+    UIWidgets_DrawParallelogram(self->size.y, size >> 16, self->shiftedY, 0, 0, 0, self->position.x, self->position.y);
 
     drawPos = self->position;
     if (!self->align) {
@@ -295,7 +295,7 @@ void UISubHeading_StartNewSave(void)
     TimeAttackData_ClearOptions();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->field_D8;
-    param->field_168 = 0;
+    param->replayID    = 0;
     globals->gameMode = self->encoreMode != false;
 
     bool32 loadingSave = false;

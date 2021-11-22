@@ -27,13 +27,13 @@ void TMZ2Outro_Create(void *data)
 
 void TMZ2Outro_StageLoad(void)
 {
-    TMZ2Outro->sfxAlarm   = RSDK.GetSFX("TMZ3/Alarm.wav");
-    TMZ2Outro->sfxCarRev  = RSDK.GetSFX("TMZ1/CarRev.wav");
-    TMZ2Outro->sfxGrab    = RSDK.GetSFX("Global/Grab.wav");
-    TMZ2Outro->sfxRumble  = RSDK.GetSFX("Stage/Rumble.wav");
-    TMZ2Outro->sfxDrop    = RSDK.GetSFX("Stage/Drop.wav");
-    TMZ2Outro->sfxImpact  = RSDK.GetSFX("Stage/Impact2.wav");
-    TMZ2Outro->sfxRubyGet = RSDK.GetSFX("TMZ3/RubyGet.wav");
+    TMZ2Outro->sfxAlarm   = RSDK.GetSfx("TMZ3/Alarm.wav");
+    TMZ2Outro->sfxCarRev  = RSDK.GetSfx("TMZ1/CarRev.wav");
+    TMZ2Outro->sfxGrab    = RSDK.GetSfx("Global/Grab.wav");
+    TMZ2Outro->sfxRumble  = RSDK.GetSfx("Stage/Rumble.wav");
+    TMZ2Outro->sfxDrop    = RSDK.GetSfx("Stage/Drop.wav");
+    TMZ2Outro->sfxImpact  = RSDK.GetSfx("Stage/Impact2.wav");
+    TMZ2Outro->sfxRubyGet = RSDK.GetSfx("TMZ3/RubyGet.wav");
     TMZ2Outro->playerID   = ID_NONE;
 }
 
@@ -205,7 +205,7 @@ bool32 TMZ2Outro_CutsceneState_TimeToEscape(EntityCutsceneSeq *host)
     if (host->timer == 128) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player1->right        = true;
-        Zone->screenBoundsR1[0] += 832;
+        Zone->cameraBoundsR[0] += 832;
         Zone->playerBoundActiveR[0] = false;
         return true;
     }
@@ -233,7 +233,7 @@ bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host)
     if (host->timer == 248)
         RSDK.PlaySfx(TMZ2Outro->sfxGrab, false, 255);
     if (host->timer == 384) {
-        Zone->screenBoundsR1[0] = 0x2000;
+        Zone->cameraBoundsR[0] = 0x2000;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->position.x      = (camera->boundsR - ScreenInfo->centerX) << 16;
         camera->boundsR         = 0x2000;
@@ -469,7 +469,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             }
 
-            Zone->screenBoundsR1[0]     = 0x2000;
+            Zone->cameraBoundsR[0]     = 0x2000;
             Zone->playerBoundActiveR[0] = false;
         }
         else if (host->timer == 290) {
@@ -619,7 +619,7 @@ bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host)
 
 bool32 TMZ2Outro_CutsceneState_FadeOut(EntityCutsceneSeq *host)
 {
-    RSDK.StopSFX(TMZ2Outro->sfxAlarm);
+    RSDK.StopSfx(TMZ2Outro->sfxAlarm);
     return host->timer == 180;
 }
 bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)

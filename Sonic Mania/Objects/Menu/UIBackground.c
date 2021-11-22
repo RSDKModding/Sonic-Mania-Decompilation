@@ -37,7 +37,7 @@ void UIBackground_DrawNormal(void)
     colour *colourPtrs = UIBackground->activeColours;
 
     Vector2 drawPos;
-    RSDK.FillScreen(colourPtrs[0], 255, 255, 255);
+    RSDK.FillScreen(colourPtrs[0], 0xFF, 0xFF, 0xFF);
 
     drawPos.x = ((RSDK.Sin512(self->timer) >> 3) + 112) * RSDK.Sin256(self->timer) >> 8;
     drawPos.y = ((RSDK.Sin512(self->timer) >> 3) + 112) * RSDK.Cos256(self->timer) >> 8;
@@ -57,9 +57,20 @@ void UIBackground_DrawNormal(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIBackground_EditorDraw(void) {}
+void UIBackground_EditorDraw(void)
+{
+    RSDK_THIS(UIBackground);
+    RSDK.SetSpriteAnimation(UIBackground->aniFrames, 0, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void UIBackground_EditorLoad(void) {}
+void UIBackground_EditorLoad(void)
+{
+    UIBackground->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(UIBackground, type);
+    RSDK_ENUM_VAR("(Unused)", UIBACKGROUND_UNUSED);
+}
 #endif
 
 void UIBackground_Serialize(void) { RSDK_EDITABLE_VAR(UIBackground, VAR_ENUM, type); }

@@ -49,9 +49,9 @@ typedef struct {
     int32 nextTrack;
     int32 restartTrackID;
 #if !RETRO_USE_PLUS
-    bool32 trackFlag;
-    bool32 musicStackFlagA;
-    bool32 musicStackFlagB;
+    bool32 playingRegularTrack;
+    bool32 playingDrownTrack;
+    bool32 playing1UPTrack;
 #endif
     uint16 aniFrames;
 } ObjectMusic;

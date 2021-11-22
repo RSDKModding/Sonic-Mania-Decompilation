@@ -97,7 +97,7 @@ void SPZ2Setup_StageLoad(void)
 
     if (isMainGameMode() && globals->atlEnabled) {
         if (!PlayerHelpers_CheckStageReload()) {
-            Zone->screenBoundsL1[0] = 256 - ScreenInfo->centerX;
+            Zone->cameraBoundsL[0] = 256 - ScreenInfo->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
             CREATE_ENTITY(SPZ2Setup, NULL, 0, 0);
         }

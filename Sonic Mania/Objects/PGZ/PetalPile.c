@@ -56,7 +56,7 @@ void PetalPile_StageLoad(void)
         PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Petal.bin", SCOPE_STAGE);
     }
 
-    PetalPile->sfxPetals = RSDK.GetSFX("PSZ/Petals.wav");
+    PetalPile->sfxPetals = RSDK.GetSfx("PSZ/Petals.wav");
 }
 
 int32 PetalPile_GetLeafPattern(int32 *patternPtr)

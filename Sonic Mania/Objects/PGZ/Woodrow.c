@@ -88,8 +88,8 @@ void Woodrow_StageLoad(void)
     Woodrow->hitbox4.right  = 12;
     Woodrow->hitbox4.bottom = 12;
 
-    Woodrow->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    Woodrow->sfxPeck      = RSDK.GetSFX("PSZ/Peck.wav");
+    Woodrow->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    Woodrow->sfxPeck      = RSDK.GetSfx("PSZ/Peck.wav");
     DEBUGMODE_ADD_OBJ(Woodrow);
 }
 

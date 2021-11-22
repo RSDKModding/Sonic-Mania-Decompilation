@@ -92,8 +92,8 @@ void SentryBug_StageLoad(void)
     SentryBug->hitbox.top    = -12;
     SentryBug->hitbox.right  = 12;
     SentryBug->hitbox.bottom = 12;
-    SentryBug->sfxPon        = RSDK.GetSFX("Stage/Pon.wav");
-    SentryBug->sfxSwarm      = RSDK.GetSFX("TMZ1/CyberSwarm.wav");
+    SentryBug->sfxPon        = RSDK.GetSfx("Stage/Pon.wav");
+    SentryBug->sfxSwarm      = RSDK.GetSfx("TMZ1/CyberSwarm.wav");
 
     DEBUGMODE_ADD_OBJ(SentryBug);
 }
@@ -122,7 +122,7 @@ void SentryBug_CheckPlayerCollisions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &SentryBug->hitbox)) {
             if (Player_CheckBadnikBreak(self, player, true))
-                RSDK.StopSFX(SentryBug->sfxSwarm);
+                RSDK.StopSfx(SentryBug->sfxSwarm);
         }
     }
 }
@@ -337,7 +337,7 @@ void SentryBug_State_Unknown4(void)
                 self->drawFlag          = false;
                 self->stateLate         = SentryBug_StateLate_Unknown5;
                 self->state             = SentryBug_State_Unknown6;
-                RSDK.StopSFX(SentryBug->sfxSwarm);
+                RSDK.StopSfx(SentryBug->sfxSwarm);
             }
         }
         else {
@@ -350,7 +350,7 @@ void SentryBug_State_Unknown4(void)
         self->drawFlag          = false;
         self->stateLate         = SentryBug_StateLate_Unknown5;
         self->state             = SentryBug_State_Unknown6;
-        RSDK.StopSFX(SentryBug->sfxSwarm);
+        RSDK.StopSfx(SentryBug->sfxSwarm);
     }
 }
 
@@ -378,7 +378,7 @@ void SentryBug_State_Unknown5(void)
         self->drawFlag          = false;
         self->stateLate         = SentryBug_StateLate_Unknown5;
         self->state             = SentryBug_State_Unknown6;
-        RSDK.StopSFX(SentryBug->sfxSwarm);
+        RSDK.StopSfx(SentryBug->sfxSwarm);
         self->isPermanent = false;
     }
     SentryBug_CheckPlayerCollisions();

@@ -135,14 +135,14 @@ void KingAttack_Create(void *data)
 void KingAttack_StageLoad(void)
 {
     KingAttack->aniFrames     = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE);
-    KingAttack->sfxLaserSweep = RSDK.GetSFX("LRZ/LaserSweep.wav");
-    KingAttack->sfxLaserErupt = RSDK.GetSFX("LRZ/LaserErupt.wav");
+    KingAttack->sfxLaserSweep = RSDK.GetSfx("LRZ/LaserSweep.wav");
+    KingAttack->sfxLaserErupt = RSDK.GetSfx("LRZ/LaserErupt.wav");
     KingAttack->flag          = false;
-    KingAttack->sfxElecPulse  = RSDK.GetSFX("Stage/ElecPulse.wav");
-    KingAttack->sfxTwinShot   = RSDK.GetSFX("LRZ/TwinShot.wav");
+    KingAttack->sfxElecPulse  = RSDK.GetSfx("Stage/ElecPulse.wav");
+    KingAttack->sfxTwinShot   = RSDK.GetSfx("LRZ/TwinShot.wav");
     int id                    = Soundboard_LoadSFX("LRZ/ElecIdle.wav", true, KingAttack_ElecIdleCheckCB, NULL);
     if (id >= 0)
-        Soundboard->sfxUnknown8[id] = 30;
+        Soundboard->sfxFadeOutDuration[id] = 30;
 }
 
 bool32 KingAttack_ElecIdleCheckCB(void)

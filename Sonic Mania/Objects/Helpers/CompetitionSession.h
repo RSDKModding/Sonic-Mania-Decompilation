@@ -32,7 +32,7 @@ typedef struct {
     int32 matchCount;
     int32 monitorMode;
 #if RETRO_USE_PLUS
-    int32 unknown29;
+    int32 swapFlag;
 #endif
     int32 zoneFlags[12];
     uint8 characterFlags[PLAYER_MAX];
@@ -46,11 +46,8 @@ typedef struct {
     int32 wins[PLAYER_MAX];
     int32 lives[PLAYER_MAX];
 #if RETRO_USE_PLUS
-    int32 unknown84;
-    int32 unknown85;
-    int32 splitScreenMode;
-    int32 unknown87;
-    bool32 readOnlyDisplayMode;
+    int32 splitScreenMode[SCREEN_MAX];
+    int32 displayMode;
     int32 controllerIDs[PLAYER_MAX];
     int32 prevMatchID;
 #endif

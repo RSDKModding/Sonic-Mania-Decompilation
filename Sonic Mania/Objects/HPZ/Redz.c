@@ -69,7 +69,7 @@ void Redz_StageLoad(void)
     Redz->hitboxRange.right  = 0;
     Redz->hitboxRange.bottom = 0;
 
-    Redz->sfxFlame = RSDK.GetSFX("Stage/Flame.wav");
+    Redz->sfxFlame = RSDK.GetSfx("Stage/Flame.wav");
     DEBUGMODE_ADD_OBJ(Redz);
 }
 

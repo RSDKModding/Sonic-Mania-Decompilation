@@ -39,16 +39,16 @@ void UIResPicker_Draw(void)
     drawPos.x -= self->offset;
     drawPos.y -= self->offset;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->field_11C, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->field_11C, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
                        (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->field_11C, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->field_11C, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
     drawPos = self->position;
     drawPos.x += self->offset;
     drawPos.y += self->offset;
-    UIWidgets_DrawRhombus((self->size.y >> 16), size, self->field_11C, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram((self->size.y >> 16), size, self->field_11C, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (self->arrowWidth > 0 && self->flag) {
         drawPos = self->position;

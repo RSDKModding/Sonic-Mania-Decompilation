@@ -153,9 +153,9 @@ void PopcornMachine_StageLoad(void)
     PopcornMachine->hitbox2.right    = 176;
     PopcornMachine->hitbox2.top      = -16;
     PopcornMachine->hitbox2.bottom   = 24;
-    PopcornMachine->sfxFanStart      = RSDK.GetSFX("Stage/FanStart.wav");
-    PopcornMachine->sfxShoot         = RSDK.GetSFX("Stage/Shoot1.wav");
-    PopcornMachine->sfxPopcornLaunch = RSDK.GetSFX("Stage/PopcornLaunch.wav");
+    PopcornMachine->sfxFanStart      = RSDK.GetSfx("Stage/FanStart.wav");
+    PopcornMachine->sfxShoot         = RSDK.GetSfx("Stage/Shoot1.wav");
+    PopcornMachine->sfxPopcornLaunch = RSDK.GetSfx("Stage/PopcornLaunch.wav");
 }
 
 void PopcornMachine_LinkPlayer(EntityPlayer *player)
@@ -177,7 +177,7 @@ void PopcornMachine_LinkPlayer(EntityPlayer *player)
     machine->isPermanent          = true;
     machine->parent               = (Entity *)self;
     if (!player->sidekick)
-        machine->bounds[player->playerID] = Zone->screenBoundsB1[player->playerID];
+        machine->bounds[player->playerID] = Zone->cameraBoundsB[player->playerID];
 }
 void PopcornMachine_CheckPlayerCollisions(void)
 {
@@ -317,7 +317,7 @@ void PopcornMachine_State2_Unknown1(void)
 
         if (!Player_CheckValidState(player)) {
             if (!player->sidekick)
-                Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+                Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
             destroyEntity(self);
         }
     }
@@ -331,7 +331,7 @@ void PopcornMachine_State2_Unknown1(void)
         player->velocity.x = 0;
         player->velocity.y = -0x80000;
         if (!player->sidekick)
-            Zone->screenBoundsB1[player->playerID] = (self->position.y >> 16) + 32;
+            Zone->cameraBoundsB[player->playerID] = (self->position.y >> 16) + 32;
 
         if (parent->state == PopcornMachine_State_Unknown1 || parent->state == PopcornMachine_State_Unknown4) {
             parent->state = PopcornMachine_State_Unknown2;
@@ -342,7 +342,7 @@ void PopcornMachine_State2_Unknown1(void)
 
     if (!Player_CheckValidState(player)) {
         if (!player->sidekick)
-            Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+            Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
         destroyEntity(self);
     }
 }
@@ -362,7 +362,7 @@ void PopcornMachine_State2_Unknown2(void)
 
         if (!Player_CheckValidState(player)) {
             if (!player->sidekick)
-                Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+                Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
             destroyEntity(self);
         }
     }
@@ -385,7 +385,7 @@ void PopcornMachine_State2_Unknown3(void)
             player->position.y += player->velocity.y;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             if (!player->sidekick)
-                Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+                Zone->cameraBoundsB[player->playerID] = self->bounds[player->playerID];
             self->state = PopcornMachine_State2_Unknown4;
         }
     }

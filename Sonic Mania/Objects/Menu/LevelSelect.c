@@ -11,7 +11,7 @@ void LevelSelect_Update(void)
         text->visible = API.CheckDLC(DLC_PLUS);
 #endif
     StateMachine_Run(self->state);
-    ScreenInfo->position.x = 256 - ScreenInfo->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
 void LevelSelect_LateUpdate(void) {}
@@ -41,19 +41,19 @@ void LevelSelect_Create(void *data)
         self->visible   = true;
         self->drawOrder = 12;
         self->state     = LevelSelect_State_SetupEntities;
-        self->stateDraw = LevelSelect_StateDraw_Fade;
+        self->stateDraw = LevelSelect_Draw_Fade;
         self->timer     = 640;
     }
 }
 
 void LevelSelect_StageLoad(void)
 {
-    LevelSelect->sfxFail = RSDK.GetSFX("Stage/Fail.wav");
+    LevelSelect->sfxFail = RSDK.GetSfx("Stage/Fail.wav");
 #if RETRO_USE_PLUS
-    LevelSelect->sfxRing     = RSDK.GetSFX("Global/Ring.wav");
-    LevelSelect->sfxEmerald  = RSDK.GetSFX("Special/Emerald.wav");
-    LevelSelect->sfxContinue = RSDK.GetSFX("Special/Continue.wav");
-    LevelSelect->sfxMedalGot = RSDK.GetSFX("Special/MedalCaught.wav");
+    LevelSelect->sfxRing     = RSDK.GetSfx("Global/Ring.wav");
+    LevelSelect->sfxEmerald  = RSDK.GetSfx("Special/Emerald.wav");
+    LevelSelect->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
+    LevelSelect->sfxMedalGot = RSDK.GetSfx("Special/MedalCaught.wav");
 #endif
     RSDK.ResetEntitySlot(0, LevelSelect->objectID, NULL);
     UIPicture->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
@@ -102,25 +102,25 @@ void LevelSelect_StageLoad(void)
 void LevelSelect_CheatActivated_AllEmeralds(void)
 {
     Music_FadeOut(0.125);
-    RSDK.PlaySfx(LevelSelect->sfxEmerald, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxEmerald, false, 255);
     SaveGame->saveRAM->chaosEmeralds = 0x7F;
 }
 
 void LevelSelect_CheatActivated_ChangeSuperMusicFlag(void)
 {
-    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
     globals->superMusicEnabled ^= 1;
 }
 
 void LevelSelect_CheatActivated_MaxContinues(void)
 {
-    RSDK.PlaySfx(LevelSelect->sfxContinue, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxContinue, false, 255);
     SaveGame->saveRAM->continues = 14;
 }
 
 void LevelSelect_CheatActivated_MaxControl(void)
 {
-    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
     globals->medalMods &= ~getMod(MEDAL_NODROPDASH);
     globals->medalMods |= getMod(MEDAL_INSTASHIELD);
     globals->medalMods |= getMod(MEDAL_PEELOUT);
@@ -128,20 +128,20 @@ void LevelSelect_CheatActivated_MaxControl(void)
 
 void LevelSelect_CheatActivated_RickyMode(void)
 {
-    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
     globals->secrets ^= SECRET_RICKYMODE;
 }
 
 void LevelSelect_CheatActivated_SuperDash(void)
 {
-    RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
+    RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
     globals->secrets ^= SECRET_SUPERDASH;
 }
 
 void LevelSelect_CheatActivated_SwapGameMode(void)
 {
     if (API.CheckDLC(DLC_PLUS)) {
-        RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
         if (globals->gameMode == MODE_ENCORE) {
             globals->gameMode = MODE_MANIA;
         }
@@ -157,7 +157,7 @@ void LevelSelect_CheatActivated_SwapGameMode(void)
 void LevelSelect_CheatActivated_UnlockAllMedals(void)
 {
     if (globals->superSecret && (globals->secrets & getMod(SECRET_RICKYMODE))) {
-        RSDK.PlaySfx(LevelSelect->sfxMedalGot, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxMedalGot, false, 255);
         GameProgress_UnlockAllMedals();
         if (SceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
             LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
@@ -168,10 +168,16 @@ void LevelSelect_CheatActivated_UnlockAllMedals(void)
         }
     }
     else {
-        RSDK.PlaySfx(LevelSelect->sfxRing, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxRing, false, 255);
     }
 }
 #endif
+
+void LevelSelect_Draw_Fade(void)
+{
+    RSDK_THIS(LevelSelect);
+    RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
+}
 
 void LevelSelect_State_SetupEntities(void)
 {
@@ -282,67 +288,16 @@ void LevelSelect_State_SetupEntities(void)
 
     self->labelPtrs2[self->labelCount + 31] = self->soundTestLabel;
     LevelSelect_ManagePlayerIcon();
-    self->state = LevelSelect_Unknown1;
+    self->state = LevelSelect_State_FadeIn;
 }
 
-void LevelSelect_ManagePlayerIcon(void)
-{
-    RSDK_THIS(LevelSelect);
-    EntityUIPicture *player1 = (EntityUIPicture *)self->player1Icon;
-    EntityUIPicture *player2 = (EntityUIPicture *)self->player2Icon;
-    switch (self->playerID) {
-        case 1:
-        case 2:
-            if (self->player2ID == 2)
-                self->playerID = 3;
-            player1->animator.frameID = self->playerID;
-            break;
-        case 3: player1->animator.frameID = self->playerID; break;
-#if RETRO_USE_PLUS
-        case 4:
-        case 5:
-            if (!API.CheckDLC(DLC_PLUS))
-                self->playerID = 1;
-            player1->animator.frameID = self->playerID;
-            break;
-#endif
-        default:
-            self->playerID          = 1;
-            player1->animator.frameID = 1;
-            break;
-    }
-
-    if (self->player2ID == 1) {
-        self->player2ID = 2;
-    }
-    else {
-        if (self->player2ID != 2) {
-            self->player2ID         = 0;
-            player2->animator.frameID = 0;
-        }
-        else {
-            player2->animator.frameID = self->player2ID;
-            if (self->playerID != 1) {
-                self->player2ID         = 0;
-                player2->animator.frameID = 0;
-            }
-        }
-    }
-}
-
-void LevelSelect_StateDraw_Fade(void)
-{
-    RSDK_THIS(LevelSelect);
-    RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
-}
-
-void LevelSelect_Unknown1(void)
+void LevelSelect_State_FadeIn(void)
 {
     RSDK_THIS(LevelSelect);
 
     if (self->timer <= 0) {
         self->timer     = 0;
-        self->state     = LevelSelect_Unknown2;
+        self->state     = LevelSelect_State_HandleMenu;
         self->stateDraw = StateMachine_None;
     }
     else {
@@ -350,7 +305,7 @@ void LevelSelect_Unknown1(void)
     }
 }
 
-void LevelSelect_Unknown2(void)
+void LevelSelect_State_HandleMenu(void)
 {
     RSDK_THIS(LevelSelect);
 
@@ -399,11 +354,11 @@ void LevelSelect_Unknown2(void)
                         self->soundTestID = 0;
                     }
                     EntityUIText *soundTest = (EntityUIText *)self->soundTestLabel;
-                    *soundTest->text.text   = self->soundTestID >> 4;
+                    soundTest->text.text[0] = self->soundTestID >> 4;
                     soundTest->text.text[1] = self->soundTestID & 0xF;
                 }
                 else {
-                    LevelSelect_Unknown6();
+                    LevelSelect_HandleColumnChange();
                 }
             }
             else {
@@ -411,11 +366,11 @@ void LevelSelect_Unknown2(void)
                     if (self->labelID < self->labelCount - 1 || ControllerInfo->keyStart.press) {
 #if RETRO_USE_PLUS
                         if (self->labelID != 28 || API.CheckDLC(DLC_PLUS))
-                            LevelSelect_Unknown7();
+                            LevelSelect_HandleNewStagePos();
                         else
-                            RSDK.PlaySfx(LevelSelect->sfxFail, 0, 255);
+                            RSDK.PlaySfx(LevelSelect->sfxFail, false, 255);
 #else
-                        LevelSelect_Unknown7();
+                        LevelSelect_HandleNewStagePos();
 #endif
                     }
                     else {
@@ -423,8 +378,8 @@ void LevelSelect_Unknown2(void)
                         Music_PlayTrackPtr(mus);
 
 #if RETRO_USE_PLUS
-                        self->field_18C = self->soundTestID % 14;
-                        self->field_190 = self->soundTestID & 0x1F;
+                        self->offsetUFO = self->soundTestID % 14;
+                        self->offsetBSS = self->soundTestID & 0x1F;
                         for (int32 i = 0; i < 8; ++i) {
                             if (self->soundTestID != LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]]) {
                                 LevelSelect->cheatUnknown[i] = 0;
@@ -463,13 +418,58 @@ void LevelSelect_Unknown2(void)
         RSDK.SetSpriteAnimation(UIPicture->aniFrames, 1, &zoneIcon->animator, true, ((EntityUIText *)self->labelPtrs[self->labelID])->data1);
 }
 
-void LevelSelect_Unknown3(void)
+void LevelSelect_State_FadeOut(void)
 {
     RSDK_THIS(LevelSelect);
     if (self->timer >= 1024)
         RSDK.LoadScene();
     else
         self->timer += 16;
+}
+
+void LevelSelect_ManagePlayerIcon(void)
+{
+    RSDK_THIS(LevelSelect);
+    EntityUIPicture *player1 = (EntityUIPicture *)self->player1Icon;
+    EntityUIPicture *player2 = (EntityUIPicture *)self->player2Icon;
+    switch (self->playerID) {
+        case 1:
+        case 2:
+            if (self->player2ID == 2)
+                self->playerID = 3;
+            player1->animator.frameID = self->playerID;
+            break;
+        case 3: player1->animator.frameID = self->playerID; break;
+#if RETRO_USE_PLUS
+        case 4:
+        case 5:
+            if (!API.CheckDLC(DLC_PLUS))
+                self->playerID = 1;
+            player1->animator.frameID = self->playerID;
+            break;
+#endif
+        default:
+            self->playerID            = 1;
+            player1->animator.frameID = 1;
+            break;
+    }
+
+    if (self->player2ID == 1) {
+        self->player2ID = 2;
+    }
+    else {
+        if (self->player2ID != 2) {
+            self->player2ID           = 0;
+            player2->animator.frameID = 0;
+        }
+        else {
+            player2->animator.frameID = self->player2ID;
+            if (self->playerID != 1) {
+                self->player2ID           = 0;
+                player2->animator.frameID = 0;
+            }
+        }
+    }
 }
 
 void LevelSelect_SetLabelHighlighted(bool32 highlight)
@@ -483,7 +483,7 @@ void LevelSelect_SetLabelHighlighted(bool32 highlight)
         label2->highlighted = highlight;
 }
 
-void LevelSelect_Unknown6(void)
+void LevelSelect_HandleColumnChange(void)
 {
     RSDK_THIS(LevelSelect);
     EntityUIText *curLabel = (EntityUIText *)self->labelPtrs[self->labelID];
@@ -532,7 +532,7 @@ void LevelSelect_Unknown6(void)
     }
 }
 
-void LevelSelect_Unknown7(void)
+void LevelSelect_HandleNewStagePos(void)
 {
     RSDK_THIS(LevelSelect);
     EntityUIText *curLabel = (EntityUIText *)self->labelPtrs[self->labelID];
@@ -546,10 +546,10 @@ void LevelSelect_Unknown7(void)
 
 #if RETRO_USE_PLUS
         if (self->labelID == self->labelCount - 4) {
-            SceneInfo->listPos += self->field_18C;
+            SceneInfo->listPos += self->offsetUFO;
         }
         else if (self->labelID == self->labelCount - 3) {
-            SceneInfo->listPos += self->field_190;
+            SceneInfo->listPos += self->offsetBSS;
         }
         else if (globals->gameMode == MODE_ENCORE) {
             SceneInfo->listPos = Zone_GetEncoreStageID();
@@ -568,12 +568,12 @@ void LevelSelect_Unknown7(void)
         if ((globals->playerID & 0xFF) == ID_KNUCKLES && curLabel->data0 == 15)
             ++SceneInfo->listPos;
         self->timer     = 0;
-        self->state     = LevelSelect_Unknown3;
-        self->stateDraw = LevelSelect_StateDraw_Fade;
+        self->state     = LevelSelect_State_FadeOut;
+        self->stateDraw = LevelSelect_Draw_Fade;
         Music_FadeOut(0.1);
     }
     else {
-        RSDK.PlaySfx(LevelSelect->sfxFail, 0, 255);
+        RSDK.PlaySfx(LevelSelect->sfxFail, false, 255);
     }
 }
 

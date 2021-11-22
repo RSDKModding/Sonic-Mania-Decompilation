@@ -67,7 +67,7 @@ void Crane_StageLoad(void)
     Crane->hitbox2.right  = 8;
     Crane->hitbox2.bottom = 16;
     Crane->active         = ACTIVE_ALWAYS;
-    Crane->sfxGrab        = RSDK.GetSFX("Global/Grab.wav");
+    Crane->sfxGrab        = RSDK.GetSfx("Global/Grab.wav");
     DEBUGMODE_ADD_OBJ(Crane);
 }
 

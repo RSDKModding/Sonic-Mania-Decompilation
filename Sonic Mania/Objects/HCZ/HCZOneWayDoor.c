@@ -110,7 +110,7 @@ void HCZOneWayDoor_Create(void* data)
 void HCZOneWayDoor_StageLoad(void)
 {
     HCZOneWayDoor->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
-    HCZOneWayDoor->sfxClack = RSDK.GetSFX("Stage/Clack2.wav");
+    HCZOneWayDoor->sfxClack = RSDK.GetSfx("Stage/Clack2.wav");
 }
 
 void HCZOneWayDoor_Unknown1(void)

@@ -115,8 +115,8 @@ void Press_StageLoad(void)
 #if RETRO_USE_PLUS
     Player->canSuperCB = Press_SuperCheckCB;
 #endif
-    Press->impactSFX     = RSDK.GetSFX("Stage/Impact2.wav");
-    Press->pressSFX      = RSDK.GetSFX("PSZ/Press.wav");
+    Press->impactSFX     = RSDK.GetSfx("Stage/Impact2.wav");
+    Press->pressSFX      = RSDK.GetSfx("PSZ/Press.wav");
 }
 
 #if RETRO_USE_PLUS

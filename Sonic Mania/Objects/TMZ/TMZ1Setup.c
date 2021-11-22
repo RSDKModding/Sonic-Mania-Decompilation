@@ -55,7 +55,7 @@ void TMZ1Setup_StaticUpdate(void)
         }
     }
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
-    if (!TMZ1Setup->hasAchievement && actClear->objectID == ActClear->objectID && actClear->state == ActClear_Unknown6 && !Player->gotHit[0]) {
+    if (!TMZ1Setup->hasAchievement && actClear->objectID == ActClear->objectID && actClear->state == ActClear_State_EnterText && !Player->gotHit[0]) {
         API_UnlockAchievement("ACH_TMZ");
         TMZ1Setup->hasAchievement = true;
     }

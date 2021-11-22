@@ -48,20 +48,20 @@ void PhantomRuby_Create(void *data)
 void PhantomRuby_StageLoad(void)
 {
     PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE);
-    PhantomRuby->sfxL[0]  = RSDK.GetSFX("Ruby/Attack1_L.wav");
-    PhantomRuby->sfxR[0]  = RSDK.GetSFX("Ruby/Attack1_R.wav");
-    PhantomRuby->sfxL[1]  = RSDK.GetSFX("Ruby/Attack2_L.wav");
-    PhantomRuby->sfxR[1]  = RSDK.GetSFX("Ruby/Attack2_R.wav");
-    PhantomRuby->sfxL[2]  = RSDK.GetSFX("Ruby/Attack3_L.wav");
-    PhantomRuby->sfxR[2]  = RSDK.GetSFX("Ruby/Attack3_R.wav");
-    PhantomRuby->sfxL[3]  = RSDK.GetSFX("Ruby/Attack4_L.wav");
-    PhantomRuby->sfxR[3]  = RSDK.GetSFX("Ruby/Attack4_R.wav");
-    PhantomRuby->sfxL[4]  = RSDK.GetSFX("Ruby/Attack5_L.wav");
-    PhantomRuby->sfxR[4]  = RSDK.GetSFX("Ruby/Attack5_R.wav");
-    PhantomRuby->sfxL[5]  = RSDK.GetSFX("Ruby/Attack6_L.wav");
-    PhantomRuby->sfxR[5]  = RSDK.GetSFX("Ruby/Attack6_R.wav");
-    PhantomRuby->sfxL[6]  = RSDK.GetSFX("Ruby/RedCube_L.wav");
-    PhantomRuby->sfxR[6]  = RSDK.GetSFX("Ruby/RedCube_R.wav");
+    PhantomRuby->sfxL[0]  = RSDK.GetSfx("Ruby/Attack1_L.wav");
+    PhantomRuby->sfxR[0]  = RSDK.GetSfx("Ruby/Attack1_R.wav");
+    PhantomRuby->sfxL[1]  = RSDK.GetSfx("Ruby/Attack2_L.wav");
+    PhantomRuby->sfxR[1]  = RSDK.GetSfx("Ruby/Attack2_R.wav");
+    PhantomRuby->sfxL[2]  = RSDK.GetSfx("Ruby/Attack3_L.wav");
+    PhantomRuby->sfxR[2]  = RSDK.GetSfx("Ruby/Attack3_R.wav");
+    PhantomRuby->sfxL[3]  = RSDK.GetSfx("Ruby/Attack4_L.wav");
+    PhantomRuby->sfxR[3]  = RSDK.GetSfx("Ruby/Attack4_R.wav");
+    PhantomRuby->sfxL[4]  = RSDK.GetSfx("Ruby/Attack5_L.wav");
+    PhantomRuby->sfxR[4]  = RSDK.GetSfx("Ruby/Attack5_R.wav");
+    PhantomRuby->sfxL[5]  = RSDK.GetSfx("Ruby/Attack6_L.wav");
+    PhantomRuby->sfxR[5]  = RSDK.GetSfx("Ruby/Attack6_R.wav");
+    PhantomRuby->sfxL[6]  = RSDK.GetSfx("Ruby/RedCube_L.wav");
+    PhantomRuby->sfxR[6]  = RSDK.GetSfx("Ruby/RedCube_R.wav");
 }
 
 void PhantomRuby_PlaySFX(uint8 sfxID)
@@ -120,7 +120,7 @@ void PhantomRuby_State_FallOffScreen(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (self->position.y > (Zone->screenBoundsB1[0] + 64) << 16)
+    if (self->position.y > (Zone->cameraBoundsB[0] + 64) << 16)
         self->state = StateMachine_None;
 }
 

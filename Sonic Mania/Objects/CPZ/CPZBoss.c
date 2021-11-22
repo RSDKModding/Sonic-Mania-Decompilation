@@ -55,7 +55,7 @@ void CPZBoss_StageLoad(void)
     CPZBoss->hitbox.top    = 8;
     CPZBoss->hitbox.right  = 16;
     CPZBoss->hitbox.bottom = 16;
-    CPZBoss->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
+    CPZBoss->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
     RSDK.SetDrawLayerProperties(Zone->drawOrderHigh, false, NULL);
     RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, NULL);
 }

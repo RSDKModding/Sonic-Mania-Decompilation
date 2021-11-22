@@ -118,13 +118,13 @@ void UberCaterkiller_StageLoad(void)
     UberCaterkiller->hitbox.bottom = 27;
     UberCaterkiller->defeated      = false;
     UberCaterkiller->active        = ACTIVE_ALWAYS;
-    UberCaterkiller->sfxRocketJet  = RSDK.GetSFX("Stage/RocketJet.wav");
-    UberCaterkiller->sfxHit        = RSDK.GetSFX("Stage/BossHit.wav");
-    UberCaterkiller->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    UberCaterkiller->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
-    UberCaterkiller->sfxSandSwim   = RSDK.GetSFX("MSZ/SandSwim.wav");
-    UberCaterkiller->sfxBumper3    = RSDK.GetSFX("Stage/Bumper3.wav");
-    UberCaterkiller->sfxCaterJump  = RSDK.GetSFX("MSZ/CaterJump.wav");
+    UberCaterkiller->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
+    UberCaterkiller->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    UberCaterkiller->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    UberCaterkiller->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
+    UberCaterkiller->sfxSandSwim   = RSDK.GetSfx("MSZ/SandSwim.wav");
+    UberCaterkiller->sfxBumper3    = RSDK.GetSfx("Stage/Bumper3.wav");
+    UberCaterkiller->sfxCaterJump  = RSDK.GetSfx("MSZ/CaterJump.wav");
     DEBUGMODE_ADD_OBJ(UberCaterkiller);
 }
 

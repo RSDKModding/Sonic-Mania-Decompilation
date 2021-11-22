@@ -57,10 +57,10 @@ void Camera_Create(void *data)
     self->boundsOffset.y = 2;
     self->active         = ACTIVE_NORMAL;
     if (!Zone->atlReloadFlag) {
-        self->boundsL = Zone->screenBoundsL1[self->screenID];
-        self->boundsR = Zone->screenBoundsR1[self->screenID];
-        self->boundsT = Zone->screenBoundsT1[self->screenID];
-        self->boundsB = Zone->screenBoundsB1[self->screenID];
+        self->boundsL = Zone->cameraBoundsL[self->screenID];
+        self->boundsR = Zone->cameraBoundsR[self->screenID];
+        self->boundsT = Zone->cameraBoundsT[self->screenID];
+        self->boundsB = Zone->cameraBoundsB[self->screenID];
 
         if (self->targetPtr) {
             self->position.x = self->targetPtr->position.x;
@@ -136,102 +136,102 @@ void Camera_HandleHBounds(void)
     RSDK_THIS(Camera);
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
-    if (Zone->screenBoundsL1[self->screenID] > self->boundsL) {
-        if (screen->position.x > Zone->screenBoundsL1[self->screenID])
-            self->boundsL = Zone->screenBoundsL1[self->screenID];
+    if (Zone->cameraBoundsL[self->screenID] > self->boundsL) {
+        if (screen->position.x > Zone->cameraBoundsL[self->screenID])
+            self->boundsL = Zone->cameraBoundsL[self->screenID];
         else
             self->boundsL = screen->position.x;
     }
 
-    if (Zone->screenBoundsL1[self->screenID] < self->boundsL) {
+    if (Zone->cameraBoundsL[self->screenID] < self->boundsL) {
         if (screen->position.x <= self->boundsL) {
             int32 off         = self->boundsL - self->boundsOffset.x;
             self->boundsL = off;
             if (self->velocity.x < 0) {
                 self->boundsL += (self->velocity.x >> 0x10);
-                if (self->boundsL < Zone->screenBoundsL1[self->screenID])
-                    self->boundsL = Zone->screenBoundsL1[self->screenID];
+                if (self->boundsL < Zone->cameraBoundsL[self->screenID])
+                    self->boundsL = Zone->cameraBoundsL[self->screenID];
             }
         }
         else {
-            self->boundsL = Zone->screenBoundsL1[self->screenID];
+            self->boundsL = Zone->cameraBoundsL[self->screenID];
         }
     }
 
-    if (Zone->screenBoundsR1[self->screenID] < self->boundsR) {
-        if (screen->width + screen->position.x < Zone->screenBoundsR1[self->screenID])
-            self->boundsR = Zone->screenBoundsR1[self->screenID];
+    if (Zone->cameraBoundsR[self->screenID] < self->boundsR) {
+        if (screen->width + screen->position.x < Zone->cameraBoundsR[self->screenID])
+            self->boundsR = Zone->cameraBoundsR[self->screenID];
         else
             self->boundsR = screen->width + screen->position.x;
     }
 
-    if (Zone->screenBoundsR1[self->screenID] > self->boundsR) {
+    if (Zone->cameraBoundsR[self->screenID] > self->boundsR) {
         if (screen->width + screen->position.x >= self->boundsR) {
             self->boundsR += self->boundsOffset.x;
             if (self->velocity.x > 0) {
                 self->boundsR = (self->velocity.x >> 0x10) + self->boundsR;
-                if (self->boundsR > Zone->screenBoundsR1[self->screenID])
-                    self->boundsR = Zone->screenBoundsR1[self->screenID];
+                if (self->boundsR > Zone->cameraBoundsR[self->screenID])
+                    self->boundsR = Zone->cameraBoundsR[self->screenID];
             }
         }
         else {
-            self->boundsR = Zone->screenBoundsR1[self->screenID];
+            self->boundsR = Zone->cameraBoundsR[self->screenID];
         }
     }
 
-    Zone->screenBoundsL2[self->screenID] = self->boundsL << 16;
-    Zone->screenBoundsR2[self->screenID] = self->boundsR << 16;
+    Zone->playerBoundsL[self->screenID] = self->boundsL << 16;
+    Zone->playerBoundsR[self->screenID] = self->boundsR << 16;
 }
 void Camera_HandleVBounds(void)
 {
     RSDK_THIS(Camera);
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
-    if (Zone->screenBoundsT1[self->screenID] > self->boundsT) {
+    if (Zone->cameraBoundsT[self->screenID] > self->boundsT) {
         if (screen->position.y <= self->boundsT)
             self->boundsT = screen->position.y + self->boundsOffset.y;
         else
             self->boundsT = screen->position.y;
     }
 
-    if (Zone->screenBoundsT1[self->screenID] < self->boundsT) {
+    if (Zone->cameraBoundsT[self->screenID] < self->boundsT) {
         if (screen->position.y <= self->boundsT) {
             int32 off         = self->boundsT - self->boundsOffset.y;
             self->boundsT = off;
             if (self->velocity.y < 0) {
                 self->boundsT = (self->velocity.y >> 0x10) + off;
-                if (self->boundsT < Zone->screenBoundsT1[self->screenID])
-                    self->boundsT = Zone->screenBoundsT1[self->screenID];
+                if (self->boundsT < Zone->cameraBoundsT[self->screenID])
+                    self->boundsT = Zone->cameraBoundsT[self->screenID];
             }
         }
         else {
-            self->boundsT = Zone->screenBoundsT1[self->screenID];
+            self->boundsT = Zone->cameraBoundsT[self->screenID];
         }
     }
 
-    if (Zone->screenBoundsB1[self->screenID] < self->boundsB) {
+    if (Zone->cameraBoundsB[self->screenID] < self->boundsB) {
         if (screen->height + screen->position.y >= self->boundsB)
             self->boundsB -= 2;
         else
             self->boundsB = screen->height + screen->position.y;
     }
 
-    if (Zone->screenBoundsB1[self->screenID] > self->boundsB) {
+    if (Zone->cameraBoundsB[self->screenID] > self->boundsB) {
         if (screen->height + screen->position.y >= self->boundsB) {
             self->boundsB += self->boundsOffset.y;
             if (self->velocity.y > 0) {
                 self->boundsB = (self->velocity.y >> 0x10) + self->boundsB;
-                if (self->boundsB > Zone->screenBoundsB1[self->screenID])
-                    self->boundsB = Zone->screenBoundsB1[self->screenID];
+                if (self->boundsB > Zone->cameraBoundsB[self->screenID])
+                    self->boundsB = Zone->cameraBoundsB[self->screenID];
             }
         }
         else {
-            self->boundsB = Zone->screenBoundsB1[self->screenID];
+            self->boundsB = Zone->cameraBoundsB[self->screenID];
         }
     }
 
-    Zone->screenBoundsT2[self->screenID] = self->boundsT << 16;
-    Zone->screenBoundsB2[self->screenID] = self->boundsB << 16;
+    Zone->playerBoundsT[self->screenID] = self->boundsT << 16;
+    Zone->playerBoundsB[self->screenID] = self->boundsB << 16;
 }
 
 void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed)
@@ -277,16 +277,16 @@ void Camera_State_Roam(void)
     RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
     if (self->position.x >= screen->centerX) {
-        if (self->position.x > Zone->screenBoundsR1[self->screenID] - screen->centerX)
-            self->position.x = Zone->screenBoundsR1[self->screenID] - screen->centerX;
+        if (self->position.x > Zone->cameraBoundsR[self->screenID] - screen->centerX)
+            self->position.x = Zone->cameraBoundsR[self->screenID] - screen->centerX;
     }
     else {
         self->position.x = screen->centerX;
     }
 
     if (self->position.y >= screen->centerY) {
-        if (self->position.y > Zone->screenBoundsB1[self->screenID] - screen->centerY)
-            self->position.y = Zone->screenBoundsB1[self->screenID] - screen->centerY;
+        if (self->position.y > Zone->cameraBoundsB[self->screenID] - screen->centerY)
+            self->position.y = Zone->cameraBoundsB[self->screenID] - screen->centerY;
         self->position.x <<= 0x10;
         self->position.y <<= 0x10;
     }
@@ -399,19 +399,19 @@ void Camera_State_HandleLerp(void)
     switch (self->lerpType) {
         default: break;
         case 0:
-            MathHelpers_Lerp1(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
+            MathHelpers_Lerp(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                  self->endLerpPos.y);
             break;
         case 1:
-            MathHelpers_Lerp2(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
+            MathHelpers_LerpSin1024(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                  self->endLerpPos.y);
             break;
         case 2:
-            MathHelpers_Lerp3(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
+            MathHelpers_Lerp2Sin1024(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                  self->endLerpPos.y);
             break;
         case 3:
-            MathHelpers_Lerp4(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
+            MathHelpers_LerpSin512(&self->position, self->lerpPercent, self->startLerpPos.x, self->startLerpPos.y, self->endLerpPos.x,
                                  self->endLerpPos.y);
             break;
     }

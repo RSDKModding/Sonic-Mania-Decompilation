@@ -70,6 +70,7 @@ void GameProgress_ShuffleBSSID(void)
 
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
 {
+    0xEDB5C;
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;

@@ -295,7 +295,7 @@ void ActClear_Create(void *data)
         self->active           = ACTIVE_NORMAL;
         self->visible          = true;
         self->drawOrder        = Zone->hudDrawOrder;
-        self->state            = ActClear_Unknown6;
+        self->state            = ActClear_State_EnterText;
         self->stageFinishTimer = 0;
         self->newRecordTimer          = 0;
         EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -404,11 +404,11 @@ void ActClear_Create(void *data)
 void ActClear_StageLoad(void)
 {
     ActClear->aniFrames     = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
-    ActClear->sfxScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
-    ActClear->sfxScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
+    ActClear->sfxScoreAdd   = RSDK.GetSfx("Global/ScoreAdd.wav");
+    ActClear->sfxScoreTotal = RSDK.GetSfx("Global/ScoreTotal.wav");
 #if RETRO_USE_PLUS
     ActClear->actClearActive = false;
-    ActClear->sfxEvent       = RSDK.GetSFX("Special/Event.wav");
+    ActClear->sfxEvent       = RSDK.GetSfx("Special/Event.wav");
     ActClear->forceNoSave    = false;
 #endif
 }
@@ -499,7 +499,7 @@ void ActClear_CheckPlayerVictory(void)
 void ActClear_SaveGameCallback(int32 success)
 {
     UIWaitSpinner_Wait2();
-    ActClear->finishedSavingGame = 0;
+    ActClear->finishedSavingGame = false;
 }
 
 void ActClear_Unknown5(void)
@@ -529,7 +529,7 @@ void ActClear_Unknown5(void)
     }
 }
 
-void ActClear_Unknown6(void)
+void ActClear_State_EnterText(void)
 {
     RSDK_THIS(ActClear);
 
@@ -543,12 +543,12 @@ void ActClear_Unknown6(void)
 
     if (++self->timer == 48) {
         self->timer = 0;
-        self->state = ActClear_Unknown7;
+        self->state = ActClear_State_AdjustText;
     }
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_Unknown7(void)
+void ActClear_State_AdjustText(void)
 {
     RSDK_THIS(ActClear);
 
@@ -556,12 +556,12 @@ void ActClear_Unknown7(void)
     self->gotThroughPos.y -= 0x8000;
     if (++self->timer == 48) {
         self->timer = 0;
-        self->state = ActClear_State_TAFinish;
+        self->state = ActClear_State_EnterBonuses;
     }
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_State_TAFinish(void)
+void ActClear_State_EnterBonuses(void)
 {
     RSDK_THIS(ActClear);
 
@@ -583,14 +583,14 @@ void ActClear_State_TAFinish(void)
             HUD->showTAPrompt        = true;
             ActClear->hasSavedReplay = false;
             self->newRecordTimer          = 240;
-            self->state            = ActClear_State_TAResults;
+            self->state            = ActClear_State_ShowResultsTA;
             RSDK.SetScene("Presentation", "Menu");
         }
         else {
-            self->state = ActClear_Unknown8;
+            self->state = ActClear_State_ScoreShownDelay;
         }
 #else
-        self->state = ActClear_Unknown8;
+        self->state = ActClear_State_ScoreShownDelay;
 #endif
     }
     else {
@@ -599,17 +599,17 @@ void ActClear_State_TAFinish(void)
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_Unknown8(void)
+void ActClear_State_ScoreShownDelay(void)
 {
     RSDK_THIS(ActClear);
     if (++self->timer == 120) {
         self->timer = 0;
-        self->state = ActClear_TallyScore;
+        self->state = ActClear_State_TallyScore;
     }
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_TallyScore(void)
+void ActClear_State_TallyScore(void)
 {
     RSDK_THIS(ActClear);
     EntityPlayer *player = (EntityPlayer *)self->playerPtr;
@@ -646,18 +646,18 @@ void ActClear_TallyScore(void)
 
     if (self->scoreBonus + self->ringBonus + self->coolBonus <= 0) {
         self->timer = 0;
-        self->state = ActClear_LoadNextScene;
-        RSDK.PlaySfx(ActClear->sfxScoreTotal, 0, 255);
+        self->state = ActClear_State_SaveGameProgress;
+        RSDK.PlaySfx(ActClear->sfxScoreTotal, false, 255);
     }
     else if (++self->timer == 2) {
         self->timer = 0;
-        RSDK.PlaySfx(ActClear->sfxScoreAdd, 0, 255);
+        RSDK.PlaySfx(ActClear->sfxScoreAdd, false, 255);
     }
     Music->nextTrack = -1;
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_LoadNextScene(void)
+void ActClear_State_SaveGameProgress(void)
 {
     RSDK_THIS(ActClear);
     if (++self->timer == 120) {
@@ -739,11 +739,11 @@ void ActClear_LoadNextScene(void)
             UIWaitSpinner_Wait();
 
         if (ActClear->finishedSavingGame) {
-            self->state = ActClear_Unknown10;
+            self->state = ActClear_State_StartExitSequence;
         }
         else {
             if (ActClear->actID > 0 || Zone->stageFinishCallback) {
-                self->state = ActClear_State_ActFinish;
+                self->state = ActClear_State_ExitActClear;
             }
             else {
                 self->state = StateMachine_None;
@@ -754,7 +754,7 @@ void ActClear_LoadNextScene(void)
 }
 
 #if RETRO_USE_PLUS
-void ActClear_State_TAResults(void)
+void ActClear_State_ShowResultsTA(void)
 {
     RSDK_THIS(ActClear);
 
@@ -828,7 +828,7 @@ void ActClear_State_TAResults(void)
 
             RSDK_THIS(ActClear);
             if (ActClear->actID > 0 || Zone->stageFinishCallback) {
-                self->state = ActClear_State_ActFinish;
+                self->state = ActClear_State_ExitActClear;
             }
             else {
                 self->state = StateMachine_None;
@@ -839,12 +839,12 @@ void ActClear_State_TAResults(void)
 }
 #endif
 
-void ActClear_Unknown10(void)
+void ActClear_State_StartExitSequence(void)
 {
     if (ActClear->finishedSavingGame) {
         RSDK_THIS(ActClear);
         if (ActClear->actID > 0 || Zone->stageFinishCallback) {
-            self->state = ActClear_State_ActFinish;
+            self->state = ActClear_State_ExitActClear;
         }
         else {
             self->state    = StateMachine_None;
@@ -854,14 +854,14 @@ void ActClear_Unknown10(void)
             zone->fadeSpeed  = 10;
             zone->fadeColour = 0;
             zone->state      = Zone_State_Fadeout;
-            zone->stateDraw  = Zone_StateDraw_Fadeout;
+            zone->stateDraw  = Zone_Draw_Fade;
             zone->visible    = true;
             zone->drawOrder  = 15;
         }
     }
 }
 
-void ActClear_State_ActFinish(void)
+void ActClear_State_ExitActClear(void)
 {
     RSDK_THIS(ActClear);
     self->playerNamePos.x += 0x200000;
@@ -880,13 +880,13 @@ void ActClear_State_ActFinish(void)
             if (Zone->stageFinishCallback) {
                 if (Zone->forcePlayerOnScreenFlag) {
                     self->timer = 0;
-                    self->state = ActClear_ForcePlayerOnScreen;
+                    self->state = ActClear_State_ForcePlayerOnScreen;
                 }
                 else {
                     foreach_active(Animals, animal)
                     {
-                        if (animal->behaviour == 1)
-                            animal->behaviour = 0;
+                        if (animal->behaviour == ANIMAL_BEHAVE_FOLLOW)
+                            animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
                     }
                     Zone->stageFinishCallback();
                     Zone->stageFinishCallback = NULL;
@@ -905,12 +905,12 @@ void ActClear_State_ActFinish(void)
                 player->rings         = 0;
             }
         }
-        if (self->state != ActClear_ForcePlayerOnScreen)
+        if (self->state != ActClear_State_ForcePlayerOnScreen)
             destroyEntity(self);
     }
 }
 
-void ActClear_ForcePlayerOnScreen(void)
+void ActClear_State_ForcePlayerOnScreen(void)
 {
     RSDK_THIS(ActClear);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);

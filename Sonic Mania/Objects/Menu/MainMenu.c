@@ -234,7 +234,7 @@ void MainMenu_ChangeMenu(void)
         case 6: API.ShowExtensionOverlay(0);
 #if RETRO_USE_EGS
             if (!API.CheckDLC(DLC_PLUS)) {
-                if (API.EGS_Checkout(0)) {
+                if (API.ShowCheckoutPage(0)) {
                     API.ShowEncorePage(0);
                 }
                 else {
@@ -258,7 +258,7 @@ void MainMenu_ChangeMenu(void)
 #if RETRO_USE_EGS
 int32 MainMenu_BuyPlusDialogCB(void)
 {
-    API.EGS_Unknown4(0);
+    API.CoreUnknown4(0);
     return 1;
 }
 #endif

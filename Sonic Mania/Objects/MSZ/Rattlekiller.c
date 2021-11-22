@@ -293,7 +293,7 @@ void Rattlekiller_StageLoad(void)
     Rattlekiller->hitbox.top    = -8;
     Rattlekiller->hitbox.right  = 8;
     Rattlekiller->hitbox.bottom = 8;
-    Rattlekiller->sfxRocketJet  = RSDK.GetSFX("Stage/RocketJet.wav");
+    Rattlekiller->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
     DEBUGMODE_ADD_OBJ(Rattlekiller);
 }
 

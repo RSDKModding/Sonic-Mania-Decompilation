@@ -52,7 +52,7 @@ void FBZ1Outro_StageLoad(void)
             FBZ1Outro->craneP2 = crane;
     }
 
-    FBZ1Outro->sfxDrop = RSDK.GetSFX("Stage/Drop.wav");
+    FBZ1Outro->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 }
 
 void FBZ1Outro_StartCutscene(void)
@@ -162,10 +162,10 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         boss2->timer2               = 0;
         boss2->state                = BigSqueeze_State3_Unknown1;
         boss3->state                = BigSqueeze_Unknown18;
-        Zone->screenBoundsB1[0] = 2660;
-        Zone->screenBoundsB1[1] = 2660;
-        Zone->screenBoundsR1[0] = 14080;
-        Zone->screenBoundsR1[1] = 14080;
+        Zone->cameraBoundsB[0] = 2660;
+        Zone->cameraBoundsB[1] = 2660;
+        Zone->cameraBoundsR[0] = 14080;
+        Zone->cameraBoundsR[1] = 14080;
         platform->playerPos.x   = 1;
         RSDK.PlaySfx(FBZ1Outro->sfxDrop, false, 255);
         return true;
@@ -228,18 +228,18 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
-        Zone->screenBoundsL1[0]     = 13568;
-        Zone->screenBoundsL1[1]     = 13568;
-        Zone->screenBoundsB1[0]     = 2660;
-        Zone->screenBoundsB1[0]     = 2660;
+        Zone->cameraBoundsL[0]     = 13568;
+        Zone->cameraBoundsL[1]     = 13568;
+        Zone->cameraBoundsB[0]     = 2660;
+        Zone->cameraBoundsB[0]     = 2660;
         Zone->playerBoundActiveL[0] = true;
     }
     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
     if (player2->objectID == Player->objectID)
         RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
 
-    if (camera->offset.x || ScreenInfo->position.x < Zone->screenBoundsL1[0] || host->timer < 30) {
-        if (ScreenInfo->position.x < Zone->screenBoundsL1[0])
+    if (camera->offset.x || ScreenInfo->position.x < Zone->cameraBoundsL[0] || host->timer < 30) {
+        if (ScreenInfo->position.x < Zone->cameraBoundsL[0])
             ScreenInfo->position.x++;
         if (camera->offset.x > 0)
             camera->offset.x -= 0x10000;

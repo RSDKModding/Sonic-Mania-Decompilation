@@ -54,7 +54,7 @@ void Blastoid_StageLoad(void)
     Blastoid->hitboxProjectile.top    = -3;
     Blastoid->hitboxProjectile.right  = 3;
     Blastoid->hitboxProjectile.bottom = 3;
-    Blastoid->sfxShot                 = RSDK.GetSFX("Stage/Shot.wav");
+    Blastoid->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
     DEBUGMODE_ADD_OBJ(Blastoid);
 }
 

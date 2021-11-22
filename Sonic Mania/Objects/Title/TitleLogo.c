@@ -131,7 +131,7 @@ void TitleLogo_StageLoad(void)
 #if RETRO_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
         TitleLogo->plusFrames = RSDK.LoadSpriteAnimation("Title/PlusLogo.bin", SCOPE_STAGE);
-    TitleLogo->sfxPlus = RSDK.GetSFX("Stage/Plus.wav");
+    TitleLogo->sfxPlus = RSDK.GetSfx("Stage/Plus.wav");
 #endif
 }
 

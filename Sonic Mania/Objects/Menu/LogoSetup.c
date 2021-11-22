@@ -6,7 +6,7 @@ void LogoSetup_Update(void)
 {
     RSDK_THIS(LogoSetup);
     StateMachine_Run(self->state);
-    ScreenInfo->position.x = 256 - ScreenInfo->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
 void LogoSetup_LateUpdate(void) {}
@@ -26,22 +26,22 @@ void LogoSetup_Create(void *data)
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
         self->drawOrder = 12;
-        self->stateDraw = LogoSetup_Unknown4;
+        self->stateDraw = LogoSetup_Draw_Fade;
         if (sku_region == REGION_JP)
-            self->state = LogoSetup_CESAScreen;
+            self->state = LogoSetup_State_CESAScreen;
         else
-            self->state = LogoSetup_SegaScreen;
+            self->state = LogoSetup_State_ShowLogos;
         self->timer = 1024;
     }
 }
 
 void LogoSetup_StageLoad(void)
 {
-    LogoSetup->sfxSega = RSDK.GetSFX("Stage/Sega.wav");
+    LogoSetup->sfxSega = RSDK.GetSfx("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, LogoSetup->objectID, NULL);
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 
-    if (SceneInfo->listPos > 2) {
+    if (SceneInfo->listPos >= 3) {
         switch (SceneInfo->listPos) {
             case 3: globals->playerID = ID_SONIC; break;
             case 4: globals->playerID = ID_TAILS; break;
@@ -64,7 +64,8 @@ bool32 LogoSetup_ImageCallback(void)
     LogoSetup->timer++;
     return false;
 }
-void LogoSetup_CESAScreen(void)
+
+void LogoSetup_State_CESAScreen(void)
 {
     RSDK_THIS(LogoSetup);
     LogoSetup->timer = 0;
@@ -74,33 +75,35 @@ void LogoSetup_CESAScreen(void)
     RSDK.LoadImage("CESA.tga", 60.0, 2.0, LogoSetup_ImageCallback);
 #endif
     self->timer = 1024;
-    self->state = LogoSetup_SegaScreen;
+    self->state = LogoSetup_State_ShowLogos;
 }
-void LogoSetup_SegaScreen(void)
+
+void LogoSetup_State_ShowLogos(void)
 {
     RSDK_THIS(LogoSetup);
     if (self->timer <= 0) {
         if (!ScreenInfo->position.y)
-            RSDK.PlaySfx(LogoSetup->sfxSega, 0, 0xFF);
+            RSDK.PlaySfx(LogoSetup->sfxSega, false, 0xFF);
         self->timer     = 0;
-        self->state     = LogoSetup_Unknown2;
-        self->stateDraw = 0;
+        self->state     = LogoSetup_State_FadeToNextLogos;
+        self->stateDraw = StateMachine_None;
     }
     else {
         self->timer -= 16;
     }
 }
-void LogoSetup_Unknown2(void)
+
+void LogoSetup_State_FadeToNextLogos(void)
 {
     RSDK_THIS(LogoSetup);
-    ++self->timer;
-    if (+self->timer > 120 || (self->timer > 30 && ControllerInfo->keyStart.press)) {
+    if (++self->timer > 120 || (self->timer > 30 && ControllerInfo->keyStart.press)) {
         self->timer     = 0;
-        self->state     = LogoSetup_Unknown3;
-        self->stateDraw = LogoSetup_Unknown4;
+        self->state     = LogoSetup_State_NextLogos;
+        self->stateDraw = LogoSetup_Draw_Fade;
     }
 }
-void LogoSetup_Unknown3(void)
+
+void LogoSetup_State_NextLogos(void)
 {
     RSDK_THIS(LogoSetup);
     if (self->timer >= 1024) {
@@ -110,16 +113,17 @@ void LogoSetup_Unknown3(void)
         }
         else {
             ScreenInfo->position.y += SCREEN_YSIZE;
-            self->state     = LogoSetup_SegaScreen;
-            self->stateDraw = LogoSetup_Unknown4;
-            self->timer     = 1024;
+            self->state     = LogoSetup_State_ShowLogos;
+            self->stateDraw = LogoSetup_Draw_Fade;
+            self->timer     = 0x400;
         }
     }
     else {
         self->timer += 16;
     }
 }
-void LogoSetup_Unknown4(void)
+
+void LogoSetup_Draw_Fade(void)
 {
     RSDK_THIS(LogoSetup);
     RSDK.FillScreen(0, self->timer, self->timer - 0x80, self->timer - 0x100);

@@ -93,7 +93,7 @@ void Mine_StageLoad(void)
     Mine->hitbox.left   = -12;
     Mine->hitbox.right  = 12;
     Mine->hitbox.bottom = 0;
-    Mine->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
+    Mine->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 #if RETRO_USE_PLUS

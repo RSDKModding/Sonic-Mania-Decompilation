@@ -93,7 +93,7 @@ void ContinueSetup_StageLoad(void)
     RSDK.SetDiffuseColour(ContinueSetup->sceneIndex, 160, 160, 160);
     RSDK.SetDiffuseIntensity(ContinueSetup->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(ContinueSetup->sceneIndex, 15, 15, 15);
-    ContinueSetup->sfxAccept = RSDK.GetSFX("Global/MenuAccept.wav");
+    ContinueSetup->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
 }
 
 void ContinueSetup_State_FadeIn(void)

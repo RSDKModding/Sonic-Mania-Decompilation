@@ -23,26 +23,26 @@ void ThanksSetup_Create(void *data)
 {
     RSDK_THIS(ThanksSetup);
     if (!SceneInfo->inEditor) {
-        self->active           = ACTIVE_ALWAYS;
-        self->visible          = true;
-        self->drawOrder        = 12;
-        self->drawFX           = FX_FLIP;
-        self->state            = ThanksSetup_Unknown2;
-        self->stateDraw        = ThanksSetup_Unknown6;
-        self->timer            = 768;
-        self->offset           = 0x10000;
-        self->scale.x          = 0x200;
-        self->scale.y          = 0x200;
+        self->active             = ACTIVE_ALWAYS;
+        self->visible            = true;
+        self->drawOrder          = 12;
+        self->drawFX             = FX_FLIP;
+        self->state              = ThanksSetup_State_ThanksForPlaying;
+        self->stateDraw          = ThanksSetup_Draw_Fade;
+        self->timer              = 0x300;
+        self->offset             = 0x10000;
+        self->scale.x            = 0x200;
+        self->scale.y            = 0x200;
         EntityUIPicture *picture = RSDK_GET_ENTITY(80, UIPicture);
         picture->scale.x         = 0x200;
         picture->scale.y         = 0x200;
-        self->picture          = (Entity*)picture;
+        self->picture            = (Entity *)picture;
     }
 }
 
 void ThanksSetup_StageLoad(void)
 {
-    ThanksSetup->sfxSega = RSDK.GetSFX("Stage/Sega.wav");
+    ThanksSetup->sfxSega = RSDK.GetSfx("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, ThanksSetup->objectID, 0);
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Thanks/Decorations.bin", SCOPE_STAGE);
     for (int32 i = 0; i < 16; ++i) {
@@ -50,7 +50,7 @@ void ThanksSetup_StageLoad(void)
     }
 }
 
-void ThanksSetup_Unknown1(void)
+void ThanksSetup_HandleIconsPos(void)
 {
     RSDK_THIS(ThanksSetup);
     self->angle = (self->angle - 3) & 0x1FF;
@@ -66,24 +66,24 @@ void ThanksSetup_Unknown1(void)
     }
 }
 
-void ThanksSetup_Unknown2(void)
+void ThanksSetup_State_ThanksForPlaying(void)
 {
     RSDK_THIS(ThanksSetup);
 
     if (self->timer <= 0) {
         self->timer = 0;
         self->offset += (0x3000 - self->offset) >> 4;
-        self->state     = ThanksSetup_Unknown3;
+        self->state     = ThanksSetup_State_FlipOverIcon;
         self->stateDraw = 0;
     }
     else {
         self->offset += (0x3000 - self->offset) >> 4;
         self->timer -= 16;
     }
-    ThanksSetup_Unknown1();
+    ThanksSetup_HandleIconsPos();
 }
 
-void ThanksSetup_Unknown3(void)
+void ThanksSetup_State_FlipOverIcon(void)
 {
     RSDK_THIS(ThanksSetup);
     if (++self->timer > 120) {
@@ -94,36 +94,35 @@ void ThanksSetup_Unknown3(void)
         if (self->rotation == 128) {
             RSDK.SetSpriteAnimation(UIPicture->aniFrames, 2, &picture->animator, true, 0);
             self->timer = 0;
-            self->state = ThanksSetup_Unknown4;
+            self->state = ThanksSetup_State_Mania2017;
         }
     }
     self->offset += (0x3000 - self->offset) >> 4;
-    ThanksSetup_Unknown1();
+    ThanksSetup_HandleIconsPos();
 }
 
-void ThanksSetup_Unknown4(void)
+void ThanksSetup_State_Mania2017(void)
 {
     RSDK_THIS(ThanksSetup);
 
     if (self->rotation <= 0) {
         if (++self->timer > 120) {
             self->timer     = 0;
-            self->state     = ThanksSetup_Unknown5;
-            self->stateDraw = ThanksSetup_Unknown6;
+            self->state     = ThanksSetup_State_FadeOut;
+            self->stateDraw = ThanksSetup_Draw_Fade;
         }
     }
     else {
         EntityUIPicture *picture = (EntityUIPicture *)self->picture;
         self->rotation -= 4;
         picture->scale.x = RSDK.Cos512(self->rotation);
-        if (!self->rotation) {
+        if (!self->rotation)
             picture->drawFX = FX_NONE;
-        }
     }
-    ThanksSetup_Unknown1();
+    ThanksSetup_HandleIconsPos();
 }
 
-void ThanksSetup_Unknown5(void)
+void ThanksSetup_State_FadeOut(void)
 {
     RSDK_THIS(ThanksSetup);
 
@@ -135,10 +134,10 @@ void ThanksSetup_Unknown5(void)
         self->timer += 16;
     }
     self->offset += (self->offset - 0x2000) >> 4;
-    ThanksSetup_Unknown1();
+    ThanksSetup_HandleIconsPos();
 }
 
-void ThanksSetup_Unknown6(void)
+void ThanksSetup_Draw_Fade(void)
 {
     RSDK_THIS(ThanksSetup);
     RSDK.FillScreen(0, self->timer, self->timer - 128, self->timer - 256);

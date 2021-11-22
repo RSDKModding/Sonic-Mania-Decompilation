@@ -46,7 +46,7 @@ void LRZ3OutroK_StageLoad(void)
         foreach_break;
     }
 
-    LRZ3OutroK->sfxWarp = RSDK.GetSFX("LRZ/Warp.wav");
+    LRZ3OutroK->sfxWarp = RSDK.GetSfx("LRZ/Warp.wav");
 }
 
 void LRZ3OutroK_StartCutscene(void)
@@ -77,10 +77,10 @@ bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     if (!host->timer) {
         LRZ3OutroK->prison->notSolid = true;
-        Zone->screenBoundsT1[0]       = 0;
-        Zone->screenBoundsT1[1]       = 0;
-        Zone->screenBoundsR1[0]       = (self->position.x + self->size.x) >> 16;
-        Zone->screenBoundsR1[1]       = (self->position.x + self->size.x) >> 16;
+        Zone->cameraBoundsT[0]       = 0;
+        Zone->cameraBoundsT[1]       = 0;
+        Zone->cameraBoundsR[0]       = (self->position.x + self->size.x) >> 16;
+        Zone->cameraBoundsR[1]       = (self->position.x + self->size.x) >> 16;
         Zone->playerBoundActiveR[0]   = false;
         Zone->playerBoundActiveR[1]   = false;
         CutsceneSeq_LockAllPlayerControl();

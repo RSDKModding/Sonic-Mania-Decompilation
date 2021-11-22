@@ -145,7 +145,7 @@ void SpeedGate_Create(void *data)
 void SpeedGate_StageLoad(void)
 {
     SpeedGate->aniFrames     = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
-    SpeedGate->sfxStarPost   = RSDK.GetSFX("Global/StarPost.wav");
+    SpeedGate->sfxStarPost   = RSDK.GetSfx("Global/StarPost.wav");
     SpeedGate->hitbox.left   = -8;
     SpeedGate->hitbox.top    = -44;
     SpeedGate->hitbox.right  = 8;

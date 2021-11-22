@@ -63,7 +63,7 @@ void UIUsernamePopup_DrawSprites(void)
     drawPos.x = self->posUnknown.x + self->dword6C + (ScreenInfo->position.x << 16) + (self->field_68 >> 1);
     drawPos.y =
         self->posUnknown.y + (ScreenInfo->centerY << 16) - (self->dword6C >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
-    UIWidgets_DrawRhombus(self->dword6C >> 16, self->field_68 >> 16, self->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->dword6C >> 16, self->field_68 >> 16, self->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
 
     int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->username, 0, self->username.textLength, 0);
     drawPos.y -= 0x10000;
@@ -91,7 +91,7 @@ void UIUsernamePopup_Unknown4(void)
         }
         else {
             self->drawFlag = true;
-            MathHelpers_Lerp1(&self->posUnknown, 32 * clampVal(self->timer - self->timeOut, 0, 8), -self->dword6C, self->dword6C, 0, 0);
+            MathHelpers_Lerp(&self->posUnknown, 32 * clampVal(self->timer - self->timeOut, 0, 8), -self->dword6C, self->dword6C, 0, 0);
             ++self->timer;
         }
     }

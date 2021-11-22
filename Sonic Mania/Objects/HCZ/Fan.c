@@ -146,7 +146,7 @@ void Fan_StaticUpdate(void)
             }
         }
         if (Fan->playingFanSFX) {
-            RSDK.StopSFX(Fan->sfxFan);
+            RSDK.StopSfx(Fan->sfxFan);
             Fan->playingFanSFX = false;
         }
     }
@@ -228,7 +228,7 @@ void Fan_StageLoad(void)
         Fan->hitbox3.bottom = 24;
         Fan->hitbox3.left   = -112;
         Fan->hitbox3.right  = 32;
-        Fan->sfxFan         = RSDK.GetSFX("HCZ/SmallFan.wav");
+        Fan->sfxFan         = RSDK.GetSfx("HCZ/SmallFan.wav");
         Fan->active         = ACTIVE_ALWAYS;
     }
     Fan->playerHitbox.left   = -1;

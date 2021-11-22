@@ -88,7 +88,7 @@ void PaperRoller_StageLoad(void)
     uint32 colours[]         = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
     PaperRoller->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PaperRoller.bin", SCOPE_STAGE);
     for (int32 i = 0; i < 0x40; ++i) PaperRoller->colours[i] = colours[i & 3];
-    PaperRoller->sfxPaper = RSDK.GetSFX("PSZ/Paper.wav");
+    PaperRoller->sfxPaper = RSDK.GetSfx("PSZ/Paper.wav");
 }
 
 void PaperRoller_DrawLineDeform(uint32 colour, int32 len, int32 posX1, int32 posY1, int32 posX2, int32 posY2, int32 posX3, int32 posY3, int32 posX4, int32 posY4)

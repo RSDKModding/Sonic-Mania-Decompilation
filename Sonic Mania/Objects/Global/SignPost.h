@@ -34,27 +34,25 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    uint16 field_5D;
-    char field_5F;
     Vector2 vsBoundsSize;
     Vector2 vsBoundsOffset;
     int32 vsExtendTop;
     int32 vsExtendBottom;
-    int32 field_78;
+    int32 unused1;
     int32 gravityStrength;
     int32 spinCount;
     int32 spinSpeed;
     int32 maxAngle;
     int32 sparkleType;
     int32 itemBounceCount;
-    Vector2 playerPosStore[4];
-    Animator eggPlateAnim;
-    Animator facePlateAnim;
-    Animator sidebarData;
-    Animator postTopData;
-    Animator standData;
+    Vector2 playerPosStore[PLAYER_MAX];
+    Animator eggPlateAnimator;
+    Animator facePlateAnimator;
+    Animator sidebarAnimator;
+    Animator postTopAnimator;
+    Animator standAnimator;
     uint8 activePlayers;
-    bool32 debugObj;
+    bool32 spawnedByDebugMode;
 } EntitySignPost;
 
 // Object Struct

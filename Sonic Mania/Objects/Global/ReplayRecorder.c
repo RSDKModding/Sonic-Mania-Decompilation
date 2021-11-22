@@ -72,8 +72,8 @@ void ReplayRecorder_StaticUpdate(void)
                     player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     API.SetAchievementStatus(false);
                     API.SetStatsStatus(false);
-                    TimeAttackGate->debugEnabled = true;
-                    TimeAttackData->dbRank       = param->replayRank;
+                    TimeAttackGate->disableRecords = true;
+                    TimeAttackData->dbRank         = param->replayRankID;
                 }
                 else {
                     player = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -644,7 +644,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
             Vector2 screenPos;
             screenPos.x = screenX;
             screenPos.y = screenY;
-            if (MathHelpers_Unknown14(&drawPos, player->position.x, player->position.y, screenPos, hitbox)) {
+            if (MathHelpers_ConstrainToBox(&drawPos, player->position.x, player->position.y, screenPos, hitbox)) {
                 int32 angle = RSDK.ATan2(player->position.x - drawPos.x, player->position.y - drawPos.y);
                 int32 x     = ((val + 18) * RSDK.Cos256(angle) << 8) + drawPos.x;
                 int32 y     = ((val + 18) * RSDK.Sin256(angle) << 8) + drawPos.y;

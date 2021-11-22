@@ -75,13 +75,13 @@ void PBL_Crane_Create(void *data)
 void PBL_Crane_StageLoad(void)
 {
     PBL_Crane->aniFrames    = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE);
-    PBL_Crane->sfxBackGlass = RSDK.GetSFX("Pinball/Backglass.wav");
-    PBL_Crane->sfxCraneMove = RSDK.GetSFX("Pinball/CraneMove.wav");
-    PBL_Crane->sfxCraneDrop = RSDK.GetSFX("Pinball/CraneDrop.wav");
-    PBL_Crane->sfxCraneGrab = RSDK.GetSFX("Pinball/CraneGrab.wav");
-    PBL_Crane->sfxCraneRise = RSDK.GetSFX("Pinball/CraneRise.wav");
-    PBL_Crane->sfxPrizeGood = RSDK.GetSFX("Pinball/PrizeGood.wav");
-    PBL_Crane->sfxPrizeBad  = RSDK.GetSFX("Pinball/PrizeBad.wav");
+    PBL_Crane->sfxBackGlass = RSDK.GetSfx("Pinball/Backglass.wav");
+    PBL_Crane->sfxCraneMove = RSDK.GetSfx("Pinball/CraneMove.wav");
+    PBL_Crane->sfxCraneDrop = RSDK.GetSfx("Pinball/CraneDrop.wav");
+    PBL_Crane->sfxCraneGrab = RSDK.GetSfx("Pinball/CraneGrab.wav");
+    PBL_Crane->sfxCraneRise = RSDK.GetSfx("Pinball/CraneRise.wav");
+    PBL_Crane->sfxPrizeGood = RSDK.GetSfx("Pinball/PrizeGood.wav");
+    PBL_Crane->sfxPrizeBad  = RSDK.GetSfx("Pinball/PrizeBad.wav");
 }
 
 void PBL_Crane_HandlePrizes(void)
@@ -144,7 +144,7 @@ void PBL_Crane_HandlePrizes(void)
             {
                 if (!bumper->state) {
                     bumper->velocity.y = 32;
-                    bumper->state      = PBL_TargetBumper_Unknown4;
+                    bumper->state      = PBL_TargetBumper_State_Rise;
                     bumper->active     = ACTIVE_NORMAL;
                 }
             }
@@ -231,7 +231,7 @@ void PBL_Crane_State_CreatePrizes(void)
     self->position.y       = 0;
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     camera->worldY           = 0x1000000;
-    self->field_78         = camera->targetPtr;
+    self->cameraTarget         = camera->targetPtr;
     camera->targetPtr        = NULL;
     self->visible          = true;
     int32 spawnX               = self->position.x - 0x6C0000;
@@ -485,7 +485,7 @@ void PBL_Crane_State2_Unknown3(void)
     if (++self->timer == 24) {
         foreach_active(PBL_HUD, hud)
         {
-            hud->state   = PBL_HUD_Unknown13;
+            hud->state   = PBL_HUD_State_HideCrane;
             hud->visible = true;
         }
     }
@@ -506,18 +506,18 @@ void PBL_Crane_State2_Unknown3(void)
                 sector->active = ACTIVE_NORMAL;
         }
         RSDK.PrintInteger(PRINT_NORMAL, "Sector", PBL_Setup->sectorID);
-        camera->targetPtr = self->field_78;
+        camera->targetPtr = self->cameraTarget;
         camera->rotationY = -96;
         foreach_active(PBL_HUD, hud)
         {
             switch (PBL_Crane->prizeID) {
-                case 1: PBL_HUD_DisplayMessage(hud, "TOO BAD!", 6); continue;
-                case 2: PBL_HUD_DisplayMessage(hud, "OH NO!", 6); continue;
-                case 3: PBL_HUD_DisplayMessage(hud, "NICE SAVE!", 3); continue;
-                case 4: PBL_HUD_DisplayMessage(hud, "!RINGS DEPOSITED!", 1); break;
-                case 5: PBL_HUD_DisplayMessage(hud, "!ITEM COLLECTED!", 1); break;
-                case 6: PBL_HUD_DisplayMessage(hud, "!TABLE RESTORED!", 1); break;
-                case 7: PBL_HUD_DisplayMessage(hud, "!EXTRA LIFE!", 1); break;
+                case 1: PBL_HUD_DisplayMessage(hud, "TOO BAD!", PBL_HUD_MSG_FLASH); continue;
+                case 2: PBL_HUD_DisplayMessage(hud, "OH NO!", PBL_HUD_MSG_FLASH); continue;
+                case 3: PBL_HUD_DisplayMessage(hud, "NICE SAVE!", PBL_HUD_MSG_SCROLL_RIGHT); continue;
+                case 4: PBL_HUD_DisplayMessage(hud, "!RINGS DEPOSITED!", PBL_HUD_MSG_SCROLL_LEFT); break;
+                case 5: PBL_HUD_DisplayMessage(hud, "!ITEM COLLECTED!", PBL_HUD_MSG_SCROLL_LEFT); break;
+                case 6: PBL_HUD_DisplayMessage(hud, "!TABLE RESTORED!", PBL_HUD_MSG_SCROLL_LEFT); break;
+                case 7: PBL_HUD_DisplayMessage(hud, "!EXTRA LIFE!", PBL_HUD_MSG_SCROLL_LEFT); break;
                 default: break;
             }
         }

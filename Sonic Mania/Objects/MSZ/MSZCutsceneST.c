@@ -20,7 +20,7 @@ void MSZCutsceneST_StaticUpdate(void)
 {
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID || !MSZCutsceneST->isMayday) {
         if (MSZCutsceneST->playingMaydaySfx) {
-            RSDK.StopSFX(MSZCutsceneST->sfxMayday);
+            RSDK.StopSfx(MSZCutsceneST->sfxMayday);
             MSZCutsceneST->playingMaydaySfx = false;
         }
     }
@@ -75,9 +75,9 @@ void MSZCutsceneST_StageLoad(void)
         foreach_break;
     }
 
-    MSZCutsceneST->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
-    MSZCutsceneST->sfxMayday     = RSDK.GetSFX("MSZ/Mayday.wav");
-    MSZCutsceneST->sfxLedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    MSZCutsceneST->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
+    MSZCutsceneST->sfxMayday     = RSDK.GetSfx("MSZ/Mayday.wav");
+    MSZCutsceneST->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
     MSZCutsceneST->active        = ACTIVE_ALWAYS;
 }
 
@@ -213,7 +213,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         return true;
     }
     else {
-        MathHelpers_Lerp4(&tornado->position, 255 * (host->timer - host->storedValue2) / 120, MSZCutsceneST->value4.x, MSZCutsceneST->value4.y, x, y);
+        MathHelpers_LerpSin512(&tornado->position, 255 * (host->timer - host->storedValue2) / 120, MSZCutsceneST->value4.x, MSZCutsceneST->value4.y, x, y);
         tornado->position.x &= 0xFFFF0000;
         tornado->position.y &= 0xFFFF0000;
 
@@ -264,7 +264,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
     int y = armadiloid->startPos.y;
 
     if (armadiloid->position.x > x) {
-        MathHelpers_Lerp3(&armadiloid->position, 255 * host->timer / 180, armadiloid->startPos.x, armadiloid->startPos.y, x, y);
+        MathHelpers_Lerp2Sin1024(&armadiloid->position, 255 * host->timer / 180, armadiloid->startPos.x, armadiloid->startPos.y, x, y);
         armadiloid->position.x &= 0xFFFF0000;
         armadiloid->position.y &= 0xFFFF0000;
     }
@@ -330,7 +330,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
         armadiloid->state = Armadiloid_State_PlatformFlying;
 
     if (armadiloid->position.x > x) {
-        MathHelpers_Lerp3(&armadiloid->position, 255 * host->timer / 180, armadiloid->startPos.x, armadiloid->startPos.y, x, y);
+        MathHelpers_Lerp2Sin1024(&armadiloid->position, 255 * host->timer / 180, armadiloid->startPos.x, armadiloid->startPos.y, x, y);
         armadiloid->position.x &= 0xFFFF0000;
         armadiloid->position.y &= 0xFFFF0000;
     }
@@ -389,7 +389,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host)
         armadiloid->state = Armadiloid_State_PlatformFlying;
 
     if (armadiloid->position.x > x) {
-        MathHelpers_Lerp3(&armadiloid->position, 255 * host->timer / 180, armadiloid->startPos.x, armadiloid->startPos.y, x, y);
+        MathHelpers_Lerp2Sin1024(&armadiloid->position, 255 * host->timer / 180, armadiloid->startPos.x, armadiloid->startPos.y, x, y);
         armadiloid->position.x &= 0xFFFF0000;
         armadiloid->position.y &= 0xFFFF0000;
     }
@@ -574,8 +574,8 @@ bool32 MSZCutsceneST_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 
         foreach_active(ParallaxSprite, sprite) { sprite->scrollPos.x &= 0xFFFF0000; }
 
-        Zone->screenBoundsL1[0] = (player1->position.x >> 16) - 160;
-        Zone->screenBoundsB1[0] = (player1->position.y >> 16) - 112;
+        Zone->cameraBoundsL[0] = (player1->position.x >> 16) - 160;
+        Zone->cameraBoundsB[0] = (player1->position.y >> 16) - 112;
         if (player2->objectID != Player->objectID || player2->onGround)
             return true;
     }

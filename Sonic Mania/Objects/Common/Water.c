@@ -66,8 +66,8 @@ void Water_StaticUpdate(void)
         }
     }
     else if (!Water->waterLevelVolume && Water->playingWaterLevelSFX) {
-        RSDK.StopSFX(Water->sfxWaterLevelL);
-        RSDK.StopSFX(Water->sfxWaterLevelR);
+        RSDK.StopSfx(Water->sfxWaterLevelL);
+        RSDK.StopSfx(Water->sfxWaterLevelR);
         Water->playingWaterLevelSFX = false;
     }
 
@@ -86,7 +86,7 @@ void Water_StaticUpdate(void)
         }
     }
     else if (Water->playingSkimSFX) {
-        RSDK.StopSFX(Water->sfxSkim);
+        RSDK.StopSfx(Water->sfxSkim);
         Water->playingSkimSFX = 0;
     }
 }
@@ -232,19 +232,19 @@ void Water_StageLoad(void)
     Water->hitbox.top       = -1;
     Water->hitbox.right     = 1;
     Water->hitbox.bottom    = 1;
-    Water->sfxSplash        = RSDK.GetSFX("Stage/Splash.wav");
-    Water->sfxBreathe       = RSDK.GetSFX("Stage/Breathe.wav");
-    Water->sfxWarning       = RSDK.GetSFX("Stage/Warning.wav");
-    Water->sfxDrown         = RSDK.GetSFX("Stage/Drown.wav");
-    Water->sfxDrownAlert    = RSDK.GetSFX("Stage/DrownAlert.wav");
-    Water->sfxSkim          = RSDK.GetSFX("HCZ/Skim.wav");
+    Water->sfxSplash        = RSDK.GetSfx("Stage/Splash.wav");
+    Water->sfxBreathe       = RSDK.GetSfx("Stage/Breathe.wav");
+    Water->sfxWarning       = RSDK.GetSfx("Stage/Warning.wav");
+    Water->sfxDrown         = RSDK.GetSfx("Stage/Drown.wav");
+    Water->sfxDrownAlert    = RSDK.GetSfx("Stage/DrownAlert.wav");
+    Water->sfxSkim          = RSDK.GetSfx("HCZ/Skim.wav");
     if (RSDK.CheckStageFolder("HCZ")) {
         Water->wakeSprite      = RSDK.LoadSpriteAnimation("HCZ/Wake.bin", SCOPE_STAGE);
         Water->bigBubbleSprite = RSDK.LoadSpriteAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
-        Water->sfxWaterLevelL  = RSDK.GetSFX("HCZ/WaterLevel_L.wav");
-        Water->sfxWaterLevelR  = RSDK.GetSFX("HCZ/WaterLevel_R.wav");
-        Water->sfxDNAGrab      = RSDK.GetSFX("CPZ/DNAGrab.wav");
-        Water->sfxDNABurst     = RSDK.GetSFX("CPZ/DNABurst.wav");
+        Water->sfxWaterLevelL  = RSDK.GetSfx("HCZ/WaterLevel_L.wav");
+        Water->sfxWaterLevelR  = RSDK.GetSfx("HCZ/WaterLevel_R.wav");
+        Water->sfxDNAGrab      = RSDK.GetSfx("CPZ/DNAGrab.wav");
+        Water->sfxDNABurst     = RSDK.GetSfx("CPZ/DNABurst.wav");
         RSDK.SetSpriteAnimation(Water->wakeSprite, 0, &Water->wakeData, true, 0);
     }
 }
@@ -473,7 +473,7 @@ void Water_State_Palette(void)
                             else {
                                 CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
                             }
-                            RSDK.PlaySfx(Water->sfxSplash, 0, 255);
+                            RSDK.PlaySfx(Water->sfxSplash, false, 255);
                         }
                         player->velocity.y >>= 2;
                     }
@@ -1268,66 +1268,59 @@ void Water_EditorDraw(void)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
+    self->inkEffect = INK_NONE;
     switch (self->type) {
         case WATER_PALETTE:
             self->inkEffect = INK_ADD;
             self->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
-            self->stateDraw   = Water_Draw_Palette;
-            Water->waterLevel = self->position.y;
+
+            Water_Draw_Palette();
             break;
         case WATER_RECT:
             self->drawFX        = FX_FLIP;
-            self->stateDraw     = Water_Draw_Tint;
             self->updateRange.x = self->size.x >> 1;
             self->updateRange.y = self->size.y >> 1;
+
+            self->inkEffect = INK_BLEND;
+            RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y,
+                          self->b + ((self->g + (self->r << 8)) << 8), 0x100, INK_SUB, false);
+            if (showGizmos()) {
+                self->inkEffect = INK_NONE;
+                DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+            }
             break;
         case WATER_BUBBLER:
         case WATER_BUBBLER_2:
             self->inkEffect = INK_ADD;
             self->alpha     = 0x100;
             RSDK.SetSpriteAnimation(Water->aniFrames, 2, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_Bubbler;
+
+            Water_Draw_Bubbler();
             break;
         case WATER_ADJUST:
             self->active  = ACTIVE_BOUNDS;
             self->visible = false;
+
+            //TODO: actual sprite???/ lollll
+
+            if (showGizmos()) {
+                RSDK.DrawLine(self->position.x - 0x100000, self->position.y - 0x100000, self->position.x + 0x100000, self->position.x + 0x100000,
+                              0xFFFF00, 0xFF, INK_NONE, false);
+            }
             break;
         case WATER_BUBBLE_SPAWNER:
-            self->stateDraw = Water_Draw_Bubble;
             self->drawFX    = FX_SCALE;
             self->inkEffect = INK_ADD;
             self->alpha     = 0x100;
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;
             RSDK.SetSpriteAnimation(Water->bigBubbleSprite, 7, &self->animator, true, 0);
-            break;
-        case WATER_SPLASH:
-            RSDK.SetSpriteAnimation(Water->aniFrames, 1, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_Splash;
-            break;
-        case WATER_BUBBLE:
-            self->drawFX    = FX_SCALE;
-            self->inkEffect = INK_ADD;
-            self->alpha     = 0x100;
-            self->scale.x   = 0x200;
-            self->scale.y   = 0x200;
-            RSDK.SetSpriteAnimation(Water->aniFrames, 5, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_Bubble;
-            break;
-        case WATER_COUNTDOWNBUBBLE:
-            self->drawFX    = FX_SCALE;
-            self->inkEffect = INK_ADD;
-            self->alpha     = 0x100;
-            self->scale.x   = 0x200;
-            self->scale.y   = 0x200;
-            RSDK.SetSpriteAnimation(Water->aniFrames, 7, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_CountDownBubble;
+
+            Water_Draw_Bubble();
             break;
         default: break;
     }
-
-    StateMachine_Run(self->stateDraw);
 }
 
 void Water_EditorLoad(void)

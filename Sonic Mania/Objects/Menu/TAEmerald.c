@@ -31,7 +31,7 @@ void TAEmerald_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = TAEmerald_Unknown1;
+        self->state         = TAEmerald_State_Oscillate;
         RSDK.SetSpriteAnimation(TAEmerald->aniFrames, 7, &self->animator, true, self->color);
         if (SaveGame->saveRAM) {
             if (((1 << self->color) & SaveGame->saveRAM->chaosEmeralds) > 0)
@@ -42,14 +42,14 @@ void TAEmerald_Create(void *data)
 
 void TAEmerald_StageLoad(void) { TAEmerald->aniFrames = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE); }
 
-void TAEmerald_Unknown1(void)
+void TAEmerald_State_Oscillate(void)
 {
     RSDK_THIS(TAEmerald);
     self->position.y = (RSDK.Sin256(self->angle) << 11) + self->startPos.y;
     self->angle      = (self->angle + 4);
 }
 
-void TAEmerald_Unknown2(void)
+void TAEmerald_State_MoveCircle(void)
 {
     RSDK_THIS(TAEmerald);
 
@@ -79,9 +79,26 @@ void TAEmerald_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TAEmerald_EditorDraw(void) {}
+void TAEmerald_EditorDraw(void)
+{
+    RSDK_THIS(TAEmerald);
+    RSDK.SetSpriteAnimation(TAEmerald->aniFrames, 7, &self->animator, true, self->color);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void TAEmerald_EditorLoad(void) {}
+void TAEmerald_EditorLoad(void)
+{
+    TAEmerald->aniFrames = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TAEmerald, color);
+    RSDK_ENUM_VAR("Green", TAEMERALD_GREEN);
+    RSDK_ENUM_VAR("Yellow", TAEMERALD_YELLOW);
+    RSDK_ENUM_VAR("Blue", TAEMERALD_BLUE);
+    RSDK_ENUM_VAR("Purple", TAEMERALD_PURPLE);
+    RSDK_ENUM_VAR("Gray", TAEMERALD_GRAY);
+    RSDK_ENUM_VAR("Cyan", TAEMERALD_CYAN);
+    RSDK_ENUM_VAR("Red", TAEMERALD_RED);
+}
 #endif
 
 void TAEmerald_Serialize(void) { RSDK_EDITABLE_VAR(TAEmerald, VAR_UINT8, color); }

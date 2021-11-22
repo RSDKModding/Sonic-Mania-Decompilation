@@ -51,7 +51,7 @@ void MSBomb_Create(void *data)
 void MSBomb_StageLoad(void)
 {
     MSBomb->aniFrames    = RSDK.LoadSpriteAnimation("SSZ2/MSBomb.bin", SCOPE_STAGE);
-    MSBomb->sfxExplosion = RSDK.GetSFX("Stage/Explosion4.wav");
+    MSBomb->sfxExplosion = RSDK.GetSfx("Stage/Explosion4.wav");
 }
 
 void MSBomb_Unknown1(void)

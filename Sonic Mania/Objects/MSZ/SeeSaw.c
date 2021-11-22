@@ -240,7 +240,7 @@ void SeeSaw_StageLoad(void)
     SeeSaw->hitbox2.top    = -8;
     SeeSaw->hitbox2.right  = 8;
     SeeSaw->hitbox2.bottom = 8;
-    SeeSaw->sfxSpring      = RSDK.GetSFX("Global/Spring.wav");
+    SeeSaw->sfxSpring      = RSDK.GetSfx("Global/Spring.wav");
 }
 
 void SeeSaw_SetupHitbox(int playerX, bool32 flag)

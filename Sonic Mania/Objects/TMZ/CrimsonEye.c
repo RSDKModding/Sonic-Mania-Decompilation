@@ -153,16 +153,16 @@ void CrimsonEye_StageLoad(void)
     CrimsonEye->destroyedBallCount            = 0;
     CrimsonEye->value17            = 0;
     CrimsonEye->liftBG             = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Lift Background"));
-    CrimsonEye->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    CrimsonEye->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    CrimsonEye->sfxHover           = RSDK.GetSFX("TMZ1/Hover.wav");
-    CrimsonEye->sfxHover2          = RSDK.GetSFX("TMZ1/Hover2.wav");
-    CrimsonEye->sfxElevator        = RSDK.GetSFX("TMZ1/Elevator.wav");
-    CrimsonEye->sfxShot            = RSDK.GetSFX("Stage/Shot.wav");
-    CrimsonEye->sfxBeep            = RSDK.GetSFX("Stage/Beep4.wav");
-    CrimsonEye->sfxHullClose       = RSDK.GetSFX("Stage/HullClose.wav");
-    CrimsonEye->sfxButton          = RSDK.GetSFX("Stage/Button.wav");
-    CrimsonEye->sfxImpact          = RSDK.GetSFX("Stage/Impact5.wav");
+    CrimsonEye->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    CrimsonEye->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    CrimsonEye->sfxHover           = RSDK.GetSfx("TMZ1/Hover.wav");
+    CrimsonEye->sfxHover2          = RSDK.GetSfx("TMZ1/Hover2.wav");
+    CrimsonEye->sfxElevator        = RSDK.GetSfx("TMZ1/Elevator.wav");
+    CrimsonEye->sfxShot            = RSDK.GetSfx("Stage/Shot.wav");
+    CrimsonEye->sfxBeep            = RSDK.GetSfx("Stage/Beep4.wav");
+    CrimsonEye->sfxHullClose       = RSDK.GetSfx("Stage/HullClose.wav");
+    CrimsonEye->sfxButton          = RSDK.GetSfx("Stage/Button.wav");
+    CrimsonEye->sfxImpact          = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
 void CrimsonEye_Explode(void)
@@ -229,9 +229,9 @@ void CrimsonEye_StateBody_Unknown1(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX + 80;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 124;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX + 80;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 124;
+        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - ScreenInfo->height;
         self->active              = ACTIVE_NORMAL;
         CREATE_ENTITY(TMZ1Setup, NULL, 0, 0);
 
@@ -252,7 +252,7 @@ void CrimsonEye_StateBody_Unknown2(void)
     RSDK_THIS(CrimsonEye);
     CrimsonEye->value4 += 4;
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (!self->timer && ScreenInfo->position.x + ScreenInfo->centerX > (self->position.x >> 16) - 256) {
@@ -262,7 +262,7 @@ void CrimsonEye_StateBody_Unknown2(void)
 
     if (player1->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.PlaySfx(CrimsonEye->sfxElevator, false, 255);
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -818,22 +818,22 @@ void CrimsonEye_StateCore_Unknown4(void)
     self->position.x += self->velocity.x;
 
     if (abs(self->velocity.y) <= 0x10000) {
-        if (self->field_74.y <= (Zone->screenBoundsB1[0] - 144) << 16) {
+        if (self->field_74.y <= (Zone->cameraBoundsB[0] - 144) << 16) {
             self->field_74.y += 0x10000;
-            if (self->field_74.y > (Zone->screenBoundsB1[0] - 144) << 16)
-                self->field_74.y = (Zone->screenBoundsB1[0] - 144) << 16;
+            if (self->field_74.y > (Zone->cameraBoundsB[0] - 144) << 16)
+                self->field_74.y = (Zone->cameraBoundsB[0] - 144) << 16;
         }
         else {
             self->field_74.y -= 0x10000;
-            if (self->field_74.y < (Zone->screenBoundsB1[0] - 144) << 16)
-                self->field_74.y = (Zone->screenBoundsB1[0] - 144) << 16;
+            if (self->field_74.y < (Zone->cameraBoundsB[0] - 144) << 16)
+                self->field_74.y = (Zone->cameraBoundsB[0] - 144) << 16;
         }
     }
     self->field_74.y -= self->velocity.y;
 
     self->angle      = (self->angle + 2) & 0xFF;
     self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->field_74.y) & 0xFFFF0000;
-    if (self->position.x <= (Zone->screenBoundsL1[0] + 64) << 16 || self->position.x >= (Zone->screenBoundsR1[0] - 64) << 16) {
+    if (self->position.x <= (Zone->cameraBoundsL[0] + 64) << 16 || self->position.x >= (Zone->cameraBoundsR[0] - 64) << 16) {
         self->velocity.x = -self->velocity.x;
     }
 

@@ -7,12 +7,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
+    uint16 aniFrames;
+    uint16 unused1;
     Hitbox innerBox;
     Hitbox outerBox;
     uint16 sfxPlunger;
-    uint16 jumpModel;
-    uint16 ballModel;
+    uint16 jumpFrames;
+    uint16 ballFrames;
     uint16 sceneIndex;
 } ObjectPBL_Player;
 
@@ -23,8 +24,8 @@ typedef struct {
     int32 timer;
     int32 angleX;
     int32 height;
-    int32 field_68;
-    int32 field_6C;
+    int32 unused1;
+    int32 unused2;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;
@@ -36,7 +37,7 @@ typedef struct {
     bool32 left;
     bool32 right;
     bool32 jumpPress;
-    int32 field_18C;
+    int32 unused3;
     Animator animator;
 } EntityPBL_Player;
 

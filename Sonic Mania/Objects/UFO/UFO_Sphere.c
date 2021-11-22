@@ -85,8 +85,8 @@ void UFO_Sphere_Create(void *data)
 void UFO_Sphere_StageLoad(void)
 {
     UFO_Sphere->aniFrames     = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
-    UFO_Sphere->sfxMachSpeed  = RSDK.GetSFX("Special/MachSpeed.wav");
-    UFO_Sphere->sfxLedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    UFO_Sphere->sfxMachSpeed  = RSDK.GetSfx("Special/MachSpeed.wav");
+    UFO_Sphere->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
 }
 
 void UFO_Sphere_State_Fixed(void)

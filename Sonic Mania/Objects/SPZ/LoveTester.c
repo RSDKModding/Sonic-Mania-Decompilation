@@ -66,7 +66,7 @@ void LoveTester_StageLoad(void)
     LoveTester->field_28.x = 0;
     LoveTester->field_28.y = 0x320000;
     LoveTester->active     = ACTIVE_ALWAYS;
-    LoveTester->sfxScore   = RSDK.GetSFX("SPZ/Score.wav");
+    LoveTester->sfxScore   = RSDK.GetSfx("SPZ/Score.wav");
 }
 
 void LoveTester_SetupHitboxes(void)

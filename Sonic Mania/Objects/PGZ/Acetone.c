@@ -46,8 +46,8 @@ void Acetone_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         Acetone->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Acetone.bin", SCOPE_STAGE);
-    Acetone->sfxFrostThrower = RSDK.GetSFX("PSZ/FrostThrower.wav");
-    Acetone->sfxFreeze       = RSDK.GetSFX("PSZ/Freeze.wav");
+    Acetone->sfxFrostThrower = RSDK.GetSfx("PSZ/FrostThrower.wav");
+    Acetone->sfxFreeze       = RSDK.GetSfx("PSZ/Freeze.wav");
 }
 
 void Acetone_Unknown1(void)

@@ -53,17 +53,17 @@ void UIChoice_Draw(void)
     drawPos.y -= self->field_134.y;
     size >>= 16;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->sizeIY, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->sizeIY, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
                        (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->sizeIY, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->sizeIY, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     drawPos.x += self->field_134.y;
     drawPos.y += self->field_134.y;
-    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->sizeIY, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->sizeIY, 0, 0, 0, drawPos.x, drawPos.y);
 
     EntityUIButton *parent = (EntityUIButton *)self->parent;
     if (self->arrowWidth > 0 && self->flag && !(self->disabled || parent->disabled)) {

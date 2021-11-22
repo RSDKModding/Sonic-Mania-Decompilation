@@ -482,21 +482,21 @@ inline int ControllerIDForInputID(uint8 inputID)
 }
 
 #if RETRO_REV02
-inline int32 MostRecentActiveControllerID(int32 a1, int32 a2, uint32 a3)
+inline int32 MostRecentActiveControllerID(int32 type, int32 a2, uint32 a3)
 {
-    uint v3          = -1;
-    uint recentTimer = -1;
-    int inputID      = 0;
-    int inputIDStore = 0;
+    uint recentTimer     = -1;
+    int inputID          = 0;
+    int inputIDStore     = 0;
+    uint minInactiveTime = -1;
     if (a3)
-        v3 = a3;
+        minInactiveTime = a3;
 
     if (InputDeviceCount) {
         for (int i = 0; i < InputDeviceCount; ++i) {
             if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
-                if (InputDevices[i].inactiveTimer[a1] < recentTimer) {
-                    recentTimer = InputDevices[i].inactiveTimer[a1];
-                    if (InputDevices[i].inactiveTimer[a1] <= v3)
+                if (InputDevices[i].inactiveTimer[type] < recentTimer) {
+                    recentTimer = InputDevices[i].inactiveTimer[type];
+                    if (InputDevices[i].inactiveTimer[type] <= minInactiveTime)
                         inputID = InputDevices[i].inputID;
                     inputIDStore = InputDevices[i].inputID;
                 }
@@ -520,7 +520,7 @@ inline int32 MostRecentActiveControllerID(int32 a1, int32 a2, uint32 a3)
 #else
 inline int32 MostRecentActiveControllerID(int32 a2)
 {
-    uint v3          = -1;
+    uint minInactiveTime          = -1;
     uint recentTimer = -1;
     int inputID      = 0;
     int inputIDStore = 0;
@@ -530,7 +530,7 @@ inline int32 MostRecentActiveControllerID(int32 a2)
             if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
                 if (InputDevices[i].inactiveTimer[0] < recentTimer) {
                     recentTimer = InputDevices[i].inactiveTimer[0];
-                    if (InputDevices[i].inactiveTimer[0] <= v3)
+                    if (InputDevices[i].inactiveTimer[0] <= minInactiveTime)
                         inputID = InputDevices[i].inputID;
                     inputIDStore = InputDevices[i].inputID;
                 }

@@ -38,9 +38,9 @@ void LRZ1Intro_Create(void *data)
 void LRZ1Intro_StageLoad(void)
 {
     LRZ1Intro->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/IntroSub.bin", SCOPE_STAGE);
-    LRZ1Intro->sfxSubLand     = RSDK.GetSFX("LRZ/SubLand.wav");
-    LRZ1Intro->sfxWalkerLegs2 = RSDK.GetSFX("LRZ/WalkerLegs2.wav");
-    LRZ1Intro->sfxLava        = RSDK.GetSFX("Stage/Lava.wav");
+    LRZ1Intro->sfxSubLand     = RSDK.GetSfx("LRZ/SubLand.wav");
+    LRZ1Intro->sfxWalkerLegs2 = RSDK.GetSfx("LRZ/WalkerLegs2.wav");
+    LRZ1Intro->sfxLava        = RSDK.GetSfx("Stage/Lava.wav");
 }
 
 void LRZ1Intro_HandlePlayerCollisions(void)
@@ -154,10 +154,10 @@ void LRZ1Intro_State_Unknown2(void)
         self->velocity.x = 0x100000;
         self->state      = LRZ1Intro_State_Unknown3;
         RSDK.PlaySfx(LRZ1Intro->sfxSubLand, false, 255);
-        Zone->screenBoundsL1[0] = 2732;
-        Zone->screenBoundsL1[1] = 2732;
-        Zone->screenBoundsL1[2] = 2732;
-        Zone->screenBoundsL1[3] = 2732;
+        Zone->cameraBoundsL[0] = 2732;
+        Zone->cameraBoundsL[1] = 2732;
+        Zone->cameraBoundsL[2] = 2732;
+        Zone->cameraBoundsL[3] = 2732;
     }
     LRZ1Intro_HandlePlayerMovement();
 }

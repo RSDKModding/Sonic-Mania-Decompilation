@@ -48,8 +48,8 @@ void CPZ1Intro_StageLoad(void)
         CPZ1Intro->fxRuby = (Entity *)fxRuby;
         foreach_break;
     }
-    CPZ1Intro->sfxChemDrop = RSDK.GetSFX("CPZ/ChemDrop.wav");
-    CPZ1Intro->sfxDNABurst = RSDK.GetSFX("CPZ/DNABurst.wav");
+    CPZ1Intro->sfxChemDrop = RSDK.GetSfx("CPZ/ChemDrop.wav");
+    CPZ1Intro->sfxDNABurst = RSDK.GetSfx("CPZ/DNABurst.wav");
 }
 
 void CPZ1Intro_Particle_CB(Entity *d)

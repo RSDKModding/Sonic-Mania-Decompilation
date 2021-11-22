@@ -243,7 +243,7 @@ void UIDialog_Unknown6(void)
     RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (self->field_70.x >> 1),
                   ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (self->field_70.y >> 1), self->field_70.x, self->field_70.y,
                   self->field_B8 ? 0x282028 : 0x000000, 255, INK_NONE, false);
-    UIWidgets_DrawRhombus(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
+    UIWidgets_DrawParallelogram(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
                        self->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16));
 }
 
@@ -360,7 +360,7 @@ void UIDialog_Unknown11(void)
             else {
                 self->field_70.x = ScreenInfo->width << 16;
                 self->field_70.y = 0x900000;
-                MathHelpers_Lerp3(&pos, maxVal(((self->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->width << 16), 0, 0, 0);
+                MathHelpers_Lerp2Sin1024(&pos, maxVal(((self->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->width << 16), 0, 0, 0);
                 self->drawPos.x = pos.x;
                 self->drawPos.y = pos.y;
                 if (self->timer - 16 == 1 && self->playEventSfx)
@@ -371,7 +371,7 @@ void UIDialog_Unknown11(void)
         else {
             self->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
             self->drawPos.y = 0;
-            MathHelpers_Lerp1(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x10000, ScreenInfo->width << 16,
+            MathHelpers_Lerp(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x10000, ScreenInfo->width << 16,
                                  0x900000);
             self->field_70 = pos;
             self->timer++;
@@ -380,7 +380,7 @@ void UIDialog_Unknown11(void)
     else {
         self->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
         self->drawPos.y = 0;
-        MathHelpers_Lerp3(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->width << 16, 0x10000);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->width << 16, 0x10000);
         ++self->timer;
         self->field_70.x = pos.x;
         self->field_70.y = pos.y;
@@ -409,7 +409,7 @@ void UIDialog_Unknown13(void)
         else {
             self->drawPos.x = (ScreenInfo->width + 64) << 16;
             self->drawPos.y = 0;
-            MathHelpers_Lerp3(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x900000, ScreenInfo->width << 16, 0);
+            MathHelpers_Lerp2Sin1024(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x900000, ScreenInfo->width << 16, 0);
             ++self->timer;
             self->field_70.x = pos.x;
             self->field_70.y = pos.y;
@@ -418,7 +418,7 @@ void UIDialog_Unknown13(void)
     else {
         self->field_70.x = ScreenInfo->width << 16;
         self->field_70.y = 0x900000;
-        MathHelpers_Lerp2(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->width + 64) << 16, 0);
+        MathHelpers_LerpSin1024(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->width + 64) << 16, 0);
         ++self->timer;
         self->drawPos.x = pos.x;
         self->drawPos.y = pos.y;

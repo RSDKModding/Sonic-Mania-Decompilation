@@ -160,15 +160,15 @@ void MSZSetup_StageLoad(void)
 #else
             if (globals->playerID & ID_KNUCKLES) {
 #endif
-                Zone->screenBoundsL1[0] = 0;
-                Zone->screenBoundsL1[1] = 0;
-                Zone->screenBoundsL1[2] = 0;
-                Zone->screenBoundsL1[3] = 0;
+                Zone->cameraBoundsL[0] = 0;
+                Zone->cameraBoundsL[1] = 0;
+                Zone->cameraBoundsL[2] = 0;
+                Zone->cameraBoundsL[3] = 0;
                 if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x1440000, 0x4C0000, 0x1F40000, 0x2340000)) {
-                    Zone->screenBoundsB1[0] = 564;
-                    Zone->screenBoundsB1[1] = 564;
-                    Zone->screenBoundsB1[2] = 564;
-                    Zone->screenBoundsB1[3] = 564;
+                    Zone->cameraBoundsB[0] = 564;
+                    Zone->cameraBoundsB[1] = 564;
+                    Zone->cameraBoundsB[2] = 564;
+                    Zone->cameraBoundsB[3] = 564;
                 }
                 if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
                     Zone_ReloadStoredEntities(0x2300000, 0x1200000, true);
@@ -249,7 +249,7 @@ void MSZSetup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    MSZSetup->sfxLocoChugga = RSDK.GetSFX("MSZ/LocoChugga.wav");
+    MSZSetup->sfxLocoChugga = RSDK.GetSfx("MSZ/LocoChugga.wav");
 #endif
     Animals->animalTypes[0] = ANIMAL_LOCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
@@ -383,7 +383,7 @@ void MSZSetup_StageFinishCB_ST(void) { MSZCutsceneST->actFinishFlag = true; }
 
 void MSZSetup_StageFinishCB_K(void)
 {
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, Zone->screenBoundsB1[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 
@@ -469,8 +469,8 @@ void MSZSetup_Unknown10(void)
             if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
                 decoration->animator.animationSpeed = 1;
         }
-        Zone->screenBoundsL1[0] = 0x2980;
-        Zone->screenBoundsL2[0] = 0x29800000;
+        Zone->cameraBoundsL[0] = 0x2980;
+        Zone->playerBoundsL[0] = 0x29800000;
         MSZSetup->chuggaChannel = RSDK.PlaySfx(MSZSetup->sfxLocoChugga, 1, 255);
         RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, 0.0, 0.0, 1.0);
         MSZSetup_Unknown2();
@@ -542,7 +542,7 @@ void MSZSetup_Unknown16(void)
 
     if (RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear)->objectID != ActClear->objectID) {
         self->timer               = 0;
-        Zone->screenBoundsR1[0]     = 17064;
+        Zone->cameraBoundsR[0]     = 17064;
         Zone->playerBoundActiveR[0] = false;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -569,7 +569,7 @@ void MSZSetup_Unknown17(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player1->right        = true;
 
-    if (player1->position.x < (Zone->screenBoundsR1[0] - ScreenInfo->centerX) << 16) {
+    if (player1->position.x < (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16) {
         foreach_active(Player, player)
         {
             if (player->groundVel > 0x30000)
@@ -645,7 +645,7 @@ void MSZSetup_StoreMSZ1STScrollPos(void)
 
     foreach_all(ParallaxSprite, sprite) { globals->parallaxOffset[id++] = sprite->scrollPos.x; }
 
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, 0x5A00000);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, 0x5A00000);
     ++SceneInfo->listPos;
     globals->atlEnabled = true;
     RSDK.LoadScene();

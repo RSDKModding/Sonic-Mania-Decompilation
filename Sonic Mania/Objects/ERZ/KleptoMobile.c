@@ -98,12 +98,12 @@ void KleptoMobile_Create(void *data)
 void KleptoMobile_StageLoad(void)
 {
     KleptoMobile->aniFrames    = RSDK.LoadSpriteAnimation("Phantom/KleptoMobile.bin", SCOPE_STAGE);
-    KleptoMobile->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    KleptoMobile->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    KleptoMobile->sfxFlail     = RSDK.GetSFX("SSZ1/Flail.wav");
-    KleptoMobile->sfxWhack     = RSDK.GetSFX("Stage/Whack.wav");
-    KleptoMobile->sfxPowerUp   = RSDK.GetSFX("Stage/PowerUp.wav");
-    KleptoMobile->sfxRocketJet = RSDK.GetSFX("Stage/RocketJet.wav");
+    KleptoMobile->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    KleptoMobile->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    KleptoMobile->sfxFlail     = RSDK.GetSfx("SSZ1/Flail.wav");
+    KleptoMobile->sfxWhack     = RSDK.GetSfx("Stage/Whack.wav");
+    KleptoMobile->sfxPowerUp   = RSDK.GetSfx("Stage/PowerUp.wav");
+    KleptoMobile->sfxRocketJet = RSDK.GetSfx("Stage/RocketJet.wav");
 }
 
 void KleptoMobile_HandleAnimations(void)
@@ -340,8 +340,8 @@ void KleptoMobile_State_SetupArena(void)
     KleptoMobile->boundsM = self->position.x;
     KleptoMobile->boundsL = KleptoMobile->boundsM - 0x800000;
     KleptoMobile->boundsR = KleptoMobile->boundsM + 0x800000;
-    KleptoMobile->boundsT = (Zone->screenBoundsT1[0] + 48) << 16;
-    KleptoMobile->boundsB = (Zone->screenBoundsB1[0] - 96) << 16;
+    KleptoMobile->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
+    KleptoMobile->boundsB = (Zone->cameraBoundsB[0] - 96) << 16;
     self->state         = StateMachine_None;
 }
 
@@ -384,11 +384,11 @@ void KleptoMobile_State_Unknown2(void)
         self->velocity.x += 0x800;
     }
 
-    int bottom   = Zone->screenBoundsB1[0] << 16;
+    int bottom   = Zone->cameraBoundsB[0] << 16;
     int boundary = bottom - 0x800000;
     if (y <= bottom - 0x800000) {
         boundary = bottom + 0x800000;
-        if (y >= (Zone->screenBoundsT1[0] + 128) << 16)
+        if (y >= (Zone->cameraBoundsT[0] + 128) << 16)
             boundary = y;
     }
 
@@ -464,7 +464,7 @@ void KleptoMobile_State_Unknown3(void)
     if (++self->timer < 180) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (abs(player1->position.x - self->position.x) < 0xC00000 && abs(player1->position.y - self->position.y) < 0xC00000) {
-            RSDK.StopSFX(KleptoMobile->sfxPowerUp);
+            RSDK.StopSfx(KleptoMobile->sfxPowerUp);
             self->timer     = 14;
             self->field_10C = 0;
             self->field_114 = true;
@@ -515,8 +515,8 @@ void KleptoMobile_State_Unknown4(void)
       do {
         do {
             self->field_70.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
-        } while (self->field_70.y > (Zone->screenBoundsB1[0] - 64) << 16);
-      } while (self->field_70.y < (Zone->screenBoundsT1[0] + 64) << 16);
+        } while (self->field_70.y > (Zone->cameraBoundsB[0] - 64) << 16);
+      } while (self->field_70.y < (Zone->cameraBoundsT[0] + 64) << 16);
 
     self->circleRadius = 128;
     if (++self->field_108 == 4) {

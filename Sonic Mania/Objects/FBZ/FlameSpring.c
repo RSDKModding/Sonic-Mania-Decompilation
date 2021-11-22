@@ -65,8 +65,8 @@ void FlameSpring_StageLoad(void)
     FlameSpring->hitbox2.top    = -4;
     FlameSpring->hitbox2.right  = 4;
     FlameSpring->hitbox2.bottom = 4;
-    FlameSpring->sfxSpring      = RSDK.GetSFX("Global/Spring.wav");
-    FlameSpring->sfxFlame       = RSDK.GetSFX("Stage/Flame2.wav");
+    FlameSpring->sfxSpring      = RSDK.GetSfx("Global/Spring.wav");
+    FlameSpring->sfxFlame       = RSDK.GetSfx("Stage/Flame2.wav");
 }
 
 void FlameSpring_State_Unknown1(void)

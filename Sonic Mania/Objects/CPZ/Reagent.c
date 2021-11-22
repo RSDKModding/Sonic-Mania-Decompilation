@@ -69,7 +69,7 @@ void Reagent_StageLoad(void)
     Reagent->hitbox.top    = -2;
     Reagent->hitbox.right  = 2;
     Reagent->hitbox.bottom = 2;
-    Reagent->sfxLand       = RSDK.GetSFX("Puyo/Land.wav");
+    Reagent->sfxLand       = RSDK.GetSfx("Puyo/Land.wav");
 }
 
 void Reagent_Unknown1(void)

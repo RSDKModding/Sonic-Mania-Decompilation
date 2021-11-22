@@ -40,7 +40,7 @@ void WeatherTV_StaticUpdate(void)
         }
     }
     else if (WeatherTV->playingTheBuzz) {
-        RSDK.StopSFX(WeatherTV->sfxBuzz);
+        RSDK.StopSfx(WeatherTV->sfxBuzz);
         WeatherTV->playingTheBuzz = false;
     }
 }
@@ -83,10 +83,10 @@ void WeatherTV_StageLoad(void)
 {
     WeatherTV->active     = ACTIVE_ALWAYS;
     WeatherTV->aniFrames       = RSDK.LoadSpriteAnimation("SPZ2/WeatherMobile.bin", SCOPE_STAGE);
-    WeatherTV->sfxBuzz         = RSDK.GetSFX("SPZ/TheBuzz.wav");
-    WeatherTV->sfxCardAppear   = RSDK.GetSFX("SPZ2/CardAppear.wav");
-    WeatherTV->sfxCardFlip     = RSDK.GetSFX("SPZ2/CardFlip.wav");
-    WeatherTV->sfxCardSelected = RSDK.GetSFX("SPZ2/CardSelected.wav");
+    WeatherTV->sfxBuzz         = RSDK.GetSfx("SPZ/TheBuzz.wav");
+    WeatherTV->sfxCardAppear   = RSDK.GetSfx("SPZ2/CardAppear.wav");
+    WeatherTV->sfxCardFlip     = RSDK.GetSfx("SPZ2/CardFlip.wav");
+    WeatherTV->sfxCardSelected = RSDK.GetSfx("SPZ2/CardSelected.wav");
 }
 
 void WeatherTV_ShutdownTV(void)

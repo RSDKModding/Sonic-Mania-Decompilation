@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TAEMERALD_GREEN,
+    TAEMERALD_YELLOW,
+    TAEMERALD_BLUE,
+    TAEMERALD_PURPLE,
+    TAEMERALD_GRAY,
+    TAEMERALD_CYAN,
+    TAEMERALD_RED,
+}TAEmeraldColours;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -36,7 +46,7 @@ void TAEmerald_EditorLoad(void);
 void TAEmerald_Serialize(void);
 
 // Extra Entity Functions
-void TAEmerald_Unknown1(void);
-void TAEmerald_Unknown2(void);
+void TAEmerald_State_Oscillate(void);
+void TAEmerald_State_MoveCircle(void);
 
 #endif //!OBJ_TAEMERALD_H

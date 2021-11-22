@@ -107,17 +107,17 @@ void LRZ1Setup_StageLoad(void)
         for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->bg2->deformationData[i] = LRZ1Setup->deformBG[i & 0x1F];
     }
     if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-        Zone->screenBoundsL1[0] = 2732;
-        Zone->screenBoundsL1[1] = 2732;
-        Zone->screenBoundsL1[2] = 2732;
-        Zone->screenBoundsL1[3] = 2732;
+        Zone->cameraBoundsL[0] = 2732;
+        Zone->cameraBoundsL[1] = 2732;
+        Zone->cameraBoundsL[2] = 2732;
+        Zone->cameraBoundsL[3] = 2732;
         foreach_all(LRZ1Intro, intro) { destroyEntity(intro); }
     }
 #else
-    Zone->screenBoundsL1[0] = 648;
-    Zone->screenBoundsL1[1] = 648;
-    Zone->screenBoundsL1[2] = 648;
-    Zone->screenBoundsL1[3] = 648;
+    Zone->cameraBoundsL[0] = 648;
+    Zone->cameraBoundsL[1] = 648;
+    Zone->cameraBoundsL[2] = 648;
+    Zone->cameraBoundsL[3] = 648;
 #endif
 }
 

@@ -74,8 +74,8 @@ void Jellygnite_StageLoad(void)
     Jellygnite->hitbox.top    = -14;
     Jellygnite->hitbox.right  = 14;
     Jellygnite->hitbox.bottom = 14;
-    Jellygnite->sfxGrab       = RSDK.GetSFX("Global/Grab.wav");
-    Jellygnite->sfxElectrify  = RSDK.GetSFX("Stage/Electrify2.wav");
+    Jellygnite->sfxGrab       = RSDK.GetSfx("Global/Grab.wav");
+    Jellygnite->sfxElectrify  = RSDK.GetSfx("Stage/Electrify2.wav");
     DEBUGMODE_ADD_OBJ(Jellygnite);
 }
 

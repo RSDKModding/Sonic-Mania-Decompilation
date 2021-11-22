@@ -95,8 +95,8 @@ void ItemBox_HandleObjectCollisions(void);
 
 //Entity States
 void ItemBox_State_Broken(void);
-void ItemBox_State_Contents(void);
-void ItemBox_State_Unknown(void);
+void ItemBox_State_ContentsShown(void);
+void ItemBox_State_ContentsDisappear(void);
 void ItemBox_State_Normal(void);
 void ItemBox_State_Falling(void);
 void ItemBox_State_Conveyor(void);

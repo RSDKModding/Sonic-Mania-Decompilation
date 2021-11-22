@@ -64,10 +64,10 @@ void ERZStart_Create(void *data)
 
 void ERZStart_StageLoad(void)
 {
-    ERZStart->sfxClack     = RSDK.GetSFX("Stage/Clack.wav");
-    ERZStart->sfxFlyIn     = RSDK.GetSFX("ERZ/FlyIn.wav");
-    ERZStart->sfxHullClose = RSDK.GetSFX("Stage/HullClose.wav");
-    ERZStart->sfxRumble    = RSDK.GetSFX("Stage/Rumble.wav");
+    ERZStart->sfxClack     = RSDK.GetSfx("Stage/Clack.wav");
+    ERZStart->sfxFlyIn     = RSDK.GetSfx("ERZ/FlyIn.wav");
+    ERZStart->sfxHullClose = RSDK.GetSfx("Stage/HullClose.wav");
+    ERZStart->sfxRumble    = RSDK.GetSfx("Stage/Rumble.wav");
 }
 
 void ERZStart_SetupObjects(void)
@@ -139,12 +139,12 @@ bool32 ERZStart_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
         ScreenInfo->position.x = 0;
         ScreenInfo->position.y = 0;
-        Zone->screenBoundsT2[0]  = 0;
-        Zone->screenBoundsT1[0]  = 0;
+        Zone->playerBoundsT[0]  = 0;
+        Zone->cameraBoundsT[0]  = 0;
         camera->boundsT          = 0;
-        Zone->screenBoundsB2[0]  = ScreenInfo->height;
-        Zone->screenBoundsB1[0]  = Zone->screenBoundsB2[0];
-        camera->boundsB          = Zone->screenBoundsB1[0];
+        Zone->playerBoundsB[0]  = ScreenInfo->height;
+        Zone->cameraBoundsB[0]  = Zone->playerBoundsB[0];
+        camera->boundsB          = Zone->cameraBoundsB[0];
         ruby->state              = ERZStart_RubyHover;
 
         int angle = 0;
@@ -161,8 +161,8 @@ bool32 ERZStart_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
 
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR2[0]     = 1552;
-        Zone->screenBoundsR1[0]     = 1552;
+        Zone->playerBoundsR[0]     = 1552;
+        Zone->cameraBoundsR[0]     = 1552;
     }
 
     if (host->timer >= 60) {
@@ -444,7 +444,7 @@ bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
         fxRuby->position.x = king->position.x;
         fxRuby->position.y = king->position.y;
         fxRuby->fadeWhite  = 0x300;
-        RSDK.StopSFX(ERZStart->sfxRumble);
+        RSDK.StopSfx(ERZStart->sfxRumble);
         return true;
     }
     else {
@@ -590,9 +590,9 @@ bool32 ERZStart_CutsceneState_StartFight(EntityCutsceneSeq *host)
 
     EntityPhantomKing *king = (EntityPhantomKing *)ERZStart->king;
     if (player1->animator.animationID != ANI_TRANSFORM) {
-        Zone->screenBoundsR1[0]     = 0x610;
+        Zone->cameraBoundsR[0]     = 0x610;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsT1[0]     = 0;
+        Zone->cameraBoundsT[0]     = 0;
         Zone->playerBoundActiveT[0] = true;
         player1->state              = ERZStart_State_PlayerSuperFly;
         player1->abilityValues[0]   = 60;

@@ -20,7 +20,7 @@ void Drillerdroid_StaticUpdate(void)
         Drillerdroid->shouldPlayDrillSfx = 0;
     }
     else if (Drillerdroid->playingDrillSfx) {
-        RSDK.StopSFX(Drillerdroid->sfxDrill);
+        RSDK.StopSfx(Drillerdroid->sfxDrill);
         Drillerdroid->playingDrillSfx = false;
     }
 }
@@ -124,16 +124,16 @@ void Drillerdroid_StageLoad(void)
     Drillerdroid->playingDrillSfx    = false;
     Drillerdroid->armorHealth           = 3;
     Drillerdroid->field_6D           = 0;
-    Drillerdroid->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    Drillerdroid->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    Drillerdroid->sfxDrill           = RSDK.GetSFX("LRZ/Drill.wav");
-    Drillerdroid->sfxImpact          = RSDK.GetSFX("Stage/Impact4.wav");
-    Drillerdroid->sfxJump            = RSDK.GetSFX("LRZ/DrillJump.wav");
-    Drillerdroid->sfxTargeting       = RSDK.GetSFX("Stage/Targeting1.wav");
-    Drillerdroid->sfxSizzle          = RSDK.GetSFX("LRZ/Sizzle.wav");
-    Drillerdroid->sfxDrop            = RSDK.GetSFX("Stage/Drop.wav");
-    Drillerdroid->sfxFail            = RSDK.GetSFX("Stage/Fail.wav");
-    Drillerdroid->sfxClang           = RSDK.GetSFX("Stage/Clang2.wav");
+    Drillerdroid->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    Drillerdroid->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    Drillerdroid->sfxDrill           = RSDK.GetSfx("LRZ/Drill.wav");
+    Drillerdroid->sfxImpact          = RSDK.GetSfx("Stage/Impact4.wav");
+    Drillerdroid->sfxJump            = RSDK.GetSfx("LRZ/DrillJump.wav");
+    Drillerdroid->sfxTargeting       = RSDK.GetSfx("Stage/Targeting1.wav");
+    Drillerdroid->sfxSizzle          = RSDK.GetSfx("LRZ/Sizzle.wav");
+    Drillerdroid->sfxDrop            = RSDK.GetSfx("Stage/Drop.wav");
+    Drillerdroid->sfxFail            = RSDK.GetSfx("Stage/Fail.wav");
+    Drillerdroid->sfxClang           = RSDK.GetSfx("Stage/Clang2.wav");
 }
 
 void Drillerdroid_Hit(void)
@@ -255,9 +255,9 @@ void Drillerdroid_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 324;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 96;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - 240;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 324;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 96;
+        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - 240;
         self->startY            = self->position.y;
         self->active              = ACTIVE_NORMAL;
         self->position.y          = (ScreenInfo->position.y - 192) << 16;
@@ -272,10 +272,10 @@ void Drillerdroid_State_StartBoss(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
     if (player1->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 328;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 328;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         self->health                                                                                            = 6;
         CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), self->position.x, self->startY)->target = (Entity *)player1;
@@ -293,8 +293,8 @@ void Drillerdroid_State_Unknown2(void)
     self->velocity.y += 0x3800;
     Drillerdroid_CheckPlayerCollisions();
 
-    if (self->position.y >= ((Zone->screenBoundsB1[0] - 112) << 16)) {
-        self->position.y = ((Zone->screenBoundsB1[0] - 112) << 16);
+    if (self->position.y >= ((Zone->cameraBoundsB[0] - 112) << 16)) {
+        self->position.y = ((Zone->cameraBoundsB[0] - 112) << 16);
         RSDK.PlaySfx(Drillerdroid->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 4);
         self->velocity.y >>= 1;
@@ -408,8 +408,8 @@ void Drillerdroid_State_Unknown7(void)
     Drillerdroid_CheckPlayerCollisions();
 
     if (self->velocity.y > 0) {
-        if (self->position.y >= (Zone->screenBoundsB1[0] - 96) << 16) {
-            self->position.y = (Zone->screenBoundsB1[0] - 96) << 16;
+        if (self->position.y >= (Zone->cameraBoundsB[0] - 96) << 16) {
+            self->position.y = (Zone->cameraBoundsB[0] - 96) << 16;
             RSDK.PlaySfx(Drillerdroid->sfxImpact, false, 255);
             Camera_ShakeScreen(0, 0, 4);
             self->velocity.y >>= 1;
@@ -776,10 +776,10 @@ void Drillerdroid_State_Unknown17(void)
         self->state      = Drillerdroid_State_Unknown2;
         self->position.x = (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x + 0x400000) & 0xFF800000;
 
-        bool32 flag = self->position.x < Zone->screenBoundsL1[0] << 16 || self->position.x > Zone->screenBoundsR1[0] << 16;
+        bool32 flag = self->position.x < Zone->cameraBoundsL[0] << 16 || self->position.x > Zone->cameraBoundsR[0] << 16;
         int id      = 0;
         if (!flag) {
-            Drillerdroid->field_61 = (((self->position.x >> 16) - Zone->screenBoundsL1[0] + 64) >> 7) - 1;
+            Drillerdroid->field_61 = (((self->position.x >> 16) - Zone->cameraBoundsL[0] + 64) >> 7) - 1;
             id                     = Drillerdroid->field_5C[Drillerdroid->field_61];
             flag                   = id == 0xFF;
         }
@@ -787,7 +787,7 @@ void Drillerdroid_State_Unknown17(void)
         if (flag) {
             self->position.x = 0;
             RSDK.PlaySfx(Drillerdroid->sfxFail, false, 255);
-            RSDK.StopSFX(Drillerdroid->sfxTargeting);
+            RSDK.StopSfx(Drillerdroid->sfxTargeting);
             self->timer = 60;
             self->state = Drillerdroid_State_Unknown18;
         }
@@ -1222,10 +1222,10 @@ void Drillerdroid_State1_Unknown(void)
         self->target                 = NULL;
         Drillerdroid->boss->position.x = self->position.x;
 
-        if (self->position.x < (Zone->screenBoundsL1[0] + 64) << 16 || self->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
-            Drillerdroid->boss->position.x = (Zone->screenBoundsL1[0] + 64) << 16;
-        else if (self->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
-            Drillerdroid->boss->position.x = (Zone->screenBoundsR1[0] - 64) << 16;
+        if (self->position.x < (Zone->cameraBoundsL[0] + 64) << 16 || self->position.x > (Zone->cameraBoundsR[0] - 64) << 16)
+            Drillerdroid->boss->position.x = (Zone->cameraBoundsL[0] + 64) << 16;
+        else if (self->position.x > (Zone->cameraBoundsR[0] - 64) << 16)
+            Drillerdroid->boss->position.x = (Zone->cameraBoundsR[0] - 64) << 16;
     }
     if (self->timer == 128)
         destroyEntity(self);

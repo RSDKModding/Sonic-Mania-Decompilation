@@ -8,7 +8,10 @@ void FlingRamp_Update(void)
     foreach_active(Player, player)
     {
         if (player->onGround) {
-            if (!(player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
+            bool32 left = !self->direction || self->direction == FLIP_X;
+            bool32 right = !self->direction || self->direction == FLIP_Y;
+
+            if (left && !(player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
                 if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x += 0x40000;
                     player->velocity.y = -0x70000;
@@ -16,7 +19,7 @@ void FlingRamp_Update(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
                 }
             }
-            else if ((player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
+            else if (right && (player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
                 if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x -= 0x40000;
                     player->velocity.y = -0x70000;
@@ -54,7 +57,14 @@ void FlingRamp_StageLoad(void)
 #if RETRO_INCLUDE_EDITOR
 void FlingRamp_EditorDraw(void) {}
 
-void FlingRamp_EditorLoad(void) {}
+void FlingRamp_EditorLoad(void)
+{
+
+    RSDK_ACTIVE_VAR(FlingRamp, direction);
+    RSDK_ENUM_VAR("Flip From Both Sides", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip From Left Only", FLIP_X);
+    RSDK_ENUM_VAR("Flip From Right Only", FLIP_Y);
+}
 #endif
 
 void FlingRamp_Serialize(void) { RSDK_EDITABLE_VAR(FlingRamp, VAR_UINT8, direction); }

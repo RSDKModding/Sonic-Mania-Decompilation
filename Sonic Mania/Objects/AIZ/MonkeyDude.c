@@ -123,7 +123,7 @@ void MonkeyDude_StageLoad(void)
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 1, &MonkeyDude->tailAnimator, true, 0);
     RSDK.SetSpriteAnimation(MonkeyDude->aniFrames, 4, &MonkeyDude->coconutAnimator, true, 0);
 #if RETRO_USE_PLUS
-    MonkeyDude->sfxDrop = RSDK.GetSFX("Stage/Drop.wav");
+    MonkeyDude->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 #endif
     DEBUGMODE_ADD_OBJ(MonkeyDude);
 }

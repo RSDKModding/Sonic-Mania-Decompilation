@@ -108,19 +108,19 @@ void HeavyGunner_Create(void *data)
 void HeavyGunner_StageLoad(void)
 {
     HeavyGunner->aniFrames     = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
-    HeavyGunner->sfxFire       = RSDK.GetSFX("Stage/CannonFire.wav");
-    HeavyGunner->sfxJet        = RSDK.GetSFX("Stage/RocketJet.wav");
-    HeavyGunner->sfxHit        = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyGunner->sfxDestroy    = RSDK.GetSFX("Global/Destroy.wav");
-    HeavyGunner->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyGunner->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
-    HeavyGunner->sfxCharge     = RSDK.GetSFX("SPZ1/BazookaCharge.wav");
-    HeavyGunner->sfxThrow      = RSDK.GetSFX("SPZ1/BazookaThrow.wav");
-    HeavyGunner->sfxFlyIn      = RSDK.GetSFX("SPZ1/EggRoboFlyIn.wav");
-    HeavyGunner->sfxWooshIn    = RSDK.GetSFX("SPZ1/HeliWooshIn.wav");
-    HeavyGunner->sfxWooshOut   = RSDK.GetSFX("SPZ1/HeliWooshOut.wav");
-    HeavyGunner->sfxFlip       = RSDK.GetSFX("SPZ1/RocketFlip.wav");
-    HeavyGunner->sfxRumble     = RSDK.GetSFX("SPZ1/Rumble.wav");
+    HeavyGunner->sfxFire       = RSDK.GetSfx("Stage/CannonFire.wav");
+    HeavyGunner->sfxJet        = RSDK.GetSfx("Stage/RocketJet.wav");
+    HeavyGunner->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyGunner->sfxDestroy    = RSDK.GetSfx("Global/Destroy.wav");
+    HeavyGunner->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyGunner->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
+    HeavyGunner->sfxCharge     = RSDK.GetSfx("SPZ1/BazookaCharge.wav");
+    HeavyGunner->sfxThrow      = RSDK.GetSfx("SPZ1/BazookaThrow.wav");
+    HeavyGunner->sfxFlyIn      = RSDK.GetSfx("SPZ1/EggRoboFlyIn.wav");
+    HeavyGunner->sfxWooshIn    = RSDK.GetSfx("SPZ1/HeliWooshIn.wav");
+    HeavyGunner->sfxWooshOut   = RSDK.GetSfx("SPZ1/HeliWooshOut.wav");
+    HeavyGunner->sfxFlip       = RSDK.GetSfx("SPZ1/RocketFlip.wav");
+    HeavyGunner->sfxRumble     = RSDK.GetSfx("SPZ1/Rumble.wav");
 
     Soundboard_LoadSFX("SPZ1/HBHSurprise.wav", true, HeavyGunner_SurpriseCheckCB, NULL);
     Soundboard_LoadSFX("SPZ1/HeliProp.wav", true, HeavyGunner_HelicopterCheckCB, NULL);
@@ -298,9 +298,9 @@ void HeavyGunner_State_SetupArena(void)
 
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            HeavyGunner->boundsL        = Zone->screenBoundsL1[0];
-            HeavyGunner->boundsR        = Zone->screenBoundsR1[0];
-            HeavyGunner->boundsT        = Zone->screenBoundsT1[0];
+            HeavyGunner->boundsL        = Zone->cameraBoundsL[0];
+            HeavyGunner->boundsR        = Zone->cameraBoundsR[0];
+            HeavyGunner->boundsT        = Zone->cameraBoundsT[0];
             HeavyGunner->boundsB        = 0xC00;
             HeavyGunner->field_14       = true;
 
@@ -394,48 +394,48 @@ void HeavyGunner_State_Unknown3(void)
             }
         }
 
-        Zone->screenBoundsL1[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsL2[0] = Zone->screenBoundsL1[0] << 16;
-        Zone->screenBoundsR2[0] = Zone->screenBoundsR1[0] << 16;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
+        Zone->playerBoundsR[0] = Zone->cameraBoundsR[0] << 16;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL         = Zone->screenBoundsL1[0];
-        camera->boundsR         = Zone->screenBoundsR1[0];
+        camera->boundsL         = Zone->cameraBoundsL[0];
+        camera->boundsR         = Zone->cameraBoundsR[0];
 
         if (self->field_68 == 120) {
             if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 self->position.y += 0x80000;
-            Zone->screenBoundsB1[0] = (self->position.y >> 16) + 168;
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
+            Zone->cameraBoundsB[0] = (self->position.y >> 16) + 168;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
         }
         else {
             self->field_68++;
         }
     }
     else if (self->position.x < 0x49800000) {
-        Zone->screenBoundsL1[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsL2[0] = Zone->screenBoundsL1[0] << 16;
-        Zone->screenBoundsR2[0] = Zone->screenBoundsR1[0] << 16;
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
+        Zone->playerBoundsR[0] = Zone->cameraBoundsR[0] << 16;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL         = Zone->screenBoundsL1[0];
-        camera->boundsR         = Zone->screenBoundsR1[0];
+        camera->boundsL         = Zone->cameraBoundsL[0];
+        camera->boundsR         = Zone->cameraBoundsR[0];
 
         if (self->field_68 == 120) {
             if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 self->position.y += 0x80000;
-            Zone->screenBoundsB1[0] = (self->position.y >> 16) + 168;
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
+            Zone->cameraBoundsB[0] = (self->position.y >> 16) + 168;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
         }
         else {
             self->field_68++;
         }
     }
     else {
-        Zone->screenBoundsL1[0]     = HeavyGunner->boundsL;
-        Zone->screenBoundsR1[0]     = HeavyGunner->boundsR;
-        Zone->screenBoundsT1[0]     = HeavyGunner->boundsT;
-        Zone->screenBoundsB1[0]     = HeavyGunner->boundsB;
+        Zone->cameraBoundsL[0]     = HeavyGunner->boundsL;
+        Zone->cameraBoundsR[0]     = HeavyGunner->boundsR;
+        Zone->cameraBoundsT[0]     = HeavyGunner->boundsT;
+        Zone->cameraBoundsB[0]     = HeavyGunner->boundsB;
         Zone->playerBoundActiveR[0] = false;
         for (int p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
@@ -1227,7 +1227,7 @@ void HeavyGunner_State2_Unknown2(void)
     if (self->rotation < 0)
         self->rotation = 0;
     RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
-    if (self->position.x > Zone->screenBoundsL2[0] + ((ScreenInfo->centerX - 16) << 16))
+    if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16))
         self->state = HeavyGunner_State2_Unknown3;
 }
 
@@ -1254,7 +1254,7 @@ void HeavyGunner_State2_Unknown3(void)
 
     bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
     if (self->velocity.x < 0 && collided) {
-        if (self->position.x < Zone->screenBoundsL2[0] + ((ScreenInfo->centerX - 16) << 16)) {
+        if (self->position.x < Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
             self->velocity.x = 0;
             self->drawFX     = 0;
             if (self->field_74 > 0)
@@ -1350,7 +1350,7 @@ void HeavyGunner_State2_Unknown5(void)
     if (self->rotation > 0)
         self->rotation = 0;
 
-    if (self->position.x > Zone->screenBoundsL2[0] + ((ScreenInfo->centerX - 16) << 16)) {
+    if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
         self->velocity.x = 0;
         self->drawFX     = 0;
         self->state      = HeavyGunner_State2_Unknown4;
@@ -1521,12 +1521,12 @@ void HeavyGunner_State2_Unknown9(void)
         foreach_all(SignPost, signPost)
         {
             signPost->position.y    = camera->position.y;
-            Zone->screenBoundsL1[0] = (signPost->position.x >> 16) - 512;
+            Zone->cameraBoundsL[0] = (signPost->position.x >> 16) - 512;
             RSDK.ObjectTileGrip(signPost, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, 0x40);
         }
 
         Zone->autoScrollSpeed       = 0;
-        Zone->screenBoundsR1[0]     = HeavyGunner->boundsR;
+        Zone->cameraBoundsR[0]     = HeavyGunner->boundsR;
         Zone->playerBoundActiveR[0] = false;
         destroyEntitySlot(SceneInfo->entitySlot - 4);
     }

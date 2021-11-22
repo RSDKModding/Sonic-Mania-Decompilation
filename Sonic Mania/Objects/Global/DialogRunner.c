@@ -136,7 +136,7 @@ void DialogRunner_PromptSavePreference_CB(void)
         destroyEntity(self);
     }
 }
-void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
+void DialogRunner_CheckUserAuth_CB()
 {
     RSDK_THIS(DialogRunner);
     if (self->timer) {
@@ -207,7 +207,7 @@ void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
         }
     }
 }
-void DialogRunner_ManageNotifs(int32 a1)
+void DialogRunner_ManageNotifs(int32 success)
 {
     RSDK_THIS(DialogRunner);
     if (GameProgress_CountUnreadNotifs()) {

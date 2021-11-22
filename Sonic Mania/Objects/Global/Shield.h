@@ -25,7 +25,7 @@ typedef struct {
     int32 type;
     int32 timer;
     int32 frameID;
-    int32 flag;
+    bool32 forceVisible;
     Animator animator;
     Animator animator2;
 } EntityShield;

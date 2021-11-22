@@ -31,7 +31,7 @@ void Launcher_Create(void *data)
     self->state            = Launcher_State_None;
 }
 
-void Launcher_StageLoad(void) { Launcher->sfxLaunch = RSDK.GetSFX("Stage/Launch.wav"); }
+void Launcher_StageLoad(void) { Launcher->sfxLaunch = RSDK.GetSfx("Stage/Launch.wav"); }
 
 void Launcher_StateCollide(void)
 {

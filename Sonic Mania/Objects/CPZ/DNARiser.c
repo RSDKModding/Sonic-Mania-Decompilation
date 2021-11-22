@@ -59,15 +59,15 @@ void DNARiser_StageLoad(void)
     DNARiser->hitbox.left   = -16;
     DNARiser->hitbox.right  = 16;
     DNARiser->active        = ACTIVE_ALWAYS;
-    DNARiser->sfxBurst      = RSDK.GetSFX("CPZ/DNABurst.wav");
-    DNARiser->sfxGrab       = RSDK.GetSFX("CPZ/DNAGrab.wav");
-    DNARiser->sfxScan       = RSDK.GetSFX("CPZ/DNAScan.wav");
-    DNARiser->sfxTiny[0]    = RSDK.GetSFX("CPZ/DNATiny0.wav");
-    DNARiser->sfxTiny[1]    = RSDK.GetSFX("CPZ/DNATiny1.wav");
-    DNARiser->sfxTiny[2]    = RSDK.GetSFX("CPZ/DNATiny2.wav");
-    DNARiser->sfxTiny[3]    = RSDK.GetSFX("CPZ/DNATiny3.wav");
-    DNARiser->sfxTiny[4]    = RSDK.GetSFX("CPZ/DNATiny4.wav");
-    DNARiser->sfxTiny[5]    = RSDK.GetSFX("CPZ/DNATiny5.wav");
+    DNARiser->sfxBurst      = RSDK.GetSfx("CPZ/DNABurst.wav");
+    DNARiser->sfxGrab       = RSDK.GetSfx("CPZ/DNAGrab.wav");
+    DNARiser->sfxScan       = RSDK.GetSfx("CPZ/DNAScan.wav");
+    DNARiser->sfxTiny[0]    = RSDK.GetSfx("CPZ/DNATiny0.wav");
+    DNARiser->sfxTiny[1]    = RSDK.GetSfx("CPZ/DNATiny1.wav");
+    DNARiser->sfxTiny[2]    = RSDK.GetSfx("CPZ/DNATiny2.wav");
+    DNARiser->sfxTiny[3]    = RSDK.GetSfx("CPZ/DNATiny3.wav");
+    DNARiser->sfxTiny[4]    = RSDK.GetSfx("CPZ/DNATiny4.wav");
+    DNARiser->sfxTiny[5]    = RSDK.GetSfx("CPZ/DNATiny5.wav");
 }
 
 void DNARiser_State_BubbleBurst(void)

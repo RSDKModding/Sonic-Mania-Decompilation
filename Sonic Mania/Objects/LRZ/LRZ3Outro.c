@@ -31,8 +31,8 @@ void LRZ3Outro_Create(void *data)
 
 void LRZ3Outro_StageLoad(void)
 {
-    LRZ3Outro->sfxBlastoff     = RSDK.GetSFX("LRZ/Blastoff.wav");
-    LRZ3Outro->sfxLittlePlanet = RSDK.GetSFX("LRZ/LittlePlanet.wav");
+    LRZ3Outro->sfxBlastoff     = RSDK.GetSfx("LRZ/Blastoff.wav");
+    LRZ3Outro->sfxLittlePlanet = RSDK.GetSfx("LRZ/LittlePlanet.wav");
 }
 
 void LRZ3Outro_HandleExplosions(void)
@@ -82,7 +82,7 @@ void LRZ3Outro_State_Unknown2(void)
         LRZ3Outro_HandleExplosions();
     if (self->timer == 30) {
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 64;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 64;
     }
 
     if (self->timer <= 120) {

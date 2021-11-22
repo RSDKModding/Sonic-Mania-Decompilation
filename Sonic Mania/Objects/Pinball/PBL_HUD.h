@@ -4,11 +4,23 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
+typedef enum {
+    PBL_HUD_MSG_SCROLL_LEFT_SLOW,
+    PBL_HUD_MSG_SCROLL_LEFT,
+    PBL_HUD_MSG_SCROLL_RIGHT_SLOW,
+    PBL_HUD_MSG_SCROLL_RIGHT,
+    PBL_HUD_MSG_SHOW_RISE,
+    PBL_HUD_MSG_SHOW_FALL,
+    PBL_HUD_MSG_FLASH,
+    PBL_HUD_MSG_FLASH_CRANE,
+}PBL_HUDMessageTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-    uint16 field_6;
+    uint16 unused1;
 } ObjectPBL_HUD;
 
 // Entity Class
@@ -19,9 +31,9 @@ typedef struct {
     int32 timer;
     Vector2 offset;
     TextInfo text;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator displayAnimator;
+    Animator baseAnimator;
+    Animator textAnimator;
 } EntityPBL_HUD;
 
 // Object Struct
@@ -41,19 +53,22 @@ void PBL_HUD_EditorLoad(void);
 void PBL_HUD_Serialize(void);
 
 // Extra Entity Functions
-void PBL_HUD_DisplayMessage(EntityPBL_HUD *self, const char* message, int32 type);
-void PBL_HUD_State_Message0(void);
-void PBL_HUD_State_Message1(void);
-void PBL_HUD_State_Message2(void);
-void PBL_HUD_State_Message3(void);
-void PBL_HUD_State_Message4(void);
-void PBL_HUD_State_Message6(void);
-void PBL_HUD_State_Message7(void);
-void PBL_HUD_StateDraw_Unknown1(void);
-void PBL_HUD_StateDraw_Unknown2(void);
-void PBL_HUD_StateDraw_Unknown3(void);
-void PBL_HUD_Unknown12(void);
-void PBL_HUD_Unknown13(void);
+void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char *message, int32 type);
+
+void PBL_HUD_StateMessage_ScrollLeftSlow(void);
+void PBL_HUD_StateMessage_ScrollLeftFast(void);
+void PBL_HUD_StateMessage_ScrollRightSlow(void);
+void PBL_HUD_StateMessage_ScrollRightFast(void);
+void PBL_HUD_StateMessage_ShowMove(void);
+void PBL_HUD_StateMessage_Flash(void);
+void PBL_HUD_StateMessage_FlashThenCrane(void);
+
+void PBL_HUD_Draw_Basic(void);
+void PBL_HUD_Draw_Message(void);
+void PBL_HUD_Draw_Score(void);
+
+void PBL_HUD_State_RevealCrane(void);
+void PBL_HUD_State_HideCrane(void);
 #endif
 
 #endif //!OBJ_PBL_HUD_H

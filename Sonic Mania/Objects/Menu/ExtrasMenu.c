@@ -141,7 +141,7 @@ void ExtrasMenu_Start_Puyo_vsAI(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
     RSDK.SetScene("Extras", "Puyo Puyo");
@@ -157,7 +157,7 @@ void ExtrasMenu_Start_Puyo_vs2P(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 2;
+    param->selectionType = 2;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
     RSDK.SetScene("Extras", "Puyo Puyo");
@@ -170,10 +170,10 @@ void ExtrasMenu_Start_Credits(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 3;
-    param->field_1A8 = 1;
+    param->selectionID         = 3;
+    param->creditsReturnToMenu = true;
     RSDK.SetScene("Presentation", "Credits");
     RSDK.LoadScene();
 }
@@ -204,7 +204,7 @@ void ExtrasMenu_Start_BSS_3K(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
     RSDK.SetScene("Blue Spheres", "Random");
@@ -217,7 +217,7 @@ void ExtrasMenu_Start_BSS_Mania(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
     RSDK.SetScene("Blue Spheres", "Random 2");

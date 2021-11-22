@@ -9,9 +9,9 @@ void SilverSonic_Update(void)
     self->outerBox = RSDK.GetHitbox(&self->animator, 0);
     self->innerBox = RSDK.GetHitbox(&self->animator, 1);
 
-    if (self->position.x >= Zone->screenBoundsL2[0] + 0x180000) {
-        if (self->position.x > Zone->screenBoundsR2[0] - 0x180000) {
-            self->position.x = Zone->screenBoundsR2[0] - 0x180000;
+    if (self->position.x >= Zone->playerBoundsL[0] + 0x180000) {
+        if (self->position.x > Zone->playerBoundsR[0] - 0x180000) {
+            self->position.x = Zone->playerBoundsR[0] - 0x180000;
             if (self->state != SilverSonic_State2_Unknown6) {
                 self->direction  = FLIP_X;
                 self->velocity.x = 0;
@@ -19,7 +19,7 @@ void SilverSonic_Update(void)
         }
     }
     else {
-        self->position.x = Zone->screenBoundsL2[0] + 0x180000;
+        self->position.x = Zone->playerBoundsL[0] + 0x180000;
         if (self->state != SilverSonic_State2_Unknown6) {
             self->direction  = FLIP_NONE;
             self->velocity.x = 0;
@@ -66,11 +66,11 @@ void SilverSonic_Create(void *data)
 void SilverSonic_StageLoad(void)
 {
     SilverSonic->aniFrames  = RSDK.LoadSpriteAnimation("SSZ2/SilverSonic.bin", SCOPE_STAGE);
-    SilverSonic->sfxJump    = RSDK.GetSFX("SSZ2/SSJump.wav");
-    SilverSonic->sfxDash    = RSDK.GetSFX("SSZ2/SSDash.wav");
-    SilverSonic->sfxBoost   = RSDK.GetSFX("SSZ2/SSBoost.wav");
-    SilverSonic->sfxRebound = RSDK.GetSFX("SSZ2/SSRebound.wav");
-    SilverSonic->sfxArm     = RSDK.GetSFX("SSZ2/SSArm.wav");
+    SilverSonic->sfxJump    = RSDK.GetSfx("SSZ2/SSJump.wav");
+    SilverSonic->sfxDash    = RSDK.GetSfx("SSZ2/SSDash.wav");
+    SilverSonic->sfxBoost   = RSDK.GetSfx("SSZ2/SSBoost.wav");
+    SilverSonic->sfxRebound = RSDK.GetSfx("SSZ2/SSRebound.wav");
+    SilverSonic->sfxArm     = RSDK.GetSfx("SSZ2/SSArm.wav");
 }
 
 void SilverSonic_HandleNextAttack(void)
@@ -321,21 +321,21 @@ void SilverSonic_State2_Unknown3(void)
 {
     RSDK_THIS(SilverSonic);
 
-    if (self->position.x < Zone->screenBoundsL2[0] + 0x180000) {
+    if (self->position.x < Zone->playerBoundsL[0] + 0x180000) {
         self->velocity.x = 0x80000;
         self->direction  = FLIP_NONE;
         self->state      = SilverSonic_State2_Unknown4;
         self->onGround   = false;
         self->velocity.y = -0x68000;
-        self->position.x = Zone->screenBoundsL2[0] + 0x180000;
+        self->position.x = Zone->playerBoundsL[0] + 0x180000;
     }
-    else if (self->position.x > Zone->screenBoundsR2[0] - 0x180000) {
+    else if (self->position.x > Zone->playerBoundsR[0] - 0x180000) {
         self->velocity.x = -0x80000;
         self->direction  = FLIP_X;
         self->state      = SilverSonic_State2_Unknown4;
         self->onGround   = false;
         self->velocity.y = -0x68000;
-        self->position.x = Zone->screenBoundsR2[0] - 0x180000;
+        self->position.x = Zone->playerBoundsR[0] - 0x180000;
     }
     SilverSonic_CheckPlayerCollisions_Ball();
 }
@@ -345,13 +345,13 @@ void SilverSonic_State2_Unknown4(void)
     RSDK_THIS(SilverSonic);
 
     self->velocity.y += 0x3800;
-    if (self->position.x < Zone->screenBoundsL2[0] + 0x180000) {
+    if (self->position.x < Zone->playerBoundsL[0] + 0x180000) {
         self->velocity.x = 0;
-        self->position.x = Zone->screenBoundsL2[0] + 0x180000;
+        self->position.x = Zone->playerBoundsL[0] + 0x180000;
     }
-    else if (self->position.x > Zone->screenBoundsR2[0] - 0x180000) {
+    else if (self->position.x > Zone->playerBoundsR[0] - 0x180000) {
         self->velocity.x = 0;
-        self->position.x = Zone->screenBoundsR2[0] - 0x180000;
+        self->position.x = Zone->playerBoundsR[0] - 0x180000;
     }
 
     if (self->onGround) {
@@ -369,7 +369,7 @@ void SilverSonic_State2_Unknown6(void)
     RSDK_THIS(SilverSonic);
 
     self->velocity.y += 0x1800;
-    if (self->position.x < Zone->screenBoundsL2[0] + 0x180000) {
+    if (self->position.x < Zone->playerBoundsL[0] + 0x180000) {
         if (self->velocity.x < 0) {
             self->direction  = FLIP_NONE;
             self->velocity.x = -self->velocity.x;
@@ -377,7 +377,7 @@ void SilverSonic_State2_Unknown6(void)
             RSDK.PlaySfx(SilverSonic->sfxRebound, false, 255);
         }
     }
-    else if (self->position.x > Zone->screenBoundsR2[0] - 0x180000) {
+    else if (self->position.x > Zone->playerBoundsR[0] - 0x180000) {
         if (self->velocity.x > 0) {
             self->direction  = FLIP_X;
             self->velocity.x = -self->velocity.x;
@@ -452,11 +452,11 @@ void SilverSonic_State_Unknown5(void)
 {
     RSDK_THIS(SilverSonic);
 
-    if (self->position.x < Zone->screenBoundsL2[0] + 0x180000 || self->position.x > Zone->screenBoundsR2[0] - 0x180000) {
-        if (self->position.x < Zone->screenBoundsL2[0] + 0x180000)
-            self->position.x = Zone->screenBoundsL2[0] + 0x180000;
+    if (self->position.x < Zone->playerBoundsL[0] + 0x180000 || self->position.x > Zone->playerBoundsR[0] - 0x180000) {
+        if (self->position.x < Zone->playerBoundsL[0] + 0x180000)
+            self->position.x = Zone->playerBoundsL[0] + 0x180000;
         else
-            self->position.x = Zone->screenBoundsR2[0] - 0x180000;
+            self->position.x = Zone->playerBoundsR[0] - 0x180000;
 
         self->velocity.x = 0;
         self->velocity.y = -0x30000;
@@ -478,7 +478,7 @@ void SilverSonic_State_Unknown6(void)
         int vel = self->velocity.y;
         self->velocity.y += 0x2800;
         if (self->velocity.y > 0 && vel <= 0)
-            self->direction = self->position.x > Zone->screenBoundsL2[0] + 0x800000;
+            self->direction = self->position.x > Zone->playerBoundsL[0] + 0x800000;
     }
     SilverSonic_CheckPlayerCollisions_Badnik();
 }

@@ -159,14 +159,14 @@ void HeavyRider_StageLoad(void)
 
     HeavyRider->health             = 8;
     HeavyRider->invincibilityTimer = 0;
-    HeavyRider->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyRider->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyRider->sfxCharge          = RSDK.GetSFX("LRZ/RiderCharge.wav");
-    HeavyRider->sfxLaunch          = RSDK.GetSFX("LRZ/RiderLaunch.wav");
-    HeavyRider->sfxSkid            = RSDK.GetSFX("LRZ/RiderSkid.wav");
-    HeavyRider->sfxJump            = RSDK.GetSFX("LRZ/RiderJump.wav");
-    HeavyRider->sfxCheer           = RSDK.GetSFX("LRZ/RiderCheer.wav");
-    HeavyRider->sfxBumper          = RSDK.GetSFX("Stage/Bumper3.wav");
+    HeavyRider->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyRider->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyRider->sfxCharge          = RSDK.GetSfx("LRZ/RiderCharge.wav");
+    HeavyRider->sfxLaunch          = RSDK.GetSfx("LRZ/RiderLaunch.wav");
+    HeavyRider->sfxSkid            = RSDK.GetSfx("LRZ/RiderSkid.wav");
+    HeavyRider->sfxJump            = RSDK.GetSfx("LRZ/RiderJump.wav");
+    HeavyRider->sfxCheer           = RSDK.GetSfx("LRZ/RiderCheer.wav");
+    HeavyRider->sfxBumper          = RSDK.GetSfx("Stage/Bumper3.wav");
 }
 
 void HeavyRider_SpawnDebris(int frame, uint8 drawOrder, int x, int y)
@@ -390,7 +390,7 @@ void HeavyRider_Unknown5(void)
     RSDK_THIS(HeavyRider);
 
     if (self->direction == FLIP_X) {
-        if (self->position.x < (Zone->screenBoundsL1[0] - 48) << 16) {
+        if (self->position.x < (Zone->cameraBoundsL[0] - 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
@@ -398,7 +398,7 @@ void HeavyRider_Unknown5(void)
         }
     }
     else {
-        if (self->position.x > (Zone->screenBoundsR1[0] + 48) << 16) {
+        if (self->position.x > (Zone->cameraBoundsR[0] + 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
@@ -462,7 +462,7 @@ void HeavyRider_State_SetupArena(void)
     if (++self->timer >= 2) {
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 424;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 424;
         self->active              = ACTIVE_NORMAL;
 
         foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
@@ -475,11 +475,11 @@ void HeavyRider_State_StartFight(void)
     RSDK_THIS(HeavyRider);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 424;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 424;
 #if RETRO_USE_PLUS
         HeavyRider->outro = (Entity *)CREATE_ENTITY(LRZ3Outro, NULL, self->position.x, self->position.y);
 #endif
@@ -501,7 +501,7 @@ void HeavyRider_State_SetupRider(void)
     if (player1->position.x > self->position.x) {
 #endif
         self->position.y -= 0x400000;
-        self->position.x      = (Zone->screenBoundsL1[0] - 64) << 16;
+        self->position.x      = (Zone->cameraBoundsL[0] - 64) << 16;
         self->onGround        = false;
         self->tileCollisions  = true;
         self->collisionPlane  = 0;

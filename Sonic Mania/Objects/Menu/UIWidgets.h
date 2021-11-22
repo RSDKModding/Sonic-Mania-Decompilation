@@ -11,7 +11,7 @@ typedef struct {
     int32 timer;
     int32 field_48[12];
 #else
-    int32 arrayIndex;
+    int32 timer;
     int32 buttonColours[16];
 #endif
     Animator animator1;
@@ -63,7 +63,7 @@ void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32
 void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y); // -> x, y, w, h
 void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue);
 void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag, int32 red, int32 green, int32 blue, InkEffects ink);
-void UIWidgets_DrawRhombus(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y); // -> x, y, w, size, r, g, b
+void UIWidgets_DrawParallelogram(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y); // -> x, y, w, size, r, g, b
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, colour leftColour, colour rightColour);

@@ -68,13 +68,13 @@ void OOZ2Outro_Create(void *data)
 
 void OOZ2Outro_StageLoad(void)
 {
-    OOZ2Outro->sfxGlug      = RSDK.GetSFX("OOZ/Glug.wav");
-    OOZ2Outro->sfxSubLaunch = RSDK.GetSFX("OOZ/SubLaunch.wav");
+    OOZ2Outro->sfxGlug      = RSDK.GetSfx("OOZ/Glug.wav");
+    OOZ2Outro->sfxSubLaunch = RSDK.GetSfx("OOZ/SubLaunch.wav");
 }
 
 void OOZ2Outro_StageFinishCB_Act2(void)
 {
-    Zone->screenBoundsR1[0] = 0x4000;
+    Zone->cameraBoundsR[0] = 0x4000;
     foreach_active(Player, player)
     {
         player->state      = Player_State_Air;

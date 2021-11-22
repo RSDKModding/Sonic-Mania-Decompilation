@@ -103,7 +103,7 @@ void Clapperboard_StageLoad(void)
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Clapperboard.bin", SCOPE_STAGE);
     else
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Clapperboard.bin", SCOPE_STAGE);
-    Clapperboard->sfxWhack = RSDK.GetSFX("Stage/Whack.wav");
+    Clapperboard->sfxWhack = RSDK.GetSfx("Stage/Whack.wav");
 }
 
 void Clapperboard_StateCollide_NoFlip(void)

@@ -92,10 +92,10 @@ void HotaruMKII_StageLoad(void)
     HotaruMKII->hitbox2.right  = 8;
     HotaruMKII->hitbox2.bottom = 8;
 
-    HotaruMKII->sfxLaser  = RSDK.GetSFX("SSZ1/HotaruLaser.wav");
-    HotaruMKII->sfxAppear = RSDK.GetSFX("SSZ1/HotaruAppear.wav");
-    HotaruMKII->sfxFly    = RSDK.GetSFX("SSZ1/HotaruFly.wav");
-    HotaruMKII->sfxCharge = RSDK.GetSFX("SSZ1/HotaruCharge.wav");
+    HotaruMKII->sfxLaser  = RSDK.GetSfx("SSZ1/HotaruLaser.wav");
+    HotaruMKII->sfxAppear = RSDK.GetSfx("SSZ1/HotaruAppear.wav");
+    HotaruMKII->sfxFly    = RSDK.GetSfx("SSZ1/HotaruFly.wav");
+    HotaruMKII->sfxCharge = RSDK.GetSfx("SSZ1/HotaruCharge.wav");
     DEBUGMODE_ADD_OBJ(HotaruMKII);
 }
 
@@ -397,7 +397,7 @@ void HotaruMKII_State_Unknown5(void)
             if (self->timer <= 60) {
                 if (self->timer == 60) {
                     RSDK.PlaySfx(HotaruMKII->sfxLaser, false, 255);
-                    RSDK.StopSFX(HotaruMKII->sfxCharge);
+                    RSDK.StopSfx(HotaruMKII->sfxCharge);
                 }
                 self->alpha -= 3;
                 if (!(self->timer & 3)) {

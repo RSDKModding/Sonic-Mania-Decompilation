@@ -42,8 +42,8 @@ void MSFactory_Create(void *data)
 void MSFactory_StageLoad(void)
 {
     MSFactory->aniFrames          = RSDK.LoadSpriteAnimation("SSZ2/MSFactory.bin", SCOPE_STAGE);
-    MSFactory->sfxMachineActivate = RSDK.GetSFX("Stage/MachineActivate.wav");
-    MSFactory->sfxHullClose       = RSDK.GetSFX("Stage/HullClose.wav");
+    MSFactory->sfxMachineActivate = RSDK.GetSfx("Stage/MachineActivate.wav");
+    MSFactory->sfxHullClose       = RSDK.GetSfx("Stage/HullClose.wav");
 }
 
 void MSFactory_Unknown1(void)
@@ -55,10 +55,10 @@ void MSFactory_Unknown1(void)
         if (player1->position.y > self->position.y - 0x1000000) {
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-            Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-            Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height + 44;
-            Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 44;
+            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+            Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+            Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height + 44;
+            Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 44;
             self->state               = MSFactory_Unknown2;
         }
     }

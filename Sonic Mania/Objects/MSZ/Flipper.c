@@ -140,7 +140,7 @@ void Flipper_StageLoad(void)
     Flipper->aniFrames    = RSDK.LoadSpriteAnimation("MSZ/Flipper.bin", SCOPE_STAGE);
     Flipper->hitbox.left  = -12;
     Flipper->hitbox.right = 56;
-    Flipper->sfxFlipper   = RSDK.GetSFX("Stage/Flipper.wav");
+    Flipper->sfxFlipper   = RSDK.GetSfx("Stage/Flipper.wav");
 }
 
 void Flipper_EditorDraw(void)

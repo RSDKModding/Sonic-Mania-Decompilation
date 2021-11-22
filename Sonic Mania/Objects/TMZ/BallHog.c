@@ -61,10 +61,10 @@ void BallHog_StageLoad(void)
     BallHog->hitboxBomb.right    = 6;
     BallHog->hitboxBomb.bottom   = 6;
 
-    BallHog->sfxExplosion = RSDK.GetSFX("Stage/Explosion.wav");
-    BallHog->sfxArrowHit  = RSDK.GetSFX("PSZ/ArrowHit.wav");
-    BallHog->sfxDrop      = RSDK.GetSFX("TMZ1/HogDrop.wav");
-    BallHog->sfxJump      = RSDK.GetSFX("TMZ1/HogJump.wav");
+    BallHog->sfxExplosion = RSDK.GetSfx("Stage/Explosion.wav");
+    BallHog->sfxArrowHit  = RSDK.GetSfx("PSZ/ArrowHit.wav");
+    BallHog->sfxDrop      = RSDK.GetSfx("TMZ1/HogDrop.wav");
+    BallHog->sfxJump      = RSDK.GetSfx("TMZ1/HogJump.wav");
 
     DEBUGMODE_ADD_OBJ(BallHog);
 }

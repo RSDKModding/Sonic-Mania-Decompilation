@@ -51,8 +51,8 @@ void FlowerPod_StageLoad(void)
     FlowerPod->hitbox.left   = -32;
     FlowerPod->hitbox.right  = 32;
     FlowerPod->hitbox.bottom = 0;
-    FlowerPod->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
-    FlowerPod->sfxTwinkle    = RSDK.GetSFX("Global/Twinkle.wav");
+    FlowerPod->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    FlowerPod->sfxTwinkle    = RSDK.GetSfx("Global/Twinkle.wav");
 }
 
 void FlowerPod_SpawnSeeds(void)

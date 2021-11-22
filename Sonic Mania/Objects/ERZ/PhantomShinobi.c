@@ -82,8 +82,8 @@ void PhantomShinobi_StageLoad(void)
     PhantomShinobi->hitbox.right  = 24;
     PhantomShinobi->hitbox.bottom = 24;
 
-    PhantomShinobi->sfxBlade = RSDK.GetSFX("TMZ3/ShinobiBlade.wav");
-    PhantomShinobi->sfxHit   = RSDK.GetSFX("TMZ3/ShinobiHit.wav");
+    PhantomShinobi->sfxBlade = RSDK.GetSfx("TMZ3/ShinobiBlade.wav");
+    PhantomShinobi->sfxHit   = RSDK.GetSfx("TMZ3/ShinobiHit.wav");
 
     Soundboard_LoadSFX("TMZ3/ShinobiBlade.wav", true, PhantomShinobi_BladeCheckCB, NULL);
 }

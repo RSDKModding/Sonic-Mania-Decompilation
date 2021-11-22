@@ -175,8 +175,8 @@ void PimPom_Create(void *data)
 void PimPom_StageLoad(void)
 {
     PimPom->aniFrames  = RSDK.LoadSpriteAnimation("SPZ2/PimPom.bin", SCOPE_STAGE);
-    PimPom->sfxPimPom  = RSDK.GetSFX("Stage/PimPom.wav");
-    PimPom->sfxBumper2 = RSDK.GetSFX("Stage/Bumper2.wav");
+    PimPom->sfxPimPom  = RSDK.GetSfx("Stage/PimPom.wav");
+    PimPom->sfxBumper2 = RSDK.GetSfx("Stage/Bumper2.wav");
 }
 
 void PimPom_State0_Unknown(void)

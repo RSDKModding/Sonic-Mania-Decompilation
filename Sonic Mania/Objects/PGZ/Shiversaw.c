@@ -163,11 +163,11 @@ void Shiversaw_StageLoad(void)
 
     Shiversaw->health             = 6;
     Shiversaw->invincibilityTimer = 0;
-    Shiversaw->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    Shiversaw->sfxExplosion2      = RSDK.GetSFX("Stage/Explosion2.wav");
-    Shiversaw->sfxExplosion3      = RSDK.GetSFX("Stage/Explosion3.wav");
-    Shiversaw->sfxTargeting       = RSDK.GetSFX("Stage/Targeting1.wav");
-    Shiversaw->sfxRocketJet       = RSDK.GetSFX("Stage/RocketJet.wav");
+    Shiversaw->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    Shiversaw->sfxExplosion2      = RSDK.GetSfx("Stage/Explosion2.wav");
+    Shiversaw->sfxExplosion3      = RSDK.GetSfx("Stage/Explosion3.wav");
+    Shiversaw->sfxTargeting       = RSDK.GetSfx("Stage/Targeting1.wav");
+    Shiversaw->sfxRocketJet       = RSDK.GetSfx("Stage/RocketJet.wav");
 }
 
 bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
@@ -188,7 +188,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         player->velocity.y = -0x28000;
         player->blinkTimer = 60;
         player->state      = Player_State_Hit;
-        RSDK.StopSFX(Player->sfxMightyDrill);
+        RSDK.StopSfx(Player->sfxMightyDrill);
         player->onGround         = false;
         player->jumpAbility      = 0;
         player->jumpAbilityTimer = 0;
@@ -446,9 +446,9 @@ void Shiversaw_State_Entry(void)
                 if (player1->position.y > self->position.y + 0x400000 && player1->onGround) {
                     self->timer               = 0;
                     Zone->playerBoundActiveR[0] = true;
-                    Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 416;
+                    Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 416;
                     Zone->playerBoundActiveB[0] = true;
-                    Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 128;
+                    Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 128;
                     self->position.y -= 0x1000000;
                     self->position.x -= 0x1000000;
                     Shiversaw_Unknown3();
@@ -518,9 +518,9 @@ void Shiversaw_State_Entry(void)
 #else
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 416;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 416;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 128;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 128;
         self->position.y -= 0x1000000;
         self->position.x -= 0x1000000;
         Shiversaw_Unknown3();
@@ -539,12 +539,12 @@ void Shiversaw_State_SetupBounds(void)
         self->timer               = 0;
 #endif
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+        Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.x > self->position.x + 0x500000) {
             if (player1->position.y > self->field_84) {
                 Zone->playerBoundActiveL[0] = true;
-                Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 416;
+                Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 416;
                 self->state               = Shiversaw_State_Unknown1;
 #if !RETRO_USE_PLUS
                 Music_TransitionTrack(TRACK_MINIBOSS, 0.014);
@@ -875,7 +875,7 @@ void Shiversaw_CheckCrateCollisions(void)
         foreach_all(Crate, crate)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &crate->hitbox, crate, &crate->hitbox)) {
-                RSDK.StopSFX(Shiversaw->sfxTargeting);
+                RSDK.StopSfx(Shiversaw->sfxTargeting);
                 if (!crate->animator.frameID) {
                     Crate_Break(crate);
                     if (self->stateSaw[sawID] == Shiversaw_StateSaw_Unknown4)
@@ -1002,7 +1002,7 @@ void Shiversaw_StateSaw_Unknown3(void)
 
     ++self->sawTimers[sawID];
     if (self->sawTimers[sawID] >= 45) {
-        RSDK.StopSFX(Shiversaw->sfxTargeting);
+        RSDK.StopSfx(Shiversaw->sfxTargeting);
         RSDK.PlaySfx(Shiversaw->sfxRocketJet, false, 255);
         self->stateSaw[sawID] = Shiversaw_StateSaw_Unknown4;
     }

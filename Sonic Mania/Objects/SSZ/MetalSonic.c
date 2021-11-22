@@ -83,23 +83,23 @@ void MetalSonic_StageLoad(void)
     MetalSonic->hitbox2.top     = -8;
     MetalSonic->hitbox2.right   = 16;
     MetalSonic->hitbox2.bottom  = 8;
-    MetalSonic->sfxHit          = RSDK.GetSFX("Stage/BossHit.wav");
-    MetalSonic->sfxExplosion2   = RSDK.GetSFX("Stage/Explosion2.wav");
-    MetalSonic->sfxExplosion3   = RSDK.GetSFX("Stage/Explosion3.wav");
-    MetalSonic->sfxRumble       = RSDK.GetSFX("Stage/Rumble.wav");
-    MetalSonic->sfxJump2        = RSDK.GetSFX("Stage/Jump2.wav");
-    MetalSonic->sfxSpecialRing  = RSDK.GetSFX("Global/SpecialRing.wav");
-    MetalSonic->sfxMSElecPulse  = RSDK.GetSFX("SSZ2/MSElecPulse.wav");
-    MetalSonic->sfxMSBall       = RSDK.GetSFX("SSZ2/MSBall.wav");
-    MetalSonic->sfxMSFireball   = RSDK.GetSFX("SSZ2/MSFireball.wav");
-    MetalSonic->sfxBeep3        = RSDK.GetSFX("Stage/Beep3.wav");
-    MetalSonic->sfxBeep4        = RSDK.GetSFX("Stage/Beep4.wav");
-    MetalSonic->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
-    MetalSonic->sfxMSShoot      = RSDK.GetSFX("SSZ2/MSShoot.wav");
-    MetalSonic->sfxMSChargeFire = RSDK.GetSFX("SSZ2/MSChargeFire.wav");
+    MetalSonic->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
+    MetalSonic->sfxExplosion2   = RSDK.GetSfx("Stage/Explosion2.wav");
+    MetalSonic->sfxExplosion3   = RSDK.GetSfx("Stage/Explosion3.wav");
+    MetalSonic->sfxRumble       = RSDK.GetSfx("Stage/Rumble.wav");
+    MetalSonic->sfxJump2        = RSDK.GetSfx("Stage/Jump2.wav");
+    MetalSonic->sfxSpecialRing  = RSDK.GetSfx("Global/SpecialRing.wav");
+    MetalSonic->sfxMSElecPulse  = RSDK.GetSfx("SSZ2/MSElecPulse.wav");
+    MetalSonic->sfxMSBall       = RSDK.GetSfx("SSZ2/MSBall.wav");
+    MetalSonic->sfxMSFireball   = RSDK.GetSfx("SSZ2/MSFireball.wav");
+    MetalSonic->sfxBeep3        = RSDK.GetSfx("Stage/Beep3.wav");
+    MetalSonic->sfxBeep4        = RSDK.GetSfx("Stage/Beep4.wav");
+    MetalSonic->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
+    MetalSonic->sfxMSShoot      = RSDK.GetSfx("SSZ2/MSShoot.wav");
+    MetalSonic->sfxMSChargeFire = RSDK.GetSfx("SSZ2/MSChargeFire.wav");
 #if RETRO_USE_PLUS
-    MetalSonic->sfxMSTransform = RSDK.GetSFX("SSZ2/MSTransform.wav");
-    MetalSonic->sfxTransform2  = RSDK.GetSFX("Stage/Transform2.wav");
+    MetalSonic->sfxMSTransform = RSDK.GetSfx("SSZ2/MSTransform.wav");
+    MetalSonic->sfxTransform2  = RSDK.GetSfx("Stage/Transform2.wav");
 #endif
 }
 
@@ -113,14 +113,14 @@ void MetalSonic_HandleStageWrap(void)
     EntityMetalSonic *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, MetalSonic);
     EntityPlatform *wall   = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
     if (player->position.y < marker->position.y && !player->collisionPlane) {
-        Zone->screenBoundsT1[0] = (marker->position.y >> 16) + 16 - ScreenInfo->height;
-        Zone->screenBoundsB1[0] = (marker->position.y >> 16) + 16;
+        Zone->cameraBoundsT[0] = (marker->position.y >> 16) + 16 - ScreenInfo->height;
+        Zone->cameraBoundsB[0] = (marker->position.y >> 16) + 16;
         Zone->deathBoundary[0]  = (marker->position.y >> 16) + 16;
         marker->position.y      = -0x200000;
 
         for (int i = 0; i < PLAYER_MAX; ++i) {
-            Zone->screenBoundsL1[i]     = (wall->position.x >> 16) - 95;
-            Zone->screenBoundsR1[i]     = (wall->position.x >> 16) + 392;
+            Zone->cameraBoundsL[i]     = (wall->position.x >> 16) - 95;
+            Zone->cameraBoundsR[i]     = (wall->position.x >> 16) + 392;
             Zone->playerBoundActiveL[i] = true;
             Zone->playerBoundActiveR[i] = true;
         }
@@ -164,10 +164,10 @@ void MetalSonic_HandleStageWrap(void)
             if (self->objectID == GigaMetal->objectID) {
                 camera->boundsL += 0xE00;
                 camera->boundsR += 0xE00;
-                Zone->screenBoundsL1[0] += 0xE00;
-                Zone->screenBoundsR1[0] += 0xE00;
-                Zone->screenBoundsL2[0] += 0xE000000;
-                Zone->screenBoundsR2[0] += 0xE000000;
+                Zone->cameraBoundsL[0] += 0xE00;
+                Zone->cameraBoundsR[0] += 0xE00;
+                Zone->playerBoundsL[0] += 0xE000000;
+                Zone->playerBoundsR[0] += 0xE000000;
             }
 #endif
 
@@ -213,10 +213,10 @@ void MetalSonic_HandleStageWrap(void)
         if (self->objectID == GigaMetal->objectID) {
             camera->boundsL -= 0xE00;
             camera->boundsR -= 0xE00;
-            Zone->screenBoundsL1[0] -= 0xE00;
-            Zone->screenBoundsR1[0] -= 0xE00;
-            Zone->screenBoundsL2[0] -= 0xE000000;
-            Zone->screenBoundsR2[0] -= 0xE000000;
+            Zone->cameraBoundsL[0] -= 0xE00;
+            Zone->cameraBoundsR[0] -= 0xE00;
+            Zone->playerBoundsL[0] -= 0xE000000;
+            Zone->playerBoundsR[0] -= 0xE000000;
         }
 #endif
 
@@ -382,10 +382,10 @@ void MetalSonic_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height + 52;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 52;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height + 52;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 52;
         self->state               = MetalSonic_State_WaitForPlayer;
     }
 }
@@ -491,8 +491,8 @@ void MetalSonic_State_SetupBounds(void)
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
-        Zone->screenBoundsR1[0] = size.x;
-        Zone->screenBoundsT1[0] = 0;
+        Zone->cameraBoundsR[0] = size.x;
+        Zone->cameraBoundsT[0] = 0;
     }
 }
 
@@ -502,7 +502,7 @@ void MetalSonic_State_Start(void)
 
     if (++self->timer == 90) {
         self->timer           = 0;
-        Zone->screenBoundsL1[0] = 0;
+        Zone->cameraBoundsL[0] = 0;
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &self->animator, false, 0);
         self->velocity.x = 0x18000;
         self->velocity.y = -0x60000;
@@ -1231,9 +1231,9 @@ void MetalSonic_State_Unknown15(void)
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
-        Zone->screenBoundsL1[0]     = 0;
-        Zone->screenBoundsR1[0]     = size.x;
-        Zone->screenBoundsT1[0]     = 0;
+        Zone->cameraBoundsL[0]     = 0;
+        Zone->cameraBoundsR[0]     = size.x;
+        Zone->cameraBoundsT[0]     = 0;
         Zone->playerBoundActiveL[0] = false;
         Zone->playerBoundActiveR[0] = false;
         RSDK.PlaySfx(MetalSonic->sfxExplosion3, false, 255);
@@ -1381,7 +1381,7 @@ void MetalSonic_State_Unknown16(void)
         case 300: {
             EntityPlatform *startWall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
             self->targetPos.x = startWall->position.x + 0x800000;
-            self->targetPos.y = (Zone->screenBoundsB1[0] << 16) - 0x340000;
+            self->targetPos.y = (Zone->cameraBoundsB[0] << 16) - 0x340000;
             self->state = MetalSonic_State_Unknown17;
             break;
         }
@@ -1524,8 +1524,8 @@ void MetalSonic_State_Unknown22(void)
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
 
         for (int i = 0; i < PLAYER_MAX; ++i) {
-            Zone->screenBoundsL1[i] = 0;
-            Zone->screenBoundsR1[i] = size.x + 0x400;
+            Zone->cameraBoundsL[i] = 0;
+            Zone->cameraBoundsR[i] = size.x + 0x400;
             Zone->playerBoundActiveL[i] = false;
             Zone->playerBoundActiveL[i] = false;
         }
@@ -1929,10 +1929,10 @@ void MetalSonic_State_Finish(void)
     if (!--self->timer) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        Zone->screenBoundsL1[0] = ScreenInfo->position.x;
-        Zone->screenBoundsR1[0] = ScreenInfo->width + ScreenInfo->position.x;
-        Zone->screenBoundsR2[0] = (ScreenInfo->width + ScreenInfo->position.x) << 16;
-        Zone->screenBoundsL2[0] = ScreenInfo->position.x << 16;
+        Zone->cameraBoundsL[0] = ScreenInfo->position.x;
+        Zone->cameraBoundsR[0] = ScreenInfo->width + ScreenInfo->position.x;
+        Zone->playerBoundsR[0] = (ScreenInfo->width + ScreenInfo->position.x) << 16;
+        Zone->playerBoundsL[0] = ScreenInfo->position.x << 16;
 
         EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
                                                 (ScreenInfo->position.y - 48) << 16);

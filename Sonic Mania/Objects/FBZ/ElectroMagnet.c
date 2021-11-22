@@ -20,7 +20,7 @@ void ElectroMagnet_StaticUpdate(void)
         ElectroMagnet->field_18 = 0;
     }
     else if (ElectroMagnet->playingMagnetSFX) {
-        RSDK.StopSFX(ElectroMagnet->sfxMagnet);
+        RSDK.StopSfx(ElectroMagnet->sfxMagnet);
         ElectroMagnet->playingMagnetSFX = false;
     }
 }
@@ -70,7 +70,7 @@ void ElectroMagnet_StageLoad(void)
     ElectroMagnet->hitbox.bottom   = 1;
     ElectroMagnet->onScreenRange.x = 0x800000;
     ElectroMagnet->onScreenRange.y = 0x400000;
-    ElectroMagnet->sfxMagnet       = RSDK.GetSFX("Stage/Magnet.wav");
+    ElectroMagnet->sfxMagnet       = RSDK.GetSfx("Stage/Magnet.wav");
 }
 
 void ElectroMagnet_Unknown1(void)

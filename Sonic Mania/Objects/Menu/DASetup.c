@@ -58,10 +58,10 @@ void DASetup_StageLoad(void)
 
     DASetup->trackCount    = trackCount;
     DASetup->activeTrack   = -1;
-    DASetup->sfxEmerald    = RSDK.GetSFX("Special/Emerald.wav");
-    DASetup->sfxMedal      = RSDK.GetSFX("Special/Medal.wav");
-    DASetup->sfxSSExit     = RSDK.GetSFX("Special/SSExit.wav");
-    DASetup->sfxScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
+    DASetup->sfxEmerald    = RSDK.GetSfx("Special/Emerald.wav");
+    DASetup->sfxMedal      = RSDK.GetSfx("Special/Medal.wav");
+    DASetup->sfxSSExit     = RSDK.GetSfx("Special/SSExit.wav");
+    DASetup->sfxScoreTotal = RSDK.GetSfx("Global/ScoreTotal.wav");
 }
 
 void DASetup_DisplayTrack(int32 trackID)

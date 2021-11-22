@@ -65,7 +65,7 @@ void LRZFireball_StageLoad(void)
     LRZFireball->hitbox.top    = -6;
     LRZFireball->hitbox.right  = 6;
     LRZFireball->hitbox.bottom = 6;
-    LRZFireball->sfxFireball   = RSDK.GetSFX("Stage/Fireball.wav");
+    LRZFireball->sfxFireball   = RSDK.GetSfx("Stage/Fireball.wav");
 }
 
 void LRZFireball_CheckPlayerCollisions(void)

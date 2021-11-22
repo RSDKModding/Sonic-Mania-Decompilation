@@ -58,7 +58,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     for (int p = 0; p < Player->playerCount; ++p) {
-        Zone->screenBoundsR1[p] = size.x;
+        Zone->cameraBoundsR[p] = size.x;
     }
 
     return true;

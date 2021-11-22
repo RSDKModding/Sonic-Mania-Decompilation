@@ -140,8 +140,8 @@ void SchrodingersCapsule_Create(void *data)
 void SchrodingersCapsule_StageLoad(void)
 {
     SchrodingersCapsule->aniFrames     = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE);
-    SchrodingersCapsule->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    SchrodingersCapsule->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
+    SchrodingersCapsule->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    SchrodingersCapsule->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
 }
 
 void SchrodingersCapsule_Unknown1(void)
@@ -161,11 +161,11 @@ void SchrodingersCapsule_Unknown2(void)
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
             if (abs(self->position.x - player->position.x) < 0x1000000) {
-                if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
+                if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
-                    Zone->screenBoundsL1[p]     = (self->position.x >> 16) - ScreenInfo[p].centerX;
-                    Zone->screenBoundsR1[p]     = (self->position.x >> 16) + ScreenInfo[p].centerX;
+                    Zone->cameraBoundsL[p]     = (self->position.x >> 16) - ScreenInfo[p].centerX;
+                    Zone->cameraBoundsR[p]     = (self->position.x >> 16) + ScreenInfo[p].centerX;
                 }
             }
         }

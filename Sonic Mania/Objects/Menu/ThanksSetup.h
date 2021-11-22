@@ -36,11 +36,11 @@ void ThanksSetup_EditorLoad(void);
 void ThanksSetup_Serialize(void);
 
 // Extra Entity Functions
-void ThanksSetup_Unknown1(void);
-void ThanksSetup_Unknown2(void);
-void ThanksSetup_Unknown3(void);
-void ThanksSetup_Unknown4(void);
-void ThanksSetup_Unknown5(void);
-void ThanksSetup_Unknown6(void);
+void ThanksSetup_HandleIconsPos(void);
+void ThanksSetup_State_ThanksForPlaying(void);
+void ThanksSetup_State_FlipOverIcon(void);
+void ThanksSetup_State_Mania2017(void);
+void ThanksSetup_State_FadeOut(void);
+void ThanksSetup_Draw_Fade(void);
 
 #endif //!OBJ_THANKSSETUP_H

@@ -12,39 +12,33 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 selectionFlag;
-    uint8 field_59;
+    uint8 selectionType;
     char menuTag[0x100];
     int32 selectionID;
-    int32 field_160;
+    int32 unused1; //field_160
     int32 clearFlag;
-    int32 field_168;
+    int32 replayID;
     int32 characterID;
     int32 zoneID;
     int32 actID;
-    int32 dbRowID;
+    int32 timeAttackRank;
 #if RETRO_USE_PLUS
     int32 isEncoreMode;
-    int32 field_180;
+    int32 replayUUID;
     int32 viewReplay;
     int32 showGhost;
-    uint8 field_18C;
-    uint8 replayRank;
-    uint8 field_18E;
-    uint8 field_18F;
-    int32 field_190;
-    int32 field_194;
-    int32 field_198;
-    int32 field_19C;
+    uint8 selectedReplay;
+    uint8 replayRankID;
 #else
     int32 timeScore;
-    int32 field_174;
-    int32 field_178;
-    int32 field_17C;
-    int32 field_180;
 #endif
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
     int32 vsZoneID;
     int32 vsActID;
-    int32 field_1A8;
+    int32 creditsReturnToMenu;
 } EntityMenuParam;
 
 // Object Struct

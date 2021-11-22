@@ -43,12 +43,12 @@ typedef struct {
     int32 wordStopPos;
     uint8 actID;
     int32 actNumScale;
-    Vector2 drawPos2;
+    Vector2 actNumPos;
     bool32 enableIntro;
-    Animator decorationData;
-    Animator nameLetterData;
-    Animator zoneLetterData;
-    Animator actNumbersData;
+    Animator decorationAnimator;
+    Animator nameLetterAnimator;
+    Animator zoneLetterAnimator;
+    Animator actNumbersAnimator;
     colour colours[5];
 } EntityTitleCard;
 
@@ -83,6 +83,7 @@ void TitleCard_State_ShowTitle(void);
 void TitleCard_State_Idle(void);
 void TitleCard_State_SlideAway(void);
 void TitleCard_State_Supressed(void);
+
 // Draw States
 void TitleCard_Draw_Default(void);
 void TitleCard_Draw_SolidBG(void);

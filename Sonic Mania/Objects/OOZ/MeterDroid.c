@@ -86,13 +86,13 @@ void MeterDroid_StageLoad(void)
     MeterDroid->hitbox3.top    = -14;
     MeterDroid->hitbox3.right  = 14;
     MeterDroid->hitbox3.bottom = 14;
-    MeterDroid->sfxHit         = RSDK.GetSFX("Stage/BossHit.wav");
-    MeterDroid->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
-    MeterDroid->sfxDestroy     = RSDK.GetSFX("Global/Destroy.wav");
-    MeterDroid->sfxToss        = RSDK.GetSFX("OOZ/Toss.wav");
-    MeterDroid->sfxGrab        = RSDK.GetSFX("Global/Grab.wav");
-    MeterDroid->sfxValve       = RSDK.GetSFX("OOZ/Valve.wav");
-    MeterDroid->sfxWrench      = RSDK.GetSFX("OOZ/Wrench.wav");
+    MeterDroid->sfxHit         = RSDK.GetSfx("Stage/BossHit.wav");
+    MeterDroid->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
+    MeterDroid->sfxDestroy     = RSDK.GetSfx("Global/Destroy.wav");
+    MeterDroid->sfxToss        = RSDK.GetSfx("OOZ/Toss.wav");
+    MeterDroid->sfxGrab        = RSDK.GetSfx("Global/Grab.wav");
+    MeterDroid->sfxValve       = RSDK.GetSfx("OOZ/Valve.wav");
+    MeterDroid->sfxWrench      = RSDK.GetSfx("OOZ/Wrench.wav");
 }
 
 void MeterDroid_CheckPlayerCollisions(void)
@@ -282,15 +282,15 @@ void MeterDroid_State_Setup(void)
     if (++self->timer >= 8) {
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height - 64;
-        MeterDroid->boundsL         = (Zone->screenBoundsL1[0] + 64) << 16;
-        MeterDroid->boundsR         = (Zone->screenBoundsR1[0] - 64) << 16;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - ScreenInfo->height - 64;
+        MeterDroid->boundsL         = (Zone->cameraBoundsL[0] + 64) << 16;
+        MeterDroid->boundsR         = (Zone->cameraBoundsR[0] - 64) << 16;
         MeterDroid->startX          = self->position.x;
-        MeterDroid->boundsT         = (Zone->screenBoundsT1[0] + 48) << 16;
-        MeterDroid->boundsB         = (Zone->screenBoundsB1[0] - 8) << 16;
+        MeterDroid->boundsT         = (Zone->cameraBoundsT[0] + 48) << 16;
+        MeterDroid->boundsB         = (Zone->cameraBoundsB[0] - 8) << 16;
         self->position.x += 0x800000;
         self->visible   = true;
         self->stateDraw = MeterDroid_StateDraw_Unknown1;

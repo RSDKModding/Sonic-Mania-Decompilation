@@ -71,8 +71,8 @@ void Shuriken_StageLoad(void)
     Shuriken->hitbox4.left   = -16;
     Shuriken->hitbox4.right  = 16;
     Shuriken->hitbox4.bottom = 8;
-    Shuriken->sfxArrowLaunch = RSDK.GetSFX("PSZ/ArrowLaunch.wav");
-    Shuriken->sfxArrowHit    = RSDK.GetSFX("PSZ/ArrowHit.wav");
+    Shuriken->sfxArrowLaunch = RSDK.GetSfx("PSZ/ArrowLaunch.wav");
+    Shuriken->sfxArrowHit    = RSDK.GetSfx("PSZ/ArrowHit.wav");
 }
 
 void Shuriken_CheckPlayerCollisions(void)

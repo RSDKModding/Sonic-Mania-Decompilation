@@ -70,7 +70,7 @@ void Aquis_StageLoad(void)
     Aquis->hitbox3.top    = -3;
     Aquis->hitbox3.right  = 3;
     Aquis->hitbox3.bottom = 3;
-    Aquis->sfxShot        = RSDK.GetSFX("Stage/Shot.wav");
+    Aquis->sfxShot        = RSDK.GetSfx("Stage/Shot.wav");
     DEBUGMODE_ADD_OBJ(Aquis);
 }
 

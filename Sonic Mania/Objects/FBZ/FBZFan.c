@@ -87,7 +87,7 @@ void FBZFan_Create(void *data)
 void FBZFan_StageLoad(void)
 {
     FBZFan->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZFan.bin", SCOPE_STAGE);
-    FBZFan->sfxFan    = RSDK.GetSFX("FBZ/FBZFan.wav");
+    FBZFan->sfxFan    = RSDK.GetSfx("FBZ/FBZFan.wav");
     RSDK.SetSpriteAnimation(FBZFan->aniFrames, 0, &FBZFan->animator1, true, 0);
     RSDK.SetSpriteAnimation(FBZFan->aniFrames, 1, &FBZFan->animator2, true, 0);
     RSDK.SetSpriteAnimation(FBZFan->aniFrames, 2, &FBZFan->animator3, true, 0);

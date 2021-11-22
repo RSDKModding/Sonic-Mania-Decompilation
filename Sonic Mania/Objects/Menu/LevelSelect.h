@@ -17,10 +17,10 @@ typedef struct {
     TABLE(int32 cheat_SuperDash[9], { 2, 0, 1, 7, 0, 8, 1, 5, 255 });
     TABLE(int32 cheat_MaxControl[5], { 9, 0, 0, 1, 255 });
     TABLE(int32 cheat_DisableSuperMusic[5], { 6, 2, 1, 4, 255 });
-    int32 field_108;
-    int32 field_10C;
-    int32 field_110;
-    int32 field_114;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
     int32 bgScrollPosID;
     int32 startMusicID;
     int32 soundTestMax;
@@ -63,12 +63,12 @@ typedef struct {
 #endif
     int32 labelCount;
 #if RETRO_USE_PLUS
-    int32 field_18C;
-    int32 field_190;
-    int32 field_194;
-    int32 field_198;
-    int32 field_19C;
-    int32 field_1A0;
+    int32 offsetUFO;
+    int32 offsetBSS;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
 #endif
 } EntityLevelSelect;
 
@@ -100,16 +100,16 @@ void LevelSelect_CheatActivated_SwapGameMode(void);
 void LevelSelect_CheatActivated_UnlockAllMedals(void);
 #endif
 
+void LevelSelect_Draw_Fade(void);
+
 void LevelSelect_State_SetupEntities(void);
+void LevelSelect_State_FadeIn(void);
+void LevelSelect_State_HandleMenu(void);
+void LevelSelect_State_FadeOut(void);
+
 void LevelSelect_ManagePlayerIcon(void);
-
-void LevelSelect_StateDraw_Fade(void);
-
-void LevelSelect_Unknown1(void);
-void LevelSelect_Unknown2(void);
-void LevelSelect_Unknown3(void);
 void LevelSelect_SetLabelHighlighted(bool32 highlight);
-void LevelSelect_Unknown6(void);
-void LevelSelect_Unknown7(void);
+void LevelSelect_HandleColumnChange(void);
+void LevelSelect_HandleNewStagePos(void);
 
 #endif //!OBJ_LEVELSELECT_H

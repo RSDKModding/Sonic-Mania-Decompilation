@@ -14,7 +14,7 @@ void MathHelpers_Create(void *data) {}
 
 void MathHelpers_StageLoad(void) {}
 
-void MathHelpers_Lerp1(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
+void MathHelpers_Lerp(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
 {
     if (percent < 0) {
         pos->x = startX;
@@ -30,7 +30,7 @@ void MathHelpers_Lerp1(Vector2 *pos, int32 percent, int32 startX, int32 startY, 
     }
 }
 
-void MathHelpers_Lerp2(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
+void MathHelpers_LerpSin1024(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
 {
     if (percent < 0) {
         pos->x = startX;
@@ -41,13 +41,13 @@ void MathHelpers_Lerp2(Vector2 *pos, int32 percent, int32 startX, int32 startY, 
         pos->y = endY;
     }
     else {
-        int32 val = (RSDK.Sin1024(percent + 0x300) >> 2) + 256;
+        int32 val = (RSDK.Sin1024(percent + 0x300) >> 2) + 0x200;
         pos->x    = startX + val * ((endX - startX) >> 8);
         pos->y    = startY + val * ((endY - startY) >> 8);
     }
 }
 
-void MathHelpers_Lerp3(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
+void MathHelpers_Lerp2Sin1024(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
 {
     if (percent < 0) {
         pos->x = startX;
@@ -58,12 +58,13 @@ void MathHelpers_Lerp3(Vector2 *pos, int32 percent, int32 startX, int32 startY, 
         pos->y = endY;
     }
     else {
-        pos->x = startX + (RSDK.Sin1024(percent) >> 2) * ((endX - startX) >> 8);
-        pos->y = startY + (RSDK.Sin1024(percent) >> 2) * ((endY - startY) >> 8);
+        int32 val = RSDK.Sin1024(percent) >> 2;
+        pos->x = startX + val * ((endX - startX) >> 8);
+        pos->y = startY + val * ((endY - startY) >> 8);
     }
 }
 
-void MathHelpers_Lerp4(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
+void MathHelpers_LerpSin512(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
 {
     if (percent < 0) {
         pos->x = startX;
@@ -275,101 +276,95 @@ int32 MathHelpers_Unknown12(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx
         return false;
     return true;
 }
-int32 MathHelpers_Unknown13(int32 a1, int32 a2)
+int32 MathHelpers_Unknown13(int32 distance, int32 radius)
 {
-    uint32 val = ((abs(a1) >> 16) * (abs(a2) >> 16) << 16) + (abs(a1) >> 16) * (uint16)abs(a2) + (uint16)abs(a1) * (abs(a2) >> 16)
-                 + ((uint16)abs(a1) * (uint16)abs(a2) >> 16);
-    if ((a2 ^ ~a1) >= 0)
+    uint32 v1 = abs(distance);
+    uint32 v2 = abs(radius);
+
+    uint32 r1 = (v1 >> 16) * (v2 >> 16) << 16;
+    uint32 r2 = (v1 >> 16) * (v2 & 0xFFFF);
+    uint32 r3 = (v1 & 0xFFFF) * (v2 >> 16);
+    uint32 r4 = (v1 & 0xFFFF) * (v2 & 0xFFFF) >> 16;
+
+    uint32 val = r1 + r2 + r3 + r4;
+    if ((radius ^ ~distance) >= 0) //if the signs do not match
         return -(int32)val;
     else
         return val;
 }
 
-bool32 MathHelpers_Unknown14(Vector2 *pos, int32 x1, int32 y1, Vector2 pos2, Hitbox hitbox)
+bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox)
 {
-    int32 left = hitbox.right;
-    if (hitbox.left < hitbox.right)
-        left = hitbox.left;
-    int32 right = hitbox.left;
-    if (hitbox.right > hitbox.left)
-        right = hitbox.right;
+    int32 left   = minVal(hitbox.left, hitbox.right);
+    int32 right  = maxVal(hitbox.right, hitbox.left);
+    int32 top    = minVal(hitbox.top, hitbox.bottom);
+    int32 bottom = maxVal(hitbox.bottom, hitbox.top);
 
-    int32 top = hitbox.bottom;
-    if (hitbox.top < hitbox.bottom)
-        top = hitbox.top;
-    int32 bottom = hitbox.top;
-    if (hitbox.bottom > hitbox.top)
-        bottom = hitbox.bottom;
+    int32 posLeft2   = boxPos.x + (left << 16);
+    int32 posTop2    = boxPos.y + (top << 16);
+    int32 posRight2  = boxPos.x + (right << 16);
+    int32 posBottom2 = boxPos.y + (bottom << 16);
 
-    if (x1 > pos2.x + (left << 16) && x1 < pos2.x + (right << 16) && y1 > pos2.y + (top << 16) && y1 < pos2.y + (bottom << 16))
+    if (x > posLeft2 && x < posRight2 && y > posTop2 && y < posBottom2)
         return false;
 
     int32 posY = 0;
-    if ((x1 ^ pos2.x) & 0xFFFF0000) {
-        if (!((y1 ^ pos2.y) & 0xFFFF0000)) {
-            if (pos) {
-                if (x1 <= pos2.x)
-                    pos->x = pos2.x + (left << 16);
+    if ((x ^ boxPos.x) & 0xFFFF0000) {
+        if (!((y ^ boxPos.y) & 0xFFFF0000)) {
+            if (resultPos) {
+                if (x <= boxPos.x)
+                    resultPos->x = posLeft2;
                 else
-                    pos->x = pos2.x + (right << 16);
-                pos->y = y1 & 0xFFFF0000;
+                    resultPos->x = posRight2;
+                resultPos->y = y & 0xFFFF0000;
             }
         }
         else {
-            int32 val = (((pos2.y - y1) * (1.0f / 65536.0f)) / ((pos2.x - x1) * (1.0f / 65536.0f))) * 65536.0f;
-            if (!val)
+            double div = 1.0f / 65536.0f;
+
+            int32 radius = (((boxPos.y - y) * div) / ((boxPos.x - x) * div)) * 65536.0f;
+            if (!radius)
                 return false;
 
-            int32 posVal  = 0;
-            int32 posVal2 = 0;
-            if (x1 > pos2.x) {
-                posVal = pos2.y + (top << 16);
-            }
-            else {
-                posVal = pos2.y + (top << 16);
-                posY   = y1 + MathHelpers_Unknown13((pos2.x + (left << 16)) - x1, val);
-                if ((pos2.y + (top << 16)) <= posY && posY <= (pos2.y + (bottom << 16))) {
-                    if (pos) {
-                        pos->x = pos2.x + (left << 16);
-                        pos->y = posY;
+            if (x <= boxPos.x) {
+                posY = y + MathHelpers_Unknown13(posLeft2 - x, radius);
+                if (posTop2 <= posY && posY <= posBottom2) {
+                    if (resultPos) {
+                        resultPos->x = posLeft2;
+                        resultPos->y = posY;
                     }
                     return true;
                 }
             }
 
-            if (x1 >= pos2.x) {
-                posVal = pos2.y + (top << 16);
-                posY   = y1 + MathHelpers_Unknown13((pos2.x + (right << 16)) - x1, val);
-                if ((pos2.y + (top << 16)) <= posY && posY <= (pos2.y + (bottom << 16))) {
-                    if (pos) {
-                        pos->x = pos2.x + (right << 16);
-                        pos->y = posY;
+            if (x >= boxPos.x) {
+                posY = y + MathHelpers_Unknown13(posRight2 - x, radius);
+                if (posTop2 <= posY && posY <= posBottom2) {
+                    if (resultPos) {
+                        resultPos->x = posRight2;
+                        resultPos->y = posY;
                     }
                     return true;
                 }
             }
 
-            if (y1 > pos2.y) {
-                posVal2 = pos2.x + (left << 16);
-            }
-            else {
-                val     = (((posVal - y1) * (1.0 / 65536.0)) / (val * (1.0 / 65536.0))) * -65536.0;
-                posVal2 = pos2.x + (left << 16);
-                if (posVal2 <= x1 - val && x1 - val <= (pos2.x + (right << 16))) {
-                    if (pos) {
-                        pos->x = x1 - val;
-                        pos->y = pos2.y + (top << 16);
+            if (y <= boxPos.y) {
+                radius = (((posTop2 - y) * (1.0 / 65536.0)) / (radius * (1.0 / 65536.0))) * -65536.0;
+                if (posLeft2 <= x - radius && x - radius <= posRight2) {
+                    if (resultPos) {
+                        resultPos->x = x - radius;
+                        resultPos->y = posTop2;
                     }
                     return true;
                 }
             }
 
-            if (y1 >= pos2.y) {
-                val = x1 - (((((pos2.y + (bottom << 16)) - y1) * (1.0f / 65536.0f)) / (val * (1.0f / 65536.0f))) * -65536.0f);
-                if (posVal2 <= val && val <= (pos2.x + (right << 16))) {
-                    if (pos) {
-                        pos->x = x1 - val;
-                        pos->y = pos2.y + (bottom << 16);
+            if (y >= boxPos.y) {
+                radius = x - ((((posBottom2 - y) * div) / (radius * div)) * -65536.0f);
+                if (posLeft2 <= radius && radius <= posRight2) {
+                    if (resultPos) {
+                        resultPos->x = x - radius;
+                        resultPos->y = boxPos.y + (bottom << 16);
                     }
                 }
             }
@@ -379,12 +374,12 @@ bool32 MathHelpers_Unknown14(Vector2 *pos, int32 x1, int32 y1, Vector2 pos2, Hit
         }
     }
     else {
-        if (pos) {
-            pos->x = x1 & 0xFFFF0000;
-            if (y1 <= pos2.y)
-                pos->y = pos2.y + (top << 16);
+        if (resultPos) {
+            resultPos->x = x & 0xFFFF0000;
+            if (y <= boxPos.y)
+                resultPos->y = posTop2;
             else
-                pos->y = pos2.y + (bottom << 16);
+                resultPos->y = posBottom2;
         }
     }
     return true;

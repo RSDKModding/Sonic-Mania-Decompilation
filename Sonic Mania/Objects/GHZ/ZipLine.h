@@ -21,8 +21,8 @@ typedef struct {
     Vector2 endPos;
     Vector2 handlePos;
     uint8 grabDelay[PLAYER_MAX];
-    Vector2 field_98;
-    int32 field_A0;
+    Vector2 joinPos;
+    int32 unused1;
 } EntityZipLine;
 
 // Object Struct
@@ -42,9 +42,9 @@ void ZipLine_EditorLoad(void);
 void ZipLine_Serialize(void);
 
 // Extra Entity Functions
-void ZipLine_Unknown1(void);
-void ZipLine_Unknown2(void);
-Vector2 ZipLine_Unknown3(void);
-void ZipLine_Unknown4(void);
+void ZipLine_ZoneCB(void);
+void ZipLine_ForceReleasePlayers(void);
+Vector2 ZipLine_GetJoinPos(void);
+void ZipLine_State_Moving(void);
 
 #endif //!OBJ_ZIPLINE_H

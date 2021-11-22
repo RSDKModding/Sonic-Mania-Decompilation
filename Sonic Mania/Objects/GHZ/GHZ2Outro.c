@@ -52,9 +52,9 @@ void GHZ2Outro_Create(void *data)
 
 void GHZ2Outro_StageLoad(void)
 {
-    GHZ2Outro->sfxRocketJet   = RSDK.GetSFX("Stage/RocketJet.wav");
-    GHZ2Outro->sfxShinobiJump = RSDK.GetSFX("PSZ/ShinobiJump.wav");
-    GHZ2Outro->sfxHeliWoosh   = RSDK.GetSFX("SPZ1/HeliWooshIn.wav");
+    GHZ2Outro->sfxRocketJet   = RSDK.GetSfx("Stage/RocketJet.wav");
+    GHZ2Outro->sfxShinobiJump = RSDK.GetSfx("PSZ/ShinobiJump.wav");
+    GHZ2Outro->sfxHeliWoosh   = RSDK.GetSfx("SPZ1/HeliWooshIn.wav");
 }
 
 bool32 GHZ2Outro_Cutscene_FinishActClear(EntityCutsceneSeq *host)
@@ -140,7 +140,7 @@ bool32 GHZ2Outro_Cutscene_HoleSceneFadeIn(EntityCutsceneSeq *host)
             robot->visible = true;
         }
         EntityDERobot *deRobot = (EntityDERobot *)self->DERobot;
-        deRobot->state  = DERobot_Unknown43;
+        deRobot->state  = DERobot_State_CutsceneExplode;
 
         CutsceneHBH_ShinobiBounceSetup();
         CutsceneHBH_KingSetup();
@@ -238,8 +238,8 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
         case 160: {
             foreach_active(DERobot, robot)
             {
-                if (robot->aniID == 2 && robot->frameID == 2) {
-                    robot->state = DERobot_Unknown23;
+                if (robot->aniID == DEROBOT_ARM && robot->frameID == 2) {
+                    robot->state = DERobot_Cutscene_ActivateArm;
                 }
             }
             RSDK.PlaySfx(DERobot->sfxButton2, false, 255);

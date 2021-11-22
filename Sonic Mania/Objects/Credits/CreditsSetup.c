@@ -44,7 +44,7 @@ void CreditsSetup_StaticUpdate(void)
         else {
             if (fade->state == FXFade_State_Wait && fade->wait == 1) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-                if (param->field_1A8) {
+                if (param->creditsReturnToMenu) {
                     RSDK.SetScene("Presentation", "Menu");
                 }
                 else if (SaveGame->saveRAM->chaosEmeralds < 0x7F) {

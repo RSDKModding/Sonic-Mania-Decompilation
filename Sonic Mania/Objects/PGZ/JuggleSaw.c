@@ -96,9 +96,9 @@ void JuggleSaw_StageLoad(void)
     JuggleSaw->grabboxWall.bottom = -16;
 
     DEBUGMODE_ADD_OBJ(JuggleSaw);
-    JuggleSaw->explodeSFX = RSDK.GetSFX("Stage/Explosion.wav");
-    JuggleSaw->juggleSFX  = RSDK.GetSFX("PSZ/Juggle.wav");
-    JuggleSaw->throwSFX   = RSDK.GetSFX("PSZ/JuggleThrow.wav");
+    JuggleSaw->explodeSFX = RSDK.GetSfx("Stage/Explosion.wav");
+    JuggleSaw->juggleSFX  = RSDK.GetSfx("PSZ/Juggle.wav");
+    JuggleSaw->throwSFX   = RSDK.GetSfx("PSZ/JuggleThrow.wav");
 }
 
 void JuggleSaw_DebugSpawn(void)

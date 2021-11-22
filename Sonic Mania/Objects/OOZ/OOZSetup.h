@@ -15,7 +15,7 @@ typedef struct {
     int32 aniTilesFrame;
     STATIC(int32 aniTilesDelay, 60);
     TABLE(int32 aniTileDelays[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
-    int32 value9;
+    int32 swimmingPlayerCount;
     int32 fadeTimer;
     int32 flags;
     uint8 flameTimers[0x20000];
@@ -63,7 +63,7 @@ bool32 OOZSetup_CheckCB_Flame(void);
 bool32 OOZSetup_CheckCB_Slide(void);
 bool32 OOZSetup_CheckCB_Swim(void);
 
-void OOZSetup_Unknown4(void);
+void OOZSetup_Draw_Flames(void);
 void OOZSetup_Unknown5(void);
 bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle);
 

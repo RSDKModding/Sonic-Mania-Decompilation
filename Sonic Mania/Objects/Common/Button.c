@@ -6,7 +6,7 @@ void Button_Update(void)
 {
     RSDK_THIS(Button);
 
-    self->down            = 0;
+    self->down            = false;
     self->currentlyActive = false;
     switch (self->type) {
         case BUTTON_FLOOR:
@@ -23,7 +23,7 @@ void Button_Update(void)
     }
 
     if (!self->down)
-        self->wasActivated = 0;
+        self->wasActivated = false;
     self->baseAnimator.frameID = self->down + 1;
 }
 
@@ -91,7 +91,7 @@ void Button_Create(void *data)
                 break;
             default: break;
         }
-        self->currentlyActive = ACTIVE_BOUNDS;
+        self->active          = ACTIVE_BOUNDS;
         self->updateRange.x   = 0x200000;
         self->updateRange.y   = 0x200000;
         self->visible         = true;
@@ -162,7 +162,7 @@ void Button_StageLoad(void)
         Button->hasEggman = true;
     if (RSDK.GetObjectIDByName("PhantomRider"))
         Button->hasPhantomRider = true;
-    Button->sfxButton = RSDK.GetSFX("Stage/Button.wav");
+    Button->sfxButton = RSDK.GetSfx("Stage/Button.wav");
 }
 
 void Button_CheckEggmanCollisions(void)
@@ -209,11 +209,11 @@ void Button_CheckPRiderCollisions(void)
 void Button_TypeFloor(void)
 {
     RSDK_THIS(Button);
-    int32 val      = self->pressPos;
+    int32 startPressPos      = self->pressPos;
     self->pressPos = 0;
     foreach_active(Player, player)
     {
-        self->hitbox.top     = (val >> 16) - (Button->hitboxOffset & 0xFFFF);
+        self->hitbox.top     = (startPressPos >> 16) - (Button->hitboxOffset & 0xFFFF);
         self->hitbox.bottom  = self->hitbox.top + 32;
         int32 playerX        = player->position.x;
         int32 playerY        = player->position.y;
@@ -225,7 +225,7 @@ void Button_TypeFloor(void)
         void *nextGState     = player->nextGroundState;
         void *nextAState     = player->nextAirState;
         void *state          = player->state;
-        if (Player_CheckCollisionBox(player, self, &self->hitbox) == 1 || self->walkOnto) {
+        if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP || self->walkOnto) {
             player->position.x      = playerX;
             player->position.y      = playerY;
             player->velocity.x      = xVel;
@@ -236,10 +236,10 @@ void Button_TypeFloor(void)
             player->nextGroundState = nextGState;
             player->nextAirState    = nextAState;
             player->state           = state;
-            self->hitbox.top -= (val >> 16);
+            self->hitbox.top -= (startPressPos >> 16);
             self->hitbox.top += (Button->activatePos >> 16);
-            int32 val2 = self->pressPos;
-            if (Player_CheckCollisionPlatform(player, self, &self->hitbox) == 1) {
+            int32 newPressPos = self->pressPos;
+            if (Player_CheckCollisionPlatform(player, self, &self->hitbox) == C_TOP) {
                 self->pressPos = Button->activatePos;
             }
             else {
@@ -262,7 +262,7 @@ void Button_TypeFloor(void)
                 Player_CheckCollisionBox(player, self, &self->hitbox);
                 player->angle = 0;
                 if (!self->wasActivated) {
-                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, false, 255);
                     self->currentlyActive = true;
                     self->toggled ^= true;
                 }
@@ -270,22 +270,22 @@ void Button_TypeFloor(void)
                 self->down         = true;
                 self->activated    = true;
             }
-            if (val2 > self->pressPos)
-                self->pressPos = val2;
+            if (newPressPos > self->pressPos)
+                self->pressPos = newPressPos;
         }
         if (self->pressPos)
-            val = self->pressPos;
+            startPressPos = self->pressPos;
     }
 }
 void Button_TypeRoof(void)
 {
     RSDK_THIS(Button);
-    int32 val      = self->pressPos;
+    int32 startPressPos      = self->pressPos;
     self->pressPos = 0;
 
     foreach_active(Player, player)
     {
-        self->hitbox.top     = -1 - (Button->hitboxOffset & 0xFFFF) - (val >> 16);
+        self->hitbox.top     = -1 - (Button->hitboxOffset & 0xFFFF) - (startPressPos >> 16);
         self->hitbox.bottom  = self->hitbox.top + 32;
         int32 playerX        = player->position.x;
         int32 playerY        = player->position.y;
@@ -297,7 +297,7 @@ void Button_TypeRoof(void)
         void *nextGState     = player->nextGroundState;
         void *nextAState     = player->nextAirState;
         void *state          = player->state;
-        if (Player_CheckCollisionBox(player, self, &self->hitbox) == 4 || self->walkOnto) {
+        if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM || self->walkOnto) {
             player->position.x      = playerX;
             player->position.y      = playerY;
             player->velocity.x      = xVel;
@@ -308,10 +308,10 @@ void Button_TypeRoof(void)
             player->nextGroundState = nextGState;
             player->nextAirState    = nextAState;
             player->state           = state;
-            self->hitbox.top += (val >> 16);
+            self->hitbox.top += (startPressPos >> 16);
             self->hitbox.top += (Button->activatePos >> 16);
-            int32 val2 = self->pressPos;
-            if (Player_CheckCollisionBox(player, self, &self->hitbox) == 4) {
+            int32 newPressPos = self->pressPos;
+            if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
                 self->pressPos = -Button->activatePos;
             }
             else {
@@ -333,7 +333,7 @@ void Button_TypeRoof(void)
 
             if (self->pressPos == -Button->activatePos) {
                 if (!self->wasActivated) {
-                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, false, 255);
                     self->currentlyActive = true;
                     self->toggled ^= true;
                 }
@@ -341,21 +341,21 @@ void Button_TypeRoof(void)
                 self->down         = true;
                 self->activated    = true;
             }
-            if (val2 < self->pressPos)
-                self->pressPos = val2;
+            if (newPressPos < self->pressPos)
+                self->pressPos = newPressPos;
         }
         if (self->pressPos)
-            val = self->pressPos;
+            startPressPos = self->pressPos;
     }
 }
 void Button_TypeRWall(void)
 {
     RSDK_THIS(Button);
-    int32 val      = self->pressPos;
+    int32 startPressPos      = self->pressPos;
     self->pressPos = 0;
     foreach_active(Player, player)
     {
-        self->hitbox.right   = (Button->hitboxOffset & 0xFFFF) - (val >> 16) + 1;
+        self->hitbox.right   = (Button->hitboxOffset & 0xFFFF) - (startPressPos >> 16) + 1;
         self->hitbox.left    = self->hitbox.right - 16;
         int32 playerX        = player->position.x;
         int32 playerY        = player->position.y;
@@ -368,7 +368,7 @@ void Button_TypeRWall(void)
         void *nextAState     = player->nextAirState;
         void *state          = player->state;
 
-        if (Player_CheckCollisionBox(player, self, &self->hitbox) == 3 || self->walkOnto) {
+        if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_RIGHT || self->walkOnto) {
             player->position.x      = playerX;
             player->position.y      = playerY;
             player->velocity.x      = xVel;
@@ -380,10 +380,10 @@ void Button_TypeRWall(void)
             player->nextAirState    = nextAState;
             player->state           = state;
 
-            self->hitbox.right += (val >> 16);
+            self->hitbox.right += (startPressPos >> 16);
             self->hitbox.right = self->hitbox.right - (Button->activatePos >> 16) - 1;
-            int32 val2         = self->pressPos;
-            if (Player_CheckCollisionBox(player, self, &self->hitbox) == 3) {
+            int32 newPressPos         = self->pressPos;
+            if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_RIGHT) {
                 self->pressPos = Button->activatePos;
             }
             else {
@@ -405,7 +405,7 @@ void Button_TypeRWall(void)
 
             if (self->pressPos == Button->activatePos) {
                 if (!self->wasActivated) {
-                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, false, 255);
                     self->currentlyActive = true;
                     self->toggled ^= true;
                 }
@@ -413,23 +413,23 @@ void Button_TypeRWall(void)
                 self->down         = true;
                 self->activated    = true;
             }
-            if (val2 > self->pressPos)
-                self->pressPos = val2;
+            if (newPressPos > self->pressPos)
+                self->pressPos = newPressPos;
         }
 
         if (self->pressPos)
-            val = self->pressPos;
+            startPressPos = self->pressPos;
     }
 }
 void Button_TypeLWall(void)
 {
     RSDK_THIS(Button);
-    int32 val      = self->pressPos;
+    int32 startPressPos      = self->pressPos;
     self->pressPos = 0;
 
     foreach_active(Player, player)
     {
-        self->hitbox.right = (val >> 16) + (Button->hitboxOffset & 0xFFFF);
+        self->hitbox.right = (startPressPos >> 16) + (Button->hitboxOffset & 0xFFFF);
         self->hitbox.left  = self->hitbox.right - 16;
 
         int32 playerX        = player->position.x;
@@ -442,7 +442,7 @@ void Button_TypeLWall(void)
         void *nextGState     = player->nextGroundState;
         void *nextAState     = player->nextAirState;
         void *state          = player->state;
-        if (Player_CheckCollisionBox(player, self, &self->hitbox) == 2 || self->walkOnto) {
+        if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_LEFT || self->walkOnto) {
             player->position.x      = playerX;
             player->position.y      = playerY;
             player->velocity.x      = xVel;
@@ -453,10 +453,10 @@ void Button_TypeLWall(void)
             player->nextGroundState = nextGState;
             player->nextAirState    = nextAState;
             player->state           = state;
-            self->hitbox.right -= (val >> 16);
+            self->hitbox.right -= (startPressPos >> 16);
             self->hitbox.right -= (Button->activatePos >> 16);
-            int32 val2 = self->pressPos;
-            if (Player_CheckCollisionBox(player, self, &self->hitbox) == 2) {
+            int32 newPressPos = self->pressPos;
+            if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_LEFT) {
                 self->pressPos = -Button->activatePos;
             }
             else {
@@ -477,7 +477,7 @@ void Button_TypeLWall(void)
             }
             if (self->pressPos == -Button->activatePos) {
                 if (!self->wasActivated) {
-                    RSDK.PlaySfx(Button->sfxButton, 0, 255);
+                    RSDK.PlaySfx(Button->sfxButton, false, 255);
                     self->currentlyActive = true;
                     self->toggled ^= true;
                 }
@@ -485,15 +485,15 @@ void Button_TypeLWall(void)
                 self->down         = true;
                 self->activated    = true;
             }
-            if (val2 < self->pressPos)
-                self->pressPos = val2;
+            if (newPressPos < self->pressPos)
+                self->pressPos = newPressPos;
         }
 
         if (self->pressPos)
-            val = self->pressPos;
+            startPressPos = self->pressPos;
     }
 
-    self->hitbox.right = (Button->hitboxOffset & 0xFFFF) + (val >> 16);
+    self->hitbox.right = (Button->hitboxOffset & 0xFFFF) + (startPressPos >> 16);
     self->hitbox.left  = self->hitbox.left - 16;
 }
 
@@ -501,7 +501,6 @@ void Button_TypeLWall(void)
 void Button_EditorDraw(void)
 {
     RSDK_THIS(Button);
-    Vector2 drawPos;
 
     switch (self->type) {
         case BUTTON_FLOOR:
@@ -527,66 +526,24 @@ void Button_EditorDraw(void)
         default: break;
     }
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    if (self->type >= BUTTON_RWALL)
-        drawPos.x -= self->pressPos;
-    else
-        drawPos.y += self->pressPos;
-    RSDK.DrawSprite(&self->buttonAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->buttonAnimator, NULL, false);
     RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 }
 
 void Button_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("MMZ")) {
-        Button->aniFrames    = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x80000;
-        Button->buttonOffset = 0x50000;
-        Button->hitboxOffset = 13;
-        Button->unused1      = 5;
-    }
-    else if (RSDK.CheckStageFolder("FBZ")) {
-        Button->aniFrames    = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x80000;
-        Button->buttonOffset = 0x50000;
-        Button->hitboxOffset = 13;
-        Button->unused1      = 5;
-    }
-    else if (RSDK.CheckStageFolder("LRZ1")) {
-        Button->aniFrames    = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x40000;
-        Button->buttonOffset = 0x30000;
-        Button->hitboxOffset = 7;
-        Button->unused1      = 3;
-    }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
-        Button->aniFrames    = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x40000;
-        Button->buttonOffset = 0x30000;
-        Button->hitboxOffset = 7;
-        Button->unused1      = 3;
-    }
-    else if (RSDK.CheckStageFolder("HCZ")) {
-        Button->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x30000;
-        Button->buttonOffset = 0x30000;
-        Button->hitboxOffset = 9;
-        Button->unused1      = 6;
-    }
-    else if (RSDK.CheckStageFolder("TMZ3")) {
-        Button->aniFrames    = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
-        Button->activatePos  = 0x30000;
-        Button->buttonOffset = 0x30000;
-        Button->hitboxOffset = 9;
-        Button->unused1      = 6;
-    }
-    else {
-        Button->activatePos  = 0x80000;
-        Button->buttonOffset = 0x50000;
-        Button->hitboxOffset = 13;
-        Button->unused1      = 5;
-    }
+    if (RSDK.CheckStageFolder("MMZ"))
+        Button->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("FBZ"))
+        Button->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("LRZ1"))
+        Button->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("LRZ2"))
+        Button->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("HCZ"))
+        Button->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("TMZ3"))
+        Button->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Button, type);
     RSDK_ENUM_VAR("Floor", BUTTON_FLOOR);

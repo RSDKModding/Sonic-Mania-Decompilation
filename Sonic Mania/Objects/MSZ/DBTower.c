@@ -97,14 +97,14 @@ void DBTower_StageLoad(void)
     DBTower->hitbox.bottom   = 27;
     DBTower->defeated        = false;
     DBTower->active          = ACTIVE_ALWAYS;
-    DBTower->sfxRocketJet    = RSDK.GetSFX("Stage/RocketJet.wav");
-    DBTower->sfxHit          = RSDK.GetSFX("Stage/BossHit.wav");
-    DBTower->sfxExplosion2   = RSDK.GetSFX("Stage/Explosion2.wav");
-    DBTower->sfxExplosion3   = RSDK.GetSFX("Stage/Explosion3.wav");
-    DBTower->sfxBumper3      = RSDK.GetSFX("Stage/Bumper3.wav");
-    DBTower->sfxAssemble     = RSDK.GetSFX("Stage/Assemble.wav");
-    DBTower->sfxRocketJet2   = RSDK.GetSFX("Stage/RocketJet.wav");
-    DBTower->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
+    DBTower->sfxRocketJet    = RSDK.GetSfx("Stage/RocketJet.wav");
+    DBTower->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
+    DBTower->sfxExplosion2   = RSDK.GetSfx("Stage/Explosion2.wav");
+    DBTower->sfxExplosion3   = RSDK.GetSfx("Stage/Explosion3.wav");
+    DBTower->sfxBumper3      = RSDK.GetSfx("Stage/Bumper3.wav");
+    DBTower->sfxAssemble     = RSDK.GetSfx("Stage/Assemble.wav");
+    DBTower->sfxRocketJet2   = RSDK.GetSfx("Stage/RocketJet.wav");
+    DBTower->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
 }
 
 void DBTower_CheckPlayerCollisions(void)
@@ -192,9 +192,9 @@ void DBTower_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
         self->active              = ACTIVE_NORMAL;
         self->timer               = 0;
         self->field_68.y += 0xA20000;
@@ -369,9 +369,9 @@ void DBTower_State_Finish(void)
         }
         else {
 #endif
-            Zone->screenBoundsR1[0] += 848;
+            Zone->cameraBoundsR[0] += 848;
             Zone->playerBoundActiveR[0] = false;
-            Zone->screenBoundsB1[0]     = 304;
+            Zone->cameraBoundsB[0]     = 304;
             destroyEntity(self);
 #if RETRO_USE_PLUS
         }

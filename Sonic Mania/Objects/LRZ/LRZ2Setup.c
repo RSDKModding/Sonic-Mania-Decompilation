@@ -110,7 +110,7 @@ void LRZ2Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_CUCKY;
     if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
         for (int32 p = 0; p < Player->playerCount; ++p) {
-            Zone->screenBoundsL1[p] += 0x100;
+            Zone->cameraBoundsL[p] += 0x100;
         }
     }
     else {

@@ -111,7 +111,7 @@ void Spear_Create(void *data)
 void Spear_StageLoad(void)
 {
     Spear->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Spear.bin", SCOPE_STAGE);
-    Spear->sfxSpear  = RSDK.GetSFX("HCZ/Spear.wav");
+    Spear->sfxSpear  = RSDK.GetSfx("HCZ/Spear.wav");
 }
 
 void Spear_Unknown1(void)

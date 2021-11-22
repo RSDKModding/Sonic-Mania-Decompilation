@@ -20,7 +20,7 @@ void LavaFall_StaticUpdate(void)
         LavaFall->shouldPlayLavaSfx = 0;
     }
     else if (LavaFall->playingLavaSfx) {
-        RSDK.StopSFX(LavaFall->sfxLava);
+        RSDK.StopSfx(LavaFall->sfxLava);
         LavaFall->playingLavaSfx = false;
     }
 }
@@ -61,7 +61,7 @@ void LavaFall_StageLoad(void)
     LavaFall->active            = ACTIVE_ALWAYS;
     LavaFall->shouldPlayLavaSfx = 0;
     LavaFall->playingLavaSfx    = false;
-    LavaFall->sfxLava           = RSDK.GetSFX("Stage/Lava.wav");
+    LavaFall->sfxLava           = RSDK.GetSfx("Stage/Lava.wav");
 }
 
 void LavaFall_State_Idle(void)

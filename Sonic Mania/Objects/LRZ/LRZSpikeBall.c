@@ -57,8 +57,8 @@ void LRZSpikeBall_Create(void *data)
 void LRZSpikeBall_StageLoad(void)
 {
     LRZSpikeBall->aniFrames    = RSDK.LoadSpriteAnimation("LRZ2/LRZSpikeBall.bin", SCOPE_STAGE);
-    LRZSpikeBall->sfxCharge    = RSDK.GetSFX("LRZ/Charge.wav");
-    LRZSpikeBall->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
+    LRZSpikeBall->sfxCharge    = RSDK.GetSfx("LRZ/Charge.wav");
+    LRZSpikeBall->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 int LRZSpikeBall_GetFrameID(void)

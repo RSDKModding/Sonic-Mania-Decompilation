@@ -120,8 +120,8 @@ void PauseMenu_Create(void *data)
 void PauseMenu_StageLoad(void)
 {
     PauseMenu->active               = ACTIVE_ALWAYS;
-    PauseMenu->sfxBleep             = RSDK.GetSFX("Global/MenuBleep.wav");
-    PauseMenu->sfxAccept            = RSDK.GetSFX("Global/MenuAccept.wav");
+    PauseMenu->sfxBleep             = RSDK.GetSfx("Global/MenuBleep.wav");
+    PauseMenu->sfxAccept            = RSDK.GetSfx("Global/MenuAccept.wav");
     PauseMenu->disableEvents        = false;
     PauseMenu->controllerDisconnect = false;
     PauseMenu->forcedDisconnect     = false;
@@ -286,18 +286,18 @@ void PauseMenu_FocusCamera(void)
         return;
 
     LogHelpers_Print("FocusCamera(): triggerPlayer = %d", self->triggerPlayer);
-    foreach_all(Camera, camera)
+    foreach_all(Camera, cameraPtr)
     {
-        int32 id         = RSDK.GetEntityID(camera);
-        int32 prevScreen = camera->screenID;
+        int32 id         = RSDK.GetEntityID(cameraPtr);
+        int32 prevScreen = cameraPtr->screenID;
         if (id - SLOT_CAMERA1 == self->triggerPlayer) {
-            camera->screenID = 0;
-            Camera_SetCameraBounds(camera);
+            cameraPtr->screenID = 0;
+            Camera_SetCameraBounds(cameraPtr);
         }
         else {
-            camera->screenID = 1;
+            cameraPtr->screenID = 1;
         }
-        LogHelpers_Print("cameraPtr->screenID %d => %d", prevScreen, camera->screenID);
+        LogHelpers_Print("cameraPtr->screenID %d => %d", prevScreen, cameraPtr->screenID);
     }
 }
 
@@ -545,11 +545,11 @@ void PauseMenu_State_StartPause(void)
         Vector2 pos;
 
         int32 val = 32 * self->timer;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
 
         ++self->timer;
         self->yellowTrianglePos.x = pos.x;
@@ -750,11 +750,11 @@ void PauseMenu_State_Resume(void)
         Vector2 pos;
 
         int32 val = 32 * self->timer;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
 
         self->yellowTrianglePos.x = pos.x;
         self->yellowTrianglePos.y = pos.y;
@@ -883,10 +883,10 @@ void PauseMenu_DrawPauseQuads(void)
 
     drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->centerX;
     drawPos.y = self->position.y - 0x600000 + self->headerPos.y;
-    UIWidgets_DrawRhombus(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
     drawPos.y += 0x60000;
     drawPos.x += 0xA0000;
-    UIWidgets_DrawRhombus(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
     RSDK.DrawSprite(&self->animator, &drawPos, 0);
     UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x, self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
 }

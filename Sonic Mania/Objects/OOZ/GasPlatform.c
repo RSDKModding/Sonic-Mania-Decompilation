@@ -66,8 +66,8 @@ void GasPlatform_StageLoad(void)
     GasPlatform->hitbox.bottom = 0;
     GasPlatform->range.x       = 0x800000;
     GasPlatform->range.y       = 0x180000;
-    GasPlatform->sfxGasPop     = RSDK.GetSFX("OOZ/GasPop.wav");
-    GasPlatform->sfxSpring     = RSDK.GetSFX("Global/Spring.wav");
+    GasPlatform->sfxGasPop     = RSDK.GetSfx("OOZ/GasPop.wav");
+    GasPlatform->sfxSpring     = RSDK.GetSfx("Global/Spring.wav");
 }
 
 void GasPlatform_Unknown1(void)

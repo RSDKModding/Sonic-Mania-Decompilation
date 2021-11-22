@@ -194,10 +194,10 @@ void CollapsingPlatform_StageLoad(void)
 
     if (RSDK.CheckStageFolder("FBZ") || RSDK.CheckStageFolder("HCZ") || RSDK.CheckStageFolder("LRZ1") || RSDK.CheckStageFolder("LRZ2")
         || RSDK.CheckStageFolder("AIZ")) {
-        CollapsingPlatform->sfxCrumble = RSDK.GetSFX("Stage/LedgeBreak3.wav");
+        CollapsingPlatform->sfxCrumble = RSDK.GetSfx("Stage/LedgeBreak3.wav");
     }
     else {
-        CollapsingPlatform->sfxCrumble = RSDK.GetSFX("Stage/LedgeBreak.wav");
+        CollapsingPlatform->sfxCrumble = RSDK.GetSfx("Stage/LedgeBreak.wav");
     }
 }
 

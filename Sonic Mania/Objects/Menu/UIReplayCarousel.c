@@ -36,11 +36,11 @@ void UIReplayCarousel_Update(void)
     }
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
-    if (self->field_164 > 0) {
+    if (self->replayID > 0) {
         UIControl_Unknown15(parent, 0, self->position.y);
 
-        if (102 * self->field_164 - 102 > 0)
-            self->field_170 = 102 * self->field_164 - 102;
+        if (102 * self->replayID - 102 > 0)
+            self->field_170 = 102 * self->replayID - 102;
         else
             self->field_170 = 0;
     }
@@ -128,11 +128,11 @@ void UIReplayCarousel_ProcessButtonCB(void)
         if (parent->columnCount)
             columnID = parent->activeEntityID % parent->columnCount;
 
-        int32 id           = self->field_164;
+        int32 id         = self->replayID;
         bool32 movedUp   = false;
         bool32 movedDown = false;
         if (UIControl->keyUp) {
-            if (self->field_164) {
+            if (self->replayID) {
                 --id;
                 movedDown = true;
             }
@@ -142,7 +142,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
             }
         }
 
-        if (UIControl->keyDown && self->field_164 < self->dbUnknownCount - 1) {
+        if (UIControl->keyDown && self->replayID < self->dbUnknownCount - 1) {
             movedDown = true;
             id++;
         }
@@ -166,7 +166,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
         else {
             if (movedDown) {
                 RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
-                self->field_164 = id;
+                self->replayID = id;
             }
 
             if (UIControl->keyConfirm) {
@@ -277,10 +277,10 @@ void UIReplayCarousel_TouchedCB(void)
 {
     RSDK_THIS(UIReplayCarousel);
     int32 id = self->touchCountUnknown + self->dbUnknownID;
-    if (self->field_164 == id)
+    if (self->replayID == id)
         UIReplayCarousel_Unknown11();
     else
-        self->field_164 = id;
+        self->replayID = id;
 }
 
 void UIReplayCarousel_Unknown6(void)
@@ -324,7 +324,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     uint32 colour = 0xF0F0F0;
     if (a1)
         colour = 0xF26C4F;
-    UIWidgets_DrawRhombus(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
+    UIWidgets_DrawParallelogram(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
 
     colour = 0x5FA0B0;
     if (a1)
@@ -334,7 +334,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(91, 312, a3 + 0x30000, a4 + 0x30000);
 
-    if (self->field_164 == a2)
+    if (self->replayID == a2)
         UIWidgets_DrawRectOutline_Flash(91, 312, a3, a4);
     else
         UIWidgets_DrawRectOutline_Black(91, 312, a3, a4);
@@ -399,7 +399,7 @@ void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int32 a4, int32 a5)
     drawPos.y = a5 - 0x70000;
     UIWidgets_DrawRectOutline_Black(72, 96, a4 - 0x690000, a5 - 0x70000);
 
-    if (SceneInfo->inEditor || self->field_164 != a2 || self->disabled) {
+    if (SceneInfo->inEditor || self->replayID != a2 || self->disabled) {
         self->direction = self->field_158;
         self->drawFX    = FX_FLIP;
         RSDK.DrawSprite(&self->animator2, &drawPos, false);
@@ -438,7 +438,7 @@ void UIReplayCarousel_Unknown10(uint8 zoneID, int32 a2, uint8 a3, uint8 a4, int3
     Vector2 drawPos;
     drawPos.x = drawX;
     drawPos.y = drawY - 0x160000;
-    if ((self->state != UIReplayCarousel_Unknown19 || self->field_164 != a2 || !(self->timer & 2)) && !SceneInfo->inEditor) {
+    if ((self->state != UIReplayCarousel_Unknown19 || self->replayID != a2 || !(self->timer & 2)) && !SceneInfo->inEditor) {
         int32 id    = a2 - self->dbUnknownID;
         drawPos.x = drawX - 0x390000;
         if (zoneID == 5 || zoneID == 10) {
@@ -475,7 +475,7 @@ void UIReplayCarousel_Unknown12(void)
     self->flag  = false;
     self->state = UIReplayCarousel_Unknown17;
     if (!UIControl->field_C8)
-        self->field_164 = -1;
+        self->replayID = -1;
 }
 
 void UIReplayCarousel_StateDraw_Unknown1(void)
@@ -486,7 +486,7 @@ void UIReplayCarousel_StateDraw_Unknown1(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->loadingText, 0, self->loadingText.textLength, 0) << 15;
     RSDK.DrawText(&self->animator9, &drawPos, &self->loadingText, 0, self->loadingText.textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -500,7 +500,7 @@ void UIReplayCarousel_StateDraw_Unknown2(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->noReplaysText, 0, self->noReplaysText.textLength, 0) << 15;
     RSDK.DrawText(&self->animator9, &drawPos, &self->noReplaysText, 0, self->noReplaysText.textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -529,7 +529,7 @@ void UIReplayCarousel_StateDraw_Unknown3(void)
         API.GetUserDBValue(globals->replayTableID, row, 2, "act", &act);
         API.GetUserDBValue(globals->replayTableID, row, 2, "characterID", &characterID);
         API.GetUserDBValue(globals->replayTableID, row, 2, "encore", &encore);
-        if (id == self->field_164 && parent->active == ACTIVE_ALWAYS) {
+        if (id == self->replayID && parent->active == ACTIVE_ALWAYS) {
             int32 val = (zoneID % 12) >> 3;
             int32 pal = 0;
             if (encore)
@@ -588,8 +588,8 @@ void UIReplayCarousel_Unknown18(void)
 
     RSDK.ProcessAnimation(&self->animator2);
     self->field_158 = self->animator2.frameID & 3;
-    if (self->field_164 == -1)
-        self->field_164 = 0;
+    if (self->replayID == -1)
+        self->replayID = 0;
 }
 
 void UIReplayCarousel_Unknown19(void)
@@ -621,7 +621,7 @@ void UIReplayCarousel_EditorDraw(void)
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x100000;
-    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 }
 
 void UIReplayCarousel_EditorLoad(void) { UIReplayCarousel->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }

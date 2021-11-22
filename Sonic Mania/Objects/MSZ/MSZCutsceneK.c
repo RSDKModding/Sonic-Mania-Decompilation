@@ -29,8 +29,8 @@ void MSZCutsceneK_Create(void *data)
 void MSZCutsceneK_StageLoad(void)
 {
     MSZCutsceneK->playerFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
-    MSZCutsceneK->sfxImpact    = RSDK.GetSFX("Stage/Impact5.wav");
-    MSZCutsceneK->sfxDrop      = RSDK.GetSFX("Stage/Drop.wav");
+    MSZCutsceneK->sfxImpact    = RSDK.GetSfx("Stage/Impact5.wav");
+    MSZCutsceneK->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
 
     MSZCutsceneK->mystic  = NULL;
     MSZCutsceneK->tornado = NULL;

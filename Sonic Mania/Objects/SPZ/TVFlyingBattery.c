@@ -33,7 +33,7 @@ void TVFlyingBattery_StaticUpdate(void)
         }
     }
     else if (TVFlyingBattery->isPlayingFlyover) {
-        RSDK.StopSFX(TVFlyingBattery->sfxFlyover);
+        RSDK.StopSfx(TVFlyingBattery->sfxFlyover);
         TVFlyingBattery->isPlayingFlyover = false;
     }
 }
@@ -67,7 +67,7 @@ void TVFlyingBattery_StageLoad(void)
 {
     TVFlyingBattery->active     = ACTIVE_ALWAYS;
     TVFlyingBattery->aniFrames  = RSDK.LoadSpriteAnimation("SPZ2/TVFlyingBattery.bin", SCOPE_STAGE);
-    TVFlyingBattery->sfxFlyover = RSDK.GetSFX("SPZ/Flyover.wav");
+    TVFlyingBattery->sfxFlyover = RSDK.GetSfx("SPZ/Flyover.wav");
 
     TVFlyingBattery->weatherTV = NULL;
     foreach_all(WeatherTV, weatherTV)

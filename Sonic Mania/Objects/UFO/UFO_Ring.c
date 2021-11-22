@@ -63,7 +63,7 @@ void UFO_Ring_Create(void *data)
 void UFO_Ring_StageLoad(void)
 {
     UFO_Ring->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
-    UFO_Ring->sfxRing   = RSDK.GetSFX("Global/Ring.wav");
+    UFO_Ring->sfxRing   = RSDK.GetSfx("Global/Ring.wav");
 }
 
 void UFO_Ring_PlayRingSFX(void)

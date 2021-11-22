@@ -75,9 +75,9 @@ void ContinuePlayer_StageLoad(void)
         default: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE); break;
     }
     ContinuePlayer->tailAniFrames = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE);
-    ContinuePlayer->sfxRoll       = RSDK.GetSFX("Global/Roll.wav");
-    ContinuePlayer->sfxCharge     = RSDK.GetSFX("Global/Charge.wav");
-    ContinuePlayer->sfxRelease    = RSDK.GetSFX("Global/Release.wav");
+    ContinuePlayer->sfxRoll       = RSDK.GetSfx("Global/Roll.wav");
+    ContinuePlayer->sfxCharge     = RSDK.GetSfx("Global/Charge.wav");
+    ContinuePlayer->sfxRelease    = RSDK.GetSfx("Global/Release.wav");
 }
 
 void ContinuePlayer_HandleDashAnim(void)

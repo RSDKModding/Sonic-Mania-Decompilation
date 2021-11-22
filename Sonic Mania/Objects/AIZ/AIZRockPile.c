@@ -121,7 +121,7 @@ void AIZRockPile_Create(void *data)
 void AIZRockPile_StageLoad(void)
 {
     AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
-    AIZRockPile->sfxBreak   = RSDK.GetSFX("Stage/LedgeBreak3.wav");
+    AIZRockPile->sfxBreak   = RSDK.GetSfx("Stage/LedgeBreak3.wav");
 }
 
 void AIZRockPile_SpawnRocks(int32 *speeds)

@@ -82,7 +82,7 @@ void Current_StageLoad(void)
     else
         Current->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(Current->aniFrames, 0, &Current->animator, true, 0);
-    Current->sfxRush = RSDK.GetSFX("Stage/Rush.wav");
+    Current->sfxRush = RSDK.GetSfx("Stage/Rush.wav");
 }
 
 void Current_GetTaggedButton(void)

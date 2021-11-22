@@ -50,7 +50,7 @@ void Stalactite_StageLoad(void)
     Stalactite->hitbox2.right  = 4;
     Stalactite->hitbox2.bottom = 256;
 
-    Stalactite->sfxShoot = RSDK.GetSFX("Stage/Shoot1.wav");
+    Stalactite->sfxShoot = RSDK.GetSfx("Stage/Shoot1.wav");
 }
 
 void Stalactite_State_Unknown1(void)

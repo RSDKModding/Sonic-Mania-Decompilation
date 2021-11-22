@@ -51,7 +51,7 @@ void Cactula_StageLoad(void)
     Cactula->hitbox.right  = 12;
     Cactula->hitbox.bottom = 12;
     DEBUGMODE_ADD_OBJ(Cactula);
-    Cactula->sfxCactDrop = RSDK.GetSFX("MSZ/CactDrop.wav");
+    Cactula->sfxCactDrop = RSDK.GetSfx("MSZ/CactDrop.wav");
     Soundboard_LoadSFX("MSZ/CactChopper.wav", true, Cactula_CheckCB, NULL);
 }
 

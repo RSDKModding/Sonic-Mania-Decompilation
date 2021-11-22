@@ -177,7 +177,7 @@ void JacobsLadder_Create(void *data)
 void JacobsLadder_StageLoad(void)
 {
     JacobsLadder->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/JacobsLadder.bin", SCOPE_STAGE);
-    JacobsLadder->sfxLadder = RSDK.GetSFX("TMZ1/JacobsLadder.wav");
+    JacobsLadder->sfxLadder = RSDK.GetSfx("TMZ1/JacobsLadder.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

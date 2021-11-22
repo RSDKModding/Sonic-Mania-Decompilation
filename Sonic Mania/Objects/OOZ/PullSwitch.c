@@ -118,8 +118,8 @@ void PullSwitch_StageLoad(void)
     PullSwitch->hitbox.top    = 20;
     PullSwitch->hitbox.right  = 16;
     PullSwitch->hitbox.bottom = 28;
-    PullSwitch->sfxButton     = RSDK.GetSFX("Stage/Button.wav");
-    PullSwitch->sfxSmogClear  = RSDK.GetSFX("OOZ/SmogClear.wav");
+    PullSwitch->sfxButton     = RSDK.GetSfx("Stage/Button.wav");
+    PullSwitch->sfxSmogClear  = RSDK.GetSfx("OOZ/SmogClear.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

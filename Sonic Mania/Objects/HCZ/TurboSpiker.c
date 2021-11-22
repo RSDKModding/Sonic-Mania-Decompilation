@@ -62,8 +62,8 @@ void TurboSpiker_StageLoad(void)
     TurboSpiker->checkbox.top        = -0x200;
     TurboSpiker->checkbox.right      = 0x80;
     TurboSpiker->checkbox.bottom     = 0x200;
-    TurboSpiker->launchSFX           = RSDK.GetSFX("Stage/Launch.wav");
-    TurboSpiker->splashSFX           = RSDK.GetSFX("Stage/Splash.wav");
+    TurboSpiker->launchSFX           = RSDK.GetSfx("Stage/Launch.wav");
+    TurboSpiker->splashSFX           = RSDK.GetSfx("Stage/Splash.wav");
     DEBUGMODE_ADD_OBJ(TurboSpiker);
 }
 
@@ -335,7 +335,7 @@ void TurboSpiker_Spike_Fly(void)
         self->launchPlayed = true;
     }
     if (!self->activeScreens) {
-        RSDK.StopSFX(TurboSpiker->launchSFX);
+        RSDK.StopSfx(TurboSpiker->launchSFX);
         self->launchPlayed = false;
     }
     self->position.x += self->velocity.x;

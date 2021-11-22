@@ -40,7 +40,7 @@ void MSZ1KIntro_Create(void *data)
 void MSZ1KIntro_StageLoad(void)
 {
     MSZ1KIntro->playerFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
-    MSZ1KIntro->sfxImpact    = RSDK.GetSFX("Stage/Impact3.wav");
+    MSZ1KIntro->sfxImpact    = RSDK.GetSfx("Stage/Impact3.wav");
 }
 
 bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)

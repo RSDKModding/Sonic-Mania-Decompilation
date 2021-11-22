@@ -147,11 +147,11 @@ void Hatch_StageLoad(void)
     Hatch->hitbox5.right  = 12;
     Hatch->hitbox5.bottom = 24;
     Hatch->active         = ACTIVE_ALWAYS;
-    Hatch->sfxHatchOpen   = RSDK.GetSFX("OOZ/SubHatchOpen.wav");
-    Hatch->sfxHatchClose  = RSDK.GetSFX("OOZ/SubHatchClose.wav");
-    Hatch->sfxDescend     = RSDK.GetSFX("OOZ/SubDescend.wav");
-    Hatch->sfxSurface     = RSDK.GetSFX("OOZ/SubSurface.wav");
-    Hatch->sfxGasPop      = RSDK.GetSFX("OOZ/GasPop.wav");
+    Hatch->sfxHatchOpen   = RSDK.GetSfx("OOZ/SubHatchOpen.wav");
+    Hatch->sfxHatchClose  = RSDK.GetSfx("OOZ/SubHatchClose.wav");
+    Hatch->sfxDescend     = RSDK.GetSfx("OOZ/SubDescend.wav");
+    Hatch->sfxSurface     = RSDK.GetSfx("OOZ/SubSurface.wav");
+    Hatch->sfxGasPop      = RSDK.GetSfx("OOZ/GasPop.wav");
 }
 
 void Hatch_Unknown1(void)
@@ -237,7 +237,7 @@ void Hatch_Unknown2(void)
         zone->timer      = 0;
         zone->drawOrder  = 15;
         zone->visible    = true;
-        zone->stateDraw  = Zone_StateDraw_Fadeout;
+        zone->stateDraw  = Zone_Draw_Fade;
     }
 }
 
@@ -263,7 +263,7 @@ void Hatch_Unknown3(void)
             player->state            = Player_State_Air;
             EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (warpDoor->objectID == WarpDoor->objectID) {
-                Zone->screenBoundsB1[RSDK.GetEntityID(player)] = 0x7FFF;
+                Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
                 warpDoor->hitbox                               = self->warpHitbox;
                 warpDoor->position.y                           = self->position.y;
                 player->tileCollisions                         = true;
@@ -406,7 +406,7 @@ void Hatch_Unknown10(void)
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
         if (warpDoor->objectID == WarpDoor->objectID) {
-            Zone->screenBoundsB1[RSDK.GetEntityID(player)] = 0x7FFF;
+            Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
             warpDoor->hitbox                               = self->warpHitbox;
             warpDoor->position.y                           = player->position.y;
             player->state                                  = self->stateStore;

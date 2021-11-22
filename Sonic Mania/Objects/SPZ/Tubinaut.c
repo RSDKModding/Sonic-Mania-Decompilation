@@ -88,8 +88,8 @@ void Tubinaut_StageLoad(void)
     Tubinaut->hitbox3.right  = 20;
     Tubinaut->hitbox3.bottom = 20;
     DEBUGMODE_ADD_OBJ(Tubinaut);
-    Tubinaut->sfxPowerdown = RSDK.GetSFX("Stage/PowerDown.wav");
-    Tubinaut->sfxRepel     = RSDK.GetSFX("Stage/Repel.wav");
+    Tubinaut->sfxPowerdown = RSDK.GetSfx("Stage/PowerDown.wav");
+    Tubinaut->sfxRepel     = RSDK.GetSfx("Stage/Repel.wav");
 }
 
 void Tubinaut_DebugSpawn(void)

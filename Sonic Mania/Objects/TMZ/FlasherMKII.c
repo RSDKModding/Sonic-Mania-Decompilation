@@ -62,8 +62,8 @@ void FlasherMKII_StageLoad(void)
 
     DEBUGMODE_ADD_OBJ(FlasherMKII);
 
-    FlasherMKII->sfxFlop = RSDK.GetSFX("TMZ1/FlasherFlop.wav");
-    FlasherMKII->sfxZap  = RSDK.GetSFX("TMZ1/FlasherZap.wav");
+    FlasherMKII->sfxFlop = RSDK.GetSfx("TMZ1/FlasherFlop.wav");
+    FlasherMKII->sfxZap  = RSDK.GetSfx("TMZ1/FlasherZap.wav");
 }
 
 void FlasherMKII_DebugSpawn(void)
@@ -97,7 +97,7 @@ void FlasherMKII_HandlePlayerCollisions(void)
             if ((self->animator.animationID & 3) == 3) {
                 if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
                     if (Player_CheckBadnikBreak(self, player, true))
-                        RSDK.StopSFX(FlasherMKII->sfxZap);
+                        RSDK.StopSfx(FlasherMKII->sfxZap);
                 }
                 else {
                     Player_CheckHit(player, self);
@@ -119,7 +119,7 @@ void FlasherMKII_HandleHarmPlayerCollisions(void)
         if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
             Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 0);
             if (Player_CheckBadnikTouch(player, self, hitbox) && Player_CheckBadnikBreak(self, player, true))
-                RSDK.StopSFX(FlasherMKII->sfxZap);
+                RSDK.StopSfx(FlasherMKII->sfxZap);
         }
         else {
             Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 1);

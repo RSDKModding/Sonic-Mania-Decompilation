@@ -84,7 +84,7 @@ void Canista_StageLoad(void)
     Canista->hitbox4.bottom = 5;
 
     DEBUGMODE_ADD_OBJ(Canista);
-    Canista->sfxPon = RSDK.GetSFX("Stage/Pon.wav");
+    Canista->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
 void Canista_DebugSpawn(void)

@@ -97,7 +97,7 @@ void SpinSign_StageLoad(void)
     SpinSign->hitboxes[3].right  = 6;
     SpinSign->hitboxes[3].bottom = 40;
     DEBUGMODE_ADD_OBJ(SpinSign);
-    SpinSign->sfxSignPost = RSDK.GetSFX("Global/SignPost.wav");
+    SpinSign->sfxSignPost = RSDK.GetSfx("Global/SignPost.wav");
 }
 
 void SpinSign_DebugSpawn(void)

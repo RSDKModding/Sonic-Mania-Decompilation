@@ -898,10 +898,10 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(GameProgress_GetNextNotif);
         ADD_PUBLIC_FUNC(GameProgress_CheckUnlock);
 
-        ADD_PUBLIC_FUNC(MathHelpers_Lerp1);
-        ADD_PUBLIC_FUNC(MathHelpers_Lerp2);
-        ADD_PUBLIC_FUNC(MathHelpers_Lerp3);
-        ADD_PUBLIC_FUNC(MathHelpers_Lerp4);
+        ADD_PUBLIC_FUNC(MathHelpers_Lerp);
+        ADD_PUBLIC_FUNC(MathHelpers_LerpSin1024);
+        ADD_PUBLIC_FUNC(MathHelpers_Lerp2Sin1024);
+        ADD_PUBLIC_FUNC(MathHelpers_LerpSin512);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown5);
         ADD_PUBLIC_FUNC(MathHelpers_SquareRoot);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
@@ -911,7 +911,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_Unknown11);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown12);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown13);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown14);
+        ADD_PUBLIC_FUNC(MathHelpers_ConstrainToBox);
 
         ADD_PUBLIC_FUNC(Options_Reload);
         ADD_PUBLIC_FUNC(Options_GetWinSize);

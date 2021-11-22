@@ -66,17 +66,17 @@ void HeavyKing_StageLoad(void)
     HeavyKing->aniFrames      = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE);
     HeavyKing->cutsceneFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneHPZ.bin", SCOPE_STAGE);
     HeavyKing->attackPatternPos = 0;
-    HeavyKing->sfxHit         = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyKing->sfxImpact2     = RSDK.GetSFX("Stage/Impact2.wav");
-    HeavyKing->sfxImpact5     = RSDK.GetSFX("Stage/Impact5.wav");
-    HeavyKing->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyKing->sfxFreeze      = RSDK.GetSFX("PSZ/Freeze.wav");
-    HeavyKing->sfxCharge      = RSDK.GetSFX("LRZ/KingCharge.wav");
-    HeavyKing->sfxImpact6     = RSDK.GetSFX("Stage/Impact6.wav");
-    HeavyKing->sfxRodPlant    = RSDK.GetSFX("LRZ/RodPlant.wav");
-    HeavyKing->sfxRodShine    = RSDK.GetSFX("LRZ/RodShine.wav");
-    HeavyKing->sfxElecOn      = RSDK.GetSFX("LRZ/ElecOn.wav");
-    HeavyKing->sfxTwinCharge  = RSDK.GetSFX("LRZ/TwinCharge.wav");
+    HeavyKing->sfxHit         = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyKing->sfxImpact2     = RSDK.GetSfx("Stage/Impact2.wav");
+    HeavyKing->sfxImpact5     = RSDK.GetSfx("Stage/Impact5.wav");
+    HeavyKing->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyKing->sfxFreeze      = RSDK.GetSfx("PSZ/Freeze.wav");
+    HeavyKing->sfxCharge      = RSDK.GetSfx("LRZ/KingCharge.wav");
+    HeavyKing->sfxImpact6     = RSDK.GetSfx("Stage/Impact6.wav");
+    HeavyKing->sfxRodPlant    = RSDK.GetSfx("LRZ/RodPlant.wav");
+    HeavyKing->sfxRodShine    = RSDK.GetSfx("LRZ/RodShine.wav");
+    HeavyKing->sfxElecOn      = RSDK.GetSfx("LRZ/ElecOn.wav");
+    HeavyKing->sfxTwinCharge  = RSDK.GetSfx("LRZ/TwinCharge.wav");
 
     HeavyKing->hitbox1.left   = -24;
     HeavyKing->hitbox1.top    = 40;
@@ -129,7 +129,7 @@ void HeavyKing_Hit(void)
         self->velocity.y = -0x40000;
         self->onGround   = false;
         self->timer      = 0;
-        RSDK.StopSFX(HeavyKing->sfxTwinCharge);
+        RSDK.StopSfx(HeavyKing->sfxTwinCharge);
         foreach_active(KingAttack, attack) { destroyEntity(attack); }
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
@@ -409,10 +409,10 @@ void HeavyKing_State_SetupArena(void)
             HeavyKing->boundsM          = kingClaw->position.x;
             HeavyKing->boundsR          = kingClaw->position.x + 0x600000;
             Zone->playerBoundActiveL[0] = true;
-            Zone->screenBoundsL1[0]     = (kingClaw->position.x >> 16) - 320;
+            Zone->cameraBoundsL[0]     = (kingClaw->position.x >> 16) - 320;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsR1[0]     = (kingClaw->position.x >> 16) + 320;
-            Zone->screenBoundsT1[0]     = (kingClaw->position.y >> 16);
+            Zone->cameraBoundsR[0]     = (kingClaw->position.x >> 16) + 320;
+            Zone->cameraBoundsT[0]     = (kingClaw->position.y >> 16);
             HeavyKing->value9           = kingClaw->position.y + 0x2400000;
             self->active              = ACTIVE_NORMAL;
             HeavyKing_HandleClawMovement();
@@ -1117,7 +1117,7 @@ void HeavyKing_State_Finish(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        Zone->screenBoundsR1[0] += 1024;
+        Zone->cameraBoundsR[0] += 1024;
         destroyEntity(self->claw);
         destroyEntity(self);
     }

@@ -64,12 +64,12 @@ void TimeAttackData_ClearOptions(void)
     param->selectionFlag   = 0;
     memset(param->menuTag, 0, 0x100);
     param->selectionID = 0;
-    param->field_160   = 0;
+    param->unused1     = 0;
     param->clearFlag   = 0;
     param->zoneID      = 0;
     param->actID       = 0;
 #if RETRO_USE_PLUS
-    param->dbRowID    = 0;
+    param->timeAttackRank    = 0;
     globals->gameMode = MODE_MANIA;
 #else
     param->timeScore  = 0;

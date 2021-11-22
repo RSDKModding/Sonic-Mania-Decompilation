@@ -132,15 +132,15 @@ void HotaruHiWatt_StageLoad(void)
     HotaruHiWatt->hotaruFrames = RSDK.LoadSpriteAnimation("SSZ1/HotaruMKII.bin", SCOPE_STAGE);
     HotaruHiWatt->value8       = false;
     RSDK.CopyPalette(1, 128, 0, 128, 64);
-    HotaruHiWatt->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    HotaruHiWatt->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    HotaruHiWatt->sfxHHWAppear = RSDK.GetSFX("SSZ1/HHWAppear.wav");
-    HotaruHiWatt->sfxFlash     = RSDK.GetSFX("SSZ1/HHWFlash.wav");
-    HotaruHiWatt->sfxLaser     = RSDK.GetSFX("SSZ1/HotaruLaser.wav");
-    HotaruHiWatt->sfxAppear    = RSDK.GetSFX("SSZ1/HotaruAppear.wav");
-    HotaruHiWatt->sfxFly       = RSDK.GetSFX("SSZ1/HotaruFly.wav");
-    HotaruHiWatt->sfxFlyUp     = RSDK.GetSFX("SSZ1/HHWFlyUp.wav");
-    HotaruHiWatt->sfxCharge    = RSDK.GetSFX("SSZ1/HHWCharge.wav");
+    HotaruHiWatt->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    HotaruHiWatt->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    HotaruHiWatt->sfxHHWAppear = RSDK.GetSfx("SSZ1/HHWAppear.wav");
+    HotaruHiWatt->sfxFlash     = RSDK.GetSfx("SSZ1/HHWFlash.wav");
+    HotaruHiWatt->sfxLaser     = RSDK.GetSfx("SSZ1/HotaruLaser.wav");
+    HotaruHiWatt->sfxAppear    = RSDK.GetSfx("SSZ1/HotaruAppear.wav");
+    HotaruHiWatt->sfxFly       = RSDK.GetSfx("SSZ1/HotaruFly.wav");
+    HotaruHiWatt->sfxFlyUp     = RSDK.GetSfx("SSZ1/HHWFlyUp.wav");
+    HotaruHiWatt->sfxCharge    = RSDK.GetSfx("SSZ1/HHWCharge.wav");
 
     Soundboard_LoadSFX("Stage/Zap.wav", true, HotaruHiWatt_ZapCheckCB, NULL);
     Soundboard_LoadSFX("SSZ1/HHWLaser.wav", 32606, HotaruHiWatt_LaserCheckCB, HotaruHiWatt_LaserUpdateCB);
@@ -170,7 +170,7 @@ bool32 HotaruHiWatt_LaserCheckCB(void)
 
 void HotaruHiWatt_LaserUpdateCB(int sfx)
 {
-    if (!(Soundboard->sfxUnknown6[sfx] % 6))
+    if (!(Soundboard->sfxPlayingTimer[sfx] % 6))
         Camera_ShakeScreen(0, 0, 2);
 }
 
@@ -456,15 +456,15 @@ void HotaruHiWatt_State_SetupBounds(void)
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16);
-        HotaruHiWatt->boundsL       = (Zone->screenBoundsL1[0] + 64) << 16;
-        HotaruHiWatt->boundsR       = (Zone->screenBoundsR1[0] - 64) << 16;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+        HotaruHiWatt->boundsL       = (Zone->cameraBoundsL[0] + 64) << 16;
+        HotaruHiWatt->boundsR       = (Zone->cameraBoundsR[0] - 64) << 16;
         HotaruHiWatt->boundsM       = self->position.x;
-        HotaruHiWatt->boundsT       = (Zone->screenBoundsT1[0] + 48) << 16;
-        HotaruHiWatt->boundsB       = (Zone->screenBoundsB1[0] - 8) << 16;
+        HotaruHiWatt->boundsT       = (Zone->cameraBoundsT[0] + 48) << 16;
+        HotaruHiWatt->boundsB       = (Zone->cameraBoundsB[0] - 8) << 16;
 
         foreach_active(Fireflies, fireflies)
         {
@@ -944,7 +944,7 @@ void HotaruHiWatt_State_Unknown3(void)
             self->timer      = 192;
             self->stateDraw  = HotaruHiWatt_StateDraw_Unknown4;
             self->state      = HotaruHiWatt_State_Unknown4;
-            RSDK.StopSFX(HotaruHiWatt->sfxHHWAppear);
+            RSDK.StopSfx(HotaruHiWatt->sfxHHWAppear);
             RSDK.PlaySfx(HotaruHiWatt->sfxFlash, false, 255);
             EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
             fxFade->speedIn      = 128;
@@ -1020,7 +1020,7 @@ void HotaruHiWatt_State_Unknown8(void)
             RSDK.SetSpriteAnimation(HotaruHiWatt->aniFrames, 3, &self->animator1, true, 2);
             RSDK.SetSpriteAnimation(HotaruHiWatt->aniFrames, 4, &self->animator5, true, 0);
             self->stateDraw = HotaruHiWatt_StateDraw_Unknown2;
-            RSDK.StopSFX(HotaruHiWatt->sfxCharge);
+            RSDK.StopSfx(HotaruHiWatt->sfxCharge);
 
             if (self->position.x < HotaruHiWatt->boundsM)
                 self->state = HotaruHiWatt_State_Unknown10;

@@ -31,7 +31,7 @@ void RisingLava_Create(void *data)
     }
 }
 
-void RisingLava_StageLoad(void) { RisingLava->sfxRumble = RSDK.GetSFX("Stage/Rumble.wav"); }
+void RisingLava_StageLoad(void) { RisingLava->sfxRumble = RSDK.GetSfx("Stage/Rumble.wav"); }
 
 void RisingLava_State_CheckRiseStart(void)
 {

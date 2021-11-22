@@ -14,7 +14,7 @@ void Funnel_Update(void)
                 if (!Player_CheckValidState(player)) {
                     self->activePlayers &= ~(1 << p);
                     if (!self->activePlayers)
-                        RSDK.StopSFX(Funnel->sfxFunnel);
+                        RSDK.StopSfx(Funnel->sfxFunnel);
                 }
                 else {
                     if (Player_CheckValidState(player) && player->state == Player_State_None) {
@@ -62,7 +62,7 @@ void Funnel_Update(void)
                             if (player->camera)
                                 player->scrollDelay = 1;
                             if (!self->activePlayers)
-                                RSDK.StopSFX(Funnel->sfxFunnel);
+                                RSDK.StopSfx(Funnel->sfxFunnel);
                             Camera->centerBounds.y = 0x20000;
                             player->state          = Player_State_Air;
                         }
@@ -80,7 +80,7 @@ void Funnel_Update(void)
                         if (player->camera)
                             player->scrollDelay = 1;
                         if (!self->activePlayers)
-                            RSDK.StopSFX(Funnel->sfxFunnel);
+                            RSDK.StopSfx(Funnel->sfxFunnel);
                         Camera->centerBounds.y = 0x20000;
                         player->state          = Player_State_Air;
                     }
@@ -280,8 +280,8 @@ void Funnel_StageLoad(void)
     Funnel->hitbox.right  = 64;
     Funnel->hitbox.bottom = 0;
     Funnel->active        = ACTIVE_ALWAYS;
-    Funnel->sfxFunnel     = RSDK.GetSFX("SPZ/Funnel.wav");
-    Funnel->sfxPimPom     = RSDK.GetSFX("Stage/PimPom.wav");
+    Funnel->sfxFunnel     = RSDK.GetSfx("SPZ/Funnel.wav");
+    Funnel->sfxPimPom     = RSDK.GetSfx("Stage/PimPom.wav");
 }
 
 void Funnel_Unknown1(void) {}

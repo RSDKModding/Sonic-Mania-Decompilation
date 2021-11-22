@@ -62,7 +62,7 @@ void AIZSetup_StaticUpdate(void)
 
     if (!AIZSetup->playDrillSfxFlag || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
         if (AIZSetup->playingDrillSFX) {
-            RSDK.StopSFX(AIZSetup->sfxDrill);
+            RSDK.StopSfx(AIZSetup->sfxDrill);
             AIZSetup->playingDrillSFX = false;
         }
     }
@@ -113,7 +113,7 @@ void AIZSetup_StageLoad(void)
 #if RETRO_USE_PLUS
     if (Zone->actID != 3)
 #endif
-        Zone->screenBoundsB1[0] = SCREEN_YSIZE;
+        Zone->cameraBoundsB[0] = SCREEN_YSIZE;
 
     AIZSetup->cutsceneInit    = false;
     AIZSetup->aniTiles        = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
@@ -175,10 +175,10 @@ void AIZSetup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_RICKY;
     Music_SetMusicTrack("RubyPresence.ogg", TRACK_RUBYPRESENCE, 198457);
-    AIZSetup->sfxDrill     = RSDK.GetSFX("LRZ/Drill.wav");
-    AIZSetup->sfxBreak     = RSDK.GetSFX("Stage/LedgeBreak3.wav");
-    AIZSetup->sfxImpact    = RSDK.GetSFX("Stage/Impact4.wav");
-    AIZSetup->sfxHeliWoosh = RSDK.GetSFX("SPZ1/HeliWooshIn.wav");
+    AIZSetup->sfxDrill     = RSDK.GetSfx("LRZ/Drill.wav");
+    AIZSetup->sfxBreak     = RSDK.GetSfx("Stage/LedgeBreak3.wav");
+    AIZSetup->sfxImpact    = RSDK.GetSfx("Stage/Impact4.wav");
+    AIZSetup->sfxHeliWoosh = RSDK.GetSfx("SPZ1/HeliWooshIn.wav");
     if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
         foreach_all(AIZTornado, tornado) { destroyEntity(tornado); }
         foreach_all(AIZTornadoPath, node) { destroyEntity(node); }

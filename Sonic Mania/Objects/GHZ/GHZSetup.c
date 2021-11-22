@@ -130,8 +130,8 @@ void GHZSetup_SetupActTransition(void)
 }
 void GHZSetup_HandleActTransition(void)
 {
-    Zone->screenBoundsL1[0] = 0x100 - ScreenInfo->centerX;
-    Zone->screenBoundsB1[0] = 1412;
+    Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->centerX;
+    Zone->cameraBoundsB[0] = 1412;
     Zone_ReloadStoredEntities(0x5840000, 0x1000000, true);
 
     TileLayer *layer2 = RSDK.GetSceneLayer(2);

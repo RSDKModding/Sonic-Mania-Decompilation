@@ -189,11 +189,11 @@ void GigaMetal_StageLoad(void)
     GigaMetal->hitbox4.right  = 16;
     GigaMetal->hitbox4.bottom = -64;
 
-    GigaMetal->sfxRoar   = RSDK.GetSFX("SSZ2/MSRoar.wav");
-    GigaMetal->sfxImpact = RSDK.GetSFX("Stage/Impact6.wav");
-    GigaMetal->sfxTarget = RSDK.GetSFX("SSZ2/MSTarget.wav");
-    GigaMetal->sfxPimpom = RSDK.GetSFX("Stage/PimPom.wav");
-    GigaMetal->sfxCannon = RSDK.GetSFX("SSZ2/MSCannon.wav");
+    GigaMetal->sfxRoar   = RSDK.GetSfx("SSZ2/MSRoar.wav");
+    GigaMetal->sfxImpact = RSDK.GetSfx("Stage/Impact6.wav");
+    GigaMetal->sfxTarget = RSDK.GetSfx("SSZ2/MSTarget.wav");
+    GigaMetal->sfxPimpom = RSDK.GetSfx("Stage/PimPom.wav");
+    GigaMetal->sfxCannon = RSDK.GetSfx("SSZ2/MSCannon.wav");
     RSDK.CopyPalette(0, 1, 4, 1, 255);
     for (int i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xF00080);
     GigaMetal->invincibleTimer = 0;
@@ -343,12 +343,12 @@ void GigaMetal_StateDraw10_Unknown(void)
 
 void GigaMetal_HandleCameraMovement(void)
 {
-    Zone->screenBoundsL1[0] += 2;
-    Zone->screenBoundsR1[0] += 2;
+    Zone->cameraBoundsL[0] += 2;
+    Zone->cameraBoundsR[0] += 2;
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-    camera->boundsL      = Zone->screenBoundsL1[0];
-    camera->boundsR      = Zone->screenBoundsR1[0];
-    camera->position.x   = (Zone->screenBoundsR1[0] + camera->boundsL) << 15;
+    camera->boundsL      = Zone->cameraBoundsL[0];
+    camera->boundsR      = Zone->cameraBoundsR[0];
+    camera->position.x   = (Zone->cameraBoundsR[0] + camera->boundsL) << 15;
     MetalSonic_HandleStageWrap();
 }
 
@@ -410,9 +410,9 @@ void GigaMetal_State_SetupBounds(void)
     if (player1->position.y < self->position.y && !player1->collisionPlane) {
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX + 32;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX + 32;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 16;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX + 32;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX + 32;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 16;
         Zone->deathBoundary[0]      = (self->position.y >> 16) + 16;
 
         EntityMetalSonic *metal = (EntityMetalSonic *)self->metalSonic;
