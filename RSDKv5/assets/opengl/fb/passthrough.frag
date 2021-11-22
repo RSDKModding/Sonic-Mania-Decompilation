@@ -22,9 +22,9 @@ const int INK_UNMASK = 7;
 void main()
 {
     out_color  = texture(source, ex_UV);
-    float alph = alpha / 255.0;
-    if (out_color.a == 0 || (alph == 0 && inkEffect < INK_LOOKUP && inkEffect != INK_NONE))
+    if (out_color.a == 0 || (alpha == 0 && inkEffect < INK_LOOKUP && inkEffect != INK_NONE))
         discard;
+    float alph = alpha / 255.0;
     ivec3 placed  = ivec3(texture(dest, ex_UV).rgb * 255);
     int truncated = (placed.b >> 3) | ((placed.g >> 2) << 5) | ((placed.r >> 3) << 11);
 
@@ -33,7 +33,7 @@ void main()
         case INK_BLEND: alph = .5;
         case INK_ALPHA:
         case INK_ADD: out_color = vec4(out_color.rgb, alph); break;
-        case INK_SUB: out_color = vec4((out_color - texture(dest, ex_UV) * (1 - alph)).rgb, 1.0); break;
+        case INK_SUB: out_color = vec4((texture(dest, ex_UV) - out_color * (alph)).rgb, 1.0); break;
         case INK_LOOKUP: {
             ivec2 lookupUV = ivec2(truncated % 256, truncated / 256);
             out_color      = vec4(texture(lookupTable, lookupUV).rgb, 1.0);

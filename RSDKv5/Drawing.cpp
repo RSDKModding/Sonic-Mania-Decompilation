@@ -3233,6 +3233,10 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 return;
             break;
     }
+    GFXSurface *surface = &gfxSurface[sheetID];
+    validDraw           = true;
+    
+#if RETRO_SOFTWARE_RENDER
     int widthFlip  = width;
     int heightFlip = height;
 
@@ -3260,9 +3264,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     if (width <= 0 || height <= 0)
         return;
 
-    GFXSurface *surface = &gfxSurface[sheetID];
-    validDraw           = true;
-#if RETRO_SOFTWARE_RENDER
     int pitch              = 0;
     int gfxPitch           = 0;
     byte *lineBuffer       = NULL;
