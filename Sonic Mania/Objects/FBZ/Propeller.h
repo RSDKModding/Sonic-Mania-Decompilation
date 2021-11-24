@@ -14,7 +14,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Hitbox playerHitbox;
-    Hitbox hitbox2;
+    Hitbox hitboxFan;
     Hitbox hitbox;
     bool32 fanEnabled;
     uint8 activePlayers;

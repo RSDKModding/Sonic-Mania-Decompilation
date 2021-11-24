@@ -234,7 +234,7 @@ void TimeAttackGate_Unknown1(void)
         int32 zone             = param->zoneID;
         int32 time             = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
         int32 act              = param->actID;
-        int32 mode             = SceneInfo->filter == SCN_FILTER_ENCORE;
+        int32 mode             = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
 
         param->timeAttackRank = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
         TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);

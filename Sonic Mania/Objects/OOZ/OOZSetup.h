@@ -3,6 +3,9 @@
 
 #include "SonicMania.h"
 
+typedef enum { OOZ_WARPDOOR_EFFECT_TO_SUB = 1, OOZ_WARPDOOR_EFFECT_FROM_SUB = 2 } OOZWarpDoorEffects;
+typedef enum { OOZSETUP_FLAMES, OOZSETUP_FADE } OOZSetupTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

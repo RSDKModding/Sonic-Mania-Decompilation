@@ -660,8 +660,8 @@ void SpiderMobile_StateBody_SetupBounds(void)
             self->timer               = 0;
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 212;
-            Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 212;
+            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - WIDE_SCR_XCENTER;
+            Zone->cameraBoundsR[0]     = (self->position.x >> 16) + WIDE_SCR_XCENTER;
             Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
             Zone->cameraBoundsB[0]     = (self->position.y >> 16);
             SpiderMobile->boundL        = (Zone->cameraBoundsL[0] + 64) << 16;

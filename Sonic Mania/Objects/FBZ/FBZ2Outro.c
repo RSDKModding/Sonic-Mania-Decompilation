@@ -126,9 +126,11 @@ bool32 FBZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FBZ2Outro_EditorDraw(void) {}
 
 void FBZ2Outro_EditorLoad(void) {}
+#endif
 
 void FBZ2Outro_Serialize(void) {}
 #endif

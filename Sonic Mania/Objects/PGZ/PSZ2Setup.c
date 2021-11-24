@@ -111,7 +111,7 @@ void PSZ2Setup_TriggerCB1(void) { PSZ2Setup->flag = false; }
 void PSZ2Setup_ActTransitionLoad(void)
 {
     SaveGame_LoadPlayerState();
-    Zone_ReloadStoredEntities(0x6140000, 0x1D80000, false);
+    Zone_ReloadStoredEntities(472 << 16, 1556 << 16, false);
     globals->recallEntities      = false;
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;

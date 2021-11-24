@@ -1984,7 +1984,7 @@ void MenuSetup_Options_WinSizeChanged_CB(void)
 
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     if (self->selection != 4) {
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (self->selection + 1));
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, WIDE_SCR_XSIZE * (self->selection + 1));
         RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
 
         options->windowSize = self->selection;

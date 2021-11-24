@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BLASTER_BADNIK,
+    BLASTER_SHOT,
+    BLASTER_SHELL,
+}BlasterTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -16,11 +22,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    uint8 field_5C;
-    uint8 field_5D;
+    uint16 unused1;
     uint16 timer;
     uint16 timer2;
-    uint16 field_62;
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
@@ -50,14 +54,14 @@ void Blaster_HandlePlayerInteractions(void);
 void Blaster_CheckOnScreen(void);
 
 void Blaster_State_Setup(void);
-void Blaster_State_Unknown1(void);
-void Blaster_State_Unknown2(void);
-void Blaster_State_Unknown3(void);
+void Blaster_State_Move(void);
+void Blaster_State_HandleTurn(void);
+void Blaster_State_AttackPlayer(void);
 void Blaster_State_MagnetAttract(void);
-void Blaster_State_Unknown4(void);
-void Blaster_State_Unknown5(void);
-void Blaster_State_Unknown6(void);
-void Blaster_State_Unknown7(void);
-void Blaster_State_Unknown8(void);
+void Blaster_State_MagnetReleased(void);
+void Blaster_State_BeginShot(void);
+void Blaster_State_Shot(void);
+void Blaster_State_Fall(void);
+void Blaster_State_Shell(void);
 
 #endif //!OBJ_BLASTER_H

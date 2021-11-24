@@ -14,17 +14,9 @@ typedef struct {
     int32 size;
     int32 activePlayers;
     int32 playerTimers[4];
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
+    int32 unused1[4];
     Hitbox hitbox;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
+    Animator animator;
 } EntityPropellerShaft;
 
 // Object Struct

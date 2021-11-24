@@ -276,7 +276,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
     LogHelpers_Print("Bout to create ReplayDB entry...");
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     int32 rowID            = ReplayRecorder_AddReplayID(param->actID, param->zoneID, param->characterID, (millisecds + 100 * (secs + 60 * mins)),
-                                             SceneInfo->filter == SCN_FILTER_ENCORE);
+                                             SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE));
     if (rowID == -1) {
         LogHelpers_Print("Table row ID invalid! %d", -1);
         ReplayRecorder_SavedReplay(false);
@@ -534,9 +534,9 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[4]  = Current_Player_State_Type0;
     ReplayRecorder->actions[5]  = Current_Player_State_Type1;
     ReplayRecorder->actions[6]  = Current_Player_State_Type2;
-    ReplayRecorder->actions[7]  = Cylinder_Player_State_Unknown2;
-    ReplayRecorder->actions[8]  = Cylinder_Player_State_Unknown3;
-    ReplayRecorder->actions[9]  = Cylinder_Player_State_Unknown4;
+    ReplayRecorder->actions[7]  = Cylinder_Player_State_InkRoller_Stand;
+    ReplayRecorder->actions[8]  = Cylinder_Player_State_InkRoller_Roll;
+    ReplayRecorder->actions[9]  = Cylinder_Player_State_Pillar;
     ReplayRecorder->actions[10] = Cylinder_Player_State_Unknown1;
     ReplayRecorder->actions[13] = GymBar_PlayerState_Hang;
     ReplayRecorder->actions[14] = GymBar_PlayerState_SwingV;
@@ -597,7 +597,7 @@ void ReplayRecorder_SetupWriteBuffer(void)
     buffer[REPLAY_HDR_ZONEID]       = param->zoneID;                          // zoneID
     buffer[REPLAY_HDR_ACTID]        = param->actID;                           // actID
     buffer[REPLAY_HDR_CHARID]       = param->characterID;                     // characterID
-    buffer[REPLAY_HDR_ISPLUSLAYOUT] = SceneInfo->filter == SCN_FILTER_ENCORE; // isEncore
+    buffer[REPLAY_HDR_ISPLUSLAYOUT] = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE); // isEncore
     buffer[REPLAY_HDR_OSC]          = Zone->timer;                            // oscillation
     buffer[REPLAY_HDR_COMPSIZE]     = REPLAY_HDR_SIZE * sizeof(int);          // header size
     LogHelpers_Print("characterID = %d", buffer[REPLAY_HDR_CHARID]);

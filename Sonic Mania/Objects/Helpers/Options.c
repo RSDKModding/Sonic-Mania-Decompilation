@@ -61,9 +61,9 @@ void Options_GetWinSize(void)
     }
     else {
         int32 width = RSDK.GetSettingsValue(SETTINGS_WINDOW_WIDTH);
-        if (width > 424) {
-            if (width > 848) {
-                options->windowSize = (width > 1272) + 2;
+        if (width > WIDE_SCR_XSIZE) {
+            if (width > (WIDE_SCR_XSIZE * 2)) {
+                options->windowSize = (width > (WIDE_SCR_XSIZE * 3)) + 2;
             }
             else {
                 options->windowSize = 1;

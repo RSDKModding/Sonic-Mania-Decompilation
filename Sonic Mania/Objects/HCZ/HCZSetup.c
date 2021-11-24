@@ -200,7 +200,7 @@ void HCZSetup_StageLoad(void)
         Zone->cameraBoundsL[2] = 168;
         Zone->cameraBoundsL[3] = 168;
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
-            Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
+            Zone_ReloadStoredEntities(388 << 16, 1696 << 16, true);
         }
         Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
     }

@@ -262,7 +262,16 @@ void BuzzBomber_State_ProjectileShot(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BuzzBomber_EditorDraw(void) { BuzzBomber_Draw(); }
+void BuzzBomber_EditorDraw(void)
+{
+    RSDK_THIS(BuzzBomber);
+
+    BuzzBomber_Draw();
+
+    if (showGizmos()) {
+        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->rangeHitbox);
+    }
+}
 
 void BuzzBomber_EditorLoad(void)
 {

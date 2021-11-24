@@ -14,15 +14,15 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
+    int32 unused1;
+    int32 gravityStrength;
+    int32 unused2;
+    int32 unused3;
     Entity *playerPtr;
-    Animator animator1;
-    Animator animator2;
-    Animator animator4;
-    Animator animator3;
+    Animator sailAnimator;
+    Animator handleBackAnimator;
+    Animator handleFrontAnimator;
+    Animator playerAnimator;
 } EntityHangGlider;
 
 // Object Struct

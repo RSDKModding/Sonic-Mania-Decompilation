@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-typedef enum { TETHERBALL_0, TETHERBALL_1, TETHERBALL_2, TETHERBALL_3 } TetherBallTypes;
+typedef enum { TETHERBALL_DOWN, TETHERBALL_UP, TETHERBALL_LEFT, TETHERBALL_RIGHT } TetherBallTypes;
 
 // Object Class
 typedef struct {
@@ -24,7 +24,7 @@ typedef struct {
     int32 angleEnd;
     int32 timer;
     int32 size;
-    int32 field_70;
+    int32 swingSpeed;
     Vector2 posUnknown;
     EntityPlayer *playerPtr;
 } EntityTetherBall;
@@ -46,9 +46,9 @@ void TetherBall_EditorLoad(void);
 void TetherBall_Serialize(void);
 
 // Extra Entity Functions
-void TetherBall_Unknown1(void);
-void TetherBall_Unknown2(void);
-void TetherBall_Unknown3(void);
+void TetherBall_State_CheckPlayerAttach(void);
+void TetherBall_State_SwingBall(void);
+void TetherBall_State_FinishedSwing(void);
 
 
 #endif //!OBJ_TETHERBALL_H

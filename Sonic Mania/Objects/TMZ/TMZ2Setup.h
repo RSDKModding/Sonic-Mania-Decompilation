@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { TMZ2_WARPDOOR_EFFECT_MIST = 1 } TMZ2WarpDoorEffects;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

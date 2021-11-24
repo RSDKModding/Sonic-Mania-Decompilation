@@ -56,7 +56,7 @@ void Camera_Create(void *data)
     self->boundsOffset.x = 3;
     self->boundsOffset.y = 2;
     self->active         = ACTIVE_NORMAL;
-    if (!Zone->atlReloadFlag) {
+    if (!Zone->setATLBounds) {
         self->boundsL = Zone->cameraBoundsL[self->screenID];
         self->boundsR = Zone->cameraBoundsR[self->screenID];
         self->boundsT = Zone->cameraBoundsT[self->screenID];

@@ -293,7 +293,7 @@ void Chopper_EditorLoad(void)
 {
     Chopper->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
 
-    RSDK_ACTIVE_VAR(Chopper, direction);
+    RSDK_ACTIVE_VAR(Chopper, type);
     RSDK_ENUM_VAR("Jump", CHOPPER_JUMP);
     RSDK_ENUM_VAR("Swim", CHOPPER_SWIM);
 

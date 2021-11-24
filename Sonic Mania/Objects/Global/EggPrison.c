@@ -287,27 +287,27 @@ void EggPrison_State_Activated(void)
             technosqueek->velocity.x         = -0x30000;
             technosqueek->velocity.y         = -0x40000;
             technosqueek->active             = ACTIVE_NORMAL;
-            technosqueek->state              = Technosqueek_State_Unknown6;
+            technosqueek->state              = Technosqueek_State_Fall;
 
             technosqueek             = CREATE_ENTITY(Technosqueek, NULL, self->position.x + 0x80000, self->position.y);
             technosqueek->velocity.x = 0x30000;
             technosqueek->velocity.y = -0x40000;
             technosqueek->active     = ACTIVE_NORMAL;
-            technosqueek->direction  = 1;
-            technosqueek->state      = Technosqueek_State_Unknown6;
+            technosqueek->direction  = FLIP_X;
+            technosqueek->state      = Technosqueek_State_Fall;
 
             EntityBlaster *blaster = CREATE_ENTITY(Blaster, NULL, self->position.x - 0x180000, self->position.y);
             blaster->velocity.x    = -0x30000;
             blaster->velocity.y    = -0x30000;
             blaster->active        = ACTIVE_NORMAL;
-            blaster->state         = Blaster_State_Unknown7;
+            blaster->state         = Blaster_State_Fall;
 
             blaster             = CREATE_ENTITY(Blaster, NULL, self->position.x + 0x180000, self->position.y);
             blaster->velocity.x = 0x30000;
             blaster->velocity.y = -0x30000;
             blaster->active     = ACTIVE_NORMAL;
             blaster->direction  = 1;
-            blaster->state      = Blaster_State_Unknown7;
+            blaster->state      = Blaster_State_Fall;
             break;
         }
         case EGGPRISON_ANIMALS:

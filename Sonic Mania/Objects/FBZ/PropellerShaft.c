@@ -45,7 +45,7 @@ void PropellerShaft_Update(void)
             else {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                     self->activePlayers |= 1 << pID;
-                    RSDK.PlaySfx(Player->sfxGrab, 0, 255);
+                    RSDK.PlaySfx(Player->sfxGrab, false, 255);
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
@@ -105,7 +105,15 @@ void PropellerShaft_Create(void *data)
 void PropellerShaft_StageLoad(void) {}
 
 #if RETRO_INCLUDE_EDITOR
-void PropellerShaft_EditorDraw(void) {}
+void PropellerShaft_EditorDraw(void)
+{
+    RSDK_THIS(PropellerShaft);
+    self->drawOrder = Zone->drawOrderHigh;
+
+    if (showGizmos()) {
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, 16 << 16, self->size << 17);
+    }
+}
 
 void PropellerShaft_EditorLoad(void) {}
 #endif

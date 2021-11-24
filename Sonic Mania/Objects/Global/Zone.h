@@ -47,7 +47,7 @@ typedef struct {
     int32 playerBoundActiveT[PLAYER_MAX];
     int32 playerBoundActiveB[PLAYER_MAX];
     int32 autoScrollSpeed;
-    bool32 atlReloadFlag;
+    bool32 setATLBounds;
     bool32 gotTimeOver;
     StateMachine(timeOverCallback);
     uint16 fgLayers;
@@ -108,7 +108,7 @@ void Zone_Serialize(void);
 // Extra Entity Functions
 int32 Zone_GetZoneID(void);
 void Zone_StoreEntities(int32 xOffset, int32 yOffset);
-void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setCamera);
+void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds);
 void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeOut_MusicFade(void);

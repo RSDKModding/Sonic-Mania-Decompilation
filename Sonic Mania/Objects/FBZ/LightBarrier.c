@@ -27,21 +27,21 @@ void LightBarrier_StaticUpdate(void) {}
 void LightBarrier_Draw(void)
 {
     RSDK_THIS(LightBarrier);
-    Vector2 drawPos   = self->position;
+    Vector2 drawPos = self->position;
     self->inkEffect = INK_NONE;
     self->direction = FLIP_NONE;
 
     drawPos.y += self->size << 15;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->emitterAnimator, &drawPos, false);
 
     drawPos.y -= self->size << 16;
     self->direction = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->emitterAnimator, &drawPos, false);
 
     self->direction = FLIP_NONE;
     if (self->enabled) {
-        self->inkEffect  = INK_ADD;
-        int32 timer          = self->timer;
+        self->inkEffect    = INK_ADD;
+        int32 timer        = self->timer;
         SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
         drawPos.y += 0x80000;
         for (int32 i = 8; i < self->size - 8;) {
@@ -50,7 +50,7 @@ void LightBarrier_Draw(void)
                 height = (self->size - 8) - i;
             frame->sprY   = timer + (self->sprY & 0xFFFF);
             frame->height = height;
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->barrierAnimator, &drawPos, false);
 
             i += height;
             drawPos.y += height << 16;
@@ -70,9 +70,9 @@ void LightBarrier_Create(void *data)
         self->drawOrder     = Zone->drawOrderHigh;
         self->updateRange.y = self->size << 15;
         self->updateRange.x = 0x800000;
-        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->animator2, true, 1);
-        SpriteFrame *frame    = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
+        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->emitterAnimator, true, 0);
+        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->barrierAnimator, true, 1);
+        SpriteFrame *frame  = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
         self->sprY          = frame->sprY;
         self->hitbox.left   = -8;
         self->hitbox.top    = -(self->size >> 1);
@@ -86,9 +86,24 @@ void LightBarrier_Create(void *data)
 void LightBarrier_StageLoad(void) { LightBarrier->aniFrames = RSDK.LoadSpriteAnimation("FBZ/LightBarrier.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void LightBarrier_EditorDraw(void) {}
+void LightBarrier_EditorDraw(void)
+{
+    RSDK_THIS(LightBarrier);
+    self->alpha = 160;
 
-void LightBarrier_EditorLoad(void) {}
+    self->updateRange.y = self->size << 15;
+    self->updateRange.x = 0x800000;
+    RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->emitterAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->barrierAnimator, true, 1);
+    SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
+    self->sprY         = frame->sprY;
+
+    LightBarrier_Draw();
+
+    frame->sprY = self->sprY;
+}
+
+void LightBarrier_EditorLoad(void) { LightBarrier->aniFrames = RSDK.LoadSpriteAnimation("FBZ/LightBarrier.bin", SCOPE_STAGE); }
 #endif
 
 void LightBarrier_Serialize(void)

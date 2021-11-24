@@ -5,14 +5,14 @@ ObjectFBZSinkTrash *FBZSinkTrash;
 void FBZSinkTrash_Update(void)
 {
     RSDK_THIS(FBZSinkTrash);
-    if (self->type != 2) {
+    if (self->type != FBZSINKTRASH_DECOR) {
         if (self->type) {
-            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, self, &self->hitbox1); }
+            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, self, &self->hitboxTrash); }
 
             foreach_active(SignPost, signPost)
             {
                 if (signPost->state == SignPost_State_Fall && signPost->position.y + 0x180000 > self->position.y - (self->size.y >> 1)) {
-                    RSDK.PlaySfx(SignPost->sfxSlide, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfxSlide, false, 255);
                     signPost->spinCount  = 4;
                     signPost->position.y = self->position.y - (self->size.y >> 1) - 0x180000;
                     signPost->velocity.y = 0;
@@ -24,8 +24,8 @@ void FBZSinkTrash_Update(void)
         else {
             foreach_active(Player, player)
             {
-                if (!Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
-                    if (Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
+                if (!Player_CheckCollisionTouch(player, self, &self->hitboxTrash)) {
+                    if (Player_CheckCollisionTouch(player, self, &self->hitboxDebris)) {
 #if RETRO_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop) {
                             player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
@@ -137,7 +137,7 @@ void FBZSinkTrash_Draw(void)
     for (int32 i = 0; i < self->size.x; i += 0x400000) {
         if (self->size.x - i < 0x400000)
             frame->width = (self->size.x - i) >> 16;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->topAnimator, &drawPos, false);
         drawPos.x += 0x400000;
     }
 
@@ -152,7 +152,7 @@ void FBZSinkTrash_Draw(void)
         for (int32 x = 0; x < self->size.x; x += 0x400000) {
             if (self->size.x - x < 0x400000)
                 frame->width = (self->size.x - x) >> 16;
-            RSDK.DrawSprite(&self->animator3, &drawPos, false);
+            RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
             drawPos.x += 0x400000;
         }
         drawPos.y += 0x400000;
@@ -165,18 +165,18 @@ void FBZSinkTrash_Draw(void)
     for (int32 i = 0; i < self->size.x; i += 0x400000) {
         if (self->size.x - i < 0x400000)
             frame->width = (self->size.x - i) >> 16;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->topAnimator, &drawPos, false);
         drawPos.x += 0x400000;
     }
 
-    if (self->type < 1) {
+    if (self->type < FBZSINKTRASH_SOLID) {
         for (int32 i = 0; i < 64; ++i) {
             drawPos = self->positions[i];
             drawPos.x += self->position.x;
             drawPos.y += self->position.y;
-            self->animator1.frameID = self->frameIDs[i];
+            self->trashAnimator.frameID = self->frameIDs[i];
             self->direction         = self->directions[i];
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->trashAnimator, &drawPos, false);
         }
 
         self->direction = FLIP_NONE;
@@ -192,24 +192,24 @@ void FBZSinkTrash_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
-        if (self->type == 0)
+        if (self->type == FBZSINKTRASH_LOOSE)
             self->drawOrder = Zone->drawOrderHigh - 2;
         else
             self->drawOrder = Zone->drawOrderLow;
 
-        self->hitbox1.left   = -(self->size.x >> 17);
-        self->hitbox1.top    = -(self->size.y >> 17);
-        self->hitbox1.right  = self->size.x >> 17;
-        self->hitbox1.bottom = 24 - (self->size.y >> 17);
+        self->hitboxTrash.left   = -(self->size.x >> 17);
+        self->hitboxTrash.top    = -(self->size.y >> 17);
+        self->hitboxTrash.right  = self->size.x >> 17;
+        self->hitboxTrash.bottom = 24 - (self->size.y >> 17);
 
-        self->hitbox2.left   = -(self->size.x >> 17);
-        self->hitbox2.top    = (self->size.y >> 17) - 16;
-        self->hitbox2.right  = self->size.x >> 17;
-        self->hitbox2.bottom = self->size.y >> 17;
+        self->hitboxDebris.left   = -(self->size.x >> 17);
+        self->hitboxDebris.top    = (self->size.y >> 17) - 16;
+        self->hitboxDebris.right  = self->size.x >> 17;
+        self->hitboxDebris.bottom = self->size.y >> 17;
 
-        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->animator3, true, 1);
+        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &self->trashAnimator, true, 0);
+        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->topAnimator, true, 0);
+        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->mainAnimator, true, 1);
 
         for (int32 i = 0; i < 64; ++i) {
             self->positions[i].x = RSDK.Rand(-(self->size.x >> 1), self->size.x >> 1);
@@ -223,9 +223,49 @@ void FBZSinkTrash_Create(void *data)
 void FBZSinkTrash_StageLoad(void) { FBZSinkTrash->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Trash.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void FBZSinkTrash_EditorDraw(void) {}
+void FBZSinkTrash_EditorDraw(void)
+{
+    RSDK_THIS(FBZSinkTrash);
+    self->updateRange.x = self->size.x >> 1;
+    self->updateRange.y = (self->size.y >> 1) + 0x400000;
+    self->drawFX        = FX_FLIP;
+    self->direction     = FLIP_NONE;
 
-void FBZSinkTrash_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &self->trashAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->topAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->mainAnimator, true, 1);
+
+    //this is pretty nasty but I didn't wanna make new vars and I needed smth to store it
+    int32 *prevX = (int32 *)&self->hitboxTrash.left;
+    int32 *prevY = (int32 *)&self->hitboxTrash.right;
+
+    if (*prevX != self->size.x || *prevY != self->size.y) {
+        for (int32 i = 0; i < 64; ++i) {
+            self->positions[i].x = RSDK.Rand(-(self->size.x >> 1), self->size.x >> 1);
+            self->positions[i].y = RSDK.Rand(-(self->size.y >> 1), self->size.y >> 1);
+            self->frameIDs[i]    = RSDK.Rand(0, 22);
+            self->directions[i]  = RSDK.Rand(0, 4);
+        }
+
+        *prevX = self->size.x;
+        *prevY = self->size.y;
+    }
+
+    FBZSinkTrash_Draw();
+
+    if (showGizmos())
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+}
+
+void FBZSinkTrash_EditorLoad(void)
+{
+    FBZSinkTrash->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Trash.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(FBZSinkTrash, type);
+    RSDK_ENUM_VAR("Sink Trash", FBZSINKTRASH_LOOSE);
+    RSDK_ENUM_VAR("Solid", FBZSINKTRASH_SOLID);
+    RSDK_ENUM_VAR("Decoration", FBZSINKTRASH_DECOR);
+}
 #endif
 
 void FBZSinkTrash_Serialize(void)

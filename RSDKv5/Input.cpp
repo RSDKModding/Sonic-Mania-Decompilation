@@ -17,6 +17,10 @@ TriggerState triggerL[PLAYER_COUNT + 1];
 TriggerState triggerR[PLAYER_COUNT + 1];
 TouchMouseData touchMouseData;
 
+#if !RETRO_REV02
+int mostRecentControllerID = -1;
+#endif
+
 #define normalize(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
 
 #if RETRO_USING_SDL2
@@ -377,7 +381,7 @@ void UpdateKeyboardInput(InputDevice *device)
     for (int i = 0; i < KEY_MAX; i++) {
         if (keyState[winAPIToSDLMappings(buttons[i]->keyMap)]) {
             device->anyPress |= true;
-            confirmPress |= (i == 3 || i == 9);
+            confirmPress |= (i == 4 || i == 10);
         }
     }
 
@@ -390,6 +394,11 @@ void UpdateKeyboardInput(InputDevice *device)
         device->inactiveTimer[1] = 0;
     else
         device->inactiveTimer[1]++;
+
+#if !RETRO_REV02
+    if (device->anyPress || confirmPress)
+        mostRecentControllerID = device->controllerID;
+#endif
 
 #endif
 }
@@ -407,7 +416,7 @@ void UpdateDeviceInput(InputDevice *device)
     for (int i = 0; i < KEY_MAX; ++i) {
         if (getControllerButton(device, buttonMap[i])) {
             device->anyPress |= true;
-            confirmPress |= (i == 3 || i == 9);
+            confirmPress |= (i == 4 || i == 10);
         }
     }
 
@@ -420,6 +429,11 @@ void UpdateDeviceInput(InputDevice *device)
         device->inactiveTimer[1] = 0;
     else
         device->inactiveTimer[1]++;
+
+#if !RETRO_REV02
+    if (device->anyPress || confirmPress)
+        mostRecentControllerID = device->controllerID;
+#endif
 #endif
 }
 

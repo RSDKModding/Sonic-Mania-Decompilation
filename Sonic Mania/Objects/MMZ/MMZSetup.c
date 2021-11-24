@@ -72,7 +72,7 @@ void MMZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
         for (int32 i = 3; i < 5; ++i) {
-            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (256 - ScreenInfo->centerX) << 16;
+            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
         }
 #endif
 
@@ -86,7 +86,7 @@ void MMZSetup_StageLoad(void)
 
         if (isMainGameMode() && globals->atlEnabled) {
             if (!PlayerHelpers_CheckStageReload())
-                Zone_ReloadStoredEntities(0x82C0000, 0x1000000, true);
+                Zone_ReloadStoredEntities(256 << 16, 2092 << 16, true);
         }
 
 #if RETRO_USE_PLUS

@@ -58,16 +58,16 @@ void FBZFan_LateUpdate(void) {}
 
 void FBZFan_StaticUpdate(void)
 {
-    RSDK.ProcessAnimation(&FBZFan->animator2);
-    RSDK.ProcessAnimation(&FBZFan->animator3);
+    RSDK.ProcessAnimation(&FBZFan->fanAnimator);
+    RSDK.ProcessAnimation(&FBZFan->fan2Animator);
     FBZFan->activePlayers = 0;
 }
 
 void FBZFan_Draw(void)
 {
-    RSDK.DrawSprite(&FBZFan->animator1, 0, false);
-    RSDK.DrawSprite(&FBZFan->animator2, 0, false);
-    RSDK.DrawSprite(&FBZFan->animator3, 0, false);
+    RSDK.DrawSprite(&FBZFan->baseAnimator, NULL, false);
+    RSDK.DrawSprite(&FBZFan->fanAnimator, NULL, false);
+    RSDK.DrawSprite(&FBZFan->fan2Animator, NULL, false);
 }
 
 void FBZFan_Create(void *data)
@@ -88,9 +88,9 @@ void FBZFan_StageLoad(void)
 {
     FBZFan->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZFan.bin", SCOPE_STAGE);
     FBZFan->sfxFan    = RSDK.GetSfx("FBZ/FBZFan.wav");
-    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 0, &FBZFan->animator1, true, 0);
-    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 1, &FBZFan->animator2, true, 0);
-    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 2, &FBZFan->animator3, true, 0);
+    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 0, &FBZFan->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 1, &FBZFan->fanAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 2, &FBZFan->fan2Animator, true, 0);
     FBZFan->solidHitbox.left    = -64;
     FBZFan->solidHitbox.top     = -16;
     FBZFan->solidHitbox.right   = 64;
@@ -104,9 +104,15 @@ void FBZFan_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FBZFan_EditorDraw(void) {}
+void FBZFan_EditorDraw(void) { FBZFan_Draw(); }
 
-void FBZFan_EditorLoad(void) {}
+void FBZFan_EditorLoad(void)
+{
+    FBZFan->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZFan.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 0, &FBZFan->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 1, &FBZFan->fanAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FBZFan->aniFrames, 2, &FBZFan->fan2Animator, true, 0);
+}
 #endif
 
 void FBZFan_Serialize(void) {}

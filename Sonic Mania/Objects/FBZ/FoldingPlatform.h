@@ -33,7 +33,7 @@ void FoldingPlatform_EditorLoad(void);
 void FoldingPlatform_Serialize(void);
 
 // Extra Entity Functions
-void FoldingPlatform_Unknown1(void);
-void FoldingPlatform_Unknown2(void);
+void FoldingPlatform_State_Appear(void);
+void FoldingPlatform_State_Disappear(void);
 
 #endif //!OBJ_FOLDINGPLATFORM_H

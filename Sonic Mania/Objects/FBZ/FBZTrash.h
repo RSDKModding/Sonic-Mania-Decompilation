@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FBZTRASH_TRASH,
+    FBZTRASH_UNUSED,
+    FBZTRASH_ORB,
+    FBZTRASH_ORBINAUT,
+}FBZTrashTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -13,13 +20,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 type;
+    FBZTrashTypes type;
     int32 frameID;
-    int32 field_64;
+    int32 rumbleMove;
     int32 timer;
-    int32 field_6C;
-    Vector2 field_70;
-    Vector2 field_78;
+    int32 radius;
+    Vector2 targetPos;
+    Vector2 startPos;
     Entity *parent;
     Hitbox hitbox;
     Animator animator;
@@ -42,12 +49,12 @@ void FBZTrash_EditorLoad(void);
 void FBZTrash_Serialize(void);
 
 // Extra Entity Functions
-void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int32 angle);
-void FBZTrash_Unknown2(int32 x, int32 y);
-void FBZTrash_Unknown3(void);
-void FBZTrash_Unknown4(void);
-void FBZTrash_Unknown5(void);
-void FBZTrash_Unknown6(void);
-void FBZTrash_Unknown7(void);
+void FBZTrash_SummonOrbinautOrbs(EntityFBZTrash *trashPtr, int32 angle);
+void FBZTrash_SummonOrbinaut(int32 x, int32 y);
+void FBZTrash_State_LooseTrash(void);
+void FBZTrash_State_ReactMagnet(void);
+void FBZTrash_State_MoveToTarget(void);
+void FBZTrash_State_OrbinautOrb(void);
+void FBZTrash_State_OrbinautMove(void);
 
 #endif //!OBJ_FBZTRASH_H

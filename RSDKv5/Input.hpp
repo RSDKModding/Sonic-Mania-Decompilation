@@ -392,6 +392,10 @@ extern TriggerState triggerL[PLAYER_COUNT + 1];
 extern TriggerState triggerR[PLAYER_COUNT + 1];
 extern TouchMouseData touchMouseData;
 
+#if !RETRO_REV02
+extern int mostRecentControllerID;
+#endif
+
 void InitInputDevice();
 void ProcessInput();
 
@@ -518,39 +522,7 @@ inline int32 MostRecentActiveControllerID(int32 type, int32 a2, uint32 a3)
     return inputIDStore;
 }
 #else
-inline int32 MostRecentActiveControllerID(int32 a2)
-{
-    uint minInactiveTime          = -1;
-    uint recentTimer = -1;
-    int inputID      = 0;
-    int inputIDStore = 0;
-
-    if (InputDeviceCount) {
-        for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
-                if (InputDevices[i].inactiveTimer[0] < recentTimer) {
-                    recentTimer = InputDevices[i].inactiveTimer[0];
-                    if (InputDevices[i].inactiveTimer[0] <= minInactiveTime)
-                        inputID = InputDevices[i].inputID;
-                    inputIDStore = InputDevices[i].inputID;
-                }
-            }
-        }
-
-        if (inputID)
-            return inputID;
-    }
-    if (inputIDStore)
-        return inputIDStore;
-
-    for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
-            return InputDevices[i].inputID;
-        }
-    }
-
-    return inputIDStore;
-}
+inline int32 MostRecentActiveControllerID() { return mostRecentControllerID; }
 #endif
 
 int32 GetGamePadType(int32 inputID);

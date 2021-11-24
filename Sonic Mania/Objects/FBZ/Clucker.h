@@ -9,7 +9,7 @@ typedef struct {
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxSolid;
-    Hitbox hitbox4;
+    Hitbox hitboxEgg;
     uint16 aniFrames;
     uint16 sfxShot;
 } ObjectClucker;
@@ -19,10 +19,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 yOffset;
-    int32 field_60;
+    int32 xOffset;
     uint8 timer;
     uint16 delay;
-    bool32 hasChildren;
+    bool32 hasParent;
     Animator animator;
 } EntityClucker;
 
@@ -50,13 +50,13 @@ void Clucker_HandlePlayerInteractions(void);
 void Clucker_CheckOnScreen(void);
 
 void Clucker_State_Setup(void);
-void Clucker_State_Unknown1(void);
-void Clucker_State_Unknown2(void);
-void Clucker_State_Unknown3(void);
-void Clucker_State_Unknown4(void);
-void Clucker_State_Unknown5(void);
+void Clucker_State_CheckForPlayer(void);
+void Clucker_State_Appear(void);
+void Clucker_State_ShootDelay(void);
+void Clucker_State_Shoot(void);
+void Clucker_State_Turn(void);
 void Clucker_State_Destroyed(void);
 
-void Clucker_State_Projectile(void);
+void Clucker_State_Egg(void);
 
 #endif //!OBJ_CLUCKER_H

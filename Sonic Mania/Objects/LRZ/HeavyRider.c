@@ -462,7 +462,7 @@ void HeavyRider_State_SetupArena(void)
     if (++self->timer >= 2) {
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 424;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + WIDE_SCR_XSIZE;
         self->active              = ACTIVE_NORMAL;
 
         foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
@@ -479,7 +479,7 @@ void HeavyRider_State_StartFight(void)
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 424;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XSIZE;
 #if RETRO_USE_PLUS
         HeavyRider->outro = (Entity *)CREATE_ENTITY(LRZ3Outro, NULL, self->position.x, self->position.y);
 #endif
@@ -1183,7 +1183,7 @@ void HeavyRider_EditorDraw(void)
     StateMachine_Run(self->stateDraw);
 
     if (self->type == HEAVYRIDER_RIDER && showGizmos()) {
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 0, -424, -SCREEN_YSIZE, 424, SCREEN_YSIZE);
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 0, -WIDE_SCR_XSIZE, -SCREEN_YSIZE, WIDE_SCR_XSIZE, SCREEN_YSIZE);
     }
 }
 

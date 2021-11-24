@@ -360,7 +360,8 @@ void ActClear_Create(void *data)
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-            self->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, SceneInfo->filter == SCN_FILTER_ENCORE, 1);
+            self->time =
+                TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE), 1);
             self->achievedRank = false;
             self->isNewRecord  = false;
         }

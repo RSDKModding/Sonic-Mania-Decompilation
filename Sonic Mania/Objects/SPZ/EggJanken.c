@@ -1194,7 +1194,7 @@ void EggJanken_EditorDraw(void)
     EggJanken_StateDraw_Unknown1();
 
     if (showGizmos())
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -212, -SCREEN_YSIZE, 212, 208);
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 208);
 }
 
 void EggJanken_EditorLoad(void)

@@ -1111,9 +1111,9 @@ void MetalSonic_HandlePanelAttack(void)
         EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
         ring->radiusOffset     = 24;
         ring->timer            = 24;
-        ring->r                = 0x00;
+        ring->r                = 0xF0;
         ring->g                = 0x80;
-        ring->b                = 0xF0;
+        ring->b                = 0x00;
         ring->shrinkSpeed      = 1;
 #endif
     }
@@ -1313,8 +1313,8 @@ void MetalSonic_State_Transform(void)
         EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
         ring->radiusOffset     = timer;
         ring->timer            = 24;
-        ring->r                = 0x00;
-        ring->g                = 0xF0;
+        ring->r                = 0xF0;
+        ring->g                = 0x00;
         ring->b                = 0xF0;
         ring->shrinkSpeed      = 2;
     }

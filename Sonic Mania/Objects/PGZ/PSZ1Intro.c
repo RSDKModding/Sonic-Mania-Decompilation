@@ -68,11 +68,11 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             glider->playerPtr    = (Entity *)player;
             glider->velocity.x   = 0x40000;
             glider->velocity.y   = -0x20000;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->animator3, true, 0);
-            glider->animator3.rotationFlag = 1;
-            glider->rotation               = 128;
-            glider->drawFX                 = FX_ROTATE;
-            glider->state                  = HangGlider_Unknown2;
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->playerAnimator, true, 0);
+            glider->playerAnimator.rotationFlag = 1;
+            glider->rotation                    = 128;
+            glider->drawFX                      = FX_ROTATE;
+            glider->state                       = HangGlider_Unknown2;
 
             EntityCamera *camera = player->camera;
             if (camera) {
@@ -83,7 +83,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             }
             else {
                 glider->velocity.x = 0x38000;
-                glider->field_60   = 0xE00;
+                glider->gravityStrength   = 0xE00;
             }
             self->gliders[id] = glider;
         }

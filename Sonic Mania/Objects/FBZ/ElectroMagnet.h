@@ -9,7 +9,7 @@ typedef struct {
     uint16 aniFrames;
     Hitbox hitbox;
     Vector2 onScreenRange;
-    uint8 field_18;
+    uint8 magnetSfxTimer;
     bool32 playingMagnetSFX;
     uint16 sfxMagnet;
 } ObjectElectroMagnet;
@@ -47,7 +47,7 @@ void ElectroMagnet_EditorLoad(void);
 void ElectroMagnet_Serialize(void);
 
 // Extra Entity Functions
-void ElectroMagnet_Unknown1(void);
-void ElectroMagnet_Unknown2(void);
+void ElectroMagnet_State_DurationWait(void);
+void ElectroMagnet_State_MagnetActive(void);
 
 #endif //!OBJ_ELECTROMAGNET_H

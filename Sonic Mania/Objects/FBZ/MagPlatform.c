@@ -138,7 +138,22 @@ void MagPlatform_Unknown4(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MagPlatform_EditorDraw(void) {}
+void MagPlatform_EditorDraw(void)
+{
+    RSDK_THIS(MagPlatform);
+    self->drawPos = self->centerPos = self->position;
+
+    MagPlatform_Draw();
+
+    if (showGizmos()) {
+        self->inkEffect = INK_BLEND;
+
+        self->drawPos.y = self->centerPos.y - (self->length << 16);
+        MagPlatform_Draw();
+
+        self->inkEffect = INK_NONE;
+    }
+}
 
 void MagPlatform_EditorLoad(void) {}
 #endif

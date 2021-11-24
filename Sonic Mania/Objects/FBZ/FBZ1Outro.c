@@ -30,9 +30,9 @@ void FBZ1Outro_StageLoad(void)
     foreach_all(BigSqueeze, boss)
     {
         switch (boss->type) {
-            case 2: FBZ1Outro->boss1 = boss; break;
-            case 3: FBZ1Outro->boss2 = boss; break;
-            case 0: FBZ1Outro->boss3 = boss; break;
+            case BIGSQUEEZE_CRUSHER_L: FBZ1Outro->bossBorderL = boss; break;
+            case BIGSQUEEZE_CRUSHER_R: FBZ1Outro->bossBorderR = boss; break;
+            case BIGSQUEEZE_MANAGER: FBZ1Outro->bossManager = boss; break;
         }
     }
 
@@ -95,7 +95,7 @@ void FBZ1Outro_DispenseTrash(void)
 {
     foreach_active(FBZTrash, trash)
     {
-        trash->state = 0;
+        trash->state = StateMachine_None;
         trash->position.y += trash->velocity.y;
         trash->velocity.y += 0x3800;
     }
@@ -103,7 +103,7 @@ void FBZ1Outro_DispenseTrash(void)
     {
         sinkTrash->position.y += sinkTrash->velocity.y;
         sinkTrash->velocity.y += 0x3800;
-        sinkTrash->type = 2;
+        sinkTrash->type = FBZSINKTRASH_DECOR;
     }
 
     foreach_active(SignPost, signPost)
@@ -119,10 +119,10 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
-    
-    EntityBigSqueeze *boss1 = FBZ1Outro->boss1;
-    EntityBigSqueeze *boss2 = FBZ1Outro->boss2;
-    EntityBigSqueeze *boss3 = FBZ1Outro->boss3;
+
+    EntityBigSqueeze *bossBorderL = FBZ1Outro->bossBorderL;
+    EntityBigSqueeze *bossBorderR = FBZ1Outro->bossBorderR;
+    EntityBigSqueeze *bossManager = FBZ1Outro->bossManager;
 
     EntityCollapsingPlatform *platform = FBZ1Outro->collapsingPlatform;
     if (!host->timer) {
@@ -157,15 +157,15 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             destroyEntity(FBZ1Outro->craneP2);
             self->grabbedPlayers |= 2;
         }
-        boss1->timer2               = 0;
-        boss1->state                = BigSqueeze_State3_Unknown1;
-        boss2->timer2               = 0;
-        boss2->state                = BigSqueeze_State3_Unknown1;
-        boss3->state                = BigSqueeze_Unknown18;
-        Zone->cameraBoundsB[0] = 2660;
-        Zone->cameraBoundsB[1] = 2660;
-        Zone->cameraBoundsR[0] = 14080;
-        Zone->cameraBoundsR[1] = 14080;
+        bossBorderL->setupTimer = 0;
+        bossBorderL->state      = BigSqueeze_StateCrusher_BeginCrushing;
+        bossBorderR->setupTimer = 0;
+        bossBorderR->state      = BigSqueeze_StateCrusher_BeginCrushing;
+        bossManager->state      = BigSqueeze_StateManager_Outro;
+        Zone->cameraBoundsB[0]  = 2660;
+        Zone->cameraBoundsB[1]  = 2660;
+        Zone->cameraBoundsR[0]  = 14080;
+        Zone->cameraBoundsR[1]  = 14080;
         platform->playerPos.x   = 1;
         RSDK.PlaySfx(FBZ1Outro->sfxDrop, false, 255);
         return true;
@@ -175,10 +175,10 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         FBZ1Outro_Unknown2();
         if (host->values[0])
             host->values[0] = 1;
-        boss1->timer2 = 0;
-        boss1->state  = BigSqueeze_State3_Unknown2;
-        boss2->timer2 = 0;
-        boss2->state  = BigSqueeze_State3_Unknown2;
+        bossBorderL->setupTimer = 0;
+        bossBorderL->state      = BigSqueeze_StateCrusher_Crushing;
+        bossBorderR->setupTimer = 0;
+        bossBorderR->state      = BigSqueeze_StateCrusher_Crushing;
     }
     return false;
 }
@@ -188,16 +188,16 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    EntityBigSqueeze *boss1 = FBZ1Outro->boss1;
-    EntityBigSqueeze *boss2 = FBZ1Outro->boss2;
-    boss1->timer2            = 0;
-    boss1->state             = BigSqueeze_State3_Unknown1;
-    boss2->timer2            = 0;
-    boss2->state             = BigSqueeze_State3_Unknown1;
+    EntityBigSqueeze *bossBorderL = FBZ1Outro->bossBorderL;
+    EntityBigSqueeze *bossBorderR = FBZ1Outro->bossBorderR;
+    bossBorderL->setupTimer       = 0;
+    bossBorderL->state            = BigSqueeze_StateCrusher_BeginCrushing;
+    bossBorderR->setupTimer       = 0;
+    bossBorderR->state            = BigSqueeze_StateCrusher_BeginCrushing;
 
     EntityCrane *craneP1 = FBZ1Outro->craneP1;
     craneP1->position.x  = player1->position.x;
-    if (craneP1->state == Crane_State_Unknown5) {
+    if (craneP1->state == Crane_State_RiseUp) {
         craneP1->startPos.x = player1->position.x;
         craneP1->startPos.y = craneP1->position.y;
         self->grabbedPlayers |= 1;
@@ -205,13 +205,13 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     if (player2->objectID == Player->objectID) {
         EntityCrane *craneP2 = FBZ1Outro->craneP2;
         craneP2->position.x  = player2->position.x;
-        if (craneP2->state == Crane_State_Unknown5) {
+        if (craneP2->state == Crane_State_RiseUp) {
             craneP2->startPos.x = craneP2->position.x;
             craneP2->startPos.y = craneP2->position.y;
             self->grabbedPlayers |= 2;
         }
     }
-    if (self->grabbedPlayers == 3)
+    if (self->grabbedPlayers == (1 | 2))
         return true;
     FBZ1Outro_DispenseTrash();
     return false;
@@ -220,7 +220,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
-    
+
     FBZ1Outro_DispenseTrash();
     return player1->onGround && (player2->objectID != Player->objectID || player2->onGround);
 }
@@ -228,10 +228,10 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
-        Zone->cameraBoundsL[0]     = 13568;
-        Zone->cameraBoundsL[1]     = 13568;
-        Zone->cameraBoundsB[0]     = 2660;
-        Zone->cameraBoundsB[0]     = 2660;
+        Zone->cameraBoundsL[0]      = 13568;
+        Zone->cameraBoundsL[1]      = 13568;
+        Zone->cameraBoundsB[0]      = 2660;
+        Zone->cameraBoundsB[0]      = 2660;
         Zone->playerBoundActiveL[0] = true;
     }
     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
@@ -245,10 +245,10 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
             camera->offset.x -= 0x10000;
     }
     else {
-        Zone_StoreEntities(0x35D40000, 0xA640000);
+        Zone_StoreEntities(13780 << 16, 2660 << 16);
         RSDK.LoadScene();
 
-        int32 id           = 0;
+        int32 id         = 0;
         TileLayer *layer = RSDK.GetSceneLayer(1);
         for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
             globals->parallaxOffset[id++] = layer->scrollInfo[i].scrollPos + layer->scrollInfo[i].parallaxFactor * ScreenInfo->position.x;

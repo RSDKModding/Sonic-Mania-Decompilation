@@ -57,7 +57,7 @@ void TMZ2Setup_StageLoad(void)
     if (isMainGameMode()) {
         if (globals->atlEnabled) {
             if (!PlayerHelpers_CheckStageReload()) {
-                Zone_ReloadStoredEntities(0x1EF00000, 0x1E00000, true);
+                Zone_ReloadStoredEntities(480 << 16, 7920 << 16, true);
                 CREATE_ENTITY(TMZ1Outro, NULL, 0, 0);
             }
         }
@@ -82,8 +82,15 @@ void TMZ2_DrawDynTiles_Ruby(void)
     RSDK.DrawAniTiles(TMZ2Setup->dynTiles, 1010, 16, 240, 48, 16);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZ2Setup_EditorDraw(void) {}
 
-void TMZ2Setup_EditorLoad(void) {}
+void TMZ2Setup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(WarpDoor, effect);
+    RSDK_ENUM_VAR("None", WARPDOOR_EFFECT_NONE);
+    RSDK_ENUM_VAR("Ruby Mist", TMZ2_WARPDOOR_EFFECT_MIST);
+}
+#endif
 
 void TMZ2Setup_Serialize(void) {}

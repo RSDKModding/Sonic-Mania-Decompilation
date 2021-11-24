@@ -949,7 +949,7 @@ void WeatherMobile_EditorDraw(void)
     WeatherMobile_StateDraw_Unknown1();
 
     if (showGizmos()) {
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -212, -SCREEN_YSIZE, 212, 0);
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0);
     }
 }
 

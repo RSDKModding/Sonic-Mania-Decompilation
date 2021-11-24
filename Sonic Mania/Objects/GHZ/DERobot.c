@@ -1294,7 +1294,7 @@ void DERobot_EditorDraw(void)
             RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
 
             if (showGizmos()) {
-                DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -212 + 128, -SCREEN_YSIZE, 212 + 128, 0);
+                DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER + 128, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 128, 0);
             }
             break;
         case DEROBOT_HEAD:

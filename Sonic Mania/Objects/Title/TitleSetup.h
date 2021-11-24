@@ -46,19 +46,20 @@ void TitleSetup_HandleCheatInputs(void);
 void TitleSetup_CheckCheatCode(void);
 bool32 TitleSetup_IntroCallback(void);
 
-void TitleSetup_Wait(void);
-void TitleSetup_AnimateUntilFlash(void);
-void TitleSetup_Flash(void);
-void TitleSetup_WaitForSonic(void);
-void TitleSetup_SetupLogo(void);
+void TitleSetup_State_Wait(void);
+void TitleSetup_State_AnimateUntilFlash(void);
+void TitleSetup_State_FlashIn(void);
+void TitleSetup_State_WaitForSonic(void);
+void TitleSetup_State_SetupLogo(void);
 #if RETRO_USE_PLUS
-void TitleSetup_SetupLogo_Plus(void);
+void TitleSetup_State_SetupPlusLogo(void);
 #endif
-void TitleSetup_WaitForEnter(void);
+void TitleSetup_State_WaitForEnter(void);
 void TitleSetup_FadeToMenu(void);
 void TitleSetup_FadeToVideo(void);
-void TitleSetup_DrawState_FadeBlack(void);
-void TitleSetup_DrawState_DrawRing(void);
-void TitleSetup_DrawState_Flash(void);
+
+void TitleSetup_Draw_FadeBlack(void);
+void TitleSetup_Draw_DrawRing(void);
+void TitleSetup_Draw_Flash(void);
 
 #endif //!OBJ_TITLESETUP_H

@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TWISTINGDOOR_V_SHORT,
+    TWISTINGDOOR_H_SHORT,
+    TWISTINGDOOR_H_LONG,
+    TWISTINGDOOR_V_LONG,
+}TwistingDoorTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -34,6 +41,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator;
     int32 childCount;
+
     bool32 close;
     EntityButton *buttonPtr;
 } EntityTwistingDoor;
@@ -55,9 +63,9 @@ void TwistingDoor_EditorLoad(void);
 void TwistingDoor_Serialize(void);
 
 // Extra Entity Functions
-void TwistingDoor_Unknown1(void);
-void TwistingDoor_Unknown2(void);
-void TwistingDoor_Unknown3(void);
-void TwistingDoor_Unknown4(void);
+void TwistingDoor_State_CheckOpen(void);
+void TwistingDoor_State_Opening(void);
+void TwistingDoor_State_Opened(void);
+void TwistingDoor_State_Closing(void);
 
 #endif //!OBJ_TWISTINGDOOR_H

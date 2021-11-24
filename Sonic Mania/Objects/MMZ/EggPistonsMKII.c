@@ -744,7 +744,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
             destroyEntity(barrier);
         }
 
-        Zone->cameraBoundsR[0] += 424;
+        Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
         Zone->playerBoundActiveR[0] = false;
         destroyEntity(self);
     }

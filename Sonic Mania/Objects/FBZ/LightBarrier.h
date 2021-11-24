@@ -18,8 +18,8 @@ typedef struct {
     int32 sprY;
     int32 alphaTimer;
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
+    Animator emitterAnimator;
+    Animator barrierAnimator;
 } EntityLightBarrier;
 
 // Object Struct

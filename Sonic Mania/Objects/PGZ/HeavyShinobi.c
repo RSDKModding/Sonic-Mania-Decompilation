@@ -610,7 +610,7 @@ void HeavyShinobi_State_Finished(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        Zone->cameraBoundsR[0] += 424;
+        Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
         HeavyShinobi->health = -1;
         destroyEntity(self);
     }

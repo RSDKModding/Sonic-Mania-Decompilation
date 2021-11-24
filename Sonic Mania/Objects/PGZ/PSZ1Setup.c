@@ -259,11 +259,7 @@ void PSZ1Setup_TriggerCB3(void)
         }
 
         if (!count) {
-#if RETRO_USE_PLUS
-            API.UnlockAchievement("ACH_PGZ");
-#else
-            APICallback_UnlockAchievement("ACH_PGZ");
-#endif
+            API_UnlockAchievement("ACH_PGZ");
             PSZ1Setup->hasAchievement = true;
         }
     }
@@ -281,7 +277,7 @@ void PSZ1Setup_ActTransitionCB(void)
     }
 
     SaveGame_SavePlayerState();
-    Zone_StoreEntities(0x3E040000, 0x5240000);
+    Zone_StoreEntities(15876 << 16, 1316 << 16);
     RSDK.LoadScene();
 }
 

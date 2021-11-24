@@ -111,7 +111,7 @@ void FBZSetup_StageLoad(void)
 
 void FBZSetup_ActTransitionLoad(void)
 {
-    Zone_ReloadStoredEntities(0x10E40000, 0xD40000, false);
+    Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 4324 << 16, false);
     Zone->cameraBoundsL[0] = 0;
     Zone->cameraBoundsB[0] = 4324;
     Zone->cameraBoundsL[1] = 0;
@@ -134,11 +134,11 @@ void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 val          = (a3 * screen->position.y) >> 8;
-    int32 start        = a4 - val;
-    int32 end          = a4 - val + a5;
+    int32 scroll          = (a3 * screen->position.y) >> 8;
+    int32 start        = a4 - scroll;
+    int32 end          = a4 - scroll + a5;
     int32 x            = (a1 * screen->position.x) << 8;
-    if (a4 - val < SCREEN_YSIZE && end > 0) {
+    if (start < SCREEN_YSIZE && end > 0) {
         int32 y = a6;
         if (start < 0) {
             y     = a6 - (start << 16);

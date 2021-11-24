@@ -11,9 +11,9 @@ typedef struct {
     Hitbox solidHitbox;
     Hitbox playerHitbox;
     uint16 aniFrames;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator baseAnimator;
+    Animator fanAnimator;
+    Animator fan2Animator;
     uint16 sfxFan;
 } ObjectFBZFan;
 

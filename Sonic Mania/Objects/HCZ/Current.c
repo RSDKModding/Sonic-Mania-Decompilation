@@ -692,33 +692,31 @@ void Current_Player_State_Type3(void)
 void Current_EditorDraw(void)
 {
     RSDK_THIS(Current);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
-                  false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE,
-                  false);
+    if (showGizmos()) {
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
 
-    self->direction = FLIP_NONE;
-    RSDK.DrawSprite(&Current->animator, &drawPos, false);
+        Vector2 drawPos;
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y;
+        drawPos.x -= self->size.x >> 1;
+        drawPos.y -= self->size.y >> 1;
 
-    drawPos.x += self->size.x;
-    self->direction = FLIP_X;
-    RSDK.DrawSprite(&Current->animator, &drawPos, false);
+        self->direction = FLIP_NONE;
+        RSDK.DrawSprite(&Current->animator, &drawPos, false);
 
-    drawPos.y += self->size.y;
-    self->direction = FLIP_XY;
-    RSDK.DrawSprite(&Current->animator, &drawPos, false);
+        drawPos.x += self->size.x;
+        self->direction = FLIP_X;
+        RSDK.DrawSprite(&Current->animator, &drawPos, false);
 
-    drawPos.x -= self->size.x;
-    self->direction = FLIP_Y;
-    RSDK.DrawSprite(&Current->animator, &drawPos, false);
+        drawPos.y += self->size.y;
+        self->direction = FLIP_XY;
+        RSDK.DrawSprite(&Current->animator, &drawPos, false);
+
+        drawPos.x -= self->size.x;
+        self->direction = FLIP_Y;
+        RSDK.DrawSprite(&Current->animator, &drawPos, false);
+    }
 }
 
 void Current_EditorLoad(void)

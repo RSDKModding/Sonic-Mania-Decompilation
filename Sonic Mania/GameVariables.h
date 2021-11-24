@@ -25,7 +25,7 @@ typedef enum {
     ID_RAY    = 0x10,
 #endif
     ID_TAILS_ASSIST    = ID_TAILS << 8,
-    ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, //custom-added, can be used to check if & knux is active
+    ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, //custom-added, can be used to check if "& knux" is active
     ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
 #define checkPlayerID(player, id) (((globals->playerID >> (8 * ((id) - 1))) & 0xFF) == (player))
@@ -51,8 +51,7 @@ typedef enum { WIDE_SCR_XSIZE = 424, WIDE_SCR_XCENTER = 212 } ScreenSizes;
 typedef enum { NO_SAVE_SLOT = 255 } SaveSlots;
 
 #if RETRO_USE_PLUS
-typedef enum { FILTER_MANIA = 2, FILTER_ENCORE = 4 } ModeFilters;
-typedef enum { SCN_FILTER_MANIA = 3, SCN_FILTER_ENCORE = 5 } SceneFilters;
+typedef enum { FILTER_NONE = 0, FILTER_BOTH = 1, FILTER_MANIA = 2, FILTER_ENCORE = 4, FILTER_ANY = 0xFF } ModeFilters;
 #endif
 
 typedef enum {
@@ -62,18 +61,25 @@ typedef enum {
 } PlaneFilterTypes;
 
 typedef enum {
-    SLOT_PLAYER1             = 0,
-    SLOT_PLAYER2             = 1,
-    SLOT_PLAYER3             = 2,
-    SLOT_PLAYER4             = 3,
-    SLOT_POWERUP1            = 4,
-    SLOT_POWERUP2            = 5,
-    SLOT_POWERUP3            = 6,
-    SLOT_POWERUP4            = 7,
-    SLOT_POWERUP1_2          = 8,
-    SLOT_POWERUP2_2          = 9,
-    SLOT_POWERUP3_2          = 10,
-    SLOT_POWERUP4_2          = 11,
+    SLOT_PLAYER1 = 0,
+    SLOT_PLAYER2 = 1,
+#if RETRO_USE_PLUS
+    SLOT_PLAYER3    = 2,
+    SLOT_PLAYER4    = 3,
+    SLOT_POWERUP1   = 4,
+    SLOT_POWERUP2   = 5,
+    SLOT_POWERUP3   = 6,
+    SLOT_POWERUP4   = 7,
+    SLOT_POWERUP1_2 = 8,
+    SLOT_POWERUP2_2 = 9,
+    SLOT_POWERUP3_2 = 10,
+    SLOT_POWERUP4_2 = 11,
+#else
+    SLOT_POWERUP1   = 2,
+    SLOT_POWERUP2   = 3,
+    SLOT_POWERUP1_2 = 4,
+    SLOT_POWERUP2_2 = 5,
+#endif
     SLOT_BSS_SETUP           = 8,
     SLOT_PBL_SETUP           = 8,
     SLOT_UFO_SETUP           = 8,

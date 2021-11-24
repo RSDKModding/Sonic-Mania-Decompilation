@@ -171,7 +171,7 @@ void MSZSetup_StageLoad(void)
                     Zone->cameraBoundsB[3] = 564;
                 }
                 if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
-                    Zone_ReloadStoredEntities(0x2300000, 0x1200000, true);
+                    Zone_ReloadStoredEntities(288 << 16, 560 << 16, true);
                 }
             }
             else if (isMainGameMode() && globals->atlEnabled) {
@@ -284,7 +284,7 @@ void MSZSetup_Unknown2(void)
     for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
         MSZSetup->field_138[id++] = bg1->scrollInfo[i].parallaxFactor;
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_MANIA)
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             bg1->scrollInfo[i].parallaxFactor = 0;
     }
@@ -293,7 +293,7 @@ void MSZSetup_Unknown2(void)
     for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
         MSZSetup->field_138[id++] = bg2->scrollInfo[i].parallaxFactor;
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_MANIA)
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             bg2->scrollInfo[i].parallaxFactor = 0;
     }
@@ -302,7 +302,7 @@ void MSZSetup_Unknown2(void)
     {
         MSZSetup->field_138[id++] = (parallaxSprite->parallaxFactor.x >> 8);
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_MANIA)
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             parallaxSprite->parallaxFactor.x = 0;
     }
@@ -432,7 +432,7 @@ void MSZSetup_SwitchPalettes(void)
 
 void MSZSetup_HandleRestart(void)
 {
-    Zone_ReloadStoredEntities(0x5A00000, 0xD40000, true);
+    Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1440 << 16, true);
 
     int32 id       = 0;
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
@@ -621,7 +621,7 @@ void MSZSetup_StoreMSZ1EScrollPos(void)
                 ((sprite->scrollPos.x + sprite->parallaxFactor.x * ScreenInfo->position.x) & 0x7FFF0000) % sprite->loopPoint.x;
         }
 
-        Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 0x5A00000);
+        Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 1440 << 16);
         globals->atlEnabled = true;
         RSDK.LoadScene();
         destroyEntity(self);
@@ -645,7 +645,7 @@ void MSZSetup_StoreMSZ1STScrollPos(void)
 
     foreach_all(ParallaxSprite, sprite) { globals->parallaxOffset[id++] = sprite->scrollPos.x; }
 
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, 0x5A00000);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, 1440 << 16);
     ++SceneInfo->listPos;
     globals->atlEnabled = true;
     RSDK.LoadScene();

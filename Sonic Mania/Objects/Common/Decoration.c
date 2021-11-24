@@ -105,6 +105,7 @@ void Decoration_EditorDraw(void)
 {
     RSDK_THIS(Decoration);
     RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
+
     if (self->rotSpeed)
         self->drawFX |= FX_ROTATE;
     else
@@ -113,12 +114,15 @@ void Decoration_EditorDraw(void)
     Decoration_DrawSprite();
 }
 
-void Decoration_EditorLoad(void) { Decoration_StageLoad(); 
+void Decoration_EditorLoad(void)
+{
+    Decoration_StageLoad();
+
     RSDK_ACTIVE_VAR(Decoration, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
     RSDK_ENUM_VAR("Flip X", FLIP_X);
     RSDK_ENUM_VAR("Flip Y", FLIP_Y);
-    RSDK_ENUM_VAR("Flip X & Y", FLIP_XY);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
 }
 #endif
 

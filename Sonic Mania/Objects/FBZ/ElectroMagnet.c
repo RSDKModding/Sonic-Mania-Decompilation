@@ -12,12 +12,12 @@ void ElectroMagnet_LateUpdate(void) {}
 
 void ElectroMagnet_StaticUpdate(void)
 {
-    if (ElectroMagnet->field_18) {
+    if (ElectroMagnet->magnetSfxTimer) {
         if (!ElectroMagnet->playingMagnetSFX) {
             RSDK.PlaySfx(ElectroMagnet->sfxMagnet, true, 255);
             ElectroMagnet->playingMagnetSFX = true;
         }
-        ElectroMagnet->field_18 = 0;
+        ElectroMagnet->magnetSfxTimer = 0;
     }
     else if (ElectroMagnet->playingMagnetSFX) {
         RSDK.StopSfx(ElectroMagnet->sfxMagnet);
@@ -28,9 +28,10 @@ void ElectroMagnet_StaticUpdate(void)
 void ElectroMagnet_Draw(void)
 {
     RSDK_THIS(ElectroMagnet);
-    if (self->state == ElectroMagnet_Unknown2) {
+    if (self->state == ElectroMagnet_State_MagnetActive) {
         self->animator.frameID = Zone->timer & 3;
         RSDK.DrawSprite(&self->animator, NULL, false);
+
         self->animator.frameID = (Zone->timer & 1) + 4;
         RSDK.DrawSprite(&self->animator, NULL, false);
     }
@@ -56,7 +57,7 @@ void ElectroMagnet_Create(void *data)
     self->playerHitbox.right  = 64;
     self->playerHitbox.bottom = self->shieldRange;
     RSDK.SetSpriteAnimation(ElectroMagnet->aniFrames, 0, &self->animator, true, 0);
-    self->state = ElectroMagnet_Unknown1;
+    self->state = ElectroMagnet_State_DurationWait;
 }
 
 void ElectroMagnet_StageLoad(void)
@@ -73,7 +74,7 @@ void ElectroMagnet_StageLoad(void)
     ElectroMagnet->sfxMagnet       = RSDK.GetSfx("Stage/Magnet.wav");
 }
 
-void ElectroMagnet_Unknown1(void)
+void ElectroMagnet_State_DurationWait(void)
 {
     RSDK_THIS(ElectroMagnet);
     int32 time = (Zone->timer + self->intervalOffset) % self->interval;
@@ -81,11 +82,11 @@ void ElectroMagnet_Unknown1(void)
     if (time <= self->duration) {
         self->active = ACTIVE_NORMAL;
         self->timer = self->duration - time;
-        self->state = ElectroMagnet_Unknown2;
+        self->state = ElectroMagnet_State_MagnetActive;
     }
 }
 
-void ElectroMagnet_Unknown2(void)
+void ElectroMagnet_State_MagnetActive(void)
 {
     RSDK_THIS(ElectroMagnet);
 
@@ -100,7 +101,7 @@ void ElectroMagnet_Unknown2(void)
             }
         }
         self->active = ACTIVE_BOUNDS;
-        self->state  = ElectroMagnet_Unknown1;
+        self->state  = ElectroMagnet_State_DurationWait;
     }
     else {
         self->timer--;
@@ -131,7 +132,7 @@ void ElectroMagnet_Unknown2(void)
         }
 
         if (RSDK.CheckOnScreen(self, &ElectroMagnet->onScreenRange))
-            ++ElectroMagnet->field_18;
+            ++ElectroMagnet->magnetSfxTimer;
 
         if (self->playerHitbox.top != self->playerHitbox.bottom) {
             foreach_active(Player, player)
@@ -170,9 +171,36 @@ void ElectroMagnet_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ElectroMagnet_EditorDraw(void) {}
+void ElectroMagnet_EditorDraw(void)
+{
+    RSDK_THIS(ElectroMagnet);
+    self->alpha = 0xC0;
 
-void ElectroMagnet_EditorLoad(void) {}
+    self->inkEffect = self->invisible ? INK_ALPHA : INK_NONE;
+
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    self->animator.frameID = 4;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    self->inkEffect = INK_NONE;
+
+    self->hitbox.left         = -64;
+    self->hitbox.top          = 0;
+    self->hitbox.right        = 64;
+    self->hitbox.bottom       = self->height;
+    self->playerHitbox.left   = -64;
+    self->playerHitbox.top    = 0;
+    self->playerHitbox.right  = 64;
+    self->playerHitbox.bottom = self->shieldRange;
+    if (showGizmos()) {
+        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitbox);
+        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->playerHitbox);
+    }
+}
+
+void ElectroMagnet_EditorLoad(void) { ElectroMagnet->aniFrames = RSDK.LoadSpriteAnimation("FBZ/ElectroMagnet.bin", SCOPE_STAGE); }
 #endif
 
 void ElectroMagnet_Serialize(void)

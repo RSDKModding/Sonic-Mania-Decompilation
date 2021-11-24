@@ -572,7 +572,17 @@ void OOZSetup_PlayerState_OilFall(void)
 #if RETRO_INCLUDE_EDITOR
 void OOZSetup_EditorDraw(void) {}
 
-void OOZSetup_EditorLoad(void) {}
+void OOZSetup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(OOZSetup, type);
+    RSDK_ENUM_VAR("Manage Flames", OOZSETUP_FLAMES);
+    RSDK_ENUM_VAR("Manage Fade", OOZSETUP_FADE);
+
+    RSDK_ACTIVE_VAR(WarpDoor, effect);
+    RSDK_ENUM_VAR("None", WARPDOOR_EFFECT_NONE);
+    RSDK_ENUM_VAR("To Sub", OOZ_WARPDOOR_EFFECT_TO_SUB);
+    RSDK_ENUM_VAR("From Sub", OOZ_WARPDOOR_EFFECT_FROM_SUB);
+}
 #endif
 
 void OOZSetup_Serialize(void) { RSDK_EDITABLE_VAR(OOZSetup, VAR_UINT8, type); }

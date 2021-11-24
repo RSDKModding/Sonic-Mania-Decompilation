@@ -211,7 +211,7 @@ void DBTower_State_SetupArena(void)
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
 
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_ENCORE) {
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
             self->timer = 60;
             self->state = DBTower_State_Setup_Encore;
         }
@@ -363,7 +363,7 @@ void DBTower_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_ENCORE) {
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
             self->timer = 0;
             self->state = DBTower_State_SpawnSignPost;
         }

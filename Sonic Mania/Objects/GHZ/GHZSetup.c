@@ -109,10 +109,10 @@ void GHZSetup_SetupStartingBG(void)
         for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
             GHZSetup_BGSwitch_CB_Caves_Act2();
         }
-        Zone_ReloadStoredEntities(0x6BC0000, 0xD40000, true);
+        Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1724 << 16, true);
     }
     else {
-        Zone_ReloadStoredEntities(0x3EC0000, 0xD40000, true);
+        Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1004 << 16, true);
         TileLayer *outsideLayer = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("BG Outside"));
         EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -125,14 +125,14 @@ void GHZSetup_SetupStartingBG(void)
 }
 void GHZSetup_SetupActTransition(void)
 {
-    Zone_StoreEntities(0x3DB00000, 0x6340000);
+    Zone_StoreEntities(15792 << 16, 1588 << 16);
     RSDK.LoadScene();
 }
 void GHZSetup_HandleActTransition(void)
 {
     Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->centerX;
     Zone->cameraBoundsB[0] = 1412;
-    Zone_ReloadStoredEntities(0x5840000, 0x1000000, true);
+    Zone_ReloadStoredEntities(256 << 16, 1412 << 16, true);
 
     TileLayer *layer2 = RSDK.GetSceneLayer(2);
     layer2->scrollPos += 0xB000 * layer2->parallaxFactor;

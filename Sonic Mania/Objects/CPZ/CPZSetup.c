@@ -67,8 +67,8 @@ void CPZSetup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_LOCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
     if (Zone->actID) {
-        RSDK.SetPaletteMask(0xF000);
-        RSDK.SetPaletteEntry(0, 0xFF, 0xF000);
+        RSDK.SetPaletteMask(0x00F000);
+        RSDK.SetPaletteEntry(0, 0xFF, 0x00F000);
         BGSwitch->switchCallback[CPZ_BG_CPZ2] = CPZSetup_BGSwitchCB_Act2BG;
         BGSwitch->switchCallback[CPZ_BG_CPZ1] = CPZSetup_BGSwitchCB_Act1BG;
         BGSwitch->layerIDs[0]                 = CPZ_BG_CPZ1;
@@ -82,15 +82,15 @@ void CPZSetup_StageLoad(void)
         }
         else {
             flag                    = true;
-            Zone->cameraBoundsB[0] = 0x1980;
-            Zone->cameraBoundsB[1] = 0x1980;
-            Zone->cameraBoundsB[2] = 0x1980;
-            Zone->cameraBoundsB[3] = 0x1980;
+            Zone->cameraBoundsB[0] = 6528;
+            Zone->cameraBoundsB[1] = 6528;
+            Zone->cameraBoundsB[2] = 6528;
+            Zone->cameraBoundsB[3] = 6528;
         }
 
         if (isMainGameMode() && globals->atlEnabled) {
             if (!PlayerHelpers_CheckStageReload())
-                Zone_ReloadStoredEntities(0x19800000, 0x1800000, true);
+                Zone_ReloadStoredEntities(384 << 16, 6528 << 16, true);
         }
 
         if (isMainGameMode() && PlayerHelpers_CheckAct2()) {

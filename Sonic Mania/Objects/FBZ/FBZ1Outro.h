@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused1;
     uint16 sfxDrop;
-    EntityBigSqueeze *boss1;
-    EntityBigSqueeze *boss2;
-    EntityBigSqueeze *boss3;
+    EntityBigSqueeze *bossBorderL;
+    EntityBigSqueeze *bossBorderR;
+    EntityBigSqueeze *bossManager;
     EntityCollapsingPlatform *collapsingPlatform;
     EntityCrane *craneP1;
     EntityCrane *craneP2;

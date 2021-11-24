@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    int32 unused1;
 } EntityFBZ2Outro;
 
 // Object Struct
@@ -25,8 +25,10 @@ void FBZ2Outro_StaticUpdate(void);
 void FBZ2Outro_Draw(void);
 void FBZ2Outro_Create(void* data);
 void FBZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FBZ2Outro_EditorDraw(void);
 void FBZ2Outro_EditorLoad(void);
+#endif
 void FBZ2Outro_Serialize(void);
 
 // Extra Entity Functions

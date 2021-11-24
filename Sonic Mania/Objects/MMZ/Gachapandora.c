@@ -836,7 +836,7 @@ void Gachapandora_State_Finish(void)
         self->velocity.y += 0x1800;
 
         if (self->position.y > (ScreenInfo->position.y + ScreenInfo->height + 128) << 16) {
-            Zone->cameraBoundsR[0] += 424;
+            Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
             self->state = StateMachine_None;
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
         }

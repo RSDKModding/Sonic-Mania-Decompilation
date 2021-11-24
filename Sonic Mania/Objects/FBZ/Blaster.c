@@ -28,15 +28,15 @@ void Blaster_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     if (data) {
-        if (data == intToVoid(1)) {
+        if (data == intToVoid(BLASTER_SHOT)) {
             self->active = ACTIVE_NORMAL;
             RSDK.SetSpriteAnimation(Blaster->aniFrames, 4, &self->animator, true, 0);
-            self->state = Blaster_State_Unknown5;
+            self->state = Blaster_State_BeginShot;
         }
-        else if (data == intToVoid(2)) {
+        else if (data == intToVoid(BLASTER_SHELL)) {
             self->active = ACTIVE_NORMAL;
             RSDK.SetSpriteAnimation(Blaster->aniFrames, 5, &self->animator, true, 0);
-            self->state = Blaster_State_Unknown8;
+            self->state = Blaster_State_Shell;
         }
     }
     else {
@@ -76,7 +76,7 @@ void Blaster_DebugSpawn(void)
 void Blaster_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Blaster_HandlePlayerInteractions(void)
@@ -86,11 +86,11 @@ void Blaster_HandlePlayerInteractions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Blaster->hitboxBadnik))
             Player_CheckBadnikBreak(self, player, true);
-        if (self->state != Blaster_State_Unknown3 && self->state != Blaster_State_Unknown7 && self->animator.animationID != 3) {
+        if (self->state != Blaster_State_AttackPlayer && self->state != Blaster_State_Fall && self->animator.animationID != 3) {
             if (Player_CheckCollisionTouch(player, self, &Blaster->hitboxRange)) {
                 self->timer2 = 0;
                 RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
-                self->state = Blaster_State_Unknown3;
+                self->state = Blaster_State_AttackPlayer;
             }
         }
     }
@@ -116,28 +116,28 @@ void Blaster_State_Setup(void)
         self->velocity.x = 0x8000;
     self->velocity.y = 0;
     self->timer      = 256;
-    self->state      = Blaster_State_Unknown1;
-    Blaster_State_Unknown1();
+    self->state      = Blaster_State_Move;
+    Blaster_State_Move();
 }
 
-void Blaster_State_Unknown1(void)
+void Blaster_State_Move(void)
 {
     RSDK_THIS(Blaster);
 
     self->position.x += self->velocity.x;
     RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8);
     if (!--self->timer) {
-        self->state = Blaster_State_Unknown2;
+        self->state = Blaster_State_HandleTurn;
         self->timer = 30;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
     }
     else if (self->velocity.x < 0 && !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0xE0000, 0x140000, false)) {
-        self->state = Blaster_State_Unknown2;
+        self->state = Blaster_State_HandleTurn;
         self->timer = 30;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
     }
     else if (self->velocity.x > 0 && !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xE0000, 0x140000, false)) {
-        self->state = Blaster_State_Unknown2;
+        self->state = Blaster_State_HandleTurn;
         self->timer = 30;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
     }
@@ -147,7 +147,7 @@ void Blaster_State_Unknown1(void)
     Blaster_CheckOnScreen();
 }
 
-void Blaster_State_Unknown2(void)
+void Blaster_State_HandleTurn(void)
 {
     RSDK_THIS(Blaster);
 
@@ -158,52 +158,52 @@ void Blaster_State_Unknown2(void)
     switch (--self->timer) {
         case 15: RSDK.SetSpriteAnimation(Blaster->aniFrames, 3, &self->animator, true, 0); break;
         case 7:
-            self->direction ^= 1;
+            self->direction ^= FLIP_X;
             self->velocity.x = -self->velocity.x;
             break;
         case 0:
-            self->state = Blaster_State_Unknown1;
+            self->state = Blaster_State_Move;
             self->timer = 512;
-            Blaster_State_Unknown1();
+            Blaster_State_Move();
             RSDK.SetSpriteAnimation(Blaster->aniFrames, 1, &self->animator, true, 0);
             break;
     }
 }
 
-void Blaster_State_Unknown3(void)
+void Blaster_State_AttackPlayer(void)
 {
     RSDK_THIS(Blaster);
     switch (++self->timer2) {
         case 18: {
-            EntityBlaster *projectile = NULL;
+            EntityBlaster *shot = NULL;
             if (self->direction) {
-                projectile             = CREATE_ENTITY(Blaster, intToVoid(1), self->position.x + 0x170000, self->position.y - 0x150000);
-                projectile->velocity.x = 0x20000;
+                shot             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHOT), self->position.x + 0x170000, self->position.y - 0x150000);
+                shot->velocity.x = 0x20000;
             }
             else {
-                projectile             = CREATE_ENTITY(Blaster, intToVoid(1), self->position.x - 0x170000, self->position.y - 0x150000);
-                projectile->velocity.x = -0x20000;
+                shot             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHOT), self->position.x - 0x170000, self->position.y - 0x150000);
+                shot->velocity.x = -0x20000;
             }
-            projectile->velocity.y = -0x48000;
+            shot->velocity.y = -0x48000;
             break;
         }
         case 20: RSDK.SetSpriteAnimation(Blaster->aniFrames, 2, &self->animator, true, 0); break;
         case 24: {
-            EntityBlaster *projectile = NULL;
+            EntityBlaster *shell = NULL;
             if (self->direction) {
-                projectile             = CREATE_ENTITY(Blaster, intToVoid(2), self->position.x + 0x60000, self->position.y - 0x30000);
-                projectile->velocity.x = -0x10000;
+                shell             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHELL), self->position.x + 0x60000, self->position.y - 0x30000);
+                shell->velocity.x = -0x10000;
             }
             else {
-                projectile             = CREATE_ENTITY(Blaster, intToVoid(2), self->position.x - 0x60000, self->position.y - 0x30000);
-                projectile->velocity.x = 0x10000;
+                shell             = CREATE_ENTITY(Blaster, intToVoid(BLASTER_SHELL), self->position.x - 0x60000, self->position.y - 0x30000);
+                shell->velocity.x = 0x10000;
             }
-            projectile->velocity.y = -0x20000;
+            shell->velocity.y = -0x20000;
             break;
         }
         case 60:
             RSDK.SetSpriteAnimation(Blaster->aniFrames, 1, &self->animator, true, 0);
-            self->state = Blaster_State_Unknown1;
+            self->state = Blaster_State_Move;
             self->timer = 512;
             break;
         default: break;
@@ -224,15 +224,15 @@ void Blaster_State_MagnetAttract(void)
     Blaster_HandlePlayerInteractions();
 
     if (RSDK.CheckOnScreen(self, NULL)) {
-        self->state = Blaster_State_Unknown4;
+        self->state = Blaster_State_MagnetReleased;
     }
     else {
         Blaster_CheckOnScreen();
-        self->state = Blaster_State_Unknown4;
+        self->state = Blaster_State_MagnetReleased;
     }
 }
 
-void Blaster_State_Unknown4(void)
+void Blaster_State_MagnetReleased(void)
 {
     RSDK_THIS(Blaster);
 
@@ -243,22 +243,22 @@ void Blaster_State_Unknown4(void)
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
         self->velocity.y = 0;
-        self->state      = Blaster_State_Unknown1;
+        self->state      = Blaster_State_Move;
     }
     else {
-        self->state = Blaster_State_Unknown4;
+        self->state = Blaster_State_MagnetReleased;
     }
 }
 
-void Blaster_State_Unknown5(void)
+void Blaster_State_BeginShot(void)
 {
     RSDK_THIS(Blaster);
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == 2)
-        self->state = Blaster_State_Unknown6;
+        self->state = Blaster_State_Shot;
 }
 
-void Blaster_State_Unknown6(void)
+void Blaster_State_Shot(void)
 {
     RSDK_THIS(Blaster);
     self->position.x += self->velocity.x;
@@ -278,7 +278,7 @@ void Blaster_State_Unknown6(void)
     }
 }
 
-void Blaster_State_Unknown7(void)
+void Blaster_State_Fall(void)
 {
     RSDK_THIS(Blaster);
     self->position.x += self->velocity.x;
@@ -294,7 +294,7 @@ void Blaster_State_Unknown7(void)
     Blaster_HandlePlayerInteractions();
 }
 
-void Blaster_State_Unknown8(void)
+void Blaster_State_Shell(void)
 {
     RSDK_THIS(Blaster);
     self->position.x += self->velocity.x;
@@ -306,9 +306,22 @@ void Blaster_State_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Blaster_EditorDraw(void) {}
+void Blaster_EditorDraw(void)
+{
+    RSDK_THIS(Blaster);
+    RSDK.SetSpriteAnimation(Blaster->aniFrames, 1, &self->animator, true, 0);
 
-void Blaster_EditorLoad(void) {}
+    Blaster_Draw();
+}
+
+void Blaster_EditorLoad(void)
+{
+    Blaster->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Blaster.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Blaster, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Blaster_Serialize(void) { RSDK_EDITABLE_VAR(Blaster, VAR_UINT8, direction); }

@@ -2361,7 +2361,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 
             StatInfo info;
 #if RETRO_USE_PLUS
-            TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, SceneInfo->filter == SCN_FILTER_ENCORE,
+            TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE),
                                             (entity->position.x >> 0x10), (entity->position.y >> 0x10));
             API.TryTrackStat(&info);
 #else

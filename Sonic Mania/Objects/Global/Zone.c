@@ -486,6 +486,9 @@ int32 Zone_GetZoneID(void)
 
 void Zone_StoreEntities(int32 xOffset, int32 yOffset)
 {
+    //"Normalize" the positions of players, signposts & itemboxes when we store them
+    // (this is important for later)
+
     int32 count = 0;
     int32 pos   = 0;
     foreach_active(Player, player)
@@ -498,7 +501,6 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
         pos += 0x200;
     }
 
-    pos = count << 9;
     foreach_active(SignPost, signPost)
     {
         signPost->position.x -= xOffset;
@@ -509,7 +511,6 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
         pos += 0x200;
     }
 
-    pos = count << 9;
     foreach_active(ItemBox, itemBox)
     {
         itemBox->position.x -= xOffset;
@@ -520,6 +521,7 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
         pos += 0x200;
     }
 
+    // store any relevant info about the player
     EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     globals->restartLives[0] = player1->lives;
     globals->restartScore    = player1->score;
@@ -528,12 +530,15 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
     globals->atlEnabled      = true;
 }
 
-void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 setCamera)
+void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds)
 {
+    //reload any stored entities we have
     for (int32 e = 0; e < globals->atlEntityCount; ++e) {
         Entity *entityData = (Entity *)&globals->atlEntityData[e << 9];
         Entity *entity = NULL;
-        if (globals->atlEntitySlot[e] >= 12)
+
+        //only players & powerups get to be overridden, everything else is just added to the temp area
+        if (globals->atlEntitySlot[e] >= SLOT_ZONE)
             entity = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         else
             entity = RSDK_GET_ENTITY(globals->atlEntitySlot[e], );
@@ -541,7 +546,7 @@ void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 setCamera)
             EntityPlayer *playerData = (EntityPlayer *)entityData;
             EntityPlayer *player     = (EntityPlayer *)entity;
             player->shield           = playerData->shield;
-            if (player->shield && player->superState != SUPERSTATE_SUPER && player->shield <= 0) {
+            if (player->shield && player->superState != SUPERSTATE_SUPER && player->invincibleTimer <= 0) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                 RSDK.ResetEntityPtr(shield, Shield->objectID, player);
             }
@@ -553,9 +558,12 @@ void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 setCamera)
         entity->position.y = yOffset + entityData->position.y;
     }
 
+    //clear ATL data, we dont wanna do it again
     memset(globals->atlEntityData, 0, globals->atlEntityCount << 9);
-    Zone->atlReloadFlag = setCamera;
-    if (setCamera) {
+
+    //if we've set the flag, update our camera to use ATL bounds instead of the default ones
+    Zone->setATLBounds = setATLBounds;
+    if (setATLBounds) {
         EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->camera         = NULL;
         EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -570,6 +578,7 @@ void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 setCamera)
         Camera->centerBounds.x = 0x80000;
         Camera->centerBounds.y = 0x40000;
     }
+
     Player->savedLives      = globals->restartLives[0];
     Player->savedScore      = globals->restartScore;
     Player->powerups        = globals->restartPowerups;
@@ -667,7 +676,7 @@ void Zone_StartTeleportAction(void)
 
 void Zone_ApplyWorldBounds(void)
 {
-    if (Zone->atlReloadFlag) {
+    if (Zone->setATLBounds) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         foreach_active(Player, player)
         {
@@ -792,12 +801,12 @@ void Zone_State_Fadeout(void)
     if (self->timer > 0x400) {
 #if RETRO_USE_PLUS
         if (Zone->swapGameMode) {
-            if (SceneInfo->filter == SCN_FILTER_MANIA) {
+            if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA)) {
                 if (RSDK.CheckValidScene())
                     SceneInfo->listPos = Zone_GetEncoreStageID();
                 globals->gameMode = MODE_ENCORE;
             }
-            else if (SceneInfo->filter == SCN_FILTER_ENCORE) {
+            else if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
                 if (RSDK.CheckValidScene())
                     SceneInfo->listPos = Zone_GetManiaStageID();
                 globals->gameMode = MODE_MANIA;

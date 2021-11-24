@@ -376,7 +376,22 @@ void Splats_State_InkSplat(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Splats_EditorDraw(void) { Splats_Draw(); }
+void Splats_EditorDraw(void)
+{
+    RSDK_THIS(Splats);
+
+    if (RSDK.CheckStageFolder("GHZ")) {
+        self->drawFX |= FX_FLIP;
+        self->drawOrder = Zone->drawOrderLow;
+        RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->animator1, true, 0);
+    }
+    else {
+        self->drawFX = FX_NONE;
+        self->drawOrder = Zone->drawOrderHigh;
+        RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->animator1, true, 0);
+    }
+    Splats_Draw();
+}
 
 void Splats_EditorLoad(void)
 {

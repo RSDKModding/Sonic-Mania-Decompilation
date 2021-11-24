@@ -605,7 +605,7 @@ void MegaOctus_State_Finish(void)
         }
 
         if (flag) {
-            Zone->cameraBoundsR[0] += 424;
+            Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
             destroyEntity(self);
         }
     }

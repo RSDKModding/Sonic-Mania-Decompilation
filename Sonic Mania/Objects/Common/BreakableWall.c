@@ -46,63 +46,65 @@ void BreakableWall_Create(void *data)
     }
     else {
         self->drawFX |= FX_FLIP;
-        self->visible       = false;
-        self->drawOrder     = Zone->drawOrderHigh;
-        self->active        = ACTIVE_BOUNDS;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
-        if (!self->priority)
-            self->priority = Zone->fgHigh;
-        else
-            self->priority = Zone->fgLow;
-        self->size.y >>= 0x10;
-        self->size.x >>= 0x10;
-        switch (self->type) {
-            case BREAKWALL_TYPE_SIDES:
-                self->state     = BreakableWall_State_BreakableSides;
-                self->stateDraw = BreakableWall_Draw_Outline;
-                if (!self->size.x) {
-                    self->size.x = 2;
-                    self->size.y = 4;
-                }
-                break;
-            case BREAKWALL_TYPE_TOP:
-                if (!self->size.x) {
-                    self->size.x = 2;
-                    self->size.y = 2;
-                }
-                self->state     = BreakableWall_State_Top;
-                self->stateDraw = BreakableWall_Draw_Outline2;
-                break;
-            case BREAKWALL_TYPE_TOPCHUNK:
-            case BREAKWALL_TYPE_TOPCHUNK_HIGH:
-                if (!self->size.x)
-                    self->size.x = 2;
-                self->state     = BreakableWall_State_TopChunks;
-                self->stateDraw = BreakableWall_Draw_Outline2;
-                break;
-            case BREAKWALL_TYPE_BOTTOMCHUNK:
-                if (!self->size.x)
-                    self->size.x = 2;
-                self->state     = BreakableWall_State_BottomChunks;
-                self->stateDraw = BreakableWall_Draw_Outline2;
-                break;
-            case BREAKWALL_TYPE_BOTTOMFULL:
-                if (!self->size.x) {
-                    self->size.x = 2;
-                    self->size.y = 2;
-                }
-                self->state     = BreakableWall_State_BottomFull;
-                self->stateDraw = BreakableWall_Draw_Outline2;
-                break;
-            default: break;
+        if (!SceneInfo->inEditor) {
+            self->visible       = false;
+            self->drawOrder     = Zone->drawOrderHigh;
+            self->active        = ACTIVE_BOUNDS;
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = 0x800000;
+            if (!self->priority)
+                self->priority = Zone->fgHigh;
+            else
+                self->priority = Zone->fgLow;
+            self->size.y >>= 0x10;
+            self->size.x >>= 0x10;
+            switch (self->type) {
+                case BREAKWALL_TYPE_SIDES:
+                    self->state     = BreakableWall_State_BreakableSides;
+                    self->stateDraw = BreakableWall_Draw_Outline;
+                    if (!self->size.x) {
+                        self->size.x = 2;
+                        self->size.y = 4;
+                    }
+                    break;
+                case BREAKWALL_TYPE_TOP:
+                    if (!self->size.x) {
+                        self->size.x = 2;
+                        self->size.y = 2;
+                    }
+                    self->state     = BreakableWall_State_Top;
+                    self->stateDraw = BreakableWall_Draw_Outline2;
+                    break;
+                case BREAKWALL_TYPE_TOPCHUNK:
+                case BREAKWALL_TYPE_TOPCHUNK_HIGH:
+                    if (!self->size.x)
+                        self->size.x = 2;
+                    self->state     = BreakableWall_State_TopChunks;
+                    self->stateDraw = BreakableWall_Draw_Outline2;
+                    break;
+                case BREAKWALL_TYPE_BOTTOMCHUNK:
+                    if (!self->size.x)
+                        self->size.x = 2;
+                    self->state     = BreakableWall_State_BottomChunks;
+                    self->stateDraw = BreakableWall_Draw_Outline2;
+                    break;
+                case BREAKWALL_TYPE_BOTTOMFULL:
+                    if (!self->size.x) {
+                        self->size.x = 2;
+                        self->size.y = 2;
+                    }
+                    self->state     = BreakableWall_State_BottomFull;
+                    self->stateDraw = BreakableWall_Draw_Outline2;
+                    break;
+                default: break;
+            }
+            int32 x             = 8 * self->size.x;
+            int32 y             = 8 * self->size.y;
+            self->hitbox.right  = x;
+            self->hitbox.left   = -x;
+            self->hitbox.bottom = y;
+            self->hitbox.top    = -y;
         }
-        int32 x             = 8 * self->size.x;
-        int32 y             = 8 * self->size.y;
-        self->hitbox.right  = x;
-        self->hitbox.left   = -x;
-        self->hitbox.bottom = y;
-        self->hitbox.top    = -y;
     }
 }
 
@@ -708,31 +710,66 @@ void BreakableWall_GiveScoreBonus(void *plr)
 void BreakableWall_EditorDraw(void)
 {
     RSDK_THIS(BreakableWall);
+
+    int sizeX = self->size.x;
+    int sizeY = self->size.y;
+
+    switch (self->type) {
+        case BREAKWALL_TYPE_SIDES:
+            if (!sizeX) {
+                sizeX = 2 << 16;
+                sizeY = 4 << 16;
+            }
+            break;
+        case BREAKWALL_TYPE_TOP:
+            if (!sizeX) {
+                sizeX = 2 << 16;
+                sizeY = 2 << 16;
+            }
+            break;
+        case BREAKWALL_TYPE_TOPCHUNK:
+        case BREAKWALL_TYPE_TOPCHUNK_HIGH:
+            if (!sizeX)
+                sizeX = 2 << 16;
+            break;
+        case BREAKWALL_TYPE_BOTTOMCHUNK:
+            if (!sizeX)
+                sizeX = 2 << 16;
+            break;
+        case BREAKWALL_TYPE_BOTTOMFULL:
+            if (!sizeX) {
+                sizeX = 2 << 16;
+                sizeY = 2 << 16;
+            }
+            break;
+        default: break;
+    }
+    sizeX <<= 4;
+    sizeY <<= 4;
+
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    drawPos.x -= self->size.x << 19;
-    drawPos.y -= self->size.y << 19;
+    drawPos.x -= sizeX;
+    drawPos.y -= sizeY;
 
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + (self->size.x << 20), drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y + (self->size.y << 20), drawPos.x + (self->size.x << 20), drawPos.y + (self->size.y << 20), 0xFFFF00,
-                  0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + (self->size.y << 20), 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + (self->size.x << 20), drawPos.y - 0x10000, drawPos.x + (self->size.x << 20), drawPos.y + (self->size.y << 20), 0xFFFF00,
-                  0, INK_NONE, false);
+    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, sizeX, sizeY);
+
+    drawPos.x += sizeX >> 1;
+    drawPos.y += sizeY >> 1;
 
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
 
-    drawPos.x += self->size.x << 20;
+    drawPos.x += sizeX;
     self->direction = FLIP_X;
     RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
 
-    drawPos.y += self->size.y << 20;
+    drawPos.y += sizeY;
     self->direction = FLIP_XY;
     RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
 
-    drawPos.x -= self->size.x << 20;
+    drawPos.x -= sizeX;
     self->direction = FLIP_Y;
     RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
 }

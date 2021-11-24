@@ -832,7 +832,7 @@ void DrillerdroidO_State_Finish(void)
     DrillerdroidO_Explode();
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        Zone->cameraBoundsR[0] += 424;
+        Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
         destroyEntity(self);
     }
 }
@@ -1040,7 +1040,7 @@ void DrillerdroidO_EditorDraw(void)
             DrillerdroidO_StateDraw_Boss();
 
             // Note: its actually centerX offset on left/right but mania is usually always at 424 width anyways so its pretty much the same
-            DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -212, -SCREEN_YSIZE, 212, 96);
+            DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 96);
             break;
         case DRILLERDROIDO_FIREBALLEMITTER:
             RSDK.SetSpriteAnimation(DrillerdroidO->ticFrames, 0, &self->animator1, true, 0);

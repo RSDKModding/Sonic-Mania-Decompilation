@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int32 array1[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
+    TABLE(int32 thunderFade[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
     Vector2 positions[0x100];
     uint16 aniFrames;
     uint16 sfxRain;
@@ -23,7 +23,7 @@ typedef struct {
     int32 blendAmount;
     int32 stormAngle[4];
     int32 screenPosX[4];
-    bool32 flag;
+    bool32 enabled;
     Animator animator;
 } EntityFBZStorm;
 
@@ -44,10 +44,10 @@ void FBZStorm_EditorLoad(void);
 void FBZStorm_Serialize(void);
 
 // Extra Entity Functions
-void FBZStorm_Unknown1(void);
-void FBZStorm_Unknown2(void);
-void FBZStorm_Unknown3(void);
-void FBZStorm_Unknown4(void);
-void FBZStorm_Unknown5(void);
+void FBZStorm_State_WaitForActive(void);
+void FBZStorm_State_StormStart(void);
+void FBZStorm_State_StormFinish(void);
+void FBZStorm_State_Storming(void);
+void FBZStorm_State_Thunder(void);
 
 #endif //!OBJ_FBZSTORM_H

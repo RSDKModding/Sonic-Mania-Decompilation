@@ -15,10 +15,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 activePlayers;
-    int32 field_5C[4];
+    int32 moveDistance[4];
     int32 playerTimer[4];
-    int32 field_7C;
-    int32 field_80;
+    int32 pullPos;
+    int32 maxVel;
     int32 length;
     uint8 speed;
 } EntityHangPoint;
@@ -40,6 +40,6 @@ void HangPoint_EditorLoad(void);
 void HangPoint_Serialize(void);
 
 // Extra Entity Functions
-void HangPoint_Unknown1(EntityHangPoint *self, void *p, int32 playerID);
+void HangPoint_HandlePlayerMovement(EntityHangPoint *self, void *p, int32 playerID);
 
 #endif //!OBJ_HANGPOINT_H

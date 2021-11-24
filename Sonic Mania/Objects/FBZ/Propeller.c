@@ -6,11 +6,11 @@ void Propeller_Update(void)
 {
     RSDK_THIS(Propeller);
     RSDK.ProcessAnimation(&self->animator);
-    Hitbox *hitbox       = RSDK.GetHitbox(&self->animator, 0);
-    self->hitbox2.bottom = -8;
-    self->hitbox2.top    = (RSDK.Sin256(2 * Zone->timer) >> 4) - 64;
-    self->hitbox.top     = -96;
-    self->hitbox.bottom  = -8;
+    Hitbox *hitboxHurt     = RSDK.GetHitbox(&self->animator, 0);
+    self->hitboxFan.bottom = -8;
+    self->hitboxFan.top    = (RSDK.Sin256(2 * Zone->timer) >> 4) - 64;
+    self->hitbox.top       = -96;
+    self->hitbox.bottom    = -8;
 
     foreach_active(Player, player)
     {
@@ -18,18 +18,18 @@ void Propeller_Update(void)
         bool32 flag    = 0;
         int32 anim     = player->animator.animationID;
         if (anim != ANI_SHAFTSWING && anim != ANI_HURT && self->fanEnabled
-            && RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox2, player, &self->playerHitbox)) {
+            && RSDK.CheckObjectCollisionTouchBox(self, &self->hitboxFan, player, &self->playerHitbox)) {
             flag = true;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             player->state      = Player_State_Air;
             player->onGround   = false;
             player->velocity.y = 0;
-            player->position.y += (self->position.y + (self->hitbox2.top << 16) - player->position.y) >> 4;
+            player->position.y += (self->position.y + (self->hitboxFan.top << 16) - player->position.y) >> 4;
         }
 
         if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, player, &self->playerHitbox)) {
             if (!((1 << playerID) & self->activePlayers) && flag) {
-                RSDK.PlaySfx(Propeller->sfxFan, 0, 255);
+                RSDK.PlaySfx(Propeller->sfxFan, false, 255);
                 self->activePlayers |= (1 << playerID);
             }
         }
@@ -37,7 +37,7 @@ void Propeller_Update(void)
             self->activePlayers &= ~(1 << playerID);
         }
 
-        if (Player_CheckCollisionTouch(player, self, hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, hitboxHurt)) {
             Player_CheckHit(player, self);
         }
     }
@@ -68,8 +68,8 @@ void Propeller_Create(void *data)
         self->playerHitbox.bottom = 1;
         self->hitbox.left         = -104;
         self->hitbox.right        = 104;
-        self->hitbox2.left        = -104;
-        self->hitbox2.right       = 104;
+        self->hitboxFan.left      = -104;
+        self->hitboxFan.right     = 104;
         RSDK.SetSpriteAnimation(Propeller->aniFrames, 0, &self->animator, true, 0);
     }
 }
@@ -81,9 +81,15 @@ void Propeller_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Propeller_EditorDraw(void) {}
+void Propeller_EditorDraw(void)
+{
+    RSDK_THIS(Propeller);
+    RSDK.SetSpriteAnimation(Propeller->aniFrames, 0, &self->animator, true, 0);
 
-void Propeller_EditorLoad(void) {}
+    Propeller_Draw();
+}
+
+void Propeller_EditorLoad(void) { Propeller->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Propeller.bin", SCOPE_STAGE); }
 #endif
 
 void Propeller_Serialize(void) { RSDK_EDITABLE_VAR(Propeller, VAR_BOOL, fanEnabled); }

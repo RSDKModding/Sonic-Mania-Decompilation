@@ -112,7 +112,7 @@ void TitleCard_SetColours(void)
 {
     RSDK_THIS(TitleCard);
 #if RETRO_USE_PLUS
-    if (SceneInfo->filter == SCN_FILTER_ENCORE) {
+    if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
         self->colours[0] = 0x3751A2;
         self->colours[1] = 0xC7525B;
         self->colours[2] = 0x428FC3;
@@ -471,16 +471,16 @@ void TitleCard_State_Idle(void)
     else {
         self->actionTimer++;
         if (self->actionTimer == 16) {
-            if (Zone->atlReloadFlag) {
+            if (Zone->setATLBounds) {
                 EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-                camera->state          = Camera_State_Follow;
                 EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 player->camera         = camera;
                 camera->targetPtr      = (Entity *)player;
+                camera->state          = Camera_State_Follow;
                 Camera->centerBounds.x = 0x20000;
                 Camera->centerBounds.y = 0x20000;
             }
-            Zone->atlReloadFlag = false;
+            Zone->setATLBounds = false;
         }
     }
 }
@@ -653,7 +653,7 @@ void TitleCard_Draw_Default(void)
     RSDK.DrawQuad(self->points2, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
     RSDK.DrawQuad(self->points3, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 #if RETRO_USE_PLUS
-    self->decorationAnimator.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+    self->decorationAnimator.frameID = 2 * (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) + 1;
 #else
     self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
@@ -679,7 +679,7 @@ void TitleCard_Draw_SolidBG(void)
                       INK_NONE);
     if (!globals->atlEnabled && globals->suppressTitlecard == false) {
 #if RETRO_USE_PLUS
-        self->decorationAnimator.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+        self->decorationAnimator.frameID = 2 * (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) + 1;
 #else
         self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
@@ -724,7 +724,7 @@ void TitleCard_Draw_SolidBG(void)
                 self->scale.x = self->actNumScale;
 
 #if RETRO_USE_PLUS
-            self->decorationAnimator.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+            self->decorationAnimator.frameID = (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) ? 2 : 0;
 #else
             self->decorationAnimator.frameID = 0;
 #endif
@@ -766,7 +766,7 @@ void TitleCard_Draw_SlideAway(void)
 
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
 #if RETRO_USE_PLUS
-        self->decorationAnimator.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+        self->decorationAnimator.frameID = 2 * (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) + 1;
 #else
         self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
@@ -775,7 +775,7 @@ void TitleCard_Draw_SlideAway(void)
 
     if (self->actID != 3 && self->actNumScale > 0) {
 #if RETRO_USE_PLUS
-        self->decorationAnimator.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+        self->decorationAnimator.frameID = (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) ? 2 : 0;
 #else
         self->decorationAnimator.frameID = 0;
 #endif

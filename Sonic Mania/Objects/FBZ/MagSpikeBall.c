@@ -80,9 +80,9 @@ void MagSpikeBall_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MagSpikeBall_EditorDraw(void) {}
+void MagSpikeBall_EditorDraw(void) { MagSpikeBall_Draw(); }
 
-void MagSpikeBall_EditorLoad(void) {}
+void MagSpikeBall_EditorLoad(void) { MagSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("FBZ/MagSpikeBall.bin", SCOPE_STAGE); }
 #endif
 
 void MagSpikeBall_Serialize(void) {}

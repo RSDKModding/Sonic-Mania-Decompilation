@@ -1275,6 +1275,7 @@ void Water_EditorDraw(void)
             self->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
 
+            Water->waterLevel = self->position.y;
             Water_Draw_Palette();
             break;
         case WATER_RECT:

@@ -245,8 +245,8 @@ void Shiversaw_CheckPlayerCollisions(void)
                 else {
                     RSDK.PlaySfx(Shiversaw->sfxExplosion2, false, 255);
                     Shiversaw->invincibilityTimer = 30;
-                    int32 v14                       = self->position.x;
-                    int32 v15                       = self->position.y;
+                    int32 storeX                       = self->position.x;
+                    int32 storeY                       = self->position.y;
                     self->sawID                 = 0;
                     for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
                         if (self->stateSaw[self->sawID] != Shiversaw_StateSaw_Destroyed) {
@@ -262,8 +262,8 @@ void Shiversaw_CheckPlayerCollisions(void)
                         self->sawTimers[self->sawID++] = 0x7FFFFFFF;
                     }
 
-                    self->position.x          = v14;
-                    self->position.y          = v15;
+                    self->position.x          = storeX;
+                    self->position.y          = storeY;
                     self->timer               = 120;
                     self->state               = Shiversaw_State_Destroyed;
                     SceneInfo->timeEnabled = false;
