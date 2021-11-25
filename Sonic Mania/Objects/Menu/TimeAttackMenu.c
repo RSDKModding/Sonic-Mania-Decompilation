@@ -298,7 +298,7 @@ void TimeAttackMenu_Unknown7(void)
 {
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
     int32 row                        = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
-    ReplayRecorder_DeleteTimeAttackRow(row, TimeAttackMenu_Unknown8, 0);
+    ReplayRecorder_DeleteTimeAttackRow(row, TimeAttackMenu_Unknown8, false);
 }
 
 void TimeAttackMenu_Unknown8(bool32 success)

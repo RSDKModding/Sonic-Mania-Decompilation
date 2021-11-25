@@ -72,8 +72,10 @@ void Announcer_Serialize(void);
 // Extra Entity Functions
 void Announcer_StartCountdown(void);
 void Announcer_AnnounceGoal(int32 screen);
+
 void Announcer_Draw_Countdown(void);
 void Announcer_Draw_Finished(void);
+
 void Announcer_State_Countdown(void);
 void Announcer_State_Finished(void);
 void Announcer_State_AnnounceWinner(void);

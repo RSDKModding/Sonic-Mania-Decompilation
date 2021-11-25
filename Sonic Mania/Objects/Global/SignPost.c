@@ -282,17 +282,17 @@ void SignPost_CheckTouch(void)
         }
         else if (!p || globals->gameMode == MODE_COMPETITION) {
             if (!((1 << p) & self->activePlayers)) {
-                bool32 flag = false;
+                bool32 touched = false;
                 if (globals->gameMode != MODE_COMPETITION) {
-                    flag = player->position.x > self->position.x;
+                    touched = player->position.x > self->position.x;
                 }
                 else if (self->playerPosStore[p].x && self->playerPosStore[p].y) {
-                    flag = MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPosStore[p].x, self->playerPosStore[p].y,
+                    touched = MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPosStore[p].x, self->playerPosStore[p].y,
                                                  self->position.x, self->position.y - (self->vsExtendTop << 16), self->position.x,
                                                  (self->vsExtendBottom << 16) + self->position.y);
                 }
 
-                if (flag) {
+                if (touched) {
                     if (!((1 << p) & self->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         Announcer_AnnounceGoal(player->camera->screenID);
                     RSDK.PlaySfx(SignPost->sfxSignPost, false, 255);
@@ -443,7 +443,7 @@ void SignPost_State_Launched(void)
     self->spinCount = 16;
     self->position.y += self->velocity.y;
     self->velocity.y += self->gravityStrength;
-    if (self->velocity.y < 0)
+    if (self->velocity.y >= 0)
         self->state = SignPost_State_Fall;
 }
 void SignPost_State_Fall(void)

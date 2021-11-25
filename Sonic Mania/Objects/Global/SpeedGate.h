@@ -51,8 +51,8 @@ void SpeedGate_EditorLoad(void);
 void SpeedGate_Serialize(void);
 
 // Extra Entity Functions
-void SpeedGate_State_Unknown1(void);
-void SpeedGate_State_Unknown2(void);
-void SpeedGate_State_Unknown3(void);
+void SpeedGate_State_WaitForStart(void);
+void SpeedGate_State_ProcessGate(void);
+void SpeedGate_State_HandleFinished(void);
 
 #endif //!OBJ_SPEEDGATE_H

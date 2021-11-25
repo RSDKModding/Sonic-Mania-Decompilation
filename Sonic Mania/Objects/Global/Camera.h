@@ -16,7 +16,7 @@ typedef struct {
     Entity *targetPtr;
     int32 screenID;
     Vector2 center;
-    Vector2 field_6C;
+    Vector2 targetMoveVel;
     Vector2 lastPos;
     Vector2 shakePos;
     Vector2 lookPos;

@@ -18,7 +18,7 @@ typedef struct {
     bool32 debugActive;
     uint8 itemSubType;
     uint8 subtypeCount;
-    int32 field_A2C;
+    int32 unused1;
 } ObjectDebugMode;
 
 // Entity Class

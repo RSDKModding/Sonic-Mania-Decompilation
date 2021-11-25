@@ -491,8 +491,7 @@ void Music_State_Unknown11(void)
     }
 
     if (self->timer > 0) {
-        self->timer--;
-        if (!self->timer)
+        if (!--self->timer)
             Music_Unknown7(self);
     }
 }

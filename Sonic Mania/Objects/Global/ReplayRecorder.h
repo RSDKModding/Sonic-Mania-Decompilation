@@ -146,7 +146,7 @@ void ReplayRecorder_LoadReplayDB(void (*callback)(bool32));
 void ReplayRecorder_SaveReplayDB(void (*callback)(bool32));
 void ReplayRecorder_CreateReplayDB(void);
 uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int32 charID, int32 score, char mode);
-void ReplayRecorder_DeleteTimeAttackRow(int32 a1, void (*callback)(bool32), int32 a3);
+void ReplayRecorder_DeleteTimeAttackRow(int32 row, void (*callback)(bool32), bool32 useAltCB);
 void ReplayRecorder_DeleteReplayCB(int32 status);
 void ReplayRecorder_DeleteReplaySaveCB(int32 status);
 void ReplayRecorder_DeleteReplaySave2CB(int32 status);

@@ -63,6 +63,8 @@ void StarPost_DebugSpawn(void);
 void StarPost_ResetStarPosts(void);
 void StarPost_CheckBonusStageEntry(void);
 void StarPost_CheckCollisions(void);
+
+// States
 void StarPost_State_Idle(void);
 void StarPost_State_BallSpin(void);
 

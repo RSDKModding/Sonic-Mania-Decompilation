@@ -503,7 +503,7 @@ void ActClear_SaveGameCallback(int32 success)
     ActClear->finishedSavingGame = false;
 }
 
-void ActClear_Unknown5(void)
+void ActClear_SetupForceOnScreenP2(void)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -540,7 +540,7 @@ void ActClear_State_EnterText(void)
     if (self->gotThroughPos.x < 0)
         self->gotThroughPos.x += 0x100000;
     if (!self->timer && Zone->forcePlayerOnScreenFlag)
-        ActClear_Unknown5();
+        ActClear_SetupForceOnScreenP2();
 
     if (++self->timer == 48) {
         self->timer = 0;

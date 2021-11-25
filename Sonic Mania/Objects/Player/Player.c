@@ -4142,7 +4142,7 @@ void Player_State_Die(void)
 
     if (!self->sidekick) {
         if (self->camera) {
-            int32 y = self->camera->position.y - self->camera->field_6C.y + 0x1800000;
+            int32 y = self->camera->position.y - self->camera->targetMoveVel.y + 0x1800000;
             if (self->position.y > y)
                 self->position.y = y;
             self->scrollDelay = 2;

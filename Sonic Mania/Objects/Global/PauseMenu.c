@@ -172,14 +172,14 @@ void PauseMenu_SetupMenu(void)
 void PauseMenu_SetupLookupTable(void)
 {
     for (int32 i = 0; i < 0x10000; ++i) {
-        // int32 val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
-        // val       = minVal(0xFF, val);
-        // PauseMenu->lookupTable[i] = (val >> 3) | ((val >> 3) << 11) | 8 * val & 0xFFE0;
+        int32 val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
+        val       = minVal(0xFF, val);
+        PauseMenu->lookupTable[i] = (val >> 3) | ((val >> 3) << 11) | 8 * val & 0xFFE0;
 
         // found as the "default" lookup table in rev01, produces a similar (but lighter) effect
         // included here because I think it is neat :)
-        int32 val = ((i & 0x1F) + ((i >> 6) & 0x1F) + ((i >> 11) & 0x1F)) / 3 + 6;
-        PauseMenu->lookupTable[i] = 0x841 * minVal(0x1F, val);
+        // int32 val = ((i & 0x1F) + ((i >> 6) & 0x1F) + ((i >> 11) & 0x1F)) / 3 + 6;
+        // PauseMenu->lookupTable[i] = 0x841 * minVal(0x1F, val);
     }
 }
 

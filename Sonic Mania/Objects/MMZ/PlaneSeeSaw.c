@@ -131,8 +131,8 @@ void PlaneSeeSaw_State_Launch(void)
                     player->position.x += FarPlane->field_20.x;
                     player->position.y += FarPlane->field_20.y;
                     if (player->camera) {
-                        player->camera->field_6C.x = 0;
-                        player->camera->field_6C.y = 0;
+                        player->camera->targetMoveVel.x = 0;
+                        player->camera->targetMoveVel.y = 0;
                     }
                     player->groundVel  = 0;
                     player->velocity.x = 0;
@@ -195,8 +195,8 @@ void PlaneSeeSaw_PlayerState_ToBG(void)
         Zone->deathBoundary[0] += 0x8000000;
         self->state = Player_State_Air;
         if (self->camera) {
-            self->camera->field_6C.x = FarPlane->field_20.x - FarPlane->field_18.x;
-            self->camera->field_6C.y = FarPlane->field_20.y - FarPlane->field_18.y;
+            self->camera->targetMoveVel.x = FarPlane->field_20.x - FarPlane->field_18.x;
+            self->camera->targetMoveVel.y = FarPlane->field_20.y - FarPlane->field_18.y;
         }
         self->scale.y = self->scale.x;
     }

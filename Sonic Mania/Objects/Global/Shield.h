@@ -24,7 +24,7 @@ typedef struct {
     StateMachine(state);
     int32 type;
     int32 timer;
-    int32 frameID;
+    int32 frameFlags;
     bool32 forceVisible;
     Animator animator;
     Animator animator2;

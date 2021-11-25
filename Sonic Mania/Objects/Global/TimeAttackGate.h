@@ -72,10 +72,12 @@ void TimeAttackGate_AddRecord(void);
 void TimeAttackGate_LeaderboardCB(int32 status);
 void TimeAttackGate_CheckTouch(void);
 
+// States
 void TimeAttackGate_State_Gate(void);
 void TimeAttackGate_State_Restarter(void);
 void TimeAttackGate_State_Fadeout(void);
 
+// Draw States
 void TimeAttackGate_Draw_Gate(void);
 void TimeAttackGate_Draw_Restarter(void);
 

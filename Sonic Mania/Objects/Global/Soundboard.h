@@ -12,7 +12,7 @@ typedef struct {
     uint16 sfxList[Soundboard_SFXLimit];
     int32 sfxLoopPoint[Soundboard_SFXLimit];
     bool32 (*sfxCheckCallback[Soundboard_SFXLimit])(void);
-    void (*sfxUpdateCallback[Soundboard_SFXLimit])(int32);
+    void (*sfxUpdateCallback[Soundboard_SFXLimit])(int32 sfxID);
     bool32 sfxIsPlaying[Soundboard_SFXLimit];
     int32 sfxChannel[Soundboard_SFXLimit];
     int32 sfxPlayingTimer[Soundboard_SFXLimit];
@@ -42,6 +42,6 @@ void Soundboard_EditorLoad(void);
 void Soundboard_Serialize(void);
 
 // Extra Entity Functions
-uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int32));
+uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int32 sfxID));
 
 #endif //!OBJ_SOUNDBOARD_H

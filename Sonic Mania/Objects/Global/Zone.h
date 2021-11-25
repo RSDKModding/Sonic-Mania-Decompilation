@@ -116,10 +116,15 @@ void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
+
 bool32 Zone_IsAct2(void);
 int32 Zone_GetEncoreStageID(void);
 int32 Zone_GetManiaStageID(void);
+
+// Draw States
 void Zone_Draw_Fade(void);
+
+// States & Stuff
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
 void Zone_State_Fadeout_Unknown(void);

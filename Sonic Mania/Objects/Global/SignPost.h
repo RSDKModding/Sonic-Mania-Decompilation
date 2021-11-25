@@ -87,6 +87,7 @@ void SignPost_HandleSparkles(void);
 void SignPost_HandleCamBounds(void);
 void SignPost_CheckTouch(void);
 
+// States
 void SignPost_State_Setup(void);
 void SignPost_State_AwaitTouch(void);
 void SignPost_State_Land(void);

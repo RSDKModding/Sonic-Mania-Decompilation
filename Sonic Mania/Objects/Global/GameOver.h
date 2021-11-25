@@ -47,6 +47,7 @@ void GameOver_Serialize(void);
 
 // Extra Entity Functions
 void GameOver_SaveGameCallback(int32 status);
+
 void GameOver_State_EnterLetters(void);
 void GameOver_State_HandleMultiplayer(void);
 void GameOver_State_ShowMessage(void);

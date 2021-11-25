@@ -158,7 +158,7 @@ void Platform_Create(void *data)
         self->drawPos.y   = self->position.y;
         RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID = self->frameID;
-        if (!SceneInfo->inEditor && RSDK.GetFrameID(&self->animator) == 108)
+        if (!SceneInfo->inEditor && RSDK.GetFrameID(&self->animator) == 'l')
             self->drawOrder = Zone->drawOrderLow;
 
         switch (self->type) {

@@ -1362,13 +1362,13 @@ uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int32 charID, int32 sc
     return -1;
 }
 
-void ReplayRecorder_DeleteTimeAttackRow(int32 a1, void (*callback)(bool32), int32 a3)
+void ReplayRecorder_DeleteTimeAttackRow(int32 row, void (*callback)(bool32), bool32 useAltCB)
 {
-    int32 id                 = API.GetUserDBRowUUID(globals->replayTableID, a1);
+    int32 id                 = API.GetUserDBRowUUID(globals->replayTableID, row);
     int32 value              = 0;
     ReplayDB->deleteEntity   = SceneInfo->entity;
     ReplayDB->deleteCallback = callback;
-    API.RemoveDBRow(globals->replayTableID, a1);
+    API.RemoveDBRow(globals->replayTableID, row);
     TimeAttackData->status = 0;
     API.SetupUserDBRowSorting(globals->taTableID);
     API.AddRowSortFilter(globals->taTableID, 4, "replayID", &id);
@@ -1381,7 +1381,7 @@ void ReplayRecorder_DeleteTimeAttackRow(int32 a1, void (*callback)(bool32), int3
 
     char filename[0x20];
     sprintf(filename, "Replay_%08X.bin", id);
-    if (!a3)
+    if (!useAltCB)
         API.DeleteUserFile(filename, ReplayRecorder_DeleteReplayCB);
     else
         API.DeleteUserFile(filename, ReplayRecorder_DeleteReplaySave2CB);

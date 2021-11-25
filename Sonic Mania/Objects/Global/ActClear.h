@@ -84,7 +84,7 @@ void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);
 void ActClear_SaveGameCallback(int32 success);
-void ActClear_Unknown5(void);
+void ActClear_SetupForceOnScreenP2(void);
 
 void ActClear_State_EnterText(void);
 void ActClear_State_AdjustText(void);

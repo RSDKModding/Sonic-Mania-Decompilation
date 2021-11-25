@@ -8,11 +8,15 @@ void Shield_Update(void)
     StateMachine_Run(self->state);
     EntityPlayer *player = self->player;
     if (player) {
-        int32 drawOrder = player->drawOrder;
-        if ((self->frameID & -4) <= 0)
-            --drawOrder;
-        self->drawOrder = drawOrder;
-        self->visible   = self->forceVisible & player->visible;
+        // bit 0 = flipX
+        // bit 1 = flipY
+        // if bit 2 is set, draw on player draw order (draw above player), else draw behind player
+        // bits 3-7 aren't used, the values are stored as 0-9 in ASCII because thats how RSDK anim editor treats it
+        if (self->frameFlags < 0 || !(self->frameFlags & ~3))
+            self->drawOrder = player->drawOrder - 1;
+        else
+            self->drawOrder = player->drawOrder;
+        self->visible      = self->forceVisible & player->visible;
         self->forceVisible = true;
     }
 }
@@ -39,8 +43,8 @@ void Shield_Draw(void)
             self->scale.x = player->scale.x;
             self->scale.y = player->scale.y;
         }
-        self->position.x   = player->position.x;
-        self->position.y   = player->position.y;
+        self->position.x     = player->position.x;
+        self->position.y     = player->position.y;
         Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
         if (playerHitbox) {
             if (player->direction & FLIP_X)
@@ -96,7 +100,7 @@ void Shield_Create(void *data)
 
 void Shield_StageLoad(void)
 {
-    Shield->aniFrames         = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
+    Shield->aniFrames          = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
     Shield->sfxBlueShield      = RSDK.GetSfx("Global/BlueShield.wav");
     Shield->sfxBubbleShield    = RSDK.GetSfx("Global/BubbleShield.wav");
     Shield->sfxFireShield      = RSDK.GetSfx("Global/FireShield.wav");
@@ -112,8 +116,8 @@ void Shield_State_Generic(void)
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->animator2);
-    self->frameID   = RSDK.GetFrameID(&self->animator) & 7;
-    self->direction = self->frameID & 3;
+    self->frameFlags = RSDK.GetFrameID(&self->animator) & 7;
+    self->direction  = self->frameFlags & 3;
 }
 
 void Shield_State_Bubble(void)
@@ -121,8 +125,8 @@ void Shield_State_Bubble(void)
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->animator2);
-    self->frameID   = RSDK.GetFrameID(&self->animator) & 7;
-    self->direction = self->frameID & 3;
+    self->frameFlags = RSDK.GetFrameID(&self->animator) & 7;
+    self->direction  = self->frameFlags & 3;
     if (self->animator2.frameID == self->animator2.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
@@ -135,8 +139,8 @@ void Shield_State_BubbleAlt(void)
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->animator2);
-    self->frameID   = RSDK.GetFrameID(&self->animator) & 7;
-    self->direction = self->frameID & 3;
+    self->frameFlags = RSDK.GetFrameID(&self->animator) & 7;
+    self->direction  = self->frameFlags & 3;
     if (self->animator2.frameID == self->animator2.frameCount - 1) {
         RSDK.SetSpriteAnimation(Shield->aniFrames, 5, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(Shield->aniFrames, 6, &self->animator, true, 0);
@@ -148,7 +152,7 @@ void Shield_State_Fire(void)
 {
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&self->animator);
-    self->frameID = RSDK.GetFrameID(&self->animator) & 7;
+    self->frameFlags = RSDK.GetFrameID(&self->animator) & 7;
     ++self->timer;
     if (self->timer > 24) {
         self->timer = 0;
@@ -161,8 +165,8 @@ void Shield_State_Lightning(void)
 {
     RSDK_THIS(Shield);
     RSDK.ProcessAnimation(&self->animator2);
-    self->frameID   = RSDK.GetFrameID(&self->animator) & 7;
-    self->direction = self->frameID & 3;
+    self->frameFlags = RSDK.GetFrameID(&self->animator) & 7;
+    self->direction  = self->frameFlags & 3;
     if (self->player) {
         self->position.x = self->player->position.x;
         self->position.y = self->player->position.y;

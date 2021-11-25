@@ -911,8 +911,8 @@ void OptionsMenu_Unknown44(void)
         ReplayRecorder_SaveReplayDB(OptionsMenu_Unknown45);
     }
     else {
-        int32 id = API.GetSortedUserDBRowID(globals->replayTableID, 0);
-        ReplayRecorder_DeleteTimeAttackRow(id, OptionsMenu_Unknown45, 1);
+        int32 row = API.GetSortedUserDBRowID(globals->replayTableID, 0);
+        ReplayRecorder_DeleteTimeAttackRow(row, OptionsMenu_Unknown45, true);
     }
 }
 
