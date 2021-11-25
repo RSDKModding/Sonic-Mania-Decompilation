@@ -159,7 +159,7 @@ void Ring_Collect(void)
                         frameCount >>= 1;
                     }
                     sparkle->maxFrameCount           = frameCount - 1;
-                    sparkle->animator.animationSpeed = RSDK.Rand(6, 8);
+                    sparkle->animator.speed = RSDK.Rand(6, 8);
                     sparkle->timer                   = 2 * i++;
                 }
                 destroyEntity(self);
@@ -201,7 +201,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         EntityRing *ring              = CREATE_ENTITY(Ring, player, player->position.x, player->position.y);
         ring->velocity.x              = RSDK.Cos256(angle) << 9;
         ring->velocity.y              = RSDK.Sin256(angle) << 9;
-        ring->animator.animationSpeed = 0x200;
+        ring->animator.speed = 0x200;
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 0x100;
@@ -222,7 +222,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         EntityRing *ring              = CREATE_ENTITY(Ring, player, player->position.x, player->position.y);
         ring->velocity.x              = RSDK.Cos256(angle) << 10;
         ring->velocity.y              = RSDK.Sin256(angle) << 10;
-        ring->animator.animationSpeed = 512;
+        ring->animator.speed = 512;
         ring->collisionPlane          = cPlane;
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 256;
@@ -245,7 +245,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_BIG, &ring->animator, true, 0);
         ring->scale.x                 = 0x100;
         ring->scale.y                 = 0x100;
-        ring->animator.animationSpeed = 0x200;
+        ring->animator.speed = 0x200;
         ring->drawFX                  = FX_FLIP | FX_ROTATE | FX_SCALE;
         ring->state                   = Ring_State_Grow;
         ring->stateDraw               = Ring_Draw_Normal;
@@ -278,7 +278,7 @@ void Ring_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ring->drawFX                  = FX_FLIP | FX_SCALE;
         ring->alpha                   = 0x100;
         ring->velocity.y              = 0x300 * RSDK.Sin256(angle);
-        ring->animator.animationSpeed = 0x180;
+        ring->animator.speed = 0x180;
         ring->collisionPlane          = cPlane;
         ring->angle                   = i << 6;
         ring->ringAmount              = ringValue;
@@ -321,7 +321,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
         ringGrow->velocity.x = radius * RSDK.Cos256(angle);
         ringGrow->velocity.y = radius * RSDK.Sin256(angle);
         RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_BIG, &ringGrow->animator, true, 0);
-        ringGrow->animator.animationSpeed = 0x200;
+        ringGrow->animator.speed = 0x200;
         ringGrow->scale.x                 = scale;
         ringGrow->scale.y                 = scale;
         ringGrow->drawFX                  = FX_FLIP | FX_SCALE;
@@ -341,7 +341,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
         ringGrow->velocity.x = (radius + 0x200) * RSDK.Cos256(angle);
         ringGrow->velocity.y = (radius + 0x200) * RSDK.Sin256(angle);
         RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_BIG, &ringGrow->animator, true, 0);
-        ringGrow->animator.animationSpeed = 0x200;
+        ringGrow->animator.speed = 0x200;
         ringGrow->scale.x                 = scale + 0x40;
         ringGrow->scale.y                 = scale + 0x40;
         ringGrow->drawFX                  = FX_FLIP | FX_SCALE;
@@ -361,7 +361,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder)
         ringGrow->velocity.x = (radius + 0x400) * RSDK.Cos256(angle);
         ringGrow->velocity.y = (radius + 0x400) * RSDK.Sin256(angle);
         RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_BIG, &ringGrow->animator, true, 0);
-        ringGrow->animator.animationSpeed = 0x200;
+        ringGrow->animator.speed = 0x200;
         ringGrow->scale.x                 = scale + 0x80;
         ringGrow->scale.y                 = scale + 0x80;
         ringGrow->drawFX                  = FX_FLIP | FX_SCALE;
@@ -611,8 +611,8 @@ void Ring_State_Bounce(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!(++self->timer & 7)) {
-        if (self->animator.animationSpeed > 0x40)
-            self->animator.animationSpeed -= 0x10;
+        if (self->animator.speed > 0x40)
+            self->animator.speed -= 0x10;
     }
 
     if (self->timer > 0x3F)
@@ -642,7 +642,7 @@ void Ring_State_Big(void)
     self->position.x += self->velocity.x;
     self->velocity.y += 0x1200;
     self->position.y += self->velocity.y;
-    self->angle += self->animator.animationSpeed >> 6;
+    self->angle += self->animator.speed >> 6;
     if (self->timer <= 0xF0) {
         self->scale.x = (-RSDK.Sin256(self->angle) >> 1) + 0x180;
         self->scale.y = (RSDK.Sin256(self->angle) >> 1) + 0x180;
@@ -674,15 +674,15 @@ void Ring_State_Big(void)
             frameCount >>= 1;
         }
         sparkle->maxFrameCount           = frameCount - 1;
-        sparkle->animator.animationSpeed = 4;
+        sparkle->animator.speed = 4;
         self->sparkleType              = (self->sparkleType + 1) % 3;
     }
 
     RSDK.ProcessAnimation(&self->animator);
 
     if (!(++self->timer & 7)) {
-        if (self->animator.animationSpeed > 0x80) {
-            self->animator.animationSpeed -= 8;
+        if (self->animator.speed > 0x80) {
+            self->animator.speed -= 8;
         }
     }
     if (self->timer > 71)
@@ -728,7 +728,7 @@ void Ring_State_Attract(void)
     }
     else {
         self->state                   = Ring_State_Bounce;
-        self->animator.animationSpeed = 0x80;
+        self->animator.speed = 0x80;
         self->alpha                   = 0x100;
         self->inkEffect               = INK_ALPHA;
     }

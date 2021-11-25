@@ -103,29 +103,29 @@ void Stegway_SetupAnims(char type, bool32 force)
         case 0:
             if (force || self->animator1.animationID)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 0, &self->animator1, true, 0);
-            self->animator1.animationSpeed = 1;
-            self->animator2.animationSpeed = 6;
+            self->animator1.speed = 1;
+            self->animator2.speed = 6;
             break;
         case 1:
             if (force || self->animator1.animationID != 1)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 1, &self->animator1, true, 0);
-            self->animator2.animationSpeed = 16;
+            self->animator2.speed = 16;
             break;
         case 2:
             if (force || self->animator1.animationID)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 0, &self->animator1, true, 0);
             if (self->animator1.frameID == 2)
                 self->animator1.frameID = 1;
-            self->animator1.animationSpeed = 0;
-            self->animator2.animationSpeed = 24;
+            self->animator1.speed = 0;
+            self->animator2.speed = 24;
             break;
         case 3:
             if (force || self->animator1.animationID)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 0, &self->animator1, true, 0);
             if (self->animator1.frameID == 2)
                 self->animator1.frameID = 1;
-            self->animator1.animationSpeed = 0;
-            self->animator2.animationSpeed = 0;
+            self->animator1.speed = 0;
+            self->animator2.speed = 0;
             break;
         default: break;
     }

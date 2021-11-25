@@ -48,7 +48,7 @@ void SuperSparkle_Update(void)
                 cnt >>= 1;
             }
             ring->maxFrameCount           = cnt - 1;
-            ring->animator.animationSpeed = RSDK.Rand(6, 8);
+            ring->animator.speed = RSDK.Rand(6, 8);
         }
         if (player->superState != SUPERSTATE_SUPER || !player->active)
             destroyEntity(self);

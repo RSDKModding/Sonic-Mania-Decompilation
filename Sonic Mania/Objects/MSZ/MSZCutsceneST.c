@@ -245,7 +245,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     }
     EntityArmadiloid *armadiloid         = MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID];
     armadiloid->drawOrder                = Zone->drawOrderHigh;
-    armadiloid->animator3.animationSpeed = 1;
+    armadiloid->animator3.speed = 1;
     armadiloid->velocity.x               = 0;
 
     return rougeStates[MSZCutsceneST->rougeID](host);
@@ -278,7 +278,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
     if (host->values[0] && !host->values[1]) {
         if (!rouge->animator.animationID)
             RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 0);
-        if (rouge->animator.animationID == 1 && rouge->animator.frameID == rouge->animator.frameCount - 1 && rouge->animator.animationTimer == 12) {
+        if (rouge->animator.animationID == 1 && rouge->animator.frameID == rouge->animator.frameCount - 1 && rouge->animator.timer == 12) {
             RSDK.SetSpriteAnimation(rouge->aniFrames, 2, &rouge->animator, true, 0);
             rouge->velocity.y = -0x20000;
             RSDK.PlaySfx(HeavyMystic->sfxPon, false, 255);
@@ -358,7 +358,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(rouge->aniFrames, 11, &debris->animator, true, 0);
                 MSZCutsceneST->projectile = (Entity *)debris;
             }
-            if (rouge->animator.animationID == 7 && rouge->animator.frameID == 5 && rouge->animator.animationTimer == 2) {
+            if (rouge->animator.animationID == 7 && rouge->animator.frameID == 5 && rouge->animator.timer == 2) {
                 RSDK.SetSpriteAnimation(rouge->aniFrames, 5, &rouge->animator, true, 0);
                 host->values[1] = 1;
             }
@@ -404,14 +404,14 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host)
         if (rouge->animator.animationID == 12)
             RSDK.SetSpriteAnimation(rouge->aniFrames, 14, &rouge->animator, true, 0);
         if (rouge->animator.animationID == 14) {
-            if (rouge->animator.frameID == 3 && rouge->animator.animationTimer == 1) {
+            if (rouge->animator.frameID == 3 && rouge->animator.timer == 1) {
                 RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
                 Camera_ShakeScreen(0, 0, 2);
                 armadiloid->timer = 0;
                 armadiloid->state = Armadiloid_State_PlatformShoot;
                 RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 2, &armadiloid->animator2, true, 0);
             }
-            if (rouge->animator.animationID == 14 && rouge->animator.frameID == 7 && rouge->animator.animationTimer == 2) {
+            if (rouge->animator.animationID == 14 && rouge->animator.frameID == 7 && rouge->animator.timer == 2) {
                 RSDK.SetSpriteAnimation(rouge->aniFrames, 12, &rouge->animator, true, 0);
                 host->values[1] = 1;
             }

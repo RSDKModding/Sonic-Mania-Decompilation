@@ -340,7 +340,7 @@ void UIDiorama_State_TimeAttack(void)
         self->animators[1].loopIndex  = 3;
         self->animators[1].frameCount = 65;
         RSDK.SetSpriteAnimation(UIDiorama->ringFrames, 0, &self->animators[2], true, 0);
-        self->animators[2].animationSpeed = 128;
+        self->animators[2].speed = 128;
         RSDK.SetSpriteAnimation(UIDiorama->speedGateFrames, 0, &self->animators[3], true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->speedGateFrames, 1, &self->animators[4], true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->speedGateFrames, 3, &self->animators[5], true, 0);
@@ -360,7 +360,7 @@ void UIDiorama_State_Competition(void)
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 6, &self->animators[0], true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 10, &self->animators[1], true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->ringFrames, 0, &self->animators[2], true, 0);
-        self->animators[2].animationSpeed = 128;
+        self->animators[2].speed = 128;
         RSDK.SetSpriteAnimation(UIDiorama->tailsFrames, ANI_FLY, &self->animators[3], true, 0);
         self->field_BC = 85;
         RSDK.SetSpriteAnimation(UIDiorama->knuxFramesHCZ, 4, &self->animators[4], true, 0);
@@ -469,7 +469,7 @@ void UIDiorama_State_Extras(void)
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 8, &self->animators[0], true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->bssFrames, 8, &self->animators[1], true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->bssSonicFrames, 1, &self->animators[2], true, 0);
-        self->animators[2].animationSpeed = 12;
+        self->animators[2].speed = 12;
         self->flag                        = false;
     }
     else {
@@ -491,7 +491,7 @@ void UIDiorama_State_Exit(void)
     }
     else {
         if (self->animators[1].frameCount == 11 && self->animators[1].frameID == 10
-            && self->animators[1].animationTimer == self->animators[1].frameDelay - 1 && ++self->field_BC == 1) {
+            && self->animators[1].timer == self->animators[1].frameDuration - 1 && ++self->field_BC == 1) {
             self->animators[1].loopIndex  = 14;
             self->animators[1].frameCount = 15;
         }

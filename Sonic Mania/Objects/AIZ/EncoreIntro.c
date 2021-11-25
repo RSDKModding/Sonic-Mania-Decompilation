@@ -572,11 +572,11 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
         if (host->timer > 24) {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
             if (player->animator.frameID == 5)
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
 
             RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->animator, false, 1);
             if (buddy->animator.frameID == 5)
-                buddy->animator.animationSpeed = 0;
+                buddy->animator.speed = 0;
         }
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
@@ -585,11 +585,11 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
         if (player->animator.frameID == 5)
-            player->animator.animationSpeed = 0;
+            player->animator.speed = 0;
 
         RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->animator, false, 1);
         if (buddy->animator.frameID == 5)
-            buddy->animator.animationSpeed = 0;
+            buddy->animator.speed = 0;
 
         if (mystic->position.y > ruby->startPos.y + 0x140000) {
             mystic->position.y += mystic->velocity.y;

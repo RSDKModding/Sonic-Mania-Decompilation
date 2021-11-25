@@ -9,7 +9,7 @@ void IceSpring_Update(void)
     RSDK_THIS(IceSpring);
     self->playerBits = 0;
     if (self->state) {
-        if (!self->animator.animationSpeed) {
+        if (!self->animator.speed) {
             int32 i = 0;
             foreach_active(Player, player)
             {
@@ -95,7 +95,7 @@ void IceSpring_Update(void)
                 player->jumpAbility    = 0;
                 if (player->sidekick && self->playerBits == 0b10) {
                     RSDK.SetSpriteAnimation(IceSpring->animID, self->type, &self->animator, true, 0);
-                    self->animator.animationSpeed = 0;
+                    self->animator.speed = 0;
                     self->playerBits              = 0;
                 }
             }
@@ -138,7 +138,7 @@ void IceSpring_Create(void *data)
         }
         RSDK.SetSpriteAnimation(IceSpring->animID, self->type, &self->animator, true, 0);
         self->active                  = 4;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->updateRange.x           = 0x600000;
         self->updateRange.y           = 0x600000;
         self->visible                 = true;

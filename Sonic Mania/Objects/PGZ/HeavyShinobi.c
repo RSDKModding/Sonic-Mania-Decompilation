@@ -203,7 +203,7 @@ void HeavyShinobi_HandleSlash(void *p)
     int32 alpha = 0xC0;
     for (int32 i = 3; i >= 0; --i) {
         EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), self->position.x, self->position.y);
-        child->animator1.frameDelay += delay;
+        child->animator1.frameDuration += delay;
         child->alpha     = alpha;
         child->direction = self->direction;
 
@@ -754,7 +754,7 @@ void HeavyShinobi_State2_Unknown3(void)
     }
     else {
         RSDK.ProcessAnimation(&self->animator2);
-        self->animator2.animationSpeed += 2;
+        self->animator2.speed += 2;
 
         foreach_active(Player, player)
         {
@@ -944,7 +944,7 @@ void HeavyShinobi_State4_Unknown2(void)
             ice->velocity.x               = RSDK.Rand(-6, 8) << 15;
             ice->velocity.y               = RSDK.Rand(-10, 2) << 15;
             ice->direction                = RSDK.Rand(0, 4);
-            ice->animator1.animationSpeed = RSDK.Rand(1, 4);
+            ice->animator1.speed = RSDK.Rand(1, 4);
             ice->active                   = ACTIVE_NORMAL;
         }
         destroyEntity(self);

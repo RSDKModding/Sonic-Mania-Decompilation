@@ -114,9 +114,9 @@ void CaterkillerJr_SetupPositions(void)
         self->boundR = self->position.x + 0x3C0000;
     }
 
-    self->bodyAnimators[7].animationTimer = 14;
-    self->animator1.animationTimer        = 10;
-    self->animator2.animationTimer        = 6;
+    self->bodyAnimators[7].timer = 14;
+    self->animator1.timer        = 10;
+    self->animator2.timer        = 6;
     self->timer                           = 0;
     self->bodyAnimators[7].frameID        = 8;
     self->animator1.frameID               = 8;
@@ -154,12 +154,12 @@ void CaterkillerJr_State2(void)
         self->bodyPosition[i].x += self->bodyVelocity[i].x;
         if (self->bodyDirection[i] && self->bodyPosition[i].x >= self->boundR - 0x80000) {
             self->bodyDirection[i] ^= 1;
-            self->bodyAnimators[i].animationTimer = 0;
+            self->bodyAnimators[i].timer = 0;
             self->bodyAnimators[i].frameID        = 0;
         }
         else if (!self->bodyDirection[i] && self->bodyPosition[i].x <= self->boundL + 0x80000) {
             self->bodyDirection[i] ^= 1;
-            self->bodyAnimators[i].animationTimer = 0;
+            self->bodyAnimators[i].timer = 0;
             self->bodyAnimators[i].frameID        = 0;
         }
 

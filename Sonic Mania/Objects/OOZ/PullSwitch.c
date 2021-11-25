@@ -46,7 +46,7 @@ void PullSwitch_Update(void)
                     player->groundedStore          = false;
                     player->jumpAbilityTimer       = 1;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                    player->animator.animationSpeed = 48;
+                    player->animator.speed = 48;
                     player->state                         = Player_State_Air;
                 }
             }

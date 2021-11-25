@@ -62,28 +62,33 @@ void TimeAttackGate_Create(void *data)
                 self->updateRange.y = 0x400000;
                 self->drawOrder     = Zone->playerDrawLow + 1;
 
-                int32 boundsBottom = self->boundsOffset.y + (self->boundsSize.y >> 1);
-                int32 boundsTop    = self->boundsOffset.y - (self->boundsSize.y >> 1);
+                int32 left   = self->boundsOffset.x - (self->boundsSize.x >> 1);
+                int32 top    = self->boundsOffset.y - (self->boundsSize.y >> 1);
+                int32 right  = self->boundsOffset.x + (self->boundsSize.x >> 1);
+                int32 bottom = self->boundsOffset.y + (self->boundsSize.y >> 1);
 
-                if ((-0x10000 * self->extendTop) < self->boundsOffset.y - (self->boundsSize.y >> 1))
-                    boundsTop = (-0x10000 * self->extendTop);
+                int32 extendTop    = -(self->extendTop << 16);
+                int32 extendBottom = (self->extendBottom << 16);
 
-                if (self->extendBottom << 16 < boundsBottom)
-                    boundsBottom = self->extendBottom << 16;
+                if (extendTop < top)
+                    top = extendTop;
 
-                if (abs(self->boundsOffset.x - (self->boundsSize.x >> 1)) > boundsTop)
-                    self->updateRange.x = abs(self->boundsOffset.x - (self->boundsSize.x >> 1));
+                if (extendBottom < bottom)
+                    bottom = extendBottom;
+
+                if (abs(left) > right)
+                    self->updateRange.x = abs(left);
                 else
-                    self->updateRange.x = ((self->boundsSize.x >> 1) + self->boundsOffset.x) + 0x400000;
+                    self->updateRange.x = right + 0x400000;
 
-                if (abs(boundsTop) > boundsBottom)
-                    self->updateRange.y = abs(boundsTop) + 0x400000;
+                if (abs(top) > bottom)
+                    self->updateRange.y = abs(top) + 0x400000;
                 else
-                    self->updateRange.y = boundsBottom + 0x400000;
+                    self->updateRange.y = bottom + 0x400000;
 
                 self->scale.y   = 0x200;
-                self->state     = TimeAttackGate_State_Main;
-                self->stateDraw = TimeAttackGate_Draw_Main;
+                self->state     = TimeAttackGate_State_Gate;
+                self->stateDraw = TimeAttackGate_Draw_Gate;
             }
         }
     }
@@ -113,8 +118,8 @@ void TimeAttackGate_HandleSpin(void)
 {
     RSDK_THIS(TimeAttackGate);
 
-    int32 top    = (TimeAttackGate->hitbox.top << 16) - (self->extendTop << 16) + self->position.y;
-    int32 bottom = ((self->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + self->position.y;
+    int32 top    = ((TimeAttackGate->hitbox.top - self->extendTop) << 16) + self->position.y;
+    int32 bottom = ((TimeAttackGate->hitbox.bottom + self->extendBottom) << 16) + self->position.y;
 
     foreach_active(Player, player)
     {
@@ -177,8 +182,8 @@ void TimeAttackGate_HandleSpin(void)
 void TimeAttackGate_HandleStart(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int32 top             = (TimeAttackGate->hitbox.top << 16) - (self->extendTop << 16) + self->position.y;
-    int32 bottom          = ((self->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + self->position.y;
+    int32 top             = ((TimeAttackGate->hitbox.top - self->extendTop) << 16) + self->position.y;
+    int32 bottom          = ((TimeAttackGate->hitbox.bottom + self->extendBottom) << 16) + self->position.y;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (MathHelpers_Unknown12(player1->position.x, player1->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
@@ -190,7 +195,7 @@ void TimeAttackGate_HandleStart(void)
                 TimeAttackGate->playerPtr       = player1;
                 TimeAttackGate->started         = true;
                 SceneInfo->timeEnabled          = true;
-                EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(1), self->position.x, self->position.y);
+                EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(true), self->position.x, self->position.y);
                 TimeAttackGate->activeEntity    = (Entity *)restarter;
                 restarter->isPermanent          = true;
 #if RETRO_USE_PLUS
@@ -211,7 +216,7 @@ void TimeAttackGate_HandleStart(void)
             if (!TimeAttackGate->disableRecords)
                 ActClear->isTimeAttack = true;
 #if RETRO_USE_PLUS
-            TimeAttackGate_Unknown1();
+            TimeAttackGate_AddRecord();
 #endif
         }
     }
@@ -221,7 +226,7 @@ void TimeAttackGate_HandleStart(void)
 }
 
 #if RETRO_USE_PLUS
-void TimeAttackGate_Unknown1(void)
+void TimeAttackGate_AddRecord(void)
 {
     if (!TimeAttackGate->disableRecords) {
         if (ActClear)
@@ -257,29 +262,29 @@ void TimeAttackGate_CheckTouch(void)
     int32 y = self->boundsOffset.y + self->position.y;
 
     Hitbox hitbox;
-    hitbox.left   = (-self->boundsSize.x) >> 17;
+    hitbox.left   = -(self->boundsSize.x >> 17);
     hitbox.right  = self->boundsSize.x >> 17;
-    hitbox.top    = (-self->boundsSize.y) >> 17;
+    hitbox.top    = -(self->boundsSize.y >> 17);
     hitbox.bottom = self->boundsSize.y >> 17;
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
 
-        bool32 flag = false;
+        bool32 active = false;
         if (self->boundsSize.x <= 0 || self->boundsSize.y <= 0) {
-            flag = self->position.x - player->position.x < 0x1000000;
+            active = self->position.x - player->position.x < 0x1000000;
         }
         else {
             int32 storeX     = self->position.x;
             int32 storeY     = self->position.y;
             self->position.x = x;
             self->position.y = y;
-            flag             = Player_CheckCollisionTouch(player, self, &hitbox);
+            active           = Player_CheckCollisionTouch(player, self, &hitbox);
             self->position.x = storeX;
             self->position.y = storeY;
         }
 
-        if (flag) {
+        if (active) {
             Zone->cameraBoundsL[i] = (self->position.x >> 16) - ScreenInfo[i].centerX;
             Zone->cameraBoundsR[i] = (self->position.x >> 16) + ScreenInfo[i].centerX;
             if (self->topBoundary)
@@ -288,7 +293,7 @@ void TimeAttackGate_CheckTouch(void)
     }
 }
 
-void TimeAttackGate_State_Main(void)
+void TimeAttackGate_State_Gate(void)
 {
     RSDK_THIS(TimeAttackGate);
     TimeAttackGate_HandleSpin();
@@ -421,7 +426,7 @@ void TimeAttackGate_State_Fadeout(void)
     }
 }
 
-void TimeAttackGate_Draw_Main(void)
+void TimeAttackGate_Draw_Gate(void)
 {
     RSDK_THIS(TimeAttackGate);
     Vector2 drawPos;
@@ -524,9 +529,51 @@ void TimeAttackGate_EditorDraw(void)
     drawPos.x                 = self->position.x - 0xB40 * RSDK.Sin512(self->angle & 0x7F);
     self->finAnimator.frameID = 2;
     RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
+
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    if (showGizmos()) {
+        int32 left   = self->boundsOffset.x - (self->boundsSize.x >> 1);
+        int32 top    = self->boundsOffset.y - (self->boundsSize.y >> 1);
+        int32 right  = self->boundsOffset.x + (self->boundsSize.x >> 1);
+        int32 bottom = self->boundsOffset.y + (self->boundsSize.y >> 1);
+
+        int32 extendTop    = -(self->extendTop << 16);
+        int32 extendBottom = (self->extendBottom << 16);
+
+        if (extendTop < top)
+            top = extendTop;
+
+        if (extendBottom < bottom)
+            bottom = extendBottom;
+
+        if (abs(left) > right)
+            self->updateRange.x = abs(left);
+        else
+            self->updateRange.x = right + 0x400000;
+
+        if (abs(top) > bottom)
+            self->updateRange.y = abs(top) + 0x400000;
+        else
+            self->updateRange.y = bottom + 0x400000;
+
+        DrawHelpers_DrawArenaBounds(0xFFFF00, 1 | 2 | 4 | 8, left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16);
+
+        Hitbox hitbox = TimeAttackGate->hitbox;
+        hitbox.top    = TimeAttackGate->hitbox.top - self->extendTop;
+        hitbox.bottom = self->extendBottom + TimeAttackGate->hitbox.bottom;
+        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &hitbox);
+    }
 }
 
-void TimeAttackGate_EditorLoad(void) { TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
+void TimeAttackGate_EditorLoad(void)
+{
+    TimeAttackGate->aniFrames     = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+    TimeAttackGate->hitbox.left   = -8;
+    TimeAttackGate->hitbox.top    = -44;
+    TimeAttackGate->hitbox.right  = 8;
+    TimeAttackGate->hitbox.bottom = 20;
+}
 #endif
 
 void TimeAttackGate_Serialize(void)

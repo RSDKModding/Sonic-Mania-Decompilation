@@ -763,14 +763,14 @@ void Cylinder_Player_State_InkRoller_Roll(void)
         self->state = Cylinder_Player_State_InkRoller_Stand;
     }
     if (self->characterID == ID_TAILS) {
-        self->animator.animationSpeed = 120;
+        self->animator.speed = 120;
     }
     else {
-        self->animator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
+        self->animator.speed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
     }
 
-    if (self->animator.animationSpeed > 0xF0)
-        self->animator.animationSpeed = 0xF0;
+    if (self->animator.speed > 0xF0)
+        self->animator.speed = 0xF0;
 
     if (self->camera)
         self->camera->offsetYFlag = false;

@@ -176,11 +176,11 @@ void Fan_Create(void *data)
         self->size *= 16;
         RSDK.SetSpriteAnimation(Fan->aniFrames, self->type, &self->animator, true, 0);
         self->state                   = Fan_ProcessAnimationSpeed_Slow;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         switch (self->activation) {
             case 0:
                 Fan_Unknown11();
-                self->animator.animationSpeed = 128;
+                self->animator.speed = 128;
                 break;
             case 1: self->state3 = Fan_HandleDurationTimer; break;
             case 2: self->state3 = Fan_Unknown10; break;
@@ -400,15 +400,15 @@ void Fan_HandlePlayerInteractions_Right(void)
 void Fan_ProcessAnimationSpeed_Fast(void)
 {
     RSDK_THIS(Fan);
-    if (self->animator.animationSpeed < 0x80)
-        self->animator.animationSpeed += 4;
+    if (self->animator.speed < 0x80)
+        self->animator.speed += 4;
 }
 
 void Fan_ProcessAnimationSpeed_Slow(void)
 {
     RSDK_THIS(Fan);
-    if (self->animator.animationSpeed)
-        self->animator.animationSpeed -= 2;
+    if (self->animator.speed)
+        self->animator.speed -= 2;
 }
 
 void Fan_HandleDurationTimer(void)

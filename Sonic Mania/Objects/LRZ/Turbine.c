@@ -104,7 +104,7 @@ void Turbine_CheckPlayerCollisions(void)
                     player->onGround        = false;
                     player->state           = Player_State_None;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, true, 0);
-                    player->animator.animationSpeed = 0;
+                    player->animator.speed = 0;
 
                     if (player->position.y >= self->position.y)
                         self->playerAngles[playerID] = 0x80;

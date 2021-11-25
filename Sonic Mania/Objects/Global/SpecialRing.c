@@ -161,7 +161,7 @@ void SpecialRing_State_Warp(void)
                 cnt >>= 1;
             }
             ring->maxFrameCount           = cnt - 1;
-            ring->animator.animationSpeed = RSDK.Rand(6, 8);
+            ring->animator.speed = RSDK.Rand(6, 8);
             ring->timer                   = 2 * i;
         }
         self->sparkleRadius -= 0x80000;

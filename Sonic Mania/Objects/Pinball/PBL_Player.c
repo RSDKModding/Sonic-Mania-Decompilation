@@ -201,12 +201,7 @@ void PBL_Player_ProcessPlayerControl(void)
         }
         self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
 
-#if RETRO_USE_PLUS
-        if (controller[self->controllerID].keyStart.press || UnknownInfo->field_10 == 1) {
-#else
-        if (controller[self->controllerID].keyStart.press) {
-#endif
-
+        if (controller[self->controllerID].keyStart.press || Unknown_pausePress) {
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->objectID) {

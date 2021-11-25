@@ -145,7 +145,7 @@ void DiveEggman_State_Unknown2(void)
         self->velocity.x = -self->velocity.x;
     }
 
-    if (screwMobile->animator2.animationSpeed >= 0xFF) {
+    if (screwMobile->animator2.speed >= 0xFF) {
         if (self->position.x <= screwMobile->position.x) {
             self->direction  = FLIP_NONE;
             self->velocity.x = 0x8000;
@@ -178,7 +178,7 @@ void DiveEggman_State_Unknown3(void)
     if (self->position.y >= Water->waterLevel + 0x180000)
         self->position.y -= 0x2000;
 
-    if (screwMobile->animator2.animationSpeed >= 0x100) {
+    if (screwMobile->animator2.speed >= 0x100) {
         if (abs(self->position.x - screwMobile->position.x) < 0x100000) {
             int dist      = self->position.x - screwMobile->position.x;
             int y         = MathHelpers_SquareRoot((0x100 - (dist >> 16) * (dist >> 16))) << 16;
@@ -218,7 +218,7 @@ void DiveEggman_State_Unknown4(void)
         self->drawOrder = Zone->hudDrawOrder - 1;
     self->angle += 4;
 
-    if (screwMobile->animator2.animationSpeed >= 0x100) {
+    if (screwMobile->animator2.speed >= 0x100) {
         if (self->position.y < screwMobile->position.y + 0x280000) {
             RSDK.PlaySfx(DiveEggman->sfxHit, false, 255);
             self->invincibilityTimer = 30;
@@ -374,7 +374,7 @@ void DiveEggman_State2_Unknown1(void)
 
     if (DiveEggman_Unknown10()) {
         EntityScrewMobile *screwMobile = (EntityScrewMobile *)DiveEggman->screwMobile;
-        if (screwMobile->animator2.animationSpeed >= 0xFF) {
+        if (screwMobile->animator2.speed >= 0xFF) {
             self->state = DiveEggman_State2_Unknown2;
             if (self->position.x > screwMobile->position.x)
                 self->velocity.x = -0x10000;
@@ -395,7 +395,7 @@ void DiveEggman_State2_Unknown2(void)
         if (self->position.y >= Water->waterLevel + 0x100000)
             self->position.y -= 0x2000;
 
-        if (screwMobile->animator2.animationSpeed >= 0x100) {
+        if (screwMobile->animator2.speed >= 0x100) {
             if (abs(self->position.x - screwMobile->position.x) < 0x100000) {
                 int dist      = self->position.x - screwMobile->position.x;
                 int y         = MathHelpers_SquareRoot((0x100 - (dist >> 16) * (dist >> 16))) << 16;
@@ -426,7 +426,7 @@ void DiveEggman_State2_Unknown3(void)
         else
             self->drawOrder = Zone->hudDrawOrder - 1;
         self->angle += 4;
-        if (screwMobile->animator2.animationSpeed >= 0x100) {
+        if (screwMobile->animator2.speed >= 0x100) {
             if (self->position.y < screwMobile->position.y + 0x180000) {
                 self->timer = 1;
                 --screwMobile->field_7C;

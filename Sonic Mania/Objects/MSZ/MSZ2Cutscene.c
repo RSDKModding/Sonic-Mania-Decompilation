@@ -214,7 +214,7 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         host->storedValue2 = 0x4000;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
         player1->drawFX |= FX_SCALE;
-        player1->animator.animationSpeed = 60;
+        player1->animator.speed = 60;
         player1->scale.x                       = 64;
         player1->scale.y                       = 64;
         player1->state                         = Player_State_None;
@@ -232,7 +232,7 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
             player2->position.x -= 0x63000;
             player2->position.y -= 0x24000;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->animator, false, 0);
-            player1->animator.animationSpeed = 60;
+            player1->animator.speed = 60;
         }
     }
 

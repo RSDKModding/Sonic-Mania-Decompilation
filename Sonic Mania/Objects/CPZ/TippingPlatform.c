@@ -45,7 +45,7 @@ void TippingPlatform_Update(void)
                 else {
                     RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, timer >> 2);
                     self->state                   = TippingPlatform_Unknown3;
-                    self->animator.animationTimer = (self->duration - self->timer) & 3;
+                    self->animator.timer = (self->duration - self->timer) & 3;
                 }
             }
         }
@@ -89,7 +89,7 @@ void TippingPlatform_Create(void *data)
 
     if (self->bossID) {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
     }
     else {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
@@ -125,8 +125,8 @@ void TippingPlatform_StageLoad(void) {}
 void TippingPlatform_Unknown1(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (self->animator.frameID < 6 && ++self->animator.animationTimer == 4) {
-        self->animator.animationTimer = 0;
+    if (self->animator.frameID < 6 && ++self->animator.timer == 4) {
+        self->animator.timer = 0;
         self->animator.frameID++;
     }
 
@@ -146,8 +146,8 @@ void TippingPlatform_Unknown2(void)
         self->active = ACTIVE_BOUNDS;
         self->state  = Platform_State_Fixed;
     }
-    else if (++self->animator.animationTimer == 4) {
-        self->animator.animationTimer = 0;
+    else if (++self->animator.timer == 4) {
+        self->animator.timer = 0;
         self->animator.frameID--;
     }
 }
@@ -182,7 +182,7 @@ void TippingPlatform_EditorDraw(void)
     RSDK_THIS(TippingPlatform);
     if (self->bossID) {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
     }
     else {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);

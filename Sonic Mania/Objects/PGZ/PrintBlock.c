@@ -11,14 +11,14 @@ void PrintBlock_Update(void)
             if (timer >= self->duration) {
                 if (timer >= self->duration + 12) {
                     self->animator.frameID        = 1;
-                    self->animator.animationTimer = 0;
+                    self->animator.timer = 0;
                 }
                 else {
                     self->active                  = ACTIVE_NORMAL;
                     self->state                   = PrintBlock_Unknown2;
                     self->timer           = timer - self->duration;
                     self->animator.frameID        = 4 - self->timer / 3;
-                    self->animator.animationTimer = self->timer % 3;
+                    self->animator.timer = self->timer % 3;
                 }
             }
             else {
@@ -26,10 +26,10 @@ void PrintBlock_Update(void)
                 self->timer = timer;
                 if (self->timer > 12) {
                     self->animator.frameID        = 4;
-                    self->animator.animationTimer = 0;
+                    self->animator.timer = 0;
                 }
                 else {
-                    self->animator.animationTimer = self->timer % 3;
+                    self->animator.timer = self->timer % 3;
                     self->animator.frameID        = self->timer / 3 + 1;
                 }
 
@@ -93,8 +93,8 @@ void PrintBlock_Unknown1(void)
 {
     RSDK_THIS(PrintBlock);
     ++self->timer;
-    if (++self->animator.animationTimer == 3) {
-        self->animator.animationTimer = 0;
+    if (++self->animator.timer == 3) {
+        self->animator.timer = 0;
         if (self->animator.frameID < 4)
             self->animator.frameID++;
     }
@@ -106,8 +106,8 @@ void PrintBlock_Unknown1(void)
 void PrintBlock_Unknown2(void)
 {
     RSDK_THIS(PrintBlock);
-    if (++self->animator.animationTimer == 3) {
-        self->animator.animationTimer = 0;
+    if (++self->animator.timer == 3) {
+        self->animator.timer = 0;
         if (self->animator.frameID <= 1) {
             self->active = ACTIVE_BOUNDS;
             self->state  = Platform_State_Fixed;

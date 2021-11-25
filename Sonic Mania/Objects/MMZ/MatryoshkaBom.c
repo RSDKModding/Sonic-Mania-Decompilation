@@ -357,7 +357,7 @@ void MatryoshkaBom_State_Exploding(void)
         self->canExplode      = false;
     }
 
-    if (self->animator1.frameID >= self->animator1.frameDelay - 1)
+    if (self->animator1.frameID >= self->animator1.frameDuration - 1)
         self->state = MatryoshkaBom_Unknown5;
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();

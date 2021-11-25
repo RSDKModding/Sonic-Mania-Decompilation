@@ -202,12 +202,12 @@ void IceBomba_Fly_Turn(void)
     self->position.x += self->velocity.x;
     self->position.y = self->dip * RSDK.Sin1024(self->angle) + self->spawnPos.y;
     self->velocity.x += 0x1000 * (self->direction ? -1 : 1);
-    int32 animTimer = ++self->animator.animationTimer;
+    int32 animTimer = ++self->animator.timer;
     if (self->direction) {
         if (animTimer >= 3) {
             --self->bombAnimator.frameID;
             --self->animator.frameID;
-            self->animator.animationTimer = 0;
+            self->animator.timer = 0;
             if (self->animator.frameID <= 0) {
                 self->direction ^= 1;
                 self->spawnDist = 2 * self->dist;
@@ -220,7 +220,7 @@ void IceBomba_Fly_Turn(void)
     else if (animTimer >= 3) {
         ++self->bombAnimator.frameID;
         ++self->animator.frameID;
-        self->animator.animationTimer = 0;
+        self->animator.timer = 0;
         if (self->animator.frameID >= 4) {
             self->direction  ^= 1; //ida says its a direct =. this does not make any sense
             self->spawnDist  = 2 * self->dist;

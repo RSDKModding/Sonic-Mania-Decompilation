@@ -78,7 +78,7 @@ void Platform_Update(void)
                 }
             }
         }
-        if (self->animator.frameDelay)
+        if (self->animator.frameDuration)
             RSDK.ProcessAnimation(&self->animator);
     }
 }
@@ -1628,7 +1628,7 @@ void Platform_CollisionState_Sticky(void)
             player->velocity.x                    = 0;
             player->velocity.y                    = 0;
             player->groundVel                     = 0;
-            player->animator.animationSpeed = 0;
+            player->animator.speed = 0;
             switch (side) {
                 case C_TOP: player->angle = 0x00; break;
                 case C_LEFT:
@@ -1837,7 +1837,7 @@ void Platform_CollisionState_TurnTable(void)
                         player->groundVel       = 0;
                         if (self->objectID == Platform->objectID)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
-                        player->animator.animationSpeed = 64;
+                        player->animator.speed = 64;
                         player->direction                     = FLIP_NONE;
                         if (!player->sidekick && self->state == Platform_State_Collapse && !self->timer) {
 #if RETRO_USE_PLUS
@@ -1948,7 +1948,7 @@ void Platform_CollisionState_Twister(void)
                         player->groundVel       = 0;
                         if (self->objectID == Platform->objectID)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, false, 0);
-                        player->animator.animationSpeed = 64;
+                        player->animator.speed = 64;
                         player->direction                     = FLIP_X;
                         if (!player->sidekick) {
                             self->stood = true;
@@ -2100,7 +2100,7 @@ void Platform_EditorDraw_Normal(void)
 {
     RSDK_THIS(Platform);
 
-    if (Platform->aniFrames == 0xFFFF)
+    if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
         RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
     else
         RSDK.DrawSprite(&self->animator, &self->drawPos, false);
@@ -2128,7 +2128,10 @@ void Platform_EditorDraw_Swinging(Vector2 amplitude)
     for (int32 i = 0; i < cnt; ++i) {
         drawPos.x = angle * RSDK.Cos1024(ang) + self->centerPos.x;
         drawPos.y = angle * RSDK.Sin1024(ang) + self->centerPos.y;
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
+            RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
+        else
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
         angle += 0x400;
         self->direction ^= FLIP_X;
         self->rotation = rot;
@@ -2136,10 +2139,13 @@ void Platform_EditorDraw_Swinging(Vector2 amplitude)
 
     self->drawFX           = fxStore;
     self->animator.frameID = frame + 2;
-    RSDK.DrawSprite(&self->animator, &self->centerPos, false);
+    if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
+        RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
+    else
+        RSDK.DrawSprite(&self->animator, &self->centerPos, false);
     self->animator.frameID = frame;
 
-    if (Platform->aniFrames == 0xFFFF)
+    if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
         RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
     else
         RSDK.DrawSprite(&self->animator, &self->drawPos, false);
@@ -2178,394 +2184,392 @@ void Platform_EditorDraw(void)
     amplitude.x = self->amplitude.x >> 10;
     amplitude.y = self->amplitude.y >> 10;
 
-    if (self->frameID >= 0) {
-        switch (self->type) {
-            case PLATFORM_FIXED:
-            default:
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
+    switch (self->type) {
+        case PLATFORM_FIXED:
+        default:
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = 0x800000;
 
-                Platform_EditorDraw_Normal();
-                break;
-            case PLATFORM_COLLAPSING:
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
+            Platform_EditorDraw_Normal();
+            break;
+        case PLATFORM_COLLAPSING:
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
 
-                Platform_EditorDraw_Normal();
-                break;
-            case PLATFORM_MOVING:
-                self->updateRange.x = (abs(amplitude.x) + 0x2000) << 10;
-                self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
+            Platform_EditorDraw_Normal();
+            break;
+        case PLATFORM_MOVING:
+            self->updateRange.x = (abs(amplitude.x) + 0x2000) << 10;
+            self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
 
-                Platform_EditorDraw_Normal();
+            Platform_EditorDraw_Normal();
 
-                if (showGizmos()) {
-                    self->inkEffect = INK_BLEND;
+            if (showGizmos()) {
+                self->inkEffect = INK_BLEND;
 
-                    // start pos
-                    self->drawPos.x = amplitude.x * RSDK.Sin1024(self->angle) + self->centerPos.x;
-                    self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
-                    Platform_EditorDraw_Normal();
-
-                    // right max
-                    self->drawPos.x = amplitude.x * RSDK.Sin1024(0x100) + self->centerPos.x;
-                    self->drawPos.y = amplitude.y * RSDK.Sin1024(0x100) + self->centerPos.y;
-                    drawPos = self->drawPos;
-                    Platform_EditorDraw_Normal();
-
-                    // left max
-                    self->drawPos.x = amplitude.x * RSDK.Sin1024(0x300) + self->centerPos.x;
-                    self->drawPos.y = amplitude.y * RSDK.Sin1024(0x300) + self->centerPos.y;
-                    Platform_EditorDraw_Normal();
-
-                    DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                    DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
-
-                    self->inkEffect = INK_NONE;
-                }
-                break;
-            case PLATFORM_CIRCULAR:
-                self->updateRange.x = (abs(amplitude.x) + 0x2000) << 10;
-                self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
-
-                if (self->hasTension) {
-                    self->drawPos.x = amplitude.x * RSDK.Cos1024(4 * self->angle) + self->centerPos.x;
-                    self->drawPos.y = amplitude.y * RSDK.Sin1024(4 * self->angle) + self->centerPos.y;
-                    Platform_EditorDraw_Swinging(amplitude);
-                }
-                else {
-                    Platform_EditorDraw_Normal();
-                }
-
-                if (showGizmos() && !self->hasTension) {
-                    self->inkEffect = INK_BLEND;
-
-                    // start pos
-                    self->drawPos.x = amplitude.x * RSDK.Cos1024(4 * self->angle) + self->centerPos.x;
-                    self->drawPos.y = amplitude.y * RSDK.Sin1024(4 * self->angle) + self->centerPos.y;
-                    Platform_EditorDraw_Normal();
-
-                    self->inkEffect = INK_NONE;
-                }
-                break;
-            case PLATFORM_CONTROLLED:
-            case PLATFORM_CONT_ACTIVATER:
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
-
-                // PLATFORM_CONT_ACTIVATER activates control in prev slot
-                // Note: will go back through platforms if not found
-                // e.g. if entity is slot 3, and platform control is slot 0, with slot 1 and 2 being platform/platformNode, it'll work
-                // if slot 1 or 2 ISNT a platform/platformNode, it will not work
-
-                // self->speed = starting node
-
-                Platform_EditorDraw_Normal();
-                break;
-            case PLATFORM_PUSHABLE:
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
-
-                Platform_EditorDraw_Normal();
-                break;
-            case PLATFORM_WAIT:
-            case PLATFORM_WAIT_OSC:
-                amplitude.x <<= 10;
-                self->updateRange.x = 0x800000 + abs(amplitude.x);
-                self->updateRange.y = 0x800000 + abs(amplitude.x);
-                if (self->speed < 0)
-                    self->direction = FLIP_X;
-
+                // start pos
+                self->drawPos.x = amplitude.x * RSDK.Sin1024(self->angle) + self->centerPos.x;
+                self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
                 Platform_EditorDraw_Normal();
 
-                if (showGizmos()) {
-                    drawPos         = self->drawPos;
-                    self->groundVel = 0;
-                    bool32 flag     = false;
-                    uint8 type      = 0;
-
-                    while (self->speed) {
-                        if (!flag) {
-                            amplitude.y += self->groundVel;
-
-                            self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
-                            self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
-
-                            int32 speed16 = self->speed << 16;
-                            if (self->groundVel == speed16) {
-                                if (amplitude.y >= amplitude.x) {
-                                    amplitude.y = amplitude.x;
-                                    self->groundVel -= (self->speed << 11);
-                                    flag = true;
-                                }
-                            }
-                            else {
-                                self->groundVel += (self->speed << 10);
-                                if (self->groundVel >= speed16) {
-                                    self->groundVel = speed16;
-                                    self->centerPos.x += ((amplitude.y + self->groundVel) >> 8) * RSDK.Cos256(self->angle);
-                                    self->centerPos.y += ((self->groundVel + amplitude.y) >> 8) * RSDK.Sin256(self->angle);
-                                    amplitude.y = -self->groundVel;
-                                }
-                            }
-                        }
-                        else {
-                            amplitude.y += self->groundVel;
-                            self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
-                            self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
-
-                            if (self->groundVel <= 0) {
-                                if (self->hasTension) {
-                                    // draw double arrow (auto returns)
-                                    type = 1;
-                                }
-                                else {
-                                    // draw one arrow (one way)
-                                    type = 0;
-                                }
-                                break;
-                            }
-                            else {
-                                self->groundVel -= self->speed << 10;
-                            }
-                        }
-                    }
-
-                    self->inkEffect = INK_BLEND;
-                    Platform_EditorDraw_Normal();
-
-                    self->inkEffect = INK_NONE;
-                    DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                    if (type)
-                        DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
-                }
-                break;
-            case PLATFORM_ACTIVEABOVE: 
-                amplitude.x <<= 10;
-                self->updateRange.x = 0x800000 + abs(amplitude.x);
-                self->updateRange.y = 0x800000 + abs(amplitude.x);
-
-                if (self->speed < 0) 
-                    self->direction = FLIP_X;
-
+                // right max
+                self->drawPos.x = amplitude.x * RSDK.Sin1024(0x100) + self->centerPos.x;
+                self->drawPos.y = amplitude.y * RSDK.Sin1024(0x100) + self->centerPos.y;
+                drawPos         = self->drawPos;
                 Platform_EditorDraw_Normal();
 
-                if (showGizmos()) {
-                    self->inkEffect = INK_BLEND;
+                // left max
+                self->drawPos.x = amplitude.x * RSDK.Sin1024(0x300) + self->centerPos.x;
+                self->drawPos.y = amplitude.y * RSDK.Sin1024(0x300) + self->centerPos.y;
+                Platform_EditorDraw_Normal();
 
-                    drawPos = self->drawPos;
-                    amplitude.y = 0;
-                    while (self->speed && amplitude.x) {
-                        if (amplitude.y < amplitude.x) {
-                            amplitude.y += (abs(self->speed) << 16);
+                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+
+                self->inkEffect = INK_NONE;
+            }
+            break;
+        case PLATFORM_CIRCULAR:
+            self->updateRange.x = (abs(amplitude.x) + 0x2000) << 10;
+            self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
+
+            if (self->hasTension) {
+                self->drawPos.x = amplitude.x * RSDK.Cos1024(4 * self->angle) + self->centerPos.x;
+                self->drawPos.y = amplitude.y * RSDK.Sin1024(4 * self->angle) + self->centerPos.y;
+                Platform_EditorDraw_Swinging(amplitude);
+            }
+            else {
+                Platform_EditorDraw_Normal();
+            }
+
+            if (showGizmos() && !self->hasTension) {
+                self->inkEffect = INK_BLEND;
+
+                // start pos
+                self->drawPos.x = amplitude.x * RSDK.Cos1024(4 * self->angle) + self->centerPos.x;
+                self->drawPos.y = amplitude.y * RSDK.Sin1024(4 * self->angle) + self->centerPos.y;
+                Platform_EditorDraw_Normal();
+
+                self->inkEffect = INK_NONE;
+            }
+            break;
+        case PLATFORM_CONTROLLED:
+        case PLATFORM_CONT_ACTIVATER:
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = 0x800000;
+
+            // PLATFORM_CONT_ACTIVATER activates control in prev slot
+            // Note: will go back through platforms if not found
+            // e.g. if entity is slot 3, and platform control is slot 0, with slot 1 and 2 being platform/platformNode, it'll work
+            // if slot 1 or 2 ISNT a platform/platformNode, it will not work
+
+            // self->speed = starting node
+
+            Platform_EditorDraw_Normal();
+            break;
+        case PLATFORM_PUSHABLE:
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = 0x800000;
+
+            Platform_EditorDraw_Normal();
+            break;
+        case PLATFORM_WAIT:
+        case PLATFORM_WAIT_OSC:
+            amplitude.x <<= 10;
+            self->updateRange.x = 0x800000 + abs(amplitude.x);
+            self->updateRange.y = 0x800000 + abs(amplitude.x);
+            if (self->speed < 0)
+                self->direction = FLIP_X;
+
+            Platform_EditorDraw_Normal();
+
+            if (showGizmos()) {
+                drawPos         = self->drawPos;
+                self->groundVel = 0;
+                bool32 flag     = false;
+                uint8 type      = 0;
+
+                while (self->speed) {
+                    if (!flag) {
+                        amplitude.y += self->groundVel;
+
+                        self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
+                        self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
+
+                        int32 speed16 = self->speed << 16;
+                        if (self->groundVel == speed16) {
                             if (amplitude.y >= amplitude.x) {
                                 amplitude.y = amplitude.x;
-                                break;
+                                self->groundVel -= (self->speed << 11);
+                                flag = true;
                             }
                         }
+                        else {
+                            self->groundVel += (self->speed << 10);
+                            if (self->groundVel >= speed16) {
+                                self->groundVel = speed16;
+                                self->centerPos.x += ((amplitude.y + self->groundVel) >> 8) * RSDK.Cos256(self->angle);
+                                self->centerPos.y += ((self->groundVel + amplitude.y) >> 8) * RSDK.Sin256(self->angle);
+                                amplitude.y = -self->groundVel;
+                            }
+                        }
+                    }
+                    else {
+                        amplitude.y += self->groundVel;
+                        self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
+                        self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
 
-                        if (self->direction) {
-                            self->drawPos.x = (-amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
-                            self->drawPos.y = (-amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
+                        if (self->groundVel <= 0) {
+                            if (self->hasTension) {
+                                // draw double arrow (auto returns)
+                                type = 1;
+                            }
+                            else {
+                                // draw one arrow (one way)
+                                type = 0;
+                            }
+                            break;
                         }
                         else {
-                            self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
-                            self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
+                            self->groundVel -= self->speed << 10;
                         }
                     }
+                }
 
-                    Platform_EditorDraw_Normal();
+                self->inkEffect = INK_BLEND;
+                Platform_EditorDraw_Normal();
 
-                    self->inkEffect = INK_NONE;
-
-                    DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                self->inkEffect = INK_NONE;
+                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                if (type)
                     DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
-                }
-
-                break;
-            case PLATFORM_WAIT_ARC:
-            case PLATFORM_SWINGING: {
-                self->timer = 0;
-                if (self->type == PLATFORM_WAIT_ARC)
-                    self->timer = 88;
-
-                self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
-                self->updateRange.y = (abs(amplitude.y) + 0x200) << 14;
-                RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-                amplitude.y <<= 4;
-                if (self->type != PLATFORM_SWINGING) {
-                    if (self->groundVel >= 0)
-                        self->drawPos.x -= 0x200000;
-                    else
-                        self->drawPos.x += 0x200000;
-                }
-
-                int32 angle     = self->angle;
-                self->groundVel = 4 * self->angle;
-                self->angle     = self->groundVel + 0x100 + (self->amplitude.x * RSDK.Sin1024(0x000 + self->timer) >> 14);
-                self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
-                self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
-                Platform_EditorDraw_Swinging(amplitude);
-
-                if (showGizmos()) {
-                    if (self->type == PLATFORM_SWINGING) {
-                        self->inkEffect = INK_BLEND;
-
-                        // right max
-                        self->angle = self->groundVel + 0x100 + ((amplitude.x * RSDK.Sin1024(0x100) + 0x200) >> 14);
-
-                        self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
-                        self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
-                        drawPos         = self->drawPos;
-                        Platform_EditorDraw_Swinging(amplitude);
-
-                        // left max
-                        self->angle     = self->groundVel + 0x100 + ((amplitude.x * RSDK.Sin1024(0x300) + 0x200) >> 14);
-                        self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
-                        self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
-                        Platform_EditorDraw_Swinging(amplitude);
-
-                        self->inkEffect = INK_NONE;
-                    }
-                }
-                self->angle = angle;
-                break;
             }
-            case PLATFORM_STICKY:
-                if (self->direction) {
-                    self->drawPos.x = self->centerPos.x + (amplitude.x << 9);
-                    self->drawPos.y = self->centerPos.y + (amplitude.y << 9);
-                }
-                else {
-                    self->drawPos.x = self->centerPos.x - (amplitude.x << 9);
-                    self->drawPos.y = self->centerPos.y - (amplitude.y << 9);
-                }
-                self->updateRange.x = (abs(amplitude.x) + 0x4000) << 9;
-                self->updateRange.y = (abs(amplitude.y) + 0x4000) << 9;
-                if (self->speed < 0)
-                    self->direction = FLIP_X;
+            break;
+        case PLATFORM_ACTIVEABOVE:
+            amplitude.x <<= 10;
+            self->updateRange.x = 0x800000 + abs(amplitude.x);
+            self->updateRange.y = 0x800000 + abs(amplitude.x);
 
-                Platform_EditorDraw_Normal();
-                if (showGizmos()) {
-                    drawPos       = self->drawPos;
-                    self->drawPos = self->centerPos;
+            if (self->speed < 0)
+                self->direction = FLIP_X;
 
-                    self->inkEffect = INK_BLEND;
+            Platform_EditorDraw_Normal();
 
-                    Platform_EditorDraw_Normal();
+            if (showGizmos()) {
+                self->inkEffect = INK_BLEND;
 
-                    self->inkEffect = INK_NONE;
-
-                    DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                    DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
-                }
-                break;
-            case PLATFORM_MOVING_STATIC:
-                self->updateRange.x = (abs(amplitude.x) + 0x4000) << 9;
-                self->updateRange.y = (abs(amplitude.y) + 0x4000) << 9;
-                if (self->speed < 0)
-                    self->direction = FLIP_X;
-
-                Platform_EditorDraw_Normal();
-
-                if (showGizmos()) {
-                    Vector2 storePos = self->drawPos;
-                    drawPos          = self->drawPos;
-
-                    uint8 flags = 0;
-                    int8 last  = -1;
-                    int32 timer = 0;
-                    while (flags != 2) {
-                        int32 move = timer++ * (self->speed << 7);
-
-                        if (((move >> 16) & 1) == self->direction) {
-                            if (last > 0)
-                                flags++;
-                            if (flags != 2) {
-                                self->drawPos.x = self->centerPos.x + ((move & 0xFFFF) * amplitude.x >> 6) - (amplitude.x << 9);
-                                self->drawPos.y = self->centerPos.y + ((move & 0xFFFF) * amplitude.y >> 6) - (amplitude.y << 9);
-                                storePos        = self->drawPos;
-                            }
-                            last = 0;
-                        }
-                        else {
-                            if (!last)
-                                flags++;
-                            if (flags != 2) {
-                                self->drawPos.x = self->centerPos.x + (amplitude.x << 9) - ((move & 0xFFFF) * amplitude.x >> 6);
-                                self->drawPos.y = self->centerPos.y + (amplitude.y << 9) - ((move & 0xFFFF) * amplitude.y >> 6);
-                                drawPos         = self->drawPos;
-                            }
-                            last = 1;
+                drawPos     = self->drawPos;
+                amplitude.y = 0;
+                while (self->speed && amplitude.x) {
+                    if (amplitude.y < amplitude.x) {
+                        amplitude.y += (abs(self->speed) << 16);
+                        if (amplitude.y >= amplitude.x) {
+                            amplitude.y = amplitude.x;
+                            break;
                         }
                     }
 
-                    self->inkEffect = INK_BLEND;
-
-                    self->drawPos = drawPos;
-                    Platform_EditorDraw_Normal();
-
-                    self->drawPos = storePos;
-                    Platform_EditorDraw_Normal();
-
-                    self->inkEffect = INK_NONE;
-
-                    DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                    DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+                    if (self->direction) {
+                        self->drawPos.x = (-amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
+                        self->drawPos.y = (-amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
+                    }
+                    else {
+                        self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
+                        self->drawPos.y = (amplitude.y >> 8) * RSDK.Sin256(self->angle) + self->centerPos.y;
+                    }
                 }
 
-                break;
-            case PLATFORM_SWING_CLACK: {
-                self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
-                self->updateRange.y = (abs(amplitude.y) + 0x200) << 14;
-                RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-                amplitude.y <<= 4;
-                self->groundVel = 4 * self->angle;
-                self->angle     = self->groundVel + 0x100 + (amplitude.x * RSDK.Sin1024(self->hasTension ? 0x100 : 0) >> 14);
-                self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
-                self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
+                Platform_EditorDraw_Normal();
 
-                Platform_EditorDraw_Swinging(amplitude);
+                self->inkEffect = INK_NONE;
 
-                if (showGizmos()) {
+                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+            }
+
+            break;
+        case PLATFORM_WAIT_ARC:
+        case PLATFORM_SWINGING: {
+            self->timer = 0;
+            if (self->type == PLATFORM_WAIT_ARC)
+                self->timer = 88;
+
+            self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
+            self->updateRange.y = (abs(amplitude.y) + 0x200) << 14;
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
+            amplitude.y <<= 4;
+            if (self->type != PLATFORM_SWINGING) {
+                if (self->groundVel >= 0)
+                    self->drawPos.x -= 0x200000;
+                else
+                    self->drawPos.x += 0x200000;
+            }
+
+            int32 angle     = self->angle;
+            self->groundVel = 4 * self->angle;
+            self->angle     = self->groundVel + 0x100 + (self->amplitude.x * RSDK.Sin1024(0x000 + self->timer) >> 14);
+            self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
+            self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
+            Platform_EditorDraw_Swinging(amplitude);
+
+            if (showGizmos()) {
+                if (self->type == PLATFORM_SWINGING) {
                     self->inkEffect = INK_BLEND;
 
-                    // max
-                    self->angle      = self->groundVel + 0x100 + (amplitude.x * RSDK.Sin1024(self->hasTension ? 0 : -0x100) >> 14);
-                    self->drawPos.x  = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
-                    self->drawPos.y  = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
+                    // right max
+                    self->angle = self->groundVel + 0x100 + ((amplitude.x * RSDK.Sin1024(0x100) + 0x200) >> 14);
+
+                    self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
+                    self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
+                    drawPos         = self->drawPos;
+                    Platform_EditorDraw_Swinging(amplitude);
+
+                    // left max
+                    self->angle     = self->groundVel + 0x100 + ((amplitude.x * RSDK.Sin1024(0x300) + 0x200) >> 14);
+                    self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
+                    self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
                     Platform_EditorDraw_Swinging(amplitude);
 
                     self->inkEffect = INK_NONE;
-                    self->angle     = self->groundVel / 4;
                 }
-                break;
             }
-            case PLATFORM_STATIC:
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
-
-                Platform_EditorDraw_Normal();
-                break;
-            case PLATFORM_SINKER:
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
-
-                Platform_EditorDraw_Normal();
-
-                if (showGizmos()) {
-                    self->inkEffect = INK_BLEND;
-
-                    // max
-                    self->drawPos.y += amplitude.y;
-                    Platform_EditorDraw_Normal();
-
-                    DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y);
-
-                    self->inkEffect = INK_NONE;
-                }
-                break;
+            self->angle = angle;
+            break;
         }
+        case PLATFORM_STICKY:
+            if (self->direction) {
+                self->drawPos.x = self->centerPos.x + (amplitude.x << 9);
+                self->drawPos.y = self->centerPos.y + (amplitude.y << 9);
+            }
+            else {
+                self->drawPos.x = self->centerPos.x - (amplitude.x << 9);
+                self->drawPos.y = self->centerPos.y - (amplitude.y << 9);
+            }
+            self->updateRange.x = (abs(amplitude.x) + 0x4000) << 9;
+            self->updateRange.y = (abs(amplitude.y) + 0x4000) << 9;
+            if (self->speed < 0)
+                self->direction = FLIP_X;
+
+            Platform_EditorDraw_Normal();
+            if (showGizmos()) {
+                drawPos       = self->drawPos;
+                self->drawPos = self->centerPos;
+
+                self->inkEffect = INK_BLEND;
+
+                Platform_EditorDraw_Normal();
+
+                self->inkEffect = INK_NONE;
+
+                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+            }
+            break;
+        case PLATFORM_MOVING_STATIC:
+            self->updateRange.x = (abs(amplitude.x) + 0x4000) << 9;
+            self->updateRange.y = (abs(amplitude.y) + 0x4000) << 9;
+            if (self->speed < 0)
+                self->direction = FLIP_X;
+
+            Platform_EditorDraw_Normal();
+
+            if (showGizmos()) {
+                Vector2 storePos = self->drawPos;
+                drawPos          = self->drawPos;
+
+                uint8 flags = 0;
+                int8 last   = -1;
+                int32 timer = 0;
+                while (flags != 2) {
+                    int32 move = timer++ * (self->speed << 7);
+
+                    if (((move >> 16) & 1) == self->direction) {
+                        if (last > 0)
+                            flags++;
+                        if (flags != 2) {
+                            self->drawPos.x = self->centerPos.x + ((move & 0xFFFF) * amplitude.x >> 6) - (amplitude.x << 9);
+                            self->drawPos.y = self->centerPos.y + ((move & 0xFFFF) * amplitude.y >> 6) - (amplitude.y << 9);
+                            storePos        = self->drawPos;
+                        }
+                        last = 0;
+                    }
+                    else {
+                        if (!last)
+                            flags++;
+                        if (flags != 2) {
+                            self->drawPos.x = self->centerPos.x + (amplitude.x << 9) - ((move & 0xFFFF) * amplitude.x >> 6);
+                            self->drawPos.y = self->centerPos.y + (amplitude.y << 9) - ((move & 0xFFFF) * amplitude.y >> 6);
+                            drawPos         = self->drawPos;
+                        }
+                        last = 1;
+                    }
+                }
+
+                self->inkEffect = INK_BLEND;
+
+                self->drawPos = drawPos;
+                Platform_EditorDraw_Normal();
+
+                self->drawPos = storePos;
+                Platform_EditorDraw_Normal();
+
+                self->inkEffect = INK_NONE;
+
+                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+            }
+
+            break;
+        case PLATFORM_SWING_CLACK: {
+            self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
+            self->updateRange.y = (abs(amplitude.y) + 0x200) << 14;
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
+            amplitude.y <<= 4;
+            self->groundVel = 4 * self->angle;
+            self->angle     = self->groundVel + 0x100 + (amplitude.x * RSDK.Sin1024(self->hasTension ? 0x100 : 0) >> 14);
+            self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
+            self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
+
+            Platform_EditorDraw_Swinging(amplitude);
+
+            if (showGizmos()) {
+                self->inkEffect = INK_BLEND;
+
+                // max
+                self->angle     = self->groundVel + 0x100 + (amplitude.x * RSDK.Sin1024(self->hasTension ? 0 : -0x100) >> 14);
+                self->drawPos.x = amplitude.y * RSDK.Cos1024(self->angle) + self->centerPos.x;
+                self->drawPos.y = amplitude.y * RSDK.Sin1024(self->angle) + self->centerPos.y;
+                Platform_EditorDraw_Swinging(amplitude);
+
+                self->inkEffect = INK_NONE;
+                self->angle     = self->groundVel / 4;
+            }
+            break;
+        }
+        case PLATFORM_STATIC:
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = 0x800000;
+
+            Platform_EditorDraw_Normal();
+            break;
+        case PLATFORM_SINKER:
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
+
+            Platform_EditorDraw_Normal();
+
+            if (showGizmos()) {
+                self->inkEffect = INK_BLEND;
+
+                // max
+                self->drawPos.y += amplitude.y;
+                Platform_EditorDraw_Normal();
+
+                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y);
+
+                self->inkEffect = INK_NONE;
+            }
+            break;
     }
 }
 

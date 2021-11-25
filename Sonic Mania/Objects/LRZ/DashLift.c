@@ -113,9 +113,9 @@ void DashLift_State_HandleDash(void)
 
                     self->drawPos.y += speed >> 2;
                     totalSpeed += speed >> 2;
-                    self->animator.animationTimer += abs((speed >> 2) >> 16);
-                    if (self->animator.animationTimer >= 4) {
-                        self->animator.animationTimer = 0;
+                    self->animator.timer += abs((speed >> 2) >> 16);
+                    if (self->animator.timer >= 4) {
+                        self->animator.timer = 0;
                         if (++self->animator.frameID > 4)
                             self->animator.frameID = 0;
                     }
@@ -146,9 +146,9 @@ void DashLift_State_HandleDash(void)
 
                     self->drawPos.y += speed >> 2;
                     totalSpeed += speed >> 2;
-                    self->animator.animationTimer -= abs((speed >> 2) >> 16);
-                    if (self->animator.animationTimer <= 0) {
-                        self->animator.animationTimer = 3;
+                    self->animator.timer -= abs((speed >> 2) >> 16);
+                    if (self->animator.timer <= 0) {
+                        self->animator.timer = 3;
                         if (--self->animator.frameID < 0)
                             self->animator.frameID = 4;
                     }

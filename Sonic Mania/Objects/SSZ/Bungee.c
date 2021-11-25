@@ -34,7 +34,7 @@ void Bungee_Update(void)
                     player->velocity       = self->velocity;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                     player->rotation                      = 0;
-                    player->animator.animationSpeed = 48;
+                    player->animator.speed = 48;
                     player->onGround                      = false;
                     player->state                         = Player_State_Air;
                 }

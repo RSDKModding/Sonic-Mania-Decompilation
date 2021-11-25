@@ -633,7 +633,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uin
 
                 int i           = 0;
                 int f           = 0;
-                int interpolate = animator->animationTimer;
+                int interpolate = animator->timer;
                 switch (mdl->flags) {
                     default:
                     case MODEL_NOFLAGS:

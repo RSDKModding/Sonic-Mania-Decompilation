@@ -373,7 +373,7 @@ void MSZSetup_ManageFadeE(void)
     foreach_all(Decoration, decoration)
     {
         if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
-            decoration->animator.animationSpeed = 0;
+            decoration->animator.speed = 0;
     }
     self->state = MSZSetup_Unknown9;
 }
@@ -467,7 +467,7 @@ void MSZSetup_Unknown10(void)
         foreach_all(Decoration, decoration)
         {
             if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
-                decoration->animator.animationSpeed = 1;
+                decoration->animator.speed = 1;
         }
         Zone->cameraBoundsL[0] = 0x2980;
         Zone->playerBoundsL[0] = 0x29800000;

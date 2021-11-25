@@ -50,8 +50,8 @@ struct Animator {
     int32 frameID;
     int16 animationID;
     int16 prevAnimationID;
-    int16 animationSpeed;
-    int16 animationTimer;
+    int16 speed;
+    int16 timer;
     int16 frameDuration;
     int16 frameCount;
     uint8 loopIndex;
@@ -127,11 +127,11 @@ inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *a
         return;
 
     animator->framePtrs       = frames;
-    animator->animationTimer  = 0;
+    animator->timer           = 0;
     animator->frameID         = frameID;
     animator->frameCount      = anim->frameCount;
-    animator->frameDuration      = animator->framePtrs[frameID].duration;
-    animator->animationSpeed  = anim->animationSpeed;
+    animator->frameDuration   = animator->framePtrs[frameID].duration;
+    animator->speed           = anim->animationSpeed;
     animator->rotationFlag    = anim->rotationFlag;
     animator->loopIndex       = anim->loopIndex;
     animator->prevAnimationID = animator->animationID;

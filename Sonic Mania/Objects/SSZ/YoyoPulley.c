@@ -41,7 +41,7 @@ void YoyoPulley_Update(void)
                     self->playerTimers[playerID] = 30;
                     player->tileCollisions         = true;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                    player->animator.animationSpeed = 48;
+                    player->animator.speed = 48;
                     player->onGround                      = false;
                     player->state                         = Player_State_Air;
                 }

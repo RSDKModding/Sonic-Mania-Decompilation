@@ -246,10 +246,10 @@ void Orbinaut_Unknown7(void)
             self->velocity.x = 0x4000;
     }
 
-    if (self->animatorFace.animationTimer >= 0x10)
+    if (self->animatorFace.timer >= 0x10)
         self->animatorFace.frameID = 2;
     else
-        self->animatorFace.animationTimer++;
+        self->animatorFace.timer++;
 
     Orbinaut_CheckOnScreen();
 }

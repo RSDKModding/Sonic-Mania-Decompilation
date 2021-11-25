@@ -302,7 +302,7 @@ void TurboSpiker_Hermit_Fire(void)
         self->velocity.x = 0x20000 * (self->direction ? 1 : -1);
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &self->animator, true, 0);
         self->state                   = TurboSpiker_Hermit_Handle;
-        self->animator.animationSpeed = 2;
+        self->animator.speed = 2;
         TurboSpiker_Hermit_NextState();
         RSDK.ProcessAnimation(&self->animator);
         TurboSpiker_Hermit_Collide();

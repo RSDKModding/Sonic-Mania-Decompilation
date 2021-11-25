@@ -11,7 +11,7 @@ void Spring_Update(void)
     StateMachine_Run(self->state);
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == 8)
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
 }
 
 void Spring_LateUpdate(void) {}
@@ -37,7 +37,7 @@ void Spring_Create(void *data)
         }
         RSDK.SetSpriteAnimation(Spring->aniFrames, self->type, &self->animator, true, 0);
         self->active                  = ACTIVE_BOUNDS;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->updateRange.x           = 0x600000;
         self->updateRange.y           = 0x600000;
         self->visible                 = true;
@@ -133,8 +133,8 @@ void Spring_State_Vertical(void)
                     player->onGround                = false;
                     player->velocity.y              = self->velocity.y;
                     player->tileCollisions          = true;
-                    self->animator.animationSpeed = 0x80;
-                    self->animator.animationTimer = 0;
+                    self->animator.speed = 0x80;
+                    self->animator.timer = 0;
                     self->animator.frameID        = 1;
                     if (self->timer == 0) {
                         RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -158,8 +158,8 @@ void Spring_State_Vertical(void)
                 player->onGround                = false;
                 player->velocity.y              = self->velocity.y;
                 player->tileCollisions          = true;
-                self->animator.animationSpeed = 0x80;
-                self->animator.animationTimer = 0;
+                self->animator.speed = 0x80;
+                self->animator.timer = 0;
                 self->animator.frameID        = 1;
                 if (!self->timer) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -202,8 +202,8 @@ void Spring_State_Horizontal(void)
                 player->pushing                 = false;
                 player->direction               = FLIP_NONE;
                 player->tileCollisions          = true;
-                self->animator.animationSpeed = 0x80;
-                self->animator.animationTimer = 0;
+                self->animator.speed = 0x80;
+                self->animator.timer = 0;
                 self->animator.frameID        = 1;
                 if (self->timer == 0) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -242,8 +242,8 @@ void Spring_State_Horizontal(void)
                 player->pushing                 = false;
                 player->direction               = FLIP_X;
                 player->tileCollisions          = true;
-                self->animator.animationSpeed = 0x80;
-                self->animator.animationTimer = 0;
+                self->animator.speed = 0x80;
+                self->animator.timer = 0;
                 self->animator.frameID        = 1;
                 if (self->timer == 0) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -303,8 +303,8 @@ void Spring_State_Diagonal(void)
                     player->velocity.x              = self->velocity.x;
                     player->velocity.y              = self->velocity.y;
                     player->tileCollisions          = true;
-                    self->animator.animationSpeed = 0x80;
-                    self->animator.animationTimer = 0;
+                    self->animator.speed = 0x80;
+                    self->animator.timer = 0;
                     self->animator.frameID        = 1;
                     if (self->timer == 0) {
                         RSDK.PlaySfx(Spring->sfxSpring, false, 255);

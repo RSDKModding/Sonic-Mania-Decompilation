@@ -29,7 +29,7 @@ void TubeSpring_Create(void *data)
     self->drawOrder               = Zone->drawOrderHigh;
     self->velocity.y              = !self->type ? -0x100000 : -0xA8000;
     self->type                    = 0xFF;
-    self->animator.animationSpeed = 0;
+    self->animator.speed = 0;
     self->state                   = TubeSpring_Interact;
 }
 

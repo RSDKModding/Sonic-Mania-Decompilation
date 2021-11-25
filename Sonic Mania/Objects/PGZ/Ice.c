@@ -332,7 +332,7 @@ void Ice_FreezePlayer(void *p)
         ice->isPermanent = true;
         player->velocity.x >>= 1;
         player->groundVel >>= 1;
-        player->animator.animationSpeed = 0;
+        player->animator.speed = 0;
         player->visible                       = false;
         player->nextAirState                  = StateMachine_None;
         player->nextGroundState               = StateMachine_None;
@@ -506,7 +506,7 @@ void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 vel
         ice->velocity.x               = velX + (RSDK.Rand(-6, 8) << 15);
         ice->velocity.y               = velY + (RSDK.Rand(-10, 2) << 15);
         ice->direction                = RSDK.Rand(0, 4);
-        ice->animator1.animationSpeed = RSDK.Rand(1, 4);
+        ice->animator1.speed = RSDK.Rand(1, 4);
         if (a6) {
             if (RSDK.Rand(0, 2)) {
                 RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PIECE, &ice->animator1, true, 0);
@@ -601,7 +601,7 @@ Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
                 ring->alpha          = 256;
                 ring->state          = Ring_State_Bounce;
                 ring->position.y += (0x50000 * ice->type) - 0x50000;
-                ring->animator.animationSpeed = 512;
+                ring->animator.speed = 512;
                 ring->stateDraw               = Ring_Draw_Normal;
                 angle += 16;
             }

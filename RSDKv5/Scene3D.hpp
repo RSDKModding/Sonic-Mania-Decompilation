@@ -151,10 +151,10 @@ inline void SetMeshAnimation(uint16 model, Animator *animator, int16 animSpeed, 
     if (animator->animationID == model && !forceApply)
         return;
     animator->framePtrs       = (SpriteFrame *)1;
-    animator->animationTimer  = 0;
+    animator->timer  = 0;
     animator->frameID         = frameID;
     animator->frameCount      = modelList[model].frameCount;
-    animator->animationSpeed  = animSpeed;
+    animator->speed  = animSpeed;
     animator->prevAnimationID = animator->animationID;
     animator->frameDuration      = 0x100;
     animator->loopIndex       = loopIndex;

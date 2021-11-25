@@ -109,7 +109,7 @@ void UFO_Sphere_State_Fixed(void)
             }
 
             if (UFO_Setup->machLevel == 2) {
-                self->animator.animationSpeed = 1;
+                self->animator.speed = 1;
             }
             break;
         }

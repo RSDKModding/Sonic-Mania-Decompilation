@@ -444,7 +444,7 @@ void Beanstalk_State3_Unknown(void)
         Beanstalk_Unknown7();
         Beanstalk_CheckPlayerCollisions_Plant();
         if (RSDK.CheckOnScreen(self, NULL)) {
-            if (self->animator2.frameID == 5 && self->animator2.animationTimer == 1)
+            if (self->animator2.frameID == 5 && self->animator2.timer == 1)
                 RSDK.PlaySfx(Beanstalk->sfxBeanChomp, false, 255);
         }
     }

@@ -78,7 +78,7 @@ void PuyoMatch_DropNextBeans(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    if (!self->animator1.frameDelay)
+    if (!self->animator1.frameDuration)
         PuyoMatch_SetupNextBeans(self);
 
     EntityPuyoBean *bean1 = CREATE_ENTITY(PuyoBean, intToVoid(self->animator1.animationID), self->beanDropPos.x, self->beanDropPos.y);
@@ -86,7 +86,7 @@ void PuyoMatch_DropNextBeans(void)
     PuyoMatch_SetupNextBeans(self);
     bean1->playerID                = self->playerID;
     bean1->partner                 = (Entity *)bean2;
-    bean1->animator.animationSpeed = 0;
+    bean1->animator.speed = 0;
     bean1->controllerID            = self->playerID + 1;
     bean1->state                   = PuyoBean_State_Idle;
 

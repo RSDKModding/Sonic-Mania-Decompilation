@@ -282,9 +282,9 @@ void Shutterbug_HandleBodyAnim(void)
 
     RSDK_THIS(Shutterbug);
 
-    ++self->animator.animationTimer;
-    self->animator.animationTimer &= 3;
-    int animTimer = self->animator.animationTimer;
+    ++self->animator.timer;
+    self->animator.timer &= 3;
+    int animTimer = self->animator.timer;
     if (!self->flickerTimer || self->turnTimer) {
         if (self->direction == self->moveDir) {
             if (self->turnTimer)

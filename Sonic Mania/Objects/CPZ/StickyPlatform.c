@@ -15,7 +15,7 @@ void StickyPlatform_Update(void)
     if (animState) {
         if (animState == 2 && self->animator.frameID == self->animator.frameCount - 1) {
             RSDK.SetSpriteAnimation(StickyPlatform->animID, 3 * (self->type >> 1), &self->animator, false, 0);
-            self->animator.animationSpeed = 0;
+            self->animator.speed = 0;
         }
     }
     else if (self->animator.frameID == self->animator.frameCount - 3) {
@@ -96,7 +96,7 @@ void StickyPlatform_Create(void *data)
         self->hitbox.bottom = bottom;
         self->hitbox.right  = right;
 
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
 
         self->internalPos.x = self->position.x;
         self->position.x += self->amplitude.x;
@@ -180,7 +180,7 @@ void StickyPlatform_Interact(void)
 
                     self->playerBits |= 1 << i;
                     RSDK.SetSpriteAnimation(StickyPlatform->animID, 3 * (self->type >> 1), &self->animator, true, 0);
-                    self->animator.animationSpeed = 1;
+                    self->animator.speed = 1;
                     player->state                   = Player_State_None;
                     player->velocity.x              = 0;
                     player->velocity.y              = 0;

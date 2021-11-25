@@ -162,7 +162,7 @@ void PlaneSeeSaw_State_Launch(void)
                     shield->drawFX |= FX_SCALE;
                 }
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                player->animator.animationSpeed = 0x80;
+                player->animator.speed = 0x80;
             }
         }
     }

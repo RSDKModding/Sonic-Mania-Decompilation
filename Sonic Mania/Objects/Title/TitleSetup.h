@@ -55,8 +55,8 @@ void TitleSetup_State_SetupLogo(void);
 void TitleSetup_State_SetupPlusLogo(void);
 #endif
 void TitleSetup_State_WaitForEnter(void);
-void TitleSetup_FadeToMenu(void);
-void TitleSetup_FadeToVideo(void);
+void TitleSetup_State_FadeToMenu(void);
+void TitleSetup_State_FadeToVideo(void);
 
 void TitleSetup_Draw_FadeBlack(void);
 void TitleSetup_Draw_DrawRing(void);

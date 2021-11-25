@@ -226,11 +226,7 @@ void UIControl_ProcessInputs(void)
             UIControl->keyConfirm    = ControllerInfo->keyStart.press || ControllerInfo->keyA.press;
             UIControl->keyBack = ControllerInfo->keyB.press;
         }
-#if RETRO_USE_PLUS
-        UIControl->keyBack |= UnknownInfo->field_10;
-#else
-
-#endif
+        UIControl->keyBack |= Unknown_pausePress;
         UIControl->keyBack |= UIControl->flagA;
 
         if (UIControl->keyBack) {

@@ -118,7 +118,7 @@ void EscapeCar_StateMania_Unknown1(void)
                 player->position.y -= 0x80000;
             }
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, false, 0);
-            player->animator.animationSpeed = 0;
+            player->animator.speed = 0;
         }
         else {
             allAboard = false;

@@ -572,8 +572,8 @@ void DDWrecker_State_SignalBounceAttackStart(void)
         }
         else {
             if (self->animator.animationID == 3) {
-                if (self->animator.animationSpeed < 0x100) {
-                    self->animator.animationSpeed += 2;
+                if (self->animator.speed < 0x100) {
+                    self->animator.speed += 2;
                 }
             }
         }
@@ -597,7 +597,7 @@ void DDWrecker_State_HandleBounceAttack(void)
     self->position.x += self->velocity.x;
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
-    self->animator.animationSpeed = 0x100 - 32 * self->timer;
+    self->animator.speed = 0x100 - 32 * self->timer;
     if (self->velocity.y > 0) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
             ++self->timer;
@@ -700,8 +700,8 @@ void DDWrecker_StateBall_Spiked(void)
                 RSDK.SetSpriteAnimation(DDWrecker->aniFrames, 3, &self->animator, true, 0);
         }
         else if (self->animator.animationID == 3) {
-            if (self->animator.animationSpeed < 0x100)
-                self->animator.animationSpeed += 2;
+            if (self->animator.speed < 0x100)
+                self->animator.speed += 2;
         }
     }
     else {

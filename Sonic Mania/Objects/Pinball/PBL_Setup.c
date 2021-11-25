@@ -34,7 +34,7 @@ void PBL_Setup_StaticUpdate(void)
 
     PBL_Setup->scanlineTimer += 0x8000;
     PBL_Setup->scanlineTimer &= 0x7FFFFFFF;
-    if ((ControllerInfo->keyStart.press || UnknownInfo->field_10 == 1) && SceneInfo->state == ENGINESTATE_REGULAR
+    if ((ControllerInfo->keyStart.press || Unknown_pausePress) && SceneInfo->state == ENGINESTATE_REGULAR
         && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);

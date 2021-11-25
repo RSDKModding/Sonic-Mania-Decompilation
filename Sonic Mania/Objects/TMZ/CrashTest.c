@@ -265,7 +265,7 @@ void CrashTest_Unknown6(void)
         else
             RSDK.SetSpriteAnimation(CrashTest->aniFrames, 7, &self->animator3, true, 0);
     }
-    if (self->animator3.animationSpeed == 1 && self->animator3.frameID == self->animator3.frameCount - 1) {
+    if (self->animator3.speed == 1 && self->animator3.frameID == self->animator3.frameCount - 1) {
         if (self->field_CC)
             RSDK.SetSpriteAnimation(CrashTest->aniFrames, 8, &self->animator3, false, 0);
         else

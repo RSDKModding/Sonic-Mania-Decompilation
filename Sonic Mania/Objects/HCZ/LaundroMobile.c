@@ -587,7 +587,7 @@ void LaundroMobile_State_SetupArena(void)
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (self->position.x >= 0x60800000) {
             // did this use to only have 12 health at some point during dev?
-            if (LaundroMobile->health == RETRO_USE_PLUS ? (5 + 8) : (4 + 8)) {
+            if (LaundroMobile->health == (RETRO_USE_PLUS ? (5 + 8) : (4 + 8))) {
                 LaundroMobile->health = 8;
                 Music_TransitionTrack(TRACK_EGGMAN1, 0.0125);
                 self->visible = true;
@@ -598,11 +598,11 @@ void LaundroMobile_State_SetupArena(void)
             }
         }
         else {
-            LaundroMobile->bossPtr                                                  = (Entity *)self;
-            self->state                                                           = LaundroMobile_State_SetupArena2;
+            LaundroMobile->bossPtr                                             = (Entity *)self;
+            self->state                                                        = LaundroMobile_State_SetupArena2;
             RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, BreakBar)->releaseTimer = 0;
-            EntityPlayer *player1                                                   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            player1->jumpPress                                                      = false;
+            EntityPlayer *player1                                              = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+            player1->jumpPress                                                 = false;
         }
     }
 }
@@ -621,7 +621,7 @@ void LaundroMobile_State_SetupArena2(void)
         Water->waterLevel                   = 0;
         Water->targetWaterLevel             = 0;
         self->timer                       = 120;
-        self->animator2.animationSpeed    = 0;
+        self->animator2.speed    = 0;
         self->visible                     = true;
         self->state                       = LaundroMobile_State_Unknown1;
     }
@@ -653,14 +653,14 @@ void LaundroMobile_State_Unknown2(void)
     RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->jumpPress                        = false;
     RSDK.ProcessAnimation(&self->animator2);
 
-    if (self->animator2.animationSpeed >= 0x200) {
+    if (self->animator2.speed >= 0x200) {
         ++LaundroMobile->shouldPlayFanSfx;
         RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, BreakBar)->releaseTimer = 240;
         self->state                                                           = LaundroMobile_State_Unknown3;
     }
     else {
-        self->animator2.animationSpeed += 4;
-        if (self->animator2.animationSpeed >= 0x20)
+        self->animator2.speed += 4;
+        if (self->animator2.speed >= 0x20)
             ++LaundroMobile->shouldPlayFanSfx;
     }
     self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
@@ -1149,7 +1149,7 @@ void LaundroMobile_State_Destroyed_Phase2(void)
                 EntityDebris *debris =
                     CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, LaundroMobile->rocketPositions[i].x, LaundroMobile->rocketPositions[i].y);
                 RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 5, &debris->animator, true, (LaundroMobile->rocketAngles[i] >> 12) & 0xF);
-                debris->animator.animationSpeed = 0;
+                debris->animator.speed = 0;
 
                 if (debris->position.y >= self->position.y) {
                     if (debris->position.x < self->position.x)
@@ -1711,8 +1711,8 @@ void LaundroMobile_State2_Unknown1(void)
 {
     RSDK_THIS(LaundroMobile);
 
-    self->animator2.animationSpeed = LaundroMobile->animSpeed;
-    self->animator3.animationSpeed = LaundroMobile->animSpeed;
+    self->animator2.speed = LaundroMobile->animSpeed;
+    self->animator3.speed = LaundroMobile->animSpeed;
     RSDK.ProcessAnimation(&self->animator2);
     RSDK.ProcessAnimation(&self->animator3);
     Zone->playerBoundActiveL[0] = true;

@@ -56,7 +56,7 @@ void PSZEggman_StageLoad(void)
 void PSZEggman_Unknown1(void)
 {
     RSDK_THIS(PSZEggman);
-    if (self->animator.animationTimer == 1) {
+    if (self->animator.timer == 1) {
         if (self->ruby) {
             self->ruby->position.x += 0x10000;
             ++self->timer;

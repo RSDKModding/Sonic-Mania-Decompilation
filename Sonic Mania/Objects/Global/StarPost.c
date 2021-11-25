@@ -54,7 +54,7 @@ void StarPost_Create(void *data)
         RSDK.SetSpriteAnimation(StarPost->aniFrames, 0, &self->poleAnimator, true, 0);
         if (self->activated) {
             RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &self->ballAnimator, true, 0);
-            self->ballAnimator.animationSpeed = 64;
+            self->ballAnimator.speed = 64;
         }
         else {
             RSDK.SetSpriteAnimation(StarPost->aniFrames, 1, &self->ballAnimator, true, 0);
@@ -297,7 +297,7 @@ void StarPost_CheckCollisions(void)
 
                 if (!self->activated) {
                     RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &self->ballAnimator, true, 0);
-                    self->ballAnimator.animationSpeed = 0;
+                    self->ballAnimator.speed = 0;
                 }
                 self->activated |= 1 << playerSlot;
                 self->active = ACTIVE_NORMAL;
@@ -353,7 +353,7 @@ void StarPost_State_BallSpin(void)
 
     if (flag) {
         self->state                       = StarPost_State_Idle;
-        self->ballAnimator.animationSpeed = 64;
+        self->ballAnimator.speed = 64;
         self->ballSpeed                   = 0;
         self->angle                       = 256;
         if (!self->starFlag)

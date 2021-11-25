@@ -262,12 +262,7 @@ void UFO_Player_ProcessPlayerControl(void)
         self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
         self->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
-#if RETRO_USE_PLUS
-        if (controller->keyStart.press || UnknownInfo->field_10 == 1) {
-#else
-        if (controller->keyStart.press) {
-#endif
-
+        if (controller->keyStart.press || Unknown_pausePress) {
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                 if (!pauseMenu->objectID) {
@@ -462,7 +457,7 @@ void UFO_Player_State_Run(void)
     if (!self->jumpPress || self->state == UFO_Player_State_CourseOut) {
         if (self->groundVel <= 0xC0000) {
             RSDK.SetModelAnimation(UFO_Player->jogModel, &self->animator, 128, 0, 0, 0);
-            self->animator.animationSpeed = (self->groundVel >> 12) + 48;
+            self->animator.speed = (self->groundVel >> 12) + 48;
         }
         else {
             RSDK.SetModelAnimation(UFO_Player->dashModel, &self->animator, 160, 0, 0, 0);

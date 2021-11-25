@@ -212,7 +212,7 @@ void Canista_State_Unknown1(void)
                 int shootY  = (storeY + self->shootOffset - self->shootSize) & 0xFFFF0000;
 
                 if (playerY < shootY || playerY > shootY) {
-                    self->animator1.animationSpeed = 128;
+                    self->animator1.speed = 128;
                     self->velocity.y = ((self->shootOffset + storeY) & 0xFFFF0000) < (player->position.y & 0xFFFF0000) ? 0x10000 : -0x10000;
                 }
                 else {
@@ -225,7 +225,7 @@ void Canista_State_Unknown1(void)
             else {
                 bool32 collided = Player_CheckCollisionTouch(player, self, &Canista->hitbox3);
                 if (!collided) {
-                    self->animator1.animationSpeed = 128;
+                    self->animator1.speed = 128;
                     if (player->position.y - 0x400000 > storeY)
                         self->velocity.y = 0x10000;
                     else
@@ -243,7 +243,7 @@ void Canista_State_Unknown1(void)
         self->position.y = storeY;
     }
     else {
-        self->animator1.animationSpeed = 85;
+        self->animator1.speed = 85;
         if (self->field_8D)
             self->velocity.y = -0x8000;
         else
@@ -278,8 +278,8 @@ void Canista_State_Unknown1(void)
         }
     }
     else {
-        self->animator3.animationTimer = (self->animator3.animationTimer + (abs(self->velocity.y) >> 15)) % 7;
-        self->animator3.frameID        = (self->animator3.animationTimer / 3) & 1;
+        self->animator3.timer = (self->animator3.timer + (abs(self->velocity.y) >> 15)) % 7;
+        self->animator3.frameID        = (self->animator3.timer / 3) & 1;
     }
     Canista_CheckPlayerCollisions();
     Canista_CheckOnScreen();
@@ -343,7 +343,7 @@ void Canista_State_Unknown2(void)
         }
     }
     else {
-        self->animator3.frameID = (self->animator3.animationTimer / 3) & 1;
+        self->animator3.frameID = (self->animator3.timer / 3) & 1;
     }
     Canista_CheckOnScreen();
 }

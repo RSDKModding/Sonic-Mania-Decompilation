@@ -417,7 +417,7 @@ void MetalSonic_State_WaitForHologram(void)
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 9, &self->animator, false, 6);
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 13, &self->animator2, false, 0);
             self->direction               = FLIP_X;
-            self->animator.animationSpeed = 0;
+            self->animator.speed = 0;
             self->active                  = ACTIVE_NORMAL;
             self->state                   = MetalSonic_State_Appear;
             Camera_ShakeScreen(0, 6, 6);
@@ -454,7 +454,7 @@ void MetalSonic_State_Land(void)
     if (self->onGround) {
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &self->animator, false, 0);
         self->state                   = MetalSonic_State_Taunt;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->direction               = FLIP_NONE;
     }
 }
@@ -465,7 +465,7 @@ void MetalSonic_State_Taunt(void)
 
     if (++self->timer == 60) {
         self->timer                   = 0;
-        self->animator.animationSpeed = 1;
+        self->animator.speed = 1;
         self->state                   = MetalSonic_State_GetReady;
     }
 }
@@ -524,7 +524,7 @@ void MetalSonic_State_Unknown1(void)
         RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, false, 6);
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->targetPos.x             = player1->position.x;
         self->targetPos.y             = player1->position.y;
         self->velocity.x              = 0;

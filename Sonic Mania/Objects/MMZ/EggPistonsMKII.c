@@ -691,7 +691,7 @@ void EggPistonsMKII_StateOrb_Unknown2(void)
         self->timer      = 133;
         RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 3, &self->animator2, true, 0);
         self->state = EggPistonsMKII_StateOrb_Unknown3;
-        self->animator1.animationSpeed *= 2;
+        self->animator1.speed *= 2;
     }
     RSDK.ProcessAnimation(&self->animator1);
 }

@@ -102,7 +102,7 @@ void PhantomEgg_HandleAnimations(void)
         self->invincibilityTimer--;
 
     if (self->animator6.animationID == 17) {
-        self->animator6.animationSpeed = 0;
+        self->animator6.speed = 0;
     }
     else {
         if (self->animator6.animationID == 18 || self->animator6.animationID == 19) {
@@ -806,7 +806,7 @@ void PhantomEgg_State_Unknown10(void)
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         if (self->animator3.frameID > 0) {
             self->animator3.frameID        = 6;
-            self->animator3.animationTimer = 0;
+            self->animator3.timer = 0;
             self->state                    = PhantomEgg_State_Unknown8;
         }
         else {

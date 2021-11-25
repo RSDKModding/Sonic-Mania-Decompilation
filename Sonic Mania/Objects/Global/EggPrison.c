@@ -269,7 +269,7 @@ void EggPrison_State_Activated(void)
                 EntityRing *ring = CREATE_ENTITY(Ring, self, (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + self->position.x, self->position.y);
                 ring->velocity.x              = RSDK.Cos256(angle) << 9;
                 ring->velocity.y              = RSDK.Sin256(angle) << 9;
-                ring->animator.animationSpeed = 512;
+                ring->animator.speed          = 512;
                 ring->collisionPlane          = 0;
                 ring->inkEffect               = INK_ALPHA;
                 if (angle != 176)

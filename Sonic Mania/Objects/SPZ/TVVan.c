@@ -526,7 +526,7 @@ void TVVan_State_Unknown1(void)
                 player->visible         = false;
                 player->blinkTimer      = 0;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                player->animator.animationSpeed = 120;
+                player->animator.speed = 120;
                 flag                                    = true;
                 self->player                        = player;
                 foreach_break;
@@ -539,9 +539,9 @@ void TVVan_State_Unknown1(void)
     if (flag) {
         self->state = TVVan_State_Unknown2;
         RSDK.PlaySfx(TVVan->sfxSatellite1, false, 255);
-        self->animator2.animationSpeed = 1;
-        self->animator3.animationSpeed = 1;
-        self->animator4.animationSpeed = 1;
+        self->animator2.speed = 1;
+        self->animator3.speed = 1;
+        self->animator4.speed = 1;
     }
     RSDK.ProcessAnimation(&self->animator5);
 }
@@ -860,7 +860,7 @@ void TVVan_State15_Unknown5(void)
         player->state = Player_State_Air;
         RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->animator, false, 0);
         player->velocity.x                    = 0;
-        player->animator.animationSpeed = 120;
+        player->animator.speed = 120;
         player->velocity.y                    = -0x80000;
         player->onGround                      = false;
         player->tileCollisions                = true;

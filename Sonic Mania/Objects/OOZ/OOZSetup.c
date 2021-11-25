@@ -464,8 +464,8 @@ void OOZSetup_PlayerState_OilStrip(void)
 #endif
         if (abs(self->groundVel) >= 0x20000) {
             memcpy(&self->animator, animator, sizeof(Animator));
-            if (self->animator.animationTimer >= 3)
-                self->animator.animationTimer = 256;
+            if (self->animator.timer >= 3)
+                self->animator.timer = 256;
 
             if (self->angle == 64 || self->angle == 192) {
                 self->onGround = false;

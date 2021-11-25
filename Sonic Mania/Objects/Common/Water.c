@@ -1285,7 +1285,7 @@ void Water_EditorDraw(void)
 
             self->inkEffect = INK_BLEND;
             RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y,
-                          self->b + ((self->g + (self->r << 8)) << 8), 0x100, INK_SUB, false);
+                          self->b + ((self->g + (self->r << 8)) << 8), 0x20, INK_ALPHA, false);
             if (showGizmos()) {
                 self->inkEffect = INK_NONE;
                 DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);

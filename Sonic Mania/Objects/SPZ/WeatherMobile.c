@@ -204,7 +204,7 @@ void WeatherMobile_HandleAnimations(void)
         }
     }
     else {
-        self->animator3.animationSpeed = 0;
+        self->animator3.speed = 0;
     }
 }
 

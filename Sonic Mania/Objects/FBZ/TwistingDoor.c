@@ -5,7 +5,7 @@ ObjectTwistingDoor *TwistingDoor;
 void TwistingDoor_Update(void)
 {
     RSDK_THIS(TwistingDoor);
-    --self->animator.animationTimer;
+    --self->animator.timer;
     Platform_Update();
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);

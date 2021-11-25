@@ -333,7 +333,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
         king->rotation                    = -4;
         king->animatorRuby.frameID        = 0;
         king->drawOrder                   = eggman->drawOrder + 1;
-        king->animatorRuby.animationSpeed = 0;
+        king->animatorRuby.speed = 0;
 
         eggman->state = KleptoMobile_State_Unknown1;
         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 11, &eggmanHand->animator8, true, 0);
@@ -362,9 +362,9 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     eggmanArm1->position.y -= 0x360000;
     eggmanArm1->field_F0.x                = eggman->field_70.x - 0x600000;
     eggmanArm1->field_F0.y                = eggman->field_70.y - 0x280000;
-    eggmanArm1->animator9.animationSpeed  = 0;
+    eggmanArm1->animator9.speed  = 0;
     eggmanArm1->animator10.frameID        = 0;
-    eggmanArm1->animator10.animationSpeed = 0;
+    eggmanArm1->animator10.speed = 0;
     eggmanArm1->animator9.frameID         = 0;
 
     eggmanArm2->position.x = eggman->field_70.x;
@@ -373,9 +373,9 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     eggmanArm2->position.y += 0x400000;
     eggmanArm2->field_F0.x                = eggman->field_70.x - 0x3A0000;
     eggmanArm2->field_F0.y                = eggman->field_70.y + 0x300000;
-    eggmanArm2->animator9.animationSpeed  = 0;
+    eggmanArm2->animator9.speed  = 0;
     eggmanArm2->animator10.frameID        = 0;
-    eggmanArm2->animator10.animationSpeed = 0;
+    eggmanArm2->animator10.speed = 0;
     eggmanArm2->animator9.frameID         = 0;
 
     camera->position.x = maxVal(eggman->field_70.x + 0x200000, host->storedValue2);
@@ -389,7 +389,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     kingArm1->field_FC                  = king->posUnknown.y - 0x2A0000;
     kingArm1->animator10.frameID        = 1;
     kingArm1->drawOrder                 = eggmanArm1->drawOrder + 1;
-    kingArm1->animator10.animationSpeed = 0;
+    kingArm1->animator10.speed = 0;
 
     kingArm2->position.x                = king->posUnknown.x - 0x3E0000;
     kingArm2->position.y                = king->posUnknown.y + 0x520000;
@@ -397,7 +397,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     kingArm2->field_FC                  = king->posUnknown.y + 0x380000;
     kingArm2->animator10.frameID        = 1;
     kingArm2->drawOrder                 = eggmanArm2->drawOrder + 1;
-    kingArm2->animator10.animationSpeed = 0;
+    kingArm2->animator10.speed = 0;
 
     if (eggman->position.x >= king->posUnknown.x - 0x580000) {
         eggman->position.x = king->posUnknown.x - 0x580000;
@@ -436,7 +436,7 @@ bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
         RSDK.PlaySfx(ERZStart->sfxRumble, false, 255);
     if (host->timer == 120) {
         RSDK.SetSpriteAnimation(PhantomKing->aniFrames, 8, &king->animatorRuby, true, 1);
-        king->animatorRuby.animationSpeed = 1;
+        king->animatorRuby.speed = 1;
     }
 
     if (host->timer == 172) {
@@ -478,7 +478,7 @@ bool32 ERZStart_CutsceneState_Unknown9(EntityCutsceneSeq *host)
     EntityPhantomKing *kingArm2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
     if (!king->animatorRuby.frameID)
-        king->animatorRuby.animationSpeed = 0;
+        king->animatorRuby.speed = 0;
     if (!host->timer) {
         eggman->position.x = 0x31C0000;
         eggman->position.y = -0x3C0000;

@@ -90,8 +90,8 @@ void LavaFall_State_LavaFall(void)
     }
 
     ++LavaFall->shouldPlayLavaSfx;
-    if (++self->animator.animationTimer == 8) {
-        self->animator.animationTimer = 0;
+    if (++self->animator.timer == 8) {
+        self->animator.timer = 0;
         CREATE_ENTITY(LavaFall, intToVoid(1), self->position.x, self->position.y);
     }
 }

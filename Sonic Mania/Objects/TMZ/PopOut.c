@@ -43,7 +43,7 @@ void PopOut_Update(void)
                     if (child) {
                         if (self->field_78 == 8) {
                             child->timer               = 0;
-                            child->animator.animationSpeed = 0;
+                            child->animator.speed = 0;
                             child->animator.frameID        = 0;
                         }
                     }
@@ -59,7 +59,7 @@ void PopOut_Update(void)
                 if (child) {
                     if (self->field_78 == 7) {
                         child->timer               = 0;
-                        child->animator.animationSpeed = 0;
+                        child->animator.speed = 0;
                         child->animator.frameID        = 0;
                     }
                 }

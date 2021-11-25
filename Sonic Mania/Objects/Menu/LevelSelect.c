@@ -199,10 +199,10 @@ void LevelSelect_State_SetupEntities(void)
             for (int32 i = 0; i < self->labelCount; ++i) {
                 if (label2->position.y == labelPos[i]) {
                     if (label2->align == 2) {
-                        self->labelPtrs[i] = (Entity *)label2;
+                        self->labelPtrsR[i] = (Entity *)label2;
                     }
                     else if (label2->align == 0) {
-                        self->labelPtrs2[i] = (Entity *)label2;
+                        self->labelPtrsL[i] = (Entity *)label2;
                     }
                 }
             }
@@ -228,9 +228,9 @@ void LevelSelect_State_SetupEntities(void)
                 for (int32 i = 0; i < self->labelCount; ++i) {
                     if (label4->position.y == labelPos[i]) {
                         switch (label4->align) {
-                            case 0: self->labelPtrs2[i] = (Entity *)label4; break;
+                            case 0: self->labelPtrsL[i] = (Entity *)label4; break;
                             case 1: break;
-                            case 2: self->labelPtrs[i] = (Entity *)label4;
+                            case 2: self->labelPtrsR[i] = (Entity *)label4;
 #if RETRO_USE_PLUS
                                 if (!label4->data0 && label4->data1 == 15)
                                     self->storedTextEntity = (Entity *)label;
@@ -244,10 +244,10 @@ void LevelSelect_State_SetupEntities(void)
     }
 
     for (int32 i = 0; i < self->labelCount; ++i) {
-        if (!self->labelPtrs2[i]) {
+        if (!self->labelPtrsL[i]) {
             for (int32 v = i; i >= 0; --i) {
-                if (self->labelPtrs[v]) {
-                    self->labelPtrs2[i] = self->labelPtrs2[v];
+                if (self->labelPtrsR[v]) {
+                    self->labelPtrsL[i] = self->labelPtrsL[v];
                     break;
                 }
             }
@@ -286,7 +286,7 @@ void LevelSelect_State_SetupEntities(void)
         }
     }
 
-    self->labelPtrs2[self->labelCount + 31] = self->soundTestLabel;
+    self->labelPtrsL[self->labelCount + 31] = self->soundTestLabel;
     LevelSelect_ManagePlayerIcon();
     self->state = LevelSelect_State_FadeIn;
 }
@@ -328,78 +328,157 @@ void LevelSelect_State_HandleMenu(void)
             LevelSelect_SetLabelHighlighted(true);
         }
     }
-    else {
-        if (ControllerInfo->keyDown.down || AnalogStickInfoL->keyDown.down) {
-            self->timer = (self->timer + 1) & 0xF;
-            if (self->timer == 1) {
-                LevelSelect_SetLabelHighlighted(false);
+    else if (ControllerInfo->keyDown.down || AnalogStickInfoL->keyDown.down) {
+        self->timer = (self->timer + 1) & 0xF;
+        if (self->timer == 1) {
+            LevelSelect_SetLabelHighlighted(false);
 #if RETRO_USE_PLUS
-                if (++self->labelID == 28 && !API.CheckDLC(DLC_PLUS))
+            if (++self->labelID == 28 && !API.CheckDLC(DLC_PLUS))
 #endif
-                    ++self->labelID;
-                if (self->labelID == self->labelCount)
-                    self->labelID = 0;
+                ++self->labelID;
+            if (self->labelID == self->labelCount)
+                self->labelID = 0;
+            LevelSelect_SetLabelHighlighted(true);
+        }
+    }
+    else if (AnalogStickInfoL->keyLeft.press || ControllerInfo->keyLeft.press || ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press) {
+        self->timer = 0;
+        if (self->labelID >= self->labelCount - 1) {
+            if (AnalogStickInfoL->keyLeft.press || ControllerInfo->keyLeft.press) {
+                if (--self->soundTestID < 0)
+                    self->soundTestID = LevelSelect->soundTestMax - 1;
+            }
+            else if (++self->soundTestID >= LevelSelect->soundTestMax) {
+                self->soundTestID = 0;
+            }
+            EntityUIText *soundTest = (EntityUIText *)self->soundTestLabel;
+            soundTest->text.text[0] = self->soundTestID >> 4;
+            soundTest->text.text[1] = self->soundTestID & 0xF;
+        }
+        else {
+            LevelSelect_HandleColumnChange();
+        }
+    }
+    else if (confirmPress || ControllerInfo->keyStart.press) {
+        if (self->labelID < self->labelCount - 1 || ControllerInfo->keyStart.press) {
+#if RETRO_USE_PLUS
+            if (self->labelID != 28 || API.CheckDLC(DLC_PLUS))
+                LevelSelect_HandleNewStagePos();
+            else
+                RSDK.PlaySfx(LevelSelect->sfxFail, false, 255);
+#else
+            LevelSelect_HandleNewStagePos();
+#endif
+        }
+        else {
+            EntityMusic *mus = RSDK_GET_ENTITY(self->soundTestID + LevelSelect->startMusicID, Music);
+            Music_PlayTrackPtr(mus);
+
+#if RETRO_USE_PLUS
+            self->offsetUFO = self->soundTestID % 14;
+            self->offsetBSS = self->soundTestID & 0x1F;
+            for (int32 i = 0; i < 8; ++i) {
+                if (self->soundTestID != LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]]) {
+                    LevelSelect->cheatUnknown[i] = 0;
+                }
+                else {
+                    LevelSelect->cheatUnknown[i]++;
+                    if (LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]] == 255) {
+                        LevelSelect->checkCheatActivated[i]();
+                        LevelSelect->cheatUnknown[i] = 0;
+                    }
+                }
+            }
+#endif
+        }
+    }
+#if RETRO_GAMEVER == VER_100 || RETRO_USE_TOUCH_CONTROLS
+    else if (TouchInfo->count) {
+        self->timer = (self->timer + 1) & 0xF;
+        if (self->timer == 1) {
+            int selectedLabel      = -1;
+
+            int lID = self->labelCount - 1;
+            for (int l = 0; l < self->labelCount; ++l, lID--) {
+                EntityUIText *label = (EntityUIText *)self->labelPtrsL[lID];
+
+                if (label && lID != self->labelID) {
+#if RETRO_USE_TOUCH_CONTROLS && RETRO_USE_PLUS
+                    if (lID == 28 && !API.CheckDLC(DLC_PLUS))
+                        continue;
+#endif
+
+                    int xOff = 5 * (label->text.textLength * 0.5);
+
+                    for (int f = 0; f < TouchInfo->count; ++f) {
+                        float tx = TouchInfo->x[f] * ScreenInfo->width;
+                        float ty = TouchInfo->y[f] * ScreenInfo->height;
+
+                        if (tx > ((label->position.x >> 16) - xOff) && tx < (xOff + (label->position.x >> 16))) {
+                            if (ty < ((label->position.y >> 16) + 10) && ty > ((label->position.y >> 16) - 10))
+                                selectedLabel = lID;
+                        }
+                    }
+                }
+            }
+            
+            if (selectedLabel == -1) {
+                lID = self->labelCount - 1;
+                for (int l = 0; l < self->labelCount; ++l) {
+                    EntityUIText *label = (EntityUIText *)self->labelPtrsR[lID];
+
+                    if (label && lID != self->labelID) {
+#if RETRO_USE_TOUCH_CONTROLS && RETRO_USE_PLUS
+                        if (lID == 28 && !API.CheckDLC(DLC_PLUS))
+                            continue;
+#endif
+
+                        int xOff = 5 * (label->text.textLength * 0.5);
+
+                        for (int f = 0; f < TouchInfo->count; ++f) {
+                            float tx = TouchInfo->x[f] * ScreenInfo->width;
+                            float ty = TouchInfo->y[f] * ScreenInfo->height;
+
+                            if (tx > ((label->position.x >> 16) - xOff) && tx < (xOff + (label->position.x >> 16))) {
+                                if (ty < ((label->position.y >> 16) + 10) && ty > ((label->position.y >> 16) - 10))
+                                    selectedLabel = lID;
+                            }
+                        }
+                    }
+                    lID--;
+                }
+            }
+
+            for (int f = 0; f < TouchInfo->count; ++f) {
+                float tx = TouchInfo->x[f] * ScreenInfo->width;
+                float ty = TouchInfo->y[f] * ScreenInfo->height;
+
+                if (tx > 250.0 && ty > 170.0 && tx < 310.0 && ty < 230.0) 
+                    LevelSelect_HandleNewStagePos();
+            }
+
+#if RETRO_USE_TOUCH_CONTROLS
+            for (int f = 0; f < TouchInfo->count; ++f) {
+                float tx = TouchInfo->x[f] * ScreenInfo->width;
+                float ty = TouchInfo->y[f] * ScreenInfo->height;
+
+                if (tx > 311.0 && ty > 184.0 && tx < 335.0 && ty < 216.0) {
+                    ++self->playerID;
+                    LevelSelect_ManagePlayerIcon();
+                }
+            }
+#endif
+
+            if (selectedLabel != -1) {
+                LevelSelect_SetLabelHighlighted(false);
+                self->labelID = selectedLabel;
                 LevelSelect_SetLabelHighlighted(true);
             }
         }
-        else {
-            if (AnalogStickInfoL->keyLeft.press || ControllerInfo->keyLeft.press || ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press) {
-                self->timer = 0;
-                if (self->labelID >= self->labelCount - 1) {
-                    if (AnalogStickInfoL->keyLeft.press || ControllerInfo->keyLeft.press) {
-                        if (--self->soundTestID < 0)
-                            self->soundTestID = LevelSelect->soundTestMax - 1;
-                    }
-                    else if (++self->soundTestID >= LevelSelect->soundTestMax) {
-                        self->soundTestID = 0;
-                    }
-                    EntityUIText *soundTest = (EntityUIText *)self->soundTestLabel;
-                    soundTest->text.text[0] = self->soundTestID >> 4;
-                    soundTest->text.text[1] = self->soundTestID & 0xF;
-                }
-                else {
-                    LevelSelect_HandleColumnChange();
-                }
-            }
-            else {
-                if (confirmPress || ControllerInfo->keyStart.press) {
-                    if (self->labelID < self->labelCount - 1 || ControllerInfo->keyStart.press) {
-#if RETRO_USE_PLUS
-                        if (self->labelID != 28 || API.CheckDLC(DLC_PLUS))
-                            LevelSelect_HandleNewStagePos();
-                        else
-                            RSDK.PlaySfx(LevelSelect->sfxFail, false, 255);
-#else
-                        LevelSelect_HandleNewStagePos();
+    }
 #endif
-                    }
-                    else {
-                        EntityMusic *mus = RSDK_GET_ENTITY(self->soundTestID + LevelSelect->startMusicID, Music);
-                        Music_PlayTrackPtr(mus);
-
-#if RETRO_USE_PLUS
-                        self->offsetUFO = self->soundTestID % 14;
-                        self->offsetBSS = self->soundTestID & 0x1F;
-                        for (int32 i = 0; i < 8; ++i) {
-                            if (self->soundTestID != LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]]) {
-                                LevelSelect->cheatUnknown[i] = 0;
-                            }
-                            else {
-                                LevelSelect->cheatUnknown[i]++;
-                                if (LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]] == 255) {
-                                    LevelSelect->checkCheatActivated[i]();
-                                    LevelSelect->cheatUnknown[i] = 0;
-                                }
-                            }
-                        }
-#endif
-                    }
-                }
-                else {
-                    self->timer = 0;
-                }
-            }
-        }
+    else {
+        self->timer = 0;
     }
 
     if (ControllerInfo->keyX.press) {
@@ -415,7 +494,7 @@ void LevelSelect_State_HandleMenu(void)
     if (self->labelID >= self->labelCount - 1)
         RSDK.SetSpriteAnimation(UIPicture->aniFrames, 2, &zoneIcon->animator, true, self->playerID);
     else
-        RSDK.SetSpriteAnimation(UIPicture->aniFrames, 1, &zoneIcon->animator, true, ((EntityUIText *)self->labelPtrs[self->labelID])->data1);
+        RSDK.SetSpriteAnimation(UIPicture->aniFrames, 1, &zoneIcon->animator, true, ((EntityUIText *)self->labelPtrsR[self->labelID])->data1);
 }
 
 void LevelSelect_State_FadeOut(void)
@@ -475,10 +554,10 @@ void LevelSelect_ManagePlayerIcon(void)
 void LevelSelect_SetLabelHighlighted(bool32 highlight)
 {
     RSDK_THIS(LevelSelect);
-    EntityUIText *label = (EntityUIText *)self->labelPtrs2[self->labelID];
+    EntityUIText *label = (EntityUIText *)self->labelPtrsL[self->labelID];
     if (label)
         label->highlighted = highlight;
-    EntityUIText *label2 = (EntityUIText *)self->labelPtrs[self->labelID];
+    EntityUIText *label2 = (EntityUIText *)self->labelPtrsR[self->labelID];
     if (label2)
         label2->highlighted = highlight;
 }
@@ -486,9 +565,9 @@ void LevelSelect_SetLabelHighlighted(bool32 highlight)
 void LevelSelect_HandleColumnChange(void)
 {
     RSDK_THIS(LevelSelect);
-    EntityUIText *curLabel = (EntityUIText *)self->labelPtrs[self->labelID];
+    EntityUIText *curLabel = (EntityUIText *)self->labelPtrsR[self->labelID];
     if (!curLabel)
-        curLabel = (EntityUIText *)self->labelPtrs2[self->labelID];
+        curLabel = (EntityUIText *)self->labelPtrsL[self->labelID];
 
     int32 distance                = 0x1000000;
     EntityUIText *labelPtr = NULL;
@@ -519,7 +598,7 @@ void LevelSelect_HandleColumnChange(void)
 
     int32 labelID = self->labelID;
     for (int32 i = 0; i < self->labelCount; ++i) {
-        if (self->labelPtrs[i] == (Entity *)labelPtr || self->labelPtrs2[i] == (Entity *)labelPtr) {
+        if (self->labelPtrsR[i] == (Entity *)labelPtr || self->labelPtrsL[i] == (Entity *)labelPtr) {
             labelID = i;
             break;
         }
@@ -535,9 +614,9 @@ void LevelSelect_HandleColumnChange(void)
 void LevelSelect_HandleNewStagePos(void)
 {
     RSDK_THIS(LevelSelect);
-    EntityUIText *curLabel = (EntityUIText *)self->labelPtrs[self->labelID];
+    EntityUIText *curLabel = (EntityUIText *)self->labelPtrsR[self->labelID];
     if (!curLabel)
-        curLabel = (EntityUIText *)self->labelPtrs2[self->labelID];
+        curLabel = (EntityUIText *)self->labelPtrsL[self->labelID];
     if (curLabel->selectable) {
         char buffer[32];
         RSDK.GetCString(buffer, &curLabel->tag);

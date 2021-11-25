@@ -71,7 +71,7 @@ void Crate_Break(EntityCrate *entity)
         ice->velocity.x = RSDK.Rand(-6, 8) << 15;
         ice->velocity.y = RSDK.Rand(-10, 2) << 15;
         ice->direction                = RSDK.Rand(0, 4);
-        ice->animator1.animationSpeed = RSDK.Rand(1, 4);
+        ice->animator1.speed = RSDK.Rand(1, 4);
         ice->drawOrder = Zone->drawOrderLow + 1;
         switch (entity->animator.frameID) {
             case 0:

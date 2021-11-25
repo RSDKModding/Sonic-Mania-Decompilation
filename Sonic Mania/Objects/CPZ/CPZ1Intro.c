@@ -87,7 +87,7 @@ bool32 CPZ1Intro_CheckSonicAnimFinish(void)
     unused(player2);
     unused(camera);
 
-    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.animationTimer == 30;
+    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 30;
 }
 
 bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
@@ -97,7 +97,7 @@ bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
     unused(camera);
 
 #if RETRO_USE_PLUS
-    if (player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.animationTimer == 4) {
+    if (player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4) {
         RSDK.SetSpriteAnimation(player1->tailSpriteIndex, ANI_IDLE, &player1->tailAnimator, true, 0);
         player1->animator.animationID     = 0;
         player1->animator.prevAnimationID = 0;
@@ -119,7 +119,7 @@ bool32 CPZ1Intro_CheckKnuxAnimFinish(void)
     unused(player2);
     unused(camera);
 
-    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.animationTimer == 4;
+    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4;
 }
 
 #if RETRO_USE_PLUS
@@ -129,7 +129,7 @@ bool32 CPZ1Intro_CheckMightyAnimFinish(void)
     unused(player2);
     unused(camera);
 
-    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.animationTimer == 4;
+    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4;
 }
 
 bool32 CPZ1Intro_CheckRayAnimFinish(void)
@@ -138,7 +138,7 @@ bool32 CPZ1Intro_CheckRayAnimFinish(void)
     unused(player2);
     unused(camera);
 
-    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.animationTimer == 4;
+    return player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4;
 }
 #endif
 

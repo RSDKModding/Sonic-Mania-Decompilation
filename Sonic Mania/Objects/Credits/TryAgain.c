@@ -103,12 +103,12 @@ void TryAgain_Unknown4(void)
     RSDK_THIS(TryAgain);
     RSDK.ProcessAnimation(&self->eggmanAnimator);
     if (self->eggmanAnimator.frameID == 2) {
-        if (self->eggmanAnimator.animationTimer == 1) {
+        if (self->eggmanAnimator.timer == 1) {
             self->rubyVelocity.x = 0x22000;
             self->rubyVelocity.y = -0x58000;
         }
     }
-    else if (self->eggmanAnimator.frameID == 7 && self->eggmanAnimator.animationTimer == 1) {
+    else if (self->eggmanAnimator.frameID == 7 && self->eggmanAnimator.timer == 1) {
         self->rubyVelocity.x = -0x22000;
         self->rubyVelocity.y = -0x58000;
     }

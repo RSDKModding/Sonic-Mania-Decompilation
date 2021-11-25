@@ -269,6 +269,11 @@ void BuzzBomber_EditorDraw(void)
     BuzzBomber_Draw();
 
     if (showGizmos()) {
+        self->rangeHitbox.right  = self->shotRange;
+        self->rangeHitbox.left   = -self->shotRange;
+        self->rangeHitbox.top    = -256;
+        self->rangeHitbox.bottom = 256;
+
         DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->rangeHitbox);
     }
 }

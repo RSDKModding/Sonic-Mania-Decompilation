@@ -257,7 +257,7 @@ void WoodChipper_State_Chipper(void)
                         debris->position.x += (RSDK.Rand(-3, 4) + 83) << 16;
                         debris->velocity.x = RSDK.Rand(4, 17) << 15;
                     }
-                    debris->animator1.animationSpeed = RSDK.Rand(1, 3);
+                    debris->animator1.speed = RSDK.Rand(1, 3);
                     debris->direction                = RSDK.Rand(0, 4);
                 }
             }

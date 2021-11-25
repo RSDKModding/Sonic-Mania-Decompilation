@@ -282,11 +282,7 @@ void TitleSetup_State_WaitForEnter(void)
     bool32 anyButton = ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyC.press || ControllerInfo->keyX.press
                      || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
                      || ControllerInfo->keySelect.press;
-#if RETRO_USE_PLUS
-    bool32 anyClick = (!TouchInfo->count && self->touched) || UnknownInfo->field_28;
-#else
-    bool32 anyClick = !TouchInfo->count && self->touched;
-#endif
+    bool32 anyClick = (!TouchInfo->count && self->touched) || Unknown_anyPress;
     self->touched = TouchInfo->count > 0;
     if (anyClick || anyButton) {
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, 0, 255);
@@ -305,17 +301,17 @@ void TitleSetup_State_WaitForEnter(void)
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
         RSDK.StopChannel(Music->channelID);
-        self->state     = TitleSetup_FadeToMenu;
+        self->state     = TitleSetup_State_FadeToMenu;
         self->stateDraw = TitleSetup_Draw_FadeBlack;
     }
     else if (++self->timer == 800) {
         self->timer     = 0;
-        self->state     = TitleSetup_FadeToVideo;
+        self->state     = TitleSetup_State_FadeToVideo;
         self->stateDraw = TitleSetup_Draw_FadeBlack;
     }
 }
 
-void TitleSetup_FadeToMenu(void)
+void TitleSetup_State_FadeToMenu(void)
 {
     RSDK_THIS(TitleSetup);
     if (self->timer >= 1024) {
@@ -326,7 +322,7 @@ void TitleSetup_FadeToMenu(void)
     }
 }
 
-void TitleSetup_FadeToVideo(void)
+void TitleSetup_State_FadeToVideo(void)
 {
     RSDK_THIS(TitleSetup);
     if (self->timer >= 1024) {

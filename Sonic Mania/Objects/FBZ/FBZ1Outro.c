@@ -110,7 +110,7 @@ void FBZ1Outro_DispenseTrash(void)
     {
         signPost->position.y += signPost->velocity.y;
         signPost->velocity.y += 0x3800;
-        signPost->type = 2;
+        signPost->type = SIGNPOST_NORMAL_VS;
     }
 }
 

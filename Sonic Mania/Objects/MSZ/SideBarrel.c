@@ -6,9 +6,9 @@ void SideBarrel_Update(void)
 {
     RSDK_THIS(SideBarrel);
     if (self->activePlayers <= 0)
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
     else
-        self->animator.animationSpeed = 128;
+        self->animator.speed = 128;
     RSDK.ProcessAnimation(&self->animator);
 
     int playerID = 0;

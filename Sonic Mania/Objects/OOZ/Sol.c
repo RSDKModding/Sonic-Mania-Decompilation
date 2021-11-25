@@ -265,10 +265,10 @@ void Sol_Unknown6(void)
             self->velocity.x = 0x4000;
     }
 
-    if (self->animator1.animationTimer >= 0x10)
+    if (self->animator1.timer >= 0x10)
         self->animator1.frameID = 2;
     else
-        self->animator1.animationTimer++;
+        self->animator1.timer++;
     Sol_CheckOnScreen();
 }
 

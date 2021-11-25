@@ -138,7 +138,7 @@ void WallCrawl_State_Main(void)
     if (playerPtr) {
         if (Player_CheckCollisionTouch(playerPtr, self, &WallCrawl->checkbox)) {
             if (!Player_CheckCollisionTouch(playerPtr, self, &WallCrawl->attackbox)) {
-                self->animator.animationSpeed = 48;
+                self->animator.speed = 48;
                 if (playerPtr->position.y <= self->position.y) {
                     self->direction &= ~FX_ROTATE;
                     self->velocity.y = -0x10000;
@@ -164,7 +164,7 @@ void WallCrawl_State_Main(void)
         }
     }
     else {
-        self->animator.animationSpeed = 24;
+        self->animator.speed = 24;
         if (!(self->direction & FLIP_Y))
             self->velocity.y = -0x8000;
         else

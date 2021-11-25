@@ -75,7 +75,7 @@ void ScrewMobile_Create(void *data)
                 RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 3, &self->animator5, true, 0);
                 RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->animator6, true, 0);
                 self->field_7C                 = 8;
-                self->animator2.animationSpeed = 0;
+                self->animator2.speed = 0;
                 self->state                    = ScrewMobile_State_Unknown1;
                 self->stateDraw                = ScrewMobile_StateDraw1_Unknown;
             }
@@ -265,7 +265,7 @@ void ScrewMobile_State_Unknown2(void)
                 return;
             }
             if (!self->whirlPoolTimer && ScrewMobile->playingFanSfx == false) {
-                self->animator2.animationSpeed = 64;
+                self->animator2.speed = 64;
                 RSDK.PlaySfx(ScrewMobile->sfxButton, false, 255);
             }
         }
@@ -277,10 +277,10 @@ void ScrewMobile_State_Unknown2(void)
                 self->whirlpool = NULL;
             }
 
-            if (self->animator2.animationSpeed)
-                self->animator2.animationSpeed -= 2;
+            if (self->animator2.speed)
+                self->animator2.speed -= 2;
 
-            if (self->animator2.animationSpeed > 0xC0)
+            if (self->animator2.speed > 0xC0)
                 ++ScrewMobile->shouldPlayFanSfx;
         }
         else {
@@ -305,15 +305,15 @@ void ScrewMobile_State_Unknown2(void)
                 }
             }
 
-            if (self->animator2.animationSpeed < 0x100)
-                self->animator2.animationSpeed += 2;
+            if (self->animator2.speed < 0x100)
+                self->animator2.speed += 2;
 
-            if (self->animator2.animationSpeed > 0x40)
+            if (self->animator2.speed > 0x40)
                 ++ScrewMobile->shouldPlayFanSfx;
         }
     }
 
-    if (self->animator2.animationSpeed < 0xF0) {
+    if (self->animator2.speed < 0xF0) {
         if (self->field_74 > 0) {
             self->field_74--;
         }
@@ -475,12 +475,12 @@ void ScrewMobile_StateDraw1_Unknown(void)
         self->direction = FLIP_NONE;
         RSDK.DrawSprite(&self->animator2, NULL, false);
 
-        if (self->animator2.animationSpeed >= 0x40) {
+        if (self->animator2.speed >= 0x40) {
             drawPos.x         = self->position.x;
             drawPos.y         = self->position.y;
             self->inkEffect = INK_ALPHA;
             if (self->field_74 <= 0) {
-                self->alpha = self->animator2.animationSpeed;
+                self->alpha = self->animator2.speed;
             }
             else {
                 self->alpha = 0xD0;
@@ -592,7 +592,7 @@ void ScrewMobile_EditorDraw(void)
     RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 3, &self->animator5, true, 0);
     RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->animator6, true, 0);
     self->field_7C                 = 8;
-    self->animator2.animationSpeed = 0;
+    self->animator2.speed = 0;
 
     ScrewMobile_StateDraw1_Unknown();
 }

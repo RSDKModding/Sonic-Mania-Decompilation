@@ -834,7 +834,7 @@ void PhantomKing_EditorDraw(void)
     self->posUnknown               = self->position;
     self->rotation                 = 0;
     self->angle2                   = 0;
-    self->animator3.animationSpeed = 0;
+    self->animator3.speed = 0;
     PhantomKing_HandleFrames();
 
     RSDK.SetSpriteAnimation(PhantomKing->aniFrames, 0, &self->animator2, false, 0);

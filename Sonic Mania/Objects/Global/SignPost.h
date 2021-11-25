@@ -4,6 +4,13 @@
 #include "SonicMania.h"
 
 typedef enum {
+    SIGNPOST_NORMAL,
+    SIGNPOST_HIDDEN,
+    SIGNPOST_NORMAL_VS,
+    SIGNPOST_DECOR,
+}SignPostTypes;
+
+typedef enum {
     SIGNPOSTANI_SONIC,
     SIGNPOSTANI_TAILS,
     SIGNPOSTANI_KNUX,
@@ -75,16 +82,17 @@ void SignPost_Serialize(void);
 void SignPost_DebugSpawn(void);
 void SignPost_DebugDraw(void);
 
-void SignPost_SpinSpeed(void);
-void SignPost_SpawnSparkle(void);
-void SignPost_State_SetupCompetition(void);
-void SignPost_State_Competition(void);
+void SignPost_HandleSpin(void);
+void SignPost_HandleSparkles(void);
+void SignPost_HandleCamBounds(void);
+void SignPost_CheckTouch(void);
+
+void SignPost_State_Setup(void);
+void SignPost_State_AwaitTouch(void);
 void SignPost_State_Land(void);
-void SignPost_State_CompetitionFinish(void);
+void SignPost_State_SpunVS(void);
 void SignPost_State_Launched(void);
 void SignPost_State_Fall(void);
 void SignPost_State_Finish(void);
-void SignPost_CheckTouch(void);
-void SignPost_HandleCompetition(void);
 
 #endif //!OBJ_SIGNPOST_H

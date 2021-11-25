@@ -52,8 +52,8 @@ typedef struct {
     int32 soundTestID;
     int32 playerID;
     int32 player2ID;
-    Entity *labelPtrs2[32];
-    Entity *labelPtrs[32];
+    Entity *labelPtrsL[32];
+    Entity *labelPtrsR[32];
     Entity *soundTestLabel;
     Entity *zoneIcon;
     Entity *player1Icon;

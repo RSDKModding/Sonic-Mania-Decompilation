@@ -288,7 +288,7 @@ void ItemBox_State_Normal(void)
         RSDK.ProcessAnimation(&self->animatorDebris);
         if (!self->animatorDebris.frameID) {
             self->timer                     = RSDK.Rand(1, 15);
-            self->animatorDebris.frameDelay = RSDK.Rand(1, 32);
+            self->animatorDebris.frameDuration = RSDK.Rand(1, 32);
         }
     }
 }
@@ -321,7 +321,7 @@ void ItemBox_State_Falling(void)
         RSDK.ProcessAnimation(&self->animatorDebris);
         if (!self->animatorDebris.frameID) {
             self->timer                     = RSDK.Rand(1, 15);
-            self->animatorDebris.frameDelay = RSDK.Rand(1, 32);
+            self->animatorDebris.frameDuration = RSDK.Rand(1, 32);
         }
     }
 }
@@ -353,7 +353,7 @@ void ItemBox_State_Conveyor(void)
         RSDK.ProcessAnimation(&self->animatorDebris);
         if (!self->animatorDebris.frameID) {
             self->timer                     = RSDK.Rand(1, 15);
-            self->animatorDebris.frameDelay = RSDK.Rand(1, 32);
+            self->animatorDebris.frameDuration = RSDK.Rand(1, 32);
         }
     }
 }

@@ -423,7 +423,15 @@ void Camera_State_HandleLerp(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Camera_EditorDraw(void) {}
+void Camera_EditorDraw(void)
+{
+    RSDK_THIS(Camera);
+
+    // Camera preview :)
+    if (showGizmos()) {
+        DrawHelpers_DrawRectOutline(0xFF0000, self->position.x, self->position.y, WIDE_SCR_XSIZE << 16, SCREEN_YSIZE << 16);
+    }
+}
 
 void Camera_EditorLoad(void) {}
 #endif

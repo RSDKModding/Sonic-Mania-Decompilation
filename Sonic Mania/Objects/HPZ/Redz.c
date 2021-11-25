@@ -105,7 +105,7 @@ void Redz_State_Setup(void)
     self->active = ACTIVE_NORMAL;
     RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
     self->animator.frameID        = 0;
-    self->animator.animationSpeed = 1;
+    self->animator.speed = 1;
     self->state                   = Redz_State_Walk;
     self->velocity.x              = (2 * (self->direction != FLIP_NONE) - 1) << 15;
     Redz_State_Walk();
@@ -120,7 +120,7 @@ void Redz_State_Walk(void)
         self->state = Redz_State_Turn;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID        = 0;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
     }
 
     if (self->timer <= 0) {
@@ -131,7 +131,7 @@ void Redz_State_Walk(void)
                 RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
                 self->animator.frameID        = 0;
                 self->timer                   = 60;
-                self->animator.animationSpeed = 0;
+                self->animator.speed = 0;
             }
         }
     }
@@ -149,7 +149,7 @@ void Redz_State_Turn(void)
         self->timer2 = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID        = 0;
-        self->animator.animationSpeed = 1;
+        self->animator.speed = 1;
         self->direction               = self->direction == FLIP_NONE;
         self->velocity.x              = -self->velocity.x;
     }
@@ -179,7 +179,7 @@ void Redz_State_Attack(void)
         self->timer2 = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID        = 0;
-        self->animator.animationSpeed = 1;
+        self->animator.speed = 1;
         self->state                   = Redz_State_Walk;
     }
 
@@ -203,7 +203,7 @@ void Redz_Flame_Setup(void)
     RSDK.SetSpriteAnimation(Redz->aniFrames, 2, &self->animator, true, 0);
     self->animator.frameID        = 0;
     self->state                   = Redz_Flame_State;
-    self->animator.animationSpeed = 1;
+    self->animator.speed = 1;
     Redz_Flame_State();
 }
 

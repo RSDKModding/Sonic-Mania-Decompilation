@@ -99,7 +99,7 @@ void ReplayRecorder_StaticUpdate(void)
             if (recorder2->playing && playerR2)
                 playerR2->state = ReplayRecorder_PlayerState;
 
-            if ((ControllerInfo->keyStart.press || UnknownInfo->field_10) && SceneInfo->state == ENGINESTATE_REGULAR) {
+            if ((ControllerInfo->keyStart.press || Unknown_pausePress) && SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 bool32 flag                = true;
                 if (ActClear && ActClear->actClearActive)
@@ -862,7 +862,7 @@ void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer
         player->rotation   = bufferPtr[5];
         ReplayRecorder_SetGimmickState(recorder, ((buffer[1] & 8) > 0));
         RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->animator, true, buffer[25]);
-        player->animator.animationSpeed = 0;
+        player->animator.speed = 0;
     }
 }
 
@@ -891,7 +891,7 @@ void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, uint8 *buffer)
         else if ((buffer[1] & 0x80)) {
             RSDK.SetSpriteAnimation(player->aniFrames, player->animator.animationID, &player->animator, true, buffer[25]);
         }
-        player->animator.animationSpeed = 0;
+        player->animator.speed = 0;
     }
 }
 
@@ -1008,7 +1008,7 @@ void ReplayRecorder_PlayerState(void)
     EntityReplayRecorder *recorder = (EntityReplayRecorder *)ReplayRecorder->recorder_w;
 
     if (recorder->playing) {
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
 
         int32 *buffer = NULL;
         if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)

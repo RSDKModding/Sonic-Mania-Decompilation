@@ -8,9 +8,9 @@ void TurboTurtle_Update(void)
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.animationID == 1) {
-        if (!self->animator.frameID && self->animator.animationTimer == 1)
+        if (!self->animator.frameID && self->animator.timer == 1)
             RSDK.PlaySfx(TurboTurtle->sfxWalk, false, 255);
-        if (self->animator.frameID == 5 && self->animator.animationTimer == 1)
+        if (self->animator.frameID == 5 && self->animator.timer == 1)
             RSDK.PlaySfx(TurboTurtle->sfxWalk2, false, 255);
     }
 
@@ -328,7 +328,7 @@ void TurboTurtle_State_Unknown1(void)
         TurboTurtle_SetupState();
     }
     else if (self->animator.frameID == self->animator.frameCount - 1) {
-        if (self->animator.animationTimer == self->animator.frameDelay) {
+        if (self->animator.timer == self->animator.frameDuration) {
             if (self->stepTimer < self->stepCount) {
                 self->stepTimer++;
             }

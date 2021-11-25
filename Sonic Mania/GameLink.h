@@ -166,26 +166,34 @@ typedef struct {
 #define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
 
 #if RETRO_USE_PLUS
+#define Unknown_pausePress UnknownInfo->pausePress
+#define Unknown_anyPress   UnknownInfo->anyPress
+
 typedef struct {
     int32 platform;
     int32 language;
     int32 region;
 } RSDKSKUInfo;
 
+// None of these besides the named 2 are even used
+// and even then they're not even set in plus
 typedef struct {
-    int32 field_0;
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
+    int32 unknown1;
+    int32 unknown2;
+    int32 unknown3;
+    int32 unknown4;
+    bool32 pausePress;
+    int32 unknown5;
+    int32 unknown6;
+    int32 unknown7;
+    int32 unknown8;
+    int32 unknown9;
+    bool32 anyPress;
+    int32 unknown10;
 } RSDKUnknownInfo;
+#else
+#define Unknown_pausePress TouchInfo->pausePress
+#define Unknown_anyPress   TouchInfo->anyPress
 #endif
 
 typedef struct {
@@ -272,6 +280,13 @@ typedef struct {
     float y[0x10];
     bool32 down[0x10];
     uint8 count;
+#if !RETRO_USE_PLUS
+    bool32 pausePressActive;
+    bool32 pausePress;
+    bool32 anyPressActive;
+    bool32 anyPress;
+    int32 unknown1;
+#endif
 } RSDKTouchInfo;
 
 typedef struct {
@@ -351,9 +366,9 @@ typedef struct {
     int32 frameID;
     int16 animationID;
     int16 prevAnimationID;
-    int16 animationSpeed;
-    int16 animationTimer;
-    int16 frameDelay;
+    int16 speed;
+    int16 timer;
+    int16 frameDuration;
     int16 frameCount;
     uint8 loopIndex;
     uint8 rotationFlag;

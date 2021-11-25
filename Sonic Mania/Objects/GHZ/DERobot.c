@@ -557,8 +557,8 @@ void DERobot_State_ArmIdle(void)
 {
     RSDK_THIS(DERobot);
     RSDK.ProcessAnimation(&self->animator3);
-    if (self->animator3.animationSpeed > 0x40)
-        self->animator3.animationSpeed -= 4;
+    if (self->animator3.speed > 0x40)
+        self->animator3.speed -= 4;
     DERobot_CheckPlayerCollisions_Hand();
 }
 
@@ -566,13 +566,13 @@ void DERobot_State_ArmExtendPrepare(void)
 {
     RSDK_THIS(DERobot);
     RSDK.ProcessAnimation(&self->animator3);
-    if (self->animator3.animationSpeed == 240)
+    if (self->animator3.speed == 240)
         RSDK.PlaySfx(DERobot->sfxBuzzsaw, false, 255);
 
-    if (self->animator3.animationSpeed >= 0x100)
+    if (self->animator3.speed >= 0x100)
         self->state = DERobot_State_ArmExtending;
     else
-        self->animator3.animationSpeed += 4;
+        self->animator3.speed += 4;
     DERobot_CheckPlayerCollisions_Hand();
 }
 
@@ -624,8 +624,8 @@ void DERobot_Cutscene_ActivateArm(void)
     if (self->angle > -96)
         self->angle -= 4;
 
-    if (self->animator3.animationSpeed < 0x80) {
-        self->animator3.animationSpeed += 4;
+    if (self->animator3.speed < 0x80) {
+        self->animator3.speed += 4;
     }
 
     if (self->timer++ == -1)
@@ -671,8 +671,8 @@ void DERobot_Cutscene_ArmDeactivate(void)
     RSDK_THIS(DERobot);
     RSDK.ProcessAnimation(&self->animator3);
 
-    if (self->animator3.animationSpeed)
-        self->animator3.animationSpeed--;
+    if (self->animator3.speed)
+        self->animator3.speed--;
 }
 
 void DERobot_State_CloseHeadHatch(void)
@@ -722,7 +722,7 @@ void DERobot_State_BombLanded(void)
 {
     RSDK_THIS(DERobot);
     RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.animationSpeed >= 0x80) {
+    if (self->animator1.speed >= 0x80) {
         self->visible              = false;
         self->state                = DERobot_State_BombExplode;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x80000);
@@ -730,7 +730,7 @@ void DERobot_State_BombLanded(void)
         RSDK.PlaySfx(DERobot->sfxExplosion, false, 255);
     }
     else {
-        self->animator1.animationSpeed++;
+        self->animator1.speed++;
     }
     DERobot_CheckPlayerCollisions_Bomb();
 }

@@ -170,14 +170,14 @@ void EncoreGoodEnd_Unknown10(void)
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, 13, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
                     EncoreGoodEnd->decorations[10]->visible = true;
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, 14, &EncoreGoodEnd->decorations[10]->animator, true, 0);
-                    EncoreGoodEnd->decorations[10]->animator.animationSpeed = 0;
+                    EncoreGoodEnd->decorations[10]->animator.speed = 0;
                     self->state                                           = Player_State_None;
                     break;
                 case ID_MIGHTY:
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, 18, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
                     EncoreGoodEnd->decorations[11]->visible = true;
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, 19, &EncoreGoodEnd->decorations[11]->animator, true, 0);
-                    EncoreGoodEnd->decorations[11]->animator.animationSpeed = 0;
+                    EncoreGoodEnd->decorations[11]->animator.speed = 0;
                     self->state                                           = Player_State_None;
                     break;
                 case ID_RAY:
@@ -238,7 +238,7 @@ void EncoreGoodEnd_Unknown11(void)
 
     int32 anim = playerDecor->animator.frameID;
     if (anim == ANI_RUN || anim == ANI_SKID || anim == ANI_DROPDASH)
-        playerDecor->animator.animationSpeed = 0;
+        playerDecor->animator.speed = 0;
 
     // Sonic's Ice creams
     if (EncoreGoodEnd->decorations[12]->visible) {
@@ -255,7 +255,7 @@ void EncoreGoodEnd_Unknown11(void)
         if (EncoreGoodEnd->decorations[12]->position.y >= playerDecor->position.y) {
             EncoreGoodEnd->decorations[12]->visible = 0;
             ++playerDecor->animator.frameID;
-            playerDecor->animator.animationSpeed = 1;
+            playerDecor->animator.speed = 1;
         }
     }
 
@@ -273,7 +273,7 @@ void EncoreGoodEnd_Unknown11(void)
         if (EncoreGoodEnd->decorations[13]->position.y >= playerDecor->position.y) {
             EncoreGoodEnd->decorations[13]->visible = false;
             ++playerDecor->animator.frameID;
-            playerDecor->animator.animationSpeed = 1;
+            playerDecor->animator.speed = 1;
         }
     }
 
@@ -291,7 +291,7 @@ void EncoreGoodEnd_Unknown11(void)
         if (EncoreGoodEnd->decorations[14]->position.y >= playerDecor->position.y - 0x40000) {
             EncoreGoodEnd->decorations[14]->visible = false;
             ++playerDecor->animator.frameID;
-            playerDecor->animator.animationSpeed = 1;
+            playerDecor->animator.speed = 1;
         }
     }
 
@@ -309,7 +309,7 @@ void EncoreGoodEnd_Unknown11(void)
         if (EncoreGoodEnd->decorations[15]->position.y >= playerDecor->position.y - 0x80000) {
             EncoreGoodEnd->decorations[15]->visible = false;
             ++playerDecor->animator.frameID;
-            playerDecor->animator.animationSpeed = 1;
+            playerDecor->animator.speed = 1;
         }
     }
 }
