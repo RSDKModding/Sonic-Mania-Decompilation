@@ -111,7 +111,7 @@ void YoyoPulley_Create(void *data)
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->animator3, true, 0);
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->animator4, true, 0);
-        if (RSDK.GetFrameID(&self->animator1))
+        if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
             self->drawOrder = Zone->drawOrderHigh;
         else
             self->drawOrder = Zone->drawOrderLow;
@@ -245,7 +245,7 @@ void YoyoPulley_EditorDraw(void)
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->animator2, false, 0);
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->animator3, false, 0);
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->animator4, false, 0);
-    if (RSDK.GetFrameID(&self->animator1))
+    if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
         self->drawOrder = Zone->drawOrderHigh;
     else
         self->drawOrder = Zone->drawOrderLow;

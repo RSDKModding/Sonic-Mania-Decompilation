@@ -303,7 +303,7 @@ void HotaruHiWatt_StateDraw_Destroyed(void)
 {
     RSDK_THIS(HotaruHiWatt);
 
-    if (RSDK.GetFrameID(&self->animator2) == 98)
+    if (RSDK.GetFrameID(&self->animator2) == 'b')
         self->direction = FLIP_X;
 
     if (self->invincibilityTimer & 1) {
@@ -326,7 +326,7 @@ void HotaruHiWatt_StateDraw_Unknown1(void)
 {
     RSDK_THIS(HotaruHiWatt);
 
-    if (RSDK.GetFrameID(&self->animator2) == 98)
+    if (RSDK.GetFrameID(&self->animator2) == 'b')
         self->direction = FLIP_X;
     if (self->invincibilityTimer & 1) {
         RSDK.CopyPalette(2, 240, 0, 240, 16);
@@ -357,7 +357,7 @@ void HotaruHiWatt_StateDraw_Unknown2(void)
     RSDK_THIS(HotaruHiWatt);
     Vector2 drawPos;
 
-    if (RSDK.GetFrameID(&self->animator2) == 98)
+    if (RSDK.GetFrameID(&self->animator2) == 'b')
         self->direction = FLIP_X;
 
     if (self->invincibilityTimer & 1) {
@@ -405,7 +405,7 @@ void HotaruHiWatt_StateDraw_Unknown4(void)
 {
     RSDK_THIS(HotaruHiWatt);
 
-    if (RSDK.GetFrameID(&self->animator2) == 98)
+    if (RSDK.GetFrameID(&self->animator2) == 'b')
         self->direction = FLIP_X;
     RSDK.DrawSprite(&self->animator2, 0, false);
     self->direction = FLIP_NONE;

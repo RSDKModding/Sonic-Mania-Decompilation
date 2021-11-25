@@ -5722,11 +5722,11 @@ void Player_State_Victory(void)
                         self->groundVel  = 0;
                     }
                     else {
-                        int32 id = RSDK.GetFrameID(&self->animator) - 48;
+                        int32 vel = RSDK.GetFrameID(&self->animator) - '0';
                         if (!self->direction)
-                            self->groundVel = -(id << 16);
+                            self->groundVel = -(vel << 16);
                         else
-                            self->groundVel = (id << 16);
+                            self->groundVel = (vel << 16);
                     }
                 }
                 break;

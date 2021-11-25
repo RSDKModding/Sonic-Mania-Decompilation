@@ -96,7 +96,7 @@ void SDashWheel_Create(void *data)
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &self->animator1, true, 0);
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->animator3, true, 0);
-        if (RSDK.GetFrameID(&self->animator1))
+        if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
             self->drawOrder = Zone->drawOrderHigh;
         else
             self->drawOrder = Zone->drawOrderLow;
@@ -139,7 +139,7 @@ void SDashWheel_EditorDraw(void)
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &self->animator1, false, 0);
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->animator2, false, 0);
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->animator3, false, 0);
-    if (RSDK.GetFrameID(&self->animator1))
+    if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
         self->drawOrder = Zone->drawOrderHigh;
     else
         self->drawOrder = Zone->drawOrderLow;
