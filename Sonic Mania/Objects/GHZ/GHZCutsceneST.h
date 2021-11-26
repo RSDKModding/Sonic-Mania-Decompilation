@@ -26,6 +26,7 @@ typedef struct {
     int32 field_74;
     int32 field_78;
     Hitbox hitbox2;
+
     Hitbox hitbox;
 } EntityGHZCutsceneST;
 

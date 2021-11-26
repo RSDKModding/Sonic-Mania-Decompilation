@@ -112,7 +112,7 @@ void Ice_Create(void *data)
                     if (self->subType >= 3)
                         RSDK.SetSpriteAnimation(Spring->aniFrames, (self->subType - 3), &self->animator2, true, 0);
                     else
-                       RSDK.SetSpriteAnimation(IceSpring->animID, self->subType, &self->animator2, true, 0);
+                       RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->subType, &self->animator2, true, 0);
                     if (self->size) {
                         switch (self->subType) {
                             case 0:
@@ -258,12 +258,10 @@ void Ice_Create(void *data)
 
 void Ice_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1")) {
+    if (RSDK.CheckStageFolder("PSZ1")) 
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ice.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("PSZ2")) {
+    else if (RSDK.CheckStageFolder("PSZ2")) 
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Ice.bin", SCOPE_STAGE);
-    }
 
     Ice->hitbox1.left     = -15;
     Ice->hitbox1.top      = -24;
@@ -465,7 +463,7 @@ void Ice_State_FrozenPlayer(void)
                     self->spindashCharge                      = 0;
                 }
                 else {
-                    Ice_ShatterGenerator(24, 20, 8, 0, 0, 0);
+                    Ice_ShatterGenerator(24, 20, 8, 0, 0, false);
                     RSDK.PlaySfx(Ice->sfxStruggle, 0, 255);
                 }
             }
@@ -494,10 +492,10 @@ void Ice_State_FrozenPlayer(void)
     }
 }
 
-void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 velY, int32 a6)
+void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 velY, int32 canBreak)
 {
     RSDK_THIS(Ice);
-    if (a6 > 0)
+    if (canBreak > 0)
         count >>= 1;
     for (int32 i = 0; i < maxVal(0, count); ++i) {
         int32 randY                     = RSDK.Rand(-yr, yr + 1) << 16;
@@ -507,7 +505,7 @@ void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 vel
         ice->velocity.y               = velY + (RSDK.Rand(-10, 2) << 15);
         ice->direction                = RSDK.Rand(0, 4);
         ice->animator1.speed = RSDK.Rand(1, 4);
-        if (a6) {
+        if (canBreak) {
             if (RSDK.Rand(0, 2)) {
                 RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PIECE, &ice->animator1, true, 0);
                 ice->velocity.x = (ice->velocity.x >> 1) + (ice->velocity.x >> 2);
@@ -805,13 +803,13 @@ void Ice_State_Pillar(void)
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->dwordE4) {
                     if (self->animator1.animationID == ICEANI_PILLARBLOCK) {
                         self->position.y -= 0x370000;
-                        Ice_ShatterGenerator(19, 55, 36, 0, 0, 0);
+                        Ice_ShatterGenerator(19, 55, 36, 0, 0, false);
                     }
                     else if (self->size) {
-                        Ice_ShatterGenerator(19, 17, 6, 0, 0, 0);
+                        Ice_ShatterGenerator(19, 17, 6, 0, 0, false);
                     }
                     else {
-                        Ice_ShatterGenerator(19, 20, 12, 0, 0, 0);
+                        Ice_ShatterGenerator(19, 20, 12, 0, 0, false);
                     }
 
                     self->animator1.frameID += 2;
@@ -1219,7 +1217,13 @@ void Ice_StateDraw_Shard(void)
 #if RETRO_INCLUDE_EDITOR
 void Ice_EditorDraw(void) {}
 
-void Ice_EditorLoad(void) {}
+void Ice_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ice.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("PSZ2"))
+        Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Ice.bin", SCOPE_STAGE);
+}
 #endif
 
 void Ice_Serialize(void)

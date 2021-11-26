@@ -120,7 +120,7 @@ void Ice_FreezePlayer(void *p);
 bool32 Ice_Unknown3(void);
 bool32 Ice_Unknown4(void);
 void Ice_State_FrozenPlayer(void);
-void Ice_ShatterGenerator(int32 xr, int32 xy, int32 count, int32 velX, int32 velY, int32 a6);
+void Ice_ShatterGenerator(int32 xr, int32 xy, int32 count, int32 velX, int32 velY, int32 canBreak);
 void Ice_Unknown7(int32 velX, Entity *p, int32 velY);
 void Ice_Unknown8(Entity *p);
 Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);

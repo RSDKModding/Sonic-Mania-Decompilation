@@ -29,12 +29,12 @@ typedef struct {
     int32 type;
     bool32 walkOnto;
     uint8 tag;
-    bool32 field_64;
-    int32 field_68;
-    bool32 activated;
-    bool32 field_70;
-    bool32 field_74;
-    int32 field_78;
+    bool32 down;            // 64
+    bool32 toggled;         // 68
+    bool32 currentlyActive; // 6C
+    bool32 activated;       // 70
+    bool32 wasActivated;    // 74
+    int32 pressPos;         // 78 (not actually used in this obj, just here for parity purposes)
     Animator animator1;
     Animator animator3;
     Animator animator2;

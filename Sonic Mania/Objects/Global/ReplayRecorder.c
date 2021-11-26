@@ -530,10 +530,10 @@ void ReplayRecorder_SetupActions(void)
     for (int32 i = 0; i < 64; ++i) {
         ReplayRecorder->actions[i] = StateMachine_None;
     }
-    ReplayRecorder->actions[3]  = Current_Player_State_Type3;
-    ReplayRecorder->actions[4]  = Current_Player_State_Type0;
-    ReplayRecorder->actions[5]  = Current_Player_State_Type1;
-    ReplayRecorder->actions[6]  = Current_Player_State_Type2;
+    ReplayRecorder->actions[3]  = Current_Player_State_CurrentDown;
+    ReplayRecorder->actions[4]  = Current_Player_State_CurrentLeft;
+    ReplayRecorder->actions[5]  = Current_Player_State_CurrentRight;
+    ReplayRecorder->actions[6]  = Current_Player_State_CurrentUp;
     ReplayRecorder->actions[7]  = Cylinder_Player_State_InkRoller_Stand;
     ReplayRecorder->actions[8]  = Cylinder_Player_State_InkRoller_Roll;
     ReplayRecorder->actions[9]  = Cylinder_Player_State_Pillar;

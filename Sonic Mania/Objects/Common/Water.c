@@ -731,8 +731,8 @@ void Water_State_Bubble(void)
                                     self->childPtr    = player;
                                 }
 
-                                if (player->state != Current_Player_State_Type1 && player->state != Current_Player_State_Type0
-                                    && player->state != Current_Player_State_Type2 && player->state != Current_Player_State_Type3) {
+                                if (player->state != Current_Player_State_CurrentRight && player->state != Current_Player_State_CurrentLeft
+                                    && player->state != Current_Player_State_CurrentUp && player->state != Current_Player_State_CurrentDown) {
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;
@@ -872,12 +872,13 @@ void Water_State_HCZBubble(void)
                     self->activePlayers |= 1 << playerID;
                     self->activePlayers2 |= 1 << playerID;
                     if (RSDK.GetEntityID(self) >= RESERVE_ENTITY_COUNT) {
-                        int32 id = 32;
-                        while (RSDK_GET_ENTITY(id, )->objectID) {
-                            if (++id >= 32 + PLAYER_MAX)
+                        int32 id = SLOT_HCZBUBBLE_P1;
+                        for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX; ++id) {
+                            if (!RSDK_GET_ENTITY(id, )->objectID)
                                 break;
                         }
-                        if (id >= 0 && id < 32 + PLAYER_MAX) {
+
+                        if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX) {
                             RSDK.AddDrawListRef(self->drawOrder, id);
                             RSDK.CopyEntity(RSDK.GetEntityByID(id), self, true);
                             foreach_return;
@@ -1064,7 +1065,7 @@ void Water_State_Bubbler(void)
             bubble->childPtr = NULL;
             bubble->bubbleX  = bubble->position.x;
             if (self->bubbleFlags & 2 && (!RSDK.Rand(0, 4) || !self->bubbleType1) && !(self->bubbleFlags & 4)) {
-                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &bubble->animator, 0, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &bubble->animator, false, 0);
                 bubble->isPermanent = true;
                 self->bubbleFlags |= 4;
             }

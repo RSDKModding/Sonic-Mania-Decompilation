@@ -326,7 +326,7 @@ void LaundroMobile_HandleStageWrap(void)
                     player->onGround        = false;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
-                    player->state           = Current_Player_State_Type1;
+                    player->state           = Current_Player_State_CurrentRight;
                     if (player->animator.animationID != ANI_CLING && player->animator.animationID != ANI_SHAFTSWING) {
                         if (player->position.x >= entity->position.x + 0xC00000) {
                             player->velocity.x = LaundroMobile->currentVelocity;
@@ -449,7 +449,7 @@ void LaundroMobile_HandleStageWrap(void)
                     }
                     else if (entPtr->objectID == Current->objectID) {
                         EntityCurrent *current = (EntityCurrent *)entPtr;
-                        if (current->state == Current_State_LaundoMobile) {
+                        if (current->state == Current_State_Child) {
                             current->position.x -= offsetX;
                             current->position.y -= offsetY;
                             current->size.x -= offsetX;

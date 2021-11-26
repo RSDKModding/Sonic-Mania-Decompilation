@@ -373,15 +373,15 @@ bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
             StarPost->playerPositions[1] = player->position;
             player->state                = EncoreIntro_PlayerState_BuddySel;
             player->stateInput           = EncoreIntro_PlayerState_InputNone;
-            RSDK.SetSpriteAnimation(player->aniFrames, 0, &player->animator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, true, 0);
 
             EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
             buddy1->state        = Player_State_Ground;
-            RSDK.SetSpriteAnimation(buddy1->aniFrames, 0, &buddy1->animator, true, 0);
+            RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_IDLE, &buddy1->animator, true, 0);
 
             EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
             buddy2->state        = Player_State_Ground;
-            RSDK.SetSpriteAnimation(buddy2->aniFrames, 0, &buddy2->animator, true, 0);
+            RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_IDLE, &buddy2->animator, true, 0);
             return true;
         }
     }
