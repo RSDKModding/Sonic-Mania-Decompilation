@@ -16,7 +16,7 @@ void JacobsLadder_Update(void)
     }
     else {
         if (!self->field_80 && self->activeScreens == 1)
-            RSDK.PlaySfx(JacobsLadder->sfxLadder, 0, 255);
+            RSDK.PlaySfx(JacobsLadder->sfxLadder, false, 255);
         self->field_80 = true;
     }
 

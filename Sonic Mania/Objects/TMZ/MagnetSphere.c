@@ -169,8 +169,11 @@ void MagnetSphere_MovePlayer(void *p, int32 playerID)
 
     uint8 angle = MagnetSphere->sphereAngle[playerID];
     MagnetSphere->sphereAngle[playerID] += 4;
-    if ((((MagnetSphere->sphereAngle[playerID] + 64) >> 7) & 1) != ((angle + 64) >> 7) && !player->sidekick)
-        RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, 0, 255);
+
+    uint32 angVal    = (((uint32)MagnetSphere->sphereAngle[playerID] + 64) >> 7) & 1;
+    uint8 angValPrev = ((angle + 64) >> 7) & 1;
+    if (angVal != angValPrev && !player->sidekick)
+        RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, false, 255);
 }
 
 #if RETRO_INCLUDE_EDITOR

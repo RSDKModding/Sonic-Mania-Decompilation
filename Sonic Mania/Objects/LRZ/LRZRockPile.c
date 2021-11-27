@@ -402,7 +402,7 @@ void LRZRockPile_State_Type0(void)
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
             if ((!self->onlyKnux || player->characterID == ID_KNUCKLES)
 #if RETRO_USE_PLUS
-                || (!self->onlyMighty || player->characterID == ID_MIGHTY)
+                && (!self->onlyMighty || player->characterID == ID_MIGHTY)
 #endif
             ) {
                 bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;

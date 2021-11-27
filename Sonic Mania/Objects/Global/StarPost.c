@@ -192,7 +192,7 @@ void StarPost_CheckBonusStageEntry(void)
         if (!globals->recallEntities) {
             if (Player_CheckCollisionTouch(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), self, &self->starHitbox)) {
                 SaveGame_SaveGameState();
-                RSDK.PlaySfx(StarPost->sfxWarp, 0, 0xFE);
+                RSDK.PlaySfx(StarPost->sfxWarp, false, 0xFE);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
 #if RETRO_USE_PLUS
                 EntityGameProgress *progress = GameProgress_GetGameProgress();

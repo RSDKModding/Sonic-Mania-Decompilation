@@ -265,9 +265,9 @@ void PhantomMissile_Unknown9(void)
     RSDK_THIS(PhantomMissile);
 
     self->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->rotation = (self->rotation + self->groundVel) & 0x1FF;
-    self->position.x += self->velocity.x;
 
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);

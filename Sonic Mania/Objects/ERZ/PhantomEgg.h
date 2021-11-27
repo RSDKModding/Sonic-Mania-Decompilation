@@ -113,7 +113,7 @@ void PhantomEgg_State_Unknown12(void);
 void PhantomEgg_State_Unknown13(void);
 void PhantomEgg_State_Unknown14(void);
 void PhantomEgg_State_Unknown15(void);
-void PhantomEgg_State_Unknown16(void);
+void PhantomEgg_State_Destroyed(void);
 void PhantomEgg_State_Unknown17(void);
 void PhantomEgg_State_Unknown18(void);
 void PhantomEgg_State_Unknown19(void);

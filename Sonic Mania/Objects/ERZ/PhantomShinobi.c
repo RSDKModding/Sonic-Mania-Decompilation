@@ -331,8 +331,9 @@ bool32 PhantomShinobi_BladeCheckCB(void)
 {
     foreach_active(PhantomShinobi, shinobi)
     {
-        if (shinobi->state == PhantomShinobi_State_Unknown4)
+        if (shinobi->state == PhantomShinobi_State_Unknown4) {
             foreach_return true;
+        }
     }
     return false;
 }

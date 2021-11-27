@@ -154,7 +154,7 @@ void PhantomEgg_Hit(void)
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 20, &self->animator6, true, 0);
         self->field_80.x          = self->position.x;
         self->field_80.y          = self->position.y;
-        self->state               = PhantomEgg_State_Unknown16;
+        self->state               = PhantomEgg_State_Destroyed;
         self->timer               = 0;
         PhantomEgg->superFlag       = true;
         SceneInfo->timeEnabled = false;
@@ -942,7 +942,7 @@ void PhantomEgg_State_Unknown15(void)
     }
 }
 
-void PhantomEgg_State_Unknown16(void)
+void PhantomEgg_State_Destroyed(void)
 {
     RSDK_THIS(PhantomEgg);
 
@@ -976,6 +976,7 @@ void PhantomEgg_State_Unknown16(void)
                     break;
                 default: break;
             }
+            missile->state = PhantomMissile_Unknown9;
         }
 
         foreach_active(PhantomShield, shield)

@@ -125,7 +125,7 @@ void LRZ1Setup_StageFinishCB(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
 
 void LRZ1Setup_DrawLayerCB(void)
 {
-    int32 scroll                = maxVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
+    int32 scroll              = minVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
     LRZ1Setup->bg1->scrollPos = scroll;
     LRZ1Setup->bg2->scrollPos = scroll;
 }
