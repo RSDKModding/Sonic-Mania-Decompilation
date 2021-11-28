@@ -3,14 +3,11 @@
 
 #include "SonicMania.h"
 
-// remind me to do it 
-typedef enum {STEGWAY_ANIM_NONE} StegwayAnimTypes;
-
 // Object Class
 typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
-    Hitbox hitbox2;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxRev;
     uint16 sfxRelease;

@@ -257,7 +257,7 @@ void Cylinder_State_Spiral(void)
                     }
                     if (flag) {
                         self->playerStatuses[player->playerID] = 1;
-                        player->state                            = Cylinder_Player_State_Unknown1;
+                        player->state                            = Cylinder_Player_State_Spiral;
                     }
                 }
                 break;
@@ -793,7 +793,7 @@ void Cylinder_Player_State_Pillar(void)
     }
 }
 
-void Cylinder_Player_State_Unknown1(void)
+void Cylinder_Player_State_Spiral(void)
 {
     RSDK_THIS(Player);
     self->down = false;

@@ -52,10 +52,10 @@ void Stegway_StageLoad(void)
     Stegway->hitboxBadnik.top    = -14;
     Stegway->hitboxBadnik.right  = 20;
     Stegway->hitboxBadnik.bottom = 14;
-    Stegway->hitbox2.left        = -96;
-    Stegway->hitbox2.top         = -32;
-    Stegway->hitbox2.right       = 0;
-    Stegway->hitbox2.bottom      = 14;
+    Stegway->hitboxRange.left        = -96;
+    Stegway->hitboxRange.top         = -32;
+    Stegway->hitboxRange.right       = 0;
+    Stegway->hitboxRange.bottom      = 14;
     Stegway->sfxRev              = RSDK.GetSfx("Stage/Rev.wav");
     Stegway->sfxRelease          = RSDK.GetSfx("Global/Release.wav");
     DEBUGMODE_ADD_OBJ(Stegway);
@@ -155,7 +155,7 @@ void Stegway_Unknown6(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Stegway->hitbox2)) {
+        if (Player_CheckCollisionTouch(player, self, &Stegway->hitboxRange)) {
             self->state = Stegway_Unknown8;
             Stegway_SetupAnims(3, false);
         }

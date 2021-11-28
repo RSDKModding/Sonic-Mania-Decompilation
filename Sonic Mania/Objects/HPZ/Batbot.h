@@ -30,7 +30,7 @@ typedef struct {
     Entity *playerPtr;
     uint8 lastDir;
     bool32 showWings;
-    uint16 unused3; // set to 0, not used
+    uint16 unused3; // set to 0, not used, also happens to be unused in S2
     Animator animator1;
     Animator animator2;
 } EntityBatbot;
