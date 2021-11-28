@@ -6,6 +6,7 @@
 #if RETRO_USE_PLUS
 
 #define Replay_Signature (0xF6057BED)
+#define Replay_BufferSize (0x100000)
 
 typedef enum {
     REPLAY_HDR_SIG,
@@ -23,7 +24,38 @@ typedef enum {
     REPLAY_HDR_12,
     REPLAY_HDR_13,
     REPLAY_HDR_SIZE,
-}ReplayHeaderInfo;
+} ReplayHeaderInfo;
+
+typedef struct {
+    uint8 info;
+    uint8 flags;
+    uint8 inputs;
+    uint8 dir;
+    Vector2 position;
+    Vector2 velocity;
+    int32 rotation;
+    uint8 anim;
+    uint8 frame;
+}ReplayFrame;
+
+typedef enum {
+    REPLAY_INFO_NONE,
+    REPLAY_INFO_STATECHANGE,
+    REPLAY_INFO_USEFLAGS,
+    REPLAY_INFO_PASSEDGATE,
+} ReplayFrameInfoTypes;
+
+typedef enum {
+    REPLAY_FLAG_NONE    = 0,
+    REPLAY_FLAG_INPUT   = 1 << 0,
+    REPLAY_FLAG_POS     = 1 << 1,
+    REPLAY_FLAG_VEL     = 1 << 2,
+    REPLAY_FLAG_GIMMICK = 1 << 3,
+    REPLAY_FLAG_DIR     = 1 << 4,
+    REPLAY_FLAG_ROT     = 1 << 5,
+    REPLAY_FLAG_ANIM    = 1 << 6,
+    REPLAY_FLAG_FRAME   = 1 << 7,
+} ReplayFrameFlagTypes;
 
 // Object Class
 typedef struct {
@@ -32,8 +64,8 @@ typedef struct {
     int32 frameCounter;
     int32 *writeBuffer;
     int32 *readBuffer;
-    int32 *frameBuffer_w;
-    int32 *frameBuffer_r;
+    ReplayFrame *frameBuffer_w;
+    ReplayFrame *frameBuffer_r;
     Entity *recorder_r;
     Entity *recorder_w;
     bool32 initialized;
@@ -130,10 +162,10 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame);
 void ReplayRecorder_SeekFunc(EntityReplayRecorder *recorder);
 void ReplayRecorder_Stop(EntityReplayRecorder *recorder);
 void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag);
-void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer);
-void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, uint8 *buffer);
+void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, ReplayFrame* framePtr);
+void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, ReplayFrame *framePtr);
 bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder);
-void ReplayRecorder_PackFrame(uint8 *recording);
+void ReplayRecorder_PackFrame(ReplayFrame *recording);
 void ReplayRecorder_PlayBackInput(void);
 void ReplayRecorder_Pause(EntityReplayRecorder *recorder);
 void ReplayRecorder_PlayerState(void);

@@ -26,6 +26,26 @@ struct DummyUserStorage {
     int field_1C[3];
 };
 
+enum DBVarTypes {
+    DBVAR_INVALID,
+    DBVAR_UNKNOWN1,
+    DBVAR_UINT8,
+    DBVAR_UINT16,
+    DBVAR_UINT32,
+    DBVAR_UNUSED1,
+    DBVAR_INT8,
+    DBVAR_INT16,
+    DBVAR_INT32,
+    DBVAR_UNUSED2,
+    DBVAR_FLOAT,
+    DBVAR_UNUSED3,
+    DBVAR_UNUSED4,
+    DBVAR_UNUSED5,
+    DBVAR_UNUSED6,
+    DBVAR_UNKNOWN2,
+    DBVAR_STRING,
+};
+
 extern DummyUserStorage *userStorage;
 
 struct UserDB;
@@ -170,8 +190,8 @@ bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer);
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer);
 void HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *a2, int column);
 void RemoveNonMatchingSortRows(UserDB *userDB, const char *name, void *value);
-bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *name, bool32 flag);
-void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag);
+bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type, char *name, bool32 flag);
+void HandleUserDBSorting(UserDB *userDB, int type, char *name, bool32 flag);
 uint CreateRowUUID(UserDB *userDB);
 
 // User Storage CBs

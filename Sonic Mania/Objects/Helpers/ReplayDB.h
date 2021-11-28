@@ -37,8 +37,8 @@ void ReplayDB_EditorLoad(void);
 void ReplayDB_Serialize(void);
 
 // Extra Entity Functions
-int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, uint8 *uncompressed);
-int32 ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed);
+int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed);
+int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed);
 #endif
 
 #endif //!OBJ_REPLAYDB_H

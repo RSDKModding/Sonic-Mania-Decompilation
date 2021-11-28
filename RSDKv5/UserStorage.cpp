@@ -704,17 +704,17 @@ bool32 CheckDBValueMatch(UserDBValue *valueA, int row, int column)
     UserDBValue *valueB = &userDB->rows[row].values[column];
 
     if (valueA->data && valueB->data) {
-        switch (valueA->size) {
-            case 1:
-            case 2:
-            case 6: return memcmp(valueA->data, valueB->data, sizeof(byte)) == 0;
-            case 3:
-            case 7: return memcmp(valueA->data, valueB->data, sizeof(ushort)) == 0;
-            case 4:
-            case 8:
-            case 10:
-            case 15: return memcmp(valueA->data, valueB->data, sizeof(uint)) == 0;
-            case 16: {
+        switch (userDB->columnTypes[column]) {
+            case DBVAR_UNKNOWN1:
+            case DBVAR_UINT8:
+            case DBVAR_INT8: return memcmp(valueA->data, valueB->data, sizeof(int8)) == 0;
+            case DBVAR_UINT16:
+            case DBVAR_INT16: return memcmp(valueA->data, valueB->data, sizeof(int16)) == 0;
+            case DBVAR_UINT32:
+            case DBVAR_INT32:
+            case DBVAR_FLOAT:
+            case DBVAR_UNKNOWN2: return memcmp(valueA->data, valueB->data, sizeof(int32)) == 0;
+            case DBVAR_STRING: {
                 char *string1 = (char *)valueA->data;
                 char *string2 = (char *)valueA->data;
                 int len1      = strlen(string1);
@@ -739,25 +739,25 @@ void StoreUserDBValue(UserDBValue *value, int type, void *data)
     memset(value->data, 0, sizeof(value->data));
     if (data) {
         switch (type) {
-            case 1:
-            case 2:
-            case 6:
-                value->size = sizeof(byte);
-                memcpy(value->data, data, sizeof(byte));
+            case DBVAR_UNKNOWN1:
+            case DBVAR_UINT8:
+            case DBVAR_INT8:
+                value->size = sizeof(int8);
+                memcpy(value->data, data, sizeof(int8));
                 break;
-            case 3:
-            case 7:
-                value->size = sizeof(ushort);
-                memcpy(value->data, data, sizeof(ushort));
+            case DBVAR_UINT16:
+            case DBVAR_INT16:
+                value->size = sizeof(int16);
+                memcpy(value->data, data, sizeof(int16));
                 break;
-            case 4:
-            case 8:
-            case 10:
-            case 15:
-                value->size = sizeof(int);
-                memcpy(value->data, data, sizeof(int));
+            case DBVAR_UINT32:
+            case DBVAR_INT32:
+            case DBVAR_FLOAT:
+            case DBVAR_UNKNOWN2:
+                value->size = sizeof(int32);
+                memcpy(value->data, data, sizeof(int32));
                 break;
-            case 16: {
+            case DBVAR_STRING: {
                 char *string = (char *)data;
                 int len      = strlen(string);
                 if (len < 15) {
@@ -775,18 +775,18 @@ void StoreUserDBValue(UserDBValue *value, int type, void *data)
 }
 void RetrieveUserDBValue(UserDBValue *value, int type, void *data)
 {
-    byte *valData = (byte *)data;
+    int8 *valData = (int8 *)data;
     switch (type) {
-        case 1:
-        case 2:
-        case 6: memcpy(valData, value->data, sizeof(byte)); break;
-        case 3:
-        case 7: memcpy(valData, value->data, sizeof(ushort)); break;
-        case 4:
-        case 8:
-        case 10:
-        case 15: memcpy(valData, value->data, sizeof(int)); break;
-        case 16: {
+        case DBVAR_UNKNOWN1:
+        case DBVAR_UINT8:
+        case DBVAR_INT8: memcpy(valData, value->data, sizeof(int8)); break;
+        case DBVAR_UINT16:
+        case DBVAR_INT16: memcpy(valData, value->data, sizeof(int16)); break;
+        case DBVAR_UINT32:
+        case DBVAR_INT32:
+        case DBVAR_FLOAT:
+        case DBVAR_UNKNOWN2: memcpy(valData, value->data, sizeof(int32)); break;
+        case DBVAR_STRING: {
             memset(valData, 0, value->size + 1);
             char *string = (char *)data;
             for (int c = 0; c < value->size; ++c) {
@@ -828,9 +828,9 @@ size_t GetUserDBWriteSize(UserDB *userDB)
 
     for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
         userDB->rows[r].parent = userDB;
-        int rowSize            = (sizeof(tm) * 2) + sizeof(uint);
+        int rowSize            = (sizeof(tm) * 2) + sizeof(uint32);
         for (int c = 0; c < userDB->columnCount; ++c) {
-            rowSize += sizeof(byte) + userDB->rows[r].values[c].size;
+            rowSize += sizeof(uint8) + userDB->rows[r].values[c].size;
         }
         size += rowSize;
     }
@@ -842,11 +842,11 @@ bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer)
     uint signature = *(uint *)buffer;
     if (signature != 0x80074B1E)
         return false;
-    buffer += sizeof(int);
-    buffer += sizeof(int); // used size
+    buffer += sizeof(int32);
+    buffer += sizeof(int32); // used size
 
-    userDB->rowCount = *(ushort *)buffer;
-    buffer += sizeof(ushort);
+    userDB->rowCount = *(uint16 *)buffer;
+    buffer += sizeof(uint16);
 
     userDB->columnCount = *buffer;
     buffer++;
@@ -862,8 +862,8 @@ bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer)
     }
 
     for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
-        userDB->rows[r].uuid = *(uint *)buffer;
-        buffer += sizeof(uint);
+        userDB->rows[r].uuid = *(uint32 *)buffer;
+        buffer += sizeof(uint32);
 
         memcpy(&userDB->rows[r].createTime, buffer, sizeof(tm));
         buffer += sizeof(tm);
@@ -886,15 +886,15 @@ bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer)
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
 {
     int size = 0;
-    if (totalSize >= sizeof(int)) {
-        size           = sizeof(int);
+    if (totalSize >= sizeof(int32)) {
+        size           = sizeof(int32);
         *(int *)buffer = 0x80074B1E; // signature
-        buffer += sizeof(int);
+        buffer += sizeof(int32);
     }
-    if (size + sizeof(int) <= totalSize) {
-        size += sizeof(int);
-        *(int *)buffer = (int)GetUserDBWriteSize(userDB); // used size
-        buffer += sizeof(int);
+    if (size + sizeof(int32) <= totalSize) {
+        size += sizeof(int32);
+        *(int32 *)buffer = (int)GetUserDBWriteSize(userDB); // used size
+        buffer += sizeof(int32);
     }
     if (size + sizeof(ushort) <= totalSize) {
         size += sizeof(ushort);
@@ -907,12 +907,12 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
     }
 
     for (int c = 0; c < userDB->columnCount; ++c) {
-        if (size + sizeof(byte) <= totalSize) {
+        if (size + sizeof(int8) <= totalSize) {
             ++size;
-            *buffer++ = (byte)userDB->columnTypes[c];
+            *buffer++ = (int8)userDB->columnTypes[c];
         }
         if (size + 0x10 <= totalSize) {
-            memset(buffer, 0, 0x10 * sizeof(byte));
+            memset(buffer, 0, 0x10 * sizeof(int8));
             sprintf((char *)buffer, "%s", userDB->columnNames[c]);
             size += 0x10;
             buffer += 0x10;
@@ -920,10 +920,10 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
     }
 
     for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
-        if (size + sizeof(uint) <= totalSize) {
-            size += sizeof(uint);
-            *(uint *)buffer = userDB->rows[r].uuid;
-            buffer += sizeof(uint);
+        if (size + sizeof(uint32) <= totalSize) {
+            size += sizeof(uint32);
+            *(uint32 *)buffer = userDB->rows[r].uuid;
+            buffer += sizeof(uint32);
         }
         if (size + sizeof(tm) <= totalSize) {
             memcpy(buffer, &userDB->rows[r].createTime, sizeof(tm));
@@ -937,9 +937,9 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
         }
 
         for (int c = 0; c < userDB->columnCount; ++c) {
-            if (size + sizeof(byte) <= totalSize) {
+            if (size + sizeof(int8) <= totalSize) {
                 ++size;
-                *buffer++ = (byte)userDB->rows[r].values[c].size;
+                *buffer++ = (int8)userDB->rows[r].values[c].size;
             }
             if (userDB->rows[r].values[c].size + size <= totalSize) {
                 memcpy(buffer, userDB->rows[r].values[c].data, userDB->rows[r].values[c].size);
@@ -976,18 +976,18 @@ void RemoveNonMatchingSortRows(UserDB *userDB, const char *name, void *value)
     }
 }
 
-bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *name, bool32 flag)
+bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type, char *name, bool32 flag)
 {
     uint8 data1[0x10];
     uint8 data2[0x10];
     memset(data1, 0, sizeof(data1));
     memset(data2, 0, sizeof(data2));
 
-    GetUserDBColumn(row1, size, name, &data1);
-    GetUserDBColumn(row2, size, name, &data2);
-    switch (size) {
-        case 1:
-        case 2: {
+    GetUserDBColumn(row1, type, name, &data1);
+    GetUserDBColumn(row2, type, name, &data2);
+    switch (type) {
+        case DBVAR_UNKNOWN1:
+        case DBVAR_UINT8: {
             uint8 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(uint8));
             memcpy(&value2, data2, sizeof(uint8));
@@ -998,7 +998,7 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 6: {
+        case DBVAR_INT8: {
             int8 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(int8));
             memcpy(&value2, data2, sizeof(int8));
@@ -1009,7 +1009,7 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 3: {
+        case DBVAR_UINT16: {
             uint16 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(uint16));
             memcpy(&value2, data2, sizeof(uint16));
@@ -1020,7 +1020,7 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 7: {
+        case DBVAR_INT16: {
             int16 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(int16));
             memcpy(&value2, data2, sizeof(int16));
@@ -1031,8 +1031,8 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 4:
-        case 15: {
+        case DBVAR_UINT32:
+        case DBVAR_UNKNOWN2: {
             uint32 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(uint32));
             memcpy(&value2, data2, sizeof(uint32));
@@ -1043,7 +1043,7 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 8: {
+        case DBVAR_INT32: {
             int32 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(int32));
             memcpy(&value2, data2, sizeof(int32));
@@ -1054,7 +1054,7 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 10: {
+        case DBVAR_FLOAT: {
             float value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(float));
             memcpy(&value2, data2, sizeof(float));
@@ -1065,7 +1065,7 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
                 return value1 < value2;
             break;
         }
-        case 16: {
+        case DBVAR_STRING: {
             char *string1 = (char *)data1;
             char *string2 = (char *)data2;
 
@@ -1081,20 +1081,20 @@ bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *nam
     return false;
 }
 
-void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag)
+void HandleUserDBSorting(UserDB *userDB, int type, char *name, bool32 flag)
 {
     if (!userDB->rowsChanged && userDB->sortedRowCount) {
         //sort by value
-        if (size || name) {
-            int col = GetDBColumnID(userDB, name);
+        if (type || name) {
+            int32 col = GetDBColumnID(userDB, name);
             if (col >= 0) {
-                for (int i = 0; i < userDB->sortedRowList.Count(); i++) {
-                    for (int j = i + 1; j < userDB->sortedRowList.Count(); j++) {
-                        int *id1 = userDB->sortedRowList.At(i);
-                        int *id2 = userDB->sortedRowList.At(j);
+                for (int32 i = 0; i < userDB->sortedRowList.Count(); i++) {
+                    for (int32 j = i + 1; j < userDB->sortedRowList.Count(); j++) {
+                        int32 *id1 = userDB->sortedRowList.At(i);
+                        int32 *id2 = userDB->sortedRowList.At(j);
 
-                        if (CompareUserDBValues(&userDB->rows[*id1], &userDB->rows[*id2], size, name, flag)) {
-                            int temp = *id1;
+                        if (CompareUserDBValues(&userDB->rows[*id1], &userDB->rows[*id2], type, name, flag)) {
+                            int32 temp = *id1;
                             *id1     = *id2;
                             *id2     = temp;
                         }
@@ -1105,10 +1105,10 @@ void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag)
             }
         }
         else { //sort by date
-            for (int i = 0; i < userDB->sortedRowList.Count(); i++) {
-                for (int j = i + 1; j < userDB->sortedRowList.Count(); j++) {
-                    int *id1 = userDB->sortedRowList.At(i);
-                    int *id2 = userDB->sortedRowList.At(j);
+            for (int32 i = 0; i < userDB->sortedRowList.Count(); i++) {
+                for (int32 j = i + 1; j < userDB->sortedRowList.Count(); j++) {
+                    int32 *id1 = userDB->sortedRowList.At(i);
+                    int32 *id2 = userDB->sortedRowList.At(j);
 
                     double d = difftime(mktime(&userDB->rows[*id1].createTime), mktime(&userDB->rows[*id2].createTime));
 
@@ -1119,7 +1119,7 @@ void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag)
                         swap = (d > 0) - (d < 0);
 
                     if (swap) {
-                        int temp = *id1;
+                        int32 temp = *id1;
                         *id1     = *id2;
                         *id2     = temp;
                     }
@@ -1133,10 +1133,10 @@ void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag)
 uint CreateRowUUID(UserDB *userDB)
 {
     bool32 flag = true;
-    uint uuid   = 0;
+    uint32 uuid   = 0;
 
     while (flag) {
-        byte bytes[4];
+        uint8 bytes[4];
         bytes[0] = rand();
         bytes[1] = rand();
         bytes[2] = rand();

@@ -294,7 +294,7 @@ void UIReplayCarousel_Unknown6(void)
                 break;
             int32 row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
             int32 zoneID = 0xFF;
-            API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
+            API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
             API.GetUserDBCreationTime(globals->replayTableID, row, buffer, 31, "%D");
             if (zoneID != 0xFF) {
                 RSDK.SetText(&self->zoneNameText[i], "", 0);
@@ -517,18 +517,18 @@ void UIReplayCarousel_StateDraw_Unknown3(void)
         if (id >= self->dbUnknownCount)
             break;
 
-        int32 score          = 0;
+        int32 score        = 0;
         uint16 zoneID      = 0;
         uint16 act         = 0;
         uint16 characterID = 0;
         uint16 encore      = 0;
 
         int32 row = API.GetSortedUserDBRowID(globals->replayTableID, id);
-        API.GetUserDBValue(globals->replayTableID, row, 4, "score", &score);
-        API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
-        API.GetUserDBValue(globals->replayTableID, row, 2, "act", &act);
-        API.GetUserDBValue(globals->replayTableID, row, 2, "characterID", &characterID);
-        API.GetUserDBValue(globals->replayTableID, row, 2, "encore", &encore);
+        API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT32, "score", &score);
+        API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
+        API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "act", &act);
+        API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "characterID", &characterID);
+        API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "encore", &encore);
         if (id == self->replayID && parent->active == ACTIVE_ALWAYS) {
             int32 val = (zoneID % 12) >> 3;
             int32 pal = 0;

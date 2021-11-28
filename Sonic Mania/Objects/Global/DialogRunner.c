@@ -38,13 +38,13 @@ void DialogRunner_StageLoad(void)
     }
     DialogRunner->entityPtr = NULL;
     SaveGame_LoadSaveData();
-    TimeAttackData->status  = 0;
-    TimeAttackData->uuid    = 0;
-    TimeAttackData->rowID   = -1;
-    TimeAttackData->dbRank  = 0;
-    TimeAttackData->rank    = 0;
-    TimeAttackData->dword1C = 0;
-    Options->state          = 0;
+    TimeAttackData->loaded          = false;
+    TimeAttackData->uuid            = 0;
+    TimeAttackData->rowID           = -1;
+    TimeAttackData->personalRank    = 0;
+    TimeAttackData->leaderboardRank = 0;
+    TimeAttackData->isMigratingData = false;
+    Options->state                  = 0;
     if (sku_platform && sku_platform != PLATFORM_DEV) {
         EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
         options->vSync           = false;

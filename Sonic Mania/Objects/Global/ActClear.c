@@ -228,14 +228,14 @@ void ActClear_Draw(void)
 #if RETRO_USE_PLUS
         }
         else {
-            if (!TimeAttackData->dbRank) {
+            if (!TimeAttackData->personalRank) {
                 self->numbersAnimator.frameID = 16;
                 RSDK.DrawSprite(&self->numbersAnimator, &drawPos, true);
 
                 drawPos.x -= 0x90000;
             }
             else if (!self->achievedRank || (self->achievedRank && (Zone->timer & 8)))
-                ActClear_DrawNumbers(&drawPos, TimeAttackData->dbRank, 0);
+                ActClear_DrawNumbers(&drawPos, TimeAttackData->personalRank, 0);
         }
 #endif
     }
@@ -259,12 +259,12 @@ void ActClear_Draw(void)
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
-        if (!TimeAttackData->rank) {
+        if (!TimeAttackData->leaderboardRank) {
             self->numbersAnimator.frameID = 16;
             RSDK.DrawSprite(&self->numbersAnimator, &drawPos, true);
         }
         else {
-            ActClear_DrawNumbers(&drawPos, TimeAttackData->rank, 0);
+            ActClear_DrawNumbers(&drawPos, TimeAttackData->leaderboardRank, 0);
         }
     }
     else {
@@ -760,12 +760,12 @@ void ActClear_State_ShowResultsTA(void)
     RSDK_THIS(ActClear);
 
     if (self->newRecordTimer > 0) {
-        if (TimeAttackData->dbRank <= 0 || ReplayRecorder->hasSetupGhostVS) {
+        if (TimeAttackData->personalRank <= 0 || ReplayRecorder->hasSetupGhostVS) {
             --self->newRecordTimer;
         }
         else {
             if (self->newRecordTimer == 120) {
-                if (TimeAttackData->dbRank == 1)
+                if (TimeAttackData->personalRank == 1)
                     self->isNewRecord = true;
                 self->achievedRank = true;
                 RSDK.PlaySfx(ActClear->sfxEvent, false, 255);
@@ -775,12 +775,12 @@ void ActClear_State_ShowResultsTA(void)
                 --self->newRecordTimer;
             }
             else {
-                if (TimeAttackData->dbRank == 1) {
+                if (TimeAttackData->personalRank == 1) {
                     RSDK.PlaySfx(Announcer->sfxNewRecordTop, false, 255);
                     --self->newRecordTimer;
                 }
                 else {
-                    if (TimeAttackData->dbRank > 3) {
+                    if (TimeAttackData->personalRank > 3) {
                         --self->newRecordTimer;
                     }
                     else {

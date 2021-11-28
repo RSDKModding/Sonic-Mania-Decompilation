@@ -142,16 +142,16 @@ typedef struct {
     void (*ClearAllUserDBs)(void);
     void (*SetupUserDBRowSorting)(uint16 tableID);
     bool32 (*GetUserDBRowsChanged)(uint16 tableID);
-    void (*AddRowSortFilter)(uint16 tableID, int32 size, const char *name, void *value);
-    void (*SortDBRows)(uint16 tableID, int32 size, const char *name, bool32 flag);
+    void (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
+    void (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 sortAscending);
     int32 (*GetSortedUserDBRowCount)(uint16 tableID);
     int32 (*GetSortedUserDBRowID)(uint16 tableID, uint16 row);
     int32 (*AddUserDBRow)(uint16 tableID);
-    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 size, const char *name, void *value);
-    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 size, const char *name, void *value);
+    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
+    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
     uint32 (*GetUserDBRowUUID)(uint16 tableID, uint16 row);
     int32 (*GetUserDBByID)(uint16 tableID, uint32 uuid);
-    void (*GetUserDBCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 sizeInBytes, const char *format);
+    void (*GetUserDBCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 bufferSize, const char *format);
     void (*RemoveDBRow)(uint16 tableID, uint16 row);
     void (*RemoveAllDBRows)(uint16 tableID);
     // count: 59

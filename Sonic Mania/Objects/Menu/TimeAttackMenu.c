@@ -416,11 +416,11 @@ void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
     int32 act         = 0;
     int32 characterID = 0;
     int32 encore      = 0;
-    API.GetUserDBValue(globals->replayTableID, row, 4, "score", &score);
-    API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
-    API.GetUserDBValue(globals->replayTableID, row, 2, "act", &act);
-    API.GetUserDBValue(globals->replayTableID, row, 2, "characterID", &characterID);
-    API.GetUserDBValue(globals->replayTableID, row, 2, "encore", &encore);
+    API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT32, "score", &score);
+    API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
+    API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "act", &act);
+    API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "characterID", &characterID);
+    API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "encore", &encore);
     param->viewReplay   = true;
     param->showGhost    = showGhost;
     param->replayUUID   = uuid;
@@ -431,7 +431,7 @@ void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
 
     int32 replayID = 0;
     if (!showGhost) {
-        if (!TimeAttackData->status || characterID != TimeAttackData->characterID || zoneID != TimeAttackData->zoneID || act != TimeAttackData->act
+        if (!TimeAttackData->loaded || characterID != TimeAttackData->characterID || zoneID != TimeAttackData->zoneID || act != TimeAttackData->act
             || encore != TimeAttackData->encore) {
             TimeAttackData_ConfigureTableView(zoneID, characterID, act, encore);
         }
@@ -619,9 +619,9 @@ void TimeAttackMenu_SortReplayChoiceCB(void)
 
     API.SetupUserDBRowSorting(globals->replayTableID);
     if (control->buttons[0]->selection == 1)
-        API.SortDBRows(globals->replayTableID, 4, "zoneSortVal", false);
+        API.SortDBRows(globals->replayTableID, DBVAR_UINT32, "zoneSortVal", false);
     else
-        API.SortDBRows(globals->replayTableID, 0, NULL, true);
+        API.SortDBRows(globals->replayTableID, DBVAR_INVALID, NULL, true);
     carousel->stateDraw = UIReplayCarousel_StateDraw_Unknown1;
 }
 

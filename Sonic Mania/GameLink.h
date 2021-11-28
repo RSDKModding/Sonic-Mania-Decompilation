@@ -516,6 +516,26 @@ typedef enum {
 } VarTypes;
 
 typedef enum {
+    DBVAR_INVALID,
+    DBVAR_UNKNOWN1,
+    DBVAR_UINT8,
+    DBVAR_UINT16,
+    DBVAR_UINT32,
+    DBVAR_UNUSED1,
+    DBVAR_INT8,
+    DBVAR_INT16,
+    DBVAR_INT32,
+    DBVAR_UNUSED2,
+    DBVAR_FLOAT,
+    DBVAR_UNUSED3,
+    DBVAR_UNUSED4,
+    DBVAR_UNUSED5,
+    DBVAR_UNUSED6,
+    DBVAR_UNKNOWN2,
+    DBVAR_STRING,
+} DBVarTypes;
+
+typedef enum {
     DTYPE_BOOL = 1,
     DTYPE_UINT8,
     DTYPE_UINT16,

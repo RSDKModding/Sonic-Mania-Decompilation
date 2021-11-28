@@ -5,16 +5,16 @@
 
 // Object Class
 typedef struct {
-    int32 status;
+    bool32 loaded;
     uint8 zoneID;
     uint8 act;
     uint8 characterID;
     bool32 encore;
     int32 uuid;
     int32 rowID;
-    int32 dbRank;
-    int32 rank;
-    int32 dword1C;
+    int32 personalRank;
+    int32 leaderboardRank;
+    bool32 isMigratingData;
     Entity *loadEntityPtr;
     void (*loadCallback)(int32);
     Entity* saveEntityPtr;
@@ -55,7 +55,7 @@ void TimeAttackData_GetTimeFromValue(int32 time, int32 *minsPtr, int32 *secsPtr,
 #if RETRO_USE_PLUS
 int32 TimeAttackData_LoadCB(int32 statusCode);
 void TimeAttackData_ResetTimeAttackDB(void);
-void TimeAttackData_MigrateLegacyTADB(void);
+void TimeAttackData_MigrateLegacySaves(void);
 int32 TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int32 act, char mode, int32 time);
 int32 TimeAttackData_AddTADBEntry(char zone, char charID, int32 act, int32 mode, int32 time, void (*callback)(int32));
 int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32));
