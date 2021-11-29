@@ -153,6 +153,13 @@ void DERobot_StageLoad(void)
     RSDK.SetPaletteEntry(0, 238, 0x484868);
     RSDK.SetPaletteEntry(0, 239, 0x587090);
     RSDK.SetPaletteEntry(0, 244, 0x000000);
+    // Bug Details:
+    // palette entry 244 is overwritten in GHZ2Cutscene during plus
+    // this is due to the additional colours in the tileset
+    // the simple fix to this should be to move DERobot above CutsceneHBH in the scene/stageconfig
+    // this will allow the CutsceneHBH object to properly store the 0x000000 colour set here when it does its palette swaps
+    // therefore fixing the orange DERobot bug
+    // alternatively, have GHZ2Outro_Cutscene_HoleSceneFadeIn call CutsceneHBH_StorePalette to store the updated palette
 }
 
 void DERobot_HandleScreenBounds(void)

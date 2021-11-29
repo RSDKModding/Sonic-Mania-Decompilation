@@ -1261,6 +1261,7 @@ void Player_BlendSuperTailsColours(int32 bankID)
         else
             self->superBlendAmount += 4;
     }
+    // Bug Details:
     // set this "76" to "75" to fix tails' super palette overwriting an extra colour
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 70, 76);
 }
@@ -1285,6 +1286,7 @@ void Player_BlendSuperKnuxColours(int32 bankID)
         else
             self->superBlendAmount += 4;
     }
+    // Bug Details:
     // set this "86" to "85" to fix knuckles's super palette overwriting an extra colour
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 80, 86);
 }
@@ -1309,7 +1311,8 @@ void Player_BlendSuperMightyColours(int32 bankID)
             self->superBlendState = 1;
         else
             self->superBlendAmount += 4;
-    } 
+    }
+    // Bug Details:
     // set this "102" to "101" to fix mighty's super palette messing up a skin tone colour
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 96, 102);
 }

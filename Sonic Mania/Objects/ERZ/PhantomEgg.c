@@ -139,6 +139,7 @@ void PhantomEgg_Hit(void)
             if (cable->cableID == id || !self->health) {
                 RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &cable->animator, true, 0);
                 cable->state = TMZCable_Unknown6;
+                // Bug Details:
                 // uncomment to fix a minor visual bug where the start few cable nodes wont be destroyed properly
                 // cable->timer = 0;
             }
