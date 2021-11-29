@@ -123,17 +123,17 @@ void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 
         }
     }
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator3, true, isEncore + 15);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator3, true, isEncore + 15);
     drawPos.x = drawOffsets[0].x + 0x1E0000;
     drawPos.y = drawOffsets[0].y - 0x70000;
     RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator3, true, actID + 5);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator3, true, actID + 5);
     drawPos.x = drawOffsets[1].x + 0x1A0000;
     drawPos.y = drawOffsets[1].y - 0x70000;
     RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &self->animator3, true, characterID - 1);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 8, &self->animator3, true, characterID - 1);
     drawPos.x = drawOffsets[2].x + 0x230000;
     drawPos.y = drawOffsets[2].y - 0x60000;
     RSDK.DrawSprite(&self->animator3, &drawPos, false);

@@ -287,7 +287,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
         char fileName[0x20];
         sprintf(fileName, "Replay_%08X.bin", ReplayRecorder->replayID);
         LogHelpers_Print("Replay Filename: %s", fileName);
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         ReplayRecorder->savedReplay = true;
         ReplayRecorder_Buffer_SaveFile(fileName, globals->replayTempWBuffer);
         HUD->replaySaveEnabled = false;
@@ -333,7 +333,7 @@ void ReplayRecorder_SavedReplay(bool32 status)
         INIT_TEXTINFO(message);
         Localization_GetString(&message, STR_NOREPLAYSPACE);
         UIDialog_CreateDialogOk(&message, NULL, true);
-        UIWaitSpinner_Wait2();
+        UIWaitSpinner_FinishWait();
         ActClear->disableResultsInput = false;
         ActClear->hasSavedReplay      = false;
         HUD->replaySaveEnabled        = true;
@@ -344,7 +344,7 @@ void ReplayRecorder_ReplaySave_CB(bool32 flag)
 {
     if (flag) {
         if (TimeAttackData->rowID == -1) {
-            UIWaitSpinner_Wait2();
+            UIWaitSpinner_FinishWait();
             ActClear->disableResultsInput = false;
             foreach_all(HUD, hud)
             {
@@ -369,7 +369,7 @@ void ReplayRecorder_ReplaySave_CB(bool32 flag)
         API.DeleteUserFile(fileName, NULL);
         Localization_GetString(&message, STR_NOREPLAYSPACE);
         UIDialog_CreateDialogOk(&message, NULL, true);
-        UIWaitSpinner_Wait2();
+        UIWaitSpinner_FinishWait();
         ActClear->disableResultsInput = false;
         ActClear->hasSavedReplay      = false;
         HUD->replaySaveEnabled        = true;
@@ -378,7 +378,7 @@ void ReplayRecorder_ReplaySave_CB(bool32 flag)
 
 void ReplayRecorder_SaveTimeAttackDB_CB(int32 status)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     ActClear->disableResultsInput = false;
     if (!status) {
         ActClear->hasSavedReplay = false;

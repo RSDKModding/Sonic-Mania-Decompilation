@@ -153,16 +153,16 @@ void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(vo
         EntityUIButton *button = RSDK.GetEntityByID(dialog->id + 23);
         button->position.x     = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         button->position.y     = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 9, &button->animator, true, frame);
-        button->textSpriteIndex = UIWidgets->textSpriteIndex;
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 9, &button->animator, true, frame);
+        button->textFrames = UIWidgets->textFrames;
 
         if (frame == DIALOG_CONTINUE)
             button->size.x = 0x640000;
         else
             button->size.x = 0x320000;
         button->size.y              = 0x180000;
-        button->options2            = UIDialog_Unknown10;
-        button->dword138            = 24;
+        button->actionCB            = UIDialog_ButtonActionCB;
+        button->bgEdgeSize          = 24;
         button->align               = 1;
         button->active              = ACTIVE_ALWAYS;
         button->drawOrder           = dialog->drawOrder;
@@ -198,12 +198,12 @@ void UIDialog_Setup(EntityUIDialog *dialog)
         control = NULL;
         RSDK.ResetEntitySlot(SLOT_DIALOG_UICONTROL, UIControl->objectID, &size);
         control                      = RSDK_GET_ENTITY(SLOT_DIALOG_UICONTROL, UIControl);
-        control->dwordCC             = 1;
+        control->menuWasSetup        = true;
         control->position.x          = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         control->position.y          = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         control->rowCount            = 1;
         control->columnCount         = dialog->id;
-        control->activeEntityID      = 0;
+        control->buttonID            = 0;
         control->backPressCB         = UIDialog_HandleAutoClose;
         control->selectionDisabled = true;
         dialog->parent               = control;
@@ -274,7 +274,7 @@ void UIDialog_Close(void)
     EntityUIControl *control = self->parent;
 
     if (control) {
-        UIControl_Unknown6(control);
+        UIControl_SetInactiveMenu(control);
         destroyEntity(control);
     }
 
@@ -285,7 +285,7 @@ void UIDialog_Close(void)
 
     EntityUIControl *storedControl = UIDialog->controlStore;
     if (storedControl) {
-        UIControl_Unknown5(UIDialog->controlStore);
+        UIControl_SetMenuLostFocus(UIDialog->controlStore);
         storedControl->state          = UIDialog->controlStateStore;
         storedControl->dialogHasFocus = false;
     }
@@ -322,11 +322,11 @@ bool32 UIDialog_HandleAutoClose(void)
     return false;
 }
 
-void UIDialog_Unknown10(void)
+void UIDialog_ButtonActionCB(void)
 {
     EntityUIDialog *entity = UIDialog->activeDialog;
     if (entity->parent) {
-        int32 id = entity->parent->activeEntityID;
+        int32 id = entity->parent->buttonID;
         if (id >= 0 && id < entity->parent->buttonCount) {
             if (entity->flags[id]) {
                 UIDialog_Unknown4(entity, entity->callbacks[id]);
@@ -347,7 +347,7 @@ void UIDialog_Unknown11(void)
     pos.y = 0;
     if (self->timer == 1) {
         RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
-        UIControl_Unknown12((Entity *)self->parent);
+        UIControl_HandleMenuLoseFocus(self->parent);
     }
 
     if (self->timer >= 8) {

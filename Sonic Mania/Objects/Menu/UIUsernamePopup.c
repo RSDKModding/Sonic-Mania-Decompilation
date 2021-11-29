@@ -15,20 +15,20 @@ void UIUsernamePopup_StaticUpdate(void) {}
 void UIUsernamePopup_Draw(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    if (self->drawFlag)
+    if (self->isVisible)
         UIUsernamePopup_DrawSprites();
 }
 
 void UIUsernamePopup_Create(void *data)
 {
     RSDK_THIS(UIUsernamePopup);
-    self->active       = ACTIVE_ALWAYS;
-    self->drawOrder    = 13;
-    self->posUnknown.x = 0;
-    self->posUnknown.y = 0;
-    self->dword6C      = 0x180000;
-    self->visible      = true;
-    self->state        = UIUsernamePopup_State_Setup;
+    self->active    = ACTIVE_ALWAYS;
+    self->drawOrder = 13;
+    self->drawPos.x = 0;
+    self->drawPos.y = 0;
+    self->size.y    = 0x180000;
+    self->visible   = true;
+    self->state     = UIUsernamePopup_State_Setup;
 }
 
 void UIUsernamePopup_StageLoad(void)
@@ -46,11 +46,11 @@ void UIUsernamePopup_ShowPopup(void)
 #endif
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->username);
-            int32 width      = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
-            entity->state    = UIUsernamePopup_Unknown4;
-            entity->timer    = 0;
-            entity->field_68 = (width + 16) << 16;
-            entity->timeOut  = 30;
+            int32 width    = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
+            entity->state  = UIUsernamePopup_State_Appear;
+            entity->timer  = 0;
+            entity->size.x = (width + 16) << 16;
+            entity->delay  = 30;
         }
     }
 }
@@ -60,10 +60,9 @@ void UIUsernamePopup_DrawSprites(void)
     RSDK_THIS(UIUsernamePopup);
     Vector2 drawPos;
 
-    drawPos.x = self->posUnknown.x + self->dword6C + (ScreenInfo->position.x << 16) + (self->field_68 >> 1);
-    drawPos.y =
-        self->posUnknown.y + (ScreenInfo->centerY << 16) - (self->dword6C >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
-    UIWidgets_DrawParallelogram(self->dword6C >> 16, self->field_68 >> 16, self->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
+    drawPos.x = self->drawPos.x + self->size.y + (ScreenInfo->position.x << 16) + (self->size.x >> 1);
+    drawPos.y = self->drawPos.y + (ScreenInfo->centerY << 16) - (self->size.y >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, self->size.x >> 16, self->size.y >> 16, 16, 124, 16, drawPos.x, drawPos.y);
 
     int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->username, 0, self->username.textLength, 0);
     drawPos.y -= 0x10000;
@@ -74,74 +73,60 @@ void UIUsernamePopup_DrawSprites(void)
 void UIUsernamePopup_State_Setup(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    self->drawFlag = false;
-    self->timer    = 0;
+    self->isVisible = false;
+    self->timer     = 0;
 }
 
-void UIUsernamePopup_Unknown4(void)
+void UIUsernamePopup_State_Appear(void)
 {
     RSDK_THIS(UIUsernamePopup);
 
-    if (self->timer >= self->timeOut) {
-        if (self->timer >= self->timeOut + 8) {
-            self->posUnknown.x = 0;
-            self->posUnknown.y = 0;
-            self->timer        = 0;
-            self->state        = UIUsernamePopup_Unknown5;
+    if (self->timer >= self->delay) {
+        if (self->timer >= self->delay + 8) {
+            self->drawPos.x = 0;
+            self->drawPos.y = 0;
+            self->timer     = 0;
+            self->state     = UIUsernamePopup_State_Shown;
         }
         else {
-            self->drawFlag = true;
-            MathHelpers_Lerp(&self->posUnknown, 32 * clampVal(self->timer - self->timeOut, 0, 8), -self->dword6C, self->dword6C, 0, 0);
+            self->isVisible = true;
+            MathHelpers_Lerp(&self->drawPos, 32 * clampVal(self->timer - self->delay, 0, 8), -self->size.y, self->size.y, 0, 0);
             ++self->timer;
         }
     }
     else {
-        self->drawFlag = false;
+        self->isVisible = false;
         self->timer++;
     }
 }
 
-void UIUsernamePopup_Unknown5(void)
+void UIUsernamePopup_State_Shown(void)
 {
     RSDK_THIS(UIUsernamePopup);
     if (self->timer >= 180) {
         self->timer = 0;
-        self->state = UIUsernamePopup_Unknown6;
+        self->state = UIUsernamePopup_State_Disappear;
     }
     else {
         self->timer++;
     }
 }
 
-void UIUsernamePopup_Unknown6(void)
+void UIUsernamePopup_State_Disappear(void)
 {
     RSDK_THIS(UIUsernamePopup);
     if (self->timer >= 8) {
-        self->posUnknown.y = self->dword6C;
-        self->timer        = 0;
-        self->drawFlag     = false;
-        self->posUnknown.x = -self->dword6C;
-        self->state        = UIUsernamePopup_State_Setup;
+        self->drawPos.y = self->size.y;
+        self->timer     = 0;
+        self->isVisible = false;
+        self->drawPos.x = -self->size.y;
+        self->state     = UIUsernamePopup_State_Setup;
     }
     else {
-        self->drawFlag = true;
+        self->isVisible = true;
 
-        int32 val = 32 * maxVal(self->timer, 0);
-        if (val > 0) {
-            if (val < 256) {
-                self->posUnknown.x = val * (-self->dword6C >> 8);
-                self->posUnknown.y = val * (self->dword6C >> 8);
-            }
-            else {
-                self->posUnknown.x = -self->dword6C;
-                self->posUnknown.y = self->dword6C;
-            }
-        }
-        else {
-            self->posUnknown.x = 0;
-            self->posUnknown.y = 0;
-        }
-        ++self->timer;
+        int32 percent = 0x20 * maxVal(self->timer++, 0);
+        MathHelpers_LerpToPos(&self->drawPos, percent, -self->size.y, self->size.y);
     }
 }
 

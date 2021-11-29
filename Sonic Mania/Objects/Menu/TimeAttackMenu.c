@@ -153,11 +153,11 @@ void TimeAttackMenu_Unknown3(void)
     EntityUIControl *zoneSelControl      = (EntityUIControl *)TimeAttackMenu->taZoneSelControl;
     EntityUIControl *detailsControl      = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
 
-    control->unknownCallback4 = TimeAttackMenu_Unknown20;
+    control->menuUpdateCB = TimeAttackMenu_MenuUpdateCB;
 
     EntityUIButton *button = (EntityUIButton *)control->buttons[control->buttonCount - 1];
-    button->options2       = TimeAttackMenu_Unknown21;
-    int32 newCount           = (control->buttonCount - 1) + control->columnCount;
+    button->actionCB       = TimeAttackMenu_ReplayButton_ActionCB;
+    int32 newCount         = (control->buttonCount - 1) + control->columnCount;
     for (int32 i = control->buttonCount; i < newCount; ++i) {
         control->buttons[i] = control->buttons[i - 1];
     }
@@ -167,10 +167,10 @@ void TimeAttackMenu_Unknown3(void)
     {
         Entity *parent = charButton->parent;
         if (parent == TimeAttackMenu->timeAttackControl || parent == TimeAttackMenu->timeAttackControl_Legacy)
-            charButton->options2 = TimeAttackMenu_Options2CB_CharButton;
+            charButton->actionCB = TimeAttackMenu_CharButton_ActionCB;
     }
 
-    foreach_all(UITAZoneModule, module) { module->options2 = TimeAttackMenu_TAModuleCB; }
+    foreach_all(UITAZoneModule, module) { module->actionCB = TimeAttackMenu_TAModule_ActionCB; }
 
     for (int32 i = 0; i < leaderboardsControl->buttonCount; ++i) {
         EntityUILeaderboard *button = (EntityUILeaderboard *)leaderboardsControl->buttons[i];
@@ -184,27 +184,27 @@ void TimeAttackMenu_Unknown3(void)
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &button->text1[0]);
     }
 
-    leaderboardsControl->unknownCallback4 = TimeAttackMenu_UnknownCB4_LB;
-    leaderboardsControl->yPressCB         = TimeAttackMenu_YPressCB_LB;
+    leaderboardsControl->menuUpdateCB = TimeAttackMenu_MenuUpdateCB_LB;
+    leaderboardsControl->yPressCB     = TimeAttackMenu_YPressCB_LB;
 
-    replayControl->unknownCallback3 = TimeAttackMenu_UnknownCB3_Replay;
-    replayControl->unknownCallback4 = TimeAttackMenu_UnknownCB4_Replay;
-    replayControl->xPressCB         = TimeAttackMenu_DeleteReplayCB;
-    replayControl->yPressCB         = TimeAttackMenu_YPressCB_Replay;
+    replayControl->menuSetupCB  = TimeAttackMenu_MenuSetupCB_Replay;
+    replayControl->menuUpdateCB = TimeAttackMenu_MenuUpdateCB_Replay;
+    replayControl->xPressCB     = TimeAttackMenu_DeleteReplayCB;
+    replayControl->yPressCB     = TimeAttackMenu_YPressCB_Replay;
 
     zoneSelControl->yPressCB    = TimeAttackMenu_YPressCB_ZoneSel;
     zoneSelControl->backPressCB = TimeAttackMenu_BackPressCB_ZoneSel;
 
-    detailsControl->yPressCB         = TimeAttackMenu_YPressCB_Details;
-    detailsControl->xPressCB         = TimeAttackMenu_XPressCB_Details;
-    detailsControl->unknownCallback3 = TimeAttackMenu_UnknownCB3_Details;
+    detailsControl->yPressCB    = TimeAttackMenu_YPressCB_Details;
+    detailsControl->xPressCB    = TimeAttackMenu_XPressCB_Details;
+    detailsControl->menuSetupCB = TimeAttackMenu_MenuSetupCB_Details;
 
-    EntityUIButton *replayButton   = detailsControl->buttons[0];
-    replayButton->options2         = TimeAttackMenu_Options2CB_Replays;
-    replayButton->choiceChangeCB = TimeAttackMenu_UnknownCB1_Replays;
+    EntityUIButton *replayButton = detailsControl->buttons[0];
+    replayButton->actionCB       = TimeAttackMenu_Replays_ActionCB;
+    replayButton->choiceChangeCB = TimeAttackMenu_Replays_ChoiceChangeCB;
 
-    EntityUIReplayCarousel *replayCarousel      = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
-    replayCarousel->options2                    = TimeAttackMenu_Options2CB_ReplayCarousel;
+    EntityUIReplayCarousel *replayCarousel    = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
+    replayCarousel->actionCB                  = TimeAttackMenu_ReplayCarousel_ActionCB;
     replayControl->buttons[0]->choiceChangeCB = TimeAttackMenu_SortReplayChoiceCB;
 }
 
@@ -216,8 +216,8 @@ void TimeAttackMenu_Unknown4(void)
 
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
     if (param->clearFlag) {
-        int32 charID                     = param->characterID - 1;
-        control->activeEntityID        = charID;
+        int32 charID                   = param->characterID - 1;
+        control->buttonID              = charID;
         control->buttons[charID]->flag = true;
     }
 
@@ -227,13 +227,13 @@ void TimeAttackMenu_Unknown4(void)
         if (param->characterID - 1 <= 2)
             charID = param->characterID - 1;
 
-        legacyControl->activeEntityID        = charID;
+        legacyControl->buttonID              = charID;
         legacyControl->buttons[charID]->flag = true;
     }
 
     EntityUIControl *zoneControl = (EntityUIControl *)TimeAttackMenu->taZoneSelControl;
     if (param->clearFlag) {
-        zoneControl->activeEntityID               = param->zoneID;
+        zoneControl->buttonID                     = param->zoneID;
         zoneControl->buttons[param->zoneID]->flag = true;
     }
 
@@ -242,17 +242,17 @@ void TimeAttackMenu_Unknown4(void)
         UITABanner_Unknown1(param->characterID, (EntityUITABanner *)TimeAttackMenu->banner, param->zoneID, param->actID, param->isEncoreMode);
         TimeAttackMenu_Unknown24();
         UIButton_SetChoiceSelectionWithCB(detailsControl->buttons[0], param->actID);
-        detailsControl->activeEntityID = param->selectionID;
-        TimeAttackMenu_UnknownCB1_Replays();
+        detailsControl->buttonID = param->selectionID;
+        TimeAttackMenu_Replays_ChoiceChangeCB();
     }
 
     EntityUIControl *replayControl = (EntityUIControl *)TimeAttackMenu->replaysControl;
     if (replayControl->active == ACTIVE_ALWAYS) {
-        replayControl->activeEntityID = 1;
+        replayControl->buttonID = 1;
         UIButton_SetChoiceSelectionWithCB(replayControl->buttons[0], param->selectedReplay & 0xFF);
         EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
-        int32 count                        = API.GetSortedUserDBRowCount(globals->replayTableID);
-        int32 id                           = API.GetUserDBByID(globals->replayTableID, param->replayUUID);
+        int32 count                      = API.GetSortedUserDBRowCount(globals->replayTableID);
+        int32 id                         = API.GetUserDBByID(globals->replayTableID, param->replayUUID);
 
         int32 i = 0;
         for (; i < count; ++i) {
@@ -280,7 +280,7 @@ void TimeAttackMenu_DeleteReplayCB(void)
     EntityUIControl *replayControl   = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
 
-    if (replayControl->activeEntityID == 1 && carousel->stateDraw == UIReplayCarousel_StateDraw_Unknown3
+    if (replayControl->buttonID == 1 && carousel->stateDraw == UIReplayCarousel_StateDraw_Unknown3
         && API.GetSortedUserDBRowCount(globals->replayTableID)) {
         TextInfo info;
         INIT_TEXTINFO(info);
@@ -311,7 +311,7 @@ void TimeAttackMenu_Unknown8(bool32 success)
         carousel->replayID = count;
 }
 
-void TimeAttackMenu_UnknownCB4_LB(void)
+void TimeAttackMenu_MenuUpdateCB_LB(void)
 {
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
     if (control->active == ACTIVE_ALWAYS) {
@@ -326,7 +326,7 @@ void TimeAttackMenu_UnknownCB4_LB(void)
         }
 
         entryCount          = API.LeaderboardEntryCount();
-        int32 count           = maxVal(1, entryCount.x);
+        int32 count         = maxVal(1, entryCount.x);
         carousel->minOffset = count;
 
         if (entryCount.y + entryCount.x > count + 5)
@@ -364,7 +364,7 @@ void TimeAttackMenu_Unknown10(int32 zone, int32 playerID, int32 act, int32 encor
         entity->timeOut               = 120;
         entity->state                 = TimeAttackMenu_Unknown41;
         entity->callback              = callback;
-        int32 rowCount                   = API.GetSortedUserDBRowCount(globals->taTableID);
+        int32 rowCount                = API.GetSortedUserDBRowCount(globals->taTableID);
         if (a5)
             rowCount = 0;
         TimeAttackMenu->field_40 = rowCount;
@@ -385,7 +385,7 @@ void TimeAttackMenu_Unknown10(int32 zone, int32 playerID, int32 act, int32 encor
     }
 }
 
-void TimeAttackMenu_Options2CB_ReplayCarousel(void)
+void TimeAttackMenu_ReplayCarousel_ActionCB(void)
 {
     RSDK_THIS(UIReplayCarousel);
     EntityUIPopover *popover = UIPopover_CreatePopover();
@@ -404,7 +404,7 @@ void TimeAttackMenu_Options2CB_ReplayCarousel(void)
 void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    int32 id                 = RSDK.MostRecentActiveControllerID(0, 0, 0);
+    int32 id               = RSDK.MostRecentActiveControllerID(0, 0, 0);
     RSDK.ResetControllerAssignments();
     RSDK.AssignControllerID(CONT_P1, id);
     LogHelpers_Print("Go_Replay(%d, %d)", row, showGhost);
@@ -451,7 +451,7 @@ void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
     if (popover)
         popover->parent->selectionDisabled = true;
 
-    UIWaitSpinner_Wait();
+    UIWaitSpinner_StartWait();
 
     char fileBuffer[0x20];
     sprintf(fileBuffer, "Replay_%08X.bin", uuid);
@@ -463,7 +463,7 @@ void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
 
 void TimeAttackMenu_ReplayLoad_CB(bool32 a1)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
 
     int32 strID = 0;
     if (a1) {
@@ -502,8 +502,8 @@ void TimeAttackMenu_WatchReplayCB(void)
     EntityUIButton *button = control->buttons[0];
     sprintf(param->menuTag, "Replays");
     param->replayRankID = button->selection;
-    param->replayID   = carousel->replayID;
-    int32 id = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
+    param->replayID     = carousel->replayID;
+    int32 id            = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
     TimeAttackMenu_AddReplayEntry(id, false);
 }
 
@@ -517,8 +517,8 @@ void TimeAttackMenu_ChallengeReplayCB(void)
     EntityUIButton *button = control->buttons[0];
     sprintf(param->menuTag, "Replays");
     param->replayRankID = button->selection;
-    param->replayID   = carousel->replayID;
-    int32 id          = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
+    param->replayID     = carousel->replayID;
+    int32 id            = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
     TimeAttackMenu_AddReplayEntry(id, true);
 }
 
@@ -529,10 +529,10 @@ void TimeAttackMenu_Unknown15(void)
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
 
-    int32 uuid = API.GetUserDBByID(globals->replayTableID, button->row);
+    int32 uuid = API.GetUserDBByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->selectionID = parent->activeEntityID;
+        param->selectionID = parent->buttonID;
         param->clearFlag   = true;
         TimeAttackMenu_AddReplayEntry(uuid, false);
     }
@@ -545,10 +545,10 @@ void TimeAttackMenu_Unknown16(void)
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
 
-    int32 uuid = API.GetUserDBByID(globals->replayTableID, button->row);
+    int32 uuid = API.GetUserDBByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->selectionID = parent->activeEntityID;
+        param->selectionID = parent->buttonID;
         param->clearFlag   = true;
         TimeAttackMenu_AddReplayEntry(uuid, true);
     }
@@ -560,19 +560,19 @@ void TimeAttackMenu_Unknown17(void)
     MenuSetup_StartTransition(TimeAttackMenu_Unknown27, 32);
 }
 
-void TimeAttackMenu_UnknownCB3_Replay(void)
+void TimeAttackMenu_MenuSetupCB_Replay(void)
 {
     int32 status = API.GetUserDBRowsChanged(globals->replayTableID);
     if (status)
         TimeAttackMenu_SortReplayChoiceCB();
 }
 
-void TimeAttackMenu_UnknownCB4_Replay(void)
+void TimeAttackMenu_MenuUpdateCB_Replay(void)
 {
     EntityUIControl *replayControl   = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
 
-    if (replayControl->field_D8 != 1) {
+    if (replayControl->lastButtonID != 1) {
         carousel->replayID = -1;
     }
 
@@ -581,19 +581,19 @@ void TimeAttackMenu_UnknownCB4_Replay(void)
         prompt->visible = API.GetSortedUserDBRowCount(globals->replayTableID) != 0;
 }
 
-void TimeAttackMenu_Unknown20(void)
+void TimeAttackMenu_MenuUpdateCB(void)
 {
-    EntityUIControl *control                                = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
+    EntityUIControl *control                               = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
     control->prompts[control->buttonCount - 1]->position.x = control->position.x;
 }
 
-void TimeAttackMenu_Unknown21(void)
+void TimeAttackMenu_ReplayButton_ActionCB(void)
 {
     EntityUIControl *control         = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
 
-    control->activeEntityID = 1;
-    carousel->replayID      = 0;
+    control->buttonID  = 1;
+    carousel->replayID = 0;
     UIControl_MatchMenuTag("Replays");
     UIButton_SetChoiceSelectionWithCB(control->buttons[0], 0);
 }
@@ -603,10 +603,10 @@ void TimeAttackMenu_YPressCB_Replay(void)
     EntityUIControl *control         = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
     if (carousel->stateDraw == UIReplayCarousel_StateDraw_Unknown3) {
-        control->activeEntityID = 0;
-        carousel->replayID      = -1;
-        carousel->field_16C     = 0;
-        carousel->field_170     = 0;
+        control->buttonID   = 0;
+        carousel->replayID  = -1;
+        carousel->field_16C = 0;
+        carousel->field_170 = 0;
         UIButton_SetChoiceSelectionWithCB(control->buttons[0], control->buttons[0]->selection ^ 1);
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
@@ -645,15 +645,15 @@ void TimeAttackMenu_Unknown24(void)
     }
 }
 
-void TimeAttackMenu_TAModuleCB(void)
+void TimeAttackMenu_TAModule_ActionCB(void)
 {
     RSDK_THIS(UITAZoneModule);
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUITABanner *banner = (EntityUITABanner *)TimeAttackMenu->banner;
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
 
-    param->zoneID           = self->zoneID;
-    control->activeEntityID = 0;
+    param->zoneID     = self->zoneID;
+    control->buttonID = 0;
 
     UITABanner_Unknown1(self->characterID, banner, self->zoneID, 0, TimeAttackMenu->encoreMode);
     TimeAttackMenu_Unknown24();
@@ -724,7 +724,7 @@ bool32 TimeAttackMenu_BackPressCB_ZoneSel(void)
 void TimeAttackMenu_YPressCB_Details(void)
 {
     EntityUITABanner *banner = (EntityUITABanner *)TimeAttackMenu->banner;
-    int32 count                = API.GetSortedUserDBRowCount(globals->taTableID);
+    int32 count              = API.GetSortedUserDBRowCount(globals->taTableID);
     TimeAttackMenu_Unknown10(banner->zoneID, banner->characterID, banner->actID, TimeAttackMenu->encoreMode, !count, UITAZoneModule_Unknown14);
 }
 
@@ -740,14 +740,14 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
         TimeAttackData_ConfigureTableView(banner->zoneID, banner->characterID, act, TimeAttackMenu->encoreMode);
     }
 
-    control->activeEntityID = 0;
+    control->buttonID = 0;
     if (!API.GetUserStorageNoSave() && globals->taTableID != 0xFFFF && globals->taTableLoaded == STATUS_OK) {
         LogHelpers_Print("Saving Time Attack DB");
         TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = NULL;
         API.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
     }
-    TimeAttackMenu_UnknownCB1_Replays();
+    TimeAttackMenu_Replays_ChoiceChangeCB();
 }
 
 void TimeAttackMenu_XPressCB_Details(void)
@@ -764,7 +764,7 @@ void TimeAttackMenu_XPressCB_Details(void)
     }
 }
 
-void TimeAttackMenu_Options2CB_Replays(void)
+void TimeAttackMenu_Replays_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
@@ -776,7 +776,7 @@ void TimeAttackMenu_Options2CB_Replays(void)
     MenuSetup_StartTransition(TimeAttackMenu_Unknown26, 32);
 }
 
-void TimeAttackMenu_Unknown34(void)
+void TimeAttackMenu_RankButton_ActionCB(void)
 {
     RSDK_THIS(UIRankButton);
     EntityUIPopover *popover = UIPopover_CreatePopover();
@@ -788,42 +788,42 @@ void TimeAttackMenu_Unknown34(void)
     }
 }
 
-void TimeAttackMenu_UnknownCB3_Details(void) { TimeAttackMenu_UnknownCB1_Replays(); }
+void TimeAttackMenu_MenuSetupCB_Details(void) { TimeAttackMenu_Replays_ChoiceChangeCB(); }
 
-void TimeAttackMenu_UnknownCB1_Replays(void)
+void TimeAttackMenu_Replays_ChoiceChangeCB(void)
 {
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
 
-    int32 act    = control->buttons[0]->selection;
+    int32 act = control->buttons[0]->selection;
     UITABanner_Unknown1(param->characterID, (EntityUITABanner *)TimeAttackMenu->banner, param->zoneID, act, TimeAttackMenu->encoreMode);
     TimeAttackData_ConfigureTableView(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode);
 
     int32 count = 1;
     for (int32 i = 1; i < 4; ++i) {
         EntityUIRankButton *button = (EntityUIRankButton *)control->buttons[i];
-        int32 score                  = TimeAttackData_GetScore(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode, i);
-        int32 replayID               = TimeAttackData_GetReplayID(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode, i);
+        int32 score                = TimeAttackData_GetScore(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode, i);
+        int32 replayID             = TimeAttackData_GetReplayID(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode, i);
         UIRankButton_Unknown2(i, button, score, replayID);
         if (score)
             ++count;
         if (API.CheckDLC(DLC_PLUS) && replayID)
-            button->options2 = TimeAttackMenu_Unknown34;
+            button->actionCB = TimeAttackMenu_RankButton_ActionCB;
         else
-            button->options2 = NULL;
+            button->actionCB = StateMachine_None;
     }
 
     control->rowCount = count;
 }
 
-void TimeAttackMenu_Options2CB_CharButton(void)
+void TimeAttackMenu_CharButton_ActionCB(void)
 {
     RSDK_THIS(UICharButton);
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->taZoneSelControl;
 
     TimeAttackData_ClearOptions();
-    int32 characterID    = self->characterID + 1;
+    int32 characterID  = self->characterID + 1;
     param->characterID = characterID;
     API.LeaderboardsUnknown4();
 
@@ -837,8 +837,8 @@ void TimeAttackMenu_Options2CB_CharButton(void)
 
 void TimeAttackMenu_Unknown38(void)
 {
-    UIControl_Unknown6((EntityUIControl *)TimeAttackMenu->leaderboardsControl);
-    UIControl_Unknown4((EntityUIControl *)TimeAttackMenu->taDetailsControl);
+    UIControl_SetInactiveMenu((EntityUIControl *)TimeAttackMenu->leaderboardsControl);
+    UIControl_SetActiveMenu((EntityUIControl *)TimeAttackMenu->taDetailsControl);
 }
 
 bool32 TimeAttackMenu_LeaderboardsBackPressCB(void)
@@ -861,7 +861,7 @@ void TimeAttackMenu_Unknown41(void)
     INIT_TEXTINFO(info);
 
     EntityUIDialog *dialog = (EntityUIDialog *)TimeAttackMenu->connectingDlg;
-    int32 status             = API.GetLeaderboardsStatus();
+    int32 status           = API.GetLeaderboardsStatus();
     if (status == STATUS_CONTINUE) {
         Localization_GetString(&info, STR_CONNECTING);
         UIDialog_SetupText(dialog, &info);
@@ -869,7 +869,7 @@ void TimeAttackMenu_Unknown41(void)
     else if (status < STATUS_ERROR) {
         if (status == STATUS_OK) {
             EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)TimeAttackMenu->prompt2;
-            int32 val                      = -(TimeAttackMenu->field_40 != false);
+            int32 val                    = -(TimeAttackMenu->field_40 != false);
             prompt->prevPrompt           = -1;
             prompt->promptID             = (val + 15);
             prompt->visible              = TimeAttackMenu->field_44 != false;
@@ -877,7 +877,7 @@ void TimeAttackMenu_Unknown41(void)
             EntityUIControl *leaderboardsControl = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
             TimeAttackMenu_Unknown42(leaderboardsControl->carousel);
             UIDialog_Unknown4(dialog, self->callback);
-            self->callback              = StateMachine_None;
+            self->callback                = StateMachine_None;
             TimeAttackMenu->connectingDlg = NULL;
             destroyEntity(self);
         }
@@ -893,16 +893,16 @@ void TimeAttackMenu_Unknown41(void)
         EntityUIControl *control = (EntityUIControl *)dialog->parent;
         control->rowCount        = 1;
         control->columnCount     = 1;
-        control->activeEntityID  = 0;
+        control->buttonID        = 0;
         TimeAttackMenu->field_40 = !TimeAttackMenu->field_40;
 
         EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)TimeAttackMenu->prompt2;
-        int32 val                      = -(TimeAttackMenu->field_40 != false);
+        int32 val                    = -(TimeAttackMenu->field_40 != false);
         prompt->prevPrompt           = -1;
         prompt->promptID             = (val + 15);
         prompt->visible              = TimeAttackMenu->field_44 != false;
 
-        self->callback              = StateMachine_None;
+        self->callback                = StateMachine_None;
         TimeAttackMenu->connectingDlg = NULL;
         destroyEntity(self);
     }
@@ -913,7 +913,7 @@ void TimeAttackMenu_Unknown42(void *c)
     EntityUICarousel *carousel = (EntityUICarousel *)c;
     EntityUIControl *parent    = (EntityUIControl *)carousel->parent;
     Vector2 entryCount         = API.LeaderboardEntryCount();
-    int32 start                  = entryCount.x;
+    int32 start                = entryCount.x;
     carousel->minOffset        = maxVal(1, entryCount.x);
 
     if ((entryCount.y + entryCount.x) > carousel->minOffset + 5)
@@ -947,7 +947,7 @@ void TimeAttackMenu_Unknown42(void *c)
         int32 vIndex = max + carousel->scrollOffset;
         LogHelpers_Print("i = %d, vIndex = %d", i, vIndex);
         if (vIndex == carousel->virtualIndex) {
-            parent->activeEntityID = i;
+            parent->buttonID = i;
             break;
         }
     }

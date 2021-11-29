@@ -6,9 +6,9 @@ void UIVsScoreboard_Update(void)
 {
     RSDK_THIS(UIVsScoreboard);
 
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex || self->showWinner) {
+    if (self->textFrames != UIWidgets->textFrames || self->showWinner) {
         UIVsScoreboard_SetupSprites();
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
     }
     if (self->posPtr) {
         self->position.x = self->posPtr->x;
@@ -38,7 +38,7 @@ void UIVsScoreboard_Create(void *data)
         sprintf(buffer, "%d : %d", self->p1Score, self->p2Score);
         UIVsScoreboard_SetText(self, buffer);
     }
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
 }
 
 void UIVsScoreboard_StageLoad(void) { UIVsScoreboard->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
@@ -46,9 +46,9 @@ void UIVsScoreboard_StageLoad(void) { UIVsScoreboard->aniFrames = RSDK.LoadSprit
 void UIVsScoreboard_SetupSprites(void)
 {
     RSDK_THIS(UIVsScoreboard);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &self->animator1, true, 9);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &self->animator2, true, self->winnerID + 6);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &self->animator3, true, 8);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 13, &self->animator1, true, 9);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 13, &self->animator2, true, self->winnerID + 6);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 13, &self->animator3, true, 8);
     self->sizeY = (self->size.y >> 16);
 }
 

@@ -33,7 +33,7 @@ typedef struct {
     int32 field_134;
     Animator animator1;
     Animator animator2;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
     int32 field_16C;
 } EntityUIKeyBinder;
 
@@ -59,12 +59,12 @@ int32 UIKeyBinder_GetMappings(int32 input, int32 button);
 void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings);
 int32 UIKeyBinder_Unknown4(int32 id);
 void UIKeyBinder_DrawSprites(void);
-void UIKeyBinder_Options2CB(void);
-bool32 UIKeyBinder_Options7CB(void);
-bool32 UIKeyBinder_Options8CB(void);
-void UIKeyBinder_Options5CB(void);
-void UIKeyBinder_Options6CB(void);
-void UIKeyBinder_Options3CB(void);
+void UIKeyBinder_ActionCB(void);
+bool32 UIKeyBinder_CheckButtonEnterCB(void);
+bool32 UIKeyBinder_CheckSelectedCB(void);
+void UIKeyBinder_ButtonEnterCB(void);
+void UIKeyBinder_ButtonLeaveCB(void);
+void UIKeyBinder_SelectedCB(void);
 void UIKeyBinder_Unknown12(void);
 void UIKeyBinder_Unknown13(void);
 void UIKeyBinder_Unknown14(void);

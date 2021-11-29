@@ -24,7 +24,7 @@ void UIRankButton_Update(void)
 
     EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control && self->state == UIRankButton_Unknown13 && !control->popoverHasFocus
-        && (control->state != UIControl_ProcessInputs || control->buttons[control->activeEntityID] != (EntityUIButton *)self)) {
+        && (control->state != UIControl_ProcessInputs || control->buttons[control->buttonID] != (EntityUIButton *)self)) {
         self->flag  = false;
         self->state = UIRankButton_Unknown12;
     }
@@ -65,7 +65,7 @@ void UIRankButton_Draw(void)
                            (newClipY1 >> 16) - ScreenInfo->position.y - (newClipY2 >> 17),
                            (newClipX1 >> 16) - ScreenInfo->position.x + (newClipX2 >> 17),
                            (newClipX2 >> 17) + (newClipY1 >> 16) - ScreenInfo->position.y);
-    UIRankButton_Unknown4();
+    UIRankButton_DrawSprites();
     if (setClip)
         RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
 }
@@ -86,26 +86,26 @@ void UIRankButton_Create(void *data)
     self->dword12C      = 0;
     self->rank          = 0;
     self->score         = 0;
-    self->row           = 0;
+    self->replayID      = 0;
     if (!SceneInfo->inEditor) {
         RSDK.SetText(&self->rankText, "", 0);
         RSDK.SetText(&self->nameTimeText, "-----", 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->nameTimeText);
     }
-    self->processButtonCB = UIButton_Unknown6;
-    self->touchCB         = UIButton_ProcessTouch;
-    self->options3        = UIRankButton_Options3CB;
-    self->failCB          = UIRankButton_FailCB;
-    self->options5        = UIRankButton_Options5CB;
-    self->options6        = UIRankButton_Options6CB;
-    self->options7        = UIRankButton_Options7CB;
-    self->options8        = UIRankButton_Options8CB;
-    self->dword158        = true;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator1, true, 0);
+    self->processButtonCB    = UIButton_ProcessButtonCB_Alt;
+    self->touchCB            = UIButton_ProcessTouchCB;
+    self->selectedCB         = UIRankButton_SelectedCB;
+    self->failCB             = UIRankButton_FailCB;
+    self->buttonEnterCB      = UIRankButton_ButtonEnterCB;
+    self->buttonLeaveCB      = UIRankButton_ButtonLeaveCB;
+    self->checkButtonEnterCB = UIRankButton_CheckButtonEnterCB;
+    self->checkSelectedCB    = UIRankButton_CheckSelectedCB;
+    self->dword158           = true;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->animator1, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &self->animator3, true, 12);
     RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &self->animator4, true, 13);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
 }
 
 void UIRankButton_StageLoad(void) {}
@@ -122,13 +122,13 @@ void UIRankButton_SetRankText(EntityUIRankButton *button, int32 rank)
     RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &button->rankText);
 }
 
-void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, int32 row)
+void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, int32 replayID)
 {
     button->rank  = rank;
     button->score = score;
-    button->row   = 0;
-    if (row && globals->replayTableID != -1 && API.GetUserDBByID(globals->replayTableID, row) != -1)
-        button->row = row;
+    button->replayID = 0;
+    if (replayID && globals->replayTableID != -1 && API.GetUserDBByID(globals->replayTableID, replayID) != -1)
+        button->replayID = replayID;
 
     button->leaderboardEntry = NULL;
     button->dword12C         = 0;
@@ -166,7 +166,7 @@ void UIRankButton_SetupRank(EntityUIRankButton *rankButton, LeaderboardEntry *en
     }
 }
 
-void UIRankButton_Unknown4(void)
+void UIRankButton_DrawSprites(void)
 {
     RSDK_THIS(UIRankButton);
     Vector2 drawPos;
@@ -174,20 +174,20 @@ void UIRankButton_Unknown4(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
 
-    int32 val2 = 0xA40000;
+    int32 startX = 0xA40000;
     if (!self->showsName)
-        val2 = 0x840000;
+        startX = 0x840000;
 
-    int32 val = 0xB20000;
+    int32 width = 0xB20000;
     if (self->showsName)
-        val = 0xF20000;
+        width = 0xF20000;
 
-    drawPos.x = 0x110000 - ((val + 0x150000) >> 1) + drawPos.x;
-    UIRankButton_Unknown5(0, drawPos.x, drawPos.y, 0x220000, 0x100000);
+    drawPos.x = 0x110000 - ((width + 0x2A0000) >> 1) + self->position.x;
+    UIRankButton_DrawBackgroundShape(drawPos.x, drawPos.y, 0x220000, 0x100000, 0x000000);
 
-    int32 drawX = val2 + drawPos.x;
+    int32 drawX = startX + drawPos.x;
     int32 drawY = drawPos.y;
-    UIRankButton_Unknown5(0x000000, drawX, drawPos.y, val, 0x100000);
+    UIRankButton_DrawBackgroundShape(drawX, drawPos.y, width, 0x100000, 0x000000);
     if (self->state != UIRankButton_Unknown14 || !((self->timer >> 1) % 2)) {
         if (!SceneInfo->inEditor) {
             drawPos.x = drawPos.x + self->field_14C;
@@ -204,7 +204,7 @@ void UIRankButton_Unknown4(void)
         }
 
         if (self->showsName && !SceneInfo->inEditor) {
-            drawPos.x = drawX - (val >> 1) + 0x20000;
+            drawPos.x = drawX - (width >> 1) + 0x20000;
             drawPos.x += self->field_14C;
             drawPos.y = drawY + self->field_14C;
             drawPos.y += self->field_148;
@@ -214,8 +214,7 @@ void UIRankButton_Unknown4(void)
             RSDK.DrawText(&self->animator2, &drawPos, &self->nameTimeText, 0, len, ALIGN_LEFT, 0, 2, 0, false);
         }
 
-        drawPos.x = drawX + self->field_14C;
-        drawPos.x -= 0x200000;
+        drawPos.x = (drawX + self->field_14C) - 0x200000;
         drawPos.y = (drawY + self->field_14C) + (self->field_148 - 0x20000);
         if (self->showsName)
             drawPos.x += 0x3C0000;
@@ -224,8 +223,8 @@ void UIRankButton_Unknown4(void)
 
         if (!SceneInfo->inEditor) {
             if (API.CheckDLC(DLC_PLUS)) {
-                if (self->row) {
-                    drawPos.x = self->position.x + ((val + 0x150000) >> 1);
+                if (self->replayID) {
+                    drawPos.x = self->position.x + ((width + 0x2A0000) >> 1);
                     drawPos.y = self->position.y;
                     if (self->showsName)
                         drawPos.x += 0xC0000;
@@ -243,30 +242,30 @@ void UIRankButton_Unknown4(void)
     }
 }
 
-void UIRankButton_Unknown5(int32 colour, int32 a2, int32 a3, int32 a4, int32 a5)
+void UIRankButton_DrawBackgroundShape(int32 x, int32 y, int32 width, int32 height, int32 colour)
 {
     RSDK_THIS(UIRankButton);
 
     if (self->field_14C)
-        UIWidgets_DrawParallelogram(a5 >> 16, a4 >> 16, a5 >> 16, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF,
-                           a2 - self->field_14C, a3 - self->field_14C);
-    UIWidgets_DrawParallelogram(a5 >> 16, a4 >> 16, a5 >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, self->field_14C + a2,
-                       self->field_14C + a3);
+        UIWidgets_DrawParallelogram(height >> 16, width >> 16, height >> 16, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF,
+                           x - self->field_14C, y - self->field_14C);
+    UIWidgets_DrawParallelogram(height >> 16, width >> 16, height >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, self->field_14C + x,
+                       self->field_14C + y);
 }
 
-bool32 UIRankButton_Options7CB(void)
+bool32 UIRankButton_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UIRankButton);
     return self->state == UIRankButton_Unknown13;
 }
 
-bool32 UIRankButton_Options8CB(void)
+bool32 UIRankButton_CheckSelectedCB(void)
 {
     RSDK_THIS(UIRankButton);
     return self->state == UIRankButton_Unknown14;
 }
 
-void UIRankButton_Options5CB(void)
+void UIRankButton_ButtonEnterCB(void)
 {
     RSDK_THIS(UIRankButton);
     if (self->state != UIRankButton_Unknown13) {
@@ -278,7 +277,7 @@ void UIRankButton_Options5CB(void)
     }
 }
 
-void UIRankButton_Options6CB(void)
+void UIRankButton_ButtonLeaveCB(void)
 {
     RSDK_THIS(UIRankButton);
     self->state = UIRankButton_Unknown12;
@@ -286,7 +285,7 @@ void UIRankButton_Options6CB(void)
 
 void UIRankButton_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255); }
 
-void UIRankButton_Options3CB(void)
+void UIRankButton_SelectedCB(void)
 {
     RSDK_THIS(UIRankButton);
     EntityUIControl *control = (EntityUIControl *)self->parent;
@@ -352,7 +351,7 @@ void UIRankButton_Unknown14(void)
     UIRankButton_Unknown13();
     if (++self->timer == 30) {
         self->timer = 0;
-        StateMachine_Run(self->options2);
+        StateMachine_Run(self->actionCB);
         self->state = UIRankButton_Unknown13;
     }
 
@@ -363,7 +362,7 @@ void UIRankButton_Unknown14(void)
 void UIRankButton_EditorDraw(void)
 {
     RSDK_THIS(UIRankButton);
-    UIRankButton_Unknown4();
+    UIRankButton_DrawSprites();
 }
 
 void UIRankButton_EditorLoad(void) {}

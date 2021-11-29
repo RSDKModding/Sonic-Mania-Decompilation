@@ -76,12 +76,12 @@ void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callbac
 
         button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &button->animator, true, frameID);
-        button->textSpriteIndex = UIWidgets->textSpriteIndex;
-        button->options2        = UIPopover_Unknown8;
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &button->animator, true, frameID);
+        button->textFrames      = UIWidgets->textFrames;
+        button->actionCB        = UIPopover_ButtonActionCB;
         button->size.x          = 0x380000;
         button->size.y          = 0x100000;
-        button->dword138        = 16;
+        button->bgEdgeSize      = 16;
         button->align           = 1;
         button->active          = ACTIVE_ALWAYS;
         button->drawOrder       = popover->drawOrder;
@@ -118,12 +118,12 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY)
 
         RSDK.ResetEntitySlot(SLOT_POPOVER_UICONTROL, UIControl->objectID, &size);
         EntityUIControl *control   = RSDK.GetEntityByID(SLOT_POPOVER_UICONTROL);
-        control->dwordCC           = true;
+        control->menuWasSetup      = true;
         control->position.x        = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         control->position.y        = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         control->rowCount          = popover->buttonCount;
         control->columnCount       = 1;
-        control->activeEntityID    = 0;
+        control->buttonID    = 0;
         control->backPressCB       = UIPopover_BackPressCB;
         control->selectionDisabled = true;
         popover->parent            = control;
@@ -198,7 +198,7 @@ void UIPopover_Close(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (parent) {
-        UIControl_Unknown6(parent);
+        UIControl_SetInactiveMenu(parent);
         destroyEntity(parent);
     }
 
@@ -209,7 +209,7 @@ void UIPopover_Close(void)
 
     EntityUIControl *control = UIPopover->storedControl;
     if (control) {
-        UIControl_Unknown5(UIPopover->storedControl);
+        UIControl_SetMenuLostFocus(UIPopover->storedControl);
         control->state           = UIPopover->storedControlState;
         control->popoverHasFocus = false;
     }
@@ -232,25 +232,25 @@ bool32 UIPopover_BackPressCB(void)
     return true;
 }
 
-void UIPopover_Unknown8(void)
+void UIPopover_ButtonActionCB(void)
 {
     EntityUIPopover *popover = (EntityUIPopover *)UIPopover->activeEntity;
     EntityUIControl *control = (EntityUIControl *)popover->parent;
 
     if (control) {
-        if (control->activeEntityID >= 0) {
-            if (control->activeEntityID < control->buttonCount) {
-                if (popover->flags[control->activeEntityID]) {
+        if (control->buttonID >= 0) {
+            if (control->buttonID < control->buttonCount) {
+                if (popover->flags[control->buttonID]) {
                     if (popover && popover->state != UIPopover_Unknown11) {
                         control                    = popover->parent;
                         control->selectionDisabled = true;
                         popover->timer             = 0;
                         popover->state             = UIPopover_Unknown11;
-                        popover->unknownCallback   = popover->callbacks[control->activeEntityID];
+                        popover->unknownCallback   = popover->callbacks[control->buttonID];
                     }
                 }
                 else {
-                    StateMachine_Run(popover->callbacks[control->activeEntityID]);
+                    StateMachine_Run(popover->callbacks[control->buttonID]);
                 }
             }
         }
@@ -264,7 +264,7 @@ void UIPopover_Unknown9(void)
     if (self->timer == 1) {
         RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
         EntityUIControl *control = (EntityUIControl *)self->parent;
-        UIControl_Unknown12((Entity *)control);
+        UIControl_HandleMenuLoseFocus(control);
         control->selectionDisabled = false;
         self->timer              = 0;
         self->state              = UIPopover_Unknown10;

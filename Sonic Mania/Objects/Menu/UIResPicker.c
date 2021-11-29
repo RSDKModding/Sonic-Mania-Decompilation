@@ -19,8 +19,8 @@ void UIResPicker_Update(void)
     StateMachine_Run(self->state);
 
     EntityUIControl *control = (EntityUIControl *)self->parent;
-    if (control && control->state == UIButton_Unknown16)
-        UIResPicker_Unknown3(self);
+    if (control && control->state == UIButton_State_HandleButtonLeave)
+        UIResPicker_SetChoiceInactive(self);
     self->visible = true;
 }
 
@@ -33,42 +33,42 @@ void UIResPicker_Draw(void)
     RSDK_THIS(UIResPicker);
     Vector2 drawPos;
 
-    int32 size  = (self->size.y + self->size.x) >> 16;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->offset;
-    drawPos.y -= self->offset;
+    int32 width = (self->size.y + self->size.x) >> 16;
+    drawPos.x   = self->position.x;
+    drawPos.y   = self->position.y;
+    drawPos.x -= self->buttonBounceOffset;
+    drawPos.y -= self->buttonBounceOffset;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->field_11C, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
-                       (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF,
+                                (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->field_11C, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
     drawPos = self->position;
-    drawPos.x += self->offset;
-    drawPos.y += self->offset;
-    UIWidgets_DrawParallelogram((self->size.y >> 16), size, self->field_11C, 0, 0, 0, drawPos.x, drawPos.y);
+    drawPos.x += self->buttonBounceOffset;
+    drawPos.y += self->buttonBounceOffset;
+    UIWidgets_DrawParallelogram((self->size.y >> 16), width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (self->arrowWidth > 0 && self->flag) {
         drawPos = self->position;
-        drawPos.y += self->field_120;
+        drawPos.y += self->textBounceOffset;
         drawPos.x -= self->arrowWidth << 15;
-        drawPos.x += self->offset;
-        drawPos.y += self->offset;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        drawPos.x += self->buttonBounceOffset;
+        drawPos.y += self->buttonBounceOffset;
+        RSDK.DrawSprite(&self->arrowAnimatorL, &drawPos, false);
 
         drawPos = self->position;
-        drawPos.y += self->field_120;
+        drawPos.y += self->textBounceOffset;
         drawPos.x += self->arrowWidth << 15;
-        drawPos.x += self->offset;
-        drawPos.y += self->offset;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        drawPos.x += self->buttonBounceOffset;
+        drawPos.y += self->buttonBounceOffset;
+        RSDK.DrawSprite(&self->arrowAnimatorR, &drawPos, false);
     }
 
-    if (self->textFlag) {
+    if (self->textVisible) {
         drawPos.x = self->position.x;
-        drawPos.y = self->position.y + self->field_120 + self->offset;
+        drawPos.y = self->position.y + self->textBounceOffset + self->buttonBounceOffset;
 
         switch (self->align) {
             case 0: drawPos.x = -0x60000 - (self->size.x >> 1) + drawPos.x; break;
@@ -91,14 +91,14 @@ void UIResPicker_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x400000;
-        self->field_11C     = self->size.y >> 16;
+        self->bgEdgeSize    = self->size.y >> 16;
         self->size.y        = abs(self->size.y);
-        self->textFlag      = true;
+        self->textVisible   = true;
         RSDK.SetText(&self->text, "", 0x100);
         self->processButtonCB = UIResPicker_ProcessButtonCB;
         self->touchCB         = UIResPicker_ProcessTouchCB;
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator2, true, 1);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
         RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
     }
 }
@@ -125,10 +125,10 @@ void UIResPicker_ApplySettings(void)
 {
     RSDK_THIS(UIResPicker);
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
-    self->field_128 = -0x20000;
-    self->field_12C = -0x20000;
-    self->field_120 = 0;
-    self->offset    = -0x20000;
+    self->textBounceVelocity   = -0x20000;
+    self->buttonBounceVelocity = -0x20000;
+    self->textBounceOffset     = 0;
+    self->buttonBounceOffset   = -0x20000;
     UIResPicker_GetDisplayInfo(self);
 
     RSDK.SetSettingsValue(SETTINGS_FSWIDTH, self->displayWidth);
@@ -191,12 +191,12 @@ bool32 UIResPicker_ProcessTouchCB(void)
                 int32 touchX = abs(touchEnd[i].x + self->position.x - x);
                 int32 touchY = abs(touchEnd[i].y + self->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
-                    self->field_13C = i;
-                    pressed           = true;
+                    self->touchID = i;
+                    pressed       = true;
                 }
             }
         }
-        else if (self->touchPressed && self->field_13C == i && !self->disabled) {
+        else if (self->touchPressed && self->touchID == i && !self->disabled) {
             callbacks[i]();
         }
     }
@@ -222,69 +222,83 @@ void UIResPicker_TouchedCB_Right(void)
         UIResPicker_ApplySettings();
 }
 
-void UIResPicker_Unknown3(EntityUIResPicker *entity)
+void UIResPicker_SetChoiceActive(EntityUIResPicker *entity)
 {
     if (entity) {
-        entity->field_120 = 0;
-        entity->offset    = 0;
-        entity->field_128 = 0;
-        entity->field_12C = 0;
-        entity->flag      = false;
-        entity->state     = UIResPicker_Unknown7;
+        entity->active               = ACTIVE_BOUNDS;
+        entity->visible              = true;
+        entity->textBounceOffset     = 0;
+        entity->buttonBounceOffset   = 0;
+        entity->textBounceVelocity   = -0x20000;
+        entity->buttonBounceVelocity = -0x20000;
+        entity->flag                 = true;
+        entity->state                = UIResPicker_State_HandleButtonEnter;
     }
 }
 
-void UIResPicker_Unknown7(void)
+void UIResPicker_SetChoiceInactive(EntityUIResPicker *entity)
 {
-    RSDK_THIS(UIResPicker);
-
-    self->textFlag = true;
-    if (self->field_120) {
-        int32 dist = -(self->field_120 / abs(self->field_120));
-        self->field_120 += dist << 15;
-        if (dist < 0) {
-            if (self->field_120 < 0) {
-                self->field_120 = 0;
-            }
-            else if (dist > 0 && self->field_120 > 0)
-                self->field_120 = 0;
-        }
-        else if (dist > 0 && self->field_120 > 0)
-            self->field_120 = 0;
-    }
-
-    if (self->offset) {
-        int32 dist = -(self->offset / abs(self->offset));
-        self->offset += dist << 16;
-        if (dist < 0) {
-            if (self->offset < 0) {
-                self->offset = 0;
-            }
-            else if (dist > 0 && self->offset > 0)
-                self->offset = 0;
-        }
-        else if (dist > 0 && self->offset > 0)
-            self->offset = 0;
+    if (entity) {
+        entity->textBounceOffset     = 0;
+        entity->buttonBounceOffset   = 0;
+        entity->textBounceVelocity   = 0;
+        entity->buttonBounceVelocity = 0;
+        entity->flag                 = false;
+        entity->state                = UIResPicker_State_HandleButtonLeave;
     }
 }
 
-void UIResPicker_Unknown8(void)
+void UIResPicker_State_HandleButtonLeave(void)
 {
     RSDK_THIS(UIResPicker);
 
-    self->field_128 += 0x4000;
-    self->field_120 += self->field_128;
-    self->textFlag = true;
-    if (self->field_120 >= 0 && self->field_128 > 0) {
-        self->field_120 = 0;
-        self->field_128 = 0;
+    self->textVisible = true;
+    if (self->textBounceOffset) {
+        int32 dist = -(self->textBounceOffset / abs(self->textBounceOffset));
+        self->textBounceOffset += dist << 15;
+        if (dist < 0) {
+            if (self->textBounceOffset < 0) {
+                self->textBounceOffset = 0;
+            }
+            else if (dist > 0 && self->textBounceOffset > 0)
+                self->textBounceOffset = 0;
+        }
+        else if (dist > 0 && self->textBounceOffset > 0)
+            self->textBounceOffset = 0;
     }
 
-    self->field_12C += 0x4800;
-    self->offset += self->field_12C;
-    if (self->offset >= -0x20000 && self->field_12C > 0) {
-        self->offset    = -0x20000;
-        self->field_12C = 0;
+    if (self->buttonBounceOffset) {
+        int32 dist = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
+        self->buttonBounceOffset += dist << 16;
+        if (dist < 0) {
+            if (self->buttonBounceOffset < 0) {
+                self->buttonBounceOffset = 0;
+            }
+            else if (dist > 0 && self->buttonBounceOffset > 0)
+                self->buttonBounceOffset = 0;
+        }
+        else if (dist > 0 && self->buttonBounceOffset > 0)
+            self->buttonBounceOffset = 0;
+    }
+}
+
+void UIResPicker_State_HandleButtonEnter(void)
+{
+    RSDK_THIS(UIResPicker);
+
+    self->textBounceVelocity += 0x4000;
+    self->textBounceOffset += self->textBounceVelocity;
+    self->textVisible = true;
+    if (self->textBounceOffset >= 0 && self->textBounceVelocity > 0) {
+        self->textBounceOffset   = 0;
+        self->textBounceVelocity = 0;
+    }
+
+    self->buttonBounceVelocity += 0x4800;
+    self->buttonBounceOffset += self->buttonBounceVelocity;
+    if (self->buttonBounceOffset >= -0x20000 && self->buttonBounceVelocity > 0) {
+        self->buttonBounceOffset   = -0x20000;
+        self->buttonBounceVelocity = 0;
     }
 }
 
@@ -292,17 +306,22 @@ void UIResPicker_Unknown8(void)
 void UIResPicker_EditorDraw(void)
 {
     RSDK_THIS(UIResPicker);
+
+    int sizeY = self->size.y;
+
     self->selection     = -2;
     self->drawOrder     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;
-    self->field_11C     = self->size.y >> 16;
+    self->bgEdgeSize    = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator2, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
     RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
 
     UIResPicker_Draw();
+
+    self->size.y = sizeY;
 }
 
 void UIResPicker_EditorLoad(void) {}

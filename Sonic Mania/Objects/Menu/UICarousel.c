@@ -51,19 +51,19 @@ void UICarousel_Unknown1(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
     int32 entityID             = self->field_98;
 
-    if (control->activeEntityID != entityID) {
+    if (control->buttonID != entityID) {
         int32 max      = control->buttonCount - 1;
         bool32 flag  = 0;
         bool32 flag2 = 0;
         if (entityID != -1) {
-            if (!entityID && control->activeEntityID == max) {
+            if (!entityID && control->buttonID == max) {
                 flag = true;
             }
-            else if (entityID != max || control->activeEntityID) {
-                if (control->activeEntityID < entityID) {
+            else if (entityID != max || control->buttonID) {
+                if (control->buttonID < entityID) {
                     flag = true;
                 }
-                else if (control->activeEntityID > entityID) {
+                else if (control->buttonID > entityID) {
                     flag2 = true;
                 }
             }
@@ -88,7 +88,7 @@ void UICarousel_Unknown1(void)
 
             if (self->virtualIndex > self->maxOffset - 1) {
                 self->virtualIndex        = self->maxOffset - 1;
-                control->activeEntityID = entityID;
+                control->buttonID = entityID;
             }
         }
 
@@ -97,18 +97,18 @@ void UICarousel_Unknown1(void)
                 self->scrollOffset = self->minOffset - 1;
             if (self->virtualIndex < self->minOffset) {
                 self->virtualIndex        = self->minOffset;
-                control->activeEntityID = entityID;
+                control->buttonID = entityID;
             }
         }
 
         if (self->scrollOffset >= val) {
             if (self->scrollOffset > val)
                 self->offset.y += abs(self->shift.y);
-            self->field_98 = control->activeEntityID;
+            self->field_98 = control->buttonID;
         }
         else {
             self->offset.y -= abs(self->shift.y);
-            self->field_98 = control->activeEntityID;
+            self->field_98 = control->buttonID;
         }
     }
 }

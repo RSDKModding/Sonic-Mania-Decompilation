@@ -61,16 +61,16 @@ void UIWidgets_ApplyLanguage(void)
 {
     LogHelpers_Print("Apply Language %d", Localization->language);
     switch (Localization->language) {
-        case LANGUAGE_EN: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
-        case LANGUAGE_FR: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
-        case LANGUAGE_IT: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextIT.bin", SCOPE_STAGE); break;
-        case LANGUAGE_GE: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_JP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_EN: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
+        case LANGUAGE_FR: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
+        case LANGUAGE_IT: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextIT.bin", SCOPE_STAGE); break;
+        case LANGUAGE_GE: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SP: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_JP: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
 #if RETRO_GAMEVER != VER_100
-        case LANGUAGE_KO: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
-        case LANGUAGE_TC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_KO: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SC: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_TC: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
 #endif
         default: break;
     }
@@ -180,26 +180,26 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag,
         }
     }
 }
-void UIWidgets_DrawParallelogram(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y)
+void UIWidgets_DrawParallelogram(int32 height, int32 width, int32 edgeSize, int32 red, int32 green, int32 blue, int32 x, int32 y)
 {
     Vector2 verts[4];
 
-    verts[0].x = x - (height << 15);
-    verts[0].y = y - (width << 15);
-    verts[1].x = x + (height << 15);
-    verts[1].y = y - (width << 15);
+    verts[0].x = x - (width << 15);
+    verts[0].y = y - (height << 15);
+    verts[1].x = x + (width << 15);
+    verts[1].y = y - (height << 15);
     verts[2].x = verts[1].x;
-    verts[2].y = y + (width << 15);
+    verts[2].y = y + (height << 15);
     verts[3].x = verts[0].x;
-    verts[3].y = y + (width << 15);
+    verts[3].y = y + (height << 15);
 
-    if (size << 16 <= 0) {
-        verts[0].x -= size << 16;
-        verts[2].x += size << 16;
+    if (edgeSize << 16 <= 0) {
+        verts[0].x -= edgeSize << 16;
+        verts[2].x += edgeSize << 16;
     }
     else {
-        verts[1].x += size << 16;
-        verts[3].x -= size << 16;
+        verts[1].x += edgeSize << 16;
+        verts[3].x -= edgeSize << 16;
     }
 
     if (SceneInfo->inEditor) {
@@ -313,7 +313,7 @@ void UIWidgets_EditorLoad(void)
     UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->labelSpriteIndex = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-    UIWidgets->textSpriteIndex  = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+    UIWidgets->textFrames  = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
 #if RETRO_USE_PLUS

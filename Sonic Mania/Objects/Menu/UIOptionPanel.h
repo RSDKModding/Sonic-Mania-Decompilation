@@ -28,7 +28,7 @@ typedef struct {
     int32 field_98;
     Animator animator;
     Animator animator2;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUIOptionPanel;
 
 // Object Struct

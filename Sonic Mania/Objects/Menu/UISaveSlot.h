@@ -62,7 +62,7 @@ typedef struct {
     Animator animator10;
     Animator animator11;
     Animator animator12;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUISaveSlot;
 
 // Object Struct
@@ -95,15 +95,15 @@ void UISaveSlot_Unknown8(void);
 void UISaveSlot_DeleteDLG_CB(void);
 void UISaveSlot_DeleteSaveCB(int32 status);
 void UISaveSlot_ProcessButtonCB(void);
-void UISaveSlot_SelectedSave(void);
+void UISaveSlot_SelectedCB(void);
 void UISaveSlot_NextCharacter(void);
 void UISaveSlot_PrevCharacter(void);
 void UISaveSlot_NextZone(void);
 void UISaveSlot_PrevZone(void);
-bool32 UISaveSlot_Unknown17(void);
-bool32 UISaveSlot_Unknown18(void);
-void UISaveSlot_Unknown19(void);
-void UISaveSlot_Unknown20(void);
+bool32 UISaveSlot_CheckButtonEnterCB(void);
+bool32 UISaveSlot_CheckSelectedCB(void);
+void UISaveSlot_ButtonEnterCB(void);
+void UISaveSlot_ButtonLeaveCB(void);
 void UISaveSlot_Unknown21(void);
 void UISaveSlot_Unknown22(void);
 void UISaveSlot_Unknown23(void);

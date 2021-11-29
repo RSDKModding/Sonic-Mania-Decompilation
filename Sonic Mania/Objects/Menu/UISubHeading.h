@@ -26,7 +26,7 @@ typedef struct {
     int32 storedListID;
     int32 storedFrameID;
     Animator animator;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUISubHeading;
 
 // Object Struct
@@ -55,9 +55,9 @@ int32 UISubHeading_GetMedalMods(void);
 void UISubHeading_SaveFileCB(int32 status);
 void UISubHeading_SecretsTransitionCB(void);
 void UISubHeading_Unknown9(void);
-void UISubHeading_Unknown10(void);
-void UISubHeading_Unknown11(void);
-void UISubHeading_StartNewSave(void);
+void UISubHeading_SaveSel_MenuUpdateCB(void);
+void UISubHeading_SaveSel_YPressCB(void);
+void UISubHeading_SaveButton_ActionCB(void);
 #endif
 
 #endif //!OBJ_UISUBHEADING_H

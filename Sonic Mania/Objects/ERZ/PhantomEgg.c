@@ -1137,10 +1137,10 @@ void PhantomEgg_State_Unknown21(void)
                 if (Zone_IsAct2())
                     GameProgress_MarkZoneCompleted(Zone_GetZoneID());
                 SaveGame_SaveFile(PhantomEgg_SaveGameCB);
-                UIWaitSpinner_Wait();
+                UIWaitSpinner_StartWait();
             }
             if (PhantomEgg->savedGameProgress)
-                UIWaitSpinner_Wait2();
+                UIWaitSpinner_FinishWait();
         }
 
         if (globals->saveSlotID == NO_SAVE_SLOT || PhantomEgg->savedGameProgress) {

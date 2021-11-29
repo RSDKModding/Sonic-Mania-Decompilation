@@ -32,7 +32,7 @@ typedef struct {
     int32 field_134;
     void(*sliderChangedCB)(void);
     Animator textAnimator;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUISlider;
 
 // Object Struct
@@ -57,10 +57,10 @@ void UISlider_Unknown2(void);
 
 void UISlider_ButtonPressCB(void);
 bool32 UISlider_TouchCB(void);
-void UISlider_Options5CB(void);
-void UISlider_Options6CB(void);
-bool32 UISlider_Options7CB(void);
-bool32 UISlider_Options8CB(void);
+void UISlider_ButtonEnterCB(void);
+void UISlider_ButtonLeaveCB(void);
+bool32 UISlider_CheckButtonEnterCB(void);
+bool32 UISlider_CheckSelectedCB(void);
 
 void UISlider_Unknown9(void);
 void UISlider_Unknown10(void);

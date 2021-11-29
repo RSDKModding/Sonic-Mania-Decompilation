@@ -158,7 +158,7 @@ void BSS_Message_TrackProgress_CB(int32 success)
 {
     RSDK_THIS(BSS_Message);
     self->field_6C = 0;
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
 }
 
 void BSS_Message_LoadPrevScene(void)
@@ -192,7 +192,7 @@ void BSS_Message_LoadPrevScene(void)
             else {
                 self->state    = BSS_Message_LoadGameState;
                 self->field_6C = 1;
-                UIWaitSpinner_Wait();
+                UIWaitSpinner_StartWait();
                 GameProgress_TrackGameProgress(BSS_Message_TrackProgress_CB);
             }
         }

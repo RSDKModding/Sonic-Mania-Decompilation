@@ -32,7 +32,7 @@ void PauseMenu_LateUpdate(void)
             self->visible   = true;
             self->drawOrder = DRAWLAYER_COUNT - 1;
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
-            RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 10, &self->animator, true, 3);
+            RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
             self->state = PauseMenu_State_SetupButtons;
         }
@@ -155,7 +155,7 @@ void PauseMenu_SetupMenu(void)
 
     control->rowCount       = 3;
     control->columnCount    = 1;
-    control->activeEntityID = 0;
+    control->buttonID = 0;
     self->manager           = (Entity *)control;
 
     int32 i = 0;
@@ -198,11 +198,11 @@ void PauseMenu_AddButton(uint8 id, void *action)
 
         button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 10, &button->animator, true, id);
-        button->options2           = PauseMenu_ButtonActionWrapper;
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &button->animator, true, id);
+        button->actionCB           = PauseMenu_ButtonActionCB;
         button->size.x             = 0x3C0000;
         button->size.y             = 0x150000;
-        button->dword138           = 21;
+        button->bgEdgeSize         = 21;
         button->align              = ALIGN_LEFT;
         button->drawOrder          = self->drawOrder;
         button->active             = ACTIVE_ALWAYS;
@@ -472,13 +472,13 @@ void PauseMenu_ExitFadeCB(void)
     RSDK.LoadScene();
 }
 
-void PauseMenu_ButtonActionWrapper(void)
+void PauseMenu_ButtonActionCB(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     EntityUIControl *manager   = (EntityUIControl *)pauseMenu->manager;
 
-    if (manager->activeEntityID >= 0 && manager->activeEntityID < manager->buttonCount) {
-        StateMachine_Run(pauseMenu->buttonActions[manager->activeEntityID]);
+    if (manager->buttonID >= 0 && manager->buttonID < manager->buttonCount) {
+        StateMachine_Run(pauseMenu->buttonActions[manager->buttonID]);
     }
 }
 
@@ -530,7 +530,7 @@ void PauseMenu_State_StartPause(void)
 
     if (self->timer == 1) {
         UIControl->inputLocked = 0;
-        UIControl_Unknown5((EntityUIControl *)self->manager);
+        UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
     }
 
     if (self->timer >= 8) {
@@ -764,7 +764,7 @@ void PauseMenu_State_ResumeCompetition(void)
 
     if (self->timer == 1) {
         UIControl->inputLocked = 0;
-        UIControl_Unknown5((EntityUIControl *)self->manager);
+        UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
     }
 
     if (self->timer >= 8) {

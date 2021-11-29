@@ -17,26 +17,21 @@ typedef struct {
     int32 arrowWidth;
     int32 selection;
     int32 prevSelection;
-    int32 field_11C;
-    int32 field_120;
-    int32 offset;
-    int32 field_128;
-    int32 field_12C;
-    bool32 textFlag;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
     TextInfo text;
-    bool32 field_13C;
+    int32 touchID;
     int32 displayWidth;
     int32 displayHeight;
     int32 displayRefreshRate;
-    int32 field_14C;
-    int32 field_150;
-    int32 field_154;
-    int32 field_158;
-    int32 field_15C;
-    int32 field_160;
+    Animator unusedAnimator;
     Animator textAnimator;
-    Animator animator1;
-    Animator animator2;
+    Animator arrowAnimatorL;
+    Animator arrowAnimatorR;
 } EntityUIResPicker;
 
 // Object Struct
@@ -62,8 +57,9 @@ void UIResPicker_ProcessButtonCB(void);
 bool32 UIResPicker_ProcessTouchCB(void);
 void UIResPicker_TouchedCB_Left(void);
 void UIResPicker_TouchedCB_Right(void);
-void UIResPicker_Unknown3(EntityUIResPicker *entity);
-void UIResPicker_Unknown7(void);
-void UIResPicker_Unknown8(void);
+void UIResPicker_SetChoiceActive(EntityUIResPicker *entity);
+void UIResPicker_SetChoiceInactive(EntityUIResPicker *entity);
+void UIResPicker_State_HandleButtonLeave(void);
+void UIResPicker_State_HandleButtonEnter(void);
 
 #endif //!OBJ_UIRESPICKER_H

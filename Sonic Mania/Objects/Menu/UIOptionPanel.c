@@ -5,10 +5,10 @@ ObjectUIOptionPanel *UIOptionPanel;
 void UIOptionPanel_Update(void)
 {
     RSDK_THIS(UIOptionPanel);
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->topListID, &self->animator, true, self->topFrameID);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->botListID, &self->animator2, true, self->botFrameID);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textFrames != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->animator, true, self->topFrameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->animator2, true, self->botFrameID);
+        self->textFrames = UIWidgets->textFrames;
     }
 }
 
@@ -36,9 +36,9 @@ void UIOptionPanel_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->topListID, &self->animator, true, self->topFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->botListID, &self->animator2, true, self->botFrameID);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->animator, true, self->topFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->animator2, true, self->botFrameID);
+    self->textFrames = UIWidgets->textFrames;
     if (self->panelSize < 136)
         self->panelSize = 136;
 

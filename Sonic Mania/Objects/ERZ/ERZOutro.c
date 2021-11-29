@@ -426,11 +426,11 @@ bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host)
             SaveGame_SaveProgress();
             GameProgress_GiveEnding(2);
             SaveGame_SaveFile(ERZOutro_SaveFileCB);
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
         }
         if (!ERZOutro->savedGame)
             return false;
-        UIWaitSpinner_Wait2();
+        UIWaitSpinner_FinishWait();
     }
     API_UnlockAchievement("ACH_GAME_CLEARED");
     if (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2))

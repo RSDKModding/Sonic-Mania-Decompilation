@@ -22,12 +22,13 @@ typedef struct {
     int32 align;
     int32 arrowWidth;
     bool32 isDisabled;
-    int32 sizeIY;
-    Vector2 field_134;
-    int32 field_13C;
-    int32 field_140;
-    bool32 textFlag;
-    int32 field_148;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
+    bool32 clearParentState;
     int32 touchID;
     Animator animator1;
     Animator animator2;
@@ -44,7 +45,7 @@ void UIChoice_Update(void);
 void UIChoice_LateUpdate(void);
 void UIChoice_StaticUpdate(void);
 void UIChoice_Draw(void);
-void UIChoice_Create(void* data);
+void UIChoice_Create(void *data);
 void UIChoice_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIChoice_EditorDraw(void);
@@ -53,12 +54,12 @@ void UIChoice_EditorLoad(void);
 void UIChoice_Serialize(void);
 
 // Extra Entity Functions
-void UIChoice_Unknown1(EntityUIChoice *entity);
-void UIChoice_Unknown2(EntityUIButton *entity);
+void UIChoice_SetChoiceActive(EntityUIChoice *entity);
+void UIChoice_SetChoiceInactive(EntityUIChoice *entity);
 void UIChoice_TouchedCB_Left(void);
 void UIChoice_TouchedCB_Right(void);
 bool32 UIChoice_CheckTouch(void);
-void UIChoice_Unknown6(void);
-void UIChoice_Unknown7(void);
+void UIChoice_State_HandleButtonLeave(void);
+void UIChoice_State_HandleButtonEnter(void);
 
-#endif //!OBJ_UICHOICE_H
+#endif //! OBJ_UICHOICE_H

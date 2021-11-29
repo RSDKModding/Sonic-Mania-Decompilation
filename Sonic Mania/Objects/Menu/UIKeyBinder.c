@@ -11,9 +11,9 @@ void UIKeyBinder_Update(void)
     self->touchPosStart.x += 3 * self->field_114;
     self->touchPosStart.y = self->field_114 + 0x60000;
 
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textFrames != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+        self->textFrames = UIWidgets->textFrames;
     }
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
@@ -82,7 +82,7 @@ void UIKeyBinder_Update(void)
                 LogHelpers_Print("bind = %d 0x%02x", mappings, mappings);
                 UIKeyBinder->flag         = false;
                 parent->selectionDisabled = false;
-                self->processButtonCB   = UIButton_Unknown6;
+                self->processButtonCB   = UIButton_ProcessButtonCB_Alt;
                 self->state             = UIKeyBinder_Unknown13;
                 UIKeyBinder->activeBinder = 0;
                 parent->childHasFocus     = false;
@@ -109,7 +109,7 @@ void UIKeyBinder_Update(void)
         }
     }
 
-    if (self->state == UIKeyBinder_Unknown13 && (parent->state != UIControl_ProcessInputs || parent->activeEntityID != id)) {
+    if (self->state == UIKeyBinder_Unknown13 && (parent->state != UIControl_ProcessInputs || parent->buttonID != id)) {
         self->flag  = false;
         self->state = UIKeyBinder_Unknown12;
     }
@@ -124,29 +124,29 @@ void UIKeyBinder_Draw(void) { UIKeyBinder_DrawSprites(); }
 void UIKeyBinder_Create(void *data)
 {
     RSDK_THIS(UIKeyBinder);
-    self->visible         = true;
-    self->drawOrder       = 2;
-    self->active          = ACTIVE_BOUNDS;
-    self->updateRange.x   = 0x800000;
-    self->updateRange.y   = 0x400000;
-    self->field_110       = 0x400000;
-    self->field_118       = 12;
-    self->field_114       = 0xC0000;
-    self->processButtonCB = UIButton_Unknown6;
-    self->touchCB         = UIButton_ProcessTouch;
-    self->options2        = UIKeyBinder_Options2CB;
-    self->options3        = UIKeyBinder_Options3CB;
-    self->failCB          = 0;
-    self->options5        = UIKeyBinder_Options5CB;
-    self->options6        = UIKeyBinder_Options6CB;
-    self->options7        = UIKeyBinder_Options7CB;
-    self->options8        = UIKeyBinder_Options8CB;
-    self->textFlag        = true;
-    self->field_12C       = 512;
-    self->listID          = 0;
+    self->visible            = true;
+    self->drawOrder          = 2;
+    self->active             = ACTIVE_BOUNDS;
+    self->updateRange.x      = 0x800000;
+    self->updateRange.y      = 0x400000;
+    self->field_110          = 0x400000;
+    self->field_118          = 12;
+    self->field_114          = 0xC0000;
+    self->processButtonCB    = UIButton_ProcessButtonCB_Alt;
+    self->touchCB            = UIButton_ProcessTouchCB;
+    self->actionCB           = UIKeyBinder_ActionCB;
+    self->selectedCB         = UIKeyBinder_SelectedCB;
+    self->failCB             = StateMachine_None;
+    self->buttonEnterCB      = UIKeyBinder_ButtonEnterCB;
+    self->buttonLeaveCB      = UIKeyBinder_ButtonLeaveCB;
+    self->checkButtonEnterCB = UIKeyBinder_CheckButtonEnterCB;
+    self->checkSelectedCB    = UIKeyBinder_CheckSelectedCB;
+    self->textFlag           = true;
+    self->field_12C          = 512;
+    self->listID             = 0;
     self->frameID         = UIKeyBinder_Unknown4(self->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+    self->textFrames = UIWidgets->textFrames;
     if (!SceneInfo->inEditor) {
         int32 mappings = UIKeyBinder_GetMappings(self->inputID + 1, self->type);
         int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
@@ -252,21 +252,21 @@ void UIKeyBinder_DrawSprites(void)
     }
 }
 
-void UIKeyBinder_Options2CB(void) {}
+void UIKeyBinder_ActionCB(void) {}
 
-bool32 UIKeyBinder_Options7CB(void)
+bool32 UIKeyBinder_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UIKeyBinder);
     return self->state == UIKeyBinder_Unknown13;
 }
 
-bool32 UIKeyBinder_Options8CB(void)
+bool32 UIKeyBinder_CheckSelectedCB(void)
 {
     RSDK_THIS(UIKeyBinder);
     return self->state == UIKeyBinder_Unknown14;
 }
 
-void UIKeyBinder_Options5CB(void)
+void UIKeyBinder_ButtonEnterCB(void)
 {
     RSDK_THIS(UIKeyBinder);
     if (self->state != UIKeyBinder_Unknown13) {
@@ -278,13 +278,13 @@ void UIKeyBinder_Options5CB(void)
     }
 }
 
-void UIKeyBinder_Options6CB(void)
+void UIKeyBinder_ButtonLeaveCB(void)
 {
     RSDK_THIS(UIKeyBinder);
     self->state = UIKeyBinder_Unknown12;
 }
 
-void UIKeyBinder_Options3CB(void)
+void UIKeyBinder_SelectedCB(void)
 {
     RSDK_THIS(UIKeyBinder);
     if (!UIKeyBinder->flag) {
@@ -358,7 +358,7 @@ void UIKeyBinder_Unknown14(void)
     RSDK_THIS(UIKeyBinder);
     UIKeyBinder_Unknown13();
 
-    self->processButtonCB = UIKeyBinder_Options2CB;
+    self->processButtonCB = UIKeyBinder_ActionCB;
     self->textFlag        = !((self->timer >> 1) & 1);
     self->timer++;
 }
@@ -385,7 +385,7 @@ void UIKeyBinder_Unknown16(void)
         EntityUIControl *parent   = (EntityUIControl *)binder->parent;
         UIKeyBinder->flag         = false;
         parent->selectionDisabled = false;
-        binder->processButtonCB   = UIButton_Unknown6;
+        binder->processButtonCB   = UIButton_ProcessButtonCB_Alt;
         binder->state             = UIKeyBinder_Unknown13;
         UIKeyBinder->activeBinder = NULL;
         parent->childHasFocus     = false;

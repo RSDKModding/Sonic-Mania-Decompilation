@@ -32,7 +32,7 @@ typedef struct {
     Animator textAnimator;
     Animator animator2;
     Animator animator3;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUIVsScoreboard;
 
 // Object Struct

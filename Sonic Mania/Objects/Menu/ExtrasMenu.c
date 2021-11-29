@@ -60,12 +60,12 @@ void ExtrasMenu_Unknown3(void)
     {
         if (button->listID == 7) {
             if (button->frameID == 8) {
-                button->options2  = ExtrasMenu_Callback_Credits;
-                button->field_150 = 1;
+                button->actionCB  = ExtrasMenu_CreditsButton_ActionCB;
+                button->clearParentState = true;
             }
             if (button->listID == 7 && button->frameID == 4) {
-                button->options2  = ExtrasMenu_Callback_DAGarden;
-                button->field_150 = 1;
+                button->actionCB  = ExtrasMenu_DAGarden_ActionCB;
+                button->clearParentState = true;
             }
         }
     }
@@ -73,25 +73,23 @@ void ExtrasMenu_Unknown3(void)
     foreach_all(UIChoice, choice)
     {
         if (choice->listID == 7) {
-            if (choice->frameID == 2) {
-                choice->options2  = ExtrasMenu_Callback_Puyo_vsAI;
-                choice->field_148 = 1;
-            }
-            if (choice->listID == 7) {
-                if (choice->frameID == 3) {
-                    choice->options2  = ExtrasMenu_Callback_Puyo_vsAI;
-                    choice->field_148 = 1;
-                }
-                if (choice->listID == 7) {
-                    if (choice->frameID == 6) {
-                        choice->options2  = ExtrasMenu_Callback_BSS_3K;
-                        choice->field_148 = 1;
-                    }
-                    if (choice->listID == 7 && choice->frameID == 7) {
-                        choice->options2  = ExtrasMenu_Callback_BSS_Mania;
-                        choice->field_148 = 1;
-                    }
-                }
+            switch (choice->frameID) {
+                case 2:
+                    choice->actionCB  = ExtrasMenu_Puyo_vsAI_ActionCB;
+                    choice->clearParentState = true;
+                    break;
+                case 3:
+                    choice->actionCB  = ExtrasMenu_Puyo_vsAI_ActionCB;
+                    choice->clearParentState = true;
+                    break;
+                case 6:
+                    choice->actionCB  = ExtrasMenu_BSS_S3_ActionCB;
+                    choice->clearParentState = true;
+                    break;
+                case 7:
+                    choice->actionCB  = ExtrasMenu_BSS_Mania_ActionCB;
+                    choice->clearParentState = true;
+                    break;
             }
         }
     }
@@ -124,7 +122,7 @@ bool32 ExtrasMenu_CheckMedallionCheat(void)
 void ExtrasMenu_ProcessInputs(void)
 {
     RSDK_THIS(UIControl);
-    if (self->activeEntityID == 2) {
+    if (self->buttonID == 2) {
         ExtrasMenu_ProcessMedallionCheat();
         if (ExtrasMenu_CheckMedallionCheat()) {
             if (!globals->medallionDebug) {
@@ -148,7 +146,7 @@ void ExtrasMenu_Start_Puyo_vsAI(void)
     RSDK.LoadScene();
 }
 
-void ExtrasMenu_Callback_Puyo_vsAI(void)
+void ExtrasMenu_Puyo_vsAI_ActionCB(void)
 {
     MenuSetup_StartTransition(ExtrasMenu_Start_Puyo_vsAI, 32);
 }
@@ -178,7 +176,7 @@ void ExtrasMenu_Start_Credits(void)
     RSDK.LoadScene();
 }
 
-void ExtrasMenu_Callback_Credits(void)
+void ExtrasMenu_CreditsButton_ActionCB(void)
 {
     MenuSetup_StartTransition(ExtrasMenu_Start_Credits, 32);
 }
@@ -198,7 +196,7 @@ void ExtrasMenu_Start_DAGarden(void)
     RSDK.LoadScene();
 }
 
-void ExtrasMenu_Callback_DAGarden(void) { MenuSetup_StartTransition(ExtrasMenu_Start_DAGarden, 32); }
+void ExtrasMenu_DAGarden_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Start_DAGarden, 32); }
 
 void ExtrasMenu_Start_BSS_3K(void)
 {
@@ -211,7 +209,7 @@ void ExtrasMenu_Start_BSS_3K(void)
     RSDK.LoadScene();
 }
 
-void ExtrasMenu_Callback_BSS_3K(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_3K, 32); }
+void ExtrasMenu_BSS_S3_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_3K, 32); }
 
 void ExtrasMenu_Start_BSS_Mania(void)
 {
@@ -224,7 +222,7 @@ void ExtrasMenu_Start_BSS_Mania(void)
     RSDK.LoadScene();
 }
 
-void ExtrasMenu_Callback_BSS_Mania(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_Mania, 32); }
+void ExtrasMenu_BSS_Mania_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_Mania, 32); }
 
 #if RETRO_INCLUDE_EDITOR
 void ExtrasMenu_EditorDraw(void) {}

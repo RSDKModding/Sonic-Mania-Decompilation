@@ -32,7 +32,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Animator animator6;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
     int32 prevFrameID;
 } EntityUIVsCharSelector;
 

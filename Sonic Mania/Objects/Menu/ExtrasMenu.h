@@ -42,17 +42,17 @@ bool32 ExtrasMenu_CheckMedallionCheat(void);
 void ExtrasMenu_ProcessInputs(void);
 
 void ExtrasMenu_Start_Puyo_vsAI(void);
-void ExtrasMenu_Callback_Puyo_vsAI(void);
+void ExtrasMenu_Puyo_vsAI_ActionCB(void);
 void ExtrasMenu_Start_Puyo_vs2P(void);
 void ExtrasMenu_Callback_Puyo_vs2P(void);
 void ExtrasMenu_Start_Credits(void);
-void ExtrasMenu_Callback_Credits(void);
+void ExtrasMenu_CreditsButton_ActionCB(void);
 void ExtrasMenu_Start_DAGarden(void);
-void ExtrasMenu_Callback_DAGarden(void);
+void ExtrasMenu_DAGarden_ActionCB(void);
 void ExtrasMenu_Start_BSS_3K(void);
-void ExtrasMenu_Callback_BSS_3K(void);
+void ExtrasMenu_BSS_S3_ActionCB(void);
 void ExtrasMenu_Start_BSS_Mania(void);
-void ExtrasMenu_Callback_BSS_Mania(void);
+void ExtrasMenu_BSS_Mania_ActionCB(void);
 #endif
 
 #endif //!OBJ_EXTRASMENU_H

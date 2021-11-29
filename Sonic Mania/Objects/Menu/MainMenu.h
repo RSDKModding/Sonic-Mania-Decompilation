@@ -37,9 +37,9 @@ void MainMenu_Serialize(void);
 void MainMenu_Initialize(void);
 bool32 MainMenu_ReturnToTitleOption(void);
 void MainMenu_ExitGame(void);
-void MainMenu_ExitGameOption(void);
+void MainMenu_ExitButton_ActionCB(void);
 void MainMenu_StartExitGame(void);
-void MainMenu_ChangeMenu(void);
+void MainMenu_MenuButton_ActionCB(void);
 
 #if RETRO_USE_EGS
 int32 MainMenu_BuyPlusDialogCB(void)
@@ -47,7 +47,7 @@ int32 MainMenu_BuyPlusDialogCB(void)
 
 void MainMenu_Unknown2(void);
 void MainMenu_Unknown3(void);
-void MainMenu_Unknown4(void);
+void MainMenu_MenuSetupCB(void);
 #endif
 
 #endif //!OBJ_MAINMENU_H

@@ -62,15 +62,15 @@ void TimeAttackData_ClearOptions(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     param->selectionFlag   = 0;
-    memset(param->menuTag, 0, 0x100);
-    param->selectionID = 0;
-    param->unused1     = 0;
-    param->clearFlag   = 0;
-    param->zoneID      = 0;
-    param->actID       = 0;
+    memset(param->menuTag, 0, sizeof(param->menuTag));
+    param->selectionID      = 0;
+    param->startedTAAttempt = false;
+    param->clearFlag        = false;
+    param->zoneID           = 0;
+    param->actID            = 0;
 #if RETRO_USE_PLUS
-    param->timeAttackRank    = 0;
-    globals->gameMode = MODE_MANIA;
+    param->timeAttackRank = 0;
+    globals->gameMode     = MODE_MANIA;
 #else
     param->timeScore  = 0;
     globals->gameMode = MODE_NOSAVE;
@@ -330,7 +330,7 @@ int32 TimeAttackData_GetScore(uint8 zone, uint8 charID, uint8 act, int32 encore,
 
 int32 TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int32 encore, int32 rank)
 {
-    if (rank >= 3 && rank)
+    if (rank > 3 && rank)
         return 0;
 
     uint8 rankID = rank - 1;

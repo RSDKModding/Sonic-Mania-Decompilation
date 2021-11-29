@@ -62,7 +62,7 @@ bool32 ManiaModeMenu_InitUserdata(void)
             }
 
             if (!MenuSetup->gameLoaded) {
-                UIWaitSpinner_Wait();
+                UIWaitSpinner_StartWait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
                 ReplayRecorder_LoadReplayDB(NULL);
@@ -74,7 +74,7 @@ bool32 ManiaModeMenu_InitUserdata(void)
                 && globals->taTableLoaded == STATUS_OK) {
                 if (!API.GetUserStorageNoSave() && DialogRunner_NotifyAutosave())
                     return false;
-                UIWaitSpinner_Wait2();
+                UIWaitSpinner_FinishWait();
                 if (DialogRunner_CheckUnreadNotifs())
                     return false;
                 MenuSetup->dword10 = 1;
@@ -82,7 +82,7 @@ bool32 ManiaModeMenu_InitUserdata(void)
             }
 
             if (API.GetUserStorageNoSave()) {
-                UIWaitSpinner_Wait2();
+                UIWaitSpinner_FinishWait();
                 return true;
             }
             else {
@@ -232,13 +232,13 @@ void ManiaModeMenu_Unknown7(void)
         if (strcmp(param->menuTag, "") != 0) {
             RSDK.GetCString(buffer, &control->tag);
             if (strcmp((const char *)buffer, param->menuTag) != 0) {
-                UIControl_Unknown6(control);
+                UIControl_SetInactiveMenu(control);
             }
             else {
-                control->storedEntityID = param->selectionID;
-                control->dwordC4        = 1;
-                UIControl_Unknown4(control);
-                control->activeEntityID = param->selectionID;
+                control->storedButtonID  = param->selectionID;
+                control->hasStoredButton = true;
+                UIControl_SetActiveMenu(control);
+                control->buttonID = param->selectionID;
             }
         }
     }

@@ -6,9 +6,9 @@ void UISlider_Update(void)
 {
     RSDK_THIS(UISlider);
 
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->textAnimator, true, self->frameID);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textFrames != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
+        self->textFrames = UIWidgets->textFrames;
     }
 
     self->touchPosEnd.y = self->field_11C;
@@ -26,7 +26,7 @@ void UISlider_Update(void)
         }
     }
 
-    if (self->state == UISlider_Unknown10 && (control->state != UIControl_ProcessInputs || control->activeEntityID != id)) {
+    if (self->state == UISlider_Unknown10 && (control->state != UIControl_ProcessInputs || control->buttonID != id)) {
         self->flag      = false;
         self->field_118 = 0;
         self->field_11C = 0;
@@ -64,16 +64,16 @@ void UISlider_Create(void *data)
     self->field_110       = 0x180000;
     self->processButtonCB = UISlider_ButtonPressCB;
     self->touchCB         = UISlider_TouchCB;
-    self->options3        = 0;
-    self->failCB          = 0;
-    self->options5        = UISlider_Options5CB;
-    self->options6        = UISlider_Options6CB;
-    self->options7        = UISlider_Options7CB;
-    self->options8        = UISlider_Options8CB;
+    self->selectedCB        = StateMachine_None;
+    self->failCB          = StateMachine_None;
+    self->buttonEnterCB        = UISlider_ButtonEnterCB;
+    self->buttonLeaveCB        = UISlider_ButtonLeaveCB;
+    self->checkButtonEnterCB        = UISlider_CheckButtonEnterCB;
+    self->checkSelectedCB        = UISlider_CheckSelectedCB;
     self->textFlag        = true;
     self->sliderPos       = (UISlider_MaxVal - UISlider_MinVal) / 2;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->textAnimator, true, self->frameID);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
+    self->textFrames = UIWidgets->textFrames;
 }
 
 void UISlider_StageLoad(void) {}
@@ -130,13 +130,13 @@ void UISlider_ButtonPressCB(void)
 
     int32 rowID = 0;
     if (parent->rowCount && parent->columnCount)
-        rowID = parent->activeEntityID / parent->columnCount;
+        rowID = parent->buttonID / parent->columnCount;
     else
         rowID = 0;
 
     int32 columnID = 0;
     if (parent->columnCount)
-        columnID = parent->activeEntityID % parent->columnCount;
+        columnID = parent->buttonID % parent->columnCount;
     else
         columnID = 0;
 
@@ -177,8 +177,8 @@ void UISlider_ButtonPressCB(void)
         if (rowID * parent->columnCount + columnID < max)
             max = rowID * parent->columnCount + columnID;
 
-        if (parent->activeEntityID != max) {
-            parent->activeEntityID = max;
+        if (parent->buttonID != max) {
+            parent->buttonID = max;
             if (self->flag) {
                 self->flag  = false;
                 self->state = UISlider_Unknown9;
@@ -195,8 +195,8 @@ void UISlider_ButtonPressCB(void)
             }
         }
 
-        if (!self->flag && parent->activeEntityID == id && parent->state == UIControl_ProcessInputs && !parent->dialogHasFocus) {
-            UISlider_Options5CB();
+        if (!self->flag && parent->buttonID == id && parent->state == UIControl_ProcessInputs && !parent->dialogHasFocus) {
+            UISlider_ButtonEnterCB();
         }
     }
 }
@@ -251,7 +251,7 @@ bool32 UISlider_TouchCB(void)
     return false;
 }
 
-void UISlider_Options5CB(void)
+void UISlider_ButtonEnterCB(void)
 {
     RSDK_THIS(UISlider);
     if (!self->flag) {
@@ -264,7 +264,7 @@ void UISlider_Options5CB(void)
     }
 }
 
-void UISlider_Options6CB(void)
+void UISlider_ButtonLeaveCB(void)
 {
     RSDK_THIS(UISlider);
     if (self->flag) {
@@ -273,13 +273,13 @@ void UISlider_Options6CB(void)
     }
 }
 
-bool32 UISlider_Options7CB(void)
+bool32 UISlider_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UISlider);
     return self->flag;
 }
 
-bool32 UISlider_Options8CB(void) { return false; }
+bool32 UISlider_CheckSelectedCB(void) { return false; }
 
 void UISlider_Unknown9(void)
 {

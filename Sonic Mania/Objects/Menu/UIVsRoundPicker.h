@@ -18,19 +18,19 @@ typedef struct {
     int32 val;
     int32 maxVal;
     int32 prevVal;
-    int32 dword120;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    int32 field_130;
-    bool32 textFlag;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
     TextInfo text;
     bool32 touchID;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    uint16 textSpriteIndex;
+    Animator textAnimator;
+    Animator numbersAnimator;
+    Animator arrowAnimatorL;
+    Animator arrowAnimatorR;
+    uint16 textFrames;
 } EntityUIVsRoundPicker;
 
 // Object Struct
@@ -50,15 +50,16 @@ void UIVsRoundPicker_EditorLoad(void);
 void UIVsRoundPicker_Serialize(void);
 
 // Extra Entity Functions
-void UIVsRoundPicker_Unknown2(void);
+void UIVsRoundPicker_DrawText(void);
 void UIVsRoundPicker_SetText(void);
 void UIVsRoundPicker_Apply(void);
 void UIVsRoundPicker_ProcessButtonCB(void);
 bool32 UIVsRoundPicker_ProcessTouchCB(void);
 void UIVsRoundPicker_TouchedCB_Left(void);
 void UIVsRoundPicker_TouchedCB_Right(void);
-void UIVsRoundPicker_Unknown4(EntityUIVsRoundPicker *entity);
-void UIVsRoundPicker_Unknown8(void);
-void UIVsRoundPicker_Unknown9(void);
+void UIVsRoundPicker_SetChoiceActive(EntityUIVsRoundPicker *entity);
+void UIVsRoundPicker_SetChoiceInactive(EntityUIVsRoundPicker *entity);
+void UIVsRoundPicker_State_HandleButtonLeave(void);
+void UIVsRoundPicker_State_HandleButtonEnter(void);
 
 #endif //!OBJ_UIVSROUNDPICKER_H

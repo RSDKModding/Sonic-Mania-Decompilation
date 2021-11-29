@@ -59,7 +59,7 @@ void UIVsZoneButton_Update(void)
                 }
             }
 
-            if (parent->activeEntityID != id) {
+            if (parent->buttonID != id) {
                 self->flag  = false;
                 self->flag  = false;
                 self->state = UIVsZoneButton_Unknown13;
@@ -87,21 +87,21 @@ void UIVsZoneButton_Draw(void)
 void UIVsZoneButton_Create(void *data)
 {
     RSDK_THIS(UIVsZoneButton);
-    self->active          = ACTIVE_BOUNDS;
-    self->drawOrder       = 2;
-    self->visible         = 1;
-    self->drawFX          = FX_FLIP;
-    self->updateRange.x   = 0x800000;
-    self->updateRange.y   = 0x300000;
-    self->processButtonCB = UIButton_Unknown6;
-    self->touchCB         = UIButton_ProcessTouch;
-    self->options3        = UIVsZoneButton_Options3CB;
-    self->failCB          = UIVsZoneButton_FailCB;
-    self->options5        = UIVsZoneButton_Options5CB;
-    self->options6        = UIVsZoneButton_Options6CB;
-    self->options7        = UIVsZoneButton_Options7CB;
-    self->options8        = UIVsZoneButton_Options8CB;
-    self->state           = UIVsZoneButton_Unknown13;
+    self->active             = ACTIVE_BOUNDS;
+    self->drawOrder          = 2;
+    self->visible            = true;
+    self->drawFX             = FX_FLIP;
+    self->updateRange.x      = 0x800000;
+    self->updateRange.y      = 0x300000;
+    self->processButtonCB    = UIButton_ProcessButtonCB_Alt;
+    self->touchCB            = UIButton_ProcessTouchCB;
+    self->selectedCB         = UIVsZoneButton_SelectedCB;
+    self->failCB             = UIVsZoneButton_FailCB;
+    self->buttonEnterCB      = UIVsZoneButton_ButtonEnterCB;
+    self->buttonLeaveCB      = UIVsZoneButton_ButtonLeaveCB;
+    self->checkButtonEnterCB = UIVsZoneButton_CheckButtonEnterCB;
+    self->checkSelectedCB    = UIVsZoneButton_CheckSelectedCB;
+    self->state              = UIVsZoneButton_Unknown13;
     UIVsZoneButton_SetupAnimators();
     UIVsZoneButton_SetNameText();
 }
@@ -236,19 +236,19 @@ void UIVsZoneButton_Unknown6(void)
     }
 }
 
-bool32 UIVsZoneButton_Options7CB(void)
+bool32 UIVsZoneButton_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
     return self->state == UIVsZoneButton_Unknown14;
 }
 
-bool32 UIVsZoneButton_Options8CB(void)
+bool32 UIVsZoneButton_CheckSelectedCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
     return self->state == UIVsZoneButton_Unknown15;
 }
 
-void UIVsZoneButton_Options3CB(void)
+void UIVsZoneButton_SelectedCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
     EntityUIControl *parent = (EntityUIControl *)self->parent;
@@ -265,7 +265,7 @@ void UIVsZoneButton_Options3CB(void)
 
 void UIVsZoneButton_FailCB(void) { RSDK.PlaySfx(UIVsZoneButton->sfxFail, false, 255); }
 
-void UIVsZoneButton_Options5CB(void)
+void UIVsZoneButton_ButtonEnterCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
 
@@ -279,7 +279,7 @@ void UIVsZoneButton_Options5CB(void)
     }
 }
 
-void UIVsZoneButton_Options6CB(void)
+void UIVsZoneButton_ButtonLeaveCB(void)
 {
     RSDK_THIS(UIVsZoneButton);
     self->flag  = false;
@@ -331,8 +331,8 @@ void UIVsZoneButton_Unknown15(void)
         self->flag            = false;
         self->timer           = 0;
         self->state           = UIVsZoneButton_Unknown13;
-        self->processButtonCB = UIButton_Unknown6;
-        StateMachine_Run(self->options2);
+        self->processButtonCB = UIButton_ProcessButtonCB_Alt;
+        StateMachine_Run(self->actionCB);
     }
     else {
         self->timer++;

@@ -74,13 +74,13 @@ typedef enum { DLC_PLUS } GameDLC;
     StateMachine(state);                                                                                                                             \
     void (*processButtonCB)(void);                                                                                                                   \
     bool32 (*touchCB)(void);                                                                                                                         \
-    void (*options2)(void);                                                                                                                          \
-    void (*options3)(void);                                                                                                                          \
+    void (*actionCB)(void);                                                                                                                          \
+    void (*selectedCB)(void);                                                                                                                        \
     void (*failCB)(void);                                                                                                                            \
-    void (*options5)(void);                                                                                                                          \
-    void (*options6)(void);                                                                                                                          \
-    bool32 (*options7)(void);                                                                                                                        \
-    bool32 (*options8)(void);                                                                                                                        \
+    void (*buttonEnterCB)(void);                                                                                                                     \
+    void (*buttonLeaveCB)(void);                                                                                                                     \
+    bool32 (*checkButtonEnterCB)(void);                                                                                                              \
+    bool32 (*checkSelectedCB)(void);                                                                                                                 \
     int32 timer;                                                                                                                                     \
     Vector2 posUnknown2;                                                                                                                             \
     Entity *parent;                                                                                                                                  \

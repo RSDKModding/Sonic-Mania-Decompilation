@@ -47,7 +47,7 @@ typedef struct {
     Animator animator10;
     Animator animator11;
     Animator animator12;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUILeaderboard;
 
 // Object Struct

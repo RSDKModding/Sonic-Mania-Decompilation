@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 inputLocked;
-    int32 field_C;
+    bool32 isProcessingInput;
+    bool32 inputLocked;
+    bool32 lockInput;
     bool32 upPress[4];
     bool32 downPress[4];
     bool32 leftPress[4];
@@ -31,10 +31,10 @@ typedef struct {
 #if RETRO_USE_PLUS
     bool32 keyStart;
 #endif
-    bool32 flagA;
-    int32 field_C8;
+    bool32 forceBackPress;
+    bool32 hasTouchInput;
     int32 timer;
-    int32 field_D0;
+    int32 unused1;
     uint16 aniFrames;
 } ObjectUIControl;
 
@@ -42,8 +42,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    int32 activeEntityID;
+    int32 unused1;
+    int32 buttonID;
     TextInfo tag;
     TextInfo parentTag;
     bool32 activeOnLoad;
@@ -64,18 +64,18 @@ typedef struct {
     bool32 noWrap;
 #endif
     Vector2 startPos;
-    Vector2 posUnknown;
+    Vector2 targetPos;
     bool32 childHasFocus;
     bool32 dialogHasFocus;
 #if RETRO_USE_PLUS
     bool32 popoverHasFocus;
 #endif
-    int32 dwordC4;
+    bool32 hasStoredButton;
     bool32 selectionDisabled;
-    int32 dwordCC;
+    bool32 menuWasSetup;
     int32 backoutTimer;
-    int32 storedEntityID;
-    int32 field_D8;
+    int32 storedButtonID;
+    int32 lastButtonID;
     Entity *heading;
     Entity *shifter;
 #if RETRO_USE_PLUS
@@ -85,8 +85,8 @@ typedef struct {
     EntityUIButton *buttons[64];
     bool32 (*backPressCB)(void);
     void (*processButtonInputCB)(void);
-    void (*unknownCallback3)(void);
-    void (*unknownCallback4)(void);
+    void (*menuSetupCB)(void);
+    void (*menuUpdateCB)(void);
     void (*yPressCB)(void);
     void (*xPressCB)(void);
     Animator animator;
@@ -109,24 +109,27 @@ void UIControl_EditorLoad(void);
 void UIControl_Serialize(void);
 
 // Extra Entity Functions
-int32 UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity);
-void UIControl_Unknown2(EntityUIControl *control);
+int32 UIControl_GetButtonID(EntityUIControl *control, EntityUIButton *entity);
+void UIControl_MenuChangeButtonInit(EntityUIControl *control);
+
 #if RETRO_USE_PLUS
-void UIControl_Unknown3(EntityUIControl *entity);
+void UIControl_SetActiveMenuButtonPrompts(EntityUIControl *entity);
 #endif
-void UIControl_Unknown4(EntityUIControl *entity);
-void UIControl_Unknown5(EntityUIControl *entity);
-void UIControl_Unknown6(EntityUIControl *entity);
-void UIControl_Unknown7(void);
+void UIControl_SetActiveMenu(EntityUIControl *entity);
+void UIControl_SetMenuLostFocus(EntityUIControl *entity);
+void UIControl_SetInactiveMenu(EntityUIControl *entity);
+void UIControl_SetupButtons(void);
+
 EntityUIControl *UIControl_GetUIControl(void);
-bool32 UIControl_Unknown9(EntityUIControl *entity);
+bool32 UIControl_isMoving(EntityUIControl *entity);
 void UIControl_MatchMenuTag(const char *text);
-void UIControl_Unknown11(TextInfo *info);
-void UIControl_Unknown12(Entity *control);
-void UIControl_Unknown13(void);
+void UIControl_HandleMenuChange(TextInfo *info);
+void UIControl_HandleMenuLoseFocus(EntityUIControl *parent);
+void UIControl_ReturnToParentMenu(void);
+
 void UIControl_ClearInputs(char id);
-void UIControl_Unknown15(EntityUIControl *entity, int32 x, int32 y);
-void UIControl_Unknown16(void);
+void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y);
+void UIControl_HandlePosition(void);
 void UIControl_ProcessInputs(void);
 void UIControl_ProcessButtonInput(void);
 

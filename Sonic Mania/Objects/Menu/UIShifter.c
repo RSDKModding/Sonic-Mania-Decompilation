@@ -11,9 +11,9 @@ void UIShifter_LateUpdate(void)
     if (self->parent) {
         int32 x = 0;
         int32 y = 0;
-        if (self->parent->field_D8 > 0) {
-            x = self->parent->field_D8 * self->shift.x;
-            y = self->parent->field_D8 * self->shift.y;
+        if (self->parent->lastButtonID > 0) {
+            x = self->parent->lastButtonID * self->shift.x;
+            y = self->parent->lastButtonID * self->shift.y;
         }
         self->field_60 = x;
         self->field_64 = y;

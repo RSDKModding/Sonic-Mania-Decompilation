@@ -24,7 +24,7 @@ typedef struct {
     int32 dword12C;
     int32 rank;
     int32 score;
-    int32 row;
+    int32 replayID;
     int32 dword13C;
     int32 dword140;
     int32 dword144;
@@ -42,7 +42,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUIRankButton;
 
 // Object Struct
@@ -63,16 +63,16 @@ void UIRankButton_Serialize(void);
 
 // Extra Entity Functions
 void UIRankButton_SetRankText(EntityUIRankButton *button, int32 rank);
-void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, int32 row);
+void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, int32 replayID);
 void UIRankButton_SetupRank(EntityUIRankButton *rankButton, LeaderboardEntry *entry);
-void UIRankButton_Unknown4(void);
-void UIRankButton_Unknown5(int32 colour, int32 a2, int32 a3, int32 a4, int32 a5);
-bool32 UIRankButton_Options7CB(void);
-bool32 UIRankButton_Options8CB(void);
-void UIRankButton_Options5CB(void);
-void UIRankButton_Options6CB(void);
+void UIRankButton_DrawSprites(void);
+void UIRankButton_DrawBackgroundShape(int32 colour, int32 a2, int32 a3, int32 a4, int32 a5);
+bool32 UIRankButton_CheckButtonEnterCB(void);
+bool32 UIRankButton_CheckSelectedCB(void);
+void UIRankButton_ButtonEnterCB(void);
+void UIRankButton_ButtonLeaveCB(void);
 void UIRankButton_FailCB(void);
-void UIRankButton_Options3CB(void);
+void UIRankButton_SelectedCB(void);
 void UIRankButton_Unknown12(void);
 void UIRankButton_Unknown13(void);
 void UIRankButton_Unknown14(void);

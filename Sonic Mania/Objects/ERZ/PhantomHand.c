@@ -185,7 +185,7 @@ void PhantomHand_State_Unknown3(void)
     RSDK.ProcessAnimation(&self->animator1);
 
     bool32 flag = true;
-    for (int i = SLOT_PLAYER1; i < SLOT_PLAYER3; ++i) {
+    for (int i = SLOT_PLAYER1; i < SLOT_PLAYER1 + 2; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         if (player->objectID == Player->objectID)
             flag = flag && player->interaction && player->state == Player_State_None;

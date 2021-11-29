@@ -7,10 +7,10 @@ void UIButtonPrompt_Update(void)
     RSDK_THIS(UIButtonPrompt);
 
     bool32 textChanged = false;
-    if (self->textSprite != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
+    if (self->textSprite != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->animator3, true, self->promptID);
         textChanged        = true;
-        self->textSprite = UIWidgets->textSpriteIndex;
+        self->textSprite = UIWidgets->textFrames;
     }
     if (self->scale.x == 0x200 && self->scaleMax == 0x200 && self->scaleSpeed)
         self->scaleSpeed = 0;
@@ -32,7 +32,7 @@ void UIButtonPrompt_Update(void)
     self->scale.y = self->scale.x;
 
     if (self->prevPrompt != self->promptID) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->animator3, true, self->promptID);
         self->prevPrompt = self->promptID;
     }
 
@@ -126,9 +126,9 @@ void UIButtonPrompt_Create(void *data)
         self->updateRange.y = 0x800000;
         self->flag          = true;
         RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->animator3, true, self->promptID);
         UIButtonPrompt_Unknown4();
-        self->textSprite  = UIWidgets->textSpriteIndex;
+        self->textSprite  = UIWidgets->textFrames;
         self->state       = UIButtonPrompt_Unknown6;
         self->parent      = 0;
         self->touchSize.x = 0x580000;
@@ -391,9 +391,9 @@ void UIButtonPrompt_EditorDraw(void)
     self->updateRange.y = 0x800000;
     self->flag          = true;
     RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->animator3, true, self->promptID);
     UIButtonPrompt_Unknown4();
-    self->textSprite = UIWidgets->textSpriteIndex;
+    self->textSprite = UIWidgets->textFrames;
 
     UIButtonPrompt_Draw();
 }

@@ -12,9 +12,9 @@ void UIVsRoundPicker_Update(void)
     self->touchPosStart.y = self->size.y + 0x60000;
     self->touchPosEnd.x   = -(self->touchPosStart.x >> 1);
 
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator1, true, 4);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textFrames != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
+        self->textFrames = UIWidgets->textFrames;
     }
     if (self->val != self->prevVal) {
         UIVsRoundPicker_SetText();
@@ -25,8 +25,8 @@ void UIVsRoundPicker_Update(void)
 
     EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control) {
-        if (control->state == UIButton_Unknown16)
-            UIVsRoundPicker_Unknown4(self);
+        if (control->state == UIButton_State_HandleButtonLeave)
+            UIVsRoundPicker_SetChoiceInactive(self);
     }
 }
 
@@ -39,39 +39,39 @@ void UIVsRoundPicker_Draw(void)
     RSDK_THIS(UIVsRoundPicker);
     Vector2 drawPos;
 
-    int32 size  = (self->size.y + self->size.x) >> 16;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->field_128;
-    drawPos.y -= self->field_128;
+    int32 width = (self->size.y + self->size.x) >> 16;
+    drawPos.x   = self->position.x;
+    drawPos.y   = self->position.y;
+    drawPos.x -= self->buttonBounceOffset;
+    drawPos.y -= self->buttonBounceOffset;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->dword120, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
-                       (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF,
+                                (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->dword120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
     drawPos = self->position;
-    drawPos.x += self->field_128;
-    drawPos.y += self->field_128;
-    UIWidgets_DrawParallelogram((self->size.y >> 16), size, self->dword120, 0, 0, 0, drawPos.x, drawPos.y);
+    drawPos.x += self->buttonBounceOffset;
+    drawPos.y += self->buttonBounceOffset;
+    UIWidgets_DrawParallelogram((self->size.y >> 16), width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (self->arrowWidth > 0 && self->flag) {
         if (self->val >= 2) {
             drawPos = self->position;
-            drawPos.y += self->field_124;
+            drawPos.y += self->textBounceOffset;
             drawPos.x -= self->arrowWidth << 15;
-            RSDK.DrawSprite(&self->animator3, &drawPos, false);
+            RSDK.DrawSprite(&self->arrowAnimatorL, &drawPos, false);
         }
         if (self->val < self->maxVal) {
             drawPos = self->position;
-            drawPos.y += self->field_124;
+            drawPos.y += self->textBounceOffset;
             drawPos.x += self->arrowWidth << 15;
-            RSDK.DrawSprite(&self->animator4, &drawPos, false);
+            RSDK.DrawSprite(&self->arrowAnimatorR, &drawPos, false);
         }
     }
-    if (self->textFlag)
-        UIVsRoundPicker_Unknown2();
+    if (self->textVisible)
+        UIVsRoundPicker_DrawText();
 }
 
 void UIVsRoundPicker_Create(void *data)
@@ -81,35 +81,36 @@ void UIVsRoundPicker_Create(void *data)
         self->val = 3;
     if (!self->maxVal)
         self->maxVal = 12;
+
     if (!SceneInfo->inEditor) {
         self->visible         = true;
         self->drawOrder       = 2;
         self->active          = ACTIVE_BOUNDS;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x400000;
-        self->dword120        = self->size.y >> 16;
+        self->bgEdgeSize      = self->size.y >> 16;
         self->size.y          = abs(self->size.y);
-        self->textFlag        = true;
+        self->textVisible     = true;
         self->processButtonCB = UIVsRoundPicker_ProcessButtonCB;
         self->touchCB         = UIVsRoundPicker_ProcessTouchCB;
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator1, true, 4);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
-        RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
+        self->textFrames = UIWidgets->textFrames;
+        RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->numbersAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
         UIVsRoundPicker_SetText();
     }
 }
 
 void UIVsRoundPicker_StageLoad(void) { UIVsRoundPicker->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-void UIVsRoundPicker_Unknown2(void)
+void UIVsRoundPicker_DrawText(void)
 {
     RSDK_THIS(UIVsRoundPicker);
     Vector2 drawPos;
 
     drawPos.x = self->position.x;
-    drawPos.y = self->position.y + self->field_124 - 0x40000;
+    drawPos.y = self->position.y + self->textBounceOffset - 0x40000;
     switch (self->align) {
         case 0: drawPos.x = -0x60000 - (self->size.x >> 1) + self->position.x; break;
         case 2: drawPos.x = self->position.x + (self->size.x >> 1) - 0x60000; break;
@@ -117,10 +118,10 @@ void UIVsRoundPicker_Unknown2(void)
 
     int32 width = RSDK.GetStringWidth(UIVsRoundPicker->aniFrames, 15, &self->text, 0, self->text.textLength, 0) << 16;
     drawPos.x -= (width + 0x300000) >> 1;
-    RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
+    RSDK.DrawText(&self->numbersAnimator, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
 
     drawPos.x += width + 0x40000;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 }
 
 void UIVsRoundPicker_SetText(void)
@@ -138,10 +139,10 @@ void UIVsRoundPicker_Apply(void)
 
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
 
-    self->field_12C = -0x20000;
-    self->field_130 = -0x20000;
-    self->field_124 = 0;
-    self->field_128 = -0x20000;
+    self->textBounceVelocity   = -0x20000;
+    self->buttonBounceVelocity = -0x20000;
+    self->textBounceOffset     = 0;
+    self->buttonBounceOffset   = -0x20000;
     UIVsRoundPicker_SetText();
 }
 
@@ -193,7 +194,7 @@ bool32 UIVsRoundPicker_ProcessTouchCB(void)
                 int32 touchY = abs(touchEnd[i].y + self->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     self->touchID = i;
-                    pressed         = true;
+                    pressed       = true;
                 }
             }
         }
@@ -226,69 +227,82 @@ void UIVsRoundPicker_TouchedCB_Right(void)
     }
 }
 
-void UIVsRoundPicker_Unknown4(EntityUIVsRoundPicker *entity)
+void UIVsRoundPicker_SetChoiceActive(EntityUIVsRoundPicker *entity)
 {
     if (entity) {
-        entity->field_124 = 0;
-        entity->field_128 = 0;
-        entity->field_12C = 0;
-        entity->field_130 = 0;
-        entity->flag      = false;
-        entity->state     = UIVsRoundPicker_Unknown8;
+        entity->active               = ACTIVE_BOUNDS;
+        entity->textBounceOffset     = 0;
+        entity->buttonBounceOffset   = 0;
+        entity->textBounceVelocity   = -0x20000;
+        entity->buttonBounceVelocity = -0x20000;
+        entity->flag                 = true;
+        entity->state                = UIVsRoundPicker_State_HandleButtonEnter;
     }
 }
 
-void UIVsRoundPicker_Unknown8(void)
+void UIVsRoundPicker_SetChoiceInactive(EntityUIVsRoundPicker *entity)
 {
-    RSDK_THIS(UIVsRoundPicker);
-
-    self->textFlag = true;
-    if (self->field_124) {
-        int32 dist = -(self->field_124 / abs(self->field_124));
-        self->field_124 += dist << 15;
-        if (dist < 0) {
-            if (self->field_124 < 0) {
-                self->field_124 = 0;
-            }
-            else if (dist > 0 && self->field_124 > 0)
-                self->field_124 = 0;
-        }
-        else if (dist > 0 && self->field_124 > 0)
-            self->field_124 = 0;
-    }
-
-    if (self->field_128) {
-        int32 dist = -(self->field_128 / abs(self->field_128));
-        self->field_128 += dist << 16;
-        if (dist < 0) {
-            if (self->field_128 < 0) {
-                self->field_128 = 0;
-            }
-            else if (dist > 0 && self->field_128 > 0)
-                self->field_128 = 0;
-        }
-        else if (dist > 0 && self->field_128 > 0)
-            self->field_128 = 0;
+    if (entity) {
+        entity->textBounceOffset     = 0;
+        entity->buttonBounceOffset   = 0;
+        entity->textBounceVelocity   = 0;
+        entity->buttonBounceVelocity = 0;
+        entity->flag                 = false;
+        entity->state                = UIVsRoundPicker_State_HandleButtonLeave;
     }
 }
 
-void UIVsRoundPicker_Unknown9(void)
+void UIVsRoundPicker_State_HandleButtonLeave(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    self->field_12C += 0x4000;
-    self->field_124 += self->field_12C;
-    self->textFlag = true;
-    if (self->field_124 >= 0 && self->field_12C > 0) {
-        self->field_124 = 0;
-        self->field_12C = 0;
+    self->textVisible = true;
+    if (self->textBounceOffset) {
+        int32 dist = -(self->textBounceOffset / abs(self->textBounceOffset));
+        self->textBounceOffset += dist << 15;
+        if (dist < 0) {
+            if (self->textBounceOffset < 0) {
+                self->textBounceOffset = 0;
+            }
+            else if (dist > 0 && self->textBounceOffset > 0)
+                self->textBounceOffset = 0;
+        }
+        else if (dist > 0 && self->textBounceOffset > 0)
+            self->textBounceOffset = 0;
     }
 
-    self->field_130 += 0x4800;
-    self->field_128 += self->field_130;
-    if (self->field_128 >= -0x20000 && self->field_130 > 0) {
-        self->field_128 = -0x20000;
-        self->field_130 = 0;
+    if (self->buttonBounceOffset) {
+        int32 dist = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
+        self->buttonBounceOffset += dist << 16;
+        if (dist < 0) {
+            if (self->buttonBounceOffset < 0) {
+                self->buttonBounceOffset = 0;
+            }
+            else if (dist > 0 && self->buttonBounceOffset > 0)
+                self->buttonBounceOffset = 0;
+        }
+        else if (dist > 0 && self->buttonBounceOffset > 0)
+            self->buttonBounceOffset = 0;
+    }
+}
+
+void UIVsRoundPicker_State_HandleButtonEnter(void)
+{
+    RSDK_THIS(UIVsRoundPicker);
+
+    self->textBounceVelocity += 0x4000;
+    self->textBounceOffset += self->textBounceVelocity;
+    self->textVisible = true;
+    if (self->textBounceOffset >= 0 && self->textBounceVelocity > 0) {
+        self->textBounceOffset   = 0;
+        self->textBounceVelocity = 0;
+    }
+
+    self->buttonBounceVelocity += 0x4800;
+    self->buttonBounceOffset += self->buttonBounceVelocity;
+    if (self->buttonBounceOffset >= -0x20000 && self->buttonBounceVelocity > 0) {
+        self->buttonBounceOffset   = -0x20000;
+        self->buttonBounceVelocity = 0;
     }
 }
 
@@ -296,21 +310,26 @@ void UIVsRoundPicker_Unknown9(void)
 void UIVsRoundPicker_EditorDraw(void)
 {
     RSDK_THIS(UIVsRoundPicker);
-    self->visible         = true;
-    self->drawOrder       = 2;
-    self->active          = ACTIVE_BOUNDS;
-    self->updateRange.x   = 0x800000;
-    self->updateRange.y   = 0x400000;
-    self->dword120        = self->size.y >> 16;
-    self->size.y          = abs(self->size.y);
-    self->flag            = true;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator1, true, 4);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
-    RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
+
+    int sizeY = self->size.y;
+
+    self->visible       = true;
+    self->drawOrder     = 2;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x400000;
+    self->bgEdgeSize    = self->size.y >> 16;
+    self->size.y        = abs(self->size.y);
+    self->flag          = true;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
+    self->textFrames = UIWidgets->textFrames;
+    RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->numbersAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
 
     UIVsRoundPicker_Draw();
+
+    self->size.y = sizeY;
 }
 
 void UIVsRoundPicker_EditorLoad(void) { UIVsRoundPicker->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }

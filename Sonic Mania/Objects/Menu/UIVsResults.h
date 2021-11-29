@@ -58,7 +58,7 @@ typedef struct {
     Animator animator4;
     Animator rowAnimators[13];
     Animator animator5;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUIVsResults;
 
 // Object Struct

@@ -90,7 +90,7 @@ void GameOver_StageLoad(void)
 
 void GameOver_SaveGameCallback(int32 status)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     RSDK.LoadScene();
 }
 
@@ -329,7 +329,7 @@ void GameOver_State_ExitLetters(void)
                     saveRAM->stock          = globals->stock;
                 }
 #endif
-                UIWaitSpinner_Wait();
+                UIWaitSpinner_StartWait();
                 SaveGame_SaveFile(GameOver_SaveGameCallback);
                 RSDK.SetScene("Presentation", "Menu");
             }

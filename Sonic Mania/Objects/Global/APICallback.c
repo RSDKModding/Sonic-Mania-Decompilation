@@ -213,7 +213,7 @@ void APICallback_NotifyAutoSave_OK(void)
 {
     APICallback->isAutoSaving = false;
     globals->notifiedAutosave       = true;
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
 }
 
 void APICallback_NotifyAutoSave_CB(void)
@@ -761,7 +761,7 @@ void APICallback_CheckUserAuth_CB(void)
         else {
             if (UIControl) {
                 if (UIControl_GetUIControl())
-                    UIControl_Unknown6(UIControl_GetUIControl());
+                    UIControl_SetInactiveMenu(UIControl_GetUIControl());
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
@@ -770,7 +770,7 @@ void APICallback_CheckUserAuth_CB(void)
     }
 }
 
-void APICallback_Wait(int32 success) { UIWaitSpinner_Wait2(); }
+void APICallback_Wait(int32 success) { UIWaitSpinner_FinishWait(); }
 
 void APICallback_GetNextNotif(void)
 {
@@ -799,7 +799,7 @@ void APICallback_ManageNotifs(void)
     }
     else {
         APICallback->activeEntity = NULL;
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         GameProgress_TrackGameProgress(APICallback_Wait);
         destroyEntity(self);
     }
@@ -821,7 +821,7 @@ bool32 APICallback_NotifyAutosave(void)
     }
 
     if (!APICallback->activeEntity || (!globals->notifiedAutosave && !APICallback->isAutoSaving)) {
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         APICallback->isAutoSaving = true;
         globals->notifiedAutosave       = false;
         LogHelpers_Print("DUMMY NotifyAutosave()");

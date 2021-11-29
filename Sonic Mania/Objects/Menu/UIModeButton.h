@@ -29,7 +29,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } EntityUIModeButton;
 
 // Object Struct
@@ -50,12 +50,12 @@ void UIModeButton_Serialize(void);
 
 // Extra Entity Functions
 void UIModeButton_Unknown1(void);
-bool32 UIModeButton_Options7CB(void);
-bool32 UIModeButton_Options8CB(void);
-void UIModeButton_Options5CB(void);
-void UIModeButton_Options3CB(void);
+bool32 UIModeButton_CheckButtonEnterCB(void);
+bool32 UIModeButton_CheckSelectedCB(void);
+void UIModeButton_ButtonEnterCB(void);
+void UIModeButton_SelectedCB(void);
 void UIModeButton_FailCB(void);
-void UIModeButton_Options6CB(void);
+void UIModeButton_ButtonLeaveCB(void);
 void UIModeButton_Unknown8(void);
 void UIModeButton_Unknown9(void);
 void UIModeButton_Unknown10(void);

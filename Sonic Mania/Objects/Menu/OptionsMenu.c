@@ -157,7 +157,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.bottom = controlsControl_Win->size.y >> 17;
         hitbox.top    = -(controlsControl_Win->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-            button->options2 = OptionsMenu_Unknown24;
+            button->actionCB = OptionsMenu_Unknown24;
 
         posX = optionsControl->startPos.x - optionsControl->cameraOffset.x;
         posY = optionsControl->startPos.y - optionsControl->cameraOffset.y;
@@ -168,7 +168,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(optionsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
             && button->frameID == 3) {
-            button->options2 = OptionsMenu_Unknown17;
+            button->actionCB = OptionsMenu_Unknown17;
         }
 
         posX          = optionsControl->startPos.x - optionsControl->cameraOffset.x;
@@ -179,7 +179,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(optionsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
             && !button->frameID)
-            button->options2 = OptionsMenu_Unknown15;
+            button->actionCB = OptionsMenu_Unknown15;
 
         posX          = optionsControl->startPos.x - optionsControl->cameraOffset.x;
         posY          = optionsControl->startPos.y - optionsControl->cameraOffset.y;
@@ -189,7 +189,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(optionsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
             && button->frameID == 1) {
-            button->options2 = OptionsMenu_Unknown16;
+            button->actionCB = OptionsMenu_Unknown16;
         }
 
         posX          = optionsControl->startPos.x - optionsControl->cameraOffset.x;
@@ -200,7 +200,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(optionsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y)) {
             if (button->listID == 3 && button->frameID == 2) {
-                button->options2 = OptionsMenu_Unknown21;
+                button->actionCB = OptionsMenu_Unknown21;
                 if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC)
                     button->transition = false;
             }
@@ -214,7 +214,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(optionsControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
             && button->frameID == 4) {
-            button->options2 = OptionsMenu_Unknown18;
+            button->actionCB = OptionsMenu_Unknown18;
         }
 
         posX          = languageControl->startPos.x - languageControl->cameraOffset.x;
@@ -224,7 +224,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.bottom = languageControl->size.y >> 17;
         hitbox.top    = -(languageControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-            button->options2 = OptionsMenu_Unknown30;
+            button->actionCB = OptionsMenu_Unknown30;
 
         posX          = languageControl_old->startPos.x - languageControl_old->cameraOffset.x;
         posY          = languageControl_old->startPos.y - languageControl_old->cameraOffset.y;
@@ -233,7 +233,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.bottom = languageControl_old->size.y >> 17;
         hitbox.top    = -(languageControl_old->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-            button->options2 = OptionsMenu_Unknown30;
+            button->actionCB = OptionsMenu_Unknown30;
 
         posX          = videoControl->startPos.x - videoControl->cameraOffset.x;
         posY          = videoControl->startPos.y - videoControl->cameraOffset.y;
@@ -253,7 +253,7 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(controlsControl_Win->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17
             && button->frameID == 1) {
-            button->options2 = OptionsMenu_Unknown22;
+            button->actionCB = OptionsMenu_Unknown22;
         }
 
         posX          = videoControl_Win->startPos.x - videoControl_Win->cameraOffset.x;
@@ -281,11 +281,11 @@ void OptionsMenu_Unknown3(void)
         hitbox.top    = -(dataControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 18) {
             switch (button->frameID) {
-                case 0: button->options2 = OptionsMenu_Unknown39; break;
-                case 1: button->options2 = OptionsMenu_Unknown41; break;
-                case 2: button->options2 = OptionsMenu_Unknown43; break;
-                case 3: button->options2 = OptionsMenu_Unknown46; break;
-                case 4: button->options2 = OptionsMenu_EraseAll_Confirm; break;
+                case 0: button->actionCB = OptionsMenu_Unknown39; break;
+                case 1: button->actionCB = OptionsMenu_Unknown41; break;
+                case 2: button->actionCB = OptionsMenu_Unknown43; break;
+                case 3: button->actionCB = OptionsMenu_Unknown46; break;
+                case 4: button->actionCB = OptionsMenu_EraseAll_Confirm; break;
             }
         }
     }
@@ -302,15 +302,15 @@ void OptionsMenu_Unknown3(void)
             slider->sliderChangedCB = OptionsMenu_UISlider_ChangedCB;
     }
 
-    optionsControl->unknownCallback3 = OptionsMenu_Unknown25;
+    optionsControl->menuSetupCB = OptionsMenu_MenuSetupCB;
 
     EntityUIInfoLabel *label = (EntityUIInfoLabel *)OptionsMenu->label;
     Localization_GetString(&info, STR_SELECTDATATOERASE);
     UIInfoLabel_SetString(label, &info);
 
-    videoControl_Win->unknownCallback4 = OptionsMenu_Unknown6;
-    videoControl_Win->yPressCB         = OptionsMenu_Unknown7;
-    videoControl_Win->backPressCB      = OptionsMenu_Unknown9;
+    videoControl_Win->menuUpdateCB     = OptionsMenu_VideoControl_Win_MenuUpdateCB;
+    videoControl_Win->yPressCB         = OptionsMenu_VideoControl_Win_YPressCB;
+    videoControl_Win->backPressCB      = OptionsMenu_VideoControl_Win_BackPressCB;
 
     if (sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
         optionsControl->yPressCB = OptionsMenu_ShowManual;
@@ -341,10 +341,10 @@ void OptionsMenu_Unknown4(void)
     slider->sliderPos     = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
 
     languageControl->startingID     = Localization->language;
-    languageControl->activeEntityID = Localization->language;
+    languageControl->buttonID = Localization->language;
 
     languageControl_old->startingID     = Localization->language;
-    languageControl_old->activeEntityID = Localization->language;
+    languageControl_old->buttonID = Localization->language;
 }
 void OptionsMenu_Unknown5(void)
 {
@@ -385,9 +385,9 @@ void OptionsMenu_Unknown5(void)
     }
 }
 
-void OptionsMenu_Unknown6(void) { OptionsMenu_Unknown5(); }
+void OptionsMenu_VideoControl_Win_MenuUpdateCB(void) { OptionsMenu_Unknown5(); }
 
-void OptionsMenu_Unknown7(void)
+void OptionsMenu_VideoControl_Win_YPressCB(void)
 {
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -420,7 +420,7 @@ void OptionsMenu_Unknown8(void)
     }
 }
 
-bool32 OptionsMenu_Unknown9(void)
+bool32 OptionsMenu_VideoControl_Win_BackPressCB(void)
 {
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -436,7 +436,7 @@ bool32 OptionsMenu_Unknown9(void)
         }
     }
     else {
-        UITransition_StartTransition(UIControl_Unknown13, 0);
+        UITransition_StartTransition(UIControl_ReturnToParentMenu, 0);
     }
     return false;
 }
@@ -463,7 +463,7 @@ void OptionsMenu_Unknown12(void)
     RSDK.UpdateWindow();
     OptionsMenu_Unknown5();
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
-    UITransition_StartTransition(UIControl_Unknown13, 0);
+    UITransition_StartTransition(UIControl_ReturnToParentMenu, 0);
 }
 
 void OptionsMenu_Unknown13(void)
@@ -478,7 +478,7 @@ void OptionsMenu_Unknown14(void)
     RSDK.SetSettingsValue(SETTINGS_RELOAD, 0);
     OptionsMenu_Unknown5();
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
-    UITransition_StartTransition(UIControl_Unknown13, 0);
+    UITransition_StartTransition(UIControl_ReturnToParentMenu, 0);
 }
 
 void OptionsMenu_Unknown15(void)
@@ -600,10 +600,10 @@ void OptionsMenu_Unknown24(void)
     }
 }
 
-void OptionsMenu_Unknown25(void)
+void OptionsMenu_MenuSetupCB(void)
 {
     if (Options->state) {
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         Options_SaveOptionsBin(OptionsMenu_Unknown27);
     }
 
@@ -614,7 +614,7 @@ void OptionsMenu_Unknown25(void)
     }
 }
 
-void OptionsMenu_Unknown27(int32 status) { UIWaitSpinner_Wait2(); }
+void OptionsMenu_Unknown27(int32 status) { UIWaitSpinner_FinishWait(); }
 
 void OptionsMenu_Unknown28(void)
 {
@@ -626,9 +626,9 @@ void OptionsMenu_Unknown28(void)
 void OptionsMenu_Unknown29(int32 status)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->languageControl;
-    control->startingID      = control->activeEntityID;
+    control->startingID      = control->buttonID;
 
     TimeAttackData_ClearOptions();
     strcpy(param->menuTag, "Options");
@@ -639,10 +639,10 @@ void OptionsMenu_Unknown30(void)
 {
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)self->parent;
-    Options_SetLanguage(control->activeEntityID);
-    Localization->language     = control->activeEntityID;
+    Options_SetLanguage(control->buttonID);
+    Localization->language     = control->buttonID;
     control->selectionDisabled = true;
-    UIWaitSpinner_Wait();
+    UIWaitSpinner_StartWait();
     Options_SaveOptionsBin(OptionsMenu_Unknown29);
 }
 
@@ -775,7 +775,7 @@ void OptionsMenu_EraseSaveDataCB(int32 status)
     TextInfo info;
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
 
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     if (status) {
         ManiaModeMenu_StartReturnToTitle();
     }
@@ -877,7 +877,7 @@ void OptionsMenu_Unknown42(void)
 {
     EntityUIControl *control   = (EntityUIControl *)OptionsMenu->dataOptionsControl;
     control->selectionDisabled = true;
-    UIWaitSpinner_Wait();
+    UIWaitSpinner_StartWait();
     API.RemoveAllDBRows(globals->taTableID);
     TimeAttackData_SaveTimeAttackDB(OptionsMenu_EraseSaveDataCB);
     LogHelpers_Print("TimeAttack table ID = %d, status = %d", globals->taTableID, globals->taTableLoaded);
@@ -903,7 +903,7 @@ void OptionsMenu_Unknown44(void)
 
     if (!control->selectionDisabled) {
         control->selectionDisabled = true;
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
     }
     API.SetupUserDBRowSorting(globals->replayTableID);
     API.SetupUserDBRowSorting(globals->taTableID);

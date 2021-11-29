@@ -232,7 +232,7 @@ void TimeAttackGate_AddRecord(void)
         if (ActClear)
             ActClear->finishedSavingGame = true;
         if (UIWaitSpinner)
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
 
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         int32 playerID         = param->characterID;
@@ -252,7 +252,7 @@ void TimeAttackGate_LeaderboardCB(int32 status)
     if (ActClear)
         ActClear->finishedSavingGame = false;
     if (UIWaitSpinner)
-        UIWaitSpinner_Wait2();
+        UIWaitSpinner_FinishWait();
 }
 
 void TimeAttackGate_CheckTouch(void)

@@ -30,6 +30,7 @@ void MathHelpers_EditorLoad(void);
 void MathHelpers_Serialize(void);
 
 // Extra Entity Functions
+void MathHelpers_LerpToPos(Vector2 *pos, int32 percent, int32 posX, int32 posY);
 void MathHelpers_Lerp(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);
 void MathHelpers_LerpSin1024(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);
 void MathHelpers_Lerp2Sin1024(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);

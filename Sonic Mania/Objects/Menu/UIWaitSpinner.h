@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    bool32 flag;
+    bool32 fadedIn;
     Animator animator;
 } EntityUIWaitSpinner;
 
@@ -37,9 +37,9 @@ void UIWaitSpinner_EditorLoad(void);
 void UIWaitSpinner_Serialize(void);
 
 // Extra Entity Functions
-void UIWaitSpinner_Wait(void);
-void UIWaitSpinner_Wait2(void);
+void UIWaitSpinner_StartWait(void);
+void UIWaitSpinner_FinishWait(void);
 void UIWaitSpinner_State_Wait(void);
-void UIWaitSpinner_State_Wait2(void);
+void UIWaitSpinner_State_WaitAndDestroy(void);
 
 #endif //!OBJ_UIWAITSPINNER_H

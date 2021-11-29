@@ -5,16 +5,16 @@ ObjectUILeaderboard *UILeaderboard;
 void UILeaderboard_Update(void)
 {
     RSDK_THIS(UILeaderboard);
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
+    if (self->textFrames != UIWidgets->textFrames) {
         UILeaderboard_SetupEntrySprites(self);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
     }
     StateMachine_Run(self->state);
     if (++self->timer2 >= 192)
         self->timer2 -= 192;
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
-    if (self->state == UILeaderboard_State_Unknown3 && (parent->activeEntityID != self->zoneID || parent->state != UIControl_ProcessInputs)) {
+    if (self->state == UILeaderboard_State_Unknown3 && (parent->buttonID != self->zoneID || parent->state != UIControl_ProcessInputs)) {
         self->flag  = false;
         self->state = UILeaderboard_State_Unknown2;
     }
@@ -44,7 +44,7 @@ void UILeaderboard_Create(void *data)
     self->processButtonCB = UILeaderboard_ProcessButtonCB;
     self->state           = UILeaderboard_State_Unknown1;
     UILeaderboard_SetupEntrySprites(self);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
     if (!SceneInfo->inEditor) {
         RSDK.SetText(self->text1, "", 0);
         RSDK.SetText(&self->text1[1], "", 0);
@@ -78,8 +78,8 @@ void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
         frame = 5;
     else
         frame = entity->playerID + 4;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator9, true, frame);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator10, true, entity->actID + 3);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &entity->animator9, true, frame);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &entity->animator10, true, entity->actID + 3);
     RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator5, true, 0);
     UILeaderboard_LoadEntries(entity);
 }
@@ -286,15 +286,15 @@ void UILeaderboard_DrawEntries(void)
 
     drawPos.x = self->position.x - 0x980000;
     drawPos.y = self->position.y - 0x100000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &self->animator11, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &self->animator11, true, 0);
     RSDK.DrawSprite(&self->animator11, &drawPos, false);
 
     drawPos.x += 0x8E0000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &self->animator11, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &self->animator11, true, 1);
     RSDK.DrawSprite(&self->animator11, &drawPos, false);
 
     drawPos.x += 0x8E0000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &self->animator11, true, 2);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &self->animator11, true, 2);
     RSDK.DrawSprite(&self->animator11, &drawPos, false);
 
     for (int32 i = 0; i < 5; ++i) UILeaderboard_DrawRank(i);

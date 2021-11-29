@@ -5,9 +5,9 @@ ObjectUIVsResults *UIVsResults;
 void UIVsResults_Update(void)
 {
     RSDK_THIS(UIVsResults);
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
+    if (self->textFrames != UIWidgets->textFrames) {
         UIVsResults_SetupSprites();
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
     }
 
     if (self->numRows != self->numRowStore) {
@@ -44,7 +44,7 @@ void UIVsResults_Create(void *data)
     self->characterID   = self->playerID;
     self->state         = UIVsResults_Unknown7;
     UIVsResults_SetupSprites();
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
 
     if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < self->numRows; ++i) {
@@ -91,9 +91,9 @@ void UIVsResults_SetupSprites(void)
 
     uint8 *rowLabels = &self->row0Label;
     for (int32 r = 0; r < self->numRows; ++r) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &self->rowAnimators[r], true, rowLabels[r]);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 13, &self->rowAnimators[r], true, rowLabels[r]);
     }
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->textAnimator, true, self->playerID + 8);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, self->playerID + 8);
     self->field_1CC = 0x600000;
     self->field_1C0 = 0x10000;
     self->offset    = 0x8000;

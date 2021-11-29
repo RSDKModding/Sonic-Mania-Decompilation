@@ -48,7 +48,7 @@ void UITAZoneModule_Update(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (self->state == UITAZoneModule_Unknown17
-        && (parent->buttons[parent->field_D8] != (EntityUIButton *)self || parent->state != UIControl_ProcessInputs)) {
+        && (parent->buttons[parent->lastButtonID] != (EntityUIButton *)self || parent->state != UIControl_ProcessInputs)) {
         self->flag  = false;
         self->state = UITAZoneModule_Unknown16;
     }
@@ -105,7 +105,7 @@ void UITAZoneModule_Create(void *data)
     self->drawFX          = FX_FLIP;
     self->updateRange.x   = 0x800000;
     self->updateRange.y   = 0x300000;
-    self->processButtonCB = UIButton_Unknown6;
+    self->processButtonCB = UIButton_ProcessButtonCB_Alt;
     self->state           = UITAZoneModule_Unknown15;
     if (!SceneInfo->inEditor) {
         RSDK.SetText(&self->text3, "", false);
@@ -128,18 +128,18 @@ void UITAZoneModule_StageLoad(void)
 void UITAZoneModule_Setup(void)
 {
     RSDK_THIS(UITAZoneModule);
-    self->touchPosEnd.x = 0;
-    self->touchPosEnd.y = 0;
-    self->options7      = UITAZoneModule_Options7CB;
-    self->options8      = UITAZoneModule_Options8CB;
-    if (self->processButtonCB == UIButton_Unknown6) {
+    self->touchPosEnd.x      = 0;
+    self->touchPosEnd.y      = 0;
+    self->checkButtonEnterCB = UITAZoneModule_CheckButtonEnterCB;
+    self->checkSelectedCB    = UITAZoneModule_CheckSelectedCB;
+    if (self->processButtonCB == UIButton_ProcessButtonCB_Alt) {
         self->touchPosStart.x = 0x1380000;
         self->touchPosStart.y = 0x4E0000;
-        self->touchCB         = UIButton_ProcessTouch;
-        self->options3        = UITAZoneModule_Options3CB;
+        self->touchCB         = UIButton_ProcessTouchCB;
+        self->selectedCB      = UITAZoneModule_SelectedCB;
         self->failCB          = UITAZoneModule_FailCB;
-        self->options5        = UITAZoneModule_Options5CB;
-        self->options6        = UITAZoneModule_Options6CB;
+        self->buttonEnterCB   = UITAZoneModule_ButtonEnterCB;
+        self->buttonLeaveCB   = UITAZoneModule_ButtonLeaveCB;
     }
 #if !RETRO_USE_PLUS
     else if (self->processButtonCB == UITAZoneModule_Unknown24) {
@@ -152,10 +152,10 @@ void UITAZoneModule_Setup(void)
         self->touchPosCallbacks[0] = UITAZoneModule_Unknown22;
         self->touchPosCallbacks[1] = UITAZoneModule_Unknown23;
         self->touchPosCount        = 2;
-        self->options5             = StateMachine_None;
-        self->options6             = StateMachine_None;
-        self->touchCB              = UIButton_TouchCB_Alt;
-        self->options3             = StateMachine_None;
+        self->buttonEnterCB        = StateMachine_None;
+        self->buttonLeaveCB        = StateMachine_None;
+        self->touchCB              = UIButton_ProcessTouchCB_Alt;
+        self->selectedCB           = StateMachine_None;
         self->failCB               = StateMachine_None;
     }
 #endif
@@ -163,10 +163,10 @@ void UITAZoneModule_Setup(void)
         self->touchPosStart.x = 0;
         self->touchPosStart.y = 0;
         self->touchPosCount   = 0;
-        self->options3        = StateMachine_None;
+        self->selectedCB      = StateMachine_None;
         self->failCB          = StateMachine_None;
-        self->options5        = StateMachine_None;
-        self->options6        = StateMachine_None;
+        self->buttonEnterCB   = StateMachine_None;
+        self->buttonLeaveCB   = StateMachine_None;
     }
 }
 
@@ -364,7 +364,7 @@ void UITAZoneModule_Unknown6(void)
 
 void UITAZoneModule_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255); }
 
-void UITAZoneModule_Options3CB(void)
+void UITAZoneModule_SelectedCB(void)
 {
     RSDK_THIS(UITAZoneModule);
     self->timer = 0;
@@ -387,19 +387,19 @@ void UITAZoneModule_Options3CB(void)
         RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 1, (32 * (self->zoneID % 12)), 0, 224, 32);
 }
 
-bool32 UITAZoneModule_Options7CB(void)
+bool32 UITAZoneModule_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UITAZoneModule);
     return self->state == UITAZoneModule_Unknown17;
 }
 
-bool32 UITAZoneModule_Options8CB(void)
+bool32 UITAZoneModule_CheckSelectedCB(void)
 {
     RSDK_THIS(UITAZoneModule);
     return self->state == UITAZoneModule_Unknown18;
 }
 
-void UITAZoneModule_Options5CB(void)
+void UITAZoneModule_ButtonEnterCB(void)
 {
     RSDK_THIS(UITAZoneModule);
     self->flag  = true;
@@ -415,7 +415,7 @@ void UITAZoneModule_Options5CB(void)
         RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 1, (32 * (self->zoneID % 12)), 0, 224, 32);
 }
 
-void UITAZoneModule_Options6CB(void)
+void UITAZoneModule_ButtonLeaveCB(void)
 {
     RSDK_THIS(UITAZoneModule);
     self->flag  = false;
@@ -454,7 +454,7 @@ void UITAZoneModule_Unknown16(void)
     RSDK_THIS(UITAZoneModule);
     self->position.x = self->posUnknown2.x;
     RSDK.ProcessAnimation(&self->animator2);
-    self->touchCB   = UIButton_ProcessTouch;
+    self->touchCB   = UIButton_ProcessTouchCB;
     self->field_138 = self->animator2.frameID & 3;
 }
 
@@ -492,7 +492,7 @@ void UITAZoneModule_Unknown18(void)
         self->state        = UITAZoneModule_Unknown27;
 #else
         self->timer = 0;
-        StateMachine_Run(self->options2);
+        StateMachine_Run(self->actionCB);
         self->state = UITAZoneModule_Unknown17;
 #endif
     }
@@ -557,7 +557,7 @@ void UITAZoneModule_Unknown8(void)
         offset = -RSDK.Sin256(8 * minVal((uint8)self->field_140, 16));
     offset >>= 6;
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator7, true, 0);
     drawPos.x -= 0x630000;
     drawPos.y += 0x2E0000;
 
@@ -601,7 +601,7 @@ void UITAZoneModule_Unknown8(void)
     drawPos.x += 0x4B0000;
     drawPos.y += 0xA0000;
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator7, true, 1);
     
     flag = true;
     if (self->actID == 1) {
@@ -669,7 +669,7 @@ void UITAZoneModule_Unknown7(void)
     drawPos2.x = drawX - 0x390000;
     drawPos2.y = drawY + 0x450000;
     if (self->rank != 1 || (UIControl->timer & 4)) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 2);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator7, true, 2);
         RSDK.DrawSprite(&self->animator7, &drawPos2, false);
 
         int32 time = 0;
@@ -687,7 +687,7 @@ void UITAZoneModule_Unknown7(void)
     drawPos2.x = drawX - 0x290000;
     drawPos2.y = drawY + 0x460000;
     if (self->rank != 2 || (UIControl->timer & 4)) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 3);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator7, true, 3);
         RSDK.DrawSprite(&self->animator7, &drawPos2, 0);
 
         int32 time = 0;
@@ -704,7 +704,7 @@ void UITAZoneModule_Unknown7(void)
     drawPos2.x = drawX - 0x1A0000;
     drawPos2.y = drawY + 0x560000;
     if (self->rank != 3 || (UIControl->timer & 4)) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 4);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->animator7, true, 4);
         RSDK.DrawSprite(&self->animator7, &drawPos2, false);
 
         int32 time = 0;
@@ -731,7 +731,7 @@ void UITAZoneModule_Unknown21(void)
         param->zoneID = self->zoneID;
         param->actID  = self->actID;
         self->timer = 0;
-        StateMachine_Run(self->options2);
+        StateMachine_Run(self->actionCB);
         self->state           = UITAZoneModule_Unknown19;
         self->processButtonCB = StateMachine_None;
     }
@@ -845,12 +845,12 @@ void UITAZoneModule_Unknown25(int32 player, int32 zone, int32 act, int32 a4, voi
 void UITAZoneModule_Unknown26(EntityUIControl *control, uint8 characterID, uint32 zoneID, uint8 actID, int32 score)
 {
     control->childHasFocus       = true;
-    control->activeEntityID      = zoneID;
+    control->buttonID      = zoneID;
     EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[zoneID];
 
     control->position.x = module->posUnknown2.x;
     control->position.y = module->posUnknown2.y;
-    control->posUnknown = module->posUnknown2;
+    control->targetPos = module->posUnknown2;
 
     ScreenInfo->position.x = (module->posUnknown2.x >> 16) - ScreenInfo->centerX;
     ScreenInfo->position.y = (control->position.y >> 16) - ScreenInfo->centerY;
@@ -919,7 +919,7 @@ void UITAZoneModule_Unknown27(void)
         self->timer           = 0;
         self->state           = UITAZoneModule_Unknown19;
         self->processButtonCB = UITAZoneModule_Unknown24;
-        self->touchCB         = UIButton_TouchCB_Alt;
+        self->touchCB         = UIButton_ProcessTouchCB_Alt;
     }
     else {
         if (heading->startPos.y >> 16 < ScreenInfo->position.y) {
@@ -1030,7 +1030,7 @@ void UITAZoneModule_Unknown28(void)
             parent->childHasFocus   = false;
             self->timer           = 0;
             self->state           = UITAZoneModule_Unknown17;
-            self->processButtonCB = UIButton_Unknown6;
+            self->processButtonCB = UIButton_ProcessButtonCB_Alt;
         }
         else {
             self->timer++;

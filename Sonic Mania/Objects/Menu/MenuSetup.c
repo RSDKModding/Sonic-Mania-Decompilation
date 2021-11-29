@@ -414,7 +414,7 @@ bool32 MenuSetup_InitUserdata(void)
             }
 
             if (!MenuSetup->gameLoaded) {
-                UIWaitSpinner_Wait();
+                UIWaitSpinner_StartWait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
                 MenuSetup->gameLoaded = true;
@@ -424,7 +424,7 @@ bool32 MenuSetup_InitUserdata(void)
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK) {
                 if (!globals->noSave && APICallback_NotifyAutosave())
                     return false;
-                UIWaitSpinner_Wait2();
+                UIWaitSpinner_FinishWait();
                 if (APICallback_CheckUnreadNotifs())
                     return false;
                 MenuSetup->dword10 = 1;
@@ -432,7 +432,7 @@ bool32 MenuSetup_InitUserdata(void)
             }
 
             if (globals->noSave) {
-                UIWaitSpinner_Wait2();
+                UIWaitSpinner_FinishWait();
                 return true;
             }
             else {
@@ -469,8 +469,8 @@ void MenuSetup_Unknown3(void)
     EntityUIControl *compRules    = (EntityUIControl *)MenuSetup->competitionRules;
     EntityUIControl *language     = (EntityUIControl *)MenuSetup->language;
 
-    foreach_all(UIModeButton, modeButton) { modeButton->options2 = MenuSetup_ChangeMenu; }
-    foreach_all(UISaveSlot, saveSlot) { saveSlot->options2 = MenuSetup_StartNewSave; }
+    foreach_all(UIModeButton, modeButton) { modeButton->actionCB = MenuSetup_MenuButton_ActionCB; }
+    foreach_all(UISaveSlot, saveSlot) { saveSlot->actionCB = MenuSetup_SaveSlot_ActionCB; }
 
     Hitbox hitbox;
     foreach_all(UIButton, button)
@@ -479,7 +479,7 @@ void MenuSetup_Unknown3(void)
             case 17:
                 if (!button->frameID) {
                     if (GameInfo->platform == PLATFORM_PC || GameInfo->platform == PLATFORM_DEV) {
-                        button->options2 = MenuSetup_ExitGame_Confirm;
+                        button->actionCB = MenuSetup_ExitGame_ActionCB;
                     }
                     else {
                         EntityUIControl *control = (EntityUIControl *)MenuSetup->mainMenu;
@@ -491,15 +491,15 @@ void MenuSetup_Unknown3(void)
                 break;
             case 1:
                 if (button->frameID == 4)
-                    button->options2 = MenuSetup_OpenExtrasMenu;
+                    button->actionCB = MenuSetup_OpenExtrasMenu_ActionCB;
                 break;
             case 7:
                 if (button->frameID == 4) {
-                    button->options2 = MenuSetup_Extras_Callback_DAGarden;
+                    button->actionCB = MenuSetup_Extras_DAGarden_ActionCB;
                 }
                 else if (button->frameID == 8) {
-                    button->options2  = MenuSetup_Extras_Callback_Credits;
-                    button->field_150 = 1;
+                    button->actionCB  = MenuSetup_Extras_Credits_ActionCB;
+                    button->clearParentState = true;
                 }
                 break;
         }
@@ -511,7 +511,7 @@ void MenuSetup_Unknown3(void)
         hitbox.bottom = controls_win->size.y >> 17;
         hitbox.top    = -(controls_win->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-            button->options2 = MenuSetup_Options_OpenKBControlsMenu;
+            button->actionCB = MenuSetup_Options_OpenKBControlsMenu;
 
         posX          = compRules->startPos.x - compRules->cameraOffset.x;
         posY          = compRules->startPos.y - compRules->cameraOffset.y;
@@ -521,7 +521,7 @@ void MenuSetup_Unknown3(void)
         hitbox.top    = -(compRules->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 9
             && button->frameID == 2)
-            button->options2 = MenuSetup_VS_Unknown52;
+            button->actionCB = MenuSetup_VS_Unknown52;
 
         posX          = secrets->startPos.x - secrets->cameraOffset.x;
         posY          = secrets->startPos.y - secrets->cameraOffset.y;
@@ -531,7 +531,7 @@ void MenuSetup_Unknown3(void)
         hitbox.top    = -(secrets->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 9
             && button->frameID == 2)
-            button->options2 = MenuSetup_OpenSaveSelectMenu;
+            button->actionCB = MenuSetup_OpenSaveSelectMenu;
 
         posX          = options->startPos.x - options->cameraOffset.x;
         posY          = options->startPos.y - options->cameraOffset.y;
@@ -541,10 +541,10 @@ void MenuSetup_Unknown3(void)
         hitbox.top    = -(options->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3) {
             switch (button->frameID) {
-                case 0: button->options2 = MenuSetup_Options_OpenVideoMenu; break;
-                case 1: button->options2 = MenuSetup_Options_OpenSoundMenu; break;
-                case 2: button->options2 = MenuSetup_Options_OpenControlsMenu; break;
-                case 3: button->options2 = MenuSetup_Options_OpenLanguageMenu; break;
+                case 0: button->actionCB = MenuSetup_Options_OpenVideoMenu; break;
+                case 1: button->actionCB = MenuSetup_Options_OpenSoundMenu; break;
+                case 2: button->actionCB = MenuSetup_Options_OpenControlsMenu; break;
+                case 3: button->actionCB = MenuSetup_Options_OpenLanguageMenu; break;
             }
         }
 
@@ -555,7 +555,7 @@ void MenuSetup_Unknown3(void)
         hitbox.bottom = language->size.y >> 17;
         hitbox.top    = -(language->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-            button->options2 = MenuSetup_Options_Unknown52;
+            button->actionCB = MenuSetup_Options_Unknown52;
 
         posX          = video->startPos.x - video->cameraOffset.x;
         posY          = video->startPos.y - video->cameraOffset.y;
@@ -591,20 +591,20 @@ void MenuSetup_Unknown3(void)
         if (choice->listID == 7) {
             switch (choice->frameID) {
                 case 2:
-                    choice->options2 = MenuSetup_Extras_Callback_Puyo_vsAI;
-                    choice->textFlag = true;
+                    choice->actionCB = MenuSetup_Extras_Callback_Puyo_vsAI;
+                    choice->textVisible = true;
                     break;
                 case 3:
-                    choice->options2 = MenuSetup_Extras_Callback_Puyo_vs2P;
-                    choice->textFlag = true;
+                    choice->actionCB = MenuSetup_Extras_Callback_Puyo_vs2P;
+                    choice->textVisible = true;
                     break;
                 case 6:
-                    choice->options2 = MenuSetup_Extras_Callback_BSS_3K;
-                    choice->textFlag = true;
+                    choice->actionCB = MenuSetup_Extras_Callback_BSS_3K;
+                    choice->textVisible = true;
                     break;
                 case 7:
-                    choice->options2 = MenuSetup_Extras_Callback_BSS_Mania;
-                    choice->textFlag = true;
+                    choice->actionCB = MenuSetup_Extras_Callback_BSS_Mania;
+                    choice->textVisible = true;
                     break;
                 default: break;
             }
@@ -615,14 +615,14 @@ void MenuSetup_Unknown3(void)
     {
         if (charButton->parent == MenuSetup->timeAttack) {
             switch (charButton->characterID) {
-                case 0: charButton->options2 = MenuSetup_TA_OpenZoneList_Sonic; break;
-                case 1: charButton->options2 = MenuSetup_TA_OpenZoneList_Tails; break;
-                case 2: charButton->options2 = MenuSetup_TA_OpenZoneList_Knux; break;
+                case 0: charButton->actionCB = MenuSetup_TA_OpenZoneList_Sonic; break;
+                case 1: charButton->actionCB = MenuSetup_TA_OpenZoneList_Tails; break;
+                case 2: charButton->actionCB = MenuSetup_TA_OpenZoneList_Knux; break;
             }
         }
     }
 
-    foreach_all(UITAZoneModule, module) { module->options2 = MenuSetup_TA_StartAttempt_Callback; }
+    foreach_all(UITAZoneModule, module) { module->actionCB = MenuSetup_TA_TAZoneModule_ActionCB; }
 
     ((EntityUILeaderboard *)MenuSetup->leaderboardWidget)->yPressCB = MenuSetup_TA_Unknown52;
 
@@ -638,11 +638,12 @@ void MenuSetup_Unknown3(void)
             slider->sliderChangedCB = MenuSetup_Options_SliderChanged_CB;
     }
 
-    comp->processButtonInputCB = MenuSetup_VS_Unknown50;
-    comp->unknownCallback3     = MenuSetup_VS_Unknown51;
+    comp->processButtonInputCB = MenuSetup_VS_ProcessButtonCB;
+    comp->menuSetupCB     = MenuSetup_VS_MenuSetupCB;
     if (comp->active == ACTIVE_ALWAYS) {
         RSDK_THIS(UIControl);
         self->childHasFocus = false;
+        // self->menuWasSetup  = false;
         // LODWORD(RSDK_sceneInfo->self->data[13]) = 0;
 
         foreach_all(UIVsCharSelector, selector)
@@ -653,33 +654,33 @@ void MenuSetup_Unknown3(void)
         }
     }
 
-    compRound->processButtonInputCB = MenuSetup_VS_Unknown53;
-    compRound->unknownCallback3     = MenuSetup_VS_Unknown54;
+    compRound->processButtonInputCB = MenuSetup_VS_Round_ProcessButtonCB;
+    compRound->menuSetupCB          = MenuSetup_VS_Round_MenuSetupCB;
     if (compRound->active == ACTIVE_ALWAYS)
-        MenuSetup_VS_Unknown54();
+        MenuSetup_VS_Round_MenuSetupCB();
 
-    compTotal->processButtonInputCB = MenuSetup_VS_Unknown55;
-    compTotal->unknownCallback3     = MenuSetup_VS_Unknown56;
-    compTotal->unknownCallback4     = MenuSetup_VS_Unknown57;
-    compTotal->posUnknown.y         = compTotal->startPos.y;
+    compTotal->processButtonInputCB = MenuSetup_VS_Total_ProcessButtonCB;
+    compTotal->menuSetupCB          = MenuSetup_VS_Total_MenuSetupCB;
+    compTotal->menuUpdateCB     = MenuSetup_VS_Total_MenuUpdateCB;
+    compTotal->targetPos.y          = compTotal->startPos.y;
     compTotal->position.y           = compTotal->startPos.y;
     if (compTotal->active == ACTIVE_ALWAYS)
-        MenuSetup_VS_Unknown56();
+        MenuSetup_VS_Total_MenuSetupCB();
 
-    saveSel->unknownCallback4 = MenuSetup_CheckNoSaveSelected;
+    saveSel->menuSetupCB = MenuSetup_SaveSel_MenuSetupCB;
     saveSel->yPressCB         = MenuSetup_SaveSel_YPressCB;
 
     extras->processButtonInputCB = MenuSetup_Extras_ProcessButtonCB;
 
-    options->unknownCallback3 = MenuSetup_Options_Unknown25;
+    options->menuSetupCB = MenuSetup_Options_MenuSetupCB;
     if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_SWITCH)
         options->yPressCB = MenuSetup_Options_LaunchManual;
     else
         MenuSetup->optionsPrompt->visible = false;
 
-    video_win->unknownCallback4 = MenuSetup_Unknown53;
+    video_win->menuUpdateCB = MenuSetup_OptionsVideo_Win_MenuUpdateCB;
 
-    foreach_all(UIVsZoneButton, zoneButton) { zoneButton->options2 = MenuSetup_VS_StartMatch_CB; }
+    foreach_all(UIVsZoneButton, zoneButton) { zoneButton->actionCB = MenuSetup_VS_StartMatch_ActionCB; }
 }
 
 void MenuSetup_Unknown52(void)
@@ -758,31 +759,31 @@ void MenuSetup_Unknown7(void)
         UIUsernamePopup_ShowPopup();
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
-        MenuSetup_Unknown53();
+        MenuSetup_OptionsVideo_Win_MenuUpdateCB();
 
     foreach_all(UIControl, control)
     {
         if (strcmp(param->menuTag, "") != 0) {
             RSDK.GetCString(buffer, &control->tag);
             if (strcmp((const char *)buffer, param->menuTag) != 0) {
-                UIControl_Unknown6(control);
+                UIControl_SetInactiveMenu(control);
             }
             else {
-                UIControl_Unknown4(control);
-                control->activeEntityID = param->selectionID;
+                UIControl_SetActiveMenu(control);
+                control->buttonID = param->selectionID;
 
-                if (control == (EntityUIControl *)MenuSetup->timeAttackZones && param->field_160)
+                if (control == (EntityUIControl *)MenuSetup->timeAttackZones && param->startedTAAttempt)
                     UITAZoneModule_Unknown26(control, param->characterID, param->zoneID, param->actID, param->timeScore);
             }
         }
 
-        if (control == (EntityUIControl *)MenuSetup->timeAttack && param->field_160) {
-            int32 charID                     = param->characterID - 1;
-            control->activeEntityID        = charID;
+        if (control == (EntityUIControl *)MenuSetup->timeAttack && param->startedTAAttempt) {
+            int32 charID                   = param->characterID - 1;
+            control->buttonID              = charID;
             control->buttons[charID]->flag = true;
         }
 
-        if (control == (EntityUIControl *)MenuSetup->extras && param->field_59 == 2) {
+        if (control == (EntityUIControl *)MenuSetup->extras && param->selectionType == 2) {
             UIButton_SetChoiceSelection(control->buttons[1], 1);
         }
 
@@ -826,7 +827,7 @@ void MenuSetup_Unknown7(void)
         if (control == (EntityUIControl *)MenuSetup->language) {
             EntityUIControl *control = (EntityUIControl *)MenuSetup->language;
             control->startingID      = Localization->language;
-            control->activeEntityID  = Localization->language;
+            control->buttonID  = Localization->language;
         }
 
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -916,7 +917,7 @@ void MenuSetup_SetBGColours(void)
     }
 }
 
-void MenuSetup_ChangeMenu(void)
+void MenuSetup_MenuButton_ActionCB(void)
 {
     RSDK_THIS(UIModeButton);
     switch (self->buttonID) {
@@ -925,7 +926,7 @@ void MenuSetup_ChangeMenu(void)
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
-                ((EntityUIControl *)MenuSetup->saveSelect)->activeEntityID = 7;
+                ((EntityUIControl *)MenuSetup->saveSelect)->buttonID = 7;
                 UIControl_MatchMenuTag("Save Select");
             }
             break;
@@ -961,7 +962,7 @@ void MenuSetup_ReturnToTitle(void)
 
 void MenuSetup_ExitGame(void) { APICallback_ExitGame(); }
 
-void MenuSetup_ExitGame_Confirm(void)
+void MenuSetup_ExitGame_ActionCB(void)
 {
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -1021,11 +1022,11 @@ void MenuSetup_OpenSaveSelectMenu(void)
 
 void MenuSetup_SaveFileCB(int32 status)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     RSDK.LoadScene();
 }
 
-void MenuSetup_StartNewSave(void)
+void MenuSetup_SaveSlot_ActionCB(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     RSDK_THIS(UISaveSlot);
@@ -1034,8 +1035,8 @@ void MenuSetup_StartNewSave(void)
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
     TimeAttackData_ClearOptions();
     RSDK.GetCString(param->menuTag, &control->tag);
-    param->selectionID = control->field_D8;
-    param->field_168   = 0;
+    param->selectionID = control->lastButtonID;
+    param->replayID   = 0;
     globals->gameMode  = MODE_MANIA;
 
     bool32 loadingSave = false;
@@ -1059,7 +1060,7 @@ void MenuSetup_StartNewSave(void)
             saveRAM->lives         = 3;
             saveRAM->chaosEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
             loadingSave = true;
             SaveGame_SaveFile(MenuSetup_SaveFileCB);
         }
@@ -1108,12 +1109,12 @@ void MenuSetup_StartNewSave(void)
     }
 }
 
-void MenuSetup_CheckNoSaveSelected(void)
+void MenuSetup_SaveSel_MenuSetupCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->saveSelect;
     if (control->active == ACTIVE_ALWAYS) {
         EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)MenuSetup->saveSelPrompt;
-        if (control->field_D8 == 8) {
+        if (control->lastButtonID == 8) {
             prompt->promptID      = 6;
             prompt->headingAnchor = 3;
         }
@@ -1134,7 +1135,7 @@ void MenuSetup_OpenSecretsMenu(void)
 void MenuSetup_SaveSel_YPressCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->saveSelect;
-    if (control->active == ACTIVE_ALWAYS && control->activeEntityID == 8) {
+    if (control->active == ACTIVE_ALWAYS && control->buttonID == 8) {
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
 
@@ -1187,14 +1188,14 @@ void MenuSetup_TA_OpenZoneList_Knux(void)
     UIControl_MatchMenuTag("Time Attack Zones");
 }
 
-void MenuSetup_TA_StartAttempt_Callback(void) { MenuSetup_StartTransition(MenuSetup_TA_StartAttempt, 32); }
+void MenuSetup_TA_TAZoneModule_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_TA_StartAttempt, 32); }
 
 void MenuSetup_TA_StartAttempt(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     sprintf(param->menuTag, "Time Attack Zones");
     param->selectionID = param->zoneID;
-    param->field_160   = 1;
+    param->startedTAAttempt   = true;
 
     SaveGame_ResetPlayerState();
     memset(globals->noSaveSlot, 0, 0x400);
@@ -1219,12 +1220,12 @@ void MenuSetup_TA_Unknown50(void)
 {
     EntityUIControl *leaderboardControl = (EntityUIControl *)MenuSetup->leaderboards;
     EntityUILeaderboard *leaderboards   = (EntityUILeaderboard *)MenuSetup->leaderboardWidget;
-    UIControl->flagA                    = false;
+    UIControl->forceBackPress           = false;
     leaderboardControl->active          = ACTIVE_NEVER;
     leaderboardControl->visible         = false;
     leaderboardControl->state           = StateMachine_None;
 
-    UIControl_Unknown4((EntityUIControl *)MenuSetup->timeAttackZones);
+    UIControl_SetActiveMenu((EntityUIControl *)MenuSetup->timeAttackZones);
     UITAZoneModule_Unknown26((EntityUIControl *)MenuSetup->timeAttackZones, leaderboards->playerID, leaderboards->zoneID, leaderboards->actID, 0);
 }
 
@@ -1274,7 +1275,7 @@ void MenuSetup_Leaderboard_Unknown(void)
         EntityUIControl *parent = (EntityUIControl *)dialog->parent;
         parent->rowCount        = 1;
         parent->columnCount     = 1;
-        parent->activeEntityID  = 0;
+        parent->buttonID  = 0;
 
         if (leaderboard->taRecord)
             leaderboard->entryIsUser = !leaderboard->entryIsUser;
@@ -1309,7 +1310,7 @@ void MenuSetup_Leaderboard_Unknown(void)
 void MenuSetup_VS_OpenCompRules(void) { UIControl_MatchMenuTag("Competition Rules"); }
 void MenuSetup_VS_OpenCompZones(void) { UIControl_MatchMenuTag("Competition Zones"); }
 
-void MenuSetup_VS_Unknown50(void)
+void MenuSetup_VS_ProcessButtonCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->competition;
 
@@ -1338,7 +1339,7 @@ void MenuSetup_VS_Unknown50(void)
     }
 }
 
-void MenuSetup_VS_Unknown51(void)
+void MenuSetup_VS_MenuSetupCB(void)
 {
     RSDK_THIS(UIControl);
 
@@ -1358,7 +1359,7 @@ void MenuSetup_VS_StartMatch(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
 
     sprintf(param->menuTag, "Competition Round");
-    session->levelIndex = ((EntityUIControl *)MenuSetup->competitionZones)->activeEntityID;
+    session->levelIndex = ((EntityUIControl *)MenuSetup->competitionZones)->buttonID;
     session->zoneID     = param->vsZoneID;
     session->actID      = param->vsActID;
 
@@ -1378,7 +1379,7 @@ void MenuSetup_VS_StartMatch(void)
     RSDK.LoadScene();
 }
 
-void MenuSetup_VS_StartMatch_CB(void) { MenuSetup_StartTransition(MenuSetup_VS_StartMatch, 32); }
+void MenuSetup_VS_StartMatch_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_VS_StartMatch, 32); }
 
 void MenuSetup_VS_Unknown52(void)
 {
@@ -1410,9 +1411,9 @@ void MenuSetup_VS_Unknown52(void)
 
     EntityUIControl *zoneControl = (EntityUIControl *)MenuSetup->competitionZones;
     zoneControl->position        = zoneControl->startPos;
-    zoneControl->posUnknown.x    = zoneControl->startPos.x;
-    zoneControl->posUnknown.y    = zoneControl->startPos.y;
-    zoneControl->activeEntityID  = 0;
+    zoneControl->targetPos.x    = zoneControl->startPos.x;
+    zoneControl->targetPos.y    = zoneControl->startPos.y;
+    zoneControl->buttonID  = 0;
 
     foreach_all(UIVsZoneButton, zoneButton)
     {
@@ -1425,7 +1426,7 @@ void MenuSetup_VS_Unknown52(void)
 
 void MenuSetup_VS_OpenCompTotal(void) { UIControl_MatchMenuTag("Competition Total"); }
 
-void MenuSetup_VS_Unknown53(void)
+void MenuSetup_VS_Round_ProcessButtonCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (UIControl->confirmPress[0] || UIControl->confirmPress[1] || UIControl->confirmPress[2] || UIControl->confirmPress[3]) {
@@ -1448,7 +1449,7 @@ void MenuSetup_VS_Unknown53(void)
     }
 }
 
-void MenuSetup_VS_Unknown54(void)
+void MenuSetup_VS_Round_MenuSetupCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     EntityUIControl *roundControl     = (EntityUIControl *)MenuSetup->competitionRound;
@@ -1573,7 +1574,7 @@ void MenuSetup_VS_Unknown54(void)
 
 void MenuSetup_VS_OpenCompetition(void) { UIControl_MatchMenuTag("Competition"); }
 
-void MenuSetup_VS_Unknown55(void)
+void MenuSetup_VS_Total_ProcessButtonCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (UIControl->keyConfirm) {
@@ -1601,14 +1602,14 @@ void MenuSetup_VS_Unknown55(void)
     }
 }
 
-void MenuSetup_VS_Unknown56(void)
+void MenuSetup_VS_Total_MenuSetupCB(void)
 {
     EntityUIControl *totalControl     = (EntityUIControl *)MenuSetup->competitionTotal;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
     MenuSetup->field_140 = 120;
 
-    totalControl->posUnknown.y = totalControl->startPos.y;
+    totalControl->targetPos.y = totalControl->startPos.y;
     totalControl->position.y   = totalControl->startPos.y;
 
     TextInfo info;
@@ -1672,22 +1673,22 @@ void MenuSetup_VS_Unknown56(void)
     }
 }
 
-void MenuSetup_VS_Unknown57(void)
+void MenuSetup_VS_Total_MenuUpdateCB(void)
 {
     EntityUIControl *totalControl = (EntityUIControl *)MenuSetup->competitionTotal;
 
     if (totalControl->active == ACTIVE_ALWAYS) {
-        if (totalControl->position.y == totalControl->posUnknown.y) {
+        if (totalControl->position.y == totalControl->targetPos.y) {
             if (MenuSetup->field_140 <= 0) {
                 int32 pos = totalControl->startPos.y;
-                if (totalControl->posUnknown.y == totalControl->startPos.y) {
+                if (totalControl->targetPos.y == totalControl->startPos.y) {
                     EntityUIVsResults *button = (EntityUIVsResults *)totalControl->buttons[0];
                     if (button) {
                         if (button->field_1D0 + button->position.y - 0x708000 > totalControl->startPos.y)
                             pos = button->field_1D0 + button->position.y - 0x708000;
                     }
                 }
-                totalControl->posUnknown.y = pos;
+                totalControl->targetPos.y = pos;
                 MenuSetup->field_140       = 120;
             }
             else {
@@ -1702,8 +1703,8 @@ void MenuSetup_VS_Unknown58(void)
     EntityUIControl *control     = (EntityUIControl *)MenuSetup->competition;
     EntityUIControl *zoneControl = (EntityUIControl *)MenuSetup->competitionZones;
 
-    UIControl_Unknown6(zoneControl);
-    UIControl_Unknown4(control);
+    UIControl_SetInactiveMenu(zoneControl);
+    UIControl_SetActiveMenu(control);
     CompetitionSession_ResetOptions();
     zoneControl->childHasFocus = false;
 
@@ -1718,7 +1719,7 @@ void MenuSetup_VS_BackoutFromVsCharSelect_CB(void)
 {
     EntityUIControl *control   = UIControl_GetUIControl();
     control->selectionDisabled = false;
-    UIControl_Unknown11(&control->parentTag);
+    UIControl_HandleMenuChange(&control->parentTag);
 }
 
 bool32 MenuSetup_VS_BackoutFromVsCharSelect(void)
@@ -1866,14 +1867,14 @@ void MenuSetup_Options_Unknown51(int32 id)
         if (binder->objectID == UIKeyBinder->objectID) {
             binder->inputID = id;
             if (id == 1)
-                binder->options2 = MenuSetup_Options_Unknown22_P2;
+                binder->actionCB = MenuSetup_Options_Unknown22_P2;
             else if (!id)
-                binder->options2 = MenuSetup_Options_Unknown22_P1;
+                binder->actionCB = MenuSetup_Options_Unknown22_P1;
         }
     }
 }
 
-void MenuSetup_Unknown53(void) { MenuSetup_Unknown54(); }
+void MenuSetup_OptionsVideo_Win_MenuUpdateCB(void) { MenuSetup_Unknown54(); }
 
 void MenuSetup_Unknown54(void)
 {
@@ -1928,15 +1929,15 @@ void MenuSetup_Options_OpenKBControlsMenu(void)
     }
 }
 
-void MenuSetup_Options_Unknown25(void)
+void MenuSetup_Options_MenuSetupCB(void)
 {
     if (Options->state) {
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         Options_SaveOptionsBin(MenuSetup_Options_Unknown27);
     }
 }
 
-void MenuSetup_Options_Unknown27(int32 status) { UIWaitSpinner_Wait2(); }
+void MenuSetup_Options_Unknown27(int32 status) { UIWaitSpinner_FinishWait(); }
 
 void MenuSetup_Options_LaunchManual(void)
 {
@@ -1949,18 +1950,18 @@ void MenuSetup_Options_Unknown52(void)
     EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
     EntityUIControl *control = (EntityUIControl *)MenuSetup->language;
 
-    if (control->activeEntityID < 0)
+    if (control->buttonID < 0)
         options->language = -1;
     else
-        options->language = control->activeEntityID;
-    options->overrideLanguage = control->activeEntityID >= 0;
+        options->language = control->buttonID;
+    options->overrideLanguage = control->buttonID >= 0;
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
-        RSDK.SetSettingsValue(SETTINGS_LANGUAGE, control->activeEntityID);
+        RSDK.SetSettingsValue(SETTINGS_LANGUAGE, control->buttonID);
     Options->state = 1;
 
-    Localization->language = control->activeEntityID;
-    control->startingID    = control->activeEntityID;
+    Localization->language = control->buttonID;
+    control->startingID    = control->buttonID;
     Localization->loaded   = false;
     Localization_LoadStrings();
     UIWidgets_ApplyLanguage();
@@ -2087,7 +2088,7 @@ void MenuSetup_Options_SliderChanged_CB(void)
     }
 }
 
-void MenuSetup_OpenExtrasMenu(void) { UIControl_MatchMenuTag("Extras"); }
+void MenuSetup_OpenExtrasMenu_ActionCB(void) { UIControl_MatchMenuTag("Extras"); }
 
 // Extras
 void MenuSetup_Extras_ProcessButtonCB(void) { UIControl_ProcessButtonInput(); }
@@ -2096,7 +2097,7 @@ void MenuSetup_Extras_Start_Puyo_vsAI(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
     RSDK.SetScene("Extras", "Puyo Puyo");
@@ -2109,7 +2110,7 @@ void MenuSetup_Extras_Start_Puyo_vs2P(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 2;
+    param->selectionType = 2;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
     RSDK.SetScene("Extras", "Puyo Puyo");
@@ -2122,15 +2123,15 @@ void MenuSetup_Extras_Start_Credits(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 3;
-    param->field_1A8   = 1;
+    param->creditsReturnToMenu   = 1;
     RSDK.SetScene("Presentation", "Credits");
     RSDK.LoadScene();
 }
 
-void MenuSetup_Extras_Callback_Credits(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_Credits, 32); }
+void MenuSetup_Extras_Credits_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_Credits, 32); }
 
 void MenuSetup_Extras_StartDAGarden(void)
 {
@@ -2142,13 +2143,13 @@ void MenuSetup_Extras_StartDAGarden(void)
     RSDK.LoadScene();
 }
 
-void MenuSetup_Extras_Callback_DAGarden(void) { MenuSetup_StartTransition(MenuSetup_Extras_StartDAGarden, 32); }
+void MenuSetup_Extras_DAGarden_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_Extras_StartDAGarden, 32); }
 
 void MenuSetup_Extras_Start_BSS_3K(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
     RSDK.SetScene("Blue Spheres", "Random");
@@ -2161,7 +2162,7 @@ void MenuSetup_Extras_Start_BSS_Mania(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
-    param->field_59 = 1;
+    param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
     RSDK.SetScene("Blue Spheres", "Random 2");

@@ -14,6 +14,22 @@ void MathHelpers_Create(void *data) {}
 
 void MathHelpers_StageLoad(void) {}
 
+void MathHelpers_LerpToPos(Vector2 *pos, int32 percent, int32 posX, int32 posY)
+{
+    if (percent < 0) {
+        pos->x = 0;
+        pos->y = 0;
+    }
+    else if (percent >= 0x100) {
+        pos->x = posX;
+        pos->y = posY;
+    }
+    else {
+        pos->x = percent * (posX >> 8);
+        pos->y = percent * (posY >> 8);
+    }
+}
+
 void MathHelpers_Lerp(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY)
 {
     if (percent < 0) {

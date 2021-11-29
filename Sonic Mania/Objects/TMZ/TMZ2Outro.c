@@ -644,13 +644,13 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
                 GameProgress_MarkZoneCompleted(Zone_GetZoneID());
             GameProgress_GiveEnding(1);
             SaveGame_SaveFile(TMZ2Outro_SaveFileCB);
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
         }
 
         if (!TMZ2Outro->flag1)
             return false;
         else
-            UIWaitSpinner_Wait2();
+            UIWaitSpinner_FinishWait();
     }
 
     if (goodEndingFlag) {

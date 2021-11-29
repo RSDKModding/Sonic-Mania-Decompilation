@@ -74,7 +74,7 @@ void DialogRunner_NotifyAutoSave_CB(void)
 {
     DialogRunner->isAutoSaving = false;
     globals->notifiedAutosave  = true;
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
 }
 
 void DialogRunner_NotifyAutoSave(void)
@@ -199,7 +199,7 @@ void DialogRunner_CheckUserAuth_CB()
         else {
             if (UIControl) {
                 if (UIControl_GetUIControl())
-                    UIControl_Unknown6(UIControl_GetUIControl());
+                    UIControl_SetInactiveMenu(UIControl_GetUIControl());
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
@@ -223,12 +223,12 @@ void DialogRunner_ManageNotifs(int32 success)
     }
     else {
         DialogRunner->entityPtr = NULL;
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         GameProgress_TrackGameProgress(DialogRunner_Wait);
         destroyEntity(self);
     }
 }
-void DialogRunner_Wait(int32 success) { UIWaitSpinner_Wait2(); }
+void DialogRunner_Wait(int32 success) { UIWaitSpinner_FinishWait(); }
 void DialogRunner_GetNextNotif(void)
 {
     if (SceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -257,7 +257,7 @@ bool32 DialogRunner_NotifyAutosave(void)
     }
 
     if (!DialogRunner->entityPtr || (!globals->notifiedAutosave && !DialogRunner->isAutoSaving)) {
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         DialogRunner->isAutoSaving = true;
         globals->notifiedAutosave  = false;
         LogHelpers_Print("DUMMY NotifyAutosave()");

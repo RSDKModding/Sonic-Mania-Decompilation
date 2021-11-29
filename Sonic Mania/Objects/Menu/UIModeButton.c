@@ -12,9 +12,9 @@ void UIModeButton_Update(void)
     self->touchPosStart.y += 0x60000;
     self->touchPosEnd.x = 0;
     self->touchPosEnd.y = -0x120000;
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex || self->wasDisabled != self->disabled) {
+    if (self->textFrames != UIWidgets->textFrames || self->wasDisabled != self->disabled) {
         UIModeButton_Unknown1();
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
         self->wasDisabled     = self->disabled;
     }
     StateMachine_Run(self->state);
@@ -68,24 +68,24 @@ void UIModeButton_Create(void *data)
 {
     RSDK_THIS(UIModeButton);
     if (!SceneInfo->inEditor) {
-        self->visible         = true;
-        self->drawOrder       = 2;
-        self->active          = ACTIVE_BOUNDS;
-        self->updateRange.x   = 0x800000;
-        self->updateRange.y   = 0x400000;
-        self->field_130       = true;
-        self->field_114       = 0x280000;
-        self->field_118       = 0x280000;
-        self->processButtonCB = UIButton_Unknown6;
-        self->touchCB         = UIButton_ProcessTouch;
-        self->options3        = UIModeButton_Options3CB;
-        self->failCB          = UIModeButton_FailCB;
-        self->options5        = UIModeButton_Options5CB;
-        self->options6        = UIModeButton_Options6CB;
-        self->options7        = UIModeButton_Options7CB;
-        self->options8        = UIModeButton_Options8CB;
+        self->visible            = true;
+        self->drawOrder          = 2;
+        self->active             = ACTIVE_BOUNDS;
+        self->updateRange.x      = 0x800000;
+        self->updateRange.y      = 0x400000;
+        self->field_130          = true;
+        self->field_114          = 0x280000;
+        self->field_118          = 0x280000;
+        self->processButtonCB    = UIButton_ProcessButtonCB_Alt;
+        self->touchCB            = UIButton_ProcessTouchCB;
+        self->selectedCB         = UIModeButton_SelectedCB;
+        self->failCB             = UIModeButton_FailCB;
+        self->buttonEnterCB      = UIModeButton_ButtonEnterCB;
+        self->buttonLeaveCB      = UIModeButton_ButtonLeaveCB;
+        self->checkButtonEnterCB = UIModeButton_CheckButtonEnterCB;
+        self->checkSelectedCB    = UIModeButton_CheckSelectedCB;
         UIModeButton_Unknown1();
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
     }
 }
 
@@ -95,7 +95,7 @@ void UIModeButton_Unknown1(void)
 {
     RSDK_THIS(UIModeButton);
     if (self->disabled) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 7, &self->animator5, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 7, &self->animator5, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
@@ -104,28 +104,28 @@ void UIModeButton_Unknown1(void)
     else {
         switch (self->buttonID) {
             case 1:
-                RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 1, &self->animator5, true, 1);
+                RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->animator5, true, 1);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->animator1, true, 1);
                 RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->animator3, true, 1);
                 RSDK.SetSpriteAnimation(0xFFFF, 1, &self->animator4, true, 0);
                 break;
             case 2:
-                RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 1, &self->animator5, true, 2);
+                RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->animator5, true, 2);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->animator1, true, 2);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->animator2, true, 3);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->animator3, true, 2);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->animator4, true, 3);
                 break;
             case 3:
-                RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 1, &self->animator5, true, 3);
+                RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->animator5, true, 3);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->animator1, true, 4);
                 RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->animator3, true, 4);
                 RSDK.SetSpriteAnimation(0xFFFF, 1, &self->animator4, true, 0);
                 break;
             default:
-                RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 1, &self->animator5, true, 0);
+                RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->animator5, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->animator1, true, 0);
                 RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->animator3, true, 0);
@@ -135,18 +135,18 @@ void UIModeButton_Unknown1(void)
     }
 }
 
-bool32 UIModeButton_Options7CB(void)
+bool32 UIModeButton_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UIModeButton);
     return self->state == UIModeButton_Unknown9;
 }
-bool32 UIModeButton_Options8CB(void)
+bool32 UIModeButton_CheckSelectedCB(void)
 {
     RSDK_THIS(UIModeButton);
     return self->state == UIModeButton_Unknown10;
 }
 
-void UIModeButton_Options5CB(void)
+void UIModeButton_ButtonEnterCB(void)
 {
     RSDK_THIS(UIModeButton);
     if (self->state != UIModeButton_Unknown9) {
@@ -162,7 +162,7 @@ void UIModeButton_Options5CB(void)
     }
 }
 
-void UIModeButton_Options3CB(void)
+void UIModeButton_SelectedCB(void)
 {
     RSDK_THIS(UIModeButton);
     EntityUIControl *parent = (EntityUIControl *)self->parent;
@@ -178,7 +178,7 @@ void UIModeButton_Options3CB(void)
         API_AssignControllerID(3, CONT_AUTOASSIGN);
         API_AssignControllerID(4, CONT_AUTOASSIGN);
     }
-    UITransition_StartTransition(self->options2, 14);
+    UITransition_StartTransition(self->actionCB, 14);
     if (self->stopMusic)
         RSDK.StopChannel(Music->channelID);
     self->flag         = false;
@@ -189,7 +189,7 @@ void UIModeButton_Options3CB(void)
 
 void UIModeButton_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255); }
 
-void UIModeButton_Options6CB(void)
+void UIModeButton_ButtonLeaveCB(void)
 {
     RSDK_THIS(UIModeButton);
     self->state = UIModeButton_Unknown8;
@@ -269,7 +269,7 @@ void UIModeButton_EditorDraw(void)
     self->field_114       = 0x280000;
     self->field_118       = 0x280000;
     UIModeButton_Unknown1();
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
 
     UIModeButton_Draw();
 }

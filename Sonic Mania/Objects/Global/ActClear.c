@@ -499,7 +499,7 @@ void ActClear_CheckPlayerVictory(void)
 }
 void ActClear_SaveGameCallback(int32 success)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     ActClear->finishedSavingGame = false;
 }
 
@@ -737,7 +737,7 @@ void ActClear_State_SaveGameProgress(void)
             }
         }
         if (ActClear->finishedSavingGame)
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
 
         if (ActClear->finishedSavingGame) {
             self->state = ActClear_State_StartExitSequence;

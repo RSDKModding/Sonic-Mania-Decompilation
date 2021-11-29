@@ -375,7 +375,7 @@ void SpecialClear_GiveScoreBonus(int32 score)
 void SpecialClear_SaveCB(int32 success)
 {
     RSDK_THIS(SpecialClear);
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     self->field_120 = 0;
 }
 
@@ -650,7 +650,7 @@ void SpecialClear_Unknown15(void)
         self->state = SpecialClear_LoadScene;
         if (globals->gameMode < MODE_TIMEATTACK && globals->saveSlotID != NO_SAVE_SLOT) {
             self->field_120 = 1;
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
             GameProgress_TrackGameProgress(SpecialClear_SaveCB);
         }
     }

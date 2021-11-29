@@ -60,7 +60,7 @@ void UIPopover_DrawSprites(void);
 void UIPopover_SetupButtonPositions(void);
 void UIPopover_Close(void);
 bool32 UIPopover_BackPressCB(void);
-void UIPopover_Unknown8(void);
+void UIPopover_ButtonActionCB(void);
 void UIPopover_Unknown9(void);
 void UIPopover_Unknown10(void);
 void UIPopover_Unknown11(void);

@@ -991,7 +991,7 @@ bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
     EncoreIntro->field_28 = true;
     SaveGame_SaveFile(EncoreIntro_SaveGameCB);
     if (EncoreIntro->field_28) {
-        UIWaitSpinner_Wait();
+        UIWaitSpinner_StartWait();
         if (EncoreIntro->field_28)
             return true;
     }
@@ -1114,7 +1114,7 @@ bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host)
 
 void EncoreIntro_SaveGameCB(int32 status)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     EncoreIntro->field_28 = 0;
 }
 

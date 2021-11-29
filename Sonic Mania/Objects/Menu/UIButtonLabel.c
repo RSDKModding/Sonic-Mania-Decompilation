@@ -6,9 +6,9 @@ void UIButtonLabel_Update(void)
 {
     RSDK_THIS(UIButtonLabel);
 
-    if (self->textSprite != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator2, true, self->frameID);
-        self->textSprite = UIWidgets->textSpriteIndex;
+    if (self->textSprite != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator2, true, self->frameID);
+        self->textSprite = UIWidgets->textFrames;
     }
 }
 
@@ -37,8 +37,8 @@ void UIButtonLabel_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
     RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->animator1, true, self->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator2, true, self->frameID);
-    self->textSprite = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator2, true, self->frameID);
+    self->textSprite = UIWidgets->textFrames;
 }
 
 void UIButtonLabel_StageLoad(void) { UIButtonLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/ButtonLabel.bin", SCOPE_STAGE); }
@@ -53,8 +53,8 @@ void UIButtonLabel_EditorDraw(void)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
     RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->animator1, true, self->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator2, true, self->frameID);
-    self->textSprite = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator2, true, self->frameID);
+    self->textSprite = UIWidgets->textFrames;
 
     UIButtonLabel_Draw();
 }

@@ -49,7 +49,7 @@ void UICharButton_Update(void)
         }
     }
 
-    if (self->flag && (parent->state != UIControl_ProcessInputs || parent->activeEntityID != id)) {
+    if (self->flag && (parent->state != UIControl_ProcessInputs || parent->buttonID != id)) {
         self->flag  = false;
         self->state = UICharButton_Unknown9;
     }
@@ -77,15 +77,15 @@ void UICharButton_Create(void *data)
     self->drawFX          = FX_FLIP;
     self->updateRange.x   = 0x800000;
     self->updateRange.y   = 0x300000;
-    self->processButtonCB = UIButton_Unknown6;
-    self->touchCB         = UIButton_ProcessTouch;
-    self->options3        = UICharButton_Unknown4;
-    self->failCB          = 0;
-    self->options5        = UICharButton_Unknown7;
-    self->options6        = UICharButton_Unknown8;
-    self->options7        = UICharButton_Unknown5;
-    self->options8        = UICharButton_Unknown6;
-    self->state           = UICharButton_Unknown9;
+    self->processButtonCB = UIButton_ProcessButtonCB_Alt;
+    self->touchCB            = UIButton_ProcessTouchCB;
+    self->selectedCB           = UICharButton_SelectedCB;
+    self->failCB             = StateMachine_None;
+    self->buttonEnterCB      = UICharButton_ButtonEnterCB;
+    self->buttonLeaveCB      = UICharButton_ButtonLeaveCB;
+    self->checkButtonEnterCB = UICharButton_CheckButtonEnterCB;
+    self->checkSelectedCB    = UICharButton_CheckSelectedCB;
+    self->state              = UICharButton_Unknown9;
 }
 
 void UICharButton_StageLoad(void) { UICharButton->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
@@ -136,39 +136,39 @@ void UICharButton_Unknown3(void)
         drawPos.y -= 8 * self->field_114;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &self->animator3, true, self->characterID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 8, &self->animator3, true, self->characterID);
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x200000;
         RSDK.DrawSprite(&self->animator3, &drawPos, false);
     }
 }
 
-void UICharButton_Unknown4(void)
+void UICharButton_SelectedCB(void)
 {
     RSDK_THIS(UICharButton);
     self->timer           = 0;
     self->state           = UICharButton_Unknown11;
     self->processButtonCB = 0;
-    UITransition_StartTransition(self->options2, 30);
+    UITransition_StartTransition(self->actionCB, 30);
     if (UIControl_GetUIControl())
         UIControl_GetUIControl()->selectionDisabled = true;
     ((EntityUIControl *)self->parent)->backoutTimer = 30;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 }
 
-bool32 UICharButton_Unknown5(void)
+bool32 UICharButton_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UICharButton);
     return self->state == UICharButton_Unknown10;
 }
 
-bool32 UICharButton_Unknown6(void)
+bool32 UICharButton_CheckSelectedCB(void)
 {
     RSDK_THIS(UICharButton);
     return self->state == UICharButton_Unknown11;
 }
 
-void UICharButton_Unknown7(void)
+void UICharButton_ButtonEnterCB(void)
 {
     RSDK_THIS(UICharButton);
     if (!self->flag) {
@@ -181,7 +181,7 @@ void UICharButton_Unknown7(void)
     }
 }
 
-void UICharButton_Unknown8(void)
+void UICharButton_ButtonLeaveCB(void)
 {
     RSDK_THIS(UICharButton);
     self->flag  = false;
@@ -199,7 +199,7 @@ void UICharButton_Unknown11(void)
         self->flag            = false;
         self->timer           = 0;
         self->state           = UICharButton_Unknown9;
-        self->processButtonCB = UIButton_Unknown6;
+        self->processButtonCB = UIButton_ProcessButtonCB_Alt;
     }
     else {
         if (self->timer == 2) {

@@ -7,9 +7,9 @@ void UIVsCharSelector_Update(void)
     RSDK_THIS(UIVsCharSelector);
 
     self->prevFlag = self->flag;
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex || self->prevFrameID != self->frameID) {
+    if (self->textFrames != UIWidgets->textFrames || self->prevFrameID != self->frameID) {
         UIVsCharSelector_SetupText();
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
         self->prevFrameID     = self->frameID;
     }
 
@@ -86,7 +86,7 @@ void UIVsCharSelector_Create(void *data)
     self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
     self->state           = UIVsCharSelector_Unknown8;
     UIVsCharSelector_SetupText();
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
 }
 
 void UIVsCharSelector_StageLoad(void) { UIVsCharSelector->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
@@ -94,9 +94,9 @@ void UIVsCharSelector_StageLoad(void) { UIVsCharSelector->aniFrames = RSDK.LoadS
 void UIVsCharSelector_SetupText(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator5, true, self->playerID + 8);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator6, true, 7);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &self->animator3, true, self->frameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->animator5, true, self->playerID + 8);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->animator6, true, 7);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 8, &self->animator3, true, self->frameID);
 }
 
 void UIVsCharSelector_Unknown2(void)
@@ -261,7 +261,7 @@ void UIVsCharSelector_ProcessButtonCB_Alt(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     if (parent->active == ACTIVE_ALWAYS) {
-        parent->posUnknown.x = self->position.x;
+        parent->targetPos.x = self->position.x;
 
         bool32 pressed = false;
         if (API_GetConfirmButtonFlip())
@@ -378,7 +378,7 @@ void UIVsCharSelector_Unknown11(void)
             self->timer           = 0;
             self->state           = UIVsCharSelector_Unknown8;
             self->processButtonCB = UIVsCharSelector_ProcessButtonCB_Alt;
-            StateMachine_Run(self->options2);
+            StateMachine_Run(self->actionCB);
         }
     }
     else {

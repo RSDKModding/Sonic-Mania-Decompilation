@@ -13,7 +13,7 @@ void MainMenu_StaticUpdate(void)
     if (control && control->active) {
         EntityUIDiorama *diorama     = (EntityUIDiorama *)MainMenu->dioramaPtr;
         MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->field_6C & 0xFFFF0000) > -0x700000;
-        EntityUIButton *button       = control->buttons[control->field_D8];
+        EntityUIButton *button       = control->buttons[control->lastButtonID];
         if (button) {
             switch (button->frameID) {
                 case 0: diorama->dioramaID = 0; break;
@@ -147,7 +147,7 @@ void MainMenu_ExitGame(void)
     API.ExitGame();
 }
 
-void MainMenu_ExitGameOption(void)
+void MainMenu_ExitButton_ActionCB(void)
 {
     TextInfo buffer;
     Localization_GetString(&buffer, STR_QUITWARNING);
@@ -168,7 +168,7 @@ void MainMenu_StartExitGame(void)
     MenuSetup_StartTransition(MainMenu_ExitGame, 64);
 }
 
-void MainMenu_ChangeMenu(void)
+void MainMenu_MenuButton_ActionCB(void)
 {
     EntityUIButton *button = (EntityUIButton *)SceneInfo->entity;
     switch (button->frameID) {
@@ -178,9 +178,9 @@ void MainMenu_ChangeMenu(void)
             }
             else {
                 EntityUIControl *saveSelect = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
-                saveSelect->activeEntityID  = 7;
+                saveSelect->buttonID  = 7;
 #if RETRO_USE_PLUS
-                saveSelect->dwordCC     = 0;
+                saveSelect->menuWasSetup = false;
                 ManiaModeMenu->field_28 = -1;
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store          = SceneInfo->entity;
@@ -195,14 +195,14 @@ void MainMenu_ChangeMenu(void)
         case 1:
             if (API.CheckDLC(DLC_PLUS)) {
                 EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
-                control->activeEntityID  = 0;
-                control->dwordCC         = 0;
+                control->buttonID  = 0;
+                control->menuWasSetup    = false;
                 UIControl_MatchMenuTag("Time Attack");
             }
             else {
                 EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
-                control->activeEntityID  = 0;
-                control->dwordCC         = 0;
+                control->buttonID        = 0;
+                control->menuWasSetup    = false;
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
             break;
@@ -220,8 +220,8 @@ void MainMenu_ChangeMenu(void)
             }
             else {
                 EntityUIControl *encoreSaveSel = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
-                encoreSaveSel->activeEntityID  = 1;
-                encoreSaveSel->dwordCC         = 0;
+                encoreSaveSel->buttonID        = 1;
+                encoreSaveSel->menuWasSetup    = false;
                 for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {
                     Entity *store          = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
@@ -291,18 +291,18 @@ void MainMenu_Unknown3(void)
                     mainMenu->buttons[6] = NULL;
                 }
                 else {
-                    button->options2 = MainMenu_ExitGameOption;
+                    button->actionCB = MainMenu_ExitButton_ActionCB;
                 }
             }
             else {
-                button->options2 = MainMenu_ChangeMenu;
+                button->actionCB = MainMenu_MenuButton_ActionCB;
             }
         }
     }
-    ((EntityUIControl *)MainMenu->menuControlPtr)->unknownCallback3 = MainMenu_Unknown4;
+    ((EntityUIControl *)MainMenu->menuControlPtr)->menuSetupCB = MainMenu_MenuSetupCB;
 }
 
-void MainMenu_Unknown4()
+void MainMenu_MenuSetupCB()
 {
     ((EntityUIDiorama *)MainMenu->dioramaPtr)->dioramaSubID = -1;
 }

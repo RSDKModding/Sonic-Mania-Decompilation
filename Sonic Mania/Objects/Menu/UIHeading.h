@@ -6,19 +6,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 textSpriteIndex;
+    uint16 textFrames;
 } ObjectUIHeading;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused;
     Vector2 startPos;
     int32 headingID;
-    Animator animator2;
-    Animator animator;
-    uint16 textSpriteIndex;
+    Animator headingAnimator;
+    Animator textAnimator;
+    uint16 textFrames;
 } EntityUIHeading;
 
 // Object Struct
