@@ -182,7 +182,7 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
             }
             else {
                 choicePtr->active  = ACTIVE_BOUNDS;
-                choicePtr->visible = false;
+                choicePtr->visible = true;
                 UIChoice_SetChoiceInactive(choicePtr);
             }
         }
@@ -246,7 +246,12 @@ void UIButton_ProcessButtonCB_Alt(void)
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
+#if RETRO_USE_PLUS
     UIControl_SetTargetPos(control, self->position.x, self->position.y);
+#else 
+    control->targetPos.y = self->position.y;
+#endif
+
     if (!UIControl_isMoving(control)) {
         int32 rowID = 0;
         int32 colID = 0;

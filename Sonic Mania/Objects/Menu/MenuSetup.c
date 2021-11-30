@@ -769,7 +769,7 @@ void MenuSetup_HandleMenuReturn(void)
                 control->buttonID = param->selectionID;
 
                 if (control == (EntityUIControl *)MenuSetup->timeAttackZones && param->startedTAAttempt)
-                    UITAZoneModule_Unknown26(control, param->characterID, param->zoneID, param->actID, param->timeScore);
+                    UITAZoneModule_SetStartupModule(control, param->characterID, param->zoneID, param->actID, param->timeScore);
             }
         }
 
@@ -1222,7 +1222,7 @@ void MenuSetup_TA_Unknown50(void)
     leaderboardControl->state           = StateMachine_None;
 
     UIControl_SetActiveMenu((EntityUIControl *)MenuSetup->timeAttackZones);
-    UITAZoneModule_Unknown26((EntityUIControl *)MenuSetup->timeAttackZones, leaderboards->playerID, leaderboards->zoneID, leaderboards->actID, 0);
+    UITAZoneModule_SetStartupModule((EntityUIControl *)MenuSetup->timeAttackZones, leaderboards->playerID, leaderboards->zoneID, leaderboards->actID, 0);
 }
 
 bool32 MenuSetup_TA_Unknown51(void)
@@ -1234,7 +1234,7 @@ bool32 MenuSetup_TA_Unknown51(void)
 void MenuSetup_TA_Unknown52(void)
 {
     EntityUILeaderboard *leaderboards = (EntityUILeaderboard *)MenuSetup->leaderboardWidget;
-    UITAZoneModule_Unknown25(leaderboards->playerID, leaderboards->zoneID, leaderboards->actID, leaderboards->entryIsUser, NULL);
+    UITAZoneModule_ShowLeaderboards(leaderboards->playerID, leaderboards->zoneID, leaderboards->actID, leaderboards->entryIsUser, NULL);
 }
 
 void MenuSetup_Leaderboard_Unknown(void)

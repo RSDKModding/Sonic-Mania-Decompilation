@@ -223,10 +223,8 @@ void APICallback_NotifyAutoSave_CB(void)
         if (!UIDialog->activeDialog) {
             TextInfo info;
             Localization_GetString(&info, STR_SIGNOUTDETECTED);
-            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-            dialog->field_B8       = true;
-            UIDialog_AddButton(DIALOG_OK, dialog, APICallback_NotifyAutoSave_OK, true);
-            UIDialog_Setup(dialog);
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_NotifyAutoSave_OK, true);
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -254,11 +252,8 @@ void APICallback_PromptSavePreference_CB(void)
             }
             Localization_GetString(&info, stringID);
 
-            EntityUIDialog *dialog = (EntityUIDialog *)UIDialog_CreateActiveDialog(&info);
-            dialog->field_B8       = true;
-            UIDialog_AddButton(DIALOG_NO, dialog, APICallback_SetNoSaveDisabled, true);
-            UIDialog_AddButton(DIALOG_YES, dialog, APICallback_SetNoSaveEnabled, true);
-            UIDialog_Setup(dialog);
+            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_SetNoSaveEnabled, APICallback_SetNoSaveDisabled, true, true);
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -623,12 +618,16 @@ void APICallback_TryAuth_CB(void)
     if (APICallback->authStatus == 100) {
         if (!UIDialog->activeDialog) {
             TextInfo info;
-            Localization_GetString(&info, STR_LOADNINTENDO);
-            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-            dialog->field_B8       = true;
-            UIDialog_AddButton(DIALOG_NO, dialog, APICallback_TryAuth_No, true);
-            UIDialog_AddButton(DIALOG_YES, dialog, APICallback_TryAuth_Yes, true);
-            UIDialog_Setup(dialog);
+            switch (sku_platform) {
+                case PLATFORM_PC:
+                    Localization_GetString(&info, STR_LOADSTEAM); // could also be STR_LOADINGFROMEGS
+                    break;
+                case PLATFORM_PS4: Localization_GetString(&info, STR_LOADPSN); break;
+                case PLATFORM_XB1: Localization_GetString(&info, STR_LOADXBOX); break;
+                case PLATFORM_SWITCH: Localization_GetString(&info, STR_LOADNINTENDO); break;
+            }
+            EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_TryAuth_Yes, APICallback_TryAuth_No, true, true);
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -743,10 +742,8 @@ void APICallback_CheckUserAuth_CB(void)
         else if (!dialog) {
             TextInfo info;
             Localization_GetString(&info, STR_SIGNOUTDETECTED);
-            dialog           = UIDialog_CreateActiveDialog(&info);
-            dialog->field_B8 = true;
-            UIDialog_AddButton(DIALOG_OK, dialog, APICallback_CheckUserAuth_OK, true);
-            UIDialog_Setup(dialog);
+            dialog = UIDialog_CreateDialogOk(&info, APICallback_CheckUserAuth_OK, true);
+            dialog->useAltColour = true;
         }
     }
     else {
@@ -789,7 +786,7 @@ void APICallback_ManageNotifs(void)
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_GetNextNotif, true);
             dialog->playEventSfx   = true;
-            dialog->field_B8       = true;
+            dialog->useAltColour   = true;
         }
     }
     else {

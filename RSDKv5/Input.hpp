@@ -550,7 +550,7 @@ inline int32 MostRecentActiveControllerID(int32 type, int32 a2, uint32 a3)
 inline int32 MostRecentActiveControllerID()
 {
     //TODO: fix pre-plus input API
-    return -1; 
+    return InputDevices[0].inputID; 
     /*mostRecentControllerID;*/
 }
 #endif
@@ -628,7 +628,7 @@ inline int32 DoInputUnknown3_Active(int32 inputID, int32 a2, int32 a3)
 inline void AssignControllerID(int8 controllerID, int32 inputID)
 {
     int contID = controllerID - 1;
-#if RETRO_REV02
+#if RETRO_REV02 || true
     if (contID < PLAYER_COUNT) {
         if (inputID && inputID != CONT_AUTOASSIGN) {
             if (inputID == CONT_UNASSIGNED) {

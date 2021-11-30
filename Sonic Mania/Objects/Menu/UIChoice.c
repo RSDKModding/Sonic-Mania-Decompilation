@@ -147,10 +147,10 @@ void UIChoice_SetChoiceActive(EntityUIChoice *entity)
 void UIChoice_SetChoiceInactive(EntityUIChoice *entity)
 {
     if (entity) {
-        entity->isDisabled = false;
-        entity->bgEdgeSize = 0;
-        entity->flag       = false;
-        entity->state      = UIChoice_State_HandleButtonLeave;
+        entity->textBounceOffset   = 0;
+        entity->buttonBounceOffset = 0;
+        entity->flag               = false;
+        entity->state              = UIChoice_State_HandleButtonLeave;
     }
 }
 

@@ -143,6 +143,26 @@ void TimeAttackData_GetTimeFromValue(int32 time, int32 *minsPtr, int32 *secsPtr,
     if (millisecsPtr)
         *millisecsPtr = ms;
 }
+
+uint16 *TimeAttackData_GetRecordedTime(uint8 zone, uint8 act, uint8 player, uint8 rank)
+{
+    rank--;
+    if (rank >= 3)
+        return NULL;
+
+    uint16 *saveRAM = NULL;
+    if (globals->saveLoaded == STATUS_OK)
+        saveRAM = (uint16 *)&globals->saveRAM[0x800];
+    else
+        return NULL;
+
+    // 72 = (12 * 6)
+    int32 pos = 72 * (player - 1) + 6 * zone + act * 3 + rank;
+    // not sure why theres an offset of 43 uint16's (86 bytes) but whatever ig
+    pos += 43;
+    return &saveRAM[pos];
+}
+
 #if RETRO_USE_PLUS
 int32 TimeAttackData_LoadCB(int32 statusCode)
 {
@@ -197,21 +217,14 @@ void TimeAttackData_MigrateLegacySaves(void)
         for (int32 zone = 0; zone < 12; ++zone) {
             for (int32 act = 0; act < 2; ++act) {
                 for (int32 charID = 0; charID < 3; ++charID) {
-                    int32 off = 12;
                     for (int32 rank = 0; rank < 3; ++rank) {
-                        uint16 *saveRAM = NULL;
-                        if (globals->saveLoaded == STATUS_OK)
-                            saveRAM = (uint16 *)&globals->saveRAM[0x800];
-                        else
-                            saveRAM = NULL;
-                        int32 pos = act + 2 * (off + zone) - 10;
-                        if (saveRAM[pos + rank + 2 * pos]) {
-                            int32 time = saveRAM[pos + rank + 2 * pos];
+                        uint16 *records = TimeAttackData_GetRecordedTime(zone, act, charID + 1, rank);
+                        if (records && *records) {
+                            int32 time = *records;
                             LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID + 1, rank, time);
                             TimeAttackData_AddTADBEntry(zone, charID + 1, act, MODE_MANIA, time, NULL);
                         }
                     }
-                    off += 12;
                 }
             }
         }
@@ -396,8 +409,8 @@ void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 player, uint8 rank, 
 {
     rank--;
     if (rank < 3) {
-        // playerID * (1 zones)
-        // zone * (1 acts)
+        // playerID * (12 zones)
+        // zone * (2 acts)
         // act * (3 ranks)
         uint16 *record = TimeAttackData_GetRecordedTime(zone, act, player, 1);
 
@@ -408,22 +421,6 @@ void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 player, uint8 rank, 
         record[rank] = time;
     }
 }
-
-uint16 *TimeAttackData_GetRecordedTime(uint8 zone, uint8 act, uint8 player, uint8 rank) {
-    rank--;
-    if (rank >= 3)
-        return NULL;
-
-    uint16 *saveRAM = NULL;
-    if (globals->saveLoaded == STATUS_OK)
-        saveRAM = (uint16 *)&globals->saveRAM[0x800];
-    else
-        return NULL;
-
-    int32 pos = act + 2 * (zone * 12) - 10;
-    return &saveRAM[pos + rank + 2 * pos];
-}
-
 #endif
 
 void TimeAttackData_EditorDraw(void) {}

@@ -725,7 +725,7 @@ void TimeAttackMenu_YPressCB_Details(void)
 {
     EntityUITABanner *banner = (EntityUITABanner *)TimeAttackMenu->banner;
     int32 count              = API.GetSortedUserDBRowCount(globals->taTableID);
-    TimeAttackMenu_Unknown10(banner->zoneID, banner->characterID, banner->actID, TimeAttackMenu->encoreMode, !count, UITAZoneModule_Unknown14);
+    TimeAttackMenu_Unknown10(banner->zoneID, banner->characterID, banner->actID, TimeAttackMenu->encoreMode, !count, UITAZoneModule_ShowLeaderboards_CB);
 }
 
 void TimeAttackMenu_ResetTimes_YesCB(void)
