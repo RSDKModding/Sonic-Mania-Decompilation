@@ -50,8 +50,10 @@ void MSZ2Cutscene_SetupCutscene(void)
                        MSZ2Cutscene_CutsceneState_Unknown4, NULL };
 
     CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }

@@ -35,8 +35,8 @@ void LoadScene()
     }
 #if RETRO_REV02
     ClearDebugValues();
-#endif
     lookupTable = NULL;
+#endif
 
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         MEM_ZERO(tileLayers[l]);

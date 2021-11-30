@@ -145,8 +145,10 @@ bool32 MSZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             fgLow->scrollInfo[i].scrollSpeed    = 0;
         }
 
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_NEXTSCENE;
+#endif
         return true;
     }
     return false;

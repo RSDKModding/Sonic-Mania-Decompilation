@@ -17,9 +17,11 @@ void CPZ1Intro_Update(void)
         else {
             self->activated = true;
             CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             if (seq->objectID)
                 seq->skipType = SKIPTYPE_RELOADSCN;
+#endif
         }
     }
 }

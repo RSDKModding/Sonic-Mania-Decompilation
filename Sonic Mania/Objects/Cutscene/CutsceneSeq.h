@@ -3,12 +3,14 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
 typedef enum {
     SKIPTYPE_DISABLED,
     SKIPTYPE_RELOADSCN,
     SKIPTYPE_NEXTSCENE,
     SKIPTYPE_CALLBACK,
 } SkipTypes;
+#endif
 
 // Object Class
 typedef struct {
@@ -30,8 +32,10 @@ typedef struct {
     Vector2 points[8];
     int32 fillTimerA;
     int32 fillTimerB;
+#if RETRO_USE_PLUS
     int32 skipType;
     void (*skipCallback)(void);
+#endif
 } EntityCutsceneSeq;
 
 // Object Struct
@@ -52,7 +56,9 @@ void CutsceneSeq_Serialize(void);
 
 // Extra Entity Functions
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq);
+#if RETRO_USE_PLUS
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void));
+#endif
 Entity *CutsceneSeq_GetEntity(int32 type);
 void CutsceneSeq_LockPlayerControl(void *plr);
 void CutsceneSeq_LockAllPlayerControl(void);

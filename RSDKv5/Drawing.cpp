@@ -455,6 +455,13 @@ void GenerateBlendLookupTable()
         }
     }
 
+#if !RETRO_REV02
+    for (int i = 0; i < 0x10000; ++i) {
+        int32 brightness = (((uint32)i & 0x1F) + ((i >> 6) & 0x1F) + (((uint16)i >> 11) & 0x1F)) / 3 + 6;
+        lookupTable[i] = 0x841 * minVal(0x1F, brightness);
+    }
+#endif
+
     for (int c = 0; c < 0x100; ++c) {
         rIndexes[c] = (c & 0xFFF8) << 8;
         gIndexes[c] = (c & 0xFFFC) << 3;

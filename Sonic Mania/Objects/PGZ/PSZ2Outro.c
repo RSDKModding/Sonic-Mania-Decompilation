@@ -11,8 +11,10 @@ void PSZ2Outro_Update(void)
                        PSZ2Outro_CutsceneState_LoadNextScene, NULL };
 
     CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
     self->active = ACTIVE_NEVER;
 }

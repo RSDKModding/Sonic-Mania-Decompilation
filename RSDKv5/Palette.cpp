@@ -14,7 +14,11 @@ uint16 fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 uint8 gfxLineBuffer[SCREEN_YSIZE];
 
 int32 maskColour = 0;
+#if RETRO_REV02
 uint16 *lookupTable = NULL;
+#else
+uint16 lookupTable[0x10000];
+#endif
 
 #if RETRO_REV02
 void LoadPalette(uint8 paletteID, const char *filename, ushort rowFlags)

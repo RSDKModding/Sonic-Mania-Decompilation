@@ -15,8 +15,10 @@ void TMZ1Outro_Update(void)
         void *states[] = { TMZ1Outro_Cutscene1_State1, TMZ1Outro_Cutscene1_State2, TMZ1Outro_Cutscene1_State3, TMZ1Outro_Cutscene1_State4, NULL };
         CutsceneSeq_StartSequence((Entity *)self, states);
     }
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
     self->active = ACTIVE_NEVER;
 }
 

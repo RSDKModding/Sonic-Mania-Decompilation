@@ -248,7 +248,11 @@ typedef struct {
     void (*SetScreenSplitVerticies)(int8 p2_1, int8 p2_2, int8 p3_1, int8 p3_2, int8 p3_3);
 #endif
     int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
+#if RETRO_USE_PLUS
     void (*SetLookupTable)(uint16 *tablePtr);
+#else
+    uint16 *(*GetLookupTable)(void);
+#endif
     void (*SetPaletteMask)(uint32 maskColour);
     void (*SetPaletteEntry)(uint8 paletteID, uint8 index, uint32 colour);
     uint32 (*GetPaletteEntry)(uint8 paletteID, uint8 index);
@@ -349,7 +353,7 @@ typedef struct {
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS
-    void (*Unknown92)(int32 a1, int32 a2, int32 *a3);
+    void (*InputUnknown)(int32 controllerID, int32 type, int32 *valuePtr);
 #endif
     int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size); // load user file from exe dir
     int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir

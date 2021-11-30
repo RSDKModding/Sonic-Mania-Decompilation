@@ -81,8 +81,10 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 bool32 PSZ2Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     if (ActClear->finished) {
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         return true;
     }
     return false;

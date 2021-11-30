@@ -112,7 +112,7 @@ void DiveEggman_State_Unknown1(void)
 
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
-    if (screwMobile->state != ScrewMobile_State_Unknown1) {
+    if (screwMobile->state != ScrewMobile_State_CheckPlayerEnter) {
         RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 1, &self->animator, true, 0);
         self->velocity.x = -0x10000;
         self->active     = ACTIVE_NORMAL;

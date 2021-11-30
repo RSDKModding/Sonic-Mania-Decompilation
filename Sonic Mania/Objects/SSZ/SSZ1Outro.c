@@ -9,8 +9,10 @@ void SSZ1Outro_Update(void)
     RSDK_THIS(SSZ1Outro);
     if (!self->activated) {
         self->activated = true;
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         CutsceneSeq_StartSequence((Entity *)self, states);
     }
 }

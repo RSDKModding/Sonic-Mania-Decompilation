@@ -34,6 +34,9 @@ void PauseMenu_LateUpdate(void)
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
+#if !RETRO_USE_PLUS
+            PauseMenu_SetupLookupTable();
+#endif
             self->state = PauseMenu_State_SetupButtons;
         }
     }
@@ -136,7 +139,9 @@ void PauseMenu_StageLoad(void)
     for (int32 i = 0; i < 0x10; ++i) {
         PauseMenu->channelFlags[i] = false;
     }
+#if RETRO_USE_PLUS
     PauseMenu_SetupLookupTable();
+#endif
 }
 
 void PauseMenu_SetupMenu(void)
@@ -171,16 +176,32 @@ void PauseMenu_SetupMenu(void)
 
 void PauseMenu_SetupLookupTable(void)
 {
+#if RETRO_USE_PLUS
     for (int32 i = 0; i < 0x10000; ++i) {
-        int32 val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
-        val       = minVal(0xFF, val);
-        PauseMenu->lookupTable[i] = (val >> 3) | ((val >> 3) << 11) | 8 * val & 0xFFE0;
-
-        // found as the "default" lookup table in rev01, produces a similar (but lighter) effect
-        // included here because I think it is neat :)
-        // int32 val = ((i & 0x1F) + ((i >> 6) & 0x1F) + ((i >> 11) & 0x1F)) / 3 + 6;
-        // PauseMenu->lookupTable[i] = 0x841 * minVal(0x1F, val);
+        int32 brightness =
+            ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
+        brightness                = minVal(0xFF, brightness);
+        PauseMenu->lookupTable[i] = (brightness >> 3) | ((brightness >> 3) << 11) | 8 * brightness & 0xFFE0;
     }
+#else
+    uint16 *lookupTable = RSDK.GetLookupTable();
+    for (int32 i = 0; i < 0x10000; ++i) {
+        uint32 r = (527 * (i >> 11) + 23) >> 6;
+        uint32 g = (527 * (i & 0x1F) + 23) >> 7;
+        uint32 b = (259 * ((i >> 5) & 0x3F) + 33) >> 6;
+
+        int32 rVal = 0, gVal = 0, bVal = 0;
+        ColorHelpers_Unknown1(r, g, b, &rVal, &gVal, &bVal);
+
+        uint32 brightness = 13 * bVal / 16;
+        if (brightness > 255)
+            brightness = 255;
+
+        ColorHelpers_Unknown2(0, rVal, brightness, &r, &g, &b);
+
+        lookupTable[i] = ColorHelpers_PackRGB(r, g, b);
+    }
+#endif
 }
 
 void PauseMenu_AddButton(uint8 id, void *action)
@@ -890,7 +911,9 @@ void PauseMenu_Draw_Default(void)
 {
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
+#if RETRO_USE_PLUS
         RSDK.SetLookupTable(PauseMenu->lookupTable);
+#endif
         RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_LOOKUP, true);
         PauseMenu_DrawPauseQuads();
     }
@@ -900,7 +923,9 @@ void PauseMenu_Draw_JustLookup(void)
 {
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
+#if RETRO_USE_PLUS
         RSDK.SetLookupTable(PauseMenu->lookupTable);
+#endif
         RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_LOOKUP, true);
     }
 }

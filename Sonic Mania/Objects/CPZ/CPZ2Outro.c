@@ -46,8 +46,10 @@ void CPZ2Outro_HandleCutsceneSeq(void)
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
 
     CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
     if (seq->objectID)
         seq->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }

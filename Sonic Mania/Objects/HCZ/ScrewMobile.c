@@ -76,7 +76,7 @@ void ScrewMobile_Create(void *data)
                 RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->animator6, true, 0);
                 self->field_7C                 = 8;
                 self->animator2.speed = 0;
-                self->state                    = ScrewMobile_State_Unknown1;
+                self->state                    = ScrewMobile_State_CheckPlayerEnter;
                 self->stateDraw                = ScrewMobile_StateDraw1_Unknown;
             }
         }
@@ -107,7 +107,7 @@ void ScrewMobile_StageLoad(void)
     ScrewMobile->sfxImpact        = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
-void ScrewMobile_State_Unknown1(void)
+void ScrewMobile_State_CheckPlayerEnter(void)
 {
     RSDK_THIS(ScrewMobile);
 
@@ -149,11 +149,11 @@ void ScrewMobile_State_Unknown1(void)
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.PlaySfx(ScrewMobile->sfxEggMobile, false, 255);
         DCEvent->finished = true;
-        self->state     = ScrewMobile_State_Unknown2;
+        self->state     = ScrewMobile_State_PlayerRiding;
     }
 }
 
-void ScrewMobile_State_Unknown2(void)
+void ScrewMobile_State_PlayerRiding(void)
 {
     RSDK_THIS(ScrewMobile);
 
@@ -169,14 +169,13 @@ void ScrewMobile_State_Unknown2(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (Player_CheckValidState(player1)) {
         player1->position.x = self->position.x;
-        player1->position.y = self->position.y;
-        player1->position.y -= 0x100000;
+        player1->position.y = self->position.y - 0x100000;
         player1->velocity.x     = 0;
         player1->velocity.y     = 0;
         player1->outtaHereTimer = 0;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
 
-        if (player1->left || player1->right) {
+        if ((player1->left || player1->right) && !player1->jumpHold) {
             if (player1->left) {
                 self->velocity.x -= 0xC00;
                 if (self->velocity.x > 0)
@@ -364,7 +363,7 @@ void ScrewMobile_State_BossFinished(void)
     player1->right        = true;
     player1->jumpPress    = false;
     player1->jumpHold     = false;
-    ScrewMobile_State_Unknown2();
+    ScrewMobile_State_PlayerRiding();
     Zone->cameraBoundsL[0] = ScreenInfo->position.x;
     Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
 

@@ -30,23 +30,28 @@ struct SKUInfo {
 };
 
 struct UnknownInfo {
-    int32 field_0;
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
-    uint8 field_30;
+    int32 unknown1;
+    int32 unknown2;
+    int32 unknown3;
+    int32 unknown4;
+    bool32 pausePress;
+    int32 unknown5;
+    int32 unknown6;
+    int32 unknown7;
+    int32 unknown8;
+    int32 unknown9;
+    bool32 anyPress;
+    int32 unknown10;
 };
 
 extern SKUInfo curSKU;
 extern UnknownInfo unknownInfo;
+
+#define Unknown_pausePress UnknownInfo->pausePress
+#define Unknown_anyPress   UnknownInfo->anyPress
+#else
+#define Unknown_pausePress TouchInfo->pausePress
+#define Unknown_anyPress   TouchInfo->anyPress
 #endif
 
 struct GameVersionInfo {

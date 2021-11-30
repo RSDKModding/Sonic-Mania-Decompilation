@@ -43,13 +43,16 @@ void TTCutscene_StartCutscene(void)
 
     RSDK_THIS(TTCutscene);
     CutsceneSeq_StartSequence((Entity *)self, cutsceneStates);
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (cutsceneSeq->objectID != TYPE_BLANK) {
         cutsceneSeq->skipType    = SKIPTYPE_CALLBACK;
         cutsceneSeq->skipCallback = TTCutscene_SkipCB;
     }
+#endif
 }
 
+#if RETRO_USE_PLUS
 void TTCutscene_SkipCB(void)
 {
 #if RETRO_USE_PLUS
@@ -60,6 +63,7 @@ void TTCutscene_SkipCB(void)
         RSDK.SetScene("Mania Mode", "Stardust Speedway Zone 1");
     ++SceneInfo->listPos;
 }
+#endif
 
 bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
 {

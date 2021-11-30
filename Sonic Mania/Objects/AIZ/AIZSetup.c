@@ -301,6 +301,7 @@ void AIZSetup_GetCutsceneSetupPtr(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void AIZSetup_SkipCB(void)
 {
 #if RETRO_USE_PLUS
@@ -310,6 +311,7 @@ void AIZSetup_SkipCB(void)
 #endif
         RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
+#endif
 
 void AIZSetup_CutsceneST_Setup(void)
 {
@@ -326,11 +328,13 @@ void AIZSetup_CutsceneST_Setup(void)
                        NULL };
     RSDK_THIS(AIZSetup);
     CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
         seq->skipCallback = AIZSetup_SkipCB;
     }
+#endif
 }
 
 bool32 AIZSetup_Cutscene1_Unknown1(Entity *h)
@@ -662,11 +666,13 @@ void AIZSetup_CutsceneK_Setup(void)
 
     RSDK_THIS(AIZSetup);
     CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
         seq->skipCallback = AIZSetup_SkipCB;
     }
+#endif
 }
 
 bool32 AIZSetup_Cutscene2_Unknown1(Entity *h)

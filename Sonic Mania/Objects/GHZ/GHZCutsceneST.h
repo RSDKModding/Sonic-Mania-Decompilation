@@ -48,7 +48,9 @@ void GHZCutsceneST_Serialize(void);
 
 // Extra Entity Functions
 void GHZCutsceneST_SetupObjects(void);
+#if RETRO_USE_PLUS
 void GHZCutsceneST_SkipCB(void);
+#endif
 
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host);
 bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);

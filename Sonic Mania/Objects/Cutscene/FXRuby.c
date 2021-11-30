@@ -24,7 +24,9 @@ void FXRuby_StaticUpdate(void)
 void FXRuby_Draw(void)
 {
     RSDK_THIS(FXRuby);
+#if RETRO_USE_PLUS
     RSDK.SetLookupTable(FXRuby->lookupTable);
+#endif
 
     if (self->fadeWhite >= 512 || self->fadeBlack >= 512 || SceneInfo->currentDrawGroup != self->drawOrder) {
         if (self->fadeWhite > 0)
@@ -61,6 +63,11 @@ void FXRuby_Create(void *data)
             self->state = (Type_StateMachine)data;
         else if (!self->waitForTrigger) 
             self->state = FXRuby_State_ExpandRing;
+
+#if !RETRO_USE_PLUS
+        uint16 *lookupTable = RSDK.GetLookupTable();
+        for (int32 i = 0; i < 0x10000; ++i) lookupTable[0xFFFF - i] = i;
+#endif
     }
 }
 
@@ -71,7 +78,9 @@ void FXRuby_StageLoad(void)
 
     for (int32 i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
 
+#if RETRO_USE_PLUS
     for (int32 i = 0; i < 0x10000; ++i) FXRuby->lookupTable[0xFFFF - i] = i;
+#endif
 }
 
 void FXRuby_SetupLayerDeformation(void)

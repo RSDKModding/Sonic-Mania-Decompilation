@@ -367,6 +367,13 @@ struct TouchMouseData {
     float y[0x10];
     bool32 down[0x10];
     uint8 count;
+#if !RETRO_REV02
+    bool32 pausePressActive;
+    bool32 pausePress;
+    bool32 anyPressActive;
+    bool32 anyPress;
+    int32 unknown1;
+#endif
 };
 
 #if RETRO_USING_SDL2
@@ -377,6 +384,15 @@ struct InputManagerInfo {
 };
 
 extern InputManagerInfo InputManager;
+#endif
+
+#if !RETRO_REV02
+struct ActiveControllerInfo {
+    int32 unknown1;
+    int32 unknown2;
+    int32 inputID;
+    int32 unknown3;
+};
 #endif
 
 extern InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
@@ -398,6 +414,15 @@ extern int mostRecentControllerID;
 
 void InitInputDevice();
 void ProcessInput();
+
+#if !RETRO_REV02
+extern int32 specialKeyStates[4];
+extern int32 prevSpecialKeyStates[4];
+extern int32 buttonDownCount;
+extern int32 prevButtonDownCount;
+
+void HandleSpecialKeys();
+#endif
 
 void UpdateKeyboardInput(InputDevice *device);
 void UpdateDeviceInput(InputDevice *device);
@@ -522,7 +547,12 @@ inline int32 MostRecentActiveControllerID(int32 type, int32 a2, uint32 a3)
     return inputIDStore;
 }
 #else
-inline int32 MostRecentActiveControllerID() { return mostRecentControllerID; }
+inline int32 MostRecentActiveControllerID()
+{
+    //TODO: fix pre-plus input API
+    return -1; 
+    /*mostRecentControllerID;*/
+}
 #endif
 
 int32 GetGamePadType(int32 inputID);
@@ -598,6 +628,7 @@ inline int32 DoInputUnknown3_Active(int32 inputID, int32 a2, int32 a3)
 inline void AssignControllerID(int8 controllerID, int32 inputID)
 {
     int contID = controllerID - 1;
+#if RETRO_REV02
     if (contID < PLAYER_COUNT) {
         if (inputID && inputID != CONT_AUTOASSIGN) {
             if (inputID == CONT_UNASSIGNED) {
@@ -621,6 +652,9 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
             activeControllers[contID] = inputID;
         }
     }
+#else
+    activeControllers[contID] = inputID;
+#endif
 }
 
 inline bool32 InputIDIsDisconnected(uint8 inputID)
@@ -645,5 +679,21 @@ inline void ResetControllerAssignments()
 inline void SetInputLEDColor() {
     //empty
 }
+
+#if !RETRO_REV02
+inline void InputUnknown(int32 controllerID, int32 type, int32 *valuePtr)
+{
+    if (valuePtr) {
+        uint32 id = controllerID - 1;
+        if (id < PLAYER_COUNT) {
+            switch (type) {
+                default: break;
+                // case 0: *valuePtr = InputDevices[id].field_0; break;
+                // case 1: *valuePtr = InputDevices[id].field_4; break;
+            }
+        }
+    }
+}
+#endif
 
 #endif

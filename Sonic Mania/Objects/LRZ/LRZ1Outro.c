@@ -37,8 +37,10 @@ void LRZ1Outro_StartCutscene(void)
         CutsceneSeq_StartSequence((Entity *)self, states);
     }
 
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     for (int i = 0; i < 0x100; ++i) {
         RSDK.SetPaletteEntry(5, i, 0x000000);

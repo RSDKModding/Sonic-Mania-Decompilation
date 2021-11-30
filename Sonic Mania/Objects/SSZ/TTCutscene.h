@@ -33,7 +33,9 @@ void TTCutscene_Serialize(void);
 
 // Extra Entity Functions
 void TTCutscene_StartCutscene(void);
+#if RETRO_USE_PLUS
 void TTCutscene_SkipCB(void);
+#endif
 
 bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host);
 bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host);

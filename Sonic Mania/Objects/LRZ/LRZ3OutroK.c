@@ -58,9 +58,11 @@ void LRZ3OutroK_StartCutscene(void)
 
     CutsceneSeq_StartSequence((Entity *)self, states);
 
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->objectID)
         sequence->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }

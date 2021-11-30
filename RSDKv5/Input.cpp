@@ -772,6 +772,10 @@ void ProcessInput()
         }
     }
 
+#if !RETRO_REV02
+    HandleSpecialKeys();
+#endif
+
     InputState *anyController[] = {
         &controller[0].keyUp, &controller[0].keyDown, &controller[0].keyLeft,  &controller[0].keyRight,
         &controller[0].keyA,  &controller[0].keyB,    &controller[0].keyC,     &controller[0].keyX,
@@ -876,6 +880,36 @@ void ProcessInput()
         engine.dimTimer = 0;
 #endif
 }
+
+#if !RETRO_REV02
+int32 specialKeyStates[4];
+int32 prevSpecialKeyStates[4];
+int32 buttonDownCount     = 0;
+int32 prevButtonDownCount = 0;
+
+void HandleSpecialKeys()
+{
+    if (specialKeyStates[0] || specialKeyStates[3]) {
+        touchMouseData.pausePress              = !touchMouseData.pausePressActive;
+        touchMouseData.pausePressActive        = true;
+    }
+    else {
+        touchMouseData.pausePress       = false;
+        touchMouseData.pausePressActive = false;
+    }
+
+    if (buttonDownCount) {
+        touchMouseData.anyPressActive = true;
+        touchMouseData.anyPress       = prevButtonDownCount < buttonDownCount;
+    }
+    else {
+        touchMouseData.anyPress       = false;
+        touchMouseData.anyPressActive = false;
+    }
+    prevButtonDownCount = buttonDownCount;
+    for (int k = 0; k < 4; ++k) prevSpecialKeyStates[k] = specialKeyStates[k];
+}
+#endif
 
 int32 GetGamePadType(int32 inputID)
 {

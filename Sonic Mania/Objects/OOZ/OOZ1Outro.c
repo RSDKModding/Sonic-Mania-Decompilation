@@ -114,8 +114,10 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
         Zone->cameraBoundsR[0] = self->boundsR;
         Zone->cameraBoundsT[0] = self->boundsT;
         Zone->cameraBoundsB[0] = self->boundsB;
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         return true;
     }
     return false;

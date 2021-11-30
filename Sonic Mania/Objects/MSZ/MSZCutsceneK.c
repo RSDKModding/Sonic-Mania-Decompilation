@@ -48,11 +48,13 @@ void MSZCutsceneK_StageLoad(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
     SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
 }
+#endif
 
 void MSZCutsceneK_StartCutscene(void)
 {
@@ -62,11 +64,13 @@ void MSZCutsceneK_StartCutscene(void)
 
     CutsceneSeq_StartSequence((Entity *)self, states);
 
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->objectID) {
         sequence->skipType     = SKIPTYPE_CALLBACK;
         sequence->skipCallback = MSZCutsceneK_SkipCB;
     }
+#endif
 }
 
 void MSZCutsceneK_SetupP2(int posX, int posY)

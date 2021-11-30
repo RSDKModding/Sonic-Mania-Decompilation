@@ -667,7 +667,7 @@ void MenuSetup_Unknown3(void)
     if (compTotal->active == ACTIVE_ALWAYS)
         MenuSetup_VS_Total_MenuSetupCB();
 
-    saveSel->menuSetupCB = MenuSetup_SaveSel_MenuSetupCB;
+    saveSel->menuUpdateCB = MenuSetup_SaveSel_MenuUpdateCB;
     saveSel->yPressCB         = MenuSetup_SaveSel_YPressCB;
 
     extras->processButtonInputCB = MenuSetup_Extras_ProcessButtonCB;
@@ -1109,7 +1109,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     }
 }
 
-void MenuSetup_SaveSel_MenuSetupCB(void)
+void MenuSetup_SaveSel_MenuUpdateCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->saveSelect;
     if (control->active == ACTIVE_ALWAYS) {

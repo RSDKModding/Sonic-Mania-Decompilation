@@ -14,8 +14,10 @@ void MSZ1KIntro_Update(void)
 
             self->activated = true;
             CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
             if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
                 RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         }
     }
 }

@@ -23,9 +23,14 @@ extern uint16 fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 extern uint8 gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
 
 extern int32 maskColour;
-extern uint16 *lookupTable;
 
-#define RGB888_TO_RGB565(r, g, b)  ((b) >> 3) | (((g) >> 2) << 5) | (((r) >> 3) << 11)       // used in pc vers
+#if RETRO_REV02
+extern uint16 *lookupTable;
+#else
+extern uint16 lookupTable[0x10000];
+#endif
+
+#define RGB888_TO_RGB565(r, g, b)  ((b) >> 3) | (((g) >> 2) << 5) | (((r) >> 3) << 11)
 
 #define PACK_RGB888(r, g, b) RGB888_TO_RGB565(r, g, b)
 
@@ -41,7 +46,7 @@ inline void SetActivePalette(uint8 newActivePal, int32 startLine, int32 endLine)
 
 inline uint32 GetPaletteEntry(uint8 paletteID, uint8 index)
 {
-    //0x1F   = 0000 0000 0001 1110
+    //0x1F   = 0000 0000 0001 1111
     //0x7E0  = 0000 0111 1110 0000
     //0xF800 = 1111 1000 0000 0000
     uint16 clr = fullPalette[(paletteID & 7)][index];
@@ -58,7 +63,11 @@ inline void SetPaletteMask(uint32 colour)
     maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 }
 
+#if RETRO_REV02
 inline void SetLookupTable(uint16 *tablePtr) { lookupTable = tablePtr; }
+#else
+inline uint16 *GetLookupTable() { return lookupTable; }
+#endif
 
 inline void CopyPalette(uint8 sourcePalette, uint8 srcPaletteStart, uint8 destinationPalette, uint8 destPaletteStart, uint16 count)
 {

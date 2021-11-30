@@ -13,17 +13,21 @@ void GHZ2Outro_Update(void)
     RSDK_THIS(GHZ2Outro);
     if (!self->activated) {
         CutsceneSeq_StartSequence((Entity *)self, states_Outro);
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             seq->skipType         = SKIPTYPE_CALLBACK;
             seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
         }
+#endif
         self->active = ACTIVE_NEVER;
     }
     else {
         CutsceneSeq_StartSequence((Entity *)self, states_GHZ2);
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         self->active = ACTIVE_NEVER;
@@ -428,6 +432,7 @@ bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_USE_PLUS
 void GHZ2Outro_Cutscene_SkipCB(void)
 {
 #if RETRO_USE_PLUS
@@ -437,6 +442,7 @@ void GHZ2Outro_Cutscene_SkipCB(void)
 #endif
         RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void GHZ2Outro_EditorDraw(void)

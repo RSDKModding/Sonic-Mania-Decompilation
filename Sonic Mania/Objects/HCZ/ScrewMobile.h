@@ -55,8 +55,8 @@ void ScrewMobile_EditorLoad(void);
 void ScrewMobile_Serialize(void);
 
 // Extra Entity Functions
-void ScrewMobile_State_Unknown1(void);
-void ScrewMobile_State_Unknown2(void);
+void ScrewMobile_State_CheckPlayerEnter(void);
+void ScrewMobile_State_PlayerRiding(void);
 void ScrewMobile_State_BossFinished(void);
 void ScrewMobile_State_Idle(void);
 void ScrewMobile_StateDraw1_Unknown(void);

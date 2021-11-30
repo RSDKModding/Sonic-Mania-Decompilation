@@ -39,7 +39,9 @@ void MSZCutsceneK_EditorLoad(void);
 void MSZCutsceneK_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void MSZCutsceneK_SkipCB(void);
+#endif
 void MSZCutsceneK_StartCutscene(void);
 void MSZCutsceneK_SetupP2(int posX, int posY);
 

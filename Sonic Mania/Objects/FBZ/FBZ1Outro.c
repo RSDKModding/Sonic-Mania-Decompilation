@@ -63,8 +63,10 @@ void FBZ1Outro_StartCutscene(void)
 
     CutsceneSeq_StartSequence((Entity *)self, states);
 
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_DISABLED;
+#endif
 }
 
 void FBZ1Outro_Unknown2(void)

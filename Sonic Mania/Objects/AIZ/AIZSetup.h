@@ -82,7 +82,9 @@ void AIZSetup_Unknown24(void);
 void AIZSetup_SetupObjects(void);
 
 void AIZSetup_GetCutsceneSetupPtr(void);
+#if RETRO_USE_PLUS
 void AIZSetup_SkipCB(void);
+#endif
 
 void AIZSetup_CutsceneST_Setup(void);
 bool32 AIZSetup_Cutscene1_Unknown1(Entity *h);

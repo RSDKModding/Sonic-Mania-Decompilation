@@ -16,7 +16,9 @@ typedef struct {
     bool32 plusChanged;
 #endif
     bool32 channelFlags[0x10];
+#if RETRO_USE_PLUS
     uint16 lookupTable[0x10000];
+#endif
 } ObjectPauseMenu;
 
 // Entity Class

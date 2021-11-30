@@ -4,8 +4,10 @@ ObjectCutsceneSeq *CutsceneSeq;
 
 void CutsceneSeq_Update(void)
 {
+#if RETRO_USE_PLUS
     RSDK_THIS(CutsceneSeq);
     CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
+#endif
 }
 
 void CutsceneSeq_LateUpdate(void)
@@ -78,9 +80,12 @@ void CutsceneSeq_Create(void *data)
     self->active     = ACTIVE_NORMAL;
     self->visible    = false;
     self->fillTimerA = 0;
-    self->drawOrder  = Zone->hudDrawOrder + 1;
     self->fillTimerB = 0;
+    self->drawOrder  = Zone->hudDrawOrder + 1;
+
+#if RETRO_USE_PLUS
     CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
+#endif
 }
 
 void CutsceneSeq_StageLoad(void) {}
@@ -99,6 +104,7 @@ void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
         seq->points[i].y = 0;
     }
 }
+#if RETRO_USE_PLUS
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void))
 {
     bool32 skipPress = ControllerInfo->keyStart.press;
@@ -128,6 +134,7 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCa
         }
     }
 }
+#endif
 
 Entity *CutsceneSeq_GetEntity(int32 type)
 {

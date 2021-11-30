@@ -13,11 +13,13 @@ void GHZCutsceneST_Update(void)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
                 CutsceneSeq_StartSequence((Entity *)self, states);
+#if RETRO_USE_PLUS
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
+#endif
                 self->activated = true;
             }
         }
@@ -83,6 +85,7 @@ void GHZCutsceneST_SetupObjects(void)
     foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = (Entity *)cutsceneHBH; }
 }
 
+#if RETRO_USE_PLUS
 void GHZCutsceneST_SkipCB(void)
 {
 #if RETRO_USE_PLUS
@@ -92,6 +95,7 @@ void GHZCutsceneST_SkipCB(void)
 #endif
         RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
+#endif
 
 
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)

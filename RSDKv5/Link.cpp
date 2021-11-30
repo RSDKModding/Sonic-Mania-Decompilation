@@ -268,7 +268,7 @@ enum FunctionTableIDs {
     FunctionTable_ResetControllerAssignments,
 #endif
 #if !RETRO_REV02
-    FunctionTable_Unknown92,
+    FunctionTable_InputUnknown,
 #endif
     FunctionTable_LoadUserFile,
     FunctionTable_SaveUserFile,
@@ -553,7 +553,12 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SetScreenSplitVerticies, SetScreenSplitVerticies);
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, LoadSpriteSheet);
+#if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetLookupTable, SetLookupTable);
+#else
+    //cant be bothered to change the enum name, but in rev01, this returns a ptr to the lookup table
+    addToRSDKFunctionTable(FunctionTable_SetLookupTable, GetLookupTable);
+#endif
     addToRSDKFunctionTable(FunctionTable_SetPaletteMask, SetPaletteMask);
     addToRSDKFunctionTable(FunctionTable_SetPaletteEntry, SetPaletteEntry);
     addToRSDKFunctionTable(FunctionTable_GetPaletteEntry, GetPaletteEntry);
@@ -649,7 +654,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ResetControllerAssignments, ResetControllerAssignments);
 #endif
 #if !RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_Unknown92, NullFunc);
+    addToRSDKFunctionTable(FunctionTable_InputUnknown, InputUnknown);
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile);
     addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile);

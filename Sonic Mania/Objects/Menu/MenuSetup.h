@@ -115,7 +115,7 @@ int32 MenuSetup_GetMedalMods(void);
 void MenuSetup_OpenSaveSelectMenu(void);
 void MenuSetup_SaveFileCB(int32 status);
 void MenuSetup_SaveSlot_ActionCB(void);
-void MenuSetup_SaveSel_MenuSetupCB(void);
+void MenuSetup_SaveSel_MenuUpdateCB(void);
 void MenuSetup_OpenSecretsMenu(void);
 void MenuSetup_SaveSel_YPressCB(void);
 

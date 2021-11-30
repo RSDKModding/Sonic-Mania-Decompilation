@@ -55,20 +55,36 @@ bool32 processEvents()
             case SDL_MOUSEBUTTONDOWN:
 #if RETRO_USING_SDL2
                 switch (engine.sdlEvents.button.button) {
-                    case SDL_BUTTON_LEFT:
-                        touchMouseData.down[0] = true;
-                        touchMouseData.count   = 1;
+                    case SDL_BUTTON_LEFT: touchMouseData.down[0] = true; touchMouseData.count = 1;
+#if !RETRO_REV02
+                        if (buttonDownCount > 0)
+                            buttonDownCount--;
+#endif
                         break;
+#if !RETRO_REV02
+                    case SDL_BUTTON_RIGHT:
+                        specialKeyStates[3] = true;
+                        buttonDownCount++;
+                        break;
+#endif
                 }
 #endif //! RETRO_USING_SDL2
                 break;
             case SDL_MOUSEBUTTONUP:
 #if RETRO_USING_SDL2
                 switch (engine.sdlEvents.button.button) {
-                    case SDL_BUTTON_LEFT:
-                        touchMouseData.down[0] = false;
-                        touchMouseData.count   = 0;
+                    case SDL_BUTTON_LEFT: touchMouseData.down[0] = false; touchMouseData.count = 0;
+#if !RETRO_REV02
+                        if (buttonDownCount > 0)
+                            buttonDownCount--;
+#endif
                         break;
+#if !RETRO_REV02
+                    case SDL_BUTTON_RIGHT:
+                        specialKeyStates[3] = false;
+                        buttonDownCount--;
+                        break;
+#endif
                 }
 #endif //! RETRO_USING_SDL2
                 break;
@@ -94,6 +110,9 @@ bool32 processEvents()
 #endif //! RETRO_USING_SDL2
 
             case SDL_KEYDOWN:
+#if !RETRO_REV02
+                ++buttonDownCount;
+#endif
                 switch (engine.sdlEvents.key.keysym.sym) {
                     default: break;
                     case SDLK_ESCAPE:
@@ -116,7 +135,13 @@ bool32 processEvents()
                                 PauseSound();
                             }
                         }
+#if !RETRO_REV02
+                        specialKeyStates[0] = true;
+#endif
                         break;
+#if !RETRO_REV02
+                    case SDLK_RETURN: specialKeyStates[1] = true; break;
+#endif
                     case SDLK_F1:
                         sceneInfo.listPos--;
                         if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
@@ -195,8 +220,15 @@ bool32 processEvents()
                 }
                 break;
             case SDL_KEYUP:
+#if !RETRO_REV02
+                --buttonDownCount;
+#endif
                 switch (engine.sdlEvents.key.keysym.sym) {
                     default: break;
+#if !RETRO_REV02
+                    case SDLK_ESCAPE: specialKeyStates[0] = false; break;
+                    case SDLK_RETURN: specialKeyStates[1] = false; break;
+#endif
                     case SDLK_BACKSPACE: engine.gameSpeed = 1; break;
                 }
                 break;
