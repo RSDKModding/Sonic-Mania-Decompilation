@@ -4,6 +4,17 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
+#define UIPopover_OptionCount (4)
+
+typedef enum {
+    POPOVER_WATCH     = 7,
+    POPOVER_CHALLENGE = 8,
+    POPOVER_DELETE    = 9,
+    POPOVER_BYDATE    = 10,
+    POPOVER_BYZONE    = 11,
+} PopoverOptions;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -17,23 +28,21 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 timer2;
-    int32 field_64;
-    int32 field_68;
+    int32 closeDelay;
+    TextInfo unusedTextInfo;
     int32 buttonCount;
     Vector2 size;
-    int32 field_78;
-    int32 field_7C;
+    Vector2 drawPos; //unused, it's here cuz its based off UIDialog
     EntityUIControl *parent;
     Entity* storedEntity;
-    uint8 frameIDs[4];
-    void (*callbacks[4])(void);
-    bool32 flags[4];
-    EntityUIButton *buttons[4];
-    StateMachine(unknownCallback);
-    int32 field_C0;
-    int32 field_C4;
-    uint8 field_C8;
+    uint8 frameIDs[UIPopover_OptionCount];
+    StateMachine(callbacks[UIPopover_OptionCount]);
+    bool32 closeOnSelect[UIPopover_OptionCount];
+    EntityUIButton *buttons[UIPopover_OptionCount];
+    StateMachine(closeCB);
+    bool32 playEventSfx; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
+    bool32 useAltColour; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
+    uint8 triangleFlag;
 } EntityUIPopover;
 
 // Object Struct
@@ -54,16 +63,16 @@ void UIPopover_Serialize(void);
 
 // Extra Entity Functions
 EntityUIPopover *UIPopover_CreatePopover(void);
-void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callback)(void), bool32 flag);
+void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callback)(void), bool32 closeOnSelect);
 void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY);
 void UIPopover_DrawSprites(void);
 void UIPopover_SetupButtonPositions(void);
 void UIPopover_Close(void);
 bool32 UIPopover_BackPressCB(void);
 void UIPopover_ButtonActionCB(void);
-void UIPopover_Unknown9(void);
-void UIPopover_Unknown10(void);
-void UIPopover_Unknown11(void);
+void UIPopover_State_Appear(void);
+void UIPopover_State_Idle(void);
+void UIPopover_State_Close(void);
 
 #endif
 

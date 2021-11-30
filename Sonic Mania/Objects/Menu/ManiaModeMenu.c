@@ -24,13 +24,9 @@ void ManiaModeMenu_Initialize(void)
     CompetitionMenu_Initialize();
     OptionsMenu_Initialize();
     ExtrasMenu_Initialize();
-    ManiaModeMenu_Unknown3();
-    MainMenu_Unknown3();
-    UISubHeading_Unknown3();
-    TimeAttackMenu_Unknown3();
-    CompetitionMenu_Unknown2();
-    OptionsMenu_Unknown3();
-    ExtrasMenu_Unknown3();
+
+    ManiaModeMenu_HandleUnlocks();
+    ManiaModeMenu_SetupActions();
 }
 
 bool32 ManiaModeMenu_InitUserdata(void)
@@ -190,7 +186,7 @@ void ManiaModeMenu_ReturnToTitle(void)
     RSDK.LoadScene();
 }
 
-void ManiaModeMenu_Unknown13(void)
+void ManiaModeMenu_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
     self->fadeTimer = self->timer << ((self->field_68 & 0xFF) - 1);
@@ -200,13 +196,12 @@ void ManiaModeMenu_Unknown13(void)
         self->fadeTimer = 0;
 }
 
-void ManiaModeMenu_Unknown3(void)
+void ManiaModeMenu_HandleUnlocks(void)
 {
-#if RETRO_USE_PLUS
-    MainMenu_Unknown2();
-    UISubHeading_Unknown2();
-    TimeAttackMenu_Unknown2();
-    int32 activeCount     = CompetitionMenu_Unknown4();
+    MainMenu_HandleUnlocks();
+    UISubHeading_HandleUnlocks();
+    TimeAttackMenu_HandleUnlocks();
+    int32 activeCount     = CompetitionMenu_HandleUnlocks();
     EntityUIControl *compRules = (EntityUIControl *)CompetitionMenu->compRulesControl;
     EntityUIButton *button     = UIButton_GetChoicePtr(compRules->buttons[1], compRules->buttons[1]->selection);
     if (button) {
@@ -215,12 +210,21 @@ void ManiaModeMenu_Unknown3(void)
             activeCount = button->align;
         button->align = activeCount;
     }
-    OptionsMenu_Unknown2();
-    ExtrasMenu_Unknown2();
-#endif
+    OptionsMenu_HandleUnlocks();
+    ExtrasMenu_HandleUnlocks();
 }
 
-void ManiaModeMenu_Unknown7(void)
+void ManiaModeMenu_SetupActions(void)
+{
+    MainMenu_SetupActions();
+    UISubHeading_SetupActions();
+    TimeAttackMenu_SetupActions();
+    CompetitionMenu_SetupActions();
+    OptionsMenu_SetupActions();
+    ExtrasMenu_SetupActions();
+}
+
+void ManiaModeMenu_HandleMenuReturn(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     char buffer[0x100];
@@ -243,10 +247,10 @@ void ManiaModeMenu_Unknown7(void)
         }
     }
 
-    UISubHeading_Unknown4(0);
-    TimeAttackMenu_Unknown4();
-    CompetitionMenu_Unknown3();
-    OptionsMenu_Unknown4();
+    UISubHeading_HandleMenuReturn(0);
+    TimeAttackMenu_HandleMenuReturn();
+    CompetitionMenu_HandleMenuReturn();
+    OptionsMenu_HandleMenuReturn();
     if (param->selectionFlag == 2) {
         EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
         UIButton_SetChoiceSelection(extras->buttons[1], 1);

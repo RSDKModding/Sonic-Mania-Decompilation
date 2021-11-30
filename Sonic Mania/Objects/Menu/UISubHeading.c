@@ -91,7 +91,7 @@ void UISubHeading_Initialize(void)
     }
 }
 
-void UISubHeading_Unknown2(void)
+void UISubHeading_HandleUnlocks(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
     EntityUIButton *button   = control->buttons[1];
@@ -116,7 +116,7 @@ void UISubHeading_Unknown2(void)
         UIButton_ManageChoices(button);
 }
 
-void UISubHeading_Unknown3(void)
+void UISubHeading_SetupActions(void)
 {
     foreach_all(UISaveSlot, slot) { slot->actionCB = UISubHeading_SaveButton_ActionCB; }
 
@@ -156,7 +156,7 @@ void UISubHeading_Unknown3(void)
     saveSelEncore->menuUpdateCB    = UISubHeading_SaveSel_MenuUpdateCB;
 }
 
-void UISubHeading_Unknown4(int32 slot)
+void UISubHeading_HandleMenuReturn(int32 slot)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
     EntitySaveGame *saveGame  = (EntitySaveGame *)SaveGame_GetDataPtr(slot, false);
@@ -222,13 +222,13 @@ void UISubHeading_SecretsTransitionCB(void)
     UIControl_MatchMenuTag("Secrets");
 }
 
-void UISubHeading_Unknown9(void)
+void UISubHeading_LeaveSecretsMenu(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
-    if (ManiaModeMenu->field_24) {
+    if (ManiaModeMenu->inSecretsMenu) {
         EntityUISaveSlot *slot = (EntityUISaveSlot *)control->buttons[control->lastButtonID];
-        UISubHeading_Unknown4(slot->slotID);
-        ManiaModeMenu->field_24 = 0;
+        UISubHeading_HandleMenuReturn(slot->slotID);
+        ManiaModeMenu->inSecretsMenu = false;
     }
 }
 
@@ -240,15 +240,15 @@ void UISubHeading_SaveSel_MenuUpdateCB(void)
         if (self == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect) {
             prompt = (EntityUIButtonPrompt *)ManiaModeMenu->prompt2;
         }
-        else if (self->lastButtonID != ManiaModeMenu->field_28) {
-            UISubHeading_Unknown9();
-            ManiaModeMenu->field_28 = self->lastButtonID;
+        else if (self->lastButtonID != ManiaModeMenu->saveSelLastButtonID) {
+            UISubHeading_LeaveSecretsMenu();
+            ManiaModeMenu->saveSelLastButtonID = self->lastButtonID;
         }
 
         bool32 flag  = false;
         bool32 flag2 = false;
         for (int32 i = 0; i < self->buttonCount; ++i) {
-            flag2 |= self->buttons[i]->state == UISaveSlot_Unknown28;
+            flag2 |= self->buttons[i]->state == UISaveSlot_State_Selected;
             if (self->lastButtonID >= 0) {
                 if (self->buttons[i] == self->buttons[self->lastButtonID]) {
                     EntityUISaveSlot *slot = (EntityUISaveSlot *)self->buttons[self->lastButtonID];
@@ -274,9 +274,9 @@ void UISubHeading_SaveSel_YPressCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
     if (control->active == ACTIVE_ALWAYS) {
-        if (!ManiaModeMenu->field_24) {
-            UISubHeading_Unknown4(control->buttons[control->buttonID]->stopMusic);
-            ManiaModeMenu->field_24 = 1;
+        if (!ManiaModeMenu->inSecretsMenu) {
+            UISubHeading_HandleMenuReturn(control->buttons[control->buttonID]->stopMusic);
+            ManiaModeMenu->inSecretsMenu = true;
         }
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;

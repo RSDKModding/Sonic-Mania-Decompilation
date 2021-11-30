@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     bool32 playing;
-    int32 field_8;
+    uint16 aniFrames; // prolly used in-editor
 } ObjectUIVideo;
 
 // Entity Class
@@ -21,12 +21,7 @@ typedef struct {
     TextInfo stageListCategory;
     TextInfo stageListName;
     int32 timer;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
+    Animator unusedAnimator;
 } EntityUIVideo;
 
 // Object Struct
@@ -46,10 +41,10 @@ void UIVideo_EditorLoad(void);
 void UIVideo_Serialize(void);
 
 // Extra Entity Functions
-bool32 UIVideo_SkipCallback(void);
+bool32 UIVideo_SkipCB(void);
 
-void UIVideo_State_PlayVid1(void);
-void UIVideo_State_PlayVid2(void);
+void UIVideo_State_PlayVideo1(void);
+void UIVideo_State_PlayVideo2(void);
 void UIVideo_State_FinishPlayback(void);
 
 #endif //!OBJ_UIVIDEO_H

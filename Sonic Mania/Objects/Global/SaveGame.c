@@ -183,7 +183,7 @@ void SaveGame_SaveLoadedCB(int32 status)
                 Entity* store                     = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)entity;
                 UISaveSlot_LoadSaveInfo();
-                UISaveSlot_Unknown8();
+                UISaveSlot_HandleSaveIcons();
                 SceneInfo->entity = store;
             }
         }

@@ -44,9 +44,9 @@ void CompetitionMenu_Serialize(void);
 
 // Extra Entity Functions
 void CompetitionMenu_Initialize(void);
-void CompetitionMenu_Unknown2(void);
-void CompetitionMenu_Unknown3(void);
-int32 CompetitionMenu_Unknown4(void);
+void CompetitionMenu_SetupActions(void);
+void CompetitionMenu_HandleMenuReturn(void);
+int32 CompetitionMenu_HandleUnlocks(void);
 void CompetitionMenu_Unknown5(void);
 int32 CompetitionMenu_GetReadyPlayerCount(void);
 int32 CompetitionMenu_GetFlaggedReadyPlayerCount(void);

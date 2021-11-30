@@ -34,8 +34,8 @@ void ExtrasMenu_Serialize(void);
 
 // Extra Entity Functions
 void ExtrasMenu_Initialize(void);
-void ExtrasMenu_Unknown2(void);
-void ExtrasMenu_Unknown3(void);
+void ExtrasMenu_HandleUnlocks(void);
+void ExtrasMenu_SetupActions(void);
 
 void ExtrasMenu_ProcessMedallionCheat(void);
 bool32 ExtrasMenu_CheckMedallionCheat(void);

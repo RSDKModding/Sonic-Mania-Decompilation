@@ -100,7 +100,7 @@ void CompetitionMenu_Initialize(void)
     }
 }
 
-void CompetitionMenu_Unknown2(void)
+void CompetitionMenu_SetupActions(void)
 {
     EntityUIControl *compControl        = (EntityUIControl *)CompetitionMenu->competitionControl;
     EntityUIControl *compControl_Legacy = (EntityUIControl *)CompetitionMenu->competitionControl_Legacy;
@@ -151,7 +151,7 @@ void CompetitionMenu_Unknown2(void)
     foreach_all(UIVsZoneButton, zoneButton) { zoneButton->actionCB = CompetitionMenu_ZoneButtonActionCB; }
 }
 
-void CompetitionMenu_Unknown3(void)
+void CompetitionMenu_HandleMenuReturn(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
@@ -203,7 +203,7 @@ void CompetitionMenu_Unknown3(void)
     }
 }
 
-int32 CompetitionMenu_Unknown4(void)
+int32 CompetitionMenu_HandleUnlocks(void)
 {
     int32 count = 0;
     foreach_all(UIVsZoneButton, zoneButton)
@@ -562,7 +562,7 @@ void CompetitionMenu_RulesButtonActionCB(void)
     zoneControl->targetPos.x    = zoneControl->startPos.x;
     zoneControl->targetPos.y    = zoneControl->startPos.y;
     zoneControl->buttonID  = 0;
-    CompetitionMenu_Unknown4();
+    CompetitionMenu_HandleUnlocks();
     UIControl_MatchMenuTag("Competition Zones");
 }
 
@@ -860,7 +860,7 @@ void CompetitionMenu_ExitComp_TransitionCB(void)
     UIControl_SetActiveMenu(control);
     Competition_ResetOptions();
     zoneControl->childHasFocus = false;
-    CompetitionMenu_Unknown4();
+    CompetitionMenu_HandleUnlocks();
 }
 
 void CompetitionMenu_ExitComp_YesCB(void) { UITransition_StartTransition(CompetitionMenu_ExitComp_TransitionCB, 0); }

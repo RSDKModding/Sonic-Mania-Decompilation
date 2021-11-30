@@ -751,12 +751,7 @@ void APICallback_CheckUserAuth_CB(void)
     }
     else {
         if (dialog) {
-            if (dialog->state != UIDialog_Unknown13) {
-                dialog->parent->selectionDisabled = true;
-                dialog->timer                     = 0;
-                dialog->state                     = UIDialog_Unknown13;
-                dialog->curCallback               = NULL;
-            }
+            UIDialog_CloseOnSel_HandleSelection(dialog, StateMachine_None);
         }
         else {
             if (UIControl) {

@@ -22,13 +22,13 @@ void UIVideo_Create(void *data)
         self->visible   = true;
         self->drawOrder = 0;
         UIVideo->playing  = false;
-        self->state     = UIVideo_State_PlayVid1;
+        self->state     = UIVideo_State_PlayVideo1;
     }
 }
 
 void UIVideo_StageLoad(void) {}
 
-bool32 UIVideo_SkipCallback(void)
+bool32 UIVideo_SkipCB(void)
 {
     if (ControllerInfo->keyStart.press || ControllerInfo->keyA.press || ControllerInfo->keyB.press) {
         Music_FadeOut(0.0125);
@@ -45,7 +45,7 @@ bool32 UIVideo_SkipCallback(void)
     return false;
 }
 
-void UIVideo_State_PlayVid1(void)
+void UIVideo_State_PlayVideo1(void)
 {
     RSDK_THIS(UIVideo);
     if (!self->timer)
@@ -62,22 +62,22 @@ void UIVideo_State_PlayVid1(void)
 #else
         if (videoFile1[len - 3] == 't' && videoFile1[len - 2] == 'g' && videoFile1[len - 1] == 'a')
 #endif
-            RSDK.LoadImage(videoFile1, 32.0, 1.0, UIVideo_SkipCallback);
+            RSDK.LoadImage(videoFile1, 32.0, 1.0, UIVideo_SkipCB);
         else
-            RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCallback);
-        self->state = UIVideo_State_PlayVid2;
-        RSDK.PlayStream(audioFile, Music->channelID, 0, 0, 0);
+            RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCB);
+        self->state = UIVideo_State_PlayVideo2;
+        RSDK.PlayStream(audioFile, Music->channelID, 0, false, false);
         self->timer = 0;
     }
 }
-void UIVideo_State_PlayVid2(void)
+void UIVideo_State_PlayVideo2(void)
 {
     RSDK_THIS(UIVideo);
     if (self->videoFile2.textLength) {
         if (!UIVideo->playing) {
             char videoFile2[64];
             RSDK.GetCString(videoFile2, &self->videoFile2);
-            RSDK.LoadVideo(videoFile2, 14.0, 0);
+            RSDK.LoadVideo(videoFile2, 14.0, NULL);
         }
     }
     self->state = UIVideo_State_FinishPlayback;

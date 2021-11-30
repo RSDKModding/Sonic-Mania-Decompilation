@@ -52,9 +52,9 @@ void TimeAttackMenu_Serialize(void);
 
 // Extra Entity Functions
 void TimeAttackMenu_Initialize(void);
-void TimeAttackMenu_Unknown2(void);
-void TimeAttackMenu_Unknown3(void);
-void TimeAttackMenu_Unknown4(void);
+void TimeAttackMenu_HandleUnlocks(void);
+void TimeAttackMenu_SetupActions(void);
+void TimeAttackMenu_HandleMenuReturn(void);
 void TimeAttackMenu_SetEncoreLayouts(bool32 enabled);
 void TimeAttackMenu_DeleteReplayCB(void);
 void TimeAttackMenu_Unknown7(void);
@@ -66,8 +66,8 @@ void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost);
 void TimeAttackMenu_ReplayLoad_CB(bool32 a1);
 void TimeAttackMenu_WatchReplayCB(void);
 void TimeAttackMenu_ChallengeReplayCB(void);
-void TimeAttackMenu_Unknown15(void);
-void TimeAttackMenu_Unknown16(void);
+void TimeAttackMenu_SortReplayByDate_CB(void);
+void TimeAttackMenu_SortReplayByZone_CB(void);
 void TimeAttackMenu_Unknown17(void);
 void TimeAttackMenu_MenuSetupCB_Replay(void);
 void TimeAttackMenu_MenuUpdateCB_Replay(void);

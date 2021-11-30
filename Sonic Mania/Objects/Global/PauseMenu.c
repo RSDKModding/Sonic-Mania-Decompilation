@@ -702,12 +702,7 @@ void PauseMenu_State_ForcedPause(void)
 
             EntityUIDialog *dialog = UIDialog->activeDialog;
             if (dialog) {
-                if (dialog->state != UIDialog_Unknown13) {
-                    dialog->parent->selectionDisabled = true;
-                    dialog->timer                     = 0;
-                    dialog->state                     = UIDialog_Unknown13;
-                    dialog->curCallback               = NULL;
-                }
+                UIDialog_CloseOnSel_HandleSelection(dialog, StateMachine_None);
             }
             self->forcePaused = true;
         }

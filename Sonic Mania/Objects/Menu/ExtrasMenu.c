@@ -30,7 +30,7 @@ void ExtrasMenu_Initialize(void)
     }
 }
 
-void ExtrasMenu_Unknown2(void)
+void ExtrasMenu_HandleUnlocks(void)
 {
     EntityUIControl *control = (EntityUIControl *)ExtrasMenu->extrasControl;
 
@@ -51,7 +51,7 @@ void ExtrasMenu_Unknown2(void)
     button->disabled = !unlock && !globals->medallionDebug;
 }
 
-void ExtrasMenu_Unknown3(void)
+void ExtrasMenu_SetupActions(void)
 {
     EntityUIControl *control      = (EntityUIControl *)ExtrasMenu->extrasControl;
     control->processButtonInputCB = ExtrasMenu_ProcessInputs;
@@ -128,7 +128,7 @@ void ExtrasMenu_ProcessInputs(void)
             if (!globals->medallionDebug) {
                 RSDK.PlaySfx(UIWidgets->sfxEvent, false, 255);
                 globals->medallionDebug = true;
-                ExtrasMenu_Unknown2();
+                ExtrasMenu_HandleUnlocks();
             }
         }
     }

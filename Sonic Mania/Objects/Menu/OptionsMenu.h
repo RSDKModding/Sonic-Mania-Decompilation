@@ -50,9 +50,9 @@ void OptionsMenu_Serialize(void);
 
 // Extra Entity Functions
 void OptionsMenu_Initialize(void);
-void OptionsMenu_Unknown2(void);
-void OptionsMenu_Unknown3(void);
-void OptionsMenu_Unknown4(void);
+void OptionsMenu_HandleUnlocks(void);
+void OptionsMenu_SetupActions(void);
+void OptionsMenu_HandleMenuReturn(void);
 void OptionsMenu_Unknown5(void);
 void OptionsMenu_VideoControl_Win_MenuUpdateCB(void);
 void OptionsMenu_VideoControl_Win_YPressCB(void);

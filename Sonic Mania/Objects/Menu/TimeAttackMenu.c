@@ -140,12 +140,12 @@ void TimeAttackMenu_Initialize(void)
     }
 }
 
-void TimeAttackMenu_Unknown2(void)
+void TimeAttackMenu_HandleUnlocks(void)
 {
     foreach_all(UITAZoneModule, module) { module->disabled = !GameProgress_GetZoneUnlocked(module->zoneID); }
 }
 
-void TimeAttackMenu_Unknown3(void)
+void TimeAttackMenu_SetupActions(void)
 {
     EntityUIControl *control             = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
     EntityUIControl *leaderboardsControl = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
@@ -208,7 +208,7 @@ void TimeAttackMenu_Unknown3(void)
     replayControl->buttons[0]->choiceChangeCB = TimeAttackMenu_SortReplayChoiceCB;
 }
 
-void TimeAttackMenu_Unknown4(void)
+void TimeAttackMenu_HandleMenuReturn(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     if (param->clearFlag)
@@ -394,9 +394,9 @@ void TimeAttackMenu_ReplayCarousel_ActionCB(void)
         if (!self->replayID)
             y += self->field_17C;
 
-        UIPopover_AddButton(popover, 7, TimeAttackMenu_WatchReplayCB, false);
-        UIPopover_AddButton(popover, 8, TimeAttackMenu_ChallengeReplayCB, false);
-        UIPopover_AddButton(popover, 9, TimeAttackMenu_DeleteReplayCB, true);
+        UIPopover_AddButton(popover, POPOVER_WATCH, TimeAttackMenu_WatchReplayCB, false);
+        UIPopover_AddButton(popover, POPOVER_CHALLENGE, TimeAttackMenu_ChallengeReplayCB, false);
+        UIPopover_AddButton(popover, POPOVER_DELETE, TimeAttackMenu_DeleteReplayCB, true);
         UIPopover_Setup(popover, self->position.x, y);
     }
 }
@@ -522,7 +522,7 @@ void TimeAttackMenu_ChallengeReplayCB(void)
     TimeAttackMenu_AddReplayEntry(id, true);
 }
 
-void TimeAttackMenu_Unknown15(void)
+void TimeAttackMenu_SortReplayByDate_CB(void)
 {
     EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
     EntityUIPopover *popover   = (EntityUIPopover *)UIPopover->activeEntity;
@@ -538,7 +538,7 @@ void TimeAttackMenu_Unknown15(void)
     }
 }
 
-void TimeAttackMenu_Unknown16(void)
+void TimeAttackMenu_SortReplayByZone_CB(void)
 {
     EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
     EntityUIPopover *popover   = (EntityUIPopover *)UIPopover->activeEntity;
@@ -782,8 +782,8 @@ void TimeAttackMenu_RankButton_ActionCB(void)
     EntityUIPopover *popover = UIPopover_CreatePopover();
     if (popover) {
         popover->storedEntity = (Entity *)self;
-        UIPopover_AddButton(popover, 7, TimeAttackMenu_Unknown15, 0);
-        UIPopover_AddButton(popover, 8, TimeAttackMenu_Unknown16, 0);
+        UIPopover_AddButton(popover, POPOVER_BYDATE, TimeAttackMenu_SortReplayByDate_CB, 0);
+        UIPopover_AddButton(popover, POPOVER_BYZONE, TimeAttackMenu_SortReplayByZone_CB, 0);
         UIPopover_Setup(popover, self->field_124, self->field_128);
     }
 }
@@ -876,7 +876,7 @@ void TimeAttackMenu_Unknown41(void)
 
             EntityUIControl *leaderboardsControl = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
             TimeAttackMenu_Unknown42(leaderboardsControl->carousel);
-            UIDialog_Unknown4(dialog, self->callback);
+            UIDialog_CloseOnSel_HandleSelection(dialog, self->callback);
             self->callback                = StateMachine_None;
             TimeAttackMenu->connectingDlg = NULL;
             destroyEntity(self);

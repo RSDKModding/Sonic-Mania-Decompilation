@@ -87,7 +87,7 @@ void DialogRunner_NotifyAutoSave(void)
         if (!UIDialog->activeDialog) {
             Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_NotifyAutoSave_CB, true);
-            dialog->field_B8       = 1;
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -128,7 +128,7 @@ void DialogRunner_PromptSavePreference_CB(void)
             }
             Localization_GetString(&info, stringID);
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, DialogRunner_SetNoSaveEnabled, DialogRunner_SetNoSaveDisabled, true, true);
-            dialog->field_B8       = 1;
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -183,18 +183,13 @@ void DialogRunner_CheckUserAuth_CB()
                 id = STR_RETRURNINGTOTITLE;
             Localization_GetString(&info, id);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_SignedOutCB, true);
-            dialog->field_B8       = 1;
+            dialog->useAltColour   = true;
         }
     }
     else {
         EntityUIDialog *dialog = UIDialog->activeDialog;
         if (dialog) {
-            if (dialog->state != UIDialog_Unknown13) {
-                dialog->parent->selectionDisabled = true;
-                dialog->timer                     = 0;
-                dialog->state                     = UIDialog_Unknown13;
-                dialog->curCallback               = StateMachine_None;
-            }
+            UIDialog_CloseOnSel_HandleSelection(dialog, StateMachine_None);
         }
         else {
             if (UIControl) {
@@ -218,7 +213,7 @@ void DialogRunner_ManageNotifs(int32 success)
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_GetNextNotif, true);
             dialog->playEventSfx   = true;
-            dialog->field_B8       = true;
+            dialog->useAltColour   = true;
         }
     }
     else {

@@ -180,12 +180,12 @@ void MainMenu_MenuButton_ActionCB(void)
                 EntityUIControl *saveSelect = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
                 saveSelect->buttonID  = 7;
 #if RETRO_USE_PLUS
-                saveSelect->menuWasSetup = false;
-                ManiaModeMenu->field_28 = -1;
+                saveSelect->menuWasSetup           = false;
+                ManiaModeMenu->saveSelLastButtonID = -1;
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store          = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)saveSelect->buttons[i];
-                    UISaveSlot_Unknown21();
+                    UISaveSlot_HandleSaveIconChange();
                     SceneInfo->entity = store;
                 }
 #endif
@@ -225,7 +225,7 @@ void MainMenu_MenuButton_ActionCB(void)
                 for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {
                     Entity *store          = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
-                    UISaveSlot_Unknown21();
+                    UISaveSlot_HandleSaveIconChange();
                     SceneInfo->entity = store;
                 }
                 UIControl_MatchMenuTag("Encore Mode");
@@ -263,7 +263,7 @@ int32 MainMenu_BuyPlusDialogCB(void)
 }
 #endif
 
-void MainMenu_Unknown2(void)
+void MainMenu_HandleUnlocks(void)
 {
     EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
     EntityUIButton *taButton = control->buttons[1];
@@ -277,7 +277,7 @@ void MainMenu_Unknown2(void)
     compButton->disabled = !GameProgress_CheckUnlock(1);
 }
 
-void MainMenu_Unknown3(void)
+void MainMenu_SetupActions(void)
 {
     foreach_all(UIButton, button)
     {

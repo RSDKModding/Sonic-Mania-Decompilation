@@ -28,18 +28,18 @@ typedef struct {
     int32 timer;
     int32 closeDelay;
     TextInfo textInfo;
-    int32 id;
-    Vector2 field_70;
+    int32 buttonCount;
+    Vector2 size;
     Vector2 drawPos;
     EntityUIControl *parent;
     Entity* entityPtr;
     uint8 buttonFrames[UIDialog_OptionCount];
     StateMachine(callbacks[UIDialog_OptionCount]);
-    bool32 flags[UIDialog_OptionCount];
+    bool32 closeOnSelect[UIDialog_OptionCount];
     EntityUIButton *entPtrs[UIDialog_OptionCount];
-    StateMachine(curCallback);
+    StateMachine(closeCB);
     bool32 playEventSfx;
-    int32 field_B8;
+    bool32 useAltColour;
     int32 lineLength[3];
     int32 lineCount;
     Animator animator;
@@ -65,21 +65,23 @@ void UIDialog_Serialize(void);
 EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg);
 void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
 
-void UIDialog_AddButton(uint8 a1, EntityUIDialog *dialog, void (*callback)(void), bool32 flag);
+void UIDialog_AddButton(uint8 a1, EntityUIDialog *dialog, void (*callback)(void), bool32 closeOnSelect);
 void UIDialog_Setup(EntityUIDialog *dialog);
-void UIDialog_Unknown4(EntityUIDialog *self, void (*callback)(void));
-void UIDialog_Unknown6(void);
-void UIDialog_Unknown7(void);
+void UIDialog_CloseOnSel_HandleSelection(EntityUIDialog *self, void (*callback)(void));
+void UIDialog_DrawBGShapes(void);
+void UIDialog_HandleButtonPositions(void);
 void UIDialog_Close(void);
 bool32 UIDialog_HandleAutoClose(void);
 void UIDialog_ButtonActionCB(void);
-void UIDialog_Unknown11(void);
-void UIDialog_Unknown12(void);
-void UIDialog_Unknown13(void);
+void UIDialog_State_Appear(void);
+void UIDialog_State_Idle(void);
+void UIDialog_State_Close(void);
 
 //Some Helpers
-EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), bool32 flag);
-EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 flagYes, bool32 flagNo);
-EntityUIDialog *UIDialog_CreateDialogOkCancel(TextInfo *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 flagOk, bool32 flagCancel);
+EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), bool32 closeOnSelect);
+EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 closeOnSelect_Yes,
+                                           bool32 closeOnSelect_No);
+EntityUIDialog *UIDialog_CreateDialogOkCancel(TextInfo *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 closeOnSelect_Ok,
+                                              bool32 closeOnSelect_Cancel);
 
 #endif //!OBJ_UIDIALOG_H

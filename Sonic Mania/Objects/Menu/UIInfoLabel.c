@@ -38,13 +38,13 @@ void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
         }
     }
 }
-void UIInfoLabel_SetString(EntityUIInfoLabel *self, TextInfo *text)
+void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
 {
     if (!SceneInfo->inEditor) {
-        RSDK.CopyString(&self->text, text);
+        RSDK.CopyString(&entity->text, text);
         if (!SceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
-            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->text);
+            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
+            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
         }
     }
 }

@@ -61,9 +61,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(timedState);
+    StateMachine(stateDelay);
     int32 timer;
-    int32 timeOut;
+    int32 delay;
     int32 field_68;
     int32 fadeTimer;
     int32 fadeColour;
@@ -86,7 +86,7 @@ void MenuSetup_EditorLoad(void);
 void MenuSetup_Serialize(void);
 
 // Extra Entity Functions
-void MenuSetup_StartTransition(void (*callback)(void), int32 time);
+void MenuSetup_StartTransition(void (*callback)(void), int32 delay);
 
 #if !RETRO_USE_PLUS
 //Setup
@@ -94,12 +94,12 @@ void MenuSetup_Initialize(void);
 bool32 MenuSetup_InitUserdata(void);
 void MenuSetup_Unknown3(void);
 void MenuSetup_Unknown52(void);
-void MenuSetup_Unknown7(void);
+void MenuSetup_HandleMenuReturn(void);
 int32 MenuSetup_GetActiveMenu(void);
 void MenuSetup_ChangeMenuTrack(void);
 void MenuSetup_SetBGColours(void);
 void MenuSetup_MenuButton_ActionCB(void);
-void MenuSetup_StartTransitionLB(void (*callback)(void), int32 time);
+void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay);
 
 //Main Menu
 bool32 MenuSetup_ReturnToTitleOption(void);
@@ -108,7 +108,7 @@ void MenuSetup_ReturnToTitle(void);
 void MenuSetup_ExitGame(void);
 void MenuSetup_ExitGame_ActionCB(void);
 void MenuSetup_ExitGame_CB(void);
-void MenuSetup_Unknown13(void);
+void MenuSetup_State_HandleTransition(void);
 
 //Save Select
 int32 MenuSetup_GetMedalMods(void);

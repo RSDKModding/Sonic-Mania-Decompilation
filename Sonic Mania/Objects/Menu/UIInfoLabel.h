@@ -13,8 +13,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Animator animator;
-    int32 field_70;
-    int32 field_74;
+    int32 unused1;
+    int32 unused2;
     Vector2 size;
     TextInfo text;
     int32 width;

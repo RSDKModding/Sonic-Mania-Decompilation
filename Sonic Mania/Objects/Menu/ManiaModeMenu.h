@@ -15,8 +15,8 @@ typedef struct {
     Entity *encoreSaveSelect;
     Entity *prompt2;
     Entity *noSaveMenuEncore;
-    int32 field_24;
-    int32 field_28;
+    bool32 inSecretsMenu;
+    int32 saveSelLastButtonID;
 } ObjectManiaModeMenu;
 
 // Entity Class
@@ -49,9 +49,10 @@ void ManiaModeMenu_ChangeMenuTrack(void);
 int32 ManiaModeMenu_StartReturnToTitle(void);
 void ManiaModeMenu_SetBGColours(void);
 void ManiaModeMenu_ReturnToTitle(void);
-void ManiaModeMenu_Unknown13(void);
-void ManiaModeMenu_Unknown3(void);
-void ManiaModeMenu_Unknown7(void);
+void ManiaModeMenu_State_HandleTransition(void);
+void ManiaModeMenu_HandleUnlocks(void);
+void ManiaModeMenu_SetupActions(void);
+void ManiaModeMenu_HandleMenuReturn(void);
 #endif
 
 #endif //!OBJ_MANIAMODEMENU_H

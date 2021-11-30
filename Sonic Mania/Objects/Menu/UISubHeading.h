@@ -13,10 +13,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
     Vector2 size;
     int32 listID;
     int32 frameID;
@@ -48,13 +48,14 @@ void UISubHeading_Serialize(void);
 // Extra Entity Functions
 #if RETRO_USE_PLUS
 void UISubHeading_Initialize(void);
-void UISubHeading_Unknown2(void);
-void UISubHeading_Unknown3(void);
-void UISubHeading_Unknown4(int32 slot);
+void UISubHeading_HandleUnlocks(void);
+void UISubHeading_SetupActions(void);
+void UISubHeading_HandleMenuReturn(int32 slot);
 int32 UISubHeading_GetMedalMods(void);
 void UISubHeading_SaveFileCB(int32 status);
 void UISubHeading_SecretsTransitionCB(void);
-void UISubHeading_Unknown9(void);
+void UISubHeading_LeaveSecretsMenu(void);
+
 void UISubHeading_SaveSel_MenuUpdateCB(void);
 void UISubHeading_SaveSel_YPressCB(void);
 void UISubHeading_SaveButton_ActionCB(void);

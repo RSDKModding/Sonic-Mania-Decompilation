@@ -45,8 +45,8 @@ void MainMenu_MenuButton_ActionCB(void);
 int32 MainMenu_BuyPlusDialogCB(void)
 #endif
 
-void MainMenu_Unknown2(void);
-void MainMenu_Unknown3(void);
+void MainMenu_HandleUnlocks(void);
+void MainMenu_SetupActions(void);
 void MainMenu_MenuSetupCB(void);
 #endif
 

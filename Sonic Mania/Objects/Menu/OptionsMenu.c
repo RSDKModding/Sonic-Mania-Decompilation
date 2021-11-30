@@ -115,7 +115,7 @@ void OptionsMenu_Initialize(void)
     }
 }
 
-void OptionsMenu_Unknown2(void)
+void OptionsMenu_HandleUnlocks(void)
 {
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
 
@@ -133,7 +133,7 @@ void OptionsMenu_Unknown2(void)
     }
 }
 
-void OptionsMenu_Unknown3(void)
+void OptionsMenu_SetupActions(void)
 {
     EntityUIControl *optionsControl      = (EntityUIControl *)OptionsMenu->optionsControl;
     EntityUIControl *languageControl     = (EntityUIControl *)OptionsMenu->languageControl;
@@ -321,7 +321,7 @@ void OptionsMenu_Unknown3(void)
     }
 }
 
-void OptionsMenu_Unknown4(void)
+void OptionsMenu_HandleMenuReturn(void)
 {
     EntityUIControl *languageControl     = (EntityUIControl *)OptionsMenu->languageControl;
     EntityUIControl *languageControl_old = (EntityUIControl *)OptionsMenu->languageControl_Legacy;
