@@ -76,6 +76,8 @@ typedef struct {
     bool32 (*ForeachConfigCategory)(TextInfo *textInfo);
 
     Object *(*GetObject)(const char *name);
+
+    void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
 } ModFunctionTable;
 #endif
 
@@ -86,7 +88,7 @@ typedef struct {
     bool32 (*GetConfirmButtonFlip)(void);
     void (*ExitGame)(void);
     void (*LaunchManual)(void);
-    bool32 (*Unknown4)(uint8 inputID);
+    bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
 #if RETRO_USE_EGS
@@ -445,6 +447,23 @@ extern RSDKFunctionTable RSDK;
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
     while (RSDK.GetEntities(type->objectID, (Entity **)&entityOut))
+
+#define foreach_active_group(group, entityOut)                                                                                                       \
+    Entity *entityOut = NULL;                                                                                                                        \
+    while (RSDK.GetActiveEntities(group, (Entity **)&entityOut))
+#define foreach_all_group(group, entityOut)                                                                                                          \
+    Entity *entityOut = NULL;                                                                                                                        \
+    while (RSDK.GetEntities(group, (Entity **)&entityOut))
+
+#if RETRO_USE_MOD_LOADER
+#define foreach_config(text)                                                                                                                         \
+    TextInfo *text = NULL;                                                                                                                           \
+    while (Mod.ForeachConfig(&text))
+#define foreach_configCategory(type, entityOut)                                                                                                      \
+    TextInfo *text = NULL;                                                                                                                           \
+    while (Mod.ForeachConfigCategory(&text))
+#endif
+
 #define foreach_break                                                                                                                                \
     RSDK.BreakForeachLoop();                                                                                                                         \
     break

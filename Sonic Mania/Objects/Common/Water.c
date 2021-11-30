@@ -515,7 +515,7 @@ void Water_State_Palette(void)
                             case 1560: Water_SpawnCountDownBubble(player, p, 1); break;
                             case 1680: Water_SpawnCountDownBubble(player, p, 0); break;
                             case 1800:
-                                player->hurtFlag = 3;
+                                player->deathType = PLAYER_DEATH_DROWN;
                                 if (!water)
                                     player->drawOrder = Zone->playerDrawHigh;
                                 break;

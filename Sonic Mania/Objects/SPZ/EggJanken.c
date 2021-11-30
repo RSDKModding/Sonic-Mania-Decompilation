@@ -148,7 +148,7 @@ void EggJanken_CheckPlayerCollisions(void)
                 break;
             case C_BOTTOM:
                 if (player->onGround)
-                    player->hurtFlag = 1;
+                    player->deathType = PLAYER_DEATH_DIE_USESFX;
                 break;
         }
 

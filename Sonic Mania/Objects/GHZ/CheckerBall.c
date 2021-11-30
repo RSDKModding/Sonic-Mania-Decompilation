@@ -246,7 +246,7 @@ void CheckerBall_Unknown3(void)
         else {
             int32 result = Player_CheckCollisionBox(player, self, &CheckerBall->hitbox);
             if (result == 4 && self->velocity.y >= 0 && player->onGround) {
-                player->hurtFlag = true;
+                player->deathType = PLAYER_DEATH_DIE_USESFX;
             }
             else if (result == 1) {
                 player->position.x += x + (x >> 1) + self->collisionOffset.x;

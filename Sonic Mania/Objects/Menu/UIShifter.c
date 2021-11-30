@@ -15,11 +15,11 @@ void UIShifter_LateUpdate(void)
             x = self->parent->lastButtonID * self->shift.x;
             y = self->parent->lastButtonID * self->shift.y;
         }
-        self->field_60 = x;
-        self->field_64 = y;
-        self->field_68 += (x - self->field_68) >> 2;
-        self->field_6C = self->field_6C + ((y - self->field_6C) >> 2);
-        UIShifter_Unknown();
+        self->lastButtonShift.x = x;
+        self->lastButtonShift.y = y;
+        self->shiftOffset.x += (x - self->shiftOffset.x) >> 2;
+        self->shiftOffset.y += (y - self->shiftOffset.y) >> 2;
+        UIShifter_HandleShift();
     }
 }
 
@@ -33,11 +33,11 @@ void UIShifter_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->startPos.x    = self->position.x;
         self->startPos.y    = self->position.y;
-        self->active        = ACTIVE_BOUNDS;
-        self->field_60      = 0;
-        self->field_64      = 0;
-        self->field_68      = 0;
-        self->field_6C      = 0;
+        self->active            = ACTIVE_BOUNDS;
+        self->lastButtonShift.x = 0;
+        self->lastButtonShift.y = 0;
+        self->shiftOffset.x       = 0;
+        self->shiftOffset.y       = 0;
         self->visible       = false;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -46,14 +46,14 @@ void UIShifter_Create(void *data)
 
 void UIShifter_StageLoad(void) {}
 
-void UIShifter_Unknown(void)
+void UIShifter_HandleShift(void)
 {
     RSDK_THIS(UIShifter);
 
     int32 shiftX = -self->shift.x;
     int32 shiftY = -self->shift.y;
-    int32 x      = self->startPos.x + (self->field_68 & 0xFFFF0000);
-    int32 y      = self->startPos.y + (self->field_6C & 0xFFFF0000);
+    int32 x      = self->startPos.x + (self->shiftOffset.x & 0xFFFF0000);
+    int32 y      = self->startPos.y + (self->shiftOffset.y & 0xFFFF0000);
     for (int32 i = 0; i < self->parent->buttonCount; ++i) {
         self->parent->buttons[i]->position.x = x;
         self->parent->buttons[i]->position.y = y;

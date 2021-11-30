@@ -10,11 +10,11 @@ enum UserdataTableIDs {
     APITable_GetConfirmButtonFlip,
     APITable_ExitGame,
     APITable_LaunchManual,
-    APITable_Unknown4,
+    APITable_IsOverlayEnabled,
     APITable_CheckDLC,
     APITable_ShowExtensionOverlay,
 #if RETRO_VER_EGS
-    APITable_Checkout,
+    APITable_ShowCheckoutPage,
     APITable_ShowEncorePage,
     APITable_EGS_Unknown4,
     APITable_RegisterHIDDevice,
@@ -42,7 +42,7 @@ enum UserdataTableIDs {
     APITable_TryTrackStat,
     APITable_GetStatsStatus,
     APITable_SetStatsStatus,
-    APITable_Unknown16,
+    APITable_ClearPrerollErrors,
     APITable_TryAuth,
     APITable_GetUserAuthStatus,
     APITable_GetUsername,
@@ -51,9 +51,9 @@ enum UserdataTableIDs {
     APITable_UserStorageStatusUnknown2,
     APITable_ClearUserStorageStatus,
     APITable_SetUserStorageStatus,
-    APITable_Missing5,
-    APITable_Unknown25,
-    APITable_Unknown26,
+    APITable_SetSaveStatusOK,
+    APITable_SetSaveStatusForbidden,
+    APITable_SetSaveStatusError,
     APITable_SetUserStorageNoSave,
     APITable_GetUserStorageNoSave,
     APITable_LoadUserFile,
@@ -76,7 +76,7 @@ enum UserdataTableIDs {
     APITable_GetEntryUUID,
     APITable_GetUserDBByID,
     APITable_GetUserDBCreationTime,
-    APITable_RemoveDBEntry,
+    APITable_RemoveDBRow,
     APITable_RemoveAllDBEntries,
     APITable_Count,
 };
@@ -109,7 +109,7 @@ enum FunctionTableIDs {
     FunctionTable_AddDrawListRef,
     FunctionTable_SwapDrawLayers,
     FunctionTable_SetDrawLayerProperties,
-    FunctionTable_LoadScene,
+    FunctionTable_SetScene,
     FunctionTable_SetGameMode,
 #if RETRO_REV02
     FunctionTable_SetHardResetFlag,
@@ -118,8 +118,8 @@ enum FunctionTableIDs {
     FunctionTable_CheckSceneFolder,
     FunctionTable_InitSceneLoad,
     FunctionTable_GetObjectByName,
-    FunctionTable_ClearScreens,
-    FunctionTable_AddScreen,
+    FunctionTable_ClearCameras,
+    FunctionTable_AddCamera,
 #if !RETRO_REV02
     FunctionTable_GetFuncPtr,
 #endif
@@ -255,7 +255,7 @@ enum FunctionTableIDs {
 #if RETRO_REV02
     FunctionTable_ControllerIDForInputID,
     FunctionTable_MostRecentActiveControllerID,
-    FunctionTable_Unknown100,
+    FunctionTable_GetControllerType,
     FunctionTable_GetAssignedControllerID,
     FunctionTable_GetAssignedUnknown,
     FunctionTable_Missing22,
@@ -273,17 +273,17 @@ enum FunctionTableIDs {
     FunctionTable_LoadUserFile,
     FunctionTable_SaveUserFile,
 #if RETRO_REV02
-    FunctionTable_printLog,
-    FunctionTable_printString,
-    FunctionTable_printText,
-    FunctionTable_printIntegerUnsigned,
-    FunctionTable_printInteger,
-    FunctionTable_printFloat,
-    FunctionTable_printVector2,
-    FunctionTable_printHitbox,
+    FunctionTable_PrintLog,
+    FunctionTable_PrintString,
+    FunctionTable_PrintText,
+    FunctionTable_PrintIntegerUnsigned,
+    FunctionTable_PrintInteger,
+    FunctionTable_PrintFloat,
+    FunctionTable_PrintVector2,
+    FunctionTable_PrintHitbox,
 #endif
-    FunctionTable_Unknown105,
-    FunctionTable_Unknown106,
+    FunctionTable_SetActiveVariable,
+    FunctionTable_AddEnumVariable,
 #if RETRO_REV02
     FunctionTable_ClearDebugValues,
     FunctionTable_SetDebugValue,
@@ -336,7 +336,7 @@ void *GetAPIFunction(const char *name)
     }
 
     if (engine.printConsole)
-        printLog(PRINT_POPUP, "API Function not found: %s", name);
+        PrintLog(PRINT_POPUP, "API Function not found: %s", name);
     return NULL;
 }
 #endif
@@ -362,11 +362,11 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
     addToAPIFunctionTable(APITable_ExitGame, userCore->ExitGame);
     addToAPIFunctionTable(APITable_LaunchManual, userCore->LaunchManual);
-    addToAPIFunctionTable(APITable_Unknown4, userCore->unknown15);
+    addToAPIFunctionTable(APITable_IsOverlayEnabled, userCore->isOverlayEnabled);
     addToAPIFunctionTable(APITable_CheckDLC, userCore->CheckDLC);
     addToAPIFunctionTable(APITable_ShowExtensionOverlay, userCore->ShowExtensionOverlay);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_Checkout, userCore->Epic_Checkout);
+    addToAPIFunctionTable(APITable_ShowCheckoutPage, userCore->ShowCheckoutPage);
     addToAPIFunctionTable(APITable_ShowEncorePage, userCore->ShowEncorePage);
     addToAPIFunctionTable(APITable_EGS_Unknown4, userCore->EpicUnknown4);
     addToAPIFunctionTable(APITable_RegisterHIDDevice, userCore->RegisterHIDDevice);
@@ -394,7 +394,7 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
     addToAPIFunctionTable(APITable_GetStatsStatus, GetStatsStatus);
     addToAPIFunctionTable(APITable_SetStatsStatus, SetStatsStatus);
-    addToAPIFunctionTable(APITable_Unknown16, userStorage->unknown8);
+    addToAPIFunctionTable(APITable_ClearPrerollErrors, userStorage->ClearPrerollErrors);
     addToAPIFunctionTable(APITable_TryAuth, userStorage->TryAuth);
     addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserStorageStatus);
     addToAPIFunctionTable(APITable_GetUsername, userStorage->GetUsername);
@@ -403,9 +403,9 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_UserStorageStatusUnknown2, GetSaveStatus);
     addToAPIFunctionTable(APITable_ClearUserStorageStatus, ClearUserStorageStatus);
     addToAPIFunctionTable(APITable_SetUserStorageStatus, SetUserStorageStatus);
-    addToAPIFunctionTable(APITable_Missing5, SetSaveStatusOK);
-    addToAPIFunctionTable(APITable_Unknown25, SetSaveStatusForbidden);
-    addToAPIFunctionTable(APITable_Unknown26, SetSaveStatusError);
+    addToAPIFunctionTable(APITable_SetSaveStatusOK, SetSaveStatusOK);
+    addToAPIFunctionTable(APITable_SetSaveStatusForbidden, SetSaveStatusForbidden);
+    addToAPIFunctionTable(APITable_SetSaveStatusError, SetSaveStatusError);
     addToAPIFunctionTable(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
     addToAPIFunctionTable(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
     addToAPIFunctionTable(APITable_LoadUserFile, userStorage->LoadUserFile);
@@ -428,7 +428,7 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_GetEntryUUID, GetDBRowUUID);
     addToAPIFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
     addToAPIFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);
-    addToAPIFunctionTable(APITable_RemoveDBEntry, RemoveDBRow);
+    addToAPIFunctionTable(APITable_RemoveDBRow, RemoveDBRow);
     addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBRows);
 #else
     addToAPIFunctionTable("GetConfirmButtonFlip", GetConfirmButtonFlip);
@@ -460,7 +460,7 @@ void setupFunctions()
     addToAPIFunctionTable("AssignControllerID", AssignControllerID);
     addToAPIFunctionTable("ResetControllerAssignments", ResetControllerAssignments);
     addToAPIFunctionTable("InputIDIsDisconnected", InputIDIsDisconnected);
-    addToAPIFunctionTable("GetControllerType", GetGamePadType);
+    addToAPIFunctionTable("GetControllerType", GetControllerType);
     addToAPIFunctionTable("ShowSteamControllerOverlay", ShowExtensionOverlay);
     addToAPIFunctionTable("SetInputLEDColor", SetInputLEDColor);
     addToAPIFunctionTable("SetRichPresence", SetPresence);
@@ -490,7 +490,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_AddDrawListRef, AddDrawListRef);
     addToRSDKFunctionTable(FunctionTable_SwapDrawLayers, SwapDrawListEntries);
     addToRSDKFunctionTable(FunctionTable_SetDrawLayerProperties, SetDrawLayerProperties);
-    addToRSDKFunctionTable(FunctionTable_LoadScene, SetScene);
+    addToRSDKFunctionTable(FunctionTable_SetScene, SetScene);
     addToRSDKFunctionTable(FunctionTable_SetGameMode, SetEngineState);
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetHardResetFlag, SetHardResetFlag);
@@ -499,8 +499,8 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_CheckSceneFolder, CheckSceneFolder);
     addToRSDKFunctionTable(FunctionTable_InitSceneLoad, InitSceneLoad);
     addToRSDKFunctionTable(FunctionTable_GetObjectByName, GetObjectByName);
-    addToRSDKFunctionTable(FunctionTable_ClearScreens, ClearCameras);
-    addToRSDKFunctionTable(FunctionTable_AddScreen, AddCamera);
+    addToRSDKFunctionTable(FunctionTable_ClearCameras, ClearCameras);
+    addToRSDKFunctionTable(FunctionTable_AddCamera, AddCamera);
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_GetFuncPtr, GetAPIFunction);
 #endif
@@ -641,7 +641,7 @@ void setupFunctions()
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
     addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
-    addToRSDKFunctionTable(FunctionTable_Unknown100, GetGamePadType);
+    addToRSDKFunctionTable(FunctionTable_GetControllerType, GetControllerType);
     addToRSDKFunctionTable(FunctionTable_GetAssignedControllerID, GetAssignedControllerID);
     addToRSDKFunctionTable(FunctionTable_GetAssignedUnknown, GetAssignedUnknown);
     addToRSDKFunctionTable(FunctionTable_Missing22, DoInputUnknown2);
@@ -659,17 +659,17 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_LoadUserFile, LoadUserFile);
     addToRSDKFunctionTable(FunctionTable_SaveUserFile, SaveUserFile);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_printLog, printLog);
-    addToRSDKFunctionTable(FunctionTable_printString, printString);
-    addToRSDKFunctionTable(FunctionTable_printText, printText);
-    addToRSDKFunctionTable(FunctionTable_printIntegerUnsigned, printIntegerUnsigned);
-    addToRSDKFunctionTable(FunctionTable_printInteger, printInteger);
-    addToRSDKFunctionTable(FunctionTable_printFloat, printFloat);
-    addToRSDKFunctionTable(FunctionTable_printVector2, printVector2);
-    addToRSDKFunctionTable(FunctionTable_printHitbox, printHitbox);
+    addToRSDKFunctionTable(FunctionTable_PrintLog, PrintLog);
+    addToRSDKFunctionTable(FunctionTable_PrintString, PrintString);
+    addToRSDKFunctionTable(FunctionTable_PrintText, PrintText);
+    addToRSDKFunctionTable(FunctionTable_PrintIntegerUnsigned, PrintIntegerUnsigned);
+    addToRSDKFunctionTable(FunctionTable_PrintInteger, PrintInteger);
+    addToRSDKFunctionTable(FunctionTable_PrintFloat, PrintFloat);
+    addToRSDKFunctionTable(FunctionTable_PrintVector2, PrintVector2);
+    addToRSDKFunctionTable(FunctionTable_PrintHitbox, PrintHitbox);
 #endif
-    addToRSDKFunctionTable(FunctionTable_Unknown105, SetActiveVariable);
-    addToRSDKFunctionTable(FunctionTable_Unknown106, AddEnumVar);
+    addToRSDKFunctionTable(FunctionTable_SetActiveVariable, SetActiveVariable);
+    addToRSDKFunctionTable(FunctionTable_AddEnumVariable, AddEnumVariable);
 #if !RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_PrintMessage, PrintMessage);
 #endif
@@ -683,4 +683,4 @@ void setupFunctions()
 #endif
 }
 
-void LinkGameLogic(GameInfo *info) { printLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }
+void LinkGameLogic(GameInfo *info) { PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }

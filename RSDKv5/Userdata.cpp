@@ -12,7 +12,7 @@ DummyStats *stats               = NULL;
 // Start custom achievement code
 // this is added because we don't have access to any store APIs that would otherwise use this feature
 
-void addAchievement(const char *identifier, const char *name, const char *desc)
+void RegisterAchievement(const char *identifier, const char *name, const char *desc)
 {
     AchievementInfo info;
     info.identifier  = identifier;
@@ -96,23 +96,23 @@ void initUserData()
 
         InitUserStorageDB(userDBStorage);
 
-        userCore->unknown1             = nullUserFunc;
-        userCore->unknown2             = nullUserFunc;
-        userCore->unknown3             = nullUserFunc;
-        userCore->unknown4             = nullUserFunc;
-        userCore->SetupDebugValues     = setupUserDebugValues;
-        userCore->UserInitUnknown1     = userInitUnknown1;
-        userCore->UserInitUnknown2     = userInitUnknown2;
-        userCore->GetUserLanguage      = GetUserLanguage;
-        userCore->GetUserRegion        = GetUserRegion;
-        userCore->GetUserPlatform      = GetUserPlatform;
-        userCore->GetConfirmButtonFlip = GetConfirmButtonFlip;
-        userCore->LaunchManual         = LaunchManual;
-        userCore->ExitGame             = ExitGame;
-        userCore->ControllerUnknown    = ControllerUnknown;
-        userCore->unknown15            = UserCoreUnknown15;
-        userCore->CheckDLC             = checkDLC;
-        userCore->ShowExtensionOverlay = ShowExtensionOverlay;
+        userCore->unknown1              = nullUserFunc;
+        userCore->unknown2              = nullUserFunc;
+        userCore->unknown3              = nullUserFunc;
+        userCore->unknown4              = nullUserFunc;
+        userCore->SetupDebugValues      = setupUserDebugValues;
+        userCore->UserInitUnknown1      = userInitUnknown1;
+        userCore->UserInitUnknown2      = userInitUnknown2;
+        userCore->GetUserLanguage       = GetUserLanguage;
+        userCore->GetUserRegion         = GetUserRegion;
+        userCore->GetUserPlatform       = GetUserPlatform;
+        userCore->GetConfirmButtonFlip  = GetConfirmButtonFlip;
+        userCore->LaunchManual          = LaunchManual;
+        userCore->ExitGame              = ExitGame;
+        userCore->GetDefaultGamepadType = GetDefaultGamepadType;
+        userCore->isOverlayEnabled      = IsOverlayEnabled;
+        userCore->CheckDLC              = CheckDLC;
+        userCore->ShowExtensionOverlay  = ShowExtensionOverlay;
 #if RETRO_VER_EGS
         userCore->EpicUnknown1      = nullUserFunc;
         userCore->Epic_Checkout     = EGS_Checkout;
@@ -168,13 +168,13 @@ void initUserData()
         userStorage->InitUnknown1   = (int (*)())nullUserFunc;
         userStorage->SetDebugValues = (int (*)())nullUserFunc;
         userStorage->InitUnknown2   = (int (*)())nullUserFunc;
-        userStorage->TryAuth        = TryAuth;
-        userStorage->TryInitStorage = TryInitStorage;
-        userStorage->GetUsername    = GetUserName;
-        userStorage->LoadUserFile   = TryLoadUserFile;
-        userStorage->SaveUserFile   = TrySaveUserFile;
-        userStorage->DeleteUserFile = TryDeleteUserFile;
-        userStorage->unknown8       = ClearPrerollErrors;
+        userStorage->TryAuth            = TryAuth;
+        userStorage->TryInitStorage     = TryInitStorage;
+        userStorage->GetUsername        = GetUserName;
+        userStorage->LoadUserFile       = TryLoadUserFile;
+        userStorage->SaveUserFile       = TrySaveUserFile;
+        userStorage->DeleteUserFile     = TryDeleteUserFile;
+        userStorage->ClearPrerollErrors = ClearPrerollErrors;
 
         achievements->status    = STATUS_OK;
         leaderboards->status    = STATUS_OK;
@@ -193,24 +193,24 @@ void initUserData()
     // Add achievements
     achievementList.clear();
     achievementStack.clear();
-    addAchievement("ACH_GOLD_MEDAL", "No Way? No Way!", "Collect gold medallions in Blue Spheres Bonus stage");
-    addAchievement("ACH_SILVER_MEDAL", "Full Medal Jacket", "Collect silver medallions in Blue Spheres Bonus stage");
-    addAchievement("ACH_EMERALDS", "Magnificent Seven", "Collect all seven Chaos Emeralds");
-    addAchievement("ACH_GAME_CLEARED", "See You Next Game", "Achieve any ending");
-    addAchievement("ACH_STARPOST", "Superstar", "Spin the Star Post!");
-    addAchievement("ACH_SIGNPOST", "That's a Two-fer", "Find the hidden item boxes at the end of the Zone");
-    addAchievement("ACH_GHZ", "Now It Can't Hurt You Anymore", "What would happen if you cross a bridge with a fire shield?");
-    addAchievement("ACH_CPZ", "Triple Trouble", "Try for a 3 chain combo!");
-    addAchievement("ACH_SPZ", "The Most Famous Hedgehog in the World", "Have your photos taken in Studiopolis Zone");
-    addAchievement("ACH_FBZ", "Window Shopping", "Let the wind take you through");
-    addAchievement("ACH_PGZ", "Crate Expectations", "Wreak havoc at the propaganda factory");
-    addAchievement("ACH_SSZ", "King of Speed", "Get through Stardust Speedway Zone as quickly as possible");
-    addAchievement("ACH_HCZ", "Boat Enthusiast", "Try pushing a barrel to see how far it goes");
-    addAchievement("ACH_MSZ", "The Password is \"Special Stage\"", "Try pushing a barrel to see how far it goes");
-    addAchievement("ACH_OOZ", "Secret Sub", "You might have to submerge to find it");
-    addAchievement("ACH_LRZ", "Without a Trace", "Barrel through the lava, don't let anything stop you");
-    addAchievement("ACH_MMZ", "Collect 'Em All", "Gotta gacha 'em all");
-    addAchievement("ACH_TMZ", "Professional Hedgehog", "That elusive perfect run, only a professional can achieve");
+    RegisterAchievement("ACH_GOLD_MEDAL", "No Way? No Way!", "Collect gold medallions in Blue Spheres Bonus stage");
+    RegisterAchievement("ACH_SILVER_MEDAL", "Full Medal Jacket", "Collect silver medallions in Blue Spheres Bonus stage");
+    RegisterAchievement("ACH_EMERALDS", "Magnificent Seven", "Collect all seven Chaos Emeralds");
+    RegisterAchievement("ACH_GAME_CLEARED", "See You Next Game", "Achieve any ending");
+    RegisterAchievement("ACH_STARPOST", "Superstar", "Spin the Star Post!");
+    RegisterAchievement("ACH_SIGNPOST", "That's a Two-fer", "Find the hidden item boxes at the end of the Zone");
+    RegisterAchievement("ACH_GHZ", "Now It Can't Hurt You Anymore", "What would happen if you cross a bridge with a fire shield?");
+    RegisterAchievement("ACH_CPZ", "Triple Trouble", "Try for a 3 chain combo!");
+    RegisterAchievement("ACH_SPZ", "The Most Famous Hedgehog in the World", "Have your photos taken in Studiopolis Zone");
+    RegisterAchievement("ACH_FBZ", "Window Shopping", "Let the wind take you through");
+    RegisterAchievement("ACH_PGZ", "Crate Expectations", "Wreak havoc at the propaganda factory");
+    RegisterAchievement("ACH_SSZ", "King of Speed", "Get through Stardust Speedway Zone as quickly as possible");
+    RegisterAchievement("ACH_HCZ", "Boat Enthusiast", "Try pushing a barrel to see how far it goes");
+    RegisterAchievement("ACH_MSZ", "The Password is \"Special Stage\"", "Try pushing a barrel to see how far it goes");
+    RegisterAchievement("ACH_OOZ", "Secret Sub", "You might have to submerge to find it");
+    RegisterAchievement("ACH_LRZ", "Without a Trace", "Barrel through the lava, don't let anything stop you");
+    RegisterAchievement("ACH_MMZ", "Collect 'Em All", "Gotta gacha 'em all");
+    RegisterAchievement("ACH_TMZ", "Professional Hedgehog", "That elusive perfect run, only a professional can achieve");
 
     int achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int));
@@ -338,37 +338,53 @@ int GetUserPlatform()
 }
 bool32 GetConfirmButtonFlip()
 {
-    // printLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
+    // PrintLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
     return engine.confirmFlip;
 }
 bool32 GetXYButtonFlip()
 {
-    // printLog(PRINT_NORMAL, "DUMMY GetXYButtonFlip() -> %d", engine.XYFlip);
+    // PrintLog(PRINT_NORMAL, "DUMMY GetXYButtonFlip() -> %d", engine.XYFlip);
     return engine.XYFlip;
 }
 void LaunchManual()
 {
-    printLog(PRINT_NORMAL, "DUMMY LaunchManual()");
+    PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
     // TODO(?): open this url: http://www.sonicthehedgehog.com/mania/manual
 }
 void ExitGame() { engine.running = false; }
-int ControllerUnknown() { return 0; }
+
+int GetDefaultGamepadType()
+{
+#if RETRO_REV02
+    int32 platform = curSKU.platform = PLATFORM_SWITCH;
+#else
+    int32 platform = gameVerInfo.platform = PLATFORM_SWITCH;
+#endif
+
+    switch (platform) {
+        case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_PC:
+        case PLATFORM_DEV:
+        default: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+    }
+}
+
 int ShowExtensionOverlay(byte overlay)
 {
-    printLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
+    PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
     return 1;
 }
 bool32 EGS_Checkout(int a1)
 {
-    printLog(PRINT_POPUP, "Checkout(%d)");
+    PrintLog(PRINT_POPUP, "Checkout(%d)");
     return true;
 }
 int ShowEncorePage(int a1)
 {
-    printLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
+    PrintLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
 }
-void EGS_Unknown4(int a1) { printLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1); }
+void EGS_Unknown4(int a1) { PrintLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1); }
 
 void SetPresence(byte id, TextInfo *info)
 {
@@ -383,25 +399,25 @@ void SetPresence(byte id, TextInfo *info)
 #else
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
 #endif
-    printLog(PRINT_NORMAL, buffer2);
+    PrintLog(PRINT_NORMAL, buffer2);
 }
 
 #if !RETRO_REV02
 void TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time)
 {
-    printLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
+    PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
 }
 void TrackTAClear(byte zoneID, byte actID, byte playerID, int time)
 {
-    printLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
+    PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
 }
 void TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY)
 {
-    printLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
+    PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
 }
 void TrackGameProgress(float percent)
 {
-    printLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100);
+    PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100);
 }
 #else
 #define voidToInt(x)   (int)(size_t)(x)
@@ -410,7 +426,7 @@ void TrackGameProgress(float percent)
 void TryTrackStat(StatInfo *stat)
 {
     if (stats->status) {
-        printLog(PRINT_NORMAL, "Tracking Stat: %s (%d)", stat->name, stat->statID);
+        PrintLog(PRINT_NORMAL, "Tracking Stat: %s (%d)", stat->name, stat->statID);
 
         switch (stat->statID) {
             case 0: {
@@ -421,7 +437,7 @@ void TryTrackStat(StatInfo *stat)
                 int time = voidToInt(stat->data[4]);
                 int rings = voidToInt(stat->data[5]);
                 int score = voidToInt(stat->data[6]);
-                printLog(PRINT_NORMAL, "DUMMY TrackActClear(%s, %s, %s, %d, %d, %d, %d)", zoneName, actName, playerName, val, score, rings, time);
+                PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%s, %s, %s, %d, %d, %d, %d)", zoneName, actName, playerName, val, score, rings, time);
                 break;
             }
             case 1: {
@@ -430,7 +446,7 @@ void TryTrackStat(StatInfo *stat)
                 char *playerName = (char *)stat->data[2];
                 char *mode = (char *)stat->data[3];
                 int time = voidToInt(stat->data[4]);
-                printLog(PRINT_NORMAL, "DUMMY TrackTAClear(%s, %s, %s, %s, %d)", zoneName, actName, playerName, mode, time);
+                PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%s, %s, %s, %s, %d)", zoneName, actName, playerName, mode, time);
                 break;
             }
             case 2: {
@@ -440,15 +456,15 @@ void TryTrackStat(StatInfo *stat)
                 bool32 encore = voidToInt(stat->data[3]);
                 int enemyX = voidToInt(stat->data[4]);
                 int enemyY = voidToInt(stat->data[5]);
-                printLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%s, %s, %s, %s, %d, %d)", zoneName, actName, playerName, encore ? "true" : "false",
+                PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%s, %s, %s, %s, %d, %d)", zoneName, actName, playerName, encore ? "true" : "false",
                          enemyX, enemyY);
                 break;
             }
-            case 3: printLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", voidToFloat(stat->data[0]) * 100); break;
+            case 3: PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", voidToFloat(stat->data[0]) * 100); break;
         }
     }
     else {
-        printLog(PRINT_NORMAL, "Track stat SKIPPED. Stats are disabled.");
+        PrintLog(PRINT_NORMAL, "Track stat SKIPPED. Stats are disabled.");
     }
 }
 #endif

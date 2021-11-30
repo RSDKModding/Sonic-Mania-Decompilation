@@ -52,7 +52,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
 #endif
 
         if (!videoDecoder) {
-            printLog(PRINT_NORMAL, "Video Decoder Error!");
+            PrintLog(PRINT_NORMAL, "Video Decoder Error!");
             CloseFile(&videoFile);
             return;
         }
@@ -61,7 +61,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
                 videoVidData = THEORAPLAY_getVideo(videoDecoder);
         }
         if (!videoVidData) {
-            printLog(PRINT_NORMAL, "Video Error!");
+            PrintLog(PRINT_NORMAL, "Video Error!");
             CloseFile(&videoFile);
             return;
         }
@@ -203,7 +203,7 @@ void SetupVideoBuffer(int32 width, int32 height)
 #endif
 
     if (!engine.videoBuffer)
-        printLog(PRINT_ERROR, "Failed to create video buffer!");
+        PrintLog(PRINT_ERROR, "Failed to create video buffer!");
 }
 
 void CloseVideoBuffer()

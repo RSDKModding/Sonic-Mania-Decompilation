@@ -19,13 +19,13 @@ struct DummyCore {
     bool32 (*GetConfirmButtonFlip)(void);
     void (*LaunchManual)(void);
     void (*ExitGame)(void);
-    int (*ControllerUnknown)(void);
-    int (*unknown15)(byte inputID);
-    int (*CheckDLC)(byte id);
+    int (*GetDefaultGamepadType)(void);
+    bool32 (*isOverlayEnabled)(uint32 inputID);
+    bool32 (*CheckDLC)(byte id);
     int (*ShowExtensionOverlay)(byte overlay);
 #if RETRO_VER_EGS
     void (*EpicUnknown1)(void);
-    bool32 (*Epic_Checkout)(int a1);
+    bool32 (*ShowCheckoutPage)(int a1);
     int (*ShowEncorePage)(int a1);
     void (*EpicUnknown4)(int a1);
     void (*RegisterHIDDevice)(void);
@@ -80,9 +80,9 @@ bool32 GetConfirmButtonFlip();
 bool32 GetXYButtonFlip();
 void LaunchManual();
 void ExitGame();
-int ControllerUnknown();
+int GetDefaultGamepadType();
 #if RETRO_REV02
-inline int checkDLC(byte dlcID)
+inline bool32 CheckDLC(byte dlcID)
 {
     if (dlcID < 8)
         return *userCore->values[dlcID];
@@ -90,7 +90,22 @@ inline int checkDLC(byte dlcID)
         return 0;
 }
 #endif
-inline int UserCoreUnknown15(byte inputID) { return 0; }
+inline bool32 IsOverlayEnabled(uint32 inputID)
+{
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        if (InputDevices[i].inputID == inputID) {
+            uint8 flag = InputDevices[i].gamePadType >> 16;
+            if (flag != DEVICE_FLAG_STEAMOVERLAY) {
+                return false;
+            }
+
+            return false; // sorry!
+        }
+    }
+
+    return false;
+}
+int GetDefaultGamepadType();
 int ShowExtensionOverlay(byte overlay);
 bool32 EGS_Checkout(int a1);
 int ShowEncorePage(int a1);

@@ -80,7 +80,7 @@ void Staircase_MainState(void)
                 self->state     = Staircase_Wait;
                 self->drawState = Staircase_DrawShake;
                 if (player->onGround)
-                    player->hurtFlag = 1;
+                    player->deathType = PLAYER_DEATH_DIE_USESFX;
             }
             else if (side == C_TOP) {
                 self->active = ACTIVE_NORMAL;
@@ -148,7 +148,7 @@ void Staircase_BasicCollision(void)
         for (int32 i = 0; i < Starcase_StairCount; i++) {
             self->position = self->blocks[i];
             if (Player_CheckCollisionBox(player, self, &Staircase->blockHitbox) == C_BOTTOM && player->onGround)
-                player->hurtFlag = 1;
+                player->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
     self->position = oldpos;

@@ -93,8 +93,8 @@ void Player_Update(void)
             self->abilitySpeed = 0;
 
         // Hurt Player if we're touching T/B or L/R sides at same time
-        if (self->collisionFlagH == 3 || self->collisionFlagV == 3)
-            self->hurtFlag = HURTFLAG_HURT;
+        if (self->collisionFlagH == (1 | 2) || self->collisionFlagV == (1 | 2))
+            self->deathType = PLAYER_DEATH_DIE_USESFX;
 
         self->collisionFlagH = 0;
         self->collisionFlagV = 0;
@@ -142,7 +142,7 @@ void Player_LateUpdate(void)
         self->leaderPos.y = self->position.y >> 0x10 << 0x10;
     }
 
-    if (self->hurtFlag) {
+    if (self->deathType) {
         self->abilityValues[0] = 0;
 #if RETRO_USE_PLUS
         if (!self->sidekick)
@@ -185,11 +185,11 @@ void Player_LateUpdate(void)
         Player_ChangePhysicsState(self);
         destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield));
 
-        switch (self->hurtFlag) {
+        switch (self->deathType) {
             default: break;
-            case HURTFLAG_HURT: RSDK.PlaySfx(Player->sfxHurt, false, 255);
-            case HURTFLAG_DIE:
-                self->hurtFlag   = HURTFLAG_NONE;
+            case PLAYER_DEATH_DIE_USESFX: RSDK.PlaySfx(Player->sfxHurt, false, 255);
+            case PLAYER_DEATH_DIE_NOSFX:
+                self->deathType  = PLAYER_DEATH_NONE;
                 self->velocity.y = -0x68000;
                 self->state      = Player_State_Die;
                 if (!(self->drawFX & FX_SCALE) || self->scale.x == 0x200)
@@ -224,8 +224,8 @@ void Player_LateUpdate(void)
                     }
                 }
                 break;
-            case HURTFLAG_DROWN:
-                self->hurtFlag        = HURTFLAG_NONE;
+            case PLAYER_DEATH_DROWN:
+                self->deathType       = PLAYER_DEATH_NONE;
                 self->gravityStrength = 0x1000;
                 self->velocity.y      = 0;
                 RSDK.PlaySfx(Water->sfxDrown, false, 255);
@@ -235,30 +235,16 @@ void Player_LateUpdate(void)
                         Music_ResumePrevTrack(TRACK_DROWNING, false);
                     }
 #if RETRO_USE_PLUS
-                    else if (globals->gameMode != MODE_ENCORE) {
-#else
-                    else {
-#endif
-                        SceneInfo->timeEnabled = false;
-
-                        if (self->camera) {
-                            self->scrollDelay   = 2;
-                            self->camera->state = StateMachine_None;
-                        }
-                    }
-#if RETRO_USE_PLUS
-                    else {
+                    else if (globals->gameMode == MODE_ENCORE) {
                         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (globals->stock == 0 && !sidekick->objectID) {
                             SceneInfo->timeEnabled = false;
                         }
-
-                        if (self->camera) {
-                            self->scrollDelay   = 2;
-                            self->camera->state = StateMachine_None;
-                        }
                     }
 #endif
+                    else {
+                        SceneInfo->timeEnabled = false;
+                    }
                 }
                 if (self->camera) {
                     self->scrollDelay   = 2;
@@ -3105,9 +3091,9 @@ void Player_HandleRollDeceleration(void)
 }
 void Player_Hit(EntityPlayer *player)
 {
-    uint8 flag = 0;
+    uint8 hurtType = PLAYER_HURT_NONE;
     if (player->sidekick) {
-        flag = 1;
+        hurtType = PLAYER_HURT_HASSHIELD;
     }
     else {
         int32 entityID       = RSDK.GetEntityID(player);
@@ -3115,10 +3101,10 @@ void Player_Hit(EntityPlayer *player)
         if (shield->objectID == Shield->objectID) {
             player->shield = SHIELD_NONE;
             destroyEntity(shield);
-            flag = 1;
+            hurtType = PLAYER_HURT_HASSHIELD;
         }
         else {
-            flag = (player->rings <= 0) + 2;
+            hurtType = (player->rings <= 0) + PLAYER_HURT_RINGLOSS;
         }
         if (!Player->gotHit[player->playerID])
             Player->gotHit[player->playerID] = true;
@@ -3130,14 +3116,14 @@ void Player_Hit(EntityPlayer *player)
         globals->coolBonus[player->playerID] -= 1000;
     }
 
-    switch (flag) {
+    switch (hurtType) {
         default: break;
-        case 1: // Hurt, no rings (shield/p2/etc)
+        case PLAYER_HURT_HASSHIELD: // Hurt, no rings (shield/p2/etc)
             player->state = Player_State_Hit;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             player->velocity.y     = -0x40000;
-            player->onGround       = 0;
-            player->tileCollisions = 1;
+            player->onGround       = false;
+            player->tileCollisions = true;
             player->blinkTimer     = 120;
             if (player->underwater) {
                 player->velocity.x >>= 1;
@@ -3145,12 +3131,12 @@ void Player_Hit(EntityPlayer *player)
             }
             RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
             break;
-        case 2: // Hurt, lost rings
+        case PLAYER_HURT_RINGLOSS: // Hurt, lost rings
             player->state = Player_State_Hit;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             player->velocity.y     = -0x40000;
-            player->onGround       = 0;
-            player->tileCollisions = 1;
+            player->onGround       = false;
+            player->tileCollisions = true;
             player->blinkTimer     = 120;
             if (player->underwater) {
                 player->velocity.x >>= 1;
@@ -3166,14 +3152,14 @@ void Player_Hit(EntityPlayer *player)
             player->ringExtraLife = 100;
             RSDK.PlaySfx(Player->sfxLoseRings, false, 0xFF);
             break;
-        case 3: // Hurt, dies.
-            player->hurtFlag = HURTFLAG_DIE;
+        case PLAYER_HURT_DIE: // Hurt, dies.
+            player->deathType = PLAYER_DEATH_DIE_NOSFX;
             break;
     }
 }
 bool32 Player_CheckValidState(EntityPlayer *player)
 {
-    if (player->objectID == Player->objectID && !player->hurtFlag) {
+    if (player->objectID == Player->objectID && !player->deathType) {
         if (player->state != Player_State_EncoreRespawn && player->state != Player_State_Die && player->state != Player_State_Drown
             && player->state != Player_State_StartJumpIn && player->state != Player_State_FlyIn && player->state != Player_State_JumpIn
             && player->state != Player_State_Transform) {
@@ -4176,6 +4162,7 @@ void Player_State_Drown(void)
             int32 y = self->camera->position.y + 0x1000000;
             if (self->position.y > y)
                 self->position.y = y;
+            self->scrollDelay = 2;
         }
     }
     if (self->velocity.y > 0x100000)

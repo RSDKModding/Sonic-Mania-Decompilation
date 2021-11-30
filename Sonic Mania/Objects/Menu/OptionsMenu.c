@@ -253,7 +253,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.top    = -(controlsControl_Win->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17
             && button->frameID == 1) {
-            button->actionCB = OptionsMenu_Unknown22;
+            button->actionCB = OptionsMenu_SetDefaultMappings;
         }
 
         posX          = videoControl_Win->startPos.x - videoControl_Win->cameraOffset.x;
@@ -494,46 +494,42 @@ void OptionsMenu_Unknown15(void)
 void OptionsMenu_Unknown16(void) { UIControl_MatchMenuTag("Sound"); }
 void OptionsMenu_Unknown17(void) { UIControl_MatchMenuTag("Language"); }
 void OptionsMenu_Unknown18(void) { UIControl_MatchMenuTag("Data Options"); }
-void OptionsMenu_Unknown19(void) { UIControl_MatchMenuTag("Controls WIN"); }
-void OptionsMenu_Unknown20(void) { UIControl_MatchMenuTag("Controls XB1"); }
+void OptionsMenu_TransitionToKeyboard_CB(void) { UIControl_MatchMenuTag("Controls WIN"); }
+void OptionsMenu_TransitionToDefaultController_CB(void) { UIControl_MatchMenuTag("Controls XB1"); }
 
 void OptionsMenu_Unknown21(void)
 {
     int32 id   = RSDK.MostRecentActiveControllerID(1, 0, 5);
-    int32 type = RSDK.GetControllerType(id);
+    int32 gamepadType = RSDK.GetControllerType(id);
 
     TextInfo info;
     INIT_TEXTINFO(info);
 
-    if ((type & 0xFF00) == 256) {
-        UITransition_StartTransition(OptionsMenu_Unknown19, 0);
-    }
-    else if ((type & 0xFF00) == 1024) {
-        if (!API.Unknown4(id)) {
-            Localization_GetString(&info, STR_STEAMOVERLAYUNAVALIABLE);
-            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-            if (dialog) {
-                UIDialog_AddButton(DIALOG_OK, dialog, NULL, true);
-                UIDialog_Setup(dialog);
+    switch ((gamepadType >> 8) & 0xFF) {
+        default:
+            switch (gamepadType & 0xFF) {
+                case DEVICE_XBOX: UITransition_SetNewTag("Controls XB1"); break;
+                case DEVICE_PS4: UITransition_SetNewTag("Controls PS4"); break;
+                case DEVICE_SATURN: UITransition_SetNewTag("Controls WIN"); break;
+                case DEVICE_SWITCH_HANDHELD: UITransition_SetNewTag("Controls NX"); break;
+                case DEVICE_SWITCH_JOY_GRIP: UITransition_SetNewTag("Controls NX Grip"); break;
+                case DEVICE_SWITCH_JOY_L:
+                case DEVICE_SWITCH_JOY_R: UITransition_SetNewTag("Controls NX Joycon"); break;
+                case DEVICE_SWITCH_PRO: UITransition_SetNewTag("Controls NX Pro"); break;
+                default: UITransition_StartTransition(OptionsMenu_TransitionToDefaultController_CB, 0); break;
             }
-        }
-    }
-    else {
-        switch (type) {
-            case 1: UITransition_SetNewTag("Controls XB1"); break;
-            case 2: UITransition_SetNewTag("Controls PS4"); break;
-            case 3: UITransition_SetNewTag("Controls WIN"); break;
-            case 4: UITransition_SetNewTag("Controls NX"); break;
-            case 5: UITransition_SetNewTag("Controls NX Grip"); break;
-            case 6:
-            case 7: UITransition_SetNewTag("Controls NX Joycon"); break;
-            case 8: UITransition_SetNewTag("Controls NX Pro"); break;
-            default: UITransition_StartTransition(OptionsMenu_Unknown20, 0); break;
-        }
+            break;
+        case DEVICE_TYPE_KEYBOARD: UITransition_StartTransition(OptionsMenu_TransitionToKeyboard_CB, 0); break;
+        case DEVICE_TYPE_STEAMOVERLAY:
+            if (!API.IsOverlayEnabled(id)) {
+                Localization_GetString(&info, STR_STEAMOVERLAYUNAVALIABLE);
+                UIDialog_CreateDialogOk(&info, StateMachine_None, true);
+            }
+            break;
     }
 }
 
-void OptionsMenu_Unknown22(void)
+void OptionsMenu_SetDefaultMappings(void)
 {
     ControllerInfo[1].keyUp.keyMap     = 38;
     ControllerInfo[1].keyDown.keyMap   = 40;

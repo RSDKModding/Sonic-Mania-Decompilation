@@ -6,7 +6,6 @@ void DebugMode_Update(void)
 {
     RSDK_THIS(DebugMode);
 
-    bool32 flag = false;
     // Disables Achievements
 #if RETRO_USE_PLUS
     API.SetAchievementStatus(false);
@@ -14,27 +13,30 @@ void DebugMode_Update(void)
     if (!APICallback->achievementsDisabled)
         APICallback->achievementsDisabled = true;
 #endif
+
     //if (Zone)
     //    Zone->stageFinishCallback = NULL;
+
+    bool32 moved = false;
     if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDelta > 0.3)) {
         self->position.y -= self->velocity.y;
-        flag = true;
+        moved = true;
     }
     else if (ControllerInfo[CONT_P1].keyDown.down || (AnalogStickInfoL[CONT_P1].vDelta < -0.3)) {
         self->position.y += self->velocity.y;
-        flag = true;
+        moved = true;
     }
 
     if (ControllerInfo[CONT_P1].keyLeft.down || (AnalogStickInfoL[CONT_P1].hDelta < -0.3)) {
         self->position.x -= self->velocity.y;
-        flag = true;
+        moved = true;
     }
     else if (ControllerInfo[CONT_P1].keyRight.down || (AnalogStickInfoL[CONT_P1].hDelta > 0.3)) {
         self->position.x += self->velocity.y;
-        flag = true;
+        moved = true;
     }
 
-    if (!flag) {
+    if (!moved) {
         self->velocity.y = 0;
     }
     else {
@@ -68,7 +70,7 @@ void DebugMode_Update(void)
         player->interaction         = true;
         player->visible             = true;
         player->drawOrder           = Zone->playerDrawLow;
-        SceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled      = true;
         if (SceneInfo->minutes == 9 && SceneInfo->seconds == 59 && SceneInfo->milliseconds == 99) {
             SceneInfo->minutes      = 0;
             SceneInfo->seconds      = 0;
@@ -131,6 +133,7 @@ void DebugMode_StageLoad(void)
 }
 
 void DebugMode_NullState(void) {}
+
 void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
 {
     if (DebugMode->itemCount < DebugMode_ObjectLimit) {

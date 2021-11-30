@@ -7,7 +7,7 @@ void UIButtonLabel_Update(void)
     RSDK_THIS(UIButtonLabel);
 
     if (self->textSprite != UIWidgets->textFrames) {
-        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator2, true, self->frameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
         self->textSprite = UIWidgets->textFrames;
     }
 }
@@ -23,8 +23,8 @@ void UIButtonLabel_Draw(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->frameAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 }
 
 void UIButtonLabel_Create(void *data)
@@ -36,8 +36,8 @@ void UIButtonLabel_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->animator1, true, self->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator2, true, self->frameID);
+    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->frameAnimator, true, self->type);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
     self->textSprite = UIWidgets->textFrames;
 }
 
@@ -52,8 +52,8 @@ void UIButtonLabel_EditorDraw(void)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->animator1, true, self->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator2, true, self->frameID);
+    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->frameAnimator, true, self->type);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
     self->textSprite = UIWidgets->textFrames;
 
     UIButtonLabel_Draw();

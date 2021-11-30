@@ -13,7 +13,7 @@ void SpiralPlatform_Update(void)
     {
         if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitbox) == C_BOTTOM) {
             if (player->onGround && !player->collisionMode)
-                player->hurtFlag = 1;
+                player->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
 }

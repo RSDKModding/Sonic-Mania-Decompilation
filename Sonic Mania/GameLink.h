@@ -470,9 +470,11 @@ typedef enum {
 } ControllerIDs;
 
 typedef enum {
-    DEVICE_TYPE_UNKNOWN    = 0,
-    DEVICE_TYPE_KEYBOARD   = 1,
-    DEVICE_TYPE_CONTROLLER = 2,
+    DEVICE_TYPE_NONE         = 0,
+    DEVICE_TYPE_KEYBOARD     = 1,
+    DEVICE_TYPE_CONTROLLER   = 2,
+    DEVICE_TYPE_UNKNOWN3     = 3,
+    DEVICE_TYPE_STEAMOVERLAY = 4,
 } InputDeviceTypes;
 
 typedef enum {
@@ -480,12 +482,20 @@ typedef enum {
     DEVICE_XBOX            = 1,
     DEVICE_PS4             = 2,
     DEVICE_SATURN          = 3,
-    DEVICE_SWITCH          = 4,
-    DEVICE_SWITCH_PRO      = 5,
+    DEVICE_SWITCH_HANDHELD = 4,
+    DEVICE_SWITCH_JOY_GRIP = 5,
     DEVICE_SWITCH_JOY_L    = 6,
     DEVICE_SWITCH_JOY_R    = 7,
-    DEVICE_SWITCH_JOY_GRIP = 8,
+    DEVICE_SWITCH_PRO      = 8,
 } InputDeviceIDs;
+
+typedef enum {
+    DEVICE_FLAG_NONE         = 0,
+    DEVICE_FLAG_UNKNOWN1     = 1,
+    DEVICE_FLAG_UNKNOWN2     = 2,
+    DEVICE_FLAG_UNKNOWN3     = 3,
+    DEVICE_FLAG_STEAMOVERLAY = 4,
+} InputDeviceFlags;
 
 typedef enum {
     ALIGN_LEFT,

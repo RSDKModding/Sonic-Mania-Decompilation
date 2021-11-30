@@ -61,7 +61,7 @@ typedef enum {
     ANI_SWIM,
     ANI_SWIMTIRED,
     ANI_SWIMLIFT,
-} PLAYER_ANI;
+} PlayerAnimationIDs;
 
 typedef enum {
     CHAR_NONE,
@@ -83,11 +83,18 @@ typedef enum {
 } ShieldTypes;
 
 typedef enum {
-    HURTFLAG_NONE,
-    HURTFLAG_HURT,
-    HURTFLAG_DIE,
-    HURTFLAG_DROWN,
-} HurtFlags;
+    PLAYER_DEATH_NONE,
+    PLAYER_DEATH_DIE_USESFX,
+    PLAYER_DEATH_DIE_NOSFX,
+    PLAYER_DEATH_DROWN,
+} DeathTypes;
+
+typedef enum {
+    PLAYER_HURT_NONE,
+    PLAYER_HURT_HASSHIELD,
+    PLAYER_HURT_RINGLOSS,
+    PLAYER_HURT_DIE,
+} HurtTypes;
 
 typedef enum {
     SUPERSTATE_NONE,
@@ -392,7 +399,7 @@ typedef struct {
     int32 flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;
-    uint8 hurtFlag;
+    uint8 deathType;
     bool32 forceJumpIn;
 #if RETRO_USE_PLUS
     bool32 isGhost;

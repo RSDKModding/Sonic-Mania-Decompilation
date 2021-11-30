@@ -728,7 +728,7 @@ void LoadXMLObjects()
                 }
             }
             else {
-                printLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
@@ -781,7 +781,7 @@ void LoadXMLSoundFX()
                 }
             }
             else {
-                printLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
@@ -892,7 +892,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                 }
             }
             else {
-                printLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
+                PrintLog(PRINT_NORMAL, "Failed to parse Game.xml File!");
             }
 
             delete[] xmlData;
@@ -1136,7 +1136,7 @@ void InitScriptSystem()
 #endif
 
         if (!linked) {
-            printLog(PRINT_POPUP, "Failed to link game logic!");
+            PrintLog(PRINT_POPUP, "Failed to link game logic!");
         }
     }
     else {
@@ -1151,7 +1151,7 @@ void InitScriptSystem()
         for (modLinkSTD ptr : modList[m].linkModLogic) {
             if (!ptr(&info, modList[m].folder.c_str())) {
                 modList[m].active = false;
-                printLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].folder.c_str());
+                PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].folder.c_str());
             }
         }
     }

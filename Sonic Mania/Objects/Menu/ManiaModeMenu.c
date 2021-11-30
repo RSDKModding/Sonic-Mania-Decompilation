@@ -189,7 +189,7 @@ void ManiaModeMenu_ReturnToTitle(void)
 void ManiaModeMenu_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
-    self->fadeTimer = self->timer << ((self->field_68 & 0xFF) - 1);
+    self->fadeTimer = self->timer << ((self->fadeShift & 0xFF) - 1);
     if (self->fadeTimer >= 512)
         self->fadeTimer = 512;
     else if (self->fadeTimer < 0)

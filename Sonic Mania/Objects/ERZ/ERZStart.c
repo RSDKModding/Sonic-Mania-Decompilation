@@ -638,8 +638,8 @@ bool32 ERZStart_CutsceneState_Fight(EntityCutsceneSeq *host)
         if (!king->health && !eggman->health)
             return true;
     }
-    else if (player1->hurtFlag != 1) {
-        player1->hurtFlag = 1;
+    else if (player1->deathType != PLAYER_DEATH_DIE_USESFX) {
+        player1->deathType = PLAYER_DEATH_DIE_USESFX;
     }
     return false;
 }

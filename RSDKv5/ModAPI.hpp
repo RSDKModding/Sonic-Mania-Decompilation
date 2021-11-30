@@ -57,6 +57,7 @@ typedef enum {
     ModTable_ForeachConfig,
     ModTable_ForeachConfigCategory,
     ModTable_GetObject,
+    ModTable_RegisterAchievement,
     ModTable_Max
 } ModFunctionTable;
 
@@ -148,6 +149,7 @@ void Super(int32 objectID, ModSuper callback, void *data);
 
 Object *GetObject(const char *name);
 
+void RegisterAchievement(const char *identifier, const char *name, const char *desc);
 #endif
 
 #endif // !MOD_API_H

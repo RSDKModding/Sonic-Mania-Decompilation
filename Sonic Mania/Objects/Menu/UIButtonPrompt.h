@@ -3,6 +3,22 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIBUTTONPROMPT_NONE,
+    UIBUTTONPROMPT_KEYBOARD,
+    UIBUTTONPROMPT_XBOX,
+    UIBUTTONPROMPT_PS4,
+    UIBUTTONPROMPT_SWITCH,
+    UIBUTTONPROMPT_SATURN_BLACK,
+    UIBUTTONPROMPT_SATURN_WHITE,
+    UIBUTTONPROMPT_JOYCON_L,
+    UIBUTTONPROMPT_JOYCON_R,
+    UIBUTTONPROMPT_KEYBOARD_FR,
+    UIBUTTONPROMPT_KEYBOARD_IT,
+    UIBUTTONPROMPT_KEYBOARD_GE,
+    UIBUTTONPROMPT_KEYBOARD_SP,
+}UIButtonPromptTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -21,20 +37,20 @@ typedef struct {
     int32 promptID;
     int32 buttonID;
     uint8 headingAnchor;
-    int32 field_78;
+    int32 unused;
     int32 prevPrompt;
     int32 prevButton;
     int32 mappings;
-    bool32 flag;
+    bool32 textVisible;
     int32 scaleMax;
     int32 scaleSpeed;
-    int32 field_94;
+    bool32 disableScale;
     Vector2 touchSize;
     Vector2 touchPos;
     bool32 touched;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator decorAnimator;
+    Animator buttonAnimator;
+    Animator promptAnimator;
     uint16 textSprite;
 } EntityUIButtonPrompt;
 
@@ -60,8 +76,8 @@ int32 UIButtonPrompt_GetGamepadType(void);
 uint8 UIButtonPrompt_MappingsToFrame(int32 mappings);
 
 bool32 UIButtonPrompt_CheckTouch(void);
-void UIButtonPrompt_Unknown4(void);
-void UIButtonPrompt_Unknown6(void);
-void UIButtonPrompt_Unknown7(void);
+void UIButtonPrompt_SetButtonSprites(void);
+void UIButtonPrompt_State_CheckIfSelected(void);
+void UIButtonPrompt_State_Selected(void);
 
 #endif //!OBJ_UIBUTTONPROMPT_H

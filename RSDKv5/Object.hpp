@@ -227,7 +227,7 @@ inline void SetEditableVar(byte type, const char *name, byte object, int offset)
 }
 
 void SetActiveVariable(int objectID, const char *name);
-void AddEnumVar(const char *name);
+void AddEnumVariable(const char *name);
 
 void InitObjects();
 void ProcessObjects();

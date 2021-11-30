@@ -64,7 +64,7 @@ typedef struct {
     StateMachine(stateDelay);
     int32 timer;
     int32 delay;
-    int32 field_68;
+    int32 fadeShift;
     int32 fadeTimer;
     int32 fadeColour;
 } EntityMenuSetup;

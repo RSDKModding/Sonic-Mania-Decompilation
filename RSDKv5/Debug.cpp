@@ -20,7 +20,7 @@ DebugValueInfo debugValues[DEBUGVAL_MAX];
 
 DevMenu devMenu = DevMenu();
 
-void printLog(SeverityModes severity, const char *message, ...)
+void PrintLog(SeverityModes severity, const char *message, ...)
 {
 #ifndef RETRO_DISABLE_LOG
     if (engineDebugMode) {
@@ -139,10 +139,10 @@ void PrintMessage(void *msg, int type)
 {
     if (msg && engine.printConsole) {
         switch (type) {
-            case 0: printLog(PRINT_NORMAL, "%s", (const char *)msg); break;
-            case 1: printLog(PRINT_NORMAL, "%i", *(signed int *)msg); break;
-            case 2: printLog(PRINT_NORMAL, "%i", *(int *)msg, 0); break;
-            case 3: printLog(PRINT_NORMAL, "%f", *(float *)msg); break;
+            case 0: PrintLog(PRINT_NORMAL, "%s", (const char *)msg); break;
+            case 1: PrintLog(PRINT_NORMAL, "%i", *(signed int *)msg); break;
+            case 2: PrintLog(PRINT_NORMAL, "%i", *(int *)msg, 0); break;
+            case 3: PrintLog(PRINT_NORMAL, "%f", *(float *)msg); break;
             default: break;
         }
     }

@@ -445,7 +445,7 @@ void DiveEggman_State2_Unknown3(void)
                     }
                     else {
                         if (player1->rings <= 0) {
-                            player1->hurtFlag = 1;
+                            player1->deathType = PLAYER_DEATH_DIE_USESFX;
                             RSDK.PlaySfx(Player->sfxHurt, false, 255);
                             ScrewMobile->shouldPlayFanSfx = 0;
                         }

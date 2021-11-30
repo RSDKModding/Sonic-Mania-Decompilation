@@ -94,7 +94,7 @@ void Competition_State_Manager(void)
                     if (!self->playerFlags[p]) {
                         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
                         if (player->objectID == Player->objectID) {
-                            player->hurtFlag = true;
+                            player->deathType = PLAYER_DEATH_DIE_USESFX;
                         }
                     }
                 }
@@ -110,7 +110,7 @@ void Competition_State_Manager(void)
             for (int32 p = 0; p < Player->playerCount; ++p) {
                 if (!self->playerFlags[p]) {
                     EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-                    player->hurtFlag     = 1;
+                    player->deathType     = PLAYER_DEATH_DIE_USESFX;
                     self->state        = StateMachine_None;
                 }
             }

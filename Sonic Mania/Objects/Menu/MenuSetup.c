@@ -171,7 +171,7 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay)
     EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
     menuSetup->active          = ACTIVE_ALWAYS;
     menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
+    menuSetup->fadeShift       = 5;
     menuSetup->delay           = delay;
 #if RETRO_USE_PLUS
     menuSetup->state = ManiaModeMenu_State_HandleTransition;
@@ -187,7 +187,7 @@ void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay)
     EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
     menuSetup->active          = ACTIVE_ALWAYS;
     menuSetup->fadeColour      = 0x000000;
-    menuSetup->field_68        = 5;
+    menuSetup->fadeShift       = 5;
     menuSetup->delay           = delay;
     menuSetup->state           = MenuSetup_Leaderboard_Unknown;
     menuSetup->stateDelay      = callback;
@@ -978,7 +978,7 @@ void MenuSetup_ExitGame_CB(void)
 void MenuSetup_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
-    self->fadeTimer = self->timer << ((self->field_68 & 0xFF) - 1);
+    self->fadeTimer = self->timer << ((self->fadeShift & 0xFF) - 1);
     if (self->fadeTimer >= 512)
         self->fadeTimer = 512;
     else if (self->fadeTimer < 0)

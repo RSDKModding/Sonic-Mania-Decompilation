@@ -34,7 +34,8 @@ void PhantomRuby_Create(void *data)
 {
     RSDK_THIS(PhantomRuby);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderHigh;
+    if (!SceneInfo->inEditor)
+        self->drawOrder = Zone->drawOrderHigh;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = true;

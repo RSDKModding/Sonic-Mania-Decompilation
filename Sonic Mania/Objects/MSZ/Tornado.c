@@ -194,7 +194,7 @@ void Tornado_HandlePlayerCollisions(void)
         if (player1->objectID == Player->objectID) {
             int32 deathBounds = (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16));
             if (player1->position.y > deathBounds)
-                player1->hurtFlag = 1;
+                player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
 }
@@ -350,7 +350,7 @@ void Tornado_Unknown6(void)
 
         if (player1->objectID == Player->objectID) {
             if (player1->position.y > (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16)))
-                player1->hurtFlag = 1;
+                player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
     if (player1->state == Player_State_TailsFlight) {

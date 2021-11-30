@@ -10,6 +10,12 @@ int32 InputDeviceCount = 0;
 int32 activeControllers[PLAYER_COUNT];
 InputDevice *activeInputDevices[PLAYER_COUNT];
 
+int buttonStates[KEY_MAX];
+int prevButtonStates[KEY_MAX];
+
+int analogStates[2][KEY_MAX];
+int prevAnalogStates[2][KEY_MAX];
+
 ControllerState controller[PLAYER_COUNT + 1];
 AnalogState stickL[PLAYER_COUNT + 1];
 AnalogState stickR[PLAYER_COUNT + 1];
@@ -382,6 +388,7 @@ void UpdateKeyboardInput(InputDevice *device)
         if (keyState[winAPIToSDLMappings(buttons[i]->keyMap)]) {
             device->anyPress |= true;
             confirmPress |= (i == 4 || i == 10);
+            buttonStates[i]++;
         }
     }
 
@@ -396,7 +403,7 @@ void UpdateKeyboardInput(InputDevice *device)
         device->inactiveTimer[1]++;
 
 #if !RETRO_REV02
-    if (device->anyPress || confirmPress)
+    if (device->anyPress)
         mostRecentControllerID = device->controllerID;
 #endif
 
@@ -417,8 +424,106 @@ void UpdateDeviceInput(InputDevice *device)
         if (getControllerButton(device, buttonMap[i])) {
             device->anyPress |= true;
             confirmPress |= (i == 4 || i == 10);
+            buttonStates[i]++;
         }
     }
+
+    
+
+    InputDeviceSDL *sdlDevice = (InputDeviceSDL *)device;
+    int delta                 = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTX);
+    float hDeltaL             = 0;
+    if (delta < 0)
+        hDeltaL = -normalize(-delta, 1, 32768);
+    else
+        hDeltaL = normalize(delta, 0, 32767);
+
+    delta         = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_LEFTY);
+    float vDeltaL = 0;
+    if (delta < 0)
+        vDeltaL = -normalize(-delta, 1, 32768);
+    else
+        vDeltaL = normalize(delta, 0, 32767);
+    vDeltaL = -vDeltaL;
+
+    delta         = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTX);
+    float hDeltaR = 0;
+    if (delta < 0)
+        hDeltaR = -normalize(-delta, 1, 32768);
+    else
+        hDeltaR = normalize(delta, 0, 32767);
+
+    delta = SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_RIGHTY);
+    float vDeltaR = 0;
+    if (delta < 0)
+        vDeltaR = -normalize(-delta, 1, 32768);
+    else
+        vDeltaR = normalize(delta, 0, 32767);
+    vDeltaR = -vDeltaR;
+
+    float deltaTriggerL = normalize(SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERLEFT), 0, 32767);
+    float deltaTriggerR = normalize(SDL_GameControllerGetAxis(sdlDevice->controllerPtr, SDL_CONTROLLER_AXIS_TRIGGERRIGHT), 0, 32767);
+
+    if (vDeltaL > stickL[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[0][KEY_UP]++;
+    }
+
+    if (vDeltaL < -stickL[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[0][KEY_DOWN]++;
+    }
+
+    if (hDeltaL < -stickL[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[0][KEY_LEFT]++;
+    }
+
+    if (hDeltaL > stickL[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[0][KEY_RIGHT]++;
+    }
+
+    if (vDeltaR > stickR[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[1][KEY_UP]++;
+    }
+
+    if (vDeltaR < -stickR[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[1][KEY_DOWN]++;
+    }
+
+    if (hDeltaR < -stickR[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[1][KEY_LEFT]++;
+    }
+
+    if (hDeltaR > stickR[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[1][KEY_RIGHT]++;
+    }
+
+    if (deltaTriggerL < -triggerL[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[0][KEY_X]++;
+    }
+
+    if (deltaTriggerL > triggerL[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[0][KEY_Y]++;
+    }
+
+    if (deltaTriggerR < -triggerR[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[1][KEY_X]++;
+    }
+
+    if (deltaTriggerR > triggerR[CONT_ANY].deadzone) {
+        device->anyPress |= true;
+        analogStates[1][KEY_Y]++;
+    }
+
 
     if (device->anyPress)
         device->inactiveTimer[0] = 0;
@@ -458,11 +563,13 @@ void ProcessKeyboardInput(InputDevice *device, int32 controllerID)
         }
     }
 
+    uint8 keyboardID = (device->gamePadType & 0xFF);
+
     int *mappings[] = {
-        &controller[controllerID].keyUp.keyMap,    &controller[controllerID].keyDown.keyMap,  &controller[controllerID].keyLeft.keyMap,
-        &controller[controllerID].keyRight.keyMap, &controller[controllerID].keyA.keyMap,     &controller[controllerID].keyB.keyMap,
-        &controller[controllerID].keyC.keyMap,     &controller[controllerID].keyX.keyMap,     &controller[controllerID].keyY.keyMap,
-        &controller[controllerID].keyZ.keyMap,     &controller[controllerID].keyStart.keyMap, &controller[controllerID].keySelect.keyMap,
+        &controller[keyboardID].keyUp.keyMap,    &controller[keyboardID].keyDown.keyMap,  &controller[keyboardID].keyLeft.keyMap,
+        &controller[keyboardID].keyRight.keyMap, &controller[keyboardID].keyA.keyMap,     &controller[keyboardID].keyB.keyMap,
+        &controller[keyboardID].keyC.keyMap,     &controller[keyboardID].keyX.keyMap,     &controller[keyboardID].keyY.keyMap,
+        &controller[keyboardID].keyZ.keyMap,     &controller[keyboardID].keyStart.keyMap, &controller[keyboardID].keySelect.keyMap,
     };
 
     for (int i = 0; i < KEY_MAX; i++) {
@@ -627,14 +734,14 @@ InputDevice *InitKeyboardDevice(uint32 id)
 
     InputDeviceCount++;
     device->gamePadType = (DEVICE_FLAG_UNKNOWN1 << 16) | (DEVICE_TYPE_KEYBOARD << 8) | (DEVICE_KEYBOARD << 0);
-    device->field_F     = 0;
+    device->field_F     = false;
     device->inputID     = id;
     device->active      = true;
 
     for (int i = 0; i < 4; ++i) {
         if (activeControllers[i] == id) {
             activeInputDevices[i]        = device;
-            device->assignedControllerID = true;
+            device->assignedControllerID = 0;
         }
     }
     return device;
@@ -651,6 +758,7 @@ void StartupKeyboardInput()
         InputDevice *device = InitKeyboardDevice(id);
         if (device) {
             device->controllerID = i;
+            //add the keyboard "device" id to the type as its lowest byte
             device->gamePadType |= i + 1;
             device->updateInput  = UpdateKeyboardInput;
             device->processInput = ProcessKeyboardInput;
@@ -681,7 +789,7 @@ void InitInputDevice()
         // SDL_GameControllerAddMapping()
         int nummaps = SDL_GameControllerAddMappingsFromFile(buffer);
         if (nummaps >= 0)
-            printLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
+            PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
     }
 #endif
 
@@ -693,13 +801,18 @@ void InitInputDevice()
     StartupKeyboardInput();
 
     for (int c = 0; c < gamePadCount; ++c) {
-        //printLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[c].name, gamePadMappings[c].vendorID,
+        //PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[c].name, gamePadMappings[c].vendorID,
         //         gamePadMappings[c].productID);
     }
 }
 
 void ClearInput()
 {
+    memcpy(prevButtonStates, buttonStates, sizeof(buttonStates));
+    memset(buttonStates, 0, sizeof(buttonStates));
+    memcpy(prevAnalogStates, analogStates, sizeof(analogStates));
+    memset(analogStates, 0, sizeof(analogStates));
+
     for (int i = 0; i <= PLAYER_COUNT; ++i) {
         if (i != 0 && activeControllers[i - 1] == CONT_UNASSIGNED)
             continue;
@@ -788,27 +901,27 @@ void ProcessInput()
     InputState *anyRTrigger[] = { &triggerR[0].keyL, &triggerR[0].keyR };
 
     for (int i = 0; i < 12; ++i) {
-        anyController[i]->press = false;
-        anyController[i]->down  = false;
+        anyController[i]->press = buttonStates[i] && !prevButtonStates[i];
+        anyController[i]->down  = buttonStates[i];
     }
 
     for (int i = 0; i < 5; ++i) {
-        anyLStick[i]->press = false;
-        anyLStick[i]->down  = false;
+        anyLStick[i]->press = analogStates[0][i] && !prevAnalogStates[0][i];
+        anyLStick[i]->down  = analogStates[0][i];
 
-        anyRStick[i]->press = false;
-        anyRStick[i]->down  = false;
+        anyRStick[i]->press = analogStates[1][i];
+        anyRStick[i]->down  = analogStates[1][i] && !prevAnalogStates[1][i];
     }
 
     for (int i = 0; i < 2; ++i) {
-        anyLTrigger[i]->press = false;
-        anyLTrigger[i]->down  = false;
+        anyLTrigger[i]->press = analogStates[0][KEY_X + i] && !prevAnalogStates[0][KEY_X + i];
+        anyLTrigger[i]->down  = analogStates[0][KEY_X + i];
 
-        anyRTrigger[i]->press = false;
-        anyRTrigger[i]->down  = false;
+        anyRTrigger[i]->press = analogStates[1][KEY_X + i];
+        anyRTrigger[i]->down  = analogStates[1][KEY_X + i] && !prevAnalogStates[1][KEY_X + i];
     }
 
-    for (int c = 1; c < PLAYER_COUNT + 1; ++c) {
+    for (int c = 1; c <= PLAYER_COUNT; ++c) {
         InputState *cont[] = {
             &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
             &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,
@@ -911,7 +1024,7 @@ void HandleSpecialKeys()
 }
 #endif
 
-int32 GetGamePadType(int32 inputID)
+int32 GetControllerType(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
@@ -919,5 +1032,5 @@ int32 GetGamePadType(int32 inputID)
         }
     }
 
-    return ControllerUnknown();
+    return GetDefaultGamepadType();
 }

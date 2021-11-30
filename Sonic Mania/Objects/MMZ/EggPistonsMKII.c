@@ -144,7 +144,7 @@ void EggPistonsMKII_CheckPlayerCollisions_Piston(void)
             player->position.y &= 0xFFFF0000;
         }
         else if (side == C_BOTTOM && player->onGround)
-            player->hurtFlag = 1;
+            player->deathType = PLAYER_DEATH_DIE_USESFX;
     }
 
     self->position.y += self->velocity.y;
@@ -207,7 +207,7 @@ void EggPistonsMKII_HandlePlayerCollisions(void)
     {
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
             if (player->onGround)
-                player->hurtFlag = 1;
+                player->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
 }

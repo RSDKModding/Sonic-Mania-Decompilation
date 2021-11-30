@@ -373,7 +373,7 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
                         modeButton->touchPosEnd.x      = 0;
                         modeButton->touchPosEnd.y      = -0x120000;
                         if (modeButton->textFrames != UIWidgets->textFrames || modeButton->wasDisabled != modeButton->disabled) {
-                            UIModeButton_Unknown1();
+                            UIModeButton_SetupSprites();
                             modeButton->textFrames  = UIWidgets->textFrames;
                             modeButton->wasDisabled = modeButton->disabled;
                         }

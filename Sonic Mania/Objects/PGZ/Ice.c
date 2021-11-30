@@ -825,7 +825,7 @@ void Ice_State_Pillar(void)
                             Ice_Shatter(self, 0, 0);
                             foreach_return;
                         }
-                        player->hurtFlag = 1;
+                        player->deathType = PLAYER_DEATH_DIE_USESFX;
                     }
                 }
                 else if (side == 1 && player->velocity.y >= 0) {

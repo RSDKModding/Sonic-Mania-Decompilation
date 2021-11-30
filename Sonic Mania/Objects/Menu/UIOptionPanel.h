@@ -19,13 +19,11 @@ typedef struct {
     int32 botFrameID;
     bool32 botAlignRight;
     bool32 botHidden;
-    int32 field_74;
-    int32 field_78;
-    Vector2 field_7C;
+    Vector2 startPos;
+    Vector2 size;
     Vector2 drawPosTop;
     Vector2 drawPosBottom;
-    int32 field_94;
-    int32 field_98;
+    Hitbox hitbox;
     Animator animator;
     Animator animator2;
     uint16 textFrames;

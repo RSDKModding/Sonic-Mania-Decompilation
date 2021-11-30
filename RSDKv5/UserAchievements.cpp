@@ -9,18 +9,18 @@ std::vector<int> achievementStack;
 DummyAchievements *achievements = NULL;
 #endif
 
-void ClearAchievements() { printLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
+void ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
 
 void TryUnlockAchievement(const char *name)
 {
-    printLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
+    PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
     int i = 0;
     for (; i < (int)achievementList.size(); ++i) {
         if (strcmp(name, achievementList[i].identifier) == 0) {
             if (!achievementList[i].achieved) {
                 achievementStack.push_back(i);
-                printLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
+                PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
                 achievementList[i].achieved = true;
                 saveUserData();
             }
@@ -29,7 +29,7 @@ void TryUnlockAchievement(const char *name)
     }
 
     if (i == achievementList.size())
-        printLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
+        PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
 }
 
 void GetAchievementNames(TextInfo *names, int count)

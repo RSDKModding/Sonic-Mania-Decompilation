@@ -15,7 +15,7 @@ struct DummyUserStorage {
     bool32 (*LoadUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
     bool32 (*SaveUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
     bool32 (*DeleteUserFile)(const char *filename, int (*callback)(int));
-    void (*unknown8)(void);
+    void (*ClearPrerollErrors)(void);
 
     int authStatus;
     int statusCode;

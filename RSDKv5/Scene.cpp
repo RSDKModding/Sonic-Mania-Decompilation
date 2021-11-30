@@ -49,7 +49,7 @@ void LoadScene()
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
-        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
+        PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
                  sceneInfo.listData[sceneInfo.listPos].name,
                  sceneInfo.listData[sceneInfo.listPos].filter);
         return;
@@ -60,7 +60,7 @@ void LoadScene()
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[sceneInfo.listPos].name);
+        PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[sceneInfo.listPos].name);
         return;
     }
 #endif
@@ -139,11 +139,11 @@ void LoadScene()
 #if RETRO_REV02
     hardResetFlag    = false;
     sceneInfo.filter = sceneEntry->filter;
-    printLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
+    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
 #endif
 
 #if !RETRO_REV02
-    printLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
+    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\"", list->name, sceneEntry->name);
 #endif
 
     char buffer[0x40];
@@ -386,7 +386,7 @@ void LoadSceneFile()
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (!objID && i >= TYPE_DEFAULTCOUNT) {
-                printLog(PRINT_NORMAL, "Object %d is unimplimented!", i);
+                PrintLog(PRINT_NORMAL, "Object %d is unimplimented!", i);
             }
 #endif
 

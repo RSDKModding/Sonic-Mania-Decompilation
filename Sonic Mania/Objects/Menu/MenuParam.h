@@ -15,7 +15,7 @@ typedef struct {
     uint8 selectionType;
     char menuTag[0x100];
     int32 selectionID;
-    int32 startedTAAttempt; // field_160 only used in pre-plus, goes unused by the time plus rolled around
+    int32 startedTAAttempt; // only used in pre-plus, goes unused by the time plus rolled around
     int32 clearFlag;
     int32 replayID;
     int32 characterID;

@@ -118,7 +118,7 @@ void ClearPrerollErrors()
     if (userStorage->saveStatus != STATUS_OK)
         userStorage->saveStatus = STATUS_NONE;
 #else
-    printLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()");
+    PrintLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()");
 #endif
 }
 
@@ -233,7 +233,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
 
     char pathBuffer[0x400];
     sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    printLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
+    PrintLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
 
     FileIO *file = fOpen(pathBuffer, "rb");
     if (file) {
@@ -252,7 +252,7 @@ bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
     else {
         if (userFileCallback2)
             userFileCallback2();
-        printLog(PRINT_NORMAL, "Nope!");
+        PrintLog(PRINT_NORMAL, "Nope!");
     }
     return false;
 }
@@ -263,7 +263,7 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
 
     char pathBuffer[0x400];
     sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    printLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
+    PrintLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
 
     FileIO *file = fOpen(pathBuffer, "wb");
     if (file) {
@@ -277,7 +277,7 @@ bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
     else {
         if (userFileCallback2)
             userFileCallback2();
-        printLog(PRINT_NORMAL, "Nope!");
+        PrintLog(PRINT_NORMAL, "Nope!");
     }
     return false;
 }
@@ -288,7 +288,7 @@ bool32 DeleteUserFile(const char *filename)
 
     char pathBuffer[0x400];
     sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    printLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
+    PrintLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
     int status = remove(pathBuffer);
 
     if (userFileCallback2)

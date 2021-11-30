@@ -65,16 +65,16 @@ void Zone_LateUpdate(void)
                 }
             }
 
-            if (player->state != Player_State_Die && !player->hurtFlag) {
+            if (player->state != Player_State_Die && !player->deathType) {
                 if (Zone->playerBoundsB[playerID] <= Zone->deathBoundary[playerID]) {
                     if (player->position.y > Zone->deathBoundary[playerID]) {
-                        player->hurtFlag                   = 2;
+                        player->deathType                   = PLAYER_DEATH_DIE_NOSFX;
                         Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
                 else {
                     if (player->position.y > Zone->playerBoundsB[playerID]) {
-                        player->hurtFlag                   = 2;
+                        player->deathType                   = PLAYER_DEATH_DIE_NOSFX;
                         Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
@@ -111,7 +111,7 @@ void Zone_LateUpdate(void)
                 }
 #endif
                 if (!playerLoop->sidekick && flag)
-                    playerLoop->hurtFlag = 1;
+                    playerLoop->deathType = PLAYER_DEATH_DIE_USESFX;
             }
             Zone->gotTimeOver = true;
             StateMachine_Run(Zone->timeOverCallback);

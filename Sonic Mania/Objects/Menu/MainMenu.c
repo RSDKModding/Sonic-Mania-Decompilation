@@ -12,7 +12,7 @@ void MainMenu_StaticUpdate(void)
     EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
     if (control && control->active) {
         EntityUIDiorama *diorama     = (EntityUIDiorama *)MainMenu->dioramaPtr;
-        MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->field_6C & 0xFFFF0000) > -0x700000;
+        MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->shiftOffset.y & 0xFFFF0000) > -0x700000;
         EntityUIButton *button       = control->buttons[control->lastButtonID];
         if (button) {
             switch (button->frameID) {
@@ -26,9 +26,10 @@ void MainMenu_StaticUpdate(void)
                 case 7: diorama->dioramaID = 7; break;
                 default: break;
             }
+
+            if (button->disabled)
+                diorama->timer = 12;
         }
-        if (button->disabled)
-           diorama->timer = 12;
     }
 }
 

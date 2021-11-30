@@ -546,8 +546,8 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
     else
         player->velocity.x = -0x20000;
     Player_Hit(player);
-    if (player->hurtFlag == 1) {
-        player->hurtFlag = 2;
+    if (player->deathType == PLAYER_DEATH_DIE_USESFX) {
+        player->deathType = PLAYER_DEATH_DIE_NOSFX;
         RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
     }
     else if (player->state == Player_State_Hit && (player->shield || player->sidekick)) {

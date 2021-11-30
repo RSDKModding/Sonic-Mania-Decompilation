@@ -15,9 +15,11 @@ enum ControllerIDs {
 };
 
 enum InputDeviceTypes {
-    DEVICE_TYPE_UNKNOWN    = 0,
+    DEVICE_TYPE_NONE       = 0,
     DEVICE_TYPE_KEYBOARD   = 1,
     DEVICE_TYPE_CONTROLLER = 2,
+    DEVICE_TYPE_UNKNOWN3   = 3,
+    DEVICE_TYPE_UNKNOWN4   = 4,
 };
 
 enum InputDeviceIDs {
@@ -25,18 +27,19 @@ enum InputDeviceIDs {
     DEVICE_XBOX            = 1,
     DEVICE_PS4             = 2,
     DEVICE_SATURN          = 3,
-    DEVICE_SWITCH          = 4,
-    DEVICE_SWITCH_PRO      = 5,
+    DEVICE_SWITCH_HANDHELD = 4,
+    DEVICE_SWITCH_JOY_GRIP = 5,
     DEVICE_SWITCH_JOY_L    = 6,
     DEVICE_SWITCH_JOY_R    = 7,
-    DEVICE_SWITCH_JOY_GRIP = 8,
+    DEVICE_SWITCH_PRO      = 8,
 };
 
 enum InputDeviceFlags {
-    DEVICE_FLAG_UNKNOWN1    = 1,
-    DEVICE_FLAG_UNKNOWN2    = 2,
-    DEVICE_FLAG_UNKNOWN3    = 3,
-    DEVICE_FLAG_UNKNOWN4    = 4,
+    DEVICE_FLAG_NONE         = 0,
+    DEVICE_FLAG_UNKNOWN1     = 1,
+    DEVICE_FLAG_UNKNOWN2     = 2,
+    DEVICE_FLAG_UNKNOWN3     = 3,
+    DEVICE_FLAG_STEAMOVERLAY = 4,
 };
 
 enum ControllerKeys {
@@ -438,21 +441,47 @@ inline InputDevice *controllerInit(uint8 controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
         return NULL;
-    InputDeviceSDL *device = (InputDeviceSDL *)&InputDevices[InputDeviceCount++];
-    device->controllerPtr  = SDL_GameControllerOpen(controllerID);
     uint32 id;
     char buffer[0x20];
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
+
+    InputDeviceSDL *device = NULL;
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        //same input id, so smth prolly went wrong here
+        //lets just close it and take it
+        if (InputDevices[i].inputID == id && InputDevices[i].active) {
+            if (device->controllerPtr)
+                SDL_GameControllerClose(device->controllerPtr);
+            device = (InputDeviceSDL *)&InputDevices[i];
+        }
+    }
+
+    for (int i = 0; i < InputDeviceCount; ++i) {
+        //this device was closed, we can use it's slot
+        if (!InputDevices[i].active) {
+            device = (InputDeviceSDL *)&InputDevices[i];
+            break;
+        }
+    }
+    
+    if (!device)
+        device = (InputDeviceSDL *)&InputDevices[InputDeviceCount++];
+    device->controllerPtr  = SDL_GameControllerOpen(controllerID);
+
+    const char *name = SDL_GameControllerName(device->controllerPtr);
+
+    byte controllerType = DEVICE_XBOX;
+
     device->active       = true;
     device->field_F      = false;
-    device->gamePadType  = (DEVICE_FLAG_UNKNOWN2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_XBOX << 0);
+    device->gamePadType  = (DEVICE_FLAG_UNKNOWN2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (controllerType << 0);
     device->inputID      = id;
     device->updateInput  = UpdateDeviceInput;
     device->processInput = ProcessDeviceInput;
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
-        if (activeControllers[i] == (uint)id) {
+        if (activeControllers[i] == id) {
             activeInputDevices[i]        = (InputDevice *)device;
             device->assignedControllerID = i + 1;
         }
@@ -471,10 +500,12 @@ inline void controllerClose(uint8 controllerID)
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
 
+    //clean up the device list
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == id && InputDevices[i].active) {
-            InputDeviceSDL *device = (InputDeviceSDL *)&InputDevices[i];
-            device->active         = false;
+            InputDeviceSDL *device       = (InputDeviceSDL *)&InputDevices[i];
+            device->active               = false;
+            device->assignedControllerID = 0;
             SDL_GameControllerClose(device->controllerPtr);
             device->controllerPtr = NULL;
             InputDeviceCount--;
@@ -555,7 +586,7 @@ inline int32 MostRecentActiveControllerID()
 }
 #endif
 
-int32 GetGamePadType(int32 inputID);
+int32 GetControllerType(int32 inputID);
 
 inline int32 GetAssignedControllerID(int32 inputID)
 {
@@ -637,9 +668,9 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
             else {
                 for (int i = 0; i < InputDeviceCount; ++i) {
                     if (InputDevices[i].inputID == inputID) {
-                        InputDevices[i].assignedControllerID = true;
-                        activeControllers[contID]          = inputID;
-                        activeInputDevices[contID]         = &InputDevices[i];
+                        InputDevices[i].assignedControllerID = controllerID;
+                        activeControllers[contID]            = inputID;
+                        activeInputDevices[contID]           = &InputDevices[i];
                         break;
                     }
                 }
@@ -648,7 +679,7 @@ inline void AssignControllerID(int8 controllerID, int32 inputID)
         else {
             InputDevice *device = InputDeviceFromID(activeControllers[contID]);
             if (device)
-                device->assignedControllerID = false;
+                device->assignedControllerID = 0;
             activeControllers[contID] = inputID;
         }
     }
@@ -672,7 +703,7 @@ inline void ResetControllerAssignments()
     }
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        InputDevices[i].assignedControllerID = false;
+        InputDevices[i].assignedControllerID = 0;
     }
 }
 

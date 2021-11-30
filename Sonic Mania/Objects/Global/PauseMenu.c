@@ -24,7 +24,7 @@ void PauseMenu_LateUpdate(void)
             RSDK.PauseChannel(Music->channelID);
     }
     else {
-        void *state = RSDK_GET_ENTITY(self->triggerPlayer, Player)->state;
+        StateMachine(state) = RSDK_GET_ENTITY(self->triggerPlayer, Player)->state;
         if (state == Player_State_Die || state == Player_State_Drown) {
             destroyEntity(self);
         }
@@ -75,15 +75,15 @@ void PauseMenu_StaticUpdate(void)
 #if RETRO_USE_PLUS
                     int32 id = API_ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
-                        // PauseMenu->controllerDisconnect = true;
-                        // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        // pauseMenu->triggerPlayer = i;
+                        PauseMenu->controllerDisconnect = true;
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        pauseMenu->triggerPlayer = i;
                     }
 #else
                     if (API_InputIDIsDisconnected(i + 1)) {
-                        // PauseMenu->controllerDisconnect = true;
-                        // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        // pauseMenu->triggerPlayer = i;
+                        PauseMenu->controllerDisconnect = true;
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        pauseMenu->triggerPlayer = i;
                     }
 #endif
                 }
@@ -351,7 +351,7 @@ void PauseMenu_CheckAndReassignControllers(void)
         API_AssignControllerID(entity->triggerPlayer + 1, id);
     else
         API_AssignControllerID(entity->triggerPlayer + 1, CONT_AUTOASSIGN);
-    if (globals->gameMode < MODE_TIMEATTACK && !API_ControllerIDForInputID(2))
+    if (globals->gameMode < MODE_TIMEATTACK && !API_ControllerIDForInputID(CONT_P2))
         API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     PauseMenu->forcedDisconnect = true;

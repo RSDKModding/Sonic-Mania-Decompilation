@@ -88,6 +88,7 @@ void initModAPI()
     addToModFunctionTable(ModTable_ForeachConfig, ForeachConfig);
     addToModFunctionTable(ModTable_ForeachConfigCategory, ForeachConfigCategory);
     addToModFunctionTable(ModTable_GetObject, GetObject);
+    addToModFunctionTable(ModTable_RegisterAchievement, RegisterAchievement);
 
     loadMods();
 }
@@ -173,7 +174,7 @@ void loadMods()
                 }
             }
         } catch (fs::filesystem_error fe) {
-            printLog(PRINT_ERROR, "Mods Folder Scanning Error: %s", fe.what());
+            PrintLog(PRINT_ERROR, "Mods Folder Scanning Error: %s", fe.what());
         }
     }
     sortMods();
@@ -217,7 +218,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 
     ModInfo *cur = currentMod;
 
-    printLog(PRINT_NORMAL, "[MOD] Trying to load mod %s...", folder.c_str());
+    PrintLog(PRINT_NORMAL, "[MOD] Trying to load mod %s...", folder.c_str());
 
     info->fileMap.clear();
     info->name    = "";
@@ -271,7 +272,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                                 buffer[i - tokenPos] = modBuf[i] == '\\' ? '/' : modBuf[i];
                             }
 
-                            // printLog(modBuf);
+                            // PrintLog(modBuf);
                             std::string path(buffer);
                             std::string modPath(modBuf);
                             char pathLower[0x100];
@@ -285,7 +286,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     }
                 }
             } catch (fs::filesystem_error fe) {
-                printLog(PRINT_ERROR, "Data Folder Scanning Error: %s", fe.what());
+                PrintLog(PRINT_ERROR, "Data Folder Scanning Error: %s", fe.what());
             }
         }
         // LOGIC
@@ -559,7 +560,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             fClose(cfg);
         }
 
-        printLog(PRINT_NORMAL, "[MOD] Loaded mod %s! Active: %s", folder.c_str(), active ? "Y" : "N");
+        PrintLog(PRINT_NORMAL, "[MOD] Loaded mod %s! Active: %s", folder.c_str(), active ? "Y" : "N");
 
         iniparser_freedict(ini);
         currentMod = cur;
@@ -577,7 +578,7 @@ void saveMods()
 
     sortMods();
 
-    printLog(PRINT_NORMAL, "[MOD] Saving mods...");
+    PrintLog(PRINT_NORMAL, "[MOD] Saving mods...");
 
     if (fs::exists(modPath) && fs::is_directory(modPath)) {
         std::string mod_config = modPath.string() + "/modconfig.ini";
@@ -836,6 +837,7 @@ bool32 ForeachConfigCategory(TextInfo *textInfo)
 {
     if (!textInfo || !currentMod)
         return false;
+
     using namespace std;
     if (!currentMod->config.size())
         return false;
@@ -960,7 +962,7 @@ void SaveSettings()
         for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
     fClose(file);
-    printLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->folder.c_str());
+    PrintLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->folder.c_str());
     return;
 }
 

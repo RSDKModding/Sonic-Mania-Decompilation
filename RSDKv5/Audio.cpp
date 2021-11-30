@@ -70,7 +70,7 @@ bool32 InitAudioDevice()
         SDL_PauseAudioDevice(audioDevice, 0);
     }
     else {
-        printLog(PRINT_ERROR, "Unable to open audio device: %s", SDL_GetError());
+        PrintLog(PRINT_ERROR, "Unable to open audio device: %s", SDL_GetError());
         audioEnabled = false;
         return true; // no audio but game wont crash now
     }
@@ -499,7 +499,7 @@ void LoadStream(ChannelInfo *channel)
             streamInfo.musicStream = SDL_NewAudioStream(AUDIO_S16, streamInfo.vorbisFile.vi->channels, (int)streamInfo.vorbisFile.vi->rate,
                                                         audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq);
             if (!streamInfo.musicStream) {
-                printLog(PRINT_NORMAL, "Failed to create stream: %s", SDL_GetError());
+                PrintLog(PRINT_NORMAL, "Failed to create stream: %s", SDL_GetError());
             }
 #endif
 
@@ -613,7 +613,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
             if (src == NULL) {
                 SDL_RWclose(src);
                 delete[] sfx;
-                printLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
+                PrintLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
             }
             else {
                 SDL_AudioSpec wav_spec;
@@ -624,7 +624,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                 SDL_RWclose(src);
                 delete[] sfx;
                 if (wav == NULL) {
-                    printLog(PRINT_POPUP, "Unable to open sfx: '%s'\nError: %s\nTrying native method", fullPath, SDL_GetError());
+                    PrintLog(PRINT_POPUP, "Unable to open sfx: '%s'\nError: %s\nTrying native method", fullPath, SDL_GetError());
 
                     // Try Again, this time with RSDK's loader
                     InitFileInfo(&info);
@@ -655,7 +655,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 if (loop >= 0x40) {
                                     if (loop != 0x100) {
                                         CloseFile(&info);
-                                        printLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
+                                        PrintLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
                                         return;
                                     }
                                     else {
@@ -725,7 +725,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                         CloseFile(&info);
                     }
                     else {
-                        printLog(PRINT_ERROR, "Unable to open sfx: %s", fullPath);
+                        PrintLog(PRINT_ERROR, "Unable to open sfx: %s", fullPath);
                     }
                 }
                 else {
@@ -765,7 +765,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
         else {
             // wtf lol
             CloseFile(&info);
-            printLog(PRINT_ERROR, "Sfx format not supported!");
+            PrintLog(PRINT_ERROR, "Sfx format not supported!");
         }
 #endif
     }

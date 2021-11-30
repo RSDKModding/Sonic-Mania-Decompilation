@@ -241,7 +241,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 }
 
 void SetActiveVariable(int objectID, const char *name) {}
-void AddEnumVar(const char *name) {}
+void AddEnumVariable(const char *name) {}
 
 void InitObjects()
 {

@@ -54,7 +54,7 @@ void FillDummyLeaderboardEntries()
 
 void FetchLeaderboard(const char *name, int id)
 {
-    printLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %d)", name, id);
+    PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %d)", name, id);
     leaderboards->entryStart  = 1;
     leaderboards->entryLength = 20;
     leaderboards->rankScore   = 0;

@@ -88,7 +88,7 @@ void MagPlatform_Unknown1(void)
                     }
                 }
                 else {
-                    player->hurtFlag = true;
+                    player->deathType = PLAYER_DEATH_DIE_USESFX;
                 }
                 break;
             default: break;
