@@ -459,7 +459,7 @@ extern RSDKFunctionTable RSDK;
 #define foreach_config(text)                                                                                                                         \
     TextInfo *text = NULL;                                                                                                                           \
     while (Mod.ForeachConfig(&text))
-#define foreach_configCategory(type, entityOut)                                                                                                      \
+#define foreach_configCategory(text)                                                                                                      \
     TextInfo *text = NULL;                                                                                                                           \
     while (Mod.ForeachConfigCategory(&text))
 #endif
