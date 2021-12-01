@@ -27,11 +27,11 @@ void UISlider_Update(void)
     }
 
     if (self->state == UISlider_State_HandleButtonEnter && (control->state != UIControl_ProcessInputs || control->buttonID != id)) {
-        self->flag               = false;
+        self->isSelected         = false;
         self->textBounceOffset   = 0;
         self->buttonBounceOffset = 0;
-        if (self->flag) {
-            self->flag  = false;
+        if (self->isSelected) {
+            self->isSelected  = false;
             self->state = UISlider_State_HandleButtonLeave;
         }
     }
@@ -110,7 +110,7 @@ void UISlider_DrawSlider(void)
 
     drawPos.x = drawX2 + (sliderPos >> 1) + self->buttonBounceOffset + 0x60000;
     drawPos.y = self->buttonBounceOffset + self->position.y;
-    if (self->flag) {
+    if (self->isSelected) {
         drawPos.x += 0x30000;
         drawPos.y += 0x30000;
         UIWidgets_DrawRectOutline_Blended(24, 14, drawPos.x, drawPos.y);
@@ -119,7 +119,7 @@ void UISlider_DrawSlider(void)
     }
 
     RSDK.DrawRect(drawPos.x - 0x70000, drawPos.y - 0xC0000, 0xE0000, 0x180000, 0xF0F0F0, 255, INK_NONE, false);
-    if (self->flag)
+    if (self->isSelected)
         UIWidgets_DrawRectOutline_Flash(24, 14, drawPos.x, drawPos.y);
 }
 
@@ -179,8 +179,8 @@ void UISlider_ButtonPressCB(void)
 
         if (parent->buttonID != max) {
             parent->buttonID = max;
-            if (self->flag) {
-                self->flag  = false;
+            if (self->isSelected) {
+                self->isSelected  = false;
                 self->state = UISlider_State_HandleButtonLeave;
             }
             RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
@@ -195,7 +195,7 @@ void UISlider_ButtonPressCB(void)
             }
         }
 
-        if (!self->flag && parent->buttonID == id && parent->state == UIControl_ProcessInputs && !parent->dialogHasFocus) {
+        if (!self->isSelected && parent->buttonID == id && parent->state == UIControl_ProcessInputs && !parent->dialogHasFocus) {
             UISlider_ButtonEnterCB();
         }
     }
@@ -257,8 +257,8 @@ bool32 UISlider_TouchCB(void)
 void UISlider_ButtonEnterCB(void)
 {
     RSDK_THIS(UISlider);
-    if (!self->flag) {
-        self->flag                 = true;
+    if (!self->isSelected) {
+        self->isSelected           = true;
         self->textBounceOffset     = 0;
         self->buttonBounceOffset   = 0;
         self->textBounceVelocity   = -0x20000;
@@ -270,8 +270,8 @@ void UISlider_ButtonEnterCB(void)
 void UISlider_ButtonLeaveCB(void)
 {
     RSDK_THIS(UISlider);
-    if (self->flag) {
-        self->flag  = false;
+    if (self->isSelected) {
+        self->isSelected  = false;
         self->state = UISlider_State_HandleButtonLeave;
     }
 }
@@ -279,7 +279,7 @@ void UISlider_ButtonLeaveCB(void)
 bool32 UISlider_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UISlider);
-    return self->flag;
+    return self->isSelected;
 }
 
 bool32 UISlider_CheckSelectedCB(void) { return false; }

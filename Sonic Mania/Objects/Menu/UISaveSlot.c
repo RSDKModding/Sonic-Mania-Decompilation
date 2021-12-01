@@ -24,7 +24,7 @@ void UISaveSlot_Update(void)
             break;
     }
 
-    if (self->flag) {
+    if (self->isSelected) {
         self->textBouncePos -= 0x600;
         self->textBounceOffset += self->textBouncePos;
         if (self->textBounceOffset >= 0x13600)
@@ -60,7 +60,7 @@ void UISaveSlot_Update(void)
     }
 
     if (self->currentlySelected && (control->buttons[control->lastButtonID] != (EntityUIButton *)self || control->buttonID == -1)) {
-        self->flag              = false;
+        self->isSelected        = false;
         self->currentlySelected = false;
         self->state             = UISaveSlot_State_NotSelected;
 #if RETRO_USE_PLUS
@@ -69,7 +69,7 @@ void UISaveSlot_Update(void)
     }
     if (control->state != UIControl_ProcessInputs || control->active != ACTIVE_ALWAYS) {
         if (self->currentlySelected) {
-            self->flag              = false;
+            self->isSelected        = false;
             self->currentlySelected = false;
             self->state             = UISaveSlot_State_NotSelected;
 #if RETRO_USE_PLUS
@@ -108,7 +108,7 @@ void UISaveSlot_Draw(void)
         UIWidgets_DrawRectOutline_Blended(164, 96, drawPos.x, drawPos.y);
         RSDK.DrawRect(drawPos.x - 0x2D0000, drawPos.y - 0x130000, 0x5A0000, 0x30000, 0, 255, INK_BLEND, false);
 
-        if (self->flag)
+        if (self->isSelected)
             UIWidgets_DrawRectOutline_Flash(164, 96, self->position.x, self->position.y);
         else
             UIWidgets_DrawRectOutline_Black(164, 96, self->position.x, self->position.y);
@@ -122,7 +122,7 @@ void UISaveSlot_Draw(void)
             RSDK.DrawSprite(&self->iconBGAnimator, &drawPos, false);
             RSDK.DrawSprite(&self->saveStatusAnimator, &drawPos, false);
         }
-        else if ((self->flag || self->state == UISaveSlot_State_Selected) && self->saveZoneID <= 13) {
+        else if ((self->isSelected || self->state == UISaveSlot_State_Selected) && self->saveZoneID <= 13) {
             SpriteFrame *frame = RSDK.GetFrame(UISaveSlot->aniFrames, 5, self->saveZoneID);
             frame->pivotX      = -43;
             frame->width       = 86;
@@ -203,11 +203,11 @@ void UISaveSlot_Draw(void)
         RSDK.DrawSprite(&self->zoneNameAnimator, NULL, false);
     }
 
-    if (self->flag || self->type == UISAVESLOT_REGULAR) {
+    if (self->isSelected || self->type == UISAVESLOT_REGULAR) {
         if (self->type == UISAVESLOT_NOSAVE)
             UIWidgets_DrawRectOutline_Flash(68, 96, self->position.x, self->position.y);
 
-        if (self->flag && !(self->zoneIconSprX & 8)) {
+        if (self->isSelected && !(self->zoneIconSprX & 8)) {
             drawPos.x = self->position.x;
             drawPos.y = self->position.y;
 #if RETRO_USE_PLUS
@@ -867,7 +867,7 @@ void UISaveSlot_SelectedCB(void)
     if (control->position.x == control->targetPos.x) {
         control->state          = 0;
         self->state             = UISaveSlot_State_Selected;
-        self->flag              = false;
+        self->isSelected        = false;
         self->currentlySelected = false;
         self->processButtonCB   = NULL;
         foreach_all(UISaveSlot, saveSlot)
@@ -975,7 +975,7 @@ void UISaveSlot_PrevZone(void)
 bool32 UISaveSlot_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UISaveSlot);
-    return self->flag;
+    return self->isSelected;
 }
 bool32 UISaveSlot_CheckSelectedCB(void)
 {
@@ -987,7 +987,7 @@ void UISaveSlot_ButtonEnterCB(void)
 {
     RSDK_THIS(UISaveSlot);
     if (!self->currentlySelected) {
-        self->flag              = true;
+        self->isSelected        = true;
         self->currentlySelected = true;
         UISaveSlot_HandleSaveIcons();
         self->textBouncePos   = 0x4000;
@@ -1018,7 +1018,7 @@ void UISaveSlot_ButtonEnterCB(void)
 void UISaveSlot_ButtonLeaveCB(void)
 {
     RSDK_THIS(UISaveSlot);
-    self->flag              = false;
+    self->isSelected        = false;
     self->currentlySelected = false;
     self->state             = UISaveSlot_State_NotSelected;
 #if RETRO_USE_PLUS

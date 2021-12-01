@@ -3,6 +3,22 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIVSZONEBUTTON_GHZ,
+    UIVSZONEBUTTON_CPZ,
+    UIVSZONEBUTTON_SPZ,
+    UIVSZONEBUTTON_FBZ,
+    UIVSZONEBUTTON_PGZ,
+    UIVSZONEBUTTON_SSZ,
+    UIVSZONEBUTTON_HCZ,
+    UIVSZONEBUTTON_MSZ,
+    UIVSZONEBUTTON_OOZ,
+    UIVSZONEBUTTON_LRZ,
+    UIVSZONEBUTTON_MMZ,
+    UIVSZONEBUTTON_TMZ,
+    UIVSZONEBUTTON_FUZZ,
+} UIVsZoneButtonZoneIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -19,21 +35,20 @@ typedef struct {
     bool32 xOut;
     bool32 obfuscate;
     bool32 prevObfuscate;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
+    Vector2 size;
+    int32 bgEdgeSize;
+    int32 triBounceVelocity;
     uint8 zoneDirection;
-    int32 field_12C;
-    int32 field_130;
-    int32 field_134;
-    int32 field_138;
-    int32 field_13C;
+    int32 triBounceOffset;
+    int32 unusedBounceVelocity;
+    int32 unusedBounceOffset;
+    int32 buttonBounceVelocity;
+    int32 buttonBounceOffset;
     TextInfo nameText;
     Animator textAnimator;
     Animator zoneAnimator;
-    Animator animator1;
-    Animator animator2;
+    Animator redCrossAnimator;
+    Animator blackCrossAnimator;
 } EntityUIVsZoneButton;
 
 // Object Struct
@@ -55,18 +70,18 @@ void UIVsZoneButton_Serialize(void);
 // Extra Entity Functions
 void UIVsZoneButton_SetupAnimators(void);
 void UIVsZoneButton_SetNameText(void);
-void UIVsZoneButton_Unknown3(void);
-void UIVsZoneButton_Unknown4(void);
-void UIVsZoneButton_Unknown5(void);
-void UIVsZoneButton_Unknown6(void);
+void UIVsZoneButton_DrawOutline(void);
+void UIVsZoneButton_DrawBG(void);
+void UIVsZoneButton_DrawZoneIcon(void);
+void UIVsZoneButton_DrawButton(void);
 bool32 UIVsZoneButton_CheckButtonEnterCB(void);
 bool32 UIVsZoneButton_CheckSelectedCB(void);
 void UIVsZoneButton_SelectedCB(void);
 void UIVsZoneButton_FailCB(void);
 void UIVsZoneButton_ButtonEnterCB(void);
 void UIVsZoneButton_ButtonLeaveCB(void);
-void UIVsZoneButton_Unknown13(void);
-void UIVsZoneButton_Unknown14(void);
-void UIVsZoneButton_Unknown15(void);
+void UIVsZoneButton_State_HandleButtonLeave(void);
+void UIVsZoneButton_State_HandleButtonEnter(void);
+void UIVsZoneButton_State_Selected(void);
 
 #endif //!OBJ_UIVSZONEBUTTON_H

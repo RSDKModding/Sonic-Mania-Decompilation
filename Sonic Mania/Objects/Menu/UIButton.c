@@ -30,7 +30,7 @@ void UIButton_Update(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (parent && self->state == UIButton_State_HandleButtonEnter
         && (parent->state != UIControl_ProcessInputs || parent->buttons[parent->buttonID] != self)) {
-        self->flag = false;
+        self->isSelected = false;
         UIButton_ButtonLeaveCB();
     }
 }
@@ -159,7 +159,7 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
                 EntityUIChoice *choice     = (EntityUIChoice *)entPtr;
                 choice->textBounceOffset   = 0;
                 choice->buttonBounceOffset = 0;
-                choice->flag               = false;
+                choice->isSelected         = false;
                 choice->state              = UIChoice_State_HandleButtonLeave;
             }
             else if (entPtr->objectID == UIVsRoundPicker->objectID) {
@@ -205,7 +205,7 @@ void UIButton_SetChoiceSelection(EntityUIButton *button, int32 selection)
                 EntityUIChoice *choice     = (EntityUIChoice *)entPtr;
                 choice->textBounceOffset   = 0;
                 choice->buttonBounceOffset = 0;
-                choice->flag               = false;
+                choice->isSelected         = false;
                 choice->state              = UIChoice_State_HandleButtonLeave;
             }
             else if (entPtr->objectID == UIVsRoundPicker->objectID) {
@@ -241,7 +241,7 @@ void *UIButton_GetActionCB(void)
 
 void UIButton_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255); }
 
-void UIButton_ProcessButtonCB_Alt(void)
+void UIButton_ProcessButtonCB_Scroll(void)
 {
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)self->parent;
@@ -349,7 +349,7 @@ void UIButton_ProcessButtonCB_Alt(void)
             }
 
             if (hasNoAction) {
-                if (!self->flag) {
+                if (!self->isSelected) {
                     if (control->buttonID == UIControl_GetButtonID(control, self) && control->state == UIControl_ProcessInputs
                         && !control->dialogHasFocus) {
                         StateMachine_Run(self->buttonEnterCB);
@@ -439,7 +439,7 @@ bool32 UIButton_ProcessTouchCB(void)
                     StateMachine_Run(self->failCB);
                 }
                 else {
-                    self->flag             = false;
+                    self->isSelected       = false;
                     StateMachine(actionCB) = NULL;
                     if (self->objectID == UIButton->objectID)
                         actionCB = UIButton_GetActionCB();
@@ -458,7 +458,7 @@ bool32 UIButton_ProcessTouchCB(void)
         if (!self->touchPressed && self->checkButtonEnterCB()) {
             for (int32 i = 0; i < control->buttonCount; ++i) {
                 if (self == control->buttons[i] && control->buttonID != i) {
-                    self->flag = false;
+                    self->isSelected = false;
                     StateMachine_Run(self->buttonLeaveCB);
                     break;
                 }
@@ -688,7 +688,7 @@ void UIButton_ButtonLeaveCB(void)
             if (entPtr->objectID == UIChoice->objectID) {
                 ((EntityUIChoice *)entPtr)->textBounceOffset   = 0;
                 ((EntityUIChoice *)entPtr)->buttonBounceOffset = 0;
-                entPtr->flag                                   = false;
+                entPtr->isSelected                             = false;
                 entPtr->state                                  = UIChoice_State_HandleButtonLeave;
             }
             else if (entPtr->objectID == UIVsRoundPicker->objectID) {

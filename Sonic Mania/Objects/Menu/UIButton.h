@@ -63,7 +63,7 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 a2);
 void UIButton_SetChoiceSelection(EntityUIButton *button, int32 a2);
 void *UIButton_GetActionCB(void);
 void UIButton_FailCB(void);
-void UIButton_ProcessButtonCB_Alt(void);
+void UIButton_ProcessButtonCB_Scroll(void);
 bool32 UIButton_ProcessTouchCB_Alt(void);
 bool32 UIButton_ProcessTouchCB(void);
 void UIButton_ProcessButtonCB(void);

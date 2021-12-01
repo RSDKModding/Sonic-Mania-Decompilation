@@ -218,7 +218,7 @@ void TimeAttackMenu_HandleMenuReturn(void)
     if (param->clearFlag) {
         int32 charID                   = param->characterID - 1;
         control->buttonID              = charID;
-        control->buttons[charID]->flag = true;
+        control->buttons[charID]->isSelected = true;
     }
 
     EntityUIControl *legacyControl = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
@@ -228,13 +228,13 @@ void TimeAttackMenu_HandleMenuReturn(void)
             charID = param->characterID - 1;
 
         legacyControl->buttonID              = charID;
-        legacyControl->buttons[charID]->flag = true;
+        legacyControl->buttons[charID]->isSelected = true;
     }
 
     EntityUIControl *zoneControl = (EntityUIControl *)TimeAttackMenu->taZoneSelControl;
     if (param->clearFlag) {
         zoneControl->buttonID                     = param->zoneID;
-        zoneControl->buttons[param->zoneID]->flag = true;
+        zoneControl->buttons[param->zoneID]->isSelected = true;
     }
 
     EntityUIControl *detailsControl = (EntityUIControl *)TimeAttackMenu->taDetailsControl;

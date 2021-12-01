@@ -56,7 +56,7 @@ void UIVsRoundPicker_Draw(void)
     drawPos.y += self->buttonBounceOffset;
     UIWidgets_DrawParallelogram((self->size.y >> 16), width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
-    if (self->arrowWidth > 0 && self->flag) {
+    if (self->arrowWidth > 0 && self->isSelected) {
         if (self->val >= 2) {
             drawPos = self->position;
             drawPos.y += self->textBounceOffset;
@@ -235,7 +235,7 @@ void UIVsRoundPicker_SetChoiceActive(EntityUIVsRoundPicker *entity)
         entity->buttonBounceOffset   = 0;
         entity->textBounceVelocity   = -0x20000;
         entity->buttonBounceVelocity = -0x20000;
-        entity->flag                 = true;
+        entity->isSelected           = true;
         entity->state                = UIVsRoundPicker_State_HandleButtonEnter;
     }
 }
@@ -247,7 +247,7 @@ void UIVsRoundPicker_SetChoiceInactive(EntityUIVsRoundPicker *entity)
         entity->buttonBounceOffset   = 0;
         entity->textBounceVelocity   = 0;
         entity->buttonBounceVelocity = 0;
-        entity->flag                 = false;
+        entity->isSelected           = false;
         entity->state                = UIVsRoundPicker_State_HandleButtonLeave;
     }
 }
@@ -320,7 +320,7 @@ void UIVsRoundPicker_EditorDraw(void)
     self->updateRange.y = 0x400000;
     self->bgEdgeSize    = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
-    self->flag          = true;
+    self->isSelected    = true;
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
     self->textFrames = UIWidgets->textFrames;
     RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->numbersAnimator, true, 0);

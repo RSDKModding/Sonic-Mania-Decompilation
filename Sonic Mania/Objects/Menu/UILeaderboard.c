@@ -15,7 +15,7 @@ void UILeaderboard_Update(void)
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (self->state == UILeaderboard_State_Unknown3 && (parent->buttonID != self->zoneID || parent->state != UIControl_ProcessInputs)) {
-        self->flag  = false;
+        self->isSelected = false;
         self->state = UILeaderboard_State_Unknown2;
     }
 }
@@ -33,8 +33,8 @@ void UILeaderboard_Draw(void)
 void UILeaderboard_Create(void *data)
 {
     RSDK_THIS(UILeaderboard);
-    self->posUnknown2.x   = self->position.x;
-    self->posUnknown2.y   = self->position.y;
+    self->startPos.x   = self->position.x;
+    self->startPos.y   = self->position.y;
     self->active          = ACTIVE_BOUNDS;
     self->drawOrder       = 2;
     self->visible         = true;
@@ -484,8 +484,8 @@ void UILeaderboard_ProcessButtonCB(void)
         self->yPressCB();
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
-    if (self->state == UILeaderboard_State_Unknown2 || !self->flag) {
-        self->flag      = true;
+    if (self->state == UILeaderboard_State_Unknown2 || !self->isSelected) {
+        self->isSelected = true;
         self->state     = UILeaderboard_State_Unknown3;
         self->field_1CC = 0;
     }

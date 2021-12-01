@@ -261,9 +261,9 @@ void UIDialog_HandleButtonPositions(void)
         if (!self->entPtrs[i])
             break;
         EntityUIButton *button = self->entPtrs[i];
-        button->posUnknown2.x  = x;
+        button->startPos.x     = x;
+        button->startPos.y     = y;
         button->position.x     = x;
-        button->posUnknown2.y  = y;
         button->position.y     = y;
         x += offset;
     }

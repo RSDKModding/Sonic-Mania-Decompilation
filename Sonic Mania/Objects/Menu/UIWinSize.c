@@ -50,7 +50,7 @@ void UIWinSize_Draw(void)
     drawPos.y += self->buttonBounceOffset;
     UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
-    if (self->arrowWidth > 0 && self->flag) {
+    if (self->arrowWidth > 0 && self->isSelected) {
         drawPos = self->position;
         drawPos.y += self->textBounceOffset;
         drawPos.x -= self->arrowWidth << 15;
@@ -238,7 +238,7 @@ void UIWinSize_SetChoiceActive(EntityUIWinSize *entity)
         entity->buttonBounceOffset   = 0;
         entity->textBounceVelocity   = -0x20000;
         entity->buttonBounceVelocity = -0x20000;
-        entity->flag                 = true;
+        entity->isSelected           = true;
         entity->state                = UIWinSize_State_HandleButtonEnter;
     }
 }
@@ -250,7 +250,7 @@ void UIWinSize_SetChoiceInactive(EntityUIWinSize *entity)
         entity->buttonBounceOffset   = 0;
         entity->textBounceVelocity   = 0;
         entity->buttonBounceVelocity = 0;
-        entity->flag                 = false;
+        entity->isSelected           = false;
         entity->state                = UIWinSize_State_HandleButtonLeave;
     }
 }

@@ -261,8 +261,8 @@ void PauseMenu_HandleButtonPositions(void)
         if (!self->buttonPtrs[i])
             break;
         EntityUIButton *button = (EntityUIButton *)self->buttonPtrs[i];
-        button->posUnknown2.x  = pos.x;
-        button->posUnknown2.y  = pos.y;
+        button->startPos.x     = pos.x;
+        button->startPos.y     = pos.y;
         button->position.x     = pos.x;
         button->position.y     = pos.y;
         pos.x -= 0x240000;

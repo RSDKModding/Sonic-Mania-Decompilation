@@ -44,20 +44,19 @@ typedef struct {
     bool32 row12Highlight;
     TextInfo rowText[13];
     int32 characterID;
-    int32 field_1C0;
-    int32 offset;
+    int32 triBounceOffset;
+    int32 playerBounceOffset;
     int32 numRowStore;
-    int32 field_1CC;
-    int32 field_1D0;
-    int32 field_1D4;
-    int32 field_1D8;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Vector2 size;
+    bool32 isWinner;
+    bool32 isLoser;
+    Animator playerAnimator;
+    Animator shadowAnimator;
+    Animator edgeAnimator;
     Animator textAnimator;
-    Animator animator4;
+    Animator numbersAnimator;
     Animator rowAnimators[13];
-    Animator animator5;
+    Animator trophyAnimator;
     uint16 textFrames;
 } EntityUIVsResults;
 
@@ -79,11 +78,11 @@ void UIVsResults_Serialize(void);
 
 // Extra Entity Functions
 void UIVsResults_SetupSprites(void);
-void UIVsResults_Unknown2(void);
-void UIVsResults_Unknown3(void);
+void UIVsResults_DrawOutline(void);
+void UIVsResults_DrawBG(void);
 void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY);
-void UIVsResults_Unknown5(void);
-void UIVsResults_Unknown6(void);
+void UIVsResults_DrawTrophies(void);
+void UIVsResults_DrawResults(void);
 void UIVsResults_Unknown7(void);
 
 #endif //!OBJ_UIVSRESULTS_H

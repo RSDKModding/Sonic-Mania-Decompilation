@@ -252,7 +252,7 @@ void UIControl_ProcessInputs(void)
                     }
                     else {
                         if (self->buttons[self->buttonID])
-                            self->buttons[self->buttonID]->flag = false;
+                            self->buttons[self->buttonID]->isSelected = false;
                     }
                 }
                 else {
@@ -265,7 +265,7 @@ void UIControl_ProcessInputs(void)
                         flag = false;
 
                         if (self->buttons[self->buttonID])
-                            self->buttons[self->buttonID]->flag = false;
+                            self->buttons[self->buttonID]->isSelected = false;
                     }
                 }
 
@@ -764,10 +764,10 @@ void UIControl_ProcessButtonInput(void)
                 }
 
                 self->buttonID = id;
-                if (activeButton->flag) {
+                if (activeButton->isSelected) {
                     Entity *storeEntity = SceneInfo->entity;
                     SceneInfo->entity   = (Entity *)activeButton;
-                    activeButton->flag  = true;
+                    activeButton->isSelected = true;
                     StateMachine_Run(activeButton->buttonEnterCB);
                     SceneInfo->entity = storeEntity;
                 }

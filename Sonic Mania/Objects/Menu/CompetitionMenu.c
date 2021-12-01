@@ -242,7 +242,7 @@ int32 CompetitionMenu_GetReadyPlayerCount(void)
     int32 count = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
-        if (button->ready && !button->flag)
+        if (button->ready && !button->isSelected)
             ++count;
     }
     return count;
@@ -261,7 +261,7 @@ int32 CompetitionMenu_GetFlaggedReadyPlayerCount(void)
     int32 count = 0;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector*)control->buttons[i];
-        if (button->ready || button->flag)
+        if (button->ready || button->isSelected)
             ++count;
     }
     return count;
@@ -446,7 +446,7 @@ void CompetitionMenu_VS_MenuSetupCB(void)
     for (int32 i = 0; i < self->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)self->buttons[i];
 
-        button->flag            = true;
+        button->isSelected      = true;
         button->ready           = false;
         button->processButtonCB = UIVsCharSelector_ProcessButtonCB;
 
@@ -652,8 +652,8 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     for (int32 p = 0; p < session->playerCount; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
-        results->field_1D4 = session->winnerFlags[p] & (1 << p);
-        results->field_1D8 = session->winnerFlags[p] & (1 << p);
+        results->isWinner = session->winnerFlags[p] & (1 << p);
+        results->isLoser  = session->winnerFlags[p] & (1 << p);
         if (session->winnerFlags[p] & (1 << p))
             winnerCount++;
         results->trophyCount = session->wins[p];
@@ -809,7 +809,7 @@ void CompetitionMenu_Results_MenuSetupCB(void)
         bool32 *highlight          = &results->row0Highlight;
 
         results->numRows     = session->matchCount;
-        results->field_1D4   = session->wins[p] == highestScore;
+        results->isWinner   = session->wins[p] == highestScore;
         results->trophyCount = session->wins[p];
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
@@ -834,8 +834,8 @@ void CompetitionMenu_Results_MenuUpdateCB(void)
                 if (totalControl->targetPos.y == totalControl->startPos.y) {
                     EntityUIVsResults *button = (EntityUIVsResults *)totalControl->buttons[0];
                     if (button) {
-                        if (button->field_1D0 + button->position.y - 0x708000 > totalControl->startPos.y)
-                            pos = button->field_1D0 + button->position.y - 0x708000;
+                        if (button->size.y + button->position.y - 0x708000 > totalControl->startPos.y)
+                            pos = button->size.y + button->position.y - 0x708000;
                     }
                 }
                 totalControl->targetPos.y = pos;

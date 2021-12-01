@@ -82,7 +82,7 @@ typedef enum { DLC_PLUS } GameDLC;
     bool32 (*checkButtonEnterCB)(void);                                                                                                              \
     bool32 (*checkSelectedCB)(void);                                                                                                                 \
     int32 timer;                                                                                                                                     \
-    Vector2 posUnknown2;                                                                                                                             \
+    Vector2 startPos;                                                                                                                                \
     Entity *parent;                                                                                                                                  \
     Vector2 touchPosStart;                                                                                                                           \
     Vector2 touchPosEnd;                                                                                                                             \
@@ -92,7 +92,7 @@ typedef enum { DLC_PLUS } GameDLC;
     void (*touchPosCallbacks[4])(void);                                                                                                              \
     int32 touchPosCount;                                                                                                                             \
     int32 touchCountUnknown;                                                                                                                         \
-    bool32 flag;                                                                                                                                     \
+    bool32 isSelected;                                                                                                                               \
     bool32 disabled;
 
 #define MANIA_CUTSCENE_BASE                                                                                                                          \

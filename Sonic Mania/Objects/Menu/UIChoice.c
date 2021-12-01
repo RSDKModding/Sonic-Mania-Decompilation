@@ -31,7 +31,7 @@ void UIChoice_Update(void)
         if (parent->state == UIButton_State_HandleButtonLeave) {
             self->textBounceOffset   = 0;
             self->buttonBounceOffset = 0;
-            self->flag               = false;
+            self->isSelected         = false;
             self->state              = UIChoice_State_HandleButtonLeave;
         }
     }
@@ -66,7 +66,7 @@ void UIChoice_Draw(void)
     UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
     EntityUIButton *parent = (EntityUIButton *)self->parent;
-    if (self->arrowWidth > 0 && self->flag && !(self->disabled || parent->disabled)) {
+    if (self->arrowWidth > 0 && self->isSelected && !(self->disabled || parent->disabled)) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y;
         drawPos.y += self->textBounceOffset;
@@ -139,7 +139,7 @@ void UIChoice_SetChoiceActive(EntityUIChoice *entity)
         entity->buttonBounceOffset   = 0;
         entity->textBounceVelocity   = -0x20000;
         entity->buttonBounceVelocity = -0x20000;
-        entity->flag                 = true;
+        entity->isSelected           = true;
         entity->state                = UIChoice_State_HandleButtonEnter;
     }
 }
@@ -149,7 +149,7 @@ void UIChoice_SetChoiceInactive(EntityUIChoice *entity)
     if (entity) {
         entity->textBounceOffset   = 0;
         entity->buttonBounceOffset = 0;
-        entity->flag               = false;
+        entity->isSelected         = false;
         entity->state              = UIChoice_State_HandleButtonLeave;
     }
 }

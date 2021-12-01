@@ -25,7 +25,7 @@ void UIRankButton_Update(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control && self->state == UIRankButton_Unknown13 && !control->popoverHasFocus
         && (control->state != UIControl_ProcessInputs || control->buttons[control->buttonID] != (EntityUIButton *)self)) {
-        self->flag  = false;
+        self->isSelected = false;
         self->state = UIRankButton_Unknown12;
     }
 }
@@ -73,8 +73,8 @@ void UIRankButton_Draw(void)
 void UIRankButton_Create(void *data)
 {
     RSDK_THIS(UIRankButton);
-    self->posUnknown2.x = self->position.x;
-    self->posUnknown2.y = self->position.y;
+    self->startPos.x = self->position.x;
+    self->startPos.y = self->position.y;
     self->visible       = true;
     self->drawOrder     = 2;
     self->active        = ACTIVE_BOUNDS;
@@ -92,7 +92,7 @@ void UIRankButton_Create(void *data)
         RSDK.SetText(&self->nameTimeText, "-----", 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->nameTimeText);
     }
-    self->processButtonCB    = UIButton_ProcessButtonCB_Alt;
+    self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
     self->touchCB            = UIButton_ProcessTouchCB;
     self->selectedCB         = UIRankButton_SelectedCB;
     self->failCB             = UIRankButton_FailCB;

@@ -76,7 +76,7 @@ void UIModeButton_Create(void *data)
         self->textVisible        = true;
         self->shadowBounceOffset = 0x280000;
         self->iconBounceOffset   = 0x280000;
-        self->processButtonCB    = UIButton_ProcessButtonCB_Alt;
+        self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
         self->touchCB            = UIButton_ProcessTouchCB;
         self->selectedCB         = UIModeButton_SelectedCB;
         self->failCB             = UIModeButton_FailCB;
@@ -185,7 +185,7 @@ void UIModeButton_SelectedCB(void)
     UITransition_StartTransition(self->actionCB, 14);
     if (self->stopMusic)
         RSDK.StopChannel(Music->channelID);
-    self->flag           = false;
+    self->isSelected     = false;
     self->state          = UIModeButton_State_Selected;
     parent->backoutTimer = 30;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);

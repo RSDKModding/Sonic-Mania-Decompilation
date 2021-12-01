@@ -3,6 +3,30 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIKEYBINDER_UP,
+    UIKEYBINDER_DOWN,
+    UIKEYBINDER_LEFT,
+    UIKEYBINDER_RIGHT,
+    UIKEYBINDER_A,
+    UIKEYBINDER_B,
+    UIKEYBINDER_X,
+    UIKEYBINDER_Y,
+    UIKEYBINDER_START,
+} UIKeyBinderKeyIDs;
+
+typedef enum {
+    UIKEYBINDER_FRAME_UP    = 7,
+    UIKEYBINDER_FRAME_DOWN  = 8,
+    UIKEYBINDER_FRAME_LEFT  = 9,
+    UIKEYBINDER_FRAME_RIGHT = 10,
+    UIKEYBINDER_FRAME_A     = 13,
+    UIKEYBINDER_FRAME_B     = 1,
+    UIKEYBINDER_FRAME_X     = 3,
+    UIKEYBINDER_FRAME_Y     = 11,
+    UIKEYBINDER_FRAME_START = 12,
+} UIKeyBinderKeyFrameIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -11,7 +35,7 @@ typedef struct {
     Entity *activeBinder;
     int32 curInputID;
     int32 curMappings;
-    bool32 flag;
+    bool32 isSelected;
 } ObjectUIKeyBinder;
 
 // Entity Class
@@ -21,20 +45,19 @@ typedef struct {
     uint8 inputID;
     int32 listID;
     int32 frameID;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    bool32 textFlag;
-    int32 field_134;
+    Vector2 size;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    int32 unused1; // set to 512, never used
+    bool32 textVisible;
+    int32 unused2;
     Animator animator1;
     Animator animator2;
     uint16 textFrames;
-    int32 field_16C;
+    int32 lasyKeyMap;
 } EntityUIKeyBinder;
 
 // Object Struct
@@ -57,18 +80,21 @@ void UIKeyBinder_Serialize(void);
 int32 UIKeyBinder_GetButtonListID(void);
 int32 UIKeyBinder_GetMappings(int32 input, int32 button);
 void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings);
-int32 UIKeyBinder_Unknown4(int32 id);
+int32 UIKeyBinder_GetKeyNameFrameID(int32 id);
 void UIKeyBinder_DrawSprites(void);
+
 void UIKeyBinder_ActionCB(void);
 bool32 UIKeyBinder_CheckButtonEnterCB(void);
 bool32 UIKeyBinder_CheckSelectedCB(void);
 void UIKeyBinder_ButtonEnterCB(void);
 void UIKeyBinder_ButtonLeaveCB(void);
 void UIKeyBinder_SelectedCB(void);
-void UIKeyBinder_Unknown12(void);
-void UIKeyBinder_Unknown13(void);
-void UIKeyBinder_Unknown14(void);
-void UIKeyBinder_Unknown15(void);
-void UIKeyBinder_Unknown16(void);
+
+void UIKeyBinder_State_HandleButtonLeave(void);
+void UIKeyBinder_State_HandleButtonEnter(void);
+void UIKeyBinder_State_Selected(void);
+
+void UIKeyBinder_MoveKeyToActionCB_No(void);
+void UIKeyBinder_MoveKeyToActionCB_Yes(void);
 
 #endif //!OBJ_UIKEYBINDER_H

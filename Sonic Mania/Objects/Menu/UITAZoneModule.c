@@ -19,7 +19,7 @@ void UITAZoneModule_Update(void)
         self->prevExpandAmount = self->expandAmount;
     if (self->isExpanding) {
         self->expandTimer++;
-        self->position.y = self->posUnknown2.y + (self->expandAmount >> 2);
+        self->position.y = self->startPos.y + (self->expandAmount >> 2);
     }
 
     if (self->announceTimer) {
@@ -50,7 +50,7 @@ void UITAZoneModule_Update(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (self->state == UITAZoneModule_State_Selected
         && (parent->buttons[parent->lastButtonID] != (EntityUIButton *)self || parent->state != UIControl_ProcessInputs)) {
-        self->flag  = false;
+        self->isSelected = false;
         self->state = UITAZoneModule_State_NotSelected;
     }
 }
@@ -98,15 +98,15 @@ void UITAZoneModule_Draw(void)
 void UITAZoneModule_Create(void *data)
 {
     RSDK_THIS(UITAZoneModule);
-    self->posUnknown2.x   = self->position.x;
-    self->posUnknown2.y   = self->position.y;
+    self->startPos.x   = self->position.x;
+    self->startPos.y   = self->position.y;
     self->active          = ACTIVE_BOUNDS;
     self->drawOrder       = 2;
     self->visible         = true;
     self->drawFX          = FX_FLIP;
     self->updateRange.x   = 0x800000;
     self->updateRange.y   = 0x300000;
-    self->processButtonCB = UIButton_ProcessButtonCB_Alt;
+    self->processButtonCB = UIButton_ProcessButtonCB_Scroll;
     self->state           = UITAZoneModule_State_Setup;
     if (!SceneInfo->inEditor) {
         RSDK.SetText(&self->text1Store, "", false);
@@ -133,7 +133,7 @@ void UITAZoneModule_Setup(void)
     self->touchPosEnd.y      = 0;
     self->checkButtonEnterCB = UITAZoneModule_CheckButtonEnterCB;
     self->checkSelectedCB    = UITAZoneModule_CheckSelectedCB;
-    if (self->processButtonCB == UIButton_ProcessButtonCB_Alt) {
+    if (self->processButtonCB == UIButton_ProcessButtonCB_Scroll) {
         self->touchPosStart.x = 0x1380000;
         self->touchPosStart.y = 0x4E0000;
         self->touchCB         = UIButton_ProcessTouchCB;
@@ -220,7 +220,7 @@ void UITAZoneModule_DrawBGShapes(void)
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(78, 312, self->position.x + 0x30000, self->position.y + 0x30000);
 
-    if (self->flag)
+    if (self->isSelected)
         UIWidgets_DrawRectOutline_Flash(78, 312, self->position.x, self->position.y);
     else
         UIWidgets_DrawRectOutline_Black(78, 312, self->position.x, self->position.y);
@@ -228,7 +228,7 @@ void UITAZoneModule_DrawBGShapes(void)
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(78 + (self->prevExpandAmount >> 16), 312, self->position.x + 0x30000, self->position.y + 0x30000);
 
-    if (self->flag || self->isExpanding)
+    if (self->isSelected || self->isExpanding)
         UIWidgets_DrawRectOutline_Flash(78 + (self->prevExpandAmount >> 16), 312, self->position.x, self->position.y);
     else
         UIWidgets_DrawRectOutline_Black(78 + (self->prevExpandAmount >> 16), 312, self->position.x, self->position.y);
@@ -304,7 +304,7 @@ void UITAZoneModule_DrawZonePreview(void)
     drawPos.x = self->drawPos.x - 0x690000;
     drawPos.y = self->drawPos.y;
     UIWidgets_DrawRectOutline_Black(72, 96, drawPos.x, drawPos.y);
-    if (SceneInfo->inEditor || !self->flag || self->disabled) {
+    if (SceneInfo->inEditor || !self->isSelected || self->disabled) {
         self->direction = self->fuzzDir;
         self->drawFX    = FX_FLIP;
         RSDK.DrawSprite(&self->fuzzAnimator, &drawPos, false);
@@ -406,7 +406,7 @@ bool32 UITAZoneModule_CheckSelectedCB(void)
 void UITAZoneModule_ButtonEnterCB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    self->flag  = true;
+    self->isSelected = true;
     self->state = UITAZoneModule_State_Selected;
 #if !RETRO_USE_PLUS
     self->rank = 0;
@@ -422,7 +422,7 @@ void UITAZoneModule_ButtonEnterCB(void)
 void UITAZoneModule_ButtonLeaveCB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    self->flag  = false;
+    self->isSelected = false;
     self->state = UITAZoneModule_State_NotSelected;
 }
 
@@ -445,7 +445,7 @@ void UITAZoneModule_State_Setup(void)
         hitbox.bottom = parent->size.y >> 17;
         hitbox.top    = -(parent->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y) && prompt->buttonID == 3)
-            UITAZoneModule->leaderboardsPrompt = (Entity *)prompt;
+            UITAZoneModule->leaderboardsPrompt = prompt;
     }
 #endif
 
@@ -456,7 +456,7 @@ void UITAZoneModule_State_Setup(void)
 void UITAZoneModule_State_NotSelected(void)
 {
     RSDK_THIS(UITAZoneModule);
-    self->position.x = self->posUnknown2.x;
+    self->position.x = self->startPos.x;
     RSDK.ProcessAnimation(&self->fuzzAnimator);
     self->touchCB = UIButton_ProcessTouchCB;
     self->fuzzDir = self->fuzzAnimator.frameID & 3;
@@ -481,7 +481,7 @@ void UITAZoneModule_State_HasBeenSelected(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    self->flag = true;
+    self->isSelected = true;
 #if !RETRO_USE_PLUS
     self->touchCB = StateMachine_None;
 #endif
@@ -724,7 +724,7 @@ void UITAZoneModule_State_StartTimeAttackAttempt(void)
     RSDK_THIS(UITAZoneModule);
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    self->flag = true;
+    self->isSelected = true;
     if (self->timer >= 30) {
         TimeAttackData_ClearOptions();
         param->zoneID = self->zoneID;
@@ -847,18 +847,18 @@ void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID
     control->buttonID            = zoneID;
     EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[zoneID];
 
-    control->position.x = module->posUnknown2.x;
-    control->position.y = module->posUnknown2.y;
-    control->targetPos  = module->posUnknown2;
+    control->position.x = module->startPos.x;
+    control->position.y = module->startPos.y;
+    control->targetPos  = module->startPos;
 
-    ScreenInfo->position.x = (module->posUnknown2.x >> 16) - ScreenInfo->centerX;
+    ScreenInfo->position.x = (module->startPos.x >> 16) - ScreenInfo->centerX;
     ScreenInfo->position.y = (control->position.y >> 16) - ScreenInfo->centerY;
     RSDK.CopyPalette((zoneID >> 3) + 1, 32 * zoneID, 0LL, 0xE0, 0x20);
     module->actID                = actID;
     module->state                = UITAZoneModule_State_ExpandModule;
     module->timer                = 16;
     module->isExpanding          = true;
-    module->flag                 = true;
+    module->isSelected           = true;
     UITAZoneModule->showLBPrompt = true;
     if (score > 0) {
         module->announceTimer = 150;
@@ -870,8 +870,8 @@ void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID
         if (button != module) {
             button->state       = UITAZoneModule_State_Inactive;
             button->isExpanding = false;
-            button->flag        = false;
-            button->position.x  = button->posUnknown2.x + (ScreenInfo->width << 16);
+            button->isSelected  = false;
+            button->position.x  = button->startPos.x + (ScreenInfo->width << 16);
         }
     }
 
@@ -1015,7 +1015,7 @@ void UITAZoneModule_State_ContractModule(void)
 
             UITAZoneModule->showLBPrompt = false;
             heading->position.y          = heading->startPos.y;
-            self->position               = self->posUnknown2;
+            self->position               = self->startPos;
             self->expandAmount           = 0;
             self->isExpanding            = false;
             self->timer++;
@@ -1024,7 +1024,7 @@ void UITAZoneModule_State_ContractModule(void)
             parent->childHasFocus = false;
             self->timer           = 0;
             self->state           = UITAZoneModule_State_Selected;
-            self->processButtonCB = UIButton_ProcessButtonCB_Alt;
+            self->processButtonCB = UIButton_ProcessButtonCB_Scroll;
         }
         else {
             self->timer++;
@@ -1093,12 +1093,12 @@ void UITAZoneModule_State_MoveOffScreen(void)
     RSDK.ProcessAnimation(&self->fuzzAnimator);
     self->fuzzDir    = self->fuzzAnimator.frameID & 3;
     self->velocity.x = 0x200000;
-    if ((self->position.x - self->posUnknown2.x) >> 16 < ScreenInfo->width) {
+    if ((self->position.x - self->startPos.x) >> 16 < ScreenInfo->width) {
         self->position.x += 0x200000;
         self->position.y += self->velocity.y;
     }
-    if ((self->position.x - self->posUnknown2.x) >> 16 >= ScreenInfo->width) {
-        self->position.x = self->posUnknown2.x + (ScreenInfo->width << 16);
+    if ((self->position.x - self->startPos.x) >> 16 >= ScreenInfo->width) {
+        self->position.x = self->startPos.x + (ScreenInfo->width << 16);
         self->state      = UITAZoneModule_State_Inactive;
     }
 }
@@ -1106,7 +1106,7 @@ void UITAZoneModule_State_MoveOffScreen(void)
 void UITAZoneModule_State_Inactive(void)
 {
     RSDK_THIS(UITAZoneModule);
-    self->position.x = self->posUnknown2.x + (ScreenInfo->width << 16);
+    self->position.x = self->startPos.x + (ScreenInfo->width << 16);
 }
 
 void UITAZoneModule_State_ComeBackOnScreen(void)
@@ -1116,12 +1116,12 @@ void UITAZoneModule_State_ComeBackOnScreen(void)
     self->velocity.x = -0x200000;
     self->fuzzDir    = self->fuzzAnimator.frameID & 3;
 
-    if (self->position.x > self->posUnknown2.x) {
+    if (self->position.x > self->startPos.x) {
         self->position.x -= 0x200000;
         self->position.y += self->velocity.y;
     }
-    if (self->position.x <= self->posUnknown2.x) {
-        self->position.x = self->posUnknown2.x;
+    if (self->position.x <= self->startPos.x) {
+        self->position.x = self->startPos.x;
         self->state      = UITAZoneModule_State_NotSelected;
     }
 }

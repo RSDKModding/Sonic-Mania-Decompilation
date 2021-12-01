@@ -644,7 +644,7 @@ void MenuSetup_Unknown3(void)
 
         foreach_all(UIVsCharSelector, selector)
         {
-            selector->flag            = true;
+            selector->isSelected            = true;
             selector->ready           = false;
             selector->processButtonCB = UIVsCharSelector_ProcessButtonCB;
         }
@@ -776,7 +776,7 @@ void MenuSetup_HandleMenuReturn(void)
         if (control == (EntityUIControl *)MenuSetup->timeAttack && param->startedTAAttempt) {
             int32 charID                   = param->characterID - 1;
             control->buttonID              = charID;
-            control->buttons[charID]->flag = true;
+            control->buttons[charID]->isSelected = true;
         }
 
         if (control == (EntityUIControl *)MenuSetup->extras && param->selectionType == 2) {
@@ -1280,7 +1280,7 @@ void MenuSetup_Leaderboard_Unknown(void)
             prompt->promptID = 14;
         else
             prompt->promptID = 15;
-        prompt->field_78  = -1;
+        prompt->unused    = -1;
         prompt->visible   = leaderboard->taRecord != 0;
         self->stateDelay  = StateMachine_None;
         MenuSetup->dialog = NULL;
@@ -1291,7 +1291,7 @@ void MenuSetup_Leaderboard_Unknown(void)
             prompt->promptID = 14;
         else
             prompt->promptID = 15;
-        prompt->field_78 = -1;
+        prompt->unused  = -1;
         prompt->visible  = leaderboard->taRecord != 0;
 
         UILeaderboard_InitLeaderboard(leaderboard);
@@ -1322,7 +1322,7 @@ void MenuSetup_VS_ProcessButtonCB(void)
 
             if (flag) {
                 if (button->ready)
-                    flag = !button->flag;
+                    flag = !button->isSelected;
                 else
                     flag = false;
             }
@@ -1343,7 +1343,7 @@ void MenuSetup_VS_MenuSetupCB(void)
     for (int32 i = 0; i < self->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)self->buttons[i];
 
-        button->flag            = true;
+        button->isSelected            = true;
         button->ready           = false;
         button->processButtonCB = UIVsCharSelector_ProcessButtonCB;
     }
@@ -1499,8 +1499,8 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     for (int32 p = 0; p < competition_PlayerCount; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
-        results->field_1D4 = session->winnerFlags[p] & (1 << p);
-        results->field_1D8 = session->winnerFlags[p] & (1 << p);
+        results->isWinner = session->winnerFlags[p] & (1 << p);
+        results->isLoser = session->winnerFlags[p] & (1 << p);
         if (session->winnerFlags[p] & (1 << p))
             winnerCount++;
         results->trophyCount = session->wins[p];
@@ -1655,7 +1655,7 @@ void MenuSetup_VS_Total_MenuSetupCB(void)
         bool32 *highlight          = &results->row0Highlight;
 
         results->numRows     = session->matchCount;
-        results->field_1D4   = session->wins[p] == highestScore;
+        results->isWinner   = session->wins[p] == highestScore;
         results->trophyCount = session->wins[p];
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
@@ -1680,8 +1680,8 @@ void MenuSetup_VS_Total_MenuUpdateCB(void)
                 if (totalControl->targetPos.y == totalControl->startPos.y) {
                     EntityUIVsResults *button = (EntityUIVsResults *)totalControl->buttons[0];
                     if (button) {
-                        if (button->field_1D0 + button->position.y - 0x708000 > totalControl->startPos.y)
-                            pos = button->field_1D0 + button->position.y - 0x708000;
+                        if (button->size.y + button->position.y - 0x708000 > totalControl->startPos.y)
+                            pos = button->size.y + button->position.y - 0x708000;
                     }
                 }
                 totalControl->targetPos.y = pos;
@@ -1725,7 +1725,7 @@ bool32 MenuSetup_VS_BackoutFromVsCharSelect(void)
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttonCount;
-        if (button->objectID == UIVsCharSelector->objectID && button->prevFlag && UIControl->backPress[button->playerID]) {
+        if (button->objectID == UIVsCharSelector->objectID && button->prevSelected && UIControl->backPress[button->playerID]) {
             UITransition_StartTransition(MenuSetup_VS_BackoutFromVsCharSelect_CB, 0);
             return true;
         }

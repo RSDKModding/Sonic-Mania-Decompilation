@@ -186,8 +186,8 @@ void UIPopover_SetupButtonPositions(void)
         EntityUIButton *button = self->buttons[b];
         button->position.x     = posX;
         button->position.y     = posY;
-        button->posUnknown2.x  = posX;
-        button->posUnknown2.y  = posY;
+        button->startPos.x  = posX;
+        button->startPos.y  = posY;
         posY += offsetY;
     }
 }

@@ -75,7 +75,7 @@ void UIReplayCarousel_Draw(void)
 void UIReplayCarousel_Create(void *data)
 {
     RSDK_THIS(UIReplayCarousel);
-    self->posUnknown2     = self->position;
+    self->startPos        = self->position;
     self->active          = ACTIVE_BOUNDS;
     self->drawOrder       = 2;
     self->visible         = true;
@@ -181,9 +181,9 @@ void UIReplayCarousel_ProcessButtonCB(void)
                 }
             }
 
-            if (!self->flag) {
+            if (!self->isSelected) {
                 if (parent->buttons[parent->lastButtonID] == (EntityUIButton *)self && !parent->dialogHasFocus && !parent->popoverHasFocus) {
-                    self->flag  = true;
+                    self->isSelected = true;
                     self->state = UIReplayCarousel_Unknown18;
                 }
             }
@@ -472,7 +472,7 @@ void UIReplayCarousel_Unknown11(void)
 void UIReplayCarousel_Unknown12(void)
 {
     RSDK_THIS(UIReplayCarousel);
-    self->flag  = false;
+    self->isSelected = false;
     self->state = UIReplayCarousel_Unknown17;
     if (!UIControl->hasTouchInput)
         self->replayID = -1;
@@ -568,7 +568,7 @@ void UIReplayCarousel_Unknown16(void)
 
     self->state = UIReplayCarousel_Unknown17;
 
-    self->position.x = self->posUnknown2.x;
+    self->position.x = self->startPos.x;
     RSDK.ProcessAnimation(&self->animator2);
     self->field_158 = self->animator2.frameID & 3;
 }
@@ -577,7 +577,7 @@ void UIReplayCarousel_Unknown17(void)
 {
     RSDK_THIS(UIReplayCarousel);
 
-    self->position.x = self->posUnknown2.x;
+    self->position.x = self->startPos.x;
     RSDK.ProcessAnimation(&self->animator2);
     self->field_158 = self->animator2.frameID & 3;
 }
@@ -598,7 +598,7 @@ void UIReplayCarousel_Unknown19(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     RSDK.ProcessAnimation(&self->animator2);
-    self->flag      = true;
+    self->isSelected = true;
     self->field_158 = self->animator2.frameID & 3;
     self->touchCB   = StateMachine_None;
 
