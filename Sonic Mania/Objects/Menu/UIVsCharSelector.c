@@ -400,7 +400,13 @@ void UIVsCharSelector_State_Selected(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIVsCharSelector_EditorDraw(void) { UIVsCharSelector_Draw(); }
+void UIVsCharSelector_EditorDraw(void)
+{
+    RSDK_THIS(UIVsCharSelector);
+    self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
+
+    UIVsCharSelector_Draw();
+}
 
 void UIVsCharSelector_EditorLoad(void)
 {

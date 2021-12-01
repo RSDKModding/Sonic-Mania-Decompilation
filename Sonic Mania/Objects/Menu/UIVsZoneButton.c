@@ -338,7 +338,13 @@ void UIVsZoneButton_State_Selected(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIVsZoneButton_EditorDraw(void) { UIVsZoneButton_Draw(); }
+void UIVsZoneButton_EditorDraw(void)
+{
+    RSDK_THIS(UIVsZoneButton);
+    self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
+
+    UIVsZoneButton_Draw();
+}
 
 void UIVsZoneButton_EditorLoad(void)
 {

@@ -59,39 +59,32 @@ void Fan_StaticUpdate(void)
                 offsetV = clampVal(offsetV, -0x20000, 0x20000);
 
                 if (water->bubbleOffset.x < offsetH) {
-                    int32 val = water->bubbleOffset.x + 0x800;
-                    if (val < offsetH)
-                        water->bubbleOffset.y = val;
-                    else
-                        water->bubbleOffset.y = offsetH;
+                    water->bubbleOffset.x += 0x800;
+                    if (water->bubbleOffset.x > offsetH)
+                        water->bubbleOffset.x = offsetH;
                 }
 
                 if (water->bubbleOffset.x > offsetH) {
-                    int32 val = water->bubbleOffset.x - 0x800;
-                    if (val > offsetH)
-                        water->bubbleOffset.y = val;
-                    else
-                        water->bubbleOffset.y = offsetH;
+                    water->bubbleOffset.x -= 0x800;
+                    if (water->bubbleOffset.x < offsetH)
+                        water->bubbleOffset.x = offsetH;
                 }
 
                 if (water->bubbleOffset.y < offsetV) {
-                    int32 val = water->bubbleOffset.y + 0x800;
-                    if (val < offsetV)
-                        water->bubbleOffset.y = val;
-                    else
+                    water->bubbleOffset.y += 0x800;
+                    if (water->bubbleOffset.y > offsetV)
                         water->bubbleOffset.y = offsetV;
                 }
 
                 if (water->bubbleOffset.y > offsetV) {
-                    int32 val = water->bubbleOffset.y - 0x800;
-                    if (val > offsetV)
-                        water->bubbleOffset.y = val;
-                    else
+                    water->bubbleOffset.y -= 0x800;
+                    if (water->bubbleOffset.y < offsetV)
                         water->bubbleOffset.y = offsetV;
                 }
             }
         }
     }
+
     if (HangConveyor) {
         foreach_active(HangConveyor, conveyor)
         {

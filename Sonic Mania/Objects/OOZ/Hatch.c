@@ -74,11 +74,11 @@ void Hatch_Create(void *data)
 
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
         if (warpDoor->objectID == WarpDoor->objectID) {
-            self->warpHitbox  = warpDoor->hitbox;
+            self->warpHitbox        = warpDoor->hitbox;
             warpDoor->hitbox.left   = 0;
-            warpDoor->hitbox.top    = -0x800;
+            warpDoor->hitbox.top    = 0x7FFF;
             warpDoor->hitbox.right  = 0;
-            warpDoor->hitbox.bottom = -0x800;
+            warpDoor->hitbox.bottom = 0x7FFF;
         }
 
         switch (self->go) {

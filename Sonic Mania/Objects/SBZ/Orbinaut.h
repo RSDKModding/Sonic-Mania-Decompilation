@@ -8,8 +8,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxOrb;
     uint16 aniFrames;
 } ObjectOrbinaut;
 

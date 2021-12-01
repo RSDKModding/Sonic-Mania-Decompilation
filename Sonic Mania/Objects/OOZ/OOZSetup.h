@@ -67,8 +67,8 @@ bool32 OOZSetup_CheckCB_Slide(void);
 bool32 OOZSetup_CheckCB_Swim(void);
 
 void OOZSetup_Draw_Flames(void);
-void OOZSetup_Unknown5(void);
-bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle);
+void OOZSetup_HandleActiveFlames(void);
+bool32 OOZSetup_StartFire(int32 posY, int32 posX, int32 angle);
 
 void OOZSetup_GenericTriggerCB(void);
 

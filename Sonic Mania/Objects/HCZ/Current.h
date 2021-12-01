@@ -66,8 +66,8 @@ void Current_Serialize(void);
 
 // Extra Entity Functions
 void Current_GetTaggedButton(void);
-Vector2 Current_Unknown2(uint8 a1);
-Vector2 Current_Unknown3(uint8 a1);
+Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right);
+Vector2 Current_GetBubbleSpawnPosVertical(uint8 down);
 
 void Current_State_WaterLeft(void);
 void Current_State_WaterRight(void);

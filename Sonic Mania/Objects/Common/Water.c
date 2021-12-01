@@ -592,17 +592,17 @@ void Water_HandleBubbleMovement(void)
     }
 
     if (self->position.y < Water->waterLevel) {
-        bool32 flag = false;
+        bool32 inWater = false;
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitbox))
-                flag = true;
+                inWater = true;
         }
 
-        if (!flag) {
+        if (!inWater) {
             if (self->animator.animationID == 3) {
                 if (self->animator.frameID > 12) {
-                    RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, 0, 0);
+                    RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, false, 0);
                     self->velocity.y = 0;
                 }
             }

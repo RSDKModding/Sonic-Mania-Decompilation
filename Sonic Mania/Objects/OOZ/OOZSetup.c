@@ -55,7 +55,7 @@ void OOZSetup_StaticUpdate(void)
                     int32 tx = (player->position.x & 0xFFF00000) + 0x70000;
                     int32 ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
                     if (behaviour == 1) {
-                        if (OOZSetup_Unknown6((ty & 0xFFF00000) - 0xC0000, tx, player->angle)) {
+                        if (OOZSetup_StartFire((ty & 0xFFF00000) - 0xC0000, tx, player->angle)) {
                             EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(1), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
                             sol->velocity.x = -0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
@@ -68,7 +68,7 @@ void OOZSetup_StaticUpdate(void)
                         }
                     }
                     else if (player->onGround) {
-                        if (OOZSetup_Unknown6(ty & 0xFFFF0000, tx, player->angle)) {
+                        if (OOZSetup_StartFire(ty & 0xFFFF0000, tx, player->angle)) {
                             EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(1), tx - 0x10000, (ty & 0xFFFF0000) - 0x80000);
                             sol->velocity.x = -0x40000;
                             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
@@ -135,7 +135,7 @@ void OOZSetup_StaticUpdate(void)
                         player->interaction    = true;
                         player->tileCollisions = true;
                         if (player->velocity.y < 0)
-                            player->velocity.y += 49152;
+                            player->velocity.y += 0xC000;
                         else
                             player->state = OOZSetup_PlayerState_OilFall;
                         break;
@@ -175,7 +175,7 @@ void OOZSetup_StaticUpdate(void)
         }
     }
 #endif
-    OOZSetup_Unknown5();
+    OOZSetup_HandleActiveFlames();
 #if RETRO_USE_PLUS
     RSDK.ProcessAnimation(&OOZSetup->animator);
 #endif
@@ -334,7 +334,7 @@ void OOZSetup_Draw_Flames(void)
     }
 }
 
-void OOZSetup_Unknown5(void)
+void OOZSetup_HandleActiveFlames(void)
 {
     RSDK_THIS(OOZSetup);
     for (int32 i = 0; i < OOZSetup->flameCount; ++i) {
@@ -360,12 +360,13 @@ void OOZSetup_Unknown5(void)
                 else {
                     ++frameTimer;
                 }
+                //likewise, this too is evil, using the lower 2 bytes to store frame info
                 OOZSetup->flamePositions[i].y = frame | (frameTimer << 8) | (OOZSetup->flamePositions[i].y & 0xFFFF0000);
             }
 
             foreach_active(Player, player)
             {
-                if (Player_CheckCollisionTouch(player, self, &Sol->hitbox1)) {
+                if (Player_CheckCollisionTouch(player, &OOZSetup->flamePositions[i], &Sol->hitboxBadnik)) {
                     Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
@@ -373,7 +374,7 @@ void OOZSetup_Unknown5(void)
     }
 }
 
-bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle)
+bool32 OOZSetup_StartFire(int32 posY, int32 posX, int32 angle)
 {
     RSDK_THIS(OOZSetup);
     int32 pos = (posX >> 20) + (posY >> 20 << 10);
@@ -390,13 +391,14 @@ bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle)
             OOZSetup->flamePositions[i].y = posY;
             OOZSetup->flamePositions[i].x &= 0xFFFF0000;
             OOZSetup->flamePositions[i].y &= 0xFFFF0000;
+            //this is so evil, using the bottom byte of the XPos to store the angle
             OOZSetup->flamePositions[i].x |= angle;
 
-            if (i + 1 > OOZSetup->flameCount) {
+            if (i + 1 > OOZSetup->flameCount)
                 OOZSetup->flameCount = i + 1;
-            }
-            OOZSetup->flameTimers[pos]                                                                      = 0xF0;
-            CREATE_ENTITY(Explosion, intToVoid(2), self->position.x, self->position.y - 0x60000)->drawOrder = self->drawOrder;
+
+            OOZSetup->flameTimers[pos]                                                                                   = 0xF0;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y - 0x60000)->drawOrder = self->drawOrder;
             return true;
         }
     }

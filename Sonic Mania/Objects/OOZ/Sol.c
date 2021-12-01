@@ -59,14 +59,17 @@ void Sol_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         Sol->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE);
-    Sol->hitbox1.left   = -8;
-    Sol->hitbox1.top    = -8;
-    Sol->hitbox1.right  = 8;
-    Sol->hitbox1.bottom = 8;
-    Sol->hitbox2.left   = -4;
-    Sol->hitbox2.top    = -4;
-    Sol->hitbox2.right  = 4;
-    Sol->hitbox2.bottom = 4;
+
+    Sol->hitboxBadnik.left   = -8;
+    Sol->hitboxBadnik.top    = -8;
+    Sol->hitboxBadnik.right  = 8;
+    Sol->hitboxBadnik.bottom = 8;
+
+    Sol->hitboxOrb.left   = -4;
+    Sol->hitboxOrb.top    = -4;
+    Sol->hitboxOrb.right  = 4;
+    Sol->hitboxOrb.bottom = 4;
+
     DEBUGMODE_ADD_OBJ(Sol);
 }
 
@@ -110,13 +113,13 @@ void Sol_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Sol->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &Sol->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
             int32 angle = self->angle;
             for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
                 if ((1 << i) & self->activeOrbs) {
                     self->position.x = self->positions[i].x;
                     self->position.y = self->positions[i].y;
-                    EntitySol *sol     = CREATE_ENTITY(Sol, intToVoid(1), self->positions[i].x, self->positions[i].y);
+                    EntitySol *sol   = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
 
                     sol->state = Sol_Unknown9;
 #if RETRO_USE_PLUS
@@ -138,7 +141,7 @@ void Sol_HandlePlayerHurt(void)
     RSDK_THIS(Sol);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Sol->hitbox2)) {
+        if (Player_CheckCollisionTouch(player, self, &Sol->hitboxOrb)) {
             Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
     }
@@ -194,8 +197,8 @@ void Sol_Unknown5(void)
 
     if (self->fireOrbs) {
         EntityPlayer *playerPtr = NULL;
-        int32 distanceX           = 0x7FFFFFFF;
-        int32 distanceY           = 0x7FFFFFFF;
+        int32 distanceX         = 0x7FFFFFFF;
+        int32 distanceY         = 0x7FFFFFFF;
         foreach_active(Player, player)
         {
             if (abs(player->position.y - self->position.y) < distanceY)
@@ -246,7 +249,7 @@ void Sol_Unknown6(void)
         if (angle == 64) {
             if ((1 << i) & self->activeOrbs) {
                 self->activeOrbs &= ~(1 << i);
-                EntitySol *sol = CREATE_ENTITY(Sol, intToVoid(1), self->positions[i].x, self->positions[i].y);
+                EntitySol *sol = CREATE_ENTITY(Sol, intToVoid(true), self->positions[i].x, self->positions[i].y);
                 if (self->direction == FLIP_NONE)
                     sol->velocity.x = -0x20000;
                 else
@@ -319,25 +322,23 @@ void Sol_Unknown9(void)
             self->rotation = (self->rotation + 64) & 0x180;
         }
 
-        int32 spawnX  = self->position.x + offsetX;
-        int32 spawnY  = self->position.y + offsetY;
-        uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, spawnX >> 20, (spawnY - 0x10000) >> 20);
+        int32 spawnX = self->position.x + offsetX;
+        int32 spawnY = self->position.y + offsetY;
+        uint16 tile  = RSDK.GetTileInfo(Zone->fgHigh, spawnX >> 20, (spawnY - 0x10000) >> 20);
         if (tile == 0xFFFF)
             tile = RSDK.GetTileInfo(Zone->fgLow, spawnX >> 20, (spawnY - 0x10000) >> 20);
 
         int32 behaviour = RSDK.GetTileBehaviour(tile, 0);
         if (((behaviour == 2 || behaviour == 3) && collided) || behaviour == 1) {
-            self->position.y = spawnY;
-            self->position.y -= 0x80000;
-            self->position.x = spawnX;
-            self->position.x -= 0x40000;
+            self->position.x = spawnX - 0x40000;
+            self->position.y = spawnY - 0x80000;
             self->rotation   = 0;
             self->velocity.x = -0x40000;
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &self->animator1, true, 0);
             self->state = Sol_Unknown11;
 
-            EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(1), spawnX, spawnY - 0x80000);
+            EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), spawnX, spawnY - 0x80000);
             sol->velocity.x = 0x40000;
             sol->velocity.y = 0;
             RSDK.SetSpriteAnimation(Sol->aniFrames, 3, &sol->animator1, true, 0);
@@ -346,8 +347,8 @@ void Sol_Unknown9(void)
 
             if (behaviour == 1) {
                 self->position.y = (self->position.y & 0xFFF00000) + 0x20000;
-                sol->position.y    = (sol->position.y & 0xFFF00000) + 0x20000;
-                sol->state         = Sol_Unknown12;
+                sol->position.y  = (sol->position.y & 0xFFF00000) + 0x20000;
+                sol->state       = Sol_Unknown12;
                 self->state      = Sol_Unknown12;
             }
             else {
@@ -404,7 +405,7 @@ void Sol_Unknown11(void)
         else {
             self->position.y -= 0x80000;
             if ((self->position.x & 0xF00000) != self->field_88)
-                OOZSetup_Unknown6(self->position.y & 0xFFFF0000, (self->position.x & 0xFFF00000) + 0x70000, self->rotation >> 1);
+                OOZSetup_StartFire(self->position.y & 0xFFFF0000, (self->position.x & 0xFFF00000) + 0x70000, self->rotation >> 1);
             self->field_88 = self->position.x & 0xF00000;
         }
         self->position.x += self->velocity.x;
@@ -427,7 +428,7 @@ void Sol_Unknown12(void)
 
         if (RSDK.GetTileBehaviour(tile, 0) == 1) {
             if ((self->position.x & 0xF00000) != self->field_88)
-                OOZSetup_Unknown6(self->position.y & 0xFFFF0000, (self->position.x & 0xFFF00000) + 0x70000, self->rotation >> 1);
+                OOZSetup_StartFire(self->position.y & 0xFFFF0000, (self->position.x & 0xFFF00000) + 0x70000, self->rotation >> 1);
             self->field_88 = self->position.x & 0xF00000;
         }
         else {

@@ -221,7 +221,13 @@ void UICharButton_State_Selected(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UICharButton_EditorDraw(void) { UICharButton_Draw(); }
+void UICharButton_EditorDraw(void)
+{
+    RSDK_THIS(UICharButton);
+    self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
+
+    UICharButton_Draw();
+}
 
 void UICharButton_EditorLoad(void)
 {

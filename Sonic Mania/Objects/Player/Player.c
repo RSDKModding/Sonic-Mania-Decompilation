@@ -4099,12 +4099,12 @@ void Player_State_Hit(void)
         else {
             self->groundVel += 0x20000;
         }
-        self->pushing     = 0;
-        self->controlLock = 0;
+        self->pushing     = false;
+        self->controlLock = false;
         if (self->camera)
             self->camera->offsetYFlag = false;
         self->jumpAbilityTimer = 0;
-        self->skidding         = 0;
+        self->skidding         = false;
     }
     else {
         if (self->camera) {
@@ -4134,9 +4134,8 @@ void Player_State_Die(void)
 
     if (!self->sidekick) {
         if (self->camera) {
-            int32 y = self->camera->position.y - self->camera->targetMoveVel.y + 0x1800000;
-            if (self->position.y > y)
-                self->position.y = y;
+            if (self->position.y > self->camera->position.y - self->camera->targetMoveVel.y + 0x1800000)
+                self->position.y = self->camera->position.y - self->camera->targetMoveVel.y + 0x1800000;
             self->scrollDelay = 2;
         }
     }
@@ -4154,14 +4153,13 @@ void Player_State_Drown(void)
         self->blinkTimer = 0;
         self->visible    = true;
     }
-    self->velocity.y += self->gravityStrength;
     self->velocity.x = 0;
+    self->velocity.y += self->gravityStrength;
     RSDK.SetSpriteAnimation(self->aniFrames, ANI_DROWN, &self->animator, false, 0);
     if (!self->sidekick) {
         if (self->camera) {
-            int32 y = self->camera->position.y + 0x1000000;
-            if (self->position.y > y)
-                self->position.y = y;
+            if (self->position.y > self->camera->position.y + 0x1000000)
+                self->position.y = self->camera->position.y + 0x1000000;
             self->scrollDelay = 2;
         }
     }
@@ -4224,6 +4222,7 @@ void Player_State_DropDash(void)
             self->scrollDelay   = 8;
             self->camera->state = Camera_State_VLock;
         }
+
         EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
         dust->state = Dust_State_Move;

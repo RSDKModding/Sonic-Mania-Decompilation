@@ -87,7 +87,7 @@ typedef struct {
     uint8 activePlayers;
     uint8 activePlayers2;
     Vector2 bubbleOffset;
-    Vector2 bubbleVelocity; // never set, but can tell what they're for in the code
+    Vector2 bubbleVelocity;
     EntityButton *taggedObject;
     Animator animator;
 } EntityWater;

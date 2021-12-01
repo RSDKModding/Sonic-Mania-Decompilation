@@ -64,14 +64,17 @@ void Orbinaut_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         Orbinaut->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Orbinaut.bin", SCOPE_STAGE);
-    Orbinaut->hitbox1.left   = -8;
-    Orbinaut->hitbox1.top    = -8;
-    Orbinaut->hitbox1.right  = 8;
-    Orbinaut->hitbox1.bottom = 8;
-    Orbinaut->hitbox2.left   = -4;
-    Orbinaut->hitbox2.top    = -4;
-    Orbinaut->hitbox2.right  = 4;
-    Orbinaut->hitbox2.bottom = 4;
+
+    Orbinaut->hitboxBadnik.left   = -8;
+    Orbinaut->hitboxBadnik.top    = -8;
+    Orbinaut->hitboxBadnik.right  = 8;
+    Orbinaut->hitboxBadnik.bottom = 8;
+
+    Orbinaut->hitboxOrb.left   = -4;
+    Orbinaut->hitboxOrb.top    = -4;
+    Orbinaut->hitboxOrb.right  = 4;
+    Orbinaut->hitboxOrb.bottom = 4;
+
     DEBUGMODE_ADD_OBJ(Orbinaut);
 }
 
@@ -84,7 +87,7 @@ void Orbinaut_DebugSpawn(void)
 void Orbinaut_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Orbinaut_HandlePlayerInteractions(void)
@@ -100,7 +103,7 @@ void Orbinaut_HandlePlayerInteractions(void)
             foreach_active(Player, player)
             {
                 if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
-                    if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitbox2)) {
+                    if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
                         Player_CheckHit(player, self);
                     }
                 }
@@ -113,7 +116,7 @@ void Orbinaut_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Orbinaut->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &Orbinaut->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
             int32 angle = self->angle;
             for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
                 if ((1 << i) & self->activeOrbs) {
@@ -271,7 +274,7 @@ void Orbinaut_State_Orb(void)
         foreach_active(Player, player)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
-                if (Player_CheckCollisionTouch(player, self, &Sol->hitbox2)) {
+                if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
                     Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }

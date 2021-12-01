@@ -1132,6 +1132,8 @@ void UITAZoneModule_State_ComeBackOnScreen(void)
 void UITAZoneModule_EditorDraw(void)
 {
     RSDK_THIS(UITAZoneModule);
+    self->startPos   = self->position;
+    self->drawPos    = self->position;
 
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->medLetterAnimator1, false, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->medLetterAnimator2, false, 0);
