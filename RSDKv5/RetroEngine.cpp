@@ -565,7 +565,9 @@ void runRetroEngine()
     writeSettings(false);
     releaseUserData();
     ReleaseStorage();
+#if RETRO_USE_MOD_LOADER
     unloadMods();
+#endif
 
 #if RETRO_USING_SDL1 || RETRO_USING_SDL2
     SDL_Quit();

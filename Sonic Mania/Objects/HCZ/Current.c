@@ -78,7 +78,7 @@ void Current_StaticUpdate(void)
                 if (current->type < CURRENT_W_LEFT) {
                     if ((current->planeFilter <= 0 || player->collisionPlane == ((uint8)(current->planeFilter - 1) & 1))
                         && (!current->waterOnly || player->underwater)) {
-                        if (Player_CheckCollisionTouch(Player, current, &current->hitbox)) {
+                        if (Player_CheckCollisionTouch(player, current, &current->hitbox)) {
                             Current->activePlayers |= (1 << playerID);
                             active = true;
                             foreach_break;

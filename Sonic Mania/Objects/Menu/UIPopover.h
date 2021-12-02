@@ -11,8 +11,6 @@ typedef enum {
     POPOVER_WATCH     = 7,
     POPOVER_CHALLENGE = 8,
     POPOVER_DELETE    = 9,
-    POPOVER_BYDATE    = 10,
-    POPOVER_BYZONE    = 11,
 } PopoverOptions;
 
 // Object Class

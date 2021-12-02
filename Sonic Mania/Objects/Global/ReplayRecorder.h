@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 
-#define Replay_Signature (0xF6057BED)
+#define Replay_Signature  (0xF6057BED)
 #define Replay_BufferSize (0x100000)
 
 typedef enum {

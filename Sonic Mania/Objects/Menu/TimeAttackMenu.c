@@ -394,14 +394,14 @@ void TimeAttackMenu_ReplayCarousel_ActionCB(void)
         if (!self->replayID)
             y += self->field_17C;
 
-        UIPopover_AddButton(popover, POPOVER_WATCH, TimeAttackMenu_WatchReplayCB, false);
-        UIPopover_AddButton(popover, POPOVER_CHALLENGE, TimeAttackMenu_ChallengeReplayCB, false);
+        UIPopover_AddButton(popover, POPOVER_WATCH, TimeAttackMenu_WatchReplayCB_ReplaysMenu, false);
+        UIPopover_AddButton(popover, POPOVER_CHALLENGE, TimeAttackMenu_ChallengeReplayCB_ReplaysMenu, false);
         UIPopover_AddButton(popover, POPOVER_DELETE, TimeAttackMenu_DeleteReplayCB, true);
         UIPopover_Setup(popover, self->position.x, y);
     }
 }
 
-void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
+void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     int32 id               = RSDK.MostRecentActiveControllerID(0, 0, 0);
@@ -461,13 +461,13 @@ void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost)
     ReplayRecorder_Buffer_LoadFile(fileBuffer, globals->replayTempRBuffer, TimeAttackMenu_ReplayLoad_CB);
 }
 
-void TimeAttackMenu_ReplayLoad_CB(bool32 a1)
+void TimeAttackMenu_ReplayLoad_CB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
 
     int32 strID = 0;
-    if (a1) {
-        if (globals->replayTempRBuffer[1] == RETRO_GAMEVER) {
+    if (success) {
+        if (globals->replayTempRBuffer[REPLAY_HDR_VER] == RETRO_GAMEVER) {
             LogHelpers_Print("WARNING: Replay Load OK");
             ReplayRecorder_Buffer_Unpack(globals->replayReadBuffer, globals->replayTempRBuffer);
             TimeAttackMenu_Unknown17();
@@ -482,17 +482,16 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 a1)
     TextInfo info;
     INIT_TEXTINFO(info);
     Localization_GetString(&info, strID);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
+   
+    EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, StateMachine_None, true);
     if (dialog) {
-        UIDialog_AddButton(DIALOG_OK, dialog, 0, true);
-        UIDialog_Setup(dialog);
         EntityUIPopover *popover = (EntityUIPopover *)UIPopover->activeEntity;
         if (popover)
             popover->parent->selectionDisabled = false;
     }
 }
 
-void TimeAttackMenu_WatchReplayCB(void)
+void TimeAttackMenu_WatchReplayCB_ReplaysMenu(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
@@ -504,10 +503,10 @@ void TimeAttackMenu_WatchReplayCB(void)
     param->replayRankID = button->selection;
     param->replayID     = carousel->replayID;
     int32 id            = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
-    TimeAttackMenu_AddReplayEntry(id, false);
+    TimeAttackMenu_WatchReplay(id, false);
 }
 
-void TimeAttackMenu_ChallengeReplayCB(void)
+void TimeAttackMenu_ChallengeReplayCB_ReplaysMenu(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
@@ -519,10 +518,10 @@ void TimeAttackMenu_ChallengeReplayCB(void)
     param->replayRankID = button->selection;
     param->replayID     = carousel->replayID;
     int32 id            = API.GetSortedUserDBRowID(globals->replayTableID, carousel->replayID);
-    TimeAttackMenu_AddReplayEntry(id, true);
+    TimeAttackMenu_WatchReplay(id, true);
 }
 
-void TimeAttackMenu_SortReplayByDate_CB(void)
+void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
 {
     EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
     EntityUIPopover *popover   = (EntityUIPopover *)UIPopover->activeEntity;
@@ -534,11 +533,11 @@ void TimeAttackMenu_SortReplayByDate_CB(void)
         RSDK.GetCString(param->menuTag, &parent->tag);
         param->selectionID = parent->buttonID;
         param->clearFlag   = true;
-        TimeAttackMenu_AddReplayEntry(uuid, false);
+        TimeAttackMenu_WatchReplay(uuid, false);
     }
 }
 
-void TimeAttackMenu_SortReplayByZone_CB(void)
+void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void)
 {
     EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
     EntityUIPopover *popover   = (EntityUIPopover *)UIPopover->activeEntity;
@@ -550,7 +549,7 @@ void TimeAttackMenu_SortReplayByZone_CB(void)
         RSDK.GetCString(param->menuTag, &parent->tag);
         param->selectionID = parent->buttonID;
         param->clearFlag   = true;
-        TimeAttackMenu_AddReplayEntry(uuid, true);
+        TimeAttackMenu_WatchReplay(uuid, true);
     }
 }
 
@@ -666,9 +665,9 @@ void TimeAttackMenu_Unknown26(void)
 
     sprintf(param->menuTag, "Time Attack Detail");
     param->selectionID  = 0;
-    param->clearFlag    = 1;
+    param->clearFlag    = true;
     param->isEncoreMode = TimeAttackMenu->encoreMode;
-    if (globals->replayReadBuffer[3] && globals->replayReadBuffer[0] == 0xF6057BED)
+    if (globals->replayReadBuffer[REPLAY_HDR_PACKED] && globals->replayReadBuffer[REPLAY_HDR_SIG] == Replay_Signature)
         memset(globals->replayReadBuffer, 0, sizeof(globals->replayReadBuffer));
     TimeAttackMenu_Unknown27();
 }
@@ -679,7 +678,7 @@ void TimeAttackMenu_Unknown27(void)
     SaveGame_ResetPlayerState();
     memset(globals->noSaveSlot, 0, 0x400);
     globals->continues  = 0;
-    globals->saveSlotID = 255;
+    globals->saveSlotID = NO_SAVE_SLOT;
     globals->gameMode   = MODE_TIMEATTACK;
     globals->medalMods  = 0;
 
@@ -782,8 +781,8 @@ void TimeAttackMenu_RankButton_ActionCB(void)
     EntityUIPopover *popover = UIPopover_CreatePopover();
     if (popover) {
         popover->storedEntity = (Entity *)self;
-        UIPopover_AddButton(popover, POPOVER_BYDATE, TimeAttackMenu_SortReplayByDate_CB, 0);
-        UIPopover_AddButton(popover, POPOVER_BYZONE, TimeAttackMenu_SortReplayByZone_CB, 0);
+        UIPopover_AddButton(popover, POPOVER_WATCH, TimeAttackMenu_WatchReplayCB_RanksMenu, false);
+        UIPopover_AddButton(popover, POPOVER_CHALLENGE, TimeAttackMenu_ChallengeReplayCB_RanksMenu, false);
         UIPopover_Setup(popover, self->field_124, self->field_128);
     }
 }

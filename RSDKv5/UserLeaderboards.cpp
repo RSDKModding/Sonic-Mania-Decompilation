@@ -1,4 +1,5 @@
 #include "RetroEngine.hpp"
+#include <string>
 
 // Start custom leaderboard code
 // this is added because we don't have access to any store APIs that would otherwise use this feature
