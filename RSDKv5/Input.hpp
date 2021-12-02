@@ -542,40 +542,38 @@ inline int ControllerIDForInputID(uint8 inputID)
 }
 
 #if RETRO_REV02
-inline int32 MostRecentActiveControllerID(int32 type, int32 a2, uint32 a3)
+inline int32 MostRecentActiveControllerID(int32 type, bool32 unassignedOnly, uint32 maxInactiveTimer)
 {
-    uint recentTimer     = -1;
-    int inputID          = 0;
-    int inputIDStore     = 0;
-    uint minInactiveTime = -1;
-    if (a3)
-        minInactiveTime = a3;
+    uint mostRecentTime   = -1;
+    int mostRecentValidID = 0;
+    int mostRecentID      = 0;
+    uint maxTime          = maxInactiveTimer ? maxInactiveTimer : -1;
 
     if (InputDeviceCount) {
         for (int i = 0; i < InputDeviceCount; ++i) {
-            if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
-                if (InputDevices[i].inactiveTimer[type] < recentTimer) {
-                    recentTimer = InputDevices[i].inactiveTimer[type];
-                    if (InputDevices[i].inactiveTimer[type] <= minInactiveTime)
-                        inputID = InputDevices[i].inputID;
-                    inputIDStore = InputDevices[i].inputID;
+            if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !unassignedOnly)) {
+                if (InputDevices[i].inactiveTimer[type] < mostRecentTime) {
+                    mostRecentTime = InputDevices[i].inactiveTimer[type];
+                    if (InputDevices[i].inactiveTimer[type] <= maxTime)
+                        mostRecentValidID = InputDevices[i].inputID;
+                    mostRecentID = InputDevices[i].inputID;
                 }
             }
         }
 
-        if (inputID)
-            return inputID;
+        if (mostRecentValidID)
+            return mostRecentValidID;
     }
-    if (inputIDStore)
-        return inputIDStore;
+    if (mostRecentID)
+        return mostRecentID;
 
     for (int i = 0; i < InputDeviceCount; ++i) {
-        if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !a2)) {
+        if (InputDevices[i].active && !InputDevices[i].field_F && (!InputDevices[i].assignedControllerID || !unassignedOnly)) {
             return InputDevices[i].inputID;
         }
     }
 
-    return inputIDStore;
+    return mostRecentID;
 }
 #else
 inline int32 MostRecentActiveControllerID()

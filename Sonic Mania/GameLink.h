@@ -526,7 +526,7 @@ typedef enum {
 } VarTypes;
 
 typedef enum {
-    DBVAR_INVALID,
+    DBVAR_NONE,
     DBVAR_UNKNOWN1,
     DBVAR_UINT8,
     DBVAR_UINT16,

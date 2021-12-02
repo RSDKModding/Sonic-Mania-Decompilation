@@ -248,7 +248,7 @@ int32 TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int32 act, cha
     uint32 uuid = API.GetUserDBRowUUID(globals->taTableID, rowID);
     char buf[0x20];
     memset(buf, 0, 0x20 * sizeof(char));
-    API.GetUserDBCreationTime(globals->taTableID, rowID, buf, 23, "%Y/%m/%d %H:%M:%S");
+    API.GetUserDBRowCreationTime(globals->taTableID, rowID, buf, 23, "%Y/%m/%d %H:%M:%S");
     LogHelpers_Print("Time Attack DB Added Entry");
     LogHelpers_Print("Created at %s", buf);
     LogHelpers_Print("Row ID: %d", rowID);

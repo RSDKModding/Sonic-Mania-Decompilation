@@ -127,7 +127,7 @@ void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, 
     button->rank  = rank;
     button->score = score;
     button->replayID = 0;
-    if (replayID && globals->replayTableID != -1 && API.GetUserDBByID(globals->replayTableID, replayID) != -1)
+    if (replayID && globals->replayTableID != -1 && API.GetUserDBRowByID(globals->replayTableID, replayID) != -1)
         button->replayID = replayID;
 
     button->leaderboardEntry = NULL;

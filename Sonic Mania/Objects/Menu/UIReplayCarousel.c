@@ -295,7 +295,7 @@ void UIReplayCarousel_Unknown6(void)
             int32 row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
             int32 zoneID = 0xFF;
             API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "zoneID", &zoneID);
-            API.GetUserDBCreationTime(globals->replayTableID, row, buffer, 31, "%D");
+            API.GetUserDBRowCreationTime(globals->replayTableID, row, buffer, 31, "%D");
             if (zoneID != 0xFF) {
                 RSDK.SetText(&self->zoneNameText[i], "", 0);
                 Localization_GetZoneName(&self->zoneNameText[i], zoneID);

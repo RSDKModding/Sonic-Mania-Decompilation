@@ -151,7 +151,7 @@ ushort LoadUserDB(const char *filename, void (*callback)(int));
 bool32 SaveUserDB(ushort tableID, void (*callback)(int));
 void ClearUserDB(ushort tableID);
 void ClearAllUserDBs();
-ushort GetUserDBByID(ushort tableID, uint uuid);
+ushort GetUserDBRowByID(ushort tableID, uint uuid);
 
 // UserDB Columns
 bool32 AddUserDBColumn(UserDBRow *userDB, int type, char *name, void *value);
@@ -183,13 +183,13 @@ void RetrieveUserDBValue(UserDBValue *value, int type, void *data);
 
 // UserDB Misc
 int GetUserDBRowsChanged(ushort tableID);
-void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format);
+void GetUserDBRowCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format);
 void UpdateUserDBParents(UserDB *userDB);
 size_t GetUserDBWriteSize(UserDB *userDB);
 bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer);
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer);
 void HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *a2, int column);
-void RemoveNonMatchingSortRows(UserDB *userDB, const char *name, void *value);
+void FilterSortedUserDBRows(UserDB *userDB, const char *name, void *value);
 bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type, char *name, bool32 flag);
 void HandleUserDBSorting(UserDB *userDB, int type, char *name, bool32 flag);
 uint CreateRowUUID(UserDB *userDB);

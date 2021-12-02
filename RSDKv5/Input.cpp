@@ -376,11 +376,11 @@ void UpdateKeyboardInput(InputDevice *device)
     int keyCount         = 0;
     const byte *keyState = SDL_GetKeyboardState(&keyCount);
 
-    int inputID           = device->controllerID + 1;
+    uint8 keyboardID      = (device->gamePadType & 0xFF);
     InputState *buttons[] = {
-        &controller[inputID].keyUp, &controller[inputID].keyDown, &controller[inputID].keyLeft,  &controller[inputID].keyRight,
-        &controller[inputID].keyA,  &controller[inputID].keyB,    &controller[inputID].keyC,     &controller[inputID].keyX,
-        &controller[inputID].keyY,  &controller[inputID].keyZ,    &controller[inputID].keyStart, &controller[inputID].keySelect,
+        &controller[keyboardID].keyUp, &controller[keyboardID].keyDown, &controller[keyboardID].keyLeft,  &controller[keyboardID].keyRight,
+        &controller[keyboardID].keyA,  &controller[keyboardID].keyB,    &controller[keyboardID].keyC,     &controller[keyboardID].keyX,
+        &controller[keyboardID].keyY,  &controller[keyboardID].keyZ,    &controller[keyboardID].keyStart, &controller[keyboardID].keySelect,
     };
 
     bool32 confirmPress = false;

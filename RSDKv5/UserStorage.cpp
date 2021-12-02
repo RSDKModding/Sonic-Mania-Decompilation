@@ -435,7 +435,7 @@ void ClearAllUserDBs()
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) ClearUserDB(i);
 }
 
-ushort GetUserDBByID(ushort tableID, uint uuid)
+ushort GetUserDBRowByID(ushort tableID, uint uuid)
 {
     if (tableID == 0xFFFF)
         return -1;
@@ -491,9 +491,9 @@ int GetDBColumnID(UserDB *userDB, const char *name)
     }
     return id;
 }
-bool32 GetUserDBColumn(UserDBRow *userDB, int type, char *name, void *value)
+bool32 GetUserDBColumn(UserDBRow *row, int type, char *name, void *value)
 {
-    UserDB *db = userDB->parent;
+    UserDB *db = row->parent;
     uint uuid  = 0;
     GenerateCRC(&uuid, name);
 
@@ -501,7 +501,7 @@ bool32 GetUserDBColumn(UserDBRow *userDB, int type, char *name, void *value)
         if (db->columnUUIDs[c] == uuid) {
             if (c < 0 || type != db->columnTypes[c])
                 return 0;
-            RetrieveUserDBValue(&userDB->values[c], type, value);
+            RetrieveUserDBValue(&row->values[c], type, value);
             return true;
         }
     }
@@ -626,10 +626,10 @@ int AddUserDBRowSortFilter(ushort tableID, int type, const char *name, void *val
     if (!userDB->active)
         return 0;
 
-    RemoveNonMatchingSortRows(userDB->parent, name, value);
+    FilterSortedUserDBRows(userDB->parent, name, value);
     return userDB->sortedRowCount;
 }
-int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active)
+int SortUserDBRows(ushort tableID, int type, const char *name, bool32 flag)
 {
     if (tableID == 0xFFFF)
         return 0;
@@ -637,7 +637,7 @@ int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active)
     if (!userDB->active)
         return 0;
 
-    HandleUserDBSorting(userDB->parent, type, (char*)name, active);
+    HandleUserDBSorting(userDB->parent, type, (char *)name, flag);
     return userDB->sortedRowCount;
 }
 int GetSortedUserDBRowCount(ushort tableID)
@@ -651,15 +651,15 @@ int GetSortedUserDBRowCount(ushort tableID)
 
     return userDB->sortedRowCount;
 }
-int GetSortedUserDBRowID(ushort tableID, ushort entryID)
+int GetSortedUserDBRowID(ushort tableID, ushort sortedRowID)
 {
     if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (!userDB->active || userDB->rowsChanged || entryID >= userDB->sortedRowCount)
+    if (!userDB->active || userDB->rowsChanged || sortedRowID >= userDB->sortedRowCount)
         return -1;
 
-    return userDB->sortedRowIDs[entryID];
+    return userDB->sortedRowIDs[sortedRowID];
 }
 
 //UserDB Values
@@ -765,6 +765,7 @@ void StoreUserDBValue(UserDBValue *value, int type, void *data)
                     int id      = 0;
                     while (string[id]) {
                         value->data[id] = string[id];
+                        ++id;
                     }
                 }
                 break;
@@ -788,7 +789,7 @@ void RetrieveUserDBValue(UserDBValue *value, int type, void *data)
         case DBVAR_UNKNOWN2: memcpy(valData, value->data, sizeof(int32)); break;
         case DBVAR_STRING: {
             memset(valData, 0, value->size + 1);
-            char *string = (char *)data;
+            char *string = (char *)value->data;
             for (int c = 0; c < value->size; ++c) {
                 valData[c] = string[c];
             }
@@ -800,7 +801,7 @@ void RetrieveUserDBValue(UserDBValue *value, int type, void *data)
 
 //UserDB Misc
 int GetUserDBRowsChanged(ushort tableID) { return userDBStorage->userDB[tableID].rowsChanged; }
-void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
+void GetUserDBRowCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
 {
     if (tableID != 0xFFFF && entryID != 0xFFFF) {
         UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -960,7 +961,7 @@ void HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *value, int column)
         }
     }
 }
-void RemoveNonMatchingSortRows(UserDB *userDB, const char *name, void *value)
+void FilterSortedUserDBRows(UserDB *userDB, const char *name, void *value)
 {
     int id = GetDBColumnID(userDB, name);
 

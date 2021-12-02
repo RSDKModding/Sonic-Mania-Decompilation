@@ -252,7 +252,7 @@ void TimeAttackMenu_HandleMenuReturn(void)
         UIButton_SetChoiceSelectionWithCB(replayControl->buttons[0], param->selectedReplay & 0xFF);
         EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
         int32 count                      = API.GetSortedUserDBRowCount(globals->replayTableID);
-        int32 id                         = API.GetUserDBByID(globals->replayTableID, param->replayUUID);
+        int32 id                         = API.GetUserDBRowByID(globals->replayTableID, param->replayUUID);
 
         int32 i = 0;
         for (; i < count; ++i) {
@@ -529,7 +529,7 @@ void TimeAttackMenu_SortReplayByDate_CB(void)
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
 
-    int32 uuid = API.GetUserDBByID(globals->replayTableID, button->replayID);
+    int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
         param->selectionID = parent->buttonID;
@@ -545,7 +545,7 @@ void TimeAttackMenu_SortReplayByZone_CB(void)
     EntityUIRankButton *button = (EntityUIRankButton *)popover->storedEntity;
     EntityUIControl *parent    = (EntityUIControl *)button->parent;
 
-    int32 uuid = API.GetUserDBByID(globals->replayTableID, button->replayID);
+    int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
         param->selectionID = parent->buttonID;
@@ -621,7 +621,7 @@ void TimeAttackMenu_SortReplayChoiceCB(void)
     if (control->buttons[0]->selection == 1)
         API.SortDBRows(globals->replayTableID, DBVAR_UINT32, "zoneSortVal", false);
     else
-        API.SortDBRows(globals->replayTableID, DBVAR_INVALID, NULL, true);
+        API.SortDBRows(globals->replayTableID, DBVAR_NONE, NULL, true);
     carousel->stateDraw = UIReplayCarousel_StateDraw_Unknown1;
 }
 

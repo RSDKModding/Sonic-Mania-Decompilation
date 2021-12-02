@@ -210,7 +210,7 @@ inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(v
     }
 }
 
-void SwapDrawListEntries(byte layer, uint16 indexA, uint16 indexB, int count);
+void SwapDrawListEntries(uint8 layer, uint16 indexA, uint16 indexB, int32 count);
 
 void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha);
 

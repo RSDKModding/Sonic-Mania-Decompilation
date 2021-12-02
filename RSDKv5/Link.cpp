@@ -74,8 +74,8 @@ enum UserdataTableIDs {
     APITable_SetUserDBValue,
     APITable_GetUserDBValue,
     APITable_GetEntryUUID,
-    APITable_GetUserDBByID,
-    APITable_GetUserDBCreationTime,
+    APITable_GetUserDBRowByID,
+    APITable_GetUserDBRowCreationTime,
     APITable_RemoveDBRow,
     APITable_RemoveAllDBEntries,
     APITable_Count,
@@ -426,8 +426,8 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
     addToAPIFunctionTable(APITable_GetUserDBValue, GetUserDBValue);
     addToAPIFunctionTable(APITable_GetEntryUUID, GetDBRowUUID);
-    addToAPIFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
-    addToAPIFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);
+    addToAPIFunctionTable(APITable_GetUserDBRowByID, GetUserDBRowByID);
+    addToAPIFunctionTable(APITable_GetUserDBRowCreationTime, GetUserDBRowCreationTime);
     addToAPIFunctionTable(APITable_RemoveDBRow, RemoveDBRow);
     addToAPIFunctionTable(APITable_RemoveAllDBEntries, RemoveAllDBRows);
 #else

@@ -134,9 +134,13 @@ typedef struct {
     void (*SetSaveStatusError)(void);
     void (*SetUserStorageNoSave)(bool32 state);
     bool32 (*GetUserStorageNoSave)(void);
-    void (*LoadUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status));                  // load user file from game dir
-    void (*SaveUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status), bool32 compress); // save user file to game dir
-    void (*DeleteUserFile)(const char *filename, void (*callback)(int32 status));                                 // delete user file from game dir
+    // load user file from game dir
+    void (*LoadUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status));
+    // save user file to game dir
+    void (*SaveUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status), bool32 compress);
+    // delete user file from game dir
+    void (*DeleteUserFile)(const char *filename, void (*callback)(int32 status));
+    // format: name, [colType, colName] for how ever many columns you want (max of 8), DBVAR_NONE (or NULL)
     uint16 (*InitUserDB)(const char *name, ...);
     uint16 (*LoadUserDB)(const char *filename, void (*callback)(int32 status));
     void (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
@@ -152,11 +156,10 @@ typedef struct {
     void (*SetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
     void (*GetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
     uint32 (*GetUserDBRowUUID)(uint16 tableID, uint16 row);
-    int32 (*GetUserDBByID)(uint16 tableID, uint32 uuid);
-    void (*GetUserDBCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 bufferSize, const char *format);
+    int32 (*GetUserDBRowByID)(uint16 tableID, uint32 uuid);
+    void (*GetUserDBRowCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 bufferSize, const char *format);
     void (*RemoveDBRow)(uint16 tableID, uint16 row);
     void (*RemoveAllDBRows)(uint16 tableID);
-    // count: 59
 } APIFunctionTable;
 #endif
 
@@ -341,7 +344,7 @@ typedef struct {
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
     int32 (*ControllerIDForInputID)(uint8 inputID);
-    int32 (*MostRecentActiveControllerID)(int32 deviceID, int32 a2, uint32 a3);
+    int32 (*MostRecentActiveControllerID)(int32 type, bool32 unassignedOnly, uint32 maxInactiveTimer);
     int32 (*GetControllerType)(int32 inputID);
     int32 (*GetAssignedControllerID)(int32 inputID);
     int32 (*GetAssignedUnknown)(int32 inputID);
@@ -357,8 +360,10 @@ typedef struct {
 #if !RETRO_USE_PLUS
     void (*InputUnknown)(int32 controllerID, int32 type, int32 *valuePtr);
 #endif
-    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size); // load user file from exe dir
-    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
+    // load user file from exe dir
+    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size);
+    // save use file to exe dir
+    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size);
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
