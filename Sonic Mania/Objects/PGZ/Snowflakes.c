@@ -20,11 +20,11 @@ void Snowflakes_Update(void)
                     self->positions[i].x = posX << 16;
                     self->frameIDs[i]    = 0;
 #if RETRO_USE_PLUS
-                    self->flipFlags[i] = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
+                    self->priority[i] = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
 #else
-                    self->flipFlags[i] = RSDK.Rand(0, 10) > 7;
+                    self->priority[i] = RSDK.Rand(0, 10) > 7;
 #endif
-                    if (self->flipFlags[i]) {
+                    if (self->priority[i]) {
 #if RETRO_USE_PLUS
                         self->animIDs[i] = 2 * (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7) + 2;
 #else
@@ -33,15 +33,15 @@ void Snowflakes_Update(void)
                     }
                     else {
 #if RETRO_USE_PLUS
-                        int32 val = RSDK.RandSeeded(0, 10, &Zone->randSeed);
+                        int32 randVal = RSDK.RandSeeded(0, 10, &Zone->randSeed);
 #else
-                        int32 val        = RSDK.Rand(0, 10);
+                        int32 randVal = RSDK.Rand(0, 10);
 #endif
-                        if (val > 8) {
+                        if (randVal > 8) {
                             self->animIDs[i] = 3;
                         }
                         else {
-                            self->animIDs[i] = val > 4;
+                            self->animIDs[i] = randVal > 4;
                         }
                     }
 #if RETRO_USE_PLUS
@@ -103,8 +103,8 @@ void Snowflakes_Draw(void)
 
     for (int32 i = 0; i < 0x40; ++i) {
         if (self->positions[i].x || self->positions[i].y) {
-            int32 val = self->flipFlags[i];
-            if ((val || drawLayer != drawHigh) && (val != 1 || drawLayer == drawHigh)) {
+            int32 priority = self->priority[i];
+            if ((priority || drawLayer != drawHigh) && (priority != 1 || drawLayer == drawHigh)) {
                 Vector2 drawPos = Snowflakes_HandleWrap(i);
                 self->direction = FLIP_NONE;
                 int32 angle     = RSDK.Sin256(self->angles[i]) << 6;
@@ -156,7 +156,7 @@ Vector2 Snowflakes_HandleWrap(int32 id)
     int32 x    = self->positions[id].x;
     int32 y    = self->positions[id].y;
     int32 mult = 128;
-    if (!self->flipFlags[id])
+    if (!self->priority[id])
         mult = 64;
 
     int32 newX = x - (ScreenInfo->position.x << 8) * mult;

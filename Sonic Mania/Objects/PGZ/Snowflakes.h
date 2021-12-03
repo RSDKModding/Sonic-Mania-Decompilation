@@ -14,14 +14,14 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
-    int32 field_60;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
     Animator animator;
     uint8 animIDs[0x40];
     uint16 frameIDs[0x40];
     Vector2 positions[0x40];
-    uint8 flipFlags[0x40];
+    uint8 priority[0x40];
     uint16 angles[0x40];
 } EntitySnowflakes;
 
