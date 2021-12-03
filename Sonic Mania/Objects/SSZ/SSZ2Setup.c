@@ -62,7 +62,7 @@ void SSZ2Setup_StageLoad(void)
     }
 #if RETRO_USE_PLUS
     if ((SceneInfo->filter & FILTER_ENCORE))
-        RSDK.LoadPalette(0, "EncoreSSZ2.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreSSZ2.act", 0b0000000011111111);
 #endif
     GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCallback1;
     GenericTrigger->callbacks[1] = SSZ2Setup_GenericTriggerCallback2;

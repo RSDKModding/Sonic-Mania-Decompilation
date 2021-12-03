@@ -63,8 +63,8 @@ void PhantomEgg_StageLoad(void)
     PhantomEgg->savedGameProgress = false;
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreTMZ3.act", 0xFF);
-        RSDK.LoadPalette(1, "EncoreTMZ3.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreTMZ3.act", 0b0000000011111111);
+        RSDK.LoadPalette(1, "EncoreTMZ3.act", 0b0000000011111111);
     }
 #endif
     if (!PhantomEgg->setupPalette) {

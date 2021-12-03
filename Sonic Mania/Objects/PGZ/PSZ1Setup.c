@@ -210,7 +210,7 @@ void PSZ1Setup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
-        RSDK.LoadPalette(0, "EncorePSZ1.act", 0xFF);
+        RSDK.LoadPalette(0, "EncorePSZ1.act", 0b0000000011111111);
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1]     = ANIMAL_BECKY;
 

@@ -82,7 +82,7 @@ void GHZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && globals->gameMode == MODE_ENCORE)) {
-        RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreGHZ.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 2, 128, 80);
         RSDK.RotatePalette(2, 181, 184, true);

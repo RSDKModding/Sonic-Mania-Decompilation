@@ -111,8 +111,8 @@ void SPZ2Setup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(4, "EncoreSPZ1.act", 255);
-        RSDK.LoadPalette(0, "EncoreSPZ2.act", 255);
+        RSDK.LoadPalette(4, "EncoreSPZ1.act", 0b0000000011111111);
+        RSDK.LoadPalette(0, "EncoreSPZ2.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 5, 128, 128);
     }
 #endif

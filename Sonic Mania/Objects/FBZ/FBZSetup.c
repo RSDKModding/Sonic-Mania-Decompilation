@@ -100,11 +100,11 @@ void FBZSetup_StageLoad(void)
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act2;
 
     if ((SceneInfo->filter & FILTER_ENCORE)) {
-        RSDK.LoadPalette(0, "EncoreFBZ.act", 0xFF);
-        RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
-        RSDK.LoadPalette(2, "EncoreFBZs.act", 0xFF);
-        RSDK.LoadPalette(3, "EncoreFBZf.act", 0xFF);
-        RSDK.LoadPalette(4, "EncoreFBZi.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreFBZ.act", 0b0000000011111111);
+        RSDK.CopyPalette(0, 1, 1, 1, 0b0000000011111111);
+        RSDK.LoadPalette(2, "EncoreFBZs.act", 0b0000000011111111);
+        RSDK.LoadPalette(3, "EncoreFBZf.act", 0b0000000011111111);
+        RSDK.LoadPalette(4, "EncoreFBZi.act", 0b0000000011111111);
     }
 #endif
 }

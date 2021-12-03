@@ -89,7 +89,7 @@ void MSZSetup_Create(void *data)
     if (MSZSetup->flag) {
 #if RETRO_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
-            RSDK.LoadPalette(0, "EncoreMSZ2.act", 0xFF);
+            RSDK.LoadPalette(0, "EncoreMSZ2.act", 0b0000000011111111);
             self->state = MSZSetup_Unknown10;
         }
         else {
@@ -108,9 +108,9 @@ void MSZSetup_Create(void *data)
     }
 #if RETRO_USE_PLUS
     else if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreMSZ1.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreMSZ1.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 3, 128, 80);
-        RSDK.LoadPalette(4, "EncoreMSZ2.act", 0xFF);
+        RSDK.LoadPalette(4, "EncoreMSZ2.act", 0b0000000011111111);
     }
 #endif
     else {
@@ -143,7 +143,7 @@ void MSZSetup_StageLoad(void)
 #if RETRO_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
                 RSDK.CopyPalette(0, 128, 5, 128, 128);
-                RSDK.LoadPalette(0, "EncoreMSZ2.act", 255);
+                RSDK.LoadPalette(0, "EncoreMSZ2.act", 0b0000000011111111);
                 RSDK.CopyPalette(0, 128, 1, 128, 128);
                 RSDK.CopyPalette(0, 128, 2, 128, 128);
                 RSDK.RotatePalette(2, 204, 207, false);

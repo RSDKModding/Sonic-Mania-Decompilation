@@ -258,8 +258,8 @@ void OOZSetup_StageLoad(void)
             Zone->stageFinishCallback = OOZ2Outro_StageFinishCB_Act2;
 
         if (SceneInfo->filter & FILTER_ENCORE) {
-            RSDK.LoadPalette(0, "EncoreOOZ2.act", 255);
-            RSDK.LoadPalette(2, "EncoreOOZSmog.act", 255);
+            RSDK.LoadPalette(0, "EncoreOOZ2.act", 0b0000000011111111);
+            RSDK.LoadPalette(2, "EncoreOOZSmog.act", 0b0000000011111111);
             RSDK.CopyPalette(0, 128, 1, 128, 128);
             RSDK.CopyPalette(0, 128, 3, 128, 128);
             RSDK.CopyPalette(0, 128, 4, 128, 128);
@@ -272,7 +272,7 @@ void OOZSetup_StageLoad(void)
     }
 #if RETRO_USE_PLUS
     else if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreOOZ1.act", 255);
+        RSDK.LoadPalette(0, "EncoreOOZ1.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 3, 128, 80);
     }

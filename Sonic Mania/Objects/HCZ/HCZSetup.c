@@ -211,8 +211,8 @@ void HCZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreHCZ.act", 255);
-        RSDK.LoadPalette(1, "EncoreHCZw.act", 255);
+        RSDK.LoadPalette(0, "EncoreHCZ.act", 0b0000000011111111);
+        RSDK.LoadPalette(1, "EncoreHCZw.act", 0b0000000011111111);
     }
 
     HCZSetup->sfxWaterfall     = RSDK.GetSfx("Stage/Waterfall.wav");
