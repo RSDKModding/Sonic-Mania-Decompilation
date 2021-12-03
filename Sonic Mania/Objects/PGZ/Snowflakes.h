@@ -42,6 +42,6 @@ void Snowflakes_EditorLoad(void);
 void Snowflakes_Serialize(void);
 
 // Extra Entity Functions
-Vector2 Snowflakes_Unknown1(int32 id);
+Vector2 Snowflakes_HandleWrap(int32 id);
 
 #endif //! OBJ_SNOWFLAKES_H
