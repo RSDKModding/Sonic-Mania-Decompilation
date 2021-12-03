@@ -8,23 +8,24 @@
 #define Replay_Signature  (0xF6057BED)
 #define Replay_BufferSize (0x100000)
 
-typedef enum {
-    REPLAY_HDR_SIG,
-    REPLAY_HDR_VER,
-    REPLAY_HDR_PACKED2,
-    REPLAY_HDR_PACKED,
-    REPLAY_HDR_FRAMECOUNT2,
-    REPLAY_HDR_FRAMECOUNT,
-    REPLAY_HDR_ZONEID,
-    REPLAY_HDR_ACTID,
-    REPLAY_HDR_CHARID,
-    REPLAY_HDR_ISPLUSLAYOUT,
-    REPLAY_HDR_OSC,
-    REPLAY_HDR_COMPSIZE,
-    REPLAY_HDR_12,
-    REPLAY_HDR_13,
-    REPLAY_HDR_SIZE,
-} ReplayHeaderInfo;
+#define Replay_MaxFrameCount (37447)
+
+typedef struct {
+    uint32 signature;
+    int32 version;
+    bool32 isPacked;
+    bool32 isNotEmpty;
+    int32 frameCount;
+    int32 startingFrame;
+    int32 zoneID;
+    int32 act;
+    int32 characterID;
+    bool32 isPlusLayout;
+    int32 oscillation;
+    int32 bufferSize;
+    float averageFrameSize;
+    int32 unused;
+} ReplayHeader;
 
 typedef struct {
     uint8 info;
@@ -36,7 +37,14 @@ typedef struct {
     int32 rotation;
     uint8 anim;
     uint8 frame;
-}ReplayFrame;
+} ReplayFrame;
+
+typedef struct {
+    ReplayHeader header;
+    ReplayFrame frames[Replay_MaxFrameCount];
+    // there's an extra 4 bytes here, but they're just padding to make the size correct
+    int32 padding;
+} Replay;
 
 typedef enum {
     REPLAY_INFO_NONE,
@@ -62,8 +70,8 @@ typedef struct {
     RSDK_OBJECT
     void *actions[64];
     int32 frameCounter;
-    int32 *writeBuffer;
-    int32 *readBuffer;
+    Replay *writeBuffer;
+    Replay *readBuffer;
     ReplayFrame *frameBuffer_w;
     ReplayFrame *frameBuffer_r;
     Entity *recorder_r;
@@ -141,8 +149,8 @@ void ReplayRecorder_SaveReplayDLG_NoCB(void);
 void ReplayRecorder_SaveReplayDLG_YesCB(void);
 void ReplayRecorder_Unknown6(void);
 void ReplayRecorder_SaveReplay(void);
-void ReplayRecorder_SavedReplay(bool32 status);
-void ReplayRecorder_ReplaySave_CB(bool32 a1);
+void ReplayRecorder_ReplaySaveFinish_CB(bool32 status);
+void ReplayRecorder_ReplaySave_CB(bool32 success);
 void ReplayRecorder_SaveTimeAttackDB_CB(int32 status);
 void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer);
 void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer);
@@ -178,12 +186,12 @@ void ReplayRecorder_LoadReplayDB(void (*callback)(bool32));
 void ReplayRecorder_SaveReplayDB(void (*callback)(bool32));
 void ReplayRecorder_CreateReplayDB(void);
 uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int32 charID, int32 score, char mode);
-void ReplayRecorder_DeleteTimeAttackRow(int32 row, void (*callback)(bool32), bool32 useAltCB);
-void ReplayRecorder_DeleteReplayCB(int32 status);
-void ReplayRecorder_DeleteReplaySaveCB(int32 status);
-void ReplayRecorder_DeleteReplaySave2CB(int32 status);
-int32 ReplayRecorder_SetStatus(int32 status);
-int32 ReplayRecorder_ReplaySaveFinish(int32 status);
+void ReplayRecorder_DeleteReplay(int32 row, void (*callback)(bool32), bool32 useAltCB);
+void ReplayRecorder_DeleteReplay_CB(int32 status);
+void ReplayRecorder_DeleteReplaySave_CB(int32 status);
+void ReplayRecorder_DeleteReplaySave2_CB(int32 status);
+void ReplayRecorder_SetStatus(int32 status);
+void ReplayRecorder_ReplaySaveFinish(int32 status);
 #endif
 
 #endif //!OBJ_REPLAYRECORDER_H

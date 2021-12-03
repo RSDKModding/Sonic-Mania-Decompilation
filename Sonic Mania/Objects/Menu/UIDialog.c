@@ -59,7 +59,7 @@ void UIDialog_Draw(void)
                 len = self->textInfo.textLength;
             else
                 len = self->lineLength[i];
-            int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->textInfo, start, len, 0);
+            int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->textInfo, start, len, 0);
             if (width > w)
                 w = width;
         }
@@ -77,7 +77,7 @@ void UIDialog_Draw(void)
             len = self->textInfo.textLength;
         else
             len = self->lineLength[i];
-        RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->textInfo, start, len, 0);
+        RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->textInfo, start, len, 0);
         drawPos.x += offset;
         RSDK.DrawText(&self->animator, &drawPos, &self->textInfo, start, len, 0, 0, 0, NULL, false);
         drawPos.y += 0x120000;
@@ -137,8 +137,8 @@ void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text)
             ++charPos;
         }
         RSDK.CopyString(&dialog->textInfo, text);
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &dialog->animator, true, 0);
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &dialog->textInfo);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &dialog->animator, true, 0);
+        RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &dialog->textInfo);
     }
 }
 

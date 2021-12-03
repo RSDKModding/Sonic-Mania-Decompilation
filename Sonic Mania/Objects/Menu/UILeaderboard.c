@@ -80,7 +80,7 @@ void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
         frame = entity->playerID + 4;
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &entity->animator9, true, frame);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &entity->animator10, true, entity->actID + 3);
-    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &entity->animator5, true, 0);
     UILeaderboard_LoadEntries(entity);
 }
 
@@ -147,24 +147,24 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
                 else
                     sprintf(buffer, "%d", entry->globalRank);
                 RSDK.PrependText(&entity->rankText[i], buffer);
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->rankText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
                 RSDK.CopyString(&entity->nameText[i], &entry->username);
                 if (entity->nameText[i].textLength > 19) {
                     entity->nameText[i].textLength = 19;
                     RSDK.AppendText(&entity->nameText[i], "...");
                 }
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->nameText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->nameText[i]);
                 entity->times[i]  = entry->score;
                 entity->ranks[i]  = entry->globalRank;
                 entity->isUser[i] = entry->isUser;
             }
             else {
                 RSDK.PrependText(&entity->rankText[i], "--");
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->rankText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
                 RSDK.PrependText(&entity->nameText[i], "--------");
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->nameText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->nameText[i]);
 
                 entity->times[i] = 0;
                 if (entry) 

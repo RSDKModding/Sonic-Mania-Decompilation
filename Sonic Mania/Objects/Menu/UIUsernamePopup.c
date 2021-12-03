@@ -44,9 +44,9 @@ void UIUsernamePopup_ShowPopup(void)
 #if RETRO_USE_PLUS
             RSDK.PrintText(0, &entity->username);
 #endif
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->username);
-            int32 width    = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->username);
+            int32 width    = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &entity->username, 0, entity->username.textLength, 0);
             entity->state  = UIUsernamePopup_State_Appear;
             entity->timer  = 0;
             entity->size.x = (width + 16) << 16;
@@ -64,7 +64,7 @@ void UIUsernamePopup_DrawSprites(void)
     drawPos.y = self->drawPos.y + (ScreenInfo->centerY << 16) - (self->size.y >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
     UIWidgets_DrawParallelogram(self->size.y >> 16, self->size.x >> 16, self->size.y >> 16, 16, 124, 16, drawPos.x, drawPos.y);
 
-    int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->username, 0, self->username.textLength, 0);
+    int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->username, 0, self->username.textLength, 0);
     drawPos.y -= 0x10000;
     drawPos.x -= width << 15;
     RSDK.DrawText(&self->animator, &drawPos, &self->username, 0, self->username.textLength, ALIGN_LEFT, 0, 0, 0, false);

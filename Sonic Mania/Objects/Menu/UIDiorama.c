@@ -178,8 +178,8 @@ void UIDiorama_SetText(TextInfo *info)
 
         self->field_CC = lineCount;
         RSDK.CopyString(&self->textInfo, info);
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animators[6], true, 0);
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->textInfo);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->animators[6], true, 0);
+        RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->textInfo);
     }
 }
 
@@ -616,7 +616,7 @@ void UIDiorama_StateDraw_PlusUpsell(void)
             else
                 end = length[i + 1];
 
-            int32 width = -0x8000 * RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->textInfo, start, end, 0);
+            int32 width = -0x8000 * RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->textInfo, start, end, 0);
             drawPos.x += width;
             RSDK.DrawText(&self->animators[6], &drawPos, &self->textInfo, start, end, ALIGN_LEFT, 0, 0, 0, false);
 

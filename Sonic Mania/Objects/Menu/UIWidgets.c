@@ -24,12 +24,12 @@ void UIWidgets_StageLoad(void)
     UIWidgets->active                = ACTIVE_ALWAYS;
     UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
-    UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
-    UIWidgets->labelSpriteIndex      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->fontFrames      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
     UIWidgets->sfxBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     UIWidgets->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     UIWidgets->sfxWarp   = RSDK.GetSfx("Global/SpecialWarp.wav");
@@ -229,12 +229,12 @@ void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist)
 
     drawPos.x                    = x;
     drawPos.y                    = y;
-    UIWidgets->animator2.frameID = 2;
+    UIWidgets->arrowsAnimator.frameID = 2;
     drawPos.y -= arrowDist << 15;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
-    UIWidgets->animator2.frameID = 3;
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
+    UIWidgets->arrowsAnimator.frameID = 3;
     drawPos.y += arrowDist << 16;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
 }
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 {
@@ -242,12 +242,12 @@ void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 
     drawPos.x                    = x;
     drawPos.y                    = y;
-    UIWidgets->animator2.frameID = 0;
+    UIWidgets->arrowsAnimator.frameID = 0;
     drawPos.x -= arrowDist >> 1;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
-    UIWidgets->animator2.frameID = 1;
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
+    UIWidgets->arrowsAnimator.frameID = 1;
     drawPos.x += arrowDist;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
 }
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, colour leftColour, colour rightColour)
 {
@@ -265,17 +265,17 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
 {
     Vector2 drawPos;
     Animator animator;
-    Animator animator2;
+    Animator arrowsAnimator;
     char strBuf[16];
 
     memset(&animator, 0, sizeof(Animator));
-    memset(&animator2, 0, sizeof(Animator));
+    memset(&arrowsAnimator, 0, sizeof(Animator));
 
     drawPos.x = x;
     drawPos.y = y + 0x20000;
 
-    RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &animator2, true, 9);
-    RSDK.DrawSprite(&animator2, &drawPos, false);
+    RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 9, &arrowsAnimator, true, 9);
+    RSDK.DrawSprite(&arrowsAnimator, &drawPos, false);
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
     if (minutes) {
@@ -296,7 +296,7 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
     for (int32 i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
-        RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 8, &animator, true, (uint8)(strBuf[i] - '0'));
+        RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 8, &animator, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&animator, &drawPos, false);
         drawPos.x += 0x80000;
     }
@@ -310,12 +310,12 @@ void UIWidgets_EditorLoad(void)
 {
     UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
-    UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
-    UIWidgets->labelSpriteIndex = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets->textFrames  = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
 #if RETRO_USE_PLUS
     UIWidgets->buttonColour = 0xF0F0F0;
 #endif

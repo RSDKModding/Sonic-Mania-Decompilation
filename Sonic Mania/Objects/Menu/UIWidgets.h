@@ -9,19 +9,20 @@ typedef struct {
 #if RETRO_USE_PLUS
     int32 buttonColours[16];
     int32 timer;
-    int32 field_48[12];
+    Animator unusedAnimator1;
+    Animator unusedAnimator2;
 #else
     int32 timer;
     int32 buttonColours[16];
 #endif
-    Animator animator1;
-    Animator animator2;
+    Animator frameAnimator;
+    Animator arrowsAnimator;
     uint16 uiSpriteIndex;
 #if RETRO_USE_PLUS
-    uint16 saveSelectSpriteIndex;
+    uint16 saveSelFrames;
 #endif
     uint16 textFrames;
-    uint16 labelSpriteIndex;
+    uint16 fontFrames;
     uint16 sfxBleep;
     uint16 sfxAccept;
     uint16 sfxWarp;

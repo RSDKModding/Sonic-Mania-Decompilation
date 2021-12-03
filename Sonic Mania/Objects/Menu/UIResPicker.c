@@ -75,7 +75,7 @@ void UIResPicker_Draw(void)
             case 2: drawPos.x = drawPos.x + (self->size.x >> 1) - 0x60000; break;
         }
 
-        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->text, 0, self->text.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.textLength, 0);
         drawPos.x -= width << 15;
         RSDK.DrawText(&self->textAnimator, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
     }
@@ -99,7 +99,7 @@ void UIResPicker_Create(void *data)
         self->touchCB         = UIResPicker_ProcessTouchCB;
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
     }
 }
 
@@ -117,7 +117,7 @@ void UIResPicker_GetDisplayInfo(EntityUIResPicker *entity)
             RSDK.CopyString(&entity->text, &info);
         else
             Localization_GetString(&entity->text, STR_DEFAULT);
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
+        RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->text);
     }
 }
 
@@ -317,7 +317,7 @@ void UIResPicker_EditorDraw(void)
     self->size.y        = abs(self->size.y);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
-    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
 
     UIResPicker_Draw();
 

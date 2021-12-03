@@ -258,23 +258,19 @@ void UIChoice_State_HandleButtonLeave(void)
     if (self->textBounceOffset) {
         int32 val = -(self->textBounceOffset / abs(self->textBounceOffset));
         self->textBounceOffset += val << 15;
-        if (val < 0 && self->textBounceOffset < 0) {
+        if (val < 0 && self->textBounceOffset < 0) 
             self->textBounceOffset = 0;
-        }
-        else if (val > 0 && self->textBounceOffset > 0) {
+        else if (val > 0 && self->textBounceOffset > 0) 
             self->textBounceOffset = 0;
-        }
     }
 
     if (self->buttonBounceOffset) {
         int32 val = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
         self->buttonBounceOffset += val << 16;
-        if (val < 0 && self->buttonBounceOffset < 0) {
+        if (val < 0 && self->buttonBounceOffset < 0) 
             self->buttonBounceOffset = 0;
-        }
-        else if (val > 0 && self->buttonBounceOffset > 0) {
+        else if (val > 0 && self->buttonBounceOffset > 0) 
             self->buttonBounceOffset = 0;
-        }
     }
 }
 

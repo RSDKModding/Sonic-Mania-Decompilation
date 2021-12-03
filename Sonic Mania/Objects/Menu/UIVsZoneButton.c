@@ -130,7 +130,7 @@ void UIVsZoneButton_SetNameText(void)
 {
     RSDK_THIS(UIVsZoneButton);
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
         if (self->obfuscate) {
             RSDK.PrependText(&self->nameText, "???");
             self->nameText.textLength = 3;
@@ -143,7 +143,7 @@ void UIVsZoneButton_SetNameText(void)
                 RSDK.AppendText(&self->nameText, buffer);
             }
         }
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->nameText);
+        RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->nameText);
     }
 }
 
@@ -227,7 +227,7 @@ void UIVsZoneButton_DrawButton(void)
     UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!SceneInfo->inEditor) {
-        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->nameText, 0, self->nameText.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.textLength, 0);
         drawPos.y -= 0x10000;
         drawPos.x -= width << 15;
         RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.textLength, ALIGN_LEFT, 0, 0, 0, false);

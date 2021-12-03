@@ -75,7 +75,7 @@ void UIWinSize_Draw(void)
             case 2: drawPos.x = drawPos.x + (self->size.x >> 1) - 0x60000; break;
         }
 
-        drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->text, 0, self->text.textLength, 0) << 15;
+        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.textLength, 0) << 15;
         RSDK.DrawText(&self->textAnimator, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
@@ -99,7 +99,7 @@ void UIWinSize_Create(void *data)
         self->touchCB         = UIWinSize_ProcessTouchCB;
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
     }
 }
 
@@ -128,7 +128,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
             }
         }
 #endif
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entityPtr->text);
+        RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entityPtr->text);
     }
 }
 
@@ -326,7 +326,7 @@ void UIWinSize_EditorDraw(void)
     self->size.y        = abs(self->size.y);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
-    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
 
     UIWinSize_Draw();
 
