@@ -542,7 +542,7 @@ void Player_Create(void *data)
                 if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
                     self->peeloutState = Player_StartPeelout;
                     for (int32 f = 0; f < 4; ++f) {
-                        SpriteFrame *dst = RSDK.GetFrame(self->aniFrames, ANI_DASH, f);
+                        SpriteFrame *dst = RSDK.GetFrame(self->aniFrames, ANI_DASH, f + 1);
                         SpriteFrame *src = RSDK.GetFrame(self->aniFrames, ANI_FLY, f);
 
                         *dst = *src;

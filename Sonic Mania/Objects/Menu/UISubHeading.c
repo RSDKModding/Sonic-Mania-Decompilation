@@ -275,7 +275,7 @@ void UISubHeading_SaveSel_YPressCB(void)
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
     if (control->active == ACTIVE_ALWAYS) {
         if (!ManiaModeMenu->inSecretsMenu) {
-            UISubHeading_HandleMenuReturn(control->buttons[control->buttonID]->stopMusic);
+            UISubHeading_HandleMenuReturn(((EntityUISaveSlot*)control->buttons[control->buttonID])->slotID);
             ManiaModeMenu->inSecretsMenu = true;
         }
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);

@@ -9,12 +9,12 @@ void Snowflakes_Update(void)
         for (int32 i = 0; i < 0x40; ++i) {
             if (!self->positions[i].x && !self->positions[i].y) {
                 if ((i & 0x8000) == 0) {
-                    int32 screenY            = ScreenInfo->position.y;
+                    int32 screenY = ScreenInfo->position.y;
                     int32 scrX    = ScreenInfo->position.x % ScreenInfo->width;
 #if RETRO_USE_PLUS
-                    int32 posX               = (scrX + RSDK.RandSeeded(0, ScreenInfo->width, &Zone->randSeed)) % ScreenInfo->width;
+                    int32 posX = (scrX + RSDK.RandSeeded(0, ScreenInfo->width, &Zone->randSeed)) % ScreenInfo->width;
 #else
-                    int32 posX             = (scrX + RSDK.Rand(0, ScreenInfo->width)) % ScreenInfo->width;
+                    int32 posX         = (scrX + RSDK.Rand(0, ScreenInfo->width)) % ScreenInfo->width;
 #endif
                     self->positions[i].y = (screenY - 5) << 16;
                     self->positions[i].x = posX << 16;
@@ -35,7 +35,7 @@ void Snowflakes_Update(void)
 #if RETRO_USE_PLUS
                         int32 val = RSDK.RandSeeded(0, 10, &Zone->randSeed);
 #else
-                        int32 val = RSDK.Rand(0, 10);
+                        int32 val        = RSDK.Rand(0, 10);
 #endif
                         if (val > 8) {
                             self->animIDs[i] = 3;
@@ -62,8 +62,8 @@ void Snowflakes_Update(void)
 
     for (int32 i = 0; i < 0x40; ++i) {
         if (self->positions[i].x || self->positions[i].y) {
-            Vector2 pos = Snowflakes_Unknown1(i);
-            int32 angle   = RSDK.Sin256(self->angles[i]) << 6;
+            Vector2 pos = Snowflakes_HandleWrap(i);
+            int32 angle = RSDK.Sin256(self->angles[i]) << 6;
             self->positions[i].y += 0x8000;
             pos.y += 0x8000;
             self->positions[i].x += angle;
@@ -105,9 +105,9 @@ void Snowflakes_Draw(void)
         if (self->positions[i].x || self->positions[i].y) {
             int32 val = self->flipFlags[i];
             if ((val || drawLayer != drawHigh) && (val != 1 || drawLayer == drawHigh)) {
-                Vector2 drawPos   = Snowflakes_Unknown1(i);
+                Vector2 drawPos = Snowflakes_HandleWrap(i);
                 self->direction = FLIP_NONE;
-                int32 angle         = RSDK.Sin256(self->angles[i]) << 6;
+                int32 angle     = RSDK.Sin256(self->angles[i]) << 6;
                 if (self->animIDs[i] <= 2) {
                     RSDK.SetSpriteAnimation(Snowflakes->aniFrames, self->animIDs[i], &self->animator, true, self->frameIDs[i] >> 2);
                     RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -150,7 +150,7 @@ void Snowflakes_StageLoad(void)
     Snowflakes->active    = ACTIVE_ALWAYS;
 }
 
-Vector2 Snowflakes_Unknown1(int32 id)
+Vector2 Snowflakes_HandleWrap(int32 id)
 {
     RSDK_THIS(Snowflakes);
     int32 x    = self->positions[id].x;
@@ -159,11 +159,11 @@ Vector2 Snowflakes_Unknown1(int32 id)
     if (!self->flipFlags[id])
         mult = 64;
 
-    int32 i = x - (ScreenInfo->position.x << 8) * mult;
-    while (i < 0) i += ScreenInfo->width << 16;
+    int32 newX = x - (ScreenInfo->position.x << 8) * mult;
+    while (newX < 0) newX += ScreenInfo->width << 16;
 
     int32 posX = ScreenInfo->position.x / ScreenInfo->width;
-    if ((i % (ScreenInfo->width << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->width)
+    if ((newX % (ScreenInfo->width << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->width)
         posX = ScreenInfo->position.x / ScreenInfo->width + 1;
 
     int32 posY = 0;
@@ -171,15 +171,20 @@ Vector2 Snowflakes_Unknown1(int32 id)
         posY = -ScreenInfo->height;
 
     Vector2 pos;
-    pos.x = (posX * ScreenInfo->width << 16) + (i % (ScreenInfo->width << 16));
+    pos.x = (posX * ScreenInfo->width << 16) + (newX % (ScreenInfo->width << 16));
     pos.y = (posY << 16) + y;
     return pos;
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Snowflakes_EditorDraw(void) {}
+void Snowflakes_EditorDraw(void)
+{
+    RSDK_THIS(Snowflakes);
+    RSDK.SetSpriteAnimation(Snowflakes->aniFrames, 5, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void Snowflakes_EditorLoad(void) {}
+void Snowflakes_EditorLoad(void) { Snowflakes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Snowflakes.bin", SCOPE_STAGE); }
 #endif
 
 void Snowflakes_Serialize(void) {}
