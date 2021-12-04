@@ -27,10 +27,7 @@ struct ImageGIF {
     FileInfo info;
     int32 width;
     int32 height;
-    int32 field_4C;
-    int32 field_4D;
-    int32 field_4E;
-    int32 field_4F;
+    int32 unused;
     colour* palette;
     uint8 *dataPtr;
     GifDecoder *decoder;

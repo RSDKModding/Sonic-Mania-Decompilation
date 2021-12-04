@@ -305,7 +305,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 if (MODAPI_ENDS_WITH(".so"))
 #endif
                     mode = 1;
-                fs::path file;
+                fs::path file(modDir + "/" + buf);
 
                 if (!mode) {
                     // autodec
