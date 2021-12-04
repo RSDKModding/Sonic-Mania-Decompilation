@@ -408,7 +408,7 @@ void LevelSelect_State_HandleMenu(void)
                         continue;
 #endif
 
-                    int xOff = 5 * (label->text.textLength * 0.5);
+                    int xOff = 5 * (label->text.length * 0.5);
 
                     for (int f = 0; f < TouchInfo->count; ++f) {
                         float tx = TouchInfo->x[f] * ScreenInfo->width;
@@ -433,7 +433,7 @@ void LevelSelect_State_HandleMenu(void)
                             continue;
 #endif
 
-                        int xOff = 5 * (label->text.textLength * 0.5);
+                        int xOff = 5 * (label->text.length * 0.5);
 
                         for (int f = 0; f < TouchInfo->count; ++f) {
                             float tx = TouchInfo->x[f] * ScreenInfo->width;

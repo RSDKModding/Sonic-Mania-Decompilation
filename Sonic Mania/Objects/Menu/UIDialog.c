@@ -56,7 +56,7 @@ void UIDialog_Draw(void)
 
             int32 len = 0;
             if (i >= self->lineCount)
-                len = self->textInfo.textLength;
+                len = self->textInfo.length;
             else
                 len = self->lineLength[i];
             int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->textInfo, start, len, 0);
@@ -74,7 +74,7 @@ void UIDialog_Draw(void)
 
         int32 len = 0;
         if (i >= self->lineCount)
-            len = self->textInfo.textLength;
+            len = self->textInfo.length;
         else
             len = self->lineLength[i];
         RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->textInfo, start, len, 0);
@@ -129,7 +129,7 @@ void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text)
     if (text) {
         dialog->lineCount = 0;
         int32 charPos       = 0;
-        for (int32 i = 0; i < text->textLength; ++i) {
+        for (int32 i = 0; i < text->length; ++i) {
             if (text->text[charPos] == '\n' && dialog->lineCount < 3) {
                 dialog->lineLength[dialog->lineCount] = charPos;
                 ++dialog->lineCount;

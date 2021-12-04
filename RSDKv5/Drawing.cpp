@@ -4130,19 +4130,19 @@ void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFr
         }
 
         if (startFrame >= 0) {
-            if (startFrame >= info->textLength)
-                startFrame = info->textLength - 1;
+            if (startFrame >= info->length)
+                startFrame = info->length - 1;
         }
         else {
             startFrame = 0;
         }
 
         if (endFrame > 0) {
-            if (endFrame > info->textLength)
-                endFrame = info->textLength;
+            if (endFrame > info->length)
+                endFrame = info->length;
         }
         else {
-            endFrame = info->textLength;
+            endFrame = info->length;
         }
 
         switch (align) {

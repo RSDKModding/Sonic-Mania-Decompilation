@@ -336,8 +336,8 @@ typedef struct {
 
 typedef struct {
     uint16 *text;
-    uint16 textLength;
     uint16 length;
+    uint16 size;
 } TextInfo;
 
 typedef struct {

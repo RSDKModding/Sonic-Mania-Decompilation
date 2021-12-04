@@ -256,7 +256,7 @@ void UIControl_ProcessInputs(void)
                     }
                 }
                 else {
-                    if (self->parentTag.textLength <= 0) {
+                    if (self->parentTag.length <= 0) {
                         UIControl->keyBack = false;
                     }
                     else {
@@ -617,7 +617,7 @@ void UIControl_MatchMenuTag(const char *text)
 
 void UIControl_HandleMenuChange(TextInfo *info)
 {
-    if (info->textLength) {
+    if (info->length) {
         foreach_all(UIControl, entity)
         {
             if (entity->active == ACTIVE_ALWAYS || !RSDK.StringCompare(info, &entity->tag, false))

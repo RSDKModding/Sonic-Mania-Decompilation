@@ -150,8 +150,8 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
                 RSDK.CopyString(&entity->nameText[i], &entry->username);
-                if (entity->nameText[i].textLength > 19) {
-                    entity->nameText[i].textLength = 19;
+                if (entity->nameText[i].length > 19) {
+                    entity->nameText[i].length = 19;
                     RSDK.AppendText(&entity->nameText[i], "...");
                 }
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->nameText[i]);
@@ -260,7 +260,7 @@ void UILeaderboard_DrawEntries(void)
     if (!SceneInfo->inEditor) {
         drawPos.x += 0xC0000;
         drawPos.y += 0x70000;
-        RSDK.DrawText(&self->animator4, &drawPos, &self->field_1E0, 0, self->field_1E0.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->animator4, &drawPos, &self->field_1E0, 0, self->field_1E0.length, ALIGN_LEFT, 0, 0, 0, false);
 
         drawPos.x -= 0xC0000;
         drawPos.y -= 0x70000;
@@ -383,9 +383,9 @@ void UILeaderboard_DrawRank(int32 id)
             drawPos.x += 0xE60000;
         }
         else {
-            RSDK.DrawText(&self->animator5, &drawPos, &self->rankText[id], 0, self->rankText[id].textLength, ALIGN_RIGHT, 0, 0, 0, false);
+            RSDK.DrawText(&self->animator5, &drawPos, &self->rankText[id], 0, self->rankText[id].length, ALIGN_RIGHT, 0, 0, 0, false);
             drawPos.x += 0x320000;
-            RSDK.DrawText(&self->animator5, &drawPos, &self->nameText[id], 0, self->nameText[id].textLength, ALIGN_LEFT, 0, 0, 0, false);
+            RSDK.DrawText(&self->animator5, &drawPos, &self->nameText[id], 0, self->nameText[id].length, ALIGN_LEFT, 0, 0, 0, false);
             drawPos.x += 0xB40000;
         }
 

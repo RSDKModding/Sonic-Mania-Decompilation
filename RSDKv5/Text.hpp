@@ -2,9 +2,9 @@
 #define TEXT_H
 
 struct TextInfo {
-    uint16 *text;
-    int16 textLength;
-    int16 length;
+    uint16 *text; // text
+    int16 length; // string length
+    int16 size;   // total alloc length
 };
 
 inline void StringLowerCase(char *dest, const char *src)
@@ -74,16 +74,16 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
         if (*text) {
             int cnt = 0;
             do
-                textInfo->textLength = ++cnt;
+                textInfo->length = ++cnt;
             while (text[cnt]);
         }
-        if (size && size >= textInfo->textLength)
-            textInfo->length = size;
+        if (size && size >= textInfo->length)
+            textInfo->size = size;
         else
-            textInfo->length = textInfo->textLength;
-        if (!textInfo->length)
-            textInfo->length = 1;
-        AllocateStorage(sizeof(ushort) * textInfo->length, (void **)&textInfo->text, DATASET_STR, false);
+            textInfo->size = textInfo->length;
+        if (!textInfo->size)
+            textInfo->size = 1;
+        AllocateStorage(sizeof(ushort) * textInfo->size, (void **)&textInfo->text, DATASET_STR, false);
 
         char *txt = text;
         if (*text) {
@@ -101,20 +101,20 @@ inline void CopyString(TextInfo *dst, TextInfo *src)
     if (dst == src)
         return;
 
-    int textLen = src->textLength;
+    int textLen = src->length;
     dst->text   = NULL;
-    if (dst->length >= textLen) {
+    if (dst->size >= textLen) {
         if (!dst->text) {
-            AllocateStorage(sizeof(ushort) * dst->length, (void **)&dst->text, DATASET_STR, false);
+            AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, DATASET_STR, false);
         }
     }
     else {
-        dst->length = textLen;
-        AllocateStorage(sizeof(ushort) * dst->length, (void **)&dst->text, DATASET_STR, false);
+        dst->size = textLen;
+        AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, DATASET_STR, false);
     }
     
-    dst->textLength = src->textLength;
-    for (int c = 0; c < dst->textLength; ++c) {
+    dst->length = src->length;
+    for (int c = 0; c < dst->length; ++c) {
         dst->text[c] = src->text[c];
     }
 }
@@ -129,7 +129,7 @@ inline void GetCString(char *dest, TextInfo *info)
         text = dest;
     int textLen = 0x400;
     if (dest)
-        textLen = info->textLength;
+        textLen = info->length;
     
     int c = 0;
     for (; c < textLen; ++c) {

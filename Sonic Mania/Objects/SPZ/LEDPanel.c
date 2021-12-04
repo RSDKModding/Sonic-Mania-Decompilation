@@ -37,7 +37,7 @@ void LEDPanel_Draw(void)
     RSDK.SetClipBounds(SceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
 
     for (int r = 0; r < LEDPanel_RowCount; ++r) {
-        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].textLength, ALIGN_RIGHT, 0, 0,
+        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].length, ALIGN_RIGHT, 0, 0,
                       NULL, false);
     }
 
@@ -90,7 +90,7 @@ void LEDPanel_Create(void *data)
 
             self->textPos[r].x = self->position.x;
             self->textPos[r].y = self->position.y;
-            self->textPos[r].x += (self->activeText[r].textLength << 20) - (self->size.x >> 1) + 0x80000;
+            self->textPos[r].x += (self->activeText[r].length << 20) - (self->size.x >> 1) + 0x80000;
             self->textPos[r].y += (0x100000 + offset) - (self->size.y >> 1);
 
             self->textMovePos[r].x = 0;
@@ -124,8 +124,8 @@ void LEDPanel_SetupActiveText(int row, TextInfo *src)
 
     RSDK.CopyString(&self->activeText[row], src);
 
-    self->activeTextSize[row] = self->activeText[row].textLength;
-    for (int i = 0; i < self->activeText[row].textLength; ++i) {
+    self->activeTextSize[row] = self->activeText[row].length;
+    for (int i = 0; i < self->activeText[row].length; ++i) {
         if (self->activeText[row].text[i] != 27) {
             self->activeTextSize[row] = i;
             break;
@@ -133,7 +133,7 @@ void LEDPanel_SetupActiveText(int row, TextInfo *src)
     }
 
     self->activeTextLen[row] = 0;
-    for (int i = self->activeText[row].textLength - 1; i >= 0; --i) {
+    for (int i = self->activeText[row].length - 1; i >= 0; --i) {
         if (self->activeText[row].text[i] != 27) {
             self->activeTextLen[row] = i;
             break;
@@ -147,7 +147,7 @@ void LEDPanel_SetupTextPos(int row, int x, int y)
 
     self->textPos[row].x = self->position.x;
     self->textPos[row].y = self->position.y;
-    self->textPos[row].x += (self->activeText[row].textLength << 20) - (self->size.x >> 1) + x + 0x80000;
+    self->textPos[row].x += (self->activeText[row].length << 20) - (self->size.x >> 1) + x + 0x80000;
     self->textPos[row].y += y - (self->size.y >> 1) + 0x100000;
 }
 
@@ -160,7 +160,7 @@ void LEDPanel_HandleCharacters(void)
 
     while (!flag) {
         int charID = -1;
-        if (self->rowSeqPos[self->row] < self->seqPtrs[self->row]->textLength)
+        if (self->rowSeqPos[self->row] < self->seqPtrs[self->row]->length)
             charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
 
         switch (charID) {
@@ -168,7 +168,7 @@ void LEDPanel_HandleCharacters(void)
                 charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
                 switch (charID) {
                     case 0:
-                        self->textMovePos[self->row].x   = -0x100000 * self->activeText[self->row].textLength;
+                        self->textMovePos[self->row].x   = -0x100000 * self->activeText[self->row].length;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     case 1:
@@ -176,11 +176,11 @@ void LEDPanel_HandleCharacters(void)
                         self->textTargetPos[self->row].x = 0;
                         break;
                     case 2:
-                        self->textMovePos[self->row].x   = (self->size.x >> 1) - (self->activeText[self->row].textLength << 19) - 0x80000;
+                        self->textMovePos[self->row].x   = (self->size.x >> 1) - (self->activeText[self->row].length << 19) - 0x80000;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     case 3:
-                        self->textMovePos[self->row].x   = self->size.x - (self->activeText[self->row].textLength << 20) - 0x100000;
+                        self->textMovePos[self->row].x   = self->size.x - (self->activeText[self->row].length << 20) - 0x100000;
                         self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     case 4:
@@ -222,13 +222,11 @@ void LEDPanel_HandleCharacters(void)
             case 'C':
                 charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
                 switch (charID) {
-                    case 0: self->textTargetPos[self->row].x = -0x100000 * self->activeText[self->row].textLength; break;
+                    case 0: self->textTargetPos[self->row].x = -0x100000 * self->activeText[self->row].length; break;
                     case 1: self->textTargetPos[self->row].x = 0; break;
-                    case 2:
-                        self->textTargetPos[self->row].x = (self->size.x >> 1) - (self->activeText[self->row].textLength << 19) - 0x80000;
+                    case 2: self->textTargetPos[self->row].x = (self->size.x >> 1) - (self->activeText[self->row].length << 19) - 0x80000;
                         break;
-                    case 3:
-                        self->textTargetPos[self->row].x = self->size.x - (self->activeText[self->row].textLength << 20) - 0x100000;
+                    case 3: self->textTargetPos[self->row].x = self->size.x - (self->activeText[self->row].length << 20) - 0x100000;
                         break;
                     case 4: self->textTargetPos[self->row].x = self->size.x; break;
                     default: break;
@@ -476,8 +474,7 @@ void LEDPanel_StateText_Move(void)
 
     self->textPos[self->row].x = self->position.x;
     self->textPos[self->row].y = self->position.y;
-    self->textPos[self->row].x +=
-        (self->activeText[self->row].textLength << 20) - (self->size.x >> 1) + self->textMovePos[self->row].x + 0x80000;
+    self->textPos[self->row].x += (self->activeText[self->row].length << 20) - (self->size.x >> 1) + self->textMovePos[self->row].x + 0x80000;
     self->textPos[self->row].y += self->textMovePos[self->row].y - (self->size.y >> 1) + 0x100000;
 
     if (self->textMovePos[self->row].x == self->textTargetPos[self->row].x) {

@@ -33,16 +33,11 @@ void Snowflakes_Update(void)
                     }
                     else {
 #if RETRO_USE_PLUS
-                        int32 randVal = RSDK.RandSeeded(0, 10, &Zone->randSeed);
+                        int32 type = RSDK.RandSeeded(0, 10, &Zone->randSeed);
 #else
-                        int32 randVal = RSDK.Rand(0, 10);
+                        int32 type       = RSDK.Rand(0, 10);
 #endif
-                        if (randVal > 8) {
-                            self->animIDs[i] = 3;
-                        }
-                        else {
-                            self->animIDs[i] = randVal > 4;
-                        }
+                        self->animIDs[i] = type > 8 ? 3 : (type > 4 ? 1 : 0);
                     }
 #if RETRO_USE_PLUS
                     self->angles[i] = RSDK.RandSeeded(0, 256, &Zone->randSeed);

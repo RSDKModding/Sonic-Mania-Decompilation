@@ -939,7 +939,7 @@ void SetSettingsBool(const char *key, bool32 val) { SetSettingsValue(key, val ? 
 void SetSettingsInteger(const char *key, int32 val) { SetSettingsValue(key, std::to_string(val)); }
 void SetSettingsString(const char *key, TextInfo *val)
 {
-    char *buf = new char[val->textLength];
+    char *buf = new char[val->length];
     GetCString(buf, val);
     SetSettingsValue(key, buf);
 }

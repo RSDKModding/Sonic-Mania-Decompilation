@@ -184,7 +184,7 @@ void UITAZoneModule_SetupText(void)
         if (self->disabled) {
             RSDK.PrependText(&self->text1, "???");
             RSDK.PrependText(&self->text2, "");
-            self->text2.textLength = 0;
+            self->text2.length = 0;
         }
         else {
             RSDK.CopyString(&self->text1, &self->text1Store);
@@ -348,17 +348,17 @@ void UITAZoneModule_DrawModuleInfo(void)
     if (self->state != UITAZoneModule_State_HasBeenSelected || !(self->timer & 2)) {
         if (!SceneInfo->inEditor) {
             drawPos.x = self->drawPos.x - 0x370000;
-            if (self->text2.textLength) {
+            if (self->text2.length) {
                 drawPos.y = self->drawPos.y - 0x160000;
-                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.textLength, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, 2, 0, false);
 
                 drawPos.y += 0x1C0000;
                 drawPos.x += 0x200000;
-                RSDK.DrawText(&self->medLetterAnimator2, &drawPos, &self->text2, 0, self->text2.textLength, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->medLetterAnimator2, &drawPos, &self->text2, 0, self->text2.length, ALIGN_LEFT, 0, 2, 0, false);
             }
             else {
                 drawPos.y = self->drawPos.y - 0x60000;
-                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.textLength, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, 2, 0, false);
             }
         }
     }

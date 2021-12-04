@@ -133,7 +133,7 @@ void UIVsZoneButton_SetNameText(void)
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
         if (self->obfuscate) {
             RSDK.PrependText(&self->nameText, "???");
-            self->nameText.textLength = 3;
+            self->nameText.length = 3;
         }
         else {
             Localization_SetZoneNameShort(&self->nameText, self->zoneID);
@@ -227,10 +227,10 @@ void UIVsZoneButton_DrawButton(void)
     UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!SceneInfo->inEditor) {
-        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.length, 0);
         drawPos.y -= 0x10000;
         drawPos.x -= width << 15;
-        RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.length, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
 

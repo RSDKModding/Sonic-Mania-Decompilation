@@ -173,19 +173,19 @@ int GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startI
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
         if (startIndex >= 0) {
-            if (startIndex >= info->textLength)
-                startIndex = info->textLength - 1;
+            if (startIndex >= info->length)
+                startIndex = info->length - 1;
         }
         else {
             startIndex = 0;
         }
 
         if (length > 0) {
-            if (length > info->textLength)
-                length = info->textLength;
+            if (length > info->length)
+                length = info->length;
         }
         else {
-            length = info->textLength;
+            length = info->length;
         }
 
         int w = 0;
@@ -214,7 +214,7 @@ void SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info)
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
-        for (int c = 0; c < info->textLength; ++c) {
+        for (int c = 0; c < info->length; ++c) {
             int charVal   = info->text[c];
             info->text[c] = -1;
             for (int f = 0; f < anim->frameCount; ++f) {

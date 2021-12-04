@@ -79,9 +79,9 @@ void UIVsScoreboard_DrawSprites(void)
     UIWidgets_DrawParallelogram(self->size.y >> 16, (self->size.y + self->size.x) >> 16, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!SceneInfo->inEditor) {
-        int32 width = RSDK.GetStringWidth(UIVsScoreboard->aniFrames, 18, &self->scoreText, 0, self->scoreText.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIVsScoreboard->aniFrames, 18, &self->scoreText, 0, self->scoreText.length, 0);
         drawPos.x -= width << 15;
-        RSDK.DrawText(&self->textAnimator, &drawPos, &self->scoreText, 0, self->scoreText.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->textAnimator, &drawPos, &self->scoreText, 0, self->scoreText.length, ALIGN_LEFT, 0, 0, 0, false);
 
         drawPos.x += width << 15;
     }

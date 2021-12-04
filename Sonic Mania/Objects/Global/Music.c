@@ -19,7 +19,7 @@ void Music_Create(void *data)
     RSDK_THIS(Music);
     if (!SceneInfo->inEditor) {
         self->active = ((SceneInfo->state & 3) != 3) + ACTIVE_ALWAYS;
-        if (self->trackFile.textLength) {
+        if (self->trackFile.length) {
             if (self->trackID != TRACK_NOLOAD) {
                 RSDK.GetCString(Music->trackNames[self->trackID], &self->trackFile);
                 Music->trackLoops[self->trackID] = self->trackLoop;

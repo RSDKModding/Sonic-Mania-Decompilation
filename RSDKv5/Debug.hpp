@@ -17,7 +17,7 @@ inline void PrintString(SeverityModes severity, const char *message) { PrintLog(
 inline void PrintText(SeverityModes severity, TextInfo *text)
 {
     useEndLine = false;
-    for (int c = 0; c < text->textLength; ++c) {
+    for (int c = 0; c < text->length; ++c) {
         PrintLog(severity, "%c", text->text[c]);
     }
     PrintLog(severity, "\n");

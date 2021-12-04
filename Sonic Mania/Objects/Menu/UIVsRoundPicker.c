@@ -116,9 +116,9 @@ void UIVsRoundPicker_DrawText(void)
         case 2: drawPos.x = self->position.x + (self->size.x >> 1) - 0x60000; break;
     }
 
-    int32 width = RSDK.GetStringWidth(UIVsRoundPicker->aniFrames, 15, &self->text, 0, self->text.textLength, 0) << 16;
+    int32 width = RSDK.GetStringWidth(UIVsRoundPicker->aniFrames, 15, &self->text, 0, self->text.length, 0) << 16;
     drawPos.x -= (width + 0x300000) >> 1;
-    RSDK.DrawText(&self->numbersAnimator, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
+    RSDK.DrawText(&self->numbersAnimator, &drawPos, &self->text, 0, self->text.length, ALIGN_LEFT, 0, 0, 0, false);
 
     drawPos.x += width + 0x40000;
     RSDK.DrawSprite(&self->textAnimator, &drawPos, false);

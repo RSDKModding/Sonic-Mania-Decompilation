@@ -487,8 +487,8 @@ void LoadSceneFile()
                                 ushort len         = ReadInt16(&info);
 
                                 SetText(textInfo, (char *)"", len);
-                                for (textInfo->textLength = 0; textInfo->textLength < len; ++textInfo->textLength) {
-                                    textInfo->text[textInfo->textLength] = ReadInt16(&info);
+                                for (textInfo->length = 0; textInfo->length < len; ++textInfo->length) {
+                                    textInfo->text[textInfo->length] = ReadInt16(&info);
                                 }
                             }
                             else {

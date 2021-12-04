@@ -138,14 +138,14 @@ void ProcessAchievements()
                     CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
                     CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
                     if (curSKU.language == LANGUAGE_JP) {
-                        achievementTextWidth[0] = 13 * achievementText[0].textLength;
-                        achievementTextWidth[1] = 13 * achievementText[1].textLength;
+                        achievementTextWidth[0] = 13 * achievementText[0].length;
+                        achievementTextWidth[1] = 13 * achievementText[1].length;
                     }
                     else {
                         achievementTextWidth[0] =
-                            GetStringWidth(achievementAniFrames[0], 0, &achievementText[0], 0, achievementText[0].textLength, 0);
+                            GetStringWidth(achievementAniFrames[0], 0, &achievementText[0], 0, achievementText[0].length, 0);
                         achievementTextWidth[1] =
-                            GetStringWidth(achievementAniFrames[1], 0, &achievementText[1], 0, achievementText[1].textLength, 0);
+                            GetStringWidth(achievementAniFrames[1], 0, &achievementText[1], 0, achievementText[1].length, 0);
                     }
 
                     achievementStrW = maxVal(achievementTextWidth[0], achievementTextWidth[1]) + 16;
@@ -187,14 +187,14 @@ void DrawAchievements()
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y + 0xA0000;
             SetSpriteString(achievementAniFrames[0], 0, &achievementText[0]);
-            DrawText(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].textLength, ALIGN_CENTER, 0, 0, NULL, true);
+            DrawText(&achievementAnimator[0], &drawPos, &achievementText[0], 0, achievementText[0].length, ALIGN_CENTER, 0, 0, NULL, true);
 
             vertices[1].y += 0x1C0000;
 
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;
             drawPos.y = vertices[1].y;
             SetSpriteString(achievementAniFrames[1], 0, &achievementText[1]);
-            DrawText(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].textLength, ALIGN_CENTER, 0, 0, NULL, true);
+            DrawText(&achievementAnimator[1], &drawPos, &achievementText[1], 0, achievementText[1].length, ALIGN_CENTER, 0, 0, NULL, true);
 
             achievementsDrawn = true;
         }

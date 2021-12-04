@@ -884,12 +884,7 @@ bool32 CompetitionMenu_Unknown30(void)
     INIT_TEXTINFO(info);
 
     Localization_GetString(&info, STR_EXITCOMP);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, 0, true);
-        UIDialog_AddButton(DIALOG_YES, dialog, CompetitionMenu_ExitComp_YesCB, true);
-        UIDialog_Setup(dialog);
-    }
+    UIDialog_CreateDialogYesNo(&info, CompetitionMenu_ExitComp_YesCB, StateMachine_None, true, true);
     return true;
 }
 

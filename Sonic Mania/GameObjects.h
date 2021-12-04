@@ -279,8 +279,8 @@ typedef struct {
     void (*DrawBlendedQuad)(Vector2 *verticies, colour *vertColours, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startCharID, int32 endCharID, Alignments align, int32 spacing, int32 a8,
-                     Vector2 *charPos, bool32 ScreenRelative);
+    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startCharID, int32 endCharID, Alignments align, int32 spacing,
+                     int32 a8, Vector2 *charPos, bool32 ScreenRelative);
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
@@ -292,21 +292,21 @@ typedef struct {
     void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, colour colour);
-    void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 animSpeed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
+    void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
     void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
                                   colour colour);
     void (*Draw3DScene)(uint16 index);
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
-    uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);
-    void (*SetSpriteAnimation)(uint16 aniFrames, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID);
-    void (*EditSpriteAnimation)(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
-                                uint8 loopIndex, uint8 rotationFlag);
-    void (*SetSpriteString)(uint16 aniFrames, uint16 animID, TextInfo *info);
+    uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 listCount, Scopes scope);
+    void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
+    void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
+                                uint8 rotationFlag);
+    void (*SetSpriteString)(uint16 aniFrames, uint16 listID, TextInfo *info);
     void *(*GetSpriteAnimation)(uint16 aniFrames, const char *name);
-    SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 anim, int32 frame);
+    SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 listID, int32 frameID);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
     int16 (*GetFrameID)(Animator *animator);
-    int32 (*GetStringWidth)(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
+    int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
     void (*ProcessAnimation)(Animator *animator);
     int32 (*GetSceneLayerID)(const char *name);
     TileLayer *(*GetSceneLayer)(int32 layerID);
@@ -435,9 +435,9 @@ extern RSDKFunctionTable RSDK;
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
-    info.text       = NULL;                                                                                                                          \
-    info.textLength = 0;                                                                                                                             \
-    info.length     = 0
+    info.text   = NULL;                                                                                                                              \
+    info.length = 0;                                                                                                                                 \
+    info.size   = 0
 
 //Initializes entity values to the defaults
 #define INIT_ENTITY(entity)                                                                                                                          \

@@ -168,7 +168,7 @@ void UIDiorama_SetText(TextInfo *info)
         int32 linePos   = 0;
 
         int32 *linePosPtr = &self->field_D0;
-        for (int32 i = 0; i < info->textLength; ++i) {
+        for (int32 i = 0; i < info->length; ++i) {
             if (info->text[linePos] == '\n' && lineCount < 3) {
                 linePosPtr[lineCount] = linePos;
                 ++lineCount;
@@ -612,7 +612,7 @@ void UIDiorama_StateDraw_PlusUpsell(void)
                 start = length[i] + 1;
             }
             if (i >= lineCount)
-                end = self->textInfo.textLength;
+                end = self->textInfo.length;
             else
                 end = length[i + 1];
 

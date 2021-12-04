@@ -75,9 +75,9 @@ void UIResPicker_Draw(void)
             case 2: drawPos.x = drawPos.x + (self->size.x >> 1) - 0x60000; break;
         }
 
-        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.length, 0);
         drawPos.x -= width << 15;
-        RSDK.DrawText(&self->textAnimator, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->textAnimator, &drawPos, &self->text, 0, self->text.length, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
 

@@ -206,13 +206,13 @@ void PrependText(TextInfo *info, char *text)
     if (!len)
         return;
 
-    if (info->length < len || !info->text) {
-        info->length = len;
-        AllocateStorage(sizeof(ushort) * info->length, (void **)&info->text, DATASET_STR, false);
+    if (info->size < len || !info->text) {
+        info->size = len;
+        AllocateStorage(sizeof(ushort) * info->size, (void **)&info->text, DATASET_STR, false);
     }
 
-    info->textLength = len;
-    for (int pos = 0; pos < info->textLength; ++pos) {
+    info->length = len;
+    for (int pos = 0; pos < info->length; ++pos) {
         ushort c = 0;
         switch (stringFlags[*text & 0xFF]) {
             case 1:
@@ -252,12 +252,12 @@ void AppendText(TextInfo *info, char *text)
     if (!len)
         return;
 
-    int newLen = (len + info->length);
-    if (info->length < newLen || !info->text) {
+    int newLen = (len + info->size);
+    if (info->size < newLen || !info->text) {
         if (info->text) {
             ushort *buffer = info->text;
             AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, DATASET_STR, false);
-            for (int charID = 0; charID < info->textLength; ++charID) {
+            for (int charID = 0; charID < info->length; ++charID) {
                 info->text[charID] = buffer[charID];
             }
             buffer = NULL;
@@ -265,10 +265,10 @@ void AppendText(TextInfo *info, char *text)
         else {
             AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, DATASET_STR, false);
         }
-        info->length = newLen;
+        info->size = newLen;
     }
 
-    for (int pos = info->textLength; pos < info->textLength + len; ++pos) {
+    for (int pos = info->length; pos < info->length + len; ++pos) {
         ushort c = 0;
         switch (stringFlags[*text & 0xFF]) {
             case 1:
@@ -293,17 +293,17 @@ void AppendText(TextInfo *info, char *text)
         }
         info->text[pos] = c;
     }
-    info->textLength = newLen;
+    info->length = newLen;
 }
 
 void AppendString(TextInfo *info, TextInfo *string)
 {
-    uint totalLen = string->textLength + info->textLength;
-    if (info->length < totalLen || !info->text) {
+    uint totalLen = string->length + info->length;
+    if (info->size < totalLen || !info->text) {
         if (info->text) {
             ushort *buffer = info->text;
             AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, DATASET_STR, false);
-            for (int charID = 0; charID < info->textLength; ++charID) {
+            for (int charID = 0; charID < info->length; ++charID) {
                 info->text[charID] = buffer[charID];
             }
             buffer = NULL;
@@ -311,36 +311,36 @@ void AppendString(TextInfo *info, TextInfo *string)
         else {
             AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, DATASET_STR, false);
         }
-        info->length = string->textLength + info->textLength;
+        info->size = string->length + info->length;
     }
 
-    int textLen = info->textLength;
-    info->textLength += string->textLength;
+    int textLen = info->length;
+    info->length += string->length;
     int id            = 0;
-    for (; textLen < info->textLength; ++textLen) {
+    for (; textLen < info->length; ++textLen) {
         info->text[textLen] = string->text[id++];
     }
 }
 
 bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch)
 {
-    if (textA->textLength != textB->textLength)
+    if (textA->length != textB->length)
         return false;
     ushort *textPtrA = textA->text;
     ushort *textPtrB = textB->text;
 
     if (exactMatch) { //each character has to match
-        for (int i = 0; i < textA->textLength; ++i) {
+        for (int i = 0; i < textA->length; ++i) {
             if (textPtrA[i] != textPtrB[i])
                 return false;
         }
         return true;
     }
     else { //attempt to ignore case sensitivity when matching
-        if (textA->textLength <= 0)
+        if (textA->length <= 0)
             return true;
 
-        for (int i = 0; i < textA->textLength; ++i) {
+        for (int i = 0; i < textA->length; ++i) {
             if (textPtrA[i] != textPtrB[i]) {
                 if (textPtrA[i] != textPtrB[i] + 0x20 && textPtrA[i] != textPtrB[i] - 0x20) {
                     return false;
@@ -354,7 +354,7 @@ bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch)
 
 bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 count)
 {
-    if (!strings->length || !strings->text)
+    if (!strings->size || !strings->text)
         return false;
 
     int lastStrPos = 0;
@@ -362,20 +362,20 @@ bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 cou
 
     bool32 flag    = false;
     TextInfo *info = list;
-    for (int c = 0; c < strings->textLength && count > 0; ++c) {
+    for (int c = 0; c < strings->length && count > 0; ++c) {
         if (strings->text[c] == '\n') {
             if (strID < start) {
                 lastStrPos = c;
             }
             else {
                 ushort len = c - lastStrPos;
-                if (info->length < len) {
-                    info->length = len;
+                if (info->size < len) {
+                    info->size = len;
                     AllocateStorage(sizeof(ushort) * len, (void **)&info->text, DATASET_STR, true);
                 }
-                info->textLength = len;
+                info->length = len;
 
-                for (int i = 0; i < info->textLength; ++i) {
+                for (int i = 0; i < info->length; ++i) {
                     info->text[i] = strings->text[lastStrPos++];
                 }
 
@@ -396,14 +396,14 @@ void InitStringsBuffer(TextInfo *info, int size)
 
     AllocateStorage(sizeof(ushort) * size, (void **)&text, DATASET_STR, 0);
     
-    for (int i = 0; i < size && i < info->textLength; ++i) {
+    for (int i = 0; i < size && i < info->length; ++i) {
         text[i] = info->text[i];
     }
     
     CopyStorage((int **)info, (int **)&text);
-    info->length = size;
-    if (info->textLength > (ushort)size)
-        info->textLength = size;
+    info->size = size;
+    if (info->length > (ushort)size)
+        info->length = size;
 }
 
 void LoadStrings(TextInfo *buffer, const char *filename)
@@ -417,8 +417,8 @@ void LoadStrings(TextInfo *buffer, const char *filename)
         ushort header = ReadInt16(&info);
         if (header == 0xFEFF) {
             InitStringsBuffer(buffer, (info.fileSize >> 1) - 1);
-            ReadBytes(&info, buffer->text, buffer->length * sizeof(ushort));
-            buffer->textLength = buffer->length;
+            ReadBytes(&info, buffer->text, buffer->size * sizeof(ushort));
+            buffer->length = buffer->size;
         }
         else {
             if (header == 0xEFBB) {
@@ -460,7 +460,7 @@ void LoadStrings(TextInfo *buffer, const char *filename)
                     default: break;
                 }
 
-                buffer->text[buffer->textLength++] = curChar;
+                buffer->text[buffer->length++] = curChar;
             }
         }
 

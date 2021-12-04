@@ -147,9 +147,9 @@ void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
     if (!SceneInfo->inEditor) {
         drawPos.y = posY + 0x80000;
         drawPos.x = posX + 0x590000;
-        int32 width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &self->rowText[row], 0, self->rowText[row].textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &self->rowText[row], 0, self->rowText[row].length, 0);
         drawPos.x -= width << 16;
-        RSDK.DrawText(&self->numbersAnimator, &drawPos, &self->rowText[row], 0, self->rowText[row].textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->numbersAnimator, &drawPos, &self->rowText[row], 0, self->rowText[row].length, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
 

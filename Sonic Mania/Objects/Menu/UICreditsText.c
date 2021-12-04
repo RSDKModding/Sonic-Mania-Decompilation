@@ -19,7 +19,7 @@ void UICreditsText_Draw(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, self->listID, &self->text, 0, self->text.textLength, 0);
+    int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, self->listID, &self->text, 0, self->text.length, 0);
     drawPos.y += 0x40000;
     if (self->hasShape)
         UIWidgets_DrawParallelogram(self->scaleTimer >> 4, (self->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
@@ -84,7 +84,7 @@ void UICreditsText_State_Setup(void)
         }
         else if (self->isHeading) {
             int32 yOffset = 0x280000;
-            for (int32 c = 0; c < self->text.textLength; ++c) {
+            for (int32 c = 0; c < self->text.length; ++c) {
                 self->charPositions[c].y = yOffset;
                 self->charOffsets[c]     = -0x80000;
                 yOffset += 0x100000;
@@ -107,7 +107,7 @@ void UICreditsText_State_SetupCharPos(void)
     self->visible = true;
 
     int32 yOffset = 0x280000;
-    for (int32 c = 0; c < self->text.textLength; ++c) {
+    for (int32 c = 0; c < self->text.length; ++c) {
         self->charPositions[c].y = yOffset;
         self->charOffsets[c]     = -0x80000;
         yOffset += 0x100000;
@@ -122,7 +122,7 @@ void UICreditsText_State_MoveChars(void)
 {
     RSDK_THIS(UICreditsText);
 
-    for (int32 c = 0; c < self->text.textLength; ++c) {
+    for (int32 c = 0; c < self->text.length; ++c) {
         if (self->charPositions[c].y < 0)
             self->charOffsets[c] += 0x28000;
         self->charPositions[c].y += self->charOffsets[c];
@@ -181,8 +181,8 @@ void UICreditsText_SetupIdleDelay(void)
             self->state  = UICreditsText_State_ScaleOut;
         }
         else if (self->isHeading) {
-            for (int32 c = 0; c < self->text.textLength; ++c) {
-                self->charTimers[c]  = 2 * (self->text.textLength - c - 1);
+            for (int32 c = 0; c < self->text.length; ++c) {
+                self->charTimers[c]  = 2 * (self->text.length - c - 1);
                 self->charOffsets[c] = -0x80000;
             }
             self->state = UICreditsText_State_Idle;
@@ -197,7 +197,7 @@ void UICreditsText_State_Idle(void)
 {
     RSDK_THIS(UICreditsText);
 
-    for (int32 c = 0; c < self->text.textLength; ++c) {
+    for (int32 c = 0; c < self->text.length; ++c) {
         if (self->charTimers[c] <= 0) {
             self->charOffsets[c] += 0x28000;
             self->charPositions[c].y += self->charOffsets[c];

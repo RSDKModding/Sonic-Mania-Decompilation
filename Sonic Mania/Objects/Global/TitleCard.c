@@ -236,18 +236,18 @@ void TitleCard_SetWordPositions(void)
     RSDK.SetSpriteString(TitleCard->aniFrames, 1, &self->zoneName);
 
     int32 offset = 0x280000;
-    for (int32 c = 0; c < self->zoneName.textLength; ++c) {
+    for (int32 c = 0; c < self->zoneName.length; ++c) {
         self->charPos[c].y  = offset;
         self->charSpeeds[c] = -0x80000;
         offset += 0x100000;
     }
 
     for (int32 i = 0; i < 4; ++i) {
-        self->zoneCharPos[i]   = ((2 - self->zoneName.textLength) << 19) - ((i * 2) << 19);
+        self->zoneCharPos[i]   = ((2 - self->zoneName.length) << 19) - ((i * 2) << 19);
         self->zoneCharSpeed[i] = 0x40000;
     }
 
-    for (int32 c = 0; c < self->zoneName.textLength; ++c) {
+    for (int32 c = 0; c < self->zoneName.length; ++c) {
         if (self->zoneName.text[c] == 0xFFFF) {
             self->word2Offset = c;
         }
@@ -317,7 +317,7 @@ void TitleCard_HandleZoneCharacters(void)
 {
     RSDK_THIS(TitleCard);
 
-    for (int32 c = 0; c < self->zoneName.textLength; ++c) {
+    for (int32 c = 0; c < self->zoneName.length; ++c) {
         if (self->charPos[c].y < 0)
             self->charSpeeds[c] += 0x28000;
 

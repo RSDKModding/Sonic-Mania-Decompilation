@@ -175,7 +175,7 @@ void DASetup_State_ManageControl(void)
         else {
             EntityMusic *track = (EntityMusic *)DASetup->trackList[DASetup->trackID];
             if (!DASetup_HandleMedallionDebug()) {
-                if (track->trackFile.textLength) {
+                if (track->trackFile.length) {
                     DASetup->activeTrack = DASetup->trackID;
                     Music_PlayTrackPtr(track);
                 }

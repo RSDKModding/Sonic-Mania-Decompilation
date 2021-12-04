@@ -75,8 +75,8 @@ void UIWinSize_Draw(void)
             case 2: drawPos.x = drawPos.x + (self->size.x >> 1) - 0x60000; break;
         }
 
-        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.textLength, 0) << 15;
-        RSDK.DrawText(&self->textAnimator, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.length, 0) << 15;
+        RSDK.DrawText(&self->textAnimator, &drawPos, &self->text, 0, self->text.length, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
 
@@ -122,7 +122,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
         RSDK.PrependText(&entityPtr->text, buffer);
 #if RETRO_GAMEVER != VER_100
         if (Localization->language == LANGUAGE_TC) {
-            for (int32 c = 0; c < entityPtr->text.textLength; ++c) {
+            for (int32 c = 0; c < entityPtr->text.length; ++c) {
                 if (entityPtr->text.text[c] == 'x')
                     entityPtr->text.text[c] = 20493; // unicode character ID
             }

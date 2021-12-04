@@ -67,8 +67,8 @@ void UIInfoLabel_DrawSprites(void)
     }
     else {
         drawPos.y -= 0x10000;
-        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.textLength, 0) << 15;
-        RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.textLength, 0, 0, 0, 0, 0);
+        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.length, 0) << 15;
+        RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.length, 0, 0, 0, 0, 0);
     }
 }
 

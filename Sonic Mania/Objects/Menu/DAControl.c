@@ -58,7 +58,7 @@ void DAControl_Draw(void)
     drawPos.x = self->position.x - 0x800000;
     drawPos.y = self->position.y;
     if (!SceneInfo->inEditor)
-        RSDK.DrawText(&self->animator4, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->animator4, &drawPos, &self->text, 0, self->text.length, ALIGN_LEFT, 0, 0, 0, false);
 }
 
 void DAControl_Create(void *data)
