@@ -51,7 +51,7 @@ void TubeSpring_Interact(void) { TubeSpring_Spring(true); }
 void TubeSpring_Springing(void)
 {
     RSDK_THIS(TubeSpring);
-    if (TubeSpring_Spring(false) && self->animator.frameID == self->animator.frameCount - 1) {
+    if (!TubeSpring_Spring(false) && self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 2, &self->animator, true, 0);
         self->state = TubeSpring_Pullback;
         TubeSpring_Pullback();
@@ -60,7 +60,6 @@ void TubeSpring_Springing(void)
 void TubeSpring_Pullback(void)
 {
     RSDK_THIS(TubeSpring);
-    TubeSpring_Spring(false);
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
         self->state = TubeSpring_Interact;
@@ -84,7 +83,7 @@ bool32 TubeSpring_Spring(bool32 interact)
 
             if (interact) {
                 RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 1, &self->animator, true, 0);
-                RSDK.PlaySfx(TubeSpring->sfxExit, 0, 255);
+                RSDK.PlaySfx(TubeSpring->sfxExit, false, 255);
                 self->state = TubeSpring_Springing;
             }
 

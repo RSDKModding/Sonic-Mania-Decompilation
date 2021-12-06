@@ -109,7 +109,7 @@ void LRZConvDropper_SetupDropperChildren(void)
 
     int slot = RSDK.GetEntityID(self) - self->seqCount;
     for (int i = 0; i < self->seqCount; ++i) {
-        EntityLRZConvItem *child = RSDK_GET_ENTITY(slot--, LRZConvItem);
+        EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
         child->active            = ACTIVE_NEVER;
         child->visible           = false;
     }
@@ -119,7 +119,8 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
 {
     if (entity->seqCount && entity->seqPos < entity->seqCount) {
         int slot                  = RSDK.GetEntityID(entity);
-        EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(entity->seqPos - entity->seqCount + slot, LRZConvItem);
+        int32 seqPos              = entity->seqPos - entity->seqCount;
+        EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
         if (seqEnt->objectID == LRZConvItem->objectID) {
             EntityLRZConvItem *item = CREATE_ENTITY(LRZConvItem, intToVoid(seqEnt->type), entity->position.x, entity->position.y);

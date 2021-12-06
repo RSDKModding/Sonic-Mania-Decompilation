@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { TURBINE_HANDLES, TURBINE_SPIKES, TURBINE_WALLDECOR } TurbineTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -41,7 +43,7 @@ void Turbine_EditorLoad(void);
 void Turbine_Serialize(void);
 
 // Extra Entity Functions
-void Turbine_CheckPlayerCollisions(void);
-void Turbine_CheckPlayerCollisions_Hurt(void);
+void Turbine_State_Handles(void);
+void Turbine_State_Spikes(void);
 
 #endif //!OBJ_TURBINE_H
