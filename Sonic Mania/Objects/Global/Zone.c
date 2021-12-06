@@ -329,7 +329,7 @@ void Zone_StageLoad(void)
     Zone->autoScrollSpeed = 0;
     Zone->ringFrame       = 0;
     Zone->gotTimeOver     = false;
-    Zone->callbackCount   = 0;
+    Zone->vsSwapCBCount   = 0;
     Zone->fgLayerLow      = 0;
     Zone->drawOrderLow    = 2;
     Zone->playerDrawLow   = 4;
@@ -1231,8 +1231,8 @@ void Zone_State_SwapPlayers(void)
                     Zone->playerFlags[Zone->playerID] = 0;
             }
 
-            for (int i = 0; i < Zone->callbackCount; ++i) {
-                StateMachine_Run(Zone->callbacks[i]);
+            for (int i = 0; i < Zone->vsSwapCBCount; ++i) {
+                StateMachine_Run(Zone->vsSwapCB[i]);
             }
 
             if (Zone->playerFlags[Zone->playerID]) {
@@ -1294,8 +1294,8 @@ void Zone_State_SwapPlayers(void)
         if (Competition->activeEntity)
             Zone->playerFlags = 0;
 
-        for (int i = 0; i < Zone->callbackCount; ++i) {
-            StateMachine_Run(Zone->callbacks[i]);
+        for (int i = 0; i < Zone->vsSwapCBCount; ++i) {
+            StateMachine_Run(Zone->vsSwapCB[i]);
         }
 
         if (Zone->playerFlags) {

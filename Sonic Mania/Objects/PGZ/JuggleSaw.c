@@ -395,9 +395,49 @@ void JuggleSaw_Saw_Knocked(void)
         destroyEntity(self);
 }
 
-void JuggleSaw_EditorDraw(void) { JuggleSaw_DebugDraw(); }
+#if RETRO_INCLUDE_EDITOR
+void JuggleSaw_EditorDraw(void)
+{
+    RSDK_THIS(JuggleSaw);
 
-void JuggleSaw_EditorLoad(void) { JuggleSaw_StageLoad(); }
+    int32 dir = self->direction;
+
+    switch (self->direction) {
+        case FLIP_NONE: RSDK.SetSpriteAnimation(JuggleSaw->animID, self->hasSaw == JSAW_HAS_SAW, &self->animator, true, 0); break;
+        case FLIP_X:
+            self->direction = FLIP_Y;
+            RSDK.SetSpriteAnimation(JuggleSaw->animID, self->hasSaw == JSAW_HAS_SAW, &self->animator, true, 0);
+            break;
+        case FLIP_Y:
+            self->direction = FLIP_NONE;
+            RSDK.SetSpriteAnimation(JuggleSaw->animID, 4 - (self->hasSaw != JSAW_HAS_SAW), &self->animator, true, 0);
+            break;
+        case FLIP_XY:
+            self->direction = FLIP_X;
+            RSDK.SetSpriteAnimation(JuggleSaw->animID, 4 - (self->hasSaw != JSAW_HAS_SAW), &self->animator, true, 0);
+            break;
+        default: break;
+    }
+
+    JuggleSaw_Draw();
+
+    self->direction = dir;
+}
+
+void JuggleSaw_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        JuggleSaw->animID = RSDK.LoadSpriteAnimation("PSZ1/JuggleSaw.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("PSZ2"))
+        JuggleSaw->animID = RSDK.LoadSpriteAnimation("PSZ2/JuggleSaw.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(JuggleSaw, direction);
+    RSDK_ENUM_VAR("No Flip (Vertical)", FLIP_NONE);
+    RSDK_ENUM_VAR("Flipped (Vertical)", FLIP_X);
+    RSDK_ENUM_VAR("No Flip (Horizontal)", FLIP_Y);
+    RSDK_ENUM_VAR("Flipped (Horizontal)", FLIP_XY);
+}
+#endif
 
 void JuggleSaw_Serialize(void)
 {

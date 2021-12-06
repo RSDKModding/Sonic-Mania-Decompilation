@@ -472,7 +472,7 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     }
 
     if (Ice) {
-        foreach_active(Ice, ice) { flags |= 1 << RSDK.CheckObjectCollisionBox(ice, &ice->hitbox1, self, &Ring->hitbox, true); }
+        foreach_active(Ice, ice) { flags |= 1 << RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &Ring->hitbox, true); }
     }
 
     if (BigSqueeze) {

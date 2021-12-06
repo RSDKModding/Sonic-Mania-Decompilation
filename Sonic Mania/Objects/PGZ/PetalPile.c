@@ -49,12 +49,10 @@ void PetalPile_Create(void *data)
 
 void PetalPile_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1")) {
+    if (RSDK.CheckStageFolder("PSZ1")) 
         PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Petal.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("PSZ2")) {
+    else if (RSDK.CheckStageFolder("PSZ2")) 
         PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Petal.bin", SCOPE_STAGE);
-    }
 
     PetalPile->sfxPetals = RSDK.GetSfx("PSZ/Petals.wav");
 }
@@ -66,11 +64,11 @@ int32 PetalPile_GetLeafPattern(int32 *patternPtr)
     int32 count    = PetalPile->patternSize[self->leafPattern];
     int32 *pattern = NULL;
     switch (self->leafPattern) {
-        case 0: pattern = PetalPile->pattern1; break;
-        case 1: pattern = PetalPile->pattern2; break;
-        case 2: pattern = PetalPile->pattern3; break;
-        case 3: pattern = PetalPile->pattern4; break;
-        case 4: pattern = PetalPile->pattern5; break;
+        case PETALPILE_PATTERN_0: pattern = PetalPile->pattern1; break;
+        case PETALPILE_PATTERN_1: pattern = PetalPile->pattern2; break;
+        case PETALPILE_PATTERN_2: pattern = PetalPile->pattern3; break;
+        case PETALPILE_PATTERN_3: pattern = PetalPile->pattern4; break;
+        case PETALPILE_PATTERN_4: pattern = PetalPile->pattern5; break;
         default: return 0;
     }
 
@@ -87,18 +85,18 @@ void PetalPile_State_Setup(void)
 {
     RSDK_THIS(PetalPile);
 
-    self->hitbox1.left   = -(self->pileSize.x >> 17);
-    self->hitbox1.top    = -(self->pileSize.y >> 17);
-    self->hitbox1.right  = self->pileSize.x >> 17;
-    self->hitbox1.bottom = self->pileSize.y >> 17;
+    self->hitbox.left   = -(self->pileSize.x >> 17);
+    self->hitbox.top    = -(self->pileSize.y >> 17);
+    self->hitbox.right  = self->pileSize.x >> 17;
+    self->hitbox.bottom = self->pileSize.y >> 17;
 
-    if (!self->flag) {
-        self->state = PetalPile_State_HandleInteractions;
-        PetalPile_State_HandleInteractions();
-    }
-    else {
+    if (self->noRemoveTiles) {
         self->state = PetalPile_State_Unknown3;
         PetalPile_State_Unknown3();
+    }
+    else {
+        self->state = PetalPile_State_HandleInteractions;
+        PetalPile_State_HandleInteractions();
     }
 }
 
@@ -108,22 +106,22 @@ void PetalPile_State_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             if (!player->sidekick) {
                 if (abs(player->groundVel) >= 0x60000 || player->velocity.y > 0x60000 || player->velocity.y < -0x70000
                     || player->state == Player_State_Spindash || player->state == Player_State_DropDash) {
                     bool32 flag = false;
                     if (player->state == Player_State_Spindash || player->state == Player_State_DropDash || abs(player->groundVel) >= 0x60000)
                         flag = true;
-                    self->field_94 = flag * (2 * (player->direction != FLIP_NONE) - 1);
+                    self->petalDir = flag * (2 * (player->direction != FLIP_NONE) - 1);
 
                     if (player->state == Player_State_Spindash || player->state == Player_State_DropDash)
-                        self->field_98 = 0xF5555;
+                        self->petalRadius = 0xF5555;
                     else
-                        self->field_98 = 0xB5555;
-                    self->field_8C = player->groundVel >> 1;
-                    self->field_84 = player->position.x - self->position.x;
-                    self->field_88 = 0;
+                        self->petalRadius = 0xB5555;
+                    self->petalVel = player->groundVel >> 1;
+                    self->distance.x = player->position.x - self->position.x;
+                    self->distance.y   = 0;
                     RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                     self->state = PetalPile_State_Unknown3;
                     foreach_break;
@@ -143,11 +141,11 @@ void PetalPile_State_HandleInteractions(void)
         hitbox.bottom = 8;
         foreach_active(Explosion, explosion)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox1, explosion, &hitbox)) {
-                self->field_94 = 0;
-                self->field_98 = 0xF5555;
-                self->field_84 = explosion->position.x - self->position.x;
-                self->field_88 = 0;
+            if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, explosion, &hitbox)) {
+                self->petalDir = 0;
+                self->petalRadius = 0xF5555;
+                self->distance.x   = explosion->position.x - self->position.x;
+                self->distance.y  = 0;
                 RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                 self->state = PetalPile_State_Unknown3;
                 foreach_break;
@@ -165,18 +163,18 @@ void PetalPile_State_Unknown3(void)
     int32 count = PetalPile_GetLeafPattern((int32 *)buffer);
 
     int32 offsetX = 0, offsetY = 0;
-    switch (self->field_94) {
+    switch (self->petalDir) {
         case 0:
-            offsetX = self->position.x + self->field_84;
-            offsetY = self->position.y + ((self->hitbox1.bottom + 32) << 16);
+            offsetX = self->position.x + self->distance.x;
+            offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
         case -1:
-            offsetX = self->position.x + ((self->hitbox1.right + 16) << 16);
-            offsetY = self->position.y + ((self->hitbox1.bottom + 32) << 16);
+            offsetX = self->position.x + ((self->hitbox.right + 16) << 16);
+            offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
         case 1:
-            offsetX = self->position.x + ((self->hitbox1.left - 16) << 16);
-            offsetY = self->position.y + ((self->hitbox1.bottom + 32) << 16);
+            offsetX = self->position.x + ((self->hitbox.left - 16) << 16);
+            offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
     }
 
@@ -193,26 +191,26 @@ void PetalPile_State_Unknown3(void)
 
         int32 angle              = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
         EntityPetalPile *petal = CREATE_ENTITY(PetalPile, self, spawnX, spawnY);
-        petal->state           = PetalPile_SetupLeaf;
+        petal->state           = PetalPile_StateLeaf_Setup;
         petal->stateDraw       = PetalPile_StateDraw_Leaf;
 
-        int32 val = self->field_98 >> 1;
-        if (self->field_94) {
-            petal->direction = self->field_94 <= 0;
-            petal->field_8C  = self->field_8C;
-            val              = (self->field_98 >> 8) * ((16 * (abs(spawnX - offsetX) / (pos >> 16))) >> 12);
+        int32 radius = self->petalRadius >> 1;
+        if (self->petalDir) {
+            petal->direction = self->petalDir <= 0;
+            petal->petalVel  = self->petalVel;
+            radius              = (self->petalRadius >> 8) * ((16 * (abs(spawnX - offsetX) / (pos >> 16))) >> 12);
             petal->timer     = (pos - abs(spawnX - offsetX)) >> 18;
         }
         else {
 #if RETRO_USE_PLUS
-            petal->direction = RSDK.RandSeeded(0, 1, &Zone->randSeed);
+            petal->direction = RSDK.RandSeeded(FLIP_NONE, FLIP_X, &Zone->randSeed);
 #else
-            petal->direction = RSDK.Rand(0, 1);
+            petal->direction = RSDK.Rand(FLIP_NONE, FLIP_X);
 #endif
         }
 
-        petal->velStore.x = (val >> 8) * RSDK.Cos256(angle);
-        petal->velStore.y = (val >> 9) * RSDK.Sin256(angle) - 0x20000;
+        petal->velStore.x = (radius >> 8) * RSDK.Cos256(angle);
+        petal->velStore.y = (radius >> 9) * RSDK.Sin256(angle) - 0x20000;
         if (self->tileLayer)
             petal->drawOrder = Zone->drawOrderLow;
         else
@@ -220,14 +218,14 @@ void PetalPile_State_Unknown3(void)
     }
 
     if (self->emitterMode) {
-        self->state = PetalPile_State_Unknown4;
+        self->state = PetalPile_State_Emitter;
     }
     else {
-        if (!self->flag) {
-            int32 left   = (self->position.x >> 16) + self->hitbox1.left;
-            int32 right  = (self->position.x >> 16) + self->hitbox1.right;
-            int32 top    = (self->position.y >> 16) + self->hitbox1.top;
-            int32 bottom = (self->position.y >> 16) + self->hitbox1.bottom;
+        if (!self->noRemoveTiles) {
+            int32 left   = (self->position.x >> 16) + self->hitbox.left;
+            int32 right  = (self->position.x >> 16) + self->hitbox.right;
+            int32 top    = (self->position.y >> 16) + self->hitbox.top;
+            int32 bottom = (self->position.y >> 16) + self->hitbox.bottom;
 
             int32 sizeX = (right >> 4) - (left >> 4);
             int32 sizeY = (bottom >> 4) - (top >> 4);
@@ -241,14 +239,14 @@ void PetalPile_State_Unknown3(void)
     }
 }
 
-void PetalPile_State_Unknown4(void)
+void PetalPile_State_Emitter(void)
 {
     RSDK_THIS(PetalPile);
 
     bool32 flag = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             flag = true;
         }
     }
@@ -258,27 +256,27 @@ void PetalPile_State_Unknown4(void)
     }
 }
 
-void PetalPile_SetupLeaf(void)
+void PetalPile_StateLeaf_Setup(void)
 {
     RSDK_THIS(PetalPile);
-    self->hitbox1.left   = -1;
-    self->hitbox1.top    = -1;
-    self->hitbox1.right  = 1;
-    self->hitbox1.bottom = 1;
+    self->hitbox.left   = -1;
+    self->hitbox.top    = -1;
+    self->hitbox.right  = 1;
+    self->hitbox.bottom = 1;
     self->active         = ACTIVE_NORMAL;
     self->updateRange.x  = 0x10000;
     self->updateRange.y  = 0x10000;
     RSDK.SetSpriteAnimation(PetalPile->aniFrames, 0, &self->animator, true, 0);
-    self->state = PetalPile_State_Unknown5;
-    PetalPile_State_Unknown5();
+    self->state = PetalPile_StateLeaf_Delay;
+    PetalPile_StateLeaf_Delay();
 }
 
-void PetalPile_State_Unknown5(void)
+void PetalPile_StateLeaf_Delay(void)
 {
     RSDK_THIS(PetalPile);
 
     if (self->timer <= 0) {
-        self->state    = PetalPile_State_Unknown6;
+        self->state    = PetalPile_StateLeaf_HandleVelocity;
         self->timer    = 0;
         self->velocity = self->velStore;
     }
@@ -290,21 +288,21 @@ void PetalPile_State_Unknown5(void)
         destroyEntity(self);
 }
 
-void PetalPile_State_Unknown6(void)
+void PetalPile_StateLeaf_HandleVelocity(void)
 {
     RSDK_THIS(PetalPile);
 
-    if (self->field_8C > 0) {
-        self->field_8C -= 4096;
-        if (self->field_8C < 0)
-            self->field_8C = 0;
+    if (self->petalVel > 0) {
+        self->petalVel -= 4096;
+        if (self->petalVel < 0)
+            self->petalVel = 0;
     }
-    else if (self->field_8C < 0) {
-        self->field_8C += 0x1000;
-        if (self->field_8C > 0)
-            self->field_8C = 0;
+    else if (self->petalVel < 0) {
+        self->petalVel += 0x1000;
+        if (self->petalVel > 0)
+            self->petalVel = 0;
     }
-    self->position.x += self->field_8C;
+    self->position.x += self->petalVel;
 
     self->velocity.y += 0x4000;
     if (self->velocity.x <= 0)
@@ -327,36 +325,36 @@ void PetalPile_State_Unknown6(void)
     }
     if (self->velocity.y >= 0 && !self->velocity.x) {
 #if RETRO_USE_PLUS
-        self->field_9C = RSDK.RandSeeded(0, 255, &Zone->randSeed);
+        self->petalOffset = RSDK.RandSeeded(0, 255, &Zone->randSeed);
 #else
-        self->field_9C = RSDK.Rand(0, 255);
+        self->petalOffset = RSDK.Rand(0, 255);
 #endif
-        self->state = PetalPile_State_Unknown7;
+        self->state = PetalPile_StateLeaf_Fall;
     }
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
 
-void PetalPile_State_Unknown7(void)
+void PetalPile_StateLeaf_Fall(void)
 {
     RSDK_THIS(PetalPile);
 
-    if (self->field_8C > 0) {
-        self->field_8C -= 4096;
-        if (self->field_8C < 0)
-            self->field_8C = 0;
+    if (self->petalVel > 0) {
+        self->petalVel -= 4096;
+        if (self->petalVel < 0)
+            self->petalVel = 0;
     }
-    else if (self->field_8C < 0) {
-        self->field_8C += 0x1000;
-        if (self->field_8C > 0)
-            self->field_8C = 0;
+    else if (self->petalVel < 0) {
+        self->petalVel += 0x1000;
+        if (self->petalVel > 0)
+            self->petalVel = 0;
     }
-    self->position.x += self->field_8C;
+    self->position.x += self->petalVel;
     self->velocity.y += 0x4000;
     if (self->velocity.y > 0x10000)
         self->velocity.y = 0x10000;
-    int32 val = RSDK.Sin256(4 * self->field_9C) << 8;
+    int32 val = RSDK.Sin256(4 * self->petalOffset) << 8;
     ++self->timer;
     self->position.x += val;
     self->velocity.x = val;
@@ -374,7 +372,7 @@ void PetalPile_State_Unknown7(void)
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 
-    self->field_9C++;
+    self->petalOffset++;
 }
 
 void PetalPile_StateDraw_Leaf(void)
@@ -384,9 +382,30 @@ void PetalPile_StateDraw_Leaf(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PetalPile_EditorDraw(void) {}
+void PetalPile_EditorDraw(void)
+{
+    RSDK_THIS(PetalPile);
+    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->pileSize.x, self->pileSize.y);
+}
 
-void PetalPile_EditorLoad(void) {}
+void PetalPile_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Petal.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("PSZ2"))
+        PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Petal.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PetalPile, leafPattern);
+    RSDK_ENUM_VAR("Pattern 0", PETALPILE_PATTERN_0);
+    RSDK_ENUM_VAR("Pattern 1", PETALPILE_PATTERN_1);
+    RSDK_ENUM_VAR("Pattern 2", PETALPILE_PATTERN_2);
+    RSDK_ENUM_VAR("Pattern 3", PETALPILE_PATTERN_3);
+    RSDK_ENUM_VAR("Pattern 4", PETALPILE_PATTERN_4);
+
+    RSDK_ACTIVE_VAR(PetalPile, tileLayer);
+    RSDK_ENUM_VAR("FG High", PETALPILE_FGHIGH);
+    RSDK_ENUM_VAR("FG Low", PETALPILE_FGLOW);
+}
 #endif
 
 void PetalPile_Serialize(void)

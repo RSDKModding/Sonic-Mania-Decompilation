@@ -417,6 +417,10 @@ void WarpDoor_EditorLoad(void)
 
     // RSDK_ACTIVE_VAR(WarpDoor, effect);
     // RSDK_ENUM_VAR("None", WARPDOOR_EFFECT_NONE);
+
+    RSDK_ACTIVE_VAR(WarpDoor, forcePlayerState);
+    RSDK_ENUM_VAR("None", WARPDOOR_PLRSTATE_NONE);
+    RSDK_ENUM_VAR("Hurt", WARPDOOR_PLRSTATE_HURT);
 }
 #endif
 

@@ -1066,21 +1066,21 @@ void ItemBox_HandleObjectCollisions(void)
     if (Ice) {
         foreach_active(Ice, ice)
         {
-            if (ice->stateDraw == Ice_StateDraw_Unknown1) {
+            if (ice->stateDraw == Ice_Draw_IceBlock) {
                 int32 storeX = ice->position.x;
                 int32 storeY = ice->position.y;
-                ice->position.x -= ice->playerPos.x;
-                ice->position.y -= ice->playerPos.y;
+                ice->position.x -= ice->playerMoveOffset.x;
+                ice->position.y -= ice->playerMoveOffset.y;
 
-                if (RSDK.CheckObjectCollisionBox(ice, &ice->hitbox1, self, &ItemBox->hitbox, true)) {
-                    self->position.x += ice->playerPos.x;
-                    self->position.y += ice->playerPos.y;
+                if (RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &ItemBox->hitbox, true)) {
+                    self->position.x += ice->playerMoveOffset.x;
+                    self->position.y += ice->playerMoveOffset.y;
                     self->position.y = self->position.y >> 0x10 << 0x10;
-                    self->contentsPos.x += ice->playerPos.x;
-                    self->contentsPos.y += ice->playerPos.y;
+                    self->contentsPos.x += ice->playerMoveOffset.x;
+                    self->contentsPos.y += ice->playerMoveOffset.y;
                     self->contentsPos.y = self->contentsPos.y >> 0x10 << 0x10;
-                    self->moveOffset.x  = ice->playerPos.x;
-                    self->moveOffset.y  = ice->playerPos.y;
+                    self->moveOffset.x  = ice->playerMoveOffset.x;
+                    self->moveOffset.y  = ice->playerMoveOffset.y;
                     self->velocity.y    = 0;
                 }
                 ice->position.x = storeX;

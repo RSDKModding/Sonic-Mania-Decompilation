@@ -1192,7 +1192,7 @@ void ReplayRecorder_RecordFrameData(void)
         EntityIce *ice     = player->abilityPtrs[1];
         Animator *animator = &player->animator;
         if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->objectID == Ice->objectID) {
-            animator = &ice->animator2;
+            animator = &ice->contentsAnimator;
         }
         void *storedState = self->storedState;
         self->animID      = animator->animationID;

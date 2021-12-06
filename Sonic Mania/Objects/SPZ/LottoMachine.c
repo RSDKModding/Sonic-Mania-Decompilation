@@ -156,7 +156,7 @@ void LottoMachine_StageLoad(void)
     LottoMachine->active         = ACTIVE_ALWAYS;
     LottoMachine->sfxPimPom      = RSDK.GetSfx("Stage/PimPom.wav");
     LottoMachine->sfxFail        = RSDK.GetSfx("Stage/Fail.wav");
-    Zone_AddCallback(LottoMachine_ZoneCB);
+    Zone_AddVSSwapCallback(LottoMachine_ZoneCB);
 }
 
 void LottoMachine_ZoneCB(void)

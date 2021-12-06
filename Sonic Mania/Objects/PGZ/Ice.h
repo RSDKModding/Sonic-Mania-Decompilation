@@ -58,12 +58,46 @@ typedef enum {
 } IceAni;
 #endif
 
+typedef enum {
+    ICE_SIZE_LARGE,
+    ICE_SIZE_SMALL,
+} IceSizes;
+
+typedef enum {
+    ICE_BLOCK,
+    ICE_1RING,
+    ICE_3RINGS,
+    ICE_5RINGS,
+    ICE_SPIKES,
+    ICE_ITEMBOX_RINGS,
+    ICE_ITEMBOX_BLUESHIELD,
+    ICE_ITEMBOX_BUBBLESHIELD,
+    ICE_ITEMBOX_FIRESHIELD,
+    ICE_ITEMBOX_LIGHTNINGSHIELD,
+    ICE_ITEMBOX_INVINCIBILITY,
+    ICE_ITEMBOX_SNEAKERS,
+    ICE_ITEMBOX_1UP,
+    ICE_ITEMBOX_EGGMAN,
+    ICE_ITEMBOX_HYPERRING,
+    ICE_ITEMBOX_SWAP,
+    ICE_ITEMBOX_RANDOM,
+    ICE_ITEMBOX_SUPER,
+    ICE_SPRING,
+} IceTypes;
+
+typedef enum {
+    ICE_CHILD_NONE,
+    ICE_CHILD_PLAYER,
+    ICE_CHILD_PILLAR,
+    ICE_CHILD_SHARD,
+} IceChildTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxPlayerBlockInner;
+    Hitbox hitboxPlayerBlockOuter;
     int32 playerTimers[PLAYER_MAX];
     uint16 sfxFreeze;
     uint16 sfxLedgeBreak;
@@ -84,17 +118,17 @@ typedef struct {
     bool32 knuxSmash;
     uint8 timer;
     uint8 animationID;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Animator blockAnimator;
+    Animator contentsAnimator;
+    Animator contentsAltAnimator;
+    Animator glintAnimator;
     Entity *playerPtr;
-    Vector2 playerPos;
-    Vector2 dwordDC;
-    int32 dwordE4;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Vector2 playerMoveOffset;
+    Vector2 contentsOffset;
+    int32 destroyDelay;
+    Hitbox hitboxBlock;
+    Hitbox hitboxFallCheck;
+    Hitbox hitboxPlayerBlockCheck;
 } EntityIce;
 
 // Object Struct
@@ -114,29 +148,29 @@ void Ice_EditorLoad(void);
 void Ice_Serialize(void);
 
 // Extra Entity Functions
-void Ice_ZoneCB(void);
+void Ice_VSSwapCB(void);
 
 void Ice_FreezePlayer(void *p);
-bool32 Ice_Unknown3(void);
-bool32 Ice_Unknown4(void);
+bool32 Ice_CheckPlayerBlockSmashH(void);
+bool32 Ice_CheckPlayerBlockSmashV(void);
 void Ice_State_FrozenPlayer(void);
 void Ice_ShatterGenerator(int32 xr, int32 xy, int32 count, int32 velX, int32 velY, int32 canBreak);
-void Ice_Unknown7(int32 velX, Entity *p, int32 velY);
-void Ice_Unknown8(Entity *p);
+void Ice_FullShatter(Entity *p, int32 velX, int32 velY);
+void Ice_BreakPlayerBlock(Entity *p);
 Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);
 void Ice_TimeOverCB(void);
 
-void Ice_Unknown11(void);
-void Ice_State_Pillar(void);
-void Ice_Unknown13(void);
-void Ice_Unknown14(void);
-void Ice_Unknown15(void);
+void Ice_UpdateBlockGravity(void);
+void Ice_State_IceBlock(void);
+void Ice_State_StartBlockFall(void);
+void Ice_State_BlockFallDelay(void);
+void Ice_State_IceBlockFall(void);
 void Ice_State_PlayerBlock(void);
 void Ice_State_Shard(void);
 
-void Ice_StateDraw_Unknown1(void);
-void Ice_StateDraw_PlayerBlock(void);
-void Ice_StateDraw_Pillar(void);
-void Ice_StateDraw_Shard(void);
+void Ice_Draw_IceBlock(void);
+void Ice_Draw_PlayerBlock(void);
+void Ice_Draw_Pillar(void);
+void Ice_Draw_Shard(void);
 
 #endif //! OBJ_ICE_H

@@ -3,10 +3,10 @@
 
 #include "SonicMania.h"
 
-#define Zone_AddCallback(callback)                                                                                                                   \
-    if (Zone->callbackCount < 0x10) {                                                                                                                \
-        Zone->callbacks[Zone->callbackCount] = callback;                                                                                             \
-        ++Zone->callbackCount;                                                                                                                       \
+#define Zone_AddVSSwapCallback(callback)                                                                                                                   \
+    if (Zone->vsSwapCBCount < 0x10) {                                                                                                                \
+        Zone->vsSwapCB[Zone->vsSwapCBCount] = callback;                                                                                              \
+        ++Zone->vsSwapCBCount;                                                                                                                       \
     }
 
 // Object Class
@@ -15,9 +15,9 @@ typedef struct {
     int32 actID;
     StateMachine(stageFinishCallback);
     bool32 forcePlayerOnScreenFlag;
-    StateMachine(callbacks[0x10]);
+    StateMachine(vsSwapCB[0x10]);
 #if RETRO_USE_PLUS
-    int32 callbackCount;
+    int32 vsSwapCBCount;
     int32 playerFlags[PLAYER_MAX];
     uint8 playerID;
     uint8 playerCount;
@@ -25,7 +25,7 @@ typedef struct {
     uint8 playerIDs2[PLAYER_MAX];
 #else
     int32 field_94;
-    int32 callbackCount;
+    int32 vsSwapCBCount;
     int32 playerFlags;
 #endif
     int32 listPos;

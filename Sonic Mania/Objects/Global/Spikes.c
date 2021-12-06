@@ -147,7 +147,7 @@ void Spikes_Update(void)
 
                     uint8 side = C_NONE;
                     if (player->state == Ice_State_FrozenPlayer) {
-                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitbox2, false);
+                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     }
                     else {
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);

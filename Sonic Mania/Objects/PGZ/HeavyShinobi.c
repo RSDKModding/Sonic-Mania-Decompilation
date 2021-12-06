@@ -833,7 +833,7 @@ void HeavyShinobi_State2_Unknown3(void)
             }
 
             if (playerPtr) {
-                Ice_Unknown8((Entity *)playerPtr);
+                Ice_BreakPlayerBlock((Entity *)playerPtr);
                 playerPtr->state = Player_State_Air;
                 Player_CheckHit(playerPtr, self);
             }
@@ -939,12 +939,12 @@ void HeavyShinobi_State4_Unknown2(void)
             int32 x = RSDK.Rand(-64, 65) << 16;
             int32 y = RSDK.Rand(-80, 81) << 16;
 
-            EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(3), x + self->position.x, y + self->position.y);
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &ice->animator1, true, 0);
+            EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), x + self->position.x, y + self->position.y);
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &ice->blockAnimator, true, 0);
             ice->velocity.x               = RSDK.Rand(-6, 8) << 15;
             ice->velocity.y               = RSDK.Rand(-10, 2) << 15;
             ice->direction                = RSDK.Rand(0, 4);
-            ice->animator1.speed = RSDK.Rand(1, 4);
+            ice->blockAnimator.speed      = RSDK.Rand(1, 4);
             ice->active                   = ACTIVE_NORMAL;
         }
         destroyEntity(self);

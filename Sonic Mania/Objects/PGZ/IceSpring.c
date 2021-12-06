@@ -13,7 +13,7 @@ void IceSpring_Update(void)
             int32 i = 0;
             foreach_active(Player, player)
             {
-                if (self->planeFilter && player->collisionPlane != ((self->planeFilter - 1) & 1))
+                if (self->planeFilter && player->collisionPlane != ((uint8)(self->planeFilter - 1) & 1))
                     continue;
 
                 int32 storeX = player->position.x;
@@ -21,7 +21,7 @@ void IceSpring_Update(void)
 
                 int32 collided = 0;
                 if (player->state == Ice_State_FrozenPlayer)
-                    collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitbox2, 0);
+                    collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, 0);
                 else
                     collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), 0);
                 if (!collided) {

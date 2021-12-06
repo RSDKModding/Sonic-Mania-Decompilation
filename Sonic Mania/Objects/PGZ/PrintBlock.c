@@ -10,48 +10,48 @@ void PrintBlock_Update(void)
             int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
             if (timer >= self->duration) {
                 if (timer >= self->duration + 12) {
-                    self->animator.frameID        = 1;
-                    self->animator.timer = 0;
+                    self->animator.frameID = 1;
+                    self->animator.timer   = 0;
                 }
                 else {
-                    self->active                  = ACTIVE_NORMAL;
-                    self->state                   = PrintBlock_Unknown2;
-                    self->timer           = timer - self->duration;
-                    self->animator.frameID        = 4 - self->timer / 3;
-                    self->animator.timer = self->timer % 3;
+                    self->active           = ACTIVE_NORMAL;
+                    self->state            = PrintBlock_State_Disappear;
+                    self->timer            = timer - self->duration;
+                    self->animator.frameID = 4 - self->timer / 3;
+                    self->animator.timer   = self->timer % 3;
                 }
             }
             else {
-                self->active        = ACTIVE_NORMAL;
-                self->timer = timer;
+                self->active = ACTIVE_NORMAL;
+                self->timer  = timer;
                 if (self->timer > 12) {
-                    self->animator.frameID        = 4;
-                    self->animator.timer = 0;
+                    self->animator.frameID = 4;
+                    self->animator.timer   = 0;
                 }
                 else {
-                    self->animator.timer = self->timer % 3;
-                    self->animator.frameID        = self->timer / 3 + 1;
+                    self->animator.timer   = self->timer % 3;
+                    self->animator.frameID = self->timer / 3 + 1;
                 }
 
                 Vector2 pos;
                 pos.x = 0x200000;
                 pos.y = 0x200000;
                 if (RSDK.CheckOnScreen(self, &pos)) {
-                    int32 channel = RSDK.PlaySfx(PrintBlock->sfxLetter, 0, 255);
+                    int32 channel = RSDK.PlaySfx(PrintBlock->sfxLetter, false, 255);
                     RSDK.SetChannelAttributes(channel, 1.0, 0.0, 1.0);
                 }
-                self->state = PrintBlock_Unknown1;
+                self->state = PrintBlock_State_Appear;
             }
         }
     }
 
     if (self->animator.frameID <= 2) {
         self->stateCollide = Platform_CollisionState_None;
-        self->collision    = 4;
+        self->collision    = PLATFORM_C_SOLID_NONE;
     }
     else {
         self->stateCollide = Platform_CollisionState_AllSolid;
-        self->collision    = 1;
+        self->collision    = PLATFORM_C_SOLID_ALL;
     }
     Platform_Update();
 }
@@ -64,9 +64,11 @@ void PrintBlock_Draw(void)
 {
     RSDK_THIS(PrintBlock);
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
-    self->inkEffect            = INK_SUB;
+
+    self->inkEffect              = INK_SUB;
     PrintBlock->animator.frameID = self->animator.frameID;
     RSDK.DrawSprite(&PrintBlock->animator, &self->drawPos, false);
+
     self->inkEffect = INK_NONE;
 }
 
@@ -89,7 +91,7 @@ void PrintBlock_StageLoad(void)
     PrintBlock->sfxLetter = RSDK.GetSfx("PSZ/Letter.wav");
 }
 
-void PrintBlock_Unknown1(void)
+void PrintBlock_State_Appear(void)
 {
     RSDK_THIS(PrintBlock);
     ++self->timer;
@@ -100,10 +102,10 @@ void PrintBlock_Unknown1(void)
     }
 
     if (self->timer == self->duration)
-        self->state = PrintBlock_Unknown2;
+        self->state = PrintBlock_State_Disappear;
 }
 
-void PrintBlock_Unknown2(void)
+void PrintBlock_State_Disappear(void)
 {
     RSDK_THIS(PrintBlock);
     if (++self->animator.timer == 3) {
@@ -119,9 +121,35 @@ void PrintBlock_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PrintBlock_EditorDraw(void) {}
+void PrintBlock_EditorDraw(void)
+{
+    RSDK_THIS(PrintBlock);
+    RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, self->interval == 0xFFFF ? 0 : 4);
+    self->alpha   = 128;
+    self->drawPos = self->position;
 
-void PrintBlock_EditorLoad(void) {}
+    PrintBlock_Draw();
+}
+
+void PrintBlock_EditorLoad(void)
+{
+    PrintBlock->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PrintBlock.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(0xFFFF, 12, &PrintBlock->animator, true, 0);
+
+    RSDK_ACTIVE_VAR(PrintBlock, letter);
+    RSDK_ENUM_VAR("E", PRINTBLOCK_LETTER_E);
+    RSDK_ENUM_VAR("T", PRINTBLOCK_LETTER_T);
+    RSDK_ENUM_VAR("A", PRINTBLOCK_LETTER_A);
+    RSDK_ENUM_VAR("O", PRINTBLOCK_LETTER_O);
+    RSDK_ENUM_VAR("I", PRINTBLOCK_LETTER_I);
+    RSDK_ENUM_VAR("N", PRINTBLOCK_LETTER_N);
+    RSDK_ENUM_VAR("S", PRINTBLOCK_LETTER_S);
+    RSDK_ENUM_VAR("H", PRINTBLOCK_LETTER_H);
+    RSDK_ENUM_VAR("R", PRINTBLOCK_LETTER_R);
+    RSDK_ENUM_VAR("D", PRINTBLOCK_LETTER_D);
+    RSDK_ENUM_VAR("L", PRINTBLOCK_LETTER_L);
+    RSDK_ENUM_VAR("U", PRINTBLOCK_LETTER_U);
+}
 #endif
 
 void PrintBlock_Serialize(void)

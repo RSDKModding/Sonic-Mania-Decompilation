@@ -194,6 +194,15 @@ void LoadScene()
             }
         }
 
+        RETRO_HASH(hash);
+        GEN_HASH("TestObject", hash);
+        for (int32 objID = 0; objID < objectCount; ++objID) {
+            if (HASH_MATCH(hash, objectList[objID].hash)) {
+                stageObjectIDs[sceneInfo.classCount] = objID;
+                sceneInfo.classCount++;
+            }
+        }
+
         for (int32 o = 0; o < sceneInfo.classCount; ++o) {
             ObjectInfo *obj = &objectList[stageObjectIDs[o]];
             if (obj->type && !*obj->type) {

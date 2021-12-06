@@ -308,7 +308,7 @@ void ZipLine_StageLoad(void)
     ZipLine->hitbox.bottom = 24;
     ZipLine->hitbox.right  = 8;
 
-    Zone_AddCallback(ZipLine_ZoneCB);
+    Zone_AddVSSwapCallback(ZipLine_ZoneCB);
 }
 
 void ZipLine_ZoneCB(void)

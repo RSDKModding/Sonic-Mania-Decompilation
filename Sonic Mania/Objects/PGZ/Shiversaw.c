@@ -1081,11 +1081,11 @@ void Shiversaw_StateSaw_Destroyed(void)
         dust->state      = Shiversaw_StateDust_Unknown;
     }
     if (!(Zone->timer & 0xF)) {
-        EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(3), self->sawPos[self->sawID].x, self->sawPos[self->sawID].y);
+        EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), self->sawPos[self->sawID].x, self->sawPos[self->sawID].y);
         ice->velocity.x               = RSDK.Rand(-6, 8) << 15;
         ice->velocity.y               = RSDK.Rand(-10, 2) << 15;
         ice->direction                = RSDK.Rand(0, 4);
-        ice->animator1.speed = RSDK.Rand(1, 4);
+        ice->blockAnimator.speed      = RSDK.Rand(1, 4);
         ice->drawOrder                = self->drawOrder - 1;
     }
 

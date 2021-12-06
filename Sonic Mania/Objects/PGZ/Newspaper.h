@@ -3,6 +3,15 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
+typedef enum {
+    NEWSPAPER_WHITE_FG,
+    NEWSPAPER_BLUE_FG,
+    NEWSPAPER_WHITE_BG,
+    NEWSPAPER_BLUE_BG,
+}NewspaperTypes;
+#endif
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

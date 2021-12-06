@@ -66,22 +66,22 @@ void Crate_Break(EntityCrate *entity)
 {
     for (int32 i = 0; i < 64; ++i) {
         // the ice is used to create a shattering effect
-        EntityIce *ice  = CREATE_ENTITY(Ice, intToVoid(3), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
+        EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
                                                         (RSDK.Rand(-24, 25) << 16) + entity->position.y);
         ice->velocity.x = RSDK.Rand(-6, 8) << 15;
         ice->velocity.y = RSDK.Rand(-10, 2) << 15;
         ice->direction                = RSDK.Rand(0, 4);
-        ice->animator1.speed = RSDK.Rand(1, 4);
+        ice->blockAnimator.speed = RSDK.Rand(1, 4);
         ice->drawOrder = Zone->drawOrderLow + 1;
         switch (entity->animator.frameID) {
             case 0:
-            case 3: RSDK.SetSpriteAnimation(Crate->aniFrames, 1, &ice->animator1, true, 0); break;
+            case 3: RSDK.SetSpriteAnimation(Crate->aniFrames, 1, &ice->blockAnimator, true, 0); break;
             case 1:
             case 2:
                 if (RSDK.Rand(0, 6) >= 2)
-                    RSDK.SetSpriteAnimation(Crate->aniFrames, 2, &ice->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(Crate->aniFrames, 2, &ice->blockAnimator, true, 0);
                 else
-                    RSDK.SetSpriteAnimation(Crate->aniFrames, 3, &ice->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(Crate->aniFrames, 3, &ice->blockAnimator, true, 0);
                 break;
             default: break;
         }

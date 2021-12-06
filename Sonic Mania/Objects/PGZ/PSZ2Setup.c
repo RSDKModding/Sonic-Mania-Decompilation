@@ -31,7 +31,7 @@ void PSZ2Setup_StaticUpdate(void)
     else
         RSDK.SetLimitedFade(0, 1, 2, -RSDK.Sin256(16 * Zone->timer), 224, 227);
 
-    if (PSZ2Setup->flag) {
+    if (PSZ2Setup->petalBehaviourActive) {
         if (PSZ2Setup->petalTimer <= 0) {
             foreach_active(Player, player)
             {
@@ -47,14 +47,14 @@ void PSZ2Setup_StaticUpdate(void)
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
                         RSDK_THIS_GEN();
                         EntityPetalPile *pile = CREATE_ENTITY(PetalPile, self, player->position.x, player->position.y + (playerHitbox->bottom << 16));
-                        pile->leafPattern     = 4;
+                        pile->leafPattern     = PETALPILE_PATTERN_4;
                         pile->tileLayer       = lowFlag;
                         pile->pileSize.x      = 0x40000;
                         pile->pileSize.y      = 0x40000;
-                        pile->flag            = 1;
-                        pile->field_98        = 0xB5555;
-                        pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
-                        pile->field_8C        = player->groundVel >> 1;
+                        pile->noRemoveTiles   = true;
+                        pile->petalRadius     = 0xB5555;
+                        pile->petalDir        = 2 * (player->direction != FLIP_NONE) - 1;
+                        pile->petalVel        = player->groundVel >> 1;
                         PSZ2Setup->petalTimer = 3;
                     }
                 }
@@ -72,9 +72,9 @@ void PSZ2Setup_Create(void *data) {}
 
 void PSZ2Setup_StageLoad(void)
 {
-    PSZ2Setup->flag              = false;
-    GenericTrigger->callbacks[0] = PSZ2Setup_TriggerCB1;
-    GenericTrigger->callbacks[1] = PSZ2Setup_TriggerCB2;
+    PSZ2Setup->petalBehaviourActive                               = false;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSINACTIVE] = PSZ2Setup_TriggerCB_DeactivatePetalBehaviour;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSACTIVE]   = PSZ2Setup_TriggerCB_ActivatePetalBehaviour;
     PSZ2Setup->aniTiles1         = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
     PSZ2Setup->aniTiles2         = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
 
@@ -104,9 +104,9 @@ void PSZ2Setup_StageLoad(void)
 #endif
 }
 
-void PSZ2Setup_TriggerCB2(void) { PSZ2Setup->flag = true; }
+void PSZ2Setup_TriggerCB_ActivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = true; }
 
-void PSZ2Setup_TriggerCB1(void) { PSZ2Setup->flag = false; }
+void PSZ2Setup_TriggerCB_DeactivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = false; }
 
 void PSZ2Setup_ActTransitionLoad(void)
 {
@@ -138,8 +138,15 @@ void PSZ2Setup_ActTransitionLoad(void)
 
 void PSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZ2Setup_EditorDraw(void) {}
 
-void PSZ2Setup_EditorLoad(void) {}
+void PSZ2Setup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
+    RSDK_ENUM_VAR("Stop Petal Behaviour", GENERICTRIGGER_PSZ2_PETALSINACTIVE);
+    RSDK_ENUM_VAR("Start Petal Behaviour", GENERICTRIGGER_PSZ2_PETALSACTIVE);
+}
+#endif
 
 void PSZ2Setup_Serialize(void) {}

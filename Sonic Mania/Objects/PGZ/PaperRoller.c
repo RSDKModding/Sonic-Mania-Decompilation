@@ -460,9 +460,49 @@ void PaperRoller_Unknown5(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PaperRoller_EditorDraw(void) {}
+void PaperRoller_EditorDraw(void)
+{
+    RSDK_THIS(PaperRoller);
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->visible       = true;
+    self->drawFX        = FX_NONE;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
-void PaperRoller_EditorLoad(void) {}
+    int32 len = self->length;
+
+    if ((RSDK.Cos256(self->angle) << 8) * self->length >= 0)
+        self->updateRange.x += (RSDK.Cos256(self->angle) << 8) * self->length;
+    else
+        self->updateRange.x += -((RSDK.Cos256(self->angle) << 8) * self->length);
+
+    if ((RSDK.Sin256(self->angle) << 8) * self->length >= 0)
+        self->updateRange.y += (RSDK.Sin256(self->angle) << 8) * self->length;
+    else
+        self->updateRange.y += -((RSDK.Sin256(self->angle) << 8) * self->length);
+
+    if (self->length > 256)
+        self->length = 256;
+
+    RSDK.SetSpriteAnimation(PaperRoller->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(PaperRoller->aniFrames, 1, &self->animator2, true, 0);
+
+    PaperRoller_DrawPaperLines();
+    PaperRoller_DrawRollers();
+
+    self->length = len;
+}
+
+void PaperRoller_EditorLoad(void)
+{
+    PaperRoller_StageLoad();
+
+    RSDK_ACTIVE_VAR(PaperRoller, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void PaperRoller_Serialize(void)

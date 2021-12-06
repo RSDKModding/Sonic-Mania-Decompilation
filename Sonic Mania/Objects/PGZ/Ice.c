@@ -36,40 +36,40 @@ void Ice_Create(void *data)
             self->active = ACTIVE_NORMAL;
 
             switch (voidToInt(data)) {
-                case 1:
-                    self->hitbox1.left   = -24;
-                    self->hitbox1.top    = -24;
-                    self->hitbox1.right  = 24;
-                    self->hitbox1.bottom = 24;
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERBLOCK, &self->animator1, true, 0);
+                case ICE_CHILD_PLAYER:
+                    self->hitboxBlock.left   = -24;
+                    self->hitboxBlock.top    = -24;
+                    self->hitboxBlock.right  = 24;
+                    self->hitboxBlock.bottom = 24;
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERBLOCK, &self->blockAnimator, true, 0);
                     self->isPermanent = true;
                     self->state       = Ice_State_PlayerBlock;
-                    self->stateDraw   = Ice_StateDraw_PlayerBlock;
+                    self->stateDraw   = Ice_Draw_PlayerBlock;
                     break;
-                case 2:
+                case ICE_CHILD_PILLAR:
                     self->updateRange.x  = 0x800000;
                     self->updateRange.y  = 0x800000;
-                    self->hitbox1.left   = -19;
-                    self->hitbox1.top    = -110;
-                    self->hitbox1.right  = 19;
-                    self->hitbox1.bottom = 0;
-                    self->hitbox3.left   = -19;
-                    self->hitbox3.top    = -110;
-                    self->hitbox3.right  = 19;
-                    self->hitbox3.bottom = 0;
-                    self->dwordE4        = 240;
+                    self->hitboxBlock.left   = -19;
+                    self->hitboxBlock.top    = -110;
+                    self->hitboxBlock.right  = 19;
+                    self->hitboxBlock.bottom = 0;
+                    self->hitboxPlayerBlockCheck.left   = -19;
+                    self->hitboxPlayerBlockCheck.top    = -110;
+                    self->hitboxPlayerBlockCheck.right  = 19;
+                    self->hitboxPlayerBlockCheck.bottom = 0;
+                    self->destroyDelay        = 240;
                     self->alpha          = 128;
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARBLOCK, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &self->animator4, true, 0);
-                    self->state     = Ice_State_Pillar;
-                    self->stateDraw = Ice_StateDraw_Pillar;
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARBLOCK, &self->blockAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &self->glintAnimator, true, 0);
+                    self->state     = Ice_State_IceBlock;
+                    self->stateDraw = Ice_Draw_Pillar;
                     break;
-                case 3:
+                case ICE_CHILD_SHARD:
                     self->updateRange.x = 0x400000;
                     self->updateRange.y = 0x400000;
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_SHARD, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_SHARD, &self->blockAnimator, true, 0);
                     self->state     = Ice_State_Shard;
-                    self->stateDraw = Ice_StateDraw_Shard;
+                    self->stateDraw = Ice_Draw_Shard;
                     break;
             }
         }
@@ -77,70 +77,73 @@ void Ice_Create(void *data)
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_ICEBLOCK, &self->animator1, true, self->size);
+            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_ICEBLOCK, &self->blockAnimator, true, self->size);
             switch (self->type) {
-                case 0: RSDK.SetSpriteAnimation(0xFFFF, ICEANI_ICEBLOCK, &self->animator2, true, 0); break;
-                case 1: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->animator2, true, 0); break;
-                case 2: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->animator2, true, 1); break;
-                case 3: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->animator2, true, 2); break;
-                case 4:
+                case ICE_BLOCK: RSDK.SetSpriteAnimation(0xFFFF, ICEANI_ICEBLOCK, &self->contentsAnimator, true, 0); break;
+                case ICE_1RING: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 0); break;
+                case ICE_3RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 1); break;
+                case ICE_5RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 2); break;
+                case ICE_SPIKES:
                     self->subType = self->subType & 3;
-                    RSDK.SetSpriteAnimation(Spikes->aniFrames, self->subType >> 1, &self->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(Spikes->aniFrames, self->subType >> 1, &self->contentsAnimator, true, 0);
                     if (!self->size) {
+                        // direction of da spikes, matches the spikes "type" variable
                         switch (self->subType) {
                             case 0:
-                                self->dwordDC.y = 0x40000;
-                                self->subFlip   = 0;
+                                self->contentsOffset.y = 0x40000;
+                                self->subFlip          = FLIP_NONE;
                                 break;
                             case 1:
-                                self->dwordDC.y = -0x40000;
-                                self->subFlip   = 2;
+                                self->contentsOffset.y = -0x40000;
+                                self->subFlip          = FLIP_Y;
                                 break;
                             case 2:
-                                self->dwordDC.x = -0x80000;
-                                self->subFlip   = 0;
+                                self->contentsOffset.x = -0x80000;
+                                self->subFlip          = FLIP_NONE;
                                 break;
                             case 3:
-                                self->dwordDC.x = 0x80000;
-                                self->subFlip   = 1;
+                                self->contentsOffset.x = 0x80000;
+                                self->subFlip          = FLIP_X;
                                 break;
                             default: break;
                         }
                     }
                     break;
-                case 18:
+
+                case ICE_SPRING:
+                    // Ice Springs (0-2), Normal Springs (2-8)
                     if (self->subType >= 3)
-                        RSDK.SetSpriteAnimation(Spring->aniFrames, (self->subType - 3), &self->animator2, true, 0);
+                        RSDK.SetSpriteAnimation(Spring->aniFrames, (self->subType - 3), &self->contentsAnimator, true, 0);
                     else
-                       RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->subType, &self->animator2, true, 0);
+                        RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->subType, &self->contentsAnimator, true, 0);
                     if (self->size) {
                         switch (self->subType) {
                             case 0:
                             case 3:
                             case 4:
-                                self->dwordDC.x = 0;
-                                if (!(self->subFlip & 2))
-                                    self->dwordDC.y = 0x80000;
+                                self->contentsOffset.x = 0;
+                                if (!(self->subFlip & FLIP_Y))
+                                    self->contentsOffset.y = 0x80000;
                                 else
-                                    self->dwordDC.y = -0x80000;
+                                    self->contentsOffset.y = -0x80000;
                                 break;
                             case 1:
                             case 5:
                             case 6:
-                                self->dwordDC.y = 0;
-                                if (!(self->subFlip & 1))
-                                    self->dwordDC.x = -0x80000;
+                                self->contentsOffset.y = 0;
+                                if (!(self->subFlip & FLIP_X))
+                                    self->contentsOffset.x = -0x80000;
                                 else
-                                    self->dwordDC.x = 0x80000;
+                                    self->contentsOffset.x = 0x80000;
                                 break;
                             case 2:
                             case 7:
                             case 8:
-                                self->dwordDC.x = 0;
-                                if (!(self->subFlip & 2))
-                                    self->dwordDC.y = -0x10000;
+                                self->contentsOffset.x = 0;
+                                if (!(self->subFlip & FLIP_Y))
+                                    self->contentsOffset.y = -0x10000;
                                 else
-                                    self->dwordDC.y = 0x10000;
+                                    self->contentsOffset.y = 0x10000;
                                 break;
                             default: break;
                         }
@@ -150,140 +153,154 @@ void Ice_Create(void *data)
                             case 0:
                             case 3:
                             case 4:
-                                self->dwordDC.x = 0;
-                                if (!(self->subFlip & 2))
-                                    self->dwordDC.y = 0xC0000;
+                                self->contentsOffset.x = 0;
+                                if (!(self->subFlip & FLIP_Y))
+                                    self->contentsOffset.y = 0xC0000;
                                 else
-                                    self->dwordDC.y = -0xC0000;
+                                    self->contentsOffset.y = -0xC0000;
                                 break;
                             case 1:
                             case 5:
                             case 6:
-                                self->dwordDC.y = 0;
-                                if (!(self->subFlip & 1))
-                                    self->dwordDC.x = -0x100000;
+                                self->contentsOffset.y = 0;
+                                if (!(self->subFlip & FLIP_X))
+                                    self->contentsOffset.x = -0x100000;
                                 else
-                                    self->dwordDC.x = 0x100000;
+                                    self->contentsOffset.x = 0x100000;
                                 break;
                             case 2:
                             case 7:
                             case 8:
-                                if (!(self->subFlip & 1))
-                                    self->dwordDC.x = -0x80000;
+                                if (!(self->subFlip & FLIP_X))
+                                    self->contentsOffset.x = -0x80000;
                                 else
-                                    self->dwordDC.x = 0x80000;
-                                if (!(self->subFlip & 2))
-                                    self->dwordDC.y = 0x40000;
+                                    self->contentsOffset.x = 0x80000;
+                                if (!(self->subFlip & FLIP_Y))
+                                    self->contentsOffset.y = 0x40000;
                                 else
-                                    self->dwordDC.y = -0x40000;
+                                    self->contentsOffset.y = -0x40000;
                                 break;
                             default: break;
                         }
                     }
                     break;
+
+                case ICE_ITEMBOX_RINGS:
+                case ICE_ITEMBOX_BLUESHIELD:
+                case ICE_ITEMBOX_BUBBLESHIELD:
+                case ICE_ITEMBOX_FIRESHIELD:
+                case ICE_ITEMBOX_LIGHTNINGSHIELD:
+                case ICE_ITEMBOX_INVINCIBILITY:
+                case ICE_ITEMBOX_SNEAKERS:
+                case ICE_ITEMBOX_1UP:
+                case ICE_ITEMBOX_EGGMAN:
+                case ICE_ITEMBOX_HYPERRING:
+                case ICE_ITEMBOX_SWAP:
+                case ICE_ITEMBOX_RANDOM:
+                case ICE_ITEMBOX_SUPER:
                 default:
-                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->animator3, true, (self->type > 12 ? 2 : 0) + self->type - 5);
-                    if (self->type != 12) {
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->contentsAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->contentsAltAnimator, true,
+                                            (self->type > ICE_ITEMBOX_1UP ? 2 : 0) + self->type - 5);
+                    if (self->type != ICE_ITEMBOX_1UP) {
                         if (globals->gameMode == MODE_COMPETITION) {
-                            if (globals->itemMode == 1) {
-                                self->type              = 16;
-                                self->animator3.frameID = 13;
+                            if (globals->itemMode == ITEMS_RANDOM) {
+                                self->type                        = ICE_ITEMBOX_EGGMAN;
+                                self->contentsAltAnimator.frameID = 13;
                             }
-                            else if (globals->itemMode == 2) {
-                                self->type              = 15;
-                                self->animator3.frameID = 12;
+                            else if (globals->itemMode == ITEMS_TELEPORT) {
+                                self->type                        = ICE_ITEMBOX_SWAP;
+                                self->contentsAltAnimator.frameID = 12;
                             }
                         }
                     }
                     else if (globals->gameMode != MODE_TIMEATTACK) {
                         switch (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->characterID) {
-                            case ID_TAILS: ++self->animator3.frameID; break;
-                            case ID_KNUCKLES: self->animator3.frameID += 2; break;
+                            case ID_TAILS: ++self->contentsAltAnimator.frameID; break;
+                            case ID_KNUCKLES: self->contentsAltAnimator.frameID += 2; break;
 #if RETRO_USE_PLUS
-                            case ID_MIGHTY: self->animator3.frameID += 8; break;
-                            case ID_RAY: self->animator3.frameID += 9; break;
+                            case ID_MIGHTY: self->contentsAltAnimator.frameID += 8; break;
+                            case ID_RAY: self->contentsAltAnimator.frameID += 9; break;
 #endif
                             default: break;
                         }
 
                         if (globals->gameMode == MODE_COMPETITION) {
-                            if (globals->itemMode == 1) {
-                                self->type              = 16;
-                                self->animator3.frameID = 13;
+                            if (globals->itemMode == ITEMS_RANDOM) {
+                                self->type                        = ICE_ITEMBOX_RANDOM;
+                                self->contentsAltAnimator.frameID = 13;
                             }
                             else if (globals->itemMode == 2) {
-                                self->type              = 15;
-                                self->animator3.frameID = 12;
+                                self->type                        = ICE_ITEMBOX_SWAP;
+                                self->contentsAltAnimator.frameID = 12;
                             }
                         }
                     }
                     else {
-                        self->type              = 5;
-                        self->animator3.frameID = 0;
+                        self->type                        = ICE_ITEMBOX_RINGS;
+                        self->contentsAltAnimator.frameID = 0;
                     }
                     break;
             }
 
-            if (self->size) {
-                if (self->size == 1) {
-                    self->hitbox1.left   = -16;
-                    self->hitbox1.top    = -16;
-                    self->hitbox1.right  = 16;
-                    self->hitbox1.bottom = 16;
-                }
+            if (self->size == ICE_SIZE_SMALL) {
+                self->hitboxBlock.left   = -16;
+                self->hitboxBlock.top    = -16;
+                self->hitboxBlock.right  = 16;
+                self->hitboxBlock.bottom = 16;
             }
-            else {
-                self->hitbox1.left   = -24;
-                self->hitbox1.top    = -20;
-                self->hitbox1.right  = 24;
-                self->hitbox1.bottom = 20;
+            else if (!self->size) {
+                self->hitboxBlock.left   = -24;
+                self->hitboxBlock.top    = -20;
+                self->hitboxBlock.right  = 24;
+                self->hitboxBlock.bottom = 20;
             }
 
-            self->hitbox2.top    = self->hitbox1.top;
-            self->hitbox3.left   = self->hitbox1.left;
-            self->hitbox3.right  = self->hitbox1.right;
-            self->hitbox3.bottom = self->hitbox1.bottom + 8;
-            self->hitbox3.top    = self->hitbox1.top - 8;
-            self->hitbox2.left   = self->hitbox1.left - 8;
-            self->hitbox2.right  = self->hitbox1.right + 8;
-            self->hitbox2.bottom = self->hitbox1.bottom + 8;
-            self->alpha          = 384;
-            self->state          = Ice_State_Pillar;
-            self->stateDraw      = Ice_StateDraw_Unknown1;
+            self->hitboxFallCheck.left   = self->hitboxBlock.left - 8;
+            self->hitboxFallCheck.top    = self->hitboxBlock.top;
+            self->hitboxFallCheck.right  = self->hitboxBlock.right + 8;
+            self->hitboxFallCheck.bottom = self->hitboxBlock.bottom + 8;
+
+            self->hitboxPlayerBlockCheck.left   = self->hitboxBlock.left;
+            self->hitboxPlayerBlockCheck.top    = self->hitboxBlock.top - 8;
+            self->hitboxPlayerBlockCheck.right  = self->hitboxBlock.right;
+            self->hitboxPlayerBlockCheck.bottom = self->hitboxBlock.bottom + 8;
+
+            self->alpha          = 0x180;
+            self->state          = Ice_State_IceBlock;
+            self->stateDraw      = Ice_Draw_IceBlock;
         }
     }
 }
 
 void Ice_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1")) 
+    if (RSDK.CheckStageFolder("PSZ1"))
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ice.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2")) 
+    else if (RSDK.CheckStageFolder("PSZ2"))
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Ice.bin", SCOPE_STAGE);
 
-    Ice->hitbox1.left     = -15;
-    Ice->hitbox1.top      = -24;
-    Ice->hitbox1.right    = 15;
-    Ice->hitbox1.bottom   = 24;
-    Ice->hitbox2.left     = -16;
-    Ice->hitbox2.top      = -24;
-    Ice->hitbox2.right    = 16;
-    Ice->hitbox2.bottom   = 24;
-    Ice->playerTimers[0]  = 0;
-    Ice->playerTimers[1]  = 0;
-    Ice->playerTimers[2]  = 0;
-    Ice->playerTimers[3]  = 0;
-    Ice->sfxFreeze        = RSDK.GetSfx("PSZ/Freeze.wav");
-    Ice->sfxLedgeBreak    = RSDK.GetSfx("Stage/LedgeBreak.wav");
-    Ice->sfxWindowShatter = RSDK.GetSfx("Stage/WindowShatter.wav");
-    Ice->sfxStruggle      = RSDK.GetSfx("PSZ/Struggle.wav");
-    Zone->timeOverCallback   = Ice_TimeOverCB;
-    Zone_AddCallback(Ice_ZoneCB);
+    Ice->hitboxPlayerBlockInner.left      = -15;
+    Ice->hitboxPlayerBlockInner.top       = -24;
+    Ice->hitboxPlayerBlockInner.right     = 15;
+    Ice->hitboxPlayerBlockInner.bottom    = 24;
+    Ice->hitboxPlayerBlockOuter.left      = -16;
+    Ice->hitboxPlayerBlockOuter.top       = -24;
+    Ice->hitboxPlayerBlockOuter.right     = 16;
+    Ice->hitboxPlayerBlockOuter.bottom    = 24;
+    Ice->playerTimers[0]   = 0;
+    Ice->playerTimers[1]   = 0;
+    Ice->playerTimers[2]   = 0;
+    Ice->playerTimers[3]   = 0;
+    Ice->sfxFreeze         = RSDK.GetSfx("PSZ/Freeze.wav");
+    Ice->sfxLedgeBreak     = RSDK.GetSfx("Stage/LedgeBreak.wav");
+    Ice->sfxWindowShatter  = RSDK.GetSfx("Stage/WindowShatter.wav");
+    Ice->sfxStruggle       = RSDK.GetSfx("PSZ/Struggle.wav");
+    Zone->timeOverCallback = Ice_TimeOverCB;
+    Zone_AddVSSwapCallback(Ice_VSSwapCB);
 }
 
-void Ice_ZoneCB(void)
+void Ice_VSSwapCB(void)
 {
 #if RETRO_USE_PLUS
     EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerID, Player);
@@ -295,7 +312,7 @@ void Ice_ZoneCB(void)
 #if RETRO_USE_PLUS
         Zone->playerFlags[Zone->playerID] = false;
 #else
-        Ice_Unknown8((Entity *)player);
+        Ice_BreakPlayerBlock((Entity *)player);
 #endif
     }
 }
@@ -305,7 +322,7 @@ void Ice_FreezePlayer(void *p)
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
     if (!Zone->gotTimeOver && player->state != Ice_State_FrozenPlayer && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
-        EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(1), player->position.x, player->position.y);
+        EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PLAYER), player->position.x, player->position.y);
         ice->playerPtr = (Entity *)player;
 #if RETRO_USE_PLUS
         switch (player->characterID) {
@@ -324,27 +341,27 @@ void Ice_FreezePlayer(void *p)
             default: break;
         }
 #endif
-        RSDK.SetSpriteAnimation(Ice->aniFrames, ice->animationID, &ice->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &ice->animator3, true, 0);
+        RSDK.SetSpriteAnimation(Ice->aniFrames, ice->animationID, &ice->contentsAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &ice->contentsAltAnimator, true, 0);
         ice->alpha       = 128;
         ice->isPermanent = true;
         player->velocity.x >>= 1;
         player->groundVel >>= 1;
-        player->animator.speed = 0;
-        player->visible                       = false;
-        player->nextAirState                  = StateMachine_None;
-        player->nextGroundState               = StateMachine_None;
-        player->state                         = Ice_State_FrozenPlayer;
-        player->velocity.y                    = 0;
+        player->animator.speed  = 0;
+        player->visible         = false;
+        player->nextAirState    = StateMachine_None;
+        player->nextGroundState = StateMachine_None;
+        player->state           = Ice_State_FrozenPlayer;
+        player->velocity.y      = 0;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         player->abilityPtrs[0] = self;
         player->abilityPtrs[1] = ice;
         if (!self->collisionMode) {
-            player->position.y += Player_GetHitbox(player)->bottom - Ice->hitbox2.bottom;
+            player->position.y += Player_GetHitbox(player)->bottom - Ice->hitboxPlayerBlockOuter.bottom;
         }
         player->blinkTimer     = 0;
-        player->outerbox       = &Ice->hitbox2;
-        player->innerbox       = &Ice->hitbox1;
+        player->outerbox       = &Ice->hitboxPlayerBlockOuter;
+        player->innerbox       = &Ice->hitboxPlayerBlockInner;
         player->timer          = 0;
         player->abilityTimer   = 0;
         player->spindashCharge = 0;
@@ -352,7 +369,7 @@ void Ice_FreezePlayer(void *p)
     }
 }
 
-bool32 Ice_Unknown3(void)
+bool32 Ice_CheckPlayerBlockSmashH(void)
 {
     RSDK_THIS(Player);
 
@@ -363,14 +380,14 @@ bool32 Ice_Unknown3(void)
             else
                 self->velocity.x = -0x18000;
 
-            Ice_Unknown8((Entity *)self);
+            Ice_BreakPlayerBlock((Entity *)self);
             return true;
         }
     }
     return false;
 }
 
-bool32 Ice_Unknown4(void)
+bool32 Ice_CheckPlayerBlockSmashV(void)
 {
     RSDK_THIS(Player);
 
@@ -378,12 +395,12 @@ bool32 Ice_Unknown4(void)
         if (abs(self->skidding) <= abs(self->pushing)) {
             if (self->pushing > 0) {
                 if ((self->angle & 0xFF) < 0x20) {
-                    Ice_Unknown8(SceneInfo->entity);
+                    Ice_BreakPlayerBlock((Entity *)self);
                     return true;
                 }
             }
             if (self->pushing && (self->angle + 0x80) < 0x20) {
-                Ice_Unknown8(SceneInfo->entity);
+                Ice_BreakPlayerBlock((Entity *)self);
                 return true;
             }
         }
@@ -395,17 +412,17 @@ void Ice_State_FrozenPlayer(void)
 {
     RSDK_THIS(Player);
 
-    bool32 flag = self->onGround;
-    int32 skid    = self->groundVel;
-    bool32 groundFlag    = self->groundedStore;
+    bool32 flag       = self->onGround;
+    int32 skid        = self->groundVel;
+    bool32 groundFlag = self->groundedStore;
 
     if (!flag) {
         flag |= self->groundedStore || self->velocity.x;
-        skid = self->velocity.x;
+        skid       = self->velocity.x;
         groundFlag = self->velocity.y;
     }
     if (!flag) {
-        flag |= abs(self->skidding) < 0x50000 || !Ice_Unknown3();
+        flag |= abs(self->skidding) < 0x50000 || !Ice_CheckPlayerBlockSmashH();
         skid       = self->velocity.x;
         groundFlag = self->velocity.y;
     }
@@ -413,14 +430,14 @@ void Ice_State_FrozenPlayer(void)
     if (flag) {
         if (self->onGround) {
             if (!self->groundVel) {
-                if (Ice_Unknown3())
+                if (Ice_CheckPlayerBlockSmashH())
                     return;
             }
         }
 
         self->skidding = skid;
         if (!groundFlag) {
-            if (Ice_Unknown4())
+            if (Ice_CheckPlayerBlockSmashV())
                 return;
         }
 
@@ -431,7 +448,7 @@ void Ice_State_FrozenPlayer(void)
             self->onGround   = false;
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
             Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
-            RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
+            RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
             Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
             self->skidding                            = 0;
             self->pushing                             = 0;
@@ -454,7 +471,7 @@ void Ice_State_FrozenPlayer(void)
                     self->onGround   = false;
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
                     Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
-                    RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
+                    RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
                     Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
                     self->skidding                            = 0;
                     self->pushing                             = 0;
@@ -464,14 +481,14 @@ void Ice_State_FrozenPlayer(void)
                 }
                 else {
                     Ice_ShatterGenerator(24, 20, 8, 0, 0, false);
-                    RSDK.PlaySfx(Ice->sfxStruggle, 0, 255);
+                    RSDK.PlaySfx(Ice->sfxStruggle, false, 255);
                 }
             }
         }
 
         if (self->state == Ice_State_FrozenPlayer) {
             if (self->onGround) {
-                int32 rollFric            = self->rollingFriction;
+                int32 rollFric        = self->rollingFriction;
                 self->left            = false;
                 self->right           = false;
                 self->rollingFriction = 0;
@@ -498,16 +515,16 @@ void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 vel
     if (canBreak > 0)
         count >>= 1;
     for (int32 i = 0; i < maxVal(0, count); ++i) {
-        int32 randY                     = RSDK.Rand(-yr, yr + 1) << 16;
-        int32 randX                     = RSDK.Rand(-xr, xr + 1) << 16;
-        EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(3), randX + self->position.x, randY + self->position.y);
-        ice->velocity.x               = velX + (RSDK.Rand(-6, 8) << 15);
-        ice->velocity.y               = velY + (RSDK.Rand(-10, 2) << 15);
-        ice->direction                = RSDK.Rand(0, 4);
-        ice->animator1.speed = RSDK.Rand(1, 4);
+        int32 randY              = RSDK.Rand(-yr, yr + 1) << 16;
+        int32 randX              = RSDK.Rand(-xr, xr + 1) << 16;
+        EntityIce *ice           = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), randX + self->position.x, randY + self->position.y);
+        ice->velocity.x          = velX + (RSDK.Rand(-6, 8) << 15);
+        ice->velocity.y          = velY + (RSDK.Rand(-10, 2) << 15);
+        ice->direction           = RSDK.Rand(0, 4);
+        ice->blockAnimator.speed = RSDK.Rand(1, 4);
         if (canBreak) {
             if (RSDK.Rand(0, 2)) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PIECE, &ice->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PIECE, &ice->blockAnimator, true, 0);
                 ice->velocity.x = (ice->velocity.x >> 1) + (ice->velocity.x >> 2);
                 ice->velocity.y = (ice->velocity.y >> 1) + (ice->velocity.y >> 2);
             }
@@ -515,12 +532,13 @@ void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 vel
     }
 }
 
-void Ice_Unknown7(int32 velX, Entity *p, int32 velY)
+//Like Ice_Shatter, but "shatters" the contents too
+void Ice_FullShatter(Entity *p, int32 velX, int32 velY)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
-    if (self->type == 4 || (self->type == 18 && self->subType < 3))
-        self->type = 0;
+    if (self->type == ICE_SPIKES || (self->type == ICE_SPRING && self->subType < 3))
+        self->type = ICE_BLOCK;
     EntityItemBox *itemBox = (EntityItemBox *)Ice_Shatter(self, velX, velY);
     if (player && itemBox) {
         if (player->sidekick)
@@ -531,10 +549,10 @@ void Ice_Unknown7(int32 velX, Entity *p, int32 velY)
     }
 }
 
-void Ice_Unknown8(Entity *p)
+void Ice_BreakPlayerBlock(Entity *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
-    RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
+    RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
     Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
     Ice->playerTimers[RSDK.GetEntityID(player)] = 30;
 
@@ -564,11 +582,11 @@ Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
     EntityItemBox *itemBox = NULL;
 
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-    if (self->animator1.animationID == ICEANI_PILLARBLOCK) {
+    if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
         self->position.y -= 0x370000;
         Ice_ShatterGenerator(19, 55, 96, velX, velY, 2);
     }
-    else if (self->size) {
+    else if (self->size == ICE_SIZE_SMALL) {
         Ice_ShatterGenerator(16, 16, 16, velX, velY, 2);
     }
     else {
@@ -577,13 +595,13 @@ Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
 
     int32 count = 0;
     switch (ice->type) {
-        case 0: break;
-        case 1: count = 1;
-        case 2:
-            if (ice->type == 2)
+        case ICE_BLOCK: break;
+        case ICE_1RING: count = 1;
+        case ICE_3RINGS:
+            if (ice->type == ICE_3RINGS)
                 count = 3;
-        case 3: {
-            if (ice->type == 3)
+        case ICE_5RINGS: {
+            if (ice->type == ICE_5RINGS)
                 count = 5;
 
             int32 angle = 16 * (12 - (count >> 1));
@@ -600,28 +618,31 @@ Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
                 ring->state          = Ring_State_Bounce;
                 ring->position.y += (0x50000 * ice->type) - 0x50000;
                 ring->animator.speed = 512;
-                ring->stateDraw               = Ring_Draw_Normal;
+                ring->stateDraw      = Ring_Draw_Normal;
                 angle += 16;
             }
             break;
         }
-        case 4: CREATE_ENTITY(Spikes, intToVoid(self->subType), ice->position.x + self->dwordDC.x, ice->position.y + self->dwordDC.y); break;
-        case 18:
+        case ICE_SPIKES:
+            CREATE_ENTITY(Spikes, intToVoid(self->subType), ice->position.x + self->contentsOffset.x, ice->position.y + self->contentsOffset.y);
+            break;
+        case ICE_SPRING:
             if (self->subType >= 3)
-                CREATE_ENTITY(Spring, intToVoid((self->subFlip << 8) - 3 + self->subType), ice->position.x + self->dwordDC.x,
-                              ice->position.y + self->dwordDC.y);
+                CREATE_ENTITY(Spring, intToVoid((self->subFlip << 8) - 3 + self->subType), ice->position.x + self->contentsOffset.x,
+                              ice->position.y + self->contentsOffset.y);
             else
-                CREATE_ENTITY(IceSpring, intToVoid(self->subType + (self->subFlip << 8)), ice->position.x + self->dwordDC.x,
-                              ice->position.y + self->dwordDC.y);
+                CREATE_ENTITY(IceSpring, intToVoid(self->subType + (self->subFlip << 8)), ice->position.x + self->contentsOffset.x,
+                              ice->position.y + self->contentsOffset.y);
             break;
         default: {
-            itemBox             = CREATE_ENTITY(ItemBox, intToVoid(ice->type - 5 + (ice->type > 12 ? 2 : 0)), ice->position.x, ice->position.y);
+            int32 type          = ice->type - ICE_ITEMBOX_RINGS;
+            itemBox             = CREATE_ENTITY(ItemBox, intToVoid(type + (ice->type > ICE_ITEMBOX_1UP ? 2 : 0)), ice->position.x, ice->position.y);
             itemBox->velocity.y = -0x18000;
             itemBox->state      = ItemBox_State_Falling;
             break;
         }
     }
-    Ice_Unknown11();
+    Ice_UpdateBlockGravity();
     destroyEntity(ice);
     return (Entity *)itemBox;
 }
@@ -630,111 +651,111 @@ void Ice_TimeOverCB(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->state == Ice_State_FrozenPlayer)
-        Ice_Unknown8((Entity *)player);
+        Ice_BreakPlayerBlock((Entity *)player);
 }
 
-void Ice_Unknown11(void)
+void Ice_UpdateBlockGravity(void)
 {
     RSDK_THIS(Ice);
     foreach_all(Ice, ice)
     {
-        if (ice != self && ice->state == Ice_State_Pillar && RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox1, ice, &ice->hitbox2)) {
-            ice->state = Ice_Unknown13;
+        if (ice != self && ice->state == Ice_State_IceBlock && RSDK.CheckObjectCollisionTouchBox(self, &self->hitboxBlock, ice, &ice->hitboxFallCheck)) {
+            ice->state = Ice_State_StartBlockFall;
         }
     }
 }
 
-void Ice_State_Pillar(void)
+void Ice_State_IceBlock(void)
 {
     RSDK_THIS(Ice);
 
     foreach_active(Player, player)
     {
-        bool32 flag = true;
+        bool32 flag   = true;
         int32 playerX = player->position.x;
         int32 playerY = player->position.y;
 
         if (player->state == Ice_State_FrozenPlayer) {
-            int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitbox3, player, &Ice->hitbox2, false);
+            int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitboxPlayerBlockCheck, player, &Ice->hitboxPlayerBlockOuter, false);
             switch (side) {
-                case 1:
+                case C_TOP:
                     if (player->velocity.y < 0x40000) {
                         player->position.x = playerX;
                         player->position.y = playerY;
-                        self->position.x -= self->playerPos.x;
-                        self->position.y -= self->playerPos.y;
-                        if (Player_CheckCollisionBox(player, self, &self->hitbox1) == 1) {
-                            player->position.x += self->playerPos.x;
-                            player->position.y += self->playerPos.y;
+                        self->position.x -= self->playerMoveOffset.x;
+                        self->position.y -= self->playerMoveOffset.y;
+                        if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
+                            player->position.x += self->playerMoveOffset.x;
+                            player->position.y += self->playerMoveOffset.y;
                         }
-                        self->position.x += self->playerPos.x;
-                        self->position.y += self->playerPos.y;
+                        self->position.x += self->playerMoveOffset.x;
+                        self->position.y += self->playerMoveOffset.y;
                         flag = false;
                     }
                     else {
-                        Ice_Unknown7(0, (Entity *)player, 0);
+                        Ice_FullShatter((Entity *)player, 0, 0);
                         player->velocity.y = -0x20000;
                         foreach_return;
                     }
                     break;
-                case 2:
+                case C_LEFT:
                     if (player->velocity.x < 0x20000) {
                         player->position.x = playerX;
                         player->position.y = playerY;
-                        self->position.x -= self->playerPos.x;
-                        self->position.y -= self->playerPos.y;
-                        if (Player_CheckCollisionBox(player, self, &self->hitbox1) == 1) {
-                            player->position.x += self->playerPos.x;
-                            player->position.y += self->playerPos.y;
+                        self->position.x -= self->playerMoveOffset.x;
+                        self->position.y -= self->playerMoveOffset.y;
+                        if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
+                            player->position.x += self->playerMoveOffset.x;
+                            player->position.y += self->playerMoveOffset.y;
                         }
-                        self->position.x += self->playerPos.x;
-                        self->position.y += self->playerPos.y;
+                        self->position.x += self->playerMoveOffset.x;
+                        self->position.y += self->playerMoveOffset.y;
                         flag = false;
                     }
                     else {
-                        Ice_Unknown7(player->velocity.x >> 1, (Entity *)player, 0);
+                        Ice_FullShatter((Entity *)player, player->velocity.x >> 1, 0);
                         player->position.x = playerX;
                         player->position.y = playerY;
                         foreach_return;
                     }
                     break;
-                case 3:
+                case C_RIGHT:
                     if (player->velocity.x > -0x20000) {
                         player->position.x = playerX;
                         player->position.y = playerY;
-                        self->position.x -= self->playerPos.x;
-                        self->position.y -= self->playerPos.y;
-                        if (Player_CheckCollisionBox(player, self, &self->hitbox1) == 1) {
-                            player->position.x += self->playerPos.x;
-                            player->position.y += self->playerPos.y;
+                        self->position.x -= self->playerMoveOffset.x;
+                        self->position.y -= self->playerMoveOffset.y;
+                        if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
+                            player->position.x += self->playerMoveOffset.x;
+                            player->position.y += self->playerMoveOffset.y;
                         }
-                        self->position.x += self->playerPos.x;
-                        self->position.y += self->playerPos.y;
+                        self->position.x += self->playerMoveOffset.x;
+                        self->position.y += self->playerMoveOffset.y;
                         flag = false;
                     }
                     else {
-                        Ice_Unknown7(player->velocity.x >> 1, (Entity *)player, 0);
+                        Ice_FullShatter((Entity *)player, player->velocity.x >> 1, 0);
                         player->position.x = playerX;
                         player->position.y = playerY;
                         foreach_return;
                     }
                     break;
-                case 4:
+                case C_BOTTOM:
                     if (player->velocity.y > -0x40000) {
                         player->position.x = playerX;
                         player->position.y = playerY;
-                        self->position.x -= self->playerPos.x;
-                        self->position.y -= self->playerPos.y;
-                        if (Player_CheckCollisionBox(player, self, &self->hitbox1) == 1) {
-                            player->position.x += self->playerPos.x;
-                            player->position.y += self->playerPos.y;
+                        self->position.x -= self->playerMoveOffset.x;
+                        self->position.y -= self->playerMoveOffset.y;
+                        if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
+                            player->position.x += self->playerMoveOffset.x;
+                            player->position.y += self->playerMoveOffset.y;
                         }
-                        self->position.x += self->playerPos.x;
-                        self->position.y += self->playerPos.y;
+                        self->position.x += self->playerMoveOffset.x;
+                        self->position.y += self->playerMoveOffset.y;
                         flag = false;
                     }
                     else {
-                        Ice_Unknown7(0, (Entity *)player, player->velocity.y >> 1);
+                        Ice_FullShatter((Entity *)player, 0, player->velocity.y >> 1);
                         player->position.x = playerX;
                         player->position.y = playerY;
                         foreach_return;
@@ -743,23 +764,23 @@ void Ice_State_Pillar(void)
                 default:
                     player->position.x = playerX;
                     player->position.y = playerY;
-                    self->position.x -= self->playerPos.x;
-                    self->position.y -= self->playerPos.y;
-                    if (Player_CheckCollisionBox(player, self, &self->hitbox1) == 1) {
-                        player->position.x += self->playerPos.x;
-                        player->position.y += self->playerPos.y;
+                    self->position.x -= self->playerMoveOffset.x;
+                    self->position.y -= self->playerMoveOffset.y;
+                    if (Player_CheckCollisionBox(player, self, &self->hitboxBlock) == C_TOP) {
+                        player->position.x += self->playerMoveOffset.x;
+                        player->position.y += self->playerMoveOffset.y;
                     }
-                    self->position.x += self->playerPos.x;
-                    self->position.y += self->playerPos.y;
+                    self->position.x += self->playerMoveOffset.x;
+                    self->position.y += self->playerMoveOffset.y;
                     flag = false;
                     break;
             }
         }
 
         if (flag) {
-            int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitbox1, player, &Ice->hitbox2, false);
-            if (side >= 2) {
-                if (side <= 3) {
+            int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitboxBlock, player, &Ice->hitboxPlayerBlockOuter, false);
+            if (side >= C_LEFT) {
+                if (side <= C_RIGHT) {
                     if (self->knuxSmash && player->characterID == ID_KNUCKLES) {
                         Ice_Shatter(self, 0, 0);
                         player->position.x = playerX;
@@ -770,14 +791,14 @@ void Ice_State_Pillar(void)
                         if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->animator.animationID == 2) {
                             if (player->position.x >= self->position.x) {
                                 if (player->velocity.x <= -0x78000) {
-                                    Ice_Unknown7(player->velocity.x, (Entity *)player, 0);
+                                    Ice_FullShatter((Entity *)player, player->velocity.x, 0);
                                     player->position.x = playerX;
                                     player->position.y = playerY;
                                     foreach_return;
                                 }
                             }
                             else if (player->velocity.x >= 0x78000) {
-                                Ice_Unknown7(player->velocity.x, (Entity *)player, 0);
+                                Ice_FullShatter((Entity *)player, player->velocity.x, 0);
                                 player->position.x = playerX;
                                 player->position.y = playerY;
                                 foreach_return;
@@ -785,7 +806,7 @@ void Ice_State_Pillar(void)
                         }
                     }
                 }
-                else if (side == 4 && self->bottomSmash) {
+                else if (side == C_BOTTOM && self->bottomSmash) {
                     Ice_Shatter(self, 0, 0);
                     player->position.x = playerX;
                     player->position.y = playerY;
@@ -795,30 +816,30 @@ void Ice_State_Pillar(void)
 
             player->position.x = playerX;
             player->position.y = playerY;
-            self->position.x -= self->playerPos.x;
-            self->position.y -= self->playerPos.y;
+            self->position.x -= self->playerMoveOffset.x;
+            self->position.y -= self->playerMoveOffset.y;
             int32 prevVel = player->velocity.y;
-            side        = Player_CheckCollisionBox(player, self, &self->hitbox1);
+            side          = Player_CheckCollisionBox(player, self, &self->hitboxBlock);
             if (side) {
-                if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->dwordE4) {
-                    if (self->animator1.animationID == ICEANI_PILLARBLOCK) {
+                if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->destroyDelay) {
+                    if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
                         self->position.y -= 0x370000;
                         Ice_ShatterGenerator(19, 55, 36, 0, 0, false);
                     }
-                    else if (self->size) {
+                    else if (self->size == ICE_SIZE_SMALL) {
                         Ice_ShatterGenerator(19, 17, 6, 0, 0, false);
                     }
                     else {
                         Ice_ShatterGenerator(19, 20, 12, 0, 0, false);
                     }
 
-                    self->animator1.frameID += 2;
-                    self->dwordE4 = 15;
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_LARGEGLINT + self->size, &self->animator4, true, 0);
+                    self->blockAnimator.frameID += 2;
+                    self->destroyDelay = 15;
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_LARGEGLINT + self->size, &self->glintAnimator, true, 0);
                 }
 
-                if (side == 4) {
-                    if (player->onGround && !player->collisionMode && self->playerPos.y >= 0) {
+                if (side == C_BOTTOM) {
+                    if (player->onGround && !player->collisionMode && self->playerMoveOffset.y >= 0) {
                         if (player->shield == SHIELD_FIRE || player->invincibleTimer) {
                             player->position.x = playerX;
                             player->position.y = playerY;
@@ -828,8 +849,8 @@ void Ice_State_Pillar(void)
                         player->deathType = PLAYER_DEATH_DIE_USESFX;
                     }
                 }
-                else if (side == 1 && player->velocity.y >= 0) {
-                    if (self->animator1.animationID == ICEANI_PILLARBLOCK) {
+                else if (side == C_TOP && player->velocity.y >= 0) {
+                    if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
                         Player_CheckHit(player, self);
                     }
                     else {
@@ -841,93 +862,92 @@ void Ice_State_Pillar(void)
                         }
 #if RETRO_USE_PLUS
                         else if (player->state == Player_State_MightyHammerDrop && !player->sidekick) {
-                            Ice_Unknown7(0, (Entity *)player, player->velocity.y);
+                            Ice_FullShatter((Entity *)player, 0, player->velocity.y);
                             player->velocity.y = prevVel - 0x10000;
                             player->onGround   = false;
                             foreach_return;
                         }
 #endif
                     }
-                    player->position.x += self->playerPos.x;
-                    player->position.y += self->playerPos.y;
+                    player->position.x += self->playerMoveOffset.x;
+                    player->position.y += self->playerMoveOffset.y;
                 }
             }
-            self->position.x += self->playerPos.x;
-            self->position.y += self->playerPos.y;
+            self->position.x += self->playerMoveOffset.x;
+            self->position.y += self->playerMoveOffset.y;
         }
     }
 
-    RSDK.ProcessAnimation(&self->animator4);
-    if (self->animator1.animationID == ICEANI_PILLARBLOCK) {
-        if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitbox1.bottom << 16, true)
-            && self->state == Ice_State_Pillar) {
-            self->state = Ice_Unknown13;
+    RSDK.ProcessAnimation(&self->glintAnimator);
+    if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
+        if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitboxBlock.bottom << 16, true)
+            && self->state == Ice_State_IceBlock) {
+            self->state = Ice_State_StartBlockFall;
         }
-        RSDK.ProcessAnimation(&self->animator1);
-        self->dwordE4--;
-        if (self->dwordE4 == 54) {
-            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &self->animator4, true, 1);
+        RSDK.ProcessAnimation(&self->blockAnimator);
+        if (--self->destroyDelay == 54) {
+            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PILLARGLINT, &self->glintAnimator, true, 1);
         }
-        else if (!self->dwordE4)
+        else if (!self->destroyDelay)
             Ice_Shatter(self, 0, 0);
     }
     else {
-        if (self->dwordE4 > 0) {
-            self->dwordE4--;
-            if (!self->dwordE4) {
-                if (self->type == 4 || (self->type == 18 && self->subType < 3))
-                    self->type = 0;
+        if (self->destroyDelay > 0) {
+            self->destroyDelay--;
+            if (!self->destroyDelay) {
+                if (self->type == ICE_SPIKES || (self->type == ICE_SPRING && self->subType < 3))
+                    self->type = ICE_BLOCK;
                 Ice_Shatter(self, 0, 0);
             }
         }
     }
 }
 
-void Ice_Unknown13(void)
+void Ice_State_StartBlockFall(void)
 {
     RSDK_THIS(Ice);
-    Ice_Unknown11();
+    Ice_UpdateBlockGravity();
     self->timer  = 15;
-    self->state  = Ice_Unknown14;
+    self->state  = Ice_State_BlockFallDelay;
     self->active = ACTIVE_NORMAL;
-    Ice_State_Pillar();
+    Ice_State_IceBlock();
 }
 
-void Ice_Unknown14(void)
+void Ice_State_BlockFallDelay(void)
 {
     RSDK_THIS(Ice);
     if (!--self->timer) {
-        Ice_Unknown11();
-        self->state = Ice_Unknown15;
+        Ice_UpdateBlockGravity();
+        self->state = Ice_State_IceBlockFall;
     }
-    Ice_Unknown15();
+    Ice_State_IceBlockFall();
     self->velocity.y = 0;
 }
 
-void Ice_Unknown15(void)
+void Ice_State_IceBlockFall(void)
 {
     RSDK_THIS(Ice);
 
-    self->playerPos.y = -(int32)(self->position.y & 0xFFFF0000);
     self->position.y  = self->velocity.y + self->position.y;
-    self->playerPos.y += (self->velocity.y + self->position.y) & 0xFFFF0000;
+    self->playerMoveOffset.y = -(int32)(self->position.y & 0xFFFF0000);
+    self->playerMoveOffset.y += (self->velocity.y + self->position.y) & 0xFFFF0000;
     self->velocity.y += 0x3800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitbox1.bottom << 16, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitboxBlock.bottom << 16, true)) {
         self->velocity.y = 0;
-        self->state      = Ice_State_Pillar;
-        Ice_State_Pillar();
+        self->state      = Ice_State_IceBlock;
+        Ice_State_IceBlock();
     }
     else {
         int32 velY = self->velocity.y;
         foreach_all(Ice, ice)
         {
             if (ice != self) {
-                if ((ice->stateDraw == Ice_StateDraw_Unknown1 || ice->stateDraw == Ice_StateDraw_PlayerBlock)
-                    && RSDK.CheckObjectCollisionPlatform(ice, &ice->hitbox1, self, &self->hitbox1, true)) {
+                if ((ice->stateDraw == Ice_Draw_IceBlock || ice->stateDraw == Ice_Draw_PlayerBlock)
+                    && RSDK.CheckObjectCollisionPlatform(ice, &ice->hitboxBlock, self, &self->hitboxBlock, true)) {
                     self->velocity.y = 0;
-                    if (ice->state == Ice_State_Pillar) {
+                    if (ice->state == Ice_State_IceBlock) {
                         self->active = ACTIVE_BOUNDS;
-                        self->state  = Ice_State_Pillar;
+                        self->state  = Ice_State_IceBlock;
                     }
                 }
             }
@@ -935,45 +955,45 @@ void Ice_Unknown15(void)
 
         foreach_all(Spikes, spikes)
         {
-            if (RSDK.CheckObjectCollisionPlatform(spikes, &spikes->hitbox, self, &self->hitbox1, true)) {
+            if (RSDK.CheckObjectCollisionPlatform(spikes, &spikes->hitbox, self, &self->hitboxBlock, true)) {
                 self->velocity.y = 0;
                 self->active     = ACTIVE_BOUNDS;
-                self->state      = Ice_State_Pillar;
+                self->state      = Ice_State_IceBlock;
             }
         }
 
         foreach_all(ItemBox, itemBox)
         {
             if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
-                && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitbox, self, &self->hitbox1, true)) {
+                && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitbox, self, &self->hitboxBlock, true)) {
                 self->velocity.y = 0;
                 if (itemBox->onGround) {
                     self->active = ACTIVE_BOUNDS;
-                    self->state  = Ice_State_Pillar;
+                    self->state  = Ice_State_IceBlock;
                 }
             }
         }
 
         if (!self->velocity.y && velY >= 0x60000) {
             if (ice) {
-                if (ice->stateDraw == Ice_StateDraw_PlayerBlock) {
-                    Ice_Unknown8((Entity *)ice->playerPtr);
+                if (ice->stateDraw == Ice_Draw_PlayerBlock) {
+                    Ice_BreakPlayerBlock((Entity *)ice->playerPtr);
                 }
                 else {
-                    Entity *storeEntity    = SceneInfo->entity;
-                    SceneInfo->entity = (Entity *)ice;
-                    if (ice->type == 4 || (ice->type == 18 && ice->subType < 3))
-                        ice->type = 0;
+                    Entity *storeEntity = SceneInfo->entity;
+                    SceneInfo->entity   = (Entity *)ice;
+                    if (ice->type == ICE_SPIKES || (ice->type == ICE_SPRING && ice->subType < 3))
+                        ice->type = ICE_BLOCK;
                     Ice_Shatter(ice, 0, 0);
                     SceneInfo->entity = storeEntity;
                 }
             }
 
-            if (self->type == 4 || (self->type == 18 && self->subType < 3))
-                self->type = 0;
+            if (self->type == ICE_SPIKES || (self->type == ICE_SPRING && self->subType < 3))
+                self->type = ICE_BLOCK;
             Ice_Shatter(self, 0, 0);
         }
-        Ice_State_Pillar();
+        Ice_State_IceBlock();
     }
 }
 
@@ -981,32 +1001,32 @@ void Ice_State_PlayerBlock(void)
 {
     RSDK_THIS(Ice);
 
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->contentsAnimator);
     EntityPlayer *playerPtr = (EntityPlayer *)self->playerPtr;
 
     if (playerPtr->state == Ice_State_FrozenPlayer) {
-        RSDK.ProcessAnimation(&self->animator3);
+        RSDK.ProcessAnimation(&self->contentsAltAnimator);
 #if RETRO_USE_PLUS
-        if (self->animator2.animationID == self->animationID + 3) {
-            if (self->animator2.frameID == self->animator2.frameCount - 1) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID, &self->animator2, false, 0);
+        if (self->contentsAnimator.animationID == self->animationID + 3) {
+            if (self->contentsAnimator.frameID == self->contentsAnimator.frameCount - 1) {
+                RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID, &self->contentsAnimator, false, 0);
             }
 
-            if (--self->dwordE4 <= 0) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &self->animator3, true, 0);
-                self->dwordE4 = 30 * RSDK.Rand(1, 9);
+            if (--self->destroyDelay <= 0) {
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &self->contentsAltAnimator, true, 0);
+                self->destroyDelay = 30 * RSDK.Rand(1, 9);
             }
-            self->animator1.frameID = playerPtr->timer;
+            self->blockAnimator.frameID = playerPtr->timer;
             if (playerPtr->spindashCharge) {
-                self->dwordDC.x = RSDK.Rand(-1, 2) << 16;
-                self->dwordDC.y = RSDK.Rand(-1, 2) << 16;
+                self->contentsOffset.x = RSDK.Rand(-1, 2) << 16;
+                self->contentsOffset.y = RSDK.Rand(-1, 2) << 16;
             }
             else {
-                self->dwordDC.x = 0;
-                self->dwordDC.y = 0;
+                self->contentsOffset.x = 0;
+                self->contentsOffset.y = 0;
             }
-            self->playerPos.x = (playerPtr->position.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
-            self->playerPos.y = (playerPtr->position.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
+            self->playerMoveOffset.x = (playerPtr->position.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
+            self->playerMoveOffset.y = (playerPtr->position.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
 
             self->position.x = playerPtr->position.x;
             self->position.y = playerPtr->position.y;
@@ -1014,42 +1034,42 @@ void Ice_State_PlayerBlock(void)
         }
         else {
             if (playerPtr->jumpPress) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 3, &self->animator2, false, 0);
+                RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 3, &self->contentsAnimator, false, 0);
             }
             else {
                 if (playerPtr->velocity.x >= -0x60000) {
                     if (playerPtr->velocity.x <= 0x60000) {
                         if (playerPtr->left) {
-                            RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 1, &self->animator2, false, 0);
+                            RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 1, &self->contentsAnimator, false, 0);
                         }
                         else if (playerPtr->right) {
-                            RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 2, &self->animator2, false, 0);
+                            RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 2, &self->contentsAnimator, false, 0);
                         }
                     }
                     else {
-                        RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 2, &self->animator2, false, 0);
+                        RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 2, &self->contentsAnimator, false, 0);
                     }
                 }
                 else {
-                    RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 1, &self->animator2, false, 0);
+                    RSDK.SetSpriteAnimation(Ice->aniFrames, self->animationID + 1, &self->contentsAnimator, false, 0);
                 }
             }
 
-            if (--self->dwordE4 <= 0) {
-                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &self->animator3, true, 0);
-                self->dwordE4 = 30 * RSDK.Rand(1, 9);
+            if (--self->destroyDelay <= 0) {
+                RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &self->contentsAltAnimator, true, 0);
+                self->destroyDelay = 30 * RSDK.Rand(1, 9);
             }
-            self->animator1.frameID = playerPtr->timer;
+            self->blockAnimator.frameID = playerPtr->timer;
             if (playerPtr->spindashCharge) {
-                self->dwordDC.x = RSDK.Rand(-1, 2) << 16;
-                self->dwordDC.y = RSDK.Rand(-1, 2) << 16;
+                self->contentsOffset.x = RSDK.Rand(-1, 2) << 16;
+                self->contentsOffset.y = RSDK.Rand(-1, 2) << 16;
             }
             else {
-                self->dwordDC.x = 0;
-                self->dwordDC.y = 0;
+                self->contentsOffset.x = 0;
+                self->contentsOffset.y = 0;
             }
-            self->playerPos.x = (playerPtr->position.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
-            self->playerPos.y = (playerPtr->position.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
+            self->playerMoveOffset.x = (playerPtr->position.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
+            self->playerMoveOffset.y = (playerPtr->position.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
 
             self->position.x = playerPtr->position.x;
             self->position.y = playerPtr->position.y;
@@ -1059,7 +1079,7 @@ void Ice_State_PlayerBlock(void)
     else {
         if (playerPtr->state != Player_State_FlyIn && playerPtr->state != Player_State_JumpIn) {
             if (!Player_CheckValidState(playerPtr)) {
-                Ice_Unknown8((Entity *)self->playerPtr);
+                Ice_BreakPlayerBlock((Entity *)self->playerPtr);
             }
             else {
                 playerPtr->outerbox = NULL;
@@ -1070,21 +1090,21 @@ void Ice_State_PlayerBlock(void)
         destroyEntity(self);
     }
 #else
-        if (--self->dwordE4 <= 0) {
-            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &self->animator3, true, 0);
-            self->dwordE4 = 30 * RSDK.Rand(1, 9);
+        if (--self->destroyDelay <= 0) {
+            RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &self->contentsAltAnimator, true, 0);
+            self->destroyDelay = 30 * RSDK.Rand(1, 9);
         }
-        self->animator1.frameID = playerPtr->timer;
+        self->blockAnimator.frameID = playerPtr->timer;
         if (playerPtr->spindashCharge) {
-            self->dwordDC.x = RSDK.Rand(-1, 2) << 16;
-            self->dwordDC.y = RSDK.Rand(-1, 2) << 16;
+            self->contentsOffset.x = RSDK.Rand(-1, 2) << 16;
+            self->contentsOffset.y = RSDK.Rand(-1, 2) << 16;
         }
         else {
-            self->dwordDC.x = 0;
-            self->dwordDC.y = 0;
+            self->contentsOffset.x = 0;
+            self->contentsOffset.y = 0;
         }
-        self->playerPos.x = (playerPtr->position.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
-        self->playerPos.y = (playerPtr->position.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
+        self->playerMoveOffset.x = (playerPtr->position.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
+        self->playerMoveOffset.y = (playerPtr->position.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
 
         self->position.x = playerPtr->position.x;
         self->position.y = playerPtr->position.y;
@@ -1102,9 +1122,9 @@ void Ice_State_PlayerBlock(void)
     {
         if (player != (EntityPlayer *)self->playerPtr && player->stateInput != Player_ProcessP2Input_AI && player->state != Ice_State_FrozenPlayer
             && player->velocity.y > 0 && !player->onGround && player->position.y < self->position.y - 0x200000
-            && Player_CheckBadnikTouch(player, self, &self->hitbox1)) {
+            && Player_CheckBadnikTouch(player, self, &self->hitboxBlock)) {
             if (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_DROPDASH) {
-                Ice_Unknown8((Entity *)self->playerPtr);
+                Ice_BreakPlayerBlock((Entity *)self->playerPtr);
                 player->velocity.y = -0x30000;
                 player->onGround   = false;
                 foreach_break;
@@ -1119,103 +1139,288 @@ void Ice_State_PlayerBlock(void)
 void Ice_State_Shard(void)
 {
     RSDK_THIS(Ice);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->blockAnimator);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    self->visible ^= 1;
+    self->visible ^= true;
     self->velocity.y += 0x3800;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
 
-void Ice_StateDraw_Unknown1(void)
+void Ice_Draw_IceBlock(void)
 {
     RSDK_THIS(Ice);
     Vector2 drawPos;
 
     int32 dirStore = self->direction;
-    drawPos.x    = self->position.x;
-    drawPos.y    = self->position.y;
-    drawPos.x += self->dwordDC.x;
-    drawPos.y += self->dwordDC.y;
+    drawPos.x      = self->position.x;
+    drawPos.y      = self->position.y;
+    drawPos.x += self->contentsOffset.x;
+    drawPos.y += self->contentsOffset.y;
     self->direction = self->subFlip;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->contentsAnimator, &drawPos, false);
 
     self->direction = dirStore;
     drawPos.y -= 0x30000;
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->contentsAltAnimator, &drawPos, false);
 
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor) {
         self->inkEffect = INK_ADD;
-        if (!self->dwordE4)
-            self->animator1.frameID += 4;
+        if (!self->destroyDelay)
+            self->blockAnimator.frameID += 4;
         else
-            self->animator1.frameID += 2;
-        RSDK.DrawSprite(&self->animator1, 0, false);
-        if (self->dwordE4)
-            self->animator1.frameID -= 2;
+            self->blockAnimator.frameID += 2;
+        RSDK.DrawSprite(&self->blockAnimator, NULL, false);
+        if (self->destroyDelay)
+            self->blockAnimator.frameID -= 2;
         else
-            self->animator1.frameID -= 4;
+            self->blockAnimator.frameID -= 4;
         self->inkEffect = INK_NONE;
     }
 #endif
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->blockAnimator, NULL, false);
 
     self->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->glintAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_PlayerBlock(void)
+void Ice_Draw_PlayerBlock(void)
 {
     RSDK_THIS(Ice);
     Vector2 drawPos;
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    drawPos.x += self->dwordDC.x;
-    drawPos.y += self->dwordDC.y;
+    drawPos.x += self->contentsOffset.x;
+    drawPos.y += self->contentsOffset.y;
 
 #if RETRO_USE_PLUS
-    int32 frame                 = self->animator1.frameID;
-    self->inkEffect         = INK_SUB;
-    self->animator1.frameID = 5;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    int32 frame                 = self->blockAnimator.frameID;
+    self->inkEffect             = INK_SUB;
+    self->blockAnimator.frameID = 5;
+    RSDK.DrawSprite(&self->blockAnimator, NULL, false);
 
-    self->animator1.frameID = frame;
-    self->inkEffect         = INK_NONE;
+    self->blockAnimator.frameID = frame;
+    self->inkEffect             = INK_NONE;
 #endif
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->contentsAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->blockAnimator, NULL, false);
 
     self->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->contentsAltAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_Pillar(void)
+void Ice_Draw_Pillar(void)
 {
     RSDK_THIS(Ice);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->blockAnimator, NULL, false);
 
     self->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->glintAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
 }
 
-void Ice_StateDraw_Shard(void)
+void Ice_Draw_Shard(void)
 {
     RSDK_THIS(Ice);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->blockAnimator, NULL, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Ice_EditorDraw(void) {}
+void Ice_EditorDraw(void)
+{
+    RSDK_THIS(Ice);
+    self->drawFX        = FX_FLIP;
+    self->drawOrder     = Zone->playerDrawLow + 1;
+    self->visible       = true;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->alpha         = 0x180;
+
+    int32 type = self->type;
+    int32 subType = self->subType;
+    int32 subFlip = self->subFlip;
+
+    RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_ICEBLOCK, &self->blockAnimator, true, self->size);
+    switch (self->type) {
+        case ICE_BLOCK: RSDK.SetSpriteAnimation(0xFFFF, ICEANI_ICEBLOCK, &self->contentsAnimator, true, 0); break;
+        case ICE_1RING: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 0); break;
+        case ICE_3RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 1); break;
+        case ICE_5RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 2); break;
+        case ICE_SPIKES:
+            self->subType = self->subType & 3;
+            RSDK.SetSpriteAnimation(Spikes->aniFrames, self->subType >> 1, &self->contentsAnimator, true, 0);
+            if (!self->size) {
+                //direction of da spikes, matches the spikes "type" variable
+                switch (self->subType) {
+                    case 0:
+                        self->contentsOffset.y = 0x40000;
+                        self->subFlip          = FLIP_NONE;
+                        break;
+                    case 1:
+                        self->contentsOffset.y = -0x40000;
+                        self->subFlip          = FLIP_Y;
+                        break;
+                    case 2:
+                        self->contentsOffset.x = -0x80000;
+                        self->subFlip          = FLIP_NONE;
+                        break;
+                    case 3:
+                        self->contentsOffset.x = 0x80000;
+                        self->subFlip          = FLIP_X;
+                        break;
+                    default: break;
+                }
+            }
+            break;
+
+        case ICE_SPRING:
+            //Ice Springs (0-2), Normal Springs (2-8)
+            if (self->subType >= 3)
+                RSDK.SetSpriteAnimation(Spring->aniFrames, (self->subType - 3), &self->contentsAnimator, true, 0);
+            else
+                RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->subType, &self->contentsAnimator, true, 0);
+            if (self->size) {
+                switch (self->subType) {
+                    case 0:
+                    case 3:
+                    case 4:
+                        self->contentsOffset.x = 0;
+                        if (!(self->subFlip & FLIP_Y))
+                            self->contentsOffset.y = 0x80000;
+                        else
+                            self->contentsOffset.y = -0x80000;
+                        break;
+                    case 1:
+                    case 5:
+                    case 6:
+                        self->contentsOffset.y = 0;
+                        if (!(self->subFlip & FLIP_X))
+                            self->contentsOffset.x = -0x80000;
+                        else
+                            self->contentsOffset.x = 0x80000;
+                        break;
+                    case 2:
+                    case 7:
+                    case 8:
+                        self->contentsOffset.x = 0;
+                        if (!(self->subFlip & FLIP_Y))
+                            self->contentsOffset.y = -0x10000;
+                        else
+                            self->contentsOffset.y = 0x10000;
+                        break;
+                    default: break;
+                }
+            }
+            else {
+                switch (self->subType) {
+                    case 0:
+                    case 3:
+                    case 4:
+                        self->contentsOffset.x = 0;
+                        if (!(self->subFlip & FLIP_Y))
+                            self->contentsOffset.y = 0xC0000;
+                        else
+                            self->contentsOffset.y = -0xC0000;
+                        break;
+                    case 1:
+                    case 5:
+                    case 6:
+                        self->contentsOffset.y = 0;
+                        if (!(self->subFlip & FLIP_X))
+                            self->contentsOffset.x = -0x100000;
+                        else
+                            self->contentsOffset.x = 0x100000;
+                        break;
+                    case 2:
+                    case 7:
+                    case 8:
+                        if (!(self->subFlip & FLIP_X))
+                            self->contentsOffset.x = -0x80000;
+                        else
+                            self->contentsOffset.x = 0x80000;
+                        if (!(self->subFlip & FLIP_Y))
+                            self->contentsOffset.y = 0x40000;
+                        else
+                            self->contentsOffset.y = -0x40000;
+                        break;
+                    default: break;
+                }
+            }
+            break;
+
+        case ICE_ITEMBOX_RINGS:
+        case ICE_ITEMBOX_BLUESHIELD:
+        case ICE_ITEMBOX_BUBBLESHIELD:
+        case ICE_ITEMBOX_FIRESHIELD:
+        case ICE_ITEMBOX_LIGHTNINGSHIELD:
+        case ICE_ITEMBOX_INVINCIBILITY:
+        case ICE_ITEMBOX_SNEAKERS:
+        case ICE_ITEMBOX_1UP:
+        case ICE_ITEMBOX_EGGMAN:
+        case ICE_ITEMBOX_HYPERRING:
+        case ICE_ITEMBOX_SWAP:
+        case ICE_ITEMBOX_RANDOM:
+        case ICE_ITEMBOX_SUPER:
+        default:
+            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->contentsAnimator, true, 0);
+            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->contentsAltAnimator, true, (self->type > ICE_ITEMBOX_1UP ? 2 : 0) + self->type - 5);
+            if (self->type != ICE_ITEMBOX_1UP) {
+                if (globals->gameMode == MODE_COMPETITION) {
+                    if (globals->itemMode == ITEMS_RANDOM) {
+                        self->type                        = ICE_ITEMBOX_EGGMAN;
+                        self->contentsAltAnimator.frameID = 13;
+                    }
+                    else if (globals->itemMode == ITEMS_TELEPORT) {
+                        self->type                        = ICE_ITEMBOX_SWAP;
+                        self->contentsAltAnimator.frameID = 12;
+                    }
+                }
+            }
+            else if (globals->gameMode != MODE_TIMEATTACK) {
+                switch (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->characterID) {
+                    case ID_TAILS: ++self->contentsAltAnimator.frameID; break;
+                    case ID_KNUCKLES: self->contentsAltAnimator.frameID += 2; break;
+#if RETRO_USE_PLUS
+                    case ID_MIGHTY: self->contentsAltAnimator.frameID += 8; break;
+                    case ID_RAY: self->contentsAltAnimator.frameID += 9; break;
+#endif
+                    default: break;
+                }
+
+                if (globals->gameMode == MODE_COMPETITION) {
+                    if (globals->itemMode == ITEMS_RANDOM) {
+                        self->type                        = ICE_ITEMBOX_RANDOM;
+                        self->contentsAltAnimator.frameID = 13;
+                    }
+                    else if (globals->itemMode == 2) {
+                        self->type                        = ICE_ITEMBOX_SWAP;
+                        self->contentsAltAnimator.frameID = 12;
+                    }
+                }
+            }
+            else {
+                self->type                        = ICE_ITEMBOX_RINGS;
+                self->contentsAltAnimator.frameID = 0;
+            }
+            break;
+    }
+
+    Ice_Draw_IceBlock();
+
+    self->type    = type;
+    self->subType = subType;
+    self->subFlip = subFlip;
+}
 
 void Ice_EditorLoad(void)
 {
@@ -1223,6 +1428,37 @@ void Ice_EditorLoad(void)
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ice.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("PSZ2"))
         Ice->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Ice.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Ice, size);
+    RSDK_ENUM_VAR("Large", ICE_SIZE_LARGE);
+    RSDK_ENUM_VAR("Small", ICE_SIZE_SMALL);
+
+    RSDK_ACTIVE_VAR(Ice, type);
+    RSDK_ENUM_VAR("Empty Block", ICE_BLOCK);
+    RSDK_ENUM_VAR("1 Ring", ICE_1RING);
+    RSDK_ENUM_VAR("3 Rings", ICE_3RINGS);
+    RSDK_ENUM_VAR("5 Rings", ICE_5RINGS);
+    RSDK_ENUM_VAR("Spikes", ICE_SPIKES);
+    RSDK_ENUM_VAR("ItemBox (Rings)", ICE_ITEMBOX_RINGS);
+    RSDK_ENUM_VAR("ItemBox (Blue Shield)", ICE_ITEMBOX_BLUESHIELD);
+    RSDK_ENUM_VAR("ItemBox (Bubble Shield)", ICE_ITEMBOX_BUBBLESHIELD);
+    RSDK_ENUM_VAR("ItemBox (Fire Shield)", ICE_ITEMBOX_FIRESHIELD);
+    RSDK_ENUM_VAR("ItemBox (Lightning Shield)", ICE_ITEMBOX_LIGHTNINGSHIELD);
+    RSDK_ENUM_VAR("ItemBox (Invincibility)", ICE_ITEMBOX_INVINCIBILITY);
+    RSDK_ENUM_VAR("ItemBox (Speed Shoes)", ICE_ITEMBOX_SNEAKERS);
+    RSDK_ENUM_VAR("ItemBox (1UP)", ICE_ITEMBOX_1UP);
+    RSDK_ENUM_VAR("ItemBox (Eggman)", ICE_ITEMBOX_EGGMAN);
+    RSDK_ENUM_VAR("ItemBox (Hyper Ring)", ICE_ITEMBOX_HYPERRING);
+    RSDK_ENUM_VAR("ItemBox (Swap)", ICE_ITEMBOX_SWAP);
+    RSDK_ENUM_VAR("ItemBox (Random)", ICE_ITEMBOX_SUPER);
+    RSDK_ENUM_VAR("ItemBox (Super)", ICE_ITEMBOX_RANDOM);
+    RSDK_ENUM_VAR("Spring", ICE_SPRING);
+
+    RSDK_ACTIVE_VAR(Ice, subFlip);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
 }
 #endif
 

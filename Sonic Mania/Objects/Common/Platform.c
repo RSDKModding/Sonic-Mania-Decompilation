@@ -68,8 +68,8 @@ void Platform_Update(void)
                     platform->centerPos.y += self->collisionOffset.y;
                 }
                 else if (Ice && child->objectID == Ice->objectID) {
-                    EntityIce *ice = (EntityIce *)child;
-                    ice->playerPos = self->collisionOffset;
+                    EntityIce *ice        = (EntityIce *)child;
+                    ice->playerMoveOffset = self->collisionOffset;
                 }
                 else if (TurboTurtle && child->objectID == TurboTurtle->objectID) {
                     EntityTurboTurtle *turboTurtle = (EntityTurboTurtle *)child;

@@ -145,7 +145,18 @@ void Turntable_SetupSize(void)
 #if RETRO_INCLUDE_EDITOR
 void Turntable_EditorDraw(void) { Turntable_Draw(); }
 
-void Turntable_EditorLoad(void) { Turntable->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Turntable.bin", SCOPE_STAGE); }
+void Turntable_EditorLoad(void)
+{
+    Turntable->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Turntable.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Turntable, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+
+    RSDK_ACTIVE_VAR(Turntable, type);
+    RSDK_ENUM_VAR("Small", FLIP_NONE);
+    RSDK_ENUM_VAR("Large", FLIP_X);
+}
 #endif
 
 void Turntable_Serialize(void)

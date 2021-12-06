@@ -5,6 +5,8 @@
 
 typedef enum { WARPDOOR_EFFECT_NONE } WarpDoorEffects;
 
+typedef enum { WARPDOOR_PLRSTATE_NONE, WARPDOOR_PLRSTATE_HURT } WarpDoorPlayerStates;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
