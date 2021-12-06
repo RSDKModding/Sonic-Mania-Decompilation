@@ -394,8 +394,8 @@ typedef struct {
     bool32 jumpHold;
     int32 jumpAbility;
     int32 jumpAbilityTimer;
-    StateMachine(movesetState);
-    StateMachine(peeloutState);
+    StateMachine(stateAbility);
+    StateMachine(statePeelout);
     int32 flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;

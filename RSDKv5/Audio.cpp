@@ -225,11 +225,11 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                                 if (channel->bufferPos >= channel->sampleLength) {
                                     if (channel->loop == 1) {
                                         channel->bufferPos = 0;
-                                        soundBuf           = &channel->samplePtr[channel->bufferPos];
+                                        soundBuf           = &channel->samplePtr[channel->bufferPos * sfxList[channel->soundID].channelCount];
                                     }
                                     else if (channel->loop) {
-                                        channel->bufferPos = channel->loop;
-                                        soundBuf           = &channel->samplePtr[channel->bufferPos];
+                                        channel->bufferPos = channel->loop * 2;
+                                        soundBuf           = &channel->samplePtr[channel->bufferPos * sfxList[channel->soundID].channelCount];
                                     }
                                     else {
                                         MEM_ZEROP(channel);
@@ -602,9 +602,9 @@ void LoadSfx(char *filename, byte plays, byte scope)
     FileInfo info;
     InitFileInfo(&info);
     if (LoadFile(&info, fullPath, FMODE_RB)) {
-#if !RETRO_USE_ORIGINAL_CODE
         byte type = fullPath[strlen(fullPath) - 3];
         if (type == 'w' || type == 'W') {
+#if !RETRO_USE_ORIGINAL_CODE
             byte *sfx = new byte[info.fileSize];
             ReadBytes(&info, sfx, info.fileSize);
             CloseFile(&info);
@@ -708,6 +708,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 sfxList[id].length             = convert.len_cvt / sizeof(float);
                                 sfxList[id].scope              = scope;
                                 sfxList[id].maxConcurrentPlays = plays;
+                                sfxList[id].channelCount       = channels;
                                 UnlockAudioDevice();
                                 free(convert.buf);
                             }
@@ -719,6 +720,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 // sfxList[id].length             = wav_length / sizeof(float);
                                 sfxList[id].scope              = scope;
                                 sfxList[id].maxConcurrentPlays = plays;
+                                sfxList[id].channelCount       = channels;
                                 UnlockAudioDevice();
                             }
                         }
@@ -745,6 +747,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                         sfxList[id].length             = convert.len_cvt / sizeof(float);
                         sfxList[id].scope              = scope;
                         sfxList[id].maxConcurrentPlays = plays;
+                        sfxList[id].channelCount       = wav->channels;
                         UnlockAudioDevice();
                         SDL_FreeWAV(wav_buffer);
                         free(convert.buf);
@@ -757,6 +760,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                         sfxList[id].length             = wav_length / sizeof(float);
                         sfxList[id].scope              = scope;
                         sfxList[id].maxConcurrentPlays = plays;
+                        sfxList[id].channelCount       = wav->channels;
                         UnlockAudioDevice();
                     }
                 }
@@ -767,6 +771,93 @@ void LoadSfx(char *filename, byte plays, byte scope)
             CloseFile(&info);
             PrintLog(PRINT_ERROR, "Sfx format not supported!");
         }
+#else
+            uint signature = ReadInt32(&info, false);
+
+            if (signature == 'FFIR') {
+                ReadInt32(&info, false); // chunk size
+                ReadInt32(&info, false); // WAVE
+                ReadInt32(&info, false); // FMT
+                ReadInt32(&info, false); // chunk size
+                ReadInt16(&info);        // audio format
+                ushort channels = ReadInt16(&info);
+                uint freq       = ReadInt32(&info, false);
+                ReadInt32(&info, false); // bytes per sec
+                ReadInt16(&info);        // block align
+                uint format = 0x8000 | (ReadInt16(&info) & 0xFF);
+                Seek_Set(&info, 34);
+
+                ushort sampleBits = ReadInt16(&info);
+                int loop          = 0;
+                while (true) {
+                    signature = ReadInt32(&info, false);
+                    if (signature == 'atad')
+                        break;
+
+                    loop += 4;
+                    if (loop >= 0x40) {
+                        if (loop != 0x100) {
+                            CloseFile(&info);
+                            PrintLog(PRINT_ERROR, "Unable to read sfx: %s", fullPath);
+                            return;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+
+                uint length = ReadInt32(&info, false);
+                uint size   = length;
+                if (sampleBits == 16) {
+                    length >>= 1;
+                }
+                AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                sfxList[id].length = length;
+
+                if (sampleBits == 8) {
+                    sbyte *buffer = (sbyte *)sfxList[id].buffer;
+                    for (int remaining = length; remaining; --remaining) {
+                        int sample = ReadInt8(&info);
+                        *buffer    = (sample - 128);
+                        buffer++;
+                    }
+                }
+                else {
+                    short *buffer = (short *)sfxList[id].buffer;
+                    for (int remaining = length; remaining; --remaining) {
+                        int sample = ReadInt16(&info);
+                        if (sample > 0x7FFF)
+                            sample = (sample & 0x7FFF) - 0x8000;
+                        *buffer = sample;
+                        buffer++;
+                    }
+                }
+
+#if !RETRO_USE_ORIGINAL_CODE
+                SDL_AudioCVT convert;
+                if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq)
+                    > 0) {
+                    convert.buf = (byte *)malloc(size * convert.len_mult);
+                    convert.len = size;
+                    memcpy(convert.buf, sfxList[id].buffer, size);
+                    SDL_ConvertAudio(&convert);
+
+                    LockAudioDevice();
+                    GEN_HASH(filename, sfxList[id].hash);
+                    sfxList[id].buffer = NULL;
+                    AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                    memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
+                    sfxList[id].length             = convert.len_cvt / sizeof(float);
+                    sfxList[id].scope              = scope;
+                    sfxList[id].maxConcurrentPlays = plays;
+                    sfxList[id].channelCount       = channels;
+                    UnlockAudioDevice();
+                    free(convert.buf);
+                }
+#endif
+            }
+            CloseFile(&info);
 #endif
     }
 }

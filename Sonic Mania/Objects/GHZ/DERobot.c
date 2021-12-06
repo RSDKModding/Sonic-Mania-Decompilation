@@ -800,7 +800,7 @@ void DERobot_State_SetupBoss(void)
             self->visible = true;
             self->state   = DERobot_State_SurpriseFall;
             if (player1->characterID == ID_TAILS)
-                player1->movesetState = Player_TailsJumpAbility;
+                player1->stateAbility = Player_TailsJumpAbility;
             EntityDERobot *kneeBack = (EntityDERobot *)self->legs[0];
             kneeBack->active        = ACTIVE_NORMAL;
             kneeBack->visible       = true;
@@ -862,7 +862,7 @@ void DERobot_State_SetupBoss(void)
         RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->boundsOffset.x = 1;
         ++self->timer;
         if (player1->characterID == ID_TAILS)
-            player1->movesetState = NULL;
+            player1->stateAbility = StateMachine_None;
     }
 
     foreach_active(Player, player)

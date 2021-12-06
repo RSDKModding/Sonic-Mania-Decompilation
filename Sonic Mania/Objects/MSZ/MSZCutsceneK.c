@@ -87,9 +87,9 @@ void MSZCutsceneK_SetupP2(int posX, int posY)
     player2->aniFrames     = Player->sonicSpriteIndex;
     player2->tailSpriteIndex = -1;
     player2->cameraOffset    = 0x50000;
-    player2->movesetState    = Player_SonicJumpAbility;
+    player2->stateAbility    = Player_SonicJumpAbility;
     player2->sensorY         = 0x140000;
-    player2->stateInput      = 0;
+    player2->stateInput      = StateMachine_None;
     player2->state           = Player_State_None;
     RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_RIDE, &player2->animator, true, 0);
 }

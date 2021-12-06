@@ -507,14 +507,14 @@ void Player_Create(void *data)
                 self->aniFrames       = Player->tailsSpriteIndex;
                 self->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                 self->cameraOffset    = 0;
-                self->movesetState    = Player_TailsJumpAbility;
+                self->stateAbility    = Player_TailsJumpAbility;
                 self->sensorY         = 0x100000;
                 break;
             case ID_KNUCKLES:
                 self->aniFrames       = Player->knuxSpriteIndex;
                 self->tailSpriteIndex = -1;
                 self->cameraOffset    = 0x50000;
-                self->movesetState    = Player_KnuxJumpAbility;
+                self->stateAbility    = Player_KnuxJumpAbility;
                 self->sensorY         = 0x140000;
                 break;
 #if RETRO_USE_PLUS
@@ -522,14 +522,14 @@ void Player_Create(void *data)
                 self->aniFrames       = Player->mightySpriteIndex;
                 self->tailSpriteIndex = -1;
                 self->cameraOffset    = 0x50000;
-                self->movesetState    = Player_MightyJumpAbility;
+                self->stateAbility    = Player_MightyJumpAbility;
                 self->sensorY         = 0x140000;
                 break;
             case ID_RAY:
                 self->aniFrames       = Player->raySpriteIndex;
                 self->tailSpriteIndex = -1;
                 self->cameraOffset    = 0x50000;
-                self->movesetState    = Player_RayJumpAbility;
+                self->stateAbility    = Player_RayJumpAbility;
                 self->sensorY         = 0x140000;
                 break;
 #endif
@@ -537,10 +537,10 @@ void Player_Create(void *data)
                 self->aniFrames       = Player->sonicSpriteIndex;
                 self->tailSpriteIndex = -1;
                 self->cameraOffset    = 0x50000;
-                self->movesetState    = Player_SonicJumpAbility;
+                self->stateAbility    = Player_SonicJumpAbility;
                 self->sensorY         = 0x140000;
                 if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
-                    self->peeloutState = Player_StartPeelout;
+                    self->statePeelout = Player_StartPeelout;
                     for (int32 f = 0; f < 4; ++f) {
                         SpriteFrame *dst = RSDK.GetFrame(self->aniFrames, ANI_DASH, f + 1);
                         SpriteFrame *src = RSDK.GetFrame(self->aniFrames, ANI_FLY, f);
@@ -934,7 +934,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 entity->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                 entity->cameraOffset    = 0;
             }
-            entity->movesetState = Player_TailsJumpAbility;
+            entity->stateAbility = Player_TailsJumpAbility;
             entity->sensorY      = 0x100000;
             break;
         case ID_KNUCKLES:
@@ -952,7 +952,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 entity->cameraOffset = 0x50000;
             }
             entity->tailSpriteIndex = -1;
-            entity->movesetState    = Player_KnuxJumpAbility;
+            entity->stateAbility    = Player_KnuxJumpAbility;
             entity->sensorY         = 0x140000;
             break;
 #if RETRO_USE_PLUS
@@ -971,7 +971,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 entity->cameraOffset = 0x50000;
             }
             entity->tailSpriteIndex = -1;
-            entity->movesetState    = Player_MightyJumpAbility;
+            entity->stateAbility    = Player_MightyJumpAbility;
             entity->sensorY         = 0x140000;
             break;
         case ID_RAY:
@@ -989,7 +989,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 entity->cameraOffset = 0x50000;
             }
             entity->tailSpriteIndex = -1;
-            entity->movesetState    = Player_RayJumpAbility;
+            entity->stateAbility    = Player_RayJumpAbility;
             entity->sensorY         = 0x140000;
             break;
 #endif
@@ -1009,10 +1009,10 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
                 entity->cameraOffset = 0x50000;
             }
             entity->tailSpriteIndex = -1;
-            entity->movesetState    = Player_SonicJumpAbility;
+            entity->stateAbility    = Player_SonicJumpAbility;
             entity->sensorY         = 0x140000;
             if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
-                entity->peeloutState = Player_StartPeelout;
+                entity->statePeelout = Player_StartPeelout;
                 for (int32 f = 0; f < 4; ++f) {
                     SpriteFrame *dst = RSDK.GetFrame(entity->aniFrames, ANI_DASH, f);
                     SpriteFrame *src = RSDK.GetFrame(entity->aniFrames, ANI_FLY, f);
@@ -1117,7 +1117,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
 #if RETRO_USE_PLUS
     RSDK.StopSfx(Player->sfxSwapFail);
     if (globals->medalMods & getMod(SECRET_SUPERDASH))
-        player->movesetState = ERZStart_Player_StartSuperFly;
+        player->stateAbility = ERZStart_Player_StartSuperFly;
 #endif
 
     switch (player->characterID) {
@@ -1572,7 +1572,7 @@ void Player_HandleSuperForm(void)
     if (self->superState == SUPERSTATE_FADEOUT) {
         switch (self->characterID) {
             case ID_SONIC:
-                self->movesetState = Player_SonicJumpAbility;
+                self->stateAbility = Player_SonicJumpAbility;
                 for (int32 i = 0; i < 6; ++i) {
                     RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i]);
                     RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 6]);
@@ -1580,11 +1580,11 @@ void Player_HandleSuperForm(void)
                 self->superBlendAmount = 256;
                 self->superBlendState  = 1;
                 break;
-            case ID_TAILS: self->movesetState = Player_TailsJumpAbility; break;
-            case ID_KNUCKLES: self->movesetState = Player_KnuxJumpAbility; break;
+            case ID_TAILS: self->stateAbility = Player_TailsJumpAbility; break;
+            case ID_KNUCKLES: self->stateAbility = Player_KnuxJumpAbility; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: self->movesetState = Player_MightyJumpAbility; break;
-            case ID_RAY: self->movesetState = Player_RayJumpAbility; break;
+            case ID_MIGHTY: self->stateAbility = Player_MightyJumpAbility; break;
+            case ID_RAY: self->stateAbility = Player_RayJumpAbility; break;
 #endif
             default: break;
         }
@@ -3668,15 +3668,13 @@ void Player_State_Air(void)
             case ANI_JOG: RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->animator, false, 0); break;
             case ANI_JUMP:
                 if (self->velocity.y >= self->jumpCap)
-                    StateMachine_Run(self->movesetState);
+                    StateMachine_Run(self->stateAbility);
                 break;
             case ANI_SKID:
-                if (self->skidding < 1) {
+                if (self->skidding <= 0) 
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->animator, false, self->animator.frameID);
-                }
-                else {
+                else 
                     self->skidding--;
-                }
                 break;
             case ANI_SPINDASH: RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0); break;
             default: break;
@@ -3802,8 +3800,8 @@ void Player_State_LookUp(void)
             }
         }
         if (self->jumpPress) {
-            if (self->peeloutState) {
-                StateMachine_Run(self->peeloutState);
+            if (self->statePeelout) {
+                StateMachine_Run(self->statePeelout);
             }
             else {
                 Player_StartJump(self);

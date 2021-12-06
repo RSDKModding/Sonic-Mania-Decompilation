@@ -598,7 +598,7 @@ bool32 ERZStart_CutsceneState_StartFight(EntityCutsceneSeq *host)
         player1->abilityValues[0]   = 60;
         player1->velocity.x         = 0x160000;
         player1->onGround           = false;
-        player1->movesetState       = ERZStart_Player_StartSuperFly;
+        player1->stateAbility       = ERZStart_Player_StartSuperFly;
         RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;

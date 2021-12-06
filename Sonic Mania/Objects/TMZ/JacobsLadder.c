@@ -43,7 +43,7 @@ void JacobsLadder_Update(void)
                         player->jumpAbilityTimer = 1;
                         player->state            = Player_State_Air;
                         SceneInfo->entity   = (Entity *)player;
-                        player->movesetState();
+                        player->stateAbility();
                         SceneInfo->entity = (Entity *)self;
                     }
                     else {

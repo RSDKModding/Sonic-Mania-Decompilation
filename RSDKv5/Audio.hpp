@@ -15,26 +15,30 @@
 #define UnlockAudioDevice() SDL_UnlockAudio()
 
 struct SFXInfo {
-    uint hash[4];
+    uint32 hash[4];
     float *buffer;
     size_t length;
-    int playCount;
-    byte maxConcurrentPlays;
-    byte scope;
+    int32 playCount;
+    uint8 maxConcurrentPlays;
+    uint8 scope;
+    //I need this to fix sfx loopPoints
+#if !RETRO_USE_ORIGINAL_CODE
+    uint8 channelCount;
+#endif
 };
 
 struct ChannelInfo {
     float *samplePtr;
     float pan;
     float volume;
-    int speed;
+    int32 speed;
     size_t sampleLength;
-    int bufferPos;
-    int playIndex;
-    uint loop;
-    short soundID;
-    byte priority;
-    byte state;
+    int32 bufferPos;
+    int32 playIndex;
+    uint32 loop;
+    int16 soundID;
+    uint8 priority;
+    uint8 state;
 };
 
 enum ChannelStates { CHANNEL_NONE, CHANNEL_SFX, CHANNEL_STREAMING, CHANNEL_STREAM_LOAD, CHANNEL_PAUSED = 0x40 };
