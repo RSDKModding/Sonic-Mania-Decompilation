@@ -129,7 +129,7 @@ void loadMods()
             fClose(configFile);
             auto ini = iniparser_load(mod_config.c_str());
 
-            int32 c             = iniparser_getsecnkeys(ini, "Mods");
+            int32 c           = iniparser_getsecnkeys(ini, "Mods");
             const char **keys = new const char *[c];
             iniparser_getseckeys(ini, "Mods", keys);
 
@@ -296,7 +296,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::string buf;
             while (std::getline(stream, buf, ',')) {
                 int32 mode = 0;
-                buf      = trim(buf);
+                buf        = trim(buf);
 #if RETRO_PLATFORM == RETRO_WIN
                 if (MODAPI_ENDS_WITH(".dll"))
 #elif RETRO_PLATFORM == RETRO_OSX
@@ -317,7 +317,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                     autodec = ".so";
 #endif
-                    file = fs::path(modDir + "/" + buf + autodec);
+                    file += autodec;
                     if (fs::exists(file)) {
                         buf += autodec;
                         mode = 1;
@@ -325,7 +325,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 }
                 if (!mode) {
                     // lang mod time
-                    int32 i      = 0;
+                    int32 i    = 0;
                     bool found = false;
                     for (auto ext : langMap) {
                         i++;
@@ -333,7 +333,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                             found = true;
                             break;
                         }
-                        file = fs::path(modDir + "/" + buf + ext.first);
+                        file += ext.first;
                         if (fs::exists(file)) {
                             buf += ext.first;
                             found = true;
@@ -426,7 +426,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     std::advance(it, mode - 2);
                     const char *fid = info->folder.c_str();
                     const char *log = buf.c_str();
-                    int32 isSTD       = 0;
+                    int32 isSTD     = 0;
                     modLink res     = (*(newLangLink *)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
                     if (isSTD)
                         info->linkModLogic.push_back(*(modLinkSTD *)res);
@@ -447,12 +447,12 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
         if (set) {
             fClose(set);
             using namespace std;
-            auto ini = iniparser_load((modDir + "/modSettings.ini").c_str());
-            int32 sec  = iniparser_getnsec(ini);
+            auto ini  = iniparser_load((modDir + "/modSettings.ini").c_str());
+            int32 sec = iniparser_getnsec(ini);
             if (sec) {
                 for (int32 i = 0; i < sec; ++i) {
                     const char *secn  = iniparser_getsecname(ini, i);
-                    int32 len           = iniparser_getsecnkeys(ini, secn);
+                    int32 len         = iniparser_getsecnkeys(ini, secn);
                     const char **keys = new const char *[len];
                     iniparser_getseckeys(ini, secn, keys);
                     map<string, string> secset;
@@ -478,7 +478,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::istringstream stream(cfg);
             std::string buf;
             while (std::getline(stream, buf, ',')) {
-                buf      = trim(buf);
+                buf        = trim(buf);
                 int32 mode = 0;
                 if (MODAPI_ENDS_WITH(".ini"))
                     mode = 1;
@@ -507,11 +507,11 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     if (set) {
                         fClose(set);
                         using namespace std;
-                        auto ini = iniparser_load(file.string().c_str());
-                        int32 sec  = iniparser_getnsec(ini);
+                        auto ini  = iniparser_load(file.string().c_str());
+                        int32 sec = iniparser_getnsec(ini);
                         for (int32 i = 0; i < sec; ++i) {
                             const char *secn  = iniparser_getsecname(ini, i);
-                            int32 len           = iniparser_getsecnkeys(ini, secn);
+                            int32 len         = iniparser_getsecnkeys(ini, secn);
                             const char **keys = new const char *[len];
                             iniparser_getseckeys(ini, secn, keys);
                             for (int32 j = 0; j < len; ++j) info->config[secn][keys[j] + strlen(secn) + 1] = iniparser_getstring(ini, keys[j], "");
@@ -537,7 +537,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 byte kt = kv.second.size();
                 fWrite(&kt, 1, 1, cfg);
                 for (auto kkv : kv.second) {
-                    byte len   = (byte)(kkv.first.length()) & 0x7F;
+                    byte len     = (byte)(kkv.first.length()) & 0x7F;
                     bool32 isint = false;
                     int32 r      = 0;
                     try {
@@ -969,11 +969,10 @@ void SaveSettings()
 // i'm going to hell for this
 // nvm im actually so proud of this func yall have no idea i'm insane
 int32 superLevels = 1;
-void Super(int32 objectID, ModSuper callback, void *data)
+void SuperInternal(ObjectInfo *super, ModSuper callback, void *data)
 {
-    ObjectInfo *super = &objectList[stageObjectIDs[objectID]];
-    Object *before    = NULL;
-    ModInfo* curMod = currentMod;
+    Object *before  = NULL;
+    ModInfo *curMod = currentMod;
     if (HASH_MATCH(super->hash, super->inherited->hash)) {
         for (int i = 0; i < superLevels; i++) {
             before = *super->type;
@@ -1034,8 +1033,10 @@ void Super(int32 objectID, ModSuper callback, void *data)
     }
     *super->type = before;
     superLevels  = 1;
-    currentMod = curMod;
+    currentMod   = curMod;
 }
+
+void Super(int32 objectID, ModSuper callback, void *data) { return SuperInternal(&objectList[stageObjectIDs[objectID]], callback, data); }
 
 void *GetGlobals() { return (void *)globalVarsPtr; }
 
@@ -1073,73 +1074,61 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
                            std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                            std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
 {
+    // TODO: i think i introduced a memleak somewhere here??
+
     ModInfo *curMod = currentMod;
-    int32 preCount    = objectCount + 1;
+    int32 preCount  = objectCount + 1;
     RETRO_HASH(hash);
     GEN_HASH(name, hash);
 
+    int32 superSlot     = preCount;
+    ObjectInfo *inherit = NULL;
     for (int32 i = 0; i < objectCount; ++i) {
         if (HASH_MATCH(objectList[i].hash, hash)) {
             objectCount = i;
+            superSlot   = i;
+            inherit     = new ObjectInfo(objectList[i]);
             --preCount;
             if (!inherited)
                 inherited = name;
             break;
         }
     }
-    ObjectInfo *inherit = NULL;
 
     if (inherited) {
         uint32 hash[4];
         GEN_HASH(inherited, hash);
-        for (int32 i = 0; i < preCount; ++i) {
-            if (HASH_MATCH(objectList[i].hash, hash)) {
-                inherit = new ObjectInfo(objectList[i]);
-                break;
+        if (!inherit)
+            for (int32 i = 0; i < preCount; ++i) {
+                if (HASH_MATCH(objectList[i].hash, hash)) {
+                    inherit = new ObjectInfo(objectList[i]);
+                    break;
+                }
             }
-        }
-        if (inherit) {
-            if (!update)
-                update = []() { Super(sceneInfo.entity->objectID, SUPER_UPDATE, NULL); };
-            if (!lateUpdate)
-                lateUpdate = []() { Super(sceneInfo.entity->objectID, SUPER_LATEUPDATE, NULL); };
-            if (!staticUpdate)
-                staticUpdate = []() { Super(currentObjectID, SUPER_STATICUPDATE, NULL); };
-            if (!draw)
-                draw = []() { Super(sceneInfo.entity->objectID, SUPER_DRAW, NULL); };
-            if (!stageLoad)
-                stageLoad = []() { Super(currentObjectID, SUPER_STAGELOAD, NULL); };
-            if (!serialize)
-                serialize = []() { Super(currentObjectID, SUPER_SERIALIZE, NULL); };
-            if (!editorDraw)
-                editorDraw = []() { Super(currentObjectID, SUPER_EDITORDRAW, NULL); };
-            if (!editorLoad)
-                editorLoad = []() { Super(currentObjectID, SUPER_EDITORLOAD, NULL); };
-            if (!create)
-                create = [](void *data) { Super(sceneInfo.entity->objectID, SUPER_CREATE, data); };
-        }
-        else
+
+        if (!inherit)
             inherited = NULL;
     }
 
     // clang-format off
-    update       = [curMod, update]()           { currentMod = curMod; update();       currentMod = NULL; };
-    lateUpdate   = [curMod, lateUpdate]()       { currentMod = curMod; lateUpdate();   currentMod = NULL; };
-    staticUpdate = [curMod, staticUpdate]()     { currentMod = curMod; staticUpdate(); currentMod = NULL; };
-    draw         = [curMod, draw]()             { currentMod = curMod; draw();         currentMod = NULL; };
-    stageLoad    = [curMod, stageLoad]()        { currentMod = curMod; stageLoad();    currentMod = NULL; };
-    serialize    = [curMod, serialize]()        { currentMod = curMod; serialize();    currentMod = NULL; };
-    editorDraw   = [curMod, editorDraw]()       { currentMod = curMod; editorDraw();   currentMod = NULL; };
-    editorLoad   = [curMod, editorLoad]()       { currentMod = curMod; editorLoad();   currentMod = NULL; };
-    create       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
+    decltype(update) updateU       = [curMod, update]()           { currentMod = curMod; update();       currentMod = NULL; };
+    decltype(update) lateUpdateU   = [curMod, lateUpdate]()       { currentMod = curMod; lateUpdate();   currentMod = NULL; };
+    decltype(update) staticUpdateU = [curMod, staticUpdate]()     { currentMod = curMod; staticUpdate(); currentMod = NULL; };
+    decltype(update) drawU         = [curMod, draw]()             { currentMod = curMod; draw();         currentMod = NULL; };
+    decltype(update) stageLoadU    = [curMod, stageLoad]()        { currentMod = curMod; stageLoad();    currentMod = NULL; };
+    decltype(update) serializeU    = [curMod, serialize]()        { currentMod = curMod; serialize();    currentMod = NULL; };
+    decltype(update) editorDrawU   = [curMod, editorDraw]()       { currentMod = curMod; editorDraw();   currentMod = NULL; };
+    decltype(update) editorLoadU   = [curMod, editorLoad]()       { currentMod = curMod; editorLoad();   currentMod = NULL; };
+    decltype(create) createU       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
     // clang-format on
 
-    RegisterObject_STD(structPtr, name, entitySize, objectSize, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad,
-                       serialize);
+    RegisterObject_STD(structPtr, name, entitySize, objectSize, updateU, lateUpdateU, staticUpdateU, drawU, createU, stageLoadU, editorDrawU,
+                       editorLoadU, serializeU);
 
     if (inherited) {
         ObjectInfo *info = &objectList[objectCount - 1];
         info->inherited  = inherit;
+
         if (HASH_MATCH(info->hash, inherit->hash)) {
             // we override an obj and lets check for structPtr
             if (!info->type) {
@@ -1147,6 +1136,20 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
                 info->objectSize = inherit->objectSize;
             }
         }
+
+        ObjectInfo *copy = new ObjectInfo(*info);
+
+        // clang-format off
+        if (!update)       info->update       = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_UPDATE, NULL);       currentMod = NULL; };
+        if (!lateUpdate)   info->lateUpdate   = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_LATEUPDATE, NULL);   currentMod = NULL; };
+        if (!staticUpdate) info->staticUpdate = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_STATICUPDATE, NULL); currentMod = NULL; };
+        if (!draw)         info->draw         = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_DRAW, NULL);         currentMod = NULL; };
+        if (!stageLoad)    info->stageLoad    = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_STAGELOAD, NULL);    currentMod = NULL; };
+        if (!serialize)    info->serialize    = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_SERIALIZE, NULL);    currentMod = NULL; };
+        if (!editorDraw)   info->editorDraw   = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_EDITORDRAW, NULL);   currentMod = NULL; };
+        if (!editorLoad)   info->editorLoad   = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_EDITORLOAD, NULL);   currentMod = NULL; };
+        if (!create)       info->create       = [curMod, copy](void* data) { currentMod = curMod; SuperInternal(copy, SUPER_CREATE, data);       currentMod = NULL; };
+        // clang-format on
     }
     objectCount = preCount;
 }
