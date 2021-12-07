@@ -144,9 +144,11 @@ bool32 PSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return true;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZ1Intro_EditorDraw(void) {}
 
 void PSZ1Intro_EditorLoad(void) {}
+#endif
 
 void PSZ1Intro_Serialize(void) {}
 #endif

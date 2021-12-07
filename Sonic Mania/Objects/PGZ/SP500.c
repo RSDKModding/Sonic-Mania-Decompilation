@@ -448,9 +448,34 @@ void SP500_Unknown10(void)
     }
 }
 
-void SP500_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void SP500_EditorDraw(void)
+{
+    RSDK_THIS(SP500);
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = (self->len + 4) << 20;
+    self->updateRange.y = 0x800000;
+    self->alpha         = 0xC0;
+    RSDK.SetSpriteAnimation(SP500->aniFrames, 0, &self->animator, true, 0);
 
-void SP500_EditorLoad(void) {}
+    SP500_Draw();
+
+    if (showGizmos()) {
+        self->active = ACTIVE_NORMAL;
+
+        DrawHelpers_DrawRectOutline(0x00FFFF, self->srcC.x, self->srcC.y, self->len << 16, self->height << 16);
+        DrawHelpers_DrawArrow(0x00FFFF, self->position.x, self->position.y, self->srcC.x, self->srcC.y);
+
+        DrawHelpers_DrawRectOutline(0x00FF00, self->srcM.x, self->srcM.y, self->len << 16, self->height << 16);
+        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->srcM.x, self->srcM.y);
+
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->srcY.x, self->srcY.y, self->len << 16, self->height << 16);
+        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->srcY.x, self->srcY.y);
+    }
+}
+
+void SP500_EditorLoad(void) { SP500->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/SP500.bin", SCOPE_STAGE); }
+#endif
 
 void SP500_Serialize(void)
 {

@@ -48,8 +48,10 @@ void SP500MkII_StaticUpdate(void);
 void SP500MkII_Draw(void);
 void SP500MkII_Create(void* data);
 void SP500MkII_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SP500MkII_EditorDraw(void);
 void SP500MkII_EditorLoad(void);
+#endif
 void SP500MkII_Serialize(void);
 
 // Extra Entity Functions

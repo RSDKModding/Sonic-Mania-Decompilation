@@ -11,61 +11,60 @@ void PSZDoor_Update(void)
 
     int32 speed = 0;
     switch (self->open ^ self->orientation) {
-        case 0:
+        case PSZDOOR_ORIENATION_D:
             offsetY = -0x10000;
             speed   = -self->speed;
             break;
-        case 1:
+        case PSZDOOR_ORIENATION_U:
             speed   = self->speed;
             offsetY = 0x10000;
             break;
-        case 2:
+        case PSZDOOR_ORIENATION_L:
             speed   = self->speed;
             offsetX = -0x10000;
             break;
-        case 3:
+        case PSZDOOR_ORIENATION_R:
             offsetX = 0x10000;
             speed   = -self->speed;
             break;
         default: break;
     }
 
-    int32 startX = self->startPos.x;
-    int32 startY = self->startPos.y;
+    int32 startX = self->doorPos.x;
+    int32 startY = self->doorPos.y;
 
-    Vector2 *pos = &self->startPos;
-    if (self->field_70) {
-        if (PSZDoor_Unknown1() > 0) {
-            self->startPos.x += self->speed * (offsetX >> 3);
-            self->startPos.y += self->speed * (offsetY >> 3);
+    if (self->shouldMove) {
+        if (PSZDoor_GetRemainingDistance() > 0) {
+            self->doorPos.x += self->speed * (offsetX >> 3);
+            self->doorPos.y += self->speed * (offsetY >> 3);
             self->rotation += speed;
         }
 
-        if (PSZDoor_Unknown1() < 0) {
-            self->startPos.x = self->field_8C.x;
-            self->startPos.y = self->field_8C.y;
+        if (PSZDoor_GetRemainingDistance() < 0) {
+            self->doorPos.x = self->targetPos.x;
+            self->doorPos.y = self->targetPos.y;
         }
-        if (self->startPos.x == self->field_8C.x && self->startPos.y == self->field_8C.y) {
-            self->field_70 = 0;
-            self->open     = self->open ^ 1;
+        if (self->doorPos.x == self->targetPos.x && self->doorPos.y == self->targetPos.y) {
+            self->shouldMove = false;
+            self->open ^= 1;
         }
     }
 
-    int32 posX = self->startPos.x - startX;
-    int32 posY = self->startPos.y - startY;
+    int32 posX = self->doorPos.x - startX;
+    int32 posY = self->doorPos.y - startY;
 
     bool32 flag = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, pos, &PSZDoor->hitboxes[self->animator1.frameID]) == 1) {
-            if (self->orientation >= 2)
+        if (Player_CheckCollisionBox(player, &self->doorPos, &PSZDoor->hitboxes[self->doorAnimator.frameID]) == C_TOP) {
+            if (self->orientation >= PSZDOOR_ORIENATION_L)
                 player->position.x += posX;
             else
                 player->position.y += posY;
         }
 
         if (self->automatic) {
-            if (self->orientation >= 2) {
+            if (self->orientation >= PSZDOOR_ORIENATION_L) {
                 if (player->position.y < self->position.y) {
                     if (abs(player->position.x - self->position.x) < 0x200000)
                         flag = true;
@@ -79,7 +78,7 @@ void PSZDoor_Update(void)
             }
         }
         else if (self->automatic == 2) {
-            if (self->orientation >= 2) {
+            if (self->orientation >= PSZDOOR_ORIENATION_L) {
                 if (player->position.y > self->position.y) {
                     if (abs(player->position.x - self->position.x) < 0x200000)
                         flag = true;
@@ -93,14 +92,14 @@ void PSZDoor_Update(void)
     }
 
     EntityDoorTrigger *trigger = self->trigger;
-    if (trigger && ((trigger->objectID == DoorTrigger->objectID && trigger->animator2.frameID == 1) || flag)) {
+    if (trigger && ((trigger->objectID == DoorTrigger->objectID && trigger->bulbAnimator.frameID == 1) || flag)) {
         if (self->activeScreens)
             RSDK.PlaySfx(PSZDoor->sfxOpen, false, 255);
-        self->field_84   = self->startPos;
+        self->startPos   = self->doorPos;
         self->trigger    = 0;
-        self->field_70   = true;
-        self->field_8C.x = self->startPos.x + 112 * offsetX;
-        self->field_8C.y = self->startPos.y + 112 * offsetY;
+        self->shouldMove   = true;
+        self->targetPos.x = self->doorPos.x + 112 * offsetX;
+        self->targetPos.y = self->doorPos.y + 112 * offsetY;
     }
 }
 
@@ -113,26 +112,26 @@ void PSZDoor_Draw(void)
     RSDK_THIS(PSZDoor);
     Vector2 drawPos;
 
-    RSDK.DrawSprite(&self->animator1, &self->startPos, false);
+    RSDK.DrawSprite(&self->doorAnimator, &self->doorPos, false);
 
-    self->animator1.frameID = 2;
+    self->doorAnimator.frameID = 2;
     drawPos.x                 = self->position.x + self->offset.x;
     drawPos.y                 = self->position.y + self->offset.y;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->cogAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->doorAnimator, &drawPos, false);
 
-    if (self->orientation < 2)
+    if (self->orientation < PSZDOOR_ORIENATION_L)
         drawPos.x -= 2 * self->offset.x;
     else
         drawPos.y -= 2 * self->offset.y;
 
     int32 rotation     = self->rotation;
     self->rotation = 256 - rotation;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->cogAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->doorAnimator, &drawPos, false);
 
     self->rotation          = rotation;
-    self->animator1.frameID = self->orientation >= 2;
+    self->doorAnimator.frameID = self->orientation >= PSZDOOR_ORIENATION_L;
 }
 
 void PSZDoor_Create(void *data)
@@ -146,41 +145,41 @@ void PSZDoor_Create(void *data)
         self->drawOrder     = Zone->drawOrderLow;
         self->updateRange.y = 0x800000;
         self->updateRange.x = 0x800000;
-        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 0, &self->doorAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 1, &self->cogAnimator, true, 0);
 
-        self->startPos  = self->position;
+        self->doorPos  = self->position;
         self->drawFX    = FX_ROTATE;
         self->direction = self->orientation & 1;
-        if (self->orientation < 2)
+        if (self->orientation < PSZDOOR_ORIENATION_L)
             self->direction = 2 * (self->orientation & 1);
         else
-            self->animator1.frameID = 1;
+            self->doorAnimator.frameID = 1;
 
         switch (self->orientation) {
             case 0:
                 self->offset.y = -0x380000;
                 self->offset.x = -0x130000;
                 if (self->open)
-                    self->startPos.y -= 0x700000;
+                    self->doorPos.y -= 0x700000;
                 break;
             case 1:
                 self->offset.y = 0x380000;
                 self->offset.x = -0x130000;
                 if (self->open)
-                    self->startPos.y += 0x700000;
+                    self->doorPos.y += 0x700000;
                 break;
             case 2:
                 self->offset.x = -0x380000;
                 self->offset.y = -0x130000;
                 if (self->open)
-                    self->startPos.x -= 0x700000;
+                    self->doorPos.x -= 0x700000;
                 break;
             case 3:
                 self->offset.x = 0x380000;
                 self->offset.y = -0x130000;
                 if (self->open)
-                    self->startPos.x += 0x700000;
+                    self->doorPos.x += 0x700000;
                 break;
             default: break;
         }
@@ -211,15 +210,15 @@ void PSZDoor_StageLoad(void)
     PSZDoor->sfxOpen            = RSDK.GetSfx("Stage/Open.wav");
 }
 
-int32 PSZDoor_Unknown1(void)
+int32 PSZDoor_GetRemainingDistance(void)
 {
     RSDK_THIS(PSZDoor);
-    if (self->field_70) {
+    if (self->shouldMove) {
         switch (self->open ^ self->orientation) {
-            case 0: return self->startPos.y - self->field_8C.y; break;
-            case 1: return self->field_8C.y - self->startPos.y; break;
-            case 2: return self->startPos.x - self->field_8C.x; break;
-            case 3: return self->field_8C.x - self->startPos.x; break;
+            case PSZDOOR_ORIENATION_D: return self->doorPos.y - self->targetPos.y; break;
+            case PSZDOOR_ORIENATION_U: return self->targetPos.y - self->doorPos.y; break;
+            case PSZDOOR_ORIENATION_L: return self->doorPos.x - self->targetPos.x; break;
+            case PSZDOOR_ORIENATION_R: return self->targetPos.x - self->doorPos.x; break;
             default: break;
         }
     }
@@ -227,9 +226,102 @@ int32 PSZDoor_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PSZDoor_EditorDraw(void) {}
+void PSZDoor_EditorDraw(void)
+{
+    RSDK_THIS(PSZDoor);
+    self->updateRange.y = 0x800000;
+    self->updateRange.x = 0x800000;
+    RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 0, &self->doorAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 1, &self->cogAnimator, true, 0);
 
-void PSZDoor_EditorLoad(void) {}
+    self->doorPos  = self->position;
+    self->drawFX    = FX_ROTATE;
+    self->direction = self->orientation & 1;
+    if (self->orientation < PSZDOOR_ORIENATION_L)
+        self->direction = 2 * (self->orientation & 1);
+    else
+        self->doorAnimator.frameID = 1;
+
+    switch (self->orientation) {
+        case PSZDOOR_ORIENATION_D:
+            self->offset.y = -0x380000;
+            self->offset.x = -0x130000;
+            if (self->open)
+                self->doorPos.y -= 0x700000;
+            break;
+        case PSZDOOR_ORIENATION_U:
+            self->offset.y = 0x380000;
+            self->offset.x = -0x130000;
+            if (self->open)
+                self->doorPos.y += 0x700000;
+            break;
+        case PSZDOOR_ORIENATION_L:
+            self->offset.x = -0x380000;
+            self->offset.y = -0x130000;
+            if (self->open)
+                self->doorPos.x -= 0x700000;
+            break;
+        case PSZDOOR_ORIENATION_R:
+            self->offset.x = 0x380000;
+            self->offset.y = -0x130000;
+            if (self->open)
+                self->doorPos.x += 0x700000;
+            break;
+        default: break;
+    }
+
+    PSZDoor_Draw();
+
+    if (showGizmos()) {
+        self->doorPos   = self->position;
+        self->inkEffect = INK_BLEND;
+        self->open ^= 1;
+
+        switch (self->orientation) {
+            case PSZDOOR_ORIENATION_D:
+                self->offset.y = -0x380000;
+                self->offset.x = -0x130000;
+                if (self->open)
+                    self->doorPos.y -= 0x700000;
+                break;
+            case PSZDOOR_ORIENATION_U:
+                self->offset.y = 0x380000;
+                self->offset.x = -0x130000;
+                if (self->open)
+                    self->doorPos.y += 0x700000;
+                break;
+            case PSZDOOR_ORIENATION_L:
+                self->offset.x = -0x380000;
+                self->offset.y = -0x130000;
+                if (self->open)
+                    self->doorPos.x -= 0x700000;
+                break;
+            case PSZDOOR_ORIENATION_R:
+                self->offset.x = 0x380000;
+                self->offset.y = -0x130000;
+                if (self->open)
+                    self->doorPos.x += 0x700000;
+                break;
+            default: break;
+        }
+
+        PSZDoor_Draw();
+
+        self->open ^= 1;
+        self->inkEffect = INK_NONE;
+    }
+}
+
+void PSZDoor_EditorLoad(void)
+{
+    PSZDoor->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZDoor.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PSZDoor, orientation);
+    RSDK_ENUM_VAR("Down", PSZDOOR_ORIENATION_D);
+    RSDK_ENUM_VAR("Up", PSZDOOR_ORIENATION_U);
+    RSDK_ENUM_VAR("Left", PSZDOOR_ORIENATION_L);
+    RSDK_ENUM_VAR("Right", PSZDOOR_ORIENATION_R);
+}
 #endif
 
 void PSZDoor_Serialize(void)

@@ -13,8 +13,8 @@ void LRZConvDropper_Update(void)
                 LRZConvDropper_HandleButtonDrop(self);
             break;
         case LRZCONVDROP_TRIGGER_PLAYER: {
-            bool32 dropFlag  = false;
-            bool32 enterFlag = false;
+            bool32 shouldDrop    = false;
+            bool32 playerEntered = false;
 
             self->position.x += self->detectOffset.x;
             self->position.y += self->detectOffset.y;
@@ -29,13 +29,13 @@ void LRZConvDropper_Update(void)
 
                 if (!((1 << playerID) & self->activePlayers) && flag) {
                     if (!player->sidekick)
-                        enterFlag = true;
+                        playerEntered = true;
                     self->activePlayers |= (1 << playerID);
                 }
 
                 if ((1 << playerID) & self->activePlayers) {
                     if (!player->sidekick)
-                        dropFlag = true;
+                        shouldDrop = true;
                     if (!flag)
                         self->activePlayers &= ~(1 << playerID);
                 }
@@ -43,16 +43,13 @@ void LRZConvDropper_Update(void)
             self->position.x -= self->detectOffset.x;
             self->position.y -= self->detectOffset.y;
 
-            if (enterFlag) {
+            if (playerEntered) {
                 if (!self->timerStore || Zone->timer - self->timerStore > self->interval)
                     self->timerStore = Zone->timer;
             }
 
-            int32 timer = 0;
-            if (dropFlag)
-                timer = Zone->timer - self->timerStore;
-
-            if (dropFlag) {
+            if (shouldDrop) {
+                int32 timer = Zone->timer - self->timerStore;
                 if (!((timer + self->intervalOffset) % self->interval))
                     LRZConvDropper_HandleButtonDrop(self);
             }

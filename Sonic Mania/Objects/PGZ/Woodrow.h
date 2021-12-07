@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { WOODROW_BADNIK, WOODROW_BOMB } WoodrowTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -22,11 +24,11 @@ typedef struct {
     uint8 type;
     int32 distUp;
     int32 distDown;
-    uint8 field_68;
+    uint8 activeBombCount;
     uint8 bombCount;
-    uint8 field_6A;
-    uint8 field_6B;
-    int32 field_6C;
+    uint8 bombFallDelay;
+    uint8 moveDelay;
+    int32 collisionFlags;
     Vector2 startPos;
     uint8 startDir;
     Entity *parent;
@@ -60,7 +62,7 @@ void Woodrow_State_Setup(void);
 void Woodrow_Unknown4(void);
 void Woodrow_Unknown5(void);
 void Woodrow_Unknown6(void);
-void Woodrow_Unknown7(void);
-void Woodrow_Unknown8(void);
+void Woodrow_State_Bomb(void);
+void Woodrow_State_BombSpawner(void);
 
 #endif //!OBJ_WOODROW_H

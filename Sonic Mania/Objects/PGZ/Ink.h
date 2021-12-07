@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    INK_C,
+    INK_M,
+    INK_Y,
+}InkTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -18,9 +24,9 @@ typedef struct {
     RSDK_ENTITY
     uint8 type;
     uint8 inkedPlayers;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator bottleAnimator;
+    Animator contentAnimator;
+    Animator splashAnimator;
 } EntityInk;
 
 // Object Struct

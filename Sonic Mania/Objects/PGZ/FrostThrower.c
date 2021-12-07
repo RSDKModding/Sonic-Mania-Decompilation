@@ -16,8 +16,8 @@ void FrostThrower_Draw(void)
 {
     RSDK_THIS(FrostThrower);
     RSDK.DrawSprite(&self->animator1, NULL, false);
-    if (self->flag)
-        FrostThrower_Unknown1();
+    if (self->isActive)
+        FrostThrower_DrawGustFX();
 }
 
 void FrostThrower_Create(void *data)
@@ -39,7 +39,7 @@ void FrostThrower_Create(void *data)
     FrostThrower_Unknown4();
     RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 0, &self->animator1, true, 0);
     RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->animator2, true, 0);
-    self->state = FrostThrower_Unknown5;
+    self->state = FrostThrower_State_IntervalWait;
 }
 
 void FrostThrower_StageLoad(void)
@@ -53,7 +53,7 @@ void FrostThrower_StageLoad(void)
     FrostThrower->sfxFreeze       = RSDK.GetSfx("PSZ/Freeze.wav");
 }
 
-void FrostThrower_Unknown1(void)
+void FrostThrower_DrawGustFX(void)
 {
     RSDK_THIS(FrostThrower);
 
@@ -64,15 +64,15 @@ void FrostThrower_Unknown1(void)
         RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->animator2, true, i);
         for (int32 p = 0; p < count; ++p) {
             Vector2 drawPos;
-            drawPos.x = self->position.x + self->field_C4[pos + p].x;
-            drawPos.y = self->position.y + self->field_C4[pos + p].y;
+            drawPos.x = self->position.x + self->gustPos[pos + p].x;
+            drawPos.y = self->position.y + self->gustPos[pos + p].y;
             RSDK.DrawSprite(&self->animator2, &drawPos, false);
         }
         pos += 3;
     }
 }
 
-void FrostThrower_Unknown2(void)
+void FrostThrower_CheckPlayerCollisions(void)
 {
     RSDK_THIS(FrostThrower);
 
@@ -109,22 +109,22 @@ void FrostThrower_Unknown4(void)
     for (int32 i = 0; i < 4; ++i) {
         if (self->field_B4[i]) {
             for (int32 p = 0; p < self->field_B4[i]; ++p) {
-                self->field_C4[pos + p].x = RSDK.Rand(xMin[i], xMax[i]) << 16;
-                self->field_C4[pos + p].y = RSDK.Rand(yMin[i], yMax[i]) << 16;
+                self->gustPos[pos + p].x = RSDK.Rand(xMin[i], xMax[i]) << 16;
+                self->gustPos[pos + p].y = RSDK.Rand(yMin[i], yMax[i]) << 16;
             }
         }
         pos += 3;
     }
 }
 
-void FrostThrower_Unknown5(void)
+void FrostThrower_State_IntervalWait(void)
 {
     RSDK_THIS(FrostThrower);
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        self->active = ACTIVE_NORMAL;
-        self->timer  = 0;
-        self->flag   = true;
-        self->state  = FrostThrower_Unknown6;
+        self->active   = ACTIVE_NORMAL;
+        self->timer    = 0;
+        self->isActive = true;
+        self->state    = FrostThrower_Unknown6;
         RSDK.PlaySfx(FrostThrower->sfxFrostThrower, false, 255);
     }
 }
@@ -138,7 +138,7 @@ void FrostThrower_Unknown6(void)
     else
         self->hitbox.bottom = 4 * self->timer;
 
-    FrostThrower_Unknown2();
+    FrostThrower_CheckPlayerCollisions();
 
     self->field_A4[0] = 0;
     if (self->timer > 3)
@@ -195,7 +195,7 @@ void FrostThrower_Unknown7(void)
     RSDK_THIS(FrostThrower);
     self->hitbox.top    = 4 * self->timer;
     self->hitbox.bottom = 80;
-    FrostThrower_Unknown2();
+    FrostThrower_CheckPlayerCollisions();
 
     self->field_A4[0] = 2;
     if (self->timer <= 8) {
@@ -246,10 +246,10 @@ void FrostThrower_Unknown7(void)
     FrostThrower_Unknown4();
 
     if (self->timer >= 20) {
-        self->active = ACTIVE_BOUNDS;
-        self->flag   = false;
-        self->state  = FrostThrower_Unknown5;
-        self->timer  = 0;
+        self->active   = ACTIVE_BOUNDS;
+        self->isActive = false;
+        self->state    = FrostThrower_State_IntervalWait;
+        self->timer    = 0;
     }
     else {
         self->timer++;
@@ -257,9 +257,15 @@ void FrostThrower_Unknown7(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FrostThrower_EditorDraw(void) {}
+void FrostThrower_EditorDraw(void) { FrostThrower_Draw(); }
 
-void FrostThrower_EditorLoad(void) {}
+void FrostThrower_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        FrostThrower->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/FrostThrower.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("PSZ2"))
+        FrostThrower->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/FrostThrower.bin", SCOPE_STAGE);
+}
 #endif
 
 void FrostThrower_Serialize(void)

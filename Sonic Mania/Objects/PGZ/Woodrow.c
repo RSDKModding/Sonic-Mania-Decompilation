@@ -21,43 +21,43 @@ void Woodrow_Draw(void)
 void Woodrow_Create(void *data)
 {
     RSDK_THIS(Woodrow);
-    self->visible = 1;
+    self->visible = true;
     self->drawFX |= FX_FLIP;
     self->drawOrder     = Zone->drawOrderLow - 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     if (!SceneInfo->inEditor) {
-        if (self->type == 1) {
+        if (self->type == WOODROW_BOMB) {
             self->startPos.x = self->position.x;
             self->startPos.y = self->position.y;
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 2, &self->animator, true, 0);
-            self->state = Woodrow_Unknown8;
+            self->state = Woodrow_State_BombSpawner;
         }
         else if (data) {
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 3, &self->animator, true, 0);
-            self->state = Woodrow_Unknown7;
+            self->state = Woodrow_State_Bomb;
         }
         else {
-            self->drawOrder = Zone->drawOrderHigh;
-            self->bombCount      = 0;
-            int32 pos           = SceneInfo->entitySlot + 1;
-            EntityWoodrow *bombSpawn                   = RSDK_GET_ENTITY(pos, Woodrow);
+            self->drawOrder          = Zone->drawOrderHigh;
+            self->bombCount          = 0;
+            int32 pos                = SceneInfo->entitySlot + 1;
+            EntityWoodrow *bombSpawn = RSDK_GET_ENTITY(pos, Woodrow);
             while (bombSpawn->objectID == Woodrow->objectID) {
-                if (bombSpawn->type != 1)
+                if (bombSpawn->type != WOODROW_BOMB)
                     break;
                 bombSpawn->parent = (Entity *)self;
                 ++self->bombCount;
                 ++pos;
                 bombSpawn = RSDK_GET_ENTITY(pos, Woodrow);
             }
-            self->startPos.x = self->position.x;
-            self->startPos.y = self->position.y;
-            self->startDir   = self->direction;
-            self->field_6A   = 60;
-            self->distUp     = self->position.y - (self->distUp << 16);
-            self->distDown   = self->position.y + (self->distDown << 16);
-            self->field_6B   = RSDK.Rand(15, 120);
+            self->startPos.x    = self->position.x;
+            self->startPos.y    = self->position.y;
+            self->startDir      = self->direction;
+            self->bombFallDelay = 60;
+            self->distUp        = self->position.y - (self->distUp << 16);
+            self->distDown      = self->position.y + (self->distDown << 16);
+            self->moveDelay     = RSDK.Rand(15, 120);
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, true, 0);
             self->state = Woodrow_State_Setup;
         }
@@ -102,7 +102,7 @@ void Woodrow_DebugSpawn(void)
 void Woodrow_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Woodrow_CheckPlayerCollisions(void)
@@ -117,26 +117,26 @@ void Woodrow_CheckPlayerCollisions(void)
         }
         else if (player->state != Ice_State_FrozenPlayer) {
             if (Player_CheckCollisionTouch(player, self, &Woodrow->hitbox3)) {
-                if (self->field_6C == 1)
-                    self->field_6A = 30;
+                if (self->collisionFlags == 1)
+                    self->bombFallDelay = 30;
                 flags |= 2;
-                self->field_6C |= 2;
+                self->collisionFlags |= 2;
             }
             else if (Player_CheckCollisionTouch(player, self, &Woodrow->hitbox2)) {
-                self->field_6C |= 1;
+                self->collisionFlags |= 1;
                 flags |= 1;
             }
         }
     }
 
     if (flags) {
-        if (flags == 1 && self->field_6A > 30)
-            self->field_6A = 30;
+        if (flags == 1 && self->bombFallDelay > 30)
+            self->bombFallDelay = 30;
     }
     else {
         if (self->animator.animationID == 1)
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 4, &self->animator, false, 0);
-        self->field_6C = 0;
+        self->collisionFlags = 0;
     }
 }
 
@@ -166,19 +166,19 @@ void Woodrow_Unknown4(void)
     RSDK_THIS(Woodrow);
     RSDK.ProcessAnimation(&self->animator);
 
-    if (self->field_6C <= 1) {
+    if (self->collisionFlags <= 1) {
         if (self->animator.animationID <= 3) {
             if (self->animator.animationID == 1)
                 RSDK.SetSpriteAnimation(Woodrow->aniFrames, 4, &self->animator, false, 0);
-            self->field_6C = 0;
+            self->collisionFlags = 0;
         }
         else if (self->animator.frameID == self->animator.frameCount - 1) {
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, false, 0);
         }
         if ((self->distUp == self->distDown) != self->startPos.y) {
-            if (!--self->field_6B) {
-                self->field_6B = RSDK.Rand(15, 120);
-                self->field_6A = RSDK.Rand(8, 30);
+            if (!--self->moveDelay) {
+                self->moveDelay     = RSDK.Rand(15, 120);
+                self->bombFallDelay = RSDK.Rand(8, 30);
 
                 if (self->position.y > self->distUp) {
                     if (self->position.y < self->distDown && RSDK.Rand(0, 2) == 1)
@@ -196,59 +196,49 @@ void Woodrow_Unknown4(void)
                     RSDK.SetSpriteAnimation(Woodrow->aniFrames, 5, &self->animator, true, 0);
             }
         }
-        Woodrow_CheckPlayerCollisions();
-        Woodrow_CheckOnScreen();
     }
     else {
         if (!(Zone->timer & 7))
             RSDK.PlaySfx(Woodrow->sfxPeck, false, 255);
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 1, &self->animator, false, 0);
 
-        if (--self->field_6A) {
-            Woodrow_CheckPlayerCollisions();
-            Woodrow_CheckOnScreen();
-        }
-        else if (!self->bombCount) {
-            self->field_6A = -76;
-            if (self->field_68 == 0) {
-                self->field_68 = 1;
-                Woodrow_CheckPlayerCollisions();
-                Woodrow_CheckOnScreen();
+        if (!--self->bombFallDelay) {
+            if (!self->bombCount) {
+                self->bombFallDelay = -76;
+                if (self->activeBombCount == 0) {
+                    self->activeBombCount = 1;
+                }
+                else {
+                    self->collisionFlags = 0;
+                }
+            }
+            if (self->activeBombCount >= self->bombCount) {
+                self->bombFallDelay  = 30;
+                self->collisionFlags = 0;
             }
             else {
-                self->field_6C = 0;
-                Woodrow_CheckPlayerCollisions();
-                Woodrow_CheckOnScreen();
+                int32 pos = SceneInfo->entitySlot + 1;
+
+                EntityWoodrow *bombSpawn = NULL;
+                do {
+                    bombSpawn = RSDK_GET_ENTITY(pos + RSDK.Rand(0, self->bombCount), Woodrow);
+                } while (bombSpawn->activeBombCount);
+
+                EntityWoodrow *bomb = CREATE_ENTITY(Woodrow, intToVoid(true), bombSpawn->position.x, bombSpawn->position.y);
+                bombSpawn->position.y -= 0x100000;
+                bombSpawn->bombFallDelay   = 120;
+                bombSpawn->activeBombCount = 32;
+                bombSpawn->active          = ACTIVE_NORMAL;
+                bomb->parent               = (Entity *)bombSpawn->parent;
+                if (++self->activeBombCount == self->bombCount)
+                    self->bombFallDelay = -76;
+                else
+                    self->bombFallDelay = 60;
             }
         }
-        if (self->field_68 >= self->bombCount) {
-            self->field_6A = 30;
-            self->field_6C = 0;
-            Woodrow_CheckPlayerCollisions();
-            Woodrow_CheckOnScreen();
-        }
-        else {
-            int32 pos = SceneInfo->entitySlot + 1;
-
-            EntityWoodrow *bombSpawn = NULL;
-            do {
-                bombSpawn = RSDK_GET_ENTITY(pos + RSDK.Rand(0, self->bombCount), Woodrow);
-            } while (bombSpawn->field_68);
-
-            EntityWoodrow *bomb = CREATE_ENTITY(Woodrow, intToVoid(1), bombSpawn->position.x, bombSpawn->position.y);
-            bombSpawn->position.y -= 0x100000;
-            bombSpawn->field_6A = 120;
-            bombSpawn->field_68 = 32;
-            bombSpawn->active   = ACTIVE_NORMAL;
-            bomb->parent        = (Entity *)bombSpawn->parent;
-            if (++self->field_68 == self->bombCount)
-                self->field_6A = -76;
-            else
-                self->field_6A = 60;
-            Woodrow_CheckPlayerCollisions();
-            Woodrow_CheckOnScreen();
-        }
     }
+    Woodrow_CheckPlayerCollisions();
+    Woodrow_CheckOnScreen();
 }
 
 void Woodrow_Unknown5(void)
@@ -275,7 +265,7 @@ void Woodrow_Unknown6(void)
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
 
-    if (!--self->field_6A) {
+    if (!--self->bombFallDelay) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 4, &self->animator, false, 0);
         self->state = Woodrow_Unknown4;
@@ -290,7 +280,7 @@ void Woodrow_Unknown6(void)
     Woodrow_CheckOnScreen();
 }
 
-void Woodrow_Unknown7(void)
+void Woodrow_State_Bomb(void)
 {
     RSDK_THIS(Woodrow);
     self->position.x += self->velocity.x;
@@ -299,7 +289,7 @@ void Woodrow_Unknown7(void)
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
             RSDK.PlaySfx(Woodrow->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             destroyEntity(self);
         }
         RSDK.ProcessAnimation(&self->animator);
@@ -323,18 +313,18 @@ void Woodrow_Unknown7(void)
     }
 }
 
-void Woodrow_Unknown8(void)
+void Woodrow_State_BombSpawner(void)
 {
     RSDK_THIS(Woodrow);
-    if (self->field_6A) {
+    if (self->bombFallDelay) {
         self->visible = false;
-        self->field_6A--;
+        self->bombFallDelay--;
     }
     else {
         self->visible = true;
-        if (self->field_68) {
+        if (self->activeBombCount) {
             self->position.y += 0x8000;
-            self->field_68--;
+            self->activeBombCount--;
         }
         else {
             EntityWoodrow *parent = (EntityWoodrow *)self->parent;
@@ -350,7 +340,7 @@ void Woodrow_Unknown8(void)
                         self->position.y += RSDK.Rand(-1, 2) << 16;
                     }
                     if (self->active == ACTIVE_NORMAL) {
-                        --parent->field_68;
+                        --parent->activeBombCount;
                         self->active = ACTIVE_BOUNDS;
                     }
                 }
@@ -360,9 +350,42 @@ void Woodrow_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Woodrow_EditorDraw(void) {}
+void Woodrow_EditorDraw(void)
+{
+    RSDK_THIS(Woodrow);
 
-void Woodrow_EditorLoad(void) {}
+    if (self->type == WOODROW_BOMB) {
+        self->startPos.x = self->position.x;
+        self->startPos.y = self->position.y;
+        RSDK.SetSpriteAnimation(Woodrow->aniFrames, 2, &self->animator, true, 0);
+        self->state = Woodrow_State_BombSpawner;
+    }
+    else {
+        self->drawOrder          = Zone->drawOrderHigh;
+        self->startPos.x    = self->position.x;
+        self->startPos.y    = self->position.y;
+        self->startDir      = self->direction;
+        RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, true, 0);
+    }
+
+    Woodrow_Draw();
+}
+
+void Woodrow_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        Woodrow->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Woodrow.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("PSZ2"))
+        Woodrow->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Woodrow.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Woodrow, type);
+    RSDK_ENUM_VAR("Woodrow", WOODROW_BADNIK);
+    RSDK_ENUM_VAR("Bomb", WOODROW_BOMB);
+
+    RSDK_ACTIVE_VAR(Woodrow, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Woodrow_Serialize(void)

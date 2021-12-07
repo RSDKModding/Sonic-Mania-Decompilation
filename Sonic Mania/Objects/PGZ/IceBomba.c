@@ -151,7 +151,7 @@ void IceBomba_Fly_Create(void)
     self->active     = ACTIVE_NORMAL;
     self->angle      = 0;
     self->direction  = self->dir;
-    self->unused_62  = self->dir;
+    self->spawnDir   = self->dir;
     self->velocity.x = 0x8000 * (self->dir ? 1 : -1);
     self->state      = IceBomba_Fly_Idle;
     IceBomba_Fly_Idle();
@@ -160,7 +160,7 @@ void IceBomba_Fly_Create(void)
 void IceBomba_CheckOnScreen(void)
 {
     RSDK_THIS(IceBomba);
-    if (!RSDK.CheckOnScreen(self, 0) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
         self->dip >>= 7;
         self->position.x = self->spawnPos.x;
         self->position.y = self->spawnPos.y;

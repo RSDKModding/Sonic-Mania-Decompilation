@@ -327,9 +327,23 @@ void Shuriken_Unknown14(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Shuriken_EditorDraw(void) {}
+void Shuriken_EditorDraw(void)
+{
+    RSDK_THIS(Shuriken);
+    RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &self->animator, true, 0);
+    self->drawOrder = Zone->drawOrderHigh;
 
-void Shuriken_EditorLoad(void) {}
+    Shuriken_Draw();
+}
+
+void Shuriken_EditorLoad(void)
+{
+    Shuriken->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shuriken.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Shuriken, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Shuriken_Serialize(void)

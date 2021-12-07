@@ -306,6 +306,7 @@ void SP500MkII_Unknown8(void)
     SP500MkII_CheckPlayerCollisions();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SP500MkII_EditorDraw(void)
 {
     SP500MkII_Unknown3();
@@ -314,6 +315,7 @@ void SP500MkII_EditorDraw(void)
 }
 
 void SP500MkII_EditorLoad(void) { SP500MkII->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/SP500MkII.bin", SCOPE_STAGE); }
+#endif
 
 void SP500MkII_Serialize(void)
 {

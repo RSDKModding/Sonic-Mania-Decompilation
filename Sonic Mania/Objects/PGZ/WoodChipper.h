@@ -23,8 +23,8 @@ typedef struct {
     uint16 size;
     int32 speed;
     int32 timer;
-    Vector2 field_68[3];
-    int32 field_80;
+    Vector2 shakeOffsets[3];
+    int32 height;
     uint8 activePlayers;
     Animator animator1;
     Animator animator2;

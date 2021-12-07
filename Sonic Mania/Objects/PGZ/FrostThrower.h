@@ -22,10 +22,10 @@ typedef struct {
     uint16 intervalOffset;
     uint16 duration;
     Hitbox hitbox;
-    bool32 flag;
+    bool32 isActive;
     int32 field_A4[4];
     int32 field_B4[4];
-    Vector2 field_C4[12];
+    Vector2 gustPos[12];
 } EntityFrostThrower;
 
 // Object Struct
@@ -45,11 +45,11 @@ void FrostThrower_EditorLoad(void);
 void FrostThrower_Serialize(void);
 
 // Extra Entity Functions
-void FrostThrower_Unknown1(void);
-void FrostThrower_Unknown2(void);
+void FrostThrower_DrawGustFX(void);
+void FrostThrower_CheckPlayerCollisions(void);
 void FrostThrower_Unknown3(void);
 void FrostThrower_Unknown4(void);
-void FrostThrower_Unknown5(void);
+void FrostThrower_State_IntervalWait(void);
 void FrostThrower_Unknown6(void);
 void FrostThrower_Unknown7(void);
 

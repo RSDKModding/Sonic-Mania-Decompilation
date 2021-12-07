@@ -130,7 +130,7 @@ void HeavyShinobi_StageLoad(void)
     HeavyShinobi->hitbox7.right  = 3;
     HeavyShinobi->hitbox7.bottom = 3;
 
-    RSDK.SetSpriteAnimation(0xFFFF, 0, HeavyShinobi->animator1, true, 0);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[0], true, 0);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[1], true, 0);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[2], true, 0);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[3], true, 0);
@@ -620,6 +620,7 @@ void HeavyShinobi_StateDraw_Unknown1(void)
 {
     RSDK_THIS(HeavyShinobi);
     RSDK.DrawSprite(&self->animator2, NULL, false);
+
     self->inkEffect = INK_ALPHA;
     self->alpha     = 0x60;
 
@@ -631,7 +632,8 @@ void HeavyShinobi_StateDraw_Unknown1(void)
     self->inkEffect = INK_NONE;
     if (HeavyShinobi->invincibilityTimer & 1)
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
-    RSDK.DrawSprite(&self->animator1, 0, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+
     RSDK.SetPaletteEntry(0, 128, 0x000000);
 }
 
@@ -977,9 +979,53 @@ void HeavyShinobi_StateDraw4_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void HeavyShinobi_EditorDraw(void) {}
+void HeavyShinobi_EditorDraw(void)
+{
+    RSDK_THIS(HeavyShinobi);
+    self->active    = ACTIVE_BOUNDS;
+    self->visible   = false;
+    self->drawOrder = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->animator2, true, 0);
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
-void HeavyShinobi_EditorLoad(void) {}
+    HeavyShinobi_StateDraw_Unknown1();
+
+    if (showGizmos()) {
+        int32 boundsL = (self->position.x >> 16) - WIDE_SCR_XCENTER - 80;
+        int32 boundsR = (self->position.x >> 16) + WIDE_SCR_XCENTER + 80;
+        int32 boundsB = (self->position.y >> 16) + 68;
+
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER - 80, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 80, 68);
+
+        Vector2 startPos = self->position;
+
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = true;
+        self->drawOrder = Zone->fgLayerHigh - 1;
+        RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
+
+        self->position.x = (boundsL + 40) << 16;
+        self->position.y = (boundsB - 99) << 16;
+        HeavyShinobi_StateDraw4_Unknown1();
+
+        self->position.x = (boundsR - 40) << 16;
+        self->position.y = (boundsB - 99) << 16;
+        HeavyShinobi_StateDraw4_Unknown1();
+
+        self->position = startPos;
+    }
+}
+
+void HeavyShinobi_EditorLoad(void)
+{
+    HeavyShinobi->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[0], true, 0);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[1], true, 0);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[2], true, 0);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[3], true, 0);
+}
 #endif
 
 void HeavyShinobi_Serialize(void) {}

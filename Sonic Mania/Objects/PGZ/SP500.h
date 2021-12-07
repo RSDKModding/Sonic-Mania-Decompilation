@@ -56,8 +56,10 @@ void SP500_StaticUpdate(void);
 void SP500_Draw(void);
 void SP500_Create(void* data);
 void SP500_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SP500_EditorDraw(void);
 void SP500_EditorLoad(void);
+#endif
 void SP500_Serialize(void);
 
 // Extra Entity Functions

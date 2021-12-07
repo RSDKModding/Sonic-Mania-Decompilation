@@ -21,7 +21,7 @@ void PSZLauncher_Draw(void)
 void PSZLauncher_Create(void *data)
 {
     RSDK_THIS(PSZLauncher);
-    self->visible   = 1;
+    self->visible   = true;
     self->drawOrder = Zone->drawOrderHigh - 1;
     self->drawFX    = FX_FLIP;
     if (SceneInfo->inEditor && !self->power)
@@ -136,14 +136,26 @@ void PSZLauncher_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PSZLauncher_EditorDraw(void) {}
+void PSZLauncher_EditorDraw(void)
+{
+    RSDK_THIS(PSZLauncher);
+    RSDK.SetSpriteAnimation(PSZLauncher->aniFrames, 0, &self->animator, true, 0);
 
-void PSZLauncher_EditorLoad(void) {}
+    PSZLauncher_Draw();
+}
+
+void PSZLauncher_EditorLoad(void)
+{
+    PSZLauncher->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZLauncher.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PSZLauncher, direction);
+    RSDK_ENUM_VAR("Up", FLIP_NONE);
+    RSDK_ENUM_VAR("Down", FLIP_X);
+}
 #endif
 
 void PSZLauncher_Serialize(void)
 {
-    RSDK_EDITABLE_VAR(PSZLauncher, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(PSZLauncher, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(PSZLauncher, VAR_UINT8, power);
 }

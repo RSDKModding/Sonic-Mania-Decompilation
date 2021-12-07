@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DOORTRIGGER_ORIENATION_L,
+    DOORTRIGGER_ORIENATION_R,
+    DOORTRIGGER_ORIENATION_U,
+    DOORTRIGGER_ORIENATION_D,
+} DoorTriggerOrientations;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -16,8 +23,8 @@ typedef struct {
     RSDK_ENTITY
     uint8 orientation;
     uint8 id;
-    Animator animator1;
-    Animator animator2;
+    Animator baseAnimator;
+    Animator bulbAnimator;
 } EntityDoorTrigger;
 
 // Object Struct

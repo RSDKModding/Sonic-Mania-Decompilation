@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CRATE_FRAME_BLUE,
+    CRATE_FRAME_ORANGE_BROKEN,
+    CRATE_FRAME_ORANGE,
+    CRATE_FRAME_BLUE_BG,
+}CrateFrameIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -36,9 +43,10 @@ void Crate_Serialize(void);
 void Crate_Break(EntityCrate *entity);
 void Crate_MoveY(EntityCrate *self, int32 offset);
 bool32 Crate_Collide(void);
-void Crate_Null1(void);
-void Crate_ApplyGravity(void);
-void Crate_WaitToFall(void);
-void Crate_Fall(void);
+
+void Crate_State_None(void);
+void Crate_State_ApplyGravity(void);
+void Crate_State_WaitToFall(void);
+void Crate_State_Fall(void);
 
 #endif //!OBJ_CRATE_H

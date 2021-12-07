@@ -213,7 +213,8 @@ void IceSpring_Shatter(int32 velX, int32 velY)
 void IceSpring_EditorDraw(void)
 {
     RSDK_THIS(IceSpring);
-    RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->type, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->type % 3, &self->animator, true, 0);
+    self->direction = self->flipFlag;
 
     IceSpring_Draw();
 }
@@ -222,7 +223,7 @@ void IceSpring_EditorLoad(void)
 {
     IceSpring->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/IceSpring.bin", SCOPE_STAGE);
 
-    RSDK_ACTIVE_VAR(IceSpring, planeFilter);
+    RSDK_ACTIVE_VAR(IceSpring, type);
     RSDK_ENUM_VAR("Vertical", ICESPRING_VERTICAL);
     RSDK_ENUM_VAR("Horizontal", ICESPRING_HORIZONTAL);
     RSDK_ENUM_VAR("Diagonal", ICESPRING_DIAGONAL);

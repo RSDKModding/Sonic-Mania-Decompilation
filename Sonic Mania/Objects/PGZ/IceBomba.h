@@ -17,16 +17,16 @@ typedef struct {
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
-	StateMachine(state);
-	uint8 dir;
-	uint16 dist;
-	uint16 dip;
-	uint8 unused_62;
-	Vector2 spawnPos;
-	uint32 spawnDist;
-	Animator animator;
-	Animator wingAnimator;
-	Animator bombAnimator;
+    StateMachine(state);
+    uint8 dir;
+    uint16 dist;
+    uint16 dip;
+    uint8 spawnDir;
+    Vector2 spawnPos;
+    uint32 spawnDist;
+    Animator animator;
+    Animator wingAnimator;
+    Animator bombAnimator;
 } EntityIceBomba;
 
 // Object Struct

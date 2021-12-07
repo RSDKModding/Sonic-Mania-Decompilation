@@ -5,16 +5,16 @@ ObjectDoorTrigger *DoorTrigger;
 void DoorTrigger_Update(void)
 {
     RSDK_THIS(DoorTrigger);
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator2.frameID) {
-        if (self->id-- == 1) {
-            self->id = RSDK.Rand(15, 121);
-            int32 anim   = 0;
+    RSDK.ProcessAnimation(&self->baseAnimator);
+    if (self->bulbAnimator.frameID) {
+        if (!--self->id) {
+            self->id   = RSDK.Rand(15, 121);
+            int32 anim = 0;
             switch (self->orientation) {
-                case 0:
-                case 1: anim = 3; break;
-                case 2:
-                case 3: anim = 4; break;
+                case DOORTRIGGER_ORIENATION_L:
+                case DOORTRIGGER_ORIENATION_R: anim = 3; break;
+                case DOORTRIGGER_ORIENATION_U:
+                case DOORTRIGGER_ORIENATION_D: anim = 4; break;
                 default: break;
             }
 
@@ -30,33 +30,9 @@ void DoorTrigger_Update(void)
     else {
         foreach_active(Player, player)
         {
-            int32 anim    = player->animator.animationID;
-            bool32 flag = anim == ANI_JUMP;
-            switch (player->characterID) {
-                case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
-#if RETRO_USE_PLUS
-                case ID_MIGHTY: flag |= anim == ANI_DROPDASH; break;
-#endif
-                case ID_TAILS:
-                    if (anim != ANI_JUMP) {
-                        flag = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;
-                        if (player->position.y <= self->position.y)
-                            flag = false;
-                    }
-                    break;
-                case ID_KNUCKLES: flag |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
-                default: break;
-            }
-
-            if (player->sidekick)
-                flag = false;
-
-            if (!flag) {
-                Player_CheckCollisionBox(player, self, &DoorTrigger->hitboxes[self->animator1.frameID]);
-            }
-            else {
-                if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxes[self->animator1.frameID])) {
-                    self->animator2.frameID = 1;
+            if (!player->sidekick && Player_CheckAttacking(player, self)) {
+                if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxes[self->baseAnimator.frameID])) {
+                    self->bulbAnimator.frameID = 1;
                     if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
                         player->velocity.x = -player->velocity.x >> 1;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
@@ -64,7 +40,7 @@ void DoorTrigger_Update(void)
                     }
                     else {
                         int32 x = 0, y = 0;
-                        if (self->animator1.frameID) {
+                        if (self->baseAnimator.frameID) {
                             x = player->position.x - self->position.x;
                             if (self->direction)
                                 y = (player->position.y - self->position.y) - 0xE0000;
@@ -100,10 +76,10 @@ void DoorTrigger_Update(void)
                     int32 spawnX = self->position.x;
                     int32 spawnY = self->position.y;
                     switch (self->orientation) {
-                        case 0: spawnX -= 0x100000; break;
-                        case 1: spawnX += 0x100000; break;
-                        case 2: spawnY -= 0x100000; break;
-                        case 3: spawnY += 0x100000; break;
+                        case DOORTRIGGER_ORIENATION_L: spawnX -= 0x100000; break;
+                        case DOORTRIGGER_ORIENATION_R: spawnX += 0x100000; break;
+                        case DOORTRIGGER_ORIENATION_U: spawnY -= 0x100000; break;
+                        case DOORTRIGGER_ORIENATION_D: spawnY += 0x100000; break;
                         default: break;
                     }
                     for (int32 i = 0; i < 8; ++i) {
@@ -123,6 +99,9 @@ void DoorTrigger_Update(void)
                     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), spawnX, spawnY)->drawOrder = Zone->drawOrderHigh;
                 }
             }
+            else {
+                Player_CheckCollisionBox(player, self, &DoorTrigger->hitboxes[self->baseAnimator.frameID]);
+            }
         }
     }
 }
@@ -134,26 +113,27 @@ void DoorTrigger_StaticUpdate(void) {}
 void DoorTrigger_Draw(void)
 {
     RSDK_THIS(DoorTrigger);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    if (!self->animator2.frameID && !(Zone->timer & 1)) {
-        self->inkEffect         = INK_ADD;
-        self->animator2.frameID = 2;
-        self->alpha             = ((56 * RSDK.Sin256(Zone->timer)) >> 8) + 184;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
 
-        self->animator2.frameID = 3;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
+    RSDK.DrawSprite(&self->bulbAnimator, NULL, false);
+    if (!self->bulbAnimator.frameID && !(Zone->timer & 1)) {
+        self->inkEffect            = INK_ADD;
+        self->bulbAnimator.frameID = 2;
+        self->alpha                = ((56 * RSDK.Sin256(Zone->timer)) >> 8) + 184;
+        RSDK.DrawSprite(&self->bulbAnimator, NULL, false);
 
-        self->animator2.frameID = 0;
-        self->inkEffect         = INK_NONE;
+        self->bulbAnimator.frameID = 3;
+        RSDK.DrawSprite(&self->bulbAnimator, NULL, false);
+
+        self->bulbAnimator.frameID = 0;
+        self->inkEffect            = INK_NONE;
     }
 }
 
 void DoorTrigger_Create(void *data)
 {
     RSDK_THIS(DoorTrigger);
-    
+
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
@@ -161,16 +141,16 @@ void DoorTrigger_Create(void *data)
         self->drawOrder     = Zone->drawOrderHigh;
         self->updateRange.y = 0x800000;
         self->updateRange.x = 0x800000;
-        RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->baseAnimator, true, 0);
 
         self->direction = self->orientation & 1;
-        if (self->orientation < 2) {
-            RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 1, &self->animator2, true, 0);
+        if (self->orientation < DOORTRIGGER_ORIENATION_U) {
+            RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 1, &self->bulbAnimator, true, 0);
         }
         else {
-            self->animator1.frameID = 1;
+            self->baseAnimator.frameID = 1;
             self->direction *= FLIP_Y;
-            RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 2, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 2, &self->bulbAnimator, true, 0);
         }
     }
 }
@@ -191,9 +171,39 @@ void DoorTrigger_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void DoorTrigger_EditorDraw(void) {}
+void DoorTrigger_EditorDraw(void)
+{
+    RSDK_THIS(DoorTrigger);
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->updateRange.y = 0x800000;
+    self->updateRange.x = 0x800000;
+    RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->baseAnimator, true, 0);
 
-void DoorTrigger_EditorLoad(void) {}
+    self->direction = self->orientation & 1;
+    if (self->orientation < DOORTRIGGER_ORIENATION_U) {
+        RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 1, &self->bulbAnimator, true, 0);
+    }
+    else {
+        self->baseAnimator.frameID = 1;
+        self->direction *= FLIP_Y;
+        RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 2, &self->bulbAnimator, true, 0);
+    }
+
+    DoorTrigger_Draw();
+}
+
+void DoorTrigger_EditorLoad(void)
+{
+    DoorTrigger->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/DoorTrigger.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(DoorTrigger, orientation);
+    RSDK_ENUM_VAR("Left", DOORTRIGGER_ORIENATION_L);
+    RSDK_ENUM_VAR("Right", DOORTRIGGER_ORIENATION_R);
+    RSDK_ENUM_VAR("Up", DOORTRIGGER_ORIENATION_U);
+    RSDK_ENUM_VAR("Down", DOORTRIGGER_ORIENATION_D);
+}
 #endif
 
 void DoorTrigger_Serialize(void)

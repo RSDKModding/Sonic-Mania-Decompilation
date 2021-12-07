@@ -74,9 +74,30 @@ void PSZEggman_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PSZEggman_EditorDraw(void) {}
+void PSZEggman_EditorDraw(void)
+{
+    RSDK_THIS(PSZEggman);
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->drawPos.x     = self->position.x - 0x180000;
+    self->drawPos.y     = self->position.y + 0x10000;
+    self->alpha         = 0x40;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 1, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(PSZEggman->controlFrames, 2, &self->animator4, true, 0);
+    RSDK.SetSpriteAnimation(PSZEggman->aniFrames, 0, &self->animator, true, 0);
 
-void PSZEggman_EditorLoad(void) {}
+    PSZEggman_Draw();
+}
+
+void PSZEggman_EditorLoad(void)
+{
+    PSZEggman->controlFrames = RSDK.LoadSpriteAnimation("PSZ2/ControlPanel.bin", SCOPE_STAGE);
+    PSZEggman->aniFrames     = RSDK.LoadSpriteAnimation("Eggman/EggmanPSZ.bin", SCOPE_STAGE);
+}
 #endif
 
 void PSZEggman_Serialize(void) {}

@@ -22,7 +22,7 @@ void Crate_StaticUpdate(void) {}
 void Crate_Draw(void)
 {
     RSDK_THIS(Crate);
-    RSDK.DrawSprite(&self->animator, &self->drawPos, 0);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void Crate_Create(void *data)
@@ -51,7 +51,7 @@ void Crate_Create(void *data)
         else
             self->drawOrder = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(Crate->aniFrames, 0, &self->animator, true, frameID);
-        self->state = Crate_Null1;
+        self->state = Crate_State_None;
     }
 }
 
@@ -66,13 +66,13 @@ void Crate_Break(EntityCrate *entity)
 {
     for (int32 i = 0; i < 64; ++i) {
         // the ice is used to create a shattering effect
-        EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
-                                                        (RSDK.Rand(-24, 25) << 16) + entity->position.y);
-        ice->velocity.x = RSDK.Rand(-6, 8) << 15;
-        ice->velocity.y = RSDK.Rand(-10, 2) << 15;
-        ice->direction                = RSDK.Rand(0, 4);
+        EntityIce *ice           = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_SHARD), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
+                                       (RSDK.Rand(-24, 25) << 16) + entity->position.y);
+        ice->velocity.x          = RSDK.Rand(-6, 8) << 15;
+        ice->velocity.y          = RSDK.Rand(-10, 2) << 15;
+        ice->direction           = RSDK.Rand(0, 4);
         ice->blockAnimator.speed = RSDK.Rand(1, 4);
-        ice->drawOrder = Zone->drawOrderLow + 1;
+        ice->drawOrder           = Zone->drawOrderLow + 1;
         switch (entity->animator.frameID) {
             case 0:
             case 3: RSDK.SetSpriteAnimation(Crate->aniFrames, 1, &ice->blockAnimator, true, 0); break;
@@ -86,14 +86,14 @@ void Crate_Break(EntityCrate *entity)
             default: break;
         }
     }
-    RSDK.PlaySfx(Crate->sfxExplosion2, 0, 255);
+    RSDK.PlaySfx(Crate->sfxExplosion2, false, 255);
     entity->position.y -= 0x10000;
 
     foreach_active(Crate, crate)
     {
-        if (crate != entity && crate->state == Crate_Null1
+        if (crate != entity && crate->state == Crate_State_None
             && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, crate, &crate->hitbox)) {
-            crate->state = Crate_ApplyGravity;
+            crate->state = Crate_State_ApplyGravity;
         }
     }
     destroyEntity(entity);
@@ -105,7 +105,7 @@ void Crate_MoveY(EntityCrate *self, int32 offset)
     self->centerPos.y = self->drawPos.y;
     self->position.x  = self->drawPos.x;
     self->position.y  = self->drawPos.y;
-    int32 start           = (self->drawPos.y - 0x300000) & 0xFFFF0000;
+    int32 start       = (self->drawPos.y - 0x300000) & 0xFFFF0000;
     foreach_active(Crate, crate)
     {
         if (crate != self && RSDK.CheckObjectCollisionBox(self, &self->hitbox, crate, &crate->hitbox, true) == C_TOP)
@@ -118,23 +118,23 @@ bool32 Crate_Collide(void)
 
     foreach_active(Player, player)
     {
-        int32 storeX           = player->position.x;
-        int32 storeY           = player->position.y;
-        int32 storeXVel        = player->velocity.x;
-        int32 storeYVel        = player->velocity.y;
-        int32 storeVel         = player->groundVel;
-        int32 storeGrounded    = player->onGround;
+        int32 storeX         = player->position.x;
+        int32 storeY         = player->position.y;
+        int32 storeXVel      = player->velocity.x;
+        int32 storeYVel      = player->velocity.y;
+        int32 storeVel       = player->groundVel;
+        int32 storeGrounded  = player->onGround;
         Hitbox *playerHitbox = Player_GetHitbox(player);
         switch (RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, playerHitbox, false)) {
             default:
-            case 0:
+            case C_NONE:
                 player->velocity.x = storeXVel;
                 player->velocity.y = storeYVel;
                 player->position.x = storeX;
                 player->position.y = storeY;
                 Player_CheckCollisionBox(player, self, &self->hitbox);
                 break;
-            case 1:
+            case C_TOP:
                 if (self->frameID != 1) {
                     player->velocity.x = storeXVel;
                     player->velocity.y = storeYVel;
@@ -175,8 +175,8 @@ bool32 Crate_Collide(void)
                 player->position.y = storeY;
                 Player_CheckCollisionBox(player, self, &self->hitbox);
                 break;
-            case 2:
-            case 3:
+            case C_LEFT:
+            case C_RIGHT:
                 if (self->frameID != 1 || player->shield != SHIELD_FIRE || player->invincibleTimer > 0
                     || RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->animator.animationID != 2) {
                     player->velocity.x = storeXVel;
@@ -224,7 +224,7 @@ bool32 Crate_Collide(void)
                     }
                 }
                 break;
-            case 4:
+            case C_BOTTOM:
                 if (self->collisionOffset.y >= 0)
                     player->collisionFlagV |= 2;
                 player->velocity.x = storeXVel;
@@ -237,31 +237,31 @@ bool32 Crate_Collide(void)
     }
     return false;
 }
-void Crate_Null1(void) {
-    //hehe
+void Crate_State_None(void)
+{
+    // hehe
 }
-void Crate_ApplyGravity(void)
+void Crate_State_ApplyGravity(void)
 {
     RSDK_THIS(Crate);
     self->position.y -= 0x10000;
     foreach_active(Crate, crate)
     {
-        if (crate != self && crate->state == Crate_Null1
-            && RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, crate, &crate->hitbox)) {
-            crate->state = Crate_ApplyGravity;
+        if (crate != self && crate->state == Crate_State_None && RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, crate, &crate->hitbox)) {
+            crate->state = Crate_State_ApplyGravity;
         }
     }
     self->position.y += 0x10000;
     self->timer = 15;
-    self->state         = Crate_WaitToFall;
+    self->state = Crate_State_WaitToFall;
 }
-void Crate_WaitToFall(void)
+void Crate_State_WaitToFall(void)
 {
     RSDK_THIS(Crate);
     if (--self->timer <= 0)
-        self->state = Crate_Fall;
+        self->state = Crate_State_Fall;
 }
-void Crate_Fall(void)
+void Crate_State_Fall(void)
 {
     RSDK_THIS(Crate);
     self->drawPos.y += self->velocity.y;
@@ -272,14 +272,14 @@ void Crate_Fall(void)
     self->position.y = self->drawPos.y;
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, CMODE_FLOOR, 0, 0x180000, true)) {
         self->velocity.y = 0;
-        self->state      = Crate_Null1;
+        self->state      = Crate_State_None;
     }
     else {
         foreach_active(Crate, crate)
         {
             if (crate != self && !crate->velocity.y && RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, self, &self->hitbox, true) == C_TOP) {
                 self->velocity.y = 0;
-                self->state      = Crate_Null1;
+                self->state      = Crate_State_None;
             }
         }
     }
@@ -291,14 +291,28 @@ void Crate_Fall(void)
     self->position.y  = y;
 }
 
-void Crate_EditorDraw(void) {
+#if RETRO_INCLUDE_EDITOR
+void Crate_EditorDraw(void)
+{
     RSDK_THIS(Crate);
+
     RSDK.SetSpriteAnimation(Crate->aniFrames, 0, &self->animator, true, self->frameID);
     self->drawPos = self->position;
+
     Crate_Draw();
 }
 
-void Crate_EditorLoad(void) { Crate_StageLoad(); }
+void Crate_EditorLoad(void)
+{
+    Crate->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Crate.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Crate, frameID);
+    RSDK_ENUM_VAR("Blue", CRATE_FRAME_BLUE);
+    RSDK_ENUM_VAR("Orange (Broken)", CRATE_FRAME_ORANGE_BROKEN);
+    RSDK_ENUM_VAR("Orange", CRATE_FRAME_ORANGE);
+    RSDK_ENUM_VAR("Blue (BG)", CRATE_FRAME_BLUE_BG);
+}
+#endif
 
 void Crate_Serialize(void)
 {

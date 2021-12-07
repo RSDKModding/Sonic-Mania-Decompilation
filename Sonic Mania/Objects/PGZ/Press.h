@@ -56,10 +56,10 @@ void Press_Serialize(void);
 // Extra Entity Functions
 bool32 Press_SuperCheckCB(bool32 hud);
 void Press_Move(void);
-void Press_Crush(void);
-void Press_FinalCrush(void);
+void Press_State_Crush(void);
+void Press_State_FinalCrush(void);
 void Press_HandleMovement(void);
-void Press_HandleCrates(void);
+void Press_State_HandleCrates(void);
 void Press_DrawHandle(void);
 
 #endif //!OBJ_PRESS_H
