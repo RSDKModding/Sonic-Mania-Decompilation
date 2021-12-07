@@ -816,6 +816,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_State_Victory);
         ADD_PUBLIC_FUNC(Player_State_Bubble);
         ADD_PUBLIC_FUNC(Player_State_WaterSlide);
+        ADD_PUBLIC_FUNC(Player_State_TransportTube);
 
         ADD_PUBLIC_FUNC(Player_SonicJumpAbility);
         ADD_PUBLIC_FUNC(Player_TailsJumpAbility);
@@ -864,6 +865,8 @@ void LinkGameLogicDLL(EngineInfo *info)
 
         ADD_PUBLIC_FUNC(Player_CheckHit);
         ADD_PUBLIC_FUNC(Player_CheckHitFlip);
+        ADD_PUBLIC_FUNC(Player_CheckElementalHit);
+        ADD_PUBLIC_FUNC(Player_CheckAttacking);
         ADD_PUBLIC_FUNC(Player_CheckBadnikTouch);
         ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
         ADD_PUBLIC_FUNC(Player_CheckBossHit);
