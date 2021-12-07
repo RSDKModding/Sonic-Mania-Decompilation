@@ -273,11 +273,7 @@ void InitObjects()
 
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!cameraCount) {
-        cameras[0].targetPos     = &screens[0].position;
-        cameras[0].offset.x      = screens[0].center.x << 0x10;
-        cameras[0].offset.y      = screens[0].center.y << 0x10;
-        cameras[0].worldRelative = false;
-        cameraCount              = 1;
+        AddCamera(&screens[0].position, screens[0].center.x << 0x10, screens[0].center.x << 0x10, false);
     }
 }
 void ProcessObjects()

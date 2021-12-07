@@ -12,7 +12,7 @@ void UIWidgets_StaticUpdate(void)
     UIWidgets->timer &= 0x7FFF;
 #if RETRO_USE_PLUS
     UIWidgets->buttonColour = UIWidgets->buttonColours[(UIWidgets->timer >> 1) & 0xF];
-#endif  
+#endif
 }
 
 void UIWidgets_Draw(void) {}
@@ -21,12 +21,12 @@ void UIWidgets_Create(void *data) {}
 
 void UIWidgets_StageLoad(void)
 {
-    UIWidgets->active                = ACTIVE_ALWAYS;
+    UIWidgets->active        = ACTIVE_ALWAYS;
     UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
-    UIWidgets->fontFrames      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
@@ -96,8 +96,8 @@ void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32
 }
 void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y)
 {
-    int32 w    = width << 16 >> 1;
-    int32 h    = height << 16 >> 1;
+    int32 w       = width << 16 >> 1;
+    int32 h       = height << 16 >> 1;
     colour colour = RSDK.GetPaletteEntry(3, (UIWidgets->timer >> 1) & 0xF);
     RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, colour, 255, INK_NONE, false);
     RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
@@ -227,8 +227,8 @@ void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
 
-    drawPos.x                    = x;
-    drawPos.y                    = y;
+    drawPos.x                         = x;
+    drawPos.y                         = y;
     UIWidgets->arrowsAnimator.frameID = 2;
     drawPos.y -= arrowDist << 15;
     RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
@@ -240,8 +240,8 @@ void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
 
-    drawPos.x                    = x;
-    drawPos.y                    = y;
+    drawPos.x                         = x;
+    drawPos.y                         = y;
     UIWidgets->arrowsAnimator.frameID = 0;
     drawPos.x -= arrowDist >> 1;
     RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
@@ -313,7 +313,7 @@ void UIWidgets_EditorLoad(void)
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-    UIWidgets->textFrames  = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+    UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
 #if RETRO_USE_PLUS

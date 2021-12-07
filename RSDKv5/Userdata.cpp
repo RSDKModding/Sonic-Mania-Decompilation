@@ -348,8 +348,13 @@ bool32 GetXYButtonFlip()
 }
 void LaunchManual()
 {
+    // LaunchManual() just opens the mania manual URL, thats it
+#if RETRO_USING_SDL2
+    SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
     PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
-    // TODO(?): open this url: http://www.sonicthehedgehog.com/mania/manual
+#else
+    PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
+#endif
 }
 void ExitGame() { engine.running = false; }
 
@@ -371,7 +376,10 @@ int GetDefaultGamepadType()
 
 int ShowExtensionOverlay(byte overlay)
 {
-    PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay);
+    switch (overlay) {
+        default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
+        case 0: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d (Plus Upsell Screen)", overlay); break;
+    }
     return 1;
 }
 bool32 EGS_Checkout(int a1)

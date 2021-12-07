@@ -435,7 +435,7 @@ void Player_LoadSprites(void);
 void Player_LoadSpritesVS(void);
 void Player_SaveValues(void);
 void Player_GiveScore(EntityPlayer *player, int32 score);
-void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSFX);
+void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSfx); // USERCALL -> player, amount, playSfx
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int32 character);
@@ -451,13 +451,12 @@ void Player_HandleSuperForm(void);
 bool32 Player_CheckKeyPress(void);
 //returns the pointer to the nearest player to the current entity on the x axis only
 EntityPlayer *Player_GetNearestPlayerX(void);
-// returns the pointer to the nearest player to the current entity on both the x & y axis'
+// returns the pointer to the nearest player to the current entity on both the x & y axis
 EntityPlayer *Player_GetNearestPlayer(void);
 #if RETRO_USE_PLUS
 void Player_RemoveEncoreLeader(void);
 #endif
 void Player_ResetBoundaries(EntityPlayer *player);
-void Player_State_TransportTube(void);
 void Player_HandleDeath(EntityPlayer *player);
 void Player_ResetState(EntityPlayer *player);
 
@@ -482,7 +481,7 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
 //checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate
 bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 //checks if the player is attacking the badnik, returns true if the player attacked the badnik, otherwise the player is hit and returns false
-bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy);
+bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy); // USERCALL -> player, entity, destroy
 //similar to checkBadnikTouch, this time for bosses, handles rebounds and stuff properly, does NOT check for hammerdrop/instashield hitboxes. returns true if player hit the boss, otherwise the player is hit and returns false
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 //similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false
@@ -493,7 +492,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
 bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int velY);
 #endif
 // idk yet, needs more research
-bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
+bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 hitIfNotAttacking);
 
 // State helpers
 void Player_ChangePhysicsState(EntityPlayer *entity);
@@ -503,7 +502,7 @@ void Player_HandleAirMovement(void);
 void Player_HandleAirFriction(void);
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll(void);
-bool32 Player_SwapMainPlayer(bool32 flag);
+bool32 Player_SwapMainPlayer(bool32 forceSwap);
 void Player_StartPeelout(void);
 void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
@@ -542,17 +541,18 @@ void Player_State_KnuxLedgePullUp(void);
 void Player_State_MightyHammerDrop(void);
 void Player_State_MightyUnspin(void);
 void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox);
-bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer);
+bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer); // USERCALL -> player, bounceDistance, checkHammerDrop, uncurlTimer
 void Player_State_RayGlide(void);
 #endif
 void Player_State_FlyIn(void);
 void Player_State_JumpIn(void);
 void Player_State_StartJumpIn(void);
-void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player);
+void Player_EndFlyJumpIn(EntityPlayer *player, EntityPlayer *leader);
 void Player_State_EncoreRespawn(void);
 void Player_State_Victory(void);
 void Player_State_Bubble(void);
 void Player_State_WaterSlide(void);
+void Player_State_TransportTube(void);
 
 void Player_SonicJumpAbility(void);
 void Player_TailsJumpAbility(void);

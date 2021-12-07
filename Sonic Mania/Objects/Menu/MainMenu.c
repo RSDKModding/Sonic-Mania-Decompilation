@@ -305,7 +305,7 @@ void MainMenu_SetupActions(void)
 
 void MainMenu_MenuSetupCB()
 {
-    ((EntityUIDiorama *)MainMenu->dioramaPtr)->dioramaSubID = -1;
+    ((EntityUIDiorama *)MainMenu->dioramaPtr)->lastDioramaID = -1;
 }
 
 #if RETRO_INCLUDE_EDITOR

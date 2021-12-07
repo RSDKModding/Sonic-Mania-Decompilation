@@ -248,7 +248,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                     break;
                 }
                 case CHANNEL_STREAMING: {
-                    if (channel->soundID < 0)
+                    if (channel->soundID < 0 || !streamInfo.loaded)
                         continue;
 
                     size_t samples_gotten = 0;
@@ -262,7 +262,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                     size_t bytes_wanted = samples_gotten * sizeof(float);
 
 #if RETRO_USING_SDL2
-                    while (SDL_AudioStreamAvailable(streamInfo.musicStream) < bytes_wanted) {
+                    while (streamInfo.musicStream && SDL_AudioStreamAvailable(streamInfo.musicStream) < bytes_wanted) {
                         // We need more samples: get some
                         long bytes_read =
                             ov_read(&streamInfo.vorbisFile, (char *)streamInfo.buffer, sizeof(streamInfo.buffer), 0, 2, 1, &streamInfo.vorbBitstream);
@@ -285,7 +285,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                             }
                         }
 
-                        if (SDL_AudioStreamPut(streamInfo.musicStream, streamInfo.buffer, (int)bytes_read) == -1)
+                        if (!streamInfo.musicStream || SDL_AudioStreamPut(streamInfo.musicStream, streamInfo.buffer, (int)bytes_read) == -1)
                             return;
                     }
 

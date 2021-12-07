@@ -848,19 +848,12 @@ void Player_GiveScore(EntityPlayer *player, int32 score)
         while (player->score1UP <= player->score) player->score1UP += 50000;
     }
 }
-void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSFX)
+void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSfx)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION)
         session->totalRings[player->playerID] += amount;
-    player->rings += amount;
-
-    if (player->rings < 0) {
-        player->rings = 0;
-    }
-    else if (player->rings >= 999) {
-        player->rings = 999;
-    }
+    player->rings = clampVal(player->rings + amount, 0, 999);
 
     if (player->rings >= player->ringExtraLife) {
 #if RETRO_USE_PLUS
@@ -873,11 +866,12 @@ void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSFX)
             Music_PlayMusicTrack(TRACK_1UP);
         }
         player->ringExtraLife += 100;
+        // literally 1984
         if (player->ringExtraLife > 300)
             player->ringExtraLife = 1000;
     }
 
-    if (playSFX) {
+    if (playSfx) {
         if (Ring->pan) {
             int32 channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
             RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
@@ -1719,10 +1713,6 @@ void Player_ResetBoundaries(EntityPlayer *player)
         player->camera->boundsB = Zone->cameraBoundsB[screen];
     }
 }
-void Player_State_TransportTube(void)
-{
-    // Nothin
-}
 void Player_HandleDeath(EntityPlayer *player)
 {
     if (player->sidekick) {
@@ -2509,7 +2499,7 @@ bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int v
     return false;
 }
 #endif
-bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 flag)
+bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
 {
     Entity *entity  = (Entity *)e;
     int32 anim      = player->animator.animationID;
@@ -2537,7 +2527,7 @@ bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 flag)
         }
     }
     else {
-        if (flag) {
+        if (hitIfNotAttacking) {
 #if RETRO_USE_PLUS
             if (!(character == ID_MIGHTY && anim == ANI_CROUCH)) {
 #endif
@@ -2915,14 +2905,14 @@ void Player_StartPeelout(void)
     RSDK.PlaySfx(Player->sfxPeelCharge, false, 255);
 }
 #if RETRO_USE_PLUS
-bool32 Player_SwapMainPlayer(bool32 flag)
+bool32 Player_SwapMainPlayer(bool32 forceSwap)
 {
     RSDK_THIS(Player);
     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (!sidekick->objectID)
         return false;
 
-    if (!flag) {
+    if (!forceSwap) {
         if (Player->cantSwap || self->drawOrder == 2 || !SceneInfo->timeEnabled)
             return false;
         if (Player->jumpInDelay) {
@@ -2943,6 +2933,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
                 return false;
         }
     }
+
     EntityPlayer *leader             = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *sidekickCam        = sidekick->camera;
     int32 sidekickController         = sidekick->controllerID;
@@ -2957,9 +2948,9 @@ bool32 Player_SwapMainPlayer(bool32 flag)
                 destroyEntity(ice);
         }
     }
-    RSDK.CopyEntity(Zone->entityData, leader, 0);
-    RSDK.CopyEntity(leader, sidekick, 0);
-    RSDK.CopyEntity(sidekick, (Entity *)Zone->entityData, 0);
+    RSDK.CopyEntity(Zone->entityData, leader, false);
+    RSDK.CopyEntity(leader, sidekick, false);
+    RSDK.CopyEntity(sidekick, (Entity *)Zone->entityData, false);
 
     sidekick->state       = Player_State_Air;
     self->controllerID    = sidekick->controllerID;
@@ -5511,85 +5502,85 @@ void Player_State_StartJumpIn(void)
         }
     }
 }
-void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
+void Player_EndFlyJumpIn(EntityPlayer *player, EntityPlayer *leader)
 {
     RSDK_THIS(Player);
-    Entity *parent             = thisEntity->abilityPtrs[0];
-    thisEntity->abilityPtrs[0] = NULL;
-    if (!SizeLaser || thisEntity->state == Player_State_FlyIn) {
-        thisEntity->state = Player_State_Air;
+    Entity *parent             = player->abilityPtrs[0];
+    player->abilityPtrs[0] = NULL;
+    if (!SizeLaser || player->state == Player_State_FlyIn) {
+        player->state = Player_State_Air;
     }
 #if RETRO_USE_PLUS
     else if (globals->gameMode != MODE_ENCORE) {
-        thisEntity->state = Player_State_Air;
+        player->state = Player_State_Air;
     }
 #endif
-    else if (!thisEntity->isChibi && (player->isChibi || player->state == SizeLaser_P2JumpInShrink)) {
-        thisEntity->drawFX |= FX_SCALE;
-        thisEntity->scale.x          = 0x200;
-        thisEntity->scale.y          = 0x200;
-        thisEntity->velocity.x       = 0;
-        thisEntity->velocity.y       = 0;
-        thisEntity->groundVel        = 0;
-        thisEntity->nextAirState     = 0;
-        thisEntity->nextGroundState  = 0;
-        thisEntity->interaction      = 0;
-        thisEntity->abilityPtrs[0]   = SizeLaser_P2JumpInResize;
-        thisEntity->abilityValues[0] = parent->position.x - thisEntity->position.x;
-        thisEntity->abilityValues[1] = parent->position.y - thisEntity->position.y;
-        thisEntity->state            = SizeLaser_P2JumpInShrink;
+    else if (!player->isChibi && (leader->isChibi || leader->state == SizeLaser_P2JumpInShrink)) {
+        player->drawFX |= FX_SCALE;
+        player->scale.x          = 0x200;
+        player->scale.y          = 0x200;
+        player->velocity.x       = 0;
+        player->velocity.y       = 0;
+        player->groundVel        = 0;
+        player->nextAirState     = 0;
+        player->nextGroundState  = 0;
+        player->interaction      = 0;
+        player->abilityPtrs[0]   = SizeLaser_P2JumpInResize;
+        player->abilityValues[0] = parent->position.x - player->position.x;
+        player->abilityValues[1] = parent->position.y - player->position.y;
+        player->state            = SizeLaser_P2JumpInShrink;
     }
-    else if (!thisEntity->isChibi || (player->isChibi || player->state == SizeLaser_P2JumpInGrow)) {
-        thisEntity->state = Player_State_Air;
+    else if (!player->isChibi || (leader->isChibi || leader->state == SizeLaser_P2JumpInGrow)) {
+        player->state = Player_State_Air;
     }
     else {
-        thisEntity->drawFX |= FX_SCALE;
-        thisEntity->scale.x         = 0x140;
-        thisEntity->scale.y         = 0x140;
-        thisEntity->velocity.x      = 0;
-        thisEntity->velocity.y      = 0;
-        thisEntity->groundVel       = 0;
-        thisEntity->nextAirState    = StateMachine_None;
-        thisEntity->nextGroundState = StateMachine_None;
+        player->drawFX |= FX_SCALE;
+        player->scale.x         = 0x140;
+        player->scale.y         = 0x140;
+        player->velocity.x      = 0;
+        player->velocity.y      = 0;
+        player->groundVel       = 0;
+        player->nextAirState    = StateMachine_None;
+        player->nextGroundState = StateMachine_None;
 
-        thisEntity->tailSpriteIndex = -1;
-        switch (thisEntity->characterID) {
+        player->tailSpriteIndex = -1;
+        switch (player->characterID) {
             case ID_TAILS:
-                thisEntity->aniFrames       = Player->tailsSpriteIndex;
-                thisEntity->tailSpriteIndex = Player->tailsTailsSpriteIndex;
+                player->aniFrames       = Player->tailsSpriteIndex;
+                player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                 break;
-            case ID_KNUCKLES: thisEntity->aniFrames = Player->knuxSpriteIndex; break;
+            case ID_KNUCKLES: player->aniFrames = Player->knuxSpriteIndex; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: thisEntity->aniFrames = Player->mightySpriteIndex; break;
-            case ID_RAY: thisEntity->aniFrames = Player->raySpriteIndex; break;
+            case ID_MIGHTY: player->aniFrames = Player->mightySpriteIndex; break;
+            case ID_RAY: player->aniFrames = Player->raySpriteIndex; break;
 #endif
             default:
                 if (self->superState == SUPERSTATE_SUPER)
-                    thisEntity->aniFrames = Player->superSpriteIndex;
+                    player->aniFrames = Player->superSpriteIndex;
                 else
-                    thisEntity->aniFrames = Player->sonicSpriteIndex;
+                    player->aniFrames = Player->sonicSpriteIndex;
                 break;
         }
-        thisEntity->interaction      = false;
-        thisEntity->abilityPtrs[0]   = SizeLaser_P2JumpInResize;
-        thisEntity->abilityValues[0] = parent->position.x - thisEntity->position.x;
-        thisEntity->abilityValues[1] = parent->position.y - thisEntity->position.y;
-        thisEntity->state            = SizeLaser_P2JumpInGrow;
+        player->interaction      = false;
+        player->abilityPtrs[0]   = SizeLaser_P2JumpInResize;
+        player->abilityValues[0] = parent->position.x - player->position.x;
+        player->abilityValues[1] = parent->position.y - player->position.y;
+        player->state            = SizeLaser_P2JumpInGrow;
     }
-    RSDK.SetSpriteAnimation(thisEntity->aniFrames, ANI_JUMP, &thisEntity->animator, false, 0);
-    thisEntity->onGround       = false;
-    thisEntity->tileCollisions = true;
-    thisEntity->interaction    = true;
-    thisEntity->controlLock    = 0;
-    thisEntity->angle          = 0;
-    if (!thisEntity->sidekick) {
-        thisEntity->stateInput = Player_ProcessP1Input;
+    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+    player->onGround       = false;
+    player->tileCollisions = true;
+    player->interaction    = true;
+    player->controlLock    = 0;
+    player->angle          = 0;
+    if (!player->sidekick) {
+        player->stateInput = Player_ProcessP1Input;
     }
     else {
-        thisEntity->stateInput = Player_ProcessP2Input_AI;
+        player->stateInput = Player_ProcessP2Input_AI;
         EntityPlayer *plr1     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        thisEntity->velocity.x = plr1->velocity.x;
-        thisEntity->groundVel  = plr1->groundVel;
+        player->velocity.x = plr1->velocity.x;
+        player->groundVel  = plr1->groundVel;
         Player->upState        = 0;
         Player->downState      = 0;
         Player->leftState      = 0;
@@ -5598,17 +5589,17 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         Player->jumpPressState = 0;
     }
 
-    thisEntity->collisionPlane = player->collisionPlane;
-    thisEntity->drawOrder      = player->drawOrder;
-    thisEntity->active         = ACTIVE_NORMAL;
-    thisEntity->position.x     = parent->position.x;
-    thisEntity->position.y     = parent->position.y;
-    if (thisEntity->playerID == 0)
-        thisEntity->blinkTimer = 120;
+    player->collisionPlane = leader->collisionPlane;
+    player->drawOrder      = leader->drawOrder;
+    player->active         = ACTIVE_NORMAL;
+    player->position.x     = parent->position.x;
+    player->position.y     = parent->position.y;
+    if (player->playerID == 0)
+        player->blinkTimer = 120;
 
-    if (thisEntity->camera) {
-        Camera_SetTargetEntity(thisEntity->camera->screenID, (Entity *)thisEntity);
-        thisEntity->camera->state = Camera_State_Follow;
+    if (player->camera) {
+        Camera_SetTargetEntity(player->camera->screenID, (Entity *)player);
+        player->camera->state = Camera_State_Follow;
     }
     destroyEntity(parent);
     Player->upState        = false;
@@ -5618,7 +5609,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
     Player->jumpPressState = false;
     Player->jumpHoldState  = false;
     if (BoundsMarker)
-        BoundsMarker_CheckAllBounds(thisEntity, false);
+        BoundsMarker_CheckAllBounds(player, false);
 }
 void Player_State_EncoreRespawn(void)
 {
@@ -5789,6 +5780,10 @@ void Player_State_WaterSlide(void)
             }
         }
     }
+}
+void Player_State_TransportTube(void)
+{
+    // Nothin
 }
 
 void Player_SonicJumpAbility(void)
@@ -6178,15 +6173,7 @@ void Player_ProcessP1Input(void)
                 if (TouchInfo->down[t]) {
                     if (tx >= ScreenInfo->width - 0x100 && ty >= 0 && tx <= ScreenInfo->width - 0x80 && ty <= 0x40) {
                         if (globals->gameMode == MODE_ENCORE) {
-                            if (!HUD->swapCooldown && Player_CheckValidState(self)) {
-                                if (Player_SwapMainPlayer(false)) {
-                                    return;
-                                }
-                                else {
-                                    RSDK.PlaySfx(Player->sfxSwapFail, false, 0xFF);
-                                }
-                            }
-                            else {
+                            if (HUD->swapCooldown || !Player_CheckValidState(self) || !Player_SwapMainPlayer(false)) {
                                 RSDK.PlaySfx(Player->sfxSwapFail, false, 0xFF);
                             }
                         }
@@ -6234,15 +6221,7 @@ void Player_ProcessP1Input(void)
                 }
 
                 if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
-                    if (!HUD->swapCooldown && Player_CheckValidState(self)) {
-                        if (Player_SwapMainPlayer(false)) {
-                            return;
-                        }
-                        else {
-                            RSDK.PlaySfx(Player->sfxSwapFail, false, 0xFF);
-                        }
-                    }
-                    else {
+                    if (HUD->swapCooldown || !Player_CheckValidState(self) || !Player_SwapMainPlayer(false)) {
                         RSDK.PlaySfx(Player->sfxSwapFail, false, 0xFF);
                     }
                 }
