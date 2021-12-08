@@ -379,8 +379,8 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
                 radius = x - ((((posBottom2 - y) * div) / (radius * div)) * -65536.0f);
                 if (posLeft2 <= radius && radius <= posRight2) {
                     if (resultPos) {
-                        resultPos->x = x - radius;
-                        resultPos->y = boxPos.y + (bottom << 16);
+                        resultPos->x = radius;
+                        resultPos->y = posBottom2;
                     }
                 }
             }
