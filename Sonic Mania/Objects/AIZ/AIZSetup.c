@@ -533,7 +533,7 @@ bool32 AIZSetup_Cutscene1_Unknown7(Entity *h)
                 }
             }
             else if (host->timer < host->storedValue2 + 30) {
-                Vector2 result = MathHelpers_Unknown5(((host->timer - host->storedValue2) << 16) / 30, claw->position.x, host->storedValue1, claw->position.x,
+                Vector2 result = MathHelpers_GetBezierPoint(((host->timer - host->storedValue2) << 16) / 30, claw->position.x, host->storedValue1, claw->position.x,
                                                       host->storedValue1 - 0x500000, claw->position.x, host->storedValue1 - 0x300000, claw->position.x,
                                                       host->storedValue1 - 0x300000);
                 claw->position.y = result.y;

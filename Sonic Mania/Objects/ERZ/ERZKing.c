@@ -407,7 +407,7 @@ void ERZKing_State_Arm(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 

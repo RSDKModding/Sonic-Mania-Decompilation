@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BEANSTALK_BEGIN,
+    BEANSTALK_NODE,
+    BEANSTALK_PLATFORM,
+    BEANSTALK_CHOMPER,
+}BeanstalkTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -70,16 +77,16 @@ void Beanstalk_Unknown5(void);
 void Beanstalk_Unknown6(void);
 void Beanstalk_Unknown7(void);
 
-void Beanstalk_CheckPlayerCollisions_Leaf(void);
-void Beanstalk_CheckPlayerCollisions_Plant(void);
+void Beanstalk_CheckPlayerCollisions_Platform(void);
+void Beanstalk_CheckPlayerCollisions_Chomper(void);
 
 void Beanstalk_State_Setup(void);
-void Beanstalk_State_Unknown1(void);
-void Beanstalk_State_Unknown2(void);
-void Beanstalk_State_Unknown3(void);
+void Beanstalk_StateDirt_WaitForStart(void);
+void Beanstalk_StateDirt_GrowthDelay(void);
+void Beanstalk_StateDirt_Grow(void);
 
-void Beanstalk_State1_Unknown(void);
-void Beanstalk_State2_Unknown(void);
-void Beanstalk_State3_Unknown(void);
+void Beanstalk_State_Node(void);
+void Beanstalk_State_Platform(void);
+void Beanstalk_State_Chomper(void);
 
 #endif //!OBJ_BEANSTALK_H

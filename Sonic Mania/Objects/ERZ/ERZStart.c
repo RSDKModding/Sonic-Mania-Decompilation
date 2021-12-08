@@ -280,7 +280,7 @@ bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
         if (host->timer << 16 < 0x3C0000)
             percent = (host->timer << 16) / 60;
 
-        Vector2 pos = MathHelpers_Unknown5(percent, host->storedValue2, host->storedValue1, host->storedValue2, host->storedValue1 - 0x400000, king->rubyPos.x,
+        Vector2 pos = MathHelpers_GetBezierPoint(percent, host->storedValue2, host->storedValue1, host->storedValue2, host->storedValue1 - 0x400000, king->rubyPos.x,
                                            king->rubyPos.y - 0x400000, king->rubyPos.x, king->rubyPos.y);
 
         ruby->position.x += (pos.x - ruby->position.x) >> 2;

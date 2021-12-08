@@ -636,7 +636,7 @@ void KleptoMobile_State3_Unknown1(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -668,7 +668,7 @@ void KleptoMobile_State3_Unknown2(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, parentX, parentY, x, y, x, y, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, parentX, parentY, x, y, x, y, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -779,7 +779,7 @@ void KleptoMobile_State1_Unknown1(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -809,7 +809,7 @@ void KleptoMobile_State1_Unknown2(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, self->field_F0.x, self->field_F0.y, self->field_F0.x,
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->field_F0.x, self->field_F0.y, self->field_F0.x,
                                                          self->field_F0.y, self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -881,7 +881,7 @@ void KleptoMobile_State1_Unknown3(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x3, y3, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x3, y3, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -942,7 +942,7 @@ void KleptoMobile_State1_Unknown4(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 

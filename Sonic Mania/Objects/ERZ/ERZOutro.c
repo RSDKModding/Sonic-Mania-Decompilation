@@ -149,7 +149,7 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, false, 0);
         int x             = player1->position.x;
         int y             = player1->position.y;
-        player1->position = MathHelpers_Unknown5((host->timer << 16) / 120, ERZOutro->field_8, ERZOutro->field_C, ERZOutro->field_8,
+        player1->position = MathHelpers_GetBezierPoint((host->timer << 16) / 120, ERZOutro->field_8, ERZOutro->field_C, ERZOutro->field_8,
                                                  ERZOutro->field_C - 0x2000000, posX - 0x2000000, posY, posX, posY);
 
         player1->velocity.y = player1->position.y - y;

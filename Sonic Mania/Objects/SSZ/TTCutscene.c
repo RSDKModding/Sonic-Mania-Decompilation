@@ -113,7 +113,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
         }
         else {
             Vector2 *pos = &player1->position;
-            pos->y       = MathHelpers_Unknown5((timerP1 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
+            pos->y       = MathHelpers_GetBezierPoint((timerP1 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
         }
     }
     else {
@@ -130,7 +130,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
             }
             else if (timerP2 < 60) {
                 Vector2 *pos = &player2->position;
-                pos->y       = MathHelpers_Unknown5((timerP2 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
+                pos->y       = MathHelpers_GetBezierPoint((timerP2 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
             }
         }
         else {
@@ -169,7 +169,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
         }
         else {
             Vector2 *pos = &player1->position;
-            pos->y       = MathHelpers_Unknown5((timerP1 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
+            pos->y       = MathHelpers_GetBezierPoint((timerP1 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
         }
     }
     else {
@@ -186,7 +186,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
             }
             else {
                 Vector2 *pos = &player2->position;
-                pos->y       = MathHelpers_Unknown5((timerP2 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
+                pos->y       = MathHelpers_GetBezierPoint((timerP2 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
             }
         }
         else {

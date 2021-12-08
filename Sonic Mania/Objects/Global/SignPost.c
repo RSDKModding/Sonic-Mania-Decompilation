@@ -287,9 +287,10 @@ void SignPost_CheckTouch(void)
                     touched = player->position.x > self->position.x;
                 }
                 else if (self->playerPosStore[p].x && self->playerPosStore[p].y) {
-                    touched = MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPosStore[p].x, self->playerPosStore[p].y,
-                                                 self->position.x, self->position.y - (self->vsExtendTop << 16), self->position.x,
-                                                 (self->vsExtendBottom << 16) + self->position.y);
+                    touched = MathHelpers_Unknown12(player->position.x, player->position.y, 
+                                                    self->playerPosStore[p].x, self->playerPosStore[p].y,
+                                                    self->position.x, self->position.y - (self->vsExtendTop << 16), 
+                                                    self->position.x, (self->vsExtendBottom << 16) + self->position.y);
                 }
 
                 if (touched) {

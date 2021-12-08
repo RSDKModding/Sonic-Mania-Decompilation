@@ -7,7 +7,7 @@ void Beanstalk_Update(void)
     RSDK_THIS(Beanstalk);
 
     RSDK.ProcessAnimation(&self->animator1);
-    if (self->type > 1)
+    if (self->type > BEANSTALK_NODE)
         RSDK.ProcessAnimation(&self->animator2);
     StateMachine_Run(self->state);
 }
@@ -28,7 +28,7 @@ void Beanstalk_Draw(void)
         self->scale.y = self->field_78;
         self->drawFX  = FX_SCALE | FX_FLIP;
         RSDK.DrawSprite(&self->animator1, NULL, false);
-        if (self->type > 1)
+        if (self->type > BEANSTALK_NODE)
             RSDK.DrawSprite(&self->animator2, NULL, false);
         self->drawFX  = FX_FLIP;
         self->scale.x = 0x200;
@@ -49,7 +49,7 @@ void Beanstalk_Create(void *data)
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
     self->field_74      = -1;
-    if (self->type == 0) {
+    if (self->type == BEANSTALK_BEGIN) {
         self->field_78 = 512;
         self->active   = ACTIVE_NORMAL;
     }
@@ -98,7 +98,7 @@ int32 Beanstalk_Unknown1(void)
     uint8 angle = (next->bezCtrlAngle + 0x80);
     int nextX   = ((next->bezCtrlLength * RSDK.Cos256(angle)) << 9) + next->position.x;
     int nextY   = ((next->bezCtrlLength * RSDK.Sin256(angle)) << 9) + next->position.y;
-    return MathHelpers_Unknown7(self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x, next->position.y) / 0xA0000;
+    return MathHelpers_GetBezierCurveLength(self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x, next->position.y) / 0xA0000;
 }
 
 int32 Beanstalk_Unknown2(void)
@@ -117,7 +117,7 @@ int32 Beanstalk_Unknown2(void)
         uint8 angle = (self->bezCtrlAngle + 0x80);
         int32 thisX = ((self->bezCtrlLength * RSDK.Cos256(angle)) << 9) + self->position.x;
         int32 thisY = ((self->bezCtrlLength * RSDK.Sin256(angle)) << 9) + self->position.y;
-        len += MathHelpers_Unknown7(prev->position.x, prev->position.y, prevX, prevY, thisX, thisY, self->position.x, self->position.y);
+        len += MathHelpers_GetBezierCurveLength(prev->position.x, prev->position.y, prevX, prevY, thisX, thisY, self->position.x, self->position.y);
         self = prev;
     }
     return len;
@@ -138,7 +138,7 @@ int32 Beanstalk_Unknown3(void)
     int32 nextX = ((next->bezCtrlLength * RSDK.Cos256(angle)) << 9) + next->position.x;
     int32 nextY = ((next->bezCtrlLength * RSDK.Sin256(angle)) << 9) + next->position.y;
     return 0x10000
-           / (MathHelpers_Unknown7(self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x, next->position.y) / 0x32000);
+           / (MathHelpers_GetBezierCurveLength(self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x, next->position.y) / 0x32000);
 }
 
 void Beanstalk_Unknown4(void)
@@ -176,7 +176,7 @@ void Beanstalk_Unknown4(void)
                 for (int i = pos; i <= 0x10000; i += inc) {
                     if (i >= self->field_80)
                         break;
-                    Vector2 drawPos = MathHelpers_Unknown5(i, self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x,
+                    Vector2 drawPos = MathHelpers_GetBezierPoint(i, self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x,
                                                            next->position.y);
                     RSDK.DrawSprite(&self->animator3, &drawPos, false);
                 }
@@ -185,7 +185,7 @@ void Beanstalk_Unknown4(void)
                 for (int i = self->field_85; pos <= 0x10000; ++val) {
                     if (pos >= self->field_80)
                         break;
-                    Vector2 drawPos = MathHelpers_Unknown5(pos, self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x,
+                    Vector2 drawPos = MathHelpers_GetBezierPoint(pos, self->position.x, self->position.y, thisX, thisY, nextX, nextY, next->position.x,
                                                            next->position.y);
                     if (!(val % 3)) {
                         RSDK.SetSpriteAnimation(Beanstalk->aniFrames, i + 5, &self->animator3, true, 0);
@@ -213,7 +213,7 @@ void Beanstalk_Unknown5(void)
                 int nextX   = ((next->bezCtrlLength * RSDK.Cos256(angle)) << 9) + next->position.x;
                 int nextY   = ((next->bezCtrlLength * RSDK.Sin256(angle)) << 9) + next->position.y;
 
-                Vector2 drawPos = MathHelpers_Unknown5(self->field_80, self->position.x, self->position.y, thisX, thisY, nextX, nextY,
+                Vector2 drawPos = MathHelpers_GetBezierPoint(self->field_80, self->position.x, self->position.y, thisX, thisY, nextX, nextY,
                                                        next->position.x, next->position.y);
                 RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 1, &self->animator3, true, 0);
                 RSDK.DrawSprite(&self->animator3, &drawPos, false);
@@ -270,7 +270,7 @@ void Beanstalk_Unknown7(void)
     }
 }
 
-void Beanstalk_CheckPlayerCollisions_Leaf(void)
+void Beanstalk_CheckPlayerCollisions_Platform(void)
 {
     RSDK_THIS(Beanstalk);
 
@@ -309,7 +309,7 @@ void Beanstalk_CheckPlayerCollisions_Leaf(void)
     self->field_94.y += RSDK.Sin256(self->field_9C) << 10;
 }
 
-void Beanstalk_CheckPlayerCollisions_Plant(void)
+void Beanstalk_CheckPlayerCollisions_Chomper(void)
 {
     RSDK_THIS(Beanstalk);
 
@@ -341,7 +341,7 @@ void Beanstalk_CheckPlayerCollisions_Plant(void)
             if (player->state == Player_State_MightyHammerDrop) {
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
                 RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-                self->state = Beanstalk_State1_Unknown;
+                self->state = Beanstalk_State_Node;
                 RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator2, true, 0);
             }
             else if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer)) {
@@ -359,38 +359,38 @@ void Beanstalk_State_Setup(void)
     RSDK_THIS(Beanstalk);
 
     switch (self->type) {
-        case 0:
+        case BEANSTALK_BEGIN:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 4, &self->animator1, true, 9);
-            self->state = Beanstalk_State_Unknown1;
+            self->state = Beanstalk_StateDirt_WaitForStart;
             break;
-        case 1:
+        case BEANSTALK_NODE:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator1, true, 0);
-            self->state = Beanstalk_State1_Unknown;
+            self->state = Beanstalk_State_Node;
             break;
-        case 2:
+        case BEANSTALK_PLATFORM:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 2, &self->animator2, true, 0);
-            self->state = Beanstalk_State2_Unknown;
+            self->state = Beanstalk_State_Platform;
             break;
-        case 3:
+        case BEANSTALK_CHOMPER:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 3, &self->animator2, true, 0);
-            self->state = Beanstalk_State3_Unknown;
+            self->state = Beanstalk_State_Chomper;
             break;
         default: break;
     }
 }
 
-void Beanstalk_State_Unknown1(void)
+void Beanstalk_StateDirt_WaitForStart(void)
 {
     RSDK_THIS(Beanstalk);
     if (self->startGrowth) {
-        self->state = Beanstalk_State_Unknown2;
+        self->state = Beanstalk_StateDirt_GrowthDelay;
         self->timer = 15;
     }
 }
 
-void Beanstalk_State_Unknown2(void)
+void Beanstalk_StateDirt_GrowthDelay(void)
 {
     RSDK_THIS(Beanstalk);
 
@@ -400,16 +400,16 @@ void Beanstalk_State_Unknown2(void)
         RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 4, &self->animator1, true, 0);
         self->shown  = true;
         self->active = ACTIVE_NORMAL;
-        self->state  = Beanstalk_State_Unknown3;
+        self->state  = Beanstalk_StateDirt_Grow;
     }
     else {
         self->timer--;
     }
 }
 
-void Beanstalk_State_Unknown3(void) { Beanstalk_Unknown6(); }
+void Beanstalk_StateDirt_Grow(void) { Beanstalk_Unknown6(); }
 
-void Beanstalk_State1_Unknown(void)
+void Beanstalk_State_Node(void)
 {
     RSDK_THIS(Beanstalk);
 
@@ -423,26 +423,26 @@ void Beanstalk_State1_Unknown(void)
     }
 }
 
-void Beanstalk_State2_Unknown(void)
+void Beanstalk_State_Platform(void)
 {
     RSDK_THIS(Beanstalk);
 
     if (self->shown) {
         Beanstalk_Unknown6();
         Beanstalk_Unknown7();
-        Beanstalk_CheckPlayerCollisions_Leaf();
+        Beanstalk_CheckPlayerCollisions_Platform();
         ++self->angle2;
     }
 }
 
-void Beanstalk_State3_Unknown(void)
+void Beanstalk_State_Chomper(void)
 {
     RSDK_THIS(Beanstalk);
 
     if (self->shown) {
         Beanstalk_Unknown6();
         Beanstalk_Unknown7();
-        Beanstalk_CheckPlayerCollisions_Plant();
+        Beanstalk_CheckPlayerCollisions_Chomper();
         if (RSDK.CheckOnScreen(self, NULL)) {
             if (self->animator2.frameID == 5 && self->animator2.timer == 1)
                 RSDK.PlaySfx(Beanstalk->sfxBeanChomp, false, 255);
@@ -465,17 +465,17 @@ void Beanstalk_EditorDraw(void)
     self->field_A0 = 0;
 
     switch (self->type) {
-        case 0:
+        case BEANSTALK_BEGIN:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 4, &self->animator1, true, 9);
             break;
-        case 1:
+        case BEANSTALK_NODE:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator1, true, 0);
             break;
-        case 2:
+        case BEANSTALK_PLATFORM:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 2, &self->animator2, true, 0);
             break;
-        case 3:
+        case BEANSTALK_CHOMPER:
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 3, &self->animator2, true, 0);
             break;
@@ -489,14 +489,27 @@ void Beanstalk_EditorDraw(void)
     self->scale.y = self->field_78;
     self->drawFX  = FX_SCALE | FX_FLIP;
     RSDK.DrawSprite(&self->animator1, NULL, false);
-    if (self->type > 1)
+    if (self->type > BEANSTALK_NODE)
         RSDK.DrawSprite(&self->animator2, NULL, false);
     self->drawFX  = FX_FLIP;
     self->scale.x = 0x200;
     self->scale.y = 0x200;
 }
 
-void Beanstalk_EditorLoad(void) { Beanstalk->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Beanstalk.bin", SCOPE_STAGE); }
+void Beanstalk_EditorLoad(void)
+{
+    Beanstalk->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Beanstalk.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Beanstalk, type);
+    RSDK_ENUM_VAR("Dirt Splash", BEANSTALK_BEGIN);
+    RSDK_ENUM_VAR("Node", BEANSTALK_NODE);
+    RSDK_ENUM_VAR("Platform", BEANSTALK_PLATFORM);
+    RSDK_ENUM_VAR("Comper", BEANSTALK_CHOMPER);
+
+    RSDK_ACTIVE_VAR(Beanstalk, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Beanstalk_Serialize(void)

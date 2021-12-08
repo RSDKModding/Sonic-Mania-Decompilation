@@ -349,51 +349,41 @@ void SizeLaser_Unknown3(void)
     int32 entityX = self->position.x;
     int32 entityY = self->position.y;
 
-    int32 tx1[2];
-    int32 tx2[2];
-    int32 ty1[2];
-    int32 ty2[2];
+    int32 extendX1[2];
+    int32 extendY1[2];
+    int32 extendX2[2];
+    int32 extendY2[2];
 
     switch (self->orientation) {
         case 0:
-            tx1[0] = entityX - 0x80000;
-            tx1[1] = entityX + 0x80000;
-            tx2[0] = entityY - 0x200000;
-            tx2[1] = entityY - 0x200000;
-            ty1[0] = entityX - 0x80000;
-            ty1[1] = entityX + 0x80000;
-            ty2[1] = (self->extend << 16) + entityY;
-            ty2[0] = (self->extend << 16) + entityY;
+            extendX1[0] = entityX - 0x80000;
+            extendX1[1] = entityX + 0x80000;
+            extendY1[0] = entityY - 0x200000;
+            extendY1[1] = entityY - 0x200000;
+            extendX2[0] = entityX - 0x80000;
+            extendX2[1] = entityX + 0x80000;
+            extendY2[1] = (self->extend << 16) + entityY;
+            extendY2[0] = (self->extend << 16) + entityY;
             break;
         case 1:
-            tx1[0] = entityX - 0x200000;
-            tx1[1] = entityX - 0x200000;
-            tx2[0] = entityY - 0x80000;
-            tx2[1] = entityY + 0x80000;
-            ty1[0] = (self->extend << 16) + entityX;
-            ty1[1] = (self->extend << 16) + entityX;
-            ty2[1] = entityY + 0x80000;
-            ty2[0] = entityY - 0x80000;
+            extendX1[0] = entityX - 0x200000;
+            extendX1[1] = entityX - 0x200000;
+            extendY1[0] = entityY - 0x80000;
+            extendY1[1] = entityY + 0x80000;
+            extendX2[0] = (self->extend << 16) + entityX;
+            extendX2[1] = (self->extend << 16) + entityX;
+            extendY2[1] = entityY + 0x80000;
+            extendY2[0] = entityY - 0x80000;
             break;
         case 2:
-            tx1[0] = entityX + 0x200000;
-            tx1[1] = entityX;
-            tx2[0] = entityY - 0x80000;
-            tx2[1] = entityY + 0x80000;
-            ty1[0] = entityX - 0x80000;
-            ty1[1] = entityX - (self->extend << 16);
-            ty2[1] = entityY + 0x80000;
-            ty2[0] = entityY - 0x80000;
-            break;
-        default: // what
-            tx1[0] = entityX;
-            tx1[1] = entityX;
-            tx2[0] = entityY;
-            tx2[1] = entityX;
-            ty1[0] = entityX;
-            ty1[1] = entityX;
-            ty2[0] = entityY;
-            ty2[1] = entityX;
+            extendX1[0] = entityX + 0x200000;
+            extendX1[1] = entityX;
+            extendY1[0] = entityY - 0x80000;
+            extendY1[1] = entityY + 0x80000;
+            extendX2[0] = entityX - 0x80000;
+            extendX2[1] = entityX - (self->extend << 16);
+            extendY2[1] = entityY + 0x80000;
+            extendY2[0] = entityY - 0x80000;
             break;
     }
 
@@ -401,9 +391,9 @@ void SizeLaser_Unknown3(void)
     {
         int32 pID = RSDK.GetEntityID(player);
         if (MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
-                                  tx1[0], tx2[0], ty1[0], ty2[0])
+                                  extendX1[0], extendY1[0], extendX2[0], extendY2[0])
             || MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
-                                     tx1[1], tx2[1], ty1[1], ty2[1])) {
+                                     extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
 
             if (self->type) {
                 if (player->state == SizeLaser_P2JumpInShrink || player->state == SizeLaser_P2JumpInGrow || !player->isChibi) {

@@ -617,7 +617,7 @@ void PhantomKing_StateArm1_Unknown2(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
@@ -657,7 +657,7 @@ void PhantomKing_StateArm1_Unknown3(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, self->field_F8, self->field_FC, self->field_F8, self->field_FC,
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->field_F8, self->field_FC, self->field_F8, self->field_FC,
                                                          self->position.x, self->position.y);
         percent += 0x2000;
     }
@@ -717,7 +717,7 @@ void PhantomKing_Unknown21(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_Unknown5(percent, x, y, x2, y2, x2, y2, x3, y3);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, x3, y3);
         percent += 0x2000;
     }
 

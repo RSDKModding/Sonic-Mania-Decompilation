@@ -905,9 +905,9 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_LerpSin1024);
         ADD_PUBLIC_FUNC(MathHelpers_Lerp2Sin1024);
         ADD_PUBLIC_FUNC(MathHelpers_LerpSin512);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown5);
+        ADD_PUBLIC_FUNC(MathHelpers_GetBezierPoint);
         ADD_PUBLIC_FUNC(MathHelpers_SquareRoot);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
+        ADD_PUBLIC_FUNC(MathHelpers_GetBezierCurveLength);
         ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown9);
         ADD_PUBLIC_FUNC(MathHelpers_GetValueSign);
