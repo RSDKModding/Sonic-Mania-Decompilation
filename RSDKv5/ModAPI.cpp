@@ -171,8 +171,15 @@ void loadMods()
                     std::string folder            = modDirPath.filename().string();
 
                     if (std::find_if(modList.begin(), modList.end(), [&folder](ModInfo m) { return m.id == folder; }) == modList.end()) {
-                        loadMod(&info, modPath.string(), modDirPath.filename().string(), false);
-                        modList.push_back(info);
+
+                        const std::string modDir = modPath.string() + "/" + modDirPath.filename().string();
+
+                        FileIO *f = fOpen((modDir + "/mod.ini").c_str(), "r");
+                        if (f) {
+                            fClose(f);
+                            loadMod(&info, modPath.string(), modDirPath.filename().string(), false);
+                            modList.push_back(info);
+                        }
                     }
                 }
             }
