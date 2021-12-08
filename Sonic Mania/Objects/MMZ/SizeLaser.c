@@ -12,7 +12,36 @@ void SizeLaser_Update(void)
 
 void SizeLaser_LateUpdate(void) {}
 
-void SizeLaser_StaticUpdate(void) {}
+void SizeLaser_StaticUpdate(void)
+{
+    foreach_active(Player, player) {
+        int32 playerID                                   = RSDK.GetEntityID(player);
+
+        SizeLaser->playerPositions[playerID].x = player->position.x;
+        SizeLaser->playerPositions[playerID].y = player->position.y;
+
+        if (player->scale.x > 0x200) {
+            Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
+            if (!playerHitbox)
+                playerHitbox = &defaultHitbox;
+
+            SizeLaser->playerOuterBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
+            SizeLaser->playerOuterBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
+            SizeLaser->playerOuterBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
+            SizeLaser->playerOuterBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
+
+            playerHitbox = RSDK.GetHitbox(&player->animator, 1);
+            if (!playerHitbox)
+                playerHitbox = &defaultHitbox;
+            SizeLaser->playerInnerBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
+            SizeLaser->playerInnerBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
+            SizeLaser->playerInnerBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
+            SizeLaser->playerInnerBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
+            player->outerbox                         = &SizeLaser->playerOuterBox[playerID];
+            player->innerbox                         = &SizeLaser->playerInnerBox[playerID];
+        }
+    }
+}
 
 void SizeLaser_Draw(void)
 {
@@ -358,42 +387,53 @@ void SizeLaser_Unknown3(void)
         case 0:
             extendX1[0] = entityX - 0x80000;
             extendX1[1] = entityX + 0x80000;
+
             extendY1[0] = entityY - 0x200000;
             extendY1[1] = entityY - 0x200000;
+
             extendX2[0] = entityX - 0x80000;
             extendX2[1] = entityX + 0x80000;
-            extendY2[1] = (self->extend << 16) + entityY;
-            extendY2[0] = (self->extend << 16) + entityY;
+
+            extendY2[0] = entityY + (self->extend << 16);
+            extendY2[1] = entityY + (self->extend << 16);
             break;
+
         case 1:
             extendX1[0] = entityX - 0x200000;
             extendX1[1] = entityX - 0x200000;
+
             extendY1[0] = entityY - 0x80000;
             extendY1[1] = entityY + 0x80000;
-            extendX2[0] = (self->extend << 16) + entityX;
-            extendX2[1] = (self->extend << 16) + entityX;
+
+            extendX2[0] = entityX + (self->extend << 16);
+            extendX2[1] = entityX + (self->extend << 16);
+
             extendY2[1] = entityY + 0x80000;
             extendY2[0] = entityY - 0x80000;
             break;
+
         case 2:
-            extendX1[0] = entityX + 0x200000;
+            extendX1[0] = entityX - 0x200000;
             extendX1[1] = entityX;
+
             extendY1[0] = entityY - 0x80000;
             extendY1[1] = entityY + 0x80000;
-            extendX2[0] = entityX - 0x80000;
+
+            extendX2[0] = entityX + 0x200000;
             extendX2[1] = entityX - (self->extend << 16);
-            extendY2[1] = entityY + 0x80000;
-            extendY2[0] = entityY - 0x80000;
+
+            extendY2[0] = entityY + 0x80000;
+            extendY2[1] = entityY - 0x80000;
             break;
     }
 
     foreach_active(Player, player)
     {
-        int32 pID = RSDK.GetEntityID(player);
-        if (MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
-                                  extendX1[0], extendY1[0], extendX2[0], extendY2[0])
-            || MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
-                                     extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
+        int32 playerID = RSDK.GetEntityID(player);
+        if (MathHelpers_Unknown12(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
+                                  player->position.y, extendX1[0], extendY1[0], extendX2[0], extendY2[0])
+            || MathHelpers_Unknown12(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
+                                     player->position.y, extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
 
             if (self->type) {
                 if (player->state == SizeLaser_P2JumpInShrink || player->state == SizeLaser_P2JumpInGrow || !player->isChibi) {

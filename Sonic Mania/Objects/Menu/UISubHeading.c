@@ -61,6 +61,10 @@ void UISubHeading_Create(void *data)
 
 void UISubHeading_StageLoad(void) {}
 
+// ???
+// Why is this all here
+// Wouldn't it make more sense to make a "SaveSelectMenu" object like options, extras, time attack, competition and main menus have?
+
 #if RETRO_USE_PLUS
 void UISubHeading_Initialize(void)
 {

@@ -147,14 +147,9 @@ void MainMenu_ExitGame(void) { API.ExitGame(); }
 
 void MainMenu_ExitButton_ActionCB(void)
 {
-    TextInfo buffer;
-    Localization_GetString(&buffer, STR_QUITWARNING);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
-        UIDialog_AddButton(DIALOG_YES, dialog, MainMenu_StartExitGame, 1);
-        UIDialog_Setup(dialog);
-    }
+    TextInfo msg;
+    Localization_GetString(&msg, STR_QUITWARNING);
+    UIDialog_CreateDialogYesNo(&msg, MainMenu_StartExitGame, StateMachine_None, true, true);
 }
 
 void MainMenu_StartExitGame(void)
