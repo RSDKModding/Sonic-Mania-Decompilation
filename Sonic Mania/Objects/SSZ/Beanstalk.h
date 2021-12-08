@@ -30,26 +30,26 @@ typedef struct {
     int32 bezCtrlAngle;
     int32 bezCtrlLength;
     bool32 forceEnd;
-    uint8 angle2;
+    uint8 moveAngle;
     int32 timer;
-    uint16 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    uint8 field_84;
-    uint8 field_85;
-    int32 field_88;
-    Vector2 field_8C;
-    Vector2 field_94;
-    int32 field_9C;
-    int32 field_A0;
+    uint16 curBezierPos;
+    int32 size;
+    int32 bezierInc;
+    int32 bezierPos;
+    uint8 curNodeID;
+    uint8 curDecorID;
+    bool32 setupDecorNodeID;
+    Vector2 startPos;
+    Vector2 platformPos;
+    int32 stoodAngle;
+    int32 chomperOffset;
     uint8 activePlayers;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator nodeAnimator;
+    Animator plantAnimator;
+    Animator fillerAnimator;
     bool32 startGrowth;
     bool32 shown;
-    bool32 flag2;
+    bool32 finished;
 } EntityBeanstalk;
 
 // Object Struct
@@ -69,13 +69,15 @@ void Beanstalk_EditorLoad(void);
 void Beanstalk_Serialize(void);
 
 // Extra Entity Functions
-int32 Beanstalk_Unknown1(void);
-int32 Beanstalk_Unknown2(void);
-int32 Beanstalk_Unknown3(void);
-void Beanstalk_Unknown4(void);
-void Beanstalk_Unknown5(void);
-void Beanstalk_Unknown6(void);
-void Beanstalk_Unknown7(void);
+int32 Beanstalk_GetNextNodeDistance(void);
+int32 Beanstalk_GetRemainingDistance(void);
+int32 Beanstalk_GetBezierInc(void);
+
+void Beanstalk_DrawNodes(void);
+void Beanstalk_DrawFillerNodes(void);
+
+void Beanstalk_HandleNodeMovement(void);
+void Beanstalk_HandleNodeAppear(void);
 
 void Beanstalk_CheckPlayerCollisions_Platform(void);
 void Beanstalk_CheckPlayerCollisions_Chomper(void);
