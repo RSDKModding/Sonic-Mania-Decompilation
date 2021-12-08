@@ -37,13 +37,13 @@ void MMZLightning_EditorLoad(void);
 void MMZLightning_Serialize(void);
 
 // Extra Entity Functions
-void MMZLightning_Unknown1(void);
-void MMZLightning_Unknown2(void);
-void MMZLightning_Unknown3(void);
-void MMZLightning_Unknown4(void);
-void MMZLightning_Unknown5(void);
-void MMZLightning_Unknown6(void);
-void MMZLightning_Unknown7(void);
+void MMZLightning_State_BeginFadeIn(void);
+void MMZLightning_State_FadeIn(void);
+void MMZLightning_State_SetupLightningBig(void);
+void MMZLightning_State_ShowLightningBig(void);
+void MMZLightning_State_LightningBigFadeOut(void);
+void MMZLightning_State_SetupLightningSmall(void);
+void MMZLightning_State_LightningSmallFadeOut(void);
 
 #endif
 

@@ -19,7 +19,7 @@ void MMZLightning_Draw(void)
 
     RSDK.SetActivePalette(1, 0, ScreenInfo->height);
 
-    RSDK.DrawSprite(&self->animator, 0, true);
+    RSDK.DrawSprite(&self->animator, NULL, true);
 
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
@@ -36,28 +36,28 @@ void MMZLightning_Create(void *data)
 
 void MMZLightning_StageLoad(void) { MMZLightning->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Lightning.bin", SCOPE_STAGE); }
 
-void MMZLightning_Unknown1(void)
+void MMZLightning_State_BeginFadeIn(void)
 {
     RSDK_THIS(MMZLightning);
     if (!self->timer)
         RSDK.SetLimitedFade(0, 0, 5, 192, 0, 255);
     if (++self->timer == 4) {
         self->timer = 0;
-        self->state = MMZLightning_Unknown2;
+        self->state = MMZLightning_State_FadeIn;
     }
 }
 
-void MMZLightning_Unknown2(void)
+void MMZLightning_State_FadeIn(void)
 {
     RSDK_THIS(MMZLightning);
-    RSDK.SetLimitedFade(0, 4, 1, self->timer, 0, 255);
+    RSDK.SetLimitedFade(0, 4, 1, self->timer, false, 255);
 
     self->timer += 4;
     if (self->timer > 256)
         destroyEntity(self);
 }
 
-void MMZLightning_Unknown3(void)
+void MMZLightning_State_SetupLightningBig(void)
 {
     RSDK_THIS(MMZLightning);
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 0, &self->animator, true, 0);
@@ -66,22 +66,22 @@ void MMZLightning_Unknown3(void)
     self->visible    = true;
     self->drawFX     = FX_FLIP;
     self->direction  = RSDK.Rand(0, 2);
-    self->alpha      = 512;
+    self->alpha      = 0x200;
     self->inkEffect  = INK_ADD;
     self->drawOrder  = 1;
-    self->state      = MMZLightning_Unknown4;
+    self->state      = MMZLightning_State_ShowLightningBig;
 }
 
-void MMZLightning_Unknown4(void)
+void MMZLightning_State_ShowLightningBig(void)
 {
     RSDK_THIS(MMZLightning);
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1)
-        self->state = MMZLightning_Unknown5;
+        self->state = MMZLightning_State_LightningBigFadeOut;
 }
 
-void MMZLightning_Unknown5(void)
+void MMZLightning_State_LightningBigFadeOut(void)
 {
     RSDK_THIS(MMZLightning);
 
@@ -91,7 +91,7 @@ void MMZLightning_Unknown5(void)
         destroyEntity(self);
 }
 
-void MMZLightning_Unknown6(void)
+void MMZLightning_State_SetupLightningSmall(void)
 {
     RSDK_THIS(MMZLightning);
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 4));
@@ -103,10 +103,10 @@ void MMZLightning_Unknown6(void)
     self->alpha      = 320;
     self->inkEffect  = INK_ADD;
     self->drawOrder  = 1;
-    self->state      = MMZLightning_Unknown7;
+    self->state      = MMZLightning_State_LightningSmallFadeOut;
 }
 
-void MMZLightning_Unknown7(void)
+void MMZLightning_State_LightningSmallFadeOut(void)
 {
     RSDK_THIS(MMZLightning);
 

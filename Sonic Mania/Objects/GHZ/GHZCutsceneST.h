@@ -19,8 +19,8 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
-    int32 field_64;
-    int32 field_68;
+    bool32 setupKnuxCutscene;
+    int32 timer;
     int32 field_6C;
     int32 field_70;
     int32 field_74;
@@ -48,6 +48,7 @@ void GHZCutsceneST_Serialize(void);
 
 // Extra Entity Functions
 void GHZCutsceneST_SetupObjects(void);
+void GHZCutsceneST_SetupKnuxCutscene(void);
 #if RETRO_USE_PLUS
 void GHZCutsceneST_SkipCB(void);
 #endif

@@ -267,7 +267,7 @@ typedef struct {
     void (*LoadPalette)(uint8 bank, const char *path, uint16 rowFlags);
 #endif
     void (*RotatePalette)(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 right);
-    void (*SetLimitedFade)(uint8 destPaletteID, uint8 srcPaletteA, uint8 srcPaletteB, uint16 blendAmount, int32 startIndex, int32 endIndex);
+    void (*SetLimitedFade)(uint8 destPaletteID, uint8 srcPaletteA, uint8 srcPaletteB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_USE_PLUS
     void (*BlendColours)(uint8 paletteID, uint8 *coloursA, uint8 *coloursB, int32 alpha, int32 index, int32 count);
 #endif

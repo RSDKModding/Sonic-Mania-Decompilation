@@ -96,7 +96,7 @@ inline void RotatePalette(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 
     }
 }
 
-void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int32 startIndex, int32 endIndex);
+void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, short blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
 void BlendColours(byte paletteID, byte *coloursA, byte *coloursB, int32 alpha, int32 index, int32 count);
 #endif

@@ -36,12 +36,12 @@ void MMZ2Outro_Serialize(void);
 // Extra Entity Functions
 void MMZ2Outro_StartCutscene(void);
 
-bool32 MMZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 MMZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 MMZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
-bool32 MMZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host);
-bool32 MMZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_Cutscene_Rumble(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_Cutscene_CameraMoveToWindow(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_Cutscene_PlayerMoveToWindow(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_Cutscene_EnterMonarchEyes(EntityCutsceneSeq *host);
+bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host);
 #endif
 
 #endif //!OBJ_MMZ2OUTRO_H

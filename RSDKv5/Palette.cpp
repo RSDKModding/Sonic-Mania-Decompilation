@@ -48,14 +48,16 @@ void LoadPalette(uint8 paletteID, const char *filename, ushort rowFlags)
 }
 #endif
 
-void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex)
+void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, short blendAmount, int startIndex, int endIndex)
 {
     if (destPaletteID >= PALETTE_COUNT || srcPaletteA >= PALETTE_COUNT || srcPaletteB >= PALETTE_COUNT)
         return;
 
-    if (blendAmount > 0xFF) {
+    if (blendAmount > 0xFF) 
         blendAmount = 0xFF;
-    }
+    else if (blendAmount < 0)
+        blendAmount = 0;
+
 
     if (startIndex >= endIndex)
         return;
@@ -86,12 +88,10 @@ void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int32 alpha, i
     if (paletteID >= PALETTE_COUNT || !coloursA || !coloursB)
         return;
 
-    if (alpha > 0xFF) {
+    if (alpha > 0xFF) 
         alpha = 0xFF;
-    }
-    else if (alpha < 0) {
+    else if (alpha < 0) 
         alpha = 0;
-    }
 
     byte alpha2        = 0xFF - alpha;
     ushort *palettePtr = &fullPalette[paletteID][index];

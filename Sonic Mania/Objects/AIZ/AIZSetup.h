@@ -75,9 +75,10 @@ void AIZSetup_BGSwitchCB_Jungle(void);
 void AIZSetup_BGSwitchCB_Sky(void);
 #endif
 
-void AIZSetup_Unknown4(void);
-void AIZSetup_Unknown5(void);
-void AIZSetup_Unknown24(void);
+void AIZSetup_PlayerState_Static(void);
+void AIZSetup_PlayerState_P2Enter(void);
+
+void AIZSetup_HandleHeavyMovement(void);
 
 void AIZSetup_SetupObjects(void);
 
@@ -87,25 +88,25 @@ void AIZSetup_SkipCB(void);
 #endif
 
 void AIZSetup_CutsceneST_Setup(void);
-bool32 AIZSetup_Cutscene1_Unknown1(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown2(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown3(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown4(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown5(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown6(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown7(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown8(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown9(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterAIZ(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h);
+bool32 AIZSetup_CutsceneSonic_P2FlyIn(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterClaw(Entity *h);
+bool32 AIZSetup_CutsceneSonic_WatchClaw(Entity *h);
+bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h);
+bool32 AIZSetup_CutsceneSonic_RubyAppear(Entity *h);
+bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h);
 
 void AIZSetup_CutsceneK_Setup(void);
-bool32 AIZSetup_Cutscene2_Unknown1(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown2(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown3(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown4(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown5(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown6(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown7(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown8(Entity *h);
+bool32 AIZSetup_CutsceneKnux_Chillin(Entity *h);
+bool32 AIZSetup_CutsceneKnux_StartDrillin(Entity *h);
+bool32 AIZSetup_CutsceneKnux_Drillin(Entity *h);
+bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(Entity *h);
+bool32 AIZSetup_CutsceneKnux_EnterThreat(Entity *h);
+bool32 AIZSetup_CutsceneKnux_HeaviesAppear(Entity *h);
+bool32 AIZSetup_CutsceneKnux_RubyImpact(Entity *h);
+bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h);
 
 bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h);
 
