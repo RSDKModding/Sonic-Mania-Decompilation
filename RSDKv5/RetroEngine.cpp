@@ -1151,9 +1151,9 @@ void InitScriptSystem()
             continue;
         currentMod = &modList[m];
         for (modLinkSTD ptr : modList[m].linkModLogic) {
-            if (!ptr(&info, modList[m].folder.c_str())) {
+            if (!ptr(&info, modList[m].id.c_str())) {
                 modList[m].active = false;
-                PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].folder.c_str());
+                PrintLog(PRINT_ERROR, "[MOD] Failed to link logic for mod %s!", modList[m].id.c_str());
             }
         }
     }

@@ -39,11 +39,14 @@ typedef enum {
     ModTable_GetGlobals,
     ModTable_Super,
     ModTable_LoadModInfo,
+    ModTable_GetModPath,
+    ModTable_GetModCount,
+    ModTable_GetModIDByIndex,
+    ModTable_ForeachModID,
     ModTable_AddModCallback,
     ModTable_AddModCallbackSTD,
     ModTable_AddPublicFunction,
     ModTable_GetPublicFunction,
-    ModTable_GetModPath,
     ModTable_GetSettingsBool,
     ModTable_GetSettingsInt,
     ModTable_GetSettingsString,
@@ -81,7 +84,7 @@ struct ModInfo {
     std::string version;
     std::map<std::string, std::string> fileMap;
     std::vector<ModPublicFunctionInfo> functionList;
-    std::string folder;
+    std::string id;
     bool active;
     std::vector<modLinkSTD> linkModLogic;
     void (*unloadMod)() = NULL;
@@ -123,11 +126,15 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
 void *GetGlobals();
 
 bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
+void GetModPath(const char *id, TextInfo *result);
+int32 GetModCount(bool32 active);
+const char *GetModIDByIndex(uint32 index);
+bool32 ForeachModID(TextInfo *id);
+
 void AddModCallback(int32 callbackID, ModCallback callback);
 void AddModCallback_STD(int32 callbackID, ModCallbackSTD callback);
 void AddPublicFunction(const char *functionName, void *functionPtr);
 void *GetPublicFunction(const char *folder, const char *functionName);
-void GetModPath(const char *id, TextInfo *result);
 
 bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback);
 int32 GetSettingsInteger(const char *id, const char *key, int32 fallback);

@@ -220,37 +220,31 @@ bool32 MathHelpers_Unknown11(int32 x, int32 y, int32 prevX, int32 prevY, int32 e
                 if (prevY >= y) {
                     if (x > extendX)
                         return false;
-                    if (x <= extendX)
-                        return true;
+                    return y <= extendY;
                 }
                 else {
                     if (prevY > extendY)
                         return false;
-                    if (prevY <= extendY)
-                        return true;
+                    return extendY <= y;
                 }
             }
             else {
                 if (y > extendY)
                     return false;
-                if (y <= extendX)
-                    return true;
+                return extendY <= prevY;
             }
         }
         else {
             if (prevX > extendX)
                 return false;
-            if (prevX <= extendX)
-                return true;
+            return extendX <= x;
         }
     }
     else {
         if (x > extendX)
             return false;
-        if (x <= extendX)
-            return true;
+        return extendX <= prevX;
     }
-    return false;
 }
 int32 MathHelpers_Unknown12(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX1, int32 extendY1, int32 extendX2, int32 extendY2)
 {

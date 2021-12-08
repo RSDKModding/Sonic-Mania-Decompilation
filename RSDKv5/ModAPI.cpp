@@ -70,11 +70,14 @@ void initModAPI()
     addToModFunctionTable(ModTable_RegisterObjectSTD, ModRegisterObject_STD);
     addToModFunctionTable(ModTable_Super, Super);
     addToModFunctionTable(ModTable_LoadModInfo, LoadModInfo);
+    addToModFunctionTable(ModTable_GetModPath, GetModPath);
+    addToModFunctionTable(ModTable_GetModCount, GetModCount);
+    addToModFunctionTable(ModTable_GetModIDByIndex, GetModIDByIndex);
+    addToModFunctionTable(ModTable_ForeachModID, ForeachModID);
     addToModFunctionTable(ModTable_AddModCallback, AddModCallback);
     addToModFunctionTable(ModTable_AddModCallbackSTD, AddModCallback_STD);
     addToModFunctionTable(ModTable_AddPublicFunction, AddPublicFunction);
     addToModFunctionTable(ModTable_GetPublicFunction, GetPublicFunction);
-    addToModFunctionTable(ModTable_GetModPath, GetModPath);
     addToModFunctionTable(ModTable_GetSettingsBool, GetSettingsBool);
     addToModFunctionTable(ModTable_GetSettingsInt, GetSettingsInteger);
     addToModFunctionTable(ModTable_GetSettingsString, GetSettingsString);
@@ -151,7 +154,7 @@ void loadMods()
 
         // try the waitlist
         for (int32 &m : waitList) {
-            loadMod(&modList[m], modPath.string(), modList[m].folder, true);
+            loadMod(&modList[m], modPath.string(), modList[m].id, true);
             modList[m].language = 0;
         }
 
@@ -167,7 +170,7 @@ void loadMods()
                     const std::string mod_inifile = modDir + "/mod.ini";
                     std::string folder            = modDirPath.filename().string();
 
-                    if (std::find_if(modList.begin(), modList.end(), [&folder](ModInfo m) { return m.folder == folder; }) == modList.end()) {
+                    if (std::find_if(modList.begin(), modList.end(), [&folder](ModInfo m) { return m.id == folder; }) == modList.end()) {
                         loadMod(&info, modPath.string(), modDirPath.filename().string(), false);
                         modList.push_back(info);
                     }
@@ -225,7 +228,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
     info->desc    = "";
     info->author  = "";
     info->version = "";
-    info->folder  = "";
+    info->id      = "";
     info->active  = false;
 
     const std::string modDir = modsPath + "/" + folder;
@@ -235,7 +238,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
         fClose(f);
         auto ini = iniparser_load((modDir + "/mod.ini").c_str());
 
-        info->folder = folder;
+        info->id     = folder;
         info->active = active;
 
         info->name    = iniparser_getstring(ini, ":Name", "Unnamed Mod");
@@ -410,7 +413,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         linkInfo.screenInfo = screens;
                         linkInfo.modPtrs    = modFunctionTable;
 
-                        const char *fid = info->folder.c_str();
+                        const char *fid = info->id.c_str();
                         currentMod      = info;
                         std::string res = ((langSetup)info->language)(&linkInfo, fid);
                         res             = "." + res;
@@ -424,7 +427,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     // index
                     auto it = langMap.begin();
                     std::advance(it, mode - 2);
-                    const char *fid = info->folder.c_str();
+                    const char *fid = info->id.c_str();
                     const char *log = buf.c_str();
                     int32 isSTD     = 0;
                     modLink res     = (*(newLangLink *)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
@@ -589,7 +592,7 @@ void saveMods()
         for (int32 m = 0; m < modList.size(); ++m) {
             currentMod = &modList[m];
             SaveSettings();
-            writeText(file, "%s=%c\n", currentMod->folder.c_str(), currentMod->active ? 'y' : 'n');
+            writeText(file, "%s=%c\n", currentMod->id.c_str(), currentMod->active ? 'y' : 'n');
         }
         fClose(file);
     }
@@ -608,10 +611,10 @@ void RunModCallbacks(int32 callbackID, void *data)
 }
 
 // Mod API
-bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active)
+bool32 LoadModInfo(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active)
 {
     for (int32 m = 0; m < modList.size(); ++m) {
-        if (modList[m].folder == folder) {
+        if (modList[m].id == id) {
             if (description)
                 SetText(description, (char *)modList[m].desc.c_str(), false);
             if (description)
@@ -625,6 +628,46 @@ bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, Te
         }
     }
     return false;
+}
+
+int32 GetModCount(bool32 active)
+{
+    int32 c = 0;
+    for (auto &m : modList) {
+        if (++c && active && !m.active)
+            return c - 1;
+    }
+    return c;
+}
+
+const char *GetModIDByIndex(uint32 index)
+{
+    if (index >= modList.size())
+        return NULL;
+    return modList[index].id.c_str();
+}
+
+bool32 ForeachModID(TextInfo *id)
+{
+    if (!id)
+        return false;
+
+    using namespace std;
+
+    if (id->text)
+        ++foreachStackPtr->id;
+    else {
+        ++foreachStackPtr;
+        foreachStackPtr->id = 0;
+    }
+
+    if (foreachStackPtr->id >= modList.size()) {
+        foreachStackPtr--;
+        return false;
+    }
+    string set = modList[foreachStackPtr->id].id;
+    SetText(id, (char *)set.c_str(), set.length());
+    return true;
 }
 
 void AddModCallback(int32 callbackID, ModCallback callback) { return AddModCallback_STD(callbackID, callback); }
@@ -655,9 +698,9 @@ void *GetPublicFunction(const char *id, const char *functionName)
         return NULL;
     }
     if (!strlen(id))
-        id = currentMod->folder.c_str();
+        id = currentMod->id.c_str();
     for (ModInfo &m : modList) {
-        if (m.active && m.folder == id) {
+        if (m.active && m.id == id) {
             for (auto &f : m.functionList)
                 if (f.name == functionName)
                     return f.ptr;
@@ -671,7 +714,7 @@ void GetModPath(const char *id, TextInfo *result)
 {
     int32 m;
     for (m = 0; m < modList.size(); ++m)
-        if (modList[m].active && modList[m].folder == id)
+        if (modList[m].active && modList[m].id == id)
             break;
     if (m == modList.size())
         return;
@@ -685,7 +728,7 @@ std::string GetModPath_i(const char *id)
 {
     int32 m;
     for (m = 0; m < modList.size(); ++m)
-        if (modList[m].active && modList[m].folder == id)
+        if (modList[m].active && modList[m].id == id)
             break;
     if (m == modList.size())
         return std::string();
@@ -703,7 +746,7 @@ std::string GetSettingsValue(const char *id, const char *key)
     std::string rkey = skey.substr(skey.find(":") + 1);
 
     for (ModInfo &m : modList) {
-        if (m.active && m.folder == id) {
+        if (m.active && m.id == id) {
             try {
                 return m.settings.at(cat).at(rkey);
             } catch (std::out_of_range) {
@@ -719,11 +762,11 @@ bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
     if (!id) {
         if (!currentMod)
             return fallback;
-        id = currentMod->folder.c_str();
+        id = currentMod->id.c_str();
     }
     std::string v = GetSettingsValue(id, key);
     if (!v.length()) {
-        if (currentMod->folder == id)
+        if (currentMod->id == id)
             SetSettingsBool(key, fallback);
         return fallback;
     }
@@ -732,7 +775,7 @@ bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
         return true;
     if (first == 'n' || first == 'N' || first == 'f' || first == 'F' || !first)
         return false;
-    if (currentMod->folder == id)
+    if (currentMod->id == id)
         SetSettingsBool(key, fallback);
     return fallback;
 }
@@ -742,18 +785,18 @@ int32 GetSettingsInteger(const char *id, const char *key, int32 fallback)
     if (!id) {
         if (!currentMod)
             return fallback;
-        id = currentMod->folder.c_str();
+        id = currentMod->id.c_str();
     }
     std::string v = GetSettingsValue(id, key);
     if (!v.length()) {
-        if (currentMod->folder == id)
+        if (currentMod->id == id)
             SetSettingsInteger(key, fallback);
         return fallback;
     }
     try {
         return std::stoi(v, nullptr, 0);
     } catch (...) {
-        if (currentMod->folder == id)
+        if (currentMod->id == id)
             SetSettingsInteger(key, fallback);
         return fallback;
     }
@@ -766,12 +809,12 @@ void GetSettingsString(const char *id, const char *key, TextInfo *result, const 
             SetText(result, (char *)fallback, strlen(fallback));
             return;
         }
-        id = currentMod->folder.c_str();
+        id = currentMod->id.c_str();
     }
 
     std::string v = GetSettingsValue(id, key);
     if (!v.length()) {
-        if (currentMod->folder == id)
+        if (currentMod->id == id)
             SetSettingsString(key, result);
         SetText(result, (char *)fallback, strlen(fallback));
         return;
@@ -950,7 +993,7 @@ void SaveSettings()
     if (!currentMod || !currentMod->settings.size())
         return;
 
-    FileIO *file = fOpen((GetModPath_i(currentMod->folder.c_str()) + "/modSettings.ini").c_str(), "w");
+    FileIO *file = fOpen((GetModPath_i(currentMod->id.c_str()) + "/modSettings.ini").c_str(), "w");
 
     if (currentMod->settings[""].size()) {
         for (pair<string, string> pair : currentMod->settings[""]) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
@@ -962,7 +1005,7 @@ void SaveSettings()
         for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
     fClose(file);
-    PrintLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->folder.c_str());
+    PrintLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->id.c_str());
     return;
 }
 

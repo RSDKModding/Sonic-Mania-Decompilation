@@ -281,3 +281,4 @@ android/local.properties
 mods/*
 !mods/v5py
 !mods/PZTC
+!mods/ManiaModMenu

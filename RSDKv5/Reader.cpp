@@ -146,7 +146,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     if (activeMod != -1) {
         char buf[0x100];
         sprintf(buf, "%s", filePathBuf);
-        sprintf(filePathBuf, "%smods/%s/%s", userFileDir, modList[activeMod].folder.c_str(), buf);
+        sprintf(filePathBuf, "%smods/%s/%s", userFileDir, modList[activeMod].id.c_str(), buf);
         info->externalFile = true;
         addPath            = false;
     }
