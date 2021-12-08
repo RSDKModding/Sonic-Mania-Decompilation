@@ -31,16 +31,16 @@ void UIShifter_Create(void *data)
 {
     RSDK_THIS(UIShifter);
     if (!SceneInfo->inEditor) {
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->startPos.x        = self->position.x;
+        self->startPos.y        = self->position.y;
         self->active            = ACTIVE_BOUNDS;
         self->lastButtonShift.x = 0;
         self->lastButtonShift.y = 0;
-        self->shiftOffset.x       = 0;
-        self->shiftOffset.y       = 0;
-        self->visible       = false;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
+        self->shiftOffset.x     = 0;
+        self->shiftOffset.y     = 0;
+        self->visible           = false;
+        self->updateRange.x     = 0x800000;
+        self->updateRange.y     = 0x800000;
     }
 }
 
