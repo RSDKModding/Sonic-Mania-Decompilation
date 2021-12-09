@@ -15,16 +15,17 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    Vector2 headStartPos;
+    Vector2 startPos;
     Vector2 bodyPosition[8];
     Vector2 bodyVelocity[8];
     int32 bodyDirection[8];
     int32 bodyTimer[8];
     int32 boundL;
     int32 boundR;
-    Animator bodyAnimators[8];
-    Animator animator1;
-    Animator animator2;
+    Animator bodyAnimators[7];
+    Animator smokePuffAnimator0;
+    Animator smokePuffAnimator1;
+    Animator smokePuffAnimator2;
 } EntityCaterkillerJr;
 
 // Object Struct
@@ -48,7 +49,7 @@ void CaterkillerJr_DebugDraw(void);
 void CaterkillerJr_DebugSpawn(void);
 
 void CaterkillerJr_SetupPositions(void);
-void CaterkillerJr_State1(void);
-void CaterkillerJr_State2(void);
+void CaterkillerJr_State_SetupVelocities(void);
+void CaterkillerJr_State_Move(void);
 
 #endif //!OBJ_CATERKILLERJR_H

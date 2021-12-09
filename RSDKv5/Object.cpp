@@ -95,6 +95,8 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
     }
 
     bool loaded = false;
+
+    //TODO: remove
     //This is done so Static/ can be loaded first, ensuring smoother development
 #if !RETRO_USE_ORIGINAL_CODE
     sprintf(buffer, "Static/%s.bin", hashBuf);
