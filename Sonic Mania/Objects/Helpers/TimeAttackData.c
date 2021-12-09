@@ -9,9 +9,9 @@ void TimeAttackData_Draw(void) {}
 void TimeAttackData_Create(void *data) {}
 void TimeAttackData_StageLoad(void) {}
 
-void TimeAttackData_TrackActClear(uint8 act, uint8 zone, StatInfo * stat, uint8 charID, int32 time, int32 rings, int32 score)
-{
 #if RETRO_USE_PLUS
+void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 charID, int32 rings, int32 score, int32 time)
+{
     stat->statID = 0;
     stat->name   = "ACT_CLEAR";
     memset(stat->data, 0, sizeof(stat->data));
@@ -22,13 +22,9 @@ void TimeAttackData_TrackActClear(uint8 act, uint8 zone, StatInfo * stat, uint8 
     stat->data[4] = intToVoid(time);
     stat->data[5] = intToVoid(rings);
     stat->data[6] = intToVoid(score);
-#else
-    APICallback_TrackActClear(zone, act, charID, score, rings, time);
-#endif
 }
-void TimeAttackData_TrackTAClear(uint8 actID, uint8 zone, StatInfo *stat, uint8 charID, int32 gameMode, int32 time)
+void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 charID, int32 gameMode, int32 time)
 {
-#if RETRO_USE_PLUS
     stat->statID = 1;
     stat->name   = "TA_CLEAR";
     memset(stat->data, 0, sizeof(stat->data));
@@ -37,13 +33,9 @@ void TimeAttackData_TrackTAClear(uint8 actID, uint8 zone, StatInfo *stat, uint8 
     stat->data[2] = (void *)PlayerNames[charID];
     stat->data[3] = (void *)ModeNames[gameMode];
     stat->data[4] = intToVoid(time);
-#else
-    APICallback_TrackTAClear(zone, actID, charID, time);
-#endif
 }
-void TimeAttackData_TrackEnemyDefeat(uint8 actID, uint8 zoneID, StatInfo *stat, uint8 charID, bool32 encore, int32 x, int32 y)
+void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 charID, bool32 encore, int32 x, int32 y)
 {
-#if RETRO_USE_PLUS
     stat->statID   = 2;
     stat->name   = "ENEMY_DEFEAT";
     memset(stat->data, 0, sizeof(stat->data));
@@ -53,19 +45,17 @@ void TimeAttackData_TrackEnemyDefeat(uint8 actID, uint8 zoneID, StatInfo *stat, 
     stat->data[3]     = intToVoid(encore);
     stat->data[4]     = intToVoid(x);
     stat->data[5]     = intToVoid(y);
-#else
-    APICallback_TrackEnemyDefeat(zoneID, actID, charID, x, y);
-#endif
 }
+#endif
 
-void TimeAttackData_ClearOptions(void)
+void TimeAttackData_Clear(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     param->selectionFlag   = 0;
     memset(param->menuTag, 0, sizeof(param->menuTag));
     param->selectionID      = 0;
     param->startedTAAttempt = false;
-    param->clearFlag        = false;
+    param->inTimeAttack     = false;
     param->zoneID           = 0;
     param->actID            = 0;
 #if RETRO_USE_PLUS
@@ -78,7 +68,7 @@ void TimeAttackData_ClearOptions(void)
     globals->suppressAutoMusic = false;
     globals->suppressTitlecard = false;
 }
-int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 playerID, int32 act)
+int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID)
 {
     int32 listPos = 0;
     switch (zoneID) {
@@ -93,7 +83,7 @@ int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 playerID, int32 act)
             if (act)
                 listPos = 2 * zoneID + 3;
             else
-                listPos = (playerID == 3) + 1 + 2 * zoneID;
+                listPos = (characterID == 3) + 1 + 2 * zoneID;
             break;
         case 8:
         case 9: listPos = act + 2 * (zoneID + 1); break;
@@ -101,11 +91,11 @@ int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 playerID, int32 act)
         case 11: listPos = act + (2 * zoneID + 3); break;
         default: break;
     }
-    LogHelpers_Print("playerID = %d, zoneID = %d, act = %d", playerID, zoneID, act);
+    LogHelpers_Print("playerID = %d, zoneID = %d, act = %d", characterID, zoneID, act);
     LogHelpers_Print("listPos = %d", listPos);
     return listPos;
 }
-int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 playerID, int32 act)
+int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID)
 {
     int32 listPos = 0;
     switch (zoneID) {
@@ -123,7 +113,7 @@ int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 playerID, int32 act)
         case 11: listPos = act + 2 * (zoneID + 1); break;
         default: break;
     }
-    LogHelpers_Print("playerID = %d, zoneID = %d, act = %d", playerID, zoneID, act);
+    LogHelpers_Print("playerID = %d, zoneID = %d, act = %d", characterID, zoneID, act);
     LogHelpers_Print("listPos = %d", listPos);
     return listPos;
 }
@@ -388,15 +378,15 @@ void TimeAttackData_GetLeaderboardRank_CB(int32 status, int32 rank)
     }
 }
 
-void TimeAttackData_AddLeaderboardEntry(uint8 zone, char playerID, uint8 act, int32 mode, int32 time)
+void TimeAttackData_AddLeaderboardEntry(uint8 zone, uint8 act, uint8 characterID, int32 mode, int32 time)
 {
     StatInfo stat; 
-    TimeAttackData_TrackTAClear(act, zone, &stat, playerID, mode, time);
+    TimeAttackData_TrackTAClear(&stat, zone, act, characterID, mode, time);
     API.TryTrackStat(&stat);
 
     const char *leaderboardName = "";
-    if (zone < 12 && act < 2 && playerID <= 5) {
-        int32 id = 10 * zone + 5 * act + (playerID - 1);
+    if (zone < 12 && act < 2 && characterID <= 5) {
+        int32 id = 10 * zone + 5 * act + (characterID - 1);
         if (mode)
             id += 120;
         leaderboardName = LeaderboardNames[id];
@@ -423,6 +413,8 @@ void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 player, uint8 rank, 
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void TimeAttackData_EditorDraw(void) {}
 void TimeAttackData_EditorLoad(void) {}
+#endif
 void TimeAttackData_Serialize(void) {}

@@ -23,9 +23,6 @@ void Options_StageLoad(void)
     }
 #endif
 }
-void Options_EditorDraw(void) {}
-void Options_EditorLoad(void) {}
-void Options_Serialize(void) {}
 
 void Options_Reload(void)
 {
@@ -227,3 +224,9 @@ void Options_SaveOptionsCallback(int32 statusCode)
         Options->saveEntityPtr = NULL;
     }
 }
+
+#if RETRO_INCLUDE_EDITOR
+void Options_EditorDraw(void) {}
+void Options_EditorLoad(void) {}
+#endif
+void Options_Serialize(void) {}

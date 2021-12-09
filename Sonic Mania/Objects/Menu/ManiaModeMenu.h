@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     Entity *saveSelectMenu;
     Entity *noSaveMenu;
     Entity *secretsMenu;
@@ -42,8 +42,8 @@ void ManiaModeMenu_Serialize(void);
 
 // Extra Entity Functions
 void ManiaModeMenu_Initialize(void);
-bool32 ManiaModeMenu_InitUserdata(void);
-void ManiaModeMenu_InitLocalization(int32 a1);
+bool32 ManiaModeMenu_InitAPI(void);
+void ManiaModeMenu_InitLocalization(bool32 success);
 int32 ManiaModeMenu_GetActiveMenu(void);
 void ManiaModeMenu_ChangeMenuTrack(void);
 int32 ManiaModeMenu_StartReturnToTitle(void);

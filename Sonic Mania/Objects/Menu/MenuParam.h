@@ -16,7 +16,7 @@ typedef struct {
     char menuTag[0x100];
     int32 selectionID;
     int32 startedTAAttempt; // only used in pre-plus, goes unused by the time plus rolled around
-    int32 clearFlag;
+    bool32 inTimeAttack;
     int32 replayID;
     int32 characterID;
     int32 zoneID;

@@ -255,7 +255,7 @@ void UIVsZoneButton_SelectedCB(void)
     parent->state = StateMachine_None;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
     RSDK.StopChannel(Music->channelID);
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->vsZoneID = self->zoneID;
     param->vsActID  = self->act;
     self->state   = UIVsZoneButton_State_Selected;

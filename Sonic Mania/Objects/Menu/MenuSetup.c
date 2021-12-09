@@ -27,7 +27,7 @@ void MenuSetup_LateUpdate(void) {}
 void MenuSetup_StaticUpdate(void)
 {
 #if RETRO_USE_PLUS
-    if (!MenuSetup->dword10) {
+    if (!MenuSetup->initializedAPI) {
         MenuSetup->fxFade->speedOut = 0;
         TextInfo tag;
         INIT_TEXTINFO(tag);
@@ -37,35 +37,39 @@ void MenuSetup_StaticUpdate(void)
                 RSDK.PrependText(&tag, "Main Menu");
             }
         }
-        if (!ManiaModeMenu_InitUserdata()) {
+
+        if (!ManiaModeMenu_InitAPI()) {
             control->selectionDisabled = true;
             return;
         }
         else {
             control->selectionDisabled = false;
-            MenuSetup->dword10         = 1;
+            MenuSetup->initializedAPI         = true;
             TextInfo info;
             Localization_GetString(&info, STR_RPC_MENU);
             API_SetRichPresence(PRESENCE_MENU, &info);
         }
     }
-    if (!MenuSetup->initialized) {
+
+    if (!MenuSetup->initializedMenu) {
         ManiaModeMenu_Initialize();
-        MenuSetup->initialized = true;
+        MenuSetup->initializedMenu = true;
     }
-    if (!MenuSetup->dword8) {
+
+    if (!MenuSetup->initializedMenuReturn) {
         ManiaModeMenu_HandleMenuReturn();
-        MenuSetup->dword8 = 1;
+        MenuSetup->initializedMenuReturn = true;
         ManiaModeMenu_SetBGColours();
         if (!globals->suppressAutoMusic) {
             ManiaModeMenu_ChangeMenuTrack();
         }
         globals->suppressAutoMusic = false;
     }
+
     MenuSetup->fxFade->speedOut = 12;
     DialogRunner_GetUserAuthStatus();
 #else
-    if (!MenuSetup->dword10) {
+    if (!MenuSetup->initializedAPI) {
         TextInfo tag;
         INIT_TEXTINFO(tag);
         foreach_all(UIControl, control)
@@ -74,31 +78,34 @@ void MenuSetup_StaticUpdate(void)
                 RSDK.PrependText(&tag, "Main Menu");
             }
         }
-        if (!MenuSetup_InitUserdata()) {
+        if (!MenuSetup_InitAPI()) {
             control->selectionDisabled = true;
             return;
         }
         else {
             control->selectionDisabled = false;
-            MenuSetup->dword10         = 1;
+            MenuSetup->initializedAPI         = true;
             TextInfo info;
             Localization_GetString(&info, STR_RPC_MENU);
             API_SetRichPresence(PRESENCE_MENU, &info);
         }
     }
-    if (!MenuSetup->initialized) {
+
+    if (!MenuSetup->initializedMenu) {
         MenuSetup_Initialize();
-        MenuSetup->initialized = true;
+        MenuSetup->initializedMenu = true;
     }
-    if (!MenuSetup->dword8) {
+
+    if (!MenuSetup->initializedMenuReturn) {
         MenuSetup_HandleMenuReturn();
-        MenuSetup->dword8 = 1;
+        MenuSetup->initializedMenuReturn = true;
         MenuSetup_SetBGColours();
         if (!globals->suppressAutoMusic) {
             MenuSetup_ChangeMenuTrack();
         }
         globals->suppressAutoMusic = false;
     }
+
     APICallback_GetUserAuthStatus();
 #endif
 }
@@ -122,12 +129,11 @@ void MenuSetup_StageLoad(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 #if RETRO_USE_PLUS
     LogHelpers_Print("Menu recall ctrl: %s", param->menuTag);
-    MenuSetup->dword8      = false;
-    MenuSetup->initialized = false;
-    MenuSetup->dword10     = false;
-    MenuSetup->gameLoaded  = false;
-    MenuSetup->dword10     = false;
-    MenuSetup->fxFade      = NULL;
+    MenuSetup->initializedMenuReturn = false;
+    MenuSetup->initializedMenu       = false;
+    MenuSetup->initializedAPI        = false;
+    MenuSetup->saveLoaded            = false;
+    MenuSetup->fxFade                = NULL;
     if (!globals->suppressAutoMusic) {
         RSDK.StopChannel(Music->channelID);
         Music->activeTrack = -1;
@@ -381,9 +387,9 @@ void MenuSetup_Initialize(void)
     MenuSetup_Unknown3();
 }
 
-bool32 MenuSetup_InitUserdata(void)
+bool32 MenuSetup_InitAPI(void)
 {
-    if (!MenuSetup->dword10)
+    if (!MenuSetup->initializedAPI)
         MenuSetup->fxFade->timer = 512;
 
     APICallback_GetUserAuthStatus();
@@ -409,13 +415,13 @@ bool32 MenuSetup_InitUserdata(void)
                 return false;
             }
 
-            if (!MenuSetup->gameLoaded) {
+            if (!MenuSetup->saveLoaded) {
                 UIWaitSpinner_StartWait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
-                MenuSetup->gameLoaded = true;
+                MenuSetup->saveLoaded = true;
             }
-            if (MenuSetup->dword10)
+            if (MenuSetup->initializedAPI)
                 return true;
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK) {
                 if (!globals->noSave && APICallback_NotifyAutosave())
@@ -423,7 +429,7 @@ bool32 MenuSetup_InitUserdata(void)
                 UIWaitSpinner_FinishWait();
                 if (APICallback_CheckUnreadNotifs())
                     return false;
-                MenuSetup->dword10 = 1;
+                MenuSetup->initializedAPI = 1;
                 return true;
             }
 
@@ -862,7 +868,7 @@ void MenuSetup_HandleMenuReturn(void)
         }
     }
 
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
 }
 
 // Main Menu
@@ -951,7 +957,7 @@ int32 MenuSetup_StartReturnToTitle(void)
 
 void MenuSetup_ReturnToTitle(void)
 {
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     RSDK.SetScene("Presentation", "Title Screen");
     RSDK.LoadScene();
 }
@@ -1029,7 +1035,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->lastButtonID;
     param->replayID    = 0;
@@ -1142,7 +1148,7 @@ void MenuSetup_SaveSel_YPressCB(void)
 void MenuSetup_TA_OpenZoneList_Sonic(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 1;
 
     EntityUIControl *control = (EntityUIControl *)MenuSetup->timeAttackZones;
@@ -1157,7 +1163,7 @@ void MenuSetup_TA_OpenZoneList_Sonic(void)
 void MenuSetup_TA_OpenZoneList_Tails(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 2;
 
     EntityUIControl *control = (EntityUIControl *)MenuSetup->timeAttackZones;
@@ -1172,7 +1178,7 @@ void MenuSetup_TA_OpenZoneList_Tails(void)
 void MenuSetup_TA_OpenZoneList_Knux(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 3;
 
     EntityUIControl *control = (EntityUIControl *)MenuSetup->timeAttackZones;
@@ -1757,7 +1763,7 @@ void MenuSetup_VS_StartPuyoMatch(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionFlag = 3;
     globals->gameMode    = MODE_COMPETITION;
     strcpy(param->menuTag, "Competition Total");
@@ -2092,7 +2098,7 @@ void MenuSetup_Extras_ProcessButtonCB(void) { UIControl_ProcessButtonInput(); }
 void MenuSetup_Extras_Start_Puyo_vsAI(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
@@ -2105,7 +2111,7 @@ void MenuSetup_Extras_Callback_Puyo_vsAI(void) { MenuSetup_StartTransition(MenuS
 void MenuSetup_Extras_Start_Puyo_vs2P(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 2;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
@@ -2118,7 +2124,7 @@ void MenuSetup_Extras_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(MenuS
 void MenuSetup_Extras_Start_Credits(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID         = 3;
@@ -2132,7 +2138,7 @@ void MenuSetup_Extras_Credits_ActionCB(void) { MenuSetup_StartTransition(MenuSet
 void MenuSetup_Extras_StartDAGarden(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     strcpy(param->menuTag, "Extras");
     param->selectionID = 2;
     RSDK.SetScene("Extras", "D.A. Garden");
@@ -2144,7 +2150,7 @@ void MenuSetup_Extras_DAGarden_ActionCB(void) { MenuSetup_StartTransition(MenuSe
 void MenuSetup_Extras_Start_BSS_3K(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
@@ -2157,7 +2163,7 @@ void MenuSetup_Extras_Callback_BSS_3K(void) { MenuSetup_StartTransition(MenuSetu
 void MenuSetup_Extras_Start_BSS_Mania(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;

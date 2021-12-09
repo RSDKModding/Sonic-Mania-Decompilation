@@ -626,7 +626,7 @@ void OptionsMenu_Unknown29(int32 status)
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->languageControl;
     control->startingID      = control->buttonID;
 
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     strcpy(param->menuTag, "Options");
     MenuSetup_StartTransition(OptionsMenu_Unknown28, 32);
 }

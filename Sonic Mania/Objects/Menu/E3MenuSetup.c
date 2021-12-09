@@ -121,7 +121,7 @@ void E3MenuSetup_ZoneSelect_ActionCB(void)
 void E3MenuSetup_ActionCB_Sonic(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 1;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
@@ -134,7 +134,7 @@ void E3MenuSetup_ActionCB_Sonic(void)
 void E3MenuSetup_ActionCB_Tails(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 2;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
@@ -147,7 +147,7 @@ void E3MenuSetup_ActionCB_Tails(void)
 void E3MenuSetup_ActionCB_Knux(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 3;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {

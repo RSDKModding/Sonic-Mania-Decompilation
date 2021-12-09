@@ -52,7 +52,7 @@ void MSZCutsceneK_StageLoad(void)
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 0, 3);
 }
 #endif
 
@@ -167,7 +167,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             globals->suppressAutoMusic = true;
             globals->enableIntro       = 1;
             RSDK.SetScene("Mania Mode", "");
-            SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
+            SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 0, 3);
             Zone_StartFadeOut(10, 0x000000);
         }
         else if (host->timer - host->storedValue2 == 60) {

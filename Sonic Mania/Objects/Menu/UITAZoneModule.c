@@ -726,7 +726,7 @@ void UITAZoneModule_State_StartTimeAttackAttempt(void)
 
     self->isSelected = true;
     if (self->timer >= 30) {
-        TimeAttackData_ClearOptions();
+        TimeAttackData_Clear();
         param->zoneID = self->zoneID;
         param->actID  = self->actID;
         self->timer   = 0;

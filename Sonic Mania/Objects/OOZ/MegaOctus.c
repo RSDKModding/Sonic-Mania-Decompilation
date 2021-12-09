@@ -828,10 +828,7 @@ void MegaOctus_StateGun_FireLaser(void)
     RSDK.ProcessAnimation(&self->animator2);
     self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
 
-    if ((self->velocity.y >= 0 && self->position.y < self->field_6C) || (self->velocity.y < 0 && self->position.y > self->field_6C)) {
-        // TODO: cleanup
-    }
-    else {
+    if ((self->velocity.y < 0 || self->position.y >= self->field_6C) && (self->velocity.y >= 0 && self->position.y <= self->field_6C)) {
         self->position.y = self->field_6C;
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 4, &self->animator2, true, 0);
         RSDK.PlaySfx(MegaOctus->sfxLaser, false, 255);

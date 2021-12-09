@@ -356,9 +356,8 @@ void PuyoGame_Unknown14(void)
 
     EntityFXFade *fxFade = PuyoGame->fxFade;
     if (fxFade->timer == 512) {
-        //TODO: what was this
-        // if (param->selectionFlag == 3)
-        //     session->wins[self->field_A1];
+        if (param->selectionFlag == 3)
+            session->wins[self->field_A1]++;
         destroyEntity(self);
         RSDK.SetScene("Presentation", "Menu");
         RSDK.LoadScene();

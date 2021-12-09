@@ -33,8 +33,8 @@ void TimeAttackMenu_Create(void *data) {}
 void TimeAttackMenu_StageLoad(void)
 {
     TimeAttackMenu->encoreMode = false;
-    TimeAttackMenu->hasRows   = false;
-    TimeAttackMenu->rowCount    = 0;
+    TimeAttackMenu->hasRows    = false;
+    TimeAttackMenu->rowCount   = 0;
 }
 
 void TimeAttackMenu_Initialize(void)
@@ -125,7 +125,7 @@ void TimeAttackMenu_Initialize(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, detailsControl->startPos.x - detailsControl->cameraOffset.x,
                                       detailsControl->startPos.y - detailsControl->cameraOffset.y, &hitbox, banner->position.x, banner->position.y)) {
             TimeAttackMenu->detailsBanner = (Entity *)banner;
-            banner->parent         = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
+            banner->parent                = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
         }
 
         hitbox.right  = lbControl->size.x >> 17;
@@ -135,7 +135,7 @@ void TimeAttackMenu_Initialize(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, lbControl->startPos.x - lbControl->cameraOffset.x, lbControl->startPos.y - lbControl->cameraOffset.y,
                                       &hitbox, banner->position.x, banner->position.y)) {
             TimeAttackMenu->leaderboardsBanner = (Entity *)banner;
-            banner->parent          = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
+            banner->parent                     = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
         }
     }
 }
@@ -211,35 +211,36 @@ void TimeAttackMenu_SetupActions(void)
 void TimeAttackMenu_HandleMenuReturn(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    if (param->clearFlag)
+    if (param->inTimeAttack)
         TimeAttackMenu_SetEncoreLayouts(param->isEncoreMode);
 
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
-    if (param->clearFlag) {
-        int32 charID                   = param->characterID - 1;
-        control->buttonID              = charID;
+    if (param->inTimeAttack) {
+        int32 charID                         = param->characterID - 1;
+        control->buttonID                    = charID;
         control->buttons[charID]->isSelected = true;
     }
 
     EntityUIControl *legacyControl = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
-    if (param->clearFlag) {
+    if (param->inTimeAttack) {
         int32 charID = 0;
         if (param->characterID - 1 <= 2)
             charID = param->characterID - 1;
 
-        legacyControl->buttonID              = charID;
+        legacyControl->buttonID                    = charID;
         legacyControl->buttons[charID]->isSelected = true;
     }
 
     EntityUIControl *zoneControl = (EntityUIControl *)TimeAttackMenu->taZoneSelControl;
-    if (param->clearFlag) {
-        zoneControl->buttonID                     = param->zoneID;
+    if (param->inTimeAttack) {
+        zoneControl->buttonID                           = param->zoneID;
         zoneControl->buttons[param->zoneID]->isSelected = true;
     }
 
     EntityUIControl *detailsControl = (EntityUIControl *)TimeAttackMenu->taDetailsControl;
-    if (param->clearFlag) {
-        UITABanner_SetupDetails(param->characterID, (EntityUITABanner *)TimeAttackMenu->detailsBanner, param->zoneID, param->actID, param->isEncoreMode);
+    if (param->inTimeAttack) {
+        UITABanner_SetupDetails(param->characterID, (EntityUITABanner *)TimeAttackMenu->detailsBanner, param->zoneID, param->actID,
+                                param->isEncoreMode);
         TimeAttackMenu_SetupDetailsView();
         UIButton_SetChoiceSelectionWithCB(detailsControl->buttons[0], param->actID);
         detailsControl->buttonID = param->selectionID;
@@ -478,7 +479,7 @@ void TimeAttackMenu_ReplayLoad_CB(bool32 success)
     TextInfo info;
     INIT_TEXTINFO(info);
     Localization_GetString(&info, strID);
-   
+
     EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, StateMachine_None, true);
     if (dialog) {
         EntityUIPopover *popover = (EntityUIPopover *)UIPopover->activeEntity;
@@ -527,8 +528,8 @@ void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
     int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->selectionID = parent->buttonID;
-        param->clearFlag   = true;
+        param->selectionID  = parent->buttonID;
+        param->inTimeAttack = true;
         TimeAttackMenu_WatchReplay(uuid, false);
     }
 }
@@ -543,8 +544,8 @@ void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void)
     int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->selectionID = parent->buttonID;
-        param->clearFlag   = true;
+        param->selectionID  = parent->buttonID;
+        param->inTimeAttack = true;
         TimeAttackMenu_WatchReplay(uuid, true);
     }
 }
@@ -587,7 +588,7 @@ void TimeAttackMenu_ReplayButton_ActionCB(void)
     EntityUIControl *control         = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
 
-    control->buttonID  = 1;
+    control->buttonID     = 1;
     carousel->curReplayID = 0;
     UIControl_MatchMenuTag("Replays");
     UIButton_SetChoiceSelectionWithCB(control->buttons[0], 0);
@@ -661,7 +662,7 @@ void TimeAttackMenu_StartTAAttempt(void)
 
     sprintf(param->menuTag, "Time Attack Detail");
     param->selectionID  = 0;
-    param->clearFlag    = true;
+    param->inTimeAttack = true;
     param->isEncoreMode = TimeAttackMenu->encoreMode;
 
     Replay *replayPtr = (Replay *)globals->replayReadBuffer;
@@ -687,9 +688,9 @@ void TimeAttackMenu_LoadScene(void)
         RSDK.SetScene("Mania Mode", "");
 
     if (param->isEncoreMode)
-        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(param->zoneID, param->characterID, param->actID);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(param->zoneID, param->actID, param->characterID);
     else
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->actID, param->characterID);
 
     switch (param->characterID) {
         case 1: globals->playerID = ID_SONIC; break;
@@ -723,7 +724,8 @@ void TimeAttackMenu_YPressCB_Details(void)
 {
     EntityUITABanner *banner = (EntityUITABanner *)TimeAttackMenu->detailsBanner;
     int32 count              = API.GetSortedUserDBRowCount(globals->taTableID);
-    TimeAttackMenu_SetupLeaderboards(banner->zoneID, banner->characterID, banner->actID, TimeAttackMenu->encoreMode, !count, UITAZoneModule_ShowLeaderboards_CB);
+    TimeAttackMenu_SetupLeaderboards(banner->zoneID, banner->characterID, banner->actID, TimeAttackMenu->encoreMode, !count,
+                                     UITAZoneModule_ShowLeaderboards_CB);
 }
 
 void TimeAttackMenu_ResetTimes_YesCB(void)
@@ -820,7 +822,7 @@ void TimeAttackMenu_CharButton_ActionCB(void)
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->taZoneSelControl;
 
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     int32 characterID  = self->characterID + 1;
     param->characterID = characterID;
     API.LeaderboardsUnknown4();
@@ -881,7 +883,7 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
                 control->rowCount        = 1;
                 control->columnCount     = 1;
                 control->buttonID        = 0;
-                TimeAttackMenu->hasRows = TimeAttackMenu->hasRows == 0;
+                TimeAttackMenu->hasRows  = TimeAttackMenu->hasRows == 0;
 
                 EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)TimeAttackMenu->topRankPrompt;
                 int32 val                    = -(TimeAttackMenu->hasRows != 0);
@@ -894,7 +896,7 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
                 destroyEntity(self);
                 break;
             }
-            //otherwise, fallthrough and do this
+            // otherwise, fallthrough and do this
         }
         case STATUS_OK: {
             EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)TimeAttackMenu->topRankPrompt;

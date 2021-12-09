@@ -47,7 +47,7 @@ void TitleSetup_StageLoad(void)
     globals->noSave = false;
 #endif
     globals->blueSpheresInit = false;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
 #if RETRO_USE_PLUS
     API.ClearPrerollErrors();
     API.ClearUserStorageStatus();

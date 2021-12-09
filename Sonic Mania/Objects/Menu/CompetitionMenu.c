@@ -486,7 +486,7 @@ void CompetitionMenu_StartMatch(void)
         RSDK.SetScene("Encore Mode", "");
     else
         RSDK.SetScene("Mania Mode", "");
-    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, param->vsActID, 0);
     SaveGame_ResetPlayerState();
     memset(globals->noSaveSlot, 0, 0x400);
 
@@ -892,7 +892,7 @@ void CompetitionMenu_GotoPuyoVS(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionFlag = 3;
     globals->gameMode    = MODE_COMPETITION;
     strcpy(param->menuTag, "Competition Total");

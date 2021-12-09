@@ -5,6 +5,9 @@
 
 // Object Class
 typedef struct {
+#if !RETRO_USE_PLUS
+    RSDK_OBJECT
+#endif
     bool32 loaded;
     uint8 zoneID;
     uint8 act;
@@ -45,12 +48,14 @@ void TimeAttackData_EditorLoad(void);
 void TimeAttackData_Serialize(void);
 
 //Extra Entity FUnctions
-void TimeAttackData_TrackActClear(uint8 act, uint8 zone, StatInfo *stat, uint8 charID, int32 time, int32 rings, int32 score);
-void TimeAttackData_TrackTAClear(uint8 actID, uint8 zone, StatInfo *stat, uint8 charID, int32 gameMode, int32 time);
-void TimeAttackData_TrackEnemyDefeat(uint8 actID, uint8 zoneID, StatInfo *stat, uint8 charID, bool32 encore, int32 x, int32 y);
-void TimeAttackData_ClearOptions(void);
-int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 playerID, int32 act);
-int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 playerID, int32 act);
+#if RETRO_USE_PLUS
+void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 charID, int32 rings, int32 score, int32 time);
+void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 charID, int32 gameMode, int32 time);
+void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 charID, bool32 encore, int32 x, int32 y);
+#endif
+void TimeAttackData_Clear(void);
+int32 TimeAttackData_GetManiaListPos(int32 zoneID, int32 act, int32 characterID);
+int32 TimeAttackData_GetEncoreListPos(int32 zoneID, int32 act, int32 characterID);
 void TimeAttackData_GetTimeFromValue(int32 time, int32 *minsPtr, int32 *secsPtr, int32 *millisecsPtr);
 #if RETRO_USE_PLUS
 int32 TimeAttackData_LoadCB(int32 statusCode);
@@ -65,7 +70,7 @@ int32 TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int32 enco
 void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 characterID, uint8 act, int32 encore);
 
 void TimeAttackData_GetLeaderboardRank_CB(int32 status, int32 rank);
-void TimeAttackData_AddLeaderboardEntry(uint8 zone, char playerID, uint8 act, int32 mode, int32 time);
+void TimeAttackData_AddLeaderboardEntry(uint8 zone, uint8 act, uint8 characterID, int32 mode, int32 time);
 #else
 void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 player, uint8 rank, uint16 time);
 uint16 *TimeAttackData_GetRecordedTime(uint8 zone, uint8 act, uint8 player, uint8 rank);

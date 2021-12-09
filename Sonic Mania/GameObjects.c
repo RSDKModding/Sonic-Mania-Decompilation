@@ -278,7 +278,7 @@ void LinkGameLogicDLL(EngineInfo *info)
 #if RETRO_USE_PLUS
     RSDK_ADD_OBJECT_CONTAINER(GameProgress);
 #else
-    // RSDK_ADD_OBJECT(GameProgress); //TODO: lol
+    RSDK_ADD_OBJECT(GameProgress);
 #endif
     RSDK_ADD_OBJECT(GasPlatform);
     RSDK_ADD_OBJECT(GenericTrigger);
