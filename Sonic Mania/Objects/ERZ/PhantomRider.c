@@ -93,8 +93,6 @@ void PhantomRider_StageLoad(void)
 
 void PhantomRider_ProcessAutoScroll(void)
 {
-    RSDK_THIS(PhantomRider);
-
     if (Zone->autoScrollSpeed > 0x80000) {
         Zone->autoScrollSpeed -= 0x2000;
         if (Zone->autoScrollSpeed < 0x80000)

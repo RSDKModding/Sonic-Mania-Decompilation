@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <tinyxml2.h>
+#include "tinyxml2.h"
 
 #include <functional>
 
@@ -110,7 +110,7 @@ void loadMods();
 bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active);
 void saveMods();
 
-inline void sortMods();
+void sortMods();
 
 void RunModCallbacks(int32 callbackID, void *data);
 

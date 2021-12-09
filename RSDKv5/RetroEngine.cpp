@@ -742,7 +742,6 @@ void LoadXMLObjects()
 void LoadXMLSoundFX()
 {
     FileInfo info;
-    FileInfo infoStore;
     for (int m = 0; m < (int)modList.size(); ++m) {
         if (!modList[m].active)
             continue;

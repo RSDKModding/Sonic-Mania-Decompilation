@@ -1,4 +1,4 @@
-﻿#include "RetroEngine.hpp"
+#include "RetroEngine.hpp"
 #include "zlib/zlib.h"
 
 #if RETRO_REV02
@@ -350,7 +350,7 @@ void LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_USING_SDL2
-    SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
+    //SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
     PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
 #else
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");

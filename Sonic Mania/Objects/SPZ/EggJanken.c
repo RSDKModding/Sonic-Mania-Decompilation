@@ -1190,7 +1190,6 @@ void EggJanken_StateDraw_Unknown3(void)
 #if RETRO_INCLUDE_EDITOR
 void EggJanken_EditorDraw(void)
 {
-    RSDK_THIS(EggJanken);
     EggJanken_StateDraw_Unknown1();
 
     if (showGizmos())

@@ -95,7 +95,7 @@ void Funnel_Update(void)
                         dy = distY - 10;
 
                     int distX = abs(player->position.x - self->position.x) >> 16;
-                    if (distX <= dy && player->position.y < self->position.y || player->position.y < self->position.y - 0x280000 && distX <= 64) {
+                    if ((distX <= dy && player->position.y < self->position.y) || (player->position.y < self->position.y - 0x280000 && distX <= 64)) {
                         if (player->camera) {
                             player->scrollDelay = 0;
                             Camera_SetupLerp(2, p, self->position.x, self->position.y - 0x400000, 8);

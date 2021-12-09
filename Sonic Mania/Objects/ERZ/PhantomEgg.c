@@ -238,8 +238,6 @@ void PhantomEgg_SetupScanlineCB(void)
 
 void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
 {
-    RSDK_THIS(PhantomEgg);
-
     int id                    = phantomID & 3;
     PhantomEgg->boundsStoreL1 = Zone->cameraBoundsL[0];
     PhantomEgg->boundsStoreR1 = Zone->cameraBoundsR[0];
@@ -354,8 +352,6 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
 
 void PhantomEgg_HandleReturnWarp(void)
 {
-    RSDK_THIS(PhantomEgg);
-
     for (int p = 0; p < Player->playerCount; ++p) {
         Zone->cameraBoundsL[p] = PhantomEgg->boundsStoreL1;
         Zone->cameraBoundsR[p] = PhantomEgg->boundsStoreR1;
@@ -802,7 +798,7 @@ void PhantomEgg_State_Unknown10(void)
     if (self->timer == 4 * self->health + 160)
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 14, &self->animator7, true, 0);
 
-    if (self->animator7.animationID == 14 && self->animator7.frameID == self->animator7.frameCount - 2 || self->timer > 288) {
+    if ((self->animator7.animationID == 14 && self->animator7.frameID == self->animator7.frameCount - 2) || self->timer > 288) {
         self->timer = 0;
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         if (self->animator3.frameID > 0) {

@@ -717,8 +717,8 @@ bool32 CheckDBValueMatch(UserDBValue *valueA, int row, int column)
             case DBVAR_STRING: {
                 char *string1 = (char *)valueA->data;
                 char *string2 = (char *)valueA->data;
-                int len1      = strlen(string1);
-                int len2      = strlen(string2);
+                int len1      = (int)strlen(string1);
+                int len2      = (int)strlen(string2);
                 if (len1 != len2)
                     return false;
 
@@ -759,7 +759,7 @@ void StoreUserDBValue(UserDBValue *value, int type, void *data)
                 break;
             case DBVAR_STRING: {
                 char *string = (char *)data;
-                int len      = strlen(string);
+                int len      = (int)strlen(string);
                 if (len < 15) {
                     value->size = len + 1;
                     int id      = 0;

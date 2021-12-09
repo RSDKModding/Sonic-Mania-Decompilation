@@ -90,7 +90,7 @@ void DashLift_State_HandleDash(void)
                 player->velocity.x -= player->velocity.x >> 5;
                 player->position.x = self->position.x;
                 if (player->direction == FLIP_X) {
-                    if (player->sidekick && totalSpeed < 0 || self->drawPos.y >= self->amplitude.y)
+                    if ((player->sidekick && totalSpeed < 0) || self->drawPos.y >= self->amplitude.y)
                         continue;
 
                     int speed = 0;
@@ -123,7 +123,7 @@ void DashLift_State_HandleDash(void)
                         RSDK.PlaySfx(DashLift->sfxPulley, false, 255);
                 }
                 else {
-                    if (player->sidekick && totalSpeed > 0 || self->drawPos.y <= self->amplitude.x)
+                    if ((player->sidekick && totalSpeed > 0) || self->drawPos.y <= self->amplitude.x)
                         continue;
 
                     int speed = 0;

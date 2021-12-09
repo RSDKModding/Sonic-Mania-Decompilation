@@ -75,7 +75,6 @@ void RisingLava_State_RiseShake(void)
 
 void RisingLava_State_StoppedRising(void)
 {
-    RSDK_THIS(RisingLava);
     TileLayer *move = RSDK.GetSceneLayer(Zone->moveLayer);
 
     foreach_active(Player, player)

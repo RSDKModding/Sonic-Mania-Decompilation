@@ -130,8 +130,7 @@ void MSBomb_Unknown3(void)
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xA0000, true)) {
         self->velocity.y = -0x40000;
         if (self->timer > 0) {
-            self->timer--;
-            if (!self->timer == 1) {
+            if (!--self->timer) {
                 int storeX = self->position.x;
                 int storeY = self->position.y;
                 RSDK.ResetEntityPtr(self, Explosion->objectID, intToVoid(EXPLOSION_BOSS));

@@ -588,7 +588,6 @@ void Drillerdroid_State_Unknown10(void)
             Drillerdroid->field_6E = 0;
             RSDK.PlaySfx(Drillerdroid->sfxSizzle, false, 255);
 
-            int spawnX           = 0;
             EntityDebris *debris = NULL;
             switch (Drillerdroid->armorHealth) {
                 default: break;

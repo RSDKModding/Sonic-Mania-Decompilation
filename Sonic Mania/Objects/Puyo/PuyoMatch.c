@@ -24,7 +24,9 @@ void PuyoMatch_Draw(void)
         drawPos.x = self->position.x;
         drawPos.y = self->position.y - 0x80000;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
-        drawPos.y += 0x100000, RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        
+        drawPos.y += 0x100000;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
     }
 
     if (self->field_94 > 0)

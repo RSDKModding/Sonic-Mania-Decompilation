@@ -1206,12 +1206,6 @@ void UISaveSlot_EditorLoad(void)
     RSDK_ENUM_VAR("No Save Slot", UISAVESLOT_NOSAVE);
 
 #if RETRO_USE_PLUS
-    uint8 sonic  = UISaveSlot_GetIDFromPlayerID(ID_SONIC);
-    uint8 tails  = UISaveSlot_GetIDFromPlayerID(ID_TAILS);
-    uint8 knux   = UISaveSlot_GetIDFromPlayerID(ID_KNUCKLES);
-    uint8 mighty = UISaveSlot_GetIDFromPlayerID(ID_MIGHTY);
-    uint8 ray    = UISaveSlot_GetIDFromPlayerID(ID_RAY);
-
     RSDK_ACTIVE_VAR(UISaveSlot, dCharPoint);
     RSDK_ENUM_VAR("None", ID_NONE);
     RSDK_ENUM_VAR("Sonic", sonic);

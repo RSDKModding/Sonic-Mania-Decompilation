@@ -231,7 +231,7 @@ void TurboTurtle_HandleFans(void)
                     if (player->position.x < right)
                         right = player->position.x;
                     int pos = self->position.x + (self->hitbox2.left << 16);
-                    player->position.x += (strength * (((length << 16) - right + (pos != 0) ? (length << 16) - right + pos : 0) / length)) >> 1;
+                    player->position.x += (strength * (((length << 16) - right + ((pos != 0) ? (length << 16) - right + pos : 0)) / length)) >> 1;
                 }
             }
         }

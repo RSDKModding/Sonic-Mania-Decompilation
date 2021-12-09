@@ -242,7 +242,6 @@ void Bomb_State_Shrapnel(void)
 #if RETRO_INCLUDE_EDITOR
 void Bomb_EditorDraw(void)
 {
-    RSDK_THIS(Bomb);
     Bomb_Draw();
 }
 

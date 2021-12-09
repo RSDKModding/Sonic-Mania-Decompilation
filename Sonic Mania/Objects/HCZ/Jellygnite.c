@@ -374,7 +374,6 @@ void Jellygnite_State_Unknown3(void)
 #if RETRO_INCLUDE_EDITOR
 void Jellygnite_EditorDraw(void)
 {
-    RSDK_THIS(Jellygnite);
     Jellygnite_SetupAnimations(0);
 
     Jellygnite_Draw();

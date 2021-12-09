@@ -360,7 +360,6 @@ void UIRankButton_State_Selected(void)
 #if RETRO_INCLUDE_EDITOR
 void UIRankButton_EditorDraw(void)
 {
-    RSDK_THIS(UIRankButton);
     UIRankButton_DrawSprites();
 }
 

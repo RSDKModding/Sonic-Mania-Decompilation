@@ -124,7 +124,7 @@ void PuyoAI_Unknown2(int playerID)
 
                 if (x1 <= 5 && y1 <= 13 && x2 <= 5 && y2 <= 13) {
                     int val1 = PuyoAI_Unknown3(bean, playerID, partner, x1, y1, x2, y2);
-                    if ((!y1 && (x1 == 2 || x1 == 3) || !y2 && (x2 == 2 || x2 == 3)) && val1 < 16)
+                    if (((!y1 && (x1 == 2 || x1 == 3)) || (!y2 && (x2 == 2 || x2 == 3))) && val1 < 16)
                         val1 = -1;
                     int val2 = PuyoBean_Unknown9(bean, playerID, x1, y1);
                     int val3 = PuyoBean_Unknown9(partner, playerID, x2, y2);
@@ -141,7 +141,7 @@ void PuyoAI_Unknown2(int playerID)
                         y = y1;
 
                     int valY = (val1 * ((y << 16) / 4 + 1)) >> 16;
-                    if (valY > lastY || valY == lastY && RSDK.Rand(0, 10) > 5) {
+                    if (valY > lastY || (valY == lastY && RSDK.Rand(0, 10) > 5)) {
                         lastY                     = valY;
                         PuyoAI->targetX[playerID] = x1;
                         PuyoAI->value6[playerID]  = p;

@@ -414,6 +414,7 @@ bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
+    unused(camera);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)ERZStart->ruby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)ERZStart->fxRuby;
 
@@ -460,6 +461,7 @@ bool32 ERZStart_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
+    unused(camera);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)ERZStart->ruby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)ERZStart->fxRuby;
 

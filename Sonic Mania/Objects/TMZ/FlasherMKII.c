@@ -74,7 +74,6 @@ void FlasherMKII_DebugSpawn(void)
 
 void FlasherMKII_DebugDraw(void)
 {
-    RSDK_THIS(FlasherMKII);
     RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }

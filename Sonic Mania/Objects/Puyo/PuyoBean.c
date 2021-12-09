@@ -1139,7 +1139,6 @@ void PuyoBean_Unknown24(void)
 #if RETRO_INCLUDE_EDITOR
 void PuyoBean_EditorDraw(void)
 {
-    RSDK_THIS(PuyoBean);
     RSDK.DrawSprite(&PuyoBean->animator, NULL, false);
 }
 

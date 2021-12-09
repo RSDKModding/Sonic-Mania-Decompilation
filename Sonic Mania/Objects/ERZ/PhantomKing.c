@@ -229,8 +229,6 @@ void PhantomKing_HandleAttacks(void)
 
 void PhantomKing_SwitchToEggman(void)
 {
-    RSDK_THIS(PhantomKing);
-
     EntityKleptoMobile *eggmanPtr = NULL;
 
     foreach_active(KleptoMobile, eggman)
