@@ -970,6 +970,8 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Zone_IsAct2);
         ADD_PUBLIC_FUNC(Zone_GetEncoreStageID);
         ADD_PUBLIC_FUNC(Zone_GetManiaStageID);
+
+        ADD_PUBLIC_FUNC(UIControl_MatchMenuTag);
     }
 #endif
 }

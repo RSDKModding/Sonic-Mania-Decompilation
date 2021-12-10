@@ -53,11 +53,15 @@ typedef struct {
     void (*Super)(int32 objectID, ModSuper callback, void *data);
 
     bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
+    void (*GetModPath)(const char *id, TextInfo *result);
+    int32 (*GetModCount)(bool32 active);
+    const char *(*GetModIDByIndex)(uint32 index);
+    bool32 (*ForeachModID)(TextInfo *id);
+
     void *AddModCallback_FuncP;
     void *AddModCallback_STD;
     void (*AddPublicFunction)(const char *functionName, void *functionPtr);
     void *(*GetPublicFunction)(const char *id, const char *functionName);
-    const char *(*GetModPath)(const char *id);
 
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int32 (*GetSettingsInteger)(const char *id, const char *key, int32 fallback);

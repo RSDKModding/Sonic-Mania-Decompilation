@@ -1160,24 +1160,11 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
             inherited = NULL;
     }
 
-    // clang-format off
-    decltype(update) updateU       = [curMod, update]()           { currentMod = curMod; update();       currentMod = NULL; };
-    decltype(update) lateUpdateU   = [curMod, lateUpdate]()       { currentMod = curMod; lateUpdate();   currentMod = NULL; };
-    decltype(update) staticUpdateU = [curMod, staticUpdate]()     { currentMod = curMod; staticUpdate(); currentMod = NULL; };
-    decltype(update) drawU         = [curMod, draw]()             { currentMod = curMod; draw();         currentMod = NULL; };
-    decltype(update) stageLoadU    = [curMod, stageLoad]()        { currentMod = curMod; stageLoad();    currentMod = NULL; };
-    decltype(update) serializeU    = [curMod, serialize]()        { currentMod = curMod; serialize();    currentMod = NULL; };
-    decltype(update) editorDrawU   = [curMod, editorDraw]()       { currentMod = curMod; editorDraw();   currentMod = NULL; };
-    decltype(update) editorLoadU   = [curMod, editorLoad]()       { currentMod = curMod; editorLoad();   currentMod = NULL; };
-    decltype(create) createU       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
-    // clang-format on
+    RegisterObject_STD(structPtr, name, entitySize, objectSize, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
-    RegisterObject_STD(structPtr, name, entitySize, objectSize, updateU, lateUpdateU, staticUpdateU, drawU, createU, stageLoadU, editorDrawU,
-                       editorLoadU, serializeU);
-
+    ObjectInfo *info = &objectList[objectCount - 1];
     if (inherited) {
-        ObjectInfo *info = &objectList[objectCount - 1];
-        info->inherited  = inherit;
+        info->inherited = inherit;
 
         if (HASH_MATCH(info->hash, inherit->hash)) {
             // we override an obj and lets check for structPtr
@@ -1199,6 +1186,19 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
         if (!editorDraw)   info->editorDraw   = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_EDITORDRAW, NULL);   currentMod = NULL; };
         if (!editorLoad)   info->editorLoad   = [curMod, copy]()           { currentMod = curMod; SuperInternal(copy, SUPER_EDITORLOAD, NULL);   currentMod = NULL; };
         if (!create)       info->create       = [curMod, copy](void* data) { currentMod = curMod; SuperInternal(copy, SUPER_CREATE, data);       currentMod = NULL; };
+        // clang-format on
+    }
+    else {
+        // clang-format off
+        if (update)       info->update       = [curMod, update]()           { currentMod = curMod; update();       currentMod = NULL; };
+        if (lateUpdate)   info->lateUpdate   = [curMod, lateUpdate]()       { currentMod = curMod; lateUpdate();   currentMod = NULL; };
+        if (staticUpdate) info->staticUpdate = [curMod, staticUpdate]()     { currentMod = curMod; staticUpdate(); currentMod = NULL; };
+        if (draw)         info->draw         = [curMod, draw]()             { currentMod = curMod; draw();         currentMod = NULL; };
+        if (stageLoad)    info->stageLoad    = [curMod, stageLoad]()        { currentMod = curMod; stageLoad();    currentMod = NULL; };
+        if (serialize)    info->serialize    = [curMod, serialize]()        { currentMod = curMod; serialize();    currentMod = NULL; };
+        if (editorDraw)   info->editorDraw   = [curMod, editorDraw]()       { currentMod = curMod; editorDraw();   currentMod = NULL; };
+        if (editorLoad)   info->editorLoad   = [curMod, editorLoad]()       { currentMod = curMod; editorLoad();   currentMod = NULL; };
+        if (create)       info->create       = [curMod, create](void* data) { currentMod = curMod; create(data);   currentMod = NULL; };
         // clang-format on
     }
     objectCount = preCount;
