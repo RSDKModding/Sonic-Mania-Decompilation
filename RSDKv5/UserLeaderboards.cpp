@@ -53,19 +53,26 @@ void FillDummyLeaderboardEntries()
 
 void FetchLeaderboard(const char *name, bool32 isUser)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", name, isUser ? "true" : "false");
-    leaderboards->isUser   = isUser;
-    leaderboards->userRank = 0;
-    if (isUser)
-        leaderboards->userRank = rand() % 9999 + 1;
-    leaderboards->status = STATUS_OK;
+    if (leaderboards->status == STATUS_CONTINUE) {
+        std::string str = __FILE__;
+        str += ": FetchLeaderboard() # ERROR Attemped to fetch leaderboard when fetch currently in progress. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
+    }
+    else {
+        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", name, isUser ? "true" : "false");
+        leaderboards->isUser   = isUser;
+        leaderboards->userRank = 0;
+        if (isUser)
+            leaderboards->userRank = rand() % 9999 + 1;
+        leaderboards->status = STATUS_OK;
 
-    leaderboards->unknown.entryStart  = 1;
-    leaderboards->unknown.entryLength = 20;
-    leaderboards->unknown.field_8     = 1;
-    leaderboards->unknown.entryCount  = 20;
+        leaderboards->unknown.entryStart  = 1;
+        leaderboards->unknown.entryLength = 20;
+        leaderboards->unknown.field_8     = 1;
+        leaderboards->unknown.entryCount  = 20;
 
-    FillDummyLeaderboardEntries();
+        FillDummyLeaderboardEntries();
+    }
 }
 void TrackScore(const char *name, int score, void (*callback)(int status, int rank))
 {
@@ -87,6 +94,12 @@ void TrackScore(const char *name, int score, void (*callback)(int status, int ra
 
     leaderboardList[id].score = score;
     saveUserData();
+
+    std::string str = __FILE__;
+    str += ": TrackScore() # TrackScore ";
+    str += std::to_string(score);
+    str += " \r\n";
+    PrintLog(PRINT_NORMAL, str.c_str());
 
     if (callback)
         callback(true, 1);

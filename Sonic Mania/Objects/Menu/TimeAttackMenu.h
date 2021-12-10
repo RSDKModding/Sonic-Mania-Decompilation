@@ -22,8 +22,8 @@ typedef struct {
     Entity *replayPrompt;
     Entity *connectingDlg;
     bool32 encoreMode;
-    bool32 hasRows;
-    int32 rowCount;
+    bool32 prevIsUser;
+    int32 isUser;
 } ObjectTimeAttackMenu;
 
 // Entity Class

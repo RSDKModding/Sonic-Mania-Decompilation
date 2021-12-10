@@ -91,8 +91,16 @@ int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 int TryAuth()
 {
 #if RETRO_REV02
-    userStorage->authStatus = STATUS_OK;
-    return userStorage->authStatus;
+    if (userStorage->authStatus == STATUS_CONTINUE) {
+        std::string str = __FILE__;
+        str += ": TryAuth() # WARNING TryAuth() when auth currently in progress. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
+    }
+    else {
+        userStorage->authStatus = STATUS_OK;
+        userStorage->authTime   = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
+        return userStorage->authStatus;
+    }
 #else
     return STATUS_OK;
 #endif
@@ -100,8 +108,15 @@ int TryAuth()
 int TryInitStorage()
 {
 #if RETRO_REV02
-    userStorage->saveStatus = STATUS_OK;
-    return userStorage->saveStatus;
+    if (userStorage->storageStatus == STATUS_CONTINUE) {
+        std::string str = __FILE__;
+        str += ": TryInitStorage() # WARNING TryInitStorage() when auth currently in progress. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
+    }
+    else {
+        userStorage->storageStatus = STATUS_OK;
+        return userStorage->storageStatus;
+    }
 #else
     return STATUS_OK;
 #endif
@@ -117,9 +132,9 @@ void ClearPrerollErrors()
     if (userStorage->authStatus != STATUS_OK)
         userStorage->authStatus = STATUS_NONE;
 
-    userStorage->field_14 = 0;
-    if (userStorage->saveStatus != STATUS_OK)
-        userStorage->saveStatus = STATUS_NONE;
+    userStorage->authTime = 0;
+    if (userStorage->storageStatus != STATUS_OK)
+        userStorage->storageStatus = STATUS_NONE;
 #else
     PrintLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()");
 #endif
@@ -155,8 +170,11 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
 #if RETRO_REV02
     }
     else {
-        char buffer[0x100];
-        sprintf(buffer, "TryLoadUserFile(%s, %p, %u, %p) failing due to noSave", filename, buffer, bufSize, callback);
+        std::string str = __FILE__;
+        str += ": TryLoadUserFile() # TryLoadUserFile(";
+        str += filename;
+        str += ", ...) failing due to noSave \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         if (callback)
             callback(STATUS_ERROR);
@@ -191,9 +209,11 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
 #if RETRO_REV02
     }
     else {
-        char buffer[0x100];
-        sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback,
-                compressData ? "true" : "false");
+        std::string str = __FILE__;
+        str += ": TrySaveUserFile() # TrySaveUserFile(";
+        str += filename;
+        str += ", ...) failing due to noSave \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         if (callback)
             callback(STATUS_ERROR);
@@ -214,8 +234,11 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
 #if RETRO_REV02
     }
     else {
-        char buffer[0x100];
-        sprintf(buffer, "TryDeleteUserFile(%s, %p) failing due to noSave", filename, callback);
+        std::string str = __FILE__;
+        str += ": TryDeleteUserFile() # TryDeleteUserFile(";
+        str += filename;
+        str += ", ...) failing due to noSave \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         if (callback)
             callback(STATUS_ERROR);

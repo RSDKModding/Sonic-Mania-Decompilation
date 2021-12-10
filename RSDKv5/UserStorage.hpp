@@ -21,8 +21,8 @@ struct DummyUserStorage {
     int storageStatus;
     int saveStatus;
     int noSaveActive;
-    int field_14;
-    int field_18;
+    int authTime;
+    int storageTime;
     int field_1C[3];
 };
 

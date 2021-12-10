@@ -33,8 +33,8 @@ void TimeAttackMenu_Create(void *data) {}
 void TimeAttackMenu_StageLoad(void)
 {
     TimeAttackMenu->encoreMode = false;
-    TimeAttackMenu->hasRows    = false;
-    TimeAttackMenu->rowCount   = 0;
+    TimeAttackMenu->prevIsUser = false;
+    TimeAttackMenu->isUser     = false;
 }
 
 void TimeAttackMenu_Initialize(void)
@@ -348,7 +348,7 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
     }
 }
 
-void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act, bool32 isEncore, bool32 noRows, void (*callback)(void))
+void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act, bool32 isEncore, bool32 curIsUser, void (*callback)(void))
 {
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -363,11 +363,11 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         entity->delay                 = 120;
         entity->state                 = TimeAttackMenu_State_SetupLeaderboards;
         entity->callback              = callback;
-        int32 isUser                  = API.GetSortedUserDBRowCount(globals->taTableID);
-        if (noRows)
-            isUser = 0;
-        TimeAttackMenu->hasRows  = isUser;
-        TimeAttackMenu->rowCount = isUser;
+        TimeAttackMenu->isUser        = API.GetSortedUserDBRowCount(globals->taTableID) != 0;
+        if (curIsUser)
+            TimeAttackMenu->prevIsUser = false;
+        else
+            TimeAttackMenu->prevIsUser = TimeAttackMenu->isUser;
 
         const char *name = "";
         if (zoneID > 11 || act > 1 || (characterID - 1) > 4) {
@@ -379,7 +379,7 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
                 pos += 120;
             name = LeaderboardNames[pos];
         }
-        API.FetchLeaderboard(name, isUser);
+        API.FetchLeaderboard(name, TimeAttackMenu->prevIsUser);
         UITABanner_SetupDetails(characterID, (EntityUITABanner *)TimeAttackMenu->leaderboardsBanner, zoneID, act, isEncore);
     }
 }
@@ -758,13 +758,7 @@ void TimeAttackMenu_XPressCB_Details(void)
     TextInfo info;
     INIT_TEXTINFO(info);
     Localization_GetString(&info, STR_RESETTIMESWARNING);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, NULL, true);
-        UIDialog_AddButton(DIALOG_YES, dialog, TimeAttackMenu_ResetTimes_YesCB, true);
-        UIDialog_Setup(dialog);
-    }
+    UIDialog_CreateDialogYesNo(&info, TimeAttackMenu_ResetTimes_YesCB, StateMachine_None, true, true);
 }
 
 void TimeAttackMenu_Replays_ActionCB(void)
@@ -853,8 +847,8 @@ bool32 TimeAttackMenu_LeaderboardsBackPressCB(void)
 void TimeAttackMenu_YPressCB_LB(void)
 {
     EntityUITABanner *banner = (EntityUITABanner *)TimeAttackMenu->leaderboardsBanner;
-    if (TimeAttackMenu->rowCount)
-        TimeAttackMenu_SetupLeaderboards(banner->zoneID, banner->characterID, banner->actID, banner->isEncore, TimeAttackMenu->hasRows,
+    if (TimeAttackMenu->isUser)
+        TimeAttackMenu_SetupLeaderboards(banner->zoneID, banner->characterID, banner->actID, banner->isEncore, TimeAttackMenu->prevIsUser,
                                          StateMachine_None);
 }
 
@@ -886,13 +880,13 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
                 control->rowCount        = 1;
                 control->columnCount     = 1;
                 control->buttonID        = 0;
-                TimeAttackMenu->hasRows  = TimeAttackMenu->hasRows == 0;
+                TimeAttackMenu->prevIsUser   = !TimeAttackMenu->prevIsUser;
 
                 EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)TimeAttackMenu->topRankPrompt;
-                int32 val                    = -(TimeAttackMenu->hasRows != 0);
+                int32 val                    = -(TimeAttackMenu->prevIsUser != 0);
                 prompt->prevPrompt           = -1;
                 prompt->promptID             = (val + 15);
-                prompt->visible              = TimeAttackMenu->rowCount != 0;
+                prompt->visible              = !TimeAttackMenu->isUser;
 
                 self->callback                = StateMachine_None;
                 TimeAttackMenu->connectingDlg = NULL;
@@ -903,10 +897,10 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
         }
         case STATUS_OK: {
             EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)TimeAttackMenu->topRankPrompt;
-            int32 val                    = -(TimeAttackMenu->hasRows != 0);
+            int32 val                    = -(TimeAttackMenu->prevIsUser != false);
             prompt->prevPrompt           = -1;
-            prompt->promptID             = (val + 15);
-            prompt->visible              = TimeAttackMenu->rowCount != 0;
+            prompt->promptID             = val + 15;
+            prompt->visible              = TimeAttackMenu->isUser;
 
             EntityUIControl *leaderboardsControl = (EntityUIControl *)TimeAttackMenu->leaderboardsControl;
             TimeAttackMenu_SetupLeaderboardsCarousel(leaderboardsControl->carousel);
@@ -931,7 +925,7 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(void *c)
         carousel->maxOffset = entryCount.y + entryCount.x;
     else
         carousel->maxOffset = carousel->minOffset + 5;
-    if (TimeAttackMenu->hasRows && entryCount.y) {
+    if (TimeAttackMenu->prevIsUser && entryCount.y) {
         int32 userID = 0;
         for (; entryCount.x < entryCount.y; ++entryCount.x) {
             LeaderboardEntry *entry = API.ReadLeaderboardEntry(entryCount.x);

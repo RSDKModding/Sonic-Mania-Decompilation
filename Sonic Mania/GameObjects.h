@@ -126,7 +126,7 @@ typedef struct {
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
-    bool32 (*GetUsername)(TextInfo *text);
+    bool32 (*GetUsername)(TextInfo *name);
     void (*TryInitStorage)(void);
     int32 (*GetStorageStatus)(void);
     int32 (*GetSaveStatus)(void);

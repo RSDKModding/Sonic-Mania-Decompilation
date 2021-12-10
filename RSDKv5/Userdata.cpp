@@ -32,11 +32,40 @@ SettingsStorage settingsStorage;
 
 inline void nullUserFunc() {}
 
+uint32 GetAPIValueID(const char *identifier, int charIndex)
+{
+    if (identifier[charIndex])
+        return (33 * GetAPIValueID(identifier, charIndex + 1)) ^ identifier[charIndex];
+    else
+        return 5381;
+}
+
+int32 GetAPIValue(uint32 id)
+{
+    switch (id) {
+        default: break;
+        case 0x3D6BD740: return PLATFORM_DEV; // SYSTEM_PLATFORM
+        case 0xD9F55367: return REGION_US;    // SYSTEM_REGION
+        case 0xCC0762D: return LANGUAGE_EN;   // SYSTEM_LANGUAGE
+        case 0xA2ACEF21: return false;        // SYSTEM_CONFIRM_FLIP
+        case 0x4205582D: return 120;          // SYSTEM_LEADERBOARD_LOAD_TIME
+        case 0xDEF3F8B5: return STATUS_OK;    // SYSTEM_LEADERBOARD_STATUS
+        case 0x5AD68EAB: return STATUS_OK;    // SYSTEM_USERSTORAGE_AUTH_STATUS
+        case 0x884E705A: return STATUS_OK;    // SYSTEM_USERSTORAGE_STORAGE_STATUS
+        case 0xBDF4E94A: return 30;           // SYSTEM_USERSTORAGE_AUTH_TIME
+        case 0xD77E98BE: return 30;           // SYSTEM_USERSTORAGE_STORAGE_INIT_TIME
+        case 0x5AF715C2: return 30;           // SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME
+        case 0x54378EC5: return 30;           // SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME
+        case 0xCD44607D: return 30;           // SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME
+    }
+}
+
 void initUserData()
 {
-    int language = LANGUAGE_EN;
-    int region   = REGION_US;
-    int platform = PLATFORM_DEV;
+    int language = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    int region   = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    int platform = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
+    engine.confirmFlip = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
     || RETRO_PLATFORM == RETRO_iOS
@@ -58,6 +87,20 @@ void initUserData()
     gameVerInfo.language = language;
     gameVerInfo.region   = region;
 #endif
+
+    int32 value = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
 
 #if RETRO_REV02
     if (!dummmyCore)
@@ -167,9 +210,9 @@ void initUserData()
         stats->InitUnknown2   = nullUserFunc;
         stats->TryTrackStat   = TryTrackStat;
 
-        userStorage->InitUnknown1   = (int (*)())nullUserFunc;
-        userStorage->SetDebugValues = (int (*)())nullUserFunc;
-        userStorage->InitUnknown2   = (int (*)())nullUserFunc;
+        userStorage->InitUnknown1       = (int (*)())nullUserFunc;
+        userStorage->SetDebugValues     = (int (*)())nullUserFunc;
+        userStorage->InitUnknown2       = (int (*)())nullUserFunc;
         userStorage->TryAuth            = TryAuth;
         userStorage->TryInitStorage     = TryInitStorage;
         userStorage->GetUsername        = GetUserName;
@@ -179,10 +222,10 @@ void initUserData()
         userStorage->ClearPrerollErrors = ClearPrerollErrors;
 
         achievements->status       = STATUS_OK;
-        leaderboards->status       = STATUS_OK;
+        leaderboards->status       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
         stats->status              = STATUS_OK;
-        userStorage->authStatus    = STATUS_OK;
-        userStorage->storageStatus = STATUS_OK;
+        userStorage->authStatus    = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
+        userStorage->storageStatus = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
         userStorage->saveStatus    = STATUS_OK;
 #endif
     }
@@ -397,13 +440,22 @@ void SetPresence(byte id, TextInfo *info)
     GetCString(buffer, info);
     if (info->text[info->length - 1] == '\r')
         buffer[info->length - 1] = 0;
+
 #if RETRO_REV02
     richPresence->curID = id;
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
+
+    std::string str = __FILE__;
+    str += ": SetPresence() # Set Steam rich presence string to ";
+    str += buffer;
+    str += "\r\n";
+    PrintLog(PRINT_NORMAL, str.c_str());
+
+    // sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
+    // PrintLog(PRINT_NORMAL, buffer2);
 #else
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
-#endif
     PrintLog(PRINT_NORMAL, buffer2);
+#endif
 }
 
 #if !RETRO_REV02
@@ -430,7 +482,11 @@ void TrackGameProgress(float percent)
 void TryTrackStat(StatInfo *stat)
 {
     if (stats->status) {
-        PrintLog(PRINT_NORMAL, "Tracking Stat: %s (%d)", stat->name, stat->statID);
+        std::string str = __FILE__;
+        str += ": TrackStat() # TrackStat ";
+        str += stat->name;
+        str += " \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         switch (stat->statID) {
             case 0: {
@@ -468,7 +524,9 @@ void TryTrackStat(StatInfo *stat)
         }
     }
     else {
-        PrintLog(PRINT_NORMAL, "Track stat SKIPPED. Stats are disabled.");
+        std::string str = __FILE__;
+        str += ": TryTrackStat() # Track stat SKIPPED. Stats are disabled. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
     }
 }
 #endif

@@ -73,6 +73,10 @@ void initUserData();
 void releaseUserData();
 void saveUserData();
 
+//these are rev02 only but keeping em helps organization
+uint32 GetAPIValueID(const char *identifier, int charIndex);
+int32 GetAPIValue(uint32 id);
+
 int GetUserLanguage();
 int GetUserRegion();
 int GetUserPlatform();
