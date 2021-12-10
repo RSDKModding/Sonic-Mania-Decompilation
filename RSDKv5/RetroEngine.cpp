@@ -557,6 +557,8 @@ void runRetroEngine()
 #endif
 
         FlipScreen();
+
+        HandleUserStatuses();
     }
 
     // Shutdown

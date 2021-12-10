@@ -25,7 +25,7 @@ struct DummyLeaderboardsUnknown2 {
 struct DummyLeaderboardsUnknown {
     void *parent;
     int loadStatus;
-    int field_8;
+    int globalRankOffset;
     int entryCount;
     int field_10;
     int entryStart;
@@ -43,17 +43,22 @@ struct DummyLeaderboards {
 #endif
     void (*FetchLeaderboard)(const char *name, bool32 isUser);
     void (*unknown5)(void);
-    void (*TrackScore)(const char *name, int score, void (*callback)(int status, int rank));
+    void (*TrackScore)(const char *name, int score, void (*callback)(bool32 success, int rank));
     int (*GetStatus)(void);
 
     const char *currentLeaderboard;
     DummyLeaderboardsUnknown2 unknown2;
-    DummyLeaderboardsUnknown unknown;
-    int status;
-    int userRank;
-    int isUser;
-    int list;
-    int listSize;
+    DummyLeaderboardsUnknown entryInfo;
+    int32 status;
+    int32 userRank;
+    int32 isUser;
+    int32 list;
+    int32 listSize;
+
+    int32 loadTime;
+    int32 trackTime;
+    int32 trackRank;
+    void (*trackCB)(bool32 success, int rank);
 };
 #endif
 
@@ -73,7 +78,7 @@ extern DummyLeaderboards *leaderboards;
 
 void FillDummyLeaderboardEntries();
 void FetchLeaderboard(const char *name, bool32 isUser);
-void TrackScore(const char *name, int score, void (*callback)(int status, int rank));
+void TrackScore(const char *name, int score, void (*callback)(bool32 success, int rank));
 Vector2 LeaderboardEntryLength();
 Vector2 LeaderboardEntryCount();
 void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type);

@@ -469,25 +469,21 @@ void GenerateBlendLookupTable()
     }
 }
 
-void InitGFXSystem()
+void InitSystemSurfaces()
 {
-    uint hash[4];
-
-    GEN_HASH("TileBuffer", hash);
+    GEN_HASH("TileBuffer", gfxSurface[0].hash);
     gfxSurface[0].scope = SCOPE_GLOBAL;
-    memcpy(gfxSurface[0].hash, hash, 4 * sizeof(int));
     gfxSurface[0].width    = TILE_SIZE;
     gfxSurface[0].height   = 0x40000;
-    gfxSurface[0].lineSize = 4;
+    gfxSurface[0].lineSize = 4; // 16
     gfxSurface[0].dataPtr  = tilesetGFXData;
 
 #if RETRO_REV02
-    GEN_HASH("EngineText", hash);
+    GEN_HASH("EngineText", gfxSurface[1].hash);
     gfxSurface[1].scope = SCOPE_GLOBAL;
-    memcpy(gfxSurface[1].hash, hash, 4 * sizeof(int));
     gfxSurface[1].width    = 8;
-    gfxSurface[1].height   = 0x400; // 128 chars
-    gfxSurface[1].lineSize = 3;
+    gfxSurface[1].height   = 128 * 8;
+    gfxSurface[1].lineSize = 3; // 8
     gfxSurface[1].dataPtr  = engineTextBuffer;
 #endif
 }

@@ -20,8 +20,8 @@ enum UserdataTableIDs {
     APITable_RegisterHIDDevice,
 #endif
     APITable_UnlockAchievement,
-    APITable_GetAchievementsStatus,
-    APITable_SetAchievementsStatus,
+    APITable_GetAchievementsEnabled,
+    APITable_SetAchievementsEnabled,
 #if RETRO_VER_EGS
     APITable_CheckAchievementsEnabled,
     APITable_GetAchievementNames,
@@ -40,8 +40,8 @@ enum UserdataTableIDs {
     APITable_ReadLeaderboardEntry,
     APITable_SetPresence,
     APITable_TryTrackStat,
-    APITable_GetStatsStatus,
-    APITable_SetStatsStatus,
+    APITable_GetStatsEnabled,
+    APITable_SetStatsEnabled,
     APITable_ClearPrerollErrors,
     APITable_TryAuth,
     APITable_GetUserAuthStatus,
@@ -351,7 +351,7 @@ void setupFunctions()
 #endif
     CalculateTrigAngles();
     GenerateBlendLookupTable();
-    InitGFXSystem();
+    InitSystemSurfaces();
 
     memset(RSDKFunctionTable, NULL, FUNCTABLE_COUNT * sizeof(void *));
 #if RETRO_REV02
@@ -364,7 +364,7 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
     addToAPIFunctionTable(APITable_ExitGame, userCore->ExitGame);
     addToAPIFunctionTable(APITable_LaunchManual, userCore->LaunchManual);
-    addToAPIFunctionTable(APITable_IsOverlayEnabled, userCore->isOverlayEnabled);
+    addToAPIFunctionTable(APITable_IsOverlayEnabled, userCore->IsOverlayEnabled);
     addToAPIFunctionTable(APITable_CheckDLC, userCore->CheckDLC);
     addToAPIFunctionTable(APITable_ShowExtensionOverlay, userCore->ShowExtensionOverlay);
 #if RETRO_VER_EGS
@@ -374,8 +374,8 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_RegisterHIDDevice, userCore->RegisterHIDDevice);
 #endif
     addToAPIFunctionTable(APITable_UnlockAchievement, achievements->UnlockAchievement);
-    addToAPIFunctionTable(APITable_GetAchievementsStatus, GetAchievementsStatus);
-    addToAPIFunctionTable(APITable_SetAchievementsStatus, SetAchievementsStatus);
+    addToAPIFunctionTable(APITable_GetAchievementsEnabled, GetAchievementsEnabled);
+    addToAPIFunctionTable(APITable_SetAchievementsEnabled, SetAchievementsEnabled);
 #if RETRO_VER_EGS
     addToAPIFunctionTable(APITable_CheckAchievementsEnabled, achievements->CheckAchievementsEnabled);
     addToAPIFunctionTable(APITable_GetAchievementNames, achievements->GetAchievementNames);
@@ -394,8 +394,8 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
     addToAPIFunctionTable(APITable_SetPresence, richPresence->SetPresence);
     addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
-    addToAPIFunctionTable(APITable_GetStatsStatus, GetStatsStatus);
-    addToAPIFunctionTable(APITable_SetStatsStatus, SetStatsStatus);
+    addToAPIFunctionTable(APITable_GetStatsEnabled, GetStatsEnabled);
+    addToAPIFunctionTable(APITable_SetStatsEnabled, SetStatsEnabled);
     addToAPIFunctionTable(APITable_ClearPrerollErrors, userStorage->ClearPrerollErrors);
     addToAPIFunctionTable(APITable_TryAuth, userStorage->TryAuth);
     addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserAuthStatus);

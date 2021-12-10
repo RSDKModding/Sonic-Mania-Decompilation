@@ -808,14 +808,15 @@ bool32 APICallback_CheckUnreadNotifs(void)
 
 bool32 APICallback_NotifyAutosave(void)
 {
-    if (!APICallback->isAutoSaving && !APICallback->activeEntity) {
-        return false;
+    if (globals->notifiedAutosave) {
+        if (!APICallback->isAutoSaving && !APICallback->entityPtr) {
+            return false;
+        }
     }
-
-    if (!APICallback->activeEntity || (!globals->notifiedAutosave && !APICallback->isAutoSaving)) {
+    else if (!APICallback->isAutoSaving || !APICallback->entityPtr) {
         UIWaitSpinner_StartWait();
         APICallback->isAutoSaving = true;
-        globals->notifiedAutosave       = false;
+        globals->notifiedAutosave = false;
         LogHelpers_Print("DUMMY NotifyAutosave()");
         EntityAPICallback *dialogRunner = CREATE_ENTITY(APICallback, APICallback_NotifyAutoSave_CB, 0, 0);
         dialogRunner->active            = ACTIVE_ALWAYS;

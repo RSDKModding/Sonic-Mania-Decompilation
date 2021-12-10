@@ -13,7 +13,7 @@ void ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); 
 
 void TryUnlockAchievement(const char *name)
 {
-    if (achievements->status) {
+    if (achievements->enabled) {
         PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
         int i = 0;

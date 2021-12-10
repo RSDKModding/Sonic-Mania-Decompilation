@@ -20,7 +20,7 @@ struct DummyCore {
     void (*LaunchManual)(void);
     void (*ExitGame)(void);
     int (*GetDefaultGamepadType)(void);
-    bool32 (*isOverlayEnabled)(uint32 inputID);
+    bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(byte id);
     int (*ShowExtensionOverlay)(byte overlay);
 #if RETRO_VER_EGS
@@ -59,7 +59,7 @@ struct DummyStats {
     void (*InitUnknown2)(void);
     void (*TryTrackStat)(StatInfo *stat);
 
-    int status;
+    bool32 enabled;
 };
 
 extern DummyCore *dummmyCore;
@@ -72,6 +72,8 @@ extern DummyStats *stats;
 void initUserData();
 void releaseUserData();
 void saveUserData();
+
+void HandleUserStatuses();
 
 //these are rev02 only but keeping em helps organization
 uint32 GetAPIValueID(const char *identifier, int charIndex);
@@ -128,8 +130,8 @@ void TryTrackStat(StatInfo *stat);
 #endif
 
 #if RETRO_REV02
-inline int GetStatsStatus() { return stats->status; }
-inline void SetStatsStatus(int status) { stats->status = status; }
+inline bool32 GetStatsEnabled() { return stats->enabled; }
+inline void SetStatsEnabled(bool32 enabled) { stats->enabled = enabled; }
 #endif
 
 struct SettingsStorage {

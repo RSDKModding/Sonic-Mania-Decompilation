@@ -101,8 +101,8 @@ typedef struct {
     void (*RegisterHIDDevice)(void);
 #endif
     void (*UnlockAchievement)(const char *identifier);
-    int32 (*GetAchievementStatus)(void);
-    void (*SetAchievementStatus)(int32 status);
+    bool32 (*GetAchievementsEnabled)(void);
+    void (*SetAchievementsEnabled)(bool32 enabled);
 #if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(TextInfo *names, int32 count);
@@ -112,7 +112,7 @@ typedef struct {
     void (*LeaderboardUnknown1)(void);
 #endif
     void (*FetchLeaderboard)(const char *name, bool32 isUser);
-    void (*TrackScore)(const char *name, int32 score, void (*callback)(int32 status, int32 rank));
+    void (*TrackScore)(const char *name, int32 score, void (*callback)(bool32 success, int32 rank));
     int32 (*GetLeaderboardsStatus)(void);
     Vector2 (*LeaderboardEntryCount)(void);
     Vector2 (*LeaderboardEntryLength)(void);
@@ -121,8 +121,8 @@ typedef struct {
     LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);
     void (*SetRichPresence)(int32, TextInfo *text);
     void (*TryTrackStat)(StatInfo *stat);
-    int32 (*GetStatsStatus)(void);
-    void (*SetStatsStatus)(int32 status);
+    bool32 (*GetStatsEnabled)(void);
+    void (*SetStatsEnabled)(bool32 enabled);
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);

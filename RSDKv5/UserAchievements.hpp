@@ -18,7 +18,7 @@ struct DummyAchievements {
 #endif
     void (*UnlockAchievement)(const char *name);
 
-    int status;
+    bool32 enabled;
 #if RETRO_VER_EGS
 
 #endif
@@ -40,8 +40,8 @@ extern std::vector<int> achievementStack;
 extern DummyAchievements *achievements;
 
 #if RETRO_REV02
-inline int GetAchievementsStatus() { return achievements->status; }
-inline void SetAchievementsStatus(int status) { achievements->status = status; }
+inline bool32 GetAchievementsEnabled() { return achievements->enabled; }
+inline void SetAchievementsEnabled(bool32 enabled) { achievements->enabled = enabled; }
 #endif
 inline bool32 CheckAchievementsEnabled() { return true; }
 inline bool32 AchivementsUnknown8() { return true; }

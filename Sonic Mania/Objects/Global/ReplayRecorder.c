@@ -70,8 +70,8 @@ void ReplayRecorder_StaticUpdate(void)
                     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
                     player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-                    API.SetAchievementStatus(false);
-                    API.SetStatsStatus(false);
+                    API.SetAchievementsEnabled(false);
+                    API.SetStatsEnabled(false);
                     TimeAttackGate->disableRecords = true;
                     TimeAttackData->personalRank   = param->replayRankID;
                 }

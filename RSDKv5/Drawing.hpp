@@ -103,7 +103,7 @@ void SetImageTexture(int width, int height, byte *imagePixels);
 
 void GenerateBlendLookupTable();
 
-void InitGFXSystem();
+void InitSystemSurfaces();
 
 void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
 void GetWindowSize(int *width, int *height);

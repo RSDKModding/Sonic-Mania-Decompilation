@@ -58,6 +58,7 @@ int32 GetAPIValue(uint32 id)
         case 0x54378EC5: return 30;           // SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME
         case 0xCD44607D: return 30;           // SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME
     }
+    return 0;
 }
 
 void initUserData()
@@ -153,7 +154,7 @@ void initUserData()
         userCore->LaunchManual          = LaunchManual;
         userCore->ExitGame              = ExitGame;
         userCore->GetDefaultGamepadType = GetDefaultGamepadType;
-        userCore->isOverlayEnabled      = IsOverlayEnabled;
+        userCore->IsOverlayEnabled      = IsOverlayEnabled;
         userCore->CheckDLC              = CheckDLC;
         userCore->ShowExtensionOverlay  = ShowExtensionOverlay;
 #if RETRO_VER_EGS
@@ -166,11 +167,7 @@ void initUserData()
 #endif
 
         userCore->values[0]   = (int *)&engine.hasPlus;
-        userCore->values[1]   = &curSKU.platform;
-        userCore->values[2]   = &curSKU.region;
-        userCore->values[3]   = &curSKU.language;
-        userCore->values[4]   = (int *)&engine.confirmFlip;
-        userCore->debugValCnt = 5;
+        userCore->debugValCnt = 1;
 
         achievements->InitUnknown1   = nullUserFunc;
         achievements->SetDebugValues = nullUserFunc;
@@ -221,12 +218,12 @@ void initUserData()
         userStorage->DeleteUserFile     = TryDeleteUserFile;
         userStorage->ClearPrerollErrors = ClearPrerollErrors;
 
-        achievements->status       = STATUS_OK;
+        achievements->enabled      = true;
         leaderboards->status       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
-        stats->status              = STATUS_OK;
-        userStorage->authStatus    = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
-        userStorage->storageStatus = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
-        userStorage->saveStatus    = STATUS_OK;
+        stats->enabled             = true;
+        userStorage->authStatus    = STATUS_NONE;
+        userStorage->storageStatus = STATUS_NONE;
+        userStorage->saveStatus    = STATUS_NONE;
 #endif
     }
 
@@ -349,6 +346,63 @@ void saveUserData()
 #else
     SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
 #endif 
+}
+
+void HandleUserStatuses()
+{
+    if (userStorage && userStorage->authStatus == STATUS_CONTINUE) {
+        if (userStorage->authTime)
+            userStorage->authTime--;
+        else
+            userStorage->authStatus = STATUS_OK;
+    }
+
+    if (userStorage && userStorage->storageStatus == STATUS_CONTINUE) {
+        if (userStorage->storageInitTime)
+            userStorage->storageInitTime--;
+        else
+            userStorage->storageStatus = STATUS_OK;
+    }
+
+    if (leaderboards && leaderboards->status == STATUS_CONTINUE) {
+        if (leaderboards->loadTime) {
+            leaderboards->loadTime--;
+        }
+        else {
+            leaderboards->status = STATUS_OK;
+
+            if (!leaderboards->isUser) {
+                leaderboards->entryInfo.entryStart  = 1;
+                leaderboards->entryInfo.entryLength = 20;
+                leaderboards->entryInfo.globalRankOffset     = 1;
+                leaderboards->entryInfo.entryCount  = 20;
+            }
+            else {
+                leaderboards->entryInfo.entryStart  = leaderboards->userRank - 10;
+                leaderboards->entryInfo.entryLength = 20;
+                leaderboards->entryInfo.globalRankOffset     = leaderboards->userRank - 10;
+                leaderboards->entryInfo.entryCount  = 20;
+            }
+
+            FillDummyLeaderboardEntries();
+        }
+    }
+
+    if (leaderboards) {
+        if (leaderboards->trackTime != 0) {
+            leaderboards->trackTime--;
+        }
+        else {
+            leaderboards->status = STATUS_OK;
+
+            if (leaderboards->trackCB) {
+                leaderboards->trackCB(true, leaderboards->trackRank);
+            }
+
+            leaderboards->trackTime = -1;
+            leaderboards->trackCB = NULL;
+        }
+    }
 }
 
 int GetUserLanguage()
@@ -481,7 +535,7 @@ void TrackGameProgress(float percent)
 
 void TryTrackStat(StatInfo *stat)
 {
-    if (stats->status) {
+    if (stats->enabled) {
         std::string str = __FILE__;
         str += ": TrackStat() # TrackStat ";
         str += stat->name;

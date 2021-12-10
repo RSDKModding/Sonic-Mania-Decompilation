@@ -247,11 +247,12 @@ bool32 DialogRunner_CheckUnreadNotifs(void)
 }
 bool32 DialogRunner_NotifyAutosave(void)
 {
-    if (!DialogRunner->isAutoSaving && !DialogRunner->entityPtr) {
-        return false;
+    if (globals->notifiedAutosave) {
+        if (!DialogRunner->isAutoSaving && !DialogRunner->entityPtr) {
+            return false;
+        }
     }
-
-    if (!DialogRunner->entityPtr || (!globals->notifiedAutosave && !DialogRunner->isAutoSaving)) {
+    else if (!DialogRunner->isAutoSaving || !DialogRunner->entityPtr) {
         UIWaitSpinner_StartWait();
         DialogRunner->isAutoSaving = true;
         globals->notifiedAutosave  = false;

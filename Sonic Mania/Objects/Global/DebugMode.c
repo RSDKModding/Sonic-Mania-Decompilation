@@ -8,7 +8,7 @@ void DebugMode_Update(void)
 
     // Disables Achievements
 #if RETRO_USE_PLUS
-    API.SetAchievementStatus(false);
+    API.SetAchievementsEnabled(false);
 #else
     if (!APICallback->achievementsDisabled)
         APICallback->achievementsDisabled = true;

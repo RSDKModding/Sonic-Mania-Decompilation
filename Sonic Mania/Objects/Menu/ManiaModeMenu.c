@@ -44,10 +44,10 @@ bool32 ManiaModeMenu_InitAPI(void)
             API.TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
-            int32 statusUnknown2 = API.GetSaveStatus();
+            int32 saveStatus = API.GetSaveStatus();
             if (!checkNoSave && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
-                if (statusUnknown2 != STATUS_CONTINUE) {
-                    if (statusUnknown2 != STATUS_FORBIDDEN) {
+                if (saveStatus != STATUS_CONTINUE) {
+                    if (saveStatus != STATUS_FORBIDDEN) {
                         DialogRunner_PromptSavePreference(storageStatus);
                     }
                     else {

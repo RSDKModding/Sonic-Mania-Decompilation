@@ -32,14 +32,14 @@ void FillDummyLeaderboardEntries()
                                  "FACILISISIVY303",     "TELLUSHARLAN339",      "METUSSOPOLINE75",     "NUNCKYLYNN927",       "PROINHERMIONE775",
                                  "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
-    leaderboards->unknown.loadStatus = STATUS_OK;
-    for (int e = 0; e < leaderboards->unknown.entryCount; ++e) {
-        LeaderboardEntry *entry = &leaderboards->unknown.entries[e];
+    leaderboards->entryInfo.loadStatus = STATUS_OK;
+    for (int e = 0; e < leaderboards->entryInfo.entryCount; ++e) {
+        LeaderboardEntry *entry = &leaderboards->entryInfo.entries[e];
 
         entry->status     = STATUS_OK;
-        entry->globalRank = leaderboards->unknown.field_8 + e;
+        entry->globalRank = leaderboards->entryInfo.globalRankOffset + e;
         entry->score      = (4 * entry->globalRank + 2400) % 59999;
-        entry->isUser     = leaderboards->isUser && e == leaderboards->userRank;
+        entry->isUser     = leaderboards->isUser && entry->globalRank == leaderboards->userRank;
         if (entry->isUser) {
             GetUserName(&entry->username);
         }
@@ -50,7 +50,6 @@ void FillDummyLeaderboardEntries()
         SetText(&entry->userID, (char *)"DUMMY_USER_ID", 0);
     }
 }
-
 void FetchLeaderboard(const char *name, bool32 isUser)
 {
     if (leaderboards->status == STATUS_CONTINUE) {
@@ -64,17 +63,12 @@ void FetchLeaderboard(const char *name, bool32 isUser)
         leaderboards->userRank = 0;
         if (isUser)
             leaderboards->userRank = rand() % 9999 + 1;
-        leaderboards->status = STATUS_OK;
 
-        leaderboards->unknown.entryStart  = 1;
-        leaderboards->unknown.entryLength = 20;
-        leaderboards->unknown.field_8     = 1;
-        leaderboards->unknown.entryCount  = 20;
-
-        FillDummyLeaderboardEntries();
+        leaderboards->status   = STATUS_CONTINUE;
+        leaderboards->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
 }
-void TrackScore(const char *name, int score, void (*callback)(int status, int rank))
+void TrackScore(const char *name, int score, void (*callback)(bool32 success, int rank))
 {
     int id = -1;
     for (int i = 0; i < leaderboardList.size(); ++i) {
@@ -101,22 +95,24 @@ void TrackScore(const char *name, int score, void (*callback)(int status, int ra
     str += " \r\n";
     PrintLog(PRINT_NORMAL, str.c_str());
 
-    if (callback)
-        callback(true, 1);
+    if (callback) {
+        leaderboards->trackRank = rand() % 61 + 30;
+        leaderboards->trackCB   = callback;
+    }
 }
 Vector2 LeaderboardEntryLength()
 {
     Vector2 value;
-    value.x = leaderboards->unknown.entryCount;
-    value.y = leaderboards->unknown.field_10;
+    value.x = leaderboards->entryInfo.entryCount;
+    value.y = leaderboards->entryInfo.field_10;
     return value;
 }
 
 Vector2 LeaderboardEntryCount()
 {
     Vector2 value;
-    value.x = leaderboards->unknown.entryStart;
-    value.y = leaderboards->unknown.entryLength;
+    value.x = leaderboards->entryInfo.entryStart;
+    value.y = leaderboards->entryInfo.entryLength;
     return value;
 }
 
@@ -160,9 +156,9 @@ void ClearLeaderboardInfo()
 
 LeaderboardEntry *ReadLeaderboardEntry(int entryID)
 {
-    if (entryID < leaderboards->unknown.entryStart || entryID >= leaderboards->unknown.entryStart + leaderboards->unknown.entryLength)
+    if (entryID < leaderboards->entryInfo.entryStart || entryID >= leaderboards->entryInfo.entryStart + leaderboards->entryInfo.entryLength)
         return NULL;
     else
-        return &leaderboards->unknown.entries[entryID - leaderboards->unknown.entryStart];
+        return &leaderboards->entryInfo.entries[entryID - leaderboards->entryInfo.entryStart];
 }
 #endif

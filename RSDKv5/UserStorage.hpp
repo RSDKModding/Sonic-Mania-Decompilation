@@ -22,8 +22,8 @@ struct DummyUserStorage {
     int saveStatus;
     int noSaveActive;
     int authTime;
-    int storageTime;
-    int field_1C[3];
+    int storageInitTime;
+    int field_1C[2];
 };
 
 enum DBVarTypes {

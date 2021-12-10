@@ -4,7 +4,7 @@
 DummyUserStorage *userStorage = NULL;
 UserDBStorage *userDBStorage  = NULL;
 
-const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
+const char *userDebugValNames[8] = { "Ext <PLUS>" };
 void setupUserDebugValues()
 {
     achievements->SetDebugValues();
@@ -96,11 +96,12 @@ int TryAuth()
         str += ": TryAuth() # WARNING TryAuth() when auth currently in progress. \r\n";
         PrintLog(PRINT_NORMAL, str.c_str());
     }
-    else {
-        userStorage->authStatus = STATUS_OK;
+
+    if (!userStorage->authStatus) {
+        userStorage->authStatus = STATUS_CONTINUE;
         userStorage->authTime   = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
-        return userStorage->authStatus;
     }
+    return userStorage->authStatus;
 #else
     return STATUS_OK;
 #endif
@@ -114,9 +115,10 @@ int TryInitStorage()
         PrintLog(PRINT_NORMAL, str.c_str());
     }
     else {
-        userStorage->storageStatus = STATUS_OK;
-        return userStorage->storageStatus;
+        userStorage->storageStatus   = STATUS_CONTINUE;
+        userStorage->storageInitTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
     }
+    return userStorage->storageStatus;
 #else
     return STATUS_OK;
 #endif

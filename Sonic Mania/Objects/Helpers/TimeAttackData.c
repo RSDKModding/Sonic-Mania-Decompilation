@@ -370,9 +370,9 @@ void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 characterID, uint8 ac
     TimeAttackData->encore      = encore & 1;
 }
 
-void TimeAttackData_GetLeaderboardRank_CB(int32 status, int32 rank)
+void TimeAttackData_GetLeaderboardRank_CB(bool32 success, int32 rank)
 {
-    if (status) {
+    if (success) {
         LogHelpers_Print("Got back leaderboard rank: %d. Not bad!", rank);
         TimeAttackData->leaderboardRank = rank;
     }
