@@ -42,31 +42,31 @@ void TitleSetup_StageLoad(void)
     Localization_GetString(&presence, STR_RPC_TITLE);
     API_SetRichPresence(PRESENCE_TITLE, &presence);
 #if RETRO_USE_PLUS
-    API.SetUserStorageNoSave(false);
+    API.SetNoSave(false);
 #else
     globals->noSave = false;
 #endif
     globals->blueSpheresInit = false;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
 #if RETRO_USE_PLUS
     API.ClearPrerollErrors();
-    API.ClearUserStorageStatus();
+    API.ClearSaveStatus();
 #else
     APICallback_ClearPrerollErrors();
 #endif
     globals->saveLoaded = false;
     memset(globals->saveRAM, 0, 0x10000);
-    globals->optionsLoaded = 0;
+    globals->optionsLoaded = false;
     memset(globals->optionsRAM, 0, 0x200);
 #if RETRO_USE_PLUS
     API.ClearUserDB(globals->replayTableID);
     API.ClearUserDB(globals->taTableID);
-    globals->replayTableID     = -1;
+    globals->replayTableID     = 0xFFFF;
     globals->replayTableLoaded = STATUS_NONE;
-    globals->taTableID         = -1;
+    globals->taTableID         = 0xFFFF;
     globals->taTableLoaded     = STATUS_NONE;
 #endif
-    TitleSetup->aniFrames    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
+    TitleSetup->aniFrames     = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
     TitleSetup->sfxMenuBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     TitleSetup->sfxMenuAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     TitleSetup->sfxRing       = RSDK.GetSfx("Global/Ring.wav");

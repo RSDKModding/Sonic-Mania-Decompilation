@@ -2325,29 +2325,29 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
         if (Zone_GetZoneID() >= 0) {
-            int32 id = 0;
+            int32 characterID = 0;
             switch (player->characterID) {
-                case ID_SONIC: id = 1; break;
-                case ID_TAILS: id = 2; break;
-                case ID_KNUCKLES: id = 3; break;
+                case ID_SONIC: characterID = 1; break;
+                case ID_TAILS: characterID = 2; break;
+                case ID_KNUCKLES: characterID = 3; break;
 #if RETRO_USE_PLUS
-                case ID_MIGHTY: id = 4; break;
+                case ID_MIGHTY: characterID = 4; break;
 #endif
-                default: id = 0;
+                default: characterID = 0;
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_RAY)
-                        id = 5;
+                        characterID = 5;
 #endif
                     break;
             }
 
             StatInfo info;
 #if RETRO_USE_PLUS
-            TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE),
+            TimeAttackData_TrackEnemyDefeat(&info, Zone_GetZoneID(), Zone->actID, characterID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE),
                                             (entity->position.x >> 0x10), (entity->position.y >> 0x10));
             API.TryTrackStat(&info);
 #else
-            APICallback_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), id, (entity->position.x >> 0x10), (entity->position.y >> 0x10));
+            APICallback_TrackEnemyDefeat(Zone_GetZoneID(), Zone->actID, characterID, (entity->position.x >> 0x10), (entity->position.y >> 0x10));
 #endif
         }
 

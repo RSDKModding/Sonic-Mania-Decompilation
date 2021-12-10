@@ -195,8 +195,6 @@ bool32 HeavyGunner_BurnCheckCB(void)
 
 void HeavyGunner_HandleBGWrap(int multiplier)
 {
-    RSDK_THIS(HeavyGunner);
-
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
     for (int s = 0; s < bg1->scrollInfoCount; ++s) {
         bg1->scrollInfo[s].scrollPos += multiplier * bg1->scrollInfo[s].parallaxFactor;

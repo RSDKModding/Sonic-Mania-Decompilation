@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    bool32 dword8;
-    bool32 initialized;
-    bool32 dword10;
-    bool32 gameLoaded;
-    bool32 field_18;
-    int32 field_1C;
+    int32 unused;
+    bool32 initializedMenuReturn;
+    bool32 initializedMenu;
+    bool32 initializedAPI;
+    bool32 saveLoaded;
+    int32 unused2;
+    int32 unused3;
     EntityFXFade *fxFade;
 #if !RETRO_USE_PLUS
     Entity *saveSelPrompt;
@@ -91,7 +91,7 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay);
 #if !RETRO_USE_PLUS
 //Setup
 void MenuSetup_Initialize(void);
-bool32 MenuSetup_InitUserdata(void);
+bool32 MenuSetup_InitAPI(void);
 void MenuSetup_Unknown3(void);
 void MenuSetup_Unknown52(void);
 void MenuSetup_HandleMenuReturn(void);

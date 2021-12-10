@@ -138,7 +138,7 @@ void ExtrasMenu_ProcessInputs(void)
 void ExtrasMenu_Start_Puyo_vsAI(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
@@ -154,7 +154,7 @@ void ExtrasMenu_Puyo_vsAI_ActionCB(void)
 void ExtrasMenu_Start_Puyo_vs2P(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 2;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 1;
@@ -167,7 +167,7 @@ void ExtrasMenu_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(ExtrasMenu_
 void ExtrasMenu_Start_Credits(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID         = 3;
@@ -184,7 +184,7 @@ void ExtrasMenu_CreditsButton_ActionCB(void)
 void ExtrasMenu_Start_DAGarden(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     strcpy(param->menuTag, "Extras");
     param->selectionID = 2;
 #if RETRO_USE_PLUS
@@ -201,7 +201,7 @@ void ExtrasMenu_DAGarden_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_S
 void ExtrasMenu_Start_BSS_3K(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;
@@ -214,7 +214,7 @@ void ExtrasMenu_BSS_S3_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Sta
 void ExtrasMenu_Start_BSS_Mania(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->selectionType = 1;
     strcpy(param->menuTag, "Extras");
     param->selectionID = 0;

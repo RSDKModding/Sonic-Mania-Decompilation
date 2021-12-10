@@ -104,8 +104,6 @@ void BoundsMarker_EditorDraw(void)
     RSDK.SetSpriteAnimation(BoundsMarker->aniFrames, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, false);
 
-    Vector2 drawPos;
-
     int w = self->width << 16;
     if (!self->width)
         w = 24 << 16;

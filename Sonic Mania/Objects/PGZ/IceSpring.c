@@ -34,12 +34,16 @@ void IceSpring_Update(void)
                 int32 type          = self->type;
                 bool32 collideCheck = false;
                 switch (self->type) {
+                    case ICESPRING_DIAGONAL:
+                    default: break;
+                        
                     case ICESPRING_VERTICAL:
                         if (self->direction & FLIP_Y)
                             collideCheck = collided == C_BOTTOM;
                         else
                             collideCheck = collided == C_TOP;
                         break;
+                        
                     case ICESPRING_HORIZONTAL:
                         if (self->direction & FLIP_X)
                             collideCheck = collided == C_LEFT;

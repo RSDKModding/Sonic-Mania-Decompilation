@@ -611,7 +611,6 @@ void CrimsonEye_SetupPositions(void)
 
 void CrimsonEye_DestroyBall(void)
 {
-    RSDK_THIS(CrimsonEye);
     if (CrimsonEye->destroyedBallCount < 8) {
         EntityCrimsonEye *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + CrimsonEye->ballDestroyOrder[CrimsonEye->destroyedBallCount], CrimsonEye);
         child->state            = CrimsonEye_StateBall_Unknown2;

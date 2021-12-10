@@ -1,4 +1,4 @@
-﻿#include "RetroEngine.hpp"
+#include "RetroEngine.hpp"
 #include "zlib/zlib.h"
 
 #if RETRO_REV02
@@ -32,11 +32,41 @@ SettingsStorage settingsStorage;
 
 inline void nullUserFunc() {}
 
+uint32 GetAPIValueID(const char *identifier, int charIndex)
+{
+    if (identifier[charIndex])
+        return (33 * GetAPIValueID(identifier, charIndex + 1)) ^ identifier[charIndex];
+    else
+        return 5381;
+}
+
+int32 GetAPIValue(uint32 id)
+{
+    switch (id) {
+        default: break;
+        case 0x3D6BD740: return PLATFORM_DEV; // SYSTEM_PLATFORM
+        case 0xD9F55367: return REGION_US;    // SYSTEM_REGION
+        case 0xCC0762D: return LANGUAGE_EN;   // SYSTEM_LANGUAGE
+        case 0xA2ACEF21: return false;        // SYSTEM_CONFIRM_FLIP
+        case 0x4205582D: return 120;          // SYSTEM_LEADERBOARD_LOAD_TIME
+        case 0xDEF3F8B5: return STATUS_OK;    // SYSTEM_LEADERBOARD_STATUS
+        case 0x5AD68EAB: return STATUS_OK;    // SYSTEM_USERSTORAGE_AUTH_STATUS
+        case 0x884E705A: return STATUS_OK;    // SYSTEM_USERSTORAGE_STORAGE_STATUS
+        case 0xBDF4E94A: return 30;           // SYSTEM_USERSTORAGE_AUTH_TIME
+        case 0xD77E98BE: return 30;           // SYSTEM_USERSTORAGE_STORAGE_INIT_TIME
+        case 0x5AF715C2: return 30;           // SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME
+        case 0x54378EC5: return 30;           // SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME
+        case 0xCD44607D: return 30;           // SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME
+    }
+    return 0;
+}
+
 void initUserData()
 {
-    int language = LANGUAGE_EN;
-    int region   = REGION_US;
-    int platform = PLATFORM_DEV;
+    int language = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    int region   = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    int platform = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
+    engine.confirmFlip = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
     || RETRO_PLATFORM == RETRO_iOS
@@ -58,6 +88,20 @@ void initUserData()
     gameVerInfo.language = language;
     gameVerInfo.region   = region;
 #endif
+
+    int32 value = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_STATUS", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_STATUS", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_LOAD_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_SAVE_TIME", 0));
+    value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
 
 #if RETRO_REV02
     if (!dummmyCore)
@@ -110,7 +154,7 @@ void initUserData()
         userCore->LaunchManual          = LaunchManual;
         userCore->ExitGame              = ExitGame;
         userCore->GetDefaultGamepadType = GetDefaultGamepadType;
-        userCore->isOverlayEnabled      = IsOverlayEnabled;
+        userCore->IsOverlayEnabled      = IsOverlayEnabled;
         userCore->CheckDLC              = CheckDLC;
         userCore->ShowExtensionOverlay  = ShowExtensionOverlay;
 #if RETRO_VER_EGS
@@ -123,11 +167,7 @@ void initUserData()
 #endif
 
         userCore->values[0]   = (int *)&engine.hasPlus;
-        userCore->values[1]   = &curSKU.platform;
-        userCore->values[2]   = &curSKU.region;
-        userCore->values[3]   = &curSKU.language;
-        userCore->values[4]   = (int *)&engine.confirmFlip;
-        userCore->debugValCnt = 5;
+        userCore->debugValCnt = 1;
 
         achievements->InitUnknown1   = nullUserFunc;
         achievements->SetDebugValues = nullUserFunc;
@@ -154,6 +194,8 @@ void initUserData()
         leaderboards->unknown5         = nullUserFunc;
         leaderboards->TrackScore       = TrackScore;
         leaderboards->GetStatus        = GetLeaderboardStatus;
+        leaderboards->userRank         = 0;
+        leaderboards->isUser           = false;
 
         richPresence->SetDebugValues = nullUserFunc;
         richPresence->InitUnknown1   = nullUserFunc;
@@ -165,9 +207,9 @@ void initUserData()
         stats->InitUnknown2   = nullUserFunc;
         stats->TryTrackStat   = TryTrackStat;
 
-        userStorage->InitUnknown1   = (int (*)())nullUserFunc;
-        userStorage->SetDebugValues = (int (*)())nullUserFunc;
-        userStorage->InitUnknown2   = (int (*)())nullUserFunc;
+        userStorage->InitUnknown1       = (int (*)())nullUserFunc;
+        userStorage->SetDebugValues     = (int (*)())nullUserFunc;
+        userStorage->InitUnknown2       = (int (*)())nullUserFunc;
         userStorage->TryAuth            = TryAuth;
         userStorage->TryInitStorage     = TryInitStorage;
         userStorage->GetUsername        = GetUserName;
@@ -176,17 +218,12 @@ void initUserData()
         userStorage->DeleteUserFile     = TryDeleteUserFile;
         userStorage->ClearPrerollErrors = ClearPrerollErrors;
 
-        achievements->status    = STATUS_OK;
-        leaderboards->status    = STATUS_OK;
-        stats->status           = STATUS_OK;
-        userStorage->authStatus = STATUS_OK;
-        userStorage->saveStatus = STATUS_OK;
-        userStorage->statusCode = STATUS_OK;
-
-        for (int i = 0; i < 200; ++i) {
-            leaderboards->entryPtrs[i] = (LeaderboardEntry *)malloc(sizeof(LeaderboardEntry));
-            memset(leaderboards->entryPtrs[i], 0, sizeof(LeaderboardEntry));
-        }
+        achievements->enabled      = true;
+        leaderboards->status       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
+        stats->enabled             = true;
+        userStorage->authStatus    = STATUS_NONE;
+        userStorage->storageStatus = STATUS_NONE;
+        userStorage->saveStatus    = STATUS_NONE;
 #endif
     }
 
@@ -255,7 +292,6 @@ void releaseUserData()
     achievements = NULL;
 
     if (leaderboards) {
-        for (int i = 0; i < 200; ++i) free(leaderboards->entryPtrs[i]);
         free(leaderboards);
     }
     leaderboards = NULL;
@@ -312,6 +348,63 @@ void saveUserData()
 #endif 
 }
 
+void HandleUserStatuses()
+{
+    if (userStorage && userStorage->authStatus == STATUS_CONTINUE) {
+        if (userStorage->authTime)
+            userStorage->authTime--;
+        else
+            userStorage->authStatus = STATUS_OK;
+    }
+
+    if (userStorage && userStorage->storageStatus == STATUS_CONTINUE) {
+        if (userStorage->storageInitTime)
+            userStorage->storageInitTime--;
+        else
+            userStorage->storageStatus = STATUS_OK;
+    }
+
+    if (leaderboards && leaderboards->status == STATUS_CONTINUE) {
+        if (leaderboards->loadTime) {
+            leaderboards->loadTime--;
+        }
+        else {
+            leaderboards->status = STATUS_OK;
+
+            if (!leaderboards->isUser) {
+                leaderboards->entryInfo.entryStart  = 1;
+                leaderboards->entryInfo.entryLength = 20;
+                leaderboards->entryInfo.globalRankOffset     = 1;
+                leaderboards->entryInfo.entryCount  = 20;
+            }
+            else {
+                leaderboards->entryInfo.entryStart  = leaderboards->userRank - 10;
+                leaderboards->entryInfo.entryLength = 20;
+                leaderboards->entryInfo.globalRankOffset     = leaderboards->userRank - 10;
+                leaderboards->entryInfo.entryCount  = 20;
+            }
+
+            FillDummyLeaderboardEntries();
+        }
+    }
+
+    if (leaderboards) {
+        if (leaderboards->trackTime != 0) {
+            leaderboards->trackTime--;
+        }
+        else {
+            leaderboards->status = STATUS_OK;
+
+            if (leaderboards->trackCB) {
+                leaderboards->trackCB(true, leaderboards->trackRank);
+            }
+
+            leaderboards->trackTime = -1;
+            leaderboards->trackCB = NULL;
+        }
+    }
+}
+
 int GetUserLanguage()
 {
 #if RETRO_REV02
@@ -350,7 +443,7 @@ void LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_USING_SDL2
-    SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
+    //SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
     PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
 #else
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
@@ -401,13 +494,22 @@ void SetPresence(byte id, TextInfo *info)
     GetCString(buffer, info);
     if (info->text[info->length - 1] == '\r')
         buffer[info->length - 1] = 0;
+
 #if RETRO_REV02
     richPresence->curID = id;
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
+
+    std::string str = __FILE__;
+    str += ": SetPresence() # Set Steam rich presence string to ";
+    str += buffer;
+    str += "\r\n";
+    PrintLog(PRINT_NORMAL, str.c_str());
+
+    // sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
+    // PrintLog(PRINT_NORMAL, buffer2);
 #else
     sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
-#endif
     PrintLog(PRINT_NORMAL, buffer2);
+#endif
 }
 
 #if !RETRO_REV02
@@ -433,8 +535,12 @@ void TrackGameProgress(float percent)
 
 void TryTrackStat(StatInfo *stat)
 {
-    if (stats->status) {
-        PrintLog(PRINT_NORMAL, "Tracking Stat: %s (%d)", stat->name, stat->statID);
+    if (stats->enabled) {
+        std::string str = __FILE__;
+        str += ": TrackStat() # TrackStat ";
+        str += stat->name;
+        str += " \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         switch (stat->statID) {
             case 0: {
@@ -472,7 +578,9 @@ void TryTrackStat(StatInfo *stat)
         }
     }
     else {
-        PrintLog(PRINT_NORMAL, "Track stat SKIPPED. Stats are disabled.");
+        std::string str = __FILE__;
+        str += ": TryTrackStat() # Track stat SKIPPED. Stats are disabled. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
     }
 }
 #endif

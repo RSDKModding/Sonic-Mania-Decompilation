@@ -618,7 +618,6 @@ void GigaMetal_State_Unknown5(void)
         if (endX > 224)
             RSDK.CopyTileLayer(Zone->fgHigh, endX - 224, endY - 5, Zone->fgHigh, endX - 224, endY - 5 + 8, 1, 6);
 
-        int delay  = 4;
         int tileX  = (ScreenInfo->position.x >> 4) + 8;
         int spawnY = (endY << 20) + 0x80000;
 

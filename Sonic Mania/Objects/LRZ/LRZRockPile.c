@@ -442,7 +442,7 @@ void LRZRockPile_State_Type1(void)
             if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionPlatform(player, self, &self->hitbox)
 #if RETRO_USE_PLUS
-                    && (!self->onlyMighty || player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && !self->unbreakable && player->onGround) {
                     if (self->delay != 0xFFFF) {
@@ -474,7 +474,7 @@ void LRZRockPile_State_Type2(void)
             if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP
 #if RETRO_USE_PLUS
-                    && (!self->onlyMighty || player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
+                    && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && !self->unbreakable && player->onGround) {
                     if (self->delay != 0xFFFF) {

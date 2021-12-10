@@ -296,7 +296,7 @@ void UISubHeading_SaveButton_ActionCB(void)
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->lastButtonID;
     param->replayID    = 0;
@@ -383,11 +383,11 @@ void UISubHeading_SaveButton_ActionCB(void)
         globals->stock          = saveRAM->stock;
         globals->characterFlags = saveRAM->characterFlags;
         RSDK.SetScene("Encore Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, self->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, 0, self->frameID);
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, self->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, 0, self->frameID);
     }
 
     if (!loadingSave) {

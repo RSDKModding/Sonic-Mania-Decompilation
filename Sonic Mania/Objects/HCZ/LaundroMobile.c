@@ -411,7 +411,7 @@ void LaundroMobile_HandleStageWrap(void)
 
                     if (entPtr->objectID == LaundroMobile->objectID) {
                         EntityLaundroMobile *laundroMobile = (EntityLaundroMobile *)entPtr;
-                        if (laundroMobile->type == LAUNDROMOBILE_BOMB && laundroMobile->state != LaundroMobile_State1_Unknown1
+                        if ((laundroMobile->type == LAUNDROMOBILE_BOMB && laundroMobile->state != LaundroMobile_State1_Unknown1)
                             || laundroMobile->state == LaundroMobile_State3_Unknown2) {
                             laundroMobile->position.x -= offsetX;
                             laundroMobile->position.y -= offsetY;

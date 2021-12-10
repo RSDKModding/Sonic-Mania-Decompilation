@@ -304,24 +304,27 @@ void ActClear_Create(void *data)
         if (Zone_GetZoneID() >= 0) {
             StatInfo stat;
             uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
+#if RETRO_USE_PLUS
             switch (globals->playerID & 0xFF) {
-                case ID_SONIC: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
-                case ID_TAILS: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
-                case ID_KNUCKLES: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 3, time, player1->rings, player1->score); break;
-#if RETRO_USE_PLUS
-                case ID_MIGHTY: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 4, time, player1->rings, player1->score); break;
-#endif
+                case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, player1->rings, player1->score, time); break;
+                case ID_TAILS: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 2, player1->rings, player1->score, time); break;
+                case ID_KNUCKLES: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 3, player1->rings, player1->score, time); break;
+                case ID_MIGHTY: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 4, player1->rings, player1->score, time); break;
                 default:
-#if RETRO_USE_PLUS
                     if ((globals->playerID & 0xFF) == ID_RAY)
-                        TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 5, time, player1->rings, player1->score);
+                        TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 5, player1->rings, player1->score, time);
                     else
-#endif
-                        TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score);
+                        TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, player1->rings, player1->score, time);
                     break;
             }
-#if RETRO_USE_PLUS
             API.TryTrackStat(&stat);
+#else
+            switch (globals->playerID & 0xFF) {
+                case ID_SONIC: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 1, player1->rings, player1->score, time); break;
+                case ID_TAILS: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 2, player1->rings, player1->score, time); break;
+                case ID_KNUCKLES: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 3, player1->rings, player1->score, time); break;
+                default: break;
+            }
 #endif
         }
 
@@ -672,13 +675,13 @@ void ActClear_State_SaveGameProgress(void)
             else if (globals->gameMode == MODE_TIMEATTACK) {
                 EntityMenuParam *param       = (EntityMenuParam *)globals->menuParam;
                 ActClear->finishedSavingGame = true;
-                uint8 playerID               = param->characterID;
+                uint8 characterID            = param->characterID;
                 uint8 zoneID                 = param->zoneID;
-                uint8 actID                  = param->actID;
+                uint8 act                    = param->actID;
 
                 int32 time = 6000 * SceneInfo->minutes + 100 * SceneInfo->seconds + SceneInfo->milliseconds;
 
-                uint16 *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
+                uint16 *record = TimeAttackData_GetRecordedTime(zoneID, act, characterID, 1);
                 int32 rank     = 0;
                 for (; rank < 3; ++rank) {
                     if (!record[rank] || time < record[rank])
@@ -687,8 +690,8 @@ void ActClear_State_SaveGameProgress(void)
 
                 if (rank < 3) {
                     rank++;
-                    TimeAttackData_SaveTATime(zoneID, actID, playerID, rank, time);
-                    TimeAttackData_TrackTAClear(actID, zoneID, NULL, playerID, MODE_MANIA, time);
+                    TimeAttackData_SaveTATime(zoneID, act, characterID, rank, time);
+                    APICallback_TrackTAClear(zoneID, act, characterID, time);
                     param->timeScore = rank;
                     SaveGame_SaveFile(ActClear_SaveGameCallback);
                 }

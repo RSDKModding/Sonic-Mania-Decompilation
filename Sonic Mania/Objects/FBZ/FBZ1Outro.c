@@ -30,6 +30,7 @@ void FBZ1Outro_StageLoad(void)
     foreach_all(BigSqueeze, boss)
     {
         switch (boss->type) {
+            default: break;
             case BIGSQUEEZE_CRUSHER_L: FBZ1Outro->bossBorderL = boss; break;
             case BIGSQUEEZE_CRUSHER_R: FBZ1Outro->bossBorderR = boss; break;
             case BIGSQUEEZE_MANAGER: FBZ1Outro->bossManager = boss; break;

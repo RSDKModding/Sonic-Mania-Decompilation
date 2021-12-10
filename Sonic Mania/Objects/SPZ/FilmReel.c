@@ -37,7 +37,7 @@ void FilmReel_Update(void)
             }
             break;
         case 1:
-            if (self->endPos.x != self->endPos.x) {
+            if (self->drawPos.x != self->endPos.x) {
                 if (self->field_74.x <= self->endPos.x) {
                     self->field_74.x = self->endPos.x;
                     self->field_90   = 2;
@@ -256,7 +256,7 @@ void FilmReel_SpinLeft(void)
                     bool32 flag = true;
                     switch (self->field_90) {
                         case 0:
-                            if (player->collisionMode || !player->left && !player->right && player->state != Player_State_Roll) {
+                            if (player->collisionMode || (!player->left && !player->right && player->state != Player_State_Roll)) {
                                 flag = false;
                             }
 

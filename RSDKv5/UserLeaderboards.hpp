@@ -13,6 +13,26 @@ struct LeaderboardEntry {
 };
 
 #if RETRO_REV02
+struct DummyLeaderboardsUnknown2 {
+    int loadType;
+    int loadStartIndex;
+    int loadEndIndex;
+    int field_C;
+    int field_10;
+    int field_14;
+};
+
+struct DummyLeaderboardsUnknown {
+    void *parent;
+    int loadStatus;
+    int globalRankOffset;
+    int entryCount;
+    int field_10;
+    int entryStart;
+    int entryLength;
+    LeaderboardEntry entries[25];
+};
+
 struct DummyLeaderboards {
     void (*SetDebugValues)(void);
     void (*InitUnknown1)(void);
@@ -21,31 +41,24 @@ struct DummyLeaderboards {
 #if RETRO_VER_EGS
     int (*unknown6)(void);
 #endif
-    void (*FetchLeaderboard)(const char *name, int id);
+    void (*FetchLeaderboard)(const char *name, bool32 isUser);
     void (*unknown5)(void);
-    void (*TrackScore)(const char *name, int score, void (*callback)(int status, int rank));
+    void (*TrackScore)(const char *name, int score, void (*callback)(bool32 success, int rank));
     int (*GetStatus)(void);
 
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int prevIsUser;
-    int prevRank;
-    int rankScore;
-    int entryStart;
-    int entryLength;
-    LeaderboardEntry *entryPtrs[200];
-    int status;
-    int downloadStatus;
-    int field_364;
-    int list;
-    int listSize;
+    const char *currentLeaderboard;
+    DummyLeaderboardsUnknown2 unknown2;
+    DummyLeaderboardsUnknown entryInfo;
+    int32 status;
+    int32 userRank;
+    int32 isUser;
+    int32 list;
+    int32 listSize;
+
+    int32 loadTime;
+    int32 trackTime;
+    int32 trackRank;
+    void (*trackCB)(bool32 success, int rank);
 };
 #endif
 
@@ -64,9 +77,12 @@ extern std::vector<LeaderboardInfo> leaderboardList;
 extern DummyLeaderboards *leaderboards;
 
 void FillDummyLeaderboardEntries();
-void FetchLeaderboard(const char *name, int id);
-void TrackScore(const char *name, int score, void (*callback)(int status, int rank));
+void FetchLeaderboard(const char *name, bool32 isUser);
+void TrackScore(const char *name, int score, void (*callback)(bool32 success, int rank));
+Vector2 LeaderboardEntryLength();
 Vector2 LeaderboardEntryCount();
+void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type);
+void ClearLeaderboardInfo();
 LeaderboardEntry *ReadLeaderboardEntry(int entryID);
 inline int GetLeaderboardStatus() { return leaderboards->status; }
 #endif

@@ -440,7 +440,6 @@ void TVVan_Draw_Radio(void)
 void TVVan_Draw_ExitTV_Active(void)
 {
     RSDK_THIS(TVVan);
-    Vector2 drawPos;
 
     RSDK.DrawSprite(&self->animator7, NULL, false);
     RSDK.DrawSprite(&self->animator6, NULL, false);

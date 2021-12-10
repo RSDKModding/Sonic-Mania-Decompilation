@@ -368,8 +368,6 @@ void Firework_CheckOnScreen(void)
 
 void Firework_HandleAnimations(int a1, int16 angle, Animator *animator1, Animator *animator2, uint8 *direction)
 {
-    RSDK_THIS(Firework);
-
     uint16 ang = angle & 0x3FF;
     int anim   = 4 * (a1 != 0) + 3;
 

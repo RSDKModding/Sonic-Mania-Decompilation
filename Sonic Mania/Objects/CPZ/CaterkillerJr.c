@@ -174,16 +174,16 @@ void CaterkillerJr_State_Move(void)
         }
 
         if (self->bodyVelocity[i].x) {
-            int32 val = 0;
+            int32 sine = 0;
             if (self->bodyTimer[i] >= 0x800) {
                 self->bodyTimer[i] += 8;
-                val = RSDK.Sin1024(self->bodyTimer[i]) << 10;
+                sine = RSDK.Sin1024(self->bodyTimer[i]) << 10;
             }
             else {
                 self->bodyTimer[i] += 17;
-                val = RSDK.Sin1024(self->bodyTimer[i]) << 8;
+                sine = RSDK.Sin1024(self->bodyTimer[i]) << 8;
             }
-            self->bodyPosition[i].y = val + self->startPos.y;
+            self->bodyPosition[i].y = sine + self->startPos.y;
             self->bodyTimer[i] %= 0xC00;
         }
     }

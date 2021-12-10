@@ -122,6 +122,7 @@ void FBZTrash_State_LooseTrash(void)
     foreach_active(BigSqueeze, boss)
     {
         switch (boss->type) {
+            default: break;
             case BIGSQUEEZE_BOSS:
                 if (self->position.y >  boss->position.y + 0xC00000) {
                     self->position.y =  boss->position.y + 0xC00000;

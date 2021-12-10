@@ -354,16 +354,20 @@ void BigSqueeze_State1_SetupBoss(void)
         foreach_active(BigSqueeze, boss)
         {
             switch (boss->type) {
+                default: break;
+                    
                 case BIGSQUEEZE_BOSS:
                     boss->invincible = true;
                     boss->state      = BigSqueeze_State2_Unknown1;
                     boss->velocity.x = -0x10000;
                     break;
+                    
                 case BIGSQUEEZE_CRUSHER_L:
                     boss->state      = BigSqueeze_StateCrusher_BeginCrushing;
                     boss->velocity.x = 0x8000;
                     boss->hitbox.top = -0x7FFF;
                     break;
+                    
                 case BIGSQUEEZE_CRUSHER_R:
                     boss->state      = BigSqueeze_StateCrusher_BeginCrushing;
                     boss->velocity.x = -0x8000;

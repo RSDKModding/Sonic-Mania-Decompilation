@@ -1574,7 +1574,6 @@ void HeavyMystic_StateDraw2_Unknown2(void)
 void HeavyMystic_StateDraw2_Unknown3(void)
 {
     RSDK_THIS(HeavyMystic);
-    Vector2 drawPos;
 
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         self->drawFX           = FX_SCALE | FX_ROTATE;

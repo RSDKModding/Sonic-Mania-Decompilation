@@ -2,12 +2,12 @@
 
 ObjectGameProgress *GameProgress;
 
-void GameProgess_Update(void) {}
-void GameProgess_LateUpdate(void) {}
-void GameProgess_StaticUpdate(void) {}
-void GameProgess_Draw(void) {}
-void GameProgess_Create(void *data) {}
-void GameProgess_StageLoad(void) {}
+void GameProgress_Update(void) {}
+void GameProgress_LateUpdate(void) {}
+void GameProgress_StaticUpdate(void) {}
+void GameProgress_Draw(void) {}
+void GameProgress_Create(void *data) {}
+void GameProgress_StageLoad(void) {}
 
 EntityGameProgress *GameProgress_GetGameProgress(void) { return (EntityGameProgress *)&globals->saveRAM[0x900]; }
 
@@ -70,7 +70,6 @@ void GameProgress_ShuffleBSSID(void)
 
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
 {
-    0xEDB5C;
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
@@ -179,6 +178,18 @@ void GameProgress_UnlockAllMedals(void)
         progress->medals[m] = 2;
     }
 }
+
+void GameProgress_UnlockAll(void)
+{
+    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+        LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
+    }
+    else {
+        EntityGameProgress *progress = GameProgress_GetGameProgress();
+        progress->allSpecialCleared  = false;
+    }
+}
+
 void GameProgress_ClearProgress(void)
 {
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
@@ -410,7 +421,8 @@ bool32 GameProgress_CheckUnlock(char type)
     }
 }
 
-
-void GameProgess_EditorDraw(void) {}
-void GameProgess_EditorLoad(void) {}
-void GameProgess_Serialize(void) {}
+#if RETRO_INCLUDE_EDITOR
+void GameProgress_EditorDraw(void) {}
+void GameProgress_EditorLoad(void) {}
+#endif
+void GameProgress_Serialize(void) {}

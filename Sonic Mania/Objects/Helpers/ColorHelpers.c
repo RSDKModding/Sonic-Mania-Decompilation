@@ -14,12 +14,6 @@ void ColorHelpers_Create(void *data) {}
 
 void ColorHelpers_StageLoad(void) {}
 
-#if RETRO_INCLUDE_EDITOR
-void ColorHelpers_EditorDraw(void) {}
-
-void ColorHelpers_EditorLoad(void) {}
-#endif
-
 uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b) { return (b >> 3) | (8 * ((g | (32 * (r & 0xFFF8))) & 0xFFFC)); }
 
 void ColorHelpers_Unknown1(int32 r, int32 g, int32 b, uint32 *rPtr, uint32 *gPtr, uint32 *bPtr)
@@ -129,5 +123,11 @@ void ColorHelpers_Unknown2(int32 a1, int32 a2, int32 brightness, uint32 *r, uint
     if (b)
         *b = newB;
 }
+
+#if RETRO_INCLUDE_EDITOR
+void ColorHelpers_EditorDraw(void) {}
+
+void ColorHelpers_EditorLoad(void) {}
+#endif
 
 void ColorHelpers_Serialize(void) {}

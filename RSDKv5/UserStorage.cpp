@@ -4,7 +4,7 @@
 DummyUserStorage *userStorage = NULL;
 UserDBStorage *userDBStorage  = NULL;
 
-const char *userDebugValNames[8] = { "Ext <PLUS>", "SYSTEM_PLATFORM", "SYSTEM_REGION", "SYSTEM_LANGUAGE", "SYS_CNFRM_FLIP" };
+const char *userDebugValNames[8] = { "Ext <PLUS>" };
 void setupUserDebugValues()
 {
     achievements->SetDebugValues();
@@ -40,23 +40,26 @@ void userInitUnknown2()
 }
 #endif
 
-int GetUserAuthStatus() { return STATUS_OK; }
-int GetUserStorageStatus()
+int GetUserAuthStatus()
 {
 #if RETRO_REV02
     return userStorage->authStatus;
 #else
     return STATUS_OK;
-#endif
+#endif 
 }
-#if RETRO_REV02
-int UserStorageStatusUnknown1()
+int GetUserStorageStatus()
 {
+#if RETRO_REV02
     if (userStorage->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;
     else
-        return userStorage->statusCode;
+        return userStorage->storageStatus;
+#else
+    return STATUS_OK;
+#endif
 }
+#if RETRO_REV02
 int GetSaveStatus()
 {
     if (userStorage->noSaveActive)
@@ -79,8 +82,8 @@ void SetSaveStatusError()
     if (userStorage->saveStatus == STATUS_CONTINUE)
         userStorage->saveStatus = STATUS_ERROR;
 }
-void ClearUserStorageStatus() { userStorage->saveStatus = STATUS_NONE; }
-void SetUserStorageStatus() { userStorage->saveStatus = STATUS_CONTINUE; }
+void ClearSaveStatus() { userStorage->saveStatus = STATUS_NONE; }
+void SetSaveStatusContinue() { userStorage->saveStatus = STATUS_CONTINUE; }
 void SetUserStorageNoSave(int state) { userStorage->noSaveActive = state; }
 int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 #endif
@@ -88,7 +91,16 @@ int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 int TryAuth()
 {
 #if RETRO_REV02
-    userStorage->authStatus = STATUS_OK;
+    if (userStorage->authStatus == STATUS_CONTINUE) {
+        std::string str = __FILE__;
+        str += ": TryAuth() # WARNING TryAuth() when auth currently in progress. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
+    }
+
+    if (!userStorage->authStatus) {
+        userStorage->authStatus = STATUS_CONTINUE;
+        userStorage->authTime   = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
+    }
     return userStorage->authStatus;
 #else
     return STATUS_OK;
@@ -97,8 +109,16 @@ int TryAuth()
 int TryInitStorage()
 {
 #if RETRO_REV02
-    userStorage->saveStatus = STATUS_OK;
-    return userStorage->saveStatus;
+    if (userStorage->storageStatus == STATUS_CONTINUE) {
+        std::string str = __FILE__;
+        str += ": TryInitStorage() # WARNING TryInitStorage() when auth currently in progress. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
+    }
+    else {
+        userStorage->storageStatus   = STATUS_CONTINUE;
+        userStorage->storageInitTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
+    }
+    return userStorage->storageStatus;
 #else
     return STATUS_OK;
 #endif
@@ -114,9 +134,9 @@ void ClearPrerollErrors()
     if (userStorage->authStatus != STATUS_OK)
         userStorage->authStatus = STATUS_NONE;
 
-    userStorage->field_14 = 0;
-    if (userStorage->saveStatus != STATUS_OK)
-        userStorage->saveStatus = STATUS_NONE;
+    userStorage->authTime = 0;
+    if (userStorage->storageStatus != STATUS_OK)
+        userStorage->storageStatus = STATUS_NONE;
 #else
     PrintLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()");
 #endif
@@ -152,8 +172,11 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
 #if RETRO_REV02
     }
     else {
-        char buffer[0x100];
-        sprintf(buffer, "TryLoadUserFile(%s, %p, %u, %p) failing due to noSave", filename, buffer, bufSize, callback);
+        std::string str = __FILE__;
+        str += ": TryLoadUserFile() # TryLoadUserFile(";
+        str += filename;
+        str += ", ...) failing due to noSave \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         if (callback)
             callback(STATUS_ERROR);
@@ -188,9 +211,11 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
 #if RETRO_REV02
     }
     else {
-        char buffer[0x100];
-        sprintf(buffer, "TrySaveUserFile(%s, %p, %u, %p, %s) failing due to noSave", filename, buffer, bufSize, callback,
-                compressData ? "true" : "false");
+        std::string str = __FILE__;
+        str += ": TrySaveUserFile() # TrySaveUserFile(";
+        str += filename;
+        str += ", ...) failing due to noSave \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         if (callback)
             callback(STATUS_ERROR);
@@ -211,8 +236,11 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
 #if RETRO_REV02
     }
     else {
-        char buffer[0x100];
-        sprintf(buffer, "TryDeleteUserFile(%s, %p) failing due to noSave", filename, callback);
+        std::string str = __FILE__;
+        str += ": TryDeleteUserFile() # TryDeleteUserFile(";
+        str += filename;
+        str += ", ...) failing due to noSave \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
 
         if (callback)
             callback(STATUS_ERROR);
@@ -717,8 +745,8 @@ bool32 CheckDBValueMatch(UserDBValue *valueA, int row, int column)
             case DBVAR_STRING: {
                 char *string1 = (char *)valueA->data;
                 char *string2 = (char *)valueA->data;
-                int len1      = strlen(string1);
-                int len2      = strlen(string2);
+                int len1      = (int)strlen(string1);
+                int len2      = (int)strlen(string2);
                 if (len1 != len2)
                     return false;
 
@@ -759,7 +787,7 @@ void StoreUserDBValue(UserDBValue *value, int type, void *data)
                 break;
             case DBVAR_STRING: {
                 char *string = (char *)data;
-                int len      = strlen(string);
+                int len      = (int)strlen(string);
                 if (len < 15) {
                     value->size = len + 1;
                     int id      = 0;

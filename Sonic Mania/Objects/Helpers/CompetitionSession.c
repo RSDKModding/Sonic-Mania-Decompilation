@@ -2,35 +2,17 @@
 
 ObjectCompetitionSession *CompetitionSession = NULL;
 
-void CompetitionSession_Update(void)
-{
+void CompetitionSession_Update(void) {}
 
-}
+void CompetitionSession_LateUpdate(void) {}
 
-void CompetitionSession_LateUpdate(void)
-{
+void CompetitionSession_StaticUpdate(void) {}
 
-}
+void CompetitionSession_Draw(void) {}
 
-void CompetitionSession_StaticUpdate(void)
-{
+void CompetitionSession_Create(void *data) {}
 
-}
-
-void CompetitionSession_Draw(void)
-{
-
-}
-
-void CompetitionSession_Create(void* data)
-{
-
-}
-
-void CompetitionSession_StageLoad(void)
-{
-
-}
+void CompetitionSession_StageLoad(void) {}
 
 #if !RETRO_USE_PLUS
 void CompetitionSession_ResetOptions(void)
@@ -94,7 +76,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 flags)
     }
 
     int32 deathCount = 0;
-    bool32 flag    = true;
+    bool32 flag      = true;
     for (int32 p = 0; p < session->playerCount; ++p) {
         if (!session->lives[p] || session->finishFlags[p] == 1)
             ++deathCount;
@@ -120,7 +102,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 flags)
                 int32 secs = session->time[p].seconds;
                 int32 ms   = session->time[p].milliseconds;
                 int32 time = ms + 100 * (secs + 60 * mins);
-                times[p] = time;
+                times[p]   = time;
 
                 if (session->rings[p] > winnerRings)
                     winnerRings = session->rings[p];
@@ -169,7 +151,7 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 flags)
             }
         }
     }
-    else  {
+    else {
         LogHelpers_Print("DeriveWinner() -> %d", -1);
     }
 }
@@ -183,21 +165,10 @@ void CompetitionSession_WinMatchFor(int32 player)
 }
 #endif
 
-
 #if RETRO_INCLUDE_EDITOR
-void CompetitionSession_EditorDraw(void)
-{
+void CompetitionSession_EditorDraw(void) {}
 
-}
-
-void CompetitionSession_EditorLoad(void)
-{
-
-}
+void CompetitionSession_EditorLoad(void) {}
 #endif
 
-void CompetitionSession_Serialize(void)
-{
-
-}
-
+void CompetitionSession_Serialize(void) {}

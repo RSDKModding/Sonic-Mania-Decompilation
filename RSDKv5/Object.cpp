@@ -230,8 +230,6 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         tmp = (dataPos & -(int)sizeof(short)) + sizeof(short);
                         if ((dataPos & -(int)sizeof(short)) >= dataPos)
                             tmp = dataPos;
-                        sizeof(Matrix);
-                        sizeof(SpriteFrame);
                         dataPos = tmp + sizeof(UnknownStruct) * arraySize; // 18 (2 * 9)
                         break;
                     default: break;

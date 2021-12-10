@@ -91,7 +91,6 @@ void CorkscrewPath_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     // Bounds
-    Vector2 drawPos;
 
     Vector2 size;
     size.x = abs(self->period) << 15;

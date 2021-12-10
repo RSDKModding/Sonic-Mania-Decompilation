@@ -239,7 +239,6 @@ void LoadSceneFile()
 {
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
-    SceneListInfo *list        = &sceneInfo.listCategory[sceneInfo.activeCategory];
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     char buffer[0x40];
     sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->sceneID);

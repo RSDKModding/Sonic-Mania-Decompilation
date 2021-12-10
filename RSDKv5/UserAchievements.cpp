@@ -13,30 +13,37 @@ void ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); 
 
 void TryUnlockAchievement(const char *name)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
+    if (achievements->enabled) {
+        PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
-    int i = 0;
-    for (; i < (int)achievementList.size(); ++i) {
-        if (strcmp(name, achievementList[i].identifier) == 0) {
-            if (!achievementList[i].achieved) {
-                achievementStack.push_back(i);
-                PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
-                achievementList[i].achieved = true;
-                saveUserData();
+        int i = 0;
+        for (; i < (int)achievementList.size(); ++i) {
+            if (achievementList[i].identifier == name) {
+                if (!achievementList[i].achieved) {
+                    achievementStack.push_back(i);
+                    PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
+                    achievementList[i].achieved = true;
+                    saveUserData();
+                }
+                break;
             }
-            break;
         }
-    }
 
-    if (i == achievementList.size())
-        PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
+        if (i == achievementList.size())
+            PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
+    }
+    else {
+        std::string str = __FILE__;
+        str += ": TryUnlockAchievement() # Tried to unlock achievement, but achievements are disabled. \r\n";
+        PrintLog(PRINT_NORMAL, str.c_str());
+    }
 }
 
 void GetAchievementNames(TextInfo *names, int count)
 {
     int i = 0;
     for (; i < count && i < (int)achievementStack.size(); ++i) {
-        SetText(&names[i], (char *)achievementList[i].name, 0);
+        SetText(&names[i], (char *)achievementList[i].name.c_str(), 0);
     }
     for (; i < count; ++i) {
         SetText(&names[i], (char *)"Dummy Achievement", 0);
@@ -52,7 +59,7 @@ TextInfo *GetAchievementName(TextInfo *info, uint id)
 {
     id--;
     if (id <= achievementList.size())
-        SetText(info, (char *)achievementList[id].name, 0);
+        SetText(info, (char *)achievementList[id].name.c_str(), 0);
     return info;
 }
 

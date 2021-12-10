@@ -453,7 +453,7 @@ void WalkerLegs_State_Unknown1(void)
     self->field_80[1].y    = 0;
     self->field_68[2].x += (2 * (self->direction == FLIP_NONE) - 1) << 22;
     self->field_A0 -= (WalkerLegs->hitbox.top << 16);
-    self->field_A4 = self->field_68[2].y - WalkerLegs->hitbox.top << 16;
+    self->field_A4 = self->field_68[2].y - (WalkerLegs->hitbox.top << 16);
     self->state    = WalkerLegs_State_Unknown2;
 }
 

@@ -155,7 +155,6 @@ void Bungee_StageLoad(void)
 
 void Bungee_EditorDraw(void)
 {
-    RSDK_THIS(Bungee);
     RSDK.DrawSprite(&Bungee->animator, NULL, false);
 }
 

@@ -29,24 +29,25 @@ void ManiaModeMenu_Initialize(void)
     ManiaModeMenu_SetupActions();
 }
 
-bool32 ManiaModeMenu_InitUserdata(void)
+bool32 ManiaModeMenu_InitAPI(void)
 {
-    if (!MenuSetup->dword10)
+    if (!MenuSetup->initializedAPI)
         MenuSetup->fxFade->timer = 512;
+
     int32 authStatus = API.GetUserAuthStatus();
     if (!authStatus) {
         API.TryAuth();
     }
     else if (authStatus != STATUS_CONTINUE) {
-        int32 storageStatus = API.UserStorageStatusUnknown1();
+        int32 storageStatus = API.GetStorageStatus();
         if (!storageStatus) {
             API.TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
-            int32 statusUnknown2 = API.GetSaveStatus();
-            if (!API.GetUserStorageNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
-                if (statusUnknown2 != STATUS_CONTINUE) {
-                    if (statusUnknown2 != STATUS_FORBIDDEN) {
+            int32 saveStatus = API.GetSaveStatus();
+            if (!checkNoSave && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
+                if (saveStatus != STATUS_CONTINUE) {
+                    if (saveStatus != STATUS_FORBIDDEN) {
                         DialogRunner_PromptSavePreference(storageStatus);
                     }
                     else {
@@ -57,27 +58,27 @@ bool32 ManiaModeMenu_InitUserdata(void)
                 return false;
             }
 
-            if (!MenuSetup->gameLoaded) {
+            if (!MenuSetup->saveLoaded) {
                 UIWaitSpinner_StartWait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
                 ReplayRecorder_LoadReplayDB(NULL);
-                MenuSetup->gameLoaded = true;
+                MenuSetup->saveLoaded = true;
             }
-            if (MenuSetup->dword10)
+            if (MenuSetup->initializedAPI)
                 return true;
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK
                 && globals->taTableLoaded == STATUS_OK) {
-                if (!API.GetUserStorageNoSave() && DialogRunner_NotifyAutosave())
+                if (!checkNoSave && DialogRunner_NotifyAutosave())
                     return false;
                 UIWaitSpinner_FinishWait();
                 if (DialogRunner_CheckUnreadNotifs())
                     return false;
-                MenuSetup->dword10 = 1;
+                MenuSetup->initializedAPI = true;
                 return true;
             }
 
-            if (API.GetUserStorageNoSave()) {
+            if (checkNoSave) {
                 UIWaitSpinner_FinishWait();
                 return true;
             }
@@ -103,9 +104,9 @@ bool32 ManiaModeMenu_InitUserdata(void)
     return false;
 }
 
-void ManiaModeMenu_InitLocalization(int32 a1)
+void ManiaModeMenu_InitLocalization(bool32 success)
 {
-    if (a1) {
+    if (success) {
         Localization->loaded = false;
         Localization_LoadStrings();
         UIWidgets_ApplyLanguage();
@@ -181,7 +182,7 @@ void ManiaModeMenu_SetBGColours(void)
 
 void ManiaModeMenu_ReturnToTitle(void)
 {
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     RSDK.SetScene("Presentation", "Title Screen");
     RSDK.LoadScene();
 }
@@ -231,6 +232,7 @@ void ManiaModeMenu_HandleMenuReturn(void)
     memset(buffer, 0, 0x100);
     if (strcmp(param->menuTag, "") == 0)
         UIUsernamePopup_ShowPopup();
+
     foreach_all(UIControl, control)
     {
         if (strcmp(param->menuTag, "") != 0) {
@@ -256,25 +258,21 @@ void ManiaModeMenu_HandleMenuReturn(void)
         UIButton_SetChoiceSelection(extras->buttons[1], 1);
     }
 
-    int32 a, b, c, d;
-    if (param->clearFlag) {
-        a = param->characterID;
-        b = param->zoneID;
-        c = param->actID;
-        d = param->isEncoreMode;
+    int32 characterID = 0, zoneID = 0, act = 0, isEncoreMode = false;
+    if (param->inTimeAttack) {
+        characterID  = param->characterID;
+        zoneID       = param->zoneID;
+        act          = param->actID;
+        isEncoreMode = param->isEncoreMode;
     }
-    else {
-        a = 0;
-        b = 0;
-        c = 0;
-        d = 0;
-    }
-    TimeAttackData_ClearOptions();
-    if (param->clearFlag) {
-        param->characterID = a;
-        param->zoneID      = b;
-        param->actID       = c;
-        param->isEncoreMode   = d;
+
+    TimeAttackData_Clear();
+
+    if (param->inTimeAttack) {
+        param->characterID  = characterID;
+        param->zoneID       = zoneID;
+        param->actID        = act;
+        param->isEncoreMode = isEncoreMode;
     }
 }
 

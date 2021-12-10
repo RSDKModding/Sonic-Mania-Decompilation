@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <tinyxml2.h>
+#include "tinyxml2.h"
 
 #include <functional>
 
@@ -61,6 +61,9 @@ typedef enum {
     ModTable_ForeachConfigCategory,
     ModTable_GetObject,
     ModTable_RegisterAchievement,
+    ModTable_GetAchievementInfo,
+    ModTable_GetAchievementIndexByID,
+    ModTable_GetAchievementCount,
     ModTable_Max
 } ModFunctionTable;
 
@@ -110,7 +113,7 @@ void loadMods();
 bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active);
 void saveMods();
 
-inline void sortMods();
+void sortMods();
 
 void RunModCallbacks(int32 callbackID, void *data);
 
@@ -157,6 +160,9 @@ void Super(int32 objectID, ModSuper callback, void *data);
 Object *GetObject(const char *name);
 
 void RegisterAchievement(const char *identifier, const char *name, const char *desc);
+void GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
+int GetAchievementIndexByID(const char *id);
+int GetAchievementCount();
 #endif
 
 #endif // !MOD_API_H
