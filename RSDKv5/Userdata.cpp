@@ -154,6 +154,8 @@ void initUserData()
         leaderboards->unknown5         = nullUserFunc;
         leaderboards->TrackScore       = TrackScore;
         leaderboards->GetStatus        = GetLeaderboardStatus;
+        leaderboards->userRank         = 0;
+        leaderboards->isUser           = false;
 
         richPresence->SetDebugValues = nullUserFunc;
         richPresence->InitUnknown1   = nullUserFunc;
@@ -176,17 +178,12 @@ void initUserData()
         userStorage->DeleteUserFile     = TryDeleteUserFile;
         userStorage->ClearPrerollErrors = ClearPrerollErrors;
 
-        achievements->status    = STATUS_OK;
-        leaderboards->status    = STATUS_OK;
-        stats->status           = STATUS_OK;
-        userStorage->authStatus = STATUS_OK;
-        userStorage->saveStatus = STATUS_OK;
-        userStorage->statusCode = STATUS_OK;
-
-        for (int i = 0; i < 200; ++i) {
-            leaderboards->entryPtrs[i] = (LeaderboardEntry *)malloc(sizeof(LeaderboardEntry));
-            memset(leaderboards->entryPtrs[i], 0, sizeof(LeaderboardEntry));
-        }
+        achievements->status       = STATUS_OK;
+        leaderboards->status       = STATUS_OK;
+        stats->status              = STATUS_OK;
+        userStorage->authStatus    = STATUS_OK;
+        userStorage->storageStatus = STATUS_OK;
+        userStorage->saveStatus    = STATUS_OK;
 #endif
     }
 
@@ -255,7 +252,6 @@ void releaseUserData()
     achievements = NULL;
 
     if (leaderboards) {
-        for (int i = 0; i < 200; ++i) free(leaderboards->entryPtrs[i]);
         free(leaderboards);
     }
     leaderboards = NULL;

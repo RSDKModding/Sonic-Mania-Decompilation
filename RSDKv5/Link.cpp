@@ -34,9 +34,9 @@ enum UserdataTableIDs {
     APITable_TrackScore,
     APITable_GetLeaderboardsStatus,
     APITable_LeaderboardEntryCount,
-    APITable_Missing2,
-    APITable_Unknown12,
-    APITable_Missing3,
+    APITable_LeaderboardEntryLength,
+    APITable_LoadNewLeaderboardEntries,
+    APITable_ClearLeaderboardInfo,
     APITable_ReadLeaderboardEntry,
     APITable_SetPresence,
     APITable_TryTrackStat,
@@ -47,10 +47,10 @@ enum UserdataTableIDs {
     APITable_GetUserAuthStatus,
     APITable_GetUsername,
     APITable_TryInitStorage,
-    APITable_UserStorageStatusUnknown1,
-    APITable_UserStorageStatusUnknown2,
-    APITable_ClearUserStorageStatus,
-    APITable_SetUserStorageStatus,
+    APITable_GetUserStorageStatus,
+    APITable_GetSaveStatus,
+    APITable_ClearSaveStatus,
+    APITable_SetSaveStatusContinue,
     APITable_SetSaveStatusOK,
     APITable_SetSaveStatusForbidden,
     APITable_SetSaveStatusError,
@@ -388,9 +388,9 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_TrackScore, leaderboards->TrackScore);
     addToAPIFunctionTable(APITable_GetLeaderboardsStatus, leaderboards->GetStatus);
     addToAPIFunctionTable(APITable_LeaderboardEntryCount, LeaderboardEntryCount);
-    addToAPIFunctionTable(APITable_Missing2, NullFunc);              // Missing2);
-    addToAPIFunctionTable(APITable_Unknown12, NullFunc);             // Unknown12);
-    addToAPIFunctionTable(APITable_Missing3, NullFunc);              // Missing3);
+    addToAPIFunctionTable(APITable_LeaderboardEntryLength, LeaderboardEntryLength);
+    addToAPIFunctionTable(APITable_LoadNewLeaderboardEntries, LoadNewLeaderboardEntries);
+    addToAPIFunctionTable(APITable_ClearLeaderboardInfo, ClearLeaderboardInfo);
     addToAPIFunctionTable(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
     addToAPIFunctionTable(APITable_SetPresence, richPresence->SetPresence);
     addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
@@ -398,13 +398,13 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_SetStatsStatus, SetStatsStatus);
     addToAPIFunctionTable(APITable_ClearPrerollErrors, userStorage->ClearPrerollErrors);
     addToAPIFunctionTable(APITable_TryAuth, userStorage->TryAuth);
-    addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserStorageStatus);
+    addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserAuthStatus);
     addToAPIFunctionTable(APITable_GetUsername, userStorage->GetUsername);
     addToAPIFunctionTable(APITable_TryInitStorage, userStorage->TryInitStorage);
-    addToAPIFunctionTable(APITable_UserStorageStatusUnknown1, UserStorageStatusUnknown1);
-    addToAPIFunctionTable(APITable_UserStorageStatusUnknown2, GetSaveStatus);
-    addToAPIFunctionTable(APITable_ClearUserStorageStatus, ClearUserStorageStatus);
-    addToAPIFunctionTable(APITable_SetUserStorageStatus, SetUserStorageStatus);
+    addToAPIFunctionTable(APITable_GetUserStorageStatus, GetUserStorageStatus);
+    addToAPIFunctionTable(APITable_GetSaveStatus, GetSaveStatus);
+    addToAPIFunctionTable(APITable_ClearSaveStatus, ClearSaveStatus);
+    addToAPIFunctionTable(APITable_SetSaveStatusContinue, SetSaveStatusContinue);
     addToAPIFunctionTable(APITable_SetSaveStatusOK, SetSaveStatusOK);
     addToAPIFunctionTable(APITable_SetSaveStatusForbidden, SetSaveStatusForbidden);
     addToAPIFunctionTable(APITable_SetSaveStatusError, SetSaveStatusError);

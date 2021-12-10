@@ -208,7 +208,7 @@ void MainMenu_MenuButton_ActionCB(void)
         case 3: UIControl_MatchMenuTag("Options"); break;
         case 4: UIControl_MatchMenuTag("Extras"); break;
         case 5:
-            if (API.GetUserStorageNoSave()) {
+            if (checkNoSave) {
                 UIControl_MatchMenuTag("No Save Encore");
             }
             else {

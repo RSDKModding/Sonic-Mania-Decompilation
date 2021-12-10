@@ -32,16 +32,14 @@ void FillDummyLeaderboardEntries()
                                  "FACILISISIVY303",     "TELLUSHARLAN339",      "METUSSOPOLINE75",     "NUNCKYLYNN927",       "PROINHERMIONE775",
                                  "TEMPORFITZGERALD656", "VELVELMA504",          "FAUCIBUSTAMEKAH272",  "PORTTITORWHOOPI881",  "EUPETER41" };
 
-    leaderboards->field_4 = STATUS_OK;
-    leaderboards->field_8 = 1;
-    leaderboards->field_C = 20;
-    for (int e = 0; e < leaderboards->field_C; ++e) {
-        LeaderboardEntry *entry = leaderboards->entryPtrs[e];
+    leaderboards->unknown.loadStatus = STATUS_OK;
+    for (int e = 0; e < leaderboards->unknown.entryCount; ++e) {
+        LeaderboardEntry *entry = &leaderboards->unknown.entries[e];
 
         entry->status     = STATUS_OK;
-        entry->globalRank = leaderboards->field_8 + e;
+        entry->globalRank = leaderboards->unknown.field_8 + e;
         entry->score      = (4 * entry->globalRank + 2400) % 59999;
-        entry->isUser     = leaderboards->prevIsUser && e == leaderboards->prevRank;
+        entry->isUser     = leaderboards->isUser && e == leaderboards->userRank;
         if (entry->isUser) {
             GetUserName(&entry->username);
         }
@@ -53,19 +51,19 @@ void FillDummyLeaderboardEntries()
     }
 }
 
-void FetchLeaderboard(const char *name, int id)
+void FetchLeaderboard(const char *name, bool32 isUser)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %d)", name, id);
-    leaderboards->entryStart  = 1;
-    leaderboards->entryLength = 20;
-    leaderboards->rankScore   = 0;
-    // leaderboards->leaderboardEntryCount = RSDK.Rand(start, end);
-    leaderboards->prevIsUser = id == 0;
-    if (id == 0) {
-        leaderboards->rankScore = GetRandomValue(1000, 9999);
-        leaderboards->prevRank  = GetRandomValue(0, (leaderboards->entryStart + leaderboards->entryLength) - 1);
-    }
+    PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", name, isUser ? "true" : "false");
+    leaderboards->isUser   = isUser;
+    leaderboards->userRank = 0;
+    if (isUser)
+        leaderboards->userRank = rand() % 9999 + 1;
     leaderboards->status = STATUS_OK;
+
+    leaderboards->unknown.entryStart  = 1;
+    leaderboards->unknown.entryLength = 20;
+    leaderboards->unknown.field_8     = 1;
+    leaderboards->unknown.entryCount  = 20;
 
     FillDummyLeaderboardEntries();
 }
@@ -93,18 +91,65 @@ void TrackScore(const char *name, int score, void (*callback)(int status, int ra
     if (callback)
         callback(true, 1);
 }
+Vector2 LeaderboardEntryLength()
+{
+    Vector2 value;
+    value.x = leaderboards->unknown.entryCount;
+    value.y = leaderboards->unknown.field_10;
+    return value;
+}
+
 Vector2 LeaderboardEntryCount()
 {
     Vector2 value;
-    value.x = leaderboards->entryStart;
-    value.y = leaderboards->entryLength;
+    value.x = leaderboards->unknown.entryStart;
+    value.y = leaderboards->unknown.entryLength;
     return value;
 }
+
+void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
+{
+    switch (type) {
+        default:
+            leaderboards->unknown2.loadType       = type;
+            leaderboards->unknown2.loadStartIndex = start;
+            leaderboards->unknown2.loadEndIndex   = end;
+            break;
+        case 1:
+            leaderboards->unknown2.loadType = type;
+            if (!start)
+                start = 1;
+            leaderboards->unknown2.loadStartIndex = start;
+            if (end > 200)
+                end = 200;
+            leaderboards->unknown2.loadEndIndex = end;
+            break;
+        case 2: {
+            int32 startPos = start;
+            int32 endPos   = start + end - 1;
+            leaderboards->unknown2.loadType = 2;
+            if (start < (endPos - 199))
+                startPos = endPos - 199;
+            leaderboards->unknown2.loadStartIndex = startPos;
+            leaderboards->unknown2.loadEndIndex   = start + end - startPos;
+            break;
+        }
+    }
+}
+
+void ClearLeaderboardInfo()
+{
+    leaderboards->status             = STATUS_NONE;
+    leaderboards->currentLeaderboard = NULL;
+    // ClearLeaderboardsUnknown2(&leaderboards->unknown2);
+    // SetupLeaderboardEntries(&leaderboards->unknown);
+}
+
 LeaderboardEntry *ReadLeaderboardEntry(int entryID)
 {
-    if (entryID < leaderboards->entryStart || entryID >= leaderboards->entryStart + leaderboards->entryLength)
+    if (entryID < leaderboards->unknown.entryStart || entryID >= leaderboards->unknown.entryStart + leaderboards->unknown.entryLength)
         return NULL;
     else
-        return leaderboards->entryPtrs[entryID - leaderboards->entryStart];
+        return &leaderboards->unknown.entries[entryID - leaderboards->unknown.entryStart];
 }
 #endif

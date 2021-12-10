@@ -78,6 +78,9 @@ typedef struct {
     Object *(*GetObject)(const char *name);
 
     void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
+    void (*GetAchievementInfo)(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
+    int32 (*GetAchievementIndexByID)(const char *identifier);
+    int32 (*GetAchievementCount)(void);
 } ModFunctionTable;
 #endif
 
@@ -97,8 +100,8 @@ typedef struct {
     void (*CoreUnknown4)(int32 value);
     void (*RegisterHIDDevice)(void);
 #endif
-    void (*UnlockAchievement)(const char *achName);
-    void (*GetAchievementStatus)(void);
+    void (*UnlockAchievement)(const char *identifier);
+    int32 (*GetAchievementStatus)(void);
     void (*SetAchievementStatus)(int32 status);
 #if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
@@ -108,14 +111,14 @@ typedef struct {
 #if RETRO_USE_EGS
     void (*LeaderboardUnknown1)(void);
 #endif
-    void (*FetchLeaderboard)(const char *name, int32 a2);
+    void (*FetchLeaderboard)(const char *name, bool32 isUser);
     void (*TrackScore)(const char *name, int32 score, void (*callback)(int32 status, int32 rank));
     int32 (*GetLeaderboardsStatus)(void);
     Vector2 (*LeaderboardEntryCount)(void);
-    int32 (*GetLeaderboardUnknown2)(void);
-    void (*Unknown12)(int32 a2, uint32 a3, int32 a4);
-    void (*LeaderboardsUnknown8)(void);
-    LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 a1);
+    Vector2 (*LeaderboardEntryLength)(void);
+    void (*LoadNewLeaderboardEntries)(int32 start, uint32 end, int32 type);
+    void (*ClearLeaderboardInfo)(void);
+    LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);
     void (*SetRichPresence)(int32, TextInfo *text);
     void (*TryTrackStat)(StatInfo *stat);
     int32 (*GetStatsStatus)(void);
@@ -125,21 +128,21 @@ typedef struct {
     int32 (*GetUserAuthStatus)(void);
     bool32 (*GetUsername)(TextInfo *text);
     void (*TryInitStorage)(void);
-    int32 (*UserStorageStatusUnknown1)(void);
+    int32 (*GetStorageStatus)(void);
     int32 (*GetSaveStatus)(void);
-    void (*ClearUserStorageStatus)(void);
-    void (*SetUserStorageStatus)(void);
+    void (*ClearSaveStatus)(void);
+    void (*SetSaveStatusContinue)(void);
     void (*SetSaveStatusOK)(void);
     void (*SetSaveStatusForbidden)(void);
     void (*SetSaveStatusError)(void);
-    void (*SetUserStorageNoSave)(bool32 state);
-    bool32 (*GetUserStorageNoSave)(void);
+    void (*SetNoSave)(bool32 noSave);
+    bool32 (*GetNoSave)(void);
     // load user file from game dir
-    void (*LoadUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status));
+    void (*LoadUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status));
     // save user file to game dir
-    void (*SaveUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status), bool32 compress);
+    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compress);
     // delete user file from game dir
-    void (*DeleteUserFile)(const char *filename, void (*callback)(int32 status));
+    void (*DeleteUserFile)(const char *name, void (*callback)(int32 status));
     // format: name, [colType, colName] for how ever many columns you want (max of 8), DBVAR_NONE (or NULL)
     uint16 (*InitUserDB)(const char *name, ...);
     uint16 (*LoadUserDB)(const char *filename, void (*callback)(int32 status));

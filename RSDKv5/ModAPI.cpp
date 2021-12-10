@@ -92,6 +92,9 @@ void initModAPI()
     addToModFunctionTable(ModTable_ForeachConfigCategory, ForeachConfigCategory);
     addToModFunctionTable(ModTable_GetObject, GetObject);
     addToModFunctionTable(ModTable_RegisterAchievement, RegisterAchievement);
+    addToModFunctionTable(ModTable_GetAchievementInfo, GetAchievementInfo);
+    addToModFunctionTable(ModTable_GetAchievementIndexByID, GetAchievementIndexByID);
+    addToModFunctionTable(ModTable_GetAchievementCount, GetAchievementCount);
 
     loadMods();
 }
@@ -1210,4 +1213,30 @@ Object *GetObject(const char *name)
         return *objectList[stageObjectIDs[o]].type;
     return NULL;
 }
+
+void GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved)
+{
+    if (id >= achievementList.size())
+        return;
+
+    if (name)
+        SetText(name, (char *)achievementList[id].name.c_str(), 0);
+    if (description)
+        SetText(description, (char *)achievementList[id].description.c_str(), 0);
+    if (identifer)
+        SetText(identifer, (char *)achievementList[id].identifier.c_str(), 0);
+    if (achieved)
+        *achieved = achievementList[id].achieved;
+}
+
+int GetAchievementIndexByID(const char *id)
+{
+    for (int i = 0; i < achievementList.size(); ++i) {
+        if (achievementList[i].identifier == std::string(id)) {
+            return i;
+        }
+    }
+    return -1;
+}
+int GetAchievementCount() { return achievementList.size(); }
 #endif

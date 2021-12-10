@@ -26,9 +26,9 @@ struct DummyAchievements {
 
 //Start Dummy Achievment code
 struct AchievementInfo {
-    const char *identifier;
-    const char *name;
-    const char *description;
+    std::string identifier;
+    std::string name;
+    std::string description;
     bool32 achieved;
 };
 

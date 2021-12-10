@@ -51,6 +51,7 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress);
 void GameProgress_TrackGameProgress(void (*callback)(int32));
 void GameProgress_ClearBSSSave(void);
 void GameProgress_UnlockAllMedals(void);
+void GameProgress_UnlockAll(void);
 void GameProgress_ClearProgress(void);
 void GameProgress_MarkZoneCompleted(int32 zoneID);
 bool32 GameProgress_CheckZoneClear(void);

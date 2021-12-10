@@ -448,12 +448,12 @@ void UILeaderboard_ProcessButtonCB(void)
         if (entryCount.x <= 1 || newID >= entryCount.x + 2) {
             if (newID > (entryCount.x + entryCount.y - 7)) {
                 LogHelpers_Print("Load down");
-                API.Unknown12(entryCount.x, entryCount.y + 20, 2);
+                API.LoadNewLeaderboardEntries(entryCount.x, entryCount.y + 20, 2);
             }
         }
         else {
             LogHelpers_Print("Load up");
-            API.Unknown12(entryCount.x - 20, entryCount.y + 20, 1);
+            API.LoadNewLeaderboardEntries(entryCount.x - 20, entryCount.y + 20, 1);
         }
     }
 #else

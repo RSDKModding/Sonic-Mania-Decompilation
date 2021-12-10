@@ -189,7 +189,7 @@ void TimeAttackData_ResetTimeAttackDB(void)
     }
     else {
         globals->taTableLoaded = STATUS_OK;
-        if (!API.GetUserStorageNoSave()) {
+        if (!checkNoSave) {
             if (globals->saveLoaded == STATUS_OK)
                 TimeAttackData_MigrateLegacySaves();
         }
@@ -285,9 +285,9 @@ int32 TimeAttackData_AddTADBEntry(char zone, char charID, int32 act, int32 mode,
 
 int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
 {
-    if (API.GetUserStorageNoSave() || globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) {
+    if (API.GetNoSave() || globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) {
         if (callback)
-            callback(0);
+            callback(false);
     }
     else {
         LogHelpers_Print("Saving Time Attack DB");

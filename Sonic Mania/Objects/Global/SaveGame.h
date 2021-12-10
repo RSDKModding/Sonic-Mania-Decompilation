@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
-#define checkNoSave API.GetUserStorageNoSave()
+#define checkNoSave API.GetNoSave()
 #else
 #define checkNoSave globals->noSave
 #endif

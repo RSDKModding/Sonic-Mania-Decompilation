@@ -99,13 +99,13 @@ void DialogRunner_NotifyAutoSave(void)
 void DialogRunner_SetNoSaveDisabled(void)
 {
     API.SetSaveStatusForbidden();
-    API.SetUserStorageNoSave(false);
+    API.SetNoSave(false);
 }
 
 void DialogRunner_SetNoSaveEnabled(void)
 {
     API.SetSaveStatusError();
-    API.SetUserStorageNoSave(true);
+    API.SetNoSave(true);
 }
 
 void DialogRunner_PromptSavePreference_CB(void)
@@ -226,7 +226,7 @@ void DialogRunner_ManageNotifs(int32 success)
 void DialogRunner_Wait(int32 success) { UIWaitSpinner_FinishWait(); }
 void DialogRunner_GetNextNotif(void)
 {
-    if (SceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API.GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }
@@ -284,7 +284,7 @@ void DialogRunner_GetUserAuthStatus(void)
 }
 void DialogRunner_PromptSavePreference(int32 id)
 {
-    if (API.GetUserStorageNoSave()) {
+    if (API.GetNoSave()) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
@@ -292,7 +292,7 @@ void DialogRunner_PromptSavePreference(int32 id)
     if (API.GetSaveStatus() == STATUS_CONTINUE) {
         LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
-    API.SetUserStorageStatus();
+    API.ClearSaveStatus();
     EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_PromptSavePreference_CB, 0, 0);
     dialogRunner->status             = id;
     DialogRunner->entityPtr          = dialogRunner;

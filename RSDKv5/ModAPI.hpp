@@ -61,6 +61,9 @@ typedef enum {
     ModTable_ForeachConfigCategory,
     ModTable_GetObject,
     ModTable_RegisterAchievement,
+    ModTable_GetAchievementInfo,
+    ModTable_GetAchievementIndexByID,
+    ModTable_GetAchievementCount,
     ModTable_Max
 } ModFunctionTable;
 
@@ -157,6 +160,9 @@ void Super(int32 objectID, ModSuper callback, void *data);
 Object *GetObject(const char *name);
 
 void RegisterAchievement(const char *identifier, const char *name, const char *desc);
+void GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
+int GetAchievementIndexByID(const char *id);
+int GetAchievementCount();
 #endif
 
 #endif // !MOD_API_H

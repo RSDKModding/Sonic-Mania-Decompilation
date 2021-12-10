@@ -18,7 +18,7 @@ struct DummyUserStorage {
     void (*ClearPrerollErrors)(void);
 
     int authStatus;
-    int statusCode;
+    int storageStatus;
     int saveStatus;
     int noSaveActive;
     int field_14;
@@ -106,13 +106,12 @@ void userInitUnknown2();
 int GetUserAuthStatus();
 int GetUserStorageStatus();
 #if RETRO_REV02
-int UserStorageStatusUnknown1();
 int GetSaveStatus();
 void SetSaveStatusOK();
 void SetSaveStatusForbidden();
 void SetSaveStatusError();
-void ClearUserStorageStatus();
-void SetUserStorageStatus();
+void ClearSaveStatus();
+void SetSaveStatusContinue();
 void SetUserStorageNoSave(int state);
 int GetUserStorageNoSave();
 #endif

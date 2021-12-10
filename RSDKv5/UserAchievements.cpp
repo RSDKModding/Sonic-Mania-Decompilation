@@ -17,7 +17,7 @@ void TryUnlockAchievement(const char *name)
 
     int i = 0;
     for (; i < (int)achievementList.size(); ++i) {
-        if (strcmp(name, achievementList[i].identifier) == 0) {
+        if (achievementList[i].identifier == name) {
             if (!achievementList[i].achieved) {
                 achievementStack.push_back(i);
                 PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
@@ -36,7 +36,7 @@ void GetAchievementNames(TextInfo *names, int count)
 {
     int i = 0;
     for (; i < count && i < (int)achievementStack.size(); ++i) {
-        SetText(&names[i], (char *)achievementList[i].name, 0);
+        SetText(&names[i], (char *)achievementList[i].name.c_str(), 0);
     }
     for (; i < count; ++i) {
         SetText(&names[i], (char *)"Dummy Achievement", 0);
@@ -52,7 +52,7 @@ TextInfo *GetAchievementName(TextInfo *info, uint id)
 {
     id--;
     if (id <= achievementList.size())
-        SetText(info, (char *)achievementList[id].name, 0);
+        SetText(info, (char *)achievementList[id].name.c_str(), 0);
     return info;
 }
 

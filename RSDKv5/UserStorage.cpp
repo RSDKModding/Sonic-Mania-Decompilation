@@ -40,23 +40,26 @@ void userInitUnknown2()
 }
 #endif
 
-int GetUserAuthStatus() { return STATUS_OK; }
-int GetUserStorageStatus()
+int GetUserAuthStatus()
 {
 #if RETRO_REV02
     return userStorage->authStatus;
 #else
     return STATUS_OK;
-#endif
+#endif 
 }
-#if RETRO_REV02
-int UserStorageStatusUnknown1()
+int GetUserStorageStatus()
 {
+#if RETRO_REV02
     if (userStorage->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;
     else
-        return userStorage->statusCode;
+        return userStorage->storageStatus;
+#else
+    return STATUS_OK;
+#endif
 }
+#if RETRO_REV02
 int GetSaveStatus()
 {
     if (userStorage->noSaveActive)
@@ -79,8 +82,8 @@ void SetSaveStatusError()
     if (userStorage->saveStatus == STATUS_CONTINUE)
         userStorage->saveStatus = STATUS_ERROR;
 }
-void ClearUserStorageStatus() { userStorage->saveStatus = STATUS_NONE; }
-void SetUserStorageStatus() { userStorage->saveStatus = STATUS_CONTINUE; }
+void ClearSaveStatus() { userStorage->saveStatus = STATUS_NONE; }
+void SetSaveStatusContinue() { userStorage->saveStatus = STATUS_CONTINUE; }
 void SetUserStorageNoSave(int state) { userStorage->noSaveActive = state; }
 int GetUserStorageNoSave() { return userStorage->noSaveActive; }
 #endif

@@ -1315,7 +1315,7 @@ void ReplayRecorder_LoadReplayDB(void (*callback)(bool32))
 
 void ReplayRecorder_SaveReplayDB(void (*callback)(bool32))
 {
-    if (API.GetUserStorageNoSave() || globals->replayTableID == 0xFFFF || globals->replayTableLoaded != STATUS_OK) {
+    if (checkNoSave || globals->replayTableID == 0xFFFF || globals->replayTableLoaded != STATUS_OK) {
         if (callback)
             callback(false);
     }

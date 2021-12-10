@@ -178,6 +178,18 @@ void GameProgress_UnlockAllMedals(void)
         progress->medals[m] = 2;
     }
 }
+
+void GameProgress_UnlockAll(void)
+{
+    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+        LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
+    }
+    else {
+        EntityGameProgress *progress = GameProgress_GetGameProgress();
+        progress->allSpecialCleared  = false;
+    }
+}
+
 void GameProgress_ClearProgress(void)
 {
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {

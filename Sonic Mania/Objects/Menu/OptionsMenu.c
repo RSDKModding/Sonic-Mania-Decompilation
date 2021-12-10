@@ -606,7 +606,7 @@ void OptionsMenu_MenuSetupCB(void)
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->optionsControl;
     EntityUIButton *button   = control->buttons[4];
     if (button) {
-        button->disabled = API.GetUserStorageNoSave();
+        button->disabled = checkNoSave;
     }
 }
 

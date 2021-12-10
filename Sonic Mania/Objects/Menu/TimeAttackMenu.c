@@ -314,11 +314,14 @@ void TimeAttackMenu_MenuUpdateCB_LB(void)
         EntityUICarousel *carousel = control->carousel;
         Vector2 entryCount         = API.LeaderboardEntryCount();
         if (entryCount.x <= 1 || carousel->scrollOffset >= (entryCount.x + 2)) {
-            if (carousel->scrollOffset > entryCount.y - control->buttonCount + entryCount.x - 2)
-                API.Unknown12(entryCount.x, entryCount.y + 20, 2);
+            if (carousel->scrollOffset > entryCount.y - control->buttonCount + entryCount.x - 2) {
+                //Load Down
+                API.LoadNewLeaderboardEntries(entryCount.x, entryCount.y + 20, 2);
+            }
         }
         else {
-            API.Unknown12(entryCount.x - 20, entryCount.y + 20, 1);
+            //Load Up
+            API.LoadNewLeaderboardEntries(entryCount.x - 20, entryCount.y + 20, 1);
         }
 
         entryCount          = API.LeaderboardEntryCount();
@@ -360,11 +363,11 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         entity->delay                 = 120;
         entity->state                 = TimeAttackMenu_State_SetupLeaderboards;
         entity->callback              = callback;
-        int32 rowCount                = API.GetSortedUserDBRowCount(globals->taTableID);
+        int32 isUser                  = API.GetSortedUserDBRowCount(globals->taTableID);
         if (noRows)
-            rowCount = 0;
-        TimeAttackMenu->hasRows  = rowCount;
-        TimeAttackMenu->rowCount = rowCount;
+            isUser = 0;
+        TimeAttackMenu->hasRows  = isUser;
+        TimeAttackMenu->rowCount = isUser;
 
         const char *name = "";
         if (zoneID > 11 || act > 1 || (characterID - 1) > 4) {
@@ -376,7 +379,7 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
                 pos += 120;
             name = LeaderboardNames[pos];
         }
-        API.FetchLeaderboard(name, rowCount);
+        API.FetchLeaderboard(name, isUser);
         UITABanner_SetupDetails(characterID, (EntityUITABanner *)TimeAttackMenu->leaderboardsBanner, zoneID, act, isEncore);
     }
 }
@@ -741,7 +744,7 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
     }
 
     control->buttonID = 0;
-    if (!API.GetUserStorageNoSave() && globals->taTableID != 0xFFFF && globals->taTableLoaded == STATUS_OK) {
+    if (!checkNoSave && globals->taTableID != 0xFFFF && globals->taTableLoaded == STATUS_OK) {
         LogHelpers_Print("Saving Time Attack DB");
         TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = NULL;

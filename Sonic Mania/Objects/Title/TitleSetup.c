@@ -42,7 +42,7 @@ void TitleSetup_StageLoad(void)
     Localization_GetString(&presence, STR_RPC_TITLE);
     API_SetRichPresence(PRESENCE_TITLE, &presence);
 #if RETRO_USE_PLUS
-    API.SetUserStorageNoSave(false);
+    API.SetNoSave(false);
 #else
     globals->noSave = false;
 #endif
@@ -50,7 +50,7 @@ void TitleSetup_StageLoad(void)
     TimeAttackData_Clear();
 #if RETRO_USE_PLUS
     API.ClearPrerollErrors();
-    API.ClearUserStorageStatus();
+    API.ClearSaveStatus();
 #else
     APICallback_ClearPrerollErrors();
 #endif

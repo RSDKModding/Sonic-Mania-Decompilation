@@ -39,13 +39,13 @@ bool32 ManiaModeMenu_InitAPI(void)
         API.TryAuth();
     }
     else if (authStatus != STATUS_CONTINUE) {
-        int32 storageStatus = API.UserStorageStatusUnknown1();
+        int32 storageStatus = API.GetStorageStatus();
         if (!storageStatus) {
             API.TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
             int32 statusUnknown2 = API.GetSaveStatus();
-            if (!API.GetUserStorageNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
+            if (!checkNoSave && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
                 if (statusUnknown2 != STATUS_CONTINUE) {
                     if (statusUnknown2 != STATUS_FORBIDDEN) {
                         DialogRunner_PromptSavePreference(storageStatus);
@@ -69,7 +69,7 @@ bool32 ManiaModeMenu_InitAPI(void)
                 return true;
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK
                 && globals->taTableLoaded == STATUS_OK) {
-                if (!API.GetUserStorageNoSave() && DialogRunner_NotifyAutosave())
+                if (!checkNoSave && DialogRunner_NotifyAutosave())
                     return false;
                 UIWaitSpinner_FinishWait();
                 if (DialogRunner_CheckUnreadNotifs())
@@ -78,7 +78,7 @@ bool32 ManiaModeMenu_InitAPI(void)
                 return true;
             }
 
-            if (API.GetUserStorageNoSave()) {
+            if (checkNoSave) {
                 UIWaitSpinner_FinishWait();
                 return true;
             }

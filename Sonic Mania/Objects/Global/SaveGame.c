@@ -242,9 +242,9 @@ void SaveGame_SaveGameState(void)
     globals->restart1UP      = player1->ringExtraLife;
     globals->restartPowerups = player1->shield | (player1->hyperRing << 6);
 
-    for (int32 i = 0x40; i < 0x40 + 0x800; ++i) {
+    for (int32 i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
-        if (itemBox->objectID || (itemBox->active != 0xFF)) {
+        if (itemBox->objectID || (itemBox->active != ACTIVE_NEVER2)) {
             if (itemBox->objectID == ItemBox->objectID) {
                 if (itemBox->state == ItemBox_State_Broken) {
                     globals->atlEntityData[(0x200 * 1) + i] = 2;
@@ -301,7 +301,7 @@ void SaveGame_ClearRestartData(void)
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
     globals->restartMinutes      = 0;
-    memset(globals->atlEntityData, 0, 0x840 * sizeof(int32));
+    memset(globals->atlEntityData, 0, (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT) * sizeof(int32));
 }
 void SaveGame_SavePlayerState(void)
 {
