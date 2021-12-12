@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define CaterkillerJr_SegmentCount (7)
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -22,10 +24,8 @@ typedef struct {
     int32 bodyTimer[8];
     int32 boundL;
     int32 boundR;
-    Animator bodyAnimators[7];
-    Animator smokePuffAnimator0;
-    Animator smokePuffAnimator1;
-    Animator smokePuffAnimator2;
+    Animator bodyAnimators[CaterkillerJr_SegmentCount];
+    Animator smokePuffAnimators[3];
 } EntityCaterkillerJr;
 
 // Object Struct

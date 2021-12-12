@@ -5,7 +5,7 @@ ObjectCPZ1Intro *CPZ1Intro;
 void CPZ1Intro_Update(void)
 {
     void *states[] = {
-        CPZ1Intro_Unknown5, CPZ1Intro_Unknown6, CPZ1Intro_Unknown7, CPZ1Intro_Unknown8, CPZ1Intro_Unknown9, CPZ1Intro_Unknown15, NULL
+        CPZ1Intro_Cutscene_RubyWarp, CPZ1Intro_Cutscene_PostWarpDrop, CPZ1Intro_Cutscene_Waiting, CPZ1Intro_Cutscene_ChemicalDrop, CPZ1Intro_Cutscene_PlayerChemicalReact, CPZ1Intro_Cutscene_ReadyStage, NULL
     };
 
     RSDK_THIS(CPZ1Intro);
@@ -61,7 +61,7 @@ void CPZ1Intro_Particle_CB(Entity *d)
     RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 1, &debris->animator, true, 0);
 }
 
-void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int32 val)
+void CPZ1Intro_HandleRubyHover(Entity *player1, Entity *cutSeq, Entity *player2, int32 targetY)
 {
     EntityPlayer *players[2];
     players[0]             = (EntityPlayer *)player1;
@@ -75,7 +75,7 @@ void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int32 
             break;
 
         int32 valX = (player->position.x - player->position.x) >> 3;
-        int32 valY = (val + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->storedValue2)) - player->position.y) >> 3;
+        int32 valY = (targetY + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->storedValue2)) - player->position.y) >> 3;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
         player->position.x += valX;
         player->position.y += valY;
@@ -144,7 +144,7 @@ bool32 CPZ1Intro_CheckRayAnimFinish(void)
 }
 #endif
 
-bool32 CPZ1Intro_Unknown5(void *h)
+bool32 CPZ1Intro_Cutscene_RubyWarp(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -172,12 +172,10 @@ bool32 CPZ1Intro_Unknown5(void *h)
     camera->state = StateMachine_None;
     if (fxRuby->fadeBlack > 0) {
         fxRuby->fadeBlack -= 16;
-        CPZ1Intro_Unknown3((Entity *)player1, (Entity *)host, (Entity *)player2, ent->position.y - 0x200000);
     }
     else {
         if (fxRuby->fadeWhite > 0) {
             fxRuby->fadeWhite -= 16;
-            CPZ1Intro_Unknown3((Entity *)player1, (Entity *)host, (Entity *)player2, ent->position.y - 0x200000);
         }
         else {
             if (!host->values[0]) {
@@ -186,10 +184,7 @@ bool32 CPZ1Intro_Unknown5(void *h)
                 fxRuby->state     = FXRuby_State_ShrinkRing;
             }
 
-            if (fxRuby->outerRadius) {
-                CPZ1Intro_Unknown3((Entity *)player1, (Entity *)host, (Entity *)player2, ent->position.y - 0x200000);
-            }
-            else {
+            if (!fxRuby->outerRadius) {
                 player1->state = Player_State_Air;
                 if (player2->objectID == Player->objectID)
                     player2->state = Player_State_Air;
@@ -198,11 +193,12 @@ bool32 CPZ1Intro_Unknown5(void *h)
             }
         }
     }
+    CPZ1Intro_HandleRubyHover((Entity *)player1, (Entity *)host, (Entity *)player2, ent->position.y - 0x200000);
 
     return false;
 }
 
-bool32 CPZ1Intro_Unknown6(void *h)
+bool32 CPZ1Intro_Cutscene_PostWarpDrop(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -221,7 +217,7 @@ bool32 CPZ1Intro_Unknown6(void *h)
     return false;
 }
 
-bool32 CPZ1Intro_Unknown7(void *h)
+bool32 CPZ1Intro_Cutscene_Waiting(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -236,7 +232,7 @@ bool32 CPZ1Intro_Unknown7(void *h)
     }
 
     if (host->timer == 30) {
-        if ((globals->playerID & 0xFF) == ID_SONIC)
+        if (checkPlayerID(ID_SONIC, 1))
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED2, &player1->animator, false, 0);
         else
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED1, &player1->animator, false, 0);
@@ -244,7 +240,7 @@ bool32 CPZ1Intro_Unknown7(void *h)
     return host->timer == 60;
 }
 
-bool32 CPZ1Intro_Unknown8(void *h)
+bool32 CPZ1Intro_Cutscene_ChemicalDrop(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -252,7 +248,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
 
 
     if (!host->timer) {
-        RSDK.PlaySfx(CPZ1Intro->sfxChemDrop, 0, 255);
+        RSDK.PlaySfx(CPZ1Intro->sfxChemDrop, false, 255);
         EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, player1->position.x + 0x20000, (ScreenInfo->position.y - 8) << 16);
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;
@@ -269,10 +265,10 @@ bool32 CPZ1Intro_Unknown8(void *h)
 
     int32 playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
     if (debris->position.y >= playerY) {
-        RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, 0, 255);
+        RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, false, 255);
         ParticleHelpers_SetupFallingParticles(debris->position.x, playerY);
         destroyEntity(debris);
-        if ((globals->playerID & 0xFFFFFF00) == ID_TAILS_ASSIST)
+        if (checkPlayerID(ID_TAILS, 2))
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
         return true;
     }
@@ -280,7 +276,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
     return false;
 }
 
-bool32 CPZ1Intro_Unknown9(void *h)
+bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -351,7 +347,7 @@ bool32 CPZ1Intro_Unknown9(void *h)
     return false;
 }
 
-bool32 CPZ1Intro_Unknown15(void *h)
+bool32 CPZ1Intro_Cutscene_ReadyStage(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -393,6 +389,7 @@ bool32 CPZ1Intro_Unknown15(void *h)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CPZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(CPZ1Intro);
@@ -400,5 +397,6 @@ void CPZ1Intro_EditorDraw(void)
 }
 
 void CPZ1Intro_EditorLoad(void) {}
+#endif
 
 void CPZ1Intro_Serialize(void) { RSDK_EDITABLE_VAR(CPZ1Intro, VAR_VECTOR2, size); }

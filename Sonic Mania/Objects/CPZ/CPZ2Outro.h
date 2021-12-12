@@ -25,12 +25,14 @@ void CPZ2Outro_StaticUpdate(void);
 void CPZ2Outro_Draw(void);
 void CPZ2Outro_Create(void* data);
 void CPZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void CPZ2Outro_EditorDraw(void);
 void CPZ2Outro_EditorLoad(void);
+#endif
 void CPZ2Outro_Serialize(void);
 
 // Extra Entity Functions
-void CPZ2Outro_HandleCutsceneSeq(void);
-bool32 CPZ2Outro_CutsceneSeq(void *h);
+void CPZ2Outro_SetupCutscene(void);
+bool32 CPZ2Outro_Cutscene_Outro(void *h);
 
 #endif //!OBJ_CPZ2OUTRO_H

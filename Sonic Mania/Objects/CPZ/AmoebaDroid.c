@@ -641,8 +641,8 @@ void AmoebaDroid_State3_Unknown1(void)
     int32 pos = (self->position.x + 0x80000) >> 20;
     foreach_active(ChemicalPool, pool)
     {
-        if (pos >= pool->dword88 && pos < pool->dword8C)
-            self->position.y = pool->offsetY + ChemicalPool->table1[pos];
+        if (pos >= pool->startX && pos < pool->endX)
+            self->position.y = pool->offsetY + ChemicalPool->surfaceDeformation[pos];
     }
 
     RSDK.ProcessAnimation(&self->animator1);

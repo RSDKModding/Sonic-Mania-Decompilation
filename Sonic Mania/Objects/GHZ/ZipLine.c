@@ -7,8 +7,8 @@ void ZipLine_Update(void)
     RSDK_THIS(ZipLine);
     StateMachine_Run(self->state);
 
-    int32 storeX         = self->position.x;
-    int32 storeY         = self->position.y;
+    int32 storeX     = self->position.x;
+    int32 storeY     = self->position.y;
     self->position.x = self->handlePos.x;
     self->position.y = self->handlePos.y;
     foreach_active(Player, player)
@@ -32,15 +32,15 @@ void ZipLine_Update(void)
                         else if (self->groundVel < -0xA0000)
                             self->groundVel = -0xA0000;
 
-                        self->velocity.x = self->groundVel * RSDK.Cos256(self->angle) >> 8;
-                        self->velocity.y = self->groundVel * RSDK.Sin256(self->angle) >> 8;
+                        self->velocity.x   = self->groundVel * RSDK.Cos256(self->angle) >> 8;
+                        self->velocity.y   = self->groundVel * RSDK.Sin256(self->angle) >> 8;
                         player->velocity.x = 0;
                         player->velocity.y = 0;
                         player->groundVel  = 0;
                         player->angle      = 0;
                         player->rotation   = 0;
                     }
-                    int32 prevX          = player->position.x;
+                    int32 prevX        = player->position.x;
                     player->position.x = self->position.x;
                     player->position.y = self->position.y;
                     player->position.y +=
@@ -50,9 +50,9 @@ void ZipLine_Update(void)
                             player->velocity.y       = -0x40000;
                             player->jumpAbilityTimer = 1;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                            player->animator.speed              = 48;
-                            player->state                         = Player_State_Air;
-                            self->grabDelay[pid]                = 60;
+                            player->animator.speed = 48;
+                            player->state          = Player_State_Air;
+                            self->grabDelay[pid]   = 60;
                             self->activePlayers &= ~(1 << pid);
                             player->onGround       = false;
                             player->groundedStore  = false;
@@ -60,7 +60,7 @@ void ZipLine_Update(void)
                         }
                     }
                     else {
-                        player->state          = Player_State_Air;
+                        player->state        = Player_State_Air;
                         self->grabDelay[pid] = 60;
                         self->activePlayers &= ~(1 << pid);
                         player->onGround       = false;
@@ -295,7 +295,7 @@ void ZipLine_Create(void *data)
         self->position.y += (self->endPos.y - self->startPos.y) >> 1;
         self->updateRange.x = (abs(self->endPos.x - self->startPos.x) >> 1) + 0x400000;
         self->updateRange.y = (abs(self->endPos.y - self->startPos.y) >> 1) + 0x400000;
-        self->joinPos      = ZipLine_GetJoinPos();
+        self->joinPos       = ZipLine_GetJoinPos();
     }
 }
 
@@ -308,10 +308,10 @@ void ZipLine_StageLoad(void)
     ZipLine->hitbox.bottom = 24;
     ZipLine->hitbox.right  = 8;
 
-    Zone_AddVSSwapCallback(ZipLine_ZoneCB);
+    Zone_AddVSSwapCallback(ZipLine_VSSwapCB);
 }
 
-void ZipLine_ZoneCB(void)
+void ZipLine_VSSwapCB(void)
 {
     foreach_active(ZipLine, zipline)
     {
@@ -320,7 +320,7 @@ void ZipLine_ZoneCB(void)
             Zone->playerFlags[Zone->playerID] = false;
 #else
         if (zipline->activePlayers)
-           Zone->playerFlags = false;
+            Zone->playerFlags = false;
 #endif
     }
 }
@@ -334,9 +334,9 @@ void ZipLine_ForceReleasePlayers(void)
         int32 pid = RSDK.GetEntityID(player);
         if ((1 << pid) & self->activePlayers) {
             self->grabDelay[pid] = 60;
-            player->velocity.y     = self->velocity.y;
-            player->velocity.x     = self->velocity.x;
-            player->groundVel      = player->velocity.x;
+            player->velocity.y   = self->velocity.y;
+            player->velocity.x   = self->velocity.x;
+            player->groundVel    = player->velocity.x;
             self->activePlayers &= ~(1 << pid);
             player->onGround       = false;
             player->groundedStore  = false;
@@ -346,7 +346,7 @@ void ZipLine_ForceReleasePlayers(void)
     }
 }
 
-//this func actually rules, you can join any number of ZipLines together using this
+// this func actually rules, you can join any number of ZipLines together using this
 Vector2 ZipLine_GetJoinPos(void)
 {
     RSDK_THIS(ZipLine);
@@ -431,8 +431,8 @@ void ZipLine_State_Moving(void)
     self->velocity.y = self->groundVel * RSDK.Sin256(self->angle) >> 8;
 
     if (self->joinPos.x) {
-        int32 storeX           = self->position.x;
-        int32 storeY           = self->position.y;
+        int32 storeX     = self->position.x;
+        int32 storeY     = self->position.y;
         self->position.x = self->handlePos.x;
         self->position.y = self->handlePos.y;
 
@@ -457,12 +457,12 @@ void ZipLine_State_Moving(void)
             endMarker->activePlayers = self->activePlayers;
             endMarker->groundVel     = self->groundVel;
             endMarker->state         = ZipLine_State_Moving;
-            self->position.x       = storeX;
-            self->position.y       = storeY;
-            self->activePlayers    = 0;
-            self->groundVel        = 0;
-            self->handlePos.x      = -0x100000;
-            self->state            = StateMachine_None;
+            self->position.x         = storeX;
+            self->position.y         = storeY;
+            self->activePlayers      = 0;
+            self->groundVel          = 0;
+            self->handlePos.x        = -0x100000;
+            self->state              = StateMachine_None;
             foreach_active(Player, player)
             {
                 if ((1 << RSDK.GetEntityID(player)) & endMarker->activePlayers) {

@@ -67,7 +67,7 @@ void Ball_DebugSpawn(void)
 void Ball_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Ball_HandleInteractions(void)

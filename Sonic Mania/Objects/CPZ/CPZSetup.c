@@ -15,7 +15,7 @@ void CPZSetup_StaticUpdate(void)
     }
 
     if (!(Zone->timer & 7)) {
-        ++CPZSetup->layerPtr->deformationOffset;
+        ++CPZSetup->cpz1BG->deformationOffset;
 
         ++CPZSetup->palAnimFrameA;
         CPZSetup->palAnimFrameA &= 0xF;
@@ -52,9 +52,9 @@ void CPZSetup_StageLoad(void)
     CPZSetup->palAnimFrameC = 0;
     CPZSetup->palAnimFrameD = 1;
     CPZSetup->palAnimFrameE = 2;
-    CPZSetup->layerPtr      = RSDK.GetSceneLayer(0);
+    CPZSetup->cpz1BG      = RSDK.GetSceneLayer(0);
     for (int32 i = 0; i < 0x400; ++i) {
-        CPZSetup->layerPtr->deformationData[i] = CPZSetup->deformation[i & 0x3F];
+        CPZSetup->cpz1BG->deformationData[i] = CPZSetup->deformation[i & 0x3F];
     }
 
 #if RETRO_USE_PLUS
@@ -76,12 +76,12 @@ void CPZSetup_StageLoad(void)
         BGSwitch->layerIDs[2]                 = CPZ_BG_CPZ1;
         BGSwitch->layerIDs[3]                 = CPZ_BG_CPZ1;
 
-        bool32 flag = false;
+        bool32 setCPZ1BG = false;
         if (PlayerHelpers_CheckStageReload() && !PlayerHelpers_CheckPlayerPos(0x18900000, 0xAC0000, 0x2560000, 0x19800000)) {
-            flag = false;
+            setCPZ1BG = false;
         }
         else {
-            flag                    = true;
+            setCPZ1BG                    = true;
             Zone->cameraBoundsB[0] = 6528;
             Zone->cameraBoundsB[1] = 6528;
             Zone->cameraBoundsB[2] = 6528;
@@ -103,7 +103,7 @@ void CPZSetup_StageLoad(void)
         }
 
         BGSwitch->screenID = 0;
-        if (flag) {
+        if (setCPZ1BG) {
             for (; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID++) {
                 CPZSetup_BGSwitchCB_Act1BG();
             }

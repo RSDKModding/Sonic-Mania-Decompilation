@@ -14,8 +14,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 shiftY2;
-    int32 shiftY;
+    int32 amplitude;
+    int32 angleShift;
     Vector2 startPos;
     Entity *parent;
     Animator animator;
@@ -38,8 +38,8 @@ void ChemBubble_EditorLoad(void);
 void ChemBubble_Serialize(void);
 
 // Extra Entity Functions
-void ChemBubble_Unknown1(void);
-void ChemBubble_Unknown2(void);
-void ChemBubble_Unknown3(void);
+void ChemBubble_State_Appear(void);
+void ChemBubble_State_Rising(void);
+void ChemBubble_State_Surfaced(void);
 
 #endif //!OBJ_CHEMBUBBLE_H

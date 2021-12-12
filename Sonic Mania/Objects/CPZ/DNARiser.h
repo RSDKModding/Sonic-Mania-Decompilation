@@ -19,32 +19,31 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int32 field_60;
+    bool32 noBubbleScaling;
     bool32 popped;
     Vector2 popPos;
-    int32 field_70;
-    Animator animator2;
-    Animator animator;
-    uint16 field_A4;
+    int32 bubbleScale;
+    Animator bubbleAnimator;
+    Animator popAnimator;
+    uint16 startHelixPos;
     int16 timer;
-    uint8 field_A8;
-    int32 field_AC;
-    int32 field_B0;
-    uint16 timer2;
-    uint8 field_B6;
-    uint8 field_B7;
+    uint8 scaleTimer;
+    bool32 canDestroySelf;
+    int32 scanSfxDir;
+    uint16 sfxTimer;
+    uint8 lastSfxID;
     int32 height;
     Vector2 speed;
     uint8 activePlayers;
-    int32 curHeight;
-    int32 field_CC;
-    Vector2 vector_D0;
-    Vector2 vector_D8;
-    uint16 field_E0;
-    Entity* field_E4;
+    int32 risePos;
+    int32 amplitude;
+    Vector2 startPos;
+    Vector2 maxSpeed;
+    uint16 helixPos;
+    Entity *firstChild;
     Entity *child;
-    Entity* field_EC;
-    Entity *field_F0;
+    Entity *sibling;
+    Entity *lastChild;
     Entity *parent;
 } EntityDNARiser;
 
@@ -66,18 +65,18 @@ void DNARiser_Serialize(void);
 
 // Extra Entity Functions
 void DNARiser_State_BubbleBurst(void);
-void DNARiser_State_Burst_Helix(void);
-Vector2 DNARiser_CalculateScale(Vector2 *vec);
+void DNARiser_SetupBurst(void);
+Vector2 DNARiser_CalculateScale(Vector2 *scalePtr);
 void DNARiser_State_Setup(void);
-void DNARiser_HandleInteractions(void);
-void DNARiser_State_Unknown3(void);
-void DNARiser_State_Unknown4(void);
-void DNARiser_State_Unknown5(void);
-void DNARiser_State_SetupChild(void);
-void DNARiser_State_None(void);
-void DNARiser_State_Unknown8(void);
+void DNARiser_State_HandleInteractions(void);
+void DNARiser_State_HelixRise(void);
+void DNARiser_State_HelixBurst(void);
+void DNARiser_State_ResetRiser(void);
+void DNARiser_State_OrbSetup(void);
+void DNARiser_State_OrbIdle(void);
+void DNARiser_State_OrbFall(void);
 
-void DNARiser_StateDraw_Main(void);
-void DNARiser_StateDraw_Helix(void);
+void DNARiser_Draw_Main(void);
+void DNARiser_Draw_Helix(void);
 
 #endif //!OBJ_DNARISER_H

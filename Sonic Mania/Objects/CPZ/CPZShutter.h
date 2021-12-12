@@ -14,8 +14,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
-    int32 field_64;
+    int32 unused1;
+    int32 unused2;
     Animator animator;
 } EntityCPZShutter;
 

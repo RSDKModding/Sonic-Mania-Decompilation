@@ -42,7 +42,7 @@ void ZipLine_EditorLoad(void);
 void ZipLine_Serialize(void);
 
 // Extra Entity Functions
-void ZipLine_ZoneCB(void);
+void ZipLine_VSSwapCB(void);
 void ZipLine_ForceReleasePlayers(void);
 Vector2 ZipLine_GetJoinPos(void);
 void ZipLine_State_Moving(void);
