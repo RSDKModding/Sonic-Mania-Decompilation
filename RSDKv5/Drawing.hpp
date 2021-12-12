@@ -234,6 +234,6 @@ void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uin
 
 void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative);
-void DrawDevText(int x, const char *text, int y, int align, uint colour);
+void DrawDevText(const char *text, int x, int y, int align, uint colour);
 
 #endif // !DRAWING_H

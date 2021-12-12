@@ -360,47 +360,47 @@ void setupFunctions()
 
 #if RETRO_REV02
     // API functions
-    addToAPIFunctionTable(APITable_GetUserLanguage, userCore->GetUserLanguage);
-    addToAPIFunctionTable(APITable_GetConfirmButtonFlip, userCore->GetConfirmButtonFlip);
-    addToAPIFunctionTable(APITable_ExitGame, userCore->ExitGame);
-    addToAPIFunctionTable(APITable_LaunchManual, userCore->LaunchManual);
-    addToAPIFunctionTable(APITable_IsOverlayEnabled, userCore->IsOverlayEnabled);
-    addToAPIFunctionTable(APITable_CheckDLC, userCore->CheckDLC);
-    addToAPIFunctionTable(APITable_ShowExtensionOverlay, userCore->ShowExtensionOverlay);
+    addToAPIFunctionTable(APITable_GetUserLanguage, GetUserLanguage);
+    addToAPIFunctionTable(APITable_GetConfirmButtonFlip, GetConfirmButtonFlip);
+    addToAPIFunctionTable(APITable_ExitGame, ExitGame);
+    addToAPIFunctionTable(APITable_LaunchManual, LaunchManual);
+    addToAPIFunctionTable(APITable_IsOverlayEnabled, IsOverlayEnabled);
+    addToAPIFunctionTable(APITable_CheckDLC, CheckDLC);
+    addToAPIFunctionTable(APITable_ShowExtensionOverlay, ShowExtensionOverlay);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_ShowCheckoutPage, userCore->ShowCheckoutPage);
-    addToAPIFunctionTable(APITable_ShowEncorePage, userCore->ShowEncorePage);
-    addToAPIFunctionTable(APITable_EGS_Unknown4, userCore->EpicUnknown4);
-    addToAPIFunctionTable(APITable_RegisterHIDDevice, userCore->RegisterHIDDevice);
+    addToAPIFunctionTable(APITable_ShowCheckoutPage, ShowCheckoutPage);
+    addToAPIFunctionTable(APITable_ShowEncorePage, ShowEncorePage);
+    addToAPIFunctionTable(APITable_EGS_Unknown4, EpicUnknown4);
+    addToAPIFunctionTable(APITable_RegisterHIDDevice, RegisterHIDDevice);
 #endif
-    addToAPIFunctionTable(APITable_UnlockAchievement, achievements->UnlockAchievement);
+    addToAPIFunctionTable(APITable_UnlockAchievement, TryUnlockAchievement);
     addToAPIFunctionTable(APITable_GetAchievementsEnabled, GetAchievementsEnabled);
     addToAPIFunctionTable(APITable_SetAchievementsEnabled, SetAchievementsEnabled);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_CheckAchievementsEnabled, achievements->CheckAchievementsEnabled);
-    addToAPIFunctionTable(APITable_GetAchievementNames, achievements->GetAchievementNames);
+    addToAPIFunctionTable(APITable_CheckAchievementsEnabled, CheckAchievementsEnabled);
+    addToAPIFunctionTable(APITable_GetAchievementNames, GetAchievementNames);
 #endif
-    addToAPIFunctionTable(APITable_LeaderboardsUnknown4, NullFunc); // LeaderboardsUnknown4);
+    addToAPIFunctionTable(APITable_LeaderboardsUnknown4, leaderboardsUnknown4); // LeaderboardsUnknown4);
 #if RETRO_VER_EGS
-    addToAPIFunctionTable(APITable_EGS_LeaderboardsUnknown4, NullFunc); // EGS_LeaderboardsUnknown4);
+    addToAPIFunctionTable(APITable_EGS_LeaderboardsUnknown4, leaderboardsUnknown6); // EGS_LeaderboardsUnknown4);
 #endif
-    addToAPIFunctionTable(APITable_FetchLeaderboard, leaderboards->FetchLeaderboard);
-    addToAPIFunctionTable(APITable_TrackScore, leaderboards->TrackScore);
-    addToAPIFunctionTable(APITable_GetLeaderboardsStatus, leaderboards->GetStatus);
+    addToAPIFunctionTable(APITable_FetchLeaderboard, FetchLeaderboard);
+    addToAPIFunctionTable(APITable_TrackScore, TrackScore);
+    addToAPIFunctionTable(APITable_GetLeaderboardsStatus, GetLeaderboardsStatus);
     addToAPIFunctionTable(APITable_LeaderboardEntryCount, LeaderboardEntryCount);
     addToAPIFunctionTable(APITable_LeaderboardEntryLength, LeaderboardEntryLength);
     addToAPIFunctionTable(APITable_LoadNewLeaderboardEntries, LoadNewLeaderboardEntries);
     addToAPIFunctionTable(APITable_ClearLeaderboardInfo, ClearLeaderboardInfo);
     addToAPIFunctionTable(APITable_ReadLeaderboardEntry, ReadLeaderboardEntry);
-    addToAPIFunctionTable(APITable_SetPresence, richPresence->SetPresence);
-    addToAPIFunctionTable(APITable_TryTrackStat, stats->TryTrackStat);
+    addToAPIFunctionTable(APITable_SetPresence, SetPresence);
+    addToAPIFunctionTable(APITable_TryTrackStat, TryTrackStat);
     addToAPIFunctionTable(APITable_GetStatsEnabled, GetStatsEnabled);
     addToAPIFunctionTable(APITable_SetStatsEnabled, SetStatsEnabled);
-    addToAPIFunctionTable(APITable_ClearPrerollErrors, userStorage->ClearPrerollErrors);
-    addToAPIFunctionTable(APITable_TryAuth, userStorage->TryAuth);
+    addToAPIFunctionTable(APITable_ClearPrerollErrors, ClearPrerollErrors);
+    addToAPIFunctionTable(APITable_TryAuth, TryAuth);
     addToAPIFunctionTable(APITable_GetUserAuthStatus, GetUserAuthStatus);
-    addToAPIFunctionTable(APITable_GetUsername, userStorage->GetUsername);
-    addToAPIFunctionTable(APITable_TryInitStorage, userStorage->TryInitStorage);
+    addToAPIFunctionTable(APITable_GetUsername, GetUsername);
+    addToAPIFunctionTable(APITable_TryInitStorage, TryInitStorage);
     addToAPIFunctionTable(APITable_GetUserStorageStatus, GetUserStorageStatus);
     addToAPIFunctionTable(APITable_GetSaveStatus, GetSaveStatus);
     addToAPIFunctionTable(APITable_ClearSaveStatus, ClearSaveStatus);
@@ -410,9 +410,9 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_SetSaveStatusError, SetSaveStatusError);
     addToAPIFunctionTable(APITable_SetUserStorageNoSave, SetUserStorageNoSave);
     addToAPIFunctionTable(APITable_GetUserStorageNoSave, GetUserStorageNoSave);
-    addToAPIFunctionTable(APITable_LoadUserFile, userStorage->LoadUserFile);
-    addToAPIFunctionTable(APITable_SaveUserFile, userStorage->SaveUserFile);
-    addToAPIFunctionTable(APITable_DeleteUserFile, userStorage->DeleteUserFile);
+    addToAPIFunctionTable(APITable_LoadUserFile, TryLoadUserFile);
+    addToAPIFunctionTable(APITable_SaveUserFile, TrySaveUserFile);
+    addToAPIFunctionTable(APITable_DeleteUserFile, TryDeleteUserFile);
     addToAPIFunctionTable(APITable_AddUserDBEntry, InitUserDB);
     addToAPIFunctionTable(APITable_OpenUserDB, LoadUserDB);
     addToAPIFunctionTable(APITable_SaveUserDB, SaveUserDB);
@@ -447,16 +447,16 @@ void setupFunctions()
     addToAPIFunctionTable("TrackTAClear", TrackTAClear);
     addToAPIFunctionTable("TrackEnemyDefeat", TrackEnemyDefeat);
     addToAPIFunctionTable("TrackGameProgress", TrackGameProgress);
-    addToAPIFunctionTable("ClearPrerollErrors", ClearPrerollErrors);
-    addToAPIFunctionTable("TryAuth", TryAuth);
-    addToAPIFunctionTable("GetUserAuthStatus", GetUserAuthStatus);
-    addToAPIFunctionTable("TryInitStorage", TryInitStorage);
-    addToAPIFunctionTable("GetStorageStatus", GetUserStorageStatus);
-    addToAPIFunctionTable("GetUsername", GetUserName);
-    addToAPIFunctionTable("LoadUserFile", TryLoadUserFile);
-    addToAPIFunctionTable("SaveUserFile", TrySaveUserFile);
+    // addToAPIFunctionTable("ClearPrerollErrors", ClearPrerollErrors); // Dummy behaviour is managed by APICallback
+    // addToAPIFunctionTable("TryAuth", TryAuth); // Dummy behaviour is managed by APICallback
+    // addToAPIFunctionTable("GetUserAuthStatus", GetUserAuthStatus); // Dummy behaviour is managed by APICallback
+    // addToAPIFunctionTable("TryInitStorage", TryInitStorage); // Dummy behaviour is managed by APICallback
+    // addToAPIFunctionTable("GetStorageStatus", GetUserStorageStatus); // Dummy behaviour is managed by APICallback
+    // addToAPIFunctionTable("GetUsername", GetUsername); // APICallback sets the dummy one anyways if this isn't set
+    addToAPIFunctionTable("LoadUserFile", LoadUserFile);
+    addToAPIFunctionTable("SaveUserFile", SaveUserFile);
     addToAPIFunctionTable("SaveSettingsINI", writeSettings);
-    addToAPIFunctionTable("GetUserLanguage", GetUserLanguage);
+    // addToAPIFunctionTable("GetUserLanguage", GetUserLanguage); // APICallback uses the sku one anyways if this isn't set, this is only needed if it needs to interact with the API
     addToAPIFunctionTable("ControllerIDForInputID", ControllerIDForInputID);
     addToAPIFunctionTable("MostRecentActiveControllerID", MostRecentActiveControllerID);
     addToAPIFunctionTable("AssignControllerID", AssignControllerID);
@@ -465,7 +465,7 @@ void setupFunctions()
     addToAPIFunctionTable("GetControllerType", GetControllerType);
     addToAPIFunctionTable("ShowSteamControllerOverlay", ShowExtensionOverlay);
     addToAPIFunctionTable("SetInputLEDColor", SetInputLEDColor);
-    addToAPIFunctionTable("SetRichPresence", SetPresence);
+    // addToAPIFunctionTable("SetRichPresence", SetPresence);
 #endif
 
     // Function Table

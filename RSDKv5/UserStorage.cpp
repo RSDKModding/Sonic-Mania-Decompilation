@@ -4,62 +4,15 @@
 DummyUserStorage *userStorage = NULL;
 UserDBStorage *userDBStorage  = NULL;
 
-const char *userDebugValNames[8] = { "Ext <PLUS>" };
-void setupUserDebugValues()
-{
-    achievements->SetDebugValues();
-    leaderboards->SetDebugValues();
-    richPresence->SetDebugValues();
-    stats->SetDebugValues();
-    userStorage->SetDebugValues();
-
-    for (int i = 0; i < userCore->debugValCnt && debugValCnt < DEBUGVAL_MAX; ++i) {
-        if (i == 2 || i == 3) {
-            SetDebugValue(userDebugValNames[i], userCore->values[i], DTYPE_INT8, 0, i == 2 ? REGION_EU : LANGUAGE_TC);
-        }
-        else {
-            SetDebugValue(userDebugValNames[i], userCore->values[i], DTYPE_BOOL, false, true);
-        }
-    }
-}
-void userInitUnknown1()
-{
-    achievements->InitUnknown1();
-    leaderboards->InitUnknown1();
-    richPresence->InitUnknown1();
-    stats->InitUnknown1();
-    userStorage->InitUnknown1();
-}
-void userInitUnknown2()
-{
-    achievements->InitUnknown2();
-    leaderboards->InitUnknown2();
-    richPresence->InitUnknown2();
-    stats->InitUnknown2();
-    userStorage->InitUnknown2();
-}
-#endif
-
-int GetUserAuthStatus()
-{
-#if RETRO_REV02
-    return userStorage->authStatus;
-#else
-    return STATUS_OK;
-#endif 
-}
+int GetUserAuthStatus() { return userStorage->authStatus; }
 int GetUserStorageStatus()
 {
-#if RETRO_REV02
     if (userStorage->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;
     else
         return userStorage->storageStatus;
-#else
-    return STATUS_OK;
-#endif
 }
-#if RETRO_REV02
+
 int GetSaveStatus()
 {
     if (userStorage->noSaveActive)
@@ -86,11 +39,9 @@ void ClearSaveStatus() { userStorage->saveStatus = STATUS_NONE; }
 void SetSaveStatusContinue() { userStorage->saveStatus = STATUS_CONTINUE; }
 void SetUserStorageNoSave(int state) { userStorage->noSaveActive = state; }
 int GetUserStorageNoSave() { return userStorage->noSaveActive; }
-#endif
 
-int TryAuth()
+int DummyUserStorage::TryAuth()
 {
-#if RETRO_REV02
     if (userStorage->authStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
         str += ": TryAuth() # WARNING TryAuth() when auth currently in progress. \r\n";
@@ -102,13 +53,9 @@ int TryAuth()
         userStorage->authTime   = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_AUTH_TIME", 0));
     }
     return userStorage->authStatus;
-#else
-    return STATUS_OK;
-#endif
 }
-int TryInitStorage()
+int DummyUserStorage::TryInitStorage()
 {
-#if RETRO_REV02
     if (userStorage->storageStatus == STATUS_CONTINUE) {
         std::string str = __FILE__;
         str += ": TryInitStorage() # WARNING TryInitStorage() when auth currently in progress. \r\n";
@@ -119,36 +66,27 @@ int TryInitStorage()
         userStorage->storageInitTime = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_INIT_TIME", 0));
     }
     return userStorage->storageStatus;
-#else
-    return STATUS_OK;
-#endif
 }
-bool32 GetUserName(TextInfo *info)
+bool32 DummyUserStorage::GetUsername(TextInfo *name)
 {
-    SetText(info, (char *)"IntegerGeorge802", false);
+    SetText(name, (char *)"IntegerGeorge802", false);
     return true;
 }
-void ClearPrerollErrors()
+void DummyUserStorage::ClearPrerollErrors()
 {
-#if RETRO_REV02
     if (userStorage->authStatus != STATUS_OK)
         userStorage->authStatus = STATUS_NONE;
 
     userStorage->authTime = 0;
     if (userStorage->storageStatus != STATUS_OK)
         userStorage->storageStatus = STATUS_NONE;
-#else
-    PrintLog(PRINT_NORMAL, "DUMMY ClearPrerollErrors()");
-#endif
 }
 
-bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int))
+bool32 DummyUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 bufSize, int32 (*callback)(int32))
 {
     bool32 success = false;
     memset(buffer, 0, bufSize);
-#if RETRO_REV02
     if (!userStorage->noSaveActive) {
-#endif
         success = LoadUserFile(filename, buffer, bufSize);
 
         if (bufSize >= 4) {
@@ -169,7 +107,6 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
 
         if (callback)
             callback(STATUS_OK);
-#if RETRO_REV02
     }
     else {
         std::string str = __FILE__;
@@ -181,34 +118,30 @@ bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         if (callback)
             callback(STATUS_ERROR);
     }
-#endif
 
     return success;
 }
-bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compressData)
+bool32 DummyUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compressData)
 {
     bool32 success = false;
-#if RETRO_REV02
     if (!userStorage->noSaveActive) {
-#endif
         if (compressData) {
             int *cbuf = NULL;
-            AllocateStorage(bufSize, (void **)&cbuf, DATASET_TMP, false);
+            AllocateStorage(size, (void **)&cbuf, DATASET_TMP, false);
 
-            uLongf clen = bufSize;
-            compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)bufSize);
+            uLongf clen = size;
+            compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)size);
 
             success = SaveUserFile(filename, cbuf, clen);
 
             RemoveStorageEntry((void **)&cbuf);
         }
         else {
-            success = SaveUserFile(filename, buffer, bufSize);
+            success = SaveUserFile(filename, buffer, size);
         }
 
         if (callback)
             callback(STATUS_OK);
-#if RETRO_REV02
     }
     else {
         std::string str = __FILE__;
@@ -220,20 +153,16 @@ bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*c
         if (callback)
             callback(STATUS_ERROR);
     }
-#endif
 
     return success;
 }
-bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
+bool32 DummyUserStorage::TryDeleteUserFile(const char *filename, int32 (*callback)(int32))
 {
-#if RETRO_REV02
     if (!userStorage->noSaveActive) {
-#endif
         DeleteUserFile(filename);
 
         if (callback)
             callback(STATUS_OK);
-#if RETRO_REV02
     }
     else {
         std::string str = __FILE__;
@@ -245,86 +174,10 @@ bool32 TryDeleteUserFile(const char *filename, int (*callback)(int))
         if (callback)
             callback(STATUS_ERROR);
     }
-#endif
 
     return false;
 }
 
-void (*userFileCallback)();
-void (*userFileCallback2)();
-char userFileDir[0x100];
-
-bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
-{
-    if (userFileCallback)
-        userFileCallback();
-
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    PrintLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
-
-    FileIO *file = fOpen(pathBuffer, "rb");
-    if (file) {
-        fSeek(file, 0, SEEK_END);
-        int fSize = (int)fTell(file);
-        fSeek(file, 0, SEEK_SET);
-        int size = bufSize;
-        if (bufSize > fSize)
-            size = fSize;
-        fRead(buffer, 1, size, file);
-        fClose(file);
-        if (userFileCallback2)
-            userFileCallback2();
-        return true;
-    }
-    else {
-        if (userFileCallback2)
-            userFileCallback2();
-        PrintLog(PRINT_NORMAL, "Nope!");
-    }
-    return false;
-}
-bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
-{
-    if (userFileCallback)
-        userFileCallback();
-
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    PrintLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
-
-    FileIO *file = fOpen(pathBuffer, "wb");
-    if (file) {
-        fWrite(buffer, 1, bufSize, file);
-        fClose(file);
-
-        if (userFileCallback2)
-            userFileCallback2();
-        return true;
-    }
-    else {
-        if (userFileCallback2)
-            userFileCallback2();
-        PrintLog(PRINT_NORMAL, "Nope!");
-    }
-    return false;
-}
-bool32 DeleteUserFile(const char *filename)
-{
-    if (userFileCallback)
-        userFileCallback();
-
-    char pathBuffer[0x400];
-    sprintf(pathBuffer, "%s%s", userFileDir, filename);
-    PrintLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
-    int status = remove(pathBuffer);
-
-    if (userFileCallback2)
-        userFileCallback2();
-    return status == 0;
-}
-
-#if RETRO_REV02
 void InitUserStorageDB(UserDBStorage *storage)
 {
     storage->loadCallback[0] = UserDBStorage_LoadCB1;
@@ -1319,3 +1172,77 @@ int UserDBStorage_SaveCB8(int status)
 }
 
 #endif
+
+void (*userFileCallback)();
+void (*userFileCallback2)();
+char userFileDir[0x100];
+
+bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize)
+{
+    if (userFileCallback)
+        userFileCallback();
+
+    char pathBuffer[0x400];
+    sprintf(pathBuffer, "%s%s", userFileDir, filename);
+    PrintLog(PRINT_NORMAL, "Attempting to load user file: %s", pathBuffer);
+
+    FileIO *file = fOpen(pathBuffer, "rb");
+    if (file) {
+        fSeek(file, 0, SEEK_END);
+        int fSize = (int)fTell(file);
+        fSeek(file, 0, SEEK_SET);
+        int size = bufSize;
+        if (bufSize > fSize)
+            size = fSize;
+        fRead(buffer, 1, size, file);
+        fClose(file);
+        if (userFileCallback2)
+            userFileCallback2();
+        return true;
+    }
+    else {
+        if (userFileCallback2)
+            userFileCallback2();
+        PrintLog(PRINT_NORMAL, "Nope!");
+    }
+    return false;
+}
+bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize)
+{
+    if (userFileCallback)
+        userFileCallback();
+
+    char pathBuffer[0x400];
+    sprintf(pathBuffer, "%s%s", userFileDir, filename);
+    PrintLog(PRINT_NORMAL, "Attempting to save user file: %s", pathBuffer);
+
+    FileIO *file = fOpen(pathBuffer, "wb");
+    if (file) {
+        fWrite(buffer, 1, bufSize, file);
+        fClose(file);
+
+        if (userFileCallback2)
+            userFileCallback2();
+        return true;
+    }
+    else {
+        if (userFileCallback2)
+            userFileCallback2();
+        PrintLog(PRINT_NORMAL, "Nope!");
+    }
+    return false;
+}
+bool32 DeleteUserFile(const char *filename)
+{
+    if (userFileCallback)
+        userFileCallback();
+
+    char pathBuffer[0x400];
+    sprintf(pathBuffer, "%s%s", userFileDir, filename);
+    PrintLog(PRINT_NORMAL, "Attempting to delete user file: %s", pathBuffer);
+    int status = remove(pathBuffer);
+
+    if (userFileCallback2)
+        userFileCallback2();
+    return status == 0;
+}

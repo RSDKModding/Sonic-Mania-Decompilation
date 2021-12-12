@@ -59,10 +59,12 @@
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="UserAchievements.cpp" />
-    <ClCompile Include="Userdata.cpp" />
+    <ClCompile Include="UserCore.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RetroEngine.cpp" />
     <ClCompile Include="UserLeaderboards.cpp" />
+    <ClCompile Include="UserPresence.cpp" />
+    <ClCompile Include="UserStats.cpp" />
     <ClCompile Include="UserStorage.cpp" />
     <ClCompile Include="Video.cpp" />
   </ItemGroup>
@@ -107,9 +109,11 @@
     <ClInclude Include="Text.hpp" />
     <ClInclude Include="unistd.h" />
     <ClInclude Include="UserAchievements.hpp" />
-    <ClInclude Include="Userdata.hpp" />
+    <ClInclude Include="UserCore.hpp" />
     <ClInclude Include="RetroEngine.hpp" />
     <ClInclude Include="UserLeaderboards.hpp" />
+    <ClInclude Include="UserPresence.hpp" />
+    <ClInclude Include="UserStats.hpp" />
     <ClInclude Include="UserStorage.hpp" />
     <ClInclude Include="Video.hpp" />
   </ItemGroup>

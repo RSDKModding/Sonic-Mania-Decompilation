@@ -359,8 +359,8 @@ struct AnalogState {
 };
 
 struct TriggerState {
-    InputState keyL;
-    InputState keyR;
+    InputState keyBumper;
+    InputState keyTrigger;
     float deadzone;
     float delta;
 };

@@ -270,29 +270,36 @@ bool32 initRetroEngine()
     SetUserFileCallbacks("", NULL, NULL);
 #endif
 
-    initUserData();
+    InitUserData();
 
-    readSettings();
-    startGameObjects();
+    // By Default we use the dummy system so this'll never be false
+    // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
+    if (userCore->CheckAPIInitialized()) {
+        readSettings();
+        startGameObjects();
 
-    engine.running = true;
-    if (!InitRenderDevice()) {
-        engine.running = false;
-        return false;
-    }
+        engine.running = true;
+        if (!InitRenderDevice()) {
+            engine.running = false;
+            return false;
+        }
 
-    if (!InitAudioDevice()) {
-        engine.running = false;
-        return false;
-    }
+        if (!InitAudioDevice()) {
+            engine.running = false;
+            return false;
+        }
 
-    InitInputDevice();
+        InitInputDevice();
 
 #if RETRO_USE_MOD_LOADER
-    // we confirmed the game actually is valid, lets start some callbacks
-    RunModCallbacks(MODCB_GAME_STARTUP, NULL);
+        // we confirmed the game actually is valid, lets start some callbacks
+        RunModCallbacks(MODCB_GAME_STARTUP, NULL);
 #endif
 
+    }
+    else {
+        engine.running = false;
+    }
     return true;
 }
 void runRetroEngine()
@@ -311,254 +318,292 @@ void runRetroEngine()
         frameEnd = SDL_GetPerformanceCounter();
 #endif
 
-#if RETRO_USE_MOD_LOADER
-        if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
-            devMenu.modsChanged = false;
-            saveMods();
-            for (int c = 0; c < CHANNEL_COUNT; ++c) {
-                StopChannel(c);
-            }
-#if RETRO_REV02
-            hardResetFlag = true;
-#endif
-            SceneInfo pre = sceneInfo;
-            startGameObjects();
-            sceneInfo.classCount = pre.classCount;
-            if (pre.state == ENGINESTATE_LOAD) {
-                sceneInfo.activeCategory = pre.activeCategory;
-                sceneInfo.listPos        = pre.listPos;
-            }
-#if RETRO_USING_SDL2
-            SDL_SetWindowTitle(engine.window, gameVerInfo.gameName);
-#endif
-            LoadGlobalSfx();
-
-            sceneInfo.state = ENGINESTATE_LOAD;
-        }
-#endif
-
         engine.running  = processEvents();
         foreachStackPtr = foreachStackList;
 #if !RETRO_USE_ORIGINAL_CODE
         debugHitboxCount = 0;
 #endif
-        switch (sceneInfo.state) {
-            default: break;
-            case ENGINESTATE_LOAD:
-                if (!sceneInfo.listData) {
-                    sceneInfo.state = ENGINESTATE_NULL;
-                }
-                else {
-                    LoadScene();
-                    LoadSceneFile();
-                    InitObjects();
+
 #if RETRO_REV02
-                    userCore->SetupDebugValues();
-                    for (int v = 0; v < DRAWLAYER_COUNT; ++v) {
-                        SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
-                    }
+        userCore->FrameInit();
 #endif
-                    // dim after 5 mins
-                    engine.dimLimit = (5 * 60) * engine.refreshRate;
-                    ProcessInput();
-                    ProcessObjects();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                    LoadAchievementAssets();
-#endif
-                }
-                break;
-            case ENGINESTATE_REGULAR:
-                ProcessInput();
-                ProcessSceneTimer();
-                ProcessObjects();
-                ProcessParallaxAutoScroll();
-                for (int i = 1; i < engine.gameSpeed; ++i) {
-                    if (sceneInfo.state != ENGINESTATE_REGULAR)
-                        break;
-                    ProcessSceneTimer();
-                    ProcessObjects();
-                    ProcessParallaxAutoScroll();
-                }
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                ProcessAchievements();
-#endif
-                ProcessObjectDrawLists();
-                break;
-            case ENGINESTATE_PAUSED:
-                ProcessInput();
-                ProcessPausedObjects();
-                for (int i = 1; i < engine.gameSpeed; ++i) {
-                    if (sceneInfo.state != ENGINESTATE_PAUSED)
-                        break;
-                    ProcessPausedObjects();
-                }
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                ProcessAchievements();
-#endif
-                ProcessObjectDrawLists();
-                break;
-            case ENGINESTATE_FROZEN:
-                ProcessInput();
-                ProcessFrozenObjects();
-                for (int i = 1; i < engine.gameSpeed; ++i) {
-                    if (sceneInfo.state != ENGINESTATE_FROZEN)
-                        break;
-                    ProcessFrozenObjects();
-                }
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                ProcessAchievements();
-#endif
-                ProcessObjectDrawLists();
-                break;
-            case ENGINESTATE_LOAD | ENGINESTATE_STEPOVER:
-                LoadScene();
-                LoadSceneFile();
-                InitObjects();
+
 #if RETRO_REV02
-                userCore->SetupDebugValues();
-                for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
-                    DebugValueInfo *val = &debugValues[debugValCnt++];
-                    strncpy(val->name, drawGroupNames[v], 0x10);
-                    val->type       = 0;
-                    val->value      = &engine.drawLayerVisible[v];
-                    val->valByteCnt = 4;
-                    val->min        = 0;
-                    val->max        = 1;
+        if (!userCore->unknown4()) {
+            // Focus Checks
+            if (userCore->CheckFocusLost()) {
+                if (!(engine.focusState & 1)) {
+                    engine.focusState = 1;
+                    PauseSound();
                 }
-#endif
-                ProcessInput();
-                ProcessObjects();
-                sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                LoadAchievementAssets();
-#endif
-                break;
-            case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
-                ProcessInput();
-                if (engine.frameStep) {
-                    ProcessSceneTimer();
-                    ProcessObjects();
-                    ProcessParallaxAutoScroll();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                    ProcessAchievements();
-#endif
-                    ProcessObjectDrawLists();
-                    engine.frameStep = false;
-                }
-                break;
-            case ENGINESTATE_PAUSED | ENGINESTATE_STEPOVER:
-                ProcessInput();
-                if (engine.frameStep) {
-                    ProcessPausedObjects();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                    ProcessAchievements();
-#endif
-                    ProcessObjectDrawLists();
-                    engine.frameStep = false;
-                }
-                break;
-            case ENGINESTATE_FROZEN | ENGINESTATE_STEPOVER:
-                ProcessInput();
-                if (engine.frameStep) {
-                    ProcessFrozenObjects();
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                    ProcessAchievements();
-#endif
-                    ProcessObjectDrawLists();
-                    engine.frameStep = false;
-                }
-                break;
-            case ENGINESTATE_DEVMENU:
-                ProcessInput();
-                currentScreen = &screens[0];
-                if (devMenu.state)
-                    devMenu.state();
-                break;
-            case ENGINESTATE_VIDEOPLAYBACK:
-                ProcessInput();
-                if (ProcessVideo() == 1)
-                    sceneInfo.state = engine.prevEngineMode;
-                break;
-            case ENGINESTATE_SHOWPNG:
-                ProcessInput();
-                if (engine.imageDelta <= 0.0 || engine.dimMax >= 1.0) {
-                    if (engine.displayTime <= 0.0) {
-                        engine.dimMax += engine.imageDelta;
-                        if (engine.dimMax <= 0.0) {
-                            engine.shaderID    = engine.prevShaderID;
-                            engine.screenCount = 1;
-                            sceneInfo.state    = engine.prevEngineMode;
-                            engine.dimMax      = 1.0;
-                        }
-                    }
-                    else {
-                        engine.displayTime -= 0.01666666666666667;
-                        if (engine.skipCallback) {
-                            if (engine.skipCallback())
-                                engine.displayTime = 0.0;
-                        }
-                    }
-                }
-                else {
-                    engine.dimMax += engine.imageDelta;
-                    if (engine.dimMax >= 1.0) {
-                        engine.imageDelta = -engine.imageDelta;
-                        engine.dimMax     = 1.0;
-                    }
-                }
-                break;
-#if RETRO_REV02
-            case ENGINESTATE_ERRORMSG: {
-                ProcessInput();
-                if (controller[0].keyStart.down)
-                    sceneInfo.state = engine.prevEngineMode;
-                currentScreen = &screens[0];
-                int yOff      = DevOutput_GetStringYOffset(outputString);
-                DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
-                DrawDevText(8, outputString, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
-                break;
             }
-            case ENGINESTATE_ERRORMSG_FATAL: {
-                ProcessInput();
-                currentScreen = &screens[0];
-                if (controller[0].keyStart.down)
-                    engine.running = false;
-                int yOff = DevOutput_GetStringYOffset(outputString);
-                DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
-                DrawDevText(8, outputString, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
-                break;
+            else if (engine.focusState) {
+                engine.focusState = 0;
+                ResumeSound();
             }
 #endif
-        }
+
+
+            if (!(engine.focusState & 1)) {
+#if RETRO_USE_MOD_LOADER
+                if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
+                    devMenu.modsChanged = false;
+                    saveMods();
+                    for (int c = 0; c < CHANNEL_COUNT; ++c) {
+                        StopChannel(c);
+                    }
+#if RETRO_REV02
+                    hardResetFlag = true;
+#endif
+                    SceneInfo pre = sceneInfo;
+                    startGameObjects();
+                    sceneInfo.classCount = pre.classCount;
+                    if (pre.state == ENGINESTATE_LOAD) {
+                        sceneInfo.activeCategory = pre.activeCategory;
+                        sceneInfo.listPos        = pre.listPos;
+                    }
+#if RETRO_USING_SDL2
+                    SDL_SetWindowTitle(engine.window, gameVerInfo.gameName);
+#endif
+                    LoadGlobalSfx();
+
+                    sceneInfo.state = ENGINESTATE_LOAD;
+                }
+#endif
+
+                if (engine.devMenu)
+                    ProcessDebugCommands();
+
+                switch (sceneInfo.state) {
+                    default: break;
+                    case ENGINESTATE_LOAD:
+                        if (!sceneInfo.listData) {
+                            sceneInfo.state = ENGINESTATE_NULL;
+                        }
+                        else {
+                            LoadScene();
+                            LoadSceneFile();
+                            InitObjects();
+#if RETRO_REV02
+                            userCore->StageLoad();
+                            for (int v = 0; v < DRAWLAYER_COUNT; ++v) {
+                                SetDebugValue(drawGroupNames[v], &engine.drawLayerVisible[v], DTYPE_BOOL, false, true);
+                            }
+#endif
+                            // dim after 5 mins
+                            engine.dimLimit = (5 * 60) * engine.refreshRate;
+                            ProcessInput();
+                            ProcessObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                            LoadAchievementAssets();
+#endif
+                        }
+                        break;
+                    case ENGINESTATE_REGULAR:
+                        ProcessInput();
+                        ProcessSceneTimer();
+                        ProcessObjects();
+                        ProcessParallaxAutoScroll();
+                        for (int i = 1; i < engine.gameSpeed; ++i) {
+                            if (sceneInfo.state != ENGINESTATE_REGULAR)
+                                break;
+                            ProcessSceneTimer();
+                            ProcessObjects();
+                            ProcessParallaxAutoScroll();
+                        }
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                        ProcessAchievements();
+#endif
+                        ProcessObjectDrawLists();
+                        break;
+                    case ENGINESTATE_PAUSED:
+                        ProcessInput();
+                        ProcessPausedObjects();
+                        for (int i = 1; i < engine.gameSpeed; ++i) {
+                            if (sceneInfo.state != ENGINESTATE_PAUSED)
+                                break;
+                            ProcessPausedObjects();
+                        }
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                        ProcessAchievements();
+#endif
+                        ProcessObjectDrawLists();
+                        break;
+                    case ENGINESTATE_FROZEN:
+                        ProcessInput();
+                        ProcessFrozenObjects();
+                        for (int i = 1; i < engine.gameSpeed; ++i) {
+                            if (sceneInfo.state != ENGINESTATE_FROZEN)
+                                break;
+                            ProcessFrozenObjects();
+                        }
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                        ProcessAchievements();
+#endif
+                        ProcessObjectDrawLists();
+                        break;
+                    case ENGINESTATE_LOAD | ENGINESTATE_STEPOVER:
+                        LoadScene();
+                        LoadSceneFile();
+                        InitObjects();
+#if RETRO_REV02
+                        userCore->StageLoad();
+                        for (int v = 0; v < DRAWLAYER_COUNT && v < DEBUGVAL_MAX; ++v) {
+                            DebugValueInfo *val = &debugValues[debugValCnt++];
+                            strncpy(val->name, drawGroupNames[v], 0x10);
+                            val->type       = 0;
+                            val->value      = &engine.drawLayerVisible[v];
+                            val->valByteCnt = 4;
+                            val->min        = 0;
+                            val->max        = 1;
+                        }
+#endif
+                        ProcessInput();
+                        ProcessObjects();
+                        sceneInfo.state = ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER;
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                        LoadAchievementAssets();
+#endif
+                        break;
+                    case ENGINESTATE_REGULAR | ENGINESTATE_STEPOVER:
+                        ProcessInput();
+                        if (engine.frameStep) {
+                            ProcessSceneTimer();
+                            ProcessObjects();
+                            ProcessParallaxAutoScroll();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                            ProcessAchievements();
+#endif
+                            ProcessObjectDrawLists();
+                            engine.frameStep = false;
+                        }
+                        break;
+                    case ENGINESTATE_PAUSED | ENGINESTATE_STEPOVER:
+                        ProcessInput();
+                        if (engine.frameStep) {
+                            ProcessPausedObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                            ProcessAchievements();
+#endif
+                            ProcessObjectDrawLists();
+                            engine.frameStep = false;
+                        }
+                        break;
+                    case ENGINESTATE_FROZEN | ENGINESTATE_STEPOVER:
+                        ProcessInput();
+                        if (engine.frameStep) {
+                            ProcessFrozenObjects();
+#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
+                            ProcessAchievements();
+#endif
+                            ProcessObjectDrawLists();
+                            engine.frameStep = false;
+                        }
+                        break;
+                    case ENGINESTATE_DEVMENU:
+                        ProcessInput();
+                        currentScreen = &screens[0];
+                        if (devMenu.state)
+                            devMenu.state();
+                        break;
+                    case ENGINESTATE_VIDEOPLAYBACK:
+                        ProcessInput();
+                        if (ProcessVideo() == 1)
+                            sceneInfo.state = engine.prevEngineMode;
+                        break;
+                    case ENGINESTATE_SHOWPNG:
+                        ProcessInput();
+                        if (engine.imageDelta <= 0.0 || engine.dimMax >= 1.0) {
+                            if (engine.displayTime <= 0.0) {
+                                engine.dimMax += engine.imageDelta;
+                                if (engine.dimMax <= 0.0) {
+                                    engine.shaderID    = engine.prevShaderID;
+                                    engine.screenCount = 1;
+                                    sceneInfo.state    = engine.prevEngineMode;
+                                    engine.dimMax      = 1.0;
+                                }
+                            }
+                            else {
+                                engine.displayTime -= 0.01666666666666667;
+                                if (engine.skipCallback) {
+                                    if (engine.skipCallback())
+                                        engine.displayTime = 0.0;
+                                }
+                            }
+                        }
+                        else {
+                            engine.dimMax += engine.imageDelta;
+                            if (engine.dimMax >= 1.0) {
+                                engine.imageDelta = -engine.imageDelta;
+                                engine.dimMax     = 1.0;
+                            }
+                        }
+                        break;
+#if RETRO_REV02
+                    case ENGINESTATE_ERRORMSG: {
+                        ProcessInput();
+                        if (controller[0].keyStart.down)
+                            sceneInfo.state = engine.prevEngineMode;
+                        currentScreen = &screens[0];
+                        int yOff      = DevOutput_GetStringYOffset(outputString);
+                        DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
+                        DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+                        break;
+                    }
+                    case ENGINESTATE_ERRORMSG_FATAL: {
+                        ProcessInput();
+                        currentScreen = &screens[0];
+                        if (controller[0].keyStart.down)
+                            engine.running = false;
+                        int yOff = DevOutput_GetStringYOffset(outputString);
+                        DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
+                        DrawDevText(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
+                        break;
+                    }
+#endif
+                }
 
 #if !RETRO_USE_ORIGINAL_CODE
-        for (int t = 0; t < touchMouseData.count; ++t) {
-            if (touchMouseData.down[t]) {
-                int tx = touchMouseData.x[t] * screens->size.x;
-                int ty = touchMouseData.y[t] * screens->size.y;
+                for (int t = 0; t < touchMouseData.count; ++t) {
+                    if (touchMouseData.down[t]) {
+                        int tx = touchMouseData.x[t] * screens->size.x;
+                        int ty = touchMouseData.y[t] * screens->size.y;
 
-                if (tx <= 32 && ty <= 32) {
-                    if (engine.devMenu) {
-                        if (sceneInfo.state != ENGINESTATE_DEVMENU) {
-                            devMenu.stateStore = sceneInfo.state;
-                            if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
-                                engine.screenCount = 1;
-                            devMenu.state   = DevMenu_MainMenu;
-                            devMenu.option  = 0;
-                            devMenu.scroll  = 0;
-                            devMenu.timer   = 0;
-                            sceneInfo.state = ENGINESTATE_DEVMENU;
-                            PauseSound();
+                        if (tx <= 32 && ty <= 32) {
+                            if (engine.devMenu) {
+                                if (sceneInfo.state != ENGINESTATE_DEVMENU) {
+                                    devMenu.stateStore = sceneInfo.state;
+                                    if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
+                                        engine.screenCount = 1;
+                                    devMenu.state   = DevMenu_MainMenu;
+                                    devMenu.option  = 0;
+                                    devMenu.scroll  = 0;
+                                    devMenu.timer   = 0;
+                                    sceneInfo.state = ENGINESTATE_DEVMENU;
+                                    PauseSound();
+                                }
+                            }
                         }
                     }
                 }
+#endif
+                // Uncomment this code to add the build number to dev menu
+                // overrides the game subtitle, used in switch dev menu
+                if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
+                    // char buffer[0x40];
+                    // sprintf(buffer, "Build #%d", 18403);
+                    // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
+                    // DrawDevText(buffer, currentScreen->center.x, currentScreen->center.y - 48, 1, 0xF0F0F0);
+                }
             }
+
+            FlipScreen();
+
+#if RETRO_REV02
+            if (!(engine.focusState & 1))
+                HandleUserStatuses();
         }
 #endif
-
-        FlipScreen();
-
-        HandleUserStatuses();
     }
 
     // Shutdown
@@ -1161,4 +1206,65 @@ void InitScriptSystem()
     currentMod = NULL;
     sortMods();
 #endif
+}
+
+void ProcessDebugCommands()
+{
+    //This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
+    int id            = ControllerIDForInputID(1);
+    uint8 gamepadType = GetControllerType(id) >> 8;
+    if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN)
+        return;
+
+    if (controller[CONT_P1].keySelect.press) {
+        if (sceneInfo.state == ENGINESTATE_DEVMENU) {
+            sceneInfo.state = devMenu.stateStore;
+            if (devMenu.stateStore == ENGINESTATE_VIDEOPLAYBACK)
+                engine.screenCount = 0;
+            ResumeSound();
+        }
+        else {
+            devMenu.stateStore = sceneInfo.state;
+            if (sceneInfo.state == ENGINESTATE_VIDEOPLAYBACK)
+                engine.screenCount = 1;
+            devMenu.state   = DevMenu_MainMenu;
+            devMenu.option  = 0;
+            devMenu.scroll  = 0;
+            devMenu.timer   = 0;
+            sceneInfo.state = ENGINESTATE_DEVMENU;
+            PauseSound();
+        }
+    }
+
+    bool32 framePaused = (sceneInfo.state >> 2) & 1;
+
+    if (triggerL[CONT_P1].keyBumper.down) {
+        if (triggerL[CONT_P1].keyTrigger.down) {
+            if (!framePaused)
+                sceneInfo.state ^= ENGINESTATE_STEPOVER;
+        }
+        else {
+            if (framePaused)
+                sceneInfo.state ^= ENGINESTATE_STEPOVER;
+        }
+
+        framePaused = (sceneInfo.state >> 2) & 1;
+        if (framePaused) {
+            if (triggerR[CONT_P1].keyBumper.press)
+                engine.frameStep = true;
+        }
+        else {
+            if (triggerR[CONT_P1].keyTrigger.down)
+                engine.gameSpeed = 8;
+            else
+                engine.gameSpeed = 1;
+        }
+    }
+    else {
+        if (engine.gameSpeed == 8)
+            engine.gameSpeed = 1;
+
+        if (framePaused)
+            sceneInfo.state ^= ENGINESTATE_STEPOVER;
+    }
 }

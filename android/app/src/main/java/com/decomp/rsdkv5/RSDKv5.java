@@ -39,4 +39,13 @@ public class RSDKv5 extends SDLActivity {
         new File(p).mkdirs();
         return p + "/";
     }
+
+    public int getFocusState() {
+        switch (mCurrentNativeState)
+            case NativeState.INIT: return 0;
+            case NativeState.RESUMED: return 1;
+            case NativeState.PAUSED: return 2;
+        }
+        return -1;
+    }
 }

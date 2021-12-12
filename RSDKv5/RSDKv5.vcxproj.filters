@@ -80,9 +80,6 @@
     <ClCompile Include="Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Userdata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -164,6 +161,15 @@
     <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
       <Filter>Source Files\tinyxml2</Filter>
     </ClCompile>
+    <ClCompile Include="UserStats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserPresence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -215,9 +221,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Text.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Userdata.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Storage.hpp">
@@ -300,6 +303,15 @@
     </ClInclude>
     <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h">
       <Filter>Source Files\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="UserStats.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserPresence.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserCore.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -42,7 +42,7 @@ void Reagent_EditorLoad(void);
 void Reagent_Serialize(void);
 
 // Extra Entity Functions
-void Reagent_Unknown1(void);
-void Reagent_Unknown2(void);
+void Reagent_State_CheckPoolCollisions(void);
+void Reagent_State_ChangingPoolType(void);
 
 #endif //!OBJ_REAGENT_H

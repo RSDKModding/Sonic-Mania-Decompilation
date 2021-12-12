@@ -2,11 +2,8 @@
 #include "zlib/zlib.h"
 
 #if RETRO_REV02
-DummyCore *dummmyCore = NULL;
-DummyCore *userCore   = NULL;
-
-DummyRichPresence *richPresence = NULL;
-DummyStats *stats               = NULL;
+DummyCore *dummyCore = NULL;
+UserCore *userCore   = NULL;
 #endif
 
 // Start custom achievement code
@@ -61,7 +58,7 @@ int32 GetAPIValue(uint32 id)
     return 0;
 }
 
-void initUserData()
+void InitUserData()
 {
     int language = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
     int region   = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
@@ -104,128 +101,29 @@ void initUserData()
     value = GetAPIValue(GetAPIValueID("SYSTEM_USERSTORAGE_STORAGE_DELETE_TIME", 0));
 
 #if RETRO_REV02
-    if (!dummmyCore)
-        dummmyCore = (DummyCore *)malloc(sizeof(DummyCore));
-    MEM_ZEROP(dummmyCore);
-#endif
+    if (dummyCore)
+        delete dummyCore;
+    dummyCore = InitDummyCore();
 
-    if (true) { // no steam or etc, so default to dummy funcs
-#if RETRO_REV02
-        userCore = dummmyCore;
+    // Initalize platform-specific subsystems here
 
-        if (!achievements)
-            achievements = (DummyAchievements *)malloc(sizeof(DummyAchievements));
-        MEM_ZEROP(achievements);
+    // Examples (that I have not added, since I want dummy as the default)
+    // InitSteamCore();
+    // InitEGSCore();
+    // InitSwitchCore();
 
-        if (!leaderboards)
-            leaderboards = (DummyLeaderboards *)malloc(sizeof(DummyLeaderboards));
-        MEM_ZEROP(leaderboards);
-
-        if (!richPresence)
-            richPresence = (DummyRichPresence *)malloc(sizeof(DummyRichPresence));
-        MEM_ZEROP(richPresence);
-
-        if (!stats)
-            stats = (DummyStats *)malloc(sizeof(DummyStats));
-        MEM_ZEROP(stats);
-
-        if (!userStorage)
-            userStorage = (DummyUserStorage *)malloc(sizeof(DummyUserStorage));
-        MEM_ZEROP(userStorage);
-        // userStorage->active = true;
-
-        if (!userDBStorage)
-            userDBStorage = (UserDBStorage *)malloc(sizeof(UserDBStorage));
-        MEM_ZEROP(userDBStorage);
-
-        InitUserStorageDB(userDBStorage);
-
-        userCore->unknown1              = nullUserFunc;
-        userCore->unknown2              = nullUserFunc;
-        userCore->unknown3              = nullUserFunc;
-        userCore->unknown4              = nullUserFunc;
-        userCore->SetupDebugValues      = setupUserDebugValues;
-        userCore->UserInitUnknown1      = userInitUnknown1;
-        userCore->UserInitUnknown2      = userInitUnknown2;
-        userCore->GetUserLanguage       = GetUserLanguage;
-        userCore->GetUserRegion         = GetUserRegion;
-        userCore->GetUserPlatform       = GetUserPlatform;
-        userCore->GetConfirmButtonFlip  = GetConfirmButtonFlip;
-        userCore->LaunchManual          = LaunchManual;
-        userCore->ExitGame              = ExitGame;
-        userCore->GetDefaultGamepadType = GetDefaultGamepadType;
-        userCore->IsOverlayEnabled      = IsOverlayEnabled;
-        userCore->CheckDLC              = CheckDLC;
-        userCore->ShowExtensionOverlay  = ShowExtensionOverlay;
-#if RETRO_VER_EGS
-        userCore->EpicUnknown1      = nullUserFunc;
-        userCore->Epic_Checkout     = EGS_Checkout;
-        userCore->ShowEncorePage    = ShowEncorePage;
-        userCore->EpicUnknown4      = EGS_Unknown4;
-        userCore->RegisterHIDDevice = nullUserFunc;
-        userCore->EpicUnknown6      = nullUserFunc;
-#endif
-
-        userCore->values[0]   = (int *)&engine.hasPlus;
-        userCore->debugValCnt = 1;
-
-        achievements->InitUnknown1   = nullUserFunc;
-        achievements->SetDebugValues = nullUserFunc;
-        achievements->InitUnknown2   = nullUserFunc;
-#if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-        achievements->CheckAchievementsEnabled = CheckAchievementsEnabled;
-        achievements->GetAchievementNames      = GetAchievementNames;
-        achievements->GetAchievementText       = GetAchievementText;
-        achievements->GetAchievementName       = GetAchievementName;
-        achievements->Unknown8                 = AchivementsUnknown8;
-        achievements->GetNextAchievementID     = GetNextAchievementID;
-        achievements->RemoveLastAchievementID  = RemoveLastAchievementID;
-#endif
-        achievements->UnlockAchievement = TryUnlockAchievement;
-
-        leaderboards->SetDebugValues = nullUserFunc;
-        leaderboards->InitUnknown1   = nullUserFunc;
-        leaderboards->InitUnknown2   = nullUserFunc;
-        leaderboards->unknown4       = (int (*)())nullUserFunc;
-#if RETRO_VER_EGS
-        leaderboards->unknown6 = (int (*)())nullUserFunc;
-#endif
-        leaderboards->FetchLeaderboard = FetchLeaderboard;
-        leaderboards->unknown5         = nullUserFunc;
-        leaderboards->TrackScore       = TrackScore;
-        leaderboards->GetStatus        = GetLeaderboardStatus;
-        leaderboards->userRank         = 0;
-        leaderboards->isUser           = false;
-
-        richPresence->SetDebugValues = nullUserFunc;
-        richPresence->InitUnknown1   = nullUserFunc;
-        richPresence->InitUnknown2   = nullUserFunc;
-        richPresence->SetPresence    = SetPresence;
-
-        stats->SetDebugValues = nullUserFunc;
-        stats->InitUnknown1   = nullUserFunc;
-        stats->InitUnknown2   = nullUserFunc;
-        stats->TryTrackStat   = TryTrackStat;
-
-        userStorage->InitUnknown1       = (int (*)())nullUserFunc;
-        userStorage->SetDebugValues     = (int (*)())nullUserFunc;
-        userStorage->InitUnknown2       = (int (*)())nullUserFunc;
-        userStorage->TryAuth            = TryAuth;
-        userStorage->TryInitStorage     = TryInitStorage;
-        userStorage->GetUsername        = GetUserName;
-        userStorage->LoadUserFile       = TryLoadUserFile;
-        userStorage->SaveUserFile       = TrySaveUserFile;
-        userStorage->DeleteUserFile     = TryDeleteUserFile;
-        userStorage->ClearPrerollErrors = ClearPrerollErrors;
-
-        achievements->enabled      = true;
-        leaderboards->status       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
-        stats->enabled             = true;
-        userStorage->authStatus    = STATUS_NONE;
-        userStorage->storageStatus = STATUS_NONE;
-        userStorage->saveStatus    = STATUS_NONE;
-#endif
+    if (!userCore) // no platform core, so default to dummy funcs
+        userCore = dummyCore;
+    else if (dummyCore) {
+        delete dummyCore;
+        dummyCore = nullptr;
     }
+
+    if (!userDBStorage)
+        userDBStorage = (UserDBStorage *)malloc(sizeof(UserDBStorage));
+
+    InitUserStorageDB(userDBStorage);
+#endif
 
     // Add achievements
     achievementList.clear();
@@ -251,10 +149,11 @@ void initUserData()
 
     int achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int));
+    bool32 loaded = false;
 #if RETRO_REV02
-    userStorage->LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL);
+    loaded = userStorage->TryLoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL);
 #else
-    LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
+    loaded               = LoadUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
 #endif
     for (int i = 0; i < (int)achievementList.size(); ++i) {
         achievementList[i].achieved = achievementsRAM[i];
@@ -264,55 +163,80 @@ void initUserData()
     int leaderboardsRAM[0x200];
     memset(leaderboardsRAM, 0, 0x200 * sizeof(int));
 #if RETRO_REV02
-    userStorage->LoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL);
+    loaded = userStorage->TryLoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL);
 #else
-    LoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
+    loaded               = LoadUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
 #endif
-    int pos = 1;
-    for (int i = 0; i < leaderboardsRAM[0]; ++i) {
-        leaderboardList.push_back(LeaderboardInfo());
-        int len = leaderboardsRAM[pos++];
-        memcpy(leaderboardList[i].name, &leaderboardsRAM[pos], len);
-        int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
-        pos += size;
-        leaderboardList[i].score = leaderboardsRAM[pos++];
+    if (loaded) {
+        int32 pos = 1;
+        for (int i = 0; i < leaderboardsRAM[0]; ++i) {
+            leaderboardList.push_back(LeaderboardInfo());
+            int len = leaderboardsRAM[pos++];
+            memcpy(leaderboardList[i].name, &leaderboardsRAM[pos], len);
+            int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));
+            pos += size;
+            leaderboardList[i].score = leaderboardsRAM[pos++];
+        }
     }
+
+    statList.clear();
+    uint8 *statsRAM = new uint8[0x1000 * sizeof(StatInfo)];
+#if RETRO_REV02
+    loaded = userStorage->TryLoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo), NULL);
+#else
+    loaded               = LoadUserFile("Stats.bin", statsRAM, 0x1000 * sizeof(StatInfo));
+#endif
+    if (loaded) {
+        uint32 statCount = *((uint32 *)statsRAM);
+        int32 pos = sizeof(uint32);
+
+        for (int i = 0; i < statCount; ++i) {
+            StatInfo stat;
+            memcpy(stat.data, &statsRAM[pos], sizeof(stat.data));
+            pos += sizeof(stat.data);
+        }
+    }
+    delete[] statsRAM;
 }
 void releaseUserData()
 {
     saveUserData();
 
 #if RETRO_REV02
-    if (dummmyCore)
-        free(dummmyCore);
-    dummmyCore = NULL;
 
     if (achievements)
-        free(achievements);
-    achievements = NULL;
+        delete achievements;
+    achievements = nullptr;
 
-    if (leaderboards) {
-        free(leaderboards);
-    }
-    leaderboards = NULL;
+    if (leaderboards)
+        delete leaderboards;
+    leaderboards = nullptr;
 
     if (richPresence)
-        free(richPresence);
-    richPresence = NULL;
+        delete richPresence;
+    richPresence = nullptr;
 
     if (stats)
-        free(stats);
-    stats = NULL;
+        delete stats;
+    stats = nullptr;
 
     if (userStorage)
-        free(userStorage);
-    userStorage = NULL;
+        delete userStorage;
+    userStorage = nullptr;
 
     ReleaseUserStorageDB(userDBStorage);
 
     if (userDBStorage)
         free(userDBStorage);
-    userDBStorage = NULL;
+    userDBStorage = nullptr;
+
+    if (userCore) {
+        userCore->Shutdown();
+        delete userCore;
+    }
+
+    dummyCore = nullptr;
+    userCore  = nullptr;
 #endif
 }
 
@@ -324,13 +248,13 @@ void saveUserData()
         achievementsRAM[i] = achievementList[i].achieved;
     }
 #if RETRO_REV02
-    userStorage->SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL, false);
+    userStorage->TrySaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int), NULL, false);
 #else
     SaveUserFile("Achievements.bin", achievementsRAM, 0x100 * sizeof(int));
 #endif
 
-    int leaderboardsRAM[0x100];
-    memset(leaderboardsRAM, 0, 0x100 * sizeof(int));
+    int32 leaderboardsRAM[0x100];
+    memset(leaderboardsRAM, 0, 0x100 * sizeof(int32));
     leaderboardsRAM[0] = (int)leaderboardList.size();
     int pos            = 1;
     for (int i = 0; i < (int)leaderboardList.size(); ++i) {
@@ -342,12 +266,76 @@ void saveUserData()
         leaderboardsRAM[pos++] = leaderboardList[i].score;
     }
 #if RETRO_REV02
-    userStorage->SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL, false);
+    userStorage->TrySaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM), NULL, false);
 #else
     SaveUserFile("Leaderboards.bin", leaderboardsRAM, sizeof(leaderboardsRAM));
-#endif 
+#endif
+
+    uint8 *statsRAM = new uint8[0x100 * sizeof(StatInfo)];
+    memset(statsRAM, 0, 0x100 * sizeof(StatInfo));
+
+    ((uint32 *)statsRAM)[0] = (int)statList.size();
+
+    pos = sizeof(uint32);
+    for (int i = 0; i < (int)statList.size(); ++i) {
+        memcpy(&statsRAM[pos], statList[i].data, sizeof(statList[i].data));
+        pos += sizeof(statList[i].data);
+    }
+#if RETRO_REV02
+    userStorage->TrySaveUserFile("Stats.bin", statsRAM, sizeof(0x1000 * sizeof(StatInfo)), NULL, false);
+#else
+    SaveUserFile("Stats.bin", statsRAM, sizeof(0x1000 * sizeof(StatInfo)));
+#endif
+    delete[] statsRAM;
 }
 
+#if RETRO_REV02
+DummyCore* InitDummyCore()
+{
+    //Initalize API subsystems
+    DummyCore *core = new DummyCore;
+
+    if (achievements)
+        delete achievements;
+    achievements = new DummyAchievements;
+
+    if (leaderboards)
+        delete leaderboards;
+    leaderboards = new DummyLeaderboards;
+
+    if (richPresence)
+        delete richPresence;
+    richPresence = new DummyRichPresence;
+
+    if (stats)
+        delete stats;
+    stats = new DummyStats;
+
+    if (userStorage)
+        delete userStorage;
+    userStorage = new DummyUserStorage;
+
+    //Setup default values
+
+    core->values[0]   = (int *)&engine.hasPlus;
+    core->valueCount = 1;
+
+    leaderboards->userRank = 0;
+    leaderboards->isUser   = false;
+
+    achievements->enabled      = true;
+    leaderboards->status       = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_STATUS", 0));
+    stats->enabled             = true;
+    userStorage->authStatus    = STATUS_NONE;
+    userStorage->storageStatus = STATUS_NONE;
+    userStorage->saveStatus    = STATUS_NONE;
+    userStorage->noSaveActive  = false;
+
+    return core;
+}
+#endif
+
+#if RETRO_REV02
 void HandleUserStatuses()
 {
     if (userStorage && userStorage->authStatus == STATUS_CONTINUE) {
@@ -365,8 +353,8 @@ void HandleUserStatuses()
     }
 
     if (leaderboards && leaderboards->status == STATUS_CONTINUE) {
-        if (leaderboards->loadTime) {
-            leaderboards->loadTime--;
+        if (API_TypeOf(leaderboards, DummyLeaderboards)->loadTime) {
+            API_TypeOf(leaderboards, DummyLeaderboards)->loadTime--;
         }
         else {
             leaderboards->status = STATUS_OK;
@@ -389,61 +377,125 @@ void HandleUserStatuses()
     }
 
     if (leaderboards) {
-        if (leaderboards->trackTime != 0) {
-            leaderboards->trackTime--;
+        if (API_TypeOf(leaderboards, DummyLeaderboards)->trackTime != 0) {
+            API_TypeOf(leaderboards, DummyLeaderboards)->trackTime--;
         }
         else {
             leaderboards->status = STATUS_OK;
 
-            if (leaderboards->trackCB) {
-                leaderboards->trackCB(true, leaderboards->trackRank);
+            if (API_TypeOf(leaderboards, DummyLeaderboards)->trackCB) {
+                API_TypeOf(leaderboards, DummyLeaderboards)->trackCB(true, API_TypeOf(leaderboards, DummyLeaderboards)->trackRank);
             }
 
-            leaderboards->trackTime = -1;
-            leaderboards->trackCB = NULL;
+            API_TypeOf(leaderboards, DummyLeaderboards)->trackTime = -1;
+            API_TypeOf(leaderboards, DummyLeaderboards)->trackCB = NULL;
         }
     }
 }
+#endif
 
-int GetUserLanguage()
-{
+bool32 GetXYButtonFlip() { return engine.XYFlip; }
+
 #if RETRO_REV02
-    return curSKU.language;
+const char *userValueNames[8] = { "Ext <PLUS>" };
+void UserCore::StageLoad()
+{
+    achievements->StageLoad();
+    leaderboards->StageLoad();
+    richPresence->StageLoad();
+    stats->StageLoad();
+    userStorage->StageLoad();
+
+    for (int i = 0; i < userCore->valueCount && debugValCnt < DEBUGVAL_MAX; ++i) {
+        SetDebugValue(userValueNames[i], userCore->values[i], DTYPE_BOOL, false, true);
+    }
+}
+void UserCore::FrameInit()
+{
+    achievements->FrameInit();
+    leaderboards->FrameInit();
+    richPresence->FrameInit();
+    stats->FrameInit();
+    userStorage->FrameInit();
+}
+void UserCore::UserInitUnknown2()
+{
+    achievements->InitUnknown2();
+    leaderboards->InitUnknown2();
+    richPresence->InitUnknown2();
+    stats->InitUnknown2();
+    userStorage->InitUnknown2();
+}
+
+bool32 DummyCore::CheckFocusLost()
+{
+#if RETRO_PLATFORM == RETRO_ANDROID
+    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
+    jobject activity = (jobject)SDL_AndroidGetActivity();
+    jclass cls(env->GetObjectClass(activity));
+    jmethodID method = env->GetMethodID(cls, "getFocusState", "();");
+    auto ret         = env->CallObjectMethod(activity, method);
+
+    env->DeleteLocalRef(activity);
+    env->DeleteLocalRef(cls);
+
+    // 0 = init
+    // 1 = resumed
+    // 2 = paused
+    return ret != 1;
 #else
-    return gameVerInfo.language;
+    return false;
 #endif
 }
-int GetUserRegion()
-{
-#if RETRO_REV02
-    return curSKU.region;
-#else
-    return gameVerInfo.region;
-#endif
-}
-int GetUserPlatform()
-{
-#if RETRO_REV02
-    return curSKU.platform;
-#else
-    return gameVerInfo.platform;
-#endif
-}
-bool32 GetConfirmButtonFlip()
+
+bool32 DummyCore::GetConfirmButtonFlip()
 {
     // PrintLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
     return engine.confirmFlip;
 }
-bool32 GetXYButtonFlip()
-{
-    // PrintLog(PRINT_NORMAL, "DUMMY GetXYButtonFlip() -> %d", engine.XYFlip);
-    return engine.XYFlip;
-}
-void LaunchManual()
+void DummyCore::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_USING_SDL2
     //SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
+    PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
+#else
+    PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
+#endif
+}
+void DummyCore::ExitGame() { engine.running = false; }
+
+int DummyCore::GetDefaultGamepadType()
+{
+#if RETRO_REV02
+    int32 platform = curSKU.platform = PLATFORM_SWITCH;
+#else
+    int32 platform = gameVerInfo.platform = PLATFORM_SWITCH;
+#endif
+
+    switch (platform) {
+        case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_PC:
+        case PLATFORM_DEV:
+        default: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+    }
+}
+
+int DummyCore::ShowExtensionOverlay(byte overlay)
+{
+    switch (overlay) {
+        default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
+        case 0: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d (Plus Upsell Screen)", overlay); break;
+    }
+    return 1;
+}
+#else
+bool32 GetConfirmButtonFlip() { return engine.confirmFlip; }
+void LaunchManual()
+{
+    // LaunchManual() just opens the mania manual URL, thats it
+#if RETRO_USING_SDL2
+    // SDL_OpenURL("http://www.sonicthehedgehog.com/mania/manual");
     PrintLog(PRINT_NORMAL, "DUMMY LaunchManual()");
 #else
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
@@ -475,114 +527,20 @@ int ShowExtensionOverlay(byte overlay)
     }
     return 1;
 }
-bool32 EGS_Checkout(int a1)
+#endif
+
+#if RETRO_VER_EGS
+bool32 DummyCore::ShowCheckoutPage(int a1)
 {
-    PrintLog(PRINT_POPUP, "Checkout(%d)");
+    PrintLog(PRINT_POPUP, "ShowCheckoutPage(%d)");
     return true;
 }
-int ShowEncorePage(int a1)
+int DummyCore::ShowEncorePage(int a1)
 {
     PrintLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
 }
-void EGS_Unknown4(int a1) { PrintLog(PRINT_POPUP, "EGS_Unknown4(%d)", a1); }
-
-void SetPresence(byte id, TextInfo *info)
-{
-    char buffer[0xFF];
-    char buffer2[0xFF];
-    GetCString(buffer, info);
-    if (info->text[info->length - 1] == '\r')
-        buffer[info->length - 1] = 0;
-
-#if RETRO_REV02
-    richPresence->curID = id;
-
-    std::string str = __FILE__;
-    str += ": SetPresence() # Set Steam rich presence string to ";
-    str += buffer;
-    str += "\r\n";
-    PrintLog(PRINT_NORMAL, str.c_str());
-
-    // sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));
-    // PrintLog(PRINT_NORMAL, buffer2);
-#else
-    sprintf(buffer2, "DUMMY SetPresence(%d, %s)", id, buffer);
-    PrintLog(PRINT_NORMAL, buffer2);
-#endif
-}
-
-#if !RETRO_REV02
-void TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time)
-{
-    PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
-}
-void TrackTAClear(byte zoneID, byte actID, byte playerID, int time)
-{
-    PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
-}
-void TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY)
-{
-    PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
-}
-void TrackGameProgress(float percent)
-{
-    PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100);
-}
-#else
-#define voidToInt(x)   (int)(size_t)(x)
-#define voidToFloat(x) *(float *)&(x)
-
-void TryTrackStat(StatInfo *stat)
-{
-    if (stats->enabled) {
-        std::string str = __FILE__;
-        str += ": TrackStat() # TrackStat ";
-        str += stat->name;
-        str += " \r\n";
-        PrintLog(PRINT_NORMAL, str.c_str());
-
-        switch (stat->statID) {
-            case 0: {
-                char *zoneName = (char *)stat->data[0];
-                char *actName = (char *)stat->data[1];
-                char *playerName = (char *)stat->data[2];
-                int val = voidToInt(stat->data[3]);
-                int time = voidToInt(stat->data[4]);
-                int rings = voidToInt(stat->data[5]);
-                int score = voidToInt(stat->data[6]);
-                PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%s, %s, %s, %d, %d, %d, %d)", zoneName, actName, playerName, val, score, rings, time);
-                break;
-            }
-            case 1: {
-                char *zoneName = (char *)stat->data[0];
-                char *actName = (char *)stat->data[1];
-                char *playerName = (char *)stat->data[2];
-                char *mode = (char *)stat->data[3];
-                int time = voidToInt(stat->data[4]);
-                PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%s, %s, %s, %s, %d)", zoneName, actName, playerName, mode, time);
-                break;
-            }
-            case 2: {
-                char *zoneName = (char *)stat->data[0];
-                char *actName = (char *)stat->data[1];
-                char *playerName = (char *)stat->data[2];
-                bool32 encore = voidToInt(stat->data[3]);
-                int enemyX = voidToInt(stat->data[4]);
-                int enemyY = voidToInt(stat->data[5]);
-                PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%s, %s, %s, %s, %d, %d)", zoneName, actName, playerName, encore ? "true" : "false",
-                         enemyX, enemyY);
-                break;
-            }
-            case 3: PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", voidToFloat(stat->data[0]) * 100); break;
-        }
-    }
-    else {
-        std::string str = __FILE__;
-        str += ": TryTrackStat() # Track stat SKIPPED. Stats are disabled. \r\n";
-        PrintLog(PRINT_NORMAL, str.c_str());
-    }
-}
+void DummyCore::EpicUnknown4(int a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
 #endif
 
 int GetSettingsValue(int id)

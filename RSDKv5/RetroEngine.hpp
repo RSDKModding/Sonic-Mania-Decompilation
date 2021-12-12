@@ -223,8 +223,10 @@ enum SeverityModes {
 #include "Video.hpp"
 #include "UserAchievements.hpp"
 #include "UserLeaderboards.hpp"
+#include "UserStats.hpp"
+#include "UserPresence.hpp"
 #include "UserStorage.hpp"
-#include "Userdata.hpp"
+#include "UserCore.hpp"
 #include "Debug.hpp"
 #include "Link.hpp"
 #if RETRO_USE_MOD_LOADER
@@ -252,8 +254,10 @@ struct RetroEngine {
     bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
     bool32 XYFlip = false; // swaps X/Y, used for nintendo and etc controllers
 
+    bool32 running   = false;
+    uint8 focusState = 0;
+
     int32 prevEngineMode      = ENGINESTATE_LOAD;
-    bool32 running          = false;
     int32 gameSpeed           = 1;
     int32 fastForwardSpeed    = 8;
     bool32 frameStep        = false;
@@ -328,6 +332,8 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount);
 
 void LoadGameConfig();
 void InitScriptSystem();
+
+void ProcessDebugCommands();
 
 inline void SetEngineState(byte state)
 {

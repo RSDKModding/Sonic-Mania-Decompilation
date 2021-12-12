@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox bodyHitbox;
-    Hitbox handleHitbox;
+    Hitbox hitboxBody;
+    Hitbox hitboxHandle;
     uint16 aniFrames;
     uint16 sfxBloop;
 } ObjectSyringe;
@@ -15,7 +15,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     int32 type;
     int32 offsetY;
     bool32 activated;

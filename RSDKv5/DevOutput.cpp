@@ -42,7 +42,7 @@ void DevOutput_Draw()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
     DrawRectangle(0, 0, currentScreen->size.x, entity->position.y + entity->yOffset, 128, 255, INK_NONE, true);
-    DrawDevText(8, entity->message, entity->position.y + 8, 0, 0xF0F0F0);
+    DrawDevText(entity->message, 8, entity->position.y + 8, 0, 0xF0F0F0);
 }
 
 void DevOutput_Create(void *source)

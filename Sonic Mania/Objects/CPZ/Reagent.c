@@ -35,23 +35,23 @@ void Reagent_Create(void *data)
         self->velocity.x = RSDK.Rand(-0xC000, 0xC000);
 #endif
         self->type          = voidToInt(data);
-        self->state         = Reagent_Unknown1;
+        self->state         = Reagent_State_CheckPoolCollisions;
 
         switch (self->type) {
-            case 0:
-                self->r = 0;
-                self->g = 8;
-                self->b = 192;
+            case CHEMICALPOOL_BLUE:
+                self->r = 0x00;
+                self->g = 0x08;
+                self->b = 0xC0;
                 break;
-            case 1:
-                self->r = 24;
-                self->g = 144;
-                self->b = 0;
+            case CHEMICALPOOL_GREEN:
+                self->r = 0x18;
+                self->g = 0x90;
+                self->b = 0x00;
                 break;
-            case 2:
-                self->r = 0;
-                self->g = 128;
-                self->b = 176;
+            case CHEMICALPOOL_CYAN:
+                self->r = 0x00;
+                self->g = 0x80;
+                self->b = 0xB0;
                 break;
         }
 #if RETRO_USE_PLUS
@@ -72,7 +72,7 @@ void Reagent_StageLoad(void)
     Reagent->sfxLand       = RSDK.GetSfx("Puyo/Land.wav");
 }
 
-void Reagent_Unknown1(void)
+void Reagent_State_CheckPoolCollisions(void)
 {
     RSDK_THIS(Reagent);
     self->position.x += self->velocity.x;
@@ -84,10 +84,10 @@ void Reagent_Unknown1(void)
         if (RSDK.CheckObjectCollisionTouchBox(self, &Reagent->hitbox, chemPool, &chemPool->hitbox)) {
             self->velocity.y >>= 2;
             self->startX   = self->position.x;
-            self->state    = Reagent_Unknown2;
+            self->state    = Reagent_State_ChangingPoolType;
             chemPool->active = ACTIVE_NORMAL;
             ChemicalPool_ChangeState(chemPool, self->type, self->r, self->g, self->b);
-            RSDK.PlaySfx(Reagent->sfxLand, 0, 255);
+            RSDK.PlaySfx(Reagent->sfxLand, false, 255);
         }
     }
 
@@ -95,7 +95,7 @@ void Reagent_Unknown1(void)
         destroyEntity(self);
 }
 
-void Reagent_Unknown2(void)
+void Reagent_State_ChangingPoolType(void)
 {
     RSDK_THIS(Reagent);
     self->velocity.y -= 0x1800;
@@ -118,20 +118,20 @@ void Reagent_EditorDraw(void)
     self->alpha         = 0xC0;
 
     switch (self->type) {
-        case 0:
-            self->r = 0;
-            self->g = 8;
+        case CHEMICALPOOL_BLUE:
+            self->r = 0x00;
+            self->g = 0x08;
             self->b = 192;
             break;
-        case 1:
-            self->r = 24;
-            self->g = 144;
-            self->b = 0;
+        case CHEMICALPOOL_GREEN:
+            self->r = 0x18;
+            self->g = 0x90;
+            self->b = 0x00;
             break;
-        case 2:
-            self->r = 0;
-            self->g = 128;
-            self->b = 176;
+        case CHEMICALPOOL_CYAN:
+            self->r = 0x00;
+            self->g = 0x80;
+            self->b = 0xB0;
             break;
     }
     RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &self->animator, true, 0);

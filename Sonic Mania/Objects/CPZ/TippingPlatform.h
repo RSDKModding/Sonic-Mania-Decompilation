@@ -35,10 +35,10 @@ void TippingPlatform_EditorLoad(void);
 void TippingPlatform_Serialize(void);
 
 // Extra Entity Functions
-void TippingPlatform_Unknown1(void);
-void TippingPlatform_Unknown2(void);
-void TippingPlatform_Unknown3(void);
-void TippingPlatform_Unknown4(void);
-void TippingPlatform_Unknown5(void);
+void TippingPlatform_State_Tipping_Boss(void);
+void TippingPlatform_State_RestorePlatform(void);
+void TippingPlatform_State_Tipping(void);
+void TippingPlatform_State_Restore(void);
+void TippingPlatform_State_Tipping_Delay(void);
 
 #endif //!OBJ_TIPPINGPLATFORM_H

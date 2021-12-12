@@ -6,12 +6,13 @@ std::vector<int> achievementStack;
 //End Dummy Achievements
 
 #if RETRO_REV02
-DummyAchievements *achievements = NULL;
+UserAchievements *achievements = NULL;
 #endif
 
 void ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
 
-void TryUnlockAchievement(const char *name)
+#if RETRO_REV02
+void DummyAchievements::TryUnlockAchievement(const char *name)
 {
     if (achievements->enabled) {
         PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
@@ -39,7 +40,7 @@ void TryUnlockAchievement(const char *name)
     }
 }
 
-void GetAchievementNames(TextInfo *names, int count)
+void DummyAchievements::GetAchievementNames(TextInfo *names, int32 count)
 {
     int i = 0;
     for (; i < count && i < (int)achievementStack.size(); ++i) {
@@ -50,12 +51,12 @@ void GetAchievementNames(TextInfo *names, int count)
     }
 }
 
-TextInfo *GetAchievementText(TextInfo *info)
+TextInfo *DummyAchievements::GetAchievementText(TextInfo *info)
 {
     SetText(info, (char *)"Achievement!", 0);
     return info;
 }
-TextInfo *GetAchievementName(TextInfo *info, uint id)
+TextInfo *DummyAchievements::GetAchievementName(TextInfo *info, uint id)
 {
     id--;
     if (id <= achievementList.size())
@@ -63,7 +64,7 @@ TextInfo *GetAchievementName(TextInfo *info, uint id)
     return info;
 }
 
-int GetNextAchievementID(void)
+int DummyAchievements::GetNextAchievementID(void)
 {
     if (achievementStack.size() > 0)
         return achievementStack[0] + 1;
@@ -71,13 +72,33 @@ int GetNextAchievementID(void)
         return 0;
 }
 
-void RemoveLastAchievementID(void)
+void DummyAchievements::RemoveLastAchievementID(void)
 {
     if (achievementStack.size() > 0)
         achievementStack.erase(achievementStack.begin());
 }
+#else
+void TryUnlockAchievement(const char *name)
+{
+    PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
+    int i = 0;
+    for (; i < (int)achievementList.size(); ++i) {
+        if (achievementList[i].identifier == name) {
+            if (!achievementList[i].achieved) {
+                achievementStack.push_back(i);
+                PrintLog(PRINT_NORMAL, "Unlocked Achievement: (%s, %d)", name, i);
+                achievementList[i].achieved = true;
+                saveUserData();
+            }
+            break;
+        }
+    }
 
+    if (i == achievementList.size())
+        PrintLog(PRINT_NORMAL, "Failed to Unlock Achievement: (%s)", name);
+}
+#endif
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
 bool32 achievementsEnabled = true;

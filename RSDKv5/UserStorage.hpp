@@ -1,29 +1,46 @@
 #ifndef USER_STORAGE_H
 #define USER_STORAGE_H
 
+#if RETRO_REV02
+
 #define RETRO_USERDB_MAX     (8)
 #define RETRO_USERDB_COL_MAX (8)
 #define RETRO_USERDB_ROW_MAX (0x400)
 
-struct DummyUserStorage {
-    int (*InitUnknown1)(void);
-    int (*SetDebugValues)(void);
-    int (*InitUnknown2)(void);
-    int (*TryAuth)(void);
-    int (*TryInitStorage)(void);
-    bool32 (*GetUsername)(TextInfo *);
-    bool32 (*LoadUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int));
-    bool32 (*SaveUserFile)(const char *filename, void *buffer, unsigned int bufSize, int (*callback)(int), bool32 compress);
-    bool32 (*DeleteUserFile)(const char *filename, int (*callback)(int));
-    void (*ClearPrerollErrors)(void);
+// This is the base struct, it serves as the base for any API-specific stats
+// This struct should never be removed
+struct UserStorage {
+    virtual void FrameInit(void) {}
+    virtual void StageLoad(void) {}
+    virtual void InitUnknown2(void) {}
+    virtual int32 TryAuth(void) { return 0; }
+    virtual int32 TryInitStorage(void) { return 0; }
+    virtual bool32 GetUsername(TextInfo *name) { return false; }
+    virtual bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32)) { return false; }
+    virtual bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress) { return false; }
+    virtual bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32)) { return false; }
+    virtual void ClearPrerollErrors(void) {}
 
-    int authStatus;
-    int storageStatus;
-    int saveStatus;
-    int noSaveActive;
-    int authTime;
-    int storageInitTime;
-    int field_1C[2];
+    int32 authStatus    = 0;
+    int32 storageStatus = 0;
+    int32 saveStatus    = 0;
+    int32 noSaveActive  = false;
+};
+
+// This is the "dummy" struct, it serves as the base in the event a suitable API isn't loaded (such as in this decomp)
+// This struct should never be removed, other structs such as "SteamUserStorage" would be added and "userStorage" would be set to that instead
+struct DummyUserStorage : UserStorage {
+    int32 TryAuth(void);
+    int32 TryInitStorage(void);
+    bool32 GetUsername(TextInfo *name);
+    bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
+    bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress);
+    bool32 TryDeleteUserFile(const char *filename, int32 (*callback)(int32));
+    void ClearPrerollErrors(void);
+
+    int32 authTime        = 0;
+    int32 storageInitTime = 0;
+    int32 unknown[2];
 };
 
 enum DBVarTypes {
@@ -86,7 +103,7 @@ struct UserDB {
 
 struct UserDBStorage {
     UserDB userDB[RETRO_USERDB_MAX];
-    byte field_228740;
+    byte unknown1;
     int *writeBuffer[RETRO_USERDB_MAX];
     void *readBuffer[RETRO_USERDB_MAX];
     int (*loadCallback[RETRO_USERDB_MAX])(int);
@@ -94,14 +111,24 @@ struct UserDBStorage {
     int (*userLoadCB[RETRO_USERDB_MAX])(ushort table, int status);
     int (*userSaveCB[RETRO_USERDB_MAX])(ushort table, int status);
     void (*callbacks[RETRO_USERDB_MAX])(int);
-    int field_228824[RETRO_USERDB_MAX];
+    int unknown2[RETRO_USERDB_MAX];
 };
 
 extern UserDBStorage *userDBStorage;
 
-void setupUserDebugValues();
-void userInitUnknown1();
-void userInitUnknown2();
+inline int TryAuth(void) { return userStorage->TryAuth(); }
+inline int TryInitStorage(void) { return userStorage->TryInitStorage(); }
+inline bool32 GetUsername(TextInfo *name) { return userStorage->GetUsername(name); }
+inline bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32))
+{
+    return userStorage->TryLoadUserFile(filename, buffer, size, callback);
+}
+inline bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32), bool32 compress)
+{
+    return userStorage->TrySaveUserFile(filename, buffer, size, callback, compress);
+}
+inline bool32 TryDeleteUserFile(const char *filename, int (*callback)(int32)) { return userStorage->TryDeleteUserFile(filename, callback); }
+inline void ClearPrerollErrors(void) { userStorage->ClearPrerollErrors(); }
 
 int GetUserAuthStatus();
 int GetUserStorageStatus();
@@ -116,31 +143,6 @@ void SetUserStorageNoSave(int state);
 int GetUserStorageNoSave();
 #endif
 
-int TryAuth();
-int TryInitStorage();
-bool32 GetUserName(TextInfo *info);
-void ClearPrerollErrors();
-
-extern void (*userFileCallback)();
-extern void (*userFileCallback2)();
-extern char userFileDir[0x100];
-
-inline void SetUserFileCallbacks(const char *userDir, void (*callback1)(void), void (*callback2)(void))
-{
-    userFileCallback  = callback1;
-    userFileCallback2 = callback2;
-    strcpy(userFileDir, userDir);
-}
-
-bool32 TryLoadUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int));
-bool32 TrySaveUserFile(const char *filename, void *buffer, uint bufSize, int (*callback)(int), bool32 compress);
-bool32 TryDeleteUserFile(const char *filename, int (*callback)(int));
-
-bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize);
-bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize);
-bool32 DeleteUserFile(const char *filename);
-
-#if RETRO_REV02
 void InitUserStorageDB(UserDBStorage *storage);
 void ReleaseUserStorageDB(UserDBStorage *storage);
 
@@ -215,5 +217,20 @@ int UserDBStorage_SaveCB6(int status);
 int UserDBStorage_SaveCB7(int status);
 int UserDBStorage_SaveCB8(int status);
 #endif
+
+extern void (*userFileCallback)();
+extern void (*userFileCallback2)();
+extern char userFileDir[0x100];
+
+inline void SetUserFileCallbacks(const char *userDir, void (*callback1)(void), void (*callback2)(void))
+{
+    userFileCallback  = callback1;
+    userFileCallback2 = callback2;
+    strcpy(userFileDir, userDir);
+}
+
+bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize);
+bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize);
+bool32 DeleteUserFile(const char *filename);
 
 #endif

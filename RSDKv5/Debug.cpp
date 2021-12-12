@@ -211,13 +211,13 @@ void DevMenu_MainMenu()
     // Info Box
     int y = currentScreen->center.y - 80;
     DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 84, 256, 48, 128, 255, INK_NONE, true);
-    DrawDevText(currentScreen->center.x, "RETRO ENGINE v5", y, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("RETRO ENGINE v5", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
     y += 8;
-    DrawDevText(currentScreen->center.x, "Dev Menu", y, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("Dev Menu", currentScreen->center.x, y, ALIGN_CENTER, 0xF0F0F0);
     y += 16;
-    DrawDevText(currentScreen->center.x, gameVerInfo.gameName, y, ALIGN_CENTER, 0x808090);
+    DrawDevText(gameVerInfo.gameName, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
     y += 8;
-    DrawDevText(currentScreen->center.x, gameVerInfo.gameVersion, y, ALIGN_CENTER, 0x808090);
+    DrawDevText(gameVerInfo.gameVersion, currentScreen->center.x, y, ALIGN_CENTER, 0x808090);
     y += 24;
 
     // Options Box
@@ -227,7 +227,7 @@ void DevMenu_MainMenu()
     y -= 6;
 #endif
     for (int i = 0; i < optionCount; ++i) {
-        DrawDevText(currentScreen->center.x, optionNames[i], y, ALIGN_CENTER, optionColours[i]);
+        DrawDevText(optionNames[i], currentScreen->center.x, y, ALIGN_CENTER, optionColours[i]);
         y += 12;
     }
     y += 20;
@@ -239,7 +239,7 @@ void DevMenu_MainMenu()
     DrawRectangle(currentScreen->center.x - 39, y + 1,
                   (sizeof(int) * dataStorage[DATASET_STG].usedStorage) / (float)dataStorage[DATASET_STG].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
-    DrawDevText(currentScreen->center.x - 64, "STG", y, 0, 0xF0F080);
+    DrawDevText("STG", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Music Storage
     y += 10;
@@ -247,7 +247,7 @@ void DevMenu_MainMenu()
     DrawRectangle(currentScreen->center.x - 39, y + 1,
                   (sizeof(int) * dataStorage[DATASET_MUS].usedStorage) / (float)dataStorage[DATASET_MUS].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
-    DrawDevText(currentScreen->center.x - 64, "MUS", y, 0, 0xF0F080);
+    DrawDevText("MUS", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // SoundFX Storage
     y += 10;
@@ -255,7 +255,7 @@ void DevMenu_MainMenu()
     DrawRectangle(currentScreen->center.x - 39, y + 1,
                   (sizeof(int) * dataStorage[DATASET_SFX].usedStorage) / (float)dataStorage[DATASET_SFX].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
-    DrawDevText(currentScreen->center.x - 64, "SFX", y, 0, 0xF0F080);
+    DrawDevText("SFX", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // String Storage
     y += 10;
@@ -263,7 +263,7 @@ void DevMenu_MainMenu()
     DrawRectangle(currentScreen->center.x - 39, y + 1,
                   (sizeof(int) * dataStorage[DATASET_STR].usedStorage) / (float)dataStorage[DATASET_STR].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
-    DrawDevText(currentScreen->center.x - 64, "STR", y, 0, 0xF0F080);
+    DrawDevText("STR", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
     // Temp Storage
     y += 10;
@@ -271,7 +271,7 @@ void DevMenu_MainMenu()
     DrawRectangle(currentScreen->center.x - 39, y + 1,
                   (sizeof(int) * dataStorage[DATASET_TMP].usedStorage) / (float)dataStorage[DATASET_TMP].storageLimit * 126.0, 6, 0xF0F0F0, 255,
                   INK_NONE, true);
-    DrawDevText(currentScreen->center.x - 64, "TMP", y, 0, 0xF0F080);
+    DrawDevText("TMP", currentScreen->center.x - 64, y, 0, 0xF0F080);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -313,7 +313,15 @@ void DevMenu_MainMenu()
         }
     }
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+    bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+    if (userCore->GetConfirmButtonFlip())
+#else
+    if (GetConfirmButtonFlip())
+#endif
+        confirm = controller[CONT_P1].keyB.press;
+
+    if (controller[CONT_P1].keyStart.press || confirm) {
         switch (devMenu.option) {
             case 0:
                 sceneInfo.state = devMenu.stateStore;
@@ -351,7 +359,7 @@ void DevMenu_ListSel()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "SELECT STAGE CATEGORY", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("SELECT STAGE CATEGORY", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     DrawRectangle(currentScreen->center.x - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
 
     uint optionColours[8];
@@ -368,7 +376,7 @@ void DevMenu_ListSel()
     int y = dy + 40;
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < sceneInfo.categoryCount) {
-            DrawDevText(currentScreen->center.x - 64, sceneInfo.listCategory[devMenu.scroll + i].name, y, 0, optionColours[i]);
+            DrawDevText(sceneInfo.listCategory[devMenu.scroll + i].name, currentScreen->center.x - 64, y, 0, optionColours[i]);
             y += 8;
         }
     }
@@ -457,7 +465,15 @@ void DevMenu_ListSel()
         }
     }
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+    bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+    if (userCore->GetConfirmButtonFlip())
+#else
+    if (GetConfirmButtonFlip())
+#endif
+        confirm = controller[CONT_P1].keyB.press;
+
+    if (controller[CONT_P1].keyStart.press || confirm) {
         if (sceneInfo.listCategory[devMenu.option].sceneCount) {
             devMenu.state   = DevMenu_SceneSel;
             devMenu.listPos = devMenu.option;
@@ -479,7 +495,7 @@ void DevMenu_SceneSel()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "SELECT STAGE SCENE", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("SELECT STAGE SCENE", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     DrawRectangle(currentScreen->center.x - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
 
     uint optionColours[8];
@@ -498,7 +514,7 @@ void DevMenu_SceneSel()
     int off             = list->sceneOffsetStart;
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < list->sceneCount) {
-            DrawDevText(currentScreen->center.x + 96, sceneInfo.listData[off + (devMenu.scroll + i)].name, y, ALIGN_RIGHT, optionColours[i]);
+            DrawDevText(sceneInfo.listData[off + (devMenu.scroll + i)].name, currentScreen->center.x + 96, y, ALIGN_RIGHT, optionColours[i]);
             y += 8;
             devMenu.scroll = devMenu.scroll;
         }
@@ -578,7 +594,15 @@ void DevMenu_SceneSel()
         }
     }
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+    bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+    if (userCore->GetConfirmButtonFlip())
+#else
+    if (GetConfirmButtonFlip())
+#endif
+        confirm = controller[CONT_P1].keyB.press;
+
+    if (controller[CONT_P1].keyStart.press || confirm) {
         sceneInfo.activeCategory = devMenu.listPos;
         sceneInfo.listPos        = devMenu.option + list->sceneOffsetStart;
         sceneInfo.state          = ENGINESTATE_LOAD;
@@ -597,7 +621,7 @@ void DevMenu_Options()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "OPTIONS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("OPTIONS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
@@ -613,16 +637,16 @@ void DevMenu_Options()
 #endif
     optionColours[devMenu.option] = 0xF0F0F0;
 
-    DrawDevText(currentScreen->center.x, "Video Settings", dy, ALIGN_CENTER, optionColours[0]);
+    DrawDevText("Video Settings", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[0]);
     dy += 12;
-    DrawDevText(currentScreen->center.x, "Audio Settings", dy, ALIGN_CENTER, optionColours[1]);
+    DrawDevText("Audio Settings", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[1]);
     dy += 12;
-    DrawDevText(currentScreen->center.x, "Configure Input", dy, ALIGN_CENTER, optionColours[2]);
+    DrawDevText("Configure Input", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[2]);
 #if RETRO_REV02
     dy += 12;
-    DrawDevText(currentScreen->center.x, "Debug Flags", dy, ALIGN_CENTER, optionColours[3]);
+    DrawDevText("Debug Flags", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[3]);
 #endif
-    DrawDevText(currentScreen->center.x, "Back", dy + 12, ALIGN_CENTER, optionColours[optionCount - 1]);
+    DrawDevText("Back", currentScreen->center.x, dy + 12, ALIGN_CENTER, optionColours[optionCount - 1]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -666,7 +690,15 @@ void DevMenu_Options()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+    bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+    if (userCore->GetConfirmButtonFlip())
+#else
+    if (GetConfirmButtonFlip())
+#endif
+        confirm = controller[CONT_P1].keyB.press;
+
+    if (controller[CONT_P1].keyStart.press || confirm) {
         switch (devMenu.option) {
             case 0: {
                 devMenu.windowed = !engine.isWindowed;
@@ -718,7 +750,7 @@ void DevMenu_VideoOptions()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "VIDEO SETTINGS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("VIDEO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
@@ -731,7 +763,7 @@ void DevMenu_VideoOptions()
     optionColours[5]              = 0x808090;
     optionColours[devMenu.option] = 0xF0F0F0;
 
-    DrawDevText(currentScreen->center.x - 96, "Window Size:", dy, 0, optionColours[0]);
+    DrawDevText("Window Size:", currentScreen->center.x - 96, dy, 0, optionColours[0]);
 
     const char *winScale = "unknown";
     switch (devMenu.winScale) {
@@ -741,9 +773,9 @@ void DevMenu_VideoOptions()
         case 3: winScale = "4x"; break;
         default: break;
     }
-    DrawDevText(currentScreen->center.x + 80, winScale, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(winScale, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
     dy += 8;
-    DrawDevText(currentScreen->center.x - 96, "Window Aspect:", dy, 0, optionColours[1]);
+    DrawDevText("Window Aspect:", currentScreen->center.x - 96, dy, 0, optionColours[1]);
 
     const char *winAspect = "unknown";
     switch (devMenu.winAspect) {
@@ -754,19 +786,19 @@ void DevMenu_VideoOptions()
         case 4: winAspect = "16:9"; break;
         default: break;
     }
-    DrawDevText(currentScreen->center.x + 80, winAspect, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(winAspect, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
     dy += 8;
-    DrawDevText(currentScreen->center.x - 96, "Fullscreen:", dy, 0, optionColours[2]);
+    DrawDevText("Fullscreen:", currentScreen->center.x - 96, dy, 0, optionColours[2]);
     const char *fsOpt = "NO";
     if (devMenu.windowed != 1)
         fsOpt = "YES";
-    DrawDevText(currentScreen->center.x + 80, fsOpt, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText(fsOpt, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
     dy += 8;
-    DrawDevText(currentScreen->center.x - 96, "Screen Shader:", dy, ALIGN_LEFT, optionColours[3]);
-    DrawDevText(currentScreen->center.x + 80, shaderList[engine.shaderID].name, dy, ALIGN_CENTER, 0xF0F080);
+    DrawDevText("Screen Shader:", currentScreen->center.x - 96, dy, ALIGN_LEFT, optionColours[3]);
+    DrawDevText(shaderList[engine.shaderID].name, currentScreen->center.x + 80, dy, ALIGN_CENTER, 0xF0F080);
     dy += 16;
-    DrawDevText(currentScreen->center.x, "Confirm", dy, ALIGN_CENTER, optionColours[4]);
-    DrawDevText(currentScreen->center.x, "Cancel", dy + 8, ALIGN_CENTER, optionColours[5]);
+    DrawDevText("Confirm", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[4]);
+    DrawDevText("Cancel", currentScreen->center.x, dy + 8, ALIGN_CENTER, optionColours[5]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -862,9 +894,18 @@ void DevMenu_VideoOptions()
             }
             break;
         case 4: // confirm
-            if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+        {
+            bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+            if (userCore->GetConfirmButtonFlip())
+#else
+            if (GetConfirmButtonFlip())
+#endif
+                confirm = controller[CONT_P1].keyB.press;
+
+            if (controller[CONT_P1].keyStart.press || confirm) {
                 // do confirm
-                engine.isWindowed  = !devMenu.windowed;
+                engine.isWindowed    = !devMenu.windowed;
                 shaderList[0].linear = !devMenu.windowed;
                 if (!devMenu.winScale)
                     engine.shaderID = SHADER_NONE;
@@ -889,12 +930,23 @@ void DevMenu_VideoOptions()
                 devMenu.option = 0;
             }
             break;
+        }
         case 5: // cancel
-            if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+        {
+            bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+            if (userCore->GetConfirmButtonFlip())
+#else
+            if (GetConfirmButtonFlip())
+#endif
+                confirm = controller[CONT_P1].keyB.press;
+
+            if (controller[CONT_P1].keyStart.press || confirm) {
                 devMenu.state  = DevMenu_Options;
                 devMenu.option = 0;
             }
             break;
+        }
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -909,7 +961,7 @@ void DevMenu_AudioOptions()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "AUDIO SETTINGS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("AUDIO SETTINGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
@@ -920,23 +972,23 @@ void DevMenu_AudioOptions()
     optionColours[3]              = 0x808090;
     optionColours[devMenu.option] = 0xF0F0F0;
 
-    DrawDevText(currentScreen->center.x - 96, "Streams Enabled:", dy, 0, optionColours[0]);
+    DrawDevText("Streams Enabled:", currentScreen->center.x - 96, dy, 0, optionColours[0]);
 
     const char *strmEnabled = "YES";
     if (!engine.streamsEnabled)
         strmEnabled = "NO";
-    DrawDevText(currentScreen->center.x + 80, strmEnabled, dy, ALIGN_CENTER, 15790208);
+    DrawDevText(strmEnabled, currentScreen->center.x + 80, dy, ALIGN_CENTER, 15790208);
     dy += 16;
 
-    DrawDevText(currentScreen->center.x - 96, "Streams Vol:", dy, 0, optionColours[1]);
+    DrawDevText("Streams Vol:", currentScreen->center.x - 96, dy, 0, optionColours[1]);
     DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0, 255, INK_NONE, true);
     DrawRectangle(currentScreen->center.x + 9, dy + 1, (int)(engine.streamVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
     dy += 16;
 
-    DrawDevText(currentScreen->center.x - 96, "SoundFX Vol:", dy, 0, optionColours[2]);
+    DrawDevText("SoundFX Vol:", currentScreen->center.x - 96, dy, 0, optionColours[2]);
     DrawRectangle(currentScreen->center.x + 8, dy, 112, 8, 0, 255, INK_NONE, true);
     DrawRectangle(currentScreen->center.x + 9, dy + 1, (int)(engine.soundFXVolume * 110.0), 6, 0xF0F0F0, 255, INK_NONE, true);
-    DrawDevText(currentScreen->center.x, "Back", dy + 16, ALIGN_CENTER, optionColours[3]);
+    DrawDevText("Back", currentScreen->center.x, dy + 16, ALIGN_CENTER, optionColours[3]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -1019,12 +1071,21 @@ void DevMenu_AudioOptions()
                 }
             }
             break;
-        case 3:
-            if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+        case 3: {
+            bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+            if (userCore->GetConfirmButtonFlip())
+#else
+            if (GetConfirmButtonFlip())
+#endif
+                confirm = controller[CONT_P1].keyB.press;
+
+            if (controller[CONT_P1].keyStart.press || confirm) {
                 devMenu.state  = DevMenu_Options;
                 devMenu.option = 1;
             }
             break;
+        }
     }
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -1039,7 +1100,7 @@ void DevMenu_InputOptions()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "CONFIGURE INPUT", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("CONFIGURE INPUT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
@@ -1051,14 +1112,14 @@ void DevMenu_InputOptions()
     optionColours[4]              = 0x808090;
     optionColours[devMenu.option] = 0xF0F0F0;
 
-    DrawDevText(currentScreen->center.x, "Set Keys For Input 1", dy, ALIGN_CENTER, optionColours[0]);
+    DrawDevText("Set Keys For Input 1", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[0]);
     dy += 10;
-    DrawDevText(currentScreen->center.x, "Set Keys For Input 2", dy, ALIGN_CENTER, optionColours[1]);
+    DrawDevText("Set Keys For Input 2", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[1]);
     dy += 10;
-    DrawDevText(currentScreen->center.x, "Set Keys For Input 3", dy, ALIGN_CENTER, optionColours[2]);
+    DrawDevText("Set Keys For Input 3", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[2]);
     dy += 10;
-    DrawDevText(currentScreen->center.x, "Set Keys For Input 4", dy, ALIGN_CENTER, optionColours[3]);
-    DrawDevText(currentScreen->center.x, "Back", dy + 18, ALIGN_CENTER, optionColours[4]);
+    DrawDevText("Set Keys For Input 4", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[3]);
+    DrawDevText("Back", currentScreen->center.x, dy + 18, ALIGN_CENTER, optionColours[4]);
 
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
@@ -1102,7 +1163,15 @@ void DevMenu_InputOptions()
         devMenu.timer = (devMenu.timer + 1) & 7;
     }
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
+    bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+    if (userCore->GetConfirmButtonFlip())
+#else
+    if (GetConfirmButtonFlip())
+#endif
+        confirm = controller[CONT_P1].keyB.press;
+
+    if (controller[CONT_P1].keyStart.press || confirm) {
         if (devMenu.option == 4) {
             devMenu.state  = DevMenu_Options;
             devMenu.option = 3;
@@ -1130,91 +1199,91 @@ void DevMenu_MappingsOptions()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "SET KEY BINDING", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("SET KEY BINDING", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     dy += 44;
     DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
 
     int controllerID     = devMenu.option + 1;
     switch (devMenu.scroll) {
         case 0:
-            DrawDevText(currentScreen->center.x, "Press Key For UP", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For UP", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyUp.keyMap != -1) {
                 controller[controllerID].keyDown.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 1:
-            DrawDevText(currentScreen->center.x, "Press Key For DOWN", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For DOWN", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyDown.keyMap != -1) {
                 controller[controllerID].keyLeft.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 2:
-            DrawDevText(currentScreen->center.x, "Press Key For LEFT", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For LEFT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyLeft.keyMap != -1) {
                 controller[controllerID].keyRight.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 3:
-            DrawDevText(currentScreen->center.x, "Press Key For RIGHT", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For RIGHT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyRight.keyMap != -1) {
                 controller[controllerID].keyA.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 4:
-            DrawDevText(currentScreen->center.x, "Press Key For BUTTON A", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For BUTTON A", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyA.keyMap != -1) {
                 controller[controllerID].keyB.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 5:
-            DrawDevText(currentScreen->center.x, "Press Key For BUTTON B", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For BUTTON B", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyB.keyMap != -1) {
                 controller[controllerID].keyC.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 6:
-            DrawDevText(currentScreen->center.x, "Press Key For BUTTON C", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For BUTTON C", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyC.keyMap != -1) {
                 controller[controllerID].keyX.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 7:
-            DrawDevText(currentScreen->center.x, "Press Key For BUTTON X", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For BUTTON X", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyX.keyMap != -1) {
                 controller[controllerID].keyY.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 8:
-            DrawDevText(currentScreen->center.x, "Press Key For BUTTON Y", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For BUTTON Y", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyY.keyMap != -1) {
                 controller[controllerID].keyZ.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 9:
-            DrawDevText(currentScreen->center.x, "Press Key For BUTTON Z", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For BUTTON Z", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyZ.keyMap != -1) {
                 controller[controllerID].keyStart.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 10:
-            DrawDevText(currentScreen->center.x, "Press Key For START", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For START", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keyStart.keyMap != -1) {
                 controller[controllerID].keySelect.keyMap = -1;
                 ++devMenu.scroll;
             }
             break;
         case 11:
-            DrawDevText(currentScreen->center.x, "Press Key For SELECT", dy, ALIGN_CENTER, 0xF0F080);
+            DrawDevText("Press Key For SELECT", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F080);
             if (controller[controllerID].keySelect.keyMap != -1)
                 devMenu.state = DevMenu_InputOptions;
             break;
@@ -1234,7 +1303,7 @@ void DevMenu_DebugOptions()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "CONFIGURE DEBUG FLAGS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("CONFIGURE DEBUG FLAGS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     dy += 40;
     DrawRectangle(currentScreen->center.x - 128, dy - 4, 256, 72, 128, 255, INK_NONE, true);
     uint optionColours[8];
@@ -1252,20 +1321,24 @@ void DevMenu_DebugOptions()
     DevMenu_HandleTouchControls();
 #endif
 
-    bool32 confirm = controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press;
+    bool32 confirm = controller[CONT_P1].keyA.press;
+    if (userCore->GetConfirmButtonFlip())
+        confirm = controller[CONT_P1].keyB.press;
+
+    confirm |= controller[CONT_P1].keyStart.press;
 
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < debugValCnt) {
             DebugValueInfo *val = &debugValues[devMenu.scroll + i];
-            DrawDevText(currentScreen->center.x - 96, val->name, dy, ALIGN_LEFT, optionColours[i]);
+            DrawDevText(val->name, currentScreen->center.x - 96, dy, ALIGN_LEFT, optionColours[i]);
             if (!val->value) {
-                DrawDevText(currentScreen->center.x + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080);
+                DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080);
             }
             else {
                 char valBuf[0x10];
                 strcpy(valBuf, "--------");
                 switch (val->valByteCnt) {
-                    default: DrawDevText(currentScreen->center.x + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
+                    default: DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
                     case sizeof(sbyte): {
                         sbyte *v = (sbyte *)val->value;
                         if (val->type == 2) {
@@ -1357,12 +1430,12 @@ void DevMenu_DebugOptions()
                         }
                     }
                 }
-                DrawDevText(currentScreen->center.x + 96, valBuf, dy, ALIGN_CENTER, optionColours[i]);
+                DrawDevText(valBuf, currentScreen->center.x + 96, dy, ALIGN_CENTER, optionColours[i]);
             }
             dy += 8;
         }
         else {
-            DrawDevText(currentScreen->center.x, "Back", dy, ALIGN_CENTER, optionColours[i]);
+            DrawDevText("Back", currentScreen->center.x, dy, ALIGN_CENTER, optionColours[i]);
         }
     }
 
@@ -1439,7 +1512,7 @@ void DevMenu_DebugOptions()
     if (devMenu.option < debugValCnt) {
         DebugValueInfo *val = &debugValues[devMenu.option];
         switch (val->valByteCnt) {
-            default: DrawDevText(currentScreen->center.x + 96, "--------", dy, ALIGN_RIGHT, 0xF0F080); break;
+            default: DrawDevText("--------", currentScreen->center.x + 96, dy, ALIGN_RIGHT, 0xF0F080); break;
             case sizeof(sbyte): {
                 sbyte *v = (sbyte *)val->value;
                 if (controller[CONT_P1].keyLeft.press) {
@@ -1539,7 +1612,7 @@ void DevMenu_Mods()
     int dy = currentScreen->center.y;
     DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
     dy -= 68;
-    DrawDevText(currentScreen->center.x, "MANAGE MODS", dy, ALIGN_CENTER, 0xF0F0F0);
+    DrawDevText("MANAGE MODS", currentScreen->center.x, dy, ALIGN_CENTER, 0xF0F0F0);
     DrawRectangle(currentScreen->center.x - 128, dy + 36, 256, 72, 128, 255, INK_NONE, true);
 
     uint optionColours[8];
@@ -1556,8 +1629,8 @@ void DevMenu_Mods()
     int y               = dy + 40;
     for (int i = 0; i < 8; ++i) {
         if (devMenu.scroll + i < modList.size()) {
-            DrawDevText(currentScreen->center.x - 96, modList[(devMenu.scroll + i)].name.c_str(), y, ALIGN_LEFT, optionColours[i]);
-            DrawDevText(currentScreen->center.x + 96, modList[(devMenu.scroll + i)].active ? "Y" : "N", y, ALIGN_RIGHT, optionColours[i]);
+            DrawDevText(modList[(devMenu.scroll + i)].name.c_str(), currentScreen->center.x - 96, y, ALIGN_LEFT, optionColours[i]);
+            DrawDevText(modList[(devMenu.scroll + i)].active ? "Y" : "N", currentScreen->center.x + 96, y, ALIGN_RIGHT, optionColours[i]);
             y += 8;
             devMenu.scroll = devMenu.scroll;
         }
@@ -1637,8 +1710,15 @@ void DevMenu_Mods()
             devMenu.scroll = devMenu.option;
         }
     }
+    bool32 confirm = controller[CONT_P1].keyA.press;
+#if RETRO_REV02
+    if (userCore->GetConfirmButtonFlip())
+#else
+    if (GetConfirmButtonFlip())
+#endif
+        confirm = controller[CONT_P1].keyB.press;
 
-    if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press || controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
+    if (controller[CONT_P1].keyStart.press || confirm || controller[CONT_P1].keyLeft.press || controller[CONT_P1].keyRight.press) {
         modList[devMenu.option].active ^= true;
         devMenu.modsChanged = true;
     }

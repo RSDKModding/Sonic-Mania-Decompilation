@@ -416,7 +416,7 @@ void UpdateDeviceInput(InputDevice *device)
     int buttonMap[] = {
         SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
         SDL_CONTROLLER_BUTTON_A,       SDL_CONTROLLER_BUTTON_B,         SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_X,
-        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_GUIDE,
+        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_BACK,
     };
 
     bool32 confirmPress = false;
@@ -484,6 +484,11 @@ void UpdateDeviceInput(InputDevice *device)
         analogStates[0][KEY_RIGHT]++;
     }
 
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSTICK)) {
+        device->anyPress |= true;
+        analogStates[0][KEY_A]++;
+    }
+
     if (vDeltaR > stickR[CONT_ANY].deadzone) {
         device->anyPress |= true;
         analogStates[1][KEY_UP]++;
@@ -504,7 +509,13 @@ void UpdateDeviceInput(InputDevice *device)
         analogStates[1][KEY_RIGHT]++;
     }
 
-    if (deltaTriggerL < -triggerL[CONT_ANY].deadzone) {
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) {
+        device->anyPress |= true;
+        analogStates[1][KEY_A]++;
+    }
+
+
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) {
         device->anyPress |= true;
         analogStates[0][KEY_X]++;
     }
@@ -514,7 +525,7 @@ void UpdateDeviceInput(InputDevice *device)
         analogStates[0][KEY_Y]++;
     }
 
-    if (deltaTriggerR < -triggerR[CONT_ANY].deadzone) {
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) {
         device->anyPress |= true;
         analogStates[1][KEY_X]++;
     }
@@ -602,7 +613,7 @@ void ProcessDeviceInput(InputDevice *device, int32 controllerID)
     int buttonMap[] = {
         SDL_CONTROLLER_BUTTON_DPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
         SDL_CONTROLLER_BUTTON_A,       SDL_CONTROLLER_BUTTON_B,         SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_X,
-        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_GUIDE,
+        SDL_CONTROLLER_BUTTON_Y,       SDL_CONTROLLER_BUTTON_INVALID,   SDL_CONTROLLER_BUTTON_START,     SDL_CONTROLLER_BUTTON_BACK,
     };
 
     for (int i = 0; i < KEY_MAX; ++i) {
@@ -682,6 +693,11 @@ void ProcessDeviceInput(InputDevice *device, int32 controllerID)
     else
         stickL[controllerID].keyRight.setReleased();
 
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSTICK))
+        stickL[controllerID].keyStick.setHeld();
+    else
+        stickL[controllerID].keyStick.setReleased();
+
     if (stickR[controllerID].vDelta > stickR[controllerID].deadzone)
         stickR[controllerID].keyUp.setHeld();
     else
@@ -702,25 +718,30 @@ void ProcessDeviceInput(InputDevice *device, int32 controllerID)
     else
         stickR[controllerID].keyRight.setReleased();
 
-    if (triggerL[controllerID].delta < -triggerL[controllerID].deadzone)
-        triggerL[controllerID].keyL.setHeld();
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSTICK))
+        stickR[controllerID].keyStick.setHeld();
     else
-        triggerL[controllerID].keyL.setReleased();
+        stickR[controllerID].keyStick.setReleased();
+
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
+        triggerL[controllerID].keyBumper.setHeld();
+    else
+        triggerL[controllerID].keyBumper.setReleased();
 
     if (triggerL[controllerID].delta > triggerL[controllerID].deadzone)
-        triggerL[controllerID].keyR.setHeld();
+        triggerL[controllerID].keyTrigger.setHeld();
     else
-        triggerL[controllerID].keyR.setReleased();
+        triggerL[controllerID].keyTrigger.setReleased();
 
-    if (triggerR[controllerID].delta < -triggerR[controllerID].deadzone)
-        triggerR[controllerID].keyL.setHeld();
+    if (getControllerButton(device, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
+        triggerR[controllerID].keyBumper.setHeld();
     else
-        triggerR[controllerID].keyL.setReleased();
+        triggerR[controllerID].keyBumper.setReleased();
 
     if (triggerR[controllerID].delta > triggerR[controllerID].deadzone)
-        triggerR[controllerID].keyR.setHeld();
+        triggerR[controllerID].keyTrigger.setHeld();
     else
-        triggerR[controllerID].keyR.setReleased();
+        triggerR[controllerID].keyTrigger.setReleased();
 #endif
 }
 
@@ -839,10 +860,10 @@ void ClearInput()
         stickR[i].keyLeft.press       = false;
         stickR[i].keyRight.press      = false;
         stickR[i].keyStick.press      = false;
-        triggerL[i].keyL.press        = false;
-        triggerL[i].keyR.press        = false;
-        triggerR[i].keyL.press        = false;
-        triggerR[i].keyR.press        = false;
+        triggerL[i].keyBumper.press        = false;
+        triggerL[i].keyTrigger.press        = false;
+        triggerR[i].keyBumper.press        = false;
+        triggerR[i].keyTrigger.press        = false;
     }
 }
 
@@ -897,8 +918,8 @@ void ProcessInput()
     InputState *anyLStick[] = { &stickL[0].keyUp, &stickL[0].keyDown, &stickL[0].keyLeft, &stickL[0].keyRight, &stickL[0].keyStick };
     InputState *anyRStick[] = { &stickR[0].keyUp, &stickR[0].keyDown, &stickR[0].keyLeft, &stickR[0].keyRight, &stickR[0].keyStick };
 
-    InputState *anyLTrigger[] = { &triggerL[0].keyL, &triggerL[0].keyR };
-    InputState *anyRTrigger[] = { &triggerR[0].keyL, &triggerR[0].keyR };
+    InputState *anyLTrigger[] = { &triggerL[0].keyBumper, &triggerL[0].keyTrigger };
+    InputState *anyRTrigger[] = { &triggerR[0].keyBumper, &triggerR[0].keyTrigger };
 
     for (int i = 0; i < 12; ++i) {
         anyController[i]->press = buttonStates[i] && !prevButtonStates[i];
@@ -930,8 +951,8 @@ void ProcessInput()
         InputState *lStick[] = { &stickL[c].keyUp, &stickL[c].keyDown, &stickL[c].keyLeft, &stickL[c].keyRight, &stickL[c].keyStick };
         InputState *rStick[] = { &stickR[c].keyUp, &stickR[c].keyDown, &stickR[c].keyLeft, &stickR[c].keyRight, &stickR[c].keyStick };
 
-        InputState *lTrigger[] = { &triggerL[c].keyL, &triggerL[c].keyR };
-        InputState *rTrigger[] = { &triggerR[c].keyL, &triggerR[c].keyR };
+        InputState *lTrigger[] = { &triggerL[c].keyBumper, &triggerL[c].keyTrigger };
+        InputState *rTrigger[] = { &triggerR[c].keyBumper, &triggerR[c].keyTrigger };
 
         for (int i = 0; i < 12; ++i) {
             anyController[i]->press |= cont[i]->press;
@@ -1032,5 +1053,16 @@ int32 GetControllerType(int32 inputID)
         }
     }
 
-    return GetDefaultGamepadType();
+#if RETRO_REV02
+    return userCore->GetDefaultGamepadType();
+#else
+    int32 platform = gameVerInfo.platform = PLATFORM_SWITCH;
+
+    switch (platform) {
+        case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);
+        case PLATFORM_PC:
+        case PLATFORM_DEV:
+        default: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (0 << 0); break;
+    }
+#endif
 }

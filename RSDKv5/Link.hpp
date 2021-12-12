@@ -22,38 +22,6 @@ extern APITableEntry APIFunctionTable[APITABLE_COUNT];
 extern int32 APIFunctionTableCount;
 #endif
 
-#if RETRO_REV02
-struct SKUInfo {
-    int32 platform;
-    int32 language;
-    int32 region;
-};
-
-struct UnknownInfo {
-    int32 unknown1;
-    int32 unknown2;
-    int32 unknown3;
-    int32 unknown4;
-    bool32 pausePress;
-    int32 unknown5;
-    int32 unknown6;
-    int32 unknown7;
-    int32 unknown8;
-    int32 unknown9;
-    bool32 anyPress;
-    int32 unknown10;
-};
-
-extern SKUInfo curSKU;
-extern UnknownInfo unknownInfo;
-
-#define Unknown_pausePress UnknownInfo->pausePress
-#define Unknown_anyPress   UnknownInfo->anyPress
-#else
-#define Unknown_pausePress TouchInfo->pausePress
-#define Unknown_anyPress   TouchInfo->anyPress
-#endif
-
 struct GameVersionInfo {
     char gameName[0x40];
     char gameSubName[0x100];

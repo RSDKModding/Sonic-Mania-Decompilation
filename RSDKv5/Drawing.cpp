@@ -337,7 +337,8 @@ void ReleaseRenderDevice()
         // if (screens[s].frameBuffer)
         //  delete[] screens[s].frameBuffer;
 #if RETRO_USING_SDL2
-        SDL_DestroyTexture(engine.screenBuffer[s]);
+        if (engine.screenBuffer[s])
+            SDL_DestroyTexture(engine.screenBuffer[s]);
         engine.screenBuffer[s] = NULL;
 #endif
     }
@@ -355,8 +356,10 @@ void ReleaseRenderDevice()
         free(engine.displays);
     engine.displays = NULL;
 
-    SDL_DestroyRenderer(engine.renderer);
-    SDL_DestroyWindow(engine.window);
+    if (engine.renderer)
+        SDL_DestroyRenderer(engine.renderer);
+    if (engine.window)
+        SDL_DestroyWindow(engine.window);
 #endif
 }
 
@@ -4198,7 +4201,7 @@ void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFr
         }
     }
 }
-void DrawDevText(int x, const char *text, int y, int align, uint colour)
+void DrawDevText(const char *text, int x, int y, int align, uint colour)
 {
     int length      = 0;
     ushort colour16 = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];

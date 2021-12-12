@@ -364,7 +364,7 @@ void CPZBoss_State_PlayerWin(void)
             foreach_active(TippingPlatform, platform)
             {
                 if (platform->bossID == 2) {
-                    platform->state         = TippingPlatform_Unknown1;
+                    platform->state         = TippingPlatform_State_Tipping_Boss;
                     platform->timer = 120;
                 }
             }
@@ -411,7 +411,7 @@ void CPZBoss_State_HandleBossMatchFinish(void)
             foreach_active(TippingPlatform, platform)
             {
                 if (platform->bossID == 1) {
-                    platform->state         = TippingPlatform_Unknown1;
+                    platform->state         = TippingPlatform_State_Tipping_Boss;
                     platform->timer = 120;
                 }
             }

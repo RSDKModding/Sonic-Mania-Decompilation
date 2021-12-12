@@ -3,10 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TRANSPORTTUBE_CHANGEDIR,
+    TRANSPORTTUBE_ENTRY,
+    TRANSPORTTUBE_TOTARGET_NEXT,
+    TRANSPORTTUBE_TOTARGET_PREV,
+    TRANSPORTTUBE_TOTARGET_NODE,
+    TRANSPORTTUBE_CHOOSEDIR,
+    TRANSPORTTUBE_EXIT,
+}TransportTubeTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4[4];
+    int32 nextSlot[4];
     uint16 aniFrames;
     uint16 sfxTravel;
 } ObjectTransportTube;
@@ -43,13 +53,13 @@ void TransportTube_Serialize(void);
 
 // Extra Entity Functions
 void TransportTube_SetupDirections(EntityTransportTube *entity);
-void TransportTube_Unknown2(int32 velX, int32 velY);
+void TransportTube_HandleVelocityChange(int32 velX, int32 velY);
 
-void TransportTube_State_Type0(void);
-void TransportTube_State_Type1(void);
-void TransportTube_State_Type23(void);
-void TransportTube_State_Type4(void);
-void TransportTube_State_Type5(void);
-void TransportTube_State_Type6(void);
+void TransportTube_State_ChangeDir(void);
+void TransportTube_State_Entry(void);
+void TransportTube_State_ToTargetEntity(void);
+void TransportTube_State_TargetSeqNode(void);
+void TransportTube_State_ChooseDir(void);
+void TransportTube_State_Exit(void);
 
 #endif //!OBJ_TRANSPORTTUBE_H

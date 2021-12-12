@@ -7,7 +7,7 @@ std::vector<LeaderboardInfo> leaderboardList;
 // End custom leaderboard code
 
 #if RETRO_REV02
-DummyLeaderboards *leaderboards = NULL;
+UserLeaderboards *leaderboards = NULL;
 
 void FillDummyLeaderboardEntries()
 {
@@ -41,7 +41,7 @@ void FillDummyLeaderboardEntries()
         entry->score      = (4 * entry->globalRank + 2400) % 59999;
         entry->isUser     = leaderboards->isUser && entry->globalRank == leaderboards->userRank;
         if (entry->isUser) {
-            GetUserName(&entry->username);
+            GetUsername(&entry->username);
         }
         else {
             SetText(&entry->username, (char *)"", 0);
@@ -50,7 +50,7 @@ void FillDummyLeaderboardEntries()
         SetText(&entry->userID, (char *)"DUMMY_USER_ID", 0);
     }
 }
-void FetchLeaderboard(const char *name, bool32 isUser)
+void DummyLeaderboards::FetchLeaderboard(const char *name, bool32 isUser)
 {
     if (leaderboards->status == STATUS_CONTINUE) {
         std::string str = __FILE__;
@@ -65,10 +65,11 @@ void FetchLeaderboard(const char *name, bool32 isUser)
             leaderboards->userRank = rand() % 9999 + 1;
 
         leaderboards->status   = STATUS_CONTINUE;
-        leaderboards->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
+
+        API_TypeOf(leaderboards, DummyLeaderboards)->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
 }
-void TrackScore(const char *name, int score, void (*callback)(bool32 success, int rank))
+void DummyLeaderboards::TrackScore(const char *name, int32 score, void (*callback)(bool32 success, int32 rank))
 {
     int id = -1;
     for (int i = 0; i < leaderboardList.size(); ++i) {
@@ -96,8 +97,8 @@ void TrackScore(const char *name, int score, void (*callback)(bool32 success, in
     PrintLog(PRINT_NORMAL, str.c_str());
 
     if (callback) {
-        leaderboards->trackRank = rand() % 61 + 30;
-        leaderboards->trackCB   = callback;
+        API_TypeOf(leaderboards, DummyLeaderboards)->trackRank = rand() % 61 + 30;
+        API_TypeOf(leaderboards, DummyLeaderboards)->trackCB   = callback;
     }
 }
 Vector2 LeaderboardEntryLength()

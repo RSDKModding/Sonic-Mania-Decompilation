@@ -435,6 +435,7 @@ int32 APICallback_GetStorageStatus(void)
             status = APICallback->storageStatus;
         }
     }
+
     if (!APICallback->saveStatus) {
         if (status == STATUS_ERROR) {
             APICallback->saveStatus = STATUS_ERROR;
