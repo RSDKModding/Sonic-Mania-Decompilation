@@ -252,7 +252,7 @@ struct RetroEngine {
 
     bool32 hasPlus     = true;  // are sonic mania plus features enabled?
     bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
-    bool32 XYFlip = false; // swaps X/Y, used for nintendo and etc controllers
+    bool32 XYFlip      = false; // swaps X/Y, used for nintendo and etc controllers
 
     bool32 running   = false;
     uint8 focusState = 0;

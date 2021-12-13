@@ -3,7 +3,7 @@
 FileInfo videoFile;
 
 THEORAPLAY_Decoder *videoDecoder;
-const THEORAPLAY_VideoFrame *videoVidData;
+const THEORAPLAY_VideoFrame *videoFrameData;
 THEORAPLAY_Io callbacks;
 
 bool32 videoPlaying = false;
@@ -56,23 +56,23 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
             CloseFile(&videoFile);
             return;
         }
-        while (!videoVidData) {
-            if (!videoVidData)
-                videoVidData = THEORAPLAY_getVideo(videoDecoder);
+        while (!videoFrameData) {
+            if (!videoFrameData)
+                videoFrameData = THEORAPLAY_getVideo(videoDecoder);
         }
-        if (!videoVidData) {
+        if (!videoFrameData) {
             PrintLog(PRINT_NORMAL, "Video Error!");
             CloseFile(&videoFile);
             return;
         }
 
-        videoWidth  = videoVidData->width;
-        videoHeight = videoVidData->height;
+        videoWidth  = videoFrameData->width;
+        videoHeight = videoFrameData->height;
         videoAR = float(videoWidth) / float(videoHeight);
 
         SetupVideoBuffer(videoWidth, videoHeight);
         vidBaseticks = SDL_GetTicks();
-        vidFrameMS   = (videoVidData->fps == 0.0) ? 0 : ((Uint32)(1000.0 / videoVidData->fps));
+        vidFrameMS   = (videoFrameData->fps == 0.0) ? 0 : ((Uint32)(1000.0 / videoFrameData->fps));
         videoPlaying = true;
 
         engine.displayTime = 0.0;
@@ -112,50 +112,28 @@ int32 ProcessVideo() {
         if (videoPlaying) {
             const Uint32 now = (SDL_GetTicks() - vidBaseticks);
 
-            if (!videoVidData)
-                videoVidData = THEORAPLAY_getVideo(videoDecoder);
+            if (!videoFrameData)
+                videoFrameData = THEORAPLAY_getVideo(videoDecoder);
 
             // Play video frames when it's time.
-            if (videoVidData && (videoVidData->playms <= now)) {
-                if (vidFrameMS && ((now - videoVidData->playms) >= vidFrameMS)) {
+            if (videoFrameData && (videoFrameData->playms <= now)) {
+                //Removed the lagging handler code, so if its lagging the uh oh, but it should make everything else smoother
 
-                    // Skip frames to catch up, but keep track of the last one+
-                    //  in case we catch up to a series of dupe frames, which
-                    //  means we'd have to draw that final frame and then wait for
-                    //  more.
-
-                    const THEORAPLAY_VideoFrame *last = videoVidData;
-                    while ((videoVidData = THEORAPLAY_getVideo(videoDecoder)) != NULL) {
-                        THEORAPLAY_freeVideo(last);
-                        last = videoVidData;
-                        if ((now - videoVidData->playms) < vidFrameMS)
-                            break;
-                    }
-
-                    if (!videoVidData)
-                        videoVidData = last;
-                }
-
-                // do nothing; we're far behind and out of options.
-                if (!videoVidData) {
-                    // video lagging uh oh
-                }
-
-                int half_w     = videoVidData->width / 2;
-                const Uint8 *y = (const Uint8 *)videoVidData->pixels;
-                const Uint8 *u = y + (videoVidData->width * videoVidData->height);
-                const Uint8 *v = u + (half_w * (videoVidData->height / 2));
+                int half_w     = videoFrameData->width / 2;
+                const Uint8 *y = (const Uint8 *)videoFrameData->pixels;
+                const Uint8 *u = y + (videoFrameData->width * videoFrameData->height);
+                const Uint8 *v = u + (half_w * (videoFrameData->height / 2));
 
 #if RETRO_USING_SDL2
-                SDL_UpdateYUVTexture(engine.videoBuffer, NULL, y, videoVidData->width, u, half_w, v, half_w);
+                SDL_UpdateYUVTexture(engine.videoBuffer, NULL, y, videoFrameData->width, u, half_w, v, half_w);
 #endif
 #if RETRO_USING_SDL1
                 uint *videoFrameBuffer = (uint *)Engine.videoBuffer->pixels;
-                memcpy(videoFrameBuffer, videoVidData->pixels, videoVidData->xsize * videoVidData->ysize * sizeof(uint));
+                memcpy(videoFrameBuffer, videoFrameData->pixels, videoFrameData->xsize * videoFrameData->ysize * sizeof(uint));
 #endif
 
-                THEORAPLAY_freeVideo(videoVidData);
-                videoVidData = NULL;
+                THEORAPLAY_freeVideo(videoFrameData);
+                videoFrameData = NULL;
             }
 
             return 2; // its playing as expected
@@ -173,9 +151,9 @@ void StopVideoPlayback()
         // condition that results in invalid memory accesses.
         SDL_LockAudio();
 
-        if (videoVidData) {
-            THEORAPLAY_freeVideo(videoVidData);
-            videoVidData = NULL;
+        if (videoFrameData) {
+            THEORAPLAY_freeVideo(videoFrameData);
+            videoFrameData = NULL;
         }
         if (videoDecoder) {
             THEORAPLAY_stopDecode(videoDecoder);
