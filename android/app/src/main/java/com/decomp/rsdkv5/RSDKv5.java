@@ -16,21 +16,23 @@ public class RSDKv5 extends SDLActivity {
         getBasePath();
     }
 
+    //Idk what the hell "has multi window" is, but I do NOT have multiple windows and therefore DO wanna pause/resume these threads
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            SDLActivity.mCurrentNativeState = SDLActivity.NativeState.PAUSED;
-            SDLActivity.mNextNativeState = SDLActivity.NativeState.RESUMED;
-        } 
-        else {
-            SDLActivity.mCurrentNativeState = SDLActivity.NativeState.RESUMED;
-            SDLActivity.mNextNativeState = SDLActivity.NativeState.PAUSED;
+    protected void onPause() {
+        super.onPause();
+        if (mHasMultiWindow) {
+            pauseNativeThread();
         }
-
-        SDLActivity.handleNativeState();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        if (mHasMultiWindow) {
+            resumeNativeThread();
+        }
+    }
     public String getBasePath() {
         Context c = getApplicationContext();
         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -38,14 +40,5 @@ public class RSDKv5 extends SDLActivity {
         //getExternalStorageDirectory is deprecated. I do not care.
         new File(p).mkdirs();
         return p + "/";
-    }
-
-    public int getFocusState() {
-        switch (mCurrentNativeState)
-            case NativeState.INIT: return 0;
-            case NativeState.RESUMED: return 1;
-            case NativeState.PAUSED: return 2;
-        }
-        return -1;
     }
 }

@@ -2,6 +2,7 @@
 #define USER_ACHIEVEMENTS_H
 
 #include <vector>
+#include <string>
 
 #if RETRO_REV02
 // This is the base struct, it serves as the base for any API-specific stats
@@ -11,7 +12,7 @@ struct UserAchievements {
 
     virtual void FrameInit(void) {}
     virtual void StageLoad(void) {}
-    virtual void InitUnknown2(void) {}
+    virtual void OnUnknownEvent(void) {}
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
     virtual bool32 CheckAchievementsEnabled(void) { return false; }
     virtual void GetAchievementNames(TextInfo *names, int32 count) {}

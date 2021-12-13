@@ -38,7 +38,7 @@ struct DummyLeaderboardsUnknown {
 struct UserLeaderboards {
     virtual void StageLoad(void) {}
     virtual void FrameInit(void) {}
-    virtual void InitUnknown2(void) {}
+    virtual void OnUnknownEvent(void) {}
     virtual int32 unknown4(void) { return 0; }
 #if RETRO_VER_EGS
     virtual int32 unknown6(void) { return 0; }

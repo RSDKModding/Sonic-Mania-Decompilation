@@ -45,10 +45,12 @@ struct UserCore {
     virtual void Shutdown(void) {}
     virtual bool32 CheckAPIInitialized(void) { return true; }
     virtual bool32 CheckFocusLost(void) { return false; }
-    virtual bool32 unknown4(void) { return false; }
+    //I do not know what this is, both PC & Switch vers have it as return false always so
+    virtual bool32 CheckEnginePause(void) { return false; }
     virtual void StageLoad(void);
     virtual void FrameInit(void);
-    virtual void UserInitUnknown2(void);
+    // I do not know what this is, both PC & Switch vers never call it as far as I can see
+    virtual void OnUnknownEvent(void);
     virtual int32 GetUserLanguage(void) { return curSKU.language; }
     virtual int32 GetUserRegion(void) { return curSKU.region; }
     virtual int32 GetUserPlatform(void) { return curSKU.platform; }
@@ -76,6 +78,9 @@ struct UserCore {
 
     int *values[8];
     byte valueCount = 0;
+
+    //Not Original, but I gotta store it somewhere /shrug
+    uint8 focusState = 0;
 };
 
 // This is the "dummy" struct, it serves as the base in the event a suitable API isn't loaded (such as in this decomp)
@@ -112,8 +117,8 @@ struct DummyCore : public UserCore {
     void EpicUnknown6(void) {}
 #endif
 
-    ushort field_25;
-    byte field_27;
+    uint16 field_25;
+    uint8 field_27;
 };
 
 extern DummyCore *dummyCore;

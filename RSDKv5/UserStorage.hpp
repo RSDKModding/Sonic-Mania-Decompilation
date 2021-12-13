@@ -12,7 +12,7 @@
 struct UserStorage {
     virtual void FrameInit(void) {}
     virtual void StageLoad(void) {}
-    virtual void InitUnknown2(void) {}
+    virtual void OnUnknownEvent(void) {}
     virtual int32 TryAuth(void) { return 0; }
     virtual int32 TryInitStorage(void) { return 0; }
     virtual bool32 GetUsername(TextInfo *name) { return false; }

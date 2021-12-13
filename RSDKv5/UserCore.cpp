@@ -333,50 +333,50 @@ DummyCore* InitDummyCore()
 
     return core;
 }
-#endif
 
-#if RETRO_REV02
 void HandleUserStatuses()
 {
-    if (userStorage && userStorage->authStatus == STATUS_CONTINUE) {
-        if (userStorage->authTime)
-            userStorage->authTime--;
-        else
-            userStorage->authStatus = STATUS_OK;
-    }
-
-    if (userStorage && userStorage->storageStatus == STATUS_CONTINUE) {
-        if (userStorage->storageInitTime)
-            userStorage->storageInitTime--;
-        else
-            userStorage->storageStatus = STATUS_OK;
-    }
-
-    if (leaderboards && leaderboards->status == STATUS_CONTINUE) {
-        if (API_TypeOf(leaderboards, DummyLeaderboards)->loadTime) {
-            API_TypeOf(leaderboards, DummyLeaderboards)->loadTime--;
+    if (userStorage) {
+        if (userStorage->authStatus == STATUS_CONTINUE) {
+            if (userStorage->authTime)
+                userStorage->authTime--;
+            else
+                userStorage->authStatus = STATUS_OK;
         }
-        else {
-            leaderboards->status = STATUS_OK;
 
-            if (!leaderboards->isUser) {
-                leaderboards->entryInfo.entryStart  = 1;
-                leaderboards->entryInfo.entryLength = 20;
-                leaderboards->entryInfo.globalRankOffset     = 1;
-                leaderboards->entryInfo.entryCount  = 20;
-            }
-            else {
-                leaderboards->entryInfo.entryStart  = leaderboards->userRank - 10;
-                leaderboards->entryInfo.entryLength = 20;
-                leaderboards->entryInfo.globalRankOffset     = leaderboards->userRank - 10;
-                leaderboards->entryInfo.entryCount  = 20;
-            }
-
-            FillDummyLeaderboardEntries();
+        if (userStorage->storageStatus == STATUS_CONTINUE) {
+            if (userStorage->storageInitTime)
+                userStorage->storageInitTime--;
+            else
+                userStorage->storageStatus = STATUS_OK;
         }
     }
 
     if (leaderboards) {
+        if (leaderboards->status == STATUS_CONTINUE) {
+            if (API_TypeOf(leaderboards, DummyLeaderboards)->loadTime) {
+                API_TypeOf(leaderboards, DummyLeaderboards)->loadTime--;
+            }
+            else {
+                leaderboards->status = STATUS_OK;
+
+                if (!leaderboards->isUser) {
+                    leaderboards->entryInfo.entryStart       = 1;
+                    leaderboards->entryInfo.entryLength      = 20;
+                    leaderboards->entryInfo.globalRankOffset = 1;
+                    leaderboards->entryInfo.entryCount       = 20;
+                }
+                else {
+                    leaderboards->entryInfo.entryStart       = leaderboards->userRank - 10;
+                    leaderboards->entryInfo.entryLength      = 20;
+                    leaderboards->entryInfo.globalRankOffset = leaderboards->userRank - 10;
+                    leaderboards->entryInfo.entryCount       = 20;
+                }
+
+                FillDummyLeaderboardEntries();
+            }
+        }
+
         if (API_TypeOf(leaderboards, DummyLeaderboards)->trackTime != 0) {
             API_TypeOf(leaderboards, DummyLeaderboards)->trackTime--;
         }
@@ -388,12 +388,13 @@ void HandleUserStatuses()
             }
 
             API_TypeOf(leaderboards, DummyLeaderboards)->trackTime = -1;
-            API_TypeOf(leaderboards, DummyLeaderboards)->trackCB = NULL;
+            API_TypeOf(leaderboards, DummyLeaderboards)->trackCB   = NULL;
         }
     }
 }
 #endif
 
+// Found this in Switch 1.00, doesn't seem to show up in rev02 variants but its neat nonetheless
 bool32 GetXYButtonFlip() { return engine.XYFlip; }
 
 #if RETRO_REV02
@@ -418,35 +419,16 @@ void UserCore::FrameInit()
     stats->FrameInit();
     userStorage->FrameInit();
 }
-void UserCore::UserInitUnknown2()
+void UserCore::OnUnknownEvent()
 {
-    achievements->InitUnknown2();
-    leaderboards->InitUnknown2();
-    richPresence->InitUnknown2();
-    stats->InitUnknown2();
-    userStorage->InitUnknown2();
+    achievements->OnUnknownEvent();
+    leaderboards->OnUnknownEvent();
+    richPresence->OnUnknownEvent();
+    stats->OnUnknownEvent();
+    userStorage->OnUnknownEvent();
 }
 
-bool32 DummyCore::CheckFocusLost()
-{
-#if RETRO_PLATFORM == RETRO_ANDROID
-    JNIEnv *env      = (JNIEnv *)SDL_AndroidGetJNIEnv();
-    jobject activity = (jobject)SDL_AndroidGetActivity();
-    jclass cls(env->GetObjectClass(activity));
-    jmethodID method = env->GetMethodID(cls, "getFocusState", "();");
-    auto ret         = env->CallObjectMethod(activity, method);
-
-    env->DeleteLocalRef(activity);
-    env->DeleteLocalRef(cls);
-
-    // 0 = init
-    // 1 = resumed
-    // 2 = paused
-    return ret != 1;
-#else
-    return false;
-#endif
-}
+bool32 DummyCore::CheckFocusLost() { return focusState != 0; }
 
 bool32 DummyCore::GetConfirmButtonFlip()
 {

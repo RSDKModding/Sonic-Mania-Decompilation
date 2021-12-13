@@ -14,7 +14,7 @@ struct StatInfo {
 struct UserStats {
     virtual void StageLoad(void) {}
     virtual void FrameInit(void) {}
-    virtual void InitUnknown2(void) {}
+    virtual void OnUnknownEvent(void) {}
     virtual void TryTrackStat(StatInfo *stat) {}
 
     bool32 enabled;

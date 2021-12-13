@@ -9,7 +9,7 @@ struct UserRichPresence
 {
     virtual void StageLoad(void) {}
     virtual void FrameInit(void) {}
-    virtual void InitUnknown2(void) {}
+    virtual void OnUnknownEvent(void) {}
     virtual void SetPresence(byte id, TextInfo *info) {}
 
     int curID = 0;

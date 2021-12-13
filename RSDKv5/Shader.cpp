@@ -69,14 +69,20 @@ void LoadShader(const char* fileName, bool32 linear) {
     sprintf(shader->name, "%s", fileName);
 
     const char *csoPath = "Dummy"; //nothing will ever be in "Data/Shaders/Dummy" so it works out to never load anthing
+    const char *ext_v   = "bin";
+    const char *ext_f   = "bin";
 #if RETRO_USING_DIRECTX9
     csoPath = "CSO-DX9"; //windows
+    ext_v   = "vso";
+    ext_f   = "fso";
 #endif
 #if RETRO_USING_DIRECTX11
     csoPath = "CSO-DX11"; //xbox one
+    ext_v   = "vso";
+    ext_f   = "fso";
 #endif
 
-    sprintf(buffer, "Data/Shaders/%s/%s.vso", csoPath, fileName);
+    sprintf(buffer, "Data/Shaders/%s/%s.%s", csoPath, fileName, ext_v);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
@@ -100,7 +106,7 @@ void LoadShader(const char* fileName, bool32 linear) {
         fileData = NULL;
     }
 
-    sprintf(buffer, "Data/Shaders/%s/%s.fso", csoPath, fileName);
+    sprintf(buffer, "Data/Shaders/%s/%s.%s", csoPath, fileName, ext_f);
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;

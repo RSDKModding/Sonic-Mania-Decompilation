@@ -38,16 +38,14 @@ bool32 processEvents()
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: return false;
-                    case SDL_WINDOWEVENT_FOCUS_LOST:
-                        // TODO: I know v5 does stuff here
-                        break;
+                    case SDL_WINDOWEVENT_FOCUS_GAINED: userCore->focusState = 0; break;
+                    case SDL_WINDOWEVENT_FOCUS_LOST: userCore->focusState = 1; break;
                 }
                 break;
             case SDL_CONTROLLERDEVICEADDED: controllerInit(engine.sdlEvents.cdevice.which); break;
             case SDL_CONTROLLERDEVICEREMOVED: controllerClose(engine.sdlEvents.cdevice.which); break;
-            case SDL_APP_WILLENTERBACKGROUND:
-                // TODO: I know v5 does stuff here
-                break;
+            case SDL_APP_WILLENTERFOREGROUND: userCore->focusState = 0; break;
+            case SDL_APP_WILLENTERBACKGROUND: userCore->focusState = 1; break;
             case SDL_APP_TERMINATING: return false;
 #endif
 
@@ -241,10 +239,6 @@ bool32 processEvents()
 
 bool32 initRetroEngine()
 {
-#if RETRO_PLATFORM == RETRO_ANDROID
-    sleep(1); // wait to initialize the engine
-#endif
-
     InitStorage();
 
 #if RETRO_PLATFORM == RETRO_OSX
@@ -329,7 +323,7 @@ void runRetroEngine()
 #endif
 
 #if RETRO_REV02
-        if (!userCore->unknown4()) {
+        if (!userCore->CheckEnginePause()) {
             // Focus Checks
             if (userCore->CheckFocusLost()) {
                 if (!(engine.focusState & 1)) {
@@ -590,6 +584,7 @@ void runRetroEngine()
                 // Uncomment this code to add the build number to dev menu
                 // overrides the game subtitle, used in switch dev menu
                 if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
+                    //Switch 1.04 build # is 18403, 1.00 is 17051
                     // char buffer[0x40];
                     // sprintf(buffer, "Build #%d", 18403);
                     // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
