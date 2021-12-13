@@ -362,6 +362,7 @@ void HeavyMystic_State0_Unknown1(void)
     RSDK.ProcessAnimation(&self->animator);
     if (++self->timer >= 8) {
         self->velocity.x = 0x20000;
+        //I'd prolly put a position check here too, its not hard to go into the special stage, then not hit the starpost, doing so causes a softlock
         if (StarPost->postIDs[0])
             HeavyMystic->curtainLinePos = 1;
         self->targetPos.x = self->position.x;
