@@ -1044,7 +1044,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     bool32 loadingSave = false;
     if (self->type) {
         memset(globals->noSaveSlot, 0, 0x400);
-        globals->tempFlags  = false;
+        globals->tempFlags  = 0;
         globals->saveSlotID = NO_SAVE_SLOT;
         globals->gameMode   = MODE_NOSAVE;
         globals->medalMods  = MenuSetup_GetMedalMods();

@@ -43,12 +43,12 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         callbacks.close    = videoClose;
         callbacks.userdata = (void *)&videoFile;
 #if RETRO_USING_SDL2
-        videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 30, THEORAPLAY_VIDFMT_IYUV, 0);
+        videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 60, THEORAPLAY_VIDFMT_IYUV, 0);
 #endif
 
         // TODO: does SDL1.2 support YUV?
 #if RETRO_USING_SDL1
-        videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 30, THEORAPLAY_VIDFMT_RGBA, 0);
+        videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 60, THEORAPLAY_VIDFMT_RGBA, 0);
 #endif
 
         if (!videoDecoder) {
@@ -146,11 +146,6 @@ int32 ProcessVideo() {
 void StopVideoPlayback()
 {
     if (videoPlaying) {
-        // `videoPlaying` and `videoDecoder` are read by
-        // the audio thread, so lock it to prevent a race
-        // condition that results in invalid memory accesses.
-        SDL_LockAudio();
-
         if (videoFrameData) {
             THEORAPLAY_freeVideo(videoFrameData);
             videoFrameData = NULL;
@@ -162,8 +157,6 @@ void StopVideoPlayback()
 
         CloseVideoBuffer();
         videoPlaying = false;
-
-        SDL_UnlockAudio();
 
         engine.shaderID    = engine.prevShaderID;
         sceneInfo.state    = engine.prevEngineMode;

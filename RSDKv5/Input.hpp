@@ -319,17 +319,6 @@ struct InputState {
     bool32 down;
     bool32 press;
     int32 keyMap;
-
-    inline void setHeld()
-    {
-        press = !down;
-        down  = true;
-    }
-    inline void setReleased()
-    {
-        press = false;
-        down  = false;
-    }
 };
 
 struct ControllerState {
@@ -382,7 +371,6 @@ struct TouchMouseData {
 #if RETRO_USING_SDL2
 struct InputManagerInfo {
     int32 mouseHideTimer = 0;
-    bool32 keyPress[PLAYER_COUNT][12];
     bool32 anyPress;
 };
 

@@ -43,7 +43,7 @@ int32 GetAPIValue(uint32 id)
         default: break;
         case 0x3D6BD740: return PLATFORM_DEV; // SYSTEM_PLATFORM
         case 0xD9F55367: return REGION_US;    // SYSTEM_REGION
-        case 0xCC0762D: return LANGUAGE_EN;   // SYSTEM_LANGUAGE
+        case 0x0CC0762D: return LANGUAGE_EN;   // SYSTEM_LANGUAGE
         case 0xA2ACEF21: return false;        // SYSTEM_CONFIRM_FLIP
         case 0x4205582D: return 120;          // SYSTEM_LEADERBOARD_LOAD_TIME
         case 0xDEF3F8B5: return STATUS_OK;    // SYSTEM_LEADERBOARD_STATUS
@@ -60,9 +60,9 @@ int32 GetAPIValue(uint32 id)
 
 void InitUserData()
 {
-    int language = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
-    int region   = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
-    int platform = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
+    int32 language     = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
+    int32 region       = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
+    int32 platform     = GetAPIValue(GetAPIValueID("SYSTEM_PLATFORM", 0));
     engine.confirmFlip = GetAPIValue(GetAPIValueID("SYSTEM_CONFIRM_FLIP", 0));
 
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_UWP                       \
@@ -450,9 +450,9 @@ void DummyCore::ExitGame() { engine.running = false; }
 int DummyCore::GetDefaultGamepadType()
 {
 #if RETRO_REV02
-    int32 platform = curSKU.platform = PLATFORM_SWITCH;
+    int32 platform = curSKU.platform;
 #else
-    int32 platform = gameVerInfo.platform = PLATFORM_SWITCH;
+    int32 platform = gameVerInfo.platform;
 #endif
 
     switch (platform) {

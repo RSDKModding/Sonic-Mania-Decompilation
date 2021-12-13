@@ -147,6 +147,99 @@ void DASetup_SetupUI(void)
 
 void DASetup_State_ManageControl(void)
 {
+#if RETRO_USE_TOUCH_CONTROLS
+    bool32 up = false, down = false, left = false, right = false, confirm = false, back = false;
+    uint8 dir = -1;
+
+    for (int32 t = 0; t < TouchInfo->count; ++t) {
+        int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+        int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
+
+        if (TouchInfo->down[t]) {
+            if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
+                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
+                tx -= 64;
+                ty -= 192;
+
+                switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
+                    case 0:
+                        ControllerInfo->keyRight.down |= true;
+                        dir = 0;
+                        break;
+                    case 1:
+                        ControllerInfo->keyDown.down |= true;
+                        dir = 1;
+                        break;
+                    case 2:
+                        ControllerInfo->keyLeft.down |= true;
+                        dir = 2;
+                        break;
+                    case 3:
+                        ControllerInfo->keyUp.down |= true;
+                        dir = 3;
+                        break;
+                }
+                break;
+            }
+        }
+    }
+
+    for (int32 t = 0; t < TouchInfo->count; ++t) {
+        int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+        int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
+
+        if (TouchInfo->down[t]) {
+            if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
+                ControllerInfo->keyA.down |= true;
+                break;
+            }
+
+            if (tx >= ScreenInfo->centerX && ty < 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
+                ControllerInfo->keyB.down |= true;
+                break;
+            }
+        }
+    }
+
+    if (dir != DASetup->touchDir && ControllerInfo->keyUp.down)
+        ControllerInfo->keyUp.press |= ControllerInfo->keyUp.down;
+
+    if (dir != DASetup->touchDir && ControllerInfo->keyDown.down)
+        ControllerInfo->keyDown.press |= ControllerInfo->keyDown.down;
+
+    if (dir != DASetup->touchDir && ControllerInfo->keyLeft.down)
+        ControllerInfo->keyLeft.press |= ControllerInfo->keyLeft.down;
+
+    if (dir != DASetup->touchDir && ControllerInfo->keyRight.down)
+        ControllerInfo->keyRight.press |= ControllerInfo->keyRight.down;
+
+    if (!DASetup->touchConfirm) 
+        ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
+    if (!DASetup->touchBack)
+        ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
+
+    DASetup->touchConfirm = ControllerInfo->keyA.down;
+    DASetup->touchBack    = ControllerInfo->keyB.down;
+    DASetup->touchDir     = dir;
+
+    up      = ControllerInfo->keyUp.press;
+    down    = ControllerInfo->keyDown.press;
+    left    = ControllerInfo->keyLeft.press;
+    right   = ControllerInfo->keyRight.press;
+    confirm = ControllerInfo->keyA.press;
+    back    = ControllerInfo->keyB.press;
+
+    int32 prevTrack = DASetup->trackID;
+    if (UIControl->keyRight || right)
+        DASetup->trackID++;
+    else if (UIControl->keyLeft || left)
+        DASetup->trackID--;
+    else if (UIControl->keyUp || up)
+        DASetup->trackID += 10;
+    else if (UIControl->keyDown || down)
+        DASetup->trackID -= 10;
+#else
     int32 prevTrack = DASetup->trackID;
     if (UIControl->keyRight)
         DASetup->trackID++;
@@ -156,6 +249,7 @@ void DASetup_State_ManageControl(void)
         DASetup->trackID += 10;
     else if (UIControl->keyDown)
         DASetup->trackID -= 10;
+#endif
 
     if (DASetup->trackID < 0)
         DASetup->trackID += DASetup->trackCount;
@@ -167,7 +261,11 @@ void DASetup_State_ManageControl(void)
         DASetup_DisplayTrack(DASetup->trackID);
     }
 
+#if RETRO_USE_TOUCH_CONTROLS
+    if (UIControl->keyConfirm || confirm) {
+#else
     if (UIControl->keyConfirm) {
+#endif
         if (DASetup->activeTrack == DASetup->trackID) {
             RSDK.StopChannel(Music->channelID);
             DASetup->activeTrack = -1;
@@ -188,7 +286,11 @@ void DASetup_State_ManageControl(void)
     }
 
     if (!DASetup->flag) {
+#if RETRO_USE_TOUCH_CONTROLS
+        if (UIControl->keyBack || back) {
+#else
         if (UIControl->keyBack) {
+#endif
             DASetup->flag      = true;
             EntityFXFade *fade = (EntityFXFade *)DASetup->fxFade;
             fade->state        = FXFade_State_FadeIn;
