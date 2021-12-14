@@ -1727,7 +1727,7 @@ void Player_HandleDeath(EntityPlayer *player)
         if (globals->gameMode != MODE_ENCORE || (leader->state != Player_State_Die && leader->state != Player_State_Drown)) {
             player->angle            = 0x80;
             player->state            = Player_State_StartJumpIn;
-            player->abilityPtrs[0]   = (Entity *)dust;
+            player->abilityPtrs[0]   = dust;
             player->abilityValues[0] = 0;
             player->nextAirState     = StateMachine_None;
             player->nextGroundState  = StateMachine_None;
@@ -1753,7 +1753,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #else
         player->angle = 0x80;
         player->state = Player_State_StartJumpIn;
-        player->abilityPtrs[0] = (Entity *)dust;
+        player->abilityPtrs[0] = dust;
         player->abilityValues[0] = 0;
         player->nextAirState = StateMachine_None;
         player->nextGroundState = StateMachine_None;
@@ -5300,13 +5300,9 @@ void Player_State_FlyIn(void)
     Entity *parent = self->abilityPtrs[0];
     int32 screenX  = (ScreenInfo->width + ScreenInfo->centerX) << 16;
     int32 screenY  = (ScreenInfo->height + ScreenInfo->centerY) << 16;
-    if (parent->position.x >= player1->position.x - screenX && parent->position.x <= screenX + player1->position.x
-        && parent->position.y >= player1->position.y - screenY && parent->position.y <= player1->position.y + screenY) {
-        // le troll
-    }
-    else {
-        parent->position.x = player1->position.x;
-        parent->position.y = player1->position.y;
+    if (parent->position.x < player1->position.x - screenX || parent->position.x > screenX + player1->position.x
+        || parent->position.y < player1->position.y - screenY || parent->position.y > player1->position.y + screenY) {
+        parent->position   = player1->position;
         parent->position.y = (ScreenInfo->position.y - 128) << 16;
     }
 
@@ -5322,63 +5318,58 @@ void Player_State_FlyIn(void)
 #endif
     }
 
-    int32 xDif = 0;
+    int32 maxDistance = 0;
     if (self->abilityValues[0] || self->characterID == ID_TAILS || self->characterID == ID_KNUCKLES) {
-        int32 xDif3 = Player->curFlyCarryPos.x - parent->position.x;
-        int32 xDif2 = (Player->curFlyCarryPos.x - parent->position.x) >> 4;
-        xDif        = Player->curFlyCarryPos.x - parent->position.x;
+        maxDistance = Player->curFlyCarryPos.x - parent->position.x;
+        int32 distance    = maxDistance >> 4;
 
         if (self->characterID != ID_TAILS && self->characterID != ID_KNUCKLES) {
-            xDif2 = ((Player->curFlyCarryPos.x - parent->position.x) >> 5) + ((Player->curFlyCarryPos.x - parent->position.x) >> 4);
+            distance = ((Player->curFlyCarryPos.x - parent->position.x) >> 5) + ((Player->curFlyCarryPos.x - parent->position.x) >> 4);
         }
 
-        if (parent->position.x > Player->curFlyCarryPos.x - 0x40000) {
-            if (parent->position.x >= Player->curFlyCarryPos.x + 0x40000) {
-                self->direction = FLIP_X;
-                if (xDif2 < -0xC0000)
-                    xDif2 = -0xC0000;
-                if (player1->velocity.x < 0)
-                    xDif2 += player1->velocity.x;
-                xDif2 -= 0x10000;
-                if (xDif2 < xDif3) {
-                    xDif2 = xDif3;
-                    xDif  = 0;
-                }
-            }
-        }
-        else {
-            self->direction = FLIP_NONE;
-            if (xDif2 > 0xC0000)
-                xDif2 = 0xC0000;
+        if (parent->position.x >= Player->curFlyCarryPos.x + 0x40000) {
+            self->direction = FLIP_X;
+            if (distance < -0xC0000)
+                distance = -0xC0000;
             if (player1->velocity.x < 0)
-                xDif2 += player1->velocity.x;
-            xDif2 += 0x10000;
-            if (xDif2 > xDif3) {
-                xDif2 = xDif3;
-                xDif  = 0;
+                distance += player1->velocity.x;
+            distance -= 0x10000;
+            if (distance < maxDistance) {
+                distance      = maxDistance;
+                maxDistance = 0;
             }
         }
-        parent->position.x += xDif2;
+        else if (parent->position.x <= Player->curFlyCarryPos.x - 0x40000) {
+            self->direction = FLIP_NONE;
+            if (distance > 0xC0000)
+                distance = 0xC0000;
+            if (player1->velocity.x > 0)
+                distance += player1->velocity.x;
+            distance += 0x10000;
+            if (distance > maxDistance) {
+                distance      = maxDistance;
+                maxDistance = 0;
+            }
+        }
+        parent->position.x += distance;
 
-        int32 spd = 0;
+        int32 yVel = 0;
         if (self->characterID == ID_TAILS || self->characterID == ID_KNUCKLES) {
-            spd = 0x10000;
+            yVel = 0x10000;
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
-                spd = 0x20000;
+                yVel = 0x20000;
 #endif
         }
         else {
-            spd = 0x30000;
+            yVel = 0x30000;
         }
 
-        if (parent->position.y >= Player->curFlyCarryPos.y) {
-            if (parent->position.y > Player->curFlyCarryPos.y)
-                parent->position.y -= spd;
-        }
-        else {
-            parent->position.y += spd;
-        }
+        if (parent->position.y > Player->curFlyCarryPos.y)
+            parent->position.y -= yVel;
+        else if (parent->position.y < Player->curFlyCarryPos.y)
+            parent->position.y += yVel;
+
         parent->position.x &= 0xFFFF0000;
         parent->position.y &= 0xFFFF0000;
     }
@@ -5396,7 +5387,7 @@ void Player_State_FlyIn(void)
         }
 
         self->angle += 3;
-        if ((self->angle >= 512 || (self->angle - 3) >= 368) && parent->position.y >= player1->position.y) {
+        if (self->angle >= 512 || (self->angle >= 368 && parent->position.y >= player1->position.y)) {
             self->abilityValues[0] = 1;
             self->drawFX &= ~FX_SCALE;
             self->scale.x    = 0x200;
@@ -5407,9 +5398,8 @@ void Player_State_FlyIn(void)
 
     if (player1->objectID == Player->objectID) {
         if (player1->state != Player_State_Die && player1->state != Player_State_Drown && player1->state != Player_State_ForceRoll_Ground) {
-            if (abs(xDif) <= 0x40000) {
-                if (abs(Player->curFlyCarryPos.y - parent->position.y) < 0x20000)
-                    Player_EndFlyJumpIn(self, player1);
+            if (abs(maxDistance) <= 0x40000 && abs(Player->curFlyCarryPos.y - parent->position.y) < 0x20000) {
+                Player_EndFlyJumpIn(self, player1);
             }
         }
     }
