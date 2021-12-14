@@ -30,6 +30,15 @@ void UIPicture_Create(void *data)
             self->visible   = true;
             self->drawOrder = 2;
         }
+        // Uncomment this to fix the "Thanks for playing screen"
+        // Not sure what happened, but sometime during dev this must've been shuffled around
+        // setting it to ACTIVE_NORMAL fixes the sonic ball sprites
+        // setting the draw order to 8 fixes the thanks for playing sprite
+        // else if (RSDK.CheckStageFolder("Thanks")) {
+        //     self->active    = ACTIVE_NORMAL;
+        //     self->visible   = true;
+        //     self->drawOrder = 8;
+        // }
         else {
             if (RSDK.CheckStageFolder("Logos") || RSDK.CheckStageFolder("LSelect") || RSDK.CheckStageFolder("Summary"))
                 self->active = ACTIVE_NORMAL;
