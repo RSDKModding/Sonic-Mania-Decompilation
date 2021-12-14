@@ -158,6 +158,10 @@ void PauseMenu_SetupMenu(void)
     control->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     control->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
+    // Bug Details:
+    // control->rowCount is slightly bugged, if `pauseMenu->disableRestart` is enabled then wrapping by pressing down is broken and wont work
+    // Fix:
+    // set it properly like buttonCount is done below
     control->rowCount       = 3;
     control->columnCount    = 1;
     control->buttonID = 0;
@@ -524,7 +528,7 @@ void PauseMenu_State_SetupButtons(void)
         self->stateDraw = PauseMenu_Draw_JustLookup;
     }
     else {
-        RSDK.PlaySfx(PauseMenu->sfxAccept, 0, 255);
+        RSDK.PlaySfx(PauseMenu->sfxAccept, false, 255);
         PauseMenu_AddButton(0, PauseMenu_ResumeButtonCB);
         if (!self->disableRestart)
             PauseMenu_AddButton(1, PauseMenu_RestartButtonCB);
@@ -550,7 +554,7 @@ void PauseMenu_State_StartPause(void)
     RSDK_THIS(PauseMenu);
 
     if (self->timer == 1) {
-        UIControl->inputLocked = 0;
+        UIControl->inputLocked = false;
         UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
     }
 
@@ -582,6 +586,11 @@ void PauseMenu_State_StartPause(void)
 void PauseMenu_State_StartPauseCompetition(void)
 {
     RSDK_THIS(PauseMenu);
+
+    if (self->timer == 1) {
+        UIControl->inputLocked = false;
+        UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
+    }
 
     if (self->timer >= 8) {
         self->headerPos.x = 0x000000;

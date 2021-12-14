@@ -333,7 +333,8 @@ void SignPost_CheckTouch(void)
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
                         if (!manager) {
-                            Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
+                            Competition->activeEntity  = (Entity *)CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
+                            manager = (EntityCompetition *)Competition->activeEntity;
                         }
                         manager->playerFlags[player->playerID]       = true;
                         session->rings[player->playerID]             = player->rings;

@@ -499,20 +499,20 @@ void UIButton_ProcessButtonCB(void)
     else
         columnID = 0;
 
-    bool32 flag = 0;
+    bool32 movedV = false;
     if (control->rowCount > 1) {
         if (UIControl->keyUp) {
-            flag = true;
+            movedV = true;
             --rowID;
         }
         if (UIControl->keyDown) {
-            flag = true;
+            movedV = true;
             rowID++;
         }
     }
 
     int32 selection = self->selection;
-    bool32 flag2    = 0;
+    bool32 movedH    = 0;
     if (choice && self->choiceCount == 1 && choice->processButtonCB && !self->choiceDir && !self->disabled) {
         Entity *entStore  = SceneInfo->entity;
         SceneInfo->entity = (Entity *)choice;
@@ -523,10 +523,10 @@ void UIButton_ProcessButtonCB(void)
         if (UIControl->keyLeft) {
             if (self->choiceCount <= 0 || self->choiceDir || self->disabled) {
                 if (control->columnCount > 1) {
-                    flag = true;
+                    movedV = true;
                     columnID--;
                 }
-                flag2 = false;
+                movedH = false;
             }
             else {
                 do {
@@ -536,7 +536,7 @@ void UIButton_ProcessButtonCB(void)
                         while (selection < 0);
                     }
                 } while (UIButton_GetChoicePtr(self, selection)->disabled && selection != self->selection);
-                flag2 = true;
+                movedH = true;
             }
         }
 
@@ -544,20 +544,20 @@ void UIButton_ProcessButtonCB(void)
             if (self->choiceCount <= 0 || self->choiceDir || self->disabled) {
                 if (control->columnCount > 1) {
                     ++columnID;
-                    flag = true;
+                    movedV = true;
                 }
-                flag2 = false;
+                movedH = false;
             }
             else {
                 do
                     selection = (selection + 1) % self->choiceCount;
                 while (UIButton_GetChoicePtr(self, selection)->disabled && selection != self->selection);
-                flag2 = true;
+                movedH = true;
             }
         }
     }
 
-    if (flag2) {
+    if (movedH) {
         if (selection < 0)
             selection += self->choiceCount;
 
@@ -569,7 +569,7 @@ void UIButton_ProcessButtonCB(void)
         }
     }
 
-    if (flag) {
+    if (movedV) {
 #if RETRO_USE_PLUS
         if (control->noWrap) {
             int32 count = control->rowCount;

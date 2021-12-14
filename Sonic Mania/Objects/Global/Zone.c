@@ -1020,7 +1020,7 @@ void Zone_HandlePlayerSwap(void)
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer                     = RSDK.GetSceneLayer(l);
-            layer->drawLayer[Zone->playerIDs[p]] = layerPlanes[l];
+            layer->drawLayer[Zone->playerIDs2[p]] = layerPlanes[l];
         }
 
         EntityCamera *camera = playerPtr->camera;
@@ -1031,18 +1031,18 @@ void Zone_HandlePlayerSwap(void)
         camera->targetPtr                  = camTarget;
         camera->screenID                   = camScreen;
         camera->state                      = camState;
-        ScreenInfo[camScreen].position.x = Zone->screenPosX[p];
-        ScreenInfo[camScreen].position.y = Zone->screenPosY[p];
+        ScreenInfo[camera->screenID].position.x = Zone->screenPosX[p];
+        ScreenInfo[camera->screenID].position.y = Zone->screenPosY[p];
 
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + Zone->playerIDs[p], Shield);
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + Zone->playerIDs2[p], Shield);
         RSDK.CopyEntity(shield, &Zone->entityData[4 + p], false);
         shield->player = player;
 
-        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + Zone->playerIDs[p], ImageTrail);
+        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + Zone->playerIDs2[p], ImageTrail);
         RSDK.CopyEntity(trail, &Zone->entityData[12 + p], false);
         trail->player = (Entity *)player;
 
-        EntityCamera *cam = player->camera;
+        EntityCamera *cam = playerPtr->camera;
         if (cam) {
             cam->position.x = playerPtr->position.x;
             cam->position.y = playerPtr->position.y;
@@ -1165,7 +1165,7 @@ void Zone_HandlePlayerSwap(void)
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetSceneLayer(l);
-            layer->drawLayer[playerIDs[p]] = layerPlanes[l];
+            layer->drawLayer[playerIDs2[p]] = layerPlanes[l];
         }
 
         EntityCamera *camera = playerPtr->camera;
@@ -1179,11 +1179,11 @@ void Zone_HandlePlayerSwap(void)
         ScreenInfo[camScreen].position.x = screenPos[p].x;
         ScreenInfo[camScreen].position.y = screenPos[p].y;
 
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + playerIDs[p], Shield);
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + playerIDs2[p], Shield);
         RSDK.CopyEntity(shield, shieldPtrs[p], false);
         shield->player = player;
 
-        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + playerIDs[p], ImageTrail);
+        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + playerIDs2[p], ImageTrail);
         RSDK.CopyEntity(trail, powerupPtrs[p], false);
         trail->player = (Entity *)player;
 
@@ -1278,9 +1278,9 @@ void Zone_State_SwapPlayers(void)
             }
             else {
                 for (Zone->playerID = 1; Zone->playerID < Zone->playerCount; ++Zone->playerID) {
-                    Zone->playerIDs2[Zone->playerID] = Zone->playerIDs[Zone->playerID];
+                    Zone->playerIDs2[Zone->playerID] = Zone->playerIDs[Zone->playerID - 1];
                 }
-                Zone->playerIDs2[0] = Zone->playerIDs[Zone->playerCount];
+                Zone->playerIDs2[0] = Zone->playerIDs[Zone->playerCount - 1];
             }
 #else
         Zone->playerFlags = 1;
