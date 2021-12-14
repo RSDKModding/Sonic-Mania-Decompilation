@@ -63,6 +63,8 @@ void Spikes_Draw_Global(void);
 void Spikes_Draw_Stage(void);
 
 void Spikes_Shatter(int32 velX, int32 velY);
+#if RETRO_USE_PLUS
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY);
+#endif
 
 #endif //!OBJ_SPIKES_H

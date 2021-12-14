@@ -316,11 +316,11 @@ void ZipLine_VSSwapCB(void)
     foreach_active(ZipLine, zipline)
     {
 #if RETRO_USE_PLUS
-        if ((1 << Zone->playerID) & zipline->activePlayers)
-            Zone->playerFlags[Zone->playerID] = false;
+        if ((1 << Zone->swapPlayerID) & zipline->activePlayers)
+            Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
         if (zipline->activePlayers)
-            Zone->playerFlags = false;
+            Zone->playerSwapEnabled = false;
 #endif
     }
 }

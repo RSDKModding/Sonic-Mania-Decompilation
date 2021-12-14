@@ -303,14 +303,14 @@ void Ice_StageLoad(void)
 void Ice_VSSwapCB(void)
 {
 #if RETRO_USE_PLUS
-    EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerID, Player);
+    EntityPlayer *player = RSDK_GET_ENTITY(Zone->swapPlayerID, Player);
 #else
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #endif
 
     if (player->state == Ice_State_FrozenPlayer) {
 #if RETRO_USE_PLUS
-        Zone->playerFlags[Zone->playerID] = false;
+        Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
         Ice_BreakPlayerBlock((Entity *)player);
 #endif

@@ -7,12 +7,14 @@ void Bungee_Update(void)
     RSDK_THIS(Bungee);
     if (self->hasAttatchedPlayer) {
         EntityPlayer *player = (EntityPlayer *)self->attatchedPlayer;
-        self->timer        = 2;
+        self->timer          = 2;
+#if RETRO_GAMEVER != VER_100
         if (player && !Player_CheckValidState(player)) {
-            self->attatchedPlayer    = 0;
+            self->attatchedPlayer    = NULL;
             self->hasAttatchedPlayer = false;
         }
         if (self->attatchedPlayer) {
+#endif
             RSDK.GetHitbox(&player->animator, 0);
             player->velocity.x = 0;
             player->velocity.y = 0;
@@ -22,7 +24,10 @@ void Bungee_Update(void)
             player->drawFX     = FX_ROTATE | FX_FLIP;
             player->position   = self->bungeePos;
             player->position.y += 0x1A0000;
+#if RETRO_GAMEVER != VER_100
         }
+#endif
+
         if (self->velocity.y <= 0) {
             self->field_80 -= 2048;
             if (self->bungeePos.y <= self->startPos.y) {
@@ -65,7 +70,7 @@ void Bungee_Update(void)
                                 self->hasAttatchedPlayer = true;
                                 self->velocity.x         = 0;
 
-                                int velocity = 0;
+                                int32 velocity = 0;
                                 if (player->onGround)
                                     velocity = abs(player->groundVel);
                                 else

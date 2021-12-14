@@ -162,11 +162,11 @@ void LottoMachine_StageLoad(void)
 void LottoMachine_ZoneCB(void)
 {
 #if RETRO_USE_PLUS
-    if ((1 << Zone->playerID) & LottoMachine->activePlayers)
-        Zone->playerFlags[Zone->playerID] = 0;
+    if ((1 << Zone->swapPlayerID) & LottoMachine->activePlayers)
+        Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
     if (LottoMachine->activePlayers)
-        Zone->playerFlags = 0;
+        Zone->playerSwapEnabled = false;
 #endif
 }
 

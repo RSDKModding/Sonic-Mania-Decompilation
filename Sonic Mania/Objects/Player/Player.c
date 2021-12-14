@@ -3169,9 +3169,11 @@ void Player_Hit(EntityPlayer *player)
 bool32 Player_CheckValidState(EntityPlayer *player)
 {
     if (player->objectID == Player->objectID && !player->deathType) {
-        if (player->state != Player_State_EncoreRespawn && player->state != Player_State_Die && player->state != Player_State_Drown
-            && player->state != Player_State_StartJumpIn && player->state != Player_State_FlyIn && player->state != Player_State_JumpIn
-            && player->state != Player_State_Transform) {
+        if (player->state != Player_State_Die && player->state != Player_State_Drown &&
+#if RETRO_USE_PLUS
+            player->state != Player_State_EncoreRespawn && player->state != Player_State_JumpIn &&
+#endif
+            player->state != Player_State_StartJumpIn && player->state != Player_State_FlyIn && player->state != Player_State_Transform) {
             return true;
         }
     }

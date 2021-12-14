@@ -16,17 +16,15 @@ typedef struct {
     StateMachine(stageFinishCallback);
     bool32 forcePlayerOnScreenFlag;
     StateMachine(vsSwapCB[0x10]);
+    int32 vsSwapCBCount;
 #if RETRO_USE_PLUS
-    int32 vsSwapCBCount;
-    int32 playerFlags[PLAYER_MAX];
-    uint8 playerID;
-    uint8 playerCount;
-    uint8 playerIDs[PLAYER_MAX];
-    uint8 playerIDs2[PLAYER_MAX];
+    int32 playerSwapEnabled[PLAYER_MAX];
+    uint8 swapPlayerID;
+    uint8 swapPlayerCount;
+    uint8 preSwapPlayerIDs[PLAYER_MAX];
+    uint8 swappedPlayerIDs[PLAYER_MAX];
 #else
-    int32 field_94;
-    int32 vsSwapCBCount;
-    int32 playerFlags;
+    bool32 playerSwapEnabled;
 #endif
     int32 listPos;
     int32 prevListPos;
@@ -67,7 +65,7 @@ typedef struct {
     uint8 playerDrawLow;
     uint8 playerDrawHigh;
     uint8 hudDrawOrder;
-    uint16 sfxfail;
+    uint16 sfxFail;
 #if RETRO_USE_PLUS
     uint8 entityData[16][ENTITY_SIZE];
     int32 screenPosX[PLAYER_MAX];
