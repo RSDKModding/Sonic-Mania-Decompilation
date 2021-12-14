@@ -121,6 +121,14 @@ void AIZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (RSDK.GetSceneLayerID("Background 4") >= DRAWLAYER_COUNT) {
+        // Bug Details:
+        // AIZ->bg4Info doesn't get cleared here, so coming from AIZ Intro to AIZ Encore (same folder so object structs aren't reset)
+        // leaves bg4Info's tileLayer pointer intact, though pointing to the wrong layers
+        // it also enables the behaviour in StaticUpdate that should only play in AIZ Intro
+        // Fix:
+        // AIZSetup->bg4Info = NULL;
+        // (though you should prolly clear the other 3 as well)
+
         for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
             int32 *deformData = RSDK.GetSceneLayer(i)->deformationDataW;
 

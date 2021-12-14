@@ -225,7 +225,10 @@ void Player_LateUpdate(void)
                 }
                 break;
             case PLAYER_DEATH_DROWN:
-                self->deathType       = PLAYER_DEATH_NONE;
+                self->deathType = PLAYER_DEATH_NONE;
+                // setting this actually causes a slight bug, as when you die the underwater flag is cleared but your gravity strength isn't updated
+                // so if you debug out, you'll have regular speed with a moon jump
+                // (yes I know this is super minor but its neat to know anyways)
                 self->gravityStrength = 0x1000;
                 self->velocity.y      = 0;
                 RSDK.PlaySfx(Water->sfxDrown, false, 255);
@@ -1998,6 +2001,13 @@ void Player_HandleDeath(EntityPlayer *player)
                         globals->playerID &= 0xFF;
                         player2->objectID = TYPE_BLANK;
                     }
+
+                    // if you somehow die (drowing is the easiest way) after getting a buddy in AIZ Encore
+                    // the game will lock up since it cant do this behaviour
+                    // Fix:
+                    // remove this check for EncoreIntro and add a xboundary
+                    // or maybe check for this and respawn both players anyways
+                    // alternatively remove the water
                     if (!EncoreIntro) {
                         Player_ResetState(player);
                         if (!player->playerID && globals->gameMode == MODE_ENCORE) {
@@ -2135,6 +2145,14 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
         case C_LEFT:
             player->controlLock = 0;
             if (player->left && player->onGround) {
+                // Bug Details:
+                // if you spindash while touching the left side of an object that uses this func to collide
+                // and if you hold left & are on ground you'll move left
+                // thats the -0x8000 vel being applied every frame via ProcessTileCollisions, since spindash state doesn't expect you to have any x velocity unless it says so, so its ignored
+                // due to the way collision works, this only happens on the left, as standing idle against a solid object on the right doesn't count as colliding, while standing on the left does
+                // Fix (idk why you'd want to):
+                // just place a check to make sure player->state isn't Player_State_Spindash here (example fix in the line below, only the velocity needs to be checked for to fix the bug)
+                // if (player->state != Player_State_Spindash)
                 player->groundVel = -0x8000;
                 player->position.x &= 0xFFFF0000;
             }

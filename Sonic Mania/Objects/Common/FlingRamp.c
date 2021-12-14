@@ -15,6 +15,11 @@ void FlingRamp_Update(void)
                 if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x += 0x40000;
                     player->velocity.y = -0x70000;
+                    // Bug Details:
+                    // this one's the same bug I detailed in SPZ/RockemSockem and was shown off in SDCC 2017
+                    // if you glide into the fling ramp as knux the state wont be set to air so you'll be gliding with SPRINGCS anim playing
+                    // Fix: set the state to Player_State_Air (see fix commented below)
+                    // player->state    = Player_State_Air;
                     player->onGround   = false;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
                 }
@@ -23,6 +28,11 @@ void FlingRamp_Update(void)
                 if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x -= 0x40000;
                     player->velocity.y = -0x70000;
+                    // Bug Details:
+                    // this one's the same bug I detailed in SPZ/RockemSockem and was shown off in SDCC 2017
+                    // if you glide into the fling ramp as knux the state wont be set to air so you'll be gliding with SPRINGCS anim playing
+                    // Fix: set the state to Player_State_Air (see fix commented below)
+                    // player->state    = Player_State_Air;
                     player->onGround   = false;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
                 }

@@ -8,14 +8,12 @@ void RockemSockem_Update(void)
     RSDK.ProcessAnimation(&self->ballAnimator);
 
     if (self->timer > 0) {
-        self->timer--;
-        if (self->timer == 1)
+        if (!--self->timer) 
             RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 2, &self->ballAnimator, true, self->ballAnimator.frameID);
     }
 
     if (self->timer2 > 0) {
-        self->timer2--;
-        if (self->timer2 == 1) {
+        if (!--self->timer2) {
             self->position.x = self->startPos.x;
             self->position.y = self->startPos.y;
             self->velocity.x = 0;
@@ -32,7 +30,6 @@ void RockemSockem_Update(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &RockemSockem->hitbox)) {
-
             int32 vel = 0;
             if (abs(player->velocity.x) <= abs(player->velocity.y)) {
                 vel = abs(player->velocity.y);
@@ -72,8 +69,9 @@ void RockemSockem_Update(void)
                 self->active = ACTIVE_NORMAL;
             }
             else {
-                if ((((angle - 32) >> 6) & 3) != 1) {
-                    if ((((angle - 32) >> 6) & 3) == 2) {
+                int32 angleVal = (((angle - 32) >> 6) & 3);
+                if (angleVal != 1) {
+                    if (angleVal == 2) {
                         int32 spd            = 0;
                         player->velocity.x = (0x700 * RSDK.Cos256(angle) + player->velocity.x) >> 1;
                         if (0x700 * RSDK.Sin256(angle) >= 0)
@@ -83,7 +81,7 @@ void RockemSockem_Update(void)
                         player->velocity.y = -spd;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
                     }
-                    else if ((((angle - 32) >> 6) & 3) != 3) {
+                    else if (angleVal != 3) {
                         int32 spd            = 0;
                         player->velocity.x = ((RSDK.Cos256(angle) << 9) + player->velocity.x) >> 1;
                         if (RSDK.Sin256(angle) << 10 >= 0)
@@ -109,7 +107,11 @@ void RockemSockem_Update(void)
                 }
 
                 if (self->ballAnimator.animationID != 3)
-                    RSDK.PlaySfx(RockemSockem->sfxRockemSockem, 0, 255);
+                    RSDK.PlaySfx(RockemSockem->sfxRockemSockem, false, 255);
+                // Bug Details:
+                // this one's actually the opposite of normal, since its fixed in release builds
+                // but if you comment out this Player_State_Air line and glide into the rockem sockem as knux
+                // you'll get the funny anim bug they showed off at SDCC 2017
                 player->state    = Player_State_Air;
                 player->onGround = false;
                 RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 3, &self->ballAnimator, true, self->ballAnimator.frameID);
