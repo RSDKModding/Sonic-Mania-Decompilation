@@ -44,7 +44,7 @@ void DialogRunner_StageLoad(void)
     TimeAttackData->personalRank    = 0;
     TimeAttackData->leaderboardRank = 0;
     TimeAttackData->isMigratingData = false;
-    Options->state                  = 0;
+    Options->changed                = false;
     if (sku_platform && sku_platform != PLATFORM_DEV) {
         EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
         options->vSync           = false;

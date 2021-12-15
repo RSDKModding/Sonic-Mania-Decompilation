@@ -98,12 +98,10 @@ void ExtrasMenu_SetupActions(void)
 void ExtrasMenu_ProcessMedallionCheat(void)
 {
     int32 key = 0;
-    if (UIControl->keyLeft) {
+    if (UIControl->keyLeft) 
         key = 1;
-    }
-    else if (UIControl->keyRight) {
+    else if (UIControl->keyRight) 
         key = 2;
-    }
 
     if (key) {
         for (int32 i = 0; i < 7; ++i) {
@@ -115,6 +113,7 @@ void ExtrasMenu_ProcessMedallionCheat(void)
 
 bool32 ExtrasMenu_CheckMedallionCheat(void)
 {
+    // left, left, right, right, left, right, left, right
     return ExtrasMenu->cheatCode[0] == 1 && ExtrasMenu->cheatCode[1] == 1 && ExtrasMenu->cheatCode[2] == 2 && ExtrasMenu->cheatCode[3] == 2
            && ExtrasMenu->cheatCode[4] == 1 && ExtrasMenu->cheatCode[5] == 2 && ExtrasMenu->cheatCode[6] == 1 && ExtrasMenu->cheatCode[7] == 2;
 }
@@ -122,6 +121,7 @@ bool32 ExtrasMenu_CheckMedallionCheat(void)
 void ExtrasMenu_ProcessInputs(void)
 {
     RSDK_THIS(UIControl);
+    //buttonID 2 == DAGarden
     if (self->buttonID == 2) {
         ExtrasMenu_ProcessMedallionCheat();
         if (ExtrasMenu_CheckMedallionCheat()) {

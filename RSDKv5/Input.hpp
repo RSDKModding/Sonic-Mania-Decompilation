@@ -461,6 +461,15 @@ inline InputDevice *controllerInit(uint8 controllerID)
 
     byte controllerType = DEVICE_XBOX;
 
+    if (strstr(name, "Xbox"))
+        controllerType = DEVICE_XBOX;
+    else if (strstr(name, "PS4") || strstr(name, "PS5"))
+        controllerType = DEVICE_PS4;
+    else if (strstr(name, "Nintendo"))
+        controllerType = DEVICE_SWITCH_PRO;
+    else if (strstr(name, "Saturn"))
+        controllerType = DEVICE_SATURN;
+
     device->active       = true;
     device->field_F      = false;
     device->gamePadType  = (DEVICE_FLAG_UNKNOWN2 << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (controllerType << 0);

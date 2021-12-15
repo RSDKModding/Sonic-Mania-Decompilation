@@ -383,8 +383,8 @@ void MenuSetup_Initialize(void)
         }
     }
 
-    MenuSetup_Unknown52();
-    MenuSetup_Unknown3();
+    MenuSetup_HandleUnlocks();
+    MenuSetup_SetupActions();
 }
 
 bool32 MenuSetup_InitAPI(void)
@@ -455,7 +455,7 @@ bool32 MenuSetup_InitAPI(void)
     return false;
 }
 
-void MenuSetup_Unknown3(void)
+void MenuSetup_SetupActions(void)
 {
     EntityUIControl *comp         = (EntityUIControl *)MenuSetup->competitionRound;
     EntityUIControl *options      = (EntityUIControl *)MenuSetup->options;
@@ -543,10 +543,10 @@ void MenuSetup_Unknown3(void)
         hitbox.top    = -(options->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3) {
             switch (button->frameID) {
-                case 0: button->actionCB = MenuSetup_Options_OpenVideoMenu; break;
-                case 1: button->actionCB = MenuSetup_Options_OpenSoundMenu; break;
-                case 2: button->actionCB = MenuSetup_Options_OpenControlsMenu; break;
-                case 3: button->actionCB = MenuSetup_Options_OpenLanguageMenu; break;
+                case 0: button->actionCB = MenuSetup_Options_VideoMenuButton_ActionCB; break;
+                case 1: button->actionCB = MenuSetup_Options_SoundMenuButton_ActionCB; break;
+                case 2: button->actionCB = MenuSetup_Options_ControlsMenuButton_ActionCB; break;
+                case 3: button->actionCB = MenuSetup_Options_LanguageMenuButton_ActionCB; break;
             }
         }
 
@@ -557,7 +557,7 @@ void MenuSetup_Unknown3(void)
         hitbox.bottom = language->size.y >> 17;
         hitbox.top    = -(language->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
-            button->actionCB = MenuSetup_Options_Unknown52;
+            button->actionCB = MenuSetup_OptionsLanguage_LanguageButton_ActionCB;
 
         posX          = video->startPos.x - video->cameraOffset.x;
         posY          = video->startPos.y - video->cameraOffset.y;
@@ -567,7 +567,7 @@ void MenuSetup_Unknown3(void)
         hitbox.top    = -(video->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
             && button->frameID == 0)
-            button->choiceChangeCB = MenuSetup_Options_ShaderIDChanged_CB;
+            button->choiceChangeCB = MenuSetup_OptionsVideo_ShaderButton_ActionCB;
 
         posX          = video_win->startPos.x - video_win->cameraOffset.x;
         posY          = video_win->startPos.y - video_win->cameraOffset.y;
@@ -577,12 +577,12 @@ void MenuSetup_Unknown3(void)
         hitbox.top    = -(video->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17) {
             switch (button->frameID) {
-                case 2: button->choiceChangeCB = MenuSetup_Options_ShaderIDChanged_CB; break;
-                case 7: button->choiceChangeCB = MenuSetup_Options_WinSizeChanged_CB; break;
-                case 13: button->choiceChangeCB = MenuSetup_Options_BorderedChanged_CB; break;
-                case 14: button->choiceChangeCB = MenuSetup_Options_FullscreenChanged_CB; break;
-                case 15: button->choiceChangeCB = MenuSetup_Options_VSyncChanged_CB; break;
-                case 16: button->choiceChangeCB = MenuSetup_Options_TripleBufferedChanged_CB; break;
+                case 2: button->choiceChangeCB = MenuSetup_OptionsVideo_ShaderButton_ActionCB; break;
+                case 7: button->choiceChangeCB = MenuSetup_OptionsVideo_WindowScaleButton_ActionCB; break;
+                case 13: button->choiceChangeCB = MenuSetup_OptionsVideo_BorderlessButton_ActionCB; break;
+                case 14: button->choiceChangeCB = MenuSetup_OptionsVideo_FullscreenButton_ActionCB; break;
+                case 15: button->choiceChangeCB = MenuSetup_OptionsVideo_VSyncButton_ActionCB; break;
+                case 16: button->choiceChangeCB = MenuSetup_OptionsVideo_TripleBufferButton_ActionCB; break;
                 default: break;
             }
         }
@@ -593,19 +593,19 @@ void MenuSetup_Unknown3(void)
         if (choice->listID == 7) {
             switch (choice->frameID) {
                 case 2:
-                    choice->actionCB    = MenuSetup_Extras_Callback_Puyo_vsAI;
+                    choice->actionCB    = MenuSetup_Extras_Puyo_vsAI_ActionCB;
                     choice->textVisible = true;
                     break;
                 case 3:
-                    choice->actionCB    = MenuSetup_Extras_Callback_Puyo_vs2P;
+                    choice->actionCB    = MenuSetup_Extras_Puyo_vs2P_ActionCB;
                     choice->textVisible = true;
                     break;
                 case 6:
-                    choice->actionCB    = MenuSetup_Extras_Callback_BSS_3K;
+                    choice->actionCB    = MenuSetup_Extras_BSS_3K_ActionCB;
                     choice->textVisible = true;
                     break;
                 case 7:
-                    choice->actionCB    = MenuSetup_Extras_Callback_BSS_Mania;
+                    choice->actionCB    = MenuSetup_Extras_BSS_Mania_ActionCB;
                     choice->textVisible = true;
                     break;
                 default: break;
@@ -637,7 +637,7 @@ void MenuSetup_Unknown3(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, sound->startPos.x - sound->cameraOffset.x, sound->startPos.y - sound->cameraOffset.y, &hitbox,
                                       slider->position.x, slider->position.y)
             && slider->listID == 5)
-            slider->sliderChangedCB = MenuSetup_Options_SliderChanged_CB;
+            slider->sliderChangedCB = MenuSetup_OptionsVideo_UISlider_ChangedCB;
     }
 
     comp->processButtonInputCB = MenuSetup_VS_ProcessButtonCB;
@@ -685,7 +685,7 @@ void MenuSetup_Unknown3(void)
     foreach_all(UIVsZoneButton, zoneButton) { zoneButton->actionCB = MenuSetup_VS_StartMatch_ActionCB; }
 }
 
-void MenuSetup_Unknown52(void)
+void MenuSetup_HandleUnlocks(void)
 {
     EntityUIControl *mainMenu = (EntityUIControl *)MenuSetup->mainMenu;
 
@@ -738,18 +738,18 @@ void MenuSetup_Unknown52(void)
 
     EntityUIControl *extras = (EntityUIControl *)MenuSetup->extras;
 
-    EntityUIButton *extrasButton1 = extras->buttons[0];
-    extrasButton1->disabled       = !GameProgress_CheckUnlock(8);
-    if (extrasButton1->disabled)
-        UIButton_ManageChoices(extrasButton1);
+    EntityUIButton *bssButton = extras->buttons[0];
+    bssButton->disabled       = !GameProgress_CheckUnlock(8);
+    if (bssButton->disabled)
+        UIButton_ManageChoices(bssButton);
 
-    EntityUIButton *extrasButton2 = extras->buttons[1];
-    extrasButton2->disabled       = !GameProgress_CheckUnlock(6);
-    if (extrasButton2->disabled)
-        UIButton_ManageChoices(extrasButton2);
+    EntityUIButton *puyoButton = extras->buttons[1];
+    puyoButton->disabled       = !GameProgress_CheckUnlock(6);
+    if (puyoButton->disabled)
+        UIButton_ManageChoices(puyoButton);
 
-    EntityUIButton *extrasButton3 = extras->buttons[2];
-    extrasButton3->disabled       = !GameProgress_CheckUnlock(7) && !globals->medallionDebug;
+    EntityUIButton *daGardenButton = extras->buttons[2];
+    daGardenButton->disabled       = !GameProgress_CheckUnlock(7) && !globals->medallionDebug;
 }
 
 void MenuSetup_HandleMenuReturn(void)
@@ -1773,21 +1773,19 @@ void MenuSetup_VS_StartPuyoMatch(void)
 }
 
 // Options
-void MenuSetup_Options_OpenVideoMenu(void)
+void MenuSetup_Options_VideoMenuButton_ActionCB(void)
 {
-    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
+    if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) 
         UIControl_MatchMenuTag("Video WIN");
-    }
-    else {
+    else 
         UIControl_MatchMenuTag("Video");
-    }
 }
 
-void MenuSetup_Options_OpenSoundMenu(void) { UIControl_MatchMenuTag("Sound"); }
+void MenuSetup_Options_SoundMenuButton_ActionCB(void) { UIControl_MatchMenuTag("Sound"); }
 
-void MenuSetup_Options_OpenLanguageMenu(void) { UIControl_MatchMenuTag("Language"); }
+void MenuSetup_Options_LanguageMenuButton_ActionCB(void) { UIControl_MatchMenuTag("Language"); }
 
-void MenuSetup_Options_OpenControlsMenu(void)
+void MenuSetup_Options_ControlsMenuButton_ActionCB(void)
 {
     int32 id   = API_MostRecentActiveControllerID(0);
     int32 type = API_GetControllerType(id);
@@ -1814,39 +1812,39 @@ void MenuSetup_Options_OpenControlsMenu(void)
     }
 }
 
-void MenuSetup_Options_Unknown22_P1(void)
+void MenuSetup_Options_SetDefaultMappings_P1(void)
 {
-    ControllerInfo[1].keyUp.keyMap     = 38;
-    ControllerInfo[1].keyDown.keyMap   = 40;
-    ControllerInfo[1].keyLeft.keyMap   = 37;
-    ControllerInfo[1].keyRight.keyMap  = 39;
-    ControllerInfo[1].keyA.keyMap      = 65;
-    ControllerInfo[1].keyB.keyMap      = 83;
-    ControllerInfo[1].keyC.keyMap      = 0;
-    ControllerInfo[1].keyX.keyMap      = 81;
-    ControllerInfo[1].keyY.keyMap      = 87;
-    ControllerInfo[1].keyZ.keyMap      = 0;
-    ControllerInfo[1].keyStart.keyMap  = 13;
-    ControllerInfo[1].keySelect.keyMap = 9;
+    ControllerInfo[CONT_P1].keyUp.keyMap     = 38;
+    ControllerInfo[CONT_P1].keyDown.keyMap   = 40;
+    ControllerInfo[CONT_P1].keyLeft.keyMap   = 37;
+    ControllerInfo[CONT_P1].keyRight.keyMap  = 39;
+    ControllerInfo[CONT_P1].keyA.keyMap      = 65;
+    ControllerInfo[CONT_P1].keyB.keyMap      = 83;
+    ControllerInfo[CONT_P1].keyC.keyMap      = 0;
+    ControllerInfo[CONT_P1].keyX.keyMap      = 81;
+    ControllerInfo[CONT_P1].keyY.keyMap      = 87;
+    ControllerInfo[CONT_P1].keyZ.keyMap      = 0;
+    ControllerInfo[CONT_P1].keyStart.keyMap  = 13;
+    ControllerInfo[CONT_P1].keySelect.keyMap = 9;
 }
 
-void MenuSetup_Options_Unknown22_P2(void)
+void MenuSetup_Options_SetDefaultMappings_P2(void)
 {
-    ControllerInfo[2].keyUp.keyMap     = 104;
-    ControllerInfo[2].keyDown.keyMap   = 101;
-    ControllerInfo[2].keyLeft.keyMap   = 100;
-    ControllerInfo[2].keyRight.keyMap  = 102;
-    ControllerInfo[2].keyA.keyMap      = 74;
-    ControllerInfo[2].keyB.keyMap      = 75;
-    ControllerInfo[2].keyC.keyMap      = 0;
-    ControllerInfo[2].keyX.keyMap      = 85;
-    ControllerInfo[2].keyY.keyMap      = 73;
-    ControllerInfo[2].keyZ.keyMap      = 0;
-    ControllerInfo[2].keyStart.keyMap  = 219;
-    ControllerInfo[2].keySelect.keyMap = 221;
+    ControllerInfo[CONT_P2].keyUp.keyMap     = 104;
+    ControllerInfo[CONT_P2].keyDown.keyMap   = 101;
+    ControllerInfo[CONT_P2].keyLeft.keyMap   = 100;
+    ControllerInfo[CONT_P2].keyRight.keyMap  = 102;
+    ControllerInfo[CONT_P2].keyA.keyMap      = 74;
+    ControllerInfo[CONT_P2].keyB.keyMap      = 75;
+    ControllerInfo[CONT_P2].keyC.keyMap      = 0;
+    ControllerInfo[CONT_P2].keyX.keyMap      = 85;
+    ControllerInfo[CONT_P2].keyY.keyMap      = 73;
+    ControllerInfo[CONT_P2].keyZ.keyMap      = 0;
+    ControllerInfo[CONT_P2].keyStart.keyMap  = 219;
+    ControllerInfo[CONT_P2].keySelect.keyMap = 221;
 }
 
-void MenuSetup_Options_Unknown51(int32 id)
+void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->controls_KB;
     foreach_all(UISubHeading, subHeading)
@@ -1859,7 +1857,7 @@ void MenuSetup_Options_Unknown51(int32 id)
 
         if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
                                       &hitbox, subHeading->position.x, subHeading->position.y)) {
-            subHeading->frameID = id + 8;
+            subHeading->frameID = playerID + 8;
             foreach_break;
         }
     }
@@ -1867,18 +1865,18 @@ void MenuSetup_Options_Unknown51(int32 id)
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
         if (binder->objectID == UIKeyBinder->objectID) {
-            binder->inputID = id;
-            if (id == 1)
-                binder->actionCB = MenuSetup_Options_Unknown22_P2;
-            else if (!id)
-                binder->actionCB = MenuSetup_Options_Unknown22_P1;
+            binder->inputID = playerID;
+            if (playerID == 1)
+                binder->actionCB = MenuSetup_Options_SetDefaultMappings_P2;
+            else if (!playerID)
+                binder->actionCB = MenuSetup_Options_SetDefaultMappings_P1;
         }
     }
 }
 
-void MenuSetup_OptionsVideo_Win_MenuUpdateCB(void) { MenuSetup_Unknown54(); }
+void MenuSetup_OptionsVideo_Win_MenuUpdateCB(void) { MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(); }
 
-void MenuSetup_Unknown54(void)
+void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         EntityUIControl *videoControl_Win = (EntityUIControl *)MenuSetup->video_win;
@@ -1924,7 +1922,7 @@ void MenuSetup_Options_OpenKBControlsMenu(void)
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         if (self == control->buttons[i]) {
-            MenuSetup_Options_Unknown51(i);
+            MenuSetup_Options_SetupKBControlsMenu(i);
             UIControl_MatchMenuTag("Controls KB");
             break;
         }
@@ -1933,13 +1931,13 @@ void MenuSetup_Options_OpenKBControlsMenu(void)
 
 void MenuSetup_Options_MenuSetupCB(void)
 {
-    if (Options->state) {
+    if (Options->changed) {
         UIWaitSpinner_StartWait();
-        Options_SaveOptionsBin(MenuSetup_Options_Unknown27);
+        Options_SaveOptionsBin(MenuSetup_Options_SaveOptionsCB_Load);
     }
 }
 
-void MenuSetup_Options_Unknown27(int32 status) { UIWaitSpinner_FinishWait(); }
+void MenuSetup_Options_SaveOptionsCB_Load(bool32 success) { UIWaitSpinner_FinishWait(); }
 
 void MenuSetup_Options_LaunchManual(void)
 {
@@ -1947,7 +1945,7 @@ void MenuSetup_Options_LaunchManual(void)
     APICallback_LaunchManual();
 }
 
-void MenuSetup_Options_Unknown52(void)
+void MenuSetup_OptionsLanguage_LanguageButton_ActionCB(void)
 {
     EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
     EntityUIControl *control = (EntityUIControl *)MenuSetup->language;
@@ -1960,7 +1958,7 @@ void MenuSetup_Options_Unknown52(void)
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
         RSDK.SetSettingsValue(SETTINGS_LANGUAGE, control->buttonID);
-    Options->state = 1;
+    Options->changed = true;
 
     Localization->language = control->buttonID;
     control->startingID    = control->buttonID;
@@ -1971,17 +1969,17 @@ void MenuSetup_Options_Unknown52(void)
     UIControl_MatchMenuTag("Options");
 }
 
-void MenuSetup_Options_ShaderIDChanged_CB(void)
+void MenuSetup_OptionsVideo_ShaderButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
     options->screenShader   = self->selection;
     options->overrideShader = true;
     RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
-    Options->state = 1;
+    Options->changed = true;
 }
 
-void MenuSetup_Options_WinSizeChanged_CB(void)
+void MenuSetup_OptionsVideo_WindowScaleButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
 
@@ -1991,11 +1989,11 @@ void MenuSetup_Options_WinSizeChanged_CB(void)
         RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
 
         options->windowSize = self->selection;
-        Options->state      = 1;
+        Options->changed      = true;
     }
 }
 
-void MenuSetup_Options_BorderedChanged_CB(void)
+void MenuSetup_OptionsVideo_BorderlessButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
@@ -2003,10 +2001,10 @@ void MenuSetup_Options_BorderedChanged_CB(void)
     options->windowBorder = self->selection;
     RSDK.SetSettingsValue(SETTINGS_BORDERED, self->selection);
     RSDK.UpdateWindow();
-    Options->state = 1;
+    Options->changed = true;
 }
 
-void MenuSetup_Options_FullscreenChanged_CB(void)
+void MenuSetup_OptionsVideo_FullscreenButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
@@ -2014,30 +2012,30 @@ void MenuSetup_Options_FullscreenChanged_CB(void)
     options->windowed = self->selection ^ 1;
     RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
     RSDK.UpdateWindow();
-    Options->state = 1;
+    Options->changed = true;
 }
 
-void MenuSetup_Options_VSyncChanged_CB(void)
+void MenuSetup_OptionsVideo_VSyncButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->vSync = self->selection;
     RSDK.SetSettingsValue(SETTINGS_VSYNC, self->selection);
-    Options->state = 1;
+    Options->changed = true;
 }
 
-void MenuSetup_Options_TripleBufferedChanged_CB(void)
+void MenuSetup_OptionsVideo_TripleBufferButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->tripleBuffering = self->selection;
     RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, self->selection);
-    Options->state = 1;
+    Options->changed = true;
 }
 
-void MenuSetup_Options_SliderChanged_CB(void)
+void MenuSetup_OptionsVideo_UISlider_ChangedCB(void)
 {
     RSDK_THIS(UISlider);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
@@ -2050,44 +2048,38 @@ void MenuSetup_Options_SliderChanged_CB(void)
         case 0xF1:
             options->windowed = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
-            Options->state = 1;
             break;
         case 0xF2:
             options->windowBorder = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
-            Options->state = 1;
             break;
         case 0xF4:
             options->vSync = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
-            Options->state = 1;
             break;
         case 0xF5:
             options->tripleBuffering = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
-            Options->state = 1;
             break;
         case 0xFC:
             options->screenShader   = self->sliderPos;
             options->overrideShader = true;
             RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
             RSDK.UpdateWindow();
-            Options->state = 1;
             break;
         case 0:
             options->volMusic         = self->sliderPos;
             options->overrideMusicVol = true;
             RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
-            Options->state = 1;
             break;
         case 1:
             options->volSfx         = self->sliderPos;
             options->overrideSfxVol = true;
             RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
-            Options->state = 1;
             break;
-        default: Options->state = 1; break;
+        default:  break;
     }
+    Options->changed = true;
 }
 
 void MenuSetup_OpenExtrasMenu_ActionCB(void) { UIControl_MatchMenuTag("Extras"); }
@@ -2106,7 +2098,7 @@ void MenuSetup_Extras_Start_Puyo_vsAI(void)
     RSDK.LoadScene();
 }
 
-void MenuSetup_Extras_Callback_Puyo_vsAI(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_Puyo_vsAI, 32); }
+void MenuSetup_Extras_Puyo_vsAI_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_Puyo_vsAI, 32); }
 
 void MenuSetup_Extras_Start_Puyo_vs2P(void)
 {
@@ -2119,7 +2111,7 @@ void MenuSetup_Extras_Start_Puyo_vs2P(void)
     RSDK.LoadScene();
 }
 
-void MenuSetup_Extras_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_Puyo_vs2P, 32); }
+void MenuSetup_Extras_Puyo_vs2P_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_Puyo_vs2P, 32); }
 
 void MenuSetup_Extras_Start_Credits(void)
 {
@@ -2158,7 +2150,7 @@ void MenuSetup_Extras_Start_BSS_3K(void)
     RSDK.LoadScene();
 }
 
-void MenuSetup_Extras_Callback_BSS_3K(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_BSS_3K, 32); }
+void MenuSetup_Extras_BSS_3K_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_BSS_3K, 32); }
 
 void MenuSetup_Extras_Start_BSS_Mania(void)
 {
@@ -2171,7 +2163,7 @@ void MenuSetup_Extras_Start_BSS_Mania(void)
     RSDK.LoadScene();
 }
 
-void MenuSetup_Extras_Callback_BSS_Mania(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_BSS_Mania, 32); }
+void MenuSetup_Extras_BSS_Mania_ActionCB(void) { MenuSetup_StartTransition(MenuSetup_Extras_Start_BSS_Mania, 32); }
 
 #endif
 

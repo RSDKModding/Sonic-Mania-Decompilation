@@ -92,8 +92,8 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay);
 //Setup
 void MenuSetup_Initialize(void);
 bool32 MenuSetup_InitAPI(void);
-void MenuSetup_Unknown3(void);
-void MenuSetup_Unknown52(void);
+void MenuSetup_SetupActions(void);
+void MenuSetup_HandleUnlocks(void);
 void MenuSetup_HandleMenuReturn(void);
 int32 MenuSetup_GetActiveMenu(void);
 void MenuSetup_ChangeMenuTrack(void);
@@ -153,43 +153,43 @@ bool32 MenuSetup_VS_Unknown60(void);
 void MenuSetup_VS_StartPuyoMatch(void);
 
 // Options
-void MenuSetup_Options_OpenVideoMenu(void);
-void MenuSetup_Options_OpenSoundMenu(void);
-void MenuSetup_Options_OpenLanguageMenu(void);
-void MenuSetup_Options_OpenControlsMenu(void);
-void MenuSetup_Options_Unknown22_P1(void);
-void MenuSetup_Options_Unknown22_P2(void);
-void MenuSetup_Options_Unknown51(int32 id);
+void MenuSetup_Options_VideoMenuButton_ActionCB(void);
+void MenuSetup_Options_SoundMenuButton_ActionCB(void);
+void MenuSetup_Options_LanguageMenuButton_ActionCB(void);
+void MenuSetup_Options_ControlsMenuButton_ActionCB(void);
+void MenuSetup_Options_SetDefaultMappings_P1(void);
+void MenuSetup_Options_SetDefaultMappings_P2(void);
+void MenuSetup_Options_SetupKBControlsMenu(int32 playerID);
 void MenuSetup_OptionsVideo_Win_MenuUpdateCB(void);
-void MenuSetup_Unknown54(void);
+void MenuSetup_OptionsVideo_Win_InitVideoOptionsMenu(void);
 void MenuSetup_Options_OpenKBControlsMenu(void);
 void MenuSetup_Options_MenuSetupCB(void);
-void MenuSetup_Options_Unknown27(int32 ststaus);
+void MenuSetup_Options_SaveOptionsCB_Load(bool32 success);
 void MenuSetup_Options_LaunchManual(void);
-void MenuSetup_Options_Unknown52(void);
-void MenuSetup_Options_ShaderIDChanged_CB(void);
-void MenuSetup_Options_WinSizeChanged_CB(void);
-void MenuSetup_Options_BorderedChanged_CB(void);
-void MenuSetup_Options_FullscreenChanged_CB(void);
-void MenuSetup_Options_VSyncChanged_CB(void);
-void MenuSetup_Options_TripleBufferedChanged_CB(void);
-void MenuSetup_Options_SliderChanged_CB(void);
+void MenuSetup_OptionsLanguage_LanguageButton_ActionCB(void);
+void MenuSetup_OptionsVideo_ShaderButton_ActionCB(void);
+void MenuSetup_OptionsVideo_WindowScaleButton_ActionCB(void);
+void MenuSetup_OptionsVideo_BorderlessButton_ActionCB(void);
+void MenuSetup_OptionsVideo_FullscreenButton_ActionCB(void);
+void MenuSetup_OptionsVideo_VSyncButton_ActionCB(void);
+void MenuSetup_OptionsVideo_TripleBufferButton_ActionCB(void);
+void MenuSetup_OptionsVideo_UISlider_ChangedCB(void);
 
 //Extras
 void MenuSetup_OpenExtrasMenu_ActionCB(void);
 void MenuSetup_Extras_ProcessButtonCB(void);
 void MenuSetup_Extras_Start_Puyo_vsAI(void);
-void MenuSetup_Extras_Callback_Puyo_vsAI(void);
+void MenuSetup_Extras_Puyo_vsAI_ActionCB(void);
 void MenuSetup_Extras_Start_Puyo_vs2P(void);
-void MenuSetup_Extras_Callback_Puyo_vs2P(void);
+void MenuSetup_Extras_Puyo_vs2P_ActionCB(void);
 void MenuSetup_Extras_Start_Credits(void);
 void MenuSetup_Extras_Credits_ActionCB(void);
 void MenuSetup_Extras_StartDAGarden(void);
 void MenuSetup_Extras_DAGarden_ActionCB(void);
 void MenuSetup_Extras_Start_BSS_3K(void);
-void MenuSetup_Extras_Callback_BSS_3K(void);
+void MenuSetup_Extras_BSS_3K_ActionCB(void);
 void MenuSetup_Extras_Start_BSS_Mania(void);
-void MenuSetup_Extras_Callback_BSS_Mania(void);
+void MenuSetup_Extras_BSS_Mania_ActionCB(void);
 #endif
 
 #endif //!OBJ_MENUSETUP_H

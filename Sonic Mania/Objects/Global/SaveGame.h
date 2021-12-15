@@ -42,9 +42,9 @@ typedef struct {
     RSDK_OBJECT
 #endif
     void *loadEntityPtr;
-    void (*loadCallback)(int32);
+    void (*loadCallback)(int32 status);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int32);
+    void (*saveCallback)(int32 status);
     EntitySaveGame *saveRAM;
     int32 unused1;
 } ObjectSaveGame;

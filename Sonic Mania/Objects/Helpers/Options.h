@@ -9,10 +9,10 @@ typedef struct {
     RSDK_OBJECT
 #endif
     Entity *loadEntityPtr;
-    void (*loadCallback)(int32);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int32);
-    int32 state;
+    void (*saveCallback)(int32 statusCode);
+    bool32 changed;
 } ObjectOptions;
 
 // Entity Class
@@ -52,9 +52,9 @@ void Options_Serialize(void);
 //Funcs
 void Options_Reload(void);
 void Options_GetWinSize(void);
-void Options_LoadCallback(int32 success);
+void Options_LoadCallback(bool32 success);
 void Options_LoadOptionsBin(void);
-void Options_SaveOptionsBin(void (*callback)(int32));
+void Options_SaveOptionsBin(void (*callback)(bool32 success));
 void Options_SetLanguage(int32 language);
 void Options_LoadValuesFromSettings(EntityOptions *options);
 void Options_LoadOptionsCallback(int32 statusCode);
