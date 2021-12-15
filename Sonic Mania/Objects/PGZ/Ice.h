@@ -154,7 +154,7 @@ void Ice_FreezePlayer(void *p);
 bool32 Ice_CheckPlayerBlockSmashH(void);
 bool32 Ice_CheckPlayerBlockSmashV(void);
 void Ice_State_FrozenPlayer(void);
-void Ice_ShatterGenerator(int32 xr, int32 xy, int32 count, int32 velX, int32 velY, int32 canBreak);
+void Ice_ShatterGenerator(int32 xr, int32 xy, int32 count, int32 velX, int32 velY, int32 canBreak); //USERCALL -> count, xr, xy, velX, velY, canBreak
 void Ice_FullShatter(Entity *p, int32 velX, int32 velY);
 void Ice_BreakPlayerBlock(Entity *p);
 Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);

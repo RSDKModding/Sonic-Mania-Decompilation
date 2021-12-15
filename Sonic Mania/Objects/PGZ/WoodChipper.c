@@ -255,7 +255,7 @@ void WoodChipper_State_Chipper(void)
 
                 for (int32 i = self->speed >> 12; i > 0; --i) {
                     EntityWoodChipper *debris =
-                        CREATE_ENTITY(WoodChipper, intToVoid(1), self->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + self->position.y);
+                        CREATE_ENTITY(WoodChipper, intToVoid(true), self->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + self->position.y);
                     if (self->direction) {
                         debris->position.x += -0x530000 - (RSDK.Rand(-3, 4) << 16);
                         debris->velocity.x = -RSDK.Rand(4, 17) << 15;

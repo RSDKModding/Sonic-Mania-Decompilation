@@ -80,7 +80,12 @@ void HeavyShinobi_Create(void *data)
                     break;
                 case SHINOBI_BOUNDS:
                     self->active      = ACTIVE_NORMAL;
+                    // Bug Details: Remember the PGZ2 boss skip?
+                    // you guessed it, this is the fix, isPermanent just says "DO NOT OVERWRITE THIS ENTITY"
+                    // since all entities spawned via RSDK.CreateEntity use the last 0x100 slots, and it loops around
+#if RETRO_GAMEVER != VER_100
                     self->isPermanent = true;
+#endif
                     self->visible     = true;
                     self->drawOrder   = Zone->fgLayerHigh - 1;
                     RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
@@ -130,7 +135,7 @@ void HeavyShinobi_StageLoad(void)
     HeavyShinobi->hitbox6.left   = -40;
     HeavyShinobi->hitbox6.top    = -336;
     HeavyShinobi->hitbox6.right  = 40;
-    HeavyShinobi->hitbox6.bottom               = 336;
+    HeavyShinobi->hitbox6.bottom = 336;
 
     HeavyShinobi->hitbox7.left   = -3;
     HeavyShinobi->hitbox7.top    = -3;
