@@ -602,7 +602,7 @@ void OptionsMenu_MenuSetupCB(void)
     }
 }
 
-void OptionsMenu_SaveOptionsCB_Load(int32 statusCode) { UIWaitSpinner_FinishWait(); }
+void OptionsMenu_SaveOptionsCB_Load(bool32 success) { UIWaitSpinner_FinishWait(); }
 
 void OptionsMenu_TransitionCB_ReloadScene(void)
 {
@@ -611,7 +611,7 @@ void OptionsMenu_TransitionCB_ReloadScene(void)
     RSDK.LoadScene();
 }
 
-void OptionsMenu_SaveOptionsCB_Action(int32 statusCode)
+void OptionsMenu_SaveOptionsCB_Action(bool32 success)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     UIWaitSpinner_FinishWait();

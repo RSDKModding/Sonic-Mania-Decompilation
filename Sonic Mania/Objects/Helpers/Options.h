@@ -11,7 +11,7 @@ typedef struct {
     Entity *loadEntityPtr;
     void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int32 statusCode);
+    void (*saveCallback)(bool32 success);
     bool32 changed;
 } ObjectOptions;
 

@@ -631,7 +631,7 @@ void UISaveSlot_SetupButtonElements(void)
 
         switch (saveRAM->saveState) {
             default:
-            case 0:
+            case SAVEGAME_BLANK:
                 self->touchPos1[1].x       = 0x200000;
                 self->touchPos1[1].y       = 0x200000;
                 self->touchPos2[1].x       = 0;
@@ -644,8 +644,8 @@ void UISaveSlot_SetupButtonElements(void)
                 self->touchPosCallbacks[2] = UISaveSlot_PrevCharacter;
                 self->touchPosCount        = 3;
                 break;
-            case 1: self->touchPosCount = 1; break;
-            case 2:
+            case SAVEGAME_INPROGRESS: self->touchPosCount = 1; break;
+            case SAVEGAME_COMPLETE:
                 self->touchPos1[1].x       = 0x200000;
                 self->touchPos1[1].y       = 0x200000;
                 self->touchPos2[1].y       = -0x440000;
@@ -691,7 +691,7 @@ void UISaveSlot_LoadSaveInfo(void)
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
 #endif
     int32 saveState = saveRAM->saveState;
-    if (saveState == 1 || saveState == 2) {
+    if (saveState == SAVEGAME_INPROGRESS || saveState == SAVEGAME_COMPLETE) {
 #if RETRO_USE_PLUS
         if (self->encoreMode) {
             self->saveEncorePlayer = saveRAM->playerID & 0xFF;
@@ -718,8 +718,8 @@ void UISaveSlot_LoadSaveInfo(void)
 
     switch (saveState) {
         default: break;
-        case 0:
-            self->saveZoneID   = 0;
+        case SAVEGAME_BLANK:
+            self->saveZoneID   = ZONE_GHZ;
             self->saveEmeralds = 0;
             self->saveLives    = 3;
 #if RETRO_USE_PLUS
@@ -731,7 +731,7 @@ void UISaveSlot_LoadSaveInfo(void)
             self->isNewSave = true;
             self->listID    = 0;
             break;
-        case 1:
+        case SAVEGAME_INPROGRESS:
             self->saveZoneID   = saveRAM->zoneID;
             self->saveEmeralds = saveRAM->chaosEmeralds;
             self->saveLives    = saveRAM->lives;
@@ -741,8 +741,8 @@ void UISaveSlot_LoadSaveInfo(void)
             self->isNewSave = false;
             self->listID    = 0;
             break;
-        case 2:
-            self->saveZoneID   = 255;
+        case SAVEGAME_COMPLETE:
+            self->saveZoneID   = NO_SAVE_SLOT;
             self->saveEmeralds = saveRAM->chaosEmeralds;
             self->saveLives    = saveRAM->lives;
 #if RETRO_USE_PLUS
@@ -855,7 +855,7 @@ void UISaveSlot_ProcessButtonCB(void)
             UISaveSlot_SelectedCB();
 #endif
         }
-        else if (UIControl->keyX && saveRAM->saveState && self->type == UISAVESLOT_REGULAR) {
+        else if (UIControl->keyX && saveRAM->saveState != SAVEGAME_BLANK && self->type == UISAVESLOT_REGULAR) {
             Localization_GetString(&msg, STR_DELETEPOPUP);
             UIDialog_CreateDialogYesNo(&msg, UISaveSlot_DeleteDLG_CB, NULL, false, true);
         }
@@ -951,13 +951,13 @@ void UISaveSlot_NextZone(void)
 {
     RSDK_THIS(UISaveSlot);
 
-    if (self->saveZoneID == 255) {
-        self->saveZoneID = 0;
+    if (self->saveZoneID == NO_SAVE_SLOT) {
+        self->saveZoneID = ZONE_GHZ;
     }
     else {
         self->saveZoneID++;
-        if (self->saveZoneID > 11)
-            self->saveZoneID = 0;
+        if (self->saveZoneID > ZONE_TMZ)
+            self->saveZoneID = ZONE_GHZ;
     }
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     UISaveSlot_HandleSaveIcons();
@@ -967,13 +967,13 @@ void UISaveSlot_PrevZone(void)
 {
     RSDK_THIS(UISaveSlot);
 
-    if (self->saveZoneID == 255) {
-        self->saveZoneID = 11;
+    if (self->saveZoneID == NO_SAVE_SLOT) {
+        self->saveZoneID = ZONE_TMZ;
     }
     else {
         self->saveZoneID--;
-        if (self->saveZoneID < 0)
-            self->saveZoneID = 11;
+        if (self->saveZoneID < ZONE_GHZ)
+            self->saveZoneID = ZONE_TMZ;
     }
     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     UISaveSlot_HandleSaveIcons();
@@ -1042,7 +1042,7 @@ void UISaveSlot_HandleSaveIconChange(void)
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
 #endif
 
-    if (!saveRAM->saveState) {
+    if (saveRAM->saveState == SAVEGAME_BLANK) {
 #if RETRO_USE_PLUS
         int32 frame = self->encoreMode ? 6 : 0;
 #else
@@ -1053,7 +1053,7 @@ void UISaveSlot_HandleSaveIconChange(void)
             UISaveSlot_HandleSaveIcons();
         }
     }
-    if (self->type == UISAVESLOT_NOSAVE && saveRAM->saveState == 2) {
+    if (self->type == UISAVESLOT_NOSAVE && saveRAM->saveState == SAVEGAME_COMPLETE) {
         self->saveZoneID = NO_SAVE_SLOT;
         UISaveSlot_HandleSaveIcons();
     }

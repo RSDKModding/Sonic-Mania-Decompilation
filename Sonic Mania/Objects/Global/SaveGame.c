@@ -46,7 +46,7 @@ void SaveGame_LoadSaveData(void)
 {
     int32 slot = globals->saveSlotID;
     if (slot == NO_SAVE_SLOT)
-        SaveGame->saveRAM = (EntitySaveGame*)globals->noSaveSlot;
+        SaveGame->saveRAM = (EntitySaveGame *)globals->noSaveSlot;
     else
 #if RETRO_USE_PLUS
         SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
@@ -57,10 +57,8 @@ void SaveGame_LoadSaveData(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     if (!saveRAM->lives)
         saveRAM->lives = 3;
-    if (saveRAM->score1UP <= saveRAM->score) {
-        do
-            saveRAM->score1UP += 50000;
-        while (saveRAM->score1UP <= saveRAM->score);
+    while (saveRAM->score1UP <= saveRAM->score) {
+        saveRAM->score1UP += 50000;
     }
 
     if (Player) {
@@ -282,9 +280,9 @@ void SaveGame_SaveProgress(void)
             if (Zone_IsAct2()) {
                 if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                     saveRAM->zoneID = Zone_GetZoneID() + 1;
-                if (saveRAM->zoneID > 11) {
+                if (saveRAM->zoneID >= ZONE_ERZ) {
                     saveRAM->zoneID = 2;
-                    saveRAM->zoneID = 12;
+                    saveRAM->zoneID = ZONE_ERZ;
                 }
             }
         }
@@ -294,9 +292,9 @@ void SaveGame_SaveProgress(void)
         if (Zone_IsAct2()) {
             if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                 saveRAM->zoneID = Zone_GetZoneID() + 1;
-            if (saveRAM->zoneID > 11) {
+            if (saveRAM->zoneID >= ZONE_ERZ) {
                 saveRAM->zoneID = 2;
-                saveRAM->zoneID = 12;
+                saveRAM->zoneID = ZONE_ERZ;
             }
         }
     }

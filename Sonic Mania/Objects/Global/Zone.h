@@ -9,6 +9,27 @@
         ++Zone->vsSwapCBCount;                                                                                                                       \
     }
 
+typedef enum {
+    ZONE_INVALID = -1,
+    ZONE_GHZ,
+    ZONE_CPZ,
+    ZONE_SPZ,
+    ZONE_FBZ,
+    ZONE_PGZ,
+    ZONE_SSZ,
+    ZONE_HCZ,
+    ZONE_MSZ,
+    ZONE_OOZ,
+    ZONE_LRZ,
+    ZONE_MMZ,
+    ZONE_TMZ,
+    ZONE_ERZ,
+#if RETRO_USE_PLUS
+    ZONE_AIZ,
+#endif
+    ZONE_COUNT,
+}ZoneIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

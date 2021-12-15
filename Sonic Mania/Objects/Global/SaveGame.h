@@ -9,6 +9,12 @@
 #define checkNoSave globals->noSave
 #endif
 
+typedef enum {
+    SAVEGAME_BLANK,
+    SAVEGAME_INPROGRESS,
+    SAVEGAME_COMPLETE,
+}SaveGameStates;
+
 // Entity Class
 typedef struct {
     RSDK_ENTITY

@@ -153,11 +153,11 @@ void Zone_StaticUpdate(void)
 
 #if RETRO_USE_PLUS
     int32 zone = Zone_GetZoneID();
-    if (zone >= 13) {
-        zone = 13;
+    if (zone >= ZONE_AIZ) {
+        zone = ZONE_AIZ;
     }
     else {
-        if (zone == -1)
+        if (zone == ZONE_INVALID)
             return;
     }
 
@@ -459,36 +459,36 @@ void Zone_StageLoad(void)
 int32 Zone_GetZoneID(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        return 0;
+        return ZONE_GHZ;
     if (RSDK.CheckStageFolder("CPZ"))
-        return 1;
+        return ZONE_CPZ;
     if (RSDK.CheckStageFolder("SPZ1") || RSDK.CheckStageFolder("SPZ2"))
-        return 2;
+        return ZONE_SPZ;
     if (RSDK.CheckStageFolder("FBZ"))
-        return 3;
+        return ZONE_FBZ;
     if (RSDK.CheckStageFolder("PSZ1") || RSDK.CheckStageFolder("PSZ2"))
-        return 4;
+        return ZONE_PGZ;
     if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
-        return 5;
+        return ZONE_SSZ;
     if (RSDK.CheckStageFolder("HCZ"))
-        return 6;
+        return ZONE_HCZ;
     if (RSDK.CheckStageFolder("MSZ"))
-        return 7;
+        return ZONE_MSZ;
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
-        return 8;
+        return ZONE_OOZ;
     if (RSDK.CheckStageFolder("LRZ1") || RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
-        return 9;
+        return ZONE_LRZ;
     if (RSDK.CheckStageFolder("MMZ"))
-        return 10;
+        return ZONE_MMZ;
     if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2") || RSDK.CheckStageFolder("TMZ3"))
-        return 11;
+        return ZONE_TMZ;
     if (RSDK.CheckStageFolder("ERZ"))
-        return 12;
+        return ZONE_ERZ;
 #if RETRO_USE_PLUS
     if (RSDK.CheckStageFolder("AIZ") && globals->gameMode == MODE_ENCORE)
-        return 13;
+        return ZONE_AIZ;
 #endif
-    return -1;
+    return ZONE_INVALID;
 }
 
 void Zone_StoreEntities(int32 xOffset, int32 yOffset)

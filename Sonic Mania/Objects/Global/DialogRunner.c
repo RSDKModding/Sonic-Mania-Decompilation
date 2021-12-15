@@ -149,7 +149,7 @@ void DialogRunner_CheckUserAuth_CB()
     if (self->timer) {
         if (DialogRunner->signoutFlag) {
             if (!UIDialog->activeDialog) {
-                if (Zone && Zone_GetZoneID() != -1) {
+                if (Zone && Zone_GetZoneID() != ZONE_INVALID) {
                     RSDK.SetScene("Presentation", "Title Screen");
                     Zone_StartFadeOut(10, 0x000000);
                 }

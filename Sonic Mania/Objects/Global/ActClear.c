@@ -308,7 +308,7 @@ void ActClear_Create(void *data)
         EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         self->playerPtr        = player1;
 
-        if (Zone_GetZoneID() >= 0) {
+        if (Zone_GetZoneID() > ZONE_INVALID) {
             StatInfo stat;
             uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
 #if RETRO_USE_PLUS

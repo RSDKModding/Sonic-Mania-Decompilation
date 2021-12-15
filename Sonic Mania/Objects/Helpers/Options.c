@@ -116,7 +116,7 @@ void Options_LoadOptionsBin(void)
     }
 }
 
-void Options_SaveOptionsBin(void (*callback)(int32 statusCode))
+void Options_SaveOptionsBin(void (*callback)(bool32 success))
 {
     if (Options->changed) {
         if (sku_platform && sku_platform != PLATFORM_DEV) {
@@ -224,7 +224,7 @@ void Options_SaveOptionsCallback(int32 statusCode)
         Entity *entStore = SceneInfo->entity;
         if (Options->saveEntityPtr)
             SceneInfo->entity = Options->saveEntityPtr;
-        Options->saveCallback(statusCode);
+        Options->saveCallback(statusCode == STATUS_OK);
         SceneInfo->entity = entStore;
 
         Options->saveCallback  = NULL;

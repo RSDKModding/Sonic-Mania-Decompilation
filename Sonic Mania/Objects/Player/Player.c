@@ -2349,7 +2349,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
         explosion->drawOrder       = Zone->drawOrderHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
-        if (Zone_GetZoneID() >= 0) {
+        if (Zone_GetZoneID() > ZONE_INVALID) {
             int32 characterID = 0;
             switch (player->characterID) {
                 case ID_SONIC: characterID = 1; break;
