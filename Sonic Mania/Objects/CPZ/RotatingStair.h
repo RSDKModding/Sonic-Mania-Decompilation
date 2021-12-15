@@ -3,10 +3,21 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    ROTATINGSTAIR_LEFT,
+    ROTATINGSTAIR_DOWN,
+    ROTATINGSTAIR_RIGHT,
+    ROTATINGSTAIR_UP,
+    ROTATINGSTAIR_LEFT_INTERVAL,
+    ROTATINGSTAIR_DOWN_INTERVAL,
+    ROTATINGSTAIR_RIGHT_INTERVAL,
+    ROTATINGSTAIR_UP_INTERVAL,
+}RotatingStairModes;
+
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-    uint8 flag;
+    uint8 unused; //its set to 0, but its not actually used
 } ObjectRotatingStair;
 
 // Entity Class
@@ -14,7 +25,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
-    int32 mode;
+    RotatingStairModes mode;
     Vector2 amplitude;
     int32 speed;
     bool32 hasTension;
@@ -56,7 +67,7 @@ void RotatingStair_EditorLoad(void);
 void RotatingStair_Serialize(void);
 
 // Extra Entity Functions
-void RotatingStair_Unknown1(void);
-void RotatingStair_Unknown2(void);
+void RotatingStair_State_Move(void);
+void RotatingStair_State_Move_Intervals(void);
 
 #endif //!OBJ_ROTATINGSTAIR_H

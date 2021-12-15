@@ -15,7 +15,7 @@ void TippingPlatform_Update(void)
             self->stateCollide = Platform_CollisionState_TopSolid;
             self->collision    = PLATFORM_C_SOLID_TOP;
         }
-        if (!self->stoodAngle && self->bossID > 2 && self->syringe->activated) {
+        if (!self->stoodAngle && self->bossID > TIPPINGPLATFORM_EGGMAN && self->syringe->activated) {
             self->stoodAngle = 1;
             self->timer      = self->intervalOffset + 1;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
@@ -97,7 +97,7 @@ void TippingPlatform_Create(void *data)
 
     self->state = Platform_State_Fixed;
     if (!SceneInfo->inEditor) {
-        if (self->bossID > 1) {
+        if (self->bossID > TIPPINGPLATFORM_PLAYER) {
             foreach_all(Syringe, syringe)
             {
                 if (syringe->tag == self->bossID) {
@@ -113,7 +113,7 @@ void TippingPlatform_Create(void *data)
             }
         }
 
-        if (self->bossID == 1) {
+        if (self->bossID == TIPPINGPLATFORM_PLAYER) {
             self->direction = FLIP_X;
             self->drawFX    = FX_FLIP;
         }
@@ -132,7 +132,7 @@ void TippingPlatform_State_Tipping_Boss(void)
 
     if (--self->timer <= 0) {
         self->active = ACTIVE_BOUNDS;
-        if (self->bossID < 3)
+        if (self->bossID <= TIPPINGPLATFORM_EGGMAN)
             self->state = TippingPlatform_State_RestorePlatform;
         else
             self->state = Platform_State_Fixed;

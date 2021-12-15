@@ -42,7 +42,7 @@ void ERZKing_Create(void *data)
         self->type          = voidToInt(data);
 
         switch (self->type) {
-            case 0: // main
+            case ERZKING_KING:
                 self->hitbox.left   = -24;
                 self->hitbox.top    = -24;
                 self->hitbox.right  = 24;
@@ -55,22 +55,22 @@ void ERZKing_Create(void *data)
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &self->animator4, true, 0);
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &self->animator5, true, 0);
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &self->animatorRuby, true, 0);
-                self->posUnknown = self->position;
-                self->state      = ERZKing_State_Unknown1;
+                self->originPos = self->position;
+                self->state      = ERZKing_State_SetupArena;
                 break;
-            case 1: // body
-            case 2: // body
+            case ERZKING_ARM_L:
+            case ERZKING_ARM_R:
                 self->visible = true;
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 3, &self->animator8, true, 0);
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 4, &self->animator9, true, 0);
-                if (self->type == 1) {
+                if (self->type == ERZKING_ARM_L) {
                     RSDK.SetSpriteAnimation(ERZKing->aniFrames, 6, &self->animator10, true, 0);
                 }
                 else {
                     self->drawOrder = Zone->playerDrawLow;
                     RSDK.SetSpriteAnimation(ERZKing->aniFrames, 5, &self->animator10, true, 0);
                 }
-                self->stateDraw = ERZKing_StateDraw_Arm;
+                self->stateDraw = ERZKing_Draw_Arm;
                 self->state     = ERZKing_State_Arm;
                 break;
         }
@@ -92,8 +92,8 @@ void ERZKing_CheckPlayerCollisions(void)
     {
         if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
             if (--self->health <= 0) {
-                self->posUnknown.x        = self->position.x;
-                self->posUnknown.y        = self->position.y;
+                self->originPos.x        = self->position.x;
+                self->originPos.y        = self->position.y;
                 self->state               = ERZKing_State_Explode;
                 self->velocity.y          = -0x10000;
                 self->timer               = 0;
@@ -153,7 +153,7 @@ void ERZKing_HandleFrames(void)
     }
 }
 
-void ERZKing_StateDraw_Body(void)
+void ERZKing_Draw_Body(void)
 {
     RSDK_THIS(ERZKing);
 
@@ -199,7 +199,7 @@ void ERZKing_StateDraw_Body(void)
     }
 }
 
-void ERZKing_StateDraw_Arm(void)
+void ERZKing_Draw_Arm(void)
 {
     RSDK_THIS(ERZKing);
     EntityERZKing *parent = (EntityERZKing *)self->parent;
@@ -222,17 +222,17 @@ void ERZKing_StateDraw_Arm(void)
     }
 }
 
-void ERZKing_State_Unknown1(void)
+void ERZKing_State_SetupArena(void)
 {
     RSDK_THIS(ERZKing);
 
     if (++self->timer >= 8) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 320;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - 320;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 320;
-        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + 320;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height;
         ERZKing->boundsL            = (Zone->cameraBoundsL[0] + 64) << 16;
         ERZKing->boundsR            = (Zone->cameraBoundsR[0] - 64) << 16;
         ERZKing->boundsM            = self->position.x;
@@ -240,11 +240,11 @@ void ERZKing_State_Unknown1(void)
         ERZKing->boundsB            = (Zone->cameraBoundsB[0] - 96) << 16;
         self->position.y += 0x1000000;
         self->active = ACTIVE_NORMAL;
-        self->state  = ERZKing_State_Unknown2;
+        self->state  = ERZKing_State_SetupBody;
     }
 }
 
-void ERZKing_State_Unknown2(void)
+void ERZKing_State_SetupBody(void)
 {
     RSDK_THIS(ERZKing);
 
@@ -252,21 +252,21 @@ void ERZKing_State_Unknown2(void)
         self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x < self->position.x;
         if (++self->timer == 30) {
             EntityERZKing *leftArm = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ERZKing);
-            RSDK.ResetEntityPtr(leftArm, ERZKing->objectID, intToVoid(1));
+            RSDK.ResetEntityPtr(leftArm, ERZKing->objectID, intToVoid(ERZKING_ARM_L));
             leftArm->position.x = self->position.x;
             leftArm->position.y = self->position.y;
             leftArm->parent     = (Entity *)self;
 
             EntityERZKing *rightArm = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, ERZKing);
-            RSDK.ResetEntityPtr(rightArm, ERZKing->objectID, intToVoid(1));
+            RSDK.ResetEntityPtr(rightArm, ERZKing->objectID, intToVoid(ERZKING_ARM_R));
             rightArm->position.x = self->position.x;
             rightArm->position.y = self->position.y;
             rightArm->parent     = (Entity *)self;
 
             self->timer     = 0;
             self->visible   = true;
-            self->stateDraw = ERZKing_StateDraw_Body;
-            self->state     = ERZKing_State_Unknown3;
+            self->stateDraw = ERZKing_Draw_Body;
+            self->state     = ERZKing_State_EnterKing;
         }
     }
     else {
@@ -275,15 +275,15 @@ void ERZKing_State_Unknown2(void)
     }
 }
 
-void ERZKing_State_Unknown3(void)
+void ERZKing_State_EnterKing(void)
 {
     RSDK_THIS(ERZKing);
 
     RSDK.ProcessAnimation(&self->animator4);
     self->velocity.y -= 0x1800;
-    if (self->position.y <= self->posUnknown.y - 0x200000) {
-        self->posUnknown.x = self->position.x;
-        self->posUnknown.y = self->position.y;
+    if (self->position.y <= self->originPos.y - 0x200000) {
+        self->originPos.x = self->position.x;
+        self->originPos.y = self->position.y;
         self->state        = ERZKing_State_Unknown4;
     }
     else {
@@ -298,8 +298,7 @@ void ERZKing_State_Unknown4(void)
 
     RSDK.ProcessAnimation(&self->animator4);
 
-    self->angle      = (self->angle + 3) & 0xFF;
-    self->position.y = (RSDK.Sin256(self->angle) << 11) + self->posUnknown.y;
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
     ERZKing_CheckPlayerCollisions();
 
     if (self->direction) {
@@ -342,7 +341,7 @@ void ERZKing_State_ChangeHBH(void)
         foreach_all(ERZKing, king) { king->active = ACTIVE_NEVER; }
 
         switch (self->nextType) {
-            case 0:
+            case ERZKING_HEAVY_GUNNER:
                 CREATE_ENTITY(ERZGunner, NULL, self->position.x, self->position.y);
 
                 self->storeDrawFX = FX_NONE;
@@ -350,7 +349,7 @@ void ERZKing_State_ChangeHBH(void)
                 self->nextType--;
                 self->nextType &= 1;
                 break;
-            case 1:
+            case ERZKING_HEAVY_MYSTIC:
                 CREATE_ENTITY(ERZMystic, NULL, self->position.x, self->position.y);
                 self->storeDrawFX = FX_NONE;
                 self->state       = ERZKing_State_Unknown4;
@@ -446,7 +445,7 @@ void ERZKing_EditorDraw(void)
 {
     RSDK_THIS(ERZKing);
 
-    self->posUnknown = self->position;
+    self->originPos = self->position;
     self->angle2     = 0;
     ERZKing_HandleFrames();
 
@@ -456,10 +455,16 @@ void ERZKing_EditorDraw(void)
     RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &self->animator5, true, 0);
     RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &self->animatorRuby, true, 0);
 
-    ERZKing_StateDraw_Body();
+    ERZKing_Draw_Body();
 }
 
-void ERZKing_EditorLoad(void) { ERZKing->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE); }
+void ERZKing_EditorLoad(void)
+{
+    ERZKing->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(ERZKing, type);
+    RSDK_ENUM_VAR("King", ERZKING_KING);
+}
 #endif
 
 void ERZKing_Serialize(void) { RSDK_EDITABLE_VAR(ERZKing, VAR_ENUM, type); }

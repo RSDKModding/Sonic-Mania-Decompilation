@@ -6,22 +6,23 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int32 array1[3], { -0x40000, -0xA0000, -0x80000 });
-    TABLE(int32 array2[40], { 0,        0,        0,        0,        0,        0,        0,        0,        -0x10000, -0x10000,
-                            -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000,
-                            -0x10000, -0x10000, -0x10000, -0x10000, -0x20000, -0x20000, -0x20000, -0x20000, -0x20000, -0x20000,
-                            -0x20000, -0x20000, -0x30000, -0x30000, -0x30000, -0x30000, -0x30000, -0x30000, -0x40000, -0x40000 });
-    TABLE(int32 array3[28], { 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 20, 21, 21, 22, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24 });
-    TABLE(int32 array4[28], { 8, 9, 10, 11, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 14, 14, 15, 15, 16, 16, 16, 16, 15, 15, 14, 14, 13, 13 });
+    //Unused here, was used in S2' 13 for getting the 'force' from propertyValue, mania just uses an editable var
+    TABLE(int32 forces[3], { -0x40000, -0xA0000, -0x80000 });
+    TABLE(int32 springPower[40], { 0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  0x00000,  -0x10000, -0x10000,
+                                   -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000, -0x10000,
+                                   -0x10000, -0x10000, -0x10000, -0x10000, -0x20000, -0x20000, -0x20000, -0x20000, -0x20000, -0x20000,
+                                   -0x20000, -0x20000, -0x30000, -0x30000, -0x30000, -0x30000, -0x30000, -0x30000, -0x40000, -0x40000 });
+    TABLE(int32 heightsReady[28], { 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 20, 21, 21, 22, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24 });
+    TABLE(int32 heightsFlat[28], { 8, 9, 10, 11, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 14, 14, 15, 15, 16, 16, 16, 16, 15, 15, 14, 14, 13, 13 });
     uint16 aniFrames;
     uint16 sfxSpring;
 } ObjectSpringboard;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
     int32 force;
-    int32 field_5C;
+    int32 bounceDelay; // bounceDelay goes unused here, though it was used in S2 '13
     uint8 playerBits;
     Animator animator;
 } EntitySpringboard;

@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
 } ObjectBubbler;
 
@@ -16,8 +16,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    uint16 timer;
-    uint16 timer2;
+    int16 timer;
+    uint16 spawnTimer;
     Vector2 startPos;
     uint8 startDir;
     Animator animator1;
@@ -49,11 +49,11 @@ void Bubbler_HandleProjectileInteractions(void);
 void Bubbler_CheckOnScreen(void);
 
 void Bubbler_State_Setup(void);
-void Bubbler_State_Unknown1(void);
-void Bubbler_State_Unknown2(void);
-void Bubbler_State_Unknown3(void);
+void Bubbler_State_MotherPatrol(void);
+void Bubbler_State_FoundPlayer(void);
+void Bubbler_State_AttackPlayer(void);
 
-void Bubbler_State_Projectile_Unknown1(void);
-void Bubbler_State_Projectile_Unknown2(void);
+void Bubbler_State_Projectile_Seed(void);
+void Bubbler_State_Projectile_Bubbler(void);
 
 #endif //!OBJ_BUBBLER_H

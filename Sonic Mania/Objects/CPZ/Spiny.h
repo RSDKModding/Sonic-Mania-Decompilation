@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPINY_FLOOR,
+    SPINY_WALL,
+}SpinyTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

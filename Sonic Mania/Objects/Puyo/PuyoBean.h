@@ -87,7 +87,7 @@ void PuyoBean_Serialize(void);
 // Extra Entity Functions
 EntityPuyoBean *PuyoBean_GetPuyoBean(int playerID, int x, int y);
 void PuyoBean_StateInput_HandlePlayerInputs(void);
-void PuyoBean_Unknown2(void);
+void PuyoBean_DestroyPuyoBeans(void);
 void PuyoBean_Unknown3(void);
 void PuyoBean_CheckBeanLinks(EntityPuyoBean *bean, EntityPuyoBean *curLink);
 void PuyoBean_HandleMoveBounds(void);
@@ -109,6 +109,6 @@ void PuyoBean_Unknown20(void);
 void PuyoBean_Unknown21(void);
 void PuyoBean_Unknown22(void);
 void PuyoBean_Unknown23(void);
-void PuyoBean_Unknown24(void);
+void PuyoBean_State_MatchLoseFall(void);
 
 #endif //!OBJ_PUYOBEAN_H

@@ -35,10 +35,10 @@ void Spiny_Create(void *data)
         self->startPos = self->position;
         self->startDir = self->direction;
         self->drawFX   = FX_FLIP;
-        if (!self->type) {
+        if (self->type == SPINY_FLOOR) {
             RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &self->animator, true, 0);
             self->state = Spiny_State_Setup;
-            if (!(self->direction & 1))
+            if (!(self->direction & FLIP_X))
                 self->velocity.x = -0x4000;
             else
                 self->velocity.x = 0x4000;
@@ -46,7 +46,7 @@ void Spiny_Create(void *data)
         else {
             RSDK.SetSpriteAnimation(Spiny->aniFrames, 2, &self->animator, true, 0);
             self->state = Spiny_State_Setup;
-            if (!(self->direction & 2))
+            if (!(self->direction & FLIP_Y))
                 self->velocity.y = -0x4000;
             else
                 self->velocity.y = 0x4000;
@@ -113,7 +113,7 @@ void Spiny_State_Setup(void)
     RSDK_THIS(Spiny);
 
     self->active = ACTIVE_NORMAL;
-    if (!self->type) {
+    if (self->type == SPINY_FLOOR) {
         self->state = Spiny_State_Floor;
         Spiny_State_Floor();
     }
@@ -128,11 +128,10 @@ void Spiny_State_Floor(void)
     RSDK_THIS(Spiny);
     RSDK.ProcessAnimation(&self->animator);
     if (++self->timer2 >= 256) {
-        int32 velStore   = -self->velocity.x;
         self->timer2 = 0;
-        self->direction ^= 1u;
+        self->direction ^= FLIP_X;
         self->timer      = 128;
-        self->velocity.x = velStore;
+        self->velocity.x = -self->velocity.x;
     }
 
     int32 distance = 0x7FFFFFFF;
@@ -282,8 +281,9 @@ void Spiny_State_ShotDisappear(void)
 void Spiny_EditorDraw(void)
 {
     RSDK_THIS(Spiny);
+    self->drawFX = FX_FLIP;
 
-    if (!self->type) 
+    if (self->type == SPINY_FLOOR) 
         RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &self->animator, false, 0);
     else 
         RSDK.SetSpriteAnimation(Spiny->aniFrames, 2, &self->animator, false, 0);
@@ -291,7 +291,20 @@ void Spiny_EditorDraw(void)
     Spiny_Draw();
 }
 
-void Spiny_EditorLoad(void) { Spiny->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Spiny.bin", SCOPE_STAGE); }
+void Spiny_EditorLoad(void)
+{
+    Spiny->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Spiny.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Spiny, type);
+    RSDK_ENUM_VAR("Floor", SPINY_FLOOR);
+    RSDK_ENUM_VAR("Wall", SPINY_WALL);
+
+    RSDK_ACTIVE_VAR(Spiny, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
+}
 #endif
 
 void Spiny_Serialize(void)

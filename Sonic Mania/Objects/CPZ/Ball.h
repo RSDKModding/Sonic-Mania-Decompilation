@@ -3,11 +3,19 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BALL_SINGLE,
+    BALL_SPAWN_LEFT,
+    BALL_SPAWN_UP,
+    BALL_SPAWN_RIGHT,
+    BALL_SPAWN_DOWN,
+} BallTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBall;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxSplash;
 } ObjectBall;
@@ -44,15 +52,14 @@ void Ball_DebugDraw(void);
 
 void Ball_HandleInteractions(void);
 void Ball_CheckOnScreen(void);
-void Ball_SpawnChildren(void);
+void Ball_SpawnSplashes(void);
 
 void Ball_State_Setup(void);
-void Ball_State_Unknown1(void);
-void Ball_State_Unknown2(void);
-void Ball_State_Unknown3(void);
-
-void Ball_State2_Unknown1(void);
-void Ball_State3_Unknown1(void);
-void Ball_State4_Unknown1(void);
+void Ball_State_LookForPlayer(void);
+void Ball_State_TargetingPlayer(void);
+void Ball_State_Chemical(void);
+void Ball_State_Splash(void);
+void Ball_State_StraightMovement(void);
+void Ball_State_Spawner(void);
 
 #endif //!OBJ_BALL_H

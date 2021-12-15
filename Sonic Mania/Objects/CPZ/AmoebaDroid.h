@@ -3,6 +3,14 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    AMOEBADROID_BOSS,
+    AMOEBADROID_BLOB_BIG,
+    AMOEBADROID_BLOB_SMALL,
+    AMOEBADROID_POOLSPLASH,
+    AMOEBADROID_POOLSPLASH_DELAY,
+}AmoebaDroidTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -31,16 +39,16 @@ typedef struct {
     int32 timer;
     int32 invincibleTimer;
     int32 health;
-    int32 partAngle2;
-    int32 partAngle;
-    int32 partOffset;
-    int32 partPos;
+    int32 blobAngleX;
+    int32 blobAngleY;
+    int32 blobAmplitude;
+    int32 blobRadius;
     Vector2 offsetPos;
-    Entity *parts[8];
+    Entity *blobs[8];
     Entity *parent;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator animator;
+    Animator attractorTopAnimator;
+    Animator attractorSideAnimator;
     Hitbox hitbox;
 } EntityAmoebaDroid;
 
@@ -61,33 +69,42 @@ void AmoebaDroid_EditorLoad(void);
 void AmoebaDroid_Serialize(void);
 
 // Extra Entity Functions
-void AmoebaDroid_HandleDropletMovement(void);
-void AmoebaDroid_HandleDropletRelease(bool32 interact);
+void AmoebaDroid_HandleSmallBlobMovement(void);
+void AmoebaDroid_HandleSmallBlobRelease(bool32 interact);
 
+// Interaction States
 void AmoebaDroid_CheckHit(void);
 void AmoebaDroid_CheckPlayerHit(void);
 
+// Draw States
 void AmoebaDroid_Draw_AmoebaDroid(void);
 void AmoebaDroid_Draw_BigBlob(void);
 
-void AmoebaDroid_StateMain_SetupArena(void);
-void AmoebaDroid_StateMain_SetupWaterLevel(void);
-void AmoebaDroid_StateMain_Unknown1(void);
-void AmoebaDroid_StateMain_Unknown2(void);
-void AmoebaDroid_StateMain_Unknown3(void);
-void AmoebaDroid_StateMain_Unknown4(void);
-void AmoebaDroid_StateMain_Unknown5(void);
-void AmoebaDroid_StateMain_Unknown6(void);
-void AmoebaDroid_StateMain_Unknown7(void);
-void AmoebaDroid_StateMain_Unknown8(void);
-void AmoebaDroid_StateMain_Unknown9(void);
-void AmoebaDroid_StateMain_Unknown10(void);
-void AmoebaDroid_State1_Unknown1(void);
+// Boss States
+void AmoebaDroid_State_SetupArena(void);
+void AmoebaDroid_State_SetupWaterLevel(void);
+void AmoebaDroid_State_DropIn(void);
+void AmoebaDroid_State_DropIntoPool(void);
+void AmoebaDroid_State_SurfaceFromPool(void);
+void AmoebaDroid_State_ChooseAttack(void);
+void AmoebaDroid_State_SwimLeft(void);
+void AmoebaDroid_State_SwimRight(void);
+void AmoebaDroid_State_ExitPool(void);
+void AmoebaDroid_State_BounceAttack(void);
+void AmoebaDroid_State_GatherBlobs(void);
+void AmoebaDroid_State_SpinBlobs(void);
+
+// Blob States
+void AmoebaDroid_State_BigBlob(void);
 void AmoebaDroid_State_SmallBlob(void);
-void AmoebaDroid_State2_Unknown2(void);
-void AmoebaDroid_State4_Unknown1(void);
-void AmoebaDroid_State3_Unknown1(void);
-void AmoebaDroid_StateMain_Death(void);
-void AmoebaDroid_StateMain_SpawnSignpost(void);
+void AmoebaDroid_State_BigBlob_Disappear(void);
+
+// Splash States
+void AmoebaDroid_State_PoolSplash_Delayed(void);
+void AmoebaDroid_State_PoolSplash(void);
+
+// Boss States (Continued)
+void AmoebaDroid_State_Destroyed(void);
+void AmoebaDroid_State_SpawnSignPost(void);
 
 #endif //!OBJ_AMOEBADROID_H

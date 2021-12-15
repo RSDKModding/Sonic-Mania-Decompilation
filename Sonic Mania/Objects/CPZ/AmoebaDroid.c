@@ -20,7 +20,7 @@ void AmoebaDroid_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
 }
 
@@ -34,7 +34,7 @@ void AmoebaDroid_Create(void *data)
             self->updateRange.y = 0x800000;
             self->type          = voidToInt(data);
             switch (self->type) {
-                case 0:
+                case AMOEBADROID_BOSS:
                     self->visible       = false;
                     self->drawOrder     = Zone->drawOrderLow;
                     self->drawFX        = FX_FLIP;
@@ -43,13 +43,13 @@ void AmoebaDroid_Create(void *data)
                     self->hitbox.top    = -22;
                     self->hitbox.right  = 22;
                     self->hitbox.bottom = 22;
-                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->animator3, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->attractorTopAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->attractorSideAnimator, true, 0);
                     self->stateDraw = AmoebaDroid_Draw_AmoebaDroid;
-                    self->state     = AmoebaDroid_StateMain_SetupArena;
+                    self->state     = AmoebaDroid_State_SetupArena;
                     break;
-                case 1:
+                case AMOEBADROID_BLOB_BIG:
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderHigh;
                     self->hitbox.left   = -40;
@@ -59,11 +59,11 @@ void AmoebaDroid_Create(void *data)
                     self->drawFX        = FX_SCALE;
                     self->inkEffect     = INK_ALPHA;
                     self->scale.y       = 0x200;
-                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 3, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 3, &self->animator, true, 0);
                     self->stateDraw = AmoebaDroid_Draw_BigBlob;
-                    self->state     = AmoebaDroid_State1_Unknown1;
+                    self->state     = AmoebaDroid_State_BigBlob;
                     break;
-                case 2:
+                case AMOEBADROID_BLOB_SMALL:
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderHigh;
@@ -75,20 +75,20 @@ void AmoebaDroid_Create(void *data)
                     self->updateRange.y = 0x200000;
                     self->inkEffect     = INK_ALPHA;
                     self->state         = AmoebaDroid_State_SmallBlob;
-                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 4, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 4, &self->animator, true, 0);
                     break;
-                case 3:
+                case AMOEBADROID_POOLSPLASH:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->state     = AmoebaDroid_State3_Unknown1;
+                    self->state     = AmoebaDroid_State_PoolSplash;
                     self->drawOrder = Zone->hudDrawOrder - 2;
-                    RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator, true, 0);
                     break;
-                case 4:
+                case AMOEBADROID_POOLSPLASH_DELAY:
                     self->active    = ACTIVE_NORMAL;
-                    self->state     = AmoebaDroid_State4_Unknown1;
+                    self->state     = AmoebaDroid_State_PoolSplash_Delayed;
                     self->drawOrder = Zone->hudDrawOrder - 2;
-                    RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator, true, 0);
                     break;
                 default: break;
             }
@@ -110,37 +110,38 @@ void AmoebaDroid_StageLoad(void)
     AmoebaDroid->sfxRelease   = RSDK.GetSfx("CPZ/DroidRelease.wav");
 }
 
-void AmoebaDroid_HandleDropletMovement(void)
+void AmoebaDroid_HandleSmallBlobMovement(void)
 {
     RSDK_THIS(AmoebaDroid);
-    int32 angle       = self->partAngle2;
-    self->partPos = (self->partOffset * RSDK.Cos256(self->partAngle)) >> 8;
+    int32 angle      = self->blobAngleX;
+    self->blobRadius = (self->blobAmplitude * RSDK.Cos256(self->blobAngleY)) >> 8;
     for (int32 i = 0; i < 8; ++i) {
-        EntityAmoebaDroid *droidPart = (EntityAmoebaDroid *)self->parts[i];
-        droidPart->velocity          = droidPart->position;
-        droidPart->position.x        = self->partOffset * RSDK.Cos256(angle) + self->position.x;
-        droidPart->velocity.x        = droidPart->position.x - droidPart->velocity.x;
-        droidPart->position.y        = self->partPos * RSDK.Sin256(angle) + self->position.y;
-        droidPart->velocity.y        = (self->partPos * RSDK.Sin256(angle) + self->position.y) - droidPart->velocity.y;
-        if ((self->partAngle2 & 0x7F) && angle <= 0x80)
-            droidPart->drawOrder = Zone->drawOrderLow - 1;
+        EntityAmoebaDroid *smallBlob = (EntityAmoebaDroid *)self->blobs[i];
+
+        smallBlob->velocity   = smallBlob->position;
+        smallBlob->position.x = self->blobAmplitude * RSDK.Cos256(angle) + self->position.x;
+        smallBlob->velocity.x = smallBlob->position.x - smallBlob->velocity.x;
+        smallBlob->position.y = self->blobRadius * RSDK.Sin256(angle) + self->position.y;
+        smallBlob->velocity.y = (self->blobRadius * RSDK.Sin256(angle) + self->position.y) - smallBlob->velocity.y;
+        if ((self->blobAngleX & 0x7F) && angle < 0x80)
+            smallBlob->drawOrder = Zone->drawOrderLow - 1;
         else
-            droidPart->drawOrder = Zone->drawOrderLow;
+            smallBlob->drawOrder = Zone->drawOrderLow;
         angle = (angle + 32) & 0xFF;
     }
 }
 
-void AmoebaDroid_HandleDropletRelease(bool32 interact)
+void AmoebaDroid_HandleSmallBlobRelease(bool32 interact)
 {
     RSDK_THIS(AmoebaDroid);
 
     for (int32 i = 0; i < 8; ++i) {
-        EntityAmoebaDroid *part = (EntityAmoebaDroid *)self->parts[i];
-        if (part) {
-            part->velocity.y -= 0x20000;
-            part->onGround    = true;
-            part->interaction = interact;
-            self->parts[i]  = NULL;
+        EntityAmoebaDroid *smallBlob = (EntityAmoebaDroid *)self->blobs[i];
+        if (smallBlob) {
+            smallBlob->velocity.y -= 0x20000;
+            smallBlob->onGround    = true;
+            smallBlob->interaction = interact;
+            self->blobs[i]         = NULL;
         }
     }
 }
@@ -156,9 +157,9 @@ void AmoebaDroid_CheckHit(void)
     {
         if (!self->invincibleTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
             if (--self->health <= 0) {
-                AmoebaDroid_HandleDropletRelease(false);
-                self->state               = AmoebaDroid_StateMain_Death;
-                self->timer               = 0;
+                AmoebaDroid_HandleSmallBlobRelease(false);
+                self->state            = AmoebaDroid_State_Destroyed;
+                self->timer            = 0;
                 SceneInfo->timeEnabled = false;
                 Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
             }
@@ -191,23 +192,23 @@ void AmoebaDroid_Draw_AmoebaDroid(void)
         RSDK.CopyPalette(1, 16, 0, 128, 10);
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator1, NULL, false);
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
+        RSDK.DrawSprite(&self->attractorTopAnimator, NULL, false);
+        RSDK.DrawSprite(&self->attractorSideAnimator, NULL, false);
 
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->attractorSideAnimator, NULL, false);
 
         RSDK.CopyPalette(1, 0, 0, 128, 10);
     }
     else {
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator1, NULL, false);
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
+        RSDK.DrawSprite(&self->attractorTopAnimator, NULL, false);
+        RSDK.DrawSprite(&self->attractorSideAnimator, NULL, false);
 
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->attractorSideAnimator, NULL, false);
     }
 }
 
@@ -229,7 +230,7 @@ void AmoebaDroid_Draw_BigBlob(void)
         frame->sprY   = y >> 8;
 
         if ((y >> 8) >= sprY)
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         drawPos.y += 0x10000;
         y += (RSDK.Sin256(angle) >> 1) + 256;
@@ -237,27 +238,27 @@ void AmoebaDroid_Draw_BigBlob(void)
     frame->sprY = sprY;
 }
 
-void AmoebaDroid_StateMain_SetupArena(void)
+void AmoebaDroid_State_SetupArena(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (++self->timer >= 8) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]     = ScreenInfo->centerX + (self->position.x >> 16);
-        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
-        Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = ScreenInfo->centerX + (self->position.x >> 16);
+        Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsB[0]      = (self->position.y >> 16);
         AmoebaDroid->arenaLeft      = (Zone->cameraBoundsL[0] + 64) << 16;
         AmoebaDroid->arenaRight     = (Zone->cameraBoundsR[0] - 64) << 16;
         AmoebaDroid->startX         = self->position.x;
         AmoebaDroid->arenaTop       = (Zone->cameraBoundsT[0] + 48) << 16;
         AmoebaDroid->arenaBottom    = (Zone->cameraBoundsB[0] - 8) << 16;
-        self->state               = AmoebaDroid_StateMain_SetupWaterLevel;
+        self->state                 = AmoebaDroid_State_SetupWaterLevel;
     }
 }
 
-void AmoebaDroid_StateMain_SetupWaterLevel(void)
+void AmoebaDroid_State_SetupWaterLevel(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (self->timer) {
@@ -266,7 +267,7 @@ void AmoebaDroid_StateMain_SetupWaterLevel(void)
             self->timer   = 0;
             self->visible = true;
             self->position.y += -0x400000 - (ScreenInfo->height << 16);
-            self->state = AmoebaDroid_StateMain_Unknown1;
+            self->state = AmoebaDroid_State_DropIn;
         }
     }
     else {
@@ -280,42 +281,42 @@ void AmoebaDroid_StateMain_SetupWaterLevel(void)
         Water->waterMoveSpeed   = 0;
         foreach_active(Water, water)
         {
-            if (water->type == 3)
+            if (water->type == WATER_ADJUST)
                 destroyEntity(water);
         }
         RSDK.SetDrawLayerProperties(0, false, NULL);
-        RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, 0);
+        RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, NULL);
     }
 }
 
-void AmoebaDroid_StateMain_Unknown1(void)
+void AmoebaDroid_State_DropIn(void)
 {
     RSDK_THIS(AmoebaDroid);
     self->position.y += 0x8000;
     if (++self->timer == 90) {
         self->timer      = 0;
         self->velocity.y = 0x8000;
-        self->state      = AmoebaDroid_StateMain_Unknown2;
+        self->state      = AmoebaDroid_State_DropIntoPool;
     }
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown2(void)
+void AmoebaDroid_State_DropIntoPool(void)
 {
     RSDK_THIS(AmoebaDroid);
     self->velocity.y += 0x1800;
     self->position.y += self->velocity.y;
     if (self->position.y > AmoebaDroid->arenaBottom) {
         self->velocity.y = self->velocity.y >> 2;
-        self->state      = AmoebaDroid_StateMain_Unknown3;
+        self->state      = AmoebaDroid_State_SurfaceFromPool;
         ChemicalPool_SetDeform(self->position.x, 0x100000);
-        CREATE_ENTITY(AmoebaDroid, intToVoid(3), self->position.x, self->position.y);
+        CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_POOLSPLASH), self->position.x, self->position.y);
         RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown3(void)
+void AmoebaDroid_State_SurfaceFromPool(void)
 {
     RSDK_THIS(AmoebaDroid);
 
@@ -325,39 +326,39 @@ void AmoebaDroid_StateMain_Unknown3(void)
         self->position.y = AmoebaDroid->arenaBottom;
         self->offsetPos  = self->position;
         self->velocity.y = 0;
-        self->state      = AmoebaDroid_StateMain_Unknown4;
+        self->state      = AmoebaDroid_State_ChooseAttack;
     }
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown4(void)
+void AmoebaDroid_State_ChooseAttack(void)
 {
     RSDK_THIS(AmoebaDroid);
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->offsetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->offsetPos.y, 2, 10);
+
     if (++self->timer == 48) {
         self->timer = 3;
         if (RSDK.Rand(0, 256) > 128)
-            self->state = AmoebaDroid_StateMain_Unknown5;
+            self->state = AmoebaDroid_State_SwimLeft;
         else
-            self->state = AmoebaDroid_StateMain_Unknown6;
+            self->state = AmoebaDroid_State_SwimRight;
 
-        EntityAmoebaDroid *part = CREATE_ENTITY(AmoebaDroid, intToVoid(1), self->position.x, self->position.y);
+        EntityAmoebaDroid *part = CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_BLOB_BIG), self->position.x, self->position.y);
         part->parent            = (Entity *)self;
-        self->parts[0]        = (Entity *)part;
+        self->blobs[0]          = (Entity *)part;
     }
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown5(void)
+void AmoebaDroid_State_SwimLeft(void)
 {
     RSDK_THIS(AmoebaDroid);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->attractorTopAnimator);
+    RSDK.ProcessAnimation(&self->attractorSideAnimator);
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->offsetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->offsetPos.y, 2, 10);
+
     self->velocity.x -= 0x2000;
     if (self->velocity.x < -0x40000)
         self->velocity.x = -0x40000;
@@ -367,14 +368,14 @@ void AmoebaDroid_StateMain_Unknown5(void)
         if (self->timer <= 0) {
             self->velocity.x = 0;
             self->velocity.y = 0;
-            self->state      = AmoebaDroid_StateMain_Unknown7;
+            self->state      = AmoebaDroid_State_ExitPool;
             ChemicalPool_SetDeform(self->position.x, -0xC0000);
-            CREATE_ENTITY(AmoebaDroid, intToVoid(4), self->position.x, self->position.y);
+            CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_POOLSPLASH_DELAY), self->position.x, self->position.y);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
     }
     else if (self->position.x < AmoebaDroid->arenaLeft + 0x400000) {
-        self->state = AmoebaDroid_StateMain_Unknown6;
+        self->state = AmoebaDroid_State_SwimRight;
         self->timer--;
     }
     if (!(Zone->timer & 0xF))
@@ -382,14 +383,14 @@ void AmoebaDroid_StateMain_Unknown5(void)
     ChemicalPool_SetDeform(self->position.x, -0x8000);
 }
 
-void AmoebaDroid_StateMain_Unknown6(void)
+void AmoebaDroid_State_SwimRight(void)
 {
     RSDK_THIS(AmoebaDroid);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->attractorTopAnimator);
+    RSDK.ProcessAnimation(&self->attractorSideAnimator);
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->offsetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->offsetPos.y, 2, 10);
+
     self->velocity.x += 0x2000;
     if (self->velocity.x > 0x40000)
         self->velocity.x = 0x40000;
@@ -399,14 +400,14 @@ void AmoebaDroid_StateMain_Unknown6(void)
         if (self->timer >= 0) {
             self->velocity.x = 0;
             self->velocity.y = 0;
-            self->state      = AmoebaDroid_StateMain_Unknown7;
+            self->state      = AmoebaDroid_State_ExitPool;
             ChemicalPool_SetDeform(self->position.x, -0xC0000);
-            CREATE_ENTITY(AmoebaDroid, intToVoid(4), self->position.x, self->position.y);
+            CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_POOLSPLASH_DELAY), self->position.x, self->position.y);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
     }
     else if (self->position.x > AmoebaDroid->arenaRight - 0x400000) {
-        self->state = AmoebaDroid_StateMain_Unknown5;
+        self->state = AmoebaDroid_State_SwimLeft;
         self->timer--;
     }
     if (!(Zone->timer & 0xF))
@@ -414,25 +415,25 @@ void AmoebaDroid_StateMain_Unknown6(void)
     ChemicalPool_SetDeform(self->position.x, -0x8000);
 }
 
-void AmoebaDroid_StateMain_Unknown7(void)
+void AmoebaDroid_State_ExitPool(void)
 {
     RSDK_THIS(AmoebaDroid);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->attractorTopAnimator);
+    RSDK.ProcessAnimation(&self->attractorSideAnimator);
     self->velocity.y -= 0x1800;
     self->position.y += self->velocity.y;
     if (self->position.y < AmoebaDroid->arenaTop + 0x400000) {
         self->timer = 3;
-        self->state = AmoebaDroid_StateMain_Unknown8;
+        self->state = AmoebaDroid_State_BounceAttack;
     }
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown8(void)
+void AmoebaDroid_State_BounceAttack(void)
 {
     RSDK_THIS(AmoebaDroid);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->attractorTopAnimator);
+    RSDK.ProcessAnimation(&self->attractorSideAnimator);
     self->velocity.y += 0x2000;
     self->position.y += self->velocity.y;
 
@@ -446,21 +447,21 @@ void AmoebaDroid_StateMain_Unknown8(void)
 
     if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x180000, true)) {
         if (--self->timer <= 0) {
-            EntityAmoebaDroid *part = (EntityAmoebaDroid *)self->parts[0];
-            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 6, &part->animator1, false, 0);
-            part->drawFX    = FX_NONE;
-            part->stateDraw = StateMachine_None;
-            part->state     = AmoebaDroid_State2_Unknown2;
+            EntityAmoebaDroid *bigBlob = (EntityAmoebaDroid *)self->blobs[0];
+            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 6, &bigBlob->animator, false, 0);
+            bigBlob->drawFX    = FX_NONE;
+            bigBlob->stateDraw = StateMachine_None;
+            bigBlob->state     = AmoebaDroid_State_BigBlob_Disappear;
 
             self->state = StateMachine_None;
             for (int32 i = 0; i < 8; ++i) {
-                self->parts[i] = (Entity *)CREATE_ENTITY(AmoebaDroid, intToVoid(2), self->position.x, self->position.y);
+                self->blobs[i] = (Entity *)CREATE_ENTITY(AmoebaDroid, intToVoid(AMOEBADROID_BLOB_SMALL), self->position.x, self->position.y);
             }
 
-            self->timer      = 0;
-            self->partAngle  = 196;
-            self->partOffset = 0x2800;
-            self->state      = AmoebaDroid_StateMain_Unknown9;
+            self->timer         = 0;
+            self->blobAngleY     = 196;
+            self->blobAmplitude = 0x2800;
+            self->state         = AmoebaDroid_State_GatherBlobs;
             RSDK.PlaySfx(AmoebaDroid->sfxRelease, false, 255);
         }
         else {
@@ -483,24 +484,24 @@ void AmoebaDroid_StateMain_Unknown8(void)
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown9(void)
+void AmoebaDroid_State_GatherBlobs(void)
 {
     RSDK_THIS(AmoebaDroid);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    AmoebaDroid_HandleDropletMovement();
-    self->partAngle2 = (self->partAngle2 + 4) & 0xFF;
+    RSDK.ProcessAnimation(&self->attractorTopAnimator);
+    RSDK.ProcessAnimation(&self->attractorSideAnimator);
+    AmoebaDroid_HandleSmallBlobMovement();
+    self->blobAngleX = (self->blobAngleX + 4) & 0xFF;
 
     if (self->timer == 60) {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
         if (self->position.y <= AmoebaDroid->arenaTop) {
             self->offsetPos.x = self->position.x;
+            self->offsetPos.y = self->position.y;
             self->timer       = 0;
             self->angle       = 0;
-            self->offsetPos.y = self->position.y;
             self->position.y  = AmoebaDroid->arenaTop;
-            self->state       = AmoebaDroid_StateMain_Unknown10;
+            self->state       = AmoebaDroid_State_SpinBlobs;
         }
     }
     else {
@@ -514,45 +515,46 @@ void AmoebaDroid_StateMain_Unknown9(void)
     AmoebaDroid_CheckHit();
 }
 
-void AmoebaDroid_StateMain_Unknown10(void)
+void AmoebaDroid_State_SpinBlobs(void)
 {
     RSDK_THIS(AmoebaDroid);
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->offsetPos.y) & 0xFFFF0000;
+
+    self->position.y = BadnikHelpers_Oscillate(self->offsetPos.y, 2, 10);
+
     if (self->timer < 120) {
-        AmoebaDroid_HandleDropletMovement();
+        AmoebaDroid_HandleSmallBlobMovement();
         if (self->offsetPos.x <= AmoebaDroid->startX)
-            self->partAngle -= 2;
+            self->blobAngleY -= 2;
         else
-            self->partAngle += 2;
-        self->partAngle &= 0xFF;
-        self->partAngle2 = (self->partAngle2 + 4) & 0xFF;
-        RSDK.ProcessAnimation(&self->animator2);
-        RSDK.ProcessAnimation(&self->animator3);
+            self->blobAngleY += 2;
+        self->blobAngleY &= 0xFF;
+        self->blobAngleX = (self->blobAngleX + 4) & 0xFF;
+        RSDK.ProcessAnimation(&self->attractorTopAnimator);
+        RSDK.ProcessAnimation(&self->attractorSideAnimator);
     }
     AmoebaDroid_CheckHit();
 
     ++self->timer;
     if (self->timer == 120) {
-        AmoebaDroid_HandleDropletRelease(true);
-        RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->animator3, true, 0);
+        AmoebaDroid_HandleSmallBlobRelease(true);
+        RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->attractorTopAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->attractorSideAnimator, true, 0);
         RSDK.PlaySfx(AmoebaDroid->sfxRelease, false, 255);
     }
     else if (self->timer == 240) {
         self->timer      = 0;
         self->angle      = 0;
         self->velocity.y = -0x20000;
-        self->state      = AmoebaDroid_StateMain_Unknown2;
+        self->state      = AmoebaDroid_State_DropIntoPool;
     }
 }
 
-void AmoebaDroid_State1_Unknown1(void)
+void AmoebaDroid_State_BigBlob(void)
 {
     RSDK_THIS(AmoebaDroid);
     EntityAmoebaDroid *parent = (EntityAmoebaDroid *)self->parent;
-    self->angle             = (self->angle + 4) & 0xFF;
-    if (parent->state == AmoebaDroid_StateMain_SpawnSignpost || parent->state == AmoebaDroid_StateMain_Death) {
+    self->angle               = (self->angle + 4) & 0xFF;
+    if (parent->state == AmoebaDroid_State_SpawnSignPost || parent->state == AmoebaDroid_State_Destroyed) {
         if (self->alpha > 0) {
             self->alpha -= 4;
             if (self->alpha <= 0)
@@ -612,7 +614,7 @@ void AmoebaDroid_State_SmallBlob(void)
     }
 }
 
-void AmoebaDroid_State2_Unknown2(void)
+void AmoebaDroid_State_BigBlob_Disappear(void)
 {
     RSDK_THIS(AmoebaDroid);
     EntityAmoebaDroid *parent = (EntityAmoebaDroid *)self->parent;
@@ -620,22 +622,22 @@ void AmoebaDroid_State2_Unknown2(void)
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
     }
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1)
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 }
 
-void AmoebaDroid_State4_Unknown1(void)
+void AmoebaDroid_State_PoolSplash_Delayed(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (++self->timer == 16) {
         self->timer   = 0;
         self->visible = true;
-        self->state   = AmoebaDroid_State3_Unknown1;
+        self->state   = AmoebaDroid_State_PoolSplash;
     }
 }
 
-void AmoebaDroid_State3_Unknown1(void)
+void AmoebaDroid_State_PoolSplash(void)
 {
     RSDK_THIS(AmoebaDroid);
     int32 pos = (self->position.x + 0x80000) >> 20;
@@ -645,43 +647,42 @@ void AmoebaDroid_State3_Unknown1(void)
             self->position.y = pool->offsetY + ChemicalPool->surfaceDeformation[pos];
     }
 
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1)
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 }
 
-void AmoebaDroid_StateMain_Death(void)
+void AmoebaDroid_State_Destroyed(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(AmoebaDroid->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
-                          (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x,
-                          (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y)
-                ->drawOrder = Zone->drawOrderHigh;
+            int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
+            int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
         }
     }
 
     ++self->timer;
     if (self->timer == 30) {
         Debris_FallFlickerAnimSetup(AmoebaDroid->aniFrames, AmoebaDroid->debrisInfo2, 7);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->attractorTopAnimator, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->attractorSideAnimator, true, 0);
     }
     else if (self->timer == 60) {
         Debris_FallFlickerAnimSetup(AmoebaDroid->aniFrames, AmoebaDroid->debrisInfo1, 7);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
     }
     else if (self->timer == 90) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         self->timer   = 0;
         self->visible = false;
-        self->state   = AmoebaDroid_StateMain_SpawnSignpost;
+        self->state   = AmoebaDroid_State_SpawnSignPost;
     }
 }
 
-void AmoebaDroid_StateMain_SpawnSignpost(void)
+void AmoebaDroid_State_SpawnSignPost(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (++self->timer == 60) {
@@ -700,39 +701,22 @@ void AmoebaDroid_StateMain_SpawnSignpost(void)
 void AmoebaDroid_EditorDraw(void)
 {
     RSDK_THIS(AmoebaDroid);
-    switch (self->type) {
-        case 0:
-            self->drawFX = FX_FLIP;
-            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->animator3, true, 0);
-            self->stateDraw = AmoebaDroid_Draw_AmoebaDroid;
-            break;
-        case 1:
-            self->drawFX    = FX_SCALE;
-            self->inkEffect = INK_ALPHA;
-            self->scale.y   = 0x200;
-            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 3, &self->animator1, true, 0);
-            self->stateDraw = AmoebaDroid_Draw_BigBlob;
-            break;
-        case 2:
-            self->updateRange.x = 0x200000;
-            self->updateRange.y = 0x200000;
-            self->inkEffect     = INK_ALPHA;
-            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 4, &self->animator1, true, 0);
-            break;
-        case 3: RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator1, true, 0); break;
-        case 4: RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &self->animator1, true, 0); break;
-        default: break;
-    }
 
-    AmoebaDroid_Draw();
+    self->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->attractorTopAnimator, true, 0);
+    RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->attractorSideAnimator, true, 0);
+
+    AmoebaDroid_Draw_AmoebaDroid();
 }
 
 void AmoebaDroid_EditorLoad(void)
 {
     AmoebaDroid->aniFrames   = RSDK.LoadSpriteAnimation("CPZ/AmoebaDroid.bin", SCOPE_STAGE);
     AmoebaDroid->waterFrames = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(AmoebaDroid, type);
+    RSDK_ENUM_VAR("Boss", AMOEBADROID_BOSS);
 }
 #endif
 

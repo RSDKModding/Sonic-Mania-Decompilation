@@ -44,13 +44,13 @@ void SpeedBooster_DebugSpawn(void);
 void SpeedBooster_DebugDraw(void);
 
 // Extra Entity Functions
-void SpeedBooster_State_Main(void);
+void SpeedBooster_State_SpeedBooster(void);
 void SpeedBooster_Interact(void);
 
 void SpeedBooster_State_SSZFire(void);
 void SpeedBooster_State_SSZRecoil(void);
 void SpeedBooster_State_SSZRetract(void);
 
-void SpeedBooster_SSZ_Bullet(void);
+void SpeedBooster_State_SSZBullet(void);
 
 #endif //!OBJ_SPEEDBOOSTER_H

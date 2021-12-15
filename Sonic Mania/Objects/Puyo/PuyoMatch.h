@@ -67,9 +67,9 @@ void PuyoMatch_DropNextBeans(void);
 void PuyoMatch_Unknown4(void);
 void PuyoMatch_DrawNumbers(void);
 
-void PuyoMatch_State_Unknown1(void);
-void PuyoMatch_State_Unknown2(void);
-void PuyoMatch_State_Unknown3(void);
-void PuyoMatch_State_Unknown4(void);
+void PuyoMatch_State_HandleMatch(void);
+void PuyoMatch_State_HandleCombos(void);
+void PuyoMatch_State_HandleComboEnd(void);
+void PuyoMatch_State_Lose(void);
 
 #endif //!OBJ_PUYOMATCH_H

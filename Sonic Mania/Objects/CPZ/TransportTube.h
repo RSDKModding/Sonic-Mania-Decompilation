@@ -9,9 +9,21 @@ typedef enum {
     TRANSPORTTUBE_TOTARGET_NEXT,
     TRANSPORTTUBE_TOTARGET_PREV,
     TRANSPORTTUBE_TOTARGET_NODE,
-    TRANSPORTTUBE_CHOOSEDIR,
+    TRANSPORTTUBE_JUNCTION,
     TRANSPORTTUBE_EXIT,
-}TransportTubeTypes;
+} TransportTubeTypes;
+
+typedef enum {
+    TRANSPORTTUBE_DIR_NONE = 0,
+    TRANSPORTTUBE_DIR_N    = 1 << 0,
+    TRANSPORTTUBE_DIR_S    = 1 << 1,
+    TRANSPORTTUBE_DIR_W    = 1 << 2,
+    TRANSPORTTUBE_DIR_E    = 1 << 3,
+    TRANSPORTTUBE_DIR_NE   = 1 << 4,
+    TRANSPORTTUBE_DIR_NW   = 1 << 5,
+    TRANSPORTTUBE_DIR_SE   = 1 << 6,
+    TRANSPORTTUBE_DIR_SW   = 1 << 7,
+} TransportTubeDirMasks;
 
 // Object Class
 typedef struct {

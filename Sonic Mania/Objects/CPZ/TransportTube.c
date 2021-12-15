@@ -30,7 +30,7 @@ void TransportTube_Create(void *data)
             case TRANSPORTTUBE_TOTARGET_NEXT:
             case TRANSPORTTUBE_TOTARGET_PREV: self->state = TransportTube_State_ToTargetEntity; break;
             case TRANSPORTTUBE_TOTARGET_NODE: self->state = TransportTube_State_TargetSeqNode; break;
-            case TRANSPORTTUBE_CHOOSEDIR: self->state = TransportTube_State_ChooseDir; break;
+            case TRANSPORTTUBE_JUNCTION: self->state = TransportTube_State_ChooseDir; break;
             case TRANSPORTTUBE_EXIT: self->state = TransportTube_State_Exit; break;
             default: break;
         }
@@ -41,8 +41,8 @@ void TransportTube_StageLoad(void) { TransportTube->sfxTravel = RSDK.GetSfx("Tub
 
 void TransportTube_SetupDirections(EntityTransportTube *entity)
 {
-    int32 velocityX[] = { 0, 0, -16, 16, 12, -12, 12, -12 };
-    int32 velocityY[] = { -16, 16, 0, 0, -12, -12, 12, 12 };
+    int32 velocityX[] = {   0,  0, -16, 16,  12, -12, 12, -12 };
+    int32 velocityY[] = { -16, 16,   0,  0, -12, -12, 12,  12 };
 
     entity->directionCount = 0;
     for (int32 i = 0; i < 8; ++i) {
@@ -287,23 +287,31 @@ void TransportTube_EditorDraw(void)
     RSDK_THIS(TransportTube);
     self->updateRange.x = 0xC00000;
     self->updateRange.y = 0xC00000;
-    TransportTube_SetupDirections(self);
 
+    RSDK.SetSpriteAnimation(TransportTube->aniFrames, 0, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    TransportTube_SetupDirections(self);
     for (int32 v = 0; v < self->directionCount; ++v) {
         DrawHelpers_DrawArrow(0xFF0000, self->position.x, self->position.y, self->position.x + (self->dirVelocity[v].x << 18),
                               self->position.y + (self->dirVelocity[v].y << 18));
     }
+
+    RSDK.SetSpriteAnimation(TransportTube->aniFrames, self->type == TRANSPORTTUBE_JUNCTION ? 2 : 1, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TransportTube_EditorLoad(void)
 {
+    TransportTube->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TransportTube.bin", SCOPE_STAGE);
+
     RSDK_ACTIVE_VAR(TransportTube, type);
     RSDK_ENUM_VAR("Change Direction", TRANSPORTTUBE_CHANGEDIR);
     RSDK_ENUM_VAR("Entrance", TRANSPORTTUBE_ENTRY);
     RSDK_ENUM_VAR("Start Sequence (Next Slot)", TRANSPORTTUBE_TOTARGET_NEXT);
     RSDK_ENUM_VAR("Start Sequence (Prev Slot)", TRANSPORTTUBE_TOTARGET_PREV);
     RSDK_ENUM_VAR("Sequence Node", TRANSPORTTUBE_TOTARGET_NODE);
-    RSDK_ENUM_VAR("Choose Direction", TRANSPORTTUBE_CHOOSEDIR);
+    RSDK_ENUM_VAR("Junction", TRANSPORTTUBE_JUNCTION);
     RSDK_ENUM_VAR("Exit", TRANSPORTTUBE_EXIT);
 }
 #endif

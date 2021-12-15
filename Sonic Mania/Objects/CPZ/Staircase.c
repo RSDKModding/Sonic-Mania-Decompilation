@@ -15,7 +15,7 @@ void Staircase_StaticUpdate(void) {}
 void Staircase_Draw(void)
 {
     RSDK_THIS(Staircase);
-    StateMachine_Run(self->drawState);
+    StateMachine_Run(self->stateDraw);
 }
 
 void Staircase_Create(void *data)
@@ -32,7 +32,7 @@ void Staircase_Create(void *data)
     Staircase->blockHitbox.bottom = 16;
     Staircase->blockHitbox.right  = 16;
 
-    int32 add = (self->direction) ? -0x200000 : 0x200000;
+    int32 add = self->direction ? -0x200000 : 0x200000;
 
     for (int i = 0; i < Starcase_StairCount; ++i) {
         self->blocks[i].x = self->position.x + i * add;
@@ -41,8 +41,8 @@ void Staircase_Create(void *data)
 
     RSDK.SetSpriteAnimation(Staircase->animID, 0, &self->animator, true, 0);
 
-    self->state     = Staircase_MainState;
-    self->drawState = Staircase_DrawBlocks;
+    self->state     = Staircase_State_Idle;
+    self->stateDraw = Staircase_Draw_Blocks;
 }
 
 void Staircase_StageLoad(void)
@@ -58,41 +58,41 @@ bool32 Staircase_CheckCB(void)
 {
     foreach_active(Staircase, entity)
     {
-        if (entity->drawState == Staircase_DrawShake)
+        if (entity->stateDraw == Staircase_Draw_Shake)
             return true;
     }
     return false;
 }
 
-void Staircase_MainState(void)
+void Staircase_State_Idle(void)
 {
     RSDK_THIS(Staircase);
     Vector2 oldpos = self->position;
     foreach_active(Player, player)
     {
-        for (int32 i = 0; i < 4; i++) {
+        for (int32 i = 0; i < Starcase_StairCount; i++) {
             self->position = self->blocks[i];
-            int32 side          = Player_CheckCollisionBox(player, self, &Staircase->blockHitbox);
+            int32 side     = Player_CheckCollisionBox(player, self, &Staircase->blockHitbox);
             if (side == C_BOTTOM) {
-                //bumpable would prolly be used here :D
+                // bumpable would prolly be used here :D
                 self->active    = ACTIVE_NORMAL;
                 self->timer     = 59;
-                self->state     = Staircase_Wait;
-                self->drawState = Staircase_DrawShake;
+                self->state     = Staircase_State_Wait;
+                self->stateDraw = Staircase_Draw_Shake;
                 if (player->onGround)
                     player->deathType = PLAYER_DEATH_DIE_USESFX;
             }
             else if (side == C_TOP) {
                 self->active = ACTIVE_NORMAL;
                 self->timer  = 32;
-                self->state  = Staircase_Wait;
+                self->state  = Staircase_State_Wait;
             }
         }
     }
     self->position = oldpos;
 }
 
-void Staircase_Wait(void)
+void Staircase_State_Wait(void)
 {
     RSDK_THIS(Staircase);
     Vector2 oldpos = self->position;
@@ -109,17 +109,17 @@ void Staircase_Wait(void)
         self->timer = 128;
         if (!RSDK.IsSfxPlaying(Staircase->sfxID))
             RSDK.PlaySfx(Staircase->sfxID, false, 255);
-        self->state     = Staircase_MoveBlocks;
-        self->drawState = Staircase_DrawBlocks;
+        self->state     = Staircase_State_MoveBlocks;
+        self->stateDraw = Staircase_Draw_Blocks;
     }
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         Staircase_Create(NULL);
 }
 
-void Staircase_MoveBlocks(void)
+void Staircase_State_MoveBlocks(void)
 {
     RSDK_THIS(Staircase);
-    int32 add        = (self->type) ? -0x4000 : 0x4000;
+    int32 add        = self->type ? -0x4000 : 0x4000;
     Vector2 oldpos = self->position;
     foreach_active(Player, player)
     {
@@ -134,12 +134,12 @@ void Staircase_MoveBlocks(void)
     for (int i = 0; i < Starcase_StairCount; ++i) self->blocks[i].y += (i + 1) * add;
 
     if (--self->timer <= 0)
-        self->state = Staircase_BasicCollision;
+        self->state = Staircase_State_MovedBlocks;
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         Staircase_Create(NULL);
 }
 
-void Staircase_BasicCollision(void)
+void Staircase_State_MovedBlocks(void)
 {
     RSDK_THIS(Staircase);
     Vector2 oldpos = self->position;
@@ -156,14 +156,14 @@ void Staircase_BasicCollision(void)
         Staircase_Create(NULL);
 }
 
-void Staircase_DrawBlocks(void)
+void Staircase_Draw_Blocks(void)
 {
     RSDK_THIS(Staircase);
     for (int32 i = 0; i < Starcase_StairCount; i++) {
         RSDK.DrawSprite(&self->animator, &self->blocks[i], false);
     }
 }
-void Staircase_DrawShake(void) {
+void Staircase_Draw_Shake(void) {
     RSDK_THIS(Staircase);
     for (int32 i = 0; i < Starcase_StairCount; i++) {
         Vector2 drawPos = self->blocks[i];
@@ -184,7 +184,7 @@ void Staircase_EditorDraw(void)
         self->blocks[i].y = self->position.y;
     }
 
-    Staircase_DrawBlocks();
+    Staircase_Draw_Blocks();
 }
 
 void Staircase_EditorLoad(void) { Staircase->animID = RSDK.LoadSpriteAnimation("CPZ/Staircase.bin", SCOPE_STAGE); }

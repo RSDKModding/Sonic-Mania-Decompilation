@@ -3,11 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum { CHEMICALBALL_ARC, CHEMICALBALL_VERTICAL } ChemicalBallTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    TABLE(int32 moveOffset1[196],
+    TABLE(int32 arcOffsets[196],
           { -0x320000, 0,         -0x320000, -0x48000,  -0x31F500, -0x8E800,  -0x31DF00, -0xD3800,  -0x31BE00, -0x117000, -0x319200, -0x159000,
             -0x315B00, -0x199800, -0x311900, -0x1D8800, -0x30CC00, -0x216000, -0x307400, -0x252000, -0x301100, -0x28C800, -0x2FA300, -0x2C5800,
             -0x2F2A00, -0x2FD000, -0x2EA600, -0x333000, -0x2E1700, -0x367800, -0x2D7D00, -0x39A800, -0x2CD800, -0x3CC000, -0x2C2800, -0x3FC000,
@@ -25,7 +27,7 @@ typedef struct {
             0x2DA600,  -0x333000, 0x2E2A00,  -0x2FD000, 0x2EA300,  -0x2C5800, 0x2F1100,  -0x28C800, 0x2F7400,  -0x252000, 0x2FCC00,  -0x216000,
             0x301900,  -0x1D8800, 0x305B00,  -0x199800, 0x309200,  -0x159000, 0x30BE00,  -0x117000, 0x30DF00,  -0xD3800,  0x30F500,  -0x8E800,
             0x310000,  -0x48000,  0x310000,  0 });
-    TABLE(int32 moveOffset2[98],
+    TABLE(int32 moveOffsets[98],
           { -0x264000, -0x262800, -0x25F800, -0x25B000, -0x255000, -0x24D800, -0x244800, -0x23A000, -0x22E000, -0x220800, -0x211800,
             -0x201000, -0x1EF000, -0x1DB800, -0x1C6800, -0x1B0000, -0x198000, -0x17E800, -0x163800, -0x147000, -0x129000, -0x109800,
             -0xE8800,  -0xC6000,  -0xA2000,  -0x7C800,  -0x55800,  -0x2D000,  -0x3000,   0x28800,   0x55800,   0x84000,   0xB4000,
@@ -46,9 +48,9 @@ typedef struct {
     uint8 type;
     uint8 interval;
     uint8 intervalOffset;
-    int32 field_60;
-    Vector2 startPos2;
+    int32 unused;
     Vector2 startPos;
+    Vector2 drawPos;
     Animator animator;
     int32 field_8C;
     bool32 master;
@@ -72,7 +74,7 @@ void ChemicalBall_Serialize(void);
 
 // Extra Entity Functions
 void ChemicalBall_CheckHit(void);
-void ChemicalBall_MoveType0(void);
-void ChemicalBall_MoveType1(void);
+void ChemicalBall_State_MoveArc(void);
+void ChemicalBall_State_MoveVertical(void);
 
 #endif //! OBJ_CHEMICALBALL_H

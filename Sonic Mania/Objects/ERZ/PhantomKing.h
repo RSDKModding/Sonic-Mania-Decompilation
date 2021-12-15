@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PHANTOMKING_KING,
+    PHANTOMKING_ARM_L,
+    PHANTOMKING_ARM_R,
+} PhantomKingTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -22,7 +28,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Vector2 posUnknown;
+    Vector2 originPos;
     int32 type;
     int32 timer;
     int32 invincibilityTimer;
@@ -81,11 +87,11 @@ void PhantomKing_HandleAttacks(void);
 void PhantomKing_SwitchToEggman(void);
 void PhantomKing_SetupKing(EntityPhantomKing *king);
 
-void PhantomKing_StateDraw_Body(void);
-void PhantomKing_StateDraw_Arm(void);
+void PhantomKing_Draw_Body(void);
+void PhantomKing_Draw_Arm(void);
 
-void PhantomKing_State_Unknown1(void);
-void PhantomKing_State_Unknown2(void);
+void PhantomKing_State_Initialize(void);
+void PhantomKing_State_SetupArms(void);
 void PhantomKing_State_Unknown3(void);
 void PhantomKing_State_Unknown4(void);
 void PhantomKing_State_Unknown5(void);

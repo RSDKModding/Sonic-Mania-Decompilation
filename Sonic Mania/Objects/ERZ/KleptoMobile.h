@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    KLEPTOMOBILE_EGGMAN,
+    KLEPTOMOBILE_ARM_L,
+    KLEPTOMOBILE_ARM_R,
+} KleptoMobileTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -32,7 +38,7 @@ typedef struct {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    Vector2 field_70;
+    Vector2 originPos;
     int32 frameIDs[10];
     Vector2 framePositions[10];
     Vector2 field_F0;
@@ -85,7 +91,7 @@ void KleptoMobile_Hit(void);
 void KleptoMobile_HandleFrames(void);
 void KleptoMobile_SwitchToKing(void);
 
-void KleptoMobile_StateDraw_Unknown1(void);
+void KleptoMobile_Draw_KleptoMobile(void);
 void KleptoMobile_State_SetupArena(void);
 void KleptoMobile_State_Unknown1(void);
 void KleptoMobile_State_Unknown2(void);
@@ -107,7 +113,7 @@ void KleptoMobile_State1_Unknown1(void);
 void KleptoMobile_State1_Unknown2(void);
 void KleptoMobile_State1_Unknown3(void);
 void KleptoMobile_State1_Unknown4(void);
-void KleptoMobile_StateDraw1_Unknown1(void);
+void KleptoMobile_Draw_Arm(void);
 
 void KleptoMobile_State_Destroyed(void);
 void KleptoMobile_State_Explode(void);

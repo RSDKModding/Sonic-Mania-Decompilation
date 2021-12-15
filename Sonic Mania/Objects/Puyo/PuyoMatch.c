@@ -181,7 +181,7 @@ void PuyoMatch_DrawNumbers(void)
     }
 }
 
-void PuyoMatch_State_Unknown1(void)
+void PuyoMatch_State_HandleMatch(void)
 {
     RSDK_THIS(PuyoMatch);
 
@@ -195,7 +195,7 @@ void PuyoMatch_State_Unknown1(void)
 
             if (bean->state == PuyoBean_Unknown23) {
                 PuyoBean->field_28[bean->playerID] = 1;
-                self->state                      = PuyoMatch_State_Unknown2;
+                self->state                        = PuyoMatch_State_HandleCombos;
                 foreach_break;
             }
 
@@ -208,7 +208,7 @@ void PuyoMatch_State_Unknown1(void)
         if (!--self->timer) {
             // if the "dispenser" slot is filled, you lose!
             if (PuyoBean_GetPuyoBean(self->playerID, 2, 2)) {
-                self->state = PuyoMatch_State_Unknown4;
+                self->state = PuyoMatch_State_Lose;
 
                 if (self->playerID) {
                     foreach_active(CollapsingPlatform, platform)
@@ -248,7 +248,7 @@ void PuyoMatch_State_Unknown1(void)
     }
 }
 
-void PuyoMatch_State_Unknown2(void)
+void PuyoMatch_State_HandleCombos(void)
 {
     RSDK_THIS(PuyoMatch);
 
@@ -300,28 +300,28 @@ void PuyoMatch_State_Unknown2(void)
     attack->targetPos.y      = match->beanDropPos.y + 0xC0000;
     attack->score            = self->comboScore;
     self->score += self->comboScore;
-    self->state = PuyoMatch_State_Unknown3;
+    self->state = PuyoMatch_State_HandleComboEnd;
 }
 
-void PuyoMatch_State_Unknown3(void)
+void PuyoMatch_State_HandleComboEnd(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    bool32 flag = false;
+    bool32 continueCombos = false;
     foreach_active(PuyoBean, bean)
     {
         if (bean->playerID == self->playerID) {
             if (bean->state == PuyoBean_Unknown22 || bean->state == PuyoBean_Unknown23) {
-                flag = true;
+                continueCombos = true;
             }
         }
     }
 
-    if (!flag)
-        self->state = PuyoMatch_State_Unknown1;
+    if (!continueCombos)
+        self->state = PuyoMatch_State_HandleMatch;
 }
 
-void PuyoMatch_State_Unknown4(void)
+void PuyoMatch_State_Lose(void)
 {
     RSDK_THIS(PuyoMatch);
 
@@ -332,7 +332,7 @@ void PuyoMatch_State_Unknown4(void)
             for (int y = 0; y < 14; ++y) {
                 EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, y);
                 if (bean) {
-                    bean->state = PuyoBean_Unknown24;
+                    bean->state = PuyoBean_State_MatchLoseFall;
                     bean->timer = vals[x];
                 }
             }

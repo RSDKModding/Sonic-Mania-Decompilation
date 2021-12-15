@@ -109,7 +109,7 @@ void PuyoGame_SetupPlayer(uint8 player)
     foeScore->flag    = true;
     foeManager->state = StateMachine_None;
 
-    PuyoBean_Unknown2();
+    PuyoBean_DestroyPuyoBeans();
     PuyoGame_Unknown5();
     self->timer = 0;
     if (!self->field_98)
@@ -254,7 +254,7 @@ void PuyoGame_SetupEntities(void)
     {
         match->timer  = true;
         match->active = ACTIVE_NORMAL;
-        match->state  = PuyoMatch_State_Unknown1;
+        match->state  = PuyoMatch_State_HandleMatch;
         if (match->playerID) {
             if (param->selectionFlag == 1 || !param->selectionFlag) {
                 match->stateInput                        = PuyoAI_StateInput;
@@ -288,7 +288,7 @@ void PuyoGame_Unknown11(void)
     for (int p = 0; p < 2; ++p) {
         EntityPuyoMatch *match                          = (EntityPuyoMatch *)PuyoGame->managers[p];
         ((EntityPuyoScore *)PuyoGame->score1[p])->score = match->score;
-        if (match->state == PuyoMatch_State_Unknown4)
+        if (match->state == PuyoMatch_State_Lose)
             PuyoGame_SetupPlayer(p);
     }
 }

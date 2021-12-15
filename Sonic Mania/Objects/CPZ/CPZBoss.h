@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CPZBOSS_PLAYER,
+    CPZBOSS_EGGMAN,
+}CPZBossTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -21,11 +26,10 @@ typedef struct {
     uint8 type;
     int32 timer;
     Vector2 startPos;
-    int32 field_6C;
-    int32 field_70;
-    Animator animator1;
-    Animator animator;
-    Animator animator2;
+    Vector2 explosionPos;
+    Animator panelAnimator;
+    Animator enterAnimator;
+    Animator playerAnimator;
 } EntityCPZBoss;
 
 // Object Struct
@@ -45,23 +49,23 @@ void CPZBoss_EditorLoad(void);
 void CPZBoss_Serialize(void);
 
 // Extra Entity Functions
-void CPZBoss_DrawLayerCB_1(void);
-void CPZBoss_DrawLayerCB_2(void);
+void CPZBoss_DrawLayerCB_SetupPuyoDropperClip(void);
+void CPZBoss_DrawLayerCB_RemovePuyoDropperClip(void);
 
-bool32 CPZBoss_Unknown1(void);
+bool32 CPZBoss_CheckMatchReset(void);
 
-void CPZBoss_State_SetupPlayer(void);
-void CPZBoss_State_Unknown1(void);
-void CPZBoss_State_Unknown2(void);
-void CPZBoss_State_Unknown3(void);
+void CPZBoss_State_SetupArena(void);
+void CPZBoss_State_EnterPlayer(void);
+void CPZBoss_State_CheckPlayerReady(void);
+void CPZBoss_State_PlayPlayerEnterAnim(void);
 void CPZBoss_State_SetupMatch(void);
-void CPZBoss_State_HandleBossMatch(void);
-void CPZBoss_State_HandlePlayerMatch(void);
-void CPZBoss_State_HandlePlayerMatchFinish(void);
+void CPZBoss_State_HandleMatch_Player(void);
+void CPZBoss_State_HandleMatch_Eggman(void);
+void CPZBoss_State_HandleMatchFinish_EggmanLose(void);
 void CPZBoss_State_PlayerWin(void);
-void CPZBoss_State_HandleBossMatchFinish(void);
-void CPZBoss_State_Unknown10(void);
-void CPZBoss_State_Unknown11(void);
-void CPZBoss_State_Unknown12(void);
+void CPZBoss_State_HandleMatchFinish_PlayerLose(void);
+void CPZBoss_State_EggmanFall(void);
+void CPZBoss_State_PlayerExit(void);
+void CPZBoss_State_Destroyed(void);
 
 #endif //!OBJ_CPZBOSS_H

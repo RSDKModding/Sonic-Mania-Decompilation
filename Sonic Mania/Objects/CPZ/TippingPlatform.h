@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TIPPINGPLATFORM_NONE,
+    TIPPINGPLATFORM_PLAYER,
+    TIPPINGPLATFORM_EGGMAN,
+}TippingPlatformBossIDs;
+
 // Object Class
 typedef struct {
 	RSDK_OBJECT
