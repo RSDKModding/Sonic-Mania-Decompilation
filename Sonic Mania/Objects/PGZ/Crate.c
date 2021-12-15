@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Crate Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled By Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCrate *Crate;

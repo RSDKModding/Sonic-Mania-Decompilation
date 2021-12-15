@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TMZAlert Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled By Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTMZAlert *TMZAlert;

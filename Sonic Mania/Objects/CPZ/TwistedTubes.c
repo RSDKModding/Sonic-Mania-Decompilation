@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TwistedTubes Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled By Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTwistedTubes *TwistedTubes;

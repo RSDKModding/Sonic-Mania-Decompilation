@@ -1,4 +1,11 @@
-﻿#include "SonicMania.h"
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UIWinSize Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled By Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
+#include "SonicMania.h"
 
 ObjectUIWinSize *UIWinSize;
 

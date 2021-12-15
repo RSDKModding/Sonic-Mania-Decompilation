@@ -79,11 +79,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Sonic Mania By Sega, Decompilation By Rubberduckycooly/RMGRich"
             VALUE "FileDescription", "Sonic Mania"
-            VALUE "FileVersion", "1.0.0.0"
+            VALUE "FileVersion", "1.0.0"
             VALUE "InternalName", "Game.dll"
             VALUE "OriginalFilename", "Game.dll"
             VALUE "ProductName", "Sonic Mania"
-            VALUE "ProductVersion", "1.0.0.0"
+            VALUE "ProductVersion", "1.0.0"
         END
     END
     BLOCK "VarFileInfo"

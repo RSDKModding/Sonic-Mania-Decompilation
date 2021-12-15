@@ -1,6 +1,11 @@
 #ifndef SONIC_MANIA_H
 #define SONIC_MANIA_H
 
+// =====================================================================
+// RSDK Project: Sonic Mania (Plus)
+// Decompiled By Rubberduckycooly & RMGRich
+// =====================================================================
+
 #define VER_100 0 // 1.00 (initial console release)
 #define VER_103 3 // 1.03 (pc release/ console patch)
 #define VER_105 5 // 1.04/1.05
