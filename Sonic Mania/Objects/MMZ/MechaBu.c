@@ -2,7 +2,7 @@
 // RSDK Project: Sonic Mania
 // Object Description: MechaBu Object
 // Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
-// Decompiled By Rubberduckycooly & RMGRich
+// Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
 #include "SonicMania.h"

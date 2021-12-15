@@ -3,7 +3,7 @@
 
 // =====================================================================
 // RSDK Project: Sonic Mania (Plus)
-// Decompiled By Rubberduckycooly & RMGRich
+// Decompiled by: Rubberduckycooly & RMGRich
 // =====================================================================
 
 #define VER_100 0 // 1.00 (initial console release)
