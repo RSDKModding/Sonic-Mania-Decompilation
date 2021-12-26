@@ -376,17 +376,14 @@ void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act
         else
             TimeAttackMenu->prevIsUser = TimeAttackMenu->isUser;
 
-        const char *name = "";
-        if (zoneID > 11 || act > 1 || (characterID - 1) > 4) {
-            name = 0;
-        }
-        else {
+        LeaderboardID *leaderboardInfo = NULL;
+        if (zoneID > 11 || act > 1 || (characterID - 1) <= 4) {
             int32 pos = act + 2 * zoneID - 1 + characterID + 4 * (act + 2 * zoneID);
             if (isEncore)
                 pos += 120;
-            name = LeaderboardNames[pos];
+            leaderboardInfo = &maniaLeaderboardInfo[pos];
         }
-        API.FetchLeaderboard(name, TimeAttackMenu->prevIsUser);
+        API.FetchLeaderboard(leaderboardInfo, TimeAttackMenu->prevIsUser);
         UITABanner_SetupDetails(characterID, (EntityUITABanner *)TimeAttackMenu->leaderboardsBanner, zoneID, act, isEncore);
     }
 }
@@ -439,13 +436,13 @@ void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost)
     if (!showGhost) {
         if (!TimeAttackData->loaded || characterID != TimeAttackData->characterID || zoneID != TimeAttackData->zoneID || act != TimeAttackData->act
             || encore != TimeAttackData->encore) {
-            TimeAttackData_ConfigureTableView(zoneID, characterID, act, encore);
+            TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
         }
 
         int32 count = API.GetSortedUserDBRowCount(globals->taTableID);
 
         for (int32 i = 1; i < count; ++i) {
-            if (uuid == TimeAttackData_GetReplayID(zoneID, characterID, act, encore, i)) {
+            if (uuid == TimeAttackData_GetReplayID(zoneID, act, characterID, encore, i)) {
                 break;
             }
             ++replayID;
@@ -747,7 +744,7 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
     while (API.GetSortedUserDBRowCount(globals->taTableID) > 0) {
         int32 value = API.GetSortedUserDBRowID(globals->taTableID, 0);
         API.RemoveDBRow(globals->taTableID, value);
-        TimeAttackData_ConfigureTableView(banner->zoneID, banner->characterID, act, TimeAttackMenu->encoreMode);
+        TimeAttackData_ConfigureTableView(banner->zoneID, act, banner->characterID, TimeAttackMenu->encoreMode);
     }
 
     control->buttonID = 0;
@@ -801,13 +798,13 @@ void TimeAttackMenu_Replays_ChoiceChangeCB(void)
 
     int32 act = control->buttons[0]->selection;
     UITABanner_SetupDetails(param->characterID, (EntityUITABanner *)TimeAttackMenu->detailsBanner, param->zoneID, act, TimeAttackMenu->encoreMode);
-    TimeAttackData_ConfigureTableView(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode);
+    TimeAttackData_ConfigureTableView(param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode);
 
     int32 count = 1;
     for (int32 i = 1; i < 4; ++i) {
         EntityUIRankButton *button = (EntityUIRankButton *)control->buttons[i];
-        int32 score                = TimeAttackData_GetScore(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode, i);
-        int32 replayID             = TimeAttackData_GetReplayID(param->zoneID, param->characterID, act, TimeAttackMenu->encoreMode, i);
+        int32 score                = TimeAttackData_GetScore(param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode, i);
+        int32 replayID             = TimeAttackData_GetReplayID(param->zoneID, act, param->characterID, TimeAttackMenu->encoreMode, i);
         UIRankButton_SetTimeAttackRank(button, i, score, replayID);
         if (score)
             ++count;

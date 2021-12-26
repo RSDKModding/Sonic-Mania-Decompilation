@@ -31,7 +31,7 @@ void LoadScene()
     }
 
     for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].rowCount = 0;
+        typeGroups[i].entryCount = 0;
     }
 #if RETRO_REV02
     ClearDebugValues();

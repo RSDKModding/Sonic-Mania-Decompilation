@@ -225,7 +225,7 @@ void PBL_Setup_GiveLife(void)
     if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
         if (saveRAM->lives < 99)
             saveRAM->lives++;
-        Music_PlayMusicTrack(TRACK_1UP);
+        Music_PlayQueuedTrack(TRACK_1UP);
     }
 }
 

@@ -273,7 +273,7 @@ bool32 EggPistonsMKII_CheckPlayerAttacking(void *p)
             player->groundVel  = -0x30000;
         }
         if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
-            RSDK.SetSpriteAnimation(Player->knuxSpriteIndex, ANI_FLYTIRED, &player->animator, true, 0);
+            RSDK.SetSpriteAnimation(Player->knuxFrames, ANI_FLYTIRED, &player->animator, true, 0);
             player->state = Player_State_KnuxGlideDrop;
         }
         return true;

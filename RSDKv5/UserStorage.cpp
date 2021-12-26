@@ -1246,3 +1246,28 @@ bool32 DeleteUserFile(const char *filename)
         userFileCallback2();
     return status == 0;
 }
+
+#if !RETRO_REV02
+bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32))
+{
+    bool32 success = false;
+
+    success = LoadUserFile(filename, buffer, size);
+
+    if (callback)
+        callback(success ? STATUS_OK : STATUS_ERROR);
+
+    return success;
+}
+bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32))
+{
+    bool32 success = false;
+
+    success = SaveUserFile(filename, buffer, size);
+
+    if (callback)
+        callback(success ? STATUS_OK : STATUS_ERROR);
+
+    return success;
+}
+#endif

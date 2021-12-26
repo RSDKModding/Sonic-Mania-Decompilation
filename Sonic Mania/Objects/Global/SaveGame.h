@@ -48,9 +48,9 @@ typedef struct {
     RSDK_OBJECT
 #endif
     void *loadEntityPtr;
-    void (*loadCallback)(int32 status);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int32 status);
+    void (*saveCallback)(bool32 success);
     EntitySaveGame *saveRAM;
     int32 unused1;
 } ObjectSaveGame;
@@ -78,8 +78,8 @@ int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
 void SaveGame_LoadFile(void);
-void SaveGame_SaveFile(void (*callback)(int32 status));
-void SaveGame_SaveLoadedCB(int32 status);
+void SaveGame_SaveFile(void (*callback)(bool32 success));
+void SaveGame_SaveLoadedCB(bool32 success);
 void SaveGame_SaveGameState(void);
 void SaveGame_SaveProgress(void);
 void SaveGame_ClearRestartData(void);

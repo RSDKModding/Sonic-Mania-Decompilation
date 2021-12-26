@@ -209,7 +209,7 @@ void DialogRunner_CheckUserAuth_CB()
         }
     }
 }
-void DialogRunner_ManageNotifs(int32 success)
+void DialogRunner_ManageNotifs(void)
 {
     RSDK_THIS(DialogRunner);
     if (GameProgress_CountUnreadNotifs()) {
@@ -226,11 +226,11 @@ void DialogRunner_ManageNotifs(int32 success)
     else {
         DialogRunner->entityPtr = NULL;
         UIWaitSpinner_StartWait();
-        GameProgress_TrackGameProgress(DialogRunner_Wait);
+        GameProgress_TrackGameProgress(DialogRunner_TrackGameProgressCB);
         destroyEntity(self);
     }
 }
-void DialogRunner_Wait(int32 success) { UIWaitSpinner_FinishWait(); }
+void DialogRunner_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(); }
 void DialogRunner_GetNextNotif(void)
 {
     if (SceneInfo->inEditor || API.GetNoSave() || globals->saveLoaded != STATUS_OK) {

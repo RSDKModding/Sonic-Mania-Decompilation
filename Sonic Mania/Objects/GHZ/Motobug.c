@@ -45,7 +45,7 @@ void Motobug_Create(void *data)
     else {
         self->timer = 16;
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &self->animator, true, 0);
-        self->state = Motobug_State_Move;
+        self->state = Motobug_State_Setup;
     }
 }
 
@@ -102,35 +102,35 @@ void Motobug_State_Fall(void)
         self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
+    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         self->wasTurning = true;
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &self->animator, true, 0);
-        self->state = Motobug_State_HandleMove;
-        Motobug_State_HandleMove();
+        self->state = Motobug_State_Move;
+        Motobug_State_Move();
     }
     else {
         Motobug_CheckPlayerCollisions();
         Motobug_CheckOnScreen();
     }
 }
-void Motobug_State_HandleMove(void)
+void Motobug_State_Move(void)
 {
     RSDK_THIS(Motobug);
 
     self->position.x += self->velocity.x;
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
+    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 1, &self->animator, true, 0);
         self->turnTimer = 0;
 
         bool32 collided = false;
         if (self->direction)
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, -0x10000, 0xF0000, 8);
+            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
         else
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, 0x10000, 0xF0000, 8);
+            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
         if (collided)
-            self->state = Motobug_State_Move2;
+            self->state = Motobug_State_Idle;
         else
             self->state = Motobug_State_Fall;
     }
@@ -147,16 +147,16 @@ void Motobug_State_HandleMove(void)
     Motobug_CheckPlayerCollisions();
     Motobug_CheckOnScreen();
 }
-void Motobug_State_Move2(void)
+void Motobug_State_Idle(void)
 {
     RSDK_THIS(Motobug);
     RSDK.ProcessAnimation(&self->animator);
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, -0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, 0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
     if (collided) {
         ++self->turnTimer;
         if (self->turnTimer == 30) {
@@ -174,14 +174,14 @@ void Motobug_State_Move2(void)
     Motobug_CheckPlayerCollisions();
     Motobug_CheckOnScreen();
 }
-void Motobug_State_Move(void)
+void Motobug_State_Setup(void)
 {
     RSDK_THIS(Motobug);
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = -0x10000;
     self->velocity.y = 0;
-    self->state      = Motobug_State_HandleMove;
-    Motobug_State_HandleMove();
+    self->state      = Motobug_State_Move;
+    Motobug_State_Move();
 }
 void Motobug_State_Smoke(void)
 {
@@ -197,17 +197,17 @@ void Motobug_State_Turn(void)
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, -0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x10000, 0xF0000, 8);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, 0x10000, 0xF0000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x10000, 0xF0000, 8);
 
     if (collided) {
         if (self->animator.frameID == self->animator.frameCount - 1) {
             RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &self->animator, true, 0);
             self->direction ^= FLIP_X;
             self->velocity.x = -self->velocity.x;
-            self->state      = Motobug_State_HandleMove;
-            Motobug_State_HandleMove();
+            self->state      = Motobug_State_Move;
+            Motobug_State_Move();
         }
         else {
             Motobug_CheckPlayerCollisions();

@@ -113,10 +113,10 @@ void SaveGame_LoadSaveData(void)
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(e);
-                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorContents, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->contentsAnimator, true, 0);
                     itemBox->state = ItemBox_State_Broken;
                 }
             }
@@ -161,7 +161,7 @@ void SaveGame_LoadFile(void)
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
     API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
-void SaveGame_SaveFile(void (*callback)(int32 status))
+void SaveGame_SaveFile(void (*callback)(bool32 success))
 {
     if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
@@ -178,10 +178,10 @@ void SaveGame_SaveFile(void (*callback)(int32 status))
     }
 }
 
-void SaveGame_SaveLoadedCB(int32 status)
+void SaveGame_SaveLoadedCB(bool32 success)
 {
-    LogHelpers_Print("SaveLoadedCB(%d)", status);
-    if (status) {
+    LogHelpers_Print("SaveLoadedCB(%d)", success);
+    if (success) {
         foreach_all(UISaveSlot, entity)
         {
             if (!entity->type) {
@@ -198,15 +198,7 @@ void SaveGame_SaveLoadedCB(int32 status)
 
 #if RETRO_USE_PLUS
     if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
-        LogHelpers_Print("Loading Time Attack DB");
-        globals->taTableLoaded        = STATUS_CONTINUE;
-        TimeAttackData->loadEntityPtr = SceneInfo->entity;
-        TimeAttackData->loadCallback  = NULL;
-        globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
-        if (globals->taTableID == -1) {
-            LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
-            globals->taTableLoaded = STATUS_ERROR;
-        }
+        TimeAttackData_LoadTimeAttackDB(NULL);
     }
 #endif
 }

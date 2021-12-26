@@ -17,41 +17,41 @@ void TimeAttackData_Create(void *data) {}
 void TimeAttackData_StageLoad(void) {}
 
 #if RETRO_USE_PLUS
-void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 charID, int32 rings, int32 score, int32 time)
+void TimeAttackData_TrackActClear(StatInfo *stat, uint8 zone, uint8 act, uint8 characterID, int32 time, int32 rings, int32 score)
 {
     stat->statID = 0;
     stat->name   = "ACT_CLEAR";
     memset(stat->data, 0, sizeof(stat->data));
     stat->data[0] = (void *)ZoneNames[zone];
     stat->data[1] = (void *)ActNames[act];
-    stat->data[2] = (void *)PlayerNames[charID];
+    stat->data[2] = (void *)PlayerNames[characterID];
     stat->data[3] = 0;
     stat->data[4] = intToVoid(time);
     stat->data[5] = intToVoid(rings);
     stat->data[6] = intToVoid(score);
 }
-void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 charID, int32 gameMode, int32 time)
+void TimeAttackData_TrackTAClear(StatInfo *stat, uint8 zone, uint8 actID, uint8 characterID, int32 gameMode, int32 time)
 {
     stat->statID = 1;
     stat->name   = "TA_CLEAR";
     memset(stat->data, 0, sizeof(stat->data));
     stat->data[0] = (void *)ZoneNames[zone];
     stat->data[1] = (void *)ActNames[actID];
-    stat->data[2] = (void *)PlayerNames[charID];
+    stat->data[2] = (void *)PlayerNames[characterID];
     stat->data[3] = (void *)ModeNames[gameMode];
     stat->data[4] = intToVoid(time);
 }
-void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 charID, bool32 encore, int32 x, int32 y)
+void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, uint8 characterID, bool32 encore, int32 x, int32 y)
 {
-    stat->statID   = 2;
+    stat->statID = 2;
     stat->name   = "ENEMY_DEFEAT";
     memset(stat->data, 0, sizeof(stat->data));
-    stat->data[0]     = (void *)ZoneNames[zoneID];
-    stat->data[1]     = (void *)ActNames[actID];
-    stat->data[2]     = (void *)PlayerNames[charID];
-    stat->data[3]     = intToVoid(encore);
-    stat->data[4]     = intToVoid(x);
-    stat->data[5]     = intToVoid(y);
+    stat->data[0] = (void *)ZoneNames[zoneID];
+    stat->data[1] = (void *)ActNames[actID];
+    stat->data[2] = (void *)PlayerNames[characterID];
+    stat->data[3] = intToVoid(encore);
+    stat->data[4] = intToVoid(x);
+    stat->data[5] = intToVoid(y);
 }
 #endif
 
@@ -141,7 +141,7 @@ void TimeAttackData_GetTimeFromValue(int32 time, int32 *minsPtr, int32 *secsPtr,
         *millisecsPtr = ms;
 }
 
-uint16 *TimeAttackData_GetRecordedTime(uint8 zone, uint8 act, uint8 player, uint8 rank)
+uint16 *TimeAttackData_GetRecordedTime(uint8 zoneID, uint8 act, uint8 characterID, uint8 rank)
 {
     rank--;
     if (rank >= 3)
@@ -154,14 +154,27 @@ uint16 *TimeAttackData_GetRecordedTime(uint8 zone, uint8 act, uint8 player, uint
         return NULL;
 
     // 72 = (12 * 6)
-    int32 pos = 72 * (player - 1) + 6 * zone + act * 3 + rank;
+    int32 pos = 72 * (characterID - 1) + 6 * zoneID + act * 3 + rank;
     // not sure why theres an offset of 43 uint16's (86 bytes) but whatever ig
     pos += 43;
     return &saveRAM[pos];
 }
 
 #if RETRO_USE_PLUS
-int32 TimeAttackData_LoadCB(int32 statusCode)
+uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success))
+{
+    LogHelpers_Print("Loading Time Attack DB");
+    globals->taTableLoaded        = STATUS_CONTINUE;
+    TimeAttackData->loadEntityPtr = SceneInfo->entity;
+    TimeAttackData->loadCallback  = callback;
+    globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadTimeAttackDB_CB);
+    if (globals->taTableID == -1) {
+        LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
+        globals->taTableLoaded = STATUS_ERROR;
+    }
+}
+
+void TimeAttackData_LoadTimeAttackDB_CB(int32 statusCode)
 {
     if (statusCode == STATUS_OK) {
         globals->taTableLoaded = STATUS_OK;
@@ -179,11 +192,10 @@ int32 TimeAttackData_LoadCB(int32 statusCode)
         if (TimeAttackData->loadEntityPtr)
             SceneInfo->entity = TimeAttackData->loadEntityPtr;
         TimeAttackData->loadCallback(statusCode == STATUS_OK);
-        SceneInfo->entity        = entStore;
+        SceneInfo->entity             = entStore;
         TimeAttackData->loadCallback  = NULL;
         TimeAttackData->loadEntityPtr = NULL;
     }
-    return 1;
 }
 
 void TimeAttackData_ResetTimeAttackDB(void)
@@ -217,9 +229,9 @@ void TimeAttackData_MigrateLegacySaves(void)
                     for (int32 rank = 0; rank < 3; ++rank) {
                         uint16 *records = TimeAttackData_GetRecordedTime(zone, act, charID + 1, rank);
                         if (records && *records) {
-                            int32 time = *records;
-                            LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID + 1, rank, time);
-                            TimeAttackData_AddTADBEntry(zone, charID + 1, act, MODE_MANIA, time, NULL);
+                            int32 score = *records;
+                            LogHelpers_Print("Import: zone=%d act=%d charID=%d rank=%d -> %d", zone, act, charID + 1, rank, score);
+                            TimeAttackData_AddTADBEntry(zone, act, charID + 1, MODE_MANIA, score, NULL);
                         }
                     }
                 }
@@ -229,18 +241,18 @@ void TimeAttackData_MigrateLegacySaves(void)
     }
 }
 
-int32 TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int32 act, char mode, int32 time)
+int32 TimeAttackData_AddTimeAttackDBEntry(uint8 zoneID, uint8 act, uint8 characterID, uint8 mode, int32 score)
 {
     if (globals->taTableLoaded != STATUS_OK)
         return -1;
 
     uint16 rowID = API.AddUserDBRow(globals->taTableID);
-    int32 encore   = mode & 1;
-    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "zoneID", &zone);
+    int32 encore = mode & 1;
+    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "zoneID", &zoneID);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "act", &act);
-    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "characterID", &charID);
+    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "characterID", &characterID);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT8, "encore", &encore);
-    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "score", &time);
+    API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "score", &score);
     API.SetUserDBValue(globals->taTableID, rowID, DBVAR_UINT32, "replayID", NULL);
     uint32 uuid = API.GetUserDBRowUUID(globals->taTableID, rowID);
     char buf[0x20];
@@ -253,15 +265,15 @@ int32 TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int32 act, cha
     return rowID;
 }
 
-int32 TimeAttackData_AddTADBEntry(char zone, char charID, int32 act, int32 mode, int32 time, void (*callback)(int32))
+int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score, void (*callback)(bool32 success))
 {
-    uint16 row = TimeAttackData_AddTimeAttackDBEntry(zone, charID, act, mode, time);
-    uint32 uuid  = API.GetUserDBRowUUID(globals->taTableID, row);
-    TimeAttackData_ConfigureTableView(zone, charID, act, mode);
+    uint16 row  = TimeAttackData_AddTimeAttackDBEntry(zoneID, act, characterID, encore, score);
+    uint32 uuid = API.GetUserDBRowUUID(globals->taTableID, row);
+    TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     if (API.GetSortedUserDBRowCount(globals->taTableID) > 3) {
         int32 row = API.GetSortedUserDBRowID(globals->taTableID, 3);
         API.RemoveDBRow(globals->taTableID, row);
-        TimeAttackData_ConfigureTableView(zone, charID, act, mode);
+        TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     }
 
     int32 c     = 0;
@@ -273,7 +285,7 @@ int32 TimeAttackData_AddTADBEntry(char zone, char charID, int32 act, int32 mode,
     }
     if (c == 3) {
         if (callback)
-            callback(0);
+            callback(false);
         return 0;
     }
 
@@ -282,7 +294,7 @@ int32 TimeAttackData_AddTADBEntry(char zone, char charID, int32 act, int32 mode,
     TimeAttackData->personalRank = c + 1;
     if (TimeAttackData->isMigratingData) {
         if (callback)
-            callback(1);
+            callback(true);
     }
     else {
         TimeAttackData_SaveTimeAttackDB(callback);
@@ -290,7 +302,7 @@ int32 TimeAttackData_AddTADBEntry(char zone, char charID, int32 act, int32 mode,
     return c + 1;
 }
 
-int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
+void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success))
 {
     if (API.GetNoSave() || globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) {
         if (callback)
@@ -302,7 +314,6 @@ int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
         TimeAttackData->saveCallback  = callback;
         API.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
     }
-    return 1;
 }
 
 void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
@@ -312,43 +323,43 @@ void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
         if (TimeAttackData->saveEntityPtr)
             SceneInfo->entity = TimeAttackData->saveEntityPtr;
         TimeAttackData->saveCallback(statusCode == STATUS_OK);
-        SceneInfo->entity        = entStore;
+        SceneInfo->entity             = entStore;
         TimeAttackData->saveCallback  = NULL;
         TimeAttackData->saveEntityPtr = NULL;
     }
 }
 
-int32 TimeAttackData_GetScore(uint8 zone, uint8 charID, uint8 act, int32 encore, int32 rank)
+int32 TimeAttackData_GetScore(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank)
 {
     if (rank > 3 && rank)
         return 0;
 
     uint8 rankID = rank - 1;
-    if (!TimeAttackData->loaded || charID != TimeAttackData->characterID || zone != TimeAttackData->zoneID || act != TimeAttackData->act
+    if (!TimeAttackData->loaded || characterID != TimeAttackData->characterID || zoneID != TimeAttackData->zoneID || act != TimeAttackData->act
         || encore != TimeAttackData->encore) {
-        TimeAttackData_ConfigureTableView(zone, charID, act, encore);
+        TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     }
 
     int32 row = API.GetSortedUserDBRowID(globals->taTableID, rankID);
     if (row == -1)
         return 0;
-    
+
     int32 score = 0;
     API.GetUserDBValue(globals->taTableID, row, DBVAR_UINT32, "score", &score);
     return score;
 }
 
-int32 TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int32 encore, int32 rank)
+int32 TimeAttackData_GetReplayID(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 rank)
 {
     if (rank > 3 && rank)
         return 0;
 
     uint8 rankID = rank - 1;
-    if (!TimeAttackData->loaded || charID != TimeAttackData->characterID || zone != TimeAttackData->zoneID
-        || act != TimeAttackData->act || encore != TimeAttackData->encore) {
-        TimeAttackData_ConfigureTableView(zone, charID, act, encore);
+    if (!TimeAttackData->loaded || characterID != TimeAttackData->characterID || zoneID != TimeAttackData->zoneID || act != TimeAttackData->act
+        || encore != TimeAttackData->encore) {
+        TimeAttackData_ConfigureTableView(zoneID, act, characterID, encore);
     }
-    
+
     int32 row = API.GetSortedUserDBRowID(globals->taTableID, rankID);
     if (row != -1) {
         int32 replayID = 0;
@@ -358,17 +369,17 @@ int32 TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int32 enco
     return 0;
 }
 
-void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 characterID, uint8 act, int32 encore)
+void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore)
 {
     LogHelpers_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
     // setup every sort row ID for every entry
     API.SetupUserDBRowSorting(globals->taTableID);
-    //remove any sort row IDs that dont match the following values
+    // remove any sort row IDs that dont match the following values
     API.AddRowSortFilter(globals->taTableID, DBVAR_UINT8, "zoneID", &zoneID);
     API.AddRowSortFilter(globals->taTableID, DBVAR_UINT8, "act", &act);
     API.AddRowSortFilter(globals->taTableID, DBVAR_UINT8, "characterID", &characterID);
     API.AddRowSortFilter(globals->taTableID, DBVAR_UINT8, "encore", &encore);
-    //sort the remaining rows
+    // sort the remaining rows
     API.SortDBRows(globals->taTableID, DBVAR_UINT32, "score", false);
     TimeAttackData->loaded      = true;
     TimeAttackData->zoneID      = zoneID;
@@ -385,37 +396,37 @@ void TimeAttackData_GetLeaderboardRank_CB(bool32 success, int32 rank)
     }
 }
 
-void TimeAttackData_AddLeaderboardEntry(uint8 zone, uint8 act, uint8 characterID, int32 mode, int32 time)
+void TimeAttackData_AddLeaderboardEntry(uint8 zoneID, uint8 act, uint8 characterID, bool32 encore, int32 score)
 {
-    StatInfo stat; 
-    TimeAttackData_TrackTAClear(&stat, zone, act, characterID, mode, time);
+    StatInfo stat;
+    TimeAttackData_TrackTAClear(&stat, zoneID, act, characterID, encore, score);
     API.TryTrackStat(&stat);
 
-    const char *leaderboardName = "";
-    if (zone < 12 && act < 2 && characterID <= 5) {
-        int32 id = 10 * zone + 5 * act + (characterID - 1);
-        if (mode)
+    LeaderboardID *leaderboardInfo = NULL;
+    if (zoneID < 12 && act < 2 && characterID <= 5) {
+        int32 id = 10 * zoneID + 5 * act + (characterID - 1);
+        if (encore)
             id += 120;
-        leaderboardName = LeaderboardNames[id];
+        leaderboardInfo = &maniaLeaderboardInfo[id];
     }
-    API.TrackScore(leaderboardName, time, TimeAttackData_GetLeaderboardRank_CB);
+    API.TrackScore(leaderboardInfo, score, TimeAttackData_GetLeaderboardRank_CB);
 }
 
 #else
-void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 player, uint8 rank, uint16 time)
+void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 characterID, uint8 rank, uint16 score)
 {
     rank--;
     if (rank < 3) {
         // playerID * (12 zones)
         // zone * (2 acts)
         // act * (3 ranks)
-        uint16 *record = TimeAttackData_GetRecordedTime(zone, act, player, 1);
+        uint16 *record = TimeAttackData_GetRecordedTime(zone, act, characterID, 1);
 
         for (int32 r = 2; r > rank; --r) {
             record[r] = record[r - 1];
         }
 
-        record[rank] = time;
+        record[rank] = score;
     }
 }
 #endif

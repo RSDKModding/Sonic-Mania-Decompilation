@@ -210,9 +210,9 @@ void PhantomMissile_Unknown6(void)
     if (rx * rx + ry * ry < 64) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->drawPos.x, self->drawPos.y - 0x80000)->drawOrder = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->animator0, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
         self->timer     = 0;
         self->field_68  = 0;
         self->drawOrder = Zone->drawOrderLow;

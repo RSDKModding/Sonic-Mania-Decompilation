@@ -115,8 +115,8 @@ typedef struct {
 #if RETRO_USE_EGS
     void (*LeaderboardUnknown1)(void);
 #endif
-    void (*FetchLeaderboard)(const char *name, bool32 isUser);
-    void (*TrackScore)(const char *name, int32 score, void (*callback)(bool32 success, int32 rank));
+    void (*FetchLeaderboard)(LeaderboardID *leaderboard, bool32 isUser);
+    void (*TrackScore)(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank));
     int32 (*GetLeaderboardsStatus)(void);
     Vector2 (*LeaderboardEntryCount)(void);
     Vector2 (*LeaderboardEntryLength)(void);

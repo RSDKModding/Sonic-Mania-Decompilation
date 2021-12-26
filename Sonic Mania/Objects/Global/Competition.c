@@ -92,7 +92,7 @@ void Competition_State_Manager(void)
             self->seconds = SceneInfo->seconds;
             self->timer--;
             if (self->timer == 12) {
-                Music_PlayMusicTrack(TRACK_DROWNING);
+                Music_PlayQueuedTrack(TRACK_DROWNING);
             }
             else if (!self->timer) {
                 Zone->gotTimeOver           = true;

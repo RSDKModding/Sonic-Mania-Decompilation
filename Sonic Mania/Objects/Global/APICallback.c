@@ -126,7 +126,7 @@ void APICallback_SaveUserFile(const char *name, void *buffer, int32 size, void (
 {
     if (globals->noSave) {
         LogHelpers_Print("SaveUserFile(%s, %X, %d, %X) failing due to noSave", name, buffer, size, callback);
-        callback(0);
+        callback(false);
     }
     else if (APICallback->SaveUserFile) {
         LogHelpers_Print("API SaveUserFile(%s, %X, %d, %X)", name, buffer, size, callback);
@@ -590,7 +590,7 @@ void APICallback_ResetControllerAssignments(void)
     }
 }
 
-void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 score, int32 rings, int32 time)
+void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time, int32 rings, int32 score)
 {
     if (APICallback->TrackActClear)
         APICallback->TrackActClear(zoneID, actID, playerID, score, rings, time);
@@ -610,6 +610,14 @@ void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int
         APICallback->TrackEnemyDefeat(zoneID, actID, playerID, entityX, entityY);
     else
         LogHelpers_Print("EMPTY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
+}
+
+void APICallback_TrackGameProgress(float percent)
+{
+    if (APICallback->TrackGameProgress)
+        APICallback->TrackGameProgress(percent);
+    else
+        LogHelpers_Print("EMPTY TrackGameProgress(%f)", percent);
 }
 
 void APICallback_TryAuth_No(void)

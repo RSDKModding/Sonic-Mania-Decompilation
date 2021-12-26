@@ -53,6 +53,6 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host);
 bool32 ERZOutro_CutsceneState_FadeOut(EntityCutsceneSeq *host);
 bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host);
 
-void ERZOutro_SaveFileCB(int32 status);
+void ERZOutro_SaveFileCB(bool32 success);
 
 #endif //!OBJ_ERZOUTRO_H

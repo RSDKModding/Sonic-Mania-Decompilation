@@ -106,7 +106,7 @@ void TimeAttackGate_Create(void *data)
 
 void TimeAttackGate_StageLoad(void)
 {
-    TimeAttackGate->teleportChannel = 0xFFFF;
+    TimeAttackGate->teleportChannel = -1;
     TimeAttackGate->aniFrames       = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
     TimeAttackGate->hitbox.left     = -8;
     TimeAttackGate->hitbox.top      = -44;
@@ -242,19 +242,19 @@ void TimeAttackGate_AddRecord(void)
             UIWaitSpinner_StartWait();
 
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-        int32 playerID         = param->characterID;
-        int32 zone             = param->zoneID;
-        int32 time             = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
+        int32 characterID      = param->characterID;
+        int32 zoneID           = param->zoneID;
+        int32 score             = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
         int32 act              = param->actID;
-        int32 mode             = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
+        bool32 encore          = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
 
-        param->timeAttackRank = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
-        TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
+        param->timeAttackRank = TimeAttackData_AddTADBEntry(zoneID, act, characterID, encore, score, TimeAttackGate_LeaderboardCB);
+        TimeAttackData_AddLeaderboardEntry(zoneID, act, characterID, encore, score);
     }
 }
 #endif
 
-void TimeAttackGate_LeaderboardCB(int32 status)
+void TimeAttackGate_LeaderboardCB(bool32 success)
 {
     if (ActClear)
         ActClear->finishedSavingGame = false;
@@ -382,7 +382,7 @@ void TimeAttackGate_State_Restarter(void)
                 }
                 if (!ControllerInfo[player->controllerID].keyY.down) {
                     if (self->restartTimer > 0) {
-                        TimeAttackGate->teleportChannel = 0xFFFF;
+                        TimeAttackGate->teleportChannel = -1;
                         RSDK.StopSfx(TimeAttackGate->sfxTeleport);
                         self->restartTimer -= 4;
                     }

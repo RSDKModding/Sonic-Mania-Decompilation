@@ -95,7 +95,7 @@ void GameOver_StageLoad(void)
     GameOver->activeScreens = 0;
 }
 
-void GameOver_SaveGameCallback(int32 status)
+void GameOver_SaveGameCallback(bool32 success)
 {
     UIWaitSpinner_FinishWait();
     RSDK.LoadScene();
@@ -143,9 +143,9 @@ void GameOver_State_EnterLetters(void)
         }
         else {
             if (session->playerCount <= 0) {
-                bool32 playMusicFlag = true;
-                if (!Zone->gotTimeOver)
-                    playMusicFlag = false;
+                bool32 playMusicFlag = false;
+                if (Zone->gotTimeOver)
+                    playMusicFlag = true;
 
                 if (playMusicFlag) {
                     Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
@@ -225,12 +225,12 @@ void GameOver_State_ShowMessage(void)
     RSDK_THIS(GameOver);
     ++self->timer;
 
-    int32 cID = CONT_ANY;
+    int32 id = CONT_ANY;
     if (globals->gameMode == MODE_COMPETITION)
-        cID = self->playerID + 1;
+        id = self->playerID + 1;
 
-    if (ControllerInfo[cID].keyA.press || ControllerInfo[cID].keyB.press || ControllerInfo[cID].keyC.press || ControllerInfo[cID].keyX.press
-        || ControllerInfo[cID].keyStart.press)
+    if (ControllerInfo[id].keyA.press || ControllerInfo[id].keyB.press || ControllerInfo[id].keyC.press || ControllerInfo[id].keyX.press
+        || ControllerInfo[id].keyStart.press)
         self->timer = 420;
 
     if (self->timer == 420) {
@@ -286,7 +286,6 @@ void GameOver_State_ExitLetters(void)
 #endif
             RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             RSDK.SetScene("Presentation", "Menu");
-            RSDK.LoadScene();
         }
         else if (self->animator.animationID != 6) {
             StarPost->storedMS      = 0;
@@ -298,7 +297,6 @@ void GameOver_State_ExitLetters(void)
             EntitySaveGame *saveRAM = SaveGame->saveRAM;
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 RSDK.SetScene("Presentation", "Menu");
-                RSDK.LoadScene();
             }
             else if (globals->continues > 0) {
                 saveRAM->storedStageID = SceneInfo->listPos;
@@ -318,7 +316,6 @@ void GameOver_State_ExitLetters(void)
                 }
 #endif
                 RSDK.SetScene("Presentation", "Continue");
-                RSDK.LoadScene();
             }
             else {
                 saveRAM->lives    = 3;
@@ -341,6 +338,7 @@ void GameOver_State_ExitLetters(void)
                 RSDK.SetScene("Presentation", "Menu");
             }
         }
+        RSDK.LoadScene();
     }
 }
 

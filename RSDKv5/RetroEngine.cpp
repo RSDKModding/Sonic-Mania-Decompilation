@@ -38,14 +38,30 @@ bool32 processEvents()
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: return false;
-                    case SDL_WINDOWEVENT_FOCUS_GAINED: userCore->focusState = 0; break;
-                    case SDL_WINDOWEVENT_FOCUS_LOST: userCore->focusState = 1; break;
+                    case SDL_WINDOWEVENT_FOCUS_GAINED: 
+                        #if RETRO_REV02
+                        userCore->focusState = 0;
+                        #endif
+                        break;
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+#if RETRO_REV02
+                        userCore->focusState = 1; 
+                        #endif
+                        break;
                 }
                 break;
             case SDL_CONTROLLERDEVICEADDED: controllerInit(engine.sdlEvents.cdevice.which); break;
             case SDL_CONTROLLERDEVICEREMOVED: controllerClose(engine.sdlEvents.cdevice.which); break;
-            case SDL_APP_WILLENTERFOREGROUND: userCore->focusState = 0; break;
-            case SDL_APP_WILLENTERBACKGROUND: userCore->focusState = 1; break;
+            case SDL_APP_WILLENTERFOREGROUND:
+#if RETRO_REV02
+                userCore->focusState = 0;
+                #endif
+                break;
+            case SDL_APP_WILLENTERBACKGROUND:
+#if RETRO_REV02
+                userCore->focusState = 1;
+                #endif
+                break;
             case SDL_APP_TERMINATING: return false;
 #endif
 
@@ -268,7 +284,9 @@ bool32 initRetroEngine()
 
     // By Default we use the dummy system so this'll never be false
     // its used in cases like steam where it gives the "Steam must be running to play this game" message and closes
+#if RETRO_REV02
     if (userCore->CheckAPIInitialized()) {
+#endif
         readSettings();
         startGameObjects();
 
@@ -290,10 +308,12 @@ bool32 initRetroEngine()
         RunModCallbacks(MODCB_GAME_STARTUP, NULL);
 #endif
 
+#if RETRO_REV02
     }
     else {
         engine.running = false;
     }
+#endif
     return true;
 }
 void runRetroEngine()

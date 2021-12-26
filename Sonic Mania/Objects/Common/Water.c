@@ -461,7 +461,7 @@ void Water_State_Palette(void)
                 }
                 if (!player->sidekick && player->airTimer >= 1080) {
                     player->airTimer = 0;
-                    Music_ResumePrevTrack(TRACK_DROWNING, false);
+                    Music_EndQueuedTrack(TRACK_DROWNING, false);
                 }
             }
             else {
@@ -773,7 +773,7 @@ void Water_State_Bubble(void)
                                 }
                                 player->airTimer = 0;
                                 if (!player->sidekick)
-                                    Music_ResumePrevTrack(TRACK_DROWNING, false);
+                                    Music_EndQueuedTrack(TRACK_DROWNING, false);
                                 RSDK.PlaySfx(Water->sfxBreathe, false, 255);
                             }
                         }
@@ -873,7 +873,7 @@ void Water_State_HCZBubble(void)
 
                     player->airTimer = 0;
                     if (!player->sidekick)
-                        Music_ResumePrevTrack(TRACK_DROWNING, false);
+                        Music_EndQueuedTrack(TRACK_DROWNING, false);
 
                     RSDK.PlaySfx(Water->sfxDNAGrab, false, 255);
                     self->activePlayers |= 1 << playerID;

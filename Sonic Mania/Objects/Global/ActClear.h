@@ -83,7 +83,7 @@ void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
 void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);
-void ActClear_SaveGameCallback(int32 success);
+void ActClear_SaveGameCallback(bool32 success);
 void ActClear_SetupForceOnScreenP2(void);
 
 void ActClear_State_EnterText(void);

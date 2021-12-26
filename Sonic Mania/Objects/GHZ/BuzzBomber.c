@@ -64,8 +64,8 @@ void BuzzBomber_Create(void *data)
         self->updateRange.x = 0x200000;
         self->updateRange.y = 0x200000;
         RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 4, &self->animator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->wingAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->wingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
         self->state = BuzzBomber_State_ProjectileCharge;
     }
     else {
@@ -141,7 +141,7 @@ void BuzzBomber_CheckPlayerCollisions(void)
             if (Player_CheckCollisionTouch(player, self, &self->rangeHitbox)) {
                 self->detectedPlayer = true;
                 self->timer    = 90;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
                 self->state = BuzzBomber_State_DetectedPlayer;
             }
         }
@@ -167,12 +167,12 @@ void BuzzBomber_State_BuzzAround(void)
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    if (!self->timer) {
+    if (!--self->timer) {
         self->direction ^= FLIP_X;
         self->timer      = 60;
         self->velocity.x = -self->velocity.x;
         self->detectedPlayer   = false;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
         self->state = BuzzBomber_State_IdleDelay;
     }
 

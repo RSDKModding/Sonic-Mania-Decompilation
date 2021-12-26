@@ -94,14 +94,14 @@ void LevelSelect_StageLoad(void)
     LevelSelect->checkCheatActivated[5] = LevelSelect_CheatActivated_SuperDash;
     LevelSelect->checkCheatActivated[6] = LevelSelect_CheatActivated_MaxControl;
     LevelSelect->checkCheatActivated[7] = LevelSelect_CheatActivated_ChangeSuperMusicFlag;
-    LevelSelect->cheatUnknown[0]        = 0;
-    LevelSelect->cheatUnknown[1]        = 0;
-    LevelSelect->cheatUnknown[2]        = 0;
-    LevelSelect->cheatUnknown[3]        = 0;
-    LevelSelect->cheatUnknown[4]        = 0;
-    LevelSelect->cheatUnknown[5]        = 0;
-    LevelSelect->cheatUnknown[6]        = 0;
-    LevelSelect->cheatUnknown[7]        = 0;
+    LevelSelect->cheatCodePos[0]        = 0;
+    LevelSelect->cheatCodePos[1]        = 0;
+    LevelSelect->cheatCodePos[2]        = 0;
+    LevelSelect->cheatCodePos[3]        = 0;
+    LevelSelect->cheatCodePos[4]        = 0;
+    LevelSelect->cheatCodePos[5]        = 0;
+    LevelSelect->cheatCodePos[6]        = 0;
+    LevelSelect->cheatCodePos[7]        = 0;
 #endif
 }
 
@@ -379,14 +379,14 @@ void LevelSelect_State_HandleMenu(void)
             self->offsetUFO = self->soundTestID % 14;
             self->offsetBSS = self->soundTestID & 0x1F;
             for (int32 i = 0; i < 8; ++i) {
-                if (self->soundTestID != LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]]) {
-                    LevelSelect->cheatUnknown[i] = 0;
+                if (self->soundTestID != LevelSelect->cheatCodePtrs[i][LevelSelect->cheatCodePos[i]]) {
+                    LevelSelect->cheatCodePos[i] = 0;
                 }
                 else {
-                    LevelSelect->cheatUnknown[i]++;
-                    if (LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]] == 255) {
+                    LevelSelect->cheatCodePos[i]++;
+                    if (LevelSelect->cheatCodePtrs[i][LevelSelect->cheatCodePos[i]] == 255) {
                         LevelSelect->checkCheatActivated[i]();
-                        LevelSelect->cheatUnknown[i] = 0;
+                        LevelSelect->cheatCodePos[i] = 0;
                     }
                 }
             }

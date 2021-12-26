@@ -196,7 +196,7 @@ void CutsceneHBH_LoadSprites(void)
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 5, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_SHINOBI:
             if (!self->aniFrames)
@@ -208,13 +208,13 @@ void CutsceneHBH_LoadSprites(void)
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_RIDER:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyRider.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 3, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_KING:
             if (!self->aniFrames)
@@ -226,19 +226,19 @@ void CutsceneHBH_LoadSprites(void)
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_ROUGE_BEAN:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 5, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_ROUGE_BARK:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 12, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_KINGDAMAGED:
             if (!self->aniFrames)
@@ -250,13 +250,13 @@ void CutsceneHBH_LoadSprites(void)
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/HBHPile.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         case HBH_KINGTMZ2:
             if (!self->aniFrames)
                 self->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/KingTMZ2.bin", SCOPE_STAGE);
             RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             break;
         default: break;
     }
@@ -293,7 +293,7 @@ void CutsceneHBH_ShinobiBounceSetup(void)
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_SHINOBI);
     if (entity) {
         RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &entity->animator2, true, 0);
         entity->state = CutsceneHBH_State_ShinobiBounce;
     }
 }
@@ -303,7 +303,7 @@ void CutsceneHBH_RiderSetup(void)
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_RIDER);
     if (entity) {
         RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &entity->animator2, true, 0);
         entity->timer      = 0;
         entity->originPos.x   = entity->position.x;
         entity->originPos.y   = entity->position.y;
@@ -456,7 +456,7 @@ void CutsceneHBH_State_KingExit(void)
         self->velocity.x = 0x28000;
         self->velocity.y = -0x60000;
         self->state      = CutsceneHBH_State_KingFall;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
     }
 }
 

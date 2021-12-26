@@ -780,11 +780,6 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 flags2 |= 8;
             }
         }
-
-        if ((drawX1 == drawX2) && ((curFlags & 1) || (curFlags & 2)))
-            printf("");
-        if ((drawY1 == drawY2) && ((curFlags & 4) || (curFlags & 8)))
-            printf("");
     }
 
     if (drawX1 > currentScreen->clipBound_X2) {
@@ -1691,11 +1686,12 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
             validDraw              = true;
             ushort *frameBufferPtr = &currentScreen->frameBuffer[left + top * currentScreen->pitch];
             ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+            int pitch           = (left + currentScreen->pitch - right);
+
             switch (inkEffect) {
                 default: break;
                 case INK_NONE:
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1712,7 +1708,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1720,7 +1716,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_BLEND:
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1737,7 +1732,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1745,7 +1740,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_ALPHA:
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1763,7 +1757,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1772,7 +1766,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 case INK_ADD: {
                     ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1790,7 +1783,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1800,7 +1793,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 case INK_SUB: {
                     ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1818,7 +1810,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1827,7 +1819,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 }
                 case INK_LOOKUP:
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1844,7 +1835,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1852,7 +1843,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_MASKED:
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1869,7 +1859,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -1877,7 +1867,6 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_UNMASKED:
                     if (top < bottom) {
-                        int fbOffset = (left + currentScreen->pitch - right);
                         int yDif1    = top - y;
                         int yDif2    = bottom - top;
                         do {
@@ -1894,7 +1883,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                     --xDif2;
                                 } while (xDif2);
                             }
-                            frameBufferPtr += fbOffset;
+                            frameBufferPtr += pitch;
                             --yDif2;
                             ++yDif1;
                         } while (yDif2);
@@ -2792,14 +2781,13 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
 
     GFXSurface *surface    = &gfxSurface[sheetID];
     validDraw              = true;
-    int pitch              = 0;
+    int pitch                  = currentScreen->pitch - width;
     int gfxPitch           = 0;
     byte *lineBuffer       = NULL;
     byte *gfxData          = NULL;
     ushort *frameBufferPtr = NULL;
     switch (direction) {
         case FLIP_NONE:
-            pitch          = currentScreen->pitch - width;
             gfxPitch       = surface->width - width;
             lineBuffer     = &gfxLineBuffer[y];
             gfxData        = &surface->dataPtr[sprX + surface->width * sprY];
@@ -2937,7 +2925,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
             }
             break;
         case FLIP_X:
-            pitch          = currentScreen->pitch - width;
             gfxPitch       = width + surface->width;
             lineBuffer     = &gfxLineBuffer[y];
             gfxData        = &surface->dataPtr[widthFlip - 1 + sprX + surface->width * sprY];
@@ -3075,7 +3062,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
             }
             break;
         case FLIP_Y:
-            pitch          = currentScreen->pitch - width;
             gfxPitch       = width + surface->width;
             lineBuffer     = &gfxLineBuffer[y];
             gfxData        = &surface->dataPtr[sprX + surface->width * (sprY + heightFlip - 1)];
@@ -3213,7 +3199,6 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
             }
             break;
         case FLIP_XY:
-            pitch          = currentScreen->pitch - width;
             gfxPitch       = surface->width - width;
             lineBuffer     = &gfxLineBuffer[y];
             gfxData        = &surface->dataPtr[widthFlip - 1 + sprX + surface->width * (sprY + heightFlip - 1)];
@@ -3467,9 +3452,9 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     if (bottom > currentScreen->clipBound_Y2)
         bottom = currentScreen->clipBound_Y2;
 
-    int xDif = right - left;
-    int yDif = bottom - top;
-    if (xDif >= 1 && yDif >= 1) {
+    int xSize = right - left;
+    int ySize = bottom - top;
+    if (xSize >= 1 && ySize >= 1) {
         GFXSurface *surface = &gfxSurface[sheetID];
 
         int fullX              = (sprX + width) << 16;
@@ -3479,7 +3464,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
         int fullScaleY         = (float)((512.0 / (float)scaleY) * 512.0);
         int deltaXLen          = fullScaleX * sine >> 2;
         int deltaX             = fullScaleX * cosine >> 2;
-        int fbPitch            = currentScreen->pitch - xDif;
+        int pitch            = currentScreen->pitch - xSize;
         int deltaYLen          = fullScaleY * cosine >> 2;
         int deltaY             = fullScaleY * sine >> 2;
         int lineSize           = surface->lineSize;
@@ -3505,11 +3490,11 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
         switch (inkEffect) {
             case INK_NONE:
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index)
@@ -3521,15 +3506,15 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             case INK_BLEND:
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index)
@@ -3541,15 +3526,15 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             case INK_ALPHA:
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index) {
@@ -3563,16 +3548,16 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             case INK_ADD: {
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index) {
@@ -3586,17 +3571,17 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             }
             case INK_SUB: {
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index) {
@@ -3610,15 +3595,15 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             }
             case INK_LOOKUP:
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     int drawXPos = drawX;
                     int drawYPos = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index)
@@ -3630,15 +3615,15 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             case INK_MASKED:
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index && *frameBufferPtr == maskColour)
@@ -3650,15 +3635,15 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
             case INK_UNMASKED:
-                for (int y = 0; y < yDif; ++y) {
+                for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
                     int drawYPos       = drawY;
-                    for (int x = 0; x < xDif; ++x) {
+                    for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index && *frameBufferPtr != maskColour)
@@ -3670,7 +3655,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
-                    frameBufferPtr += fbPitch;
+                    frameBufferPtr += pitch;
                 }
                 break;
         }

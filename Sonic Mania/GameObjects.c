@@ -953,8 +953,8 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
 
         ADD_PUBLIC_FUNC(Music_SetMusicTrack);
-        ADD_PUBLIC_FUNC(Music_State_PlayMusic);
-        ADD_PUBLIC_FUNC(Music_PlayMusicTrack);
+        ADD_PUBLIC_FUNC(Music_State_PlayAutoMusic);
+        ADD_PUBLIC_FUNC(Music_PlayQueuedTrack);
         ADD_PUBLIC_FUNC(Music_PlayTrack);
         ADD_PUBLIC_FUNC(Music_PlayTrackPtr);
 

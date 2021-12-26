@@ -448,7 +448,7 @@ bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host)
     return true;
 }
 
-void ERZOutro_SaveFileCB(int32 status) { ERZOutro->savedGame = true; }
+void ERZOutro_SaveFileCB(bool32 success) { ERZOutro->savedGame = true; }
 
 #if RETRO_INCLUDE_EDITOR
 void ERZOutro_EditorDraw(void)

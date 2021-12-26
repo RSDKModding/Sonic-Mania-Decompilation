@@ -120,6 +120,6 @@ void PhantomEgg_State_Unknown19(void);
 void PhantomEgg_State_Unknown20(void);
 void PhantomEgg_State_Unknown21(void);
 
-void PhantomEgg_SaveGameCB(int32 status);
+void PhantomEgg_SaveGameCB(bool32 success);
 
 #endif //!OBJ_PHANTOMEGG_H

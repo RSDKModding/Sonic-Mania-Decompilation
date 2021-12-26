@@ -29,10 +29,10 @@ typedef struct {
     int32 ballSpeed;
     int32 timer;
     int32 starTimer;
-    int32 starFlag;
-    int32 starAngle2;
-    int32 starAngle;
-    int32 starOffset;
+    int32 bonusStageID;
+    int32 starAngleX;
+    int32 starAngleY;
+    int32 starRadius;
     Vector2 ballPos;
     Animator poleAnimator;
     Animator ballAnimator;

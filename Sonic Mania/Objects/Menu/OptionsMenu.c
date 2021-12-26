@@ -748,17 +748,17 @@ void OptionsMenu_UISlider_ChangedCB(void)
 
 void OptionsMenu_ShowManual(void)
 {
-    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     API.LaunchManual();
 }
 
-void OptionsMenu_EraseSaveDataCB(int32 status)
+void OptionsMenu_EraseSaveDataCB(bool32 success)
 {
     TextInfo message;
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
 
     UIWaitSpinner_FinishWait();
-    if (status) {
+    if (success) {
         ManiaModeMenu_StartReturnToTitle();
     }
     else {

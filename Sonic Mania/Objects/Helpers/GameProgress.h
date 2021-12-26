@@ -16,11 +16,11 @@ typedef struct {
     bool32 allSilverMedals;
     bool32 zoneClearFlags[12];
     bool32 allZonesCleared;
-    int32 emeraldFlags[7];
+    bool32 emeraldFlags[7];
     bool32 allEmeraldsFlag;
-    int32 unreadNotifs[9];
+    bool32 unreadNotifs[9];
     bool32 specialClearFlags[7];
-    int32 allSpecialCleared;
+    bool32 allSpecialCleared;
     bool32 unlockedEndingID;
     int32 goldMedalCount;
     int32 silverMedalCount;
@@ -48,7 +48,7 @@ void GameProgress_ShuffleBSSID(void);
 EntityGameProgress *GameProgress_GetGameProgress(void);
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID);
 float GameProgress_GetCompletionPercent(EntityGameProgress *progress);
-void GameProgress_TrackGameProgress(void (*callback)(int32));
+void GameProgress_TrackGameProgress(void (*callback)(bool32 success));
 void GameProgress_ClearBSSSave(void);
 void GameProgress_UnlockAllMedals(void);
 void GameProgress_UnlockAll(void);
@@ -61,6 +61,6 @@ void GameProgress_GiveEnding(uint8 ending);
 void GameProgress_PrintSaveProgress(void);
 int32 GameProgress_CountUnreadNotifs(void);
 int32 GameProgress_GetNextNotif(void);
-bool32 GameProgress_CheckUnlock(char type);
+bool32 GameProgress_CheckUnlock(uint8 id);
 
 #endif //!OBJ_GAMEPROGRESS_H

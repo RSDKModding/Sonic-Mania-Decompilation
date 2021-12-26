@@ -253,7 +253,7 @@ void EggPrison_HandleMovement(void)
 void EggPrison_State_Activated(void)
 {
     RSDK_THIS(EggPrison);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->panelAnimator, true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &self->panelAnimator, true, 0);
     self->state = EggPrison_State_Explode;
 
     switch (self->type) {

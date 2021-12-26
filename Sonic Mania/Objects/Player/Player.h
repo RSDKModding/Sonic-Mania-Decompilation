@@ -185,13 +185,13 @@ typedef struct {
     STATIC(int32 savedLives, 3);
     int32 savedScore;
     STATIC(int32 savedScore1UP, 50000);
-    uint16 sonicSpriteIndex;
-    uint16 superSpriteIndex;
-    uint16 tailsSpriteIndex;
-    uint16 tailsTailsSpriteIndex;
-    uint16 knuxSpriteIndex;
-    uint16 mightySpriteIndex;
-    uint16 raySpriteIndex;
+    uint16 sonicFrames;
+    uint16 superFrames;
+    uint16 tailsFrames;
+    uint16 tailsTailsFrames;
+    uint16 knuxFrames;
+    uint16 mightyFrames;
+    uint16 rayFrames;
     uint16 sfxJump;
     uint16 sfxRoll;
     uint16 sfxCharge;
@@ -257,18 +257,18 @@ typedef struct {
     int32 P2JumpActionDelay;
     int32 jumpInDelay;
     int32 p2InputDelay;
-    uint8 value17;
+    bool32 disableP2KeyCheck;
     int32 rings;
     STATIC(int32 ringExtraLife, 100);
     int32 powerups;
     STATIC(int32 savedLives, 3);
     int32 savedScore;
     STATIC(int32 savedScore1UP, 50000);
-    uint16 sonicSpriteIndex;
-    uint16 superSpriteIndex;
-    uint16 tailsTailsSpriteIndex;
-    uint16 tailsSpriteIndex;
-    uint16 knuxSpriteIndex;
+    uint16 sonicFrames;
+    uint16 superFrames;
+    uint16 tailsTailsFrames;
+    uint16 tailsFrames;
+    uint16 knuxFrames;
     TABLE(colour superPalette_Sonic[18], { 0x000080, 0x0038C0, 0x0068F0, 0x1888F0, 0x30A0F0, 0x68D0F0, 0xF0C001, 0xF0D028, 0xF0E040, 0xF0E860,
                                            0xF0E898, 0xF0E8D0, 0xF0D898, 0xF0E0B0, 0xF0E8C0, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 });
     TABLE(colour superPalette_Tails[18], { 0x800801, 0xB01801, 0xD05001, 0xE07808, 0xE89008, 0xF0A801, 0xF03830, 0xF06848, 0xF09860, 0xF0B868,
@@ -327,7 +327,7 @@ typedef struct {
     int32 tailRotation;
     int32 tailDirection;
     uint16 aniFrames;
-    uint16 tailSpriteIndex;
+    uint16 tailFrames;
     uint16 storedAnim;
     uint16 playerID;
     Hitbox *outerbox;
@@ -448,7 +448,7 @@ void Player_BlendSuperMightyColours(int32 bankID);
 void Player_BlendSuperRayColours(int32 bankID);
 #endif
 void Player_HandleSuperForm(void);
-bool32 Player_CheckKeyPress(void);
+bool32 Player_CheckP2KeyPress(void);
 //returns the pointer to the nearest player to the current entity on the x axis only
 EntityPlayer *Player_GetNearestPlayerX(void);
 // returns the pointer to the nearest player to the current entity on both the x & y axis
@@ -507,7 +507,7 @@ void Player_StartPeelout(void);
 void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
-void Player_CheckStartFlyCarry(EntityPlayer *player);
+void Player_CheckStartFlyCarry(EntityPlayer *leader);
 void Player_P2JumpBackIn(void);
 void Player_ForceSuperTransform(void);
 

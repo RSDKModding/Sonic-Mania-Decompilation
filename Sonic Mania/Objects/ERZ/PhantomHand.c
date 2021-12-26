@@ -280,7 +280,7 @@ void PhantomHand_State_Unknown7(void)
     RSDK.ProcessAnimation(&self->animator1);
     RSDK.ProcessAnimation(&self->animator2);
     if (self->animator2.frameID == self->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator1, true, 0);
         RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 3, &self->animator3, true, 0);
         self->state = PhantomHand_State_Unknown8;
     }
@@ -292,7 +292,7 @@ void PhantomHand_State_Unknown8(void)
 
     RSDK.ProcessAnimation(&self->animator3);
     if (self->animator3.frameID == self->animator3.frameCount - 1) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
         if (self->field_78)
             PhantomEgg_SetupScanlineCB();
         self->state = StateMachine_None;

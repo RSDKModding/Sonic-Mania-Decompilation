@@ -132,7 +132,6 @@ inline void ClearPrerollErrors(void) { userStorage->ClearPrerollErrors(); }
 
 int GetUserAuthStatus();
 int GetUserStorageStatus();
-#if RETRO_REV02
 int GetSaveStatus();
 void SetSaveStatusOK();
 void SetSaveStatusForbidden();
@@ -141,7 +140,6 @@ void ClearSaveStatus();
 void SetSaveStatusContinue();
 void SetUserStorageNoSave(int state);
 int GetUserStorageNoSave();
-#endif
 
 void InitUserStorageDB(UserDBStorage *storage);
 void ReleaseUserStorageDB(UserDBStorage *storage);
@@ -232,5 +230,10 @@ inline void SetUserFileCallbacks(const char *userDir, void (*callback1)(void), v
 bool32 LoadUserFile(const char *filename, void *buffer, uint bufSize);
 bool32 SaveUserFile(const char *filename, void *buffer, uint bufSize);
 bool32 DeleteUserFile(const char *filename);
+
+#if !RETRO_REV02
+bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
+bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
+#endif
 
 #endif

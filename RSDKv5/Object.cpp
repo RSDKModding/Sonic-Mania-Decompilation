@@ -384,17 +384,17 @@ void ProcessObjects()
 #endif
 
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].rowCount = 0;
+        typeGroups[i].entryCount = 0;
     }
 
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].rowCount++]                                   = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].rowCount++] = e; // type-based slots
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].rowCount++] = e; // extra slots
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
         }
         sceneInfo.entitySlot++;
@@ -458,17 +458,17 @@ void ProcessPausedObjects()
 #endif
 
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].rowCount = 0;
+        typeGroups[i].entryCount = 0;
     }
 
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].rowCount++]                                   = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].rowCount++] = e; // type-based slots
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].rowCount++] = e; // extra slots
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
         }
         sceneInfo.entitySlot++;
@@ -602,17 +602,17 @@ void ProcessFrozenObjects()
 #endif
 
     for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].rowCount = 0;
+        typeGroups[i].entryCount = 0;
     }
 
     sceneInfo.entitySlot = 0;
     for (int e = 0; e < ENTITY_COUNT; ++e) {
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->inBounds && sceneInfo.entity->interaction) {
-            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].rowCount++]                                   = e; // All active objects
-            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].rowCount++] = e; // type-based slots
+            typeGroups[GROUP_ALL].entries[typeGroups[GROUP_ALL].entryCount++]                                   = e; // All active objects
+            typeGroups[sceneInfo.entity->objectID].entries[typeGroups[sceneInfo.entity->objectID].entryCount++] = e; // type-based slots
             if (sceneInfo.entity->group >= TYPE_COUNT) {
-                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].rowCount++] = e; // extra slots
+                typeGroups[sceneInfo.entity->group].entries[typeGroups[sceneInfo.entity->group].entryCount++] = e; // extra slots
             }
         }
         sceneInfo.entitySlot++;
@@ -829,7 +829,7 @@ int GetEntityCount(ushort type, bool32 isActive)
     if (type >= TYPE_COUNT)
         return 0;
     if (isActive)
-        return typeGroups[type].rowCount;
+        return typeGroups[type].entryCount;
 
     int cnt = 0;
     for (int i = 0; i < ENTITY_COUNT; ++i) {
@@ -937,7 +937,7 @@ bool32 GetActiveEntities(ushort group, Entity **entity)
         foreachStackPtr->id = 0;
     }
 
-    for (Entity *nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]; foreachStackPtr->id < typeGroups[group].rowCount;
+    for (Entity *nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]; foreachStackPtr->id < typeGroups[group].entryCount;
          ++foreachStackPtr->id, nextEnt = &objectEntityList[typeGroups[group].entries[foreachStackPtr->id]]) {
         if (nextEnt->objectID == group) {
             *entity = nextEnt;

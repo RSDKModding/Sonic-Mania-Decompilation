@@ -50,15 +50,18 @@ void FillDummyLeaderboardEntries()
         SetText(&entry->userID, (char *)"DUMMY_USER_ID", 0);
     }
 }
-void DummyLeaderboards::FetchLeaderboard(const char *name, bool32 isUser)
+void DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser)
 {
+    if (!leaderboard)
+        return;
+
     if (leaderboards->status == STATUS_CONTINUE) {
         std::string str = __FILE__;
         str += ": FetchLeaderboard() # ERROR Attemped to fetch leaderboard when fetch currently in progress. \r\n";
         PrintLog(PRINT_NORMAL, str.c_str());
     }
     else {
-        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", name, isUser ? "true" : "false");
+        PrintLog(PRINT_NORMAL, "DUMMY FetchLeaderboard(%s, %s)", leaderboard->name, isUser ? "true" : "false");
         leaderboards->isUser   = isUser;
         leaderboards->userRank = 0;
         if (isUser)
@@ -69,11 +72,14 @@ void DummyLeaderboards::FetchLeaderboard(const char *name, bool32 isUser)
         API_TypeOf(leaderboards, DummyLeaderboards)->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
 }
-void DummyLeaderboards::TrackScore(const char *name, int32 score, void (*callback)(bool32 success, int32 rank))
+void DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
 {
+    if (!leaderboard)
+        return;
+
     int id = -1;
     for (int i = 0; i < leaderboardList.size(); ++i) {
-        if (std::string(leaderboardList[i].name) == name) {
+        if (std::string(leaderboardList[i].name) == leaderboard->name) {
             id = i;
             break;
         }
@@ -81,7 +87,7 @@ void DummyLeaderboards::TrackScore(const char *name, int32 score, void (*callbac
 
     if (id == -1) {
         LeaderboardInfo info;
-        sprintf(info.name, "%s", name);
+        sprintf(info.name, "%s", leaderboard->name);
         info.score = 0x7FFFFFFF;
         id         = leaderboardList.size();
         leaderboardList.push_back(info);

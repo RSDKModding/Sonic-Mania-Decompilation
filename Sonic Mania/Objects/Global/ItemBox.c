@@ -16,19 +16,19 @@ void ItemBox_Update(void)
 
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
-        if (self->animatorContents.animationID == 2 || self->animatorContents.animationID == 7 || self->animatorContents.animationID == 8) {
+        if (self->contentsAnimator.animationID == 2 || self->contentsAnimator.animationID == 7 || self->contentsAnimator.animationID == 8) {
             if (globals->characterFlags == 0x1F && globals->gameMode == MODE_ENCORE) {
-                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &self->animatorContents, false, 0);
+                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &self->contentsAnimator, false, 0);
             }
             else {
-                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 7, &self->animatorContents, false, 0);
+                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 7, &self->contentsAnimator, false, 0);
                 if (globals->gameMode == MODE_ENCORE) {
                     int32 id = 0;
-                    while ((1 << self->animatorContents.frameID) & globals->characterFlags) {
-                        if (++self->animatorContents.frameID > 4)
-                            self->animatorContents.frameID = 0;
+                    while ((1 << self->contentsAnimator.frameID) & globals->characterFlags) {
+                        if (++self->contentsAnimator.frameID > 4)
+                            self->contentsAnimator.frameID = 0;
                         if (++id > 5) {
-                            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &self->animatorContents, false, 0);
+                            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &self->contentsAnimator, false, 0);
                             RSDK.PrintLog(PRINT_NORMAL, "Bad Change Item State");
                         }
                     }
@@ -56,26 +56,26 @@ void ItemBox_Draw(void)
         if (self->isContents) {
             if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
                 self->drawFX = FX_NONE;
-                RSDK.DrawSprite(&self->animatorContents, &self->contentsPos, false);
+                RSDK.DrawSprite(&self->contentsAnimator, &self->contentsPos, false);
             }
             else {
                 self->drawFX    = FX_FLIP;
                 self->inkEffect = INK_NONE;
-                RSDK.DrawSprite(&self->animatorBox, NULL, false);
+                RSDK.DrawSprite(&self->boxAnimator, NULL, false);
 
                 RSDK.AddDrawListRef(Zone->playerDrawHigh, SceneInfo->entitySlot);
             }
         }
         else {
             self->inkEffect = INK_NONE;
-            RSDK.DrawSprite(&self->animatorBox, NULL, false);
-            RSDK.DrawSprite(&self->animatorContents, &self->contentsPos, false);
+            RSDK.DrawSprite(&self->boxAnimator, NULL, false);
+            RSDK.DrawSprite(&self->contentsAnimator, &self->contentsPos, false);
 
             self->inkEffect = INK_ADD;
-            RSDK.DrawSprite(&self->animatorOverlay, NULL, false);
+            RSDK.DrawSprite(&self->overlayAnimator, NULL, false);
 
             self->inkEffect = INK_NONE;
-            RSDK.DrawSprite(&self->animatorDebris, NULL, false);
+            RSDK.DrawSprite(&self->debrisAnimator, NULL, false);
         }
     }
 }
@@ -86,10 +86,10 @@ void ItemBox_Create(void *data)
     if (data)
         self->type = voidToInt(data);
     if (self->state != ItemBox_State_Broken) {
-        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->animatorBox, true, 0);
-        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->animatorContents, true, 0);
-        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 3, &self->animatorOverlay, true, 0);
-        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 4, &self->animatorDebris, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->boxAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->contentsAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 3, &self->overlayAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 4, &self->debrisAnimator, true, 0);
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         switch (self->type) {
@@ -120,18 +120,18 @@ void ItemBox_Create(void *data)
                         default: break;
                     }
                 }
-                self->animatorContents.frameID = self->type;
+                self->contentsAnimator.frameID = self->type;
                 break;
 #if RETRO_USE_PLUS
-            case 12: // Swap
-            case 13: // Random
+            case ITEMBOX_SWAP:
+            case ITEMBOX_RANDOM:
                 if (globals->gameMode == MODE_ENCORE || globals->gameMode == MODE_COMPETITION)
-                    self->animatorContents.frameID = self->type;
+                    self->contentsAnimator.frameID = self->type;
                 else
                     destroyEntity(self);
 #endif
                 break;
-            default: self->animatorContents.frameID = self->type; break;
+            default: self->contentsAnimator.frameID = self->type; break;
         }
     }
 
@@ -149,7 +149,7 @@ void ItemBox_Create(void *data)
 
         self->alpha = 0xFF;
         if (self->state == ItemBox_State_Broken) {
-            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &self->animatorBox, true, self->animatorBox.frameID);
+            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &self->boxAnimator, true, self->boxAnimator.frameID);
         }
         else if (self->hidden) {
             self->state = StateMachine_None;
@@ -219,7 +219,7 @@ void ItemBox_DebugSpawn(void)
 
     EntityItemBox *itemBox            = CREATE_ENTITY(ItemBox, NULL, self->position.x, self->position.y);
     itemBox->type                     = DebugMode->itemSubType;
-    itemBox->animatorContents.frameID = DebugMode->itemSubType;
+    itemBox->contentsAnimator.frameID = DebugMode->itemSubType;
 }
 
 void ItemBox_State_Broken(void)
@@ -246,7 +246,7 @@ void ItemBox_State_ContentsShown(void)
     if (self->contentsSpeed >= 0) {
         self->contentsSpeed = 0;
         ItemBox_GivePowerup();
-        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 5, &self->animatorContents, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 5, &self->contentsAnimator, true, 0);
         self->state = ItemBox_State_ContentsDisappear;
     }
 }
@@ -260,10 +260,10 @@ void ItemBox_State_ContentsDisappear(void)
     else {
         ItemBox_HandleFallingCollision();
     }
-    RSDK.ProcessAnimation(&self->animatorContents);
+    RSDK.ProcessAnimation(&self->contentsAnimator);
 
-    if (self->animatorContents.frameID == self->animatorContents.frameCount - 1) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animatorContents, true, 0);
+    if (self->contentsAnimator.frameID == self->contentsAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(-1, 0, &self->contentsAnimator, true, 0);
         self->state = ItemBox_State_Broken;
     }
 }
@@ -279,12 +279,12 @@ void ItemBox_State_Normal(void)
         self->contentsPos.y = self->position.y + 0x30000;
     ItemBox_HandleObjectCollisions();
     ItemBox_CheckHit();
-    RSDK.ProcessAnimation(&self->animatorOverlay);
+    RSDK.ProcessAnimation(&self->overlayAnimator);
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
-        RSDK.ProcessAnimation(&self->animatorContents);
-        if (!API.CheckDLC(DLC_PLUS) && self->animatorContents.frameID >= 3)
-            self->animatorContents.frameID = 0;
+        RSDK.ProcessAnimation(&self->contentsAnimator);
+        if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
+            self->contentsAnimator.frameID = 0;
     }
 #endif
 
@@ -292,10 +292,10 @@ void ItemBox_State_Normal(void)
         self->timer--;
     }
     else {
-        RSDK.ProcessAnimation(&self->animatorDebris);
-        if (!self->animatorDebris.frameID) {
-            self->timer                     = RSDK.Rand(1, 15);
-            self->animatorDebris.frameDuration = RSDK.Rand(1, 32);
+        RSDK.ProcessAnimation(&self->debrisAnimator);
+        if (!self->debrisAnimator.frameID) {
+            self->timer                        = RSDK.Rand(1, 15);
+            self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
         }
     }
 }
@@ -312,12 +312,12 @@ void ItemBox_State_Falling(void)
         self->contentsPos.y = self->position.y + 0x30000;
 
     ItemBox_CheckHit();
-    RSDK.ProcessAnimation(&self->animatorOverlay);
+    RSDK.ProcessAnimation(&self->overlayAnimator);
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
-        RSDK.ProcessAnimation(&self->animatorContents);
-        if (!API.CheckDLC(DLC_PLUS) && self->animatorContents.frameID >= 3)
-            self->animatorContents.frameID = 0;
+        RSDK.ProcessAnimation(&self->contentsAnimator);
+        if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
+            self->contentsAnimator.frameID = 0;
     }
 #endif
 
@@ -325,10 +325,10 @@ void ItemBox_State_Falling(void)
         self->timer--;
     }
     else {
-        RSDK.ProcessAnimation(&self->animatorDebris);
-        if (!self->animatorDebris.frameID) {
+        RSDK.ProcessAnimation(&self->debrisAnimator);
+        if (!self->debrisAnimator.frameID) {
             self->timer                     = RSDK.Rand(1, 15);
-            self->animatorDebris.frameDuration = RSDK.Rand(1, 32);
+            self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
         }
     }
 }
@@ -344,12 +344,12 @@ void ItemBox_State_Conveyor(void)
         self->contentsPos.y = self->position.y + 0x30000;
 
     ItemBox_CheckHit();
-    RSDK.ProcessAnimation(&self->animatorOverlay);
+    RSDK.ProcessAnimation(&self->overlayAnimator);
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
-        RSDK.ProcessAnimation(&self->animatorContents);
-        if (!API.CheckDLC(DLC_PLUS) && self->animatorContents.frameID >= 3)
-            self->animatorContents.frameID = 0;
+        RSDK.ProcessAnimation(&self->contentsAnimator);
+        if (!API.CheckDLC(DLC_PLUS) && self->contentsAnimator.frameID >= 3)
+            self->contentsAnimator.frameID = 0;
     }
 #endif
 
@@ -357,10 +357,10 @@ void ItemBox_State_Conveyor(void)
         self->timer--;
     }
     else {
-        RSDK.ProcessAnimation(&self->animatorDebris);
-        if (!self->animatorDebris.frameID) {
+        RSDK.ProcessAnimation(&self->debrisAnimator);
+        if (!self->debrisAnimator.frameID) {
             self->timer                     = RSDK.Rand(1, 15);
-            self->animatorDebris.frameDuration = RSDK.Rand(1, 32);
+            self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
         }
     }
 }
@@ -441,10 +441,9 @@ void ItemBox_CheckHit(void)
                         self->active = ACTIVE_ALWAYS;
                         if (!self->lrzConvPhys)
                             self->state = ItemBox_State_Falling;
+                        self->velocity.y = -0x20000;
                         if (!player->onGround)
                             player->velocity.y = 0x20000;
-                        else
-                            self->velocity.y = -0x20000;
                     }
                     else if (side == C_TOP) {
                         player->position.x += self->moveOffset.x;
@@ -483,7 +482,7 @@ void ItemBox_GivePowerup(void)
             Player_ApplyShieldEffect(player);
             RSDK.PlaySfx(Shield->sfxBubbleShield, false, 255);
             player->airTimer = 0;
-            Music_ResumePrevTrack(TRACK_DROWNING, false);
+            Music_EndQueuedTrack(TRACK_DROWNING, false);
             break;
         case ITEMBOX_FIRESHIELD:
             player->shield = SHIELD_FIRE;
@@ -500,14 +499,14 @@ void ItemBox_GivePowerup(void)
                 EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
                 RSDK.ResetEntityPtr(invincibleStars, InvincibleStars->objectID, player);
                 player->invincibleTimer = 1260;
-                Music_PlayMusicTrack(TRACK_INVINCIBLE);
+                Music_PlayQueuedTrack(TRACK_INVINCIBLE);
             }
             break;
         case ITEMBOX_SNEAKERS:
             player->speedShoesTimer = 1320;
             Player_ChangePhysicsState(player);
             if (player->superState == SUPERSTATE_NONE) {
-                Music_PlayMusicTrack(TRACK_SNEAKERS);
+                Music_PlayQueuedTrack(TRACK_SNEAKERS);
                 EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail);
                 RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
             }
@@ -667,16 +666,16 @@ void ItemBox_GivePowerup(void)
             break;
 #if RETRO_USE_PLUS
         case ITEMBOX_STOCK: {
-            if (self->animatorContents.animationID == 7) {
+            if (self->contentsAnimator.animationID == 7) {
                 if (globals->gameMode == MODE_ENCORE) {
-                    if (!((1 << self->animatorContents.frameID) & globals->characterFlags) && globals->characterFlags != 31
+                    if (!((1 << self->contentsAnimator.frameID) & globals->characterFlags) && globals->characterFlags != 31
                         && !(globals->stock & 0xFF0000)) {
-                        globals->characterFlags |= (1 << self->animatorContents.frameID);
+                        globals->characterFlags |= (1 << self->contentsAnimator.frameID);
                         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (player2->objectID) {
                             int32 id = 0;
                             while ((globals->stock >> id) & 0xFF) id += 8;
-                            globals->stock |= (1 << self->animatorContents.frameID << id);
+                            globals->stock |= (1 << self->contentsAnimator.frameID << id);
                             HUD->stockFlashTimers[(id >> 3) + 1] = 120;
                         }
                         else {
@@ -699,7 +698,7 @@ void ItemBox_GivePowerup(void)
                                 break;
                             }
                             else {
-                                Player_ChangeCharacter(player2, 1 << self->animatorContents.frameID);
+                                Player_ChangeCharacter(player2, 1 << self->contentsAnimator.frameID);
                                 player2->velocity.x = 0;
                                 player2->velocity.y = 0;
                                 player2->groundVel  = 0;
@@ -750,7 +749,7 @@ void ItemBox_GivePowerup(void)
                     RSDK.PlaySfx(ItemBox->sfxRevovery, false, 255);
                 }
                 else {
-                    switch (self->animatorContents.frameID) {
+                    switch (self->contentsAnimator.frameID) {
                         case 0: Player_ChangeCharacter(player, ID_SONIC); break;
                         case 1: Player_ChangeCharacter(player, ID_TAILS); break;
                         case 2: Player_ChangeCharacter(player, ID_KNUCKLES); break;
@@ -764,7 +763,7 @@ void ItemBox_GivePowerup(void)
                 }
             }
             else {
-                switch (self->animatorContents.frameID) {
+                switch (self->contentsAnimator.frameID) {
                     case 1: self->type = ITEMBOX_BLUESHIELD; break;
                     case 2: self->type = ITEMBOX_BUBBLESHIELD; break;
                     case 3: self->type = ITEMBOX_FIRESHIELD; break;
@@ -805,11 +804,11 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     itemBox->velocity.y    = -0x20000;
     itemBox->isContents    = true;
     itemBox->state         = ItemBox_State_ContentsShown;
-    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
-    itemBox->animatorBox.frameID = ItemBox->brokenFrame++;
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
+    itemBox->boxAnimator.frameID = ItemBox->brokenFrame++;
     ItemBox->brokenFrame %= 3;
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
 
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - 0x100000);
     explosion->drawOrder       = Zone->drawOrderHigh;
@@ -852,7 +851,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
                                 break;
                             default: break;
                         }
-                        itemBox->animatorContents.frameID = itemBox->type;
+                        itemBox->contentsAnimator.frameID = itemBox->type;
                         break;
                     case ITEMBOX_1UP_TAILS:
                     case ITEMBOX_1UP_KNUX:
@@ -864,9 +863,9 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
                     case ITEMBOX_SWAP:
                         if (globals->gameMode != MODE_COMPETITION)
                             continue;
-                        itemBox->animatorContents.frameID = itemBox->type;
+                        itemBox->contentsAnimator.frameID = itemBox->type;
                         break;
-                    default: itemBox->animatorContents.frameID = itemBox->type; break;
+                    default: itemBox->contentsAnimator.frameID = itemBox->type; break;
                 }
                 break;
             }
@@ -894,10 +893,10 @@ bool32 ItemBox_HandleFallingCollision(void)
     self->velocity.y += 0x3800;
     ItemBox_HandleObjectCollisions();
 
-    bool32 flag = self->velocity.y < 0;
+    bool32 movingUp = self->velocity.y < 0;
 
-    if (flag
-        || (self->direction != FLIP_Y || self->animatorBox.animationID != 1
+    if (movingUp
+        || (self->direction != FLIP_Y || self->boxAnimator.animationID != 1
                 ? !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
                 : !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
         self->moveOffset.x += self->position.x;
@@ -1160,8 +1159,8 @@ void ItemBox_EditorDraw(void)
     else
         self->contentsPos.y = self->position.y + 0x30000;
 
-    RSDK.DrawSprite(&self->animatorBox, NULL, false);
-    RSDK.DrawSprite(&self->animatorContents, &self->contentsPos, false);
+    RSDK.DrawSprite(&self->boxAnimator, NULL, false);
+    RSDK.DrawSprite(&self->contentsAnimator, &self->contentsPos, false);
 
     self->direction = dir;
 }

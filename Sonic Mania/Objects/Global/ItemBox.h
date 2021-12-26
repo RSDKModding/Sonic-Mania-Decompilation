@@ -58,10 +58,10 @@ typedef struct {
     bool32 hidden;
     PlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
-    Animator animatorBox;
-    Animator animatorContents;
-    Animator animatorOverlay;
-    Animator animatorDebris;
+    Animator boxAnimator;
+    Animator contentsAnimator;
+    Animator overlayAnimator;
+    Animator debrisAnimator;
 #if RETRO_USE_PLUS
     Entity *parent;
 #endif

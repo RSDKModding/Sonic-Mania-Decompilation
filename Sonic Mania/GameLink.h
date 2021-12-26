@@ -412,6 +412,14 @@ typedef struct {
 } TileLayer;
 
 typedef struct {
+    int id1;
+    int id2;
+    int id_switch;
+    const char *name_legacy;
+    const char *name;
+} LeaderboardID;
+
+typedef struct {
     TextInfo username;
 #if RETRO_USE_PLUS
     TextInfo userID;

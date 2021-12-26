@@ -62,6 +62,7 @@ void CalculateTrigAngles()
     cosVal512[0x80]  = 0;
     cosVal512[0x100] = -0x200;
     cosVal512[0x180] = 0;
+
     sinVal512[0x00]  = 0;
     sinVal512[0x80]  = 0x200;
     sinVal512[0x100] = 0;
@@ -78,7 +79,7 @@ void CalculateTrigAngles()
     for (int y = 0; y < 0x100; ++y) {
         uint8 *arcTan = (uint8 *)&atanVal256[y];
         for (int x = 0; x < 0x100; ++x) {
-            // 40.743664 = 0x100 * (2 * M_PI) (roughly)
+            // 40.743664 = 0x100 / (2 * M_PI) (roughly)
             *arcTan = (int)(float)((float)atan2((float)y, x) * 40.743664);
             arcTan += 0x100;
         }

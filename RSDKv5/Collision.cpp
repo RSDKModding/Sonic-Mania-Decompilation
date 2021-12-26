@@ -1350,7 +1350,7 @@ void ProcessPathGrip()
         }
         case CMODE_LWALL: {
             if (sensors[0].collided || sensors[1].collided || sensors[2].collided) {
-                collisionEntity->angle         = sensors[0].angle;
+                collisionEntity->angle = sensors[0].angle;
             }
             else {
                 collisionEntity->onGround      = false;
@@ -1685,9 +1685,10 @@ void FindRWallPosition(CollisionSensor *sensor)
                     if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
                         ushort tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
-                            int tx        = cx + collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                            int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                            int tx        = cx + mask;
                             int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;
-                            if (collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF] < 0xFF) {
+                            if (mask < 0xFF) {
                                 if (!sensor->collided || startX <= tx) {
                                     if (abs(colX - tx) <= collisionTolerance) {
                                         if (abs(sensor->angle - tileAngle) <= 0x20) {

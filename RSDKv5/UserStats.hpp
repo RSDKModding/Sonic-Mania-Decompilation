@@ -36,9 +36,9 @@ extern UserStats *stats;
 
 // Rev01 ver of TrackStat basically
 #if !RETRO_REV02
-void TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time);
-void TrackTAClear(byte zoneID, byte actID, byte playerID, int time);
-void TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY);
+void TrackActClear(byte zoneID, byte actID, byte characterID, int time, int rings, int score);
+void TrackTAClear(byte zoneID, byte actID, byte characterID, int time);
+void TrackEnemyDefeat(byte zoneID, byte actID, byte characterID, int entityX, int entityY);
 void TrackGameProgress(float percent);
 #else
 inline void TryTrackStat(StatInfo *stat) { stats->TryTrackStat(stat); }

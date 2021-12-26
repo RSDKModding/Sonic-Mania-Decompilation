@@ -69,7 +69,7 @@ void TimeAttackGate_HandleStart(void);
 #if RETRO_USE_PLUS
 void TimeAttackGate_AddRecord(void);
 #endif
-void TimeAttackGate_LeaderboardCB(int32 status);
+void TimeAttackGate_LeaderboardCB(bool32 success);
 void TimeAttackGate_CheckTouch(void);
 
 // States

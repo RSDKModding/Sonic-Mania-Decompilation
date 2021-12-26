@@ -82,23 +82,23 @@ void MSZCutsceneK_StartCutscene(void)
 
 void MSZCutsceneK_SetupP2(int posX, int posY)
 {
-    Player->sonicSpriteIndex = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
-    Player->superSpriteIndex = RSDK.LoadSpriteAnimation("Players/SuperSonic.bin", SCOPE_STAGE);
+    Player->sonicFrames = RSDK.LoadSpriteAnimation("Players/Sonic.bin", SCOPE_STAGE);
+    Player->superFrames = RSDK.LoadSpriteAnimation("Players/SuperSonic.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_PLAYER2, Player->objectID, NULL);
 
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     ++Player->playerCount;
-    player2->characterID     = ID_SONIC;
-    player2->position.x      = posX;
-    player2->position.y      = posY;
-    player2->aniFrames     = Player->sonicSpriteIndex;
-    player2->tailSpriteIndex = -1;
-    player2->cameraOffset    = 0x50000;
-    player2->stateAbility    = Player_SonicJumpAbility;
-    player2->sensorY         = 0x140000;
-    player2->stateInput      = StateMachine_None;
-    player2->state           = Player_State_None;
-    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_RIDE, &player2->animator, true, 0);
+    player2->characterID  = ID_SONIC;
+    player2->position.x   = posX;
+    player2->position.y   = posY;
+    player2->aniFrames    = Player->sonicFrames;
+    player2->tailFrames   = -1;
+    player2->cameraOffset = 0x50000;
+    player2->stateAbility = Player_SonicJumpAbility;
+    player2->sensorY      = 0x140000;
+    player2->stateInput   = StateMachine_None;
+    player2->state        = Player_State_None;
+    RSDK.SetSpriteAnimation(Player->sonicFrames, ANI_RIDE, &player2->animator, true, 0);
 }
 
 bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
@@ -112,8 +112,8 @@ bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     if (!host->timer) {
         SceneInfo->timeEnabled  = false;
         SceneInfo->milliseconds = 0;
-        player1->state               = Player_State_None;
-        player1->stateInput          = 0;
+        player1->state          = Player_State_None;
+        player1->stateInput     = 0;
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;
         player1->velocity.y = 0;
@@ -179,13 +179,13 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         }
         else if (host->timer - host->storedValue2 == 60) {
             player1->velocity.y = 0;
-            host->values[2]   = true;
+            host->values[2]     = true;
         }
     }
     else if (player1->position.y > tornado->position.y) {
         TornadoPath->cameraPtr = NULL;
-        host->values[1]      = 1;
-        host->storedValue2         = host->timer;
+        host->values[1]        = 1;
+        host->storedValue2     = host->timer;
         MSZCutsceneK->pos3     = camera->position;
         MSZCutsceneK->pos3.y += 0x1E00000;
         Camera_SetupLerp(0, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);

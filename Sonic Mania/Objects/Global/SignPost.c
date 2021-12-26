@@ -162,14 +162,17 @@ void SignPost_Create(void *data)
 void SignPost_StageLoad(void)
 {
     SignPost->aniFrames          = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
+
     SignPost->hitbox.left          = -24;
     SignPost->hitbox.top           = -22;
     SignPost->hitbox.right         = 24;
     SignPost->hitbox.bottom        = 8;
+
     SignPost->itemBoxHitbox.left   = -8;
     SignPost->itemBoxHitbox.top    = 20;
     SignPost->itemBoxHitbox.right  = 8;
     SignPost->itemBoxHitbox.bottom = 24;
+
     SignPost->maxPlayerCount       = (1 << Player->playerCount) - 1;
 
     DEBUGMODE_ADD_OBJ(SignPost);

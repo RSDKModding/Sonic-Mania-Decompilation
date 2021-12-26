@@ -453,8 +453,8 @@ void setupFunctions()
     // addToAPIFunctionTable("TryInitStorage", TryInitStorage); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("GetStorageStatus", GetUserStorageStatus); // Dummy behaviour is managed by APICallback
     // addToAPIFunctionTable("GetUsername", GetUsername); // APICallback sets the dummy one anyways if this isn't set
-    addToAPIFunctionTable("LoadUserFile", LoadUserFile);
-    addToAPIFunctionTable("SaveUserFile", SaveUserFile);
+    addToAPIFunctionTable("LoadUserFile", TryLoadUserFile);
+    addToAPIFunctionTable("SaveUserFile", TrySaveUserFile);
     addToAPIFunctionTable("SaveSettingsINI", writeSettings);
     // addToAPIFunctionTable("GetUserLanguage", GetUserLanguage); // APICallback uses the sku one anyways if this isn't set, this is only needed if it needs to interact with the API
     addToAPIFunctionTable("ControllerIDForInputID", ControllerIDForInputID);

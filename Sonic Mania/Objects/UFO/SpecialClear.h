@@ -54,15 +54,15 @@ typedef struct {
     Vector2 positions[7];
     int32 emeraldPositions[7];
     int32 emeraldSpeeds[7];
-    int32 field_100;
-    int32 field_104;
-    int32 field_108;
-    int32 field_10C;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
+    int32 unused7;
+    int32 unused8;
+    bool32 saveInProgress;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -89,7 +89,7 @@ void SpecialClear_Serialize(void);
 // Extra Entity Functions
 void SpecialClear_DrawNumbers(Vector2 *pos, int32 value);
 void SpecialClear_GiveScoreBonus(int32 score);
-void SpecialClear_SaveCB(int32 success);
+void SpecialClear_SaveCB(bool32 success);
 void SpecialClear_LoadScene(void);
 void SpecialClear_TallyScore(void);
 

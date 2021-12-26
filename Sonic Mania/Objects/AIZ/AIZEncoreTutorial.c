@@ -149,7 +149,7 @@ void AIZEncoreTutorial_State_ReturnToCutscene(void)
 
     cutsceneSeq->skipType = SKIPTYPE_DISABLED;
     for (int32 i = 0; i < 64; ++i) {
-        if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_CutsceneState_Unknown24) {
+        if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_Cutscene_SkipAndFadeOut) {
             CutsceneSeq_NewState(i, cutsceneSeq);
         }
     }

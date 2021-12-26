@@ -86,7 +86,7 @@ void OptionsMenu_VSyncButton_ActionCB(void);
 void OptionsMenu_TripleBufferButton_ActionCB(void);
 void OptionsMenu_UISlider_ChangedCB(void);
 void OptionsMenu_ShowManual(void);
-void OptionsMenu_EraseSaveDataCB(int32 status);
+void OptionsMenu_EraseSaveDataCB(bool32 success);
 void OptionsMenu_AreYouSureDlg_YesCB_EraseSaveGame(void);
 void OptionsMenu_AreYouSureDlg_YesCB_EraseAllData(void);
 void OptionsMenu_EraseSaveGameButton_ActionCB(void);

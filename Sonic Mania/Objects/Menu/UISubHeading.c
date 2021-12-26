@@ -220,7 +220,7 @@ int32 UISubHeading_GetMedalMods(void)
     return mods;
 }
 
-void UISubHeading_SaveFileCB(int32 status)
+void UISubHeading_SaveFileCB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
     RSDK.LoadScene();

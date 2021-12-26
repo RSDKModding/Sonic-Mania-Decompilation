@@ -87,7 +87,7 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
     int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
     RSDK.Cos256(self->negAngle);
     RSDK.Sin256(self->negAngle);
-    if (!(self->onPath && !other->onGround)) {
+    if (!self->onPath || other->onGround) {
         int32 xDif = abs(scanX - self->position.x);
         int32 yDif = abs(scanY - self->position.y);
 

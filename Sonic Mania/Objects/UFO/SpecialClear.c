@@ -371,7 +371,7 @@ void SpecialClear_GiveScoreBonus(int32 score)
     if (self->score >= self->score1UP) {
         if (self->lives < 99)
             self->lives++;
-        Music_PlayMusicTrack(TRACK_1UP);
+        Music_PlayQueuedTrack(TRACK_1UP);
         Music->nextTrack = -1;
         while (self->score <= self->score1UP) {
             self->score1UP += 50000;
@@ -379,11 +379,11 @@ void SpecialClear_GiveScoreBonus(int32 score)
     }
 }
 
-void SpecialClear_SaveCB(int32 success)
+void SpecialClear_SaveCB(bool32 success)
 {
     RSDK_THIS(SpecialClear);
     UIWaitSpinner_FinishWait();
-    self->field_120 = 0;
+    self->saveInProgress = false;
 }
 
 void SpecialClear_LoadScene(void)
@@ -392,7 +392,7 @@ void SpecialClear_LoadScene(void)
     if (self->fillColour) {
         self->fillColour -= 0x80808;
     }
-    else if (!self->field_120) {
+    else if (!self->saveInProgress) {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         if (param->selectionType == 1) {
             RSDK.SetScene("Presentation", "Menu");
@@ -442,11 +442,11 @@ void SpecialClear_TallyScore(void)
             self->state = SpecialClear_Unknown9;
         else
             self->state = SpecialClear_Unknown10;
-        RSDK.PlaySfx(SpecialClear->sfxScoreTotal, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxScoreTotal, false, 0xFF);
     }
     else if (++self->timer == 2) {
         self->timer = 0;
-        RSDK.PlaySfx(SpecialClear->sfxScoreAdd, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxScoreAdd, false, 0xFF);
     }
 }
 
@@ -644,7 +644,7 @@ void SpecialClear_Unknown13(void)
     if (++self->timer == 160) {
         self->timer = 0;
         self->flag  = true;
-        RSDK.PlaySfx(SpecialClear->sfxSpecialWarp, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxSpecialWarp, false, 0xFF);
         self->state = SpecialClear_Unknown15;
     }
 }
@@ -656,7 +656,7 @@ void SpecialClear_Unknown15(void)
     if (self->timer >= 768) {
         self->state = SpecialClear_LoadScene;
         if (globals->gameMode < MODE_TIMEATTACK && globals->saveSlotID != NO_SAVE_SLOT) {
-            self->field_120 = 1;
+            self->saveInProgress = true;
             UIWaitSpinner_StartWait();
             GameProgress_TrackGameProgress(SpecialClear_SaveCB);
         }

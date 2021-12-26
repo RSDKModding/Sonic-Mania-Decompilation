@@ -23,7 +23,7 @@ typedef struct {
     int32 timer2;
     bool32 shouldFade;
     int32 colour;
-    int32 field_6C;
+    bool32 saveInProgress;
     Animator leftAnimator;
     Animator rightAnimator;
 } EntityBSS_Message;
@@ -51,7 +51,7 @@ void BSS_Message_State_Finished(void);
 void BSS_Message_State_Perfect(void);
 void BSS_Message_State_Idle(void);
 void BSS_Message_State_Finish(void);
-void BSS_Message_TrackProgress_CB(int32 success);
+void BSS_Message_TrackProgressCB(bool32 success);
 void BSS_Message_LoadPrevScene(void);
 void BSS_Message_LoadGameState(void);
 

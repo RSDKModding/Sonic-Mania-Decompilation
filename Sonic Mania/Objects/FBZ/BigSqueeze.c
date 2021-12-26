@@ -179,7 +179,7 @@ void BigSqueeze_Hit(void)
                 boss->state = BigSqueeze_HandleWallCollisions;
         }
 
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->electricAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, true, 0);
 
         self->state            = BigSqueeze_State2_Die;
         self->setupTimer       = 0;
@@ -418,7 +418,7 @@ void BigSqueeze_State2_Unknown2(void)
     if (self->setupTimer == 120) {
         self->setupTimer = 0;
         RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 2, &self->domeAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->electricAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, true, 0);
         self->state = BigSqueeze_State2_Unknown1;
     }
     if (!(Zone->timer & 0xF))
@@ -444,16 +444,16 @@ void BigSqueeze_State2_Die(void)
         switch (self->setupTimer) {
             case 20:
                 BigSqueeze_SpawnDebris(BigSqueeze->prongDebrisInfo);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->prongsAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->prongsAnimator, true, 0);
                 break;
             case 40:
                 BigSqueeze_SpawnDebris(BigSqueeze->domeDebrisInfo);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->domeAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->domeAnimator, true, 0);
                 break;
             case 60:
                 BigSqueeze_SpawnDebris(BigSqueeze->baseDebrisInfo);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->wheelAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->wheelAnimator, true, 0);
                 break;
             case 80:
                 Music_TransitionTrack(TRACK_STAGE, 0.0125);

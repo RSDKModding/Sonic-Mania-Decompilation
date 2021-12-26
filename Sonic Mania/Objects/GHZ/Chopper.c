@@ -147,8 +147,8 @@ void Chopper_State_Jump(void)
             self->animator.speed = 2;
         }
         else {
-            self->animator.frameID        = 0;
-            self->animator.speed = 0;
+            self->animator.frameID = 0;
+            self->animator.speed   = 0;
         }
     }
     else {

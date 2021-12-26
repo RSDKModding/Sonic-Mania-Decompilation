@@ -615,11 +615,11 @@ void CheckerBall_HandleObjectCollisions(void)
             itemBox->active        = 1;
             itemBox->velocity.y    = -0x20000;
             itemBox->state         = ItemBox_State_ContentsShown;
-            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
-            itemBox->animatorBox.frameID = ItemBox->brokenFrame++;
+            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
+            itemBox->boxAnimator.frameID = ItemBox->brokenFrame++;
             ItemBox->brokenFrame %= 3;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
             RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
 
             for (int32 i = 0; i < 6; ++i) {
@@ -652,7 +652,7 @@ void CheckerBall_HandleObjectCollisions(void)
                         default: break;
                     }
                 }
-                itemBox->animatorContents.frameID = itemBox->type;
+                itemBox->contentsAnimator.frameID = itemBox->type;
             }
         }
     }

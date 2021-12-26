@@ -331,9 +331,9 @@ void ReplayRecorder_SaveReplay(void)
     }
 }
 
-void ReplayRecorder_ReplaySaveFinish_CB(bool32 status)
+void ReplayRecorder_ReplaySaveFinish_CB(bool32 success)
 {
-    if (status) {
+    if (success) {
         LogHelpers_Print("Replay save successful!");
         ReplayRecorder_SaveReplayDB(ReplayRecorder_ReplaySave_CB);
     }
@@ -387,11 +387,11 @@ void ReplayRecorder_ReplaySave_CB(bool32 success)
     }
 }
 
-void ReplayRecorder_SaveTimeAttackDB_CB(int32 status)
+void ReplayRecorder_SaveTimeAttackDB_CB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
     ActClear->disableResultsInput = false;
-    if (!status) {
+    if (!success) {
         ActClear->hasSavedReplay = false;
         HUD->replaySaveEnabled   = true;
     }
@@ -668,7 +668,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
                 self->drawFX    = FX_FLIP | FX_ROTATE | FX_SCALE;
                 self->scale.x   = 0x100;
                 self->scale.y   = 0x100;
-                if (player->tailSpriteIndex != 0xFFFF) {
+                if (player->tailFrames != -1) {
                     self->rotation   = player->tailRotation;
                     self->direction  = player->tailDirection;
                     self->velocity.x = player->velocity.x;
@@ -825,19 +825,19 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
 {
     EntityPlayer *player = recorder->player;
     if (player) {
-        player->tailSpriteIndex = -1;
+        player->tailFrames = -1;
         if (RSDK.CheckStageFolder("MMZ") || RSDK.CheckStageFolder("PSZ2")) {
             if (flag) {
                 if (RSDK.CheckStageFolder("MMZ")) {
                     switch (player->characterID) {
                         case ID_TAILS:
-                            player->aniFrames       = SizeLaser->tailsIndex;
-                            player->tailSpriteIndex = SizeLaser->tailSpriteIndex;
+                            player->aniFrames  = SizeLaser->tailsFrames;
+                            player->tailFrames = SizeLaser->tailFrames;
                             break;
-                        case ID_KNUCKLES: player->aniFrames = SizeLaser->knuxIndex; break;
-                        case ID_MIGHTY: player->aniFrames = SizeLaser->mightyIndex; break;
-                        case ID_RAY: player->aniFrames = SizeLaser->rayIndex; break;
-                        default: player->aniFrames = SizeLaser->sonicIndex; break;
+                        case ID_KNUCKLES: player->aniFrames = SizeLaser->knuxFrames; break;
+                        case ID_MIGHTY: player->aniFrames = SizeLaser->mightyFrames; break;
+                        case ID_RAY: player->aniFrames = SizeLaser->rayFrames; break;
+                        default: player->aniFrames = SizeLaser->sonicFrames; break;
                     }
                 }
                 else if (RSDK.CheckStageFolder("PSZ2")) {
@@ -847,13 +847,13 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
             else {
                 switch (player->characterID) {
                     case ID_TAILS:
-                        player->aniFrames       = Player->tailsSpriteIndex;
-                        player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
+                        player->aniFrames  = Player->tailsFrames;
+                        player->tailFrames = Player->tailsTailsFrames;
                         break;
-                    case ID_KNUCKLES: player->aniFrames = Player->knuxSpriteIndex; break;
-                    case ID_MIGHTY: player->aniFrames = Player->mightySpriteIndex; break;
-                    case ID_RAY: player->aniFrames = Player->raySpriteIndex; break;
-                    default: player->aniFrames = Player->sonicSpriteIndex; break;
+                    case ID_KNUCKLES: player->aniFrames = Player->knuxFrames; break;
+                    case ID_MIGHTY: player->aniFrames = Player->mightyFrames; break;
+                    case ID_RAY: player->aniFrames = Player->rayFrames; break;
+                    default: player->aniFrames = Player->sonicFrames; break;
                 }
             }
         }

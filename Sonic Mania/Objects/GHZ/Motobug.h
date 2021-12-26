@@ -47,9 +47,9 @@ void Motobug_CheckPlayerCollisions(void);
 
 //States
 void Motobug_State_Fall(void);
-void Motobug_State_HandleMove(void);
-void Motobug_State_Move2(void);
 void Motobug_State_Move(void);
+void Motobug_State_Idle(void);
+void Motobug_State_Setup(void);
 void Motobug_State_Smoke(void);
 void Motobug_State_Turn(void);
 

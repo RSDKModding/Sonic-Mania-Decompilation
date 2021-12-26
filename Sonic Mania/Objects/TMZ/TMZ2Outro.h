@@ -66,6 +66,6 @@ bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_CutsceneState_FadeOut(EntityCutsceneSeq *host);
 bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host);
 
-void TMZ2Outro_SaveFileCB(int32 status);
+void TMZ2Outro_SaveFileCB(bool32 success);
 
 #endif //!OBJ_TMZ2OUTRO_H

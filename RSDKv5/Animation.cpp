@@ -141,7 +141,7 @@ void ProcessAnimation(Animator *animator)
             if (animator->framePtrs == (SpriteFrame *)1) {
                 while (animator->timer > animator->frameDuration) {
                     ++animator->frameID;
-                    animator->timer = animator->timer - animator->frameDuration;
+                    animator->timer -= animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
                 }
@@ -149,7 +149,7 @@ void ProcessAnimation(Animator *animator)
             else {
                 while (animator->timer > animator->frameDuration) {
                     ++animator->frameID;
-                    animator->timer = animator->timer - animator->frameDuration;
+                    animator->timer -= animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
                     animator->frameDuration = animator->framePtrs[animator->frameID].duration;

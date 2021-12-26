@@ -313,23 +313,23 @@ void ActClear_Create(void *data)
             uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
 #if RETRO_USE_PLUS
             switch (globals->playerID & 0xFF) {
-                case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, player1->rings, player1->score, time); break;
-                case ID_TAILS: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 2, player1->rings, player1->score, time); break;
-                case ID_KNUCKLES: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 3, player1->rings, player1->score, time); break;
-                case ID_MIGHTY: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 4, player1->rings, player1->score, time); break;
+                case ID_SONIC: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
+                case ID_TAILS: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 2, time, player1->rings, player1->score); break;
+                case ID_KNUCKLES: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 3, time, player1->rings, player1->score); break;
+                case ID_MIGHTY: TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 4, time, player1->rings, player1->score); break;
                 default:
                     if ((globals->playerID & 0xFF) == ID_RAY)
-                        TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 5, player1->rings, player1->score, time);
+                        TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 5, time, player1->rings, player1->score);
                     else
-                        TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, player1->rings, player1->score, time);
+                        TimeAttackData_TrackActClear(&stat, Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score);
                     break;
             }
             API.TryTrackStat(&stat);
 #else
             switch (globals->playerID & 0xFF) {
-                case ID_SONIC: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 1, player1->rings, player1->score, time); break;
-                case ID_TAILS: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 2, player1->rings, player1->score, time); break;
-                case ID_KNUCKLES: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 3, player1->rings, player1->score, time); break;
+                case ID_SONIC: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 1, time, player1->rings, player1->score); break;
+                case ID_TAILS: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 2, time, player1->rings, player1->score); break;
+                case ID_KNUCKLES: APICallback_TrackActClear(Zone_GetZoneID(), Zone->actID, 3, time, player1->rings, player1->score); break;
                 default: break;
             }
 #endif
@@ -371,7 +371,7 @@ void ActClear_Create(void *data)
         if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
             self->time =
-                TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE), 1);
+                TimeAttackData_GetScore(param->zoneID, param->actID, param->characterID, SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE), 1);
             self->achievedRank = false;
             self->isNewRecord  = false;
         }
@@ -507,7 +507,7 @@ void ActClear_CheckPlayerVictory(void)
         }
     }
 }
-void ActClear_SaveGameCallback(int32 success)
+void ActClear_SaveGameCallback(bool32 success)
 {
     UIWaitSpinner_FinishWait();
     ActClear->finishedSavingGame = false;

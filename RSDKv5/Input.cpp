@@ -820,12 +820,6 @@ void ProcessInput()
                 if (device && device->inputID == assign && device->active && device->processInput)
                     device->processInput(device, i + 1);
             }
-
-            InputState *buttons[] = {
-                &controller[i + 1].keyUp, &controller[i + 1].keyDown, &controller[i + 1].keyLeft,  &controller[i + 1].keyRight,
-                &controller[i + 1].keyA,  &controller[i + 1].keyB,    &controller[i + 1].keyC,     &controller[i + 1].keyX,
-                &controller[i + 1].keyY,  &controller[i + 1].keyZ,    &controller[i + 1].keyStart, &controller[i + 1].keySelect,
-            };
         }
     }
 

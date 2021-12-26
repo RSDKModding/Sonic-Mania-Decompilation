@@ -135,7 +135,7 @@ void SpeedGate_Create(void *data)
         self->updateRange.y = 0x400000;
         self->scale.y       = 0x200;
         if (self->timer <= 0) { //timer == 0 means finish line
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->timerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->timerAnimator, true, 0);
             RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 4, &self->finsAnimator, true, 0);
             self->timerPos.x = self->position.x;
             self->timerPos.y = self->position.y - 0x200000;
@@ -198,7 +198,7 @@ void SpeedGate_State_ProcessGate(void)
         self->timerRotation += 0x10;
 
     if (self->timer <= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->timerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->timerAnimator, true, 0);
         self->active = ACTIVE_BOUNDS;
         self->state  = StateMachine_None;
     }
@@ -222,7 +222,7 @@ void SpeedGate_State_ProcessGate(void)
 
             EntitySpeedGate *finishLine = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, SpeedGate);
             if (Player_CheckCollisionTouch(player, finishLine, &SpeedGate->hitbox)) {
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->timerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->timerAnimator, true, 0);
                 self->state               = StateMachine_None;
                 self->angle               = 0;
                 self->active              = ACTIVE_BOUNDS;

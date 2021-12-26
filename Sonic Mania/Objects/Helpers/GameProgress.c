@@ -77,6 +77,7 @@ void GameProgress_ShuffleBSSID(void)
 
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
 {
+    // 0xFFFEDB5C = saveRAM[0x900]
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
@@ -101,16 +102,19 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
         medalsGotten += progress->medals[i];
     }
 
-    float zonePercent    = (minVal(completeZones, 12) * 0.55) / 12.0;
-    float medalPercent   = (minVal(medalsGotten, 64) * 0.35) / 64.0;
-    float specialPercent = (minVal(emeraldsGotten, 7) * 0.05) / 7.0;
-    float endingPercent  = (minVal(progress->unlockedEndingID, 2) * 0.5) / 2.0;
+    // get the count of the unlock 
+    // then multiply by its completion weight (in this case zones are worth 55% of completion percent)
+    // then finally divide by the maximum count to normalize it
+
+    float zonePercent    = ((minVal(completeZones, 12) * 0.55) / 12.0);
+    float medalPercent   = ((minVal(medalsGotten, 64) * 0.35) / 64.0);
+    float specialPercent = ((minVal(emeraldsGotten, 7) * 0.05) / 7.0);
+    float endingPercent  = ((minVal(progress->unlockedEndingID, 2) * 0.05) / 2.0);
     return zonePercent + medalPercent + specialPercent + endingPercent;
 }
 
-void GameProgress_TrackGameProgress(void (*callback)(int32))
+void GameProgress_TrackGameProgress(void (*callback)(bool32 success))
 {
-#if RETRO_USE_PLUS
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to track progress before loading SaveGame file");
     }
@@ -118,35 +122,23 @@ void GameProgress_TrackGameProgress(void (*callback)(int32))
         EntityGameProgress *progress = GameProgress_GetGameProgress();
         if (!progress->allSpecialCleared) {
             float percent = GameProgress_GetCompletionPercent(progress);
+#if RETRO_USE_PLUS
             StatInfo stat;
             memset(&stat, 0, sizeof(StatInfo));
             stat.statID  = 3;
             stat.name    = "GAME_PROGRESS";
             stat.data[0] = floatToVoid(percent);
             API.TryTrackStat(&stat);
-            SaveGame_SaveFile(callback);
-        }
-    }
-    if (callback)
-        callback(0);
 #else
-    if (SceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
-        LogHelpers_Print("WARNING GameProgress Attempted to track progress before loading SaveGame file");
-    }
-    else {
-        EntityGameProgress *progress = GameProgress_GetGameProgress();
-        if (!progress->allSpecialCleared) {
-            float percent = GameProgress_GetCompletionPercent(progress);
-            if (APICallback->TrackGameProgress)
-                APICallback->TrackGameProgress(percent);
-            else
-                LogHelpers_Print("EMPTY TrackGameProgress(%f)", percent);
+            APICallback_TrackGameProgress(percent);
+#endif
             SaveGame_SaveFile(callback);
+            return;
         }
     }
+
     if (callback)
-        callback(0);
-#endif
+        callback(false);
 }
 void GameProgress_ClearBSSSave(void)
 {
@@ -269,7 +261,7 @@ void GameProgress_GiveEmerald(int32 emeraldID)
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     progress->emeraldFlags[emeraldID] = true;
-    int32 allEmeraldsFlag               = true;
+    bool32 allEmeraldsFlag             = true;
     for (int32 i = 0; i < 7; ++i) {
         allEmeraldsFlag = allEmeraldsFlag && progress->emeraldFlags[i];
     }
@@ -323,6 +315,7 @@ void GameProgress_PrintSaveProgress(void)
     }
 
     EntityGameProgress *progress = GameProgress_GetGameProgress();
+
     LogHelpers_Print("=========================");
     LogHelpers_Print("Game Progress:\n");
 
@@ -405,7 +398,7 @@ int32 GameProgress_GetNextNotif(void)
     }
     return -1;
 }
-bool32 GameProgress_CheckUnlock(char type)
+bool32 GameProgress_CheckUnlock(uint8 id)
 {
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to check unlock before loading SaveGame file");
@@ -413,7 +406,7 @@ bool32 GameProgress_CheckUnlock(char type)
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        switch (type) {
+        switch (id) {
             case 0:
             case 1: return progress->zoneClearFlags[0] == 1;
             case 2: return progress->silverMedalCount >= 1;

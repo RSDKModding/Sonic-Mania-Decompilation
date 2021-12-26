@@ -697,7 +697,7 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
     return false;
 }
 
-void TMZ2Outro_SaveFileCB(int32 status) { TMZ2Outro->flag1 = true; }
+void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->flag1 = true; }
 
 void TMZ2Outro_EditorDraw(void) {}
 

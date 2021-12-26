@@ -1155,7 +1155,7 @@ void PhantomEgg_State_Unknown21(void)
     }
 }
 
-void PhantomEgg_SaveGameCB(int32 status) { PhantomEgg->savedGameProgress = true; }
+void PhantomEgg_SaveGameCB(bool32 success) { PhantomEgg->savedGameProgress = true; }
 
 #if RETRO_INCLUDE_EDITOR
 void PhantomEgg_EditorDraw(void)

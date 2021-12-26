@@ -13,10 +13,13 @@ void PhantomRuby_Update(void)
 {
     RSDK_THIS(PhantomRuby);
     StateMachine_Run(self->state);
+
     if (self->animator1.animationID == 1 && self->animator1.frameID == self->animator1.frameCount - 1)
         RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
+
     if (self->animator2.animationID == 2 && self->animator2.frameID == self->animator2.frameCount - 1)
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0xFFFF, &self->animator2, true, 0);
+
     RSDK.ProcessAnimation(&self->animator1);
     RSDK.ProcessAnimation(&self->animator2);
 }

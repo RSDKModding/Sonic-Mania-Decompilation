@@ -51,7 +51,7 @@ void CPZ1Intro_Create(void *data)
 void CPZ1Intro_StageLoad(void)
 {
     CPZ1Intro->playerFrames        = RSDK.LoadSpriteAnimation("Players/CutsceneCPZ.bin", SCOPE_STAGE);
-    CPZ1Intro->particleSpriteIndex = RSDK.LoadSpriteAnimation("CPZ/Particles.bin", SCOPE_STAGE);
+    CPZ1Intro->particleFrames = RSDK.LoadSpriteAnimation("CPZ/Particles.bin", SCOPE_STAGE);
     foreach_all(FXRuby, fxRuby)
     {
         CPZ1Intro->fxRuby = (Entity *)fxRuby;
@@ -65,7 +65,7 @@ void CPZ1Intro_Particle_CB(Entity *d)
 {
     EntityDebris *debris = (EntityDebris *)d;
     debris->velocity.y += RSDK.Rand(-0x28000, -0x20000);
-    RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 1, &debris->animator, true, 0);
+    RSDK.SetSpriteAnimation(CPZ1Intro->particleFrames, 1, &debris->animator, true, 0);
 }
 
 void CPZ1Intro_HandleRubyHover(Entity *player1, Entity *cutSeq, Entity *player2, int32 targetY)
@@ -107,7 +107,7 @@ bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
 
 #if RETRO_USE_PLUS
     if (player1->animator.frameID == player1->animator.frameCount - 1 && player1->animator.timer == 4) {
-        RSDK.SetSpriteAnimation(player1->tailSpriteIndex, ANI_IDLE, &player1->tailAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->tailFrames, ANI_IDLE, &player1->tailAnimator, true, 0);
         player1->animator.animationID     = 0;
         player1->animator.prevAnimationID = 0;
         return true;
@@ -263,7 +263,7 @@ bool32 CPZ1Intro_Cutscene_ChemicalDrop(void *h)
         debris->drawOrder     = Zone->playerDrawHigh;
         debris->state         = Debris_State_Fall;
         debris->gravity       = 0x3800;
-        RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 0, &debris->animator, true, 0);
+        RSDK.SetSpriteAnimation(CPZ1Intro->particleFrames, 0, &debris->animator, true, 0);
         CPZ1Intro->debris = (Entity *)debris;
     }
 

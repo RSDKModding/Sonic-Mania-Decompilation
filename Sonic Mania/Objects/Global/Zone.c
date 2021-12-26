@@ -190,6 +190,9 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad(void)
 {
+    EntityGameProgress *progress = GameProgress_GetGameProgress();
+    float percent = GameProgress_GetCompletionPercent(progress);
+
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     Zone->randSeed           = (uint32)time(NULL);
@@ -649,18 +652,18 @@ void Zone_ReloadScene(int32 screen)
     entity->fadeColour = 0xF0F0F0;
 #if RETRO_USE_PLUS
     if (globals->gameMode != MODE_ENCORE || EncoreIntro) {
+#endif
         entity->state     = Zone_State_Fadeout_Destroy;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
         entity->drawOrder = DRAWLAYER_COUNT - 1;
+#if RETRO_USE_PLUS
     }
     else {
-#endif
         entity->state     = Zone_State_ReloadScene;
         entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
         entity->drawOrder = DRAWLAYER_COUNT - 1;
-#if RETRO_USE_PLUS
     }
 #endif
 }

@@ -267,23 +267,20 @@ void Spring_State_Diagonal(void)
     {
         if ((!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                bool32 flag = false;
+                bool32 collided = false;
                 if (player->onGround) {
-                    flag = true;
+                    collided = true;
                 }
                 else {
                     int32 y = player->velocity.y;
                     if (y >= 0) {
-                        flag = true;
+                        collided = true;
                     }
                     else {
-                        int32 x = player->velocity.x;
-                        if (x < 0)
-                            x = -x;
-                        flag = x > -y;
+                        collided = abs(player->velocity.x) > -y;
                     }
                 }
-                if (flag) {
+                if (collided) {
                     if (player->state != Ice_State_FrozenPlayer) {
                         if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
                             player->state = Player_State_ForceRoll_Air;

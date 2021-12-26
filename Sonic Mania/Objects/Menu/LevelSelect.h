@@ -30,7 +30,7 @@ typedef struct {
     uint16 sfxContinue;
     uint16 sfxMedalGot;
     int32 *cheatCodePtrs[8];
-    int32 cheatUnknown[8];
+    int32 cheatCodePos[8];
     void (*checkCheatActivated[8])(void);
 #else
     STATIC(int32 bgScrollPos, 240);

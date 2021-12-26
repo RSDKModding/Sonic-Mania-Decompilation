@@ -10,17 +10,30 @@ UserStats *stats = NULL;
 #endif
 
 #if !RETRO_REV02
-void TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time)
+void GetLeaderboardName(char *buffer, int zoneID, int actID, int characterID)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
+    const char *characterIDs[] = { "S", "T", "K" };
+    const char *zoneIDs[]      = { "GHZ", "CPZ", "SPZ", "FBZ", "PGZ", "SSZ", "HCZ", "MSZ", "OOZ", "LRZ", "MMZ", "TMZ" };
+
+    sprintf(buffer, "%s%d_%s", zoneIDs[zoneID], actID + 1, characterIDs[characterID]);
 }
-void TrackTAClear(byte zoneID, byte actID, byte playerID, int time)
+
+void TrackActClear(byte zoneID, byte actID, byte characterID, int time, int rings, int score)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
+    PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d) -> %s", zoneID, actID, characterID, time, rings, score);
 }
-void TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY)
+void TrackTAClear(byte zoneID, byte actID, byte characterID, int score)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, playerID, entityX, entityY);
+    char leaderboardName[0x404];
+    memset(leaderboardName, 0, 0x400);
+
+    GetLeaderboardName(leaderboardName, zoneID, actID, characterID);
+
+    PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d) -> %s", zoneID, actID, characterID, score, leaderboardName);
+}
+void TrackEnemyDefeat(byte zoneID, byte actID, byte characterID, int entityX, int entityY)
+{
+    PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, characterID, entityX, entityY);
 }
 void TrackGameProgress(float percent) { PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100); }
 #else

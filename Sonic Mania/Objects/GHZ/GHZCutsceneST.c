@@ -265,7 +265,7 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
                     case HBH_SHINOBI:
                         if (host->timer == 60) {
                             RSDK.SetSpriteAnimation(hbh->aniFrames, 3, &hbh->animator, true, 0);
-                            RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->animator2, true, 0);
+                            RSDK.SetSpriteAnimation(-1, 0, &hbh->animator2, true, 0);
                         }
                         hbh->position.x -= 0x4000;
                         hbh->position.y -= 0x40000;

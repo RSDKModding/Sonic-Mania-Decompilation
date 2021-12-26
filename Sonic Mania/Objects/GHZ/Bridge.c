@@ -228,10 +228,7 @@ void Bridge_Burn(int32 offset)
     spawnX      = self->endPos - 0x80000;
     int32 divisor = self->endPos - self->startPos - self->stoodPos;
     ang         = 0x80000;
-    if (id >= self->length) {
-        destroyEntity(self);
-    }
-    else {
+    if (id < self->length) {
         off = offset - id;
         for (; id < self->length; ++id, --off) {
             int32 spawnY = (self->bridgeDepth * RSDK.Sin512((ang << 7) / divisor) >> 9) + self->position.y;
@@ -239,8 +236,8 @@ void Bridge_Burn(int32 offset)
             ang += 0x100000;
             spawnX -= 0x100000;
         }
-        destroyEntity(self);
     }
+    destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

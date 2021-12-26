@@ -52,8 +52,8 @@ void Camera_Draw(void) {}
 
 void Camera_Create(void *data)
 {
-    int32 screen = voidToInt(data);
     RSDK_THIS(Camera);
+    int32 screen = voidToInt(data);
     self->offset.x = 0x80000;
     self->centerY  = ScreenInfo->centerY - 16;
     if (self->active != ACTIVE_NORMAL) {

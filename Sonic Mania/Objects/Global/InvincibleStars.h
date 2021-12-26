@@ -16,7 +16,7 @@ typedef struct {
     Vector2 starPos[8];
     int32 starAngle[4];
     int32 starOffset;
-    Animator starsData[4];
+    Animator starAnimator[4];
 } EntityInvincibleStars;
 
 // Object Struct

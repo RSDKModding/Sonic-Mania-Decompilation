@@ -1,6 +1,14 @@
 #ifndef USER_LEADERBOARDS_H
 #define USER_LEADERBOARDS_H
 
+struct LeaderboardID {
+    int id1;
+    int id2;
+    int id_switch;
+    const char *name_legacy;
+    const char *name;
+};
+
 struct LeaderboardEntry {
     TextInfo username;
 #if RETRO_REV02
@@ -43,9 +51,9 @@ struct UserLeaderboards {
 #if RETRO_VER_EGS
     virtual int32 unknown6(void) { return 0; }
 #endif
-    virtual void FetchLeaderboard(const char *name, bool32 isUser) {}
+    virtual void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) {}
     virtual void unknown5(void) {}
-    virtual void TrackScore(const char *name, int32 score, void (*callback)(bool32 success, int32 rank)) {}
+    virtual void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank)) {}
     virtual int32 GetStatus(void) { return 0; }
 
     const char *currentLeaderboard;
@@ -65,9 +73,9 @@ struct DummyLeaderboards : UserLeaderboards {
 #if RETRO_VER_EGS
     int32 unknown6(void) { return 0; }
 #endif
-    void FetchLeaderboard(const char *name, bool32 isUser);
+    void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser);
     void unknown5(void) {}
-    void TrackScore(const char *name, int32 score, void (*callback)(bool32 success, int32 rank));
+    void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank));
     inline int32 GetStatus(void) { return status; }
 
     int32 loadTime;
@@ -95,8 +103,11 @@ inline int32 leaderboardsUnknown4(void) { return leaderboards->unknown4(); }
 #if RETRO_VER_EGS
 inline int32 leaderboardsUnknown6(void) { return leaderboards->unknown6(); }
 #endif
-inline void FetchLeaderboard(const char *name, bool32 isUser) { leaderboards->FetchLeaderboard(name, isUser); }
-inline void TrackScore(const char *name, int32 score, void (*callback)(bool32 success, int32 rank)) { leaderboards->TrackScore(name, score, callback); }
+inline void FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser) { leaderboards->FetchLeaderboard(leaderboard, isUser); }
+inline void TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
+{
+    leaderboards->TrackScore(leaderboard, score, callback);
+}
 inline int32 GetLeaderboardsStatus(void) { return leaderboards->GetStatus(); }
 
 void FillDummyLeaderboardEntries();

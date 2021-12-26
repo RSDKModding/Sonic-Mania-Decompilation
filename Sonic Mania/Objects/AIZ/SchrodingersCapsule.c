@@ -57,7 +57,7 @@ void SchrodingersCapsule_Update(void)
                         EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
                         if (ruby->velocity.y > 0)
                             ruby->velocity.y = -ruby->velocity.y;
-                        ruby->state = EncoreIntro_PhantomRuby_Unknown4;
+                        ruby->state = EncoreIntro_PhantomRuby_CapsuleRiseUp;
                     }
                 }
             }
@@ -185,7 +185,7 @@ void SchrodingersCapsule_Unknown3(void)
     RSDK.ProcessAnimation(&self->glassAnimator);
     RSDK.ProcessAnimation(&self->mightyAnimator);
     RSDK.ProcessAnimation(&self->rayAnimator);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->glassAnimator, true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &self->glassAnimator, true, 0);
     self->state               = SchrodingersCapsule_Unknown4;
     SceneInfo->timeEnabled = false;
 }
@@ -208,8 +208,8 @@ void SchrodingersCapsule_Unknown4(void)
         self->timer             = 0;
         self->state             = StateMachine_None;
         self->mainAnimator.frameID = 1;
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->mightyAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->rayAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, -1, &self->mightyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, -1, &self->rayAnimator, true, 0);
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
         buddy1->objectID     = Player->objectID;
