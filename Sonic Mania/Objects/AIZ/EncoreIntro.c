@@ -335,7 +335,7 @@ bool32 EncoreIntro_Cutscene_BeginAIZEncore(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_State_Initial;
-            titleCard->stateDraw = TitleCard_Draw_Default;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
         foreach_all(HUD, hud)
@@ -1056,7 +1056,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
             EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->objectID);
             titleCard->active          = ACTIVE_NORMAL;
             titleCard->state           = TitleCard_State_Initial;
-            titleCard->stateDraw       = TitleCard_Draw_Default;
+            titleCard->stateDraw       = TitleCard_Draw_SlideIn;
         }
 
         Vector2 size;
@@ -1204,16 +1204,16 @@ void EncoreIntro_PlayerState_HandleAir(void)
 void EncoreIntro_PlayerState_InputNone(void)
 {
     RSDK_THIS(Player);
-    ControllerInfo[1].keyX.down       = false;
-    ControllerInfo[1].keyX.press      = false;
-    ControllerInfo[1].keyY.down       = false;
-    ControllerInfo[1].keyY.press      = false;
-    ControllerInfo[1].keyZ.down       = false;
-    ControllerInfo[1].keyZ.press      = false;
-    ControllerInfo[1].keyStart.down   = false;
-    ControllerInfo[1].keyStart.press  = false;
-    ControllerInfo[1].keySelect.down  = false;
-    ControllerInfo[1].keySelect.press = false;
+    ControllerInfo[CONT_P1].keyX.down       = false;
+    ControllerInfo[CONT_P1].keyX.press      = false;
+    ControllerInfo[CONT_P1].keyY.down       = false;
+    ControllerInfo[CONT_P1].keyY.press      = false;
+    ControllerInfo[CONT_P1].keyZ.down       = false;
+    ControllerInfo[CONT_P1].keyZ.press      = false;
+    ControllerInfo[CONT_P1].keyStart.down   = false;
+    ControllerInfo[CONT_P1].keyStart.press  = false;
+    ControllerInfo[CONT_P1].keySelect.down  = false;
+    ControllerInfo[CONT_P1].keySelect.press = false;
     Player_ProcessP1Input();
     self->up        = false;
     self->down      = false;

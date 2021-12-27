@@ -136,7 +136,7 @@ void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
 
-bool32 Zone_IsAct2(void);
+bool32 Zone_IsZoneLastAct(void);
 int32 Zone_GetEncoreStageID(void);
 int32 Zone_GetManiaStageID(void);
 

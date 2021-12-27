@@ -12,19 +12,19 @@ typedef struct {
 #if RETRO_USE_PLUS
     uint16 sfxEvent;
 #endif
-    bool32 isTimeAttack;
-    int32 finishedSavingGame;
+    bool32 bufferMoveEnabled;
+    bool32 isSavingGame;
 #if RETRO_USE_PLUS
-    int32 disableResultsInput;
+    bool32 disableResultsInput;
 #endif
-    int32 actID;
+    int32 displayedActID;
     bool32 finished;
 #if RETRO_USE_PLUS
     bool32 forceNoSave;
     StateMachine(bufferMove_CB);
     StateMachine(saveReplay_CB);
-    int32 hasSavedReplay;
-    int32 disableTimeBonus;
+    bool32 hasSavedReplay;
+    bool32 disableTimeBonus;
     bool32 actClearActive;
 #endif
 } ObjectActClear;
@@ -35,7 +35,7 @@ typedef struct {
     StateMachine(state);
     int32 timer;
     int32 stageFinishTimer;
-    int32 scoreBonus;
+    int32 timeBonus;
     int32 ringBonus;
     int32 coolBonus;
     int32 totalScore;
@@ -95,7 +95,7 @@ void ActClear_State_SaveGameProgress(void);
 #if RETRO_USE_PLUS
 void ActClear_State_ShowResultsTA(void);
 #endif
-void ActClear_State_StartExitSequence(void);
+void ActClear_State_WaitForSaveFinish(void);
 void ActClear_State_ExitActClear(void);
 
 void ActClear_State_ForcePlayerOnScreen(void);

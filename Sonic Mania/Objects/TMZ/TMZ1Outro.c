@@ -165,7 +165,7 @@ bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host)
         {
             tCard->active              = ACTIVE_NORMAL;
             tCard->state               = TitleCard_State_Initial;
-            tCard->stateDraw           = TitleCard_Draw_Default;
+            tCard->stateDraw           = TitleCard_Draw_SlideIn;
             globals->suppressAutoMusic = false;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;

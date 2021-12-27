@@ -830,12 +830,10 @@ void Player_LoadSpritesVS(void)
 void Player_SaveValues(void)
 {
     EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    Player->savedLives       = player1->lives;
-    globals->restartLives[0] = Player->savedLives;
-    Player->savedScore       = player1->score;
-    globals->restartScore    = Player->savedScore;
-    Player->savedScore1UP    = player1->score1UP;
-    globals->restartScore1UP = Player->savedScore1UP;
+
+    globals->restartLives[0] = Player->savedLives = player1->lives;
+    globals->restartScore = Player->savedScore = player1->score;
+    globals->restartScore1UP = Player->savedScore1UP = player1->score1UP;
 }
 void Player_GiveScore(EntityPlayer *player, int32 score)
 {

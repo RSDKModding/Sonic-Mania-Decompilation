@@ -75,21 +75,9 @@ void ForceSpin_Create(void *data)
     self->animator.frameID = 4;
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_BOUNDS;
-
-        int32 x = 0;
-        if (self->size * RSDK.Sin256(self->angle) << 11 >= 0)
-            x = self->size * RSDK.Sin256(self->angle) << 11;
-        else
-            x = -0x800 * self->size * RSDK.Sin256(self->angle);
-        self->updateRange.x = x + 0x200000;
-
-        int32 y = 0;
-        if (self->size * RSDK.Cos256(self->angle) << 11 >= 0)
-            y = self->size * RSDK.Cos256(self->angle) << 11;
-        else
-            y = -0x800 * self->size * RSDK.Cos256(self->angle);
+        self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
+        self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
         self->visible       = false;
-        self->updateRange.y = y + 0x200000;
         self->drawOrder     = Zone->drawOrderLow;
         self->negAngle      = (uint8) - (uint8)self->angle;
     }
@@ -103,12 +91,11 @@ void ForceSpin_DrawSprites(void)
 
     RSDK_THIS(ForceSpin);
     drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.y -= self->size << 19;
+    drawPos.y = self->position.y - (self->size << 19);
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     for (int32 i = 0; i < self->size; ++i) {
-        RSDK.DrawSprite(&self->animator, &drawPos, 0);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += RSDK.Sin256(self->angle) << 12;
         drawPos.y += RSDK.Cos256(self->angle) << 12;
     }

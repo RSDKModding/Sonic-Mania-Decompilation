@@ -297,8 +297,8 @@ void SchrodingersCapsule_Unknown5(void)
         buddy2->state        = Player_State_Victory;
         RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_VICTORY, &buddy2->animator, true, 0);
 
-        ActClear->actID       = 1;
-        ActClear->forceNoSave = true;
+        ActClear->displayedActID = 1;
+        ActClear->forceNoSave    = true;
         Music_PlayTrack(TRACK_ACTCLEAR);
         RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, NULL);
     }

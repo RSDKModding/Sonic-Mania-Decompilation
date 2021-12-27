@@ -647,7 +647,7 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
             globals->playerID = TMZ2Outro->playerID;
             TMZ2Outro->flag1  = false;
             SaveGame_SaveProgress();
-            if (Zone_IsAct2())
+            if (Zone_IsZoneLastAct())
                 GameProgress_MarkZoneCompleted(Zone_GetZoneID());
             GameProgress_GiveEnding(1);
             SaveGame_SaveFile(TMZ2Outro_SaveFileCB);

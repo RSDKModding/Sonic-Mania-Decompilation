@@ -1138,7 +1138,7 @@ void PhantomEgg_State_Unknown21(void)
     if (self->timer >= 512) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
             if (self->timer == 512) {
-                if (Zone_IsAct2())
+                if (Zone_IsZoneLastAct())
                     GameProgress_MarkZoneCompleted(Zone_GetZoneID());
                 SaveGame_SaveFile(PhantomEgg_SaveGameCB);
                 UIWaitSpinner_StartWait();

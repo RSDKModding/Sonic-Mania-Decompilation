@@ -66,9 +66,9 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
     if (host->values[0]) {
         if (host->timer - host->storedValue2 == 30) {
-            ActClear->actID = 1;
-            post->state     = SignPost_State_Fall;
-            post->active    = ACTIVE_NORMAL;
+            ActClear->displayedActID = 1;
+            post->state              = SignPost_State_Fall;
+            post->active             = ACTIVE_NORMAL;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
             return true;
         }
@@ -162,7 +162,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_State_Initial;
-            titleCard->stateDraw = TitleCard_Draw_Default;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
         Music_PlayTrack(TRACK_STAGE);

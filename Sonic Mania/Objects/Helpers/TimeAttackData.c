@@ -172,6 +172,7 @@ uint16 TimeAttackData_LoadTimeAttackDB(void (*callback)(bool32 success))
         LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
         globals->taTableLoaded = STATUS_ERROR;
     }
+    return globals->taTableID;
 }
 
 void TimeAttackData_LoadTimeAttackDB_CB(int32 statusCode)

@@ -267,13 +267,13 @@ void SaveGame_SaveProgress(void)
     saveRAM->characterFlags = globals->characterFlags;
     saveRAM->stock          = globals->stock;
     saveRAM->playerID       = globals->playerID;
-    if (!ActClear || ActClear->actID <= 0) {
+    if (!ActClear || ActClear->displayedActID <= 0) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
-            if (Zone_IsAct2()) {
+            if (Zone_IsZoneLastAct()) {
                 if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                     saveRAM->zoneID = Zone_GetZoneID() + 1;
                 if (saveRAM->zoneID >= ZONE_ERZ) {
-                    saveRAM->zoneID = 2;
+                    saveRAM->saveState = SAVEGAME_COMPLETE;
                     saveRAM->zoneID = ZONE_ERZ;
                 }
             }
@@ -281,12 +281,12 @@ void SaveGame_SaveProgress(void)
     }
 #else
     if (globals->gameMode == MODE_MANIA) {
-        if (Zone_IsAct2()) {
+        if (Zone_IsZoneLastAct()) {
             if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                 saveRAM->zoneID = Zone_GetZoneID() + 1;
             if (saveRAM->zoneID >= ZONE_ERZ) {
-                saveRAM->zoneID = 2;
-                saveRAM->zoneID = ZONE_ERZ;
+                saveRAM->saveState = SAVEGAME_COMPLETE;
+                saveRAM->zoneID    = ZONE_ERZ;
             }
         }
     }
@@ -294,7 +294,7 @@ void SaveGame_SaveProgress(void)
 }
 void SaveGame_ClearRestartData(void)
 {
-    globals->recallEntities      = 0;
+    globals->recallEntities      = false;
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
     globals->restartMinutes      = 0;

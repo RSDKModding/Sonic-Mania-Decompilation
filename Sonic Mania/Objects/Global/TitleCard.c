@@ -46,7 +46,7 @@ void TitleCard_Create(void *data)
             if (!globals->atlEnabled)
                 Zone->timer2 = 0;
             self->state     = TitleCard_State_Initial;
-            self->stateDraw = TitleCard_Draw_Default;
+            self->stateDraw = TitleCard_Draw_SlideIn;
         }
 
         self->barPos[0] = (ScreenInfo->centerX - 152) << 16;
@@ -401,7 +401,7 @@ void TitleCard_State_OpeningBG(void)
 
     if (self->timer >= 1024) {
         self->state     = TitleCard_State_ShowTitle;
-        self->stateDraw = TitleCard_Draw_SolidBG;
+        self->stateDraw = TitleCard_Draw_ShowTitleCard;
     }
     else {
         self->timer += 32;
@@ -622,9 +622,11 @@ void TitleCard_State_Supressed(void)
     StateMachine_Run(TitleCard->finishedCB);
 }
 
-void TitleCard_Draw_Default(void)
+void TitleCard_Draw_SlideIn(void)
 {
     RSDK_THIS(TitleCard);
+
+    // The big ol' BG
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
         if (self->timer < 256)
             RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 0xFF, INK_NONE, true);
@@ -632,27 +634,21 @@ void TitleCard_Draw_Default(void)
         if (self->timer < 512)
             RSDK.DrawRect(0, ScreenInfo->centerY - (self->timer >> 1), ScreenInfo->width, self->timer, self->colours[3], 0xFF, INK_NONE, true);
 
-        int32 val = self->timer - 128;
-        if (val > 0) {
-            if (val < 512)
-                RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, self->colours[2], 0xFF, INK_NONE, true);
+        uint32 height = self->timer - 128;
+        if (height < 512)
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[2], 0xFF, INK_NONE, true);
 
-            val -= 128;
-            if (val > 0) {
-                if (val < 512)
-                    RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, self->colours[0], 0xFF, INK_NONE, true);
+        height -= 128;
+        if (height < 512)
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[0], 0xFF, INK_NONE, true);
 
-                val -= 128;
-                if (val > 0) {
-                    if (val < 512)
-                        RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, self->colours[1], 0xFF, INK_NONE, true);
+        height -= 128;
+        if (height < 512)
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[1], 0xFF, INK_NONE, true);
 
-                    val -= 128;
-                    if (val > 0)
-                        RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, self->colours[4], 0xFF, INK_NONE, true);
-                }
-            }
-        }
+        height -= 128;
+        if (height < 512)
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[4], 0xFF, INK_NONE, true);
     }
 
     if (self->word2Offset > 0)
@@ -667,11 +663,12 @@ void TitleCard_Draw_Default(void)
     RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, true);
 }
 
-void TitleCard_Draw_SolidBG(void)
+void TitleCard_Draw_ShowTitleCard(void)
 {
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard)
         RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, self->colours[4], 0xFF, INK_NONE, true);
+
     if (self->points0[1].x < 0xF00000)
         RSDK.DrawQuad(self->points6, 4, (self->colours[0] >> 16) & 0xFF, (self->colours[0] >> 8) & 0xFF, (self->colours[0] >> 0) & 0xFF, 0xFF,
                       INK_NONE);
@@ -721,14 +718,12 @@ void TitleCard_Draw_SolidBG(void)
     RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->word2Offset, 0, ALIGN_RIGHT, 1, 0, self->charPos, true);
 
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, ScreenInfo[SceneInfo->currentScreenID].height);
+
     if (self->actID != 3) {
         if (self->actNumScale > 0) {
             self->drawFX  = FX_SCALE;
+            self->scale.x = minVal(self->actNumScale, 0x200);
             self->scale.y = 0x200;
-            if (self->actNumScale > 512)
-                self->scale.x = 512;
-            else
-                self->scale.x = self->actNumScale;
 
 #if RETRO_USE_PLUS
             self->decorationAnimator.frameID = (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) ? 2 : 0;
@@ -737,12 +732,7 @@ void TitleCard_Draw_SolidBG(void)
 #endif
             RSDK.DrawSprite(&self->decorationAnimator, &self->actNumPos, true);
 
-            self->scale.x = self->actNumScale - 0x100;
-            if (self->scale.x < 0) 
-                self->scale.x = 0;
-            else if (self->scale.x > 0x200) 
-                self->scale.x = 0x200;
-
+            self->scale.x = clampVal(self->actNumScale - 0x100, 0, 0x200);
             RSDK.DrawSprite(&self->actNumbersAnimator, &self->actNumPos, true);
             self->drawFX = FX_NONE;
         }

@@ -115,7 +115,6 @@ void PauseMenu_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_ALWAYS;
         if (data == intToVoid(1)) {
-            self->active    = ACTIVE_ALWAYS;
             self->visible   = true;
             self->drawOrder = DRAWLAYER_COUNT - 1;
             self->state     = PauseMenu_State_FadeToCB;

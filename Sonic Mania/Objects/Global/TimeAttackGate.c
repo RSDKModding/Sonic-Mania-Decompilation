@@ -221,7 +221,7 @@ void TimeAttackGate_HandleStart(void)
             StateMachine_Run(TimeAttackGate->endCB);
 #endif
             if (!TimeAttackGate->disableRecords)
-                ActClear->isTimeAttack = true;
+                ActClear->bufferMoveEnabled = true;
 #if RETRO_USE_PLUS
             TimeAttackGate_AddRecord();
 #endif
@@ -237,7 +237,7 @@ void TimeAttackGate_AddRecord(void)
 {
     if (!TimeAttackGate->disableRecords) {
         if (ActClear)
-            ActClear->finishedSavingGame = true;
+            ActClear->isSavingGame = true;
         if (UIWaitSpinner)
             UIWaitSpinner_StartWait();
 
@@ -257,7 +257,7 @@ void TimeAttackGate_AddRecord(void)
 void TimeAttackGate_LeaderboardCB(bool32 success)
 {
     if (ActClear)
-        ActClear->finishedSavingGame = false;
+        ActClear->isSavingGame = false;
     if (UIWaitSpinner)
         UIWaitSpinner_FinishWait();
 }

@@ -19,7 +19,7 @@ void *link_handle = NULL;
 #endif
 
 int32 *globalVarsPtr = NULL;
-RetroEngine engine = RetroEngine();
+RetroEngine engine   = RetroEngine();
 
 bool32 processEvents()
 {
@@ -38,15 +38,15 @@ bool32 processEvents()
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: return false;
-                    case SDL_WINDOWEVENT_FOCUS_GAINED: 
-                        #if RETRO_REV02
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+#if RETRO_REV02
                         userCore->focusState = 0;
-                        #endif
+#endif
                         break;
                     case SDL_WINDOWEVENT_FOCUS_LOST:
 #if RETRO_REV02
-                        userCore->focusState = 1; 
-                        #endif
+                        userCore->focusState = 1;
+#endif
                         break;
                 }
                 break;
@@ -55,12 +55,12 @@ bool32 processEvents()
             case SDL_APP_WILLENTERFOREGROUND:
 #if RETRO_REV02
                 userCore->focusState = 0;
-                #endif
+#endif
                 break;
             case SDL_APP_WILLENTERBACKGROUND:
 #if RETRO_REV02
                 userCore->focusState = 1;
-                #endif
+#endif
                 break;
             case SDL_APP_TERMINATING: return false;
 #endif
@@ -357,7 +357,6 @@ void runRetroEngine()
             }
 #endif
 
-
             if (!(engine.focusState & 1)) {
 #if RETRO_USE_MOD_LOADER
                 if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
@@ -604,7 +603,7 @@ void runRetroEngine()
                 // Uncomment this code to add the build number to dev menu
                 // overrides the game subtitle, used in switch dev menu
                 if (currentScreen && sceneInfo.state == ENGINESTATE_DEVMENU) {
-                    //Switch 1.04 build # is 18403, 1.00 is 17051
+                    // Switch 1.04 build # is 18403, 1.00 is 17051
                     // char buffer[0x40];
                     // sprintf(buffer, "Build #%d", 18403);
                     // DrawRectangle(currentScreen->center.x - 128, currentScreen->center.y - 48, 256, 8, 0x008000, 0xFF, INK_NONE, true);
@@ -833,7 +832,7 @@ void LoadXMLSoundFX()
                                 sfxPath = getXMLAttributeValueString(valAttr);
 
                             const tinyxml2::XMLAttribute *playsAttr = findXMLAttribute(sfxElement, "maxConcurrentPlays");
-                            int maxConcurrentPlays                         = 0;
+                            int maxConcurrentPlays                  = 0;
                             if (playsAttr)
                                 maxConcurrentPlays = getXMLAttributeValueInt(playsAttr);
 
@@ -849,7 +848,6 @@ void LoadXMLSoundFX()
 
             delete[] xmlData;
             delete doc;
-
         }
     }
     setActiveMod(-1);
@@ -857,9 +855,8 @@ void LoadXMLSoundFX()
 int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 {
     FileInfo info;
-    int listCount = 0;
+    int listCount  = 0;
     int stageCount = 0;
-
 
     for (int m = 0; m < (int)modList.size(); ++m) {
         if (!modList[m].active)
@@ -878,7 +875,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
             bool success = doc->Parse(xmlData) == tinyxml2::XML_SUCCESS;
 
             if (success) {
-                const tinyxml2::XMLElement *gameElement   = firstXMLChildElement(doc, nullptr, "game");
+                const tinyxml2::XMLElement *gameElement = firstXMLChildElement(doc, nullptr, "game");
                 const tinyxml2::XMLElement *listElement = firstXMLChildElement(doc, gameElement, "category");
                 if (listElement) {
                     do {
@@ -937,7 +934,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                                     if (scene->filter == 0x00)
                                         scene->filter = 0xFF;
 #endif
-                                    
+
                                     gcStageCount++;
                                     sceneInfo.listCategory[listID].sceneCount++;
                                 }
@@ -975,7 +972,7 @@ void LoadGameConfig()
 {
     FileInfo info;
     InitFileInfo(&info);
-    int gcListCount = 0;
+    int gcListCount  = 0;
     int gcSceneCount = 0;
 
     if (LoadFile(&info, "Data/Game/GameConfig.bin", FMODE_RB)) {
@@ -1114,7 +1111,7 @@ void InitScriptSystem()
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;
     foreachStackPtr  = foreachStackList;
-    currentMod = NULL;
+    currentMod       = NULL;
 #endif
     RegisterObject((Object **)&DefaultObject, ":DefaultObject:", sizeof(EntityDefaultObject), sizeof(ObjectDefaultObject), DefaultObject_Update,
                    DefaultObject_LateUpdate, DefaultObject_StaticUpdate, DefaultObject_Draw, DefaultObject_Create, DefaultObject_StageLoad,
@@ -1225,7 +1222,7 @@ void InitScriptSystem()
 
 void ProcessDebugCommands()
 {
-    //This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
+    // This block of code here isn't original, but without it this function overrides the keyboard ones, which is really annoying!
     int id            = ControllerIDForInputID(1);
     uint8 gamepadType = GetControllerType(id) >> 8;
     if (gamepadType != DEVICE_TYPE_CONTROLLER || id == CONT_UNASSIGNED || id == CONT_AUTOASSIGN)

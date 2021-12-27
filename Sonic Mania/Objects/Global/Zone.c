@@ -190,9 +190,6 @@ void Zone_Create(void *data)
 
 void Zone_StageLoad(void)
 {
-    EntityGameProgress *progress = GameProgress_GetGameProgress();
-    float percent = GameProgress_GetCompletionPercent(progress);
-
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     Zone->randSeed           = (uint32)time(NULL);
@@ -725,7 +722,8 @@ void Zone_ApplyWorldBounds(void)
     }
 }
 
-bool32 Zone_IsAct2(void)
+//Generally, this is just "isAct2", however stuff like LRZ3, SSZ boss, TMZ3 & ERZ's cases prove thats not always the case
+bool32 Zone_IsZoneLastAct(void)
 {
     if ((RSDK.CheckStageFolder("GHZ") && Zone->actID == 1) || (RSDK.CheckStageFolder("CPZ") && Zone->actID == 1) || RSDK.CheckStageFolder("SPZ2")
         || (RSDK.CheckStageFolder("FBZ") && Zone->actID == 1) || RSDK.CheckStageFolder("PSZ2")) {

@@ -386,7 +386,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(void *h)
         {
             titlecard->active    = ACTIVE_NORMAL;
             titlecard->state     = TitleCard_State_Initial;
-            titlecard->stateDraw = TitleCard_Draw_Default;
+            titlecard->stateDraw = TitleCard_Draw_SlideIn;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;
         }

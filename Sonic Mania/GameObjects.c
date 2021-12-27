@@ -967,7 +967,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Zone_StartFadeIn);
         ADD_PUBLIC_FUNC(Zone_StartTeleportAction);
         ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
-        ADD_PUBLIC_FUNC(Zone_IsAct2);
+        ADD_PUBLIC_FUNC(Zone_IsZoneLastAct);
         ADD_PUBLIC_FUNC(Zone_GetEncoreStageID);
         ADD_PUBLIC_FUNC(Zone_GetManiaStageID);
 

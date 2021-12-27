@@ -85,7 +85,7 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
         Smog->field_4           = true;
     }
     if (host->timer == 30) {
-        ActClear->actID = 1;
+        ActClear->displayedActID = 1;
 
         foreach_active(SignPost, signpost)
         {
@@ -156,7 +156,7 @@ bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host)
         {
             titlecard->active    = ACTIVE_NORMAL;
             titlecard->state     = TitleCard_State_Initial;
-            titlecard->stateDraw = TitleCard_Draw_Default;
+            titlecard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
 
