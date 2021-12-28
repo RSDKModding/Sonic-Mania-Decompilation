@@ -106,8 +106,8 @@ void ForceSpin_SetPlayerState(void *plr)
     EntityPlayer *player = (EntityPlayer *)plr;
     if (player->state != Player_State_ForceRoll_Ground && player->state != Player_State_ForceRoll_Air) {
         if (player->animator.animationID != ANI_JUMP) {
-            RSDK.PlaySfx(Player->sfxRoll, 0, 255);
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, 0, 0);
+            RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             if (!player->collisionMode && player->onGround)
                 player->position.y += player->cameraOffset;
             player->pushing = 0;

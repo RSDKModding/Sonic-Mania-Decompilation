@@ -15,7 +15,7 @@ typedef struct {
     uint8 selectionType;
     char menuTag[0x100];
     int32 selectionID;
-    int32 startedTAAttempt; // only used in pre-plus, goes unused by the time plus rolled around
+    bool32 startedTAAttempt; // only used in pre-plus, goes unused by the time plus rolled around
     bool32 inTimeAttack;
     int32 replayID;
     int32 characterID;
@@ -23,10 +23,10 @@ typedef struct {
     int32 actID;
     int32 timeAttackRank;
 #if RETRO_USE_PLUS
-    int32 isEncoreMode;
+    bool32 isEncoreMode;
     int32 replayUUID;
-    int32 viewReplay;
-    int32 showGhost;
+    bool32 viewReplay;
+    bool32 showGhost;
     uint8 selectedReplay;
     uint8 replayRankID;
 #else

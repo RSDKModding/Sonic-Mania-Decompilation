@@ -51,7 +51,7 @@ void MenuSetup_StaticUpdate(void)
         }
         else {
             control->selectionDisabled = false;
-            MenuSetup->initializedAPI         = true;
+            MenuSetup->initializedAPI  = true;
             TextInfo info;
             Localization_GetString(&info, STR_RPC_MENU);
             API_SetRichPresence(PRESENCE_MENU, &info);
@@ -139,7 +139,7 @@ void MenuSetup_StageLoad(void)
     MenuSetup->initializedMenuReturn = false;
     MenuSetup->initializedMenu       = false;
     MenuSetup->initializedAPI        = false;
-    MenuSetup->saveLoaded            = false;
+    MenuSetup->initializedSaves      = false;
     MenuSetup->fxFade                = NULL;
     if (!globals->suppressAutoMusic) {
         RSDK.StopChannel(Music->channelID);
@@ -422,14 +422,16 @@ bool32 MenuSetup_InitAPI(void)
                 return false;
             }
 
-            if (!MenuSetup->saveLoaded) {
+            if (!MenuSetup->initializedSaves) {
                 UIWaitSpinner_StartWait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
-                MenuSetup->saveLoaded = true;
+                MenuSetup->initializedSaves = true;
             }
+
             if (MenuSetup->initializedAPI)
                 return true;
+
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK) {
                 if (!globals->noSave && APICallback_NotifyAutosave())
                     return false;

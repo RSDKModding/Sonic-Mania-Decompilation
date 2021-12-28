@@ -26,11 +26,11 @@ typedef struct {
     bool32 overrideMusicVol;
     int32 volSfx;
     bool32 overrideSfxVol;
-    int32 vSync;
+    bool32 vSync;
     uint8 windowSize;
-    int32 windowBorder;
-    int32 windowed;
-    int32 tripleBuffering;
+    bool32 windowBorder;
+    bool32 windowed;
+    bool32 tripleBuffering;
 } EntityOptions;
 
 // Object Struct

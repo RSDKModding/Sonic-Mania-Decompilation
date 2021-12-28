@@ -29,7 +29,7 @@ typedef struct {
     uint16 sfxClick;
     uint16 sfxStarpost;
     bool32 showTAPrompt;
-    int32 replaySaveEnabled;
+    bool32 replaySaveEnabled;
     int32 screenBorderType[PLAYER_MAX];
     int32 swapCooldown;
     int32 stockFlashTimers[PLAYER_MAX];
@@ -40,7 +40,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    Vector2 offsets[PLAYER_MAX];
+    Vector2 scoreOffset;
+    Vector2 timeOffset;
+    Vector2 ringsOffset;
+    Vector2 lifeOffset;
 #if RETRO_USE_PLUS
     int32 lifeFrameIDs[PLAYER_MAX];
     int32 lives[PLAYER_MAX];

@@ -445,11 +445,11 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
 
             EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
             RSDK.ResetEntityPtr(hud, HUD->objectID, NULL);
-            hud->maxOffset = hud->offsets[HUDOFF_SCORE].x;
-            hud->offsets[HUDOFF_SCORE].x -= 0x1000000;
-            hud->offsets[HUDOFF_TIME].x -= 0x1100000;
-            hud->offsets[HUDOFF_RINGS].x -= 0x1200000;
-            hud->offsets[HUDOFF_LIFE].x -= 0x1300000;
+            hud->maxOffset = hud->scoreOffset.x;
+            hud->scoreOffset.x -= 0x1000000;
+            hud->timeOffset.x -= 0x1100000;
+            hud->ringsOffset.x -= 0x1200000;
+            hud->lifeOffset.x -= 0x1300000;
             hud->state = HUD_State_ComeOnScreen;
         }
     }
@@ -495,11 +495,11 @@ void CPZBoss_State_PlayerExit(void)
 
         EntityHUD *hud = RSDK_GET_ENTITY(CPZBoss->hudSlotID, HUD);
         RSDK.ResetEntityPtr(hud, HUD->objectID, NULL);
-        hud->maxOffset = hud->offsets[HUDOFF_SCORE].x;
-        hud->offsets[HUDOFF_SCORE].x -= 0x1000000;
-        hud->offsets[HUDOFF_TIME].x -= 0x1100000;
-        hud->offsets[HUDOFF_RINGS].x -= 0x1200000;
-        hud->offsets[HUDOFF_LIFE].x -= 0x1300000;
+        hud->maxOffset = hud->scoreOffset.x;
+        hud->scoreOffset.x -= 0x1000000;
+        hud->timeOffset.x -= 0x1100000;
+        hud->ringsOffset.x -= 0x1200000;
+        hud->lifeOffset.x -= 0x1300000;
         hud->state = HUD_State_ComeOnScreen;
 
         self->active = ACTIVE_NORMAL;

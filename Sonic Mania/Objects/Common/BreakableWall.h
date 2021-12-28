@@ -13,6 +13,11 @@ typedef enum {
 } BreakableWallTypes;
 
 typedef enum {
+    BREAKWALL_PRIO_HIGH,
+    BREAKWALL_PRIO_LOW,
+} BreakableWallPriorities;
+
+typedef enum {
     BREAKWALL_TILE_FIXED = 1,
     BREAKWALL_TILE_DYNAMIC,
 } BreakableWallTileTypes;
@@ -43,7 +48,7 @@ typedef struct {
     uint8 type;
     bool32 onlyKnux;
     bool32 onlyMighty;
-    bool32 priority;
+    BreakableWallPriorities priority;
     Vector2 size;
     uint16 tileInfo;
     uint16 layerID;

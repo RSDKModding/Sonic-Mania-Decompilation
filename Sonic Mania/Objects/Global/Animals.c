@@ -150,26 +150,26 @@ bool32 Animals_CheckPlatformCollision(void *plat)
 {
     RSDK_THIS(Animals);
     EntityPlatform *platform = (EntityPlatform *)plat;
-    bool32 flag              = false;
+    bool32 collision              = false;
     if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
-        if (platform->collision <= 1) {
-            flag = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &self->hitbox, true);
+        if (platform->collision <= PLATFORM_C_SOLID_ALL) {
+            collision = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &self->hitbox, true);
         }
-        else if (platform->collision == 2 && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &self->hitbox)) {
+        else if (platform->collision == PLATFORM_C_USE_TILES && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &self->hitbox)) {
             if (self->collisionLayers & Zone->moveID) {
                 TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
                 move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                 move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
             }
             if (self->velocity.y >= 0x3800)
-                flag = true;
+                collision = true;
         }
         platform->position.x = platform->centerPos.x;
         platform->position.y = platform->centerPos.y;
     }
-    return flag;
+    return collision;
 }
 
 bool32 Animals_CheckGroundCollision(void)

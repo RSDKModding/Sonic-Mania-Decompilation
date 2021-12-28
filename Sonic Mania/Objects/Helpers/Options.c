@@ -94,10 +94,7 @@ void Options_LoadOptionsBin(void)
     if (sku_platform && sku_platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
-                Localization->loaded = 0;
-                Localization_LoadStrings();
-                UIWidgets_ApplyLanguage();
-                UIHeading_LoadSprites();
+                Options_LoadCallback(true);
             }
             else {
                 globals->optionsLoaded = STATUS_CONTINUE;
@@ -109,10 +106,7 @@ void Options_LoadOptionsBin(void)
     }
     else {
         globals->optionsLoaded = STATUS_OK;
-        Localization->loaded   = false;
-        Localization_LoadStrings();
-        UIWidgets_ApplyLanguage();
-        UIHeading_LoadSprites();
+        Options_LoadCallback(true);
     }
 }
 

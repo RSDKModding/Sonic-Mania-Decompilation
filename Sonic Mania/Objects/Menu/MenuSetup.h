@@ -10,7 +10,7 @@ typedef struct {
     bool32 initializedMenuReturn;
     bool32 initializedMenu;
     bool32 initializedAPI;
-    bool32 saveLoaded;
+    bool32 initializedSaves;
     int32 unused2;
     int32 unused3;
     EntityFXFade *fxFade;

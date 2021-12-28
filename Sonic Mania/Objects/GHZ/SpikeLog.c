@@ -45,10 +45,10 @@ void SpikeLog_StageLoad(void)
     if (RSDK.CheckStageFolder("GHZ"))
         SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
 
-    SpikeLog->hitbox.left       = -8;
-    SpikeLog->hitbox.top        = -16;
-    SpikeLog->hitbox.right      = 8;
-    SpikeLog->hitbox.bottom     = 0;
+    SpikeLog->hitbox.left   = -8;
+    SpikeLog->hitbox.top    = -16;
+    SpikeLog->hitbox.right  = 8;
+    SpikeLog->hitbox.bottom = 0;
 
     SpikeLog->burnHitbox.left   = -9;
     SpikeLog->burnHitbox.top    = -16;
@@ -76,12 +76,12 @@ void SpikeLog_State_Main(void)
                                 player->onGround         = 0;
                                 player->jumpAbility      = 0;
                                 player->jumpAbilityTimer = 0;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, 0, 0);
-                                RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
+                                RSDK.PlaySfx(Player->sfxMightyUnspin, false, 255);
                             }
                             if (!player->uncurlTimer) {
                                 player->uncurlTimer = 15;
-                                RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
+                                RSDK.PlaySfx(Player->sfxPimPom, false, 255);
                             }
                         }
                     }

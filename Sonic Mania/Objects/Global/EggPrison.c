@@ -67,7 +67,7 @@ void EggPrison_Update(void)
                     self->buttonPos = 0x80000;
                     if (self->type < EGGPRISON_DUD)
                         SceneInfo->timeEnabled = false;
-                    if (self->type == EGGPRISON_ANIMALS) {
+                    if (self->type == EGGPRISON_SPRING) {
                         int32 anim = player->animator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                             player->storedAnim = player->animator.animationID;
@@ -245,9 +245,7 @@ void EggPrison_HandleMovement(void)
         }
     }
     self->position.x += self->velocity.x;
-    self->position.y = (RSDK.Sin256(self->angle) << 10) + self->originY;
-    self->angle += 4;
-    self->angle &= 0xFF;
+    self->position.y = BadnikHelpers_Oscillate(self->originY, 4, 10);
 }
 
 void EggPrison_State_Activated(void)
@@ -261,13 +259,14 @@ void EggPrison_State_Activated(void)
         case EGGPRISON_NORMAL:
         case EGGPRISON_FLYING:
         case EGGPRISON_DUD:
-            for (int32 i = 0; i < 10; ++i) {
-                EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[i & 1] + 1),
+        case EGGPRISON_SPRING:
+            for (int32 a = 0; a < 10; ++a) {
+                EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[a & 1] + 1),
                                                        (((RSDK.Rand(0, 48) & -4) - 24) << 16) + self->position.x, self->position.y + 0x40000);
-                animals->delay     = 4 * i;
+                animals->delay     = 4 * a;
                 animals->state     = Animals_State_BounceAround;
-                animals->behaviour = 1;
-                animals->direction = (i ^ (i >> 1)) & 1;
+                animals->behaviour = ANIMAL_BEHAVE_FOLLOW;
+                animals->direction = (a ^ (a >> 1)) & 1;
             }
             break;
         case EGGPRISON_RINGS: {
@@ -317,16 +316,6 @@ void EggPrison_State_Activated(void)
             blaster->state      = Blaster_State_Fall;
             break;
         }
-        case EGGPRISON_ANIMALS:
-            for (int32 a = 0; a < 10; ++a) {
-                EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[a & 1] + 1),
-                                                       (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + self->position.x, self->position.y + 0x40000);
-                animals->delay         = 4 * a;
-                animals->state         = Animals_State_BounceAround;
-                animals->behaviour     = 1;
-                animals->direction     = (a ^ (a >> 1)) & 1;
-            }
-            break;
     }
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x160000, self->position.y);
@@ -483,7 +472,7 @@ void EggPrison_EditorLoad(void)
     RSDK_ENUM_VAR("Dud", EGGPRISON_DUD);
     RSDK_ENUM_VAR("Rings", EGGPRISON_RINGS);
     RSDK_ENUM_VAR("Trap", EGGPRISON_TRAP);
-    RSDK_ENUM_VAR("Animals", EGGPRISON_ANIMALS);
+    RSDK_ENUM_VAR("Spring", EGGPRISON_SPRING);
 }
 #endif
 

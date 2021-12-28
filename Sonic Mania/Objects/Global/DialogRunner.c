@@ -38,7 +38,7 @@ void DialogRunner_StageLoad(void)
     DialogRunner->signoutFlag       = false;
     DialogRunner->unused2           = 0;
     DialogRunner->unused1           = 0;
-    DialogRunner->isAutoSaving      = 0;
+    DialogRunner->isAutoSaving      = false;
     if (!globals->hasPlusInitial) {
         globals->lastHasPlus    = API.CheckDLC(DLC_PLUS);
         globals->hasPlusInitial = true;

@@ -135,7 +135,7 @@ void SpecialRing_State_StartWarp(void)
     RSDK_THIS(SpecialRing);
     if (++self->warpTimer == 30) {
         SaveGame_SaveGameState();
-        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 254);
+        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
         destroyEntity(self);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         saveRAM->storedStageID  = SceneInfo->listPos;

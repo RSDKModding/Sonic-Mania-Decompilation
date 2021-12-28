@@ -9,7 +9,7 @@ typedef enum {
     EGGPRISON_DUD,
     EGGPRISON_RINGS,
     EGGPRISON_TRAP,
-    EGGPRISON_ANIMALS,
+    EGGPRISON_SPRING,
 }EggPrisonTypes;
 
 // Object Class

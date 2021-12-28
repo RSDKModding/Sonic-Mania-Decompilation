@@ -59,7 +59,7 @@ void BreakableWall_Create(void *data)
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            if (!self->priority)
+            if (self->priority == BREAKWALL_PRIO_HIGH)
                 self->priority = Zone->fgHigh;
             else
                 self->priority = Zone->fgLow;

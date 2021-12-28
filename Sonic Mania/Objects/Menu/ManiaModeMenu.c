@@ -65,15 +65,17 @@ bool32 ManiaModeMenu_InitAPI(void)
                 return false;
             }
 
-            if (!MenuSetup->saveLoaded) {
+            if (!MenuSetup->initializedSaves) {
                 UIWaitSpinner_StartWait();
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
                 ReplayRecorder_LoadReplayDB(NULL);
-                MenuSetup->saveLoaded = true;
+                MenuSetup->initializedSaves = true;
             }
+
             if (MenuSetup->initializedAPI)
                 return true;
+
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK
                 && globals->taTableLoaded == STATUS_OK) {
                 if (!checkNoSave && DialogRunner_NotifyAutosave())
@@ -90,10 +92,8 @@ bool32 ManiaModeMenu_InitAPI(void)
                 return true;
             }
             else {
-                if (globals->optionsLoaded != STATUS_ERROR && globals->saveLoaded != STATUS_ERROR && globals->replayTableLoaded != STATUS_ERROR
-                    && globals->taTableLoaded != STATUS_ERROR) {
-                }
-                else {
+                if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR || globals->replayTableLoaded == STATUS_ERROR
+                    || globals->taTableLoaded == STATUS_ERROR) {
                     int32 status = API.GetSaveStatus();
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {

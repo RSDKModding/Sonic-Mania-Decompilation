@@ -354,13 +354,13 @@ void SaveGame_ResetPlayerState(void)
 }
 void SaveGame_LoadFile_CB(int32 status)
 {
-    int32 state = 0;
+    bool32 success = false;
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {
-        state               = 1;
+        success             = true;
         globals->saveLoaded = STATUS_OK;
     }
     else {
-        state               = 0;
+        success             = false;
         globals->saveLoaded = STATUS_ERROR;
     }
 
@@ -368,7 +368,7 @@ void SaveGame_LoadFile_CB(int32 status)
         Entity *store = SceneInfo->entity;
         if (SaveGame->loadEntityPtr)
             SceneInfo->entity = (Entity *)SaveGame->loadEntityPtr;
-        SaveGame->loadCallback(state);
+        SaveGame->loadCallback(success);
         SceneInfo->entity  = store;
         SaveGame->loadCallback  = NULL;
         SaveGame->loadEntityPtr = NULL;

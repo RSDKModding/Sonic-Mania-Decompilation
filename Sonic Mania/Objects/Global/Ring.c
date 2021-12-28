@@ -421,11 +421,11 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     int32 yVel = self->velocity.y;
 
     if (Platform) {
-        foreach_active(Platform, colEnt) { flags |= 1 << Ring_CheckPlatformCollisions(colEnt); }
+        foreach_active(Platform, platform) { flags |= 1 << Ring_CheckPlatformCollisions(platform); }
     }
 
     if (Crate) {
-        foreach_active(Crate, colEnt) { flags |= 1 << Ring_CheckPlatformCollisions((EntityPlatform *)colEnt); }
+        foreach_active(Crate, crate) { flags |= 1 << Ring_CheckPlatformCollisions((EntityPlatform *)crate); }
     }
 
     if (Bridge) {
@@ -465,7 +465,7 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     }
 
     if (Spikes) {
-        foreach_active(Spikes, colEnt) { flags |= 1 << RSDK.CheckObjectCollisionBox(colEnt, &colEnt->hitbox, self, &Ring->hitbox, true); }
+        foreach_active(Spikes, spikes) { flags |= 1 << RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, self, &Ring->hitbox, true); }
     }
 
     if (Ice) {
@@ -473,7 +473,7 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     }
 
     if (BigSqueeze) {
-        foreach_active(BigSqueeze, boss)
+        foreach_active(BigSqueeze, bigSqueeze)
         {
             if (self->position.x < BigSqueeze->value4[2] + 0x200000)
                 flags |= 8;

@@ -97,8 +97,6 @@ void CutsceneSeq_Create(void *data)
 
 void CutsceneSeq_StageLoad(void) {}
 
-
-
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
 {
     seq->stateID      = nextState;
