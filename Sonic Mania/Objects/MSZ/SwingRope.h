@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSwingRope {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
-} ObjectSwingRope;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySwingRope {
     RSDK_ENTITY
     uint8 ropeSize;
     int32 ropeGrabDelay;
@@ -25,7 +25,7 @@ typedef struct {
     Animator ropeData;
     Animator handleData;
     Animator pivotData;
-} EntitySwingRope;
+};
 
 // Object Struct
 extern ObjectSwingRope *SwingRope;

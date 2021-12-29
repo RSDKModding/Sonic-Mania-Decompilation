@@ -17,14 +17,14 @@ typedef enum {
 }PaletteBankIDs;
 
 // Object Class
-typedef struct {
+struct ObjectPalette {
     RSDK_OBJECT
     uint16 aniFrames;
     uint8 count;
-} ObjectPalette;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPalette {
     RSDK_ENTITY
     int32 state;
     TextInfo paletteFile;
@@ -32,7 +32,7 @@ typedef struct {
     uint8 bankID;
     bool32 loadOnce;
     Animator animator;
-} EntityPalette;
+};
 
 // Object Struct
 extern ObjectPalette *Palette;

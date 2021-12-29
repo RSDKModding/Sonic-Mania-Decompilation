@@ -7,7 +7,7 @@
 #define DebugMode_ObjectLimit     (0x100)
 
 // Object Class
-typedef struct {
+struct ObjectDebugMode {
     RSDK_OBJECT
     int16 objectIDs[DebugMode_ObjectLimit];
     StateMachine(draw[DebugMode_ObjectLimit]);
@@ -19,12 +19,12 @@ typedef struct {
     uint8 itemSubType;
     uint8 subtypeCount;
     int32 unused1;
-} ObjectDebugMode;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDebugMode {
 	RSDK_ENTITY
-} EntityDebugMode;
+};
 
 // Object Struct
 extern ObjectDebugMode *DebugMode;

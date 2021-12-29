@@ -5,26 +5,26 @@
 
 // Object Class (Old)
 // Found this by digging into the static object files, just looks like an older version of the "SDashWheel" obj, nothing special here
-typedef struct {
+struct ObjectRollSwitch {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     TABLE(int32 heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
     uint16 sfxBumper;
-} ObjectRollSwitch;
+};
 
 // Object Class
-typedef struct {
+struct ObjectSDashWheel {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     TABLE(int32 heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
     uint16 sfxBumper;
     uint16 value5;
-} ObjectSDashWheel;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySDashWheel {
     RSDK_ENTITY
     int32 type;
     bool32 walkOnto;
@@ -40,7 +40,7 @@ typedef struct {
     Animator animator2;
     int32 cooldown;
     uint8 rotateOffset;
-} EntitySDashWheel;
+};
 
 // Object Struct
 extern ObjectSDashWheel *SDashWheel;

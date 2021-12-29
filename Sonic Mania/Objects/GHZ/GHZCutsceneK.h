@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGHZCutsceneK {
     RSDK_OBJECT
     int32 unused1;
-} ObjectGHZCutsceneK;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGHZCutsceneK {
     MANIA_CUTSCENE_BASE
-} EntityGHZCutsceneK;
+};
 
 // Object Struct
 extern ObjectGHZCutsceneK *GHZCutsceneK;

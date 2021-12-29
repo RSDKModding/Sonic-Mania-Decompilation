@@ -11,15 +11,15 @@ typedef enum {
 }PSZDoorOrientations;
 
 // Object Class
-typedef struct {
+struct ObjectPSZDoor {
     RSDK_OBJECT
     Hitbox hitboxes[2];
     uint16 aniFrames;
     uint16 sfxOpen;
-} ObjectPSZDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZDoor {
     RSDK_ENTITY
     uint8 orientation;
     bool32 open;
@@ -34,7 +34,7 @@ typedef struct {
     Vector2 targetPos;
     Animator doorAnimator;
     Animator cogAnimator;
-} EntityPSZDoor;
+};
 
 // Object Struct
 extern ObjectPSZDoor *PSZDoor;

@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectInvisibleBlock {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-} ObjectInvisibleBlock;
+};
 
 // Entity Class
-typedef struct {
+struct EntityInvisibleBlock {
     RSDK_ENTITY
     uint8 width;
     uint8 height;
@@ -21,7 +21,7 @@ typedef struct {
     bool32 timeAttackOnly;
     bool32 noChibi;
     Hitbox hitbox;
-} EntityInvisibleBlock;
+};
 
 // Object Struct
 extern ObjectInvisibleBlock *InvisibleBlock;

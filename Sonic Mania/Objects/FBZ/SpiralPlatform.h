@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpiralPlatform {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectSpiralPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpiralPlatform {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -39,7 +39,7 @@ typedef struct {
     uint16 tiles[0x100];
 
     int32 fallY;
-} EntitySpiralPlatform;
+};
 
 // Object Struct
 extern ObjectSpiralPlatform *SpiralPlatform;

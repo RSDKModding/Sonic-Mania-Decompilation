@@ -4,23 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpearBlock {
     RSDK_OBJECT
     Hitbox blockHitbox;
     Hitbox spearHitboxes[4];
     uint16 aniFrames;
     Animator animator;
-} ObjectSpearBlock;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpearBlock {
     RSDK_ENTITY
     StateMachine(state);
     uint8 spearDir;
     Vector2 spearPos;
     int32 timer;
     Animator animator;
-} EntitySpearBlock;
+};
 
 // Object Entity
 extern ObjectSpearBlock *SpearBlock;

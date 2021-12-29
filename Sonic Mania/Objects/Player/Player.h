@@ -106,7 +106,7 @@ typedef enum {
 
 // Object Class
 #if RETRO_USE_PLUS
-typedef struct {
+struct ObjectPlayer {
     RSDK_OBJECT
     TABLE(int32 sonicPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
@@ -224,9 +224,9 @@ typedef struct {
     StateMachine(configureGhostCB);
     bool32 (*canSuperCB)(bool32 isHUD);
     int32 superDashCooldown;
-} ObjectPlayer;
+};
 #else
-typedef struct {
+struct ObjectPlayer {
     RSDK_OBJECT
     int32 playerCount;
     TABLE(int32 sonicPhysicsTable[64],
@@ -308,11 +308,11 @@ typedef struct {
     uint16 sfxOuttahere;
     uint16 sfxTransform2;
     bool32 gotHit[4];
-} ObjectPlayer;
+};
 #endif
 
 // Entity Class
-typedef struct {
+struct EntityPlayer {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(nextAirState);
@@ -412,7 +412,7 @@ typedef struct {
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif
-} EntityPlayer;
+};
 
 // Object Struct
 extern ObjectPlayer *Player;

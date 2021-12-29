@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIWaitSpinner {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 timer;
     Entity *activeSpinner;
-} ObjectUIWaitSpinner;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIWaitSpinner {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     bool32 fadedIn;
     Animator animator;
-} EntityUIWaitSpinner;
+};
 
 // Object Struct
 extern ObjectUIWaitSpinner *UIWaitSpinner;

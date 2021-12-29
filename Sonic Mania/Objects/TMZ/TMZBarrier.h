@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZBarrier {
     RSDK_OBJECT
     uint8 flags;
     int32 postID;
-} ObjectTMZBarrier;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZBarrier {
     RSDK_ENTITY
     uint8 type;
     uint8 warpTag;
     uint8 iD;
     int32 field_5C;
-} EntityTMZBarrier;
+};
 
 // Object Struct
 extern ObjectTMZBarrier *TMZBarrier;

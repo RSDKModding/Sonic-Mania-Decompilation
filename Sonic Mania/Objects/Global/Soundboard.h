@@ -6,7 +6,7 @@
 #define Soundboard_SFXLimit 32
 
 // Object Class
-typedef struct {
+struct ObjectSoundboard {
     RSDK_OBJECT
     int32 sfxCount;
     uint16 sfxList[Soundboard_SFXLimit];
@@ -18,12 +18,12 @@ typedef struct {
     int32 sfxPlayingTimer[Soundboard_SFXLimit];
     int32 sfxFadeOutTimer[Soundboard_SFXLimit];
     int32 sfxFadeOutDuration[Soundboard_SFXLimit];
-} ObjectSoundboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySoundboard {
     RSDK_ENTITY
-} EntitySoundboard;
+};
 
 // Object Struct
 extern ObjectSoundboard *Soundboard;

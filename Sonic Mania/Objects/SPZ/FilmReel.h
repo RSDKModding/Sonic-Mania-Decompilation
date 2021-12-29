@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFilmReel {
     RSDK_OBJECT
     Hitbox hitbox;
     Vector2 offsetPos;
     uint16 aniFrames;
     uint16 sfxUnravel;
     uint16 sfxLanding;
-} ObjectFilmReel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFilmReel {
     RSDK_ENTITY
     Vector2 pathSize;
     uint8 spinDirection;
@@ -33,7 +33,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityFilmReel;
+};
 
 // Object Struct
 extern ObjectFilmReel *FilmReel;

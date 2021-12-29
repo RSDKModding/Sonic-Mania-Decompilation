@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBallCannon {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -18,10 +18,10 @@ typedef struct {
                             0x38000,  0x20000,  -0x34000, 0x40000,  -0x14000, 0x40000,  0x14000, 0x40000,  0x34000,  0x40000 });
     uint16 sfxLedgeBreak;
     uint16 sfxFire;
-} ObjectBallCannon;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBallCannon {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -32,7 +32,7 @@ typedef struct {
     int32 field_6C;
     int32 rotationSpeed;
     Animator animator;
-} EntityBallCannon;
+};
 
 // Object Struct
 extern ObjectBallCannon *BallCannon;

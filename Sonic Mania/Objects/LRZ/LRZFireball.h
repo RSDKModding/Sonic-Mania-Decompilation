@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZFireball {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 sfxFireball;
-} ObjectLRZFireball;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZFireball {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -23,7 +23,7 @@ typedef struct {
     int32 field_80;
     int32 field_84;
     int32 field_88;
-} EntityLRZFireball;
+};
 
 // Object Struct
 extern ObjectLRZFireball *LRZFireball;

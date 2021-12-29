@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGymBar {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBumper;
-} ObjectGymBar;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGymBar {
     RSDK_ENTITY
     int32 type;
     int32 size;
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 field_68;
     Animator animator;
     Hitbox hitbox;
-} EntityGymBar;
+};
 
 // Object Struct
 extern ObjectGymBar *GymBar;

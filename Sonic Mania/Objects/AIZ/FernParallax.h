@@ -5,20 +5,20 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectFernParallax {
     RSDK_OBJECT
     uint16 aniFrames;
     uint8 entityBuffer[2][ENTITY_SIZE];
-} ObjectFernParallax;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFernParallax {
     RSDK_ENTITY
     StateMachine(state); // unused
     Animator animator;
     uint8 aniID;
     Vector2 parallaxFactor;
-} EntityFernParallax;
+};
 
 // Object Struct
 extern ObjectFernParallax *FernParallax;

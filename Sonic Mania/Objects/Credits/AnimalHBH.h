@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectAnimalHBH {
     RSDK_OBJECT
     int32 palID;
     int32 palCnt;
     uint16 aniFrames;
     uint16 silhouetteFrames;
-} ObjectAnimalHBH;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAnimalHBH {
     RSDK_ENTITY
     uint8 type;
     int32 timer;
     Animator animalHBHAnimator;
     Animator silhouetteAnimator;
-} EntityAnimalHBH;
+};
 
 // Object Struct
 extern ObjectAnimalHBH *AnimalHBH;

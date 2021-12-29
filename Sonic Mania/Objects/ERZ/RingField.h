@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRingField {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectRingField;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRingField {
     RSDK_ENTITY
     StateMachine(state); // unused
     Vector2 size;
@@ -22,7 +22,7 @@ typedef struct {
     int32 timer;
     Hitbox hitbox;
     Animator animator;
-} EntityRingField;
+};
 
 // Object Struct
 extern ObjectRingField *RingField;

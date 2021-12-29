@@ -20,7 +20,7 @@ typedef enum {
 }GigaMetalAnims;
 
 // Object Class
-typedef struct {
+struct ObjectGigaMetal {
     RSDK_OBJECT
     int32 invincibleTimer;
     int32 field_8;
@@ -34,10 +34,10 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox4;
-} ObjectGigaMetal;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGigaMetal {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -64,7 +64,7 @@ typedef struct {
     int32 field_104;
     int32 field_108;
     int32 field_10C;
-} EntityGigaMetal;
+};
 
 // Object Struct
 extern ObjectGigaMetal *GigaMetal;

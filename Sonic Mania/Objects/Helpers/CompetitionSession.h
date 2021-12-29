@@ -16,12 +16,12 @@ typedef struct {
 } vsTime;
 
 // Object Class
-typedef struct {
+struct ObjectCompetitionSession {
 	RSDK_OBJECT
-} ObjectCompetitionSession;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCompetitionSession {
 	RSDK_ENTITY
     bool32 inMatch;
     int32 playerCount;
@@ -51,7 +51,7 @@ typedef struct {
     int32 controllerIDs[PLAYER_MAX];
     int32 prevMatchID;
 #endif
-} EntityCompetitionSession;
+};
 
 // Object Entity
 extern ObjectCompetitionSession *CompetitionSession;

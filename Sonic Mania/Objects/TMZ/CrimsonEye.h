@@ -19,7 +19,7 @@ typedef enum {
 } CrimsonEyeArrowTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCrimsonEye {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[97],
           { 24,       0,  0, -0x28000, -0x28000, 1,  0, -0x14000, -0x28000, 2,  0, 0x14000,  -0x26000, 3,  0, 0x28000,  -0x26000, 4,  0, -0x26000,
@@ -64,10 +64,10 @@ typedef struct {
     uint16 sfxImpact;
     TileLayer *liftBG;
     TileLayer *layerBG1;
-} ObjectCrimsonEye;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCrimsonEye {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateEye);
@@ -78,7 +78,7 @@ typedef struct {
     int32 field_70;
     Vector2 field_74;
     Animator animator;
-} EntityCrimsonEye;
+};
 
 // Object Struct
 extern ObjectCrimsonEye *CrimsonEye;

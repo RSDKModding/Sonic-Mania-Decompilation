@@ -14,15 +14,15 @@ typedef enum {
 } DialogOptions;
 
 // Object Class
-typedef struct {
+struct ObjectUIDialog {
     RSDK_OBJECT
     void *activeDialog;
     EntityUIControl *controlStore;
     StateMachine(controlStateStore);
-} ObjectUIDialog;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIDialog {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -43,7 +43,7 @@ typedef struct {
     int32 lineLength[3];
     int32 lineCount;
     Animator animator;
-} EntityUIDialog;
+};
 
 // Object Struct
 extern ObjectUIDialog *UIDialog;

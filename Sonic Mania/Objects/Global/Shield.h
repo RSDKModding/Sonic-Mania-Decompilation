@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectShield {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBlueShield;
@@ -15,10 +15,10 @@ typedef struct {
     uint16 sfxBubbleBounce;
     uint16 sfxFireDash;
     uint16 sfxLightningJump;
-} ObjectShield;
+};
 
 // Entity Class
-typedef struct {
+struct EntityShield {
     RSDK_ENTITY
     EntityPlayer *player;
     StateMachine(state);
@@ -28,7 +28,7 @@ typedef struct {
     bool32 forceVisible;
     Animator animator;
     Animator animator2;
-} EntityShield;
+};
 
 // Object Struct
 extern ObjectShield *Shield;

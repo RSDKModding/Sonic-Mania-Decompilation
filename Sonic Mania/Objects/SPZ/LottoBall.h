@@ -13,15 +13,15 @@ typedef enum {
 }LottoBallTypes;
 
 // Object Class
-typedef struct {
+struct ObjectLottoBall {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxLottoBounce;
     uint16 sfxSpew;
-} ObjectLottoBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLottoBall {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -39,7 +39,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityLottoBall;
+};
 
 // Object Struct
 extern ObjectLottoBall *LottoBall;

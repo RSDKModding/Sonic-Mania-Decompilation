@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDemoMenu {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectDemoMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDemoMenu {
 	RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -26,7 +26,7 @@ typedef struct {
     Animator animatorSPZ;
     SpriteFrame *ghzFrame;
     SpriteFrame *spzFrame;
-} EntityDemoMenu;
+};
 
 // Object Entity
 extern ObjectDemoMenu *DemoMenu;

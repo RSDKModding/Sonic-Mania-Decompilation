@@ -8,7 +8,7 @@ typedef enum {
 }GenericTriggerTypesLRZ2;
 
 // Object Class
-typedef struct {
+struct ObjectLRZ2Setup {
     RSDK_OBJECT
     int32 palTimer1;
     int32 palTimer2;
@@ -16,12 +16,12 @@ typedef struct {
     int32 srcPal;
     bool32 conveyorOff;
     uint8 conveyorDir;
-} ObjectLRZ2Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ2Setup {
 	RSDK_ENTITY
-} EntityLRZ2Setup;
+};
 
 // Object Struct
 extern ObjectLRZ2Setup *LRZ2Setup;

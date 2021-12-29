@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLargeGear {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
-} ObjectLargeGear;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLargeGear {
     RSDK_ENTITY
     int32 rotSpeed;
     int32 rotOffset;
@@ -26,7 +26,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityLargeGear;
+};
 
 // Object Struct
 extern ObjectLargeGear *LargeGear;

@@ -10,13 +10,13 @@ typedef enum {
 }FBZSinkTrashTypes;
 
 // Object Class
-typedef struct {
+struct ObjectFBZSinkTrash {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectFBZSinkTrash;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZSinkTrash {
     RSDK_ENTITY
     int32 type;
     Vector2 size;
@@ -28,7 +28,7 @@ typedef struct {
     Animator trashAnimator;
     Animator topAnimator;
     Animator mainAnimator;
-} EntityFBZSinkTrash;
+};
 
 // Object Struct
 extern ObjectFBZSinkTrash *FBZSinkTrash;

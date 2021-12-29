@@ -10,19 +10,19 @@ typedef enum {
 }TippingPlatformBossIDs;
 
 // Object Class
-typedef struct {
+struct ObjectTippingPlatform {
 	RSDK_OBJECT
-} ObjectTippingPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTippingPlatform {
     MANIA_PLATFORM_BASE
     uint8 interval;
     uint8 intervalOffset;
     uint8 duration;
     uint8 bossID;
     EntitySyringe *syringe;
-} EntityTippingPlatform;
+};
 
 // Object Struct
 extern ObjectTippingPlatform *TippingPlatform;

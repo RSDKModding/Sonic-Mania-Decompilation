@@ -14,15 +14,15 @@ typedef enum {
 } PopoverOptions;
 
 // Object Class
-typedef struct {
+struct ObjectUIPopover {
     RSDK_OBJECT
     Entity *activeEntity;
     EntityUIControl *storedControl;
     StateMachine(storedControlState);
-} ObjectUIPopover;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIPopover {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -41,7 +41,7 @@ typedef struct {
     bool32 playEventSfx; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
     bool32 useAltColour; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
     uint8 triangleFlag;
-} EntityUIPopover;
+};
 
 // Object Struct
 extern ObjectUIPopover *UIPopover;

@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZ1Outro {
     RSDK_OBJECT
     int32 field_4;
     EntityFXFade *fxFade;
     EntityRTeleporter *teleporter;
-} ObjectSSZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZ1Outro {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -23,7 +23,7 @@ typedef struct {
     int32 field_74;
     int32 field_78;
     Hitbox hitbox;
-} EntitySSZ1Outro;
+};
 
 // Object Struct
 extern ObjectSSZ1Outro *SSZ1Outro;

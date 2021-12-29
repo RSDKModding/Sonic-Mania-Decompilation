@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZSpikeBall {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxCharge;
     uint16 sfxExplosion;
-} ObjectLRZSpikeBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZSpikeBall {
     RSDK_ENTITY
     StateMachine(state);
     int32 interval;
@@ -26,7 +26,7 @@ typedef struct {
     Hitbox hitboxBall;
     Animator animator1;
     Animator animator2;
-} EntityLRZSpikeBall;
+};
 
 // Object Struct
 extern ObjectLRZSpikeBall *LRZSpikeBall;

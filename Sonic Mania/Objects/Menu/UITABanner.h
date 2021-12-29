@@ -5,13 +5,13 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUITABanner {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUITABanner;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUITABanner {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -30,7 +30,7 @@ typedef struct {
     Animator unusedAnimator2;
     Animator zoneNameAnimator;
     Animator labelAnimator;
-} EntityUITABanner;
+};
 
 // Object Struct
 extern ObjectUITABanner *UITABanner;

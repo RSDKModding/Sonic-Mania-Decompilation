@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHangPoint {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectHangPoint;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHangPoint {
     RSDK_ENTITY
     uint8 activePlayers;
     int32 moveDistance[4];
@@ -21,7 +21,7 @@ typedef struct {
     int32 maxVel;
     int32 length;
     uint8 speed;
-} EntityHangPoint;
+};
 
 // Object Struct
 extern ObjectHangPoint *HangPoint;

@@ -5,15 +5,15 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectSummary {
     RSDK_OBJECT
     STATIC(int32 timer, 240);
     int32 aniFrameID;
     TABLE(int32 aniFrameDelay[4], { 240, 3, 3, 3 });
-} ObjectSummary;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySummary {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -29,7 +29,7 @@ typedef struct {
     void *pictureA;
     void *pictureB;
     void *unusedPtr;
-} EntitySummary;
+};
 
 // Object Struct
 extern ObjectSummary *Summary;

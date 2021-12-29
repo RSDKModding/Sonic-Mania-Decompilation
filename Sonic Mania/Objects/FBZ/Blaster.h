@@ -10,16 +10,16 @@ typedef enum {
 }BlasterTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBlaster {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
-} ObjectBlaster;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBlaster {
     RSDK_ENTITY
     StateMachine(state);
     uint16 unused1;
@@ -28,7 +28,7 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-} EntityBlaster;
+};
 
 // Object Struct
 extern ObjectBlaster *Blaster;

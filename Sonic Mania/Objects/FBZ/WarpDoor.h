@@ -8,7 +8,7 @@ typedef enum { WARPDOOR_EFFECT_NONE } WarpDoorEffects;
 typedef enum { WARPDOOR_PLRSTATE_NONE, WARPDOOR_PLRSTATE_HURT } WarpDoorPlayerStates;
 
 // Object Class
-typedef struct {
+struct ObjectWarpDoor {
     RSDK_OBJECT
     Entity *tags[256];
     Hitbox boundaries[256];
@@ -21,10 +21,10 @@ typedef struct {
     uint16 sfxRubyAttackL[6];
     uint16 sfxRubyAttackR[6];
     uint16 sfxWarpDoor;
-} ObjectWarpDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWarpDoor {
     RSDK_ENTITY
     int32 go;
     int32 width;
@@ -46,7 +46,7 @@ typedef struct {
     int32 fadeTimer;
     bool32 fadeOut;
     Hitbox hitbox;
-} EntityWarpDoor;
+};
 
 // Object Struct
 extern ObjectWarpDoor *WarpDoor;

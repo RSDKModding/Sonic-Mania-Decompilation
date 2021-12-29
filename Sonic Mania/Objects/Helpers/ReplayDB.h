@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectReplayDB {
     RSDK_OBJECT
     Entity *loadEntity;
     void (*loadCallback)(bool32);
@@ -13,12 +13,12 @@ typedef struct {
     void (*saveCallback)(bool32);
     Entity *deleteEntity;
     void (*deleteCallback)(bool32);
-} ObjectReplayDB;
+};
 
 // Entity Class
-typedef struct {
+struct EntityReplayDB {
 	RSDK_ENTITY
-} EntityReplayDB;
+};
 
 // Object Struct
 extern ObjectReplayDB *ReplayDB;

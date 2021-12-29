@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectCompetitionMenu {
     RSDK_OBJECT
     Entity *competitionControl;
     Entity *competitionControl_Legacy;
@@ -19,12 +19,12 @@ typedef struct {
     Entity *compTotalControl;
     Entity *label2;
     int32 timer;
-} ObjectCompetitionMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCompetitionMenu {
     RSDK_ENTITY
-} EntityCompetitionMenu;
+};
 
 // Object Struct
 extern ObjectCompetitionMenu *CompetitionMenu;

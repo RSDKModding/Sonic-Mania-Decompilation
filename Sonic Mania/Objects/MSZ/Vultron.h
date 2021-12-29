@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectVultron {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxVultron;
-} ObjectVultron;
+};
 
 // Entity Class
-typedef struct {
+struct EntityVultron {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -24,7 +24,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator1;
     Animator animator2;
-} EntityVultron;
+};
 
 // Object Struct
 extern ObjectVultron *Vultron;

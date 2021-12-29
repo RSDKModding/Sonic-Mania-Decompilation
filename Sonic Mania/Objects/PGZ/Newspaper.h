@@ -13,16 +13,16 @@ typedef enum {
 #endif
 
 // Object Class
-typedef struct {
+struct ObjectNewspaper {
     RSDK_OBJECT
     uint16 aniFrames;
 #if RETRO_USE_PLUS
     uint16 sfxPaperStack;
 #endif
-} ObjectNewspaper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityNewspaper {
     RSDK_ENTITY
 #if RETRO_USE_PLUS
     StateMachine(state);
@@ -53,7 +53,7 @@ typedef struct {
     Animator animator;
     int32 childCount;
 #endif
-} EntityNewspaper;
+};
 
 // Object Struct
 extern ObjectNewspaper *Newspaper;

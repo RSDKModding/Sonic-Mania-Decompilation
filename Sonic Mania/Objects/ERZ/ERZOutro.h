@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZOutro {
     RSDK_OBJECT
     int32 field_4;
     int32 field_8;
@@ -18,12 +18,12 @@ typedef struct {
     int32 field_28;
     int32 field_2C;
     bool32 savedGame;
-} ObjectERZOutro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZOutro {
     MANIA_CUTSCENE_BASE
-} EntityERZOutro;
+};
 
 // Object Struct
 extern ObjectERZOutro *ERZOutro;

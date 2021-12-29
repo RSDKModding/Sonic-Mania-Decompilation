@@ -14,7 +14,7 @@ typedef enum {
 } EmeraldColours;
 
 // Object Class
-typedef struct {
+struct ObjectChaosEmerald {
     RSDK_OBJECT
     uint16 aniFrames;
     TABLE(int32 emeraldColours[36],
@@ -22,17 +22,17 @@ typedef struct {
             0xA030B0, 0x801898, 0x600080, 0x88B8E0, 0x80E0,   0x2890E0, 0x58A8E0, 0xB8D0E0, 0x208000, 0x409800, 0x60B000, 0x80C800,
             0xA0E000, 0xE0E0A0, 0xD0C878, 0xC0B050, 0xB09828, 0xA08000, 0x808080, 0x909090, 0xA0A0A0, 0xC0C0C0, 0xB0B0B0, 0xE8E8E8 });
     int32 colourStorage[36];
-} ObjectChaosEmerald;
+};
 
 // Entity Class
-typedef struct {
+struct EntityChaosEmerald {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     int32 radius;
     Vector2 originPos;
     Animator animator;
-} EntityChaosEmerald;
+};
 
 // Object Struct
 extern ObjectChaosEmerald *ChaosEmerald;

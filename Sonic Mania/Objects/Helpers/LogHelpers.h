@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLogHelpers {
     RSDK_OBJECT
-} ObjectLogHelpers;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLogHelpers {
     RSDK_ENTITY
-} EntityLogHelpers;
+};
 
 // Object Entity
 extern ObjectLogHelpers *LogHelpers;

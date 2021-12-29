@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectClucker {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
@@ -12,10 +12,10 @@ typedef struct {
     Hitbox hitboxEgg;
     uint16 aniFrames;
     uint16 sfxShot;
-} ObjectClucker;
+};
 
 // Entity Class
-typedef struct {
+struct EntityClucker {
     RSDK_ENTITY
     StateMachine(state);
     int32 yOffset;
@@ -24,7 +24,7 @@ typedef struct {
     uint16 delay;
     bool32 hasParent;
     Animator animator;
-} EntityClucker;
+};
 
 // Object Struct
 extern ObjectClucker *Clucker;

@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectAIZTornado {
     RSDK_OBJECT
     TABLE(int32 flameOffsets[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
     uint16 aniFrames;
-} ObjectAIZTornado;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZTornado {
     RSDK_ENTITY
     StateMachine(state);
     int32 collideTimer; // unused here (used in MSZ/Tornado)
@@ -30,7 +30,7 @@ typedef struct {
     Animator animatorPropeller;
     Animator animatorFlame;
     Animator animatorPilot;
-} EntityAIZTornado;
+};
 
 // Object Struct
 extern ObjectAIZTornado *AIZTornado;

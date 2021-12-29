@@ -28,7 +28,7 @@ typedef enum {
 } UIKeyBinderKeyFrameIDs;
 
 // Object Class
-typedef struct {
+struct ObjectUIKeyBinder {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFail;
@@ -36,10 +36,10 @@ typedef struct {
     int32 curInputID;
     int32 curMappings;
     bool32 isSelected;
-} ObjectUIKeyBinder;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIKeyBinder {
     MANIA_UI_ITEM_BASE
     uint8 type;
     uint8 inputID;
@@ -58,7 +58,7 @@ typedef struct {
     Animator animator2;
     uint16 textFrames;
     int32 lasyKeyMap;
-} EntityUIKeyBinder;
+};
 
 // Object Struct
 extern ObjectUIKeyBinder *UIKeyBinder;

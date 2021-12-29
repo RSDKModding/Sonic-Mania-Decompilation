@@ -9,7 +9,7 @@ typedef enum {
 }TuesdayTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTuesday {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -19,10 +19,10 @@ typedef struct {
     uint16 sfxBossHit;
     uint16 sfxExplosion;
     uint16 sfxDrop;
-} ObjectTuesday;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTuesday {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -41,7 +41,7 @@ typedef struct {
     uint16 linkCount;
     Animator nodeAnimator;
     Animator gondolaAnimator;
-} EntityTuesday;
+};
 
 // Object Struct
 extern ObjectTuesday *Tuesday;

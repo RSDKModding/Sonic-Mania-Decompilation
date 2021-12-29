@@ -16,7 +16,7 @@ typedef enum {
 }HeavyRiderTypes;
 
 // Object Class
-typedef struct {
+struct ObjectHeavyRider {
     RSDK_OBJECT
     uint8 field_3;
     uint8 field_4;
@@ -51,10 +51,10 @@ typedef struct {
     uint16 sfxJump;
     uint16 sfxCheer;
     uint16 sfxBumper;
-} ObjectHeavyRider;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHeavyRider {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -68,7 +68,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityHeavyRider;
+};
 
 // Object Struct
 extern ObjectHeavyRider *HeavyRider;

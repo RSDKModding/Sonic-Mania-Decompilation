@@ -10,24 +10,24 @@ typedef enum {
 }InkTypes;
 
 // Object Class
-typedef struct {
+struct ObjectInk {
     RSDK_OBJECT
     uint8 playerColours[4];
     uint16 aniFrames;
     Hitbox hitbox;
     Hitbox hitbox2;
     Hitbox hitbox3;
-} ObjectInk;
+};
 
 // Entity Class
-typedef struct {
+struct EntityInk {
     RSDK_ENTITY
     uint8 type;
     uint8 inkedPlayers;
     Animator bottleAnimator;
     Animator contentAnimator;
     Animator splashAnimator;
-} EntityInk;
+};
 
 // Object Struct
 extern ObjectInk *Ink;

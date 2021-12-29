@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZ3Cutscene {
 	RSDK_OBJECT
-} ObjectSSZ3Cutscene;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZ3Cutscene {
     RSDK_ENTITY
     int32 field_58;
 #if RETRO_USE_PLUS
@@ -17,7 +17,7 @@ typedef struct {
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
 #endif
-} EntitySSZ3Cutscene;
+};
 
 // Object Struct
 extern ObjectSSZ3Cutscene *SSZ3Cutscene;

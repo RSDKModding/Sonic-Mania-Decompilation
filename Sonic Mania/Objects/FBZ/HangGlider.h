@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHangGlider {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectHangGlider;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHangGlider {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -23,7 +23,7 @@ typedef struct {
     Animator handleBackAnimator;
     Animator handleFrontAnimator;
     Animator playerAnimator;
-} EntityHangGlider;
+};
 
 // Object Struct
 extern ObjectHangGlider *HangGlider;

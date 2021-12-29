@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectButtonDoor {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxOpen;
-} ObjectButtonDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityButtonDoor {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -25,7 +25,7 @@ typedef struct {
     uint8 orientation;
     Hitbox hitbox;
     Animator animator;
-} EntityButtonDoor;
+};
 
 // Object Struct
 extern ObjectButtonDoor *ButtonDoor;

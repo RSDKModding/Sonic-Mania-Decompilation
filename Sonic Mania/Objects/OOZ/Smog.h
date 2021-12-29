@@ -4,24 +4,24 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSmog {
     RSDK_OBJECT
     bool32 forceEnabled;
     ScanlineInfo *scanlines;
     uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
     uint16 aniFrames;
     int32 starPostID;
-} ObjectSmog;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySmog {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 timer;
     Animator animator; // unused
     int32 unused1;     // unused
     int32 unused2;     // unused
-} EntitySmog;
+};
 
 // Object Struct
 extern ObjectSmog *Smog;

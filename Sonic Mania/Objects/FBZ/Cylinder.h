@@ -15,15 +15,15 @@ typedef enum {
 }CylinderTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCylinder {
     RSDK_OBJECT
     TABLE(int32 frameArray[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     Animator animator;
     uint16 aniFrames;
-} ObjectCylinder;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCylinder {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -36,7 +36,7 @@ typedef struct {
     Hitbox hitboxSize;
     Hitbox hitboxL;
     Hitbox hitboxR;
-} EntityCylinder;
+};
 
 // Object Struct
 extern ObjectCylinder *Cylinder;

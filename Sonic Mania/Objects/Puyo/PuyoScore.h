@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoScore {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPuyoScore;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoScore {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
@@ -18,7 +18,7 @@ typedef struct {
     bool32 flag;
     int32 score;
     Animator animator;
-} EntityPuyoScore;
+};
 
 // Object Struct
 extern ObjectPuyoScore *PuyoScore;

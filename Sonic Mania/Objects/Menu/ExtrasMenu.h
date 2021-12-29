@@ -5,16 +5,16 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectExtrasMenu {
     RSDK_OBJECT
     Entity *extrasControl;
     int32 cheatCode[8];
-} ObjectExtrasMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityExtrasMenu {
 	RSDK_ENTITY
-} EntityExtrasMenu;
+};
 
 // Object Struct
 extern ObjectExtrasMenu *ExtrasMenu;

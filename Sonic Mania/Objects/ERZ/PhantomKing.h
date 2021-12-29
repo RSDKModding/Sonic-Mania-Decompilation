@@ -10,7 +10,7 @@ typedef enum {
 } PhantomKingTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPhantomKing {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -21,10 +21,10 @@ typedef struct {
     uint16 sfxExplosion;
     uint16 aniFrames;
     bool32 defeated;
-} ObjectPhantomKing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomKing {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -61,7 +61,7 @@ typedef struct {
     Hitbox hitbox;
     uint8 storeDrawFX;
     int32 field_224;
-} EntityPhantomKing;
+};
 
 // Object Struct
 extern ObjectPhantomKing *PhantomKing;

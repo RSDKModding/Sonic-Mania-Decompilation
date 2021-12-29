@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBridge {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectBridge;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBridge {
     RSDK_ENTITY
     uint8 length;
     bool32 burnable;
@@ -25,7 +25,7 @@ typedef struct {
     int32 endPos;
     Animator animator;
     int32 unused1;
-} EntityBridge;
+};
 
 // Object Struct
 extern ObjectBridge *Bridge;

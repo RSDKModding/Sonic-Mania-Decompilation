@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectForceSpin {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectForceSpin;
+};
 
 // Entity Class
-typedef struct {
+struct EntityForceSpin {
     RSDK_ENTITY
     int32 size;
     int32 negAngle;
     Animator animator;
-} EntityForceSpin;
+};
 
 // Object Struct
 extern ObjectForceSpin *ForceSpin;

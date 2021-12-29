@@ -4,23 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Plasma {
     RSDK_OBJECT
     int32 unused1;
     ScanlineInfo *scanlines;
     uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
     uint16 aniFrames;
     int32 unused2;
-} ObjectUFO_Plasma;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Plasma {
     RSDK_ENTITY
     StateMachine(state); // unused
     Animator animator;   // unused
     int32 unused1;       // unused
     int32 unused2;       // unused
-} EntityUFO_Plasma;
+};
 
 // Object Struct
 extern ObjectUFO_Plasma *UFO_Plasma;

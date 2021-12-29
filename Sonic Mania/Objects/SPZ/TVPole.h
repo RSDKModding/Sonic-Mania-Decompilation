@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTVPole {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTVPole;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTVPole {
     RSDK_ENTITY
     StateMachine(state);
     uint16 length;
@@ -18,7 +18,7 @@ typedef struct {
     int32 playerTimers[4];
     Hitbox hitbox;
     Animator animator;
-} EntityTVPole;
+};
 
 // Object Struct
 extern ObjectTVPole *TVPole;

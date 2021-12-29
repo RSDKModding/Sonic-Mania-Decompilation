@@ -6,15 +6,15 @@
 #define Dragonfly_BodyCount (6)
 
 // Object Class
-typedef struct {
+struct ObjectDragonfly {
 	RSDK_OBJECT
 	Hitbox hurtbox;
 	Hitbox hitbox;
 	uint16 animID;
-} ObjectDragonfly;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDragonfly {
     RSDK_ENTITY
     StateMachine(state);
     uint8 dir;
@@ -26,7 +26,7 @@ typedef struct {
     Animator animator;
     Animator wingAnimator;
     Animator bodyAnimator;
-} EntityDragonfly;
+};
 
 // Object Struct
 extern ObjectDragonfly *Dragonfly;

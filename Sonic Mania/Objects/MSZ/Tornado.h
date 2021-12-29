@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTornado {
     RSDK_OBJECT
     TABLE(int32 flameOffsets[5], { -0x20000, -0x10000, 0, 0x10000, 0x20000 });
     uint16 aniFrames;
     uint16 knuxFrames;
     uint16 sfxExplosion;
     uint16 sfxImpact;
-} ObjectTornado;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTornado {
     RSDK_ENTITY
     StateMachine(state);
     int32 collideTimer;
@@ -36,7 +36,7 @@ typedef struct {
     Animator animatorPilot;
     Animator animatorFlame;
     Animator animatorKnux;
-} EntityTornado;
+};
 
 // Object Struct
 extern ObjectTornado *Tornado;

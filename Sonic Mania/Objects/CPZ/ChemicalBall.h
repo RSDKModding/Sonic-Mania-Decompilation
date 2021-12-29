@@ -6,7 +6,7 @@
 typedef enum { CHEMICALBALL_ARC, CHEMICALBALL_VERTICAL } ChemicalBallTypes;
 
 // Object Class
-typedef struct {
+struct ObjectChemicalBall {
     RSDK_OBJECT
     Hitbox hitbox;
     TABLE(int32 arcOffsets[196],
@@ -39,10 +39,10 @@ typedef struct {
             -0x220800, -0x22E000, -0x23A000, -0x244800, -0x24D800, -0x255000, -0x25B000, -0x25F800, -0x262800, -0x264000 });
     uint16 aniFrames;
     uint16 sfxBloop;
-} ObjectChemicalBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityChemicalBall {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -54,7 +54,7 @@ typedef struct {
     Animator animator;
     int32 field_8C;
     bool32 master;
-} EntityChemicalBall;
+};
 
 // Object Struct
 extern ObjectChemicalBall *ChemicalBall;

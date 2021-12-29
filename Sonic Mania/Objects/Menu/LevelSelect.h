@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLevelSelect {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     STATIC(int32 bgScrollPos, 240);
@@ -40,10 +40,10 @@ typedef struct {
     int32 soundTestMax;
     uint16 sfxFail;
 #endif
-} ObjectLevelSelect;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLevelSelect {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -70,7 +70,7 @@ typedef struct {
     int32 unused3;
     int32 unused4;
 #endif
-} EntityLevelSelect;
+};
 
 // Object Struct
 extern ObjectLevelSelect *LevelSelect;

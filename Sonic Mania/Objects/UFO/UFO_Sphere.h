@@ -17,17 +17,17 @@ typedef enum {
 } UFO_SphereBehaviours;
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Sphere {
     RSDK_OBJECT
     int32 field_4;
     TABLE(int32 defaultHeights[4], { 12, 12, 16, 16 });
     uint16 aniFrames;
     uint16 sfxMachSpeed;
     uint16 sfxLedgeBreak;
-} ObjectUFO_Sphere;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Sphere {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -45,7 +45,7 @@ typedef struct {
     Matrix matrix;
     Matrix matrix2;
     Animator animator;
-} EntityUFO_Sphere;
+};
 
 // Object Struct
 extern ObjectUFO_Sphere *UFO_Sphere;

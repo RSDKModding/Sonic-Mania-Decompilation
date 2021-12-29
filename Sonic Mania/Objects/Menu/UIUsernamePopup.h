@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIUsernamePopup {
     RSDK_OBJECT
     Entity *popup;
-} ObjectUIUsernamePopup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIUsernamePopup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 drawPos;
     TextInfo username;
     Animator animator;
-} EntityUIUsernamePopup;
+};
 
 // Object Struct
 extern ObjectUIUsernamePopup *UIUsernamePopup;

@@ -5,16 +5,16 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Camera {
     RSDK_OBJECT
     Matrix matWorld;
     Matrix matNormalItem;
     Matrix matNormal;
     bool32 useAltMatNormal;
-} ObjectPBL_Camera;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Camera {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -31,7 +31,7 @@ typedef struct {
     Matrix matTransform;
     Matrix unusedMatrix1;
     Vector2 targetPos;
-} EntityPBL_Camera;
+};
 
 // Object Struct
 extern ObjectPBL_Camera *PBL_Camera;

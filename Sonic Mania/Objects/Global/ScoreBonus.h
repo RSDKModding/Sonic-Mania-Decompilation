@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectScoreBonus {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectScoreBonus;
+};
 
 // Entity Class
-typedef struct {
+struct EntityScoreBonus {
     RSDK_ENTITY
     int32 timer;
     Animator animator;
-} EntityScoreBonus;
+};
 
 // Object Struct
 extern ObjectScoreBonus *ScoreBonus;

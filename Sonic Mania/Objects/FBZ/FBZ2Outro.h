@@ -5,15 +5,15 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectFBZ2Outro {
 	RSDK_OBJECT
-} ObjectFBZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZ2Outro {
     RSDK_ENTITY
     int32 unused1;
-} EntityFBZ2Outro;
+};
 
 // Object Struct
 extern ObjectFBZ2Outro *FBZ2Outro;

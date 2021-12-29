@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBadnikHelpers {
 	RSDK_OBJECT
-} ObjectBadnikHelpers;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBadnikHelpers {
 	RSDK_ENTITY
-} EntityBadnikHelpers;
+};
 
 // Object Entity
 extern ObjectBadnikHelpers *BadnikHelpers;

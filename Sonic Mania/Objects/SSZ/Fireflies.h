@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFireflies {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 field_8;
-} ObjectFireflies;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFireflies {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -26,7 +26,7 @@ typedef struct {
     Vector2 pos2;
     Vector2 pos3;
     Vector2 pos4;
-} EntityFireflies;
+};
 
 // Object Struct
 extern ObjectFireflies *Fireflies;

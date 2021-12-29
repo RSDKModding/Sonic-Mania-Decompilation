@@ -9,23 +9,23 @@ typedef enum {
 }LRZConvItemTypes;
 
 // Object Class
-typedef struct {
+struct ObjectLRZConvItem {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
     uint16 sfxSizzle;
-} ObjectLRZConvItem;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZConvItem {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     Vector2 startPos;
     int32 field_68;
     Animator animator;
-} EntityLRZConvItem;
+};
 
 // Object Struct
 extern ObjectLRZConvItem *LRZConvItem;

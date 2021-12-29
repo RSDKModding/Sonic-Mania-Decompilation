@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPhantomMystic {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxCupSwap;
     uint16 sfxBigLaser;
     uint16 sfxImpact;
-} ObjectPhantomMystic;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomMystic {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Hitbox hitbox;
-} EntityPhantomMystic;
+};
 
 // Object Struct
 extern ObjectPhantomMystic *PhantomMystic;

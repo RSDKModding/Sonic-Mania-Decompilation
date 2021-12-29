@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLightBarrier {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectLightBarrier;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLightBarrier {
     RSDK_ENTITY
     int32 size;
     bool32 enabled;
@@ -20,7 +20,7 @@ typedef struct {
     Hitbox hitbox;
     Animator emitterAnimator;
     Animator barrierAnimator;
-} EntityLightBarrier;
+};
 
 // Object Struct
 extern ObjectLightBarrier *LightBarrier;

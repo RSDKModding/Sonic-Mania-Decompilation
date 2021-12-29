@@ -14,13 +14,13 @@ typedef enum {
 }UICharButtonCharacterIDs;
 
 // Object Class
-typedef struct {
+struct ObjectUICharButton {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUICharButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUICharButton {
     MANIA_UI_ITEM_BASE
     uint8 characterID;
     int32 triBounceVelocity;
@@ -32,7 +32,7 @@ typedef struct {
     Animator playerAnimator;
     Animator shadowAnimator;
     Animator nameAnimator;
-} EntityUICharButton;
+};
 
 // Object Struct
 extern ObjectUICharButton *UICharButton;

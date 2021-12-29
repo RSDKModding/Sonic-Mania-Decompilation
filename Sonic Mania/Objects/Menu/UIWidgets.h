@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIWidgets {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     int32 buttonColours[16];
@@ -32,13 +32,13 @@ typedef struct {
 #if RETRO_USE_PLUS
     colour buttonColour;
 #endif
-} ObjectUIWidgets;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIWidgets {
     RSDK_ENTITY
     int32 field_58;
-} EntityUIWidgets;
+};
 
 // Object Struct
 extern ObjectUIWidgets *UIWidgets;

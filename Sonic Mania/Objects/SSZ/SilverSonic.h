@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSilverSonic {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxJump;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 sfxBoost;
     uint16 sfxRebound;
     uint16 sfxArm;
-} ObjectSilverSonic;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySilverSonic {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -25,7 +25,7 @@ typedef struct {
     Hitbox *outerBox;
     Hitbox *innerBox;
     Animator animator;
-} EntitySilverSonic;
+};
 
 // Object Struct
 extern ObjectSilverSonic *SilverSonic;

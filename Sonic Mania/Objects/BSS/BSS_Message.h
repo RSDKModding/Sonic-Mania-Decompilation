@@ -10,13 +10,13 @@ typedef enum {
 }BSS_MessageTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBSS_Message {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectBSS_Message;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBSS_Message {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -26,7 +26,7 @@ typedef struct {
     bool32 saveInProgress;
     Animator leftAnimator;
     Animator rightAnimator;
-} EntityBSS_Message;
+};
 
 // Object Struct
 extern ObjectBSS_Message *BSS_Message;

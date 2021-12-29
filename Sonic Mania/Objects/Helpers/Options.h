@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectOptions {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
 #endif
@@ -13,10 +13,10 @@ typedef struct {
     Entity *saveEntityPtr;
     void (*saveCallback)(bool32 success);
     bool32 changed;
-} ObjectOptions;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOptions {
     RSDK_ENTITY
     uint8 language;
     int32 overrideLanguage;
@@ -31,7 +31,7 @@ typedef struct {
     bool32 windowBorder;
     bool32 windowed;
     bool32 tripleBuffering;
-} EntityOptions;
+};
 
 // Object Struct
 extern ObjectOptions *Options;

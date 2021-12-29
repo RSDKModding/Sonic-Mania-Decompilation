@@ -19,21 +19,21 @@ typedef enum {
 }PrintBlockLetters;
 
 // Object Class
-typedef struct {
+struct ObjectPrintBlock {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxLetter;
-} ObjectPrintBlock;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPrintBlock {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
     uint8 letter;
-} EntityPrintBlock;
+};
 
 // Object Struct
 extern ObjectPrintBlock *PrintBlock;

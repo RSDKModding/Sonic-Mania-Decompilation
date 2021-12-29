@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSZ1KIntro {
     RSDK_OBJECT
     int32 field_4;
     uint16 sfxImpact;
     uint16 playerFrames;
-} ObjectMSZ1KIntro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZ1KIntro {
     MANIA_CUTSCENE_BASE
-} EntityMSZ1KIntro;
+};
 
 // Object Struct
 extern ObjectMSZ1KIntro *MSZ1KIntro;

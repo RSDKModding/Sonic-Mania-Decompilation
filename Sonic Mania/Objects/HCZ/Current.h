@@ -21,16 +21,16 @@ typedef enum {
 } CurrentChildTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCurrent {
     RSDK_OBJECT
     uint8 activePlayers;
     Animator animator;
     uint16 aniFrames;
     uint16 sfxRush;
-} ObjectCurrent;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCurrent {
     RSDK_ENTITY
     StateMachine(state);
     CurrentTypes type;
@@ -46,7 +46,7 @@ typedef struct {
     bool32 waterOnly;
     bool32 fbzAchievement;
     Animator animator;
-} EntityCurrent;
+};
 
 // Object Struct
 extern ObjectCurrent *Current;

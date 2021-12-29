@@ -12,7 +12,7 @@ typedef enum {
 }FBZMissileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectFBZMissile {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -23,10 +23,10 @@ typedef struct {
     uint16 sfxPush;
     uint16 sfxPush2;
     uint16 sfxExplosion;
-} ObjectFBZMissile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZMissile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -35,7 +35,7 @@ typedef struct {
     uint8 intervalOffset;
     int32 timer;
     Animator animator;
-} EntityFBZMissile;
+};
 
 // Object Struct
 extern ObjectFBZMissile *FBZMissile;

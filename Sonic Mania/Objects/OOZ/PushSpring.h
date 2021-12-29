@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPushSpring {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPush;
     uint16 sfxSpring;
-} ObjectPushSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPushSpring {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -23,7 +23,7 @@ typedef struct {
     Hitbox hitbox;
     bool32 field_78;
     Animator animator;
-} EntityPushSpring;
+};
 
 // Object Struct
 extern ObjectPushSpring *PushSpring;

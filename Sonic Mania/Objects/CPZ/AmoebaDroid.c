@@ -253,7 +253,7 @@ void AmoebaDroid_State_SetupArena(void)
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
         Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]      = ScreenInfo->centerX + (self->position.x >> 16);
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
         Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->height;
         Zone->cameraBoundsB[0]      = (self->position.y >> 16);
         AmoebaDroid->arenaLeft      = (Zone->cameraBoundsL[0] + 64) << 16;

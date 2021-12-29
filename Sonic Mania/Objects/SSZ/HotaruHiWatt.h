@@ -16,7 +16,7 @@ typedef enum {
 }HHWTypes;
 
 // Object Class
-typedef struct {
+struct ObjectHotaruHiWatt {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[33],
           { 8, 0, 0,        -0x20000, -0x28000, 1, 0,       0x20000,  -0x28000, 2, 0,        -0x28000, -0x20000, 3, 0,       0x28000, -0x20000,
@@ -39,10 +39,10 @@ typedef struct {
     uint16 sfxCharge;
     uint16 aniFrames;
     uint16 hotaruFrames;
-} ObjectHotaruHiWatt;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHotaruHiWatt {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(nextState);
@@ -65,7 +65,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Hitbox hitbox;
-} EntityHotaruHiWatt;
+};
 
 // Object Struct
 extern ObjectHotaruHiWatt *HotaruHiWatt;

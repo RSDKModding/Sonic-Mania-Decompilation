@@ -6,7 +6,7 @@
 #define Tubinaut_OrbCount (3)
 
 // Object Class
-typedef struct {
+struct ObjectTubinaut {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -14,10 +14,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxPowerdown;
     uint16 sfxRepel;
-} ObjectTubinaut;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTubinaut {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(orbState);
@@ -36,7 +36,7 @@ typedef struct {
     int32 timer;
     uint16 distanceRemain;
     uint16 distance;
-} EntityTubinaut;
+};
 
 // Object Struct
 extern ObjectTubinaut *Tubinaut;

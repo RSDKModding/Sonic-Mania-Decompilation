@@ -14,7 +14,7 @@ typedef enum {
 } UFO_CircuitThrottles;
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Circuit {
     RSDK_OBJECT
     int32 nodeCount;
     int32 decelerationNoMach;
@@ -25,10 +25,10 @@ typedef struct {
     int32 unused1;
     uint16 emeraldModel;
     uint16 sceneIndex;
-} ObjectUFO_Circuit;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Circuit {
     RSDK_ENTITY
     StateMachine(state);
     uint8 mode;
@@ -47,7 +47,7 @@ typedef struct {
     Matrix matWorld;
     Matrix matNormal;
     Animator ufoAnimator;
-} EntityUFO_Circuit;
+};
 
 // Object Struct
 extern ObjectUFO_Circuit *UFO_Circuit;

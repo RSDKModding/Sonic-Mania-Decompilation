@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPropellerShaft {
 	RSDK_OBJECT
-} ObjectPropellerShaft;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPropellerShaft {
     RSDK_ENTITY
     int32 size;
     int32 activePlayers;
@@ -17,7 +17,7 @@ typedef struct {
     int32 unused1[4];
     Hitbox hitbox;
     Animator animator;
-} EntityPropellerShaft;
+};
 
 // Object Struct
 extern ObjectPropellerShaft *PropellerShaft;

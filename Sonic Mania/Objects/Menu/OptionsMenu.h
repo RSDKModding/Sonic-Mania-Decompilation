@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectOptionsMenu {
     RSDK_OBJECT
     Entity *optionsControl;
     Entity *prompt;
@@ -25,12 +25,12 @@ typedef struct {
     Entity *languageControl_Legacy;
     Entity *diorama;
     Entity *label;
-} ObjectOptionsMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOptionsMenu {
 	RSDK_ENTITY
-} EntityOptionsMenu;
+};
 
 // Object Struct
 extern ObjectOptionsMenu *OptionsMenu;

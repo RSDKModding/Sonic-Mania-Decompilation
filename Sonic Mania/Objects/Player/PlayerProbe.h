@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPlayerProbe {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPlayerProbe;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlayerProbe {
     RSDK_ENTITY
     int32 size;
     uint8 activePlayers;
     int32 negAngle;
     Animator animator;
-} EntityPlayerProbe;
+};
 
 // Object Struct
 extern ObjectPlayerProbe *PlayerProbe;

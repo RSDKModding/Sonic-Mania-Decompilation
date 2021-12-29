@@ -14,7 +14,7 @@ typedef enum {
 }LaundroMobileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectLaundroMobile {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
@@ -67,10 +67,10 @@ typedef struct {
     uint16 sfxRumble;
     uint16 sfxImpact;
 #endif
-} ObjectLaundroMobile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLaundroMobile {
     RSDK_ENTITY
     uint8 type;
     StateMachine(state);
@@ -84,7 +84,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityLaundroMobile;
+};
 
 // Object Struct
 extern ObjectLaundroMobile *LaundroMobile;

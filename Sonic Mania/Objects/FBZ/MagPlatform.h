@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMagPlatform {
     RSDK_OBJECT
     uint16 sfxChain;
-} ObjectMagPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMagPlatform {
     MANIA_PLATFORM_BASE
     int32 length;
-} EntityMagPlatform;
+};
 
 // Object Struct
 extern ObjectMagPlatform *MagPlatform;

@@ -17,7 +17,7 @@ typedef enum {
 } PetalPilePatterns;
 
 // Object Class
-typedef struct {
+struct ObjectPetalPile {
     RSDK_OBJECT
     TABLE(int32 patternSize[5], { 7, 6, 6, 10, 3 });
     TABLE(int32 pattern1[14],
@@ -29,10 +29,10 @@ typedef struct {
     TABLE(int32 pattern5[6], { 0, -0x10000, -0x10000, 0x10000, 0x10000, 0x10000 });
     uint16 aniFrames;
     uint16 sfxPetals;
-} ObjectPetalPile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPetalPile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -53,7 +53,7 @@ typedef struct {
     bool32 noRemoveTiles;
     Hitbox hitbox;
     Animator animator;
-} EntityPetalPile;
+};
 
 // Object Struct
 extern ObjectPetalPile *PetalPile;

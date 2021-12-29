@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWalkerLegs {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
@@ -14,10 +14,10 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     bool32 hasAchievement;
-} ObjectWalkerLegs;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWalkerLegs {
     RSDK_ENTITY
     StateMachine(state);
     uint16 steps;
@@ -34,7 +34,7 @@ typedef struct {
     uint16 stepCount;
     int32 field_BC[2];
     int32 timer;
-} EntityWalkerLegs;
+};
 
 // Object Struct
 extern ObjectWalkerLegs *WalkerLegs;

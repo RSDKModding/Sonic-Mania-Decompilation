@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpiderMobile {
     RSDK_OBJECT
     Hitbox hitboxBumper;
     Hitbox hitboxSpikes;
@@ -30,10 +30,10 @@ typedef struct {
     uint16 sfxHullClose;
     uint16 aniFrames;
     int32 field_58;
-} ObjectSpiderMobile;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpiderMobile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -74,7 +74,7 @@ typedef struct {
     Animator webAnimator;
     Animator eggmanAnimator;
     Animator electricAnimator;
-} EntitySpiderMobile;
+};
 
 // Object Struct
 extern ObjectSpiderMobile *SpiderMobile;

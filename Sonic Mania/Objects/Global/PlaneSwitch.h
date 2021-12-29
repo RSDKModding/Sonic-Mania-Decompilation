@@ -15,20 +15,20 @@ typedef enum {
 }PlaneSwitchFlags;
 
 // Object Class
-typedef struct {
+struct ObjectPlaneSwitch {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPlaneSwitch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlaneSwitch {
     RSDK_ENTITY
     int32 flags;
     int32 size;
     bool32 onPath;
     int32 negAngle;
     Animator animator;
-} EntityPlaneSwitch;
+};
 
 // Object Struct
 extern ObjectPlaneSwitch *PlaneSwitch;

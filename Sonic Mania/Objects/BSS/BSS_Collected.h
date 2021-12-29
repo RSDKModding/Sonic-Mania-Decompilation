@@ -13,16 +13,16 @@ typedef enum {
 }BSS_CollectedTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBSS_Collected {
 	RSDK_OBJECT
-} ObjectBSS_Collected;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBSS_Collected {
     RSDK_ENTITY
     int32 type;
     int32 timer;
-} EntityBSS_Collected;
+};
 
 // Object Struct
 extern ObjectBSS_Collected *BSS_Collected;

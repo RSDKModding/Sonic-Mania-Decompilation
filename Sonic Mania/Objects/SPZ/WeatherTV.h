@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWeatherTV {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 field_8;
@@ -15,10 +15,10 @@ typedef struct {
     bool32 playingTheBuzz;
     bool32 useHighLayer;
     uint8 field_1C;
-} ObjectWeatherTV;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWeatherTV {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -53,7 +53,7 @@ typedef struct {
     Animator animator7;
     Animator animator8;
     Animator animator9;
-} EntityWeatherTV;
+};
 
 // Object Struct
 extern ObjectWeatherTV *WeatherTV;

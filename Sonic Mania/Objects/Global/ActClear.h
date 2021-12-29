@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectActClear {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxScoreAdd;
@@ -27,10 +27,10 @@ typedef struct {
     bool32 disableTimeBonus;
     bool32 actClearActive;
 #endif
-} ObjectActClear;
+};
 
 // Entity Class
-typedef struct {
+struct EntityActClear {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -59,7 +59,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     Animator timeElementsAnimator;
 #endif
-} EntityActClear;
+};
 
 // Object Struct
 extern ObjectActClear *ActClear;

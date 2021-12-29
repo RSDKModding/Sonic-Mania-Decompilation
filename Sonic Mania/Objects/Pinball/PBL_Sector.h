@@ -5,20 +5,20 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Sector {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPBL_Sector;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Sector {
     RSDK_ENTITY
     Vector2 size;
     uint8 craneID;
     int32 timer;
     bool32 playerEntered;
     Animator animator;
-} EntityPBL_Sector;
+};
 
 // Object Struct
 extern ObjectPBL_Sector *PBL_Sector;

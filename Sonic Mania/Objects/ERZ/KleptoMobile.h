@@ -10,7 +10,7 @@ typedef enum {
 } KleptoMobileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectKleptoMobile {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
                                   -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
@@ -27,10 +27,10 @@ typedef struct {
     uint16 sfxRocketJet;
     uint16 aniFrames;
     bool32 defeated;
-} ObjectKleptoMobile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityKleptoMobile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -66,7 +66,7 @@ typedef struct {
     Animator animator10;
     Animator animator11;
     Hitbox hitbox;
-} EntityKleptoMobile;
+};
 
 // Object Struct
 extern ObjectKleptoMobile *KleptoMobile;

@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPlaneSeeSaw {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSpring;
     uint16 sfxFlipper;
-} ObjectPlaneSeeSaw;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlaneSeeSaw {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -20,7 +20,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityPlaneSeeSaw;
+};
 
 // Object Struct
 extern ObjectPlaneSeeSaw *PlaneSeeSaw;

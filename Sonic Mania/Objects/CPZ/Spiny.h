@@ -9,17 +9,17 @@ typedef enum {
 }SpinyTypes;
 
 // Object Class
-typedef struct {
+struct ObjectSpiny {
     RSDK_OBJECT
     Hitbox hitboxSpiny;
     Hitbox hitboxRange;
     Hitbox hitboxShot;
     uint16 aniFrames;
     uint16 sfxShot;
-} ObjectSpiny;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpiny {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -30,7 +30,7 @@ typedef struct {
     int32 shotSpeed;
     int32 timer2;
     int32 timer;
-} EntitySpiny;
+};
 
 // Object Struct
 extern ObjectSpiny *Spiny;

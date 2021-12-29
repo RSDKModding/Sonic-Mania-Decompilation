@@ -7,12 +7,12 @@
 #define FXTrail_trackCount 7
 
 // Object Class
-typedef struct {
+struct ObjectFXTrail {
 	RSDK_OBJECT
-} ObjectFXTrail;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFXTrail {
     RSDK_ENTITY
     Entity *parent;
     Vector2 currentPos;
@@ -27,7 +27,7 @@ typedef struct {
     Animator stateAnim[FXTrail_trackCount];
     Animator *animatorPtr;
     int32 baseAlpha;
-} EntityFXTrail;
+};
 
 // Object Struct
 extern ObjectFXTrail *FXTrail;

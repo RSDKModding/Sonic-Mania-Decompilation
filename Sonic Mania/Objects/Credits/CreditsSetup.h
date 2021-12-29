@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCreditsSetup {
     RSDK_OBJECT
     int32 unused1;
     int32 creditsTrack;
@@ -14,12 +14,12 @@ typedef struct {
     int32 scrollPos;
     int32 creditsPos;
     int32 creditsSize;
-} ObjectCreditsSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCreditsSetup {
 	RSDK_ENTITY
-} EntityCreditsSetup;
+};
 
 // Object Struct
 extern ObjectCreditsSetup *CreditsSetup;

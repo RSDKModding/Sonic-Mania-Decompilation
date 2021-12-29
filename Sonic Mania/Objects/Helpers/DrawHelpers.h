@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDrawHelpers {
     RSDK_OBJECT
-} ObjectDrawHelpers;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDrawHelpers {
     RSDK_ENTITY
-} EntityDrawHelpers;
+};
 
 // Object Entity
 extern ObjectDrawHelpers *DrawHelpers;

@@ -12,7 +12,7 @@ typedef enum {
 } BGSwitchIDsFBZ;
 
 // Object Class
-typedef struct {
+struct ObjectFBZSetup {
     RSDK_OBJECT
     int32 field_4;
     int32 frameA;
@@ -25,12 +25,12 @@ typedef struct {
     uint16 aniTiles;
     uint16 bgOutsideLayer;
     EntityFBZ1Outro *outroPtr;
-} ObjectFBZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZSetup {
 	RSDK_ENTITY
-} EntityFBZSetup;
+};
 
 // Object Struct
 extern ObjectFBZSetup *FBZSetup;

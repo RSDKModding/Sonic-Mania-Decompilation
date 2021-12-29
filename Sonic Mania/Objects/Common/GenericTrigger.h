@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGenericTrigger {
     RSDK_OBJECT
     StateMachine(callbacks[16]);
     int32 playerID;
     uint16 aniFrames;
-} ObjectGenericTrigger;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGenericTrigger {
     RSDK_ENTITY
     Vector2 size;
     uint8 triggerID;
     Hitbox hitbox;
     Animator animator;
-} EntityGenericTrigger;
+};
 
 // Object Struct
 extern ObjectGenericTrigger *GenericTrigger;

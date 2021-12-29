@@ -8,14 +8,14 @@
 #define UISlider_Increment (UISlider_MaxVal / 0x10)
 
 // Object Class
-typedef struct {
+struct ObjectUISlider {
     RSDK_OBJECT
     uint16 aniFrames; //prolly used in-editor
     Entity *activeEntity;
-} ObjectUISlider;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUISlider {
 	MANIA_UI_ITEM_BASE
     int32 listID;
     int32 frameID;
@@ -32,7 +32,7 @@ typedef struct {
     StateMachine(sliderChangedCB);
     Animator textAnimator;
     uint16 textFrames;
-} EntityUISlider;
+};
 
 // Object Struct
 extern ObjectUISlider *UISlider;

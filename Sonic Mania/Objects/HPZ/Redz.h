@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRedz {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox attackbox;
@@ -12,10 +12,10 @@ typedef struct {
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxFlame;
-} ObjectRedz;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRedz {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -23,7 +23,7 @@ typedef struct {
     uint16 timer2;
     uint16 timer;
     Animator animator;
-} EntityRedz;
+};
 
 // Object Entity
 extern ObjectRedz *Redz;

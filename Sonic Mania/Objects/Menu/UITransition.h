@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUITransition {
     RSDK_OBJECT
     Entity *activeTransition;
     char *newTag;
-} ObjectUITransition;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUITransition {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
@@ -20,7 +20,7 @@ typedef struct {
     int32 delay;
     bool32 isTransitioning;
     Vector2 drawPos[3];
-} EntityUITransition;
+};
 
 // Object Struct
 extern ObjectUITransition *UITransition;

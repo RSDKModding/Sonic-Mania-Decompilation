@@ -13,13 +13,13 @@ typedef enum {
 } UIVsCharSelectorPlayerIDs;
 
 // Object Class
-typedef struct {
+struct ObjectUIVsCharSelector {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIVsCharSelector;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVsCharSelector {
 	MANIA_UI_ITEM_BASE
     uint8 playerID;
     bool32 prevSelected;
@@ -38,7 +38,7 @@ typedef struct {
     Animator waitingAnimator;
     uint16 textFrames;
     int32 prevFrameID;
-} EntityUIVsCharSelector;
+};
 
 // Object Struct
 extern ObjectUIVsCharSelector *UIVsCharSelector;

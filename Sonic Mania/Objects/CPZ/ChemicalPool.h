@@ -6,7 +6,7 @@
 typedef enum { CHEMICALPOOL_BLUE, CHEMICALPOOL_GREEN, CHEMICALPOOL_CYAN } ChemicalPoolTypes;
 
 // Object Class
-typedef struct {
+struct ObjectChemicalPool {
     RSDK_OBJECT
     TABLE(colour surfaceColoursFlash[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
     uint16 aniFrames;
@@ -17,10 +17,10 @@ typedef struct {
     uint16 sfxChemYellow;
     uint16 sfxChemRed;
     uint16 sfxChemChange;
-} ObjectChemicalPool;
+};
 
 // Entity Class
-typedef struct {
+struct EntityChemicalPool {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -41,7 +41,7 @@ typedef struct {
     Vector2 vertices[66];
     colour surfaceColours[4];
     Animator animator;
-} EntityChemicalPool;
+};
 
 // Object Struct
 extern ObjectChemicalPool *ChemicalPool;

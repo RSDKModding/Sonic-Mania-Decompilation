@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSZSetup {
     RSDK_OBJECT
     int32 fadeTimer;
     uint16 aniTiles;
@@ -30,14 +30,14 @@ typedef struct {
     int32 chuggaChannel;
     uint16 sfxLocoChugga;
 #endif
-} ObjectMSZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZSetup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-} EntityMSZSetup;
+};
 
 // Object Struct
 extern ObjectMSZSetup *MSZSetup;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSP500 {
     RSDK_OBJECT
     uint16 printLayerID;
     Hitbox hitbox1;
@@ -14,10 +14,10 @@ typedef struct {
     uint16 sfxBeep4;
     uint16 sfxFail;
     uint16 sfxButton2;
-} ObjectSP500;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySP500 {
     RSDK_ENTITY
     StateMachine(state);
     int32 len;
@@ -44,7 +44,7 @@ typedef struct {
     int32 yOffset;
     Entity *storedEntity;
     Animator animator;
-} EntitySP500;
+};
 
 // Object Struct
 extern ObjectSP500 *SP500;

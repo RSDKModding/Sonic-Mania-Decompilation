@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUIReplayCarousel {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityUIButtonPrompt *prompt;
-} ObjectUIReplayCarousel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIReplayCarousel {
     MANIA_UI_ITEM_BASE
     TextInfo zoneNameText[4];
     TextInfo createdAtText[4];
@@ -44,7 +44,7 @@ typedef struct {
     Animator unusedAnimator6;
     Animator createTimeAnimator;
     int32 language;
-} EntityUIReplayCarousel;
+};
 
 // Object Struct
 extern ObjectUIReplayCarousel *UIReplayCarousel;

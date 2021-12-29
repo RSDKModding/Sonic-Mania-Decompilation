@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Crane {
     RSDK_OBJECT
     int32 prizeID;
     uint16 aniFrames;
@@ -16,10 +16,10 @@ typedef struct {
     uint16 sfxCraneRise;
     uint16 sfxPrizeGood;
     uint16 sfxPrizeBad;
-} ObjectPBL_Crane;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Crane {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -35,7 +35,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityPBL_Crane;
+};
 
 // Object Struct
 extern ObjectPBL_Crane *PBL_Crane;

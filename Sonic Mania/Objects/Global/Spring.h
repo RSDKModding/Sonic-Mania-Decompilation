@@ -13,14 +13,14 @@ typedef enum {
 } SpringTypes;
 
 // Object Class
-typedef struct {
+struct ObjectSpring {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSpring;
-} ObjectSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpring {
     RSDK_ENTITY
     StateMachine(state);
     SpringTypes type;
@@ -29,7 +29,7 @@ typedef struct {
     int32 timer;
     Animator animator;
     Hitbox hitbox;
-} EntitySpring;
+};
 
 // Object Struct
 extern ObjectSpring *Spring;

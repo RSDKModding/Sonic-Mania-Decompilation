@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDust {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectDust;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDust {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Entity *parent;
     Animator animator;
-} EntityDust;
+};
 
 // Object Struct
 extern ObjectDust *Dust;

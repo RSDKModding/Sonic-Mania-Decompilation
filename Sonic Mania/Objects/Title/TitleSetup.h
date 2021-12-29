@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTitleSetup {
     RSDK_OBJECT
     bool32 altMusic;
     uint16 aniFrames;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 sfxMenuAccept;
     uint16 sfxRing;
     uint8 cheatCode[8];
-} ObjectTitleSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTitleSetup {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -23,7 +23,7 @@ typedef struct {
     Vector2 drawPos;
     int32 touched;
     Animator animator;
-} EntityTitleSetup;
+};
 
 // Object Struct
 extern ObjectTitleSetup *TitleSetup;

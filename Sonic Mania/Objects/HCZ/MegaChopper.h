@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMegaChopper {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
-} ObjectMegaChopper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMegaChopper {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -24,7 +24,7 @@ typedef struct {
     uint16 lastShakeFlags;
     uint8 nibbleTimer;
     Animator animator;
-} EntityMegaChopper;
+};
 
 // Object Struct
 extern ObjectMegaChopper *MegaChopper;

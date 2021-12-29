@@ -23,17 +23,17 @@ typedef enum {
 } FlameSpringPAniTypes;
 
 // Object Class
-typedef struct {
+struct ObjectFlameSpring {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxSpring;
     Hitbox hitboxFlame;
     uint16 sfxSpring;
     uint16 sfxFlame;
-} ObjectFlameSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFlameSpring {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -47,7 +47,7 @@ typedef struct {
     uint8 timer;
     Animator animator1;
     Animator animator2;
-} EntityFlameSpring;
+};
 
 // Object Struct
 extern ObjectFlameSpring *FlameSpring;

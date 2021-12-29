@@ -5,19 +5,19 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectMMZ2Outro {
     RSDK_OBJECT
     uint16 sfxThunda;
     uint16 sfxLightsOut;
     uint16 sfxTMZEyes;
-} ObjectMMZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMMZ2Outro {
     RSDK_ENTITY
     int32 timer;
     int32 flashTimer;
-} EntityMMZ2Outro;
+};
 
 // Object Struct
 extern ObjectMMZ2Outro *MMZ2Outro;

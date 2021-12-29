@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZ1Outro {
     RSDK_OBJECT
     int32 field_4;
-} ObjectTMZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZ1Outro {
     MANIA_CUTSCENE_BASE
-} EntityTMZ1Outro;
+};
 
 // Object Struct
 extern ObjectTMZ1Outro *TMZ1Outro;

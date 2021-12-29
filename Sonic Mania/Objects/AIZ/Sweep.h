@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSweep {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxPon;
-} ObjectSweep;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySweep {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateStore);
@@ -24,7 +24,7 @@ typedef struct {
     uint8 startDir;
     Entity *waterPtr;
     Animator animator;
-} EntitySweep;
+};
 
 // Object Struct
 extern ObjectSweep *Sweep;

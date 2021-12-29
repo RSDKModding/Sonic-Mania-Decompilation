@@ -5,20 +5,20 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectMMZLightning {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectMMZLightning;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMMZLightning {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 field_60;
     int32 field_64;
     Animator animator;
-} EntityMMZLightning;
+};
 
 // Object Struct
 extern ObjectMMZLightning *MMZLightning;

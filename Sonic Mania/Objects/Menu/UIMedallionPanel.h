@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIMedallionPanel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIMedallionPanel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIMedallionPanel {
     RSDK_ENTITY
     Animator animator;
-} EntityUIMedallionPanel;
+};
 
 // Object Struct
 extern ObjectUIMedallionPanel *UIMedallionPanel;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoGame {
     RSDK_OBJECT
     uint16 aniFrames;
     Entity *managers[2];
@@ -14,10 +14,10 @@ typedef struct {
     Entity *score2[2];
     Entity *levelSel[2];
     EntityFXFade *fxFade;
-} ObjectPuyoGame;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoGame {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -34,7 +34,7 @@ typedef struct {
     uint8 field_A1;
     uint8 field_A2;
     uint8 field_A3;
-} EntityPuyoGame;
+};
 
 // Object Struct
 extern ObjectPuyoGame *PuyoGame;

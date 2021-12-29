@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZ2Outro {
     RSDK_OBJECT
     TABLE(colour colours[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
     uint16 sfxAlarm;
@@ -17,16 +17,16 @@ typedef struct {
     uint16 sfxRubyGet;
     bool32 flag1;
     int32 playerID;
-} ObjectTMZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZ2Outro {
     RSDK_ENTITY
     EntityEscapeCar *escapeCar;
 #if RETRO_USE_PLUS
     EntityCutsceneHBH *heavyKing;
 #endif
-} EntityTMZ2Outro;
+};
 
 // Object Struct
 extern ObjectTMZ2Outro *TMZ2Outro;

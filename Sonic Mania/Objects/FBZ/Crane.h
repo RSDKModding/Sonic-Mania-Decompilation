@@ -15,17 +15,17 @@ typedef enum {
 }CranePlayerTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCrane {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
     uint16 aniFrames;
     uint16 sfxGrab;
-} ObjectCrane;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCrane {
     RSDK_ENTITY
     StateMachine(state);
     Animator frontAnimator;
@@ -39,7 +39,7 @@ typedef struct {
     uint8 startDir;
     int32 timer2;
     int32 timer;
-} EntityCrane;
+};
 
 // Object Struct
 extern ObjectCrane *Crane;

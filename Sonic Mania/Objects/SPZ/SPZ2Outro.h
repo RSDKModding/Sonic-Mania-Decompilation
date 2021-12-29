@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSPZ2Outro {
     RSDK_OBJECT
     bool32 flag;
     int32 field_8;
     Entity *tvFlyingBattery;
     Entity *weatherTV;
     EntityEggPrison *prison;
-} ObjectSPZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySPZ2Outro {
     MANIA_CUTSCENE_BASE
-} EntitySPZ2Outro;
+};
 
 // Object Struct
 extern ObjectSPZ2Outro *SPZ2Outro;

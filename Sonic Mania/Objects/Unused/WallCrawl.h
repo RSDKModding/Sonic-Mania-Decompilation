@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWallCrawl {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox checkbox;
     Hitbox attackbox;
     Hitbox projectileHurtbox;
     uint16 aniFrames;
-} ObjectWallCrawl;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWallCrawl {
     RSDK_ENTITY
     StateMachine(state);
     int32 idleTimer;
@@ -23,7 +23,7 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-} EntityWallCrawl;
+};
 
 // Object Entity
 extern ObjectWallCrawl *WallCrawl;

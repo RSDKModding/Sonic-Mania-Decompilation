@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectStarPost {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 hasAchievement;
@@ -18,10 +18,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxStarPost;
     uint16 sfxWarp;
-} ObjectStarPost;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStarPost {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -39,7 +39,7 @@ typedef struct {
     Animator starAnimator;
     Hitbox starHitbox;
     uint8 activated;
-} EntityStarPost;
+};
 
 // Object Struct
 extern ObjectStarPost *StarPost;

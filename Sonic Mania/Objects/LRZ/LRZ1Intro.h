@@ -5,16 +5,16 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectLRZ1Intro {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSubLand;
     uint16 sfxWalkerLegs2;
     uint16 sfxLava;
-} ObjectLRZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ1Intro {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
@@ -22,7 +22,7 @@ typedef struct {
     int spawnPosY;
     Vector2 field_68[PLAYER_MAX];
     Animator animator;
-} EntityLRZ1Intro;
+};
 
 // Object Struct
 extern ObjectLRZ1Intro *LRZ1Intro;

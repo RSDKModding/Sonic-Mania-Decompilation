@@ -9,7 +9,7 @@ typedef enum {
 } BGSwitchIDsCPZ;
 
 // Object Class
-typedef struct {
+struct ObjectCPZSetup {
     RSDK_OBJECT
     uint16 aniTiles;
     TileLayer *cpz1BG;
@@ -22,12 +22,12 @@ typedef struct {
     int32 palAnimFrameE;
     uint16 aniTileFrame;
     Entity* outro;
-} ObjectCPZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCPZSetup {
 	RSDK_ENTITY
-} EntityCPZSetup;
+};
 
 // Object Struct
 extern ObjectCPZSetup *CPZSetup;

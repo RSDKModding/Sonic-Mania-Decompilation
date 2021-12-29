@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectTryAgainE {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 playerFrames;
-} ObjectTryAgainE;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTryAgainE {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +23,7 @@ typedef struct {
     Animator handDownAnimator;
     Animator player1Animator;
     Animator player2Animator;
-} EntityTryAgainE;
+};
 
 // Object Struct
 extern ObjectTryAgainE *TryAgainE;

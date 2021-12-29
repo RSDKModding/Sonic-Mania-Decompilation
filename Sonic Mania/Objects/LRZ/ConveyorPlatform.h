@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectConveyorPlatform {
     RSDK_OBJECT
     TABLE(int32 frameIDs[24], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 });
     TABLE(int32 directionIDs[24], { 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1 });
-} ObjectConveyorPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityConveyorPlatform {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -39,7 +39,7 @@ typedef struct {
     uint16 intervalOffset;
     uint16 flipCount;
     uint8 timer2;
-} EntityConveyorPlatform;
+};
 
 // Object Struct
 extern ObjectConveyorPlatform *ConveyorPlatform;

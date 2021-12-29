@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTimeAttackData {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
 #endif
@@ -22,13 +22,13 @@ typedef struct {
     void (*loadCallback)(bool32 success);
     Entity* saveEntityPtr;
     void (*saveCallback)(bool32 success);
-} ObjectTimeAttackData;
+};
 
 #if !RETRO_USE_PLUS
 // Entity Class
-typedef struct {
+struct EntityTimeAttackData {
     RSDK_ENTITY
-} EntityTimeAttackData;
+};
 #endif
 
 // Object Entity

@@ -15,13 +15,13 @@ typedef enum {
 }RotatingStairModes;
 
 // Object Class
-typedef struct {
+struct ObjectRotatingStair {
 	RSDK_OBJECT
     uint8 unused; //its set to 0, but its not actually used
-} ObjectRotatingStair;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRotatingStair {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -48,7 +48,7 @@ typedef struct {
 	uint16 oscOff;
 	int32 duration;
 	int32 interval;
-} EntityRotatingStair;
+};
 
 // Object Struct
 extern ObjectRotatingStair *RotatingStair;

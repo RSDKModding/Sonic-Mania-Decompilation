@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIWinSize {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIWinSize;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIWinSize {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
@@ -30,7 +30,7 @@ typedef struct {
     Animator textAnimator;
     Animator arrowAnimatorL;
     Animator arrowAnimatorR;
-} EntityUIWinSize;
+};
 
 // Object Struct
 extern ObjectUIWinSize *UIWinSize;

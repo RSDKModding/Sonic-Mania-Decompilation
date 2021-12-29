@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMMZWheel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectMMZWheel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMMZWheel {
     RSDK_ENTITY
     int32 amplitude;
     uint8 childCount;
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 offset;
     int32 field_78;
     Animator animator;
-} EntityMMZWheel;
+};
 
 // Object Struct
 extern ObjectMMZWheel *MMZWheel;

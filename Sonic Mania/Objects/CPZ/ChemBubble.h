@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectChemBubble {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectChemBubble;
+};
 
 // Entity Class
-typedef struct {
+struct EntityChemBubble {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -19,7 +19,7 @@ typedef struct {
     Vector2 startPos;
     Entity *parent;
     Animator animator;
-} EntityChemBubble;
+};
 
 // Object Struct
 extern ObjectChemBubble *ChemBubble;

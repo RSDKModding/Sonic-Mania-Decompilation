@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGreenScreen {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 field_C[5];
     int32 field_20[5];
     uint16 aniFrames;
     bool32 greenScreenActive;
-} ObjectGreenScreen;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGreenScreen {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 paraOffset;
@@ -26,7 +26,7 @@ typedef struct {
     Vector2 startPos;
     int32 field_80;
     Animator animator;
-} EntityGreenScreen;
+};
 
 // Object Struct
 extern ObjectGreenScreen *GreenScreen;

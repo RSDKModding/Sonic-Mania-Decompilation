@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIOptionPanel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIOptionPanel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIOptionPanel {
     RSDK_ENTITY
     int32 panelSize;
     int32 topListID;
@@ -27,7 +27,7 @@ typedef struct {
     Animator animator;
     Animator animator2;
     uint16 textFrames;
-} EntityUIOptionPanel;
+};
 
 // Object Struct
 extern ObjectUIOptionPanel *UIOptionPanel;

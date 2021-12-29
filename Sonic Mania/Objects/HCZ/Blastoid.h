@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBlastoid {
     RSDK_OBJECT
     Hitbox hitboxBody;
     Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxShot;
-} ObjectBlastoid;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBlastoid {
     RSDK_ENTITY
     StateMachine(state);
     uint8 timer;
     Animator animator;
-} EntityBlastoid;
+};
 
 // Object Struct
 extern ObjectBlastoid *Blastoid;

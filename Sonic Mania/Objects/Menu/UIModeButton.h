@@ -11,13 +11,13 @@ typedef enum {
 }UIModeButtonIDs;
 
 // Object Class
-typedef struct {
+struct ObjectUIModeButton {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIModeButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIModeButton {
     MANIA_UI_ITEM_BASE
     int32 buttonID;
     bool32 stopMusic;
@@ -37,7 +37,7 @@ typedef struct {
     Animator altShadowAnimator;
     Animator textAnimator;
     uint16 textFrames;
-} EntityUIModeButton;
+};
 
 // Object Struct
 extern ObjectUIModeButton *UIModeButton;

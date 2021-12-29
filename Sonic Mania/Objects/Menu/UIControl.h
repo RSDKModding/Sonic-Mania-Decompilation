@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIControl {
     RSDK_OBJECT
     bool32 isProcessingInput;
     bool32 inputLocked;
@@ -36,10 +36,10 @@ typedef struct {
     int32 timer;
     int32 unused1;
     uint16 aniFrames;
-} ObjectUIControl;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIControl {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -90,7 +90,7 @@ typedef struct {
     void (*yPressCB)(void);
     void (*xPressCB)(void);
     Animator animator;
-} EntityUIControl;
+};
 
 // Object Struct
 extern ObjectUIControl *UIControl;

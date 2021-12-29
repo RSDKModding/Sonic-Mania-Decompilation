@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHangConveyor {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectHangConveyor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHangConveyor {
     RSDK_ENTITY
     StateMachine(state);
     int32 length;
@@ -31,7 +31,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityHangConveyor;
+};
 
 // Object Struct
 extern ObjectHangConveyor *HangConveyor;

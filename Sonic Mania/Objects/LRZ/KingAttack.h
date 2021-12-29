@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectKingAttack {
     RSDK_OBJECT
     TABLE(int32 laserColours[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 aniFrames;
@@ -13,10 +13,10 @@ typedef struct {
     uint16 sfxElecPulse;
     uint16 sfxTwinShot;
     bool32 flag;
-} ObjectKingAttack;
+};
 
 // Entity Class
-typedef struct {
+struct EntityKingAttack {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -28,7 +28,7 @@ typedef struct {
     int32 *laserColours;
     Hitbox hitbox;
     Animator animator;
-} EntityKingAttack;
+};
 
 // Object Struct
 extern ObjectKingAttack *KingAttack;

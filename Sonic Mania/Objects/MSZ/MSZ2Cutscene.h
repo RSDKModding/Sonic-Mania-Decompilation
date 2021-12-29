@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSZ2Cutscene {
     RSDK_OBJECT
     int32 field_4;
     EntityGiantPistol *pistol;
     Entity *parallaxSprite;
     EntityEggPrison *prison;
-} ObjectMSZ2Cutscene;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZ2Cutscene {
     MANIA_CUTSCENE_BASE
-} EntityMSZ2Cutscene;
+};
 
 // Object Struct
 extern ObjectMSZ2Cutscene *MSZ2Cutscene;

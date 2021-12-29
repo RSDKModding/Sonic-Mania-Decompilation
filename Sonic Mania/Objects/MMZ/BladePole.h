@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBladePole {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
-} ObjectBladePole;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBladePole {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityBladePole;
+};
 
 // Object Struct
 extern ObjectBladePole *BladePole;

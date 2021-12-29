@@ -5,17 +5,17 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectMainMenu {
     RSDK_OBJECT
     Entity *menuControlPtr;
     Entity *promptPtr;
     Entity *dioramaPtr;
-} ObjectMainMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMainMenu {
 	RSDK_ENTITY
-} EntityMainMenu;
+};
 
 // Object Struct
 extern ObjectMainMenu *MainMenu;

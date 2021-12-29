@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpinSign {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxes[4];
     uint16 sfxSignPost;
-} ObjectSpinSign;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpinSign {
     RSDK_ENTITY
     StateMachine(stateDraw);
     StateMachine(state);
@@ -21,7 +21,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntitySpinSign;
+};
 
 // Object Struct
 extern ObjectSpinSign *SpinSign;

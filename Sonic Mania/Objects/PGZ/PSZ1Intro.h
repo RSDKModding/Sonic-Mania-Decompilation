@@ -5,16 +5,16 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPSZ1Intro {
 	RSDK_OBJECT
-} ObjectPSZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ1Intro {
     RSDK_ENTITY
     int32 timer;
     EntityHangGlider *gliders[4];
-} EntityPSZ1Intro;
+};
 
 // Object Struct
 extern ObjectPSZ1Intro *PSZ1Intro;

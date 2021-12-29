@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoAttack {
     RSDK_OBJECT
     uint16 sfxAttack;
     uint16 aniFrames;
-} ObjectPuyoAttack;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoAttack {
     RSDK_ENTITY
     int32 playerID;
     int32 delay;
@@ -19,7 +19,7 @@ typedef struct {
     int32 score;
     Vector2 targetPos;
     Animator animator;
-} EntityPuyoAttack;
+};
 
 // Object Struct
 extern ObjectPuyoAttack *PuyoAttack;

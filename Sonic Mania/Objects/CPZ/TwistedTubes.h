@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTwistedTubes {
     RSDK_OBJECT
     Hitbox hitboxSolid;
     Hitbox hitboxEntryL;
@@ -12,10 +12,10 @@ typedef struct {
     int32 playerFlags[4];
     uint16 aniFrames;
     uint16 sfxTravel;
-} ObjectTwistedTubes;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTwistedTubes {
     RSDK_ENTITY
     StateMachine(state);
     uint8 height;
@@ -26,7 +26,7 @@ typedef struct {
     Animator topGlassAnimator;
     Animator sideAnimator;
     Animator bottomGlassAnimator;
-} EntityTwistedTubes;
+};
 
 // Object Struct
 extern ObjectTwistedTubes *TwistedTubes;

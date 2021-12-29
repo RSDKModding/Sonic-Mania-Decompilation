@@ -20,7 +20,7 @@ typedef enum {
 }SpecialClearAniIDs;
 
 // Object Class
-typedef struct {
+struct ObjectSpecialClear {
     RSDK_OBJECT
     uint16 aniFrames;
 #if !RETRO_USE_PLUS
@@ -32,10 +32,10 @@ typedef struct {
     uint16 sfxSpecialWarp;
     uint16 sfxContinue;
     uint16 sfxEmerald;
-} ObjectSpecialClear;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpecialClear {
     RSDK_ENTITY
     StateMachine(state);
     bool32 isBSS;
@@ -68,7 +68,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntitySpecialClear;
+};
 
 // Object Struct
 extern ObjectSpecialClear *SpecialClear;

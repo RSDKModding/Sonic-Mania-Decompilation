@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPiston {
     RSDK_OBJECT
 	uint16 landSFX;
 	uint16 launchSFX;
-} ObjectPiston;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPiston {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -39,7 +39,7 @@ typedef struct {
     uint16 intervalOffset;
     int32 distance;
     int32 spawnType;
-} EntityPiston;
+};
 
 // Object Struct
 extern ObjectPiston *Piston;

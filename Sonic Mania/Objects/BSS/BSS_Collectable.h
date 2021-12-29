@@ -35,7 +35,7 @@ enum BSSCollectableTypes {
 };
 
 // Object Class
-typedef struct {
+struct ObjectBSS_Collectable {
     RSDK_OBJECT
     Animator sphereData[24];
     uint8 loadedTables;
@@ -49,10 +49,10 @@ typedef struct {
     int32 medalScreenYVals[32];
     uint16 aniFrames;
     uint16 ringSpriteIndex;
-} ObjectBSS_Collectable;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBSS_Collectable {
     RSDK_ENTITY
     int32 type;
     int32 field_5C;
@@ -61,7 +61,7 @@ typedef struct {
     int32 field_68;
     int32 field_6C;
     int32 field_70;
-} EntityBSS_Collectable;
+};
 
 // Object Struct
 extern ObjectBSS_Collectable *BSS_Collectable;

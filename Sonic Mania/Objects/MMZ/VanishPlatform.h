@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectVanishPlatform {
 	RSDK_OBJECT
-} ObjectVanishPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityVanishPlatform {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
-} EntityVanishPlatform;
+};
 
 // Object Struct
 extern ObjectVanishPlatform *VanishPlatform;

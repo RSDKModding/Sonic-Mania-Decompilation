@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSnowflakes {
     RSDK_OBJECT
     uint8 count;
     int32 field_4;
     uint16 aniFrames;
-} ObjectSnowflakes;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySnowflakes {
     RSDK_ENTITY
     int32 unused1;
     int32 unused2;
@@ -23,7 +23,7 @@ typedef struct {
     Vector2 positions[0x40];
     uint8 priority[0x40];
     uint16 angles[0x40];
-} EntitySnowflakes;
+};
 
 // Object Struct
 extern ObjectSnowflakes *Snowflakes;

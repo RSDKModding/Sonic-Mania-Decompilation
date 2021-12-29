@@ -6,7 +6,7 @@
 typedef enum { GENERICTRIGGER_PSZ2_PETALSINACTIVE, GENERICTRIGGER_PSZ2_PETALSACTIVE } GenericTriggerTypesPSZ2;
 
 // Object Class
-typedef struct {
+struct ObjectPSZ2Setup {
     RSDK_OBJECT
     TABLE(int32 aniTileDelays[8], { 9, 7, 6, 7, 9, 7, 6, 7 });
     int32 aniTileDelay;
@@ -15,12 +15,12 @@ typedef struct {
     int16 petalTimer;
     uint16 aniTiles1;
     uint16 aniTiles2;
-} ObjectPSZ2Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ2Setup {
 	RSDK_ENTITY
-} EntityPSZ2Setup;
+};
 
 // Object Struct
 extern ObjectPSZ2Setup *PSZ2Setup;

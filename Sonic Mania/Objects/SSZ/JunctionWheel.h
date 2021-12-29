@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectJunctionWheel {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -13,15 +13,15 @@ typedef struct {
     Hitbox hitbox5;
     Hitbox hitbox6;
     uint16 aniFrames;
-} ObjectJunctionWheel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityJunctionWheel {
     RSDK_ENTITY
     Animator animator1;
     Animator animator2;
     uint8 field_88;
-} EntityJunctionWheel;
+};
 
 // Object Struct
 extern ObjectJunctionWheel *JunctionWheel;

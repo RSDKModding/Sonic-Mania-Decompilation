@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIVideo {
     RSDK_OBJECT
     bool32 playing;
     uint16 aniFrames; // prolly used in-editor
-} ObjectUIVideo;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVideo {
     RSDK_ENTITY
     StateMachine(state);
     TextInfo videoFile1;
@@ -22,7 +22,7 @@ typedef struct {
     TextInfo stageListName;
     int32 timer;
     Animator unusedAnimator;
-} EntityUIVideo;
+};
 
 // Object Struct
 extern ObjectUIVideo *UIVideo;

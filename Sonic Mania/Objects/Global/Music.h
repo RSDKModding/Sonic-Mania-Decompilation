@@ -39,7 +39,7 @@ typedef enum {
 } TrackPriorityValues;
 
 // Object Class
-typedef struct {
+struct ObjectMusic {
     RSDK_OBJECT
     char trackNames[16][32];
     uint32 trackLoops[16];
@@ -54,10 +54,10 @@ typedef struct {
     bool32 playing1UPTrack;
 #endif
     uint16 aniFrames;
-} ObjectMusic;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMusic {
     RSDK_ENTITY
     StateMachine(state);
     TextInfo trackFile;
@@ -72,7 +72,7 @@ typedef struct {
     float volume;
     float fadeSpeed;
     Animator animator;
-} EntityMusic;
+};
 
 // Object Struct
 extern ObjectMusic *Music;

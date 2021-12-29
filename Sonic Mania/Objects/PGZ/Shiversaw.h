@@ -6,7 +6,7 @@
 #define Shiversaw_SawCount (2)
 
 // Object Class
-typedef struct {
+struct ObjectShiversaw {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
@@ -27,10 +27,10 @@ typedef struct {
     uint16 sfxTargeting;
     uint16 sfxRocketJet;
     uint16 sfxExplosion3;
-} ObjectShiversaw;
+};
 
 // Entity Class
-typedef struct {
+struct EntityShiversaw {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateSaw[Shiversaw_SawCount]);
@@ -54,7 +54,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Animator sawAnimator[Shiversaw_SawCount];
-} EntityShiversaw;
+};
 
 // Object Struct
 extern ObjectShiversaw *Shiversaw;

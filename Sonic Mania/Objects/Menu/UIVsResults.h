@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIVsResults {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 textFrames;
-} ObjectUIVsResults;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVsResults {
     MANIA_UI_ITEM_BASE
     uint8 playerID;
     int32 numRows;
@@ -58,7 +58,7 @@ typedef struct {
     Animator rowAnimators[13];
     Animator trophyAnimator;
     uint16 textFrames;
-} EntityUIVsResults;
+};
 
 // Object Struct
 extern ObjectUIVsResults *UIVsResults;

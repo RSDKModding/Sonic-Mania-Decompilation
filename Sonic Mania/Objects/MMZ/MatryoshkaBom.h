@@ -11,7 +11,7 @@ typedef enum {
 } MatryoshkaSizes;
 
 // Object Class
-typedef struct {
+struct ObjectMatryoshkaBom {
     RSDK_OBJECT
     Hitbox hitboxHurt;
     Hitbox hitboxExplode;
@@ -20,10 +20,10 @@ typedef struct {
     uint16 sfxExplosion;
     uint16 sfxButton;
     uint16 sfxPon;
-} ObjectMatryoshkaBom;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMatryoshkaBom {
     RSDK_ENTITY
     StateMachine(state);
     PlaneFilterTypes planeFilter;
@@ -39,7 +39,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityMatryoshkaBom;
+};
 
 // Object Struct
 extern ObjectMatryoshkaBom *MatryoshkaBom;

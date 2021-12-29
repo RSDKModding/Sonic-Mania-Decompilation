@@ -10,13 +10,13 @@ typedef enum {
 }MSZSpotlightColours;
 
 // Object Class
-typedef struct {
+struct ObjectMSZSpotlight {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectMSZSpotlight;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZSpotlight {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
@@ -24,7 +24,7 @@ typedef struct {
     int32 moveFlag;
     Vector2 startPos;
     Animator animator;
-} EntityMSZSpotlight;
+};
 
 // Object Struct
 extern ObjectMSZSpotlight *MSZSpotlight;

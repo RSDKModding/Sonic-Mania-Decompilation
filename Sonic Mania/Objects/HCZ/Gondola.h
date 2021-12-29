@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGondola {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 taggedBoatIDs[3];
     bool32 hasAchievement;
-} ObjectGondola;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGondola {
     RSDK_ENTITY
     StateMachine(state);
     int32 minY;
@@ -33,7 +33,7 @@ typedef struct {
     int32 field_A4;
     Hitbox hitbox;
     Animator animator;
-} EntityGondola;
+};
 
 // Object Struct
 extern ObjectGondola *Gondola;

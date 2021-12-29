@@ -11,7 +11,7 @@ typedef enum {
 }BeanstalkTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBeanstalk {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxSeed;
@@ -20,10 +20,10 @@ typedef struct {
     uint16 sfxImpact;
     uint16 sfxBeanNode;
     uint16 sfxBeanChomp;
-} ObjectBeanstalk;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBeanstalk {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -50,7 +50,7 @@ typedef struct {
     bool32 startGrowth;
     bool32 shown;
     bool32 finished;
-} EntityBeanstalk;
+};
 
 // Object Struct
 extern ObjectBeanstalk *Beanstalk;

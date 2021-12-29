@@ -11,7 +11,7 @@ typedef enum {
 }CableWarpTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCableWarp {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -19,10 +19,10 @@ typedef struct {
     uint16 sfxCharge;
     uint16 sfxPulse;
     uint16 sfxLedgeBreak;
-} ObjectCableWarp;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCableWarp {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -31,7 +31,7 @@ typedef struct {
     uint16 slotID;
     uint16 nextSlot;
     Animator animator;
-} EntityCableWarp;
+};
 
 // Object Struct
 extern ObjectCableWarp *CableWarp;

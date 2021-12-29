@@ -6,7 +6,7 @@
 typedef enum { WOODROW_BADNIK, WOODROW_BOMB } WoodrowTypes;
 
 // Object Class
-typedef struct {
+struct ObjectWoodrow {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -15,10 +15,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxExplosion;
     uint16 sfxPeck;
-} ObjectWoodrow;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWoodrow {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -33,7 +33,7 @@ typedef struct {
     uint8 startDir;
     Entity *parent;
     Animator animator;
-} EntityWoodrow;
+};
 
 // Object Struct
 extern ObjectWoodrow *Woodrow;

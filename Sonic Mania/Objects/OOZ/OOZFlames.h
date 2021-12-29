@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectOOZFlames {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectOOZFlames;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOOZFlames {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 field_60;
     Animator animator;
-} EntityOOZFlames;
+};
 
 // Object Struct
 extern ObjectOOZFlames *OOZFlames;

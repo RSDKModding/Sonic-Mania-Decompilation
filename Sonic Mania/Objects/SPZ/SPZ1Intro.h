@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSPZ1Intro {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGasPop;
     uint16 sfxPon;
     EntityDebris *debris;
-} ObjectSPZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySPZ1Intro {
     RSDK_ENTITY
     Vector2 size;
     int32 timer;
@@ -25,7 +25,7 @@ typedef struct {
     int32 field_78;
     Hitbox hitbox;
     int32 field_84;
-} EntitySPZ1Intro;
+};
 
 // Object Struct
 extern ObjectSPZ1Intro *SPZ1Intro;

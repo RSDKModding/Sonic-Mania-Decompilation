@@ -6,16 +6,16 @@
 typedef enum { TETHERBALL_DOWN, TETHERBALL_UP, TETHERBALL_LEFT, TETHERBALL_RIGHT } TetherBallTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTetherBall {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 sfxWhack;
-} ObjectTetherBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTetherBall {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -27,7 +27,7 @@ typedef struct {
     int32 swingSpeed;
     Vector2 posUnknown;
     EntityPlayer *playerPtr;
-} EntityTetherBall;
+};
 
 // Object Struct
 extern ObjectTetherBall *TetherBall;

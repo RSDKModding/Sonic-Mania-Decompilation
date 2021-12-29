@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWhirlpool {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxWhirlpool;
     bool32 playingSFX;
     int32 sfxChannel;
     int32 timer;
-} ObjectWhirlpool;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWhirlpool {
     RSDK_ENTITY
     int32 angVel;
     int32 yVel;
@@ -27,7 +27,7 @@ typedef struct {
     int32 field_288[4];
     Hitbox hitbox;
     Animator animator;
-} EntityWhirlpool;
+};
 
 // Object Struct
 extern ObjectWhirlpool *Whirlpool;

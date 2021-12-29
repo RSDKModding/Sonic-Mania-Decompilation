@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPhantomHand {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[41], { 10,       0, 0, -0x20000, -0x10000, 1, 0, -0x10000, -0x10000, 2, 0, 0x10000, -0x10000, 3, 0, 0x20000,
                                   -0x10000, 4, 0, -0x20000, -0x8000,  5, 0, -0x10000, -0x8000,  6, 0, 0x10000, -0x8000,  7, 0, 0x20000,
@@ -12,10 +12,10 @@ typedef struct {
     bool32 grabbedPlayers[4];
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectPhantomHand;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomHand {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer2;
@@ -29,7 +29,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityPhantomHand;
+};
 
 // Object Struct
 extern ObjectPhantomHand *PhantomHand;

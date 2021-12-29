@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectZipLine {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectZipLine;
+};
 
 // Entity Class
-typedef struct {
+struct EntityZipLine {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
@@ -23,7 +23,7 @@ typedef struct {
     uint8 grabDelay[PLAYER_MAX];
     Vector2 joinPos;
     int32 unused1;
-} EntityZipLine;
+};
 
 // Object Struct
 extern ObjectZipLine *ZipLine;

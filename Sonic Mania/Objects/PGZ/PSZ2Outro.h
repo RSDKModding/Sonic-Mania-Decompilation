@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPSZ2Outro {
     RSDK_OBJECT
     int32 field_4;
-} ObjectPSZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ2Outro {
     MANIA_CUTSCENE_BASE
     Entity *eggman;
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
-} EntityPSZ2Outro;
+};
 
 // Object Struct
 extern ObjectPSZ2Outro *PSZ2Outro;

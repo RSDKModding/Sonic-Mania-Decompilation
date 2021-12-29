@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTimeAttackGate {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
@@ -20,10 +20,10 @@ typedef struct {
     int32 teleportChannel;
     StateMachine(startCB);
     StateMachine(endCB);
-} ObjectTimeAttackGate;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTimeAttackGate {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     Animator baseAnimator;
     Animator topAnimator;
     Animator finAnimator;
-} EntityTimeAttackGate;
+};
 
 // Object Struct
 extern ObjectTimeAttackGate *TimeAttackGate;

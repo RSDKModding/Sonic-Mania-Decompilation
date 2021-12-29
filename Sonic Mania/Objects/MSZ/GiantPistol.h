@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGiantPistol {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     bool32 flag;
@@ -15,10 +15,10 @@ typedef struct {
     uint16 sfxClack;
     uint16 sfxCannonFire;
     uint16 aniFrames;
-} ObjectGiantPistol;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGiantPistol {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer2;
@@ -35,7 +35,7 @@ typedef struct {
     Animator animator6;
     Animator animator7;
     Animator animator8;
-} EntityGiantPistol;
+};
 
 // Object Struct
 extern ObjectGiantPistol *GiantPistol;

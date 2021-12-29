@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLocoSmoke {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 field_6;
-} ObjectLocoSmoke;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLocoSmoke {
     RSDK_ENTITY
     int32 timer;
     Animator animator;
-} EntityLocoSmoke;
+};
 
 // Object Struct
 extern ObjectLocoSmoke *LocoSmoke;

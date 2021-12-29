@@ -9,10 +9,10 @@ typedef enum {
     DDWRECKER_BALL2,
     DDWRECKER_CHAIN,
     DDWRECKER_CORE,
-}DDWreckerTypes;
+} DDWreckerTypes;
 
 // Object Class
-typedef struct {
+struct ObjectDDWrecker {
     RSDK_OBJECT
     int32 camBoundL;
     int32 camBoundR;
@@ -30,10 +30,10 @@ typedef struct {
     uint16 sfxAssemble;
     uint16 sfxRotate;
     uint16 sfxSharp;
-} ObjectDDWrecker;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDDWrecker {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateBall);
@@ -57,7 +57,7 @@ typedef struct {
     int32 blendAmount;
     Animator animator;
     Hitbox hitbox;
-} EntityDDWrecker;
+};
 
 // Object Struct
 extern ObjectDDWrecker *DDWrecker;

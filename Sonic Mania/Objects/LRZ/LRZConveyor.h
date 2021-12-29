@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZConveyor {
     RSDK_OBJECT
     uint16 aniFrames;
     colour lineColours[64];
-} ObjectLRZConveyor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZConveyor {
     RSDK_ENTITY
     int32 slope;
     int32 length;
@@ -28,7 +28,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator1;
     Animator animator2;
-} EntityLRZConveyor;
+};
 
 // Object Struct
 extern ObjectLRZConveyor *LRZConveyor;

@@ -13,12 +13,12 @@ typedef enum {
 #endif
 
 // Object Class
-typedef struct {
+struct ObjectCutsceneSeq {
 	RSDK_OBJECT
-} ObjectCutsceneSeq;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCutsceneSeq {
     RSDK_ENTITY
     bool32 (*currentState)(Entity *host);
     uint8 stateID;
@@ -36,7 +36,7 @@ typedef struct {
     int32 skipType;
     void (*skipCallback)(void);
 #endif
-} EntityCutsceneSeq;
+};
 
 // Object Struct
 extern ObjectCutsceneSeq *CutsceneSeq;

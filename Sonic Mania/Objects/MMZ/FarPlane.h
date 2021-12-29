@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFarPlane {
     RSDK_OBJECT
     int32 field_4;
     Vector2 field_8;
@@ -18,17 +18,17 @@ typedef struct {
     int32 field_1034;
     int32 field_1038;
     uint16 layerID;
-} ObjectFarPlane;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFarPlane {
     RSDK_ENTITY
     Vector2 size;
     Vector2 origin;
     uint16 entityIDs[0x100];
     int32 entityCount;
     Animator animator;
-} EntityFarPlane;
+};
 
 // Object Struct
 extern ObjectFarPlane *FarPlane;

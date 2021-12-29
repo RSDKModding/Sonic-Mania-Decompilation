@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPKingAttack {
     RSDK_OBJECT
     TABLE(int32 value1[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 sfxPulse;
     uint16 aniFrames;
-} ObjectPKingAttack;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPKingAttack {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -39,7 +39,7 @@ typedef struct {
     int32 field_B8;
     Hitbox hitbox;
     Animator animator;
-} EntityPKingAttack;
+};
 
 // Object Struct
 extern ObjectPKingAttack *PKingAttack;

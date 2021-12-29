@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFan {
     RSDK_OBJECT
     int32 activePlayers;
     uint8 field_8;
@@ -16,10 +16,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxFan;
     bool32 playingFanSFX;
-} ObjectFan;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFan {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(state3);
@@ -35,7 +35,7 @@ typedef struct {
     int32 buttonTag;
     EntityButton *buttonPtr;
     Animator animator;
-} EntityFan;
+};
 
 // Object Struct
 extern ObjectFan *Fan;

@@ -10,17 +10,17 @@ typedef enum {
 }NewtronTypes;
 
 // Object Class
-typedef struct {
+struct ObjectNewtron {
     RSDK_OBJECT
     Hitbox hitboxShoot;
     Hitbox hitboxFly; //why isn't this used in this object...? checkerball uses it, soooo
     Hitbox hitboxProjectile;
     Hitbox hitboxRange;
     uint16 aniFrames;
-} ObjectNewtron;
+};
 
 // Entity Class
-typedef struct {
+struct EntityNewtron {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -28,7 +28,7 @@ typedef struct {
     Vector2 startPos;
     Animator animator;
     Animator flameAnimator;
-} EntityNewtron;
+};
 
 // Object Struct
 extern ObjectNewtron *Newtron;

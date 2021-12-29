@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZSetup {
     RSDK_OBJECT
     int32 aniTileTimer;
     int32 timer;
     uint16 skySheet;
-} ObjectERZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZSetup {
     RSDK_ENTITY
-} EntityERZSetup;
+};
 
 // Object Struct
 extern ObjectERZSetup *ERZSetup;

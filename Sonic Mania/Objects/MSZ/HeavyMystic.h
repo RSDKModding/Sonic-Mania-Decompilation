@@ -13,7 +13,7 @@ typedef enum {
 }HeavyMysticTypes;
 
 // Object Class
-typedef struct {
+struct ObjectHeavyMystic {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -40,10 +40,10 @@ typedef struct {
     uint16 sfxAppear1;
     uint16 aniFrames;
     uint16 rouguesFrames;
-} ObjectHeavyMystic;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHeavyMystic {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -59,7 +59,7 @@ typedef struct {
     Vector2 targetPos;
     Animator animator;
     Hitbox hitbox;
-} EntityHeavyMystic;
+};
 
 // Object Struct
 extern ObjectHeavyMystic *HeavyMystic;

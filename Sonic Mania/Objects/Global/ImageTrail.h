@@ -7,12 +7,12 @@
 #define ImageTrail_TrackCount (7)
 
 // Object Class
-typedef struct {
+struct ObjectImageTrail {
     RSDK_OBJECT
-} ObjectImageTrail;
+};
 
 // Entity Class
-typedef struct {
+struct EntityImageTrail {
     RSDK_ENTITY
     Entity *player;
     int32 playerObjID;
@@ -30,7 +30,7 @@ typedef struct {
     Animator stateAnim[ImageTrail_TrackCount];
     int32 baseAlpha;
     int32 fadeoutTimer;
-} EntityImageTrail;
+};
 
 // Object Struct
 extern ObjectImageTrail *ImageTrail;

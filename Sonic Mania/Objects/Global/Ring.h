@@ -20,16 +20,16 @@ typedef enum {
 }RingMoveTypes;
 
 // Object Class
-typedef struct {
+struct ObjectRing {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 pan;
     uint16 aniFrames;
     uint16 sfxRing;
-} ObjectRing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRing {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     int32 speed;
     Vector2 drawPos;
     Animator animator;
-} EntityRing;
+};
 
 // Object Struct
 extern ObjectRing *Ring;

@@ -181,7 +181,7 @@ typedef struct {
 
 
 // Object Class
-typedef struct {
+struct ObjectUIDiorama {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 capsuleFrames;
@@ -196,10 +196,10 @@ typedef struct {
     uint16 bssSonicFrames;
     uint16 bssFrames;
     uint8 dioramaAlt;
-} ObjectUIDiorama;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIDiorama {
     RSDK_ENTITY
     int32 dioramaID;
     int32 lastDioramaID;
@@ -218,7 +218,7 @@ typedef struct {
     Vector2 vectors[16];
     Animator animators[16];
     TextInfo texts[16];
-} EntityUIDiorama;
+};
 
 // Object Struct
 extern ObjectUIDiorama *UIDiorama;

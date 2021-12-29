@@ -5,23 +5,23 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectWaterfallSound {
     RSDK_OBJECT
     int32 activeCount;
     int32 unused1;
     int32 unused2;
     int32 unused3;
     uint16 aniFrames;
-} ObjectWaterfallSound;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWaterfallSound {
     RSDK_ENTITY
     Vector2 size;
     Vector2 sfxPos;
     bool32 sfxActive;
     Animator animator;
-} EntityWaterfallSound;
+};
 
 // Object Struct
 extern ObjectWaterfallSound *WaterfallSound;

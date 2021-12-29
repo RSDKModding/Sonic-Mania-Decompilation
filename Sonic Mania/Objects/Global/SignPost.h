@@ -23,7 +23,7 @@ typedef enum {
 }SignPostAniIDs;
 
 // Object Class
-typedef struct {
+struct ObjectSignPost {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
@@ -34,10 +34,10 @@ typedef struct {
     uint16 sfxBubbleBounce;
     uint16 sfxSlide;
     uint8 maxPlayerCount;
-} ObjectSignPost;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySignPost {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -60,7 +60,7 @@ typedef struct {
     Animator standAnimator;
     uint8 activePlayers;
     bool32 spawnedByDebugMode;
-} EntitySignPost;
+};
 
 // Object Struct
 extern ObjectSignPost *SignPost;

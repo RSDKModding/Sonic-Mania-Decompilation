@@ -14,15 +14,15 @@ typedef enum {
 } RubySFX;
 
 // Object Class
-typedef struct {
+struct ObjectPhantomRuby {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxL[7];
     uint16 sfxR[7];
-} ObjectPhantomRuby;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomRuby {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -34,7 +34,7 @@ typedef struct {
     int32 unused2;
     Animator animator1;
     Animator animator2;
-} EntityPhantomRuby;
+};
 
 // Object Struct
 extern ObjectPhantomRuby *PhantomRuby;

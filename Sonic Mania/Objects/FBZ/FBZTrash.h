@@ -11,13 +11,13 @@ typedef enum {
 }FBZTrashTypes;
 
 // Object Class
-typedef struct {
+struct ObjectFBZTrash {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectFBZTrash;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZTrash {
     RSDK_ENTITY
     StateMachine(state);
     FBZTrashTypes type;
@@ -30,7 +30,7 @@ typedef struct {
     Entity *parent;
     Hitbox hitbox;
     Animator animator;
-} EntityFBZTrash;
+};
 
 // Object Struct
 extern ObjectFBZTrash *FBZTrash;

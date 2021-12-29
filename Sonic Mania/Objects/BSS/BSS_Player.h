@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBSS_Player {
     RSDK_OBJECT
     uint16 jumpPressState;
     uint16 unused1;
@@ -14,10 +14,10 @@ typedef struct {
     uint16 mightySpriteIndex;
     uint16 raySpriteIndex;
     uint16 sfxJump;
-} ObjectBSS_Player;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBSS_Player {
     RSDK_ENTITY
     int32 gravityStrength;
     bool32 sidekick;
@@ -34,7 +34,7 @@ typedef struct {
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif
-} EntityBSS_Player;
+};
 
 // Object Struct
 extern ObjectBSS_Player *BSS_Player;

@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIPicture {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIPicture;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIPicture {
     RSDK_ENTITY
     int32 listID;
     int32 frameID;
@@ -18,7 +18,7 @@ typedef struct {
     uint8 zonePalette;
     int32 zoneID;
     Animator animator;
-} EntityUIPicture;
+};
 
 // Object Struct
 extern ObjectUIPicture *UIPicture;

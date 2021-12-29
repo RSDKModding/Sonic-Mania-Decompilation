@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectOrbitSpike {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectOrbitSpike;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOrbitSpike {
     RSDK_ENTITY
     Animator animator;
     Vector2 amplitude;
     uint8 offset;
     Vector2 center;
-} EntityOrbitSpike;
+};
 
 // Object Struct
 extern ObjectOrbitSpike *OrbitSpike;

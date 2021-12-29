@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMathHelpers {
 	RSDK_OBJECT
-} ObjectMathHelpers;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMathHelpers {
 	RSDK_ENTITY
-} EntityMathHelpers;
+};
 
 // Object Entity
 extern ObjectMathHelpers *MathHelpers;

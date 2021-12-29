@@ -7,15 +7,15 @@
 #define LEDPanel_RowCount  (2)
 
 // Object Class
-typedef struct {
+struct ObjectLEDPanel {
     RSDK_OBJECT
     uint16 aniFrames;
     TextInfo text;
     colour storedColour;
-} ObjectLEDPanel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLEDPanel {
     RSDK_ENTITY
     TextInfo text[LEDPanel_TextCount];
     TextInfo seq[LEDPanel_RowCount];
@@ -48,7 +48,7 @@ typedef struct {
     int32 rowDelay[LEDPanel_RowCount];
     uint8 row;
     Animator animatorText;
-} EntityLEDPanel;
+};
 
 // Object Struct
 extern ObjectLEDPanel *LEDPanel;

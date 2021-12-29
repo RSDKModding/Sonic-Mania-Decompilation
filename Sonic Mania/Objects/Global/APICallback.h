@@ -46,7 +46,7 @@
 //90% sure this is "DialogRunner" in plus/1.05
 #if !RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectAPICallback {
     RSDK_OBJECT
     int32(*LaunchManual)(void);
     int32 (*ExitGame)(void);
@@ -99,10 +99,10 @@ typedef struct {
     int32 authStatus;
     int32 storageStatus;
     bool32 achievementsDisabled;
-} ObjectAPICallback;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAPICallback {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -116,7 +116,7 @@ typedef struct {
     int32 field_7C;
     int32 field_80;
     int32 status;
-} EntityAPICallback;
+};
 
 // Object Struct
 extern ObjectAPICallback *APICallback;

@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpikeFlail {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlail;
-} ObjectSpikeFlail;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpikeFlail {
     RSDK_ENTITY
     uint8 chainLength;
     uint16 phase512;
@@ -21,7 +21,7 @@ typedef struct {
     Vector2 origin;
     bool32 playingFlailSfx;
     Hitbox hitbox;
-} EntitySpikeFlail;
+};
 
 // Object Struct
 extern ObjectSpikeFlail *SpikeFlail;

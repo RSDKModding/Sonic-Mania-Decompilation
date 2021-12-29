@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectTimeAttackMenu {
     RSDK_OBJECT
     Entity *timeAttackControl;
     Entity *timeAttackControl_Legacy;
@@ -24,15 +24,15 @@ typedef struct {
     bool32 encoreMode;
     bool32 prevIsUser;
     int32 isUser;
-} ObjectTimeAttackMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTimeAttackMenu {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
     int32 delay;
-} EntityTimeAttackMenu;
+};
 
 // Object Struct
 extern ObjectTimeAttackMenu *TimeAttackMenu;

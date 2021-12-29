@@ -5,12 +5,12 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectFXWaveRing {
 	RSDK_OBJECT
-} ObjectFXWaveRing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFXWaveRing {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -27,7 +27,7 @@ typedef struct {
     Vector2 offsetPos;
     int32 pointCount;
     int32 radius;
-} EntityFXWaveRing;
+};
 
 // Object Struct
 extern ObjectFXWaveRing *FXWaveRing;

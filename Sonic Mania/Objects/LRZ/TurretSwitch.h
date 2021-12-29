@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTurretSwitch {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxShot;
     Hitbox hitboxProjectile;
-} ObjectTurretSwitch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTurretSwitch {
     RSDK_ENTITY
     int32 type;
     bool32 walkOnto;
@@ -29,7 +29,7 @@ typedef struct {
     Vector2 startPos;
     Hitbox hitbox;
     Hitbox hitboxRange;
-} EntityTurretSwitch;
+};
 
 // Object Struct
 extern ObjectTurretSwitch *TurretSwitch;

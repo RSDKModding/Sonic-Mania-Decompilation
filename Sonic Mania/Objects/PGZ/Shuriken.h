@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectShuriken {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -14,10 +14,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxArrowLaunch;
     uint16 sfxArrowHit;
-} ObjectShuriken;
+};
 
 // Entity Class
-typedef struct {
+struct EntityShuriken {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
@@ -29,7 +29,7 @@ typedef struct {
     uint16 interval;
     uint16 intervalOffset;
     uint8 timerGroup;
-} EntityShuriken;
+};
 
 // Object Struct
 extern ObjectShuriken *Shuriken;

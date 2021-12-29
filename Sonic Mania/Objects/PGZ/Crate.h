@@ -11,17 +11,17 @@ typedef enum {
 }CrateFrameIDs;
 
 // Object Class
-typedef struct {
+struct ObjectCrate {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion2;
-} ObjectCrate;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCrate {
     MANIA_PLATFORM_BASE
     bool32 ignoreItemBox;
-} EntityCrate;
+};
 
 // Object Struct
 extern ObjectCrate *Crate;

@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFXExpandRing {
 	RSDK_OBJECT
-} ObjectFXExpandRing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFXExpandRing {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ typedef struct {
     int32 outerRadius;
     Entity *parent;
     Vector2 posOffset;
-} EntityFXExpandRing;
+};
 
 // Object Struct
 extern ObjectFXExpandRing *FXExpandRing;

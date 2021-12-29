@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLetterboard {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxLetterTurn;
     uint16 sfxWin;
-} ObjectLetterboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLetterboard {
     RSDK_ENTITY
     StateMachine(state);
     bool32 ControllerInfo;
@@ -22,7 +22,7 @@ typedef struct {
     int32 timer;
     Animator animatorFront;
     Animator animatorBack;
-} EntityLetterboard;
+};
 
 // Object Struct
 extern ObjectLetterboard *Letterboard;

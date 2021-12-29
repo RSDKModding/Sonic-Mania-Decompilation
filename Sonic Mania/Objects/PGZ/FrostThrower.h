@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFrostThrower {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFrostThrower;
     uint16 sfxFreeze;
-} ObjectFrostThrower;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFrostThrower {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
@@ -26,7 +26,7 @@ typedef struct {
     int32 field_A4[4];
     int32 field_B4[4];
     Vector2 gustPos[12];
-} EntityFrostThrower;
+};
 
 // Object Struct
 extern ObjectFrostThrower *FrostThrower;

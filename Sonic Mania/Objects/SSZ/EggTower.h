@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectEggTower {
     RSDK_OBJECT
     uint16 modelIndex;
     uint16 sceneIndex;
-} ObjectEggTower;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEggTower {
     RSDK_ENTITY
     int32 field_58;
     int32 field_5C;
@@ -20,7 +20,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     Matrix matrix4;
-} EntityEggTower;
+};
 
 // Object Struct
 extern ObjectEggTower *EggTower;

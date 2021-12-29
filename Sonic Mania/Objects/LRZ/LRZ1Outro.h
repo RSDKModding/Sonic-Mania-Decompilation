@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZ1Outro {
 	RSDK_OBJECT
-} ObjectLRZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ1Outro {
     RSDK_ENTITY
     EntityDashLift *lift;
     int32 timer;
-} EntityLRZ1Outro;
+};
 
 // Object Struct
 extern ObjectLRZ1Outro *LRZ1Outro;

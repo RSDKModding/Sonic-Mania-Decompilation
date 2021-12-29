@@ -8,7 +8,7 @@ typedef enum { JSAW_NO_SAW = 0, JSAW_HAS_SAW = 1, JSAW_AWAITING_SAW = 2 } Juggle
 #define JuggleSaw_MaxFriends (8)
 
 // Object Class
-typedef struct {
+struct ObjectJuggleSaw {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox friendbox;
@@ -19,10 +19,10 @@ typedef struct {
     uint16 explodeSFX;
     uint16 juggleSFX;
     uint16 throwSFX;
-} ObjectJuggleSaw;
+};
 
 // Entity Class
-typedef struct {
+struct EntityJuggleSaw {
     RSDK_ENTITY
     StateMachine(state);
     uint16 sawDelay;
@@ -35,7 +35,7 @@ typedef struct {
     Vector2 spawnPos;
     uint8 spawnDir;
     Animator animator;
-} EntityJuggleSaw;
+};
 
 // Object Struct
 extern ObjectJuggleSaw *JuggleSaw;

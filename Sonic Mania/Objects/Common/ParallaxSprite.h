@@ -14,13 +14,13 @@ typedef enum {
 } ParallaxSpriteAttributes;
 
 // Object Class
-typedef struct {
+struct ObjectParallaxSprite {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectParallaxSprite;
+};
 
 // Entity Class
-typedef struct {
+struct EntityParallaxSprite {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -37,7 +37,7 @@ typedef struct {
     int32 sprX;
     int32 timerSpeed;
     int32 xSpeed;
-} EntityParallaxSprite;
+};
 
 // Object Struct
 extern ObjectParallaxSprite *ParallaxSprite;

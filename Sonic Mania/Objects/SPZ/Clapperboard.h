@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectClapperboard {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxWhack;
-} ObjectClapperboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityClapperboard {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -27,7 +27,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityClapperboard;
+};
 
 // Object Struct
 extern ObjectClapperboard *Clapperboard;

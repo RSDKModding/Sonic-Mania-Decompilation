@@ -12,23 +12,23 @@ typedef enum {
 } BallTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBall {
     RSDK_OBJECT
     Hitbox hitboxBall;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxSplash;
-} ObjectBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBall {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     Entity *playerPtr;
     Vector2 startPos;
     Animator animator;
-} EntityBall;
+};
 
 // Object Entity
 extern ObjectBall *Ball;

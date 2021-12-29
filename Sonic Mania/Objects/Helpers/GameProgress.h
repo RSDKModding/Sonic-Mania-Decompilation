@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGameProgress {
 	RSDK_OBJECT
-} ObjectGameProgress;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGameProgress {
     uint8 padding[0x56]; //aka sizeof(Entity) for pre-plus
     uint8 medals[32];
     bool32 allGoldMedals;
@@ -24,7 +24,7 @@ typedef struct {
     bool32 unlockedEndingID;
     int32 goldMedalCount;
     int32 silverMedalCount;
-} EntityGameProgress;
+};
 
 // Object Struct
 extern ObjectGameProgress *GameProgress;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMeterDroid {
     RSDK_OBJECT
     TABLE(int32 debrisSpeeds[21], { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
     Hitbox hitbox1;
@@ -23,10 +23,10 @@ typedef struct {
     uint16 sfxValve;
     uint16 sfxWrench;
     uint16 aniFrames;
-} ObjectMeterDroid;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMeterDroid {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -48,7 +48,7 @@ typedef struct {
     Animator animator2;
     Animator animator4;
     Animator animator3;
-} EntityMeterDroid;
+};
 
 // Object Struct
 extern ObjectMeterDroid *MeterDroid;

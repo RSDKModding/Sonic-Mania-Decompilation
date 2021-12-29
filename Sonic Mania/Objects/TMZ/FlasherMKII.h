@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFlasherMKII {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlop;
     uint16 sfxZap;
-} ObjectFlasherMKII;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFlasherMKII {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -20,7 +20,7 @@ typedef struct {
     int32 timer;
     Vector2 startPos;
     Animator animator;
-} EntityFlasherMKII;
+};
 
 // Object Struct
 extern ObjectFlasherMKII *FlasherMKII;

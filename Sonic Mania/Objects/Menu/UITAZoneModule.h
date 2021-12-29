@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUITAZoneModule {
     RSDK_OBJECT
     uint16 aniFrames;
     EntityUIButtonPrompt *leaderboardsPrompt;
@@ -12,10 +12,10 @@ typedef struct {
     bool32 isEncoreMode;
 #endif
     bool32 showLBPrompt;
-} ObjectUITAZoneModule;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUITAZoneModule {
     MANIA_UI_ITEM_BASE
 #if !RETRO_USE_PLUS
     bool32 isExpanding;
@@ -59,7 +59,7 @@ typedef struct {
     Animator timeAttackAnimator;
     Animator medLetterAnimator1;
     Animator medLetterAnimator2;
-} EntityUITAZoneModule;
+};
 
 // Object Struct
 extern ObjectUITAZoneModule *UITAZoneModule;

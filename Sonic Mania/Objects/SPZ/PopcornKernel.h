@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPopcornKernel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPopcornKernel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPopcornKernel {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -19,7 +19,7 @@ typedef struct {
     int32 field_68;
     Vector2 bounds;
     Animator animator;
-} EntityPopcornKernel;
+};
 
 // Object Struct
 extern ObjectPopcornKernel *PopcornKernel;

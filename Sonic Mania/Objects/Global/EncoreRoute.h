@@ -10,21 +10,21 @@ typedef enum {
 }EncoreRouteFrameIDs;
 
 // Object Class
-typedef struct {
+struct ObjectEncoreRoute {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-} ObjectEncoreRoute;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEncoreRoute {
     RSDK_ENTITY
     Vector2 offset;
     Vector2 size;
     uint8 layerSrc;
     uint8 layerDest;
     EncoreRouteFrameIDs frameID;
-} EntityEncoreRoute;
+};
 
 // Object Struct
 extern ObjectEncoreRoute *EncoreRoute;

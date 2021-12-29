@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZStart {
     RSDK_OBJECT
     int32 timer;
     int32 field_8;
@@ -19,13 +19,13 @@ typedef struct {
     EntityChaosEmerald *emeralds[7];
     Entity *king;
     Entity *eggman;
-} ObjectERZStart;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZStart {
     MANIA_CUTSCENE_BASE
     int32 timer;
-} EntityERZStart;
+};
 
 // Object Struct
 extern ObjectERZStart *ERZStart;

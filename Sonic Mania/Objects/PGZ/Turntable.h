@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTurntable {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTurntable;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTurntable {
     RSDK_ENTITY
     uint8 type;
     int32 angleVel;
@@ -23,7 +23,7 @@ typedef struct {
     int32 playerFrames[PLAYER_MAX];
     Hitbox hitbox;
     Animator animator;
-} EntityTurntable;
+};
 
 // Object Struct
 extern ObjectTurntable *Turntable;

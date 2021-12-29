@@ -15,7 +15,7 @@ typedef enum {
 } ERZKingHeavyTypes;
 
 // Object Class
-typedef struct {
+struct ObjectERZKing {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -25,10 +25,10 @@ typedef struct {
     uint16 sfxHit;
     uint16 sfxExplosion2;
     uint16 aniFrames;
-} ObjectERZKing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZKing {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -58,7 +58,7 @@ typedef struct {
     Animator animator10;
     Hitbox hitbox;
     uint8 storeDrawFX;
-} EntityERZKing;
+};
 
 // Object Struct
 extern ObjectERZKing *ERZKing;

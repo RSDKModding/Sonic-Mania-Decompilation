@@ -13,7 +13,7 @@ typedef enum {
 }EggPistonMKIITypes;
 
 // Object Class
-typedef struct {
+struct ObjectEggPistonsMKII {
     RSDK_OBJECT
     int32 invincibilityTimer;
     int32 health;
@@ -31,10 +31,10 @@ typedef struct {
     uint16 sfxElectrify;
     uint16 sfxExplosion;
     uint16 sfxAlarm;
-} ObjectEggPistonsMKII;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEggPistonsMKII {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Hitbox hitbox;
-} EntityEggPistonsMKII;
+};
 
 // Object Struct
 extern ObjectEggPistonsMKII *EggPistonsMKII;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCPZ1Intro {
     RSDK_OBJECT
     uint16 playerFrames;
     uint16 particleFrames;
@@ -14,12 +14,12 @@ typedef struct {
     int32 playerAnimID;
     Entity *fxRuby;
     Entity *debris;
-} ObjectCPZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCPZ1Intro {
     MANIA_CUTSCENE_BASE
-} EntityCPZ1Intro;
+};
 
 // Object Struct
 extern ObjectCPZ1Intro *CPZ1Intro;

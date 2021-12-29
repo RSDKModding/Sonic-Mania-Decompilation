@@ -9,7 +9,7 @@ typedef enum {
 }CPZBossTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCPZBoss {
     RSDK_OBJECT
     Hitbox hitbox;
     Entity* managers[2];
@@ -17,10 +17,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 playerFrames;
     uint16 sfxExplosion;
-} ObjectCPZBoss;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCPZBoss {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -30,7 +30,7 @@ typedef struct {
     Animator panelAnimator;
     Animator enterAnimator;
     Animator playerAnimator;
-} EntityCPZBoss;
+};
 
 // Object Struct
 extern ObjectCPZBoss *CPZBoss;

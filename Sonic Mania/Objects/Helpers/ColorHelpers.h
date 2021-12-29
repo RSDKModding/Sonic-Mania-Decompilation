@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectColorHelpers {
 	RSDK_OBJECT
-} ObjectColorHelpers;
+};
 
 // Entity Class
-typedef struct {
+struct EntityColorHelpers {
 	RSDK_ENTITY
-} EntityColorHelpers;
+};
 
 // Object Entity
 extern ObjectColorHelpers *ColorHelpers;

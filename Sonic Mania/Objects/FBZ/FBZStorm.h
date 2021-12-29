@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFBZStorm {
     RSDK_OBJECT
     TABLE(int32 thunderFade[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
     Vector2 positions[0x100];
@@ -13,10 +13,10 @@ typedef struct {
     uint8 playingRainSFX;
     uint16 sfxThunder;
     STATIC(uint8 srcPal, 1);
-} ObjectFBZStorm;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZStorm {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -25,7 +25,7 @@ typedef struct {
     int32 screenPosX[4];
     bool32 enabled;
     Animator animator;
-} EntityFBZStorm;
+};
 
 // Object Struct
 extern ObjectFBZStorm *FBZStorm;

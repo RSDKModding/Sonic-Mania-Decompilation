@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPopOut {
     RSDK_OBJECT
     bool32 hasButton;
     uint16 aniFrames;
-} ObjectPopOut;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPopOut {
     RSDK_ENTITY
     uint8 orientation;
     uint8 tag;
@@ -29,7 +29,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator;
     Animator animator2;
-} EntityPopOut;
+};
 
 // Object Struct
 extern ObjectPopOut *PopOut;

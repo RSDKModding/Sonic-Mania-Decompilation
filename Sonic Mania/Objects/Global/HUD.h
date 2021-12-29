@@ -19,7 +19,7 @@ typedef enum {
 } KeyIDs;
 
 // Object Class
-typedef struct {
+struct ObjectHUD {
     RSDK_OBJECT
     uint16 aniFrames;
 #if RETRO_GAMEVER != VER_100
@@ -34,10 +34,10 @@ typedef struct {
     int32 swapCooldown;
     int32 stockFlashTimers[PLAYER_MAX];
 #endif
-} ObjectHUD;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHUD {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 scoreOffset;
@@ -82,7 +82,7 @@ typedef struct {
     Animator taAnimator2;
     Animator taAnimator3;
 #endif
-} EntityHUD;
+};
 
 // Object Struct
 extern ObjectHUD *HUD;

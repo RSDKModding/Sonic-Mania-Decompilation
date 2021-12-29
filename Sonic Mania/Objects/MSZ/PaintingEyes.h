@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPaintingEyes {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPaintingEyes;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPaintingEyes {
     RSDK_ENTITY
     int32 timer;
     int32 lookPos;
@@ -18,7 +18,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityPaintingEyes;
+};
 
 // Object Struct
 extern ObjectPaintingEyes *PaintingEyes;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGHZCutsceneST {
     RSDK_OBJECT
     int32 unused1;
     Entity *fxRuby;
@@ -12,10 +12,10 @@ typedef struct {
     Entity *platform;
     Entity *phantomRuby;
     Entity *cutsceneHBH[5];
-} ObjectGHZCutsceneST;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGHZCutsceneST {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -28,7 +28,7 @@ typedef struct {
     Hitbox hitbox2;
 
     Hitbox hitbox;
-} EntityGHZCutsceneST;
+};
 
 // Object Struct
 extern ObjectGHZCutsceneST *GHZCutsceneST;

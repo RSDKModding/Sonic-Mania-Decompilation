@@ -15,7 +15,7 @@ typedef enum {
 }HeavyGunnerTypes;
 
 // Object Class
-typedef struct {
+struct ObjectHeavyGunner {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -42,10 +42,10 @@ typedef struct {
     int32 field_48;
     int32 field_4C;
     int32 field_50;
-} ObjectHeavyGunner;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHeavyGunner {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -69,7 +69,7 @@ typedef struct {
     Animator animator9;
     Animator animator10;
     Animator animator11;
-} EntityHeavyGunner;
+};
 
 // Object Struct
 extern ObjectHeavyGunner *HeavyGunner;

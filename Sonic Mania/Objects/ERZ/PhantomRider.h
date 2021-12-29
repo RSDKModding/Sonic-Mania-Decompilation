@@ -6,15 +6,15 @@
 typedef enum { PHANTOMRIDER_JIMMY = 3 } PhantomRiderTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPhantomRider {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxRiderLaunch;
     uint16 field_8;
-} ObjectPhantomRider;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomRider {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -34,7 +34,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Animator animator6;
-} EntityPhantomRider;
+};
 
 // Object Struct
 extern ObjectPhantomRider *PhantomRider;

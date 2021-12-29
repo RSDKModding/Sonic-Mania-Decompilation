@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectEscapeCar {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBumper;
     uint16 sfxDrop;
-} ObjectEscapeCar;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEscapeCar {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +23,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityEscapeCar;
+};
 
 // Object Struct
 extern ObjectEscapeCar *EscapeCar;

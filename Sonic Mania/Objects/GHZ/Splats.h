@@ -13,7 +13,7 @@ typedef enum {
 }SplatsTypes;
 
 // Object Class
-typedef struct {
+struct ObjectSplats {
     RSDK_OBJECT
     StateMachine(state);
     Hitbox hitbox1;
@@ -22,10 +22,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxSplatsSpawn;
     uint16 sfxSplatsLand;
-} ObjectSplats;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySplats {
     RSDK_ENTITY
     StateMachine(state);
     uint8 bounceCount;
@@ -41,7 +41,7 @@ typedef struct {
     int32 startDir;
     Animator animator1;
     Animator animator2;
-} EntitySplats;
+};
 
 // Object Struct
 extern ObjectSplats *Splats;

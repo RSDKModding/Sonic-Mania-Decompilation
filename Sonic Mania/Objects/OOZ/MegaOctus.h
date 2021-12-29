@@ -17,7 +17,7 @@ typedef enum {
 } MegaOctusTypes;
 
 // Object Class
-typedef struct {
+struct ObjectMegaOctus {
     RSDK_OBJECT
     Entity *bossPtr;
     Animator animator1;
@@ -44,10 +44,10 @@ typedef struct {
     uint16 sfxHarpoon;
     uint16 sfxSurface;
     uint16 sfxLaserSplash;
-} ObjectMegaOctus;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMegaOctus {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -68,7 +68,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Hitbox hitbox;
-} EntityMegaOctus;
+};
 
 // Object Struct
 extern ObjectMegaOctus *MegaOctus;

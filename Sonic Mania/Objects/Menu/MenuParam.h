@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMenuParam {
 	RSDK_OBJECT
-} ObjectMenuParam;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMenuParam {
     RSDK_ENTITY
     uint8 selectionFlag;
     uint8 selectionType;
@@ -39,7 +39,7 @@ typedef struct {
     int32 vsZoneID;
     int32 vsActID;
     int32 creditsReturnToMenu;
-} EntityMenuParam;
+};
 
 // Object Struct
 extern ObjectMenuParam *MenuParam;

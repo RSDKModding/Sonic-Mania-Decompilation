@@ -6,16 +6,16 @@
 #define Starcase_StairCount (4)
 
 // Object Class
-typedef struct {
+struct ObjectStaircase {
     RSDK_OBJECT
     Hitbox blockHitbox;
     uint16 animID;
     uint16 unused;
     uint16 sfxID;
-} ObjectStaircase;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStaircase {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -24,7 +24,7 @@ typedef struct {
     Animator animator;
     uint8 type;
     bool32 bumpable;
-} EntityStaircase;
+};
 
 // Object Struct
 extern ObjectStaircase *Staircase;

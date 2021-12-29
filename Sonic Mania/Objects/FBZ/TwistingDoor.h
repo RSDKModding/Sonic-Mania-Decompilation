@@ -11,14 +11,14 @@ typedef enum {
 }TwistingDoorTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTwistingDoor {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxOpen;
-} ObjectTwistingDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTwistingDoor {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -44,7 +44,7 @@ typedef struct {
 
     bool32 close;
     EntityButton *buttonPtr;
-} EntityTwistingDoor;
+};
 
 // Object Struct
 extern ObjectTwistingDoor *TwistingDoor;

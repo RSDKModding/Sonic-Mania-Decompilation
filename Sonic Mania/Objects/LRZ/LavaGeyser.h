@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLavaGeyser {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxDrill;
     uint16 sfxLavaGeyser;
-} ObjectLavaGeyser;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLavaGeyser {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -29,7 +29,7 @@ typedef struct {
     uint16 intervalOffset;
     uint16 duration;
     int32 force;
-} EntityLavaGeyser;
+};
 
 // Object Struct
 extern ObjectLavaGeyser *LavaGeyser;

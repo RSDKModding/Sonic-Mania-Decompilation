@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBurningLog {
     RSDK_OBJECT
     int32 aniFrames;
     Hitbox hitboxPlatform;
     Hitbox hitboxFlame;
-} ObjectBurningLog;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBurningLog {
     RSDK_ENTITY
     Animator animator;
     int32 timer;
-} EntityBurningLog;
+};
 
 // Object Struct
 extern ObjectBurningLog *BurningLog;

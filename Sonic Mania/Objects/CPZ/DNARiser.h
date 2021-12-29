@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDNARiser {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGrab;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 sfxBurst;
     uint16 sfxTiny[6];
     Hitbox hitbox;
-} ObjectDNARiser;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDNARiser {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     Entity *sibling;
     Entity *lastChild;
     Entity *parent;
-} EntityDNARiser;
+};
 
 // Object Struct
 extern ObjectDNARiser *DNARiser;

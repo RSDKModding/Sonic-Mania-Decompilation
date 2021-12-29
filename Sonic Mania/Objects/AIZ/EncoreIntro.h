@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectEncoreIntro {
     RSDK_OBJECT
     int32 field_4;
     uint16 aniFrames;
@@ -20,13 +20,13 @@ typedef struct {
     Entity *rubyPortal;
     int32 field_24;
     bool32 awaitingSaveFinish;
-} ObjectEncoreIntro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEncoreIntro {
     MANIA_CUTSCENE_BASE
     bool32 seenActClear;
-} EntityEncoreIntro;
+};
 
 // Object Struct
 extern ObjectEncoreIntro *EncoreIntro;

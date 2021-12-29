@@ -25,7 +25,7 @@ typedef enum {
 } AnimalBehaviours;
 
 // Object Class
-typedef struct {
+struct ObjectAnimals {
     RSDK_OBJECT
     TABLE(int32 hitboxes[12], { 0x70000, 0x70000, 0xC0000, 0xA0000, 0x80000, 0x80000, 0x80000, 0x80000, 0x70000, 0x50000, 0x70000, 0x60000 });
     TABLE(int32 gravityStrength[12], { 0x1800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x1800, 0x3800, 0x3800, 0x3800 });
@@ -35,10 +35,10 @@ typedef struct {
     int32 animalTypes[2];
     bool32 hasPlatform;
     bool32 hasBridge;
-} ObjectAnimals;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAnimals {
     RSDK_ENTITY
     StateMachine(state);
     int32 delay;
@@ -46,7 +46,7 @@ typedef struct {
     AnimalBehaviours behaviour;
     Animator animator;
     Hitbox hitbox;
-} EntityAnimals;
+};
 
 // Object Struct
 extern ObjectAnimals *Animals;

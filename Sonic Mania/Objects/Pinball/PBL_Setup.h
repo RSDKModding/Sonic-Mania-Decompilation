@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Setup {
     RSDK_OBJECT
     int32 unused1;
     int32 timer;
@@ -20,16 +20,16 @@ typedef struct {
     uint8 tableLow;
     uint8 tableHigh;
     uint16 sfxContinue;
-} ObjectPBL_Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Setup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 colour;
     Matrix unusedMatrix1;
-} EntityPBL_Setup;
+};
 
 // Object Struct
 extern ObjectPBL_Setup *PBL_Setup;

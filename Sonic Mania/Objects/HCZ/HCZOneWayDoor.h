@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHCZOneWayDoor {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxClack;
-} ObjectHCZOneWayDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHCZOneWayDoor {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 posUnknown1;
@@ -25,7 +25,7 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Animator animator;
-} EntityHCZOneWayDoor;
+};
 
 // Object Struct
 extern ObjectHCZOneWayDoor *HCZOneWayDoor;

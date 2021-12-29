@@ -7,7 +7,7 @@ typedef enum { OOZ_WARPDOOR_EFFECT_TO_SUB = 1, OOZ_WARPDOOR_EFFECT_FROM_SUB = 2 
 typedef enum { OOZSETUP_FLAMES, OOZSETUP_FADE } OOZSetupTypes;
 
 // Object Class
-typedef struct {
+struct ObjectOOZSetup {
     RSDK_OBJECT
     int32 palTimer;
     uint16 aniTiles;
@@ -37,13 +37,13 @@ typedef struct {
 #endif
     bool32 hasAchievement;
     Entity *cutscenePtr;
-} ObjectOOZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOOZSetup {
     RSDK_ENTITY
     uint8 type;
-} EntityOOZSetup;
+};
 
 // Object Struct
 extern ObjectOOZSetup *OOZSetup;

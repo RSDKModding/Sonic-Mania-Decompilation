@@ -6,14 +6,14 @@
 #define Caterkiller_BodyCount (3)
 
 // Object Class
-typedef struct {
+struct ObjectCaterkiller {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectCaterkiller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCaterkiller {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -27,7 +27,7 @@ typedef struct {
     uint8 startDir;
     Animator animator;
     Animator animator2;
-} EntityCaterkiller;
+};
 
 // Object Entity
 extern ObjectCaterkiller *Caterkiller;

@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTTCutscene {
     RSDK_OBJECT
     int32 field_4;
     EntityFXFade *fxFade;
-} ObjectTTCutscene;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTTCutscene {
     MANIA_CUTSCENE_BASE
-} EntityTTCutscene;
+};
 
 // Object Struct
 extern ObjectTTCutscene *TTCutscene;

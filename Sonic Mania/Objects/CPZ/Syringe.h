@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSyringe {
     RSDK_OBJECT
     Hitbox hitboxBody;
     Hitbox hitboxHandle;
     uint16 aniFrames;
     uint16 sfxBloop;
-} ObjectSyringe;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySyringe {
     RSDK_ENTITY
     StateMachine(state); // unused
     int32 type;
@@ -23,7 +23,7 @@ typedef struct {
     uint8 tag;
     Animator animator1;
     Animator animator2;
-} EntitySyringe;
+};
 
 // Object Struct
 extern ObjectSyringe *Syringe;

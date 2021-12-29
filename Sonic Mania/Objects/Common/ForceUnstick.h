@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectForceUnstick {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-} ObjectForceUnstick;
+};
 
 // Entity Class
-typedef struct {
+struct EntityForceUnstick {
     RSDK_ENTITY
     uint8 width;
     uint8 height;
     bool32 breakClimb;
     Hitbox hitbox;
-} EntityForceUnstick;
+};
 
 // Object Struct
 extern ObjectForceUnstick *ForceUnstick;

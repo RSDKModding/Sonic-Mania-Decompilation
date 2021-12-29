@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectEggTV {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-} ObjectEggTV;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEggTV {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -24,7 +24,7 @@ typedef struct {
     int32 field_80;
     int32 field_84;
     int32 field_88;
-} EntityEggTV;
+};
 
 // Object Struct
 extern ObjectEggTV *EggTV;

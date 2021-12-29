@@ -8,7 +8,7 @@
 #define EggJanken_SegmentCount (EggJanken_JointCount + 1)
 
 // Object Class
-typedef struct {
+struct ObjectEggJanken {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
@@ -26,10 +26,10 @@ typedef struct {
     uint16 sfxImpact4;
     uint16 sfxImpact3;
     uint16 sfxExplosion;
-} ObjectEggJanken;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEggJanken {
     RSDK_ENTITY
     StateMachine(state1);
     StateMachine(stateDraw);
@@ -66,7 +66,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityEggJanken;
+};
 
 // Object Entity
 extern ObjectEggJanken *EggJanken;

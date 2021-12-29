@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpeedGate {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 field_C;
     uint16 aniFrames;
     uint16 sfxStarPost;
-} ObjectSpeedGate;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpeedGate {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -32,7 +32,7 @@ typedef struct {
     Animator finsAnimator;
     Animator bubbleAnimator;
     int32 activePlayers;
-} EntitySpeedGate;
+};
 
 // Object Struct
 extern ObjectSpeedGate *SpeedGate;

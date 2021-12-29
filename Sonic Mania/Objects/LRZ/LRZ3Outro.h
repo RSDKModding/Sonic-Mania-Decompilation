@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectLRZ3Outro {
     RSDK_OBJECT
     uint16 sfxBlastoff;
     uint16 sfxLittlePlanet;
-} ObjectLRZ3Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ3Outro {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -21,7 +21,7 @@ typedef struct {
     Entity *littlePlanet;
     int32 blastoffChannel;
     float blastoffVolume;
-} EntityLRZ3Outro;
+};
 
 // Object Struct
 extern ObjectLRZ3Outro *LRZ3Outro;

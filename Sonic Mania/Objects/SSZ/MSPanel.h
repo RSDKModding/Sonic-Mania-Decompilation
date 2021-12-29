@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSPanel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectMSPanel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSPanel {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator1;
     Animator animator2;
-} EntityMSPanel;
+};
 
 // Object Struct
 extern ObjectMSPanel *MSPanel;

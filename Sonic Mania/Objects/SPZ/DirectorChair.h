@@ -9,7 +9,7 @@ typedef enum {
 }DirectorChairTypes;
 
 // Object Class
-typedef struct {
+struct ObjectDirectorChair {
     RSDK_OBJECT
     uint8 field_3;
     uint8 field_4;
@@ -20,10 +20,10 @@ typedef struct {
     uint16 sfxUnravel;
     uint16 sfxExtend;
     uint16 sfxRetract;
-} ObjectDirectorChair;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDirectorChair {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -51,7 +51,7 @@ typedef struct {
     int32 field_E4;
     int32 field_E8;
     int32 field_EC;
-} EntityDirectorChair;
+};
 
 // Object Struct
 extern ObjectDirectorChair *DirectorChair;

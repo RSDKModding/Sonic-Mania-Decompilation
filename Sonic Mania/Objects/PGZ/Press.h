@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPress {
 	RSDK_OBJECT
 	uint16 animID;
 	Hitbox hitbox;
@@ -13,10 +13,10 @@ typedef struct {
 #if RETRO_USE_PLUS
 	bool32 canSuper;
 #endif
-} ObjectPress;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPress {
 	RSDK_ENTITY
 	StateMachine(state);
 	uint16 size;
@@ -35,7 +35,7 @@ typedef struct {
 	Animator crusherAnimator;
 	Animator threadAnimator;
 	Animator bumperAnimator;
-} EntityPress;
+};
 
 // Object Struct
 extern ObjectPress *Press;

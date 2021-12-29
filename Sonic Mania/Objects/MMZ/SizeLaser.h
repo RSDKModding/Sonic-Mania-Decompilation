@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSizeLaser {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox playerOuterBox[4];
@@ -21,10 +21,10 @@ typedef struct {
 #endif
     uint16 sfxShrink2;
     uint16 sfxGrow2;
-} ObjectSizeLaser;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySizeLaser {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -34,7 +34,7 @@ typedef struct {
     int32 extend;
     Animator animator1;
     Animator animator2;
-} EntitySizeLaser;
+};
 
 // Object Struct
 extern ObjectSizeLaser *SizeLaser;

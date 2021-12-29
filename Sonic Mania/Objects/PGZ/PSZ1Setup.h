@@ -11,7 +11,7 @@ typedef enum {
 } BGSwitchIDsPSZ1;
 
 // Object Class
-typedef struct {
+struct ObjectPSZ1Setup {
     RSDK_OBJECT
     TABLE(int32 aniTileDelays1[7], { 64, 2, 1, 2, 2, 6, 2 });
     TABLE(int32 aniTileDelays2[14], { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 });
@@ -38,12 +38,12 @@ typedef struct {
     uint16 aniTilesA;
     uint16 aniTilesB;
     uint16 aniTilesC;
-} ObjectPSZ1Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ1Setup {
 	RSDK_ENTITY
-} EntityPSZ1Setup;
+};
 
 // Object Struct
 extern ObjectPSZ1Setup *PSZ1Setup;

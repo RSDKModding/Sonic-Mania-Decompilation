@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMagnetSphere {
     RSDK_OBJECT
     Hitbox hitbox;
     uint8 sphereAngle[4];
@@ -13,10 +13,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxBumper;
     uint16 sfxPlasmaBall;
-} ObjectMagnetSphere;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMagnetSphere {
     RSDK_ENTITY
     uint8 activePlayers;
     uint8 playerTimers[4];
@@ -31,7 +31,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityMagnetSphere;
+};
 
 // Object Struct
 extern ObjectMagnetSphere *MagnetSphere;

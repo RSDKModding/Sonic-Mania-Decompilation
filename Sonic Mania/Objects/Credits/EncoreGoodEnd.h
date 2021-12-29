@@ -5,20 +5,20 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectEncoreGoodEnd {
     RSDK_OBJECT
     int32 unused1;
     uint16 unused2;
     uint16 sfxSnap;
     int32 unused3;
     EntityDecoration *decorations[16];
-} ObjectEncoreGoodEnd;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEncoreGoodEnd {
     MANIA_CUTSCENE_BASE
     int32 unused1;
-} EntityEncoreGoodEnd;
+};
 
 // Object Struct
 extern ObjectEncoreGoodEnd *EncoreGoodEnd;

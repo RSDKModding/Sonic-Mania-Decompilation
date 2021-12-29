@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHCZ1Intro {
 	RSDK_OBJECT
-} ObjectHCZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHCZ1Intro {
 	MANIA_CUTSCENE_BASE
-} EntityHCZ1Intro;
+};
 
 // Object Struct
 extern ObjectHCZ1Intro *HCZ1Intro;

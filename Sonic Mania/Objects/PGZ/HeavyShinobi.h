@@ -12,7 +12,7 @@ typedef enum {
 }HeavyShinobiTypes;
 
 // Object Class
-typedef struct {
+struct ObjectHeavyShinobi {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
@@ -46,10 +46,10 @@ typedef struct {
     uint16 sfxSlash;
     uint16 sfxStick;
     uint16 sfxThrow;
-} ObjectHeavyShinobi;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHeavyShinobi {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -60,7 +60,7 @@ typedef struct {
     Vector2 playerDistance;
     Animator animator1;
     Animator animator2;
-} EntityHeavyShinobi;
+};
 
 // Object Struct
 extern ObjectHeavyShinobi *HeavyShinobi;

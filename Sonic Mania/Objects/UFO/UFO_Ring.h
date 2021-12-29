@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Ring {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     uint16 aniFrames;
     uint16 sfxRing;
-} ObjectUFO_Ring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Ring {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -22,7 +22,7 @@ typedef struct {
     int32 worldX;
     int32 worldY;
     Animator animator;
-} EntityUFO_Ring;
+};
 
 // Object Struct
 extern ObjectUFO_Ring *UFO_Ring;

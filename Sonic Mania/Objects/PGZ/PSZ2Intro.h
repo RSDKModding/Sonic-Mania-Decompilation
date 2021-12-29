@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPSZ2Intro {
     RSDK_OBJECT
     int32 field_4;
     uint16 sfxExplosion3;
     EntityFXFade *fxFade;
     Entity *signPost;
-} ObjectPSZ2Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ2Intro {
     MANIA_CUTSCENE_BASE
-} EntityPSZ2Intro;
+};
 
 // Object Struct
 extern ObjectPSZ2Intro *PSZ2Intro;

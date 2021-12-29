@@ -6,7 +6,7 @@
 typedef enum { UIBACKGROUND_UNUSED } UIBackgroundTypes;
 
 // Object Class
-typedef struct {
+struct ObjectUIBackground {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     TABLE(colour bgColours[21], { 0xF0C800, 0xF08C18, 0x80A0B0, 0x50D8A0, 0xF09018, 0x38B0C8, 0x38B0C8, 0xF07028, 0x50D8A0, 0xC83868, 0x50D8A0,
@@ -17,16 +17,16 @@ typedef struct {
 #endif
     colour *activeColours;
     uint16 aniFrames;
-} ObjectUIBackground;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIBackground {
     RSDK_ENTITY
     StateMachine(stateDraw);
     UIBackgroundTypes type;
     int32 timer;
     Animator animator; //probably editor-only
-} EntityUIBackground;
+};
 
 // Object Struct
 extern ObjectUIBackground *UIBackground;

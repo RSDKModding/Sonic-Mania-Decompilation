@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIVsScoreboard {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIVsScoreboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVsScoreboard {
     RSDK_ENTITY
     Animator unusedAnimator;
     Vector2 *parentPos;
@@ -28,7 +28,7 @@ typedef struct {
     Animator winnerAnimator;
     Animator winsAnimator;
     uint16 textFrames;
-} EntityUIVsScoreboard;
+};
 
 // Object Struct
 extern ObjectUIVsScoreboard *UIVsScoreboard;

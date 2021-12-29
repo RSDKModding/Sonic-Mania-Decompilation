@@ -5,13 +5,13 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectSSZEggman {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectSSZEggman;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZEggman {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
@@ -23,7 +23,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntitySSZEggman;
+};
 
 // Object Struct
 extern ObjectSSZEggman *SSZEggman;

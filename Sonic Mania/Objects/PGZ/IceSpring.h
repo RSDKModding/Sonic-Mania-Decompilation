@@ -10,16 +10,16 @@ typedef enum {
 }IceSpringTypes;
 
 // Object Class
-typedef struct {
+struct ObjectIceSpring {
 	RSDK_OBJECT
 	uint16 aniFrames;
 	uint16 sfxBounce;
 	uint16 sfxShatter;
 	Animator animators[4];
-} ObjectIceSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityIceSpring {
     RSDK_ENTITY
     StateMachine(state);
     IceSpringTypes type;
@@ -32,7 +32,7 @@ typedef struct {
 
     int32 timer;
     uint8 playerBits;
-} EntityIceSpring;
+};
 
 // Object Struct
 extern ObjectIceSpring *IceSpring;

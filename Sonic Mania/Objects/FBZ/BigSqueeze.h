@@ -11,7 +11,7 @@ typedef enum {
 }BigSqueezeTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBigSqueeze {
     RSDK_OBJECT
     TABLE(int32 prongDebrisInfo[10], { 3, 12, -0x20000, -0x10000, 13, 0, -0x10000, 14, 0x20000, -0x10000 });
     TABLE(int32 domeDebrisInfo[13], { 4, 8, -0x20000, -0x10000, 9, -0x10000, -0x10000, 10, 0x10000, -0x10000, 11, 0x20000, -0x10000 });
@@ -25,10 +25,10 @@ typedef struct {
     uint16 sfxMagnet;
     uint16 sfxOrbinaut;
     uint16 aniFrames;
-} ObjectBigSqueeze;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBigSqueeze {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -44,7 +44,7 @@ typedef struct {
     Animator wheelAnimator;
     Animator electricAnimator;
     Hitbox hitbox;
-} EntityBigSqueeze;
+};
 
 // Object Struct
 extern ObjectBigSqueeze *BigSqueeze;

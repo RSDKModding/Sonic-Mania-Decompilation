@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTitleSonic {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTitleSonic;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTitleSonic {
     RSDK_ENTITY
     Animator animatorSonic;
     Animator animatorFinger;
-} EntityTitleSonic;
+};
 
 // Object Struct
 extern ObjectTitleSonic *TitleSonic;

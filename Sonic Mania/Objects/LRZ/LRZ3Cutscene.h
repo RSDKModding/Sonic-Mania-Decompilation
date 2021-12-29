@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZ3Cutscene {
     RSDK_OBJECT
     int32 field_4;
-} ObjectLRZ3Cutscene;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ3Cutscene {
     RSDK_ENTITY
     int32 field_58;
-} EntityLRZ3Cutscene;
+};
 
 // Object Struct
 extern ObjectLRZ3Cutscene *LRZ3Cutscene;

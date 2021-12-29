@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZAlert {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTMZAlert;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZAlert {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Animator animator;
     Animator animator2;
-} EntityTMZAlert;
+};
 
 // Object Struct
 extern ObjectTMZAlert *TMZAlert;

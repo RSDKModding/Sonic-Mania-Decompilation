@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectKanabun {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectKanabun;
+};
 
 // Entity Class
-typedef struct {
+struct EntityKanabun {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -22,7 +22,7 @@ typedef struct {
     uint8 bobDist;
     uint8 angleVel;
     Animator animator;
-} EntityKanabun;
+};
 
 // Object Struct
 extern ObjectKanabun *Kanabun;

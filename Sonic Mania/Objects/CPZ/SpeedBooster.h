@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpeedBooster {
     RSDK_OBJECT
     StateMachine(defaultState);
 	Hitbox hitbox;
     uint16 animID;
 	uint16 sfxID;
-} ObjectSpeedBooster;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpeedBooster {
     RSDK_ENTITY
     StateMachine(state);
     uint8 speed;
@@ -22,7 +22,7 @@ typedef struct {
     uint8 cooldown;
     uint8 playerCooldown[PLAYER_MAX];
     Animator animator;
-} EntitySpeedBooster;
+};
 
 // Object Struct
 extern ObjectSpeedBooster *SpeedBooster;

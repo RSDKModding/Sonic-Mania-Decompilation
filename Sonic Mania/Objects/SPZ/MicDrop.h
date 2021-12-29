@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMicDrop {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
     uint16 sfxElectrify;
-} ObjectMicDrop;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMicDrop {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator1;
@@ -26,7 +26,7 @@ typedef struct {
     int32 field_A0;
     int32 radius;
     int32 field_A8;
-} EntityMicDrop;
+};
 
 // Object Struct
 extern ObjectMicDrop *MicDrop;

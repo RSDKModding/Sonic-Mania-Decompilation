@@ -9,7 +9,7 @@ typedef enum {
 } BGSwitchIDsAIZ;
 
 // Object Class
-typedef struct {
+struct ObjectAIZSetup {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     TABLE(int32 aniTiles1[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
@@ -46,12 +46,12 @@ typedef struct {
     uint16 sfxImpact;
     uint16 sfxHeliWoosh;
     uint16 aniTiles;
-} ObjectAIZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZSetup {
 	RSDK_ENTITY
-} EntityAIZSetup;
+};
 
 // Object Struct
 extern ObjectAIZSetup *AIZSetup;

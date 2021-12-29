@@ -43,7 +43,7 @@ typedef enum {
 } PlatformCollisionTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPlatform {
     RSDK_OBJECT
     uint16 aniFrames;
     Vector2 stoodPos[PLAYER_MAX];
@@ -53,12 +53,12 @@ typedef struct {
     uint16 sfxClack;
     bool32 playingPushSFX;
     bool32 useClack;
-} ObjectPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlatform {
     MANIA_PLATFORM_BASE
-} EntityPlatform;
+};
 
 // Object Struct
 extern ObjectPlatform *Platform;

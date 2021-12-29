@@ -11,14 +11,14 @@ typedef enum {
 } StickyPlatformTypes;
 
 // Object Class
-typedef struct {
+struct ObjectStickyPlatform {
 	RSDK_OBJECT
 	uint16 sfxID;
 	uint16 animID;
-} ObjectStickyPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStickyPlatform {
     RSDK_ENTITY
     StateMachine(state);
     StickyPlatformTypes type;
@@ -31,7 +31,7 @@ typedef struct {
     Vector2 startPos;
     Hitbox hitbox;
     Animator animator;
-} EntityStickyPlatform;
+};
 
 // Object Struct
 extern ObjectStickyPlatform *StickyPlatform;

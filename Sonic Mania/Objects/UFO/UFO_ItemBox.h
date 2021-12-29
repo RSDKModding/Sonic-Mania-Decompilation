@@ -13,7 +13,7 @@ typedef enum {
 }UFO_ItemBoxTypes;
 
 // Object Class
-typedef struct {
+struct ObjectUFO_ItemBox {
     RSDK_OBJECT
     int32 breakCount;
     int32 unused1;
@@ -24,10 +24,10 @@ typedef struct {
     uint16 sfxDestroy;
     uint16 sfxRockemSockem;
     uint16 sfxBumper;
-} ObjectUFO_ItemBox;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_ItemBox {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -44,7 +44,7 @@ typedef struct {
     int32 sfxTimer;
     Animator itemAnimator;
     Animator unusedAnimator1;
-} EntityUFO_ItemBox;
+};
 
 // Object Struct
 extern ObjectUFO_ItemBox *UFO_ItemBox;

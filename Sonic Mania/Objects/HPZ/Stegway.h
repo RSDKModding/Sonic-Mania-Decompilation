@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectStegway {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxRev;
     uint16 sfxRelease;
-} ObjectStegway;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStegway {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -27,7 +27,7 @@ typedef struct {
     bool32 dustFlag;
     int32 unused2;
     bool32 flag;
-} EntityStegway;
+};
 
 // Object Entity
 extern ObjectStegway *Stegway;

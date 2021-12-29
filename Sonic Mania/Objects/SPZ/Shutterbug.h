@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectShutterbug {
 	RSDK_OBJECT
 	Hitbox hitbox;
 	Hitbox checkbox;
 	uint32 pictureCount;
 	uint16 aniFrames;
 	uint16 snapSfx;
-} ObjectShutterbug;
+};
 
 // Entity Class
-typedef struct {
+struct EntityShutterbug {
 	RSDK_ENTITY
 	StateMachine(state);
 	uint8 snaps;
@@ -31,7 +31,7 @@ typedef struct {
 	Hitbox focusBox;
 	Animator animator;
 	Animator overlayAnim;
-} EntityShutterbug;
+};
 
 // Object Struct
 extern ObjectShutterbug *Shutterbug;

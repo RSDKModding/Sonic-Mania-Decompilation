@@ -23,7 +23,7 @@ typedef enum {
 }TVVanTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTVVan {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox1;
@@ -35,10 +35,10 @@ typedef struct {
     uint16 sfxSatellite1;
     uint16 sfxSatellite2;
     uint16 sfxExplosion;
-} ObjectTVVan;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTVVan {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw[DRAWLAYER_COUNT]);
@@ -63,7 +63,7 @@ typedef struct {
     Animator animator7;
     Animator animator8;
     Animator animator9;
-} EntityTVVan;
+};
 
 // Object Struct
 extern ObjectTVVan *TVVan;

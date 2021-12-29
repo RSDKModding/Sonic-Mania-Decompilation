@@ -20,15 +20,15 @@ typedef enum {
 } UIVsZoneButtonZoneIDs;
 
 // Object Class
-typedef struct {
+struct ObjectUIVsZoneButton {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 textFrames;
     uint16 sfxFail;
-} ObjectUIVsZoneButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVsZoneButton {
     MANIA_UI_ITEM_BASE
     int32 zoneID;
     int32 act;
@@ -49,7 +49,7 @@ typedef struct {
     Animator zoneAnimator;
     Animator redCrossAnimator;
     Animator blackCrossAnimator;
-} EntityUIVsZoneButton;
+};
 
 // Object Struct
 extern ObjectUIVsZoneButton *UIVsZoneButton;

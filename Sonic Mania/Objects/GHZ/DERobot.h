@@ -18,7 +18,7 @@ typedef enum {
 }DERobotAniLists;
 
 // Object Class
-typedef struct {
+struct ObjectDERobot {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxHand;
@@ -36,10 +36,10 @@ typedef struct {
     uint16 sfxDrop;
     uint16 sfxButton2;
     uint16 sfxHullClose;
-} ObjectDERobot;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDERobot {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -72,7 +72,7 @@ typedef struct {
     Animator animator3;
     int32 aniID;
     int32 frameID;
-} EntityDERobot;
+};
 
 // Object Struct
 extern ObjectDERobot *DERobot;

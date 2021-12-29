@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Springboard {
     RSDK_OBJECT
     Animator unusedAnimator1;
     uint16 aniFrames; //unused
     uint16 modelIndex;
     uint16 sceneIndex;
-} ObjectUFO_Springboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Springboard {
     RSDK_ENTITY
     int32 unused1;
     int32 height;
@@ -23,7 +23,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     Animator animator;
-} EntityUFO_Springboard;
+};
 
 // Object Struct
 extern ObjectUFO_Springboard *UFO_Springboard;

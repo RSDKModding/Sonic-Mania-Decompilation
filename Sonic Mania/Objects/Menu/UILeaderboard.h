@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUILeaderboard {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUILeaderboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUILeaderboard {
     MANIA_UI_ITEM_BASE
     int32 field_104;
     LeaderboardEntry *leaderboardEntry;
@@ -48,7 +48,7 @@ typedef struct {
     Animator animator11;
     Animator animator12;
     uint16 textFrames;
-} EntityUILeaderboard;
+};
 
 // Object Struct
 extern ObjectUILeaderboard *UILeaderboard;

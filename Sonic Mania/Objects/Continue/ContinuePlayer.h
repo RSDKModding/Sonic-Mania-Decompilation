@@ -21,7 +21,7 @@ typedef enum {
 }ContinuePlayerAniIDs;
 
 // Object Class
-typedef struct {
+struct ObjectContinuePlayer {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 playerAniFrames;
@@ -29,10 +29,10 @@ typedef struct {
     uint16 sfxRoll;
     uint16 sfxCharge;
     uint16 sfxRelease;
-} ObjectContinuePlayer;
+};
 
 // Entity Class
-typedef struct {
+struct EntityContinuePlayer {
     RSDK_ENTITY
     StateMachine(state);
     bool32 isPlayer2;
@@ -41,7 +41,7 @@ typedef struct {
     int32 unused2;
     Animator animator;
     uint16 aniFrames;
-} EntityContinuePlayer;
+};
 
 // Object Struct
 extern ObjectContinuePlayer *ContinuePlayer;

@@ -9,14 +9,14 @@ typedef enum {
 } TechnosqueekTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTechnosqueek {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectTechnosqueek;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTechnosqueek {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -31,7 +31,7 @@ typedef struct {
     uint8 startDir;
     Animator animator;
     Animator tailAnimator;
-} EntityTechnosqueek;
+};
 
 // Object Struct
 extern ObjectTechnosqueek *Technosqueek;

@@ -4,23 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGHZ2Outro {
     RSDK_OBJECT
     uint16 field_4;
     uint16 field_6;
     uint16 sfxRocketJet;
     uint16 sfxShinobiJump;
     uint16 sfxHeliWoosh;
-} ObjectGHZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGHZ2Outro {
     MANIA_CUTSCENE_BASE
     Entity *eggman;
     Entity *DERobot;
     Entity *phantomRuby;
     Entity *fxRuby;
-} EntityGHZ2Outro;
+};
 
 // Object Struct
 extern ObjectGHZ2Outro *GHZ2Outro;

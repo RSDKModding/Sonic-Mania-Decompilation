@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDCEvent {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -15,10 +15,10 @@ typedef struct {
     uint16 sfxRumble;
     uint16 sfxImpact6;
     uint16 sfxImpact4;
-} ObjectDCEvent;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDCEvent {
     RSDK_ENTITY
     StateMachine(state);
     uint8 numChildren;
@@ -27,7 +27,7 @@ typedef struct {
     int32 field_64;
     int32 timer;
     Animator animator;
-} EntityDCEvent;
+};
 
 // Object Struct
 extern ObjectDCEvent *DCEvent;

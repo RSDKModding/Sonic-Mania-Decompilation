@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFBZ1Outro {
     RSDK_OBJECT
     int32 unused1;
     uint16 sfxDrop;
@@ -14,13 +14,13 @@ typedef struct {
     EntityCollapsingPlatform *collapsingPlatform;
     EntityCrane *craneP1;
     EntityCrane *craneP2;
-} ObjectFBZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZ1Outro {
     MANIA_CUTSCENE_BASE
     int32 grabbedPlayers;
-} EntityFBZ1Outro;
+};
 
 // Object Struct
 extern ObjectFBZ1Outro *FBZ1Outro;

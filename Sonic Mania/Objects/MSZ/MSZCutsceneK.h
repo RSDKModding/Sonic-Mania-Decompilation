@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSZCutsceneK {
     RSDK_OBJECT
     int32 field_4;
     uint16 playerFrames;
@@ -15,12 +15,12 @@ typedef struct {
     Vector2 pos3;
     Entity *tornado;
     Entity *mystic;
-} ObjectMSZCutsceneK;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZCutsceneK {
 	MANIA_CUTSCENE_BASE
-} EntityMSZCutsceneK;
+};
 
 // Object Struct
 extern ObjectMSZCutsceneK *MSZCutsceneK;

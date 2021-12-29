@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDebris {
     RSDK_OBJECT
-} ObjectDebris;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDebris {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -18,7 +18,7 @@ typedef struct {
     Vector2 scaleInc;
     int32 delay;
     Animator animator;
-} EntityDebris;
+};
 
 // Object Struct
 extern ObjectDebris *Debris;

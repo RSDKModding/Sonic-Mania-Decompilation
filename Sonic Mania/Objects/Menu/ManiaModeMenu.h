@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectManiaModeMenu {
     RSDK_OBJECT
     int32 unused;
     Entity *saveSelectMenu;
@@ -17,12 +17,12 @@ typedef struct {
     Entity *noSaveMenuEncore;
     bool32 inSecretsMenu;
     int32 saveSelLastButtonID;
-} ObjectManiaModeMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityManiaModeMenu {
 	RSDK_ENTITY
-} EntityManiaModeMenu;
+};
 
 // Object Struct
 extern ObjectManiaModeMenu *ManiaModeMenu;

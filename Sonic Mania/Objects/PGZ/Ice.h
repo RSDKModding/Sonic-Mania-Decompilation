@@ -93,7 +93,7 @@ typedef enum {
 } IceChildTypes;
 
 // Object Class
-typedef struct {
+struct ObjectIce {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxPlayerBlockInner;
@@ -103,10 +103,10 @@ typedef struct {
     uint16 sfxLedgeBreak;
     uint16 sfxWindowShatter;
     uint16 sfxStruggle;
-} ObjectIce;
+};
 
 // Entity Class
-typedef struct {
+struct EntityIce {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -129,7 +129,7 @@ typedef struct {
     Hitbox hitboxBlock;
     Hitbox hitboxFallCheck;
     Hitbox hitboxPlayerBlockCheck;
-} EntityIce;
+};
 
 // Object Struct
 extern ObjectIce *Ice;

@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCactula {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxCactDrop;
-} ObjectCactula;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCactula {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -21,7 +21,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityCactula;
+};
 
 // Object Struct
 extern ObjectCactula *Cactula;

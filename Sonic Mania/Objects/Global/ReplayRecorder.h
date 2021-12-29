@@ -66,7 +66,7 @@ typedef enum {
 } ReplayFrameFlagTypes;
 
 // Object Class
-typedef struct {
+struct ObjectReplayRecorder {
     RSDK_OBJECT
     void *actions[64];
     int32 frameCounter;
@@ -93,10 +93,10 @@ typedef struct {
     void (*saveFinishPtr)(bool32);
     int32 replayID;
     int32 replayRowID;
-} ObjectReplayRecorder;
+};
 
 // Entity Class
-typedef struct {
+struct EntityReplayRecorder {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLate);
@@ -121,7 +121,7 @@ typedef struct {
     uint8 storedAnim;
     uint16 storedFrame;
     int32 alphaStore;
-} EntityReplayRecorder;
+};
 
 // Object Struct
 extern ObjectReplayRecorder *ReplayRecorder;

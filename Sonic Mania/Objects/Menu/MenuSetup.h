@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMenuSetup {
     RSDK_OBJECT
     int32 unused;
     bool32 initializedMenuReturn;
@@ -55,10 +55,10 @@ typedef struct {
     int32 field_144;
     Entity *dialog;
 #endif
-} ObjectMenuSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMenuSetup {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDelay);
@@ -67,7 +67,7 @@ typedef struct {
     int32 fadeShift;
     int32 fadeTimer;
     int32 fadeColour;
-} EntityMenuSetup;
+};
 
 // Object Struct
 extern ObjectMenuSetup *MenuSetup;

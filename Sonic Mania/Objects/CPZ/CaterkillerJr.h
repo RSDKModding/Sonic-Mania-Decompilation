@@ -6,14 +6,14 @@
 #define CaterkillerJr_SegmentCount (7)
 
 // Object Class
-typedef struct {
+struct ObjectCaterkillerJr {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectCaterkillerJr;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCaterkillerJr {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -26,7 +26,7 @@ typedef struct {
     int32 boundR;
     Animator bodyAnimators[CaterkillerJr_SegmentCount];
     Animator smokePuffAnimators[3];
-} EntityCaterkillerJr;
+};
 
 // Object Struct
 extern ObjectCaterkillerJr *CaterkillerJr;

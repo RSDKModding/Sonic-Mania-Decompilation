@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIButtonLabel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIButtonLabel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIButtonLabel {
     RSDK_ENTITY
     int32 unused1;
     int32 unused2;
@@ -22,7 +22,7 @@ typedef struct {
     Animator frameAnimator;
     Animator textAnimator;
     uint16 textSprite;
-} EntityUIButtonLabel;
+};
 
 // Object Struct
 extern ObjectUIButtonLabel *UIButtonLabel;

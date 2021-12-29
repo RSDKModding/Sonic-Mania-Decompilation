@@ -6,7 +6,7 @@
 #define Rexon_SegmentCount (5)
 
 // Object Class
-typedef struct {
+struct ObjectRexon {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -15,10 +15,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxShot;
     uint16 sfxExplosion;
-} ObjectRexon;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRexon {
     RSDK_ENTITY
     StateMachine(state);
     bool32 noMove;
@@ -35,7 +35,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityRexon;
+};
 
 // Object Struct
 extern ObjectRexon *Rexon;

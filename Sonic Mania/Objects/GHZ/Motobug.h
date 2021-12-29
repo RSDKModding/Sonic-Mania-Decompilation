@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMotobug {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectMotobug;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMotobug {
     RSDK_ENTITY
     StateMachine(state);
     int32 turnTimer;
@@ -20,7 +20,7 @@ typedef struct {
     uint8 startDir;
     bool32 wasTurning;
     Animator animator;
-} EntityMotobug;
+};
 
 // Object Struct
 extern ObjectMotobug *Motobug;

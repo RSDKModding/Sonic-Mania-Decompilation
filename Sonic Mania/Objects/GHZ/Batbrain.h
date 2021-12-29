@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBatbrain {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxFlap;
-} ObjectBatbrain;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBatbrain {
     RSDK_ENTITY
     StateMachine(state);
     int32 targetY;
     Entity *target;
     Vector2 startPos;
     Animator animator;
-} EntityBatbrain;
+};
 
 // Object Struct
 extern ObjectBatbrain *Batbrain;

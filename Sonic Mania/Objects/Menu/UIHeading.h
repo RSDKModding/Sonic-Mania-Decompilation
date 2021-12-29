@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIHeading {
     RSDK_OBJECT
     uint16 textFrames;
-} ObjectUIHeading;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIHeading {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused;
@@ -19,7 +19,7 @@ typedef struct {
     Animator headingAnimator;
     Animator textAnimator;
     uint16 textFrames;
-} EntityUIHeading;
+};
 
 // Object Struct
 extern ObjectUIHeading *UIHeading;

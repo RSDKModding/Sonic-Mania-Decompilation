@@ -10,7 +10,7 @@ typedef enum {
 }DrillerdroidTypes;
 
 // Object Class
-typedef struct {
+struct ObjectDrillerdroid {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -47,10 +47,10 @@ typedef struct {
     uint16 sfxDrop;
     uint16 sfxFail;
     uint16 sfxClang;
-} ObjectDrillerdroid;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDrillerdroid {
     RSDK_ENTITY
     uint8 type;
     StateMachine(state);
@@ -65,7 +65,7 @@ typedef struct {
     int32 timer;
     uint8 invincibilityTimer;
     int8 health;
-} EntityDrillerdroid;
+};
 
 // Object Struct
 extern ObjectDrillerdroid *Drillerdroid;

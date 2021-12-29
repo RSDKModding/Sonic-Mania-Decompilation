@@ -5,17 +5,17 @@
 
 #if !RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectE3MenuSetup {
     RSDK_OBJECT
     int32 unused1;
     bool32 initialized;
     int32 unused2;
     Entity *charSelControl;
     Entity *zoneControl;
-} ObjectE3MenuSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityE3MenuSetup {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDelay);
@@ -25,7 +25,7 @@ typedef struct {
     int32 fadeTimer;
     int32 fadeColour;
     int32 unused1;
-} EntityE3MenuSetup;
+};
 
 // Object Entity
 extern ObjectE3MenuSetup *E3MenuSetup;

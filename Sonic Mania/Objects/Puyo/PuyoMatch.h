@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoMatch {
     RSDK_OBJECT
     int32 value1;
     TABLE(int32 value2[24], { 4, 20, 24, 32, 48, 96, 160, 240, 320, 480, 600, 700, 800, 900, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999 });
@@ -13,10 +13,10 @@ typedef struct {
     TABLE(int32 value5[6], { 0, 0, 3, 6, 12, 24 });
     TABLE(int32 value6[24], { 0, 2, 5, 1, 3, 4, 5, 3, 4, 0, 1, 2, 3, 1, 0, 4, 2, 5, 0, 2, 1, 3, 5, 4 });
     uint16 aniFrames;
-} ObjectPuyoMatch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoMatch {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateInput);
@@ -42,7 +42,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityPuyoMatch;
+};
 
 // Object Struct
 extern ObjectPuyoMatch *PuyoMatch;

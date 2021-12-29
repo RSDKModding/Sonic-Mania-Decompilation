@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUICarousel {
     RSDK_OBJECT
     int32 field_4;
     int32 field_8;
@@ -14,10 +14,10 @@ typedef struct {
     int32 field_14;
     int32 field_18;
     int32 field_1C;
-} ObjectUICarousel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUICarousel {
     RSDK_ENTITY
     Vector2 shift;
     Vector2 clipSize;
@@ -39,7 +39,7 @@ typedef struct {
     int32 maxOffset;
     Vector2 offset;
     Entity *parent;
-} EntityUICarousel;
+};
 
 // Object Struct
 extern ObjectUICarousel *UICarousel;

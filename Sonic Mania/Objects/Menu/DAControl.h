@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDAControl {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectDAControl;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDAControl {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -21,7 +21,7 @@ typedef struct {
     Animator animator2;
     Animator animator3[5];
     Animator animator4;
-} EntityDAControl;
+};
 
 // Object Struct
 extern ObjectDAControl *DAControl;

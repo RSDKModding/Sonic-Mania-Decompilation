@@ -20,15 +20,15 @@ typedef enum {
 }UIButtonPromptTypes;
 
 // Object Class
-typedef struct {
+struct ObjectUIButtonPrompt {
     RSDK_OBJECT
     int32 type;
     int32 inputID;
     uint16 aniFrames;
-} ObjectUIButtonPrompt;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIButtonPrompt {
     RSDK_ENTITY
     Entity *parent;
     StateMachine(state);
@@ -52,7 +52,7 @@ typedef struct {
     Animator buttonAnimator;
     Animator promptAnimator;
     uint16 textSprite;
-} EntityUIButtonPrompt;
+};
 
 // Object Struct
 extern ObjectUIButtonPrompt *UIButtonPrompt;

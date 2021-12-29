@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectOOZ1Outro {
     RSDK_OBJECT
     int32 field_4;
     uint16 sfxDrop;
-} ObjectOOZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOOZ1Outro {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -26,7 +26,7 @@ typedef struct {
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-} EntityOOZ1Outro;
+};
 
 // Object Struct
 extern ObjectOOZ1Outro *OOZ1Outro;

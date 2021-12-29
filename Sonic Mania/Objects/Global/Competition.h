@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCompetition {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
@@ -17,10 +17,10 @@ typedef struct {
     uint16 aniFrames;
     Entity *activeEntity;
     int32 unused9;
-} ObjectCompetition;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCompetition {
     RSDK_ENTITY
     StateMachine(state);
     bool32 playerFlags[PLAYER_MAX];
@@ -28,7 +28,7 @@ typedef struct {
     int32 seconds;
     int32 unused1;
     Animator animator;
-} EntityCompetition;
+};
 
 // Object Struct
 extern ObjectCompetition *Competition;

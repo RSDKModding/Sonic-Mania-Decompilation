@@ -16,7 +16,7 @@ typedef enum {
 }SaveGameStates;
 
 // Entity Class
-typedef struct {
+struct EntitySaveGame {
     RSDK_ENTITY
     int32 saveState;
     int32 characterID;
@@ -40,10 +40,10 @@ typedef struct {
     int32 stock;
     int32 playerID; // encore playerID
 #endif
-} EntitySaveGame;
+};
 
 // Object Class
-typedef struct {
+struct ObjectSaveGame {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
 #endif
@@ -53,7 +53,7 @@ typedef struct {
     void (*saveCallback)(bool32 success);
     EntitySaveGame *saveRAM;
     int32 unused1;
-} ObjectSaveGame;
+};
 
 extern ObjectSaveGame *SaveGame;
 

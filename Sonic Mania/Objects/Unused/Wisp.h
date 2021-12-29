@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWisp {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectWisp;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWisp {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 startPos;
     Animator bodyAnimator;
     Animator wingAnimator;
-} EntityWisp;
+};
 
 // Object Entity
 extern ObjectWisp *Wisp;

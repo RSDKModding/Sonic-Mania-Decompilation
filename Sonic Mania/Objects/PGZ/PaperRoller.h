@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPaperRoller {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPaper;
     uint32 colours[64];
-} ObjectPaperRoller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPaperRoller {
     RSDK_ENTITY
     int32 length;
     Vector2 startPos;
@@ -25,7 +25,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator1;
     Animator animator2;
-} EntityPaperRoller;
+};
 
 // Object Struct
 extern ObjectPaperRoller *PaperRoller;

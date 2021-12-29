@@ -5,15 +5,15 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectOOZ2Outro {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGlug;
     uint16 sfxSubLaunch;
-} ObjectOOZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOOZ2Outro {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -29,7 +29,7 @@ typedef struct {
     TileLayer *moveLayer;
     EntityEggPrison *prisonPtr;
     Vector2 prisonPos;
-} EntityOOZ2Outro;
+};
 
 // Object Struct
 extern ObjectOOZ2Outro *OOZ2Outro;

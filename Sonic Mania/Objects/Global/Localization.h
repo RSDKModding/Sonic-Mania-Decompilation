@@ -111,18 +111,18 @@ typedef enum {
 } GameStrings;
 
 // Object Class
-typedef struct {
+struct ObjectLocalization {
     RSDK_OBJECT
     TextInfo text;
     TextInfo strings[STR_STRING_COUNT];
     bool32 loaded;
     uint8 language;
-} ObjectLocalization;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLocalization {
 	RSDK_ENTITY
-} EntityLocalization;
+};
 
 // Object Struct
 extern ObjectLocalization *Localization;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpringboard {
     RSDK_OBJECT
     //Unused here, was used in S2' 13 for getting the 'force' from propertyValue, mania just uses an editable var
     TABLE(int32 forces[3], { -0x40000, -0xA0000, -0x80000 });
@@ -16,16 +16,16 @@ typedef struct {
     TABLE(int32 heightsFlat[28], { 8, 9, 10, 11, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 14, 14, 15, 15, 16, 16, 16, 16, 15, 15, 14, 14, 13, 13 });
     uint16 aniFrames;
     uint16 sfxSpring;
-} ObjectSpringboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpringboard {
     RSDK_ENTITY
     int32 force;
     int32 bounceDelay; // bounceDelay goes unused here, though it was used in S2 '13
     uint8 playerBits;
     Animator animator;
-} EntitySpringboard;
+};
 
 // Object Struct
 extern ObjectSpringboard *Springboard;

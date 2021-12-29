@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGrabber {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxDestroy;
-} ObjectGrabber;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGrabber {
     RSDK_ENTITY
     StateMachine(state);
     Animator bodyAnimator;
@@ -30,7 +30,7 @@ typedef struct {
     uint8 startDir;
     int32 turnTimer;
     int32 timer;
-} EntityGrabber;
+};
 
 // Object Struct
 extern ObjectGrabber *Grabber;

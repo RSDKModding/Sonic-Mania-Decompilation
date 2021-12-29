@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoBean {
     RSDK_OBJECT
     TABLE(int32 fallDelays[5], { 16, 12, 8, 4, 2 });
     Hitbox hitbox;
@@ -22,10 +22,10 @@ typedef struct {
     uint16 chainFrames[6];
     uint16 sfxJunk;
     uint16 sfxFall;
-} ObjectPuyoBean;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoBean {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
@@ -66,7 +66,7 @@ typedef struct {
     int32 touchRight;
     int32 touchLeft;
 #endif
-} EntityPuyoBean;
+};
 
 // Object Struct
 extern ObjectPuyoBean *PuyoBean;

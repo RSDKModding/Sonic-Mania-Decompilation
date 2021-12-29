@@ -5,13 +5,13 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUIRankButton {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIRankButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIRankButton {
     MANIA_UI_ITEM_BASE
     bool32 showsName;
     LeaderboardEntry *leaderboardEntry;
@@ -41,7 +41,7 @@ typedef struct {
     Animator replayIconAnimator;
     Animator rankingAnimator;
     uint16 textFrames;
-} EntityUIRankButton;
+};
 
 // Object Struct
 extern ObjectUIRankButton *UIRankButton;

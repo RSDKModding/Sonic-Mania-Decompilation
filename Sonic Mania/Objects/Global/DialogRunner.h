@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectDialogRunner {
     RSDK_OBJECT
     int32 authForbiddenFlag;
     bool32 signoutFlag;
@@ -15,10 +15,10 @@ typedef struct {
     void *entityPtr;
     int32 unused3;
     int32 unused4;
-} ObjectDialogRunner;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDialogRunner {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -33,7 +33,7 @@ typedef struct {
     int32 unused8;
     int32 status;
     bool32 useGenericText;
-} EntityDialogRunner;
+};
 
 // Object Struct
 extern ObjectDialogRunner *DialogRunner;

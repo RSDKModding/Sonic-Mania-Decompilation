@@ -6,14 +6,14 @@
 typedef enum { LRZCONVSWITCH_RIGHT, LRZCONVSWITCH_LEFT } LRZConvSwitchCalibrateModes;
 
 // Object Class
-typedef struct {
+struct ObjectLRZConvSwitch {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxClack;
-} ObjectLRZConvSwitch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZConvSwitch {
     RSDK_ENTITY
     StateMachine(state);
     uint8 calibration;
@@ -26,7 +26,7 @@ typedef struct {
     int32 field_94;
     int32 field_98;
     Animator animator;
-} EntityLRZConvSwitch;
+};
 
 // Object Struct
 extern ObjectLRZConvSwitch *LRZConvSwitch;

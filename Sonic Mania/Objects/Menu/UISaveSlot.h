@@ -9,13 +9,13 @@ typedef enum {
 }UISaveSlotTypes;
 
 // Object Class
-typedef struct {
+struct ObjectUISaveSlot {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUISaveSlot;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUISaveSlot {
     MANIA_UI_ITEM_BASE
     bool32 isNewSave;
 #if RETRO_USE_PLUS
@@ -70,7 +70,7 @@ typedef struct {
     Animator saveStatusAnimator;
     Animator numbersAnimator;
     uint16 textFrames;
-} EntityUISaveSlot;
+};
 
 // Object Struct
 extern ObjectUISaveSlot *UISaveSlot;

@@ -5,12 +5,12 @@
 
 
 // Object Class
-typedef struct {
+struct ObjectUIButton {
 	RSDK_OBJECT
-} ObjectUIButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIButton {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 listID;
@@ -38,7 +38,7 @@ typedef struct {
     uint16 textFrames;
     int32 startListID;
     int32 startFrameID;
-} EntityUIButton;
+};
 
 // Object Struct
 extern ObjectUIButton *UIButton;

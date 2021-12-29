@@ -26,15 +26,15 @@ typedef enum {
 } TransportTubeDirMasks;
 
 // Object Class
-typedef struct {
+struct ObjectTransportTube {
     RSDK_OBJECT
     int32 nextSlot[4];
     uint16 aniFrames;
     uint16 sfxTravel;
-} ObjectTransportTube;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTransportTube {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -45,7 +45,7 @@ typedef struct {
     int32 playerTimers[4];
     EntityPlayer *players[4];
     Animator animator;
-} EntityTransportTube;
+};
 
 // Object Struct
 extern ObjectTransportTube *TransportTube;

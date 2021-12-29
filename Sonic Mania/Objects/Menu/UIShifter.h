@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUIShifter {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
-} ObjectUIShifter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIShifter {
     RSDK_ENTITY
     Vector2 shift;
     Vector2 lastButtonShift;
@@ -20,7 +20,7 @@ typedef struct {
     int32 unused;
     Vector2 startPos;
     EntityUIControl *parent;
-} EntityUIShifter;
+};
 
 // Object Struct
 extern ObjectUIShifter *UIShifter;

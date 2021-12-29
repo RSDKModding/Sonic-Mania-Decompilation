@@ -5,15 +5,15 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectSchrodingersCapsule {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion2;
     uint16 sfxExplosion3;
-} ObjectSchrodingersCapsule;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySchrodingersCapsule {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -29,7 +29,7 @@ typedef struct {
     Animator buttonAnimator;
     Animator mightyAnimator;
     Animator rayAnimator;
-} EntitySchrodingersCapsule;
+};
 
 // Object Struct
 extern ObjectSchrodingersCapsule *SchrodingersCapsule;

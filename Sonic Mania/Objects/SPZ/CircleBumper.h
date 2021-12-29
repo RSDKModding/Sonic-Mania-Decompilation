@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCircleBumper {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBumper;
-} ObjectCircleBumper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCircleBumper {
     RSDK_ENTITY
     StateMachine(stateCollide);
     StateMachine(stateMove);
@@ -23,7 +23,7 @@ typedef struct {
     Vector2 originPos;
     Animator animator;
     int32 field_94;
-} EntityCircleBumper;
+};
 
 // Object Struct
 extern ObjectCircleBumper *CircleBumper;
