@@ -13,17 +13,15 @@ void ERZStart_Update(void)
 {
     RSDK_THIS(ERZStart);
 
-    void *states[] = { ERZStart_CutsceneState_Unknown1,   ERZStart_CutsceneState_Unknown2,  ERZStart_CutsceneState_Unknown3,
-                       ERZStart_CutsceneState_Unknown4,   ERZStart_CutsceneState_Unknown5,  ERZStart_CutsceneState_Unknown6,
-                       ERZStart_CutsceneState_Unknown7,   ERZStart_CutsceneState_Unknown8,  ERZStart_CutsceneState_Unknown9,
-                       ERZStart_CutsceneState_Unknown10,  ERZStart_CutsceneState_Unknown11, ERZStart_CutsceneState_PlayerTransform,
-                       ERZStart_CutsceneState_StartFight, ERZStart_CutsceneState_Fight,     NULL };
-
     if (!self->activated) {
         foreach_active(Player, player)
         {
             if (!player->sidekick && Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                CutsceneSeq_StartSequence((Entity *)self, states);
+                CutsceneSeq_StartSequence(self, ERZStart_Cutscene_Unknown1, ERZStart_Cutscene_Unknown2, ERZStart_Cutscene_Unknown3,
+                                          ERZStart_Cutscene_Unknown4, ERZStart_Cutscene_Unknown5, ERZStart_Cutscene_Unknown6,
+                                          ERZStart_Cutscene_Unknown7, ERZStart_Cutscene_Unknown8, ERZStart_Cutscene_Unknown9,
+                                          ERZStart_Cutscene_Unknown10, ERZStart_Cutscene_Unknown11, ERZStart_Cutscene_PlayerTransform,
+                                          ERZStart_Cutscene_StartFight, ERZStart_Cutscene_Fight, StateMachine_None);
                 self->activated = true;
             }
         }
@@ -118,7 +116,7 @@ void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, void *p, int posY)
     player->position.x = 0x300000;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
     player->position.x += (player->position.x - player->position.x) >> 3;
-    player->position.y += (posY + 0xA00 * RSDK.Sin256(2 * (seq->timer - seq->storedValue2 + 64)) - player->position.y) >> 3;
+    player->position.y += (posY + 0xA00 * RSDK.Sin256(2 * (seq->timer - seq->storedTimer + 64)) - player->position.y) >> 3;
     player->state = Player_State_None;
 
     for (int e = 0; e < 7; ++e) {
@@ -128,7 +126,7 @@ void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, void *p, int posY)
     }
 }
 
-bool32 ERZStart_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -190,7 +188,7 @@ bool32 ERZStart_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -213,7 +211,7 @@ bool32 ERZStart_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -230,7 +228,7 @@ bool32 ERZStart_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -245,10 +243,10 @@ bool32 ERZStart_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         Zone->playerBoundActiveL[0] = false;
         Zone->playerBoundActiveR[0] = false;
         Zone->playerBoundActiveT[0] = false;
-        host->storedValue2          = camera->position.x;
+        host->storedTimer          = camera->position.x;
     }
 
-    int pos = host->storedValue2;
+    int pos = host->storedTimer;
     if (king->position.x - 0x400000 > pos)
         pos = king->position.x - 0x400000;
     camera->position.x = pos;
@@ -259,7 +257,7 @@ bool32 ERZStart_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown5(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -270,8 +268,8 @@ bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     EntityPhantomKing *king = (EntityPhantomKing *)ERZStart->king;
 
     if (!host->timer) {
-        host->storedValue2 = ruby->position.x;
-        host->storedValue1 = ruby->position.y;
+        host->storedTimer = ruby->position.x;
+        host->storedValue = ruby->position.y;
     }
 
     if (host->timer > 0) {
@@ -287,7 +285,7 @@ bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
         if (host->timer << 16 < 0x3C0000)
             percent = (host->timer << 16) / 60;
 
-        Vector2 pos = MathHelpers_GetBezierPoint(percent, host->storedValue2, host->storedValue1, host->storedValue2, host->storedValue1 - 0x400000,
+        Vector2 pos = MathHelpers_GetBezierPoint(percent, host->storedTimer, host->storedValue, host->storedTimer, host->storedValue - 0x400000,
                                                  king->rubyPos.x, king->rubyPos.y - 0x400000, king->rubyPos.x, king->rubyPos.y);
 
         ruby->position.x += (pos.x - ruby->position.x) >> 2;
@@ -296,7 +294,7 @@ bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown6(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown6(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -311,7 +309,7 @@ bool32 ERZStart_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     return host->timer == 120;
 }
 
-bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown7(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -332,8 +330,8 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     EntityPhantomKing *kingArm2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
     if (!host->timer) {
-        host->storedValue2         = camera->position.x;
-        host->storedValue1         = camera->position.y;
+        host->storedTimer         = camera->position.x;
+        host->storedValue         = camera->position.y;
         king->originPos.y          = king->position.y;
         king->originPos.x          = king->position.x;
         king->state                = PhantomKing_State_Unknown7;
@@ -385,7 +383,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     eggmanArm2->animator10.speed   = 0;
     eggmanArm2->animator9.frameID  = 0;
 
-    camera->position.x = maxVal(eggman->originPos.x + 0x200000, host->storedValue2);
+    camera->position.x = maxVal(eggman->originPos.x + 0x200000, host->storedTimer);
 
     kingArm1->state = PhantomKing_StateArm1_Unknown3;
     kingArm2->state = PhantomKing_StateArm1_Unknown3;
@@ -417,7 +415,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown8(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -464,7 +462,7 @@ bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown9(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown9(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -511,7 +509,7 @@ bool32 ERZStart_CutsceneState_Unknown9(EntityCutsceneSeq *host)
     return fxRuby->fadeWhite == 0;
 }
 
-bool32 ERZStart_CutsceneState_Unknown10(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown10(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -523,17 +521,17 @@ bool32 ERZStart_CutsceneState_Unknown10(EntityCutsceneSeq *host)
     if (!host->values[0]) {
         if (camera->position.x == ScreenInfo->centerX << 16) {
             host->values[0]    = 1;
-            host->storedValue2 = host->timer;
+            host->storedTimer = host->timer;
         }
     }
-    else if (host->timer - host->storedValue2 == 60) {
+    else if (host->timer - host->storedTimer == 60) {
         Music_TransitionTrack(TRACK_ERZBOSS, 0.0215);
         return true;
     }
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Unknown11(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Unknown11(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -555,7 +553,7 @@ bool32 ERZStart_CutsceneState_Unknown11(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_PlayerTransform(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -591,7 +589,7 @@ bool32 ERZStart_CutsceneState_PlayerTransform(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_StartFight(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
 {
     RSDK_THIS(ERZStart);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -637,7 +635,7 @@ bool32 ERZStart_CutsceneState_StartFight(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZStart_CutsceneState_Fight(EntityCutsceneSeq *host)
+bool32 ERZStart_Cutscene_Fight(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityKleptoMobile *eggman = (EntityKleptoMobile *)ERZStart->eggman;

@@ -32,9 +32,9 @@ void PSZ2Intro_EditorLoad(void);
 void PSZ2Intro_Serialize(void);
 
 // Extra Entity Functions
-bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 PSZ2Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host);
 
 #endif //!OBJ_PSZ2INTRO_H

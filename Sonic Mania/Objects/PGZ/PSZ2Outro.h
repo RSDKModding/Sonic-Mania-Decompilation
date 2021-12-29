@@ -27,17 +27,19 @@ void PSZ2Outro_StaticUpdate(void);
 void PSZ2Outro_Draw(void);
 void PSZ2Outro_Create(void *data);
 void PSZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PSZ2Outro_EditorDraw(void);
 void PSZ2Outro_EditorLoad(void);
+#endif
 void PSZ2Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 PSZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 PSZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 PSZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
-bool32 PSZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host);
-bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host);
-bool32 PSZ2Outro_CutsceneState_LoadNextScene(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_SetupCameraMove(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_HandleCameraMovement(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_WalkIntoPlace(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_EnterRuby(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_RubyActivated(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host);
+bool32 PSZ2Outro_Cutscene_LoadSSZ1(EntityCutsceneSeq *host);
 
 #endif //! OBJ_PSZ2OUTRO_H

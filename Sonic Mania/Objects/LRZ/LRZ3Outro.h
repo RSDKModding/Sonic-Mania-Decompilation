@@ -33,8 +33,10 @@ void LRZ3Outro_StaticUpdate(void);
 void LRZ3Outro_Draw(void);
 void LRZ3Outro_Create(void* data);
 void LRZ3Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ3Outro_EditorDraw(void);
 void LRZ3Outro_EditorLoad(void);
+#endif
 void LRZ3Outro_Serialize(void);
 
 // Extra Entity Functions
@@ -46,8 +48,8 @@ void LRZ3Outro_State_Unknown3(void);
 
 void LRZ3Outro_StageFinishCB(void);
 
-bool32 LRZ3Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ3Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host);
+bool32 LRZ3Outro_Cutscene_LightUpLittlePlanet(EntityCutsceneSeq *host);
 
 #endif
 

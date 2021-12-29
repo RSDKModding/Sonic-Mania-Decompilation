@@ -34,9 +34,8 @@ void FBZ2Outro_StageLoad(void) {}
 
 void FBZ2Outro_StartCutscene(EntityFBZ2Outro *outro)
 {
-    void *states[] = { FBZ2Outro_CutsceneState_Unknown1, FBZ2Outro_CutsceneState_Unknown2, FBZ2Outro_CutsceneState_Unknown3, NULL };
-
-    CutsceneSeq_StartSequence((Entity *)outro, states);
+    CutsceneSeq_StartSequence(outro, FBZ2Outro_Cutscene_SetupGliders, FBZ2Outro_Cutscene_RunToGlider, FBZ2Outro_Cutscene_GlideAway,
+                              StateMachine_None);
 
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
@@ -44,14 +43,14 @@ void FBZ2Outro_StartCutscene(EntityFBZ2Outro *outro)
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-bool32 FBZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 FBZ2Outro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
 {
     CutsceneSeq_LockAllPlayerControl();
 
     foreach_active(Player, player)
     {
         player->state      = Player_State_Ground;
-        player->stateInput = 0;
+        player->stateInput = StateMachine_None;
         player->right      = true;
     }
 
@@ -59,7 +58,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     size.x -= 128;
     for (int32 p = 0; p < Player->playerCount; ++p) {
-        Zone->cameraBoundsR[p]     = size.x;
+        Zone->cameraBoundsR[p]      = size.x;
         Zone->playerBoundActiveR[p] = false;
     }
 
@@ -67,7 +66,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 FBZ2Outro_Cutscene_RunToGlider(EntityCutsceneSeq *host)
 {
     foreach_active(Player, player)
     {
@@ -114,7 +113,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 FBZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 

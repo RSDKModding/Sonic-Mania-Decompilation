@@ -34,9 +34,9 @@ void FBZ2Outro_Serialize(void);
 // Extra Entity Functions
 void FBZ2Outro_StartCutscene(EntityFBZ2Outro *outro);
 
-bool32 FBZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 FBZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 FBZ2Outro_Cutscene_SetupGliders(EntityCutsceneSeq *host);
+bool32 FBZ2Outro_Cutscene_RunToGlider(EntityCutsceneSeq *host);
+bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host);
 
 #endif
 

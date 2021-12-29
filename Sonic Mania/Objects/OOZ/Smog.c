@@ -12,9 +12,9 @@ ObjectSmog *Smog;
 void Smog_Update(void)
 {
     RSDK_THIS(Smog);
-    if (Smog->field_4 == 1) {
+    if (Smog->forceEnabled) {
         OOZSetup->fadeTimer = 0;
-        self->alpha     = 128;
+        self->alpha         = 128;
         RSDK.SetLimitedFade(0, 1, 2, 224, 0, 255);
     }
     else {

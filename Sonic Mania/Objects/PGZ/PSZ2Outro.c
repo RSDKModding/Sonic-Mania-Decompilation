@@ -12,12 +12,10 @@ ObjectPSZ2Outro *PSZ2Outro;
 void PSZ2Outro_Update(void)
 {
     RSDK_THIS(PSZ2Outro);
-    void *states[] = { PSZ2Outro_CutsceneState_Unknown1,      PSZ2Outro_CutsceneState_Unknown2,
-                       PSZ2Outro_CutsceneState_Unknown3,      PSZ2Outro_CutsceneState_Unknown4,
-                       PSZ2Outro_CutsceneState_Unknown5,      PSZ2Outro_CutsceneState_Unknown6,
-                       PSZ2Outro_CutsceneState_LoadNextScene, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, PSZ2Outro_Cutscene_SetupCameraMove, PSZ2Outro_Cutscene_HandleCameraMovement, PSZ2Outro_Cutscene_WalkIntoPlace,
+                              PSZ2Outro_Cutscene_EnterRuby, PSZ2Outro_Cutscene_RubyActivated, PSZ2Outro_Cutscene_RubyWarp,
+                              PSZ2Outro_Cutscene_LoadSSZ1, StateMachine_None);
 #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
@@ -45,7 +43,7 @@ void PSZ2Outro_Create(void *data)
 
 void PSZ2Outro_StageLoad(void) {}
 
-bool32 PSZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_SetupCameraMove(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
     EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
@@ -74,7 +72,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 PSZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_HandleCameraMovement(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
     EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
@@ -94,7 +92,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_WalkIntoPlace(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
     EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
@@ -133,7 +131,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_EnterRuby(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -154,7 +152,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_RubyActivated(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
     EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
@@ -168,7 +166,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
     EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
@@ -191,27 +189,27 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (fxRuby->fullyExpanded) {
-            if (host->storedValue2) {
-                if (host->timer == host->storedValue2 + 48) {
+            if (host->storedTimer) {
+                if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
                     fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->storedValue2 + 180) {
+                else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
                     fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedValue2    = host->timer;
+                    host->storedTimer    = host->timer;
                     host->values[0] = 1;
                 }
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
-            if (host->timer >= host->storedValue2 + 52) {
+            if (host->timer >= host->storedTimer + 52) {
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x40) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
@@ -221,7 +219,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
                     int32 valY =
-                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) + (eggman->position.y - 0x200000) - player->position.y) >> 3;
+                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + (eggman->position.y - 0x200000) - player->position.y) >> 3;
 
                     player->position.x += valX;
                     player->position.y += valY;
@@ -235,7 +233,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer == host->storedValue2 + 150)
+                if (host->timer == host->storedTimer + 150)
                     return true;
             }
             else {
@@ -249,7 +247,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Outro_CutsceneState_LoadNextScene(EntityCutsceneSeq *host)
+bool32 PSZ2Outro_Cutscene_LoadSSZ1(EntityCutsceneSeq *host)
 {
     if (host->timer == 16) {
         RSDK.LoadScene();
@@ -258,8 +256,10 @@ bool32 PSZ2Outro_CutsceneState_LoadNextScene(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZ2Outro_EditorDraw(void) {}
 
 void PSZ2Outro_EditorLoad(void) {}
+#endif
 
 void PSZ2Outro_Serialize(void) { RSDK_EDITABLE_VAR(PSZ2Outro, VAR_VECTOR2, size); }

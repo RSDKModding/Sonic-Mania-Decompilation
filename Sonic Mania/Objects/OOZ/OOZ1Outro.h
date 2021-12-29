@@ -43,9 +43,9 @@ void OOZ1Outro_EditorLoad(void);
 void OOZ1Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host);
-bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host);
-bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host);
-bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_FallIntoAct2(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_BeginAct(EntityCutsceneSeq *host);
 
 #endif //!OBJ_OOZ1OUTRO_H

@@ -14,13 +14,12 @@ void TMZ1Outro_Update(void)
     RSDK_THIS(TMZ1Outro);
 
     if (Zone->actID) {
-        void *states[] = { TMZ1Outro_Cutscene2_State1, NULL };
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, TMZ1Outro_CutsceneAct2_BeginAct2, StateMachine_None);
         RSDK.SetLimitedFade(0, 5, 4, self->alpha, 128, 256);
     }
     else {
-        void *states[] = { TMZ1Outro_Cutscene1_State1, TMZ1Outro_Cutscene1_State2, TMZ1Outro_Cutscene1_State3, TMZ1Outro_Cutscene1_State4, NULL };
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, TMZ1Outro_CutsceneAct1_SetupPlayers, TMZ1Outro_CutsceneAct1_ElevatorRide,
+                                  TMZ1Outro_CutsceneAct1_HeadForEntrance, TMZ1Outro_CutsceneAct1_EnterMonarch, StateMachine_None);
     }
 #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
@@ -46,7 +45,7 @@ void TMZ1Outro_Create(void *data)
 
 void TMZ1Outro_StageLoad(void) {}
 
-bool32 TMZ1Outro_Cutscene1_State1(EntityCutsceneSeq *host)
+bool32 TMZ1Outro_CutsceneAct1_SetupPlayers(EntityCutsceneSeq *host)
 {
     CutsceneSeq_LockAllPlayerControl();
 
@@ -59,7 +58,7 @@ bool32 TMZ1Outro_Cutscene1_State1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 TMZ1Outro_Cutscene1_State2(EntityCutsceneSeq *host)
+bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
         CrimsonEye_SetArrowDir(CE_ARROW_UP);
@@ -86,18 +85,22 @@ bool32 TMZ1Outro_Cutscene1_State2(EntityCutsceneSeq *host)
         }
         else if (!CrimsonEye->scrollPos) {
             Camera_ShakeScreen(0, 0, 6);
-            RSDK.PlaySfx(CrimsonEye->sfxHullClose, false, 255);
+            RSDK.PlaySfx(CrimsonEye->sfxHullClose, false, 0xFF);
             return true;
         }
     }
 
-    foreach_active(ItemBox, itembox) { itembox->position.y -= CrimsonEye->scrollLimit; }
+    foreach_active(ItemBox, itembox) 
+    {
+        LogHelpers_Print("ItemBox: %d", RSDK.GetEntityID(itembox));
+        itembox->position.y -= CrimsonEye->scrollLimit; 
+    }
     foreach_active(SignPost, signPost) { signPost->position.y -= CrimsonEye->scrollLimit; }
 
     return false;
 }
 
-bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
+bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
 
@@ -135,7 +138,7 @@ bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 TMZ1Outro_Cutscene1_State4(EntityCutsceneSeq *host)
+bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
     self->alpha += 4;
@@ -154,18 +157,18 @@ bool32 TMZ1Outro_Cutscene1_State4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host)
+bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
 
     self->alpha += 4;
     RSDK.SetLimitedFade(0, 5, 4, self->alpha, 128, 256);
     if (self->alpha >= 0x100) {
-        foreach_all(TitleCard, tCard)
+        foreach_all(TitleCard, titleCard)
         {
-            tCard->active              = ACTIVE_NORMAL;
-            tCard->state               = TitleCard_State_Initial;
-            tCard->stateDraw           = TitleCard_Draw_SlideIn;
+            titleCard->active              = ACTIVE_NORMAL;
+            titleCard->state               = TitleCard_State_Initial;
+            titleCard->stateDraw           = TitleCard_Draw_SlideIn;
             globals->suppressAutoMusic = false;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;

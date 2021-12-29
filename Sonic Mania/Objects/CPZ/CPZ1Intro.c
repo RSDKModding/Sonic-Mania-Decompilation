@@ -11,10 +11,6 @@ ObjectCPZ1Intro *CPZ1Intro;
 
 void CPZ1Intro_Update(void)
 {
-    void *states[] = {
-        CPZ1Intro_Cutscene_RubyWarp, CPZ1Intro_Cutscene_PostWarpDrop, CPZ1Intro_Cutscene_Waiting, CPZ1Intro_Cutscene_ChemicalDrop, CPZ1Intro_Cutscene_PlayerChemicalReact, CPZ1Intro_Cutscene_ReadyStage, NULL
-    };
-
     RSDK_THIS(CPZ1Intro);
     if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
@@ -23,7 +19,9 @@ void CPZ1Intro_Update(void)
         }
         else {
             self->activated = true;
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, CPZ1Intro_Cutscene_RubyWarp, CPZ1Intro_Cutscene_PostWarpDrop, CPZ1Intro_Cutscene_Waiting,
+                                      CPZ1Intro_Cutscene_ChemicalDrop, CPZ1Intro_Cutscene_PlayerChemicalReact, CPZ1Intro_Cutscene_ReadyStage,
+                                      StateMachine_None);
 #if RETRO_USE_PLUS
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             if (seq->objectID)
@@ -82,7 +80,7 @@ void CPZ1Intro_HandleRubyHover(Entity *player1, Entity *cutSeq, Entity *player2,
             break;
 
         int32 valX = (player->position.x - player->position.x) >> 3;
-        int32 valY = (targetY + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->storedValue2)) - player->position.y) >> 3;
+        int32 valY = (targetY + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->storedTimer)) - player->position.y) >> 3;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
         player->position.x += valX;
         player->position.y += valY;
@@ -156,7 +154,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(void *h)
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     RSDK_GET_PLAYER(player1, player2, camera);
 
-    Entity *ent          = host->cutsceneCurEntity;
+    Entity *ent          = host->activeEntity;
     EntityFXRuby *fxRuby = (EntityFXRuby *)CPZ1Intro->fxRuby;
     if (!host->timer) {
         player1->camera = NULL;

@@ -13,29 +13,22 @@ void SSZ3Cutscene_Update(void)
 {
     RSDK_THIS(SSZ3Cutscene);
 
-    void *statesIntro[] = { SSZ3Cutscene_IntroState_Unknown1, SSZ3Cutscene_IntroState_Unknown2, NULL };
 #if RETRO_USE_PLUS
-    void *statesOutro[] = { SSZ3Cutscene_OutroState_Unknown1,
-                        SSZ3Cutscene_OutroState_Unknown2,
-                        SSZ3Cutscene_OutroState_Unknown3,
-                        SSZ3Cutscene_OutroState_Unknown4,
-                        SSZ3Cutscene_OutroState_Unknown5,
-                        SSZ3Cutscene_OutroState_LoadNextScene,
-                        NULL };
-
     if (!self->flag) {
-        CutsceneSeq_StartSequence((Entity *)self, statesIntro);
+        CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
         self->active = ACTIVE_NEVER;
     }
     else {
-        CutsceneSeq_StartSequence((Entity *)self, statesOutro);
+        CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneOutro_SetupOutro, SSZ3Cutscene_CutsceneOutro_FollowRuby,
+                                  SSZ3Cutscene_CutsceneOutro_EnterRuby, SSZ3Cutscene_CutsceneOutro_RubyActivate, SSZ3Cutscene_CutsceneOutro_RubyWarp, SSZ3Cutscene_CutsceneOutro_LoadHCZ1,
+                                  StateMachine_None);
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         self->active = ACTIVE_NEVER;
     }
 #else
-    CutsceneSeq_StartSequence((Entity *)self, statesIntro);
+    CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
     self->active = ACTIVE_NEVER;
 #endif
 }
@@ -72,7 +65,7 @@ void SSZ3Cutscene_HandleRubyFX(void)
 }
 #endif
 
-bool32 SSZ3Cutscene_IntroState_Unknown1(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneIntro_EnterStageLeft(EntityCutsceneSeq *host)
 {
 #if RETRO_USE_PLUS
     if (!host->timer) {
@@ -101,7 +94,7 @@ bool32 SSZ3Cutscene_IntroState_Unknown1(EntityCutsceneSeq *host)
 
     return false;
 }
-bool32 SSZ3Cutscene_IntroState_Unknown2(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneIntro_PlayerRunLeft(EntityCutsceneSeq *host)
 {
     if (host->timer >= 40) {
         foreach_active(Player, player)
@@ -115,7 +108,7 @@ bool32 SSZ3Cutscene_IntroState_Unknown2(EntityCutsceneSeq *host)
 }
 
 #if RETRO_USE_PLUS
-bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
@@ -160,12 +153,12 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
         ruby->startPos.y = 0x1A00000;
         ruby->position   = ruby->startPos;
         ruby->drawOrder  = Zone->drawOrderLow;
-        self->ruby     = ruby;
+        self->ruby       = ruby;
     }
 
     return true;
 }
-bool32 SSZ3Cutscene_OutroState_Unknown2(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneOutro_FollowRuby(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
     EntityPhantomRuby *ruby = self->ruby;
@@ -178,7 +171,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown2(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ3Cutscene_OutroState_Unknown3(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneOutro_EnterRuby(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
@@ -194,7 +187,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown3(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneOutro_RubyActivate(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
@@ -250,7 +243,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
 
     return false;
 }
-bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player1);
@@ -278,28 +271,28 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (fxRuby->fullyExpanded) {
-            if (host->storedValue2) {
-                if (host->timer == host->storedValue2 + 48) {
+            if (host->storedTimer) {
+                if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
                     fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->storedValue2 + 180) {
+                else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
                     fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedValue2    = host->timer;
+                    host->storedTimer    = host->timer;
                     host->values[0] = 1;
                 }
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
 
-            if (host->timer >= host->storedValue2 + 52) {
+            if (host->timer >= host->storedTimer + 52) {
                 EntityPlayer *players[2];
                 players[0] = player1;
                 players[1] = player2;
@@ -311,9 +304,9 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
 
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                     player->position.x +=
-                        ((0xA00 * RSDK.Cos256(2 * (angle + host->timer - host->storedValue2)) + player->position.x) - player->position.x) >> 3;
+                        ((0xA00 * RSDK.Cos256(2 * (angle + host->timer - host->storedTimer)) + player->position.x) - player->position.x) >> 3;
                     player->position.y +=
-                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+                        (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
                     player->state          = Player_State_None;
                     player->tileCollisions = false;
                     player->onGround       = false;
@@ -324,7 +317,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer == host->storedValue2 + 150)
+                if (host->timer == host->storedTimer + 150)
                     return true;
             }
             else {
@@ -337,7 +330,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ3Cutscene_OutroState_LoadNextScene(EntityCutsceneSeq *host)
+bool32 SSZ3Cutscene_CutsceneOutro_LoadHCZ1(EntityCutsceneSeq *host)
 {
     if (host->timer == 16) {
         RSDK.LoadScene();

@@ -13,14 +13,12 @@ ObjectGHZCutsceneK *GHZCutsceneK;
 
 void GHZCutsceneK_Update(void)
 {
-    void *states[2] = { GHZCutsceneK_Cutscene_None, NULL };
-
     RSDK_THIS(GHZCutsceneK);
     if (!self->activated) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
-                CutsceneSeq_StartSequence((Entity *)self, states);
+                CutsceneSeq_StartSequence(self, GHZCutsceneK_Cutscene_None, StateMachine_None);
                 self->activated = true;
             }
         }

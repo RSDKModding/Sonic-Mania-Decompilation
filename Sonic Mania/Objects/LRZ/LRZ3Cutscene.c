@@ -9,12 +9,13 @@
 
 ObjectLRZ3Cutscene *LRZ3Cutscene;
 
+// This is the LRZ3 Intro
+
 void LRZ3Cutscene_Update(void)
 {
-    void *states[] = { LRZ3Cutscene_Unknown1, LRZ3Cutscene_Unknown2, NULL };
+    RSDK_THIS(LRZ3Cutscene);
 
-    RSDK_THIS(FBZMissile);
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, LRZ3Cutscene_Cutscene_FadeIn, LRZ3Cutscene_Cutscene_RunRight, StateMachine_None);
     self->active = ACTIVE_NEVER;
 }
 
@@ -26,11 +27,11 @@ void LRZ3Cutscene_Draw(void) {}
 
 void LRZ3Cutscene_Create(void *data)
 {
-    RSDK_THIS(FBZMissile);
+    RSDK_THIS(LRZ3Cutscene);
     self->active = ACTIVE_NORMAL;
 }
 
-bool32 LRZ3Cutscene_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ3Cutscene_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
     if (!host->timer) {
         foreach_active(Player, player)
@@ -64,7 +65,7 @@ bool32 LRZ3Cutscene_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ3Cutscene_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ3Cutscene_Cutscene_RunRight(EntityCutsceneSeq *host)
 {
     if (host->timer >= 60) {
         foreach_active(Player, player)

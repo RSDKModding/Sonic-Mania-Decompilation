@@ -51,46 +51,37 @@ void TMZ2Outro_SetupCutscene(void)
 #if RETRO_USE_PLUS
     if (globals->gameMode != MODE_ENCORE) {
 #endif
-        void *states[] = { TMZ2Outro_CutsceneState_SetupOutro,     TMZ2Outro_CutsceneState_WatchEggman,
-                           TMZ2Outro_CutsceneState_EggmanFall,     TMZ2Outro_CutsceneState_StartAlert,
-                           TMZ2Outro_CutsceneState_TimeToEscape,   TMZ2Outro_CutsceneState_HurryToCar,
-                           TMZ2Outro_CutsceneState_StartFadeOut,   TMZ2Outro_CutsceneState_FadeOut,
-                           TMZ2Outro_CutsceneState_FinishSequence, NULL };
-
-        CutsceneSeq_StartSequence((Entity*)self, states);
+        CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman, TMZ2Outro_Cutscene_EggmanFall,
+                                  TMZ2Outro_Cutscene_StartAlert, TMZ2Outro_Cutscene_TimeToEscape, TMZ2Outro_Cutscene_HurryToCar,
+                                  TMZ2Outro_Cutscene_StartFadeOut, TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
 #if RETRO_USE_PLUS
     }
     else {
         if (SaveGame->saveRAM->chaosEmeralds == 0x7F) {
-            void *states[] = { TMZ2Outro_CutsceneState_SetupOutro,       TMZ2Outro_CutsceneState_WatchEggman,    TMZ2Outro_CutsceneState_EggmanFall,
-                               TMZ2Outro_CutsceneState_StartRubyRampage, TMZ2Outro_CutsceneState_OuttaHere,      TMZ2Outro_CutsceneState_TeamEscape,
-                               TMZ2Outro_CutsceneState_FadeOut,          TMZ2Outro_CutsceneState_FinishSequence, NULL };
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman,
+                                      TMZ2Outro_Cutscene_EggmanFall, TMZ2Outro_Cutscene_StartRubyRampage, TMZ2Outro_Cutscene_OuttaHere,
+                                      TMZ2Outro_Cutscene_TeamEscape, TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
         }
         else {
-            void *states[] = {
-                TMZ2Outro_CutsceneState_SetupOutro,       TMZ2Outro_CutsceneState_WatchEggman,    TMZ2Outro_CutsceneState_EggmanFall,
-                TMZ2Outro_CutsceneState_StartRubyRampage, TMZ2Outro_CutsceneState_Panic,          TMZ2Outro_CutsceneState_OuttaHere_BadEnd,
-                TMZ2Outro_CutsceneState_FadeOut,          TMZ2Outro_CutsceneState_FinishSequence, NULL
-            };
-
             self->heavyKing = CutsceneHBH_GetEntity(HBH_KINGTMZ2);
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, TMZ2Outro_Cutscene_SetupOutro, TMZ2Outro_Cutscene_WatchEggman, TMZ2Outro_Cutscene_EggmanFall,
+                                      TMZ2Outro_Cutscene_StartRubyRampage, TMZ2Outro_Cutscene_Panic, TMZ2Outro_Cutscene_OuttaHere_BadEnd,
+                                      TMZ2Outro_Cutscene_FadeOut, TMZ2Outro_Cutscene_FinishSequence, StateMachine_None);
         }
         foreach_all(TMZFlames, flames) { destroyEntity(flames); }
     }
 #endif
 }
 
-bool32 TMZ2Outro_CutsceneState_SetupOutro(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host)
 {
     TMZ2Outro->playerID = globals->playerID;
 
     foreach_active(Player, player)
     {
-        player->stateInput = 0;
-        if (player->superState == 2)
-            player->superState = 3;
+        player->stateInput = StateMachine_None;
+        if (player->superState == SUPERSTATE_SUPER)
+            player->superState = SUPERSTATE_FADEOUT;
 
         CutsceneSeq_LockAllPlayerControl();
     }
@@ -105,7 +96,7 @@ bool32 TMZ2Outro_CutsceneState_SetupOutro(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
 {
     bool32 flag = true;
     foreach_active(Player, player)
@@ -173,7 +164,7 @@ void TMZ2Outro_PlayerStateInput_Escape(void)
     }
 }
 
-bool32 TMZ2Outro_CutsceneState_EggmanFall(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_EggmanFall(EntityCutsceneSeq *host)
 {
     bool32 flag = false;
     foreach_active(Eggman, eggman)
@@ -188,7 +179,7 @@ bool32 TMZ2Outro_CutsceneState_EggmanFall(EntityCutsceneSeq *host)
     return flag;
 }
 
-bool32 TMZ2Outro_CutsceneState_StartAlert(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
         RSDK.PlaySfx(TMZ2Outro->sfxAlarm, true, 255);
@@ -202,7 +193,7 @@ bool32 TMZ2Outro_CutsceneState_StartAlert(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 TMZ2Outro_CutsceneState_TimeToEscape(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_TimeToEscape(EntityCutsceneSeq *host)
 {
     RSDK.SetLimitedFade(0, 7, 1, (RSDK.Cos256(4 * host->timer) >> 1) + 128, 0, 256);
 
@@ -219,7 +210,7 @@ bool32 TMZ2Outro_CutsceneState_TimeToEscape(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_HurryToCar(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ2Outro);
 
@@ -250,7 +241,7 @@ bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 TMZ2Outro_CutsceneState_StartFadeOut(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ2Outro);
 
@@ -287,7 +278,7 @@ bool32 TMZ2Outro_CutsceneState_StartFadeOut(EntityCutsceneSeq *host)
 }
 
 #if RETRO_USE_PLUS
-bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
 {
     if (host->timer == 60) {
         foreach_active(PhantomRuby, ruby)
@@ -340,7 +331,7 @@ bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
 {
     if (host->timer == 90) {
         foreach_active(Eggman, eggman)
@@ -396,7 +387,7 @@ bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ2Outro);
 
@@ -463,7 +454,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
 {
     if (host->timer >= 120) {
         if (host->timer == 240) {
@@ -531,7 +522,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ2Outro);
 
@@ -624,12 +615,12 @@ bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host)
 }
 #endif
 
-bool32 TMZ2Outro_CutsceneState_FadeOut(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 {
     RSDK.StopSfx(TMZ2Outro->sfxAlarm);
     return host->timer == 180;
 }
-bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
+bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 {
     bool32 goodEndingFlag = false;
 #if RETRO_USE_PLUS

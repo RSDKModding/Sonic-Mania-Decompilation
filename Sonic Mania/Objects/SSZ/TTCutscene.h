@@ -37,10 +37,10 @@ void TTCutscene_StartCutscene(void);
 void TTCutscene_SkipCB(void);
 #endif
 
-bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host);
 
 #endif //!OBJ_TTCUTSCENE_H

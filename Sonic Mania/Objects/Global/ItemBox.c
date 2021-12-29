@@ -327,7 +327,7 @@ void ItemBox_State_Falling(void)
     else {
         RSDK.ProcessAnimation(&self->debrisAnimator);
         if (!self->debrisAnimator.frameID) {
-            self->timer                     = RSDK.Rand(1, 15);
+            self->timer                        = RSDK.Rand(1, 15);
             self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
         }
     }
@@ -359,7 +359,7 @@ void ItemBox_State_Conveyor(void)
     else {
         RSDK.ProcessAnimation(&self->debrisAnimator);
         if (!self->debrisAnimator.frameID) {
-            self->timer                     = RSDK.Rand(1, 15);
+            self->timer                        = RSDK.Rand(1, 15);
             self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
         }
     }
@@ -893,23 +893,21 @@ bool32 ItemBox_HandleFallingCollision(void)
     self->velocity.y += 0x3800;
     ItemBox_HandleObjectCollisions();
 
-    bool32 movingUp = self->velocity.y < 0;
-
-    if (movingUp
-        || (self->direction != FLIP_Y || self->boxAnimator.animationID != 1
-                ? !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
-                : !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
-        self->moveOffset.x += self->position.x;
-        self->moveOffset.y += self->position.y;
-        return false;
-    }
-    else {
+    if (self->velocity.y >= 0
+        && (self->direction == FLIP_Y && self->boxAnimator.animationID == 1
+                ? RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true)
+                : RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true))) {
         self->velocity.y = 0;
         if (self->state != ItemBox_State_ContentsDisappear && self->state != ItemBox_State_ContentsShown)
             self->active = ACTIVE_BOUNDS;
         self->moveOffset.x += self->position.x;
         self->moveOffset.y += self->position.y;
         return true;
+    }
+    else {
+        self->moveOffset.x += self->position.x;
+        self->moveOffset.y += self->position.y;
+        return false;
     }
 }
 bool32 ItemBox_HandlePlatformCollision(void *p)

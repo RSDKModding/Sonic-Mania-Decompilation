@@ -35,12 +35,12 @@ void SPZ2Outro_Serialize(void);
 // Extra Entity Functions
 void SPZ2Outro_StartCutscene(void);
 
-bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host);
 
 void SPZ2Outro_DrawLayerCB(void);
 
-bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 SPZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SPZ2OUTRO_H

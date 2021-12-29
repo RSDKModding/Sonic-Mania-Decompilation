@@ -45,7 +45,7 @@ void MSZCutsceneK_SkipCB(void);
 void MSZCutsceneK_StartCutscene(void);
 void MSZCutsceneK_SetupP2(int posX, int posY);
 
-bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host);
+bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZCUTSCENEK_H

@@ -35,7 +35,7 @@ void SSZ1Setup_StageLoad(void)
 
     Animals->animalTypes[0]      = ANIMAL_FLICKY;
     Animals->animalTypes[1]      = ANIMAL_RICKY;
-    GenericTrigger->callbacks[0] = SSZ1Outro_Unknown4;
+    GenericTrigger->callbacks[0] = SSZ1Outro_DestroyLeftoverHotarus;
 
     if (isMainGameMode()) {
         if (globals->enableIntro) {

@@ -67,9 +67,7 @@ void MSZCutsceneK_StartCutscene(void)
 {
     RSDK_THIS(MSZCutsceneK);
 
-    void *states[] = { MSZCutsceneK_CutsceneState_Unknown1, MSZCutsceneK_CutsceneState_Unknown2, NULL };
-
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, MSZCutsceneK_Cutscene_RidingTornado, MSZCutsceneK_Cutscene_KnockedOffTornado, StateMachine_None);
 
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
@@ -101,7 +99,7 @@ void MSZCutsceneK_SetupP2(int posX, int posY)
     RSDK.SetSpriteAnimation(Player->sonicFrames, ANI_RIDE, &player2->animator, true, 0);
 }
 
-bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -113,7 +111,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         SceneInfo->timeEnabled  = false;
         SceneInfo->milliseconds = 0;
         player1->state          = Player_State_None;
-        player1->stateInput     = 0;
+        player1->stateInput     = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;
         player1->velocity.y = 0;
@@ -130,7 +128,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -139,11 +137,11 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.StopChannel(Music->channelID);
-        RSDK.PlaySfx(MSZCutsceneK->sfxImpact, false, 255);
+        RSDK.PlaySfx(MSZCutsceneK->sfxImpact, false, 0xFF);
         tornado->velocity.y = -0x10000;
         if (!host->values[0]) {
             host->values[0] = true;
-            RSDK.PlaySfx(MSZCutsceneK->sfxDrop, false, 255);
+            RSDK.PlaySfx(MSZCutsceneK->sfxDrop, false, 0xFF);
             RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 4, &player1->animator, true, 0);
             player1->velocity.x = -0x10000;
             player1->velocity.y = -0x30000;
@@ -169,7 +167,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
 
     if (host->values[1]) {
-        if (host->timer - host->storedValue2 == 15) {
+        if (host->timer - host->storedTimer == 15) {
             globals->suppressTitlecard = true;
             globals->suppressAutoMusic = true;
             globals->enableIntro       = 1;
@@ -177,7 +175,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 0, 3);
             Zone_StartFadeOut(10, 0x000000);
         }
-        else if (host->timer - host->storedValue2 == 60) {
+        else if (host->timer - host->storedTimer == 60) {
             player1->velocity.y = 0;
             host->values[2]     = true;
         }
@@ -185,7 +183,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     else if (player1->position.y > tornado->position.y) {
         TornadoPath->cameraPtr = NULL;
         host->values[1]        = 1;
-        host->storedValue2     = host->timer;
+        host->storedTimer     = host->timer;
         MSZCutsceneK->pos3     = camera->position;
         MSZCutsceneK->pos3.y += 0x1E00000;
         Camera_SetupLerp(0, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);

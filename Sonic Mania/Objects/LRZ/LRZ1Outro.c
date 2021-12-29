@@ -35,13 +35,12 @@ void LRZ1Outro_StartCutscene(void)
     RSDK_THIS(LRZ1Outro);
 
     if (Zone->actID) {
-        void *states[] = { LRZ1Outro_CutsceneState2_Unknown1, LRZ1Outro_CutsceneState2_Unknown2, LRZ1Outro_CutsceneState2_Unknown3, NULL };
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, LRZ1Outro_CutsceneAct2_Unknown1, LRZ1Outro_CutsceneAct2_Unknown2, LRZ1Outro_CutsceneAct2_Unknown3,
+                                  StateMachine_None);
     }
     else {
-        void *states[] = { LRZ1Outro_CutsceneState1_Unknown1, LRZ1Outro_CutsceneState1_Unknown2, LRZ1Outro_CutsceneState1_Unknown3,
-                           LRZ1Outro_CutsceneState1_Unknown4, NULL };
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, LRZ1Outro_CutsceneAct1_Unknown1, LRZ1Outro_CutsceneAct1_Unknown2, LRZ1Outro_CutsceneAct1_Unknown3,
+                                  LRZ1Outro_CutsceneAct1_Unknown4, StateMachine_None);
     }
 
 #if RETRO_USE_PLUS
@@ -54,7 +53,7 @@ void LRZ1Outro_StartCutscene(void)
     }
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown1(EntityCutsceneSeq *host)
 {
     CutsceneSeq_LockAllPlayerControl();
 
@@ -73,7 +72,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct2_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
 
@@ -103,7 +102,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
 
@@ -127,7 +126,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
     return RSDK.GetEntityCount(DashLift->objectID, true) > 0;
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = self->lift;
@@ -167,7 +166,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = self->lift;
@@ -198,7 +197,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct2_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = self->lift;
@@ -234,7 +233,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ1Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct2_Unknown3(EntityCutsceneSeq *host)
 {
     bool32 flag = true;
     foreach_active(Player, player)

@@ -45,26 +45,26 @@ void TMZ2Outro_Serialize(void);
 // Extra Entity Functions
 void TMZ2Outro_SetupCutscene(void);
 
-bool32 TMZ2Outro_CutsceneState_SetupOutro(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host);
 
 void TMZ2Outro_PlayerStateInput_Escape(void);
-bool32 TMZ2Outro_CutsceneState_EggmanFall(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_StartAlert(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_TimeToEscape(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_StartFadeOut(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_EggmanFall(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_TimeToEscape(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_HurryToCar(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host);
 
 #if RETRO_USE_PLUS
-bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host);
 #endif
 
-bool32 TMZ2Outro_CutsceneState_FadeOut(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host);
 
 void TMZ2Outro_SaveFileCB(bool32 success);
 

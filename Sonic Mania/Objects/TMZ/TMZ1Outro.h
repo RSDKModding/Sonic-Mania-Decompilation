@@ -29,11 +29,11 @@ void TMZ1Outro_EditorLoad(void);
 void TMZ1Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 TMZ1Outro_Cutscene1_State1(EntityCutsceneSeq *host);
-bool32 TMZ1Outro_Cutscene1_State2(EntityCutsceneSeq *host);
-bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host);
-bool32 TMZ1Outro_Cutscene1_State4(EntityCutsceneSeq *host);
+bool32 TMZ1Outro_CutsceneAct1_SetupPlayers(EntityCutsceneSeq *host);
+bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host);
+bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host);
+bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host);
 
-bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host);
+bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host);
 
 #endif //!OBJ_TMZ1OUTRO_H

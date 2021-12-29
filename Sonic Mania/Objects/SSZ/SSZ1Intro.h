@@ -42,8 +42,8 @@ void SSZ1Intro_Serialize(void);
 // Extra Entity Functions
 void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPlayer *player2, int32 offset);
 
-bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);
+bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host);
+bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SSZ1INTRO_H

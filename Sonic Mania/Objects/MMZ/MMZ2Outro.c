@@ -40,20 +40,14 @@ void MMZ2Outro_StageLoad(void)
 void MMZ2Outro_StartCutscene(void)
 {
     RSDK_THIS(MMZ2Outro);
-    void *states[] = { MMZ2Outro_Cutscene_PowerDown,
-                       MMZ2Outro_Cutscene_Rumble,
-                       MMZ2Outro_Cutscene_CameraMoveToWindow,
-                       MMZ2Outro_Cutscene_PlayerMoveToWindow,
-                       MMZ2Outro_Cutscene_EnterMonarchEyes,
-                       MMZ2Outro_Cutscene_ViewMonarch,
-                       NULL };
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
-    RSDK.CopyPalette(0, 1, 1, 1, 255);
-    for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0);
+    CutsceneSeq_StartSequence(self, MMZ2Outro_Cutscene_PowerDown, MMZ2Outro_Cutscene_Rumble, MMZ2Outro_Cutscene_CameraMoveToWindow,
+                              MMZ2Outro_Cutscene_PlayerMoveToWindow, MMZ2Outro_Cutscene_EnterMonarchEyes, MMZ2Outro_Cutscene_ViewMonarch, StateMachine_None);
+    RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
+    for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
     for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
-    RSDK.GetSceneLayer(0)->drawLayer[0] = 16;
-    RSDK.GetSceneLayer(1)->drawLayer[0] = 16;
+    RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(1)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
     RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
     RSDK.GetSceneLayer(4)->drawLayer[0] = 0;
@@ -82,7 +76,7 @@ bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
                 player->velocity.x = 0;
             }
         }
-        RSDK.PlaySfx(MMZ2Outro->sfxLightsOut, false, 255);
+        RSDK.PlaySfx(MMZ2Outro->sfxLightsOut, false, 0xFF);
         Zone->cameraBoundsT[0] = 0;
         return true;
     }

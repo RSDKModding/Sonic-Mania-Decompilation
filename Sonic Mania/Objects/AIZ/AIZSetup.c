@@ -330,19 +330,11 @@ void AIZSetup_SkipCB(void)
 
 void AIZSetup_CutsceneST_Setup(void)
 {
-    void *states[] = { AIZSetup_CutsceneSonic_EnterAIZ,
-                       AIZSetup_CutsceneSonic_EnterAIZJungle,
-                       AIZSetup_CutsceneSonic_EnterHeavies,
-                       AIZSetup_CutsceneSonic_P2FlyIn,
-                       AIZSetup_CutsceneSonic_EnterClaw,
-                       AIZSetup_CutsceneSonic_WatchClaw,
-                       AIZSetup_CutsceneSonic_RubyGrabbed,
-                       AIZSetup_CutsceneSonic_RubyAppear,
-                       AIZSetup_CutsceneSonic_RubyFX,
-                       AIZSetup_Cutscene_LoadGHZ,
-                       NULL };
     RSDK_THIS(AIZSetup);
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, AIZSetup_CutsceneSonic_EnterAIZ, AIZSetup_CutsceneSonic_EnterAIZJungle, AIZSetup_CutsceneSonic_EnterHeavies,
+                              AIZSetup_CutsceneSonic_P2FlyIn, AIZSetup_CutsceneSonic_EnterClaw, AIZSetup_CutsceneSonic_WatchClaw,
+                              AIZSetup_CutsceneSonic_RubyGrabbed, AIZSetup_CutsceneSonic_RubyAppear, AIZSetup_CutsceneSonic_RubyFX,
+                              AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
@@ -379,7 +371,7 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(Entity *h)
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.01);
         player1->right     = false;
         player1->left      = true;
-        host->storedValue1 = player1->groundVel;
+        host->storedValue = player1->groundVel;
         return true;
     }
     else {
@@ -395,10 +387,10 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (player1->position.x >= 0x2A300000) {
         if (player1->groundVel <= 0) {
-            if (!host->storedValue2) {
+            if (!host->storedTimer) {
                 player1->right     = false;
                 player1->left      = false;
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
         }
         else {
@@ -415,15 +407,15 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h)
     else {
         player1->state = Player_State_None;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SKID, &player1->animator, false, 0);
-        player1->groundVel  = host->storedValue1;
-        player1->velocity.x = host->storedValue1;
+        player1->groundVel  = host->storedValue;
+        player1->velocity.x = host->storedValue;
         player1->right      = false;
         player1->left       = false;
         if (player2 && player2->state == AIZSetup_PlayerState_Static)
             player2->state = AIZSetup_PlayerState_P2Enter;
     }
 
-    if (host->storedValue2 > 0 && host->timer > host->storedValue2 + 15) {
+    if (host->storedTimer > 0 && host->timer > host->storedTimer + 15) {
         player1->direction = FLIP_NONE;
         return true;
     }
@@ -471,12 +463,12 @@ bool32 AIZSetup_CutsceneSonic_EnterClaw(Entity *h)
     }
     else {
         if (camera->position.x >= camera->endLerpPos.x) {
-            if (host->storedValue2) {
-                if (host->timer >= host->storedValue2 + 60)
+            if (host->storedTimer) {
+                if (host->timer >= host->storedTimer + 60)
                     return true;
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
         }
         else {
@@ -498,12 +490,12 @@ bool32 AIZSetup_CutsceneSonic_WatchClaw(Entity *h)
         claw->position.y += 0x10000;
     }
     else {
-        if (host->storedValue2) {
-            if (host->timer >= host->storedValue2 + 60)
+        if (host->storedTimer) {
+            if (host->timer >= host->storedTimer + 60)
                 return true;
         }
         else {
-            host->storedValue2 = host->timer;
+            host->storedTimer = host->timer;
             claw->state        = AIZKingClaw_State_Grab;
         }
     }
@@ -537,32 +529,32 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h)
         }
     }
     else {
-        if (host->storedValue2) {
+        if (host->storedTimer) {
             if (host->values[0]) {
-                if (!host->values[1] && host->timer >= host->storedValue2 && host->timer == host->storedValue2) {
+                if (!host->values[1] && host->timer >= host->storedTimer && host->timer == host->storedTimer) {
                     return true;
                 }
             }
-            else if (host->timer < host->storedValue2 + 30) {
-                Vector2 result   = MathHelpers_GetBezierPoint(((host->timer - host->storedValue2) << 16) / 30, claw->position.x, host->storedValue1,
-                                                            claw->position.x, host->storedValue1 - 0x500000, claw->position.x,
-                                                            host->storedValue1 - 0x300000, claw->position.x, host->storedValue1 - 0x300000);
+            else if (host->timer < host->storedTimer + 30) {
+                Vector2 result   = MathHelpers_GetBezierPoint(((host->timer - host->storedTimer) << 16) / 30, claw->position.x, host->storedValue,
+                                                            claw->position.x, host->storedValue - 0x500000, claw->position.x,
+                                                            host->storedValue - 0x300000, claw->position.x, host->storedValue - 0x300000);
                 claw->position.y = result.y;
             }
-            else if (host->timer != host->storedValue2 + 30) {
-                if (!host->values[1] && host->timer >= host->storedValue2 && host->timer == host->storedValue2) {
+            else if (host->timer != host->storedTimer + 30) {
+                if (!host->values[1] && host->timer >= host->storedTimer && host->timer == host->storedTimer) {
                     return true;
                 }
             }
             else {
                 host->values[0]    = 1;
-                host->storedValue2 = host->timer + 60;
+                host->storedTimer = host->timer + 60;
             }
         }
         else {
             AIZSetup->playDrillSfxFlag                               = false;
-            host->storedValue2                                       = host->timer;
-            host->storedValue1                                       = claw->position.y;
+            host->storedTimer                                        = host->timer;
+            host->storedValue                                       = claw->position.y;
             ((EntityDecoration *)AIZSetup->decorations[0])->rotSpeed = 0;
             ((EntityDecoration *)AIZSetup->decorations[1])->rotSpeed = 0;
             if (checkPlayerID(ID_TAILS, 2))
@@ -607,28 +599,28 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h)
 
     if (!host->values[0]) {
         if (fxRuby->fullyExpanded) {
-            if (host->storedValue2) {
-                if (host->timer == host->storedValue2 + 30) {
+            if (host->storedTimer) {
+                if (host->timer == host->storedTimer + 30) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->storedValue2 + 210) {
+                else if (host->timer == host->storedTimer + 210) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedValue2 = host->timer;
+                    host->storedTimer = host->timer;
                     host->values[0]    = true;
                 }
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
 
-            if (host->timer >= host->storedValue2 + 32) {
+            if (host->timer >= host->storedTimer + 32) {
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x40) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
@@ -637,7 +629,7 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
-                    int32 valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+                    int32 valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
 
                     player->position.x += valX;
                     player->position.y += valY;
@@ -651,7 +643,7 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer == host->storedValue2 + 150)
+                if (host->timer == host->storedTimer + 150)
                     return true;
             }
             else {
@@ -667,14 +659,10 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h)
 
 void AIZSetup_CutsceneK_Setup(void)
 {
-    void *states[] = { AIZSetup_CutsceneKnux_Chillin,     AIZSetup_CutsceneKnux_StartDrillin,
-                       AIZSetup_CutsceneKnux_Drillin,     AIZSetup_CutsceneKnux_PrepareForTrouble,
-                       AIZSetup_CutsceneKnux_EnterThreat, AIZSetup_CutsceneKnux_HeaviesAppear,
-                       AIZSetup_CutsceneKnux_RubyImpact,  AIZSetup_CutsceneKnux_RubyFX,
-                       AIZSetup_Cutscene_LoadGHZ,         NULL };
-
     RSDK_THIS(AIZSetup);
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, AIZSetup_CutsceneKnux_Chillin, AIZSetup_CutsceneKnux_StartDrillin, AIZSetup_CutsceneKnux_Drillin,
+                              AIZSetup_CutsceneKnux_PrepareForTrouble, AIZSetup_CutsceneKnux_EnterThreat, AIZSetup_CutsceneKnux_HeaviesAppear,
+                              AIZSetup_CutsceneKnux_RubyImpact, AIZSetup_CutsceneKnux_RubyFX, AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
@@ -762,12 +750,12 @@ bool32 AIZSetup_CutsceneKnux_EnterThreat(Entity *h)
         Camera_SetupLerp(0, 0, player1->position.x - 0x600000, camera->position.y, 3);
     }
     else if (camera->position.x <= camera->endLerpPos.x) {
-        if (host->storedValue2) {
-            if (host->timer >= host->storedValue2 + 60)
+        if (host->storedTimer) {
+            if (host->timer >= host->storedTimer + 60)
                 return true;
         }
         else {
-            host->storedValue2 = host->timer;
+            host->storedTimer = host->timer;
         }
     }
     else {
@@ -863,7 +851,7 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h)
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
         Camera_ShakeScreen(0, 4, 4);
         Music_FadeOut(0.025);
-        host->storedValue2 = host->timer;
+        host->storedTimer = host->timer;
         host->values[0]    = 1;
     }
 
@@ -873,7 +861,7 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h)
             fxRuby->fadeWhite += 16;
         }
         else if (fxRuby->fadeBlack >= 512) {
-            if (host->timer == host->storedValue2 + 150)
+            if (host->timer == host->storedTimer + 150)
                 return true;
         }
         else {

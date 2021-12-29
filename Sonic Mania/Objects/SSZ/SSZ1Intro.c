@@ -11,8 +11,6 @@ ObjectSSZ1Intro *SSZ1Intro;
 
 void SSZ1Intro_Update(void)
 {
-    void *states[] = { SSZ1Intro_CutsceneState_Unknown1, SSZ1Intro_CutsceneState_Unknown2, SSZ1Intro_CutsceneState_Unknown3, NULL };
-
     RSDK_THIS(SSZ1Intro);
     if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
@@ -21,7 +19,8 @@ void SSZ1Intro_Update(void)
         }
         else {
             self->activated = true;
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, SSZ1Intro_Cutscene_FinishRubyWarp, SSZ1Intro_Cutscene_HandeLanding, SSZ1Intro_Cutscene_BeginAct1,
+                                      StateMachine_None);
         }
     }
 }
@@ -58,16 +57,16 @@ void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPl
             break;
         RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_FAN, &playerPtr->animator, false, 0);
         playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
-        playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) - playerPtr->position.y) >> 3;
+        playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) - playerPtr->position.y) >> 3;
         playerPtr->state = Player_State_None;
     }
 }
 
-bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
 
-    Entity *cutEntity    = host->cutsceneCurEntity;
+    Entity *cutEntity    = host->activeEntity;
     EntityFXRuby *fxRuby = SSZ1Intro->fxRuby;
     if (!host->timer) {
         CutsceneSeq_LockAllPlayerControl();
@@ -116,7 +115,7 @@ bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -130,7 +129,7 @@ bool32 SSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
 
@@ -141,6 +140,7 @@ bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
             player2->up = false;
         }
     }
+
     if (host->timer == 30) {
         player1->stateInput     = Player_ProcessP1Input;
         player1->tileCollisions = true;

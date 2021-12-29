@@ -44,12 +44,12 @@ void EncoreGoodEnd_Unknown9(void);
 void EncoreGoodEnd_Unknown10(void);
 void EncoreGoodEnd_Unknown11(void);
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 EncoreGoodEnd_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 EncoreGoodEnd_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 EncoreGoodEnd_CutsceneState_Unknown4(EntityCutsceneSeq *host);
-bool32 EncoreGoodEnd_CutsceneState_Unknown5(EntityCutsceneSeq *host);
-bool32 EncoreGoodEnd_CutsceneState_Unknown6(EntityCutsceneSeq *host);
+bool32 EncoreGoodEnd_Cutscene_Unknown1(EntityCutsceneSeq *host);
+bool32 EncoreGoodEnd_Cutscene_Unknown2(EntityCutsceneSeq *host);
+bool32 EncoreGoodEnd_Cutscene_Unknown3(EntityCutsceneSeq *host);
+bool32 EncoreGoodEnd_Cutscene_Unknown4(EntityCutsceneSeq *host);
+bool32 EncoreGoodEnd_Cutscene_Unknown5(EntityCutsceneSeq *host);
+bool32 EncoreGoodEnd_Cutscene_Unknown6(EntityCutsceneSeq *host);
 
 void EncoreGoodEnd_SkipCB(void);
 

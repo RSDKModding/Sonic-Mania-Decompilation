@@ -12,20 +12,14 @@ ObjectEncoreGoodEnd *EncoreGoodEnd;
 
 void EncoreGoodEnd_Update(void)
 {
-    void *states[] = { EncoreGoodEnd_CutsceneState_Unknown1,
-                       EncoreGoodEnd_CutsceneState_Unknown2,
-                       EncoreGoodEnd_CutsceneState_Unknown3,
-                       EncoreGoodEnd_CutsceneState_Unknown4,
-                       EncoreGoodEnd_CutsceneState_Unknown5,
-                       EncoreGoodEnd_CutsceneState_Unknown6,
-                       NULL };
-
     RSDK_THIS(EncoreGoodEnd);
     if (!self->activated) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                CutsceneSeq_StartSequence((Entity *)self, states);
+                CutsceneSeq_StartSequence(self, EncoreGoodEnd_Cutscene_Unknown1, EncoreGoodEnd_Cutscene_Unknown2,
+                                          EncoreGoodEnd_Cutscene_Unknown3, EncoreGoodEnd_Cutscene_Unknown4,
+                                          EncoreGoodEnd_Cutscene_Unknown5, EncoreGoodEnd_Cutscene_Unknown6, StateMachine_None);
 
                 EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                 if (seq->objectID) {
@@ -321,7 +315,7 @@ void EncoreGoodEnd_Unknown11(void)
     }
 }
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 EncoreGoodEnd_Cutscene_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreGoodEnd);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -362,14 +356,14 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 EncoreGoodEnd_Cutscene_Unknown2(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     return player1->state == Player_State_None && (player2->state == Player_State_None || player2->objectID != Player->objectID);
 }
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 EncoreGoodEnd_Cutscene_Unknown3(EntityCutsceneSeq *host)
 {
     if (host->timer == 60) {
         RSDK.SetSpriteAnimation(Decoration->aniFrames, 10, &EncoreGoodEnd->decorations[7]->animator, true, 0);
@@ -390,7 +384,7 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 EncoreGoodEnd_Cutscene_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreGoodEnd);
     EntityDecoration *decor = EncoreGoodEnd->decorations[0];
@@ -436,7 +430,7 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown5(EntityCutsceneSeq *host)
+bool32 EncoreGoodEnd_Cutscene_Unknown5(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreGoodEnd);
     if (host->timer < 22) {
@@ -456,7 +450,7 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     return host->timer == 240;
 }
 
-bool32 EncoreGoodEnd_CutsceneState_Unknown6(EntityCutsceneSeq *host)
+bool32 EncoreGoodEnd_Cutscene_Unknown6(EntityCutsceneSeq *host)
 {
     if (API.CheckDLC(DLC_PLUS))
         RSDK.SetScene("Presentation", "Encore Summary");
@@ -467,7 +461,7 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     return true;
 }
 
-void EncoreGoodEnd_SkipCB(void) { EncoreGoodEnd_CutsceneState_Unknown6(NULL); }
+void EncoreGoodEnd_SkipCB(void) { EncoreGoodEnd_Cutscene_Unknown6(NULL); }
 
 #if RETRO_INCLUDE_EDITOR
 void EncoreGoodEnd_EditorDraw(void) {}

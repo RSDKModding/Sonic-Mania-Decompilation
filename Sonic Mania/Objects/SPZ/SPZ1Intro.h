@@ -42,8 +42,8 @@ void SPZ1Intro_EditorLoad(void);
 void SPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SPZ1INTRO_H

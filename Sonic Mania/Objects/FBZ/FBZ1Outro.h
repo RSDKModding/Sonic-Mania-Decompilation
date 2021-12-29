@@ -41,9 +41,9 @@ void FBZ1Outro_StartCutscene(void);
 void FBZ1Outro_Unknown2(void);
 void FBZ1Outro_DispenseTrash(void);
 
-bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_Unknown2(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_Unknown3(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_Unknown4(EntityCutsceneSeq *host);
 
 #endif //!OBJ_FBZ1OUTRO_H

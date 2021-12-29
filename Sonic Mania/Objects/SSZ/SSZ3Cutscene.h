@@ -38,15 +38,15 @@ void SSZ3Cutscene_Serialize(void);
 void SSZ3Cutscene_HandleRubyFX(void);
 #endif
 
-bool32 SSZ3Cutscene_IntroState_Unknown1(EntityCutsceneSeq *host);
-bool32 SSZ3Cutscene_IntroState_Unknown2(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneIntro_EnterStageLeft(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneIntro_PlayerRunLeft(EntityCutsceneSeq *host);
 #if RETRO_USE_PLUS
-bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host);
-bool32 SSZ3Cutscene_OutroState_Unknown2(EntityCutsceneSeq *host);
-bool32 SSZ3Cutscene_OutroState_Unknown3(EntityCutsceneSeq *host);
-bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host);
-bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host);
-bool32 SSZ3Cutscene_OutroState_LoadNextScene(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneOutro_FollowRuby(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneOutro_EnterRuby(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneOutro_RubyActivate(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host);
+bool32 SSZ3Cutscene_CutsceneOutro_LoadHCZ1(EntityCutsceneSeq *host);
 #endif
 
 #endif //!OBJ_SSZ3CUTSCENE_H

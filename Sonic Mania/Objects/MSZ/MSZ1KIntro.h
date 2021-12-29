@@ -31,8 +31,8 @@ void MSZ1KIntro_EditorLoad(void);
 void MSZ1KIntro_Serialize(void);
 
 // Extra Entity Functions
-bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host);
+bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host);
+bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZ1KINTRO_H

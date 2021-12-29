@@ -28,19 +28,14 @@ void EncoreIntro_Update(void)
 
     // skip part 2 flag
     if (self->field_64) {
-        void *states[] = { EncoreIntro_Cutscene_AIZEncore,          EncoreIntro_Cutscene_CapsuleFound,
-                           EncoreIntro_Cutscene_BuddySelect,        EncoreIntro_Cutscene_ViewEncoreTutorial,
-                           EncoreIntro_Cutscene_MysticGetRuby,      EncoreIntro_Cutscene_MysticStealRuby,
-                           EncoreIntro_Cutscene_MysticEscape,       EncoreIntro_Cutscene_AIZEncoreTutorial,
-                           EncoreIntro_Cutscene_CameraPanToHBHPile, EncoreIntro_Cutscene_MysticPassRuby,
-                           EncoreIntro_Cutscene_KingActivate,       EncoreIntro_Cutscene_RubyActivated,
-                           EncoreIntro_Cutscene_RubyWarp,           EncoreIntro_Cutscene_LoadGHZ,
-                           EncoreIntro_Cutscene_AwaitSaveFinish,    EncoreIntro_Cutscene_FadeOutAndReset,
-                           EncoreIntro_Cutscene_FadeInAndStart,     EncoreIntro_Cutscene_SkipAndFadeOut,
-                           EncoreIntro_Cutscene_AwaitSaveFinish,    NULL };
-
         EncoreIntro_SetupCutscenePart2();
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, EncoreIntro_Cutscene_AIZEncore, EncoreIntro_Cutscene_CapsuleFound, EncoreIntro_Cutscene_BuddySelect,
+                                  EncoreIntro_Cutscene_ViewEncoreTutorial, EncoreIntro_Cutscene_MysticGetRuby, EncoreIntro_Cutscene_MysticStealRuby,
+                                  EncoreIntro_Cutscene_MysticEscape, EncoreIntro_Cutscene_AIZEncoreTutorial, EncoreIntro_Cutscene_CameraPanToHBHPile,
+                                  EncoreIntro_Cutscene_MysticPassRuby, EncoreIntro_Cutscene_KingActivate, EncoreIntro_Cutscene_RubyActivated,
+                                  EncoreIntro_Cutscene_RubyWarp, EncoreIntro_Cutscene_LoadGHZ, EncoreIntro_Cutscene_AwaitSaveFinish,
+                                  EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
+                                  EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
         self->field_64 = false;
     }
 }
@@ -135,35 +130,17 @@ void EncoreIntro_SetupEntities(void)
 
 void EncoreIntro_SetupCutscene(void)
 {
-    void *states[] = { EncoreIntro_Cutscene_SetupAIZEncore,
-                       EncoreIntro_Cutscene_PlayerAppear,
-                       EncoreIntro_Cutscene_RubyAppear,
-                       EncoreIntro_Cutscene_PortalClose,
-                       EncoreIntro_Cutscene_Empty,
-                       EncoreIntro_Cutscene_BeginAIZEncore,
-                       EncoreIntro_Cutscene_AIZEncore,
-                       EncoreIntro_Cutscene_CapsuleFound,
-                       EncoreIntro_Cutscene_BuddySelect,
-                       EncoreIntro_Cutscene_ViewEncoreTutorial,
-                       EncoreIntro_Cutscene_MysticGetRuby,
-                       EncoreIntro_Cutscene_MysticStealRuby,
-                       EncoreIntro_Cutscene_MysticEscape,
-                       EncoreIntro_Cutscene_AIZEncoreTutorial,
-                       EncoreIntro_Cutscene_CameraPanToHBHPile,
-                       EncoreIntro_Cutscene_MysticPassRuby,
-                       EncoreIntro_Cutscene_KingActivate,
-                       EncoreIntro_Cutscene_RubyActivated,
-                       EncoreIntro_Cutscene_RubyWarp,
-                       EncoreIntro_Cutscene_LoadGHZ,
-                       EncoreIntro_Cutscene_AwaitSaveFinish,
-                       EncoreIntro_Cutscene_FadeOutAndReset,
-                       EncoreIntro_Cutscene_FadeInAndStart,
-                       EncoreIntro_Cutscene_SkipAndFadeOut,
-                       EncoreIntro_Cutscene_AwaitSaveFinish,
-                       NULL };
     RSDK_THIS(EncoreIntro);
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, EncoreIntro_Cutscene_SetupAIZEncore, EncoreIntro_Cutscene_PlayerAppear, EncoreIntro_Cutscene_RubyAppear,
+                              EncoreIntro_Cutscene_PortalClose, EncoreIntro_Cutscene_Empty, EncoreIntro_Cutscene_BeginAIZEncore,
+                              EncoreIntro_Cutscene_AIZEncore, EncoreIntro_Cutscene_CapsuleFound, EncoreIntro_Cutscene_BuddySelect,
+                              EncoreIntro_Cutscene_ViewEncoreTutorial, EncoreIntro_Cutscene_MysticGetRuby, EncoreIntro_Cutscene_MysticStealRuby,
+                              EncoreIntro_Cutscene_MysticEscape, EncoreIntro_Cutscene_AIZEncoreTutorial, EncoreIntro_Cutscene_CameraPanToHBHPile,
+                              EncoreIntro_Cutscene_MysticPassRuby, EncoreIntro_Cutscene_KingActivate, EncoreIntro_Cutscene_RubyActivated,
+                              EncoreIntro_Cutscene_RubyWarp, EncoreIntro_Cutscene_LoadGHZ, EncoreIntro_Cutscene_AwaitSaveFinish,
+                              EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
+                              EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
 }
 
 void EncoreIntro_SetupCutscenePart2(void)
@@ -252,7 +229,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
         if (host->timer < 360) {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->animator, false, 0);
             player1->position.x += (player1->position.x - player1->position.x) >> 3;
-            player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->storedValue2)) + ruby->position.y - player1->position.y) >> 3;
+            player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->storedTimer)) + ruby->position.y - player1->position.y) >> 3;
             player1->state = Player_State_None;
         }
         else {
@@ -273,7 +250,7 @@ bool32 EncoreIntro_Cutscene_PlayerAppear(EntityCutsceneSeq *host)
         player->alpha += 2;
         if (player->alpha >= 0x100) {
             player->inkEffect = INK_NONE;
-            RSDK.Sin256(2 * (host->timer - host->storedValue2));
+            RSDK.Sin256(2 * (host->timer - host->storedTimer));
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             player->state   = Player_State_Air;
             player->up      = true;
@@ -924,28 +901,28 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (fxRuby->fullyExpanded) {
-            if (host->storedValue2) {
-                if (host->timer == host->storedValue2 + 30) {
+            if (host->storedTimer) {
+                if (host->timer == host->storedTimer + 30) {
                     fxRuby->delay = 64;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->storedValue2 + 210) {
+                else if (host->timer == host->storedTimer + 210) {
                     fxRuby->delay = 32;
                     fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedValue2 = host->timer;
+                    host->storedTimer = host->timer;
                     host->values[0]    = 1;
                 }
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
 
-            if (host->timer >= host->storedValue2 + 32) {
+            if (host->timer >= host->storedTimer + 32) {
                 EntityPlayer *players[2];
                 players[0] = player;
                 players[1] = buddy;
@@ -958,7 +935,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 
                     playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
                     playerPtr->position.y +=
-                        (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - playerPtr->position.y) >> 3;
+                        (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - playerPtr->position.y) >> 3;
                     playerPtr->tileCollisions = false;
                     playerPtr->velocity.x     = 0;
                     playerPtr->velocity.y     = 0;
@@ -970,7 +947,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer >= host->storedValue2 + 150) {
+                if (host->timer >= host->storedTimer + 150) {
                     return true;
                 }
             }

@@ -13,13 +13,10 @@ void ERZOutro_Update(void)
 {
     RSDK_THIS(ERZOutro);
 
-    void *states[] = { ERZOutro_CutsceneState_AttackEggman, ERZOutro_CutsceneState_AttackRecoil,
-                       ERZOutro_CutsceneState_LoseEmeralds, ERZOutro_CutsceneState_OpenPortal,
-                       ERZOutro_CutsceneState_EnterPortal,  ERZOutro_CutsceneState_FadeOut,
-                       ERZOutro_CutsceneState_ShowEnding,   NULL };
-
     if (!self->activated) {
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, ERZOutro_Cutscene_AttackEggman, ERZOutro_Cutscene_AttackRecoil, ERZOutro_Cutscene_LoseEmeralds,
+                                  ERZOutro_Cutscene_OpenPortal, ERZOutro_Cutscene_EnterPortal, ERZOutro_Cutscene_FadeOut,
+                                  ERZOutro_Cutscene_ShowEnding, StateMachine_None);
         self->activated = true;
     }
 }
@@ -103,12 +100,12 @@ void ERZOutro_HandleRubyHover(void)
     fxRuby->position.y = ruby->position.y;
 }
 
-bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityKleptoMobile *eggman = (EntityKleptoMobile *)ERZOutro->eggman;
     EntityFXRuby *fxRuby       = (EntityFXRuby *)ERZOutro->fxRuby;
-    EntityERZOutro *entity     = (EntityERZOutro *)host->cutsceneCurEntity;
+    EntityERZOutro *entity     = (EntityERZOutro *)host->activeEntity;
 
     uint16 eggmanSlot               = RSDK.GetEntityID(eggman);
     EntityKleptoMobile *eggmanChild = RSDK_GET_ENTITY(eggmanSlot - 2, KleptoMobile);
@@ -116,7 +113,7 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
     EntityKleptoMobile *eggmanArm2  = RSDK_GET_ENTITY(eggmanSlot + 1, KleptoMobile);
 
     if (!host->timer) {
-        host->storedValue1 = player1->rings;
+        host->storedValue = player1->rings;
         eggman->state      = StateMachine_None;
         if (player1->characterID == ID_KNUCKLES)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->animator, false, 6);
@@ -147,7 +144,7 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
     int posY = entity->position.y;
 
     if (host->timer <= 0) {
-        player1->rings = host->storedValue1;
+        player1->rings = host->storedValue;
     }
     else if (host->timer < 120) {
         if (player1->characterID == ID_KNUCKLES)
@@ -162,7 +159,7 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
         player1->velocity.y = player1->position.y - y;
         player1->velocity.x = player1->position.x - x;
         player1->direction  = x >= player1->position.x;
-        player1->rings      = host->storedValue1;
+        player1->rings      = host->storedValue;
     }
     else {
         player1->position.x = posX;
@@ -205,7 +202,7 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -221,7 +218,7 @@ bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (player1->position.x >= eggman->position.x - 0x200000) {
-            host->storedValue2  = player1->position.y;
+            host->storedTimer  = player1->position.y;
             player1->position.x = eggman->position.x - 0x200000;
             player1->velocity.x = -0x40000;
             player1->velocity.y = -0x40000;
@@ -260,9 +257,9 @@ bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
         }
         if (!host->values[2]) {
             player1->velocity.y += 0x3800;
-            if (player1->velocity.y > 0 && player1->position.y >= host->storedValue2) {
+            if (player1->velocity.y > 0 && player1->position.y >= host->storedTimer) {
                 RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->animator, true, 0);
-                player1->position.y = host->storedValue2;
+                player1->position.y = host->storedTimer;
                 player1->velocity.x = 0;
                 player1->velocity.y = 0;
                 host->values[2]     = 1;
@@ -272,11 +269,11 @@ bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
         if (host->values[1] && host->values[2])
             return true;
     }
-    player1->rings = host->storedValue1;
+    player1->rings = host->storedValue;
     return false;
 }
 
-bool32 ERZOutro_CutsceneState_LoseEmeralds(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)ERZOutro->ruby;
     ERZOutro_HandleRubyHover();
@@ -312,7 +309,7 @@ bool32 ERZOutro_CutsceneState_LoseEmeralds(EntityCutsceneSeq *host)
     return host->timer == 90;
 }
 
-bool32 ERZOutro_CutsceneState_OpenPortal(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host)
 {
     EntityRubyPortal *portal = (EntityRubyPortal *)ERZOutro->rubyPortal;
     ERZOutro_HandleRubyHover();
@@ -329,7 +326,7 @@ bool32 ERZOutro_CutsceneState_OpenPortal(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPhantomRuby *ruby  = (EntityPhantomRuby *)ERZOutro->ruby;
@@ -339,10 +336,10 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
     ERZOutro_SetEmeraldStates();
     if (!host->timer) {
         ERZOutro->field_24 = 0;
-        host->storedValue2 = RSDK.ATan2(player1->position.x - portal->position.x, player1->position.y - portal->position.y) << 16;
+        host->storedTimer = RSDK.ATan2(player1->position.x - portal->position.x, player1->position.y - portal->position.y) << 16;
         int rx             = abs(portal->position.x - player1->position.x) >> 16;
         int ry             = abs(portal->position.y - player1->position.y) >> 16;
-        host->storedValue1 = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
+        host->storedValue = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
         player1->drawFX |= FX_SCALE;
         player1->scale.x = 0x200;
         player1->scale.y = 0x200;
@@ -370,12 +367,12 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
         }
         ERZOutro->field_24 += 0x800;
 
-        host->storedValue2 += ERZOutro->field_24;
-        host->storedValue2 &= 0xFFFFFF00;
+        host->storedTimer += ERZOutro->field_24;
+        host->storedTimer &= 0xFFFFFF00;
         player1->position.x = portal->position.x;
         player1->position.y = portal->position.y;
-        player1->position.x += ((host->storedValue1 >> 9) & 0xFFFFFF80) * RSDK.Cos512(host->storedValue2 >> 15);
-        player1->position.y += ((host->storedValue1 >> 9) & 0xFFFFFF80) * RSDK.Sin512(host->storedValue2 >> 15);
+        player1->position.x += ((host->storedValue >> 9) & 0xFFFFFF80) * RSDK.Cos512(host->storedTimer >> 15);
+        player1->position.y += ((host->storedValue >> 9) & 0xFFFFFF80) * RSDK.Sin512(host->storedTimer >> 15);
 
         ERZOutro->field_2C += ERZOutro->field_24;
         ERZOutro->field_2C &= 0xFFFFFF00;
@@ -404,16 +401,16 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
         if (ERZOutro->field_28 > 0)
             ERZOutro->field_28 -= 0x8000;
 
-        if (host->storedValue1 <= 0)
+        if (host->storedValue <= 0)
             host->values[1] = 1;
         else
-            host->storedValue1 -= 0x8000;
+            host->storedValue -= 0x8000;
         return host->values[0] && host->values[1];
     }
     return false;
 }
 
-bool32 ERZOutro_CutsceneState_FadeOut(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 {
     EntityFXRuby *fxRuby = (EntityFXRuby *)ERZOutro->fxRuby;
     ERZOutro_HandleRubyHover();
@@ -425,7 +422,7 @@ bool32 ERZOutro_CutsceneState_FadeOut(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host)
+bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host)
 {
     if (globals->saveSlotID != NO_SAVE_SLOT) {
         if (!host->timer) {

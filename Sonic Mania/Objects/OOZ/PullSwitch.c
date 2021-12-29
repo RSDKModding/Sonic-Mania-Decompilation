@@ -24,11 +24,11 @@ void PullSwitch_Update(void)
         self->field_5C += 0x20000;
     }
     else {
-        if (OOZSetup->fadeTimer > 16 || Smog->field_4) {
-            RSDK.PlaySfx(PullSwitch->sfxSmogClear, 0, 255);
+        if (OOZSetup->fadeTimer > 16 || Smog->forceEnabled) {
+            RSDK.PlaySfx(PullSwitch->sfxSmogClear, false, 0xFF);
         }
         OOZSetup->fadeTimer = 0;
-        Smog->field_4       = 0;
+        Smog->forceEnabled  = false;
     }
 
     self->activated = false;

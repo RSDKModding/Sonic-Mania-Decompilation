@@ -22,7 +22,7 @@ void CutsceneSeq_LateUpdate(void)
     RSDK_THIS(CutsceneSeq);
     self->currentState = (bool32(*)(Entity *))self->cutsceneStates[self->stateID];
     if (self->currentState) {
-        SceneInfo->entity    = self->cutsceneCurEntity;
+        SceneInfo->entity    = self->activeEntity;
         bool32 stateComplete = self->currentState((Entity *)self);
         SceneInfo->entity    = (Entity *)self;
         ++self->timer;
@@ -44,7 +44,7 @@ void CutsceneSeq_LateUpdate(void)
             return;
         }
     }
-    if (self->fillTimerA <= 0 && self->fillTimerB <= 0) {
+    if (self->fadeWhite <= 0 && self->fadeBlack <= 0) {
         self->visible = false;
     }
 }
@@ -75,20 +75,20 @@ void CutsceneSeq_Draw(void)
         }
     }
 
-    if (self->fillTimerA > 0)
-        RSDK.FillScreen(0xFFF0F0, self->fillTimerA, self->fillTimerA - 256, self->fillTimerA - 256);
-    if (self->fillTimerB > 0)
-        RSDK.FillScreen(0x000000, self->fillTimerB, self->fillTimerB - 128, self->fillTimerB - 256);
+    if (self->fadeWhite > 0)
+        RSDK.FillScreen(0xFFF0F0, self->fadeWhite, self->fadeWhite - 256, self->fadeWhite - 256);
+    if (self->fadeBlack > 0)
+        RSDK.FillScreen(0x000000, self->fadeBlack, self->fadeBlack - 128, self->fadeBlack - 256);
 }
 
 void CutsceneSeq_Create(void *data)
 {
     RSDK_THIS(CutsceneSeq);
-    self->active     = ACTIVE_NORMAL;
-    self->visible    = false;
-    self->fillTimerA = 0;
-    self->fillTimerB = 0;
-    self->drawOrder  = Zone->hudDrawOrder + 1;
+    self->active    = ACTIVE_NORMAL;
+    self->visible   = false;
+    self->fadeWhite = 0;
+    self->fadeBlack = 0;
+    self->drawOrder = Zone->hudDrawOrder + 1;
 
 #if RETRO_USE_PLUS
     CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
@@ -99,9 +99,9 @@ void CutsceneSeq_StageLoad(void) {}
 
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq)
 {
-    seq->stateID      = nextState;
-    seq->timer        = 0;
-    seq->storedValue2 = 0;
+    seq->stateID     = nextState;
+    seq->timer       = 0;
+    seq->storedTimer = 0;
 
     for (int i = 0; i < 8; ++i) {
         seq->values[i]   = 0;
@@ -167,14 +167,13 @@ void CutsceneSeq_LockPlayerControl(void *plr)
     Player->jumpHoldState  = 0;
 }
 
-
 void CutsceneSeq_LockAllPlayerControl(void)
 {
     for (int32 i = 0; i < Player->playerCount; ++i) {
         CutsceneSeq_LockPlayerControl(RSDK_GET_ENTITY(i, Player));
     }
 }
-void CutsceneSeq_StartSequence(Entity *host, void **states)
+void CutsceneSeq_StartSequence(void *manager, ...)
 {
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         return;
@@ -182,15 +181,24 @@ void CutsceneSeq_StartSequence(Entity *host, void **states)
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     cutsceneSeq->position.x        = 0;
     cutsceneSeq->position.y        = 0;
-    cutsceneSeq->cutsceneCurEntity = SceneInfo->entity;
-    cutsceneSeq->hostEntity        = host;
+    cutsceneSeq->activeEntity      = SceneInfo->entity;
+    cutsceneSeq->managerEntity     = manager;
     int32 id                       = 0;
-    while (states[id]) {
-        LogHelpers_Print("state = %x", states[id]);
-        cutsceneSeq->cutsceneStates[id] = states[id];
-        id++;
+
+    va_list list;
+    va_start(list, manager);
+
+    int count = 0;
+    for (count = 0;; ++count) {
+        void *state = va_arg(list, void *);
+        if (!state)
+            break;
+
+        LogHelpers_Print("state = %x", state);
+        cutsceneSeq->cutsceneStates[count] = state;
     }
-    LogHelpers_Print("Starting sequence with %d states", id);
+    va_end(list);
+    LogHelpers_Print("Starting sequence with %d states", count);
 }
 
 #if RETRO_INCLUDE_EDITOR

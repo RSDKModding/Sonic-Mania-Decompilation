@@ -13,9 +13,6 @@ void GHZCutsceneST_Update(void)
 {
     RSDK_THIS(GHZCutsceneST);
 
-    void *states[5] = { GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp, GHZCutsceneST_Cutscene_ExitHBH,
-                        GHZCutsceneST_Cutscene_SetupGHZ1, NULL };
-
     if (!self->setupKnuxCutscene) {
         GHZCutsceneST_SetupKnuxCutscene();
         self->setupKnuxCutscene = true;
@@ -25,7 +22,8 @@ void GHZCutsceneST_Update(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
-                CutsceneSeq_StartSequence((Entity *)self, states);
+                CutsceneSeq_StartSequence(self, GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp,
+                                          GHZCutsceneST_Cutscene_ExitHBH, GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
 #if RETRO_USE_PLUS
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
@@ -176,7 +174,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
             break;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
-        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
     }
     return false;
@@ -199,7 +197,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x              = (player->position.x - player->position.x) >> 3;
-            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -219,7 +217,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
-            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;
             ++curPlayer;
         }

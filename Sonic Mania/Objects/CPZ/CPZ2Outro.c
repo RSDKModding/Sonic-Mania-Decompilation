@@ -45,12 +45,10 @@ void CPZ2Outro_StageLoad(void)
 
 void CPZ2Outro_SetupCutscene(void)
 {
-    void *states[] = { CPZ2Outro_Cutscene_Outro, NULL };
-
     RSDK_THIS(CPZ2Outro);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
 #if RETRO_USE_PLUS
     if (seq->objectID)
         seq->skipType = SKIPTYPE_RELOADSCN;
@@ -92,7 +90,7 @@ bool32 CPZ2Outro_Cutscene_Outro(void *h)
     if (player1->jumpPress)
         player1->jumpPress = false;
 
-    if (player1->onGround && player1->position.x >= host->cutsceneCurEntity->position.x && !host->values[0]) {
+    if (player1->onGround && player1->position.x >= host->activeEntity->position.x && !host->values[0]) {
         player1->jumpPress = true;
         host->values[0]    = 1;
     }

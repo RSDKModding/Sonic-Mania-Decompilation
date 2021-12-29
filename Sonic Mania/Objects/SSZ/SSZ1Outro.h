@@ -40,10 +40,10 @@ void SSZ1Outro_EditorLoad(void);
 void SSZ1Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host);
+bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host);
 
-void SSZ1Outro_Unknown3(Entity *entity);
-void SSZ1Outro_Unknown4(void);
+void SSZ1Outro_DestroyHotaru(Entity *entity);
+void SSZ1Outro_DestroyLeftoverHotarus(void);
 
 #endif //!OBJ_SSZ1OUTRO_H

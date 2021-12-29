@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
+    bool32 forceEnabled;
     ScanlineInfo *scanlines;
     uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
     uint16 aniFrames;
@@ -16,16 +16,11 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     int32 timer;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
+    Animator animator; // unused
+    int32 unused1;     // unused
+    int32 unused2;     // unused
 } EntitySmog;
 
 // Object Struct

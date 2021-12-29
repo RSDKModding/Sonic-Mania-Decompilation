@@ -13,9 +13,9 @@ ObjectPSZ1Intro *PSZ1Intro;
 void PSZ1Intro_Update(void)
 {
     RSDK_THIS(PSZ1Intro);
-    void *states[] = { PSZ1Intro_CutsceneState_Unknown1, PSZ1Intro_CutsceneState_Unknown2, PSZ1Intro_CutsceneState_Unknown3, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, PSZ1Intro_Cutscene_SetupGliders, PSZ1Intro_Cutscene_GlideAndJump, PSZ1Intro_Cutscene_HandleLanding,
+                              StateMachine_None);
     self->active = ACTIVE_NEVER;
 }
 
@@ -55,7 +55,7 @@ void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider)
     }
 }
 
-bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ1Intro);
     CutsceneSeq_LockAllPlayerControl();
@@ -104,7 +104,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 PSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 PSZ1Intro_Cutscene_GlideAndJump(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ1Intro);
     if (++self->timer == 90) {
@@ -120,7 +120,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 PSZ1Intro_Cutscene_HandleLanding(EntityCutsceneSeq *host)
 {
     foreach_active(HangGlider, glider)
     {

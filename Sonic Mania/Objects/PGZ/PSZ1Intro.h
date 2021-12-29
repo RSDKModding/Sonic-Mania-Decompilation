@@ -35,9 +35,9 @@ void PSZ1Intro_Serialize(void);
 // Extra Entity Functions
 void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider);
 
-bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 PSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 PSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host);
+bool32 PSZ1Intro_Cutscene_GlideAndJump(EntityCutsceneSeq *host);
+bool32 PSZ1Intro_Cutscene_HandleLanding(EntityCutsceneSeq *host);
 
 #endif
 

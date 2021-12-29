@@ -28,6 +28,6 @@ void HCZ1Intro_EditorLoad(void);
 void HCZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host);
+bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host);
 
 #endif //!OBJ_HCZ1INTRO_H

@@ -32,12 +32,13 @@ void LRZ1Outro_Serialize(void);
 // Extra Entity Functions
 void LRZ1Outro_StartCutscene(void);
 
-bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown1(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_Unknown1(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown2(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown3(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown4(EntityCutsceneSeq *host);
+
+bool32 LRZ1Outro_CutsceneAct2_Unknown2(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_Unknown3(EntityCutsceneSeq *host);
 
 #endif //!OBJ_LRZ1OUTRO_H

@@ -15,7 +15,11 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state); // unused
+    Animator animator;   // unused
+    int32 unused1;       // unused
+    int32 unused2;       // unused
 } EntityUFO_Plasma;
 
 // Object Struct

@@ -66,10 +66,9 @@ void FBZ1Outro_StageLoad(void)
 void FBZ1Outro_StartCutscene(void)
 {
     RSDK_THIS(FBZ1Outro);
-    void *states[] = { FBZ1Outro_CutsceneState_Unknown1, FBZ1Outro_CutsceneState_Unknown2, FBZ1Outro_CutsceneState_Unknown3,
-                       FBZ1Outro_CutsceneState_Unknown4, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, FBZ1Outro_Cutscene_Unknown1, FBZ1Outro_Cutscene_Unknown2, FBZ1Outro_Cutscene_Unknown3,
+                              FBZ1Outro_Cutscene_Unknown4, StateMachine_None);
 
 #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
@@ -124,7 +123,7 @@ void FBZ1Outro_DispenseTrash(void)
     }
 }
 
-bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -192,7 +191,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -226,7 +225,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     FBZ1Outro_DispenseTrash();
     return false;
 }
-bool32 FBZ1Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -234,7 +233,7 @@ bool32 FBZ1Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     FBZ1Outro_DispenseTrash();
     return player1->onGround && (player2->objectID != Player->objectID || player2->onGround);
 }
-bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {

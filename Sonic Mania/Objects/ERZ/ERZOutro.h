@@ -45,13 +45,13 @@ void ERZOutro_Serialize(void);
 void ERZOutro_SetEmeraldStates(void);
 void ERZOutro_HandleRubyHover(void);
 
-bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_LoseEmeralds(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_OpenPortal(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_FadeOut(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_FadeOut(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host);
 
 void ERZOutro_SaveFileCB(bool32 success);
 
