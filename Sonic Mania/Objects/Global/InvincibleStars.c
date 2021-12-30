@@ -15,8 +15,8 @@ void InvincibleStars_Update(void)
 
     EntityPlayer *player = (EntityPlayer *)self->parent;
     if (player) {
-        self->starAngle[2] = (self->starAngle[2] + 1) % 12;
-        self->starAngle[3] = (self->starAngle[3] + 1) % 10;
+        self->starFrame[0] = (self->starAngle[0] + 1) % 12;
+        self->starFrame[1] = (self->starAngle[1] + 1) % 10;
 
         for (int32 i = 8 - 1; i > 0; --i) {
             self->starPos[i].x = self->starPos[i - 1].x;
@@ -34,6 +34,7 @@ void InvincibleStars_Update(void)
             self->starPos[0].y += (playerHitbox->top << 15) - (playerHitbox->bottom << 15) - (playerHitbox->top << 16);
         else
             self->starPos[0].y += ((playerHitbox->bottom + 2 * playerHitbox->top) << 15) - (playerHitbox->top << 15);
+
         if (player->direction) {
             self->starAngle[0] -= 144;
             self->starAngle[1] -= 16;
@@ -83,7 +84,7 @@ void InvincibleStars_Draw(void)
     Vector2 drawPos;
     drawPos.x                    = (RSDK.Cos512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].x;
     drawPos.y                    = (RSDK.Sin512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].y;
-    self->starAnimator[3].frameID = self->starAngle[2];
+    self->starAnimator[3].frameID = self->starFrame[0];
     RSDK.DrawSprite(&self->starAnimator[3], &drawPos, false);
 
     drawPos.x = (RSDK.Cos512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].x;
@@ -93,7 +94,7 @@ void InvincibleStars_Draw(void)
 
     drawPos.x                    = (RSDK.Cos512(self->starAngle[1]) << self->starOffset) + self->starPos[5].x;
     drawPos.y                    = (RSDK.Sin512(self->starAngle[1]) << self->starOffset) + self->starPos[5].y;
-    self->starAnimator[2].frameID = self->starAngle[2];
+    self->starAnimator[2].frameID = self->starFrame[0];
     RSDK.DrawSprite(&self->starAnimator[2], &drawPos, false);
 
     drawPos.x = (RSDK.Cos512(self->starAngle[1] + 0x100) << self->starOffset) + self->starPos[5].x;
@@ -103,7 +104,7 @@ void InvincibleStars_Draw(void)
 
     drawPos.x                    = (RSDK.Cos512(self->starAngle[1] + 0xA8) << self->starOffset) + self->starPos[3].x;
     drawPos.y                    = (RSDK.Sin512(self->starAngle[1] + 0xA8) << self->starOffset) + self->starPos[3].y;
-    self->starAnimator[1].frameID = self->starAngle[3];
+    self->starAnimator[1].frameID = self->starFrame[1];
     RSDK.DrawSprite(&self->starAnimator[1], &drawPos, false);
 
     drawPos.x = (RSDK.Cos512(self->starAngle[1] + 0x1A8) << self->starOffset) + self->starPos[3].x;
@@ -113,7 +114,7 @@ void InvincibleStars_Draw(void)
 
     drawPos.x                    = (RSDK.Cos512(self->starAngle[0]) << self->starOffset) + self->starPos[0].x;
     drawPos.y                    = (RSDK.Sin512(self->starAngle[0]) << self->starOffset) + self->starPos[0].y;
-    self->starAnimator[0].frameID = self->starAngle[2];
+    self->starAnimator[0].frameID = self->starFrame[0];
     RSDK.DrawSprite(self->starAnimator, &drawPos, false);
 
     drawPos.x = (RSDK.Cos512(self->starAngle[0] + 0x100) << self->starOffset) + self->starPos[0].x;

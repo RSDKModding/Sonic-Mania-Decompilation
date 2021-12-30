@@ -107,7 +107,7 @@ void LaundroMobile_CheckPlayerCollisions(void);
 void LaundroMobile_Explode(void);
 void LaundroMobile_HandleStageWrap(void);
 void LaundroMobile_HandleMissileMovement(void);
-void LaundroMobile_HandleAnimations(void);
+void LaundroMobile_HandleEggmanAnimations(void);
 void LaundroMobile_HandleTileCollisions(void);
 
 void LaundroMobile_State_SetupArena(void);

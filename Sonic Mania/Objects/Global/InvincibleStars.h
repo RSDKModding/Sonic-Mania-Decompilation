@@ -14,7 +14,8 @@ struct EntityInvincibleStars {
     RSDK_ENTITY
     Entity *parent;
     Vector2 starPos[8];
-    int32 starAngle[4];
+    int32 starAngle[2];
+    int32 starFrame[2];
     int32 starOffset;
     Animator starAnimator[4];
 };

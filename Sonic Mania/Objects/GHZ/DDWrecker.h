@@ -48,8 +48,8 @@ struct EntityDDWrecker {
     int32 spinAngle;
     int32 radius;
     uint16 slots[6];
-    void *bodyA;
-    void *bodyB;
+    EntityDDWrecker *bodyA;
+    EntityDDWrecker *bodyB;
     int32 unused1;
     int32 unknownAngle;
     int32 unused2;

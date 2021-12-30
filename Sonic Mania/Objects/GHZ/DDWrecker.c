@@ -175,11 +175,11 @@ void DDWrecker_State_InitChildren(void)
             child->slots[3]   = SceneInfo->entitySlot + 4;
             child->slots[4]   = SceneInfo->entitySlot + 5;
             child->slots[5]   = SceneInfo->entitySlot + 7;
-            child->bodyA      = RSDK.GetEntityByID(SceneInfo->entitySlot + 6);
-            child->bodyB      = RSDK.GetEntityByID(SceneInfo->entitySlot + 7);
+            child->bodyA      = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
+            child->bodyB      = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
             child->state      = DDWrecker_State_Assemble;
 
-            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker); // bodyA
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_BALL1));
             child->position.x = self->position.x;
             child->position.y = self->position.y;
@@ -194,7 +194,7 @@ void DDWrecker_State_InitChildren(void)
             child->bodyB    = RSDK.GetEntityByID(SceneInfo->entitySlot + 7);
             child->radius   = 64;
 
-            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker); // bodyB
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_BALL2));
             child->position.x = self->position.x;
             child->position.y = self->position.y;
@@ -265,35 +265,33 @@ void DDWrecker_State_AttackDelay(void)
 
     DDWrecker_Spin();
     if (--self->timer < 1) {
-        EntityDDWrecker *entityA = self->bodyA;
-        EntityDDWrecker *entityB = self->bodyB;
-        if (entityA->position.y - entityB->position.y < 0) {
-            entityA->startPos.x = self->startPos.x;
-            entityA->startPos.y = self->startPos.y;
-            entityA->startPos.y -= 0x400000;
-            entityA->velocity.x = 0;
-            entityA->angle      = self->angle;
-            entityA->spinAngle  = 0;
-            entityA->timer      = 4;
-            entityA->state      = DDWrecker_State_SwingLeft;
+        if (self->bodyA->position.y - self->bodyB->position.y < 0) {
+            self->bodyA->startPos.x = self->startPos.x;
+            self->bodyA->startPos.y = self->startPos.y;
+            self->bodyA->startPos.y -= 0x400000;
+            self->bodyA->velocity.x = 0;
+            self->bodyA->angle      = self->angle;
+            self->bodyA->spinAngle  = 0;
+            self->bodyA->timer      = 4;
+            self->bodyA->state      = DDWrecker_State_SwingLeft;
         }
         else {
-            entityB->startPos.x = self->startPos.x;
-            entityB->startPos.y = self->startPos.y;
-            entityB->startPos.y -= 0x400000;
-            entityA->velocity.x = 0;
-            entityB->angle      = self->angle;
-            entityB->spinAngle  = 512;
-            entityB->timer      = 4;
-            entityB->state      = DDWrecker_State_SwingRight;
+            self->bodyB->startPos.x = self->startPos.x;
+            self->bodyB->startPos.y = self->startPos.y;
+            self->bodyB->startPos.y -= 0x400000;
+            self->bodyB->velocity.x = 0;
+            self->bodyB->angle      = self->angle;
+            self->bodyB->spinAngle  = 512;
+            self->bodyB->timer      = 4;
+            self->bodyB->state      = DDWrecker_State_SwingRight;
         }
         if (self->swapBalls) {
-            entityA->stateBall = DDWrecker_StateBall_Vulnerable;
-            entityB->stateBall = DDWrecker_StateBall_Spiked;
+            self->bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
+            self->bodyB->stateBall = DDWrecker_StateBall_Spiked;
         }
         else {
-            entityA->stateBall = DDWrecker_StateBall_Spiked;
-            entityB->stateBall = DDWrecker_StateBall_Vulnerable;
+            self->bodyA->stateBall = DDWrecker_StateBall_Spiked;
+            self->bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
         }
         RSDK.PlaySfx(DDWrecker->sfxSharp, false, 255);
         self->state = StateMachine_None;
@@ -327,10 +325,8 @@ void DDWrecker_State_SwingRight(void)
                 child->spinAngle += 0x200;
             self->state = StateMachine_None;
 
-            EntityDDWrecker *bodyA = self->bodyA;
-            EntityDDWrecker *bodyB = self->bodyB;
-            bodyA->stateBall       = DDWrecker_StateBall_Spiked;
-            bodyB->stateBall       = DDWrecker_StateBall_Spiked;
+            self->bodyA->stateBall = DDWrecker_StateBall_Spiked;
+            self->bodyB->stateBall = DDWrecker_StateBall_Spiked;
             RSDK.PlaySfx(DDWrecker->sfxSharp, false, 255);
         }
         else {
@@ -341,19 +337,17 @@ void DDWrecker_State_SwingRight(void)
 
             self->state = DDWrecker_State_SwingLeft;
             if (self->timer == 2) {
-                EntityDDWrecker *bodyA = self->bodyA;
-                EntityDDWrecker *bodyB = self->bodyB;
 
-                if (bodyA->stateBall == DDWrecker_StateBall_Vulnerable)
-                    bodyA->stateBall = DDWrecker_StateBall_Spiked;
+                if (self->bodyA->stateBall == DDWrecker_StateBall_Vulnerable)
+                    self->bodyA->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
+                    self->bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
 
-                if (bodyB->stateBall == DDWrecker_StateBall_Vulnerable)
-                    bodyB->stateBall = DDWrecker_StateBall_Spiked;
+                if (self->bodyB->stateBall == DDWrecker_StateBall_Vulnerable)
+                    self->bodyB->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
-                RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
+                    self->bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
+                RSDK.PlaySfx(DDWrecker->sfxSharp, false, 0xFF);
             }
         }
     }
@@ -386,11 +380,9 @@ void DDWrecker_State_SwingLeft(void)
                 child->spinAngle += 512;
             self->state = StateMachine_None;
 
-            EntityDDWrecker *bodyA = self->bodyA;
-            EntityDDWrecker *bodyB = self->bodyB;
-            bodyA->stateBall       = DDWrecker_StateBall_Spiked;
-            bodyB->stateBall       = DDWrecker_StateBall_Spiked;
-            RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
+            self->bodyA->stateBall = DDWrecker_StateBall_Spiked;
+            self->bodyB->stateBall = DDWrecker_StateBall_Spiked;
+            RSDK.PlaySfx(DDWrecker->sfxSharp, false, 0xFF);
         }
         else {
             if (self->velocity.x)
@@ -400,19 +392,16 @@ void DDWrecker_State_SwingLeft(void)
 
             self->state = DDWrecker_State_SwingRight;
             if (self->timer == 2) {
-                EntityDDWrecker *bodyA = self->bodyA;
-                EntityDDWrecker *bodyB = self->bodyB;
-
-                if (bodyA->stateBall == DDWrecker_StateBall_Vulnerable)
-                    bodyA->stateBall = DDWrecker_StateBall_Spiked;
+                if (self->bodyA->stateBall == DDWrecker_StateBall_Vulnerable)
+                    self->bodyA->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
+                    self->bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
 
-                if (bodyB->stateBall == DDWrecker_StateBall_Vulnerable)
-                    bodyB->stateBall = DDWrecker_StateBall_Spiked;
+                if (self->bodyB->stateBall == DDWrecker_StateBall_Vulnerable)
+                    self->bodyB->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
-                RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
+                    self->bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
+                RSDK.PlaySfx(DDWrecker->sfxSharp, false, 0xFF);
             }
         }
     }
@@ -485,10 +474,8 @@ void DDWrecker_State_HandleSpinning(void)
     if (!--self->timer) {
         self->state = DDWrecker_State_SwingSlowDown;
 
-        EntityDDWrecker *bodyA = self->bodyA;
-        EntityDDWrecker *bodyB = self->bodyB;
-        bodyA->stateBall       = DDWrecker_StateBall_Vulnerable;
-        bodyB->stateBall       = DDWrecker_StateBall_Vulnerable;
+        self->bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
+        self->bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
     }
 }
 
@@ -850,7 +837,7 @@ void DDWrecker_State_Die(void)
 {
     RSDK_THIS(DDWrecker);
     if (!(Zone->timer % 3)) {
-        RSDK.PlaySfx(DDWrecker->sfxExplosion, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
             int x                      = self->position.x + (RSDK.Rand(-20, 20) << 16);
             int y                      = self->position.y + (RSDK.Rand(-20, 20) << 16);

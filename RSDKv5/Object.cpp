@@ -159,8 +159,7 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         break;
                     }
                     case SVAR_UINT32:
-                    case SVAR_INT32:
-                    case SVAR_BOOL: {
+                    case SVAR_INT32: {
                         int tmp = (dataPos & -(int)sizeof(int)) + sizeof(int);
                         if ((dataPos & -(int)sizeof(int)) >= dataPos)
                             tmp = dataPos;
@@ -172,6 +171,20 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                             info.readPos += (dataSize * sizeof(int));
                         }
                         dataPos = tmp + sizeof(int) * dataSize;
+                        break;
+                    }
+                    case SVAR_BOOL: {
+                        int tmp = (dataPos & -(int)sizeof(bool32)) + sizeof(int);
+                        if ((dataPos & -(int)sizeof(bool32)) >= dataPos)
+                            tmp = dataPos;
+                        dataPos = tmp;
+                        if (info.readPos + (dataSize * sizeof(bool32)) <= info.fileSize && &obj[dataPos]) {
+                            for (int i = 0; i < dataSize * sizeof(bool32); i += sizeof(bool32)) ReadBytes(&info, &obj[dataPos + i], sizeof(int));
+                        }
+                        else {
+                            info.readPos += (dataSize * sizeof(bool32));
+                        }
+                        dataPos = tmp + sizeof(bool32) * dataSize;
                         break;
                     }
                 }
@@ -190,11 +203,16 @@ void LoadStaticObject(byte *obj, uint *hash, int dataPos)
                         break;
                     case SVAR_UINT32:
                     case SVAR_INT32:
-                    case SVAR_BOOL:
                         tmp = (dataPos & -(int)sizeof(int)) + sizeof(int);
                         if ((dataPos & -(int)sizeof(int)) >= dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(int) * arraySize;
+                        break;
+                    case SVAR_BOOL:
+                        tmp = (dataPos & -(int)sizeof(bool32)) + sizeof(bool32);
+                        if ((dataPos & -(int)sizeof(bool32)) >= dataPos)
+                            tmp = dataPos;
+                        dataPos = tmp + sizeof(bool32) * arraySize;
                         break;
                     case SVAR_PTR:
                         tmp = (dataPos & -(int)sizeof(void *)) + sizeof(void *);

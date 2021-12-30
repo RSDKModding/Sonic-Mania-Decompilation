@@ -448,37 +448,48 @@ void LoadSceneFile()
                 entity->position.y = ReadInt32(&info, false);
 
                 uint8 *ptr = (uint8 *)entity;
+
+                byte buffer[0x10];
                 for (int32 v = 1; v < varCnt; ++v) {
                     switch (varList[v].type) {
                         case VAR_UINT8:
                         case VAR_INT8:
-                            if (varList[v].active) {
+                            if (varList[v].active) 
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int8));
-                            }
-                            else {
-                                ReadInt8(&info);
-                            }
+                            else
+                                ReadBytes(&info, buffer, sizeof(int8));
                             break;
                         case VAR_UINT16:
                         case VAR_INT16:
-                            if (varList[v].active) {
+                            if (varList[v].active) 
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int16));
-                            }
-                            else {
-                                ReadInt16(&info);
-                            }
+                            else
+                                ReadBytes(&info, buffer, sizeof(int16));
                             break;
                         case VAR_UINT32:
                         case VAR_INT32:
-                        case VAR_ENUM:
-                        case VAR_BOOL:
-                        case VAR_COLOUR:
-                            if (varList[v].active) {
+                            if (varList[v].active) 
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int32));
-                            }
-                            else {
-                                ReadInt32(&info, false);
-                            }
+                            else
+                                ReadBytes(&info, buffer, sizeof(int32));
+                            break;
+                        case VAR_ENUM: //not entirely sure on specifics here, should prolly be int32 always but the specific type implies it may not always be
+                            if (varList[v].active) 
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int32));
+                            else
+                                ReadBytes(&info, buffer, sizeof(int32));
+                            break;
+                        case VAR_BOOL:
+                            if (varList[v].active) 
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(bool32));
+                            else
+                                ReadBytes(&info, buffer, sizeof(bool32));
+                            break;
+                        case VAR_COLOUR:
+                            if (varList[v].active) 
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(colour));
+                            else
+                                ReadBytes(&info, buffer, sizeof(colour));
                             break;
                         case VAR_STRING:
                             if (varList[v].active) {
@@ -500,8 +511,8 @@ void LoadSceneFile()
                                 ReadBytes(&info, &ptr[varList[v].offset + sizeof(int32)], sizeof(int32));
                             }
                             else {
-                                ReadInt32(&info, false); // x
-                                ReadInt32(&info, false); // y
+                                ReadBytes(&info, buffer, sizeof(int32)); // x
+                                ReadBytes(&info, buffer, sizeof(int32)); // y
                             }
                             break;
                         case VAR_UNKNOWN:
@@ -509,7 +520,7 @@ void LoadSceneFile()
                                 ReadBytes(&info, &ptr[varList[v].offset], sizeof(int32));
                             }
                             else {
-                                ReadInt32(&info, false);
+                                ReadBytes(&info, buffer, sizeof(int32)); 
                             }
                             break;
                     }

@@ -6149,7 +6149,7 @@ void Player_ProcessP1Input(void)
                             if (ActClear && ActClear->actClearActive)
                                 flag = false;
 #endif
-                            if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
+                            if (!RSDK.GetEntityCount(TitleCard->objectID, false) && !pauseMenu->objectID && flag) {
                                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                                 pauseMenu->triggerPlayer = self->playerID;
                                 if (globals->gameMode == MODE_COMPETITION)
@@ -6256,7 +6256,7 @@ void Player_ProcessP1Input(void)
                     if (ActClear && ActClear->actClearActive)
                         flag = false;
 #endif
-                    if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
+                    if (!RSDK.GetEntityCount(TitleCard->objectID, false) && !pauseMenu->objectID && flag) {
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                         pauseMenu->triggerPlayer = self->playerID;
                         if (globals->gameMode == MODE_COMPETITION)
@@ -6506,7 +6506,7 @@ void Player_ProcessP2Input_Player(void)
 
             if (ControllerInfo[self->controllerID].keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
-                if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID) {
+                if (!RSDK.GetEntityCount(TitleCard->objectID, false) && !pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                     pauseMenu->triggerPlayer = 0;
                 }
