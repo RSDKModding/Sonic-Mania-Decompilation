@@ -255,7 +255,7 @@ void TitleCard_SetWordPositions(void)
     }
 
     for (int32 c = 0; c < self->zoneName.length; ++c) {
-        if (self->zoneName.text[c] == (ushort)-1) {
+        if (self->zoneName.text[c] == (uint16)-1) {
             self->word2Offset = c;
         }
     }
