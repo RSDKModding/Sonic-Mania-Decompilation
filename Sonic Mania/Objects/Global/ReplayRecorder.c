@@ -668,7 +668,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
                 self->drawFX    = FX_FLIP | FX_ROTATE | FX_SCALE;
                 self->scale.x   = 0x100;
                 self->scale.y   = 0x100;
-                if (player->tailFrames != -1) {
+                if (player->tailFrames != (uint16)-1) {
                     self->rotation   = player->tailRotation;
                     self->direction  = player->tailDirection;
                     self->velocity.x = player->velocity.x;

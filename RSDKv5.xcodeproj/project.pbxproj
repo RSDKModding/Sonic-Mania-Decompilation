@@ -26,7 +26,6 @@
 		C968826125DF3D7E00BEE4B8 /* Math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968823725DF3D7C00BEE4B8 /* Math.cpp */; };
 		C968826225DF3D7E00BEE4B8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968823825DF3D7C00BEE4B8 /* main.cpp */; };
 		C968826325DF3D7E00BEE4B8 /* Reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968823A25DF3D7C00BEE4B8 /* Reader.cpp */; };
-		C968826425DF3D7E00BEE4B8 /* Userdata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968823B25DF3D7C00BEE4B8 /* Userdata.cpp */; };
 		C968826525DF3D7E00BEE4B8 /* Drawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968823D25DF3D7C00BEE4B8 /* Drawing.cpp */; };
 		C968826725DF3D7E00BEE4B8 /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968824225DF3D7D00BEE4B8 /* Audio.cpp */; };
 		C968826825DF3D7E00BEE4B8 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C968824425DF3D7D00BEE4B8 /* Object.cpp */; };
@@ -63,6 +62,9 @@
 		C975E69526CB365000F09AD4 /* ModAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E68E26CB364F00F09AD4 /* ModAPI.cpp */; };
 		C975E69626CB365000F09AD4 /* UserStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E69026CB365000F09AD4 /* UserStorage.cpp */; };
 		C975E69726CB365000F09AD4 /* UserLeaderboards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C975E69126CB365000F09AD4 /* UserLeaderboards.cpp */; };
+		C9CDC70A277DB74400E4C97E /* UserStats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC704277DB74300E4C97E /* UserStats.cpp */; };
+		C9CDC70B277DB74400E4C97E /* UserCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC706277DB74300E4C97E /* UserCore.cpp */; };
+		C9CDC70C277DB74400E4C97E /* UserPresence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9CDC707277DB74300E4C97E /* UserPresence.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -102,7 +104,6 @@
 		C968822F25DF3D7B00BEE4B8 /* Shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823025DF3D7C00BEE4B8 /* Text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Text.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823125DF3D7C00BEE4B8 /* Text.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Text.hpp; sourceTree = "<group>"; wrapsLines = 0; };
-		C968823225DF3D7C00BEE4B8 /* Userdata.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Userdata.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823325DF3D7C00BEE4B8 /* DefaultObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DefaultObject.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823425DF3D7C00BEE4B8 /* Sprite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Sprite.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823525DF3D7C00BEE4B8 /* Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Collision.cpp; sourceTree = "<group>"; wrapsLines = 0; };
@@ -111,7 +112,6 @@
 		C968823825DF3D7C00BEE4B8 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823925DF3D7C00BEE4B8 /* Object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Object.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823A25DF3D7C00BEE4B8 /* Reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Reader.cpp; sourceTree = "<group>"; wrapsLines = 0; };
-		C968823B25DF3D7C00BEE4B8 /* Userdata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Userdata.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823C25DF3D7C00BEE4B8 /* Debug.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Debug.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823D25DF3D7C00BEE4B8 /* Drawing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Drawing.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C968823E25DF3D7C00BEE4B8 /* Math.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Math.hpp; sourceTree = "<group>"; wrapsLines = 0; };
@@ -182,6 +182,12 @@
 		C975E69126CB365000F09AD4 /* UserLeaderboards.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserLeaderboards.cpp; sourceTree = "<group>"; };
 		C975E69226CB365000F09AD4 /* UserAchievements.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserAchievements.hpp; sourceTree = "<group>"; };
 		C975E69326CB365000F09AD4 /* main.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
+		C9CDC704277DB74300E4C97E /* UserStats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserStats.cpp; sourceTree = "<group>"; };
+		C9CDC705277DB74300E4C97E /* UserStats.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserStats.hpp; sourceTree = "<group>"; };
+		C9CDC706277DB74300E4C97E /* UserCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserCore.cpp; sourceTree = "<group>"; };
+		C9CDC707277DB74300E4C97E /* UserPresence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserPresence.cpp; sourceTree = "<group>"; };
+		C9CDC708277DB74300E4C97E /* UserPresence.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserPresence.hpp; sourceTree = "<group>"; };
+		C9CDC709277DB74400E4C97E /* UserCore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserCore.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +268,12 @@
 		C968822C25DF3D5E00BEE4B8 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				C9CDC706277DB74300E4C97E /* UserCore.cpp */,
+				C9CDC709277DB74400E4C97E /* UserCore.hpp */,
+				C9CDC707277DB74300E4C97E /* UserPresence.cpp */,
+				C9CDC708277DB74300E4C97E /* UserPresence.hpp */,
+				C9CDC704277DB74300E4C97E /* UserStats.cpp */,
+				C9CDC705277DB74300E4C97E /* UserStats.hpp */,
 				C975E69326CB365000F09AD4 /* main.hpp */,
 				C975E68E26CB364F00F09AD4 /* ModAPI.cpp */,
 				C975E68C26CB364F00F09AD4 /* ModAPI.hpp */,
@@ -315,8 +327,6 @@
 				C968825B25DF3D7E00BEE4B8 /* Storage.hpp */,
 				C968823025DF3D7C00BEE4B8 /* Text.cpp */,
 				C968823125DF3D7C00BEE4B8 /* Text.hpp */,
-				C968823B25DF3D7C00BEE4B8 /* Userdata.cpp */,
-				C968823225DF3D7C00BEE4B8 /* Userdata.hpp */,
 			);
 			name = sources;
 			sourceTree = "<group>";
@@ -467,6 +477,7 @@
 				C968889E25DF48CE00BEE4B8 /* trees.c in Sources */,
 				C968825E25DF3D7E00BEE4B8 /* DefaultObject.cpp in Sources */,
 				C968826125DF3D7E00BEE4B8 /* Math.cpp in Sources */,
+				C9CDC70C277DB74400E4C97E /* UserPresence.cpp in Sources */,
 				C968826825DF3D7E00BEE4B8 /* Object.cpp in Sources */,
 				C968889F25DF48CE00BEE4B8 /* gzread.c in Sources */,
 				C975E69426CB365000F09AD4 /* UserAchievements.cpp in Sources */,
@@ -479,7 +490,6 @@
 				C975E69526CB365000F09AD4 /* ModAPI.cpp in Sources */,
 				C968826325DF3D7E00BEE4B8 /* Reader.cpp in Sources */,
 				C968826925DF3D7E00BEE4B8 /* Scene.cpp in Sources */,
-				C968826425DF3D7E00BEE4B8 /* Userdata.cpp in Sources */,
 				C9555DAE2744FE06006E1353 /* tinyxml2.cpp in Sources */,
 				C968826725DF3D7E00BEE4B8 /* Audio.cpp in Sources */,
 				C968889B25DF48CE00BEE4B8 /* deflate.c in Sources */,
@@ -488,9 +498,11 @@
 				C96888A225DF48CE00BEE4B8 /* crc32.c in Sources */,
 				C968889925DF48CE00BEE4B8 /* compress.c in Sources */,
 				C968827225DF3D7E00BEE4B8 /* Storage.cpp in Sources */,
+				C9CDC70A277DB74400E4C97E /* UserStats.cpp in Sources */,
 				C975E69626CB365000F09AD4 /* UserStorage.cpp in Sources */,
 				C968886E25DF3F4C00BEE4B8 /* dictionary.cpp in Sources */,
 				C968825C25DF3D7E00BEE4B8 /* Shader.cpp in Sources */,
+				C9CDC70B277DB74400E4C97E /* UserCore.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,7 +6,6 @@ UserRichPresence *richPresence = NULL;
 void DummyRichPresence::SetPresence(byte id, TextInfo *info)
 {
     char buffer[0xFF];
-    char buffer2[0xFF];
     GetCString(buffer, info);
     if (info->text[info->length - 1] == '\r')
         buffer[info->length - 1] = 0;

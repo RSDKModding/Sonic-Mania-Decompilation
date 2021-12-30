@@ -183,7 +183,6 @@ void CutsceneSeq_StartSequence(void *manager, ...)
     cutsceneSeq->position.y        = 0;
     cutsceneSeq->activeEntity      = SceneInfo->entity;
     cutsceneSeq->managerEntity     = manager;
-    int32 id                       = 0;
 
     va_list list;
     va_start(list, manager);

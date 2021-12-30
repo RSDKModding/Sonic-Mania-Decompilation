@@ -292,7 +292,7 @@ void Player_LateUpdate(void)
         }
     }
 
-    if (self->tailFrames != -1) {
+    if (self->tailFrames != (ushort)-1) {
         switch (self->animator.animationID) {
             case ANI_IDLE:
             case ANI_BORED1:
@@ -424,7 +424,7 @@ void Player_Draw(void)
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
     }
-    if (self->tailFrames != -1) {
+    if (self->tailFrames != (ushort)-1) {
         int32 rotStore  = self->rotation;
         int32 dirStore  = self->direction;
         self->rotation  = self->tailRotation;
