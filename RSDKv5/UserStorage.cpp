@@ -292,7 +292,7 @@ bool32 SaveUserDB(ushort tableID, void (*callback)(int))
 
 void ClearUserDB(ushort tableID)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -318,7 +318,7 @@ void ClearAllUserDBs()
 
 ushort GetUserDBRowByID(ushort tableID, uint uuid)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return -1;
     if (!uuid)
         return -1;
@@ -393,7 +393,7 @@ bool32 GetUserDBColumn(UserDBRow *row, int type, char *name, void *value)
 //UserDB Rows
 int AddUserDBRow(ushort tableID)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -422,7 +422,7 @@ int AddUserDBRow(ushort tableID)
 }
 uint RemoveDBRow(ushort tableID, uint rowID)
 {
-    if (tableID == 0xFFFF || rowID == 0xFFFF)
+    if (tableID == (uint16)-1 || rowID == (uint16)-1)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -445,7 +445,7 @@ uint RemoveDBRow(ushort tableID, uint rowID)
 }
 bool32 RemoveAllDBRows(ushort tableID)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -457,7 +457,7 @@ bool32 RemoveAllDBRows(ushort tableID)
 }
 uint GetDBRowUUID(ushort tableID, int rowID)
 {
-    if (tableID == 0xFFFF || rowID == 0xFFFF)
+    if (tableID == (uint16)-1 || rowID == (uint16)-1)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -469,7 +469,7 @@ uint GetDBRowUUID(ushort tableID, int rowID)
 //UserDB Row Unknowns
 ushort SetupUserDBRowSorting(ushort tableID)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return 0;
     UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
 
@@ -501,7 +501,7 @@ void UserDBRefreshRowUnknown(UserDB *userDB)
 }
 int AddUserDBRowSortFilter(ushort tableID, int type, const char *name, void *value)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -512,7 +512,7 @@ int AddUserDBRowSortFilter(ushort tableID, int type, const char *name, void *val
 }
 int SortUserDBRows(ushort tableID, int type, const char *name, bool32 flag)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return 0;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active)
@@ -523,7 +523,7 @@ int SortUserDBRows(ushort tableID, int type, const char *name, bool32 flag)
 }
 int GetSortedUserDBRowCount(ushort tableID)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return 0;
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
@@ -534,7 +534,7 @@ int GetSortedUserDBRowCount(ushort tableID)
 }
 int GetSortedUserDBRowID(ushort tableID, ushort sortedRowID)
 {
-    if (tableID == 0xFFFF)
+    if (tableID == (uint16)-1)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (!userDB->active || userDB->rowsChanged || sortedRowID >= userDB->sortedRowCount)
@@ -566,15 +566,15 @@ void InitUserDBValues(UserDB *userDB, va_list list)
     userDB->active = true;
     userDB->valid  = true;
 }
-bool32 GetUserDBValue(ushort tableID, int rowID, int type, char *name, void *value)
+bool32 GetUserDBValue(ushort tableID, uint rowID, int type, char *name, void *value)
 {
-    if (tableID == 0xFFFF || rowID == -1 || !userDBStorage->userDB[tableID].active)
+    if (tableID == (uint16)-1 || rowID == (uint16)-1 || !userDBStorage->userDB[tableID].active)
         return false;
     return GetUserDBColumn(&userDBStorage->userDB[tableID].rows[rowID], type, name, value);
 }
-bool32 SetUserDBValue(ushort tableID, int rowID, int type, char *name, void *value)
+bool32 SetUserDBValue(ushort tableID, uint rowID, int type, char *name, void *value)
 {
-    if (tableID == 0xFFFF || rowID == -1 || !userDBStorage->userDB[tableID].active)
+    if (tableID == (uint16)-1 || rowID == (uint16)-1 || !userDBStorage->userDB[tableID].active)
         return false;
 
     return AddUserDBColumn(&userDBStorage->userDB[tableID].rows[rowID], type, name, value);
@@ -682,12 +682,12 @@ void RetrieveUserDBValue(UserDBValue *value, int type, void *data)
 
 //UserDB Misc
 int GetUserDBRowsChanged(ushort tableID) { return userDBStorage->userDB[tableID].rowsChanged; }
-void GetUserDBRowCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
+void GetUserDBRowCreationTime(ushort tableID, int rowID, char *buf, size_t size, char *format)
 {
-    if (tableID != 0xFFFF && entryID != 0xFFFF) {
+    if (tableID != (uint16)-1 && rowID != (uint16)-1) {
         UserDB *userDB = &userDBStorage->userDB[tableID];
         if (userDB->active)
-            strftime(buf, size, format, &userDB->rows[entryID].createTime);
+            strftime(buf, size, format, &userDB->rows[rowID].createTime);
     }
 }
 
@@ -743,7 +743,7 @@ bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer)
         GenerateCRC(&userDB->columnUUIDs[c], userDB->columnNames[c]);
     }
 
-    for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
+    for (int r = 0; r < userDB->rowCount; ++r) {
         userDB->rows[r].uuid = *(uint32 *)buffer;
         buffer += sizeof(uint32);
 
@@ -768,62 +768,62 @@ bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer)
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
 {
     int size = 0;
-    if (totalSize >= sizeof(int32)) {
-        size           = sizeof(int32);
-        *(int *)buffer = 0x80074B1E; // signature
-        buffer += sizeof(int32);
+    if (sizeof(uint32) < totalSize) {
+        size           = sizeof(uint32);
+        *(uint32 *)buffer = 0x80074B1E; // signature
+        buffer += sizeof(uint32);
     }
-    if (size + sizeof(int32) <= totalSize) {
-        size += sizeof(int32);
-        *(int32 *)buffer = (int)GetUserDBWriteSize(userDB); // used size
-        buffer += sizeof(int32);
+    if (size + sizeof(uint32) < totalSize) {
+        size += sizeof(uint32);
+        *(uint32 *)buffer = (int)GetUserDBWriteSize(userDB); // used size
+        buffer += sizeof(uint32);
     }
-    if (size + sizeof(ushort) <= totalSize) {
-        size += sizeof(ushort);
-        *(ushort *)buffer = userDB->rowCount;
-        buffer += sizeof(ushort);
+    if (size + sizeof(uint16) < totalSize) {
+        size += sizeof(uint16);
+        *(uint16 *)buffer = userDB->rowCount;
+        buffer += sizeof(uint16);
     }
-    if (size + sizeof(byte) <= totalSize) {
+    if (size + sizeof(uint8) < totalSize) {
         ++size;
         *buffer++ = userDB->columnCount;
     }
 
     for (int c = 0; c < userDB->columnCount; ++c) {
-        if (size + sizeof(int8) <= totalSize) {
+        if (size + sizeof(uint8) < totalSize) {
             ++size;
-            *buffer++ = (int8)userDB->columnTypes[c];
+            *buffer++ = (uint8)userDB->columnTypes[c];
         }
-        if (size + 0x10 <= totalSize) {
-            memset(buffer, 0, 0x10 * sizeof(int8));
+        if (size + 0x10 * sizeof(uint8) < totalSize) {
+            memset(buffer, 0, 0x10 * sizeof(uint8));
             sprintf((char *)buffer, "%s", userDB->columnNames[c]);
             size += 0x10;
             buffer += 0x10;
         }
     }
 
-    for (int r = 0; r < RETRO_USERDB_ROW_MAX; ++r) {
-        if (size + sizeof(uint32) <= totalSize) {
+    for (int r = 0; r < userDB->rowCount; ++r) {
+        if (size + sizeof(uint32) < totalSize) {
             size += sizeof(uint32);
             *(uint32 *)buffer = userDB->rows[r].uuid;
             buffer += sizeof(uint32);
         }
-        if (size + sizeof(tm) <= totalSize) {
+        if (size + sizeof(tm) < totalSize) {
             memcpy(buffer, &userDB->rows[r].createTime, sizeof(tm));
             size += sizeof(tm);
             buffer += sizeof(tm);
         }
-        if (size + sizeof(tm) <= totalSize) {
+        if (size + sizeof(tm) < totalSize) {
             memcpy(buffer, &userDB->rows[r].changeTime, sizeof(tm));
             size += sizeof(tm);
             buffer += sizeof(tm);
         }
 
         for (int c = 0; c < userDB->columnCount; ++c) {
-            if (size + sizeof(int8) <= totalSize) {
+            if (size + sizeof(uint8) < totalSize) {
                 ++size;
-                *buffer++ = (int8)userDB->rows[r].values[c].size;
+                *buffer++ = (uint8)userDB->rows[r].values[c].size;
             }
-            if (userDB->rows[r].values[c].size + size <= totalSize) {
+            if (userDB->rows[r].values[c].size + size < totalSize) {
                 memcpy(buffer, userDB->rows[r].values[c].data, userDB->rows[r].values[c].size);
                 size += userDB->rows[r].values[c].size;
                 buffer += userDB->rows[r].values[c].size;

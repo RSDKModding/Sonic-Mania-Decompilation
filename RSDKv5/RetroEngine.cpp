@@ -649,31 +649,27 @@ void runRetroEngine()
 
 void parseArguments(int32 argc, char *argv[])
 {
+    memset(currentSceneFolder, 0, sizeof(currentSceneFolder));
+    memset(currentSceneID, 0, sizeof(currentSceneID));
+    sceneInfo.filter = 0;
+
     for (int a = 0; a < argc; ++a) {
         const char *find = "";
 
         find = strstr(argv[a], "stage=");
         if (find) {
-            char buf[0x40];
-
             int b = 0;
-            int c = 7;
-            while (find[c] && find[c] != ';') {
-                buf[b++] = find[c++];
-            }
-            buf[b] = 0;
+            int c = 6;
+            while (find[c] && find[c] != ';') currentSceneFolder[b++] = find[c++];
+            currentSceneFolder[b] = 0;
         }
 
         find = strstr(argv[a], "scene=");
         if (find) {
-            char buf[0x40];
-
             int b = 0;
-            int c = 7;
-            while (find[c] && find[c] != ';') {
-                buf[b++] = find[c++];
-            }
-            buf[b] = 0;
+            int c = 6;
+            while (find[c] && find[c] != ';') currentSceneID[b++] = find[c++];
+            currentSceneID[b] = 0;
         }
 
 #if RETRO_REV02
@@ -683,9 +679,7 @@ void parseArguments(int32 argc, char *argv[])
 
             int b = 0;
             int c = 7;
-            while (argv[a][c] && find[c] != ';') {
-                buf[b++] = find[c++];
-            }
+            while (argv[a][c] && find[c] != ';') buf[b++] = find[c++];
             buf[b]           = 0;
             sceneInfo.filter = atoi(buf);
         }
@@ -695,6 +689,12 @@ void parseArguments(int32 argc, char *argv[])
         if (find) {
             engine.printConsole = true;
             engine.devMenu      = true;
+#if RETRO_PLATFORM == RETRO_WIN
+            AllocConsole();
+            freopen_s((FILE **)stdin, "CONIN$", "w", stdin);
+            freopen_s((FILE **)stdout, "CONOUT$", "w", stdout);
+            freopen_s((FILE **)stderr, "CONOUT$", "w", stderr);
+#endif
         }
     }
 }
@@ -927,7 +927,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                                     sprintf(scene->name, "%s", stgName);
                                     GEN_HASH(scene->name, scene->hash);
                                     sprintf(scene->folder, "%s", stgFolder);
-                                    sprintf(scene->sceneID, "%s", stgID);
+                                    sprintf(scene->id, "%s", stgID);
 
 #if RETRO_REV02
                                     scene->filter = stgFilter;
@@ -985,14 +985,13 @@ void LoadGameConfig()
         }
 
         ReadString(&info, gameVerInfo.gameName);
-        if (!useDataFile) {
+        if (!useDataFile)
             sprintf(gameVerInfo.gameName, "%s (Data Folder)", gameVerInfo.gameName);
-        }
         ReadString(&info, gameVerInfo.gameSubName);
         ReadString(&info, gameVerInfo.gameVersion);
 
         sceneInfo.activeCategory = ReadInt8(&info);
-        sceneInfo.listPos        = ReadInt16(&info);
+        int startScene           = ReadInt16(&info);
 
         byte objCnt       = ReadInt8(&info);
         globalObjectCount = TYPE_DEFAULTCOUNT;
@@ -1045,7 +1044,24 @@ void LoadGameConfig()
         if (!totalSceneCount)
             totalSceneCount = 1;
 
-        AllocateStorage(sizeof(SceneListEntry) * totalSceneCount, (void **)&sceneInfo.listData, DATASET_STG, false);
+        if (strlen(currentSceneFolder) && strlen(currentSceneID)) {
+            AllocateStorage(sizeof(SceneListEntry) * (totalSceneCount + 1), (void **)&sceneInfo.listData, DATASET_STG, false);
+            SceneListEntry *scene = &sceneInfo.listData[totalSceneCount];
+            strcpy(scene->name, "_RSDK_SCENE");
+            strcpy(scene->folder, currentSceneFolder);
+            strcpy(scene->id, currentSceneID);
+            scene->filter = sceneInfo.filter;
+            GEN_HASH(scene->name, scene->hash);
+
+            // Override existing values
+            sceneInfo.activeCategory = 0;
+            startScene               = totalSceneCount;
+            currentSceneFolder[0]    = 0;
+            currentSceneID[0]        = 0;
+        }
+        else {
+            AllocateStorage(sizeof(SceneListEntry) * totalSceneCount, (void **)&sceneInfo.listData, DATASET_STG, false);
+        }
 
         sceneInfo.categoryCount = ReadInt8(&info);
         sceneInfo.listPos       = 0;
@@ -1059,6 +1075,7 @@ void LoadGameConfig()
             categoryCount = 1;
 
         AllocateStorage(sizeof(SceneListInfo) * categoryCount, (void **)&sceneInfo.listCategory, DATASET_STG, false);
+        sceneInfo.listPos = 0;
 
         int sceneID = 0;
         for (int i = 0; i < sceneInfo.categoryCount; ++i) {
@@ -1074,7 +1091,7 @@ void LoadGameConfig()
                 GEN_HASH(scene->name, scene->hash);
 
                 ReadString(&info, scene->folder);
-                ReadString(&info, scene->sceneID);
+                ReadString(&info, scene->id);
 
 #if RETRO_REV02
                 scene->filter = ReadInt8(&info);
@@ -1100,6 +1117,8 @@ void LoadGameConfig()
         LoadXMLObjects();
         LoadXMLStages(0, gcListCount, gcSceneCount);
 #endif
+
+        sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart + startScene;
     }
 }
 

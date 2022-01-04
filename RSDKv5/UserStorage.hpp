@@ -174,8 +174,8 @@ int GetSortedUserDBRowID(ushort tableID, ushort entryID);
 
 // UserDB Values
 void InitUserDBValues(UserDB *userDB, va_list list);
-bool32 GetUserDBValue(ushort tableID, int rowID, int type, char *name, void *value);
-bool32 SetUserDBValue(ushort tableID, int rowID, int type, char *name, void *value);
+bool32 GetUserDBValue(ushort tableID, uint rowID, int type, char *name, void *value);
+bool32 SetUserDBValue(ushort tableID, uint rowID, int type, char *name, void *value);
 bool32 CheckDBValueMatch(UserDBValue *valueA, int row, int column);
 void StoreUserDBValue(UserDBValue *value, int type, void *data);
 void RetrieveUserDBValue(UserDBValue *value, int type, void *data);

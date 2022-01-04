@@ -828,7 +828,7 @@ void ProcessInput()
 #endif
 
     for (int c = 0; c <= PLAYER_COUNT; ++c) {
-        if (c <= 0 || activeControllers[c] != CONT_UNASSIGNED) {
+        if (c <= 0 || activeControllers[c - 1] != CONT_UNASSIGNED) {
             InputState *cont[] = {
                 &controller[c].keyUp, &controller[c].keyDown, &controller[c].keyLeft,  &controller[c].keyRight,
                 &controller[c].keyA,  &controller[c].keyB,    &controller[c].keyC,     &controller[c].keyX,

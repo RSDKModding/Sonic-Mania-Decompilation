@@ -29,7 +29,7 @@ struct SceneListEntry {
     RETRO_HASH(hash);
     char name[0x20];
     char folder[0x10];
-    char sceneID[0x08];
+    char id[0x08];
 #if RETRO_REV02
     uint8 filter;
 #endif
@@ -120,6 +120,10 @@ extern CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4]; //1024 * 1 per
 extern bool32 hardResetFlag;
 #endif
 extern char currentSceneFolder[0x10];
+extern char currentSceneID[0x10];
+#if RETRO_REV02
+extern byte currentSceneFilter;
+#endif
 
 extern SceneInfo sceneInfo;
 

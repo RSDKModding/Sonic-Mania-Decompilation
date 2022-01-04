@@ -631,23 +631,24 @@ void TitleCard_Draw_SlideIn(void)
         if (self->timer < 256)
             RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 0xFF, INK_NONE, true);
 
+        int32 height = self->timer;
         if (self->timer < 512)
-            RSDK.DrawRect(0, ScreenInfo->centerY - (self->timer >> 1), ScreenInfo->width, self->timer, self->colours[3], 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[3], 0xFF, INK_NONE, true);
 
-        uint32 height = self->timer - 128;
-        if (height < 512)
+        height = self->timer - 128;
+        if (self->timer > 128 && self->timer < 640)
             RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[2], 0xFF, INK_NONE, true);
 
-        height -= 128;
-        if (height < 512)
+        height = self->timer - 256;
+        if (self->timer > 256 && self->timer < 768)
             RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[0], 0xFF, INK_NONE, true);
 
-        height -= 128;
-        if (height < 512)
+        height = self->timer - 384;
+        if (self->timer > 384 && self->timer < 896)
             RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[1], 0xFF, INK_NONE, true);
 
-        height -= 128;
-        if (height < 512)
+        height = self->timer - 512;
+        if (self->timer > 512)
             RSDK.DrawRect(0, ScreenInfo->centerY - (height >> 1), ScreenInfo->width, height, self->colours[4], 0xFF, INK_NONE, true);
     }
 

@@ -10,6 +10,7 @@ CollisionMask collisionMasks[CPATH_COUNT][TILE_COUNT * 4];
 bool32 hardResetFlag = false;
 #endif
 char currentSceneFolder[0x10];
+char currentSceneID[0x10];
 
 SceneInfo sceneInfo;
 
@@ -48,7 +49,7 @@ void LoadScene()
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0 && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
+        sceneInfo.filter   = sceneInfo.listData[sceneInfo.listPos].filter;
         PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
                  sceneInfo.listData[sceneInfo.listPos].name,
                  sceneInfo.listData[sceneInfo.listPos].filter);
@@ -241,7 +242,7 @@ void LoadSceneFile()
 
     SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     char buffer[0x40];
-    sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->sceneID);
+    sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->id);
 
     dataStorage[DATASET_TMP].usedStorage = 0;
 
