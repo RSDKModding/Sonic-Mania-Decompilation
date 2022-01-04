@@ -3220,8 +3220,7 @@ void Player_CheckStartFlyCarry(EntityPlayer *leader)
         self->position.y      = entityYPos;
         self->velocity.x      = entityXVel;
         leader->velocity.y    = entityYVel;
-        leader->position.y    = entityYPos;
-        leader->position.y += 0x1C0000;
+        leader->position.y    = entityYPos + 0x1C0000;
         leader->position.x = entityXPos;
         leader->velocity.x = entityXVel;
 

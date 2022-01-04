@@ -777,13 +777,13 @@ void LoadTileConfig(char *filepath)
 
                 for (int c = 0; c < TILE_SIZE; ++c) {
                     int h = collisionMasks[p][t + offY].lWallMasks[c];
-                    if (h == 255)
+                    if (h == 0xFF)
                         collisionMasks[p][t + off].rWallMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].rWallMasks[c] = 0xF - h;
 
                     h = collisionMasks[p][t + offY].rWallMasks[c];
-                    if (h == 255)
+                    if (h == 0xFF)
                         collisionMasks[p][t + off].lWallMasks[c] = 0xFF;
                     else
                         collisionMasks[p][t + off].lWallMasks[c] = 0xF - h;

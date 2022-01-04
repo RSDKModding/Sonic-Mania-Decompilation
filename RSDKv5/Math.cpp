@@ -29,7 +29,7 @@ uint32 randSeed = 0;
 
 void CalculateTrigAngles()
 {
-    srand(time(NULL));
+    srand((uint32)time(NULL));
     randSeed = rand();
 
     for (int i = 0; i < 0x400; ++i) {
@@ -69,11 +69,11 @@ void CalculateTrigAngles()
     sinVal512[0x180] = -0x200;
 
     for (int i = 0; i < 0x100; i++) {
-        sinVal256[i]  = (int)((sinVal512[i * 2] >> 1));
-        cosVal256[i]  = (int)((cosVal512[i * 2] >> 1));
-        tanVal256[i]  = (int)((tanVal512[i * 2] >> 1));
-        aSinVal256[i] = (int)((asin(i / 255.0) * 128.0) / M_PI);
-        aCosVal256[i] = (int)((acos(i / 255.0) * 128.0) / M_PI);
+        sinVal256[i]  = (int32)((sinVal512[i * 2] >> 1));
+        cosVal256[i]  = (int32)((cosVal512[i * 2] >> 1));
+        tanVal256[i]  = (int32)((tanVal512[i * 2] >> 1));
+        aSinVal256[i] = (int32)((asin(i / 255.0) * 128.0) / M_PI);
+        aCosVal256[i] = (int32)((acos(i / 255.0) * 128.0) / M_PI);
     }
 
     for (int y = 0; y < 0x100; ++y) {

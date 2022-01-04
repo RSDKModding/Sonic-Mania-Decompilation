@@ -138,7 +138,7 @@ inline void Prepare3DScene(uint16 sceneID)
     }
 }
 
-inline void SetMeshAnimation(uint16 model, Animator *animator, int16 animSpeed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
+inline void SetMeshAnimation(uint16 model, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
 {
     if (model >= MODEL_MAX) {
         if (animator)
@@ -154,7 +154,7 @@ inline void SetMeshAnimation(uint16 model, Animator *animator, int16 animSpeed, 
     animator->timer  = 0;
     animator->frameID         = frameID;
     animator->frameCount      = modelList[model].frameCount;
-    animator->speed  = animSpeed;
+    animator->speed  = speed;
     animator->prevAnimationID = animator->animationID;
     animator->frameDuration      = 0x100;
     animator->loopIndex       = loopIndex;

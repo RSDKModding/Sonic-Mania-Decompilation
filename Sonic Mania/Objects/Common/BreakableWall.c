@@ -143,10 +143,10 @@ void BreakableWall_State_FallingTile(void)
 {
     RSDK_THIS(BreakableWall);
     if (--self->timer <= 0) {
-        RSDK.SetTileInfo(self->layerID, self->tilePos.x, self->tilePos.y, 0xFFFF);
+        RSDK.SetTileInfo(self->layerID, self->tilePos.x, self->tilePos.y, -1);
         if (self->drawOrder < Zone->drawOrderLow) {
-            if (BreakableWall->farPlaneLayer != 0xFFFF)
-                RSDK.SetTileInfo(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, 0xFFFF);
+            if (BreakableWall->farPlaneLayer != (uint16)-1)
+                RSDK.SetTileInfo(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
         }
         self->state     = BreakableWall_State_Tile;
         self->stateDraw = BreakableWall_Draw_Tile;
@@ -271,27 +271,27 @@ void BreakableWall_HandleTopBreak_All(void)
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 flag = player->animator.animationID == ANI_JUMP;
+                    bool32 canBreak = player->animator.animationID == ANI_JUMP;
 
                     switch (player->characterID) {
                         default: break;
                         case ID_SONIC:
-                            if (!flag)
-                                flag = player->animator.animationID == ANI_DROPDASH;
+                            if (!canBreak)
+                                canBreak = player->animator.animationID == ANI_DROPDASH;
                             break;
-                        case ID_KNUCKLES: flag = true; break;
+                        case ID_KNUCKLES: canBreak = true; break;
 #if RETRO_USE_PLUS
                         case ID_MIGHTY:
-                            if (!flag)
-                                flag = player->state == Player_State_MightyHammerDrop;
+                            if (!canBreak)
+                                canBreak = player->state == Player_State_MightyHammerDrop;
                             break;
 #endif
                     }
 
                     if (player->groundedStore && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
-                        flag = false;
+                        canBreak = false;
 
-                    if (flag && !player->sidekick) {
+                    if (canBreak && !player->sidekick) {
                         player->onGround = false;
                         int32 ty         = self->position.y - (self->size.y << 19) + 0x80000;
                         int32 th         = self->position.y - (self->size.y << 19) + 0x80000 - ((self->size.y << 19) + self->position.y);
@@ -310,11 +310,11 @@ void BreakableWall_HandleTopBreak_All(void)
                                 int32 spd                      = (speed + abs(offsetX)) >> 18;
                                 tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
                                 tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
-                                RSDK.SetTileInfo(self->priority, posX, posY, 0xFFFF);
+                                RSDK.SetTileInfo(self->priority, posX, posY, -1);
 
                                 if (self->drawOrder < Zone->drawOrderLow) {
-                                    if (BreakableWall->farPlaneLayer != 0xFFFF)
-                                        RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, 0xFFFF);
+                                    if (BreakableWall->farPlaneLayer != (uint16)-1)
+                                        RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
                                 }
 
                                 blockSpeedX += 0x200000;
@@ -356,28 +356,28 @@ void BreakableWall_HandleTopBreak_Chunks(void)
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 flag = player->animator.animationID == ANI_JUMP;
+                    bool32 canBreak = player->animator.animationID == ANI_JUMP;
 
                     switch (player->characterID) {
                         default: break;
                         case ID_SONIC:
-                            if (!flag)
-                                flag = player->animator.animationID == ANI_DROPDASH;
+                            if (!canBreak)
+                                canBreak = player->animator.animationID == ANI_DROPDASH;
                             break;
-                        case ID_KNUCKLES: flag = true; break;
+                        case ID_KNUCKLES: canBreak = true; break;
 #if RETRO_USE_PLUS
                         case ID_MIGHTY:
-                            if (!flag)
-                                flag = player->state == Player_State_MightyHammerDrop;
+                            if (!canBreak)
+                                canBreak = player->state == Player_State_MightyHammerDrop;
                             break;
 #endif
                     }
 
                     if (onGround && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
-                        flag = false;
+                        canBreak = false;
 
-                    if (flag && !player->sidekick) {
-                        player->onGround = 0;
+                    if (canBreak && !player->sidekick) {
+                        player->onGround = false;
                         BreakableWall_HandleBlockBreak_V();
                         BreakableWall_GiveScoreBonus(player);
 
@@ -411,27 +411,27 @@ void BreakableWall_HandleSidesBreak(void)
         if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
             if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
+                bool32 canBreak = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
 
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                    flag |= shield->animator.animationID == 2;
+                    canBreak |= shield->animator.animationID == 2;
                 }
 
                 switch (player->characterID) {
                     default: break;
                     case ID_SONIC:
-                        flag |= player->animator.animationID == ANI_DROPDASH;
-                        flag |= player->superState == SUPERSTATE_SUPER;
+                        canBreak |= player->animator.animationID == ANI_DROPDASH;
+                        canBreak |= player->superState == SUPERSTATE_SUPER;
                         break;
-                    case ID_KNUCKLES: flag = true; break;
+                    case ID_KNUCKLES: canBreak = true; break;
                 }
 
                 if (player->state == Ice_State_FrozenPlayer) {
-                    flag |= abs(player->groundVel) >= 0x48000;
+                    canBreak |= abs(player->groundVel) >= 0x48000;
                 }
 
-                if (flag && !player->sidekick) {
+                if (canBreak && !player->sidekick) {
                     if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                         BreakableWall_HandleBlockBreak_H(self, player->position.x > self->position.x);
                         if (player->characterID == ID_KNUCKLES) {
@@ -466,7 +466,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
 
     foreach_active(Player, player)
     {
-        int32 yVel = player->velocity.y;
+        int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
 #if RETRO_USE_PLUS
             if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
@@ -491,7 +491,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
 
                         if (self->size.y <= 0)
                             destroyEntity(self);
-                        player->velocity.y = yVel;
+                        player->velocity.y = velY;
                     }
                 }
 #if RETRO_USE_PLUS
@@ -532,11 +532,11 @@ void BreakableWall_HandleBottomBreak_All(void)
                             int32 spd                      = (speed + abs(offsetX)) >> 18;
                             tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
                             tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
-                            RSDK.SetTileInfo(self->priority, posX, posY, 0xFFFF);
+                            RSDK.SetTileInfo(self->priority, posX, posY, -1);
 
                             if (self->drawOrder < Zone->drawOrderLow) {
-                                if (BreakableWall->farPlaneLayer != 0xFFFF)
-                                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, 0xFFFF);
+                                if (BreakableWall->farPlaneLayer != (uint16)-1)
+                                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
                             }
 
                             blockSpeedX += 0x200000;
@@ -598,10 +598,10 @@ void BreakableWall_HandleBlockBreak_V(void)
             int32 spd   = (speed + abs(distX)) >> 18;
             tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
             tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
-            RSDK.SetTileInfo(self->priority, tileX, tileY, 0xFFFF);
+            RSDK.SetTileInfo(self->priority, tileX, tileY, -1);
             if (self->drawOrder < Zone->drawOrderLow) {
-                if (BreakableWall->farPlaneLayer != 0xFFFF)
-                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, 0xFFFF);
+                if (BreakableWall->farPlaneLayer != (uint16)-1)
+                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
 
             tx += 0x100000;
@@ -670,10 +670,10 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *self, uint8 flip)
                 }
             }
 
-            RSDK.SetTileInfo(self->priority, tileX, tileY, 0xFFFF);
+            RSDK.SetTileInfo(self->priority, tileX, tileY, -1);
             if (self->drawOrder < Zone->drawOrderLow) {
-                if (BreakableWall->farPlaneLayer != 0xFFFF)
-                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, 0xFFFF);
+                if (BreakableWall->farPlaneLayer != (uint16)-1)
+                    RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
             curX += 0x10 << 16;
             angleX += 0x200000;

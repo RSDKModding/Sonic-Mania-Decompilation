@@ -7,9 +7,9 @@ ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
 
 enum ModelFlags {
     MODEL_NOFLAGS     = 0,
-    MODEL_USENORMALS  = 1,
-    MODEL_USETEXTURES = 2,
-    MODEL_USECOLOURS  = 4,
+    MODEL_USENORMALS  = 1 << 0,
+    MODEL_USETEXTURES = 1 << 1,
+    MODEL_USECOLOURS  = 1 << 2,
 };
 
 void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)

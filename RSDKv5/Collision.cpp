@@ -1552,8 +1552,8 @@ void FindFloorPosition(CollisionSensor *sensor)
                             if (mask < 0xFF) {
                                 if (!sensor->collided || startY >= ty) {
                                     if (abs(colY - ty) <= collisionTolerance) {
-                                        if ((abs(sensor->angle - tileAngle) <= 0x20) || (abs(sensor->angle - 0x100 - tileAngle) <= 0x20)
-                                            || (abs(sensor->angle + 0x100 - tileAngle) <= 0x20)) {
+                                        if (abs(sensor->angle - tileAngle) <= 0x20 || abs(sensor->angle - 0x100 - tileAngle) <= 0x20
+                                            || abs(sensor->angle + 0x100 - tileAngle) <= 0x20) {
                                             sensor->collided = true;
                                             sensor->angle    = tileAngle;
                                             sensor->pos.y    = (ty + layer->position.y) << 0x10;
