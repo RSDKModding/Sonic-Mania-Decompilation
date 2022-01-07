@@ -318,18 +318,14 @@ bool32 initRetroEngine()
 }
 void runRetroEngine()
 {
-    const Uint64 frequency = SDL_GetPerformanceFrequency();
-    Uint64 frameStart = SDL_GetPerformanceCounter(), frameEnd = SDL_GetPerformanceCounter();
-    float frameDelta = 0.0f;
+    unsigned long long targetFreq = SDL_GetPerformanceFrequency() / engine.refreshRate;
+    unsigned long long curTicks   = 0;
 
     while (engine.running) {
 #if !RETRO_USE_ORIGINAL_CODE
-        frameStart = SDL_GetPerformanceCounter();
-        frameDelta = frameStart - frameEnd;
-        if (frameDelta < frequency / (float)engine.refreshRate) {
+        if (SDL_GetPerformanceCounter() < curTicks + targetFreq)
             continue;
-        }
-        frameEnd = SDL_GetPerformanceCounter();
+        curTicks = SDL_GetPerformanceCounter();
 #endif
 
         engine.running  = processEvents();

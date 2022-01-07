@@ -33,6 +33,7 @@ public class RSDKv5 extends SDLActivity {
             resumeNativeThread();
         }
     }
+
     public String getBasePath() {
         Context c = getApplicationContext();
         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);

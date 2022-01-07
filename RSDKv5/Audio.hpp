@@ -116,16 +116,14 @@ inline void ResumeChannel(uint8 channel)
 
 inline void PauseSound()
 {
-    for (int c = 0; c < CHANNEL_COUNT; ++c) {
+    for (int c = 0; c < CHANNEL_COUNT; ++c) 
         PauseChannel(c);
-    }
 }
 
 inline void ResumeSound()
 {
-    for (int c = 0; c < CHANNEL_COUNT; ++c) {
+    for (int c = 0; c < CHANNEL_COUNT; ++c) 
         ResumeChannel(c);
-    }
 }
 
 inline bool32 SfxPlaying(uint8 sfxID)
