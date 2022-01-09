@@ -74,7 +74,7 @@ uint16 LoadSpriteAnimation(const char *filename, Scopes scope)
             for (int f = 0; f < animation->frameCount; ++f) {
                 SpriteFrame *frame = &spr->frames[frameID++];
                 frame->sheetID     = sheetIDs[ReadInt8(&info)];
-                frame->duration       = ReadInt16(&info);
+                frame->duration    = ReadInt16(&info);
                 frame->id          = ReadInt16(&info);
                 frame->sprX        = ReadInt16(&info);
                 frame->sprY        = ReadInt16(&info);

@@ -771,8 +771,16 @@ void ProcessAirCollision()
         sensors[1].pos.x = collisionEntity->position.x + (collisionOuter_Left << 16) - (1 << 16);
         sensors[1].pos.y = collisionEntity->position.y + collisionOffset;
     }
-    sensors[2].pos.x = collisionEntity->position.x + (collisionOuter_Right << 16) - (2 << 16);
-    sensors[3].pos.x = collisionEntity->position.x + (collisionOuter_Left << 16) + (1 << 16);
+
+    // Bug Details:
+    // using collision outer here results in a few slopes having some wonky collision if you jump at the on the wrong angles
+    // v4 and prior uses inner box here instead, which works fine as far as I can tell...
+    // Fix (I think, it may break something else?): 
+    // uncomment the 2 lines below and remove the two below that to get v4-like behaviour 
+    // sensors[2].pos.x = collisionEntity->position.x + (collisionInner_Left << 16);
+    // sensors[3].pos.x = collisionEntity->position.x + (collisionInner_Right << 16);
+    sensors[2].pos.x = collisionEntity->position.x + (collisionOuter_Left << 16) + (1 << 16);
+    sensors[3].pos.x = collisionEntity->position.x + (collisionOuter_Right << 16) - (2 << 16);
     sensors[4].pos.x = sensors[2].pos.x;
     sensors[5].pos.x = sensors[3].pos.x;
 

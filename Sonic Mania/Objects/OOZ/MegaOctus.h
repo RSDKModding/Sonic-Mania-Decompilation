@@ -20,19 +20,19 @@ typedef enum {
 struct ObjectMegaOctus {
     RSDK_OBJECT
     Entity *bossPtr;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    int32 field_80;
-    int32 field_84;
+    Animator noseAnimator;
+    Animator boltsAnimator;
+    Animator eggmanAnimator;
+    Animator hatchBaseAnimator;
+    Animator hatchOpenAnimator;
+    int32 eggmanOffset;
+    int32 eggmanVelocity;
     bool32 spawnHarpoon;
-    int32 field_8C;
-    TABLE(int32 field_90[11], { -0x200000, -0x180000, -0x100000, -0xC0000, -0x80000, 0, 0x80000, 0xC0000, 0x100000, 0x180000, 0x200000 });
-    TABLE(int32 field_BC[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
+    int32 turnPos;
+    TABLE(int32 turnOffsets[11], { -0x200000, -0x180000, -0x100000, -0xC0000, -0x80000, 0, 0x80000, 0xC0000, 0x100000, 0x180000, 0x200000 });
+    TABLE(int32 gunHeights[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
     int32 orbHealth[2];
-    bool32 field_D4;
+    bool32 defeated;
     uint16 aniFrames;
     uint16 eggmanFrames;
     uint16 hatchFrames;
@@ -53,9 +53,9 @@ struct EntityMegaOctus {
     StateMachine(stateDraw);
     uint8 type;
     int32 timer;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
+    int32 orbMoveAngle;
+    int32 targetPos;
+    int32 lastAttackHeight;
     int32 shotCount;
     int32 invincibilityTimer;
     uint8 health;
@@ -65,8 +65,8 @@ struct EntityMegaOctus {
 #if RETRO_USE_PLUS
     int32 tilePlatY;
 #endif
-    Animator animator1;
-    Animator animator2;
+    Animator animator;
+    Animator altAnimator;
     Hitbox hitbox;
 };
 
@@ -100,7 +100,7 @@ void MegaOctus_State_Unknown3(void);
 void MegaOctus_State_Unknown4(void);
 void MegaOctus_State_Unknown5(void);
 void MegaOctus_State_SpawnWeapons(void);
-void MegaOctus_State_SpawnOrbs(void);
+void MegaOctus_State_GunThenSpawnOrbs(void);
 void MegaOctus_State_Destroyed(void);
 void MegaOctus_State_Finish(void);
 void MegaOctus_StateDraw_Body(void);
@@ -112,8 +112,8 @@ void MegaOctus_StateDraw_HarpoonLeft(void);
 void MegaOctus_StateDraw_HarpoonRight(void);
 
 void MegaOctus_CheckPlayerCollisions_Gun(void);
-void MegaOctus_StateGun_Unknown1(void);
-void MegaOctus_StateGun_Unknown2(void);
+void MegaOctus_StateGun_RiseUp(void);
+void MegaOctus_StateGun_Idle(void);
 void MegaOctus_StateGun_FireLaser(void);
 void MegaOctus_StateGun_Unknown4(void);
 void MegaOctus_StateDraw_Gun(void);
