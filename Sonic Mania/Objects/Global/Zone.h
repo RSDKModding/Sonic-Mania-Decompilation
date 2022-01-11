@@ -130,7 +130,8 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset);
 void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds);
 void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
-void Zone_StartFadeOut_MusicFade(void);
+void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour);
+void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour);
 void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
@@ -146,7 +147,7 @@ void Zone_Draw_Fade(void);
 // States & Stuff
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
-void Zone_State_Fadeout_Unknown(void);
+void Zone_State_Fadeout_Competition(void);
 void Zone_TitleCard_SupressCB(void);
 void Zone_State_ReloadScene(void);
 void Zone_State_Fadeout_Destroy(void);

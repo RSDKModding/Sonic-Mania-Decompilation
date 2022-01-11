@@ -1484,12 +1484,12 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     // scoreboard->sizeY    = session->wins[0] != session->wins[1];
     // scoreboard->field_A4 = session->wins[1] > session->wins[0];
 
-    int32 bestRings      = 0;
-    int32 bestTotalRings = 0;
-    int32 bestScore      = 0;
-    int32 bestItems      = 0;
-    int32 bestTime       = -1;
-    int32 times[PLAYER_MAX];
+    uint32 bestRings      = 0;
+    uint32 bestTotalRings = 0;
+    uint32 bestScore      = 0;
+    uint32 bestItems      = 0;
+    uint32 bestTime       = 0xFFFFFFFF;
+    uint32 times[PLAYER_MAX];
 
     for (int32 p = 0; p < competition_PlayerCount; ++p) {
         if (session->rings[p] > bestRings)
@@ -1511,12 +1511,14 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
 
     char buffer[0x40];
     int32 winnerCount = 0;
+    int32 match       = session->matchID - 1;
+
     for (int32 p = 0; p < competition_PlayerCount; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
-        results->isWinner = session->winnerFlags[p] & (1 << p);
-        results->isLoser = session->winnerFlags[p] & (1 << p);
-        if (session->winnerFlags[p] & (1 << p))
+        results->isWinner = session->winnerFlags[match] & (1 << p);
+        results->isLoser  = session->winnerFlags[match] & (1 << p);
+        if (session->winnerFlags[match] & (1 << p))
             winnerCount++;
         results->trophyCount = session->wins[p];
         memset(buffer, 0, sizeof(buffer));
@@ -1551,7 +1553,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
 
-        if (session->finishFlags[p] != 1) {
+        if (session->finishFlags[p] != FINISHFLAG_TIMEOVER) {
             results->row0Highlight = session->rings[p] == bestRings;
             results->row1Highlight = session->totalRings[p] == bestTotalRings;
             results->row2Highlight = session->score[p] == bestScore;
@@ -1563,7 +1565,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     if (winnerCount == 1) {
         int32 winner = -1;
         for (int32 p = 0; p < competition_PlayerCount; ++p) {
-            if ((1 << p) & session->winnerFlags[p]) {
+            if ((1 << p) & session->winnerFlags[match]) {
                 winner = p;
                 break;
             }

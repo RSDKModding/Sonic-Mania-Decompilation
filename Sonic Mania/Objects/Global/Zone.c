@@ -107,15 +107,14 @@ void Zone_LateUpdate(void)
             SceneInfo->seconds      = 59;
             SceneInfo->milliseconds = 99;
             SceneInfo->timeEnabled  = false;
-            RSDK.PlaySfx(Player->sfxHurt, 0, 255);
+            RSDK.PlaySfx(Player->sfxHurt, false, 0xFF);
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             foreach_active(Player, playerLoop)
             {
                 bool32 flag = true;
 #if RETRO_USE_PLUS
-                if (globals->gameMode == MODE_COMPETITION && (session->finishFlags[playerLoop->playerID]) == 2) {
+                if (globals->gameMode == MODE_COMPETITION && (session->finishFlags[playerLoop->playerID]) == FINISHFLAG_FINISHED)
                     flag = false;
-                }
 #endif
                 if (!playerLoop->sidekick && flag)
                     playerLoop->deathType = PLAYER_DEATH_DIE_USESFX;
@@ -618,14 +617,28 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
-void Zone_StartFadeOut_MusicFade(void)
+void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-    zone->fadeColour = 0x000000;
-    zone->fadeSpeed  = 10;
+    zone->fadeColour = fadeColour;
+    zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
     zone->state      = Zone_State_Fadeout;
+    zone->stateDraw  = Zone_Draw_Fade;
+    zone->visible    = true;
+    zone->drawOrder  = DRAWLAYER_COUNT - 1;
+    Music_FadeOut(0.025);
+}
+
+void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour)
+{
+    EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+    zone->fadeColour = fadeColour;
+    zone->fadeSpeed  = fadeSpeed;
+    zone->screenID   = PLAYER_MAX;
+    zone->timer      = 0;
+    zone->state      = Zone_State_Fadeout_Competition;
     zone->stateDraw  = Zone_Draw_Fade;
     zone->visible    = true;
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
@@ -850,7 +863,7 @@ void Zone_State_FadeIn(void)
     }
 }
 
-void Zone_State_Fadeout_Unknown(void)
+void Zone_State_Fadeout_Competition(void)
 {
     RSDK_THIS(Zone);
     self->timer += self->fadeSpeed;

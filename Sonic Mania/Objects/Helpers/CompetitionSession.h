@@ -8,6 +8,12 @@
 #define competition_PlayerCount (2)
 #endif
 
+typedef enum {
+    FINISHFLAG_NOTFINISHED,
+    FINISHFLAG_TIMEOVER,
+    FINISHFLAG_FINISHED,
+}vsFinishFlags;
+
 //created so I can easily set up times in an array
 typedef struct {
     int32 minutes;

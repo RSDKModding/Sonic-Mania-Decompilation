@@ -1828,9 +1828,9 @@ void Player_HandleDeath(EntityPlayer *player)
                             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                             if (!session->finishFlags[playerID]) {
 #if RETRO_USE_PLUS
-                                Competition_CalculateScore(playerID, 1);
+                                Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
-                        CompetitionSession_DeriveWinner(playerID, 1);
+                                CompetitionSession_DeriveWinner(playerID, FINISHFLAG_1);
 #endif
                             }
 #if RETRO_USE_PLUS
@@ -1901,7 +1901,7 @@ void Player_HandleDeath(EntityPlayer *player)
                             }
                         }
                         Music_FadeOut(0.025);
-                        Zone_StartFadeOut_MusicFade();
+                        Zone_StartFadeOut_MusicFade(10, 0x000000);
                         player->objectID = TYPE_BLANK;
                     }
                     else {
@@ -1925,9 +1925,9 @@ void Player_HandleDeath(EntityPlayer *player)
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         if (!session->finishFlags[playerID]) {
 #if RETRO_USE_PLUS
-                            Competition_CalculateScore(playerID, 1);
+                            Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
-                    CompetitionSession_DeriveWinner(playerID, 1);
+                            CompetitionSession_DeriveWinner(playerID, FINISHFLAG_1);
 #endif
                         }
 #if RETRO_USE_PLUS

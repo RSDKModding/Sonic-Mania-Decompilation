@@ -629,12 +629,12 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     RSDK.GetCString(textBuffer, &info);
     UIInfoLabel_SetText((EntityUIInfoLabel *)CompetitionMenu->label1, textBuffer);
 
-    int32 bestRings      = 0;
-    int32 bestTotalRings = 0;
-    int32 bestScore      = 0;
-    int32 bestItems      = 0;
-    int32 bestTime       = -1;
-    int32 times[PLAYER_MAX];
+    uint32 bestRings      = 0;
+    uint32 bestTotalRings = 0;
+    uint32 bestScore      = 0;
+    uint32 bestItems      = 0;
+    uint32 bestTime       = 0xFFFFFFFF;
+    uint32 times[PLAYER_MAX];
 
     for (int32 p = 0; p < session->playerCount; ++p) {
         if (session->rings[p] > bestRings)
@@ -656,12 +656,14 @@ void CompetitionMenu_Round_MenuSetupCB(void)
 
     char buffer[0x40];
     int32 winnerCount = 0;
+    int32 match       = session->matchID - 1;
+
     for (int32 p = 0; p < session->playerCount; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
-        results->isWinner = session->winnerFlags[p] & (1 << p);
-        results->isLoser  = session->winnerFlags[p] & (1 << p);
-        if (session->winnerFlags[p] & (1 << p))
+        results->isWinner = session->winnerFlags[match] & (1 << p);
+        results->isLoser  = session->winnerFlags[match] & (1 << p);
+        if (session->winnerFlags[match] & (1 << p))
             winnerCount++;
         results->trophyCount = session->wins[p];
         memset(buffer, 0, sizeof(buffer));
@@ -696,7 +698,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
 
-        if (session->finishFlags[p] != 1) {
+        if (session->finishFlags[p] != FINISHFLAG_TIMEOVER) {
             results->row0Highlight = session->rings[p] == bestRings;
             results->row1Highlight = session->totalRings[p] == bestTotalRings;
             results->row2Highlight = session->score[p] == bestScore;
@@ -708,7 +710,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     if (winnerCount == 1) {
         int32 winner = -1;
         for (int32 p = 0; p < session->playerCount; ++p) {
-            if ((1 << p) & session->winnerFlags[p]) {
+            if ((1 << p) & session->winnerFlags[match]) {
                 winner = p;
                 break;
             }
@@ -788,16 +790,16 @@ void CompetitionMenu_Results_MenuSetupCB(void)
             highestScore = session->wins[p];
     }
 
-    int32 count    = 0;
-    int32 winnerID = -1;
+    int32 winnerCount = 0;
+    int32 winnerID    = -1;
     for (int32 p = 0; p < session->playerCount; ++p) {
         if (session->wins[p] == highestScore) {
             winnerID = p;
-            ++count;
+            ++winnerCount;
         }
     }
 
-    if (count <= 1) {
+    if (winnerCount <= 1) {
         LogHelpers_Print("Announce_WinnerIs(%d)", winnerID);
         EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
         announcer->state           = Announcer_State_AnnounceWinner;

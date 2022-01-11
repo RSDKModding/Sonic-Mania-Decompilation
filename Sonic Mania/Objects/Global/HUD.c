@@ -640,7 +640,7 @@ void HUD_State_GoOffScreen(void)
     if (lifeOffset->x < -0x500000) {
         if (globals->gameMode == MODE_COMPETITION) {
             *statePtr = StateMachine_None;
-            Competition_CalculateScore(self->screenID, 1);
+            Competition_CalculateScore(self->screenID, FINISHFLAG_TIMEOVER);
             EntityGameOver *gameOver   = RSDK_GET_ENTITY(self->screenID + Player->playerCount, GameOver);
             EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
             if (!manager || manager->timer) {

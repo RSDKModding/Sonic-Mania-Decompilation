@@ -119,11 +119,11 @@ void Smog_Create(void *data)
             if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
                 || SceneInfo->milliseconds != globals->tempMilliseconds) {
                 OOZSetup->flags = globals->restartFlags;
-                Zone_StartFadeOut_MusicFade();
+                Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
             else {
                 OOZSetup->flags = globals->tempFlags;
-                Zone_StartFadeOut_MusicFade();
+                Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
         }
 

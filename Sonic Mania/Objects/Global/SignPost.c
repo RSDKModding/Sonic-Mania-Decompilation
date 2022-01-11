@@ -354,9 +354,9 @@ void SignPost_CheckTouch(void)
                         session->score[player->playerID]             = player->score;
                         session->lives[player->playerID]             = player->lives;
 #if RETRO_USE_PLUS
-                        Competition_CalculateScore(player->playerID, 2);
+                        Competition_CalculateScore(player->playerID, FINISHFLAG_FINISHED);
 #else
-                        CompetitionSession_DeriveWinner(player->playerID, 2);
+                        CompetitionSession_DeriveWinner(player->playerID, FINISHFLAG_FINISHED);
 #endif
 
                         self->activePlayers |= (1 << p);
@@ -436,7 +436,7 @@ void SignPost_State_SpunVS(void)
             self->type             = SIGNPOST_DECOR;
             self->state            = SignPost_State_Finish;
             SceneInfo->timeEnabled = false;
-            Zone_StartFadeOut(10, 0x000000);
+            Zone_StartFadeOut_Competition(10, 0x000000);
         }
         else {
             self->spinSpeed = 0x3000;

@@ -378,6 +378,10 @@ void CollapsingPlatform_EditorLoad(void)
     RSDK_ENUM_VAR("Center", COLLAPSEPLAT_CENTER);
     RSDK_ENUM_VAR("Left or Right", COLLAPSEPLAT_LR);
     RSDK_ENUM_VAR("Base on Player Position", COLLAPSEPLAT_PLAYER);
+
+    RSDK_ACTIVE_VAR(CollapsingPlatform, targetLayer);
+    RSDK_ENUM_VAR("Low", 0);
+    RSDK_ENUM_VAR("High", 1);
 }
 #endif
 
