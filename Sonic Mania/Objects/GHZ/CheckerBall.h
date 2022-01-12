@@ -46,9 +46,9 @@ void CheckerBall_Serialize(void);
 void CheckerBall_DebugSpawn(void);
 void CheckerBall_DebugDraw(void);
 
-void CheckerBall_Unknown1(void);
-void CheckerBall_Unknown2(void);
-void CheckerBall_Unknown3(void);
+void CheckerBall_HandlePhysics(void);
+void CheckerBall_HandlePlayerMovement(void);
+void CheckerBall_HandlePlayerInteractions(void);
 void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox);
 void CheckerBall_HandleObjectCollisions(void);
 

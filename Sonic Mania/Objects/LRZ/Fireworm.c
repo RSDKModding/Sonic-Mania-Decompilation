@@ -156,8 +156,8 @@ void Fireworm_CheckOnScreen(void)
             self->angles[i]       = 0;
             self->timers[i]       = 0;
             if (i > 0) {
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animators1[i], true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animators2[i], true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->animators1[i], true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->animators2[i], true, 0);
             }
         }
         Fireworm_Create(NULL);

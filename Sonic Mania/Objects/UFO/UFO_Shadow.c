@@ -18,7 +18,7 @@ void UFO_Shadow_LateUpdate(void)
     if (parent->objectID) {
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
-        if (RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) >= 0xFFFF || parent->drawOrder != 4) {
+        if (RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawOrder != 4) {
             self->visible = false;
         }
         else {

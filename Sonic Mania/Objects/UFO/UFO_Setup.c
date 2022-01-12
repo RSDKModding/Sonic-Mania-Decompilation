@@ -78,8 +78,8 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetLimitedFade(5, 0, 7, 180, 160, 255);
     RSDK.SetLimitedFade(6, 0, 7, 216, 160, 255);
 
-    int32 floorID = RSDK.GetSceneLayerID("3D Floor");
-    if (floorID != 0xFFFF) {
+    uint16 floorID = RSDK.GetSceneLayerID("3D Floor");
+    if (floorID != (uint16)-1) {
         TileLayer *floor3D = RSDK.GetSceneLayer(floorID);
         if (floor3D) {
             floor3D->drawLayer[0]     = 0;
@@ -87,8 +87,8 @@ void UFO_Setup_StageLoad(void)
         }
     }
 
-    int32 roofID = RSDK.GetSceneLayerID("3D Roof");
-    if (roofID != 0xFFFF) {
+    uint16 roofID = RSDK.GetSceneLayerID("3D Roof");
+    if (roofID != (uint16)-1) {
         TileLayer *roof3D = RSDK.GetSceneLayer(roofID);
         if (roof3D) {
             roof3D->drawLayer[0]     = 0;

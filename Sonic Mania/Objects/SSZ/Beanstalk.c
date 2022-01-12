@@ -166,7 +166,7 @@ void Beanstalk_DrawNodes(void)
                 self->bezierPos    = 0x10000;
             }
 
-            if (self->curBezierPos == 0xFFFF)
+            if (self->curBezierPos == (uint16)-1)
                 self->curBezierPos = Beanstalk_GetNextNodeDistance();
 
             if (self->curBezierPos) {

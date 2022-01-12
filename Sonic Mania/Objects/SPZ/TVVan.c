@@ -824,7 +824,7 @@ void TVVan_StateTV_Exploding(void)
     RSDK.ProcessAnimation(&self->animator9);
 
     if (self->scale.x >= 0x200) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator7, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator7, true, 0);
         RSDK.SetSpriteAnimation(TVVan->aniFrames, 17, &self->animator6, true, 0);
         self->state                         = TVVan_StateTV_Destroyed;
         self->stateDraw[Zone->drawOrderLow] = TVVan_Draw_ExitTV_Active;

@@ -193,7 +193,7 @@ void Grabber_State_CheckForGrab(void)
     if (++self->turnTimer >= 256) {
         self->turnTimer = 0;
         RSDK.SetSpriteAnimation(Grabber->aniFrames, 3, &self->bodyAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->clampAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->clampAnimator, true, 0);
         self->state = Grabber_State_Unknown6;
     }
     self->position.x += self->velocity.x;

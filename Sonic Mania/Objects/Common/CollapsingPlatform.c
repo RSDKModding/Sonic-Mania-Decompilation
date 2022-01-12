@@ -16,92 +16,60 @@ void CollapsingPlatform_Update(void)
     if (DebugMode)
         self->visible = DebugMode->debugActive;
 
+    bool32 runState = false;
+
     if (self->collapseDelay) {
 #if RETRO_USE_PLUS
         if (Player) {
             foreach_active(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
-                    StateMachine_Run(self->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-                    if (self->respawn) {
-                        self->collapseDelay = 0;
-                        self->playerPos.x   = 0;
-                    }
-                    else {
-                        destroyEntity(self);
-                    }
-                    foreach_return;
-                }
-            }
-        }
-#endif
-        if (--self->collapseDelay == 0) {
-            StateMachine_Run(self->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-            if (self->respawn) {
-                self->collapseDelay = 0;
-                self->playerPos.x   = 0;
-            }
-            else {
-                destroyEntity(self);
-            }
-        }
-    }
-    else if (Player) {
-        self->direction = FLIP_NONE;
-        foreach_active(Player, player)
-        {
-            if (Player_CheckCollisionTouch(player, self, &self->hitbox)
-#if RETRO_USE_PLUS
-                && (!self->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
-#endif
-                && !player->sidekick && player->onGround && !player->collisionMode && !self->eventOnly && self->delay < 0xFFFF) {
-                self->playerPos.x = player->position.x;
-#if RETRO_USE_PLUS
-                if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
-                    StateMachine_Run(self->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-                    if (self->respawn) {
-                        self->collapseDelay = 0;
-                        self->playerPos.x   = 0;
-                    }
-                    else {
-                        destroyEntity(self);
-                    }
+                    runState = true;
                     foreach_break;
                 }
+            }
+        }
 #endif
+        if (!runState && --self->collapseDelay == 0) 
+            runState = true;
+    }
+    else {
+        if (Player) {
+            self->direction = FLIP_NONE;
+            foreach_active(Player, player)
+            {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox)
+#if RETRO_USE_PLUS
+                    && (!self->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
+#endif
+                    && !player->sidekick && player->onGround && !player->collisionMode && !self->eventOnly && self->delay < 0xFFFF) {
+                    self->stoodPos.x = player->position.x;
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
+                        runState = true;
+                        foreach_break;
+                    }
+#endif
+                }
             }
         }
 
-        if (self->playerPos.x) {
+        if (!runState &&& self->stoodPos.x) {
             self->collapseDelay = self->delay;
-            if (!self->delay) {
-                StateMachine_Run(self->state);
-                RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-                if (self->respawn) {
-                    self->collapseDelay = 0;
-                    self->playerPos.x   = 0;
-                }
-                else {
-                    destroyEntity(self);
-                }
-            }
+            if (!self->delay)
+                runState = true;
         }
     }
-    else if (self->playerPos.x) {
-        self->collapseDelay = self->delay;
-        if (!self->delay) {
-            StateMachine_Run(self->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-            if (self->respawn) {
-                self->collapseDelay = 0;
-                self->playerPos.x   = 0;
-            }
-            else {
-                destroyEntity(self);
-            }
+
+    if (runState) {
+        StateMachine_Run(self->state);
+        RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 0xFF);
+        if (self->respawn) {
+            self->collapseDelay = 0;
+            self->stoodPos.x    = 0;
+        }
+        else {
+            destroyEntity(self);
         }
     }
 }
@@ -151,7 +119,7 @@ void CollapsingPlatform_Create(void *data)
     self->position.y &= 0xFFF80000;
     self->drawFX |= FX_FLIP;
     self->drawOrder = Zone->drawOrderLow;
-    if (self->targetLayer == 0) {
+    if (self->targetLayer == COLLAPSEPLAT_TARGET_LOW) {
         self->targetLayer = Zone->fgLow;
         self->drawOrder   = Zone->drawOrderLow;
     }
@@ -309,7 +277,7 @@ void CollapsingPlatform_State_Center(void)
 void CollapsingPlatform_State_LeftOrRight(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int32 px = self->playerPos.x;
+    int32 px = self->stoodPos.x;
     int32 x  = self->position.x;
 
     if (px < x)
@@ -320,7 +288,7 @@ void CollapsingPlatform_State_LeftOrRight(void)
 void CollapsingPlatform_State_PlayerPos(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int32 px = self->playerPos.x;
+    int32 px = self->stoodPos.x;
     int32 x  = self->position.x;
 
     if (abs(px - x) < self->size.x / 6) {
@@ -380,8 +348,8 @@ void CollapsingPlatform_EditorLoad(void)
     RSDK_ENUM_VAR("Base on Player Position", COLLAPSEPLAT_PLAYER);
 
     RSDK_ACTIVE_VAR(CollapsingPlatform, targetLayer);
-    RSDK_ENUM_VAR("Low", 0);
-    RSDK_ENUM_VAR("High", 1);
+    RSDK_ENUM_VAR("Low", COLLAPSEPLAT_TARGET_LOW);
+    RSDK_ENUM_VAR("High", COLLAPSEPLAT_TARGET_HIGH);
 }
 #endif
 

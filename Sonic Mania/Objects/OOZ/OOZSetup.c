@@ -53,7 +53,7 @@ void OOZSetup_StaticUpdate(void)
             Hitbox *playerHitbox = Player_GetHitbox(player);
             uint16 tile =
                 RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
-            if (tile == 0xFFFF)
+            if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             int32 behaviour = RSDK.GetTileBehaviour(tile, player->collisionPlane);
 
@@ -168,7 +168,7 @@ void OOZSetup_StaticUpdate(void)
     {
         if (ring->state == Ring_State_Bounce) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
-            if (tile == 0xFFFF)
+            if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgHigh, ring->position.x >> 20, (ring->position.y + 0xE0000) >> 20);
             if (RSDK.GetTileBehaviour(tile, ring->collisionPlane) == 1) {
                 ring->velocity.x -= ring->velocity.x >> 4;

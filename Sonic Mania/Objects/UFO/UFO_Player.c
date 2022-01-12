@@ -368,7 +368,7 @@ void UFO_Player_HandleSpeedUp(void)
     RSDK_THIS(UFO_Player);
 
     uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20);
-    if (tile == 0xFFFF) {
+    if (tile == (uint16)-1) {
         if (++self->courseOutTimer >= 2) {
             self->interaction   = 0;
             self->timer         = 0;

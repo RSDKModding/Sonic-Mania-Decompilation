@@ -259,7 +259,7 @@ void FBZTrash_EditorDraw(void)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     switch (self->type) {
-        default: RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0); break;
+        default: RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0); break;
         case FBZTRASH_TRASH:
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x200000;

@@ -882,11 +882,11 @@ void HeavyKing_State_Unknown5(void)
         masterEmerald->alpha = 0;
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 2, &self->animator1, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 11, &self->animator2, false, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, false, 0);
         self->state = HeavyKing_State_Unknown6;
     }
     if (!(self->timer & 7))
-        RSDK.PlaySfx(HeavyKing->sfxCharge, false, 255);
+        RSDK.PlaySfx(HeavyKing->sfxCharge, false, 0xFF);
     HeavyKing_CheckPlayerCollisions_Charging();
 }
 
@@ -1112,7 +1112,7 @@ void HeavyKing_State_Escape(void)
     if (!claw->state) {
         claw->state = KingClaw_Unknown7;
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 7, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->state = HeavyKing_State_Finish;
     }
 }

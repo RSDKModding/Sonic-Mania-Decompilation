@@ -674,12 +674,12 @@ void AmoebaDroid_State_Destroyed(void)
     ++self->timer;
     if (self->timer == 30) {
         Debris_FallFlickerAnimSetup(AmoebaDroid->aniFrames, AmoebaDroid->debrisInfo2, 7);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->attractorTopAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->attractorSideAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->attractorTopAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->attractorSideAnimator, true, 0);
     }
     else if (self->timer == 60) {
         Debris_FallFlickerAnimSetup(AmoebaDroid->aniFrames, AmoebaDroid->debrisInfo1, 7);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
     }
     else if (self->timer == 90) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);

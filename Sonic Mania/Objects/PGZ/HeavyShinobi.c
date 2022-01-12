@@ -142,10 +142,10 @@ void HeavyShinobi_StageLoad(void)
     HeavyShinobi->hitbox7.right  = 3;
     HeavyShinobi->hitbox7.bottom = 3;
 
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[0], true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[1], true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[2], true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[3], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[0], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[1], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[2], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[3], true, 0);
     HeavyShinobi->activeShurikens    = 0;
     HeavyShinobi->health             = 8;
     HeavyShinobi->invincibilityTimer = 0;
@@ -189,8 +189,8 @@ void HeavyShinobi_HandleAfterFX(void)
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, HeavyShinobi->storedAnimIDs[i], &HeavyShinobi->animator1[i], false, 0);
                 }
                 else {
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[i], false, 0);
-                    HeavyShinobi->animator1[i].animationID = 255;
+                    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[i], false, 0);
+                    HeavyShinobi->animator1[i].animationID = (uint8)-1;
                 }
             }
         }
@@ -207,7 +207,7 @@ void HeavyShinobi_HandleSlash(void *p)
 
     RSDK.PlaySfx(HeavyShinobi->sfxSlash, false, 255);
     self->direction = player->position.x >= self->position.x;
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 4, &self->animator1, true, 1);
     CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), self->position.x, self->position.y)->direction = self->direction;
 
@@ -230,7 +230,7 @@ void HeavyShinobi_Unknown3(void)
 {
     RSDK_THIS(HeavyShinobi);
 
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
     RSDK.PlaySfx(HeavyShinobi->sfxJump, false, 255);
     self->timer = 28;
 
@@ -264,7 +264,7 @@ void HeavyShinobi_Explode(void)
             int32 x = RSDK.Rand(-19, 20) << 16;
             int32 y = RSDK.Rand(-24, 25) << 16;
             EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x + self->position.x, y + self->position.y);
+                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x + self->position.x, y + self->position.y);
             explosion->drawOrder = Zone->drawOrderHigh + 2;
         }
     }
@@ -600,7 +600,7 @@ void HeavyShinobi_State_Destroyed(void)
     if (--self->timer <= 0) {
         self->velocity.y = -0x70000;
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 3, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         RSDK.PlaySfx(HeavyShinobi->sfxDefeat, false, 255);
         self->state = HeavyShinobi_State_Finished;
     }
@@ -1033,10 +1033,10 @@ void HeavyShinobi_EditorDraw(void)
 void HeavyShinobi_EditorLoad(void)
 {
     HeavyShinobi->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[0], true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[1], true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[2], true, 0);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &HeavyShinobi->animator1[3], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[0], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[1], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[2], true, 0);
+    RSDK.SetSpriteAnimation(-1, 0, &HeavyShinobi->animator1[3], true, 0);
 }
 #endif
 

@@ -332,7 +332,7 @@ void Sol_Unknown9(void)
         int32 spawnX = self->position.x + offsetX;
         int32 spawnY = self->position.y + offsetY;
         uint16 tile  = RSDK.GetTileInfo(Zone->fgHigh, spawnX >> 20, (spawnY - 0x10000) >> 20);
-        if (tile == 0xFFFF)
+        if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgLow, spawnX >> 20, (spawnY - 0x10000) >> 20);
 
         int32 behaviour = RSDK.GetTileBehaviour(tile, 0);
@@ -390,13 +390,13 @@ void Sol_Unknown11(void)
 
         if (collided) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
-            if (tile == 0xFFFF)
+            if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x90000) >> 20);
             self->rotation = 2 * RSDK.GetTileAngle(tile, 0, 0);
         }
 
         uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
-        if (tile == 0xFFFF)
+        if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
 
         int32 behaviour = RSDK.GetTileBehaviour(tile, 0);
@@ -430,7 +430,7 @@ void Sol_Unknown12(void)
     RSDK_THIS(Sol);
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
-        if (tile == 0xFFFF)
+        if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0xF0000) >> 20);
 
         if (RSDK.GetTileBehaviour(tile, 0) == 1) {

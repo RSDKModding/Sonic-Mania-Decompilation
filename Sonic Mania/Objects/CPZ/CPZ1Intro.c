@@ -301,7 +301,7 @@ bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h)
                 player1->state          = Player_State_None;
                 player1->tileCollisions = false;
                 RSDK.SetSpriteAnimation(CPZ1Intro->playerFrames, CPZ1Intro->playerAnimID, &player1->animator, true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &player1->tailAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &player1->tailAnimator, true, 0);
                 player1->animator.animationID     = 0xFF;
                 player1->animator.prevAnimationID = 0xFF;
 #else

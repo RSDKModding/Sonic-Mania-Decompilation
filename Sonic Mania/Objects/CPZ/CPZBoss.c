@@ -168,7 +168,7 @@ void CPZBoss_State_CheckPlayerReady(void)
                     player->position.y = self->position.y;
                     player->velocity.x = 0;
                     player->velocity.y = 0;
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->enterAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &self->enterAnimator, true, 0);
                     RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->playerAnimator, true, 1);
                     self->direction = FLIP_X;
                     self->state     = CPZBoss_State_PlayPlayerEnterAnim;
@@ -209,8 +209,8 @@ void CPZBoss_State_SetupMatch(void)
         int32 id = 0;
         foreach_active(PuyoMatch, match)
         {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator2, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator1, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &match->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &match->animator1, true, 0);
             match->state    = PuyoMatch_State_HandleMatch;
             match->matchKey = rand;
             PuyoMatch_SetupNextBeans(match);
@@ -378,7 +378,7 @@ void CPZBoss_State_PlayerWin(void)
             {
                 if (!boss->type) {
                     boss->state = CPZBoss_State_PlayerExit;
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &boss->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &boss->playerAnimator, false, 0);
                     RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &boss->enterAnimator, true, 0);
                     foreach_all(Player, player)
                     {
@@ -433,7 +433,7 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
                 player->velocity.y = -0x20000;
                 RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntityID(&player));
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->playerAnimator, false, 0);
                 RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);
             }
 
@@ -534,12 +534,12 @@ void CPZBoss_EditorDraw(void)
         self->drawFX = FX_FLIP;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 0, &self->panelAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->playerAnimator, true, 0);
     }
     else {
         RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->playerAnimator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 0, &self->panelAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->enterAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->enterAnimator, true, 0);
     }
 
     CPZBoss_Draw();

@@ -86,7 +86,7 @@ void Ice_Create(void *data)
             self->updateRange.y = 0x800000;
             RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_ICEBLOCK, &self->blockAnimator, true, self->size);
             switch (self->type) {
-                case ICE_BLOCK: RSDK.SetSpriteAnimation(0xFFFF, ICEANI_ICEBLOCK, &self->contentsAnimator, true, 0); break;
+                case ICE_BLOCK: RSDK.SetSpriteAnimation(-1, ICEANI_ICEBLOCK, &self->contentsAnimator, true, 0); break;
                 case ICE_1RING: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 0); break;
                 case ICE_3RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 1); break;
                 case ICE_5RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 2); break;
@@ -1259,7 +1259,7 @@ void Ice_EditorDraw(void)
 
     RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_ICEBLOCK, &self->blockAnimator, true, self->size);
     switch (self->type) {
-        case ICE_BLOCK: RSDK.SetSpriteAnimation(0xFFFF, ICEANI_ICEBLOCK, &self->contentsAnimator, true, 0); break;
+        case ICE_BLOCK: RSDK.SetSpriteAnimation(-1, ICEANI_ICEBLOCK, &self->contentsAnimator, true, 0); break;
         case ICE_1RING: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 0); break;
         case ICE_3RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 1); break;
         case ICE_5RINGS: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &self->contentsAnimator, true, 2); break;

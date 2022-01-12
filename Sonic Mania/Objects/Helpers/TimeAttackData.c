@@ -204,7 +204,7 @@ void TimeAttackData_ResetTimeAttackDB(void)
     uint16 id = API.InitUserDB("TimeAttackDB.bin", DBVAR_UINT8, "zoneID", DBVAR_UINT8, "act", DBVAR_UINT8, "characterID", DBVAR_UINT8, "encore",
                                DBVAR_UINT32, "score", DBVAR_UINT32, "replayID", NULL);
     globals->taTableID = id;
-    if (id == 0xFFFF) {
+    if (id == (uint16)-1) {
         globals->taTableLoaded = STATUS_ERROR;
     }
     else {
@@ -305,7 +305,7 @@ int32 TimeAttackData_AddTADBEntry(uint8 zoneID, uint8 act, uint8 characterID, bo
 
 void TimeAttackData_SaveTimeAttackDB(void (*callback)(bool32 success))
 {
-    if (API.GetNoSave() || globals->taTableID == 0xFFFF || globals->taTableLoaded != STATUS_OK) {
+    if (API.GetNoSave() || globals->taTableID == (uint16)-1 || globals->taTableLoaded != STATUS_OK) {
         if (callback)
             callback(false);
     }

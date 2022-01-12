@@ -151,7 +151,7 @@ void Cactula_State_Unknown3(void)
             }
         }
 
-        if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == 0xFFFF)
+        if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
             Cactula_CheckPlayerCollisions();
     }
 }

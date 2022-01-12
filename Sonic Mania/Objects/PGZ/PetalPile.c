@@ -238,7 +238,7 @@ void PetalPile_State_Unknown3(void)
             int32 sizeY = (bottom >> 4) - (top >> 4);
             for (int32 x = 0; x <= sizeX; ++x) {
                 for (int32 y = 0; y <= sizeY; ++y) {
-                    RSDK.SetTileInfo(self->layerID, x + (left >> 4), y + (top >> 4), 0xFFFF);
+                    RSDK.SetTileInfo(self->layerID, x + (left >> 4), y + (top >> 4), -1);
                 }
             }
         }

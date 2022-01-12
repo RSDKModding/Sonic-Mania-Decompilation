@@ -669,7 +669,7 @@ void Gachapandora_State_Unknown4(void)
 
             self->invincibilityTimer = 120;
             RSDK.SetSpriteAnimation(Gachapandora->eggmanFrames, 1, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
             self->state     = Gachapandora_State_Unknown5;
             self->stateDraw = Gachapandora_StateDraw_Unknown2;
         }
@@ -799,7 +799,7 @@ void Gachapandora_State_Unknown9(void)
     self->position.y = BadnikHelpers_Oscillate(self->posUnknown.y, 2, 10);
     if (!--self->invincibilityTimer) {
         CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_1), self->position.x, self->position.y - 0x100000)->parent = (Entity *)self;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->invincibilityTimer = 60;
         self->state              = Gachapandora_State_Unknown10;
     }

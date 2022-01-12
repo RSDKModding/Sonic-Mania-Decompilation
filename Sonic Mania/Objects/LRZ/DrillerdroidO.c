@@ -1051,7 +1051,7 @@ void DrillerdroidO_EditorDraw(void)
             break;
         case DRILLERDROIDO_FIREBALLEMITTER:
             RSDK.SetSpriteAnimation(DrillerdroidO->ticFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 3, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 3, &self->animator2, true, 0);
 
             DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y + (0xC0 << 15), 0x40 << 16, 0xC0 << 16);
             break;

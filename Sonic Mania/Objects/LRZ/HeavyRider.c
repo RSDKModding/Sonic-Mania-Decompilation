@@ -43,7 +43,7 @@ void HeavyRider_Create(void *data)
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->animator2, true, 0);
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->animator3, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
                     HeavyRider->field_10  = 0x80;
@@ -239,7 +239,7 @@ void HeavyRider_CheckObjectCollisions(void)
                             RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
                             RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
                             HeavyRider->field_20                                                    = 0;
-                            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+                            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
                         }
                         else if (HeavyRider->field_4 == 7) {
                             HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, HeavyRider->debrisPos.x, HeavyRider->debrisPos.y);
@@ -324,7 +324,7 @@ void HeavyRider_CheckObjectCollisions(void)
                     && RSDK.CheckObjectCollisionTouchBox(rider, &HeavyRider->hitbox6, self, &HeavyRider->hitbox5)) {
                     if (self->direction == FLIP_X) {
                         RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-                        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+                        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
                         self->state = HeavyRider_State_Unknown4;
                     }
                     else if (self->state != HeavyRider_State_Unknown2) {
@@ -338,7 +338,7 @@ void HeavyRider_CheckObjectCollisions(void)
                      && RSDK.CheckObjectCollisionTouchBox(rider, &HeavyRider->hitbox6, self, &HeavyRider->hitbox5) == true) {
                 if (self->direction == FLIP_NONE) {
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
                     self->state = HeavyRider_State_Unknown4;
                 }
                 else if (self->state != HeavyRider_State_Unknown2) {
@@ -363,8 +363,8 @@ void HeavyRider_Explode(void)
     if (!(Zone->timer & 7)) {
         RSDK.PlaySfx(HeavyRider->sfxExplosion, false, 255);
         if (!(Zone->timer & 0xF)) {
-            int x = self->position.x + (RSDK.Rand(-19, 20) << 16);
-            int y = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh + 2;
         }
     }
@@ -378,7 +378,7 @@ void HeavyRider_Unknown4(void)
         if (self->position.x < (ScreenInfo->position.x + 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             self->state = HeavyRider_State_Unknown4;
         }
     }
@@ -386,7 +386,7 @@ void HeavyRider_Unknown4(void)
         if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             self->state = HeavyRider_State_Unknown4;
         }
     }
@@ -400,7 +400,7 @@ void HeavyRider_Unknown5(void)
         if (self->position.x < (Zone->cameraBoundsL[0] - 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             self->state = HeavyRider_State_Unknown4;
         }
     }
@@ -408,7 +408,7 @@ void HeavyRider_Unknown5(void)
         if (self->position.x > (Zone->cameraBoundsR[0] + 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             self->state = HeavyRider_State_Unknown4;
         }
     }
@@ -420,7 +420,7 @@ void HeavyRider_Unknown6(void)
 
     if (HeavyRider->field_3 != 2) {
         HeavyRider->field_20 = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
     }
 
     int id = RSDK.Rand(0, 10);
@@ -446,7 +446,7 @@ void HeavyRider_Unknown6(void)
             HeavyRider->field_3 = ids[id];
             if (id < 6) {
                 HeavyRider->field_20 = 0;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
             }
             break;
         } break;
@@ -539,7 +539,7 @@ void HeavyRider_State_Unknown1(void)
             if (self->velocity.y > 0) {
                 if (RSDK.Rand(0, 2) == 1) {
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
                     self->state = HeavyRider_State_Unknown4;
                 }
                 self->velocity.y = 0;
@@ -572,7 +572,7 @@ void HeavyRider_State_Unknown1(void)
             HeavyRider->field_14 = 0;
             HeavyRider->field_18 = 0;
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator5, true, 0);
         }
     }
 
@@ -651,7 +651,7 @@ void HeavyRider_State_Unknown1(void)
             }
         }
         else {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             if (HeavyRider->field_1B > 16)
                 HeavyRider->field_1B = 16;
 
@@ -830,7 +830,7 @@ void HeavyRider_State_Destroyed(void)
         else
             self->velocity.x = 0x20000;
         RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 3, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->state = HeavyRider_State_Finish;
     }
 }
@@ -1157,7 +1157,7 @@ void HeavyRider_EditorDraw(void)
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->animator2, true, 0);
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             HeavyRider->field_10  = 0x80;

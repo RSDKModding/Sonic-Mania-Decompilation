@@ -11,6 +11,11 @@ typedef enum {
     COLLAPSEPLAT_PLAYER,
 } CollapsingPlatformTypes;
 
+typedef enum {
+    COLLAPSEPLAT_TARGET_LOW,
+    COLLAPSEPLAT_TARGET_HIGH,
+} CollapsingPlatformTargetLayers;
+
 // Object Class
 struct ObjectCollapsingPlatform {
     RSDK_OBJECT
@@ -35,7 +40,7 @@ struct EntityCollapsingPlatform {
     int32 collapseDelay;
     uint16 storedTiles[256];
     Hitbox hitbox;
-    Vector2 playerPos;
+    Vector2 stoodPos;
 };
 
 // Object Struct

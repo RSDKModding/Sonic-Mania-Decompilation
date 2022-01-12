@@ -1154,11 +1154,11 @@ void MegaOctus_StateArm_Unknown5(void)
 
         EntityCollapsingPlatform *collapsingPlatform = RSDK_GET_ENTITY(slot, CollapsingPlatform);
         collapsingPlatform->collapseDelay            = 24;
-        collapsingPlatform->playerPos.x              = self->position.x;
+        collapsingPlatform->stoodPos.x               = self->position.x;
 
         collapsingPlatform                = RSDK_GET_ENTITY(slot + 1, CollapsingPlatform);
         collapsingPlatform->collapseDelay = 24;
-        collapsingPlatform->playerPos.x   = self->position.x;
+        collapsingPlatform->stoodPos.x    = self->position.x;
 
         self->timer = 30;
         self->state = MegaOctus_StateArm_Unknown2;

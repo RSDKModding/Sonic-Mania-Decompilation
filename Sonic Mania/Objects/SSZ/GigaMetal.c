@@ -631,7 +631,7 @@ void GigaMetal_State_Unknown5(void)
         for (int delay = 4; delay < 40; delay += 6) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, endY);
 
-            if (tile != 0xFFFF) {
+            if (tile != (uint16)-1) {
                 EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
                 block->drawOrder           = Zone->drawOrderHigh;
                 block->layerID             = Zone->fgHigh;
@@ -737,16 +737,16 @@ void GigaMetal_State_Destroyed(void)
         dango->direction   = FLIP_X;
         dango->state       = Dango_StateTaunt_Unknown1;
 
-        int tileX = ScreenInfo->position.x >> 4;
-        int tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
+        int32 tileX = ScreenInfo->position.x >> 4;
+        int32 tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
 
-        int spawnX = (tileX << 20) + 0x80000;
+        int32 spawnX = (tileX << 20) + 0x80000;
         for (int x = 0; x < 32; ++x) {
-            int spawnY = (tileY << 20) + 0x80000;
-            for (int y = 0; y < 6; ++y) {
+            int32 spawnY = (tileY << 20) + 0x80000;
+            for (int32 y = 0; y < 6; ++y) {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, tileY);
-                if (tile != 0xFFFF) {
-                    RSDK.SetTileInfo(Zone->fgHigh, tileX, tileY, 0xFFFF);
+                if (tile != (uint16)-1) {
+                    RSDK.SetTileInfo(Zone->fgHigh, tileX, tileY, -1);
                     EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     block->drawOrder           = Zone->drawOrderHigh;
                     block->visible             = true;
@@ -943,7 +943,7 @@ void GigaMetal_StateHead_Unknown6(void)
 
     if (self->rotation >= 0) {
         if (++self->timer == 2) {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, false, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator3, false, 0);
 
             foreach_active(GigaMetal, arm)
             {
@@ -987,7 +987,7 @@ void GigaMetal_StateHead_Unknown8(void)
         RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_EYE, &self->animator2, false, 3);
     }
     else if (self->timer == 88) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
         self->field_94 = self->field_8C;
         self->timer    = 0;
         self->state    = GigaMetal_StateHead_Unknown9;

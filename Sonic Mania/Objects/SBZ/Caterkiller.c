@@ -229,17 +229,17 @@ bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
     int32 ty      = (y >> 16) + 8;
     int32 tx      = x >> 16;
     uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, x >> 16, ty);
-    if (tile == 0xFFFF)
+    if (tile == (uint16)-1)
         tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-    uint8 angle = RSDK.GetTileAngle(tile, 0, 0);
+    uint8 angle = RSDK.GetTileAngle(tile, 0, CMODE_FLOOR);
 
     if (dir) {
         if ((uint8)(angle + 127) <= 0x66)
             return true;
     }
-    else if ((uint8)(angle - 25) <= 0x66) {
+    else if ((uint8)(angle - 25) <= 0x66) 
         return true;
-    }
+
     return false;
 }
 

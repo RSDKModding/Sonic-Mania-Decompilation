@@ -113,7 +113,7 @@ void Tornado_State_SetupPlayers(void)
     RSDK_THIS(Tornado);
     Tornado_HandlePlayerCollisions();
     if (StarPost->postIDs[0]) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animatorKnux, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
         self->state = Tornado_Unknown6;
     }
     else {
@@ -158,7 +158,7 @@ void Tornado_Unknown4(void)
     self->knuxOffset.y += self->knuxVel.y;
     if (++self->timer == 120) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animatorKnux, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
         self->state = Tornado_Unknown6;
     }
 }

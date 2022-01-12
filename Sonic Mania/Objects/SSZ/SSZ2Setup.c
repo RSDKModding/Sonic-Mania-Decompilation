@@ -20,7 +20,7 @@ void SSZ2Setup_StaticUpdate(void)
         {
             Hitbox *hitbox = Player_GetHitbox(player);
             uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
-            if (tile == 0xFFFF)
+            if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
             if (RSDK.GetTileBehaviour(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {

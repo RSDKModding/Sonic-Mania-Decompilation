@@ -856,12 +856,12 @@ void WeatherMobile_State_Defeated(void)
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator6, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator7, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator6, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator7, true, 0);
             break;
         case 96:
             Debris_FallFlickerAnimSetup(WeatherMobile->aniFrames, WeatherMobile->debrisInfo, 24);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator5, true, 0);
             break;
         case 144:
             Music_TransitionTrack(TRACK_STAGE, 0.0125);

@@ -456,8 +456,8 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         RSDK.PlaySfx(MSZCutsceneST->sfxExplosion3, false, 255);
         host->fadeWhite        = 512;
         MSZCutsceneST->isMayday = true;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &tornado->animatorPropeller, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &tornado->animatorPilot, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &tornado->animatorPropeller, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &tornado->animatorPilot, true, 0);
         tornado->drawFX |= FX_ROTATE;
         tornado->state     = Tornado_Unknown7;
         tornado->rotation  = 48;

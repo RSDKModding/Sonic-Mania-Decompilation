@@ -452,7 +452,7 @@ void LRZRockPile_State_Type1(void)
                     && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && !self->unbreakable && player->onGround) {
-                    if (self->delay != 0xFFFF) {
+                    if (self->delay != (uint16)-1) {
                         if (!self->flag) {
                             self->flag  = true;
                             self->timer = self->delay;
@@ -484,7 +484,7 @@ void LRZRockPile_State_Type2(void)
                     && (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
 #endif
                     && !player->sidekick && !self->unbreakable && player->onGround) {
-                    if (self->delay != 0xFFFF) {
+                    if (self->delay != (uint16)-1) {
                         if (!self->flag) {
                             self->flag  = true;
                             self->timer = self->delay;

@@ -727,7 +727,7 @@ void LaundroMobile_State_Destroyed_Phase1(void)
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->state = LaundroMobile_State_Unknown4;
     }
 }
@@ -924,7 +924,7 @@ void LaundroMobile_State_Unknown14(void)
     self->velocity.y += 0x2800;
     if ((LaundroMobile->attackDir && self->position.x >= 0x6E000000) || (!LaundroMobile->attackDir && self->position.x <= 0x6E000000)) {
         self->position.x = 0x6E000000;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
         LaundroMobile->rocketActive = false;
         RSDK.PlaySfx(LaundroMobile->sfxHullClose, false, 255);
         self->state = LaundroMobile_State_Unknown15;

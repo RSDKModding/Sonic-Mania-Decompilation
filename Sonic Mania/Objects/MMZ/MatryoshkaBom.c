@@ -251,7 +251,7 @@ void MatryoshkaBom_Unknown6(void)
             case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &self->animator1, true, 0); break;
             case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &self->animator1, true, 0); break;
         }
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
         self->state = MatryoshkaBom_Unknown7;
     }
     RSDK.ProcessAnimation(&self->animator1);

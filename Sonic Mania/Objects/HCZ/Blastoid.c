@@ -74,7 +74,7 @@ void Blastoid_DebugSpawn(void)
 void Blastoid_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Blastoid_CheckPlayerCollisions(void)
@@ -88,7 +88,7 @@ void Blastoid_CheckPlayerCollisions(void)
             if (platform->objectID == CollapsingPlatform->objectID) {
                 platform->active        = ACTIVE_NORMAL;
                 platform->collapseDelay = 30;
-                platform->playerPos.x   = self->position.x;
+                platform->stoodPos.x    = self->position.x;
             }
             destroyEntity(self);
         }

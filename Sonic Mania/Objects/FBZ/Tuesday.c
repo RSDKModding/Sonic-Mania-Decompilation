@@ -730,7 +730,7 @@ void Tuesday_State_Destroyed(void)
         child->type                 = 1;
 
         if (!self->type) {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->gondolaAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->gondolaAnimator, true, 0);
             child = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
             RSDK.SetSpriteAnimation(Tuesday->aniFrames, 0, &child->nodeAnimator, true, 0);
             child->drawPos.x  = child->position.x;

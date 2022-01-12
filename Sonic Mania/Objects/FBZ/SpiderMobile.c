@@ -335,7 +335,7 @@ void SpiderMobile_HandlePlatformMovement(void)
         }
         if (player->state == Player_State_None) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
-            if (tile == 0xFFFF || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
+            if (tile == (uint16)-1 || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
                 player->drawOrder = Zone->playerDrawLow;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                 player->state      = Player_State_Air;
@@ -898,11 +898,11 @@ void SpiderMobile_StateBody_Unknown4(void)
         self->onGround = false;
         SpiderMobile_Unknown1();
         self->state = SpiderMobile_StateBody_Unknown2;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->electricAnimator, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, false, 0);
     }
     else if (!self->onGround) {
         self->state = SpiderMobile_StateBody_Unknown3;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->electricAnimator, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, false, 0);
     }
 
     SpiderMobile_HandlePlatformMovement();
@@ -1000,13 +1000,13 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->gravity    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
         }
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->legsAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->orbAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->legsAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->orbAnimator, true, 0);
     }
     else if (self->timer == 90) {
         CREATE_ENTITY(SpiderMobile, intToVoid(2), self->position.x, self->position.y)->rotation = self->angle;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bumperAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->starAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->bumperAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->starAnimator, true, 0);
         self->position.x = self->headPos.x;
         self->position.y = self->headPos.y;
         self->position.x -= 0xC80 * RSDK.Sin512(self->angle + self->field_90);

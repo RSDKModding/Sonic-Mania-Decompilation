@@ -103,19 +103,19 @@ void UIModeButton_SetupSprites(void)
     RSDK_THIS(UIModeButton);
     if (self->disabled) {
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 7, &self->textAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->iconAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->altIconAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->shadowAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->altShadowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->iconAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->altIconAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->shadowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->altShadowAnimator, true, 0);
     }
     else {
         switch (self->buttonID) {
             case UIMODEBUTTON_TA:
                 RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->textAnimator, true, 1);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->iconAnimator, true, 1);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->altIconAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->altIconAnimator, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->shadowAnimator, true, 1);
-                RSDK.SetSpriteAnimation(0xFFFF, 1, &self->altShadowAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 1, &self->altShadowAnimator, true, 0);
                 break;
 
             case UIMODEBUTTON_VS:
@@ -129,18 +129,18 @@ void UIModeButton_SetupSprites(void)
             case UIMODEBUTTON_OPTIONS:
                 RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->textAnimator, true, 3);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->iconAnimator, true, 4);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->altIconAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->altIconAnimator, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->shadowAnimator, true, 4);
-                RSDK.SetSpriteAnimation(0xFFFF, 1, &self->altShadowAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 1, &self->altShadowAnimator, true, 0);
                 break;
 
             default:
             case UIMODEBUTTON_MANIA:
                 RSDK.SetSpriteAnimation(UIWidgets->textFrames, 1, &self->textAnimator, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 0, &self->iconAnimator, true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->altIconAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->altIconAnimator, true, 0);
                 RSDK.SetSpriteAnimation(UIModeButton->aniFrames, 1, &self->shadowAnimator, true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 1, &self->altShadowAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 1, &self->altShadowAnimator, true, 0);
                 break;
         }
     }

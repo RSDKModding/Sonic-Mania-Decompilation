@@ -160,7 +160,7 @@ void SeltzerBottle_Unknown1(void)
         for (int32 p = 0; p < Player->playerCount; ++p) {
             RSDK_GET_ENTITY(p, Player)->collisionLayers &= ~SeltzerBottle->layerBitFlags;
         }
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator4, false, 0);
         self->state = SeltzerBottle_Unknown2;
         foreach_active(SeltzerWater, water)
         {

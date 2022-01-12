@@ -101,7 +101,7 @@ void UIVsScoreboard_DrawSprites(void)
 
     if (SceneInfo->inEditor) {
         if (self->position.y != self->offset.y)
-            DrawHelpers_DrawArrow(0xFFFF, self->position.x, self->position.y, self->offset.x + self->position.x,
+            DrawHelpers_DrawArrow(0x00FFFF, self->position.x, self->position.y, self->offset.x + self->position.x,
                                    self->offset.y + self->position.y);
     }
 }

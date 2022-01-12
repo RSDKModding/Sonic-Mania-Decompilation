@@ -150,7 +150,7 @@ void PSZ1Setup_StaticUpdate(void)
                 Hitbox *playerHitbox = Player_GetHitbox(player);
                 uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                 bool32 lowFlag = true;
-                if (tile == 0xFFFF) {
+                if (tile == (uint16)-1) {
                     tile    = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                     lowFlag = false;
                 }

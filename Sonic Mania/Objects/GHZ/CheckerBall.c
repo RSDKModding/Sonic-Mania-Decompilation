@@ -13,12 +13,12 @@ void CheckerBall_Update(void)
 {
     RSDK_THIS(CheckerBall);
     self->active = ACTIVE_NORMAL;
-    CheckerBall_Unknown2();
+    CheckerBall_HandlePlayerMovement();
     self->ballAngle += self->angleVel;
-    CheckerBall_Unknown1();
+    CheckerBall_HandlePhysics();
     RSDK.ProcessTileCollisions(self, &CheckerBall->outerBox, &CheckerBall->innerBox);
     CheckerBall_HandleObjectCollisions();
-    CheckerBall_Unknown3();
+    CheckerBall_HandlePlayerInteractions();
     self->roundedPos.x = self->position.x & 0xFFFF0000;
     self->roundedPos.y = self->position.y & 0xFFFF0000;
 }
@@ -100,30 +100,31 @@ void CheckerBall_StageLoad(void)
     CheckerBall->heightArray[22] = 16;
     CheckerBall->heightArray[23] = 20;
 
-    CheckerBall->unusedArray[0]  = -3;
-    CheckerBall->unusedArray[1]  = -5;
-    CheckerBall->unusedArray[2]  = -8;
-    CheckerBall->unusedArray[3]  = -11;
-    CheckerBall->unusedArray[4]  = -13;
-    CheckerBall->unusedArray[5]  = -16;
-    CheckerBall->unusedArray[6]  = -19;
-    CheckerBall->unusedArray[7]  = -21;
-    CheckerBall->unusedArray[8]  = -24;
-    CheckerBall->unusedArray[9]  = -27;
-    CheckerBall->unusedArray[10] = -30;
-    CheckerBall->unusedArray[11] = -32;
-    CheckerBall->unusedArray[12] = -35;
-    CheckerBall->unusedArray[13] = -37;
-    CheckerBall->unusedArray[14] = -40;
-    CheckerBall->unusedArray[15] = -43;
-    CheckerBall->unusedArray[16] = -46;
-    CheckerBall->unusedArray[17] = -48;
-    CheckerBall->unusedArray[18] = -51;
-    CheckerBall->unusedArray[19] = -53;
-    CheckerBall->unusedArray[20] = -56;
-    CheckerBall->unusedArray[21] = -59;
-    CheckerBall->unusedArray[22] = -61;
-    CheckerBall->unusedArray[23] = -64;
+    // an unused array, here since the ye olde days of v4
+    CheckerBall->unusedArray[0]  = 253;
+    CheckerBall->unusedArray[1]  = 251;
+    CheckerBall->unusedArray[2]  = 248;
+    CheckerBall->unusedArray[3]  = 245;
+    CheckerBall->unusedArray[4]  = 243;
+    CheckerBall->unusedArray[5]  = 240;
+    CheckerBall->unusedArray[6]  = 237;
+    CheckerBall->unusedArray[7]  = 235;
+    CheckerBall->unusedArray[8]  = 232;
+    CheckerBall->unusedArray[9]  = 229;
+    CheckerBall->unusedArray[10] = 226;
+    CheckerBall->unusedArray[11] = 224;
+    CheckerBall->unusedArray[12] = 221;
+    CheckerBall->unusedArray[13] = 219;
+    CheckerBall->unusedArray[14] = 216;
+    CheckerBall->unusedArray[15] = 213;
+    CheckerBall->unusedArray[16] = 210;
+    CheckerBall->unusedArray[17] = 208;
+    CheckerBall->unusedArray[18] = 205;
+    CheckerBall->unusedArray[19] = 203;
+    CheckerBall->unusedArray[20] = 200;
+    CheckerBall->unusedArray[21] = 197;
+    CheckerBall->unusedArray[22] = 195;
+    CheckerBall->unusedArray[23] = 192;
 }
 
 void CheckerBall_DebugSpawn(void)
@@ -139,7 +140,7 @@ void CheckerBall_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void CheckerBall_Unknown1(void)
+void CheckerBall_HandlePhysics(void)
 {
     RSDK_THIS(CheckerBall);
     if (self->onGround) {
@@ -169,7 +170,7 @@ void CheckerBall_Unknown1(void)
     }
 }
 
-void CheckerBall_Unknown2(void)
+void CheckerBall_HandlePlayerMovement(void)
 {
     RSDK_THIS(CheckerBall);
 
@@ -229,7 +230,7 @@ void CheckerBall_Unknown2(void)
     }
 }
 
-void CheckerBall_Unknown3(void)
+void CheckerBall_HandlePlayerInteractions(void)
 {
     RSDK_THIS(CheckerBall);
     int32 x          = ((self->position.x - self->collisionOffset.x) & 0xFFFF0000) - self->roundedPos.x;
@@ -251,11 +252,11 @@ void CheckerBall_Unknown3(void)
             player->position.x += startX;
         }
         else {
-            int32 result = Player_CheckCollisionBox(player, self, &CheckerBall->hitbox);
-            if (result == 4 && self->velocity.y >= 0 && player->onGround) {
+            int32 side = Player_CheckCollisionBox(player, self, &CheckerBall->hitbox);
+            if (side == C_BOTTOM && self->velocity.y >= 0 && player->onGround) {
                 player->deathType = PLAYER_DEATH_DIE_USESFX;
             }
-            else if (result == 1) {
+            else if (side == C_TOP) {
                 player->position.x += x + (x >> 1) + self->collisionOffset.x;
                 player->position.y += y + self->collisionOffset.y;
 
@@ -346,7 +347,7 @@ void CheckerBall_HandleObjectCollisions(void)
             hitbox.left   = -22;
             hitbox.right  = 22;
             switch (RSDK.CheckObjectCollisionBox(checkerBall, &hitbox, self, &hitbox, true)) {
-                case 1:
+                case C_TOP:
                     if (self->position.x >= checkerBall->position.x) {
                         self->groundVel += 0xC00;
                         self->velocity.x += 0xC00;
@@ -362,8 +363,8 @@ void CheckerBall_HandleObjectCollisions(void)
                         checkerBall->angleVel += 0xC00;
                     }
                     break;
-                case 2:
-                case 3:
+                case C_LEFT:
+                case C_RIGHT:
                     if (self->groundVel <= 0) {
                         if (self->groundVel < 0 && self->position.x > checkerBall->position.x) {
                             self->velocity.x = checkerBall->velocity.x;
@@ -383,7 +384,7 @@ void CheckerBall_HandleObjectCollisions(void)
                         }
                     }
                     break;
-                case 4:
+                case C_BOTTOM:
                     if (self->velocity.y <= 0) {
                         if (self->velocity.y < 0 && self->position.y > checkerBall->position.y) {
                             self->velocity.y        = checkerBall->velocity.y;
@@ -620,7 +621,7 @@ void CheckerBall_HandleObjectCollisions(void)
             ItemBox->brokenFrame %= 3;
             RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
             RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
-            RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), itemBox->position.x, itemBox->position.y - 0x100000);
 
             for (int32 i = 0; i < 6; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
@@ -637,7 +638,7 @@ void CheckerBall_HandleObjectCollisions(void)
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
-            RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
+            RSDK.PlaySfx(ItemBox->sfxDestroy, false, 0xFF);
             itemBox->active = ACTIVE_NORMAL;
             if (itemBox->type == ITEMBOX_RANDOM) {
                 if (itemBox->type == ITEMBOX_1UP_SONIC) {
@@ -677,21 +678,20 @@ void CheckerBall_HandleObjectCollisions(void)
                     tile->tileInfo            = RSDK.GetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20);
                     tile->velocity.x          = velocities[0];
                     tile->velocity.y          = velocities[1];
-                    RSDK.SetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20, 0xFFFF);
+                    RSDK.SetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20, -1);
                     offsets += 2;
                     velocities += 2;
                 }
             }
-            RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
+            RSDK.PlaySfx(BreakableWall->sfxBreak, false, 0xFF);
             destroyEntity(breakableWall);
         }
     }
 
     foreach_active(CollapsingPlatform, collapsingPlatform)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(collapsingPlatform, &collapsingPlatform->hitbox, self, &CheckerBall->hitbox) && self->onGround) {
-            collapsingPlatform->playerPos.x = self->position.x;
-        }
+        if (RSDK.CheckObjectCollisionTouchBox(collapsingPlatform, &collapsingPlatform->hitbox, self, &CheckerBall->hitbox) && self->onGround)
+            collapsingPlatform->stoodPos.x = self->position.x;
     }
 
     foreach_active(Spikes, spikes)
@@ -705,58 +705,38 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(Spring, spring)
     {
-        int32 result = RSDK.CheckObjectCollisionBox(spring, &spring->hitbox, self, &CheckerBall->hitbox, true);
-        if (result) {
+        int32 side = RSDK.CheckObjectCollisionBox(spring, &spring->hitbox, self, &CheckerBall->hitbox, true);
+        if (side) {
+            bool32 bounced = false;
+
             if (spring->state == Spring_State_Vertical) {
-                if (spring->direction) {
-                    if (result == 4) {
-                        self->onGround   = false;
-                        self->velocity.y = spring->velocity.y;
-                        RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
-                        RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
-                    }
-                }
-                else if (result == 1) {
+                if (spring->direction && side == C_BOTTOM || !spring->direction && side == C_TOP)
+                    bounced = true;
+
+                if (bounced) {
                     self->onGround   = false;
                     self->velocity.y = spring->velocity.y;
                     RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
-                    RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfxSpring, false, 0xFF);
                 }
             }
             else {
                 if (spring->state == Spring_State_Diagonal) {
-                    if (!self->onGround && self->velocity.y < 0 && abs(self->velocity.x) <= -self->velocity.y) {
-                        continue;
-                    }
-                    else {
+                    if (self->onGround || self->velocity.y >= 0 || abs(self->velocity.x) > -self->velocity.y) {
                         self->onGround   = false;
-                        self->velocity.x = spring->velocity.x;
-                        self->velocity.y = spring->velocity.y;
-                        RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
-                        RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
+                        bounced        = true;
                     }
                 }
-                else if (spring->state == Spring_State_Horizontal) {
-                    if (!spring->direction) {
-                        if (result == 3) {
-                            if (!spring->onGround || self->onGround) {
-                                self->velocity.x = spring->velocity.x;
-                                self->groundVel  = spring->velocity.x;
-                                RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
-                                RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
-                            }
-                        }
-                    }
-                    else {
-                        if (result == 2) {
-                            if (!spring->onGround || self->onGround) {
-                                self->velocity.x = spring->velocity.x;
-                                self->groundVel  = spring->velocity.x;
-                                RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
-                                RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
-                            }
-                        }
-                    }
+                else if (spring->state == Spring_State_Horizontal && (!spring->onGround || self->onGround)) {
+                    if ((!spring->direction && side == C_RIGHT) || (spring->direction && side == C_LEFT))
+                        bounced = true;
+                }
+
+                if (bounced) {
+                    self->velocity.x = spring->velocity.x;
+                    self->groundVel  = spring->velocity.x;
+                    RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
+                    RSDK.PlaySfx(Spring->sfxSpring, false, 0xFF);
                 }
             }
         }

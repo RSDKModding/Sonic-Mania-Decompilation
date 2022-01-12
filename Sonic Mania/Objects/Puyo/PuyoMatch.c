@@ -31,7 +31,7 @@ void PuyoMatch_Draw(void)
         drawPos.x = self->position.x;
         drawPos.y = self->position.y - 0x80000;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
-        
+
         drawPos.y += 0x100000;
         RSDK.DrawSprite(&self->animator2, &drawPos, false);
     }
@@ -93,11 +93,11 @@ void PuyoMatch_DropNextBeans(void)
     EntityPuyoBean *bean1 = CREATE_ENTITY(PuyoBean, intToVoid(self->animator1.animationID), self->beanDropPos.x, self->beanDropPos.y);
     EntityPuyoBean *bean2 = CREATE_ENTITY(PuyoBean, intToVoid(self->animator2.animationID), self->beanDropPos.x, self->beanDropPos.y);
     PuyoMatch_SetupNextBeans(self);
-    bean1->playerID                = self->playerID;
-    bean1->partner                 = (Entity *)bean2;
+    bean1->playerID       = self->playerID;
+    bean1->partner        = (Entity *)bean2;
     bean1->animator.speed = 0;
-    bean1->controllerID            = self->playerID + 1;
-    bean1->state                   = PuyoBean_State_Idle;
+    bean1->controllerID   = self->playerID + 1;
+    bean1->state          = PuyoBean_State_Idle;
 
     bean2->playerID     = self->playerID;
     bean2->partner      = (Entity *)bean1;
@@ -146,7 +146,7 @@ void PuyoMatch_Unknown4(void)
             bean->playerID       = self->playerID;
             bean->origin.x       = self->beanDropPos.x - 0x280000;
             bean->origin.y       = self->beanDropPos.y - 0x80000;
-            self->beanPtr      = bean;
+            self->beanPtr        = bean;
             bean->state          = PuyoBean_State_Falling;
             --count;
             validSlotCount[slot]--;
@@ -221,8 +221,8 @@ void PuyoMatch_State_HandleMatch(void)
                     foreach_active(CollapsingPlatform, platform)
                     {
                         if (platform->position.x > self->position.x) {
-                            platform->playerPos.x = self->position.x;
-                            platform->delay       = 1;
+                            platform->stoodPos.x = self->position.x;
+                            platform->delay      = 1;
                         }
                     }
                 }
@@ -230,8 +230,8 @@ void PuyoMatch_State_HandleMatch(void)
                     foreach_active(CollapsingPlatform, platform)
                     {
                         if (platform->position.x < self->position.x) {
-                            platform->playerPos.x = self->position.x;
-                            platform->delay       = 1;
+                            platform->stoodPos.x = self->position.x;
+                            platform->delay      = 1;
                         }
                     }
                 }
@@ -263,7 +263,7 @@ void PuyoMatch_State_HandleCombos(void)
     if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs)
         API_UnlockAchievement("ACH_CPZ");
 
-    uint8 flags = 0;
+    uint8 flags                = 0;
     EntityPuyoBean *targetBean = NULL;
     foreach_active(PuyoBean, bean)
     {
@@ -345,15 +345,15 @@ void PuyoMatch_State_Lose(void)
             }
         }
 
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         StateMachine_Run(self->matchFinishCB);
 
         foreach_active(PuyoMatch, match)
         {
             if (match->playerID != self->playerID) {
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator1, true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator2, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->animator1, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->animator2, true, 0);
                 StateMachine_Run(match->matchLoseCB);
                 if (RSDK.CheckStageFolder("CPZ"))
                     match->state = StateMachine_None;

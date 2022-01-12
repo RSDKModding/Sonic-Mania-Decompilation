@@ -212,8 +212,8 @@ void Armadiloid_EditorDraw(void)
 
     if (self->type) {
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 4, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 3, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 3, &self->animator3, true, 0);
     }
     else {
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 0, &self->animator1, true, 0);

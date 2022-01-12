@@ -140,9 +140,9 @@ void IceBomba_Fly_Collide(void)
             self->position.x += 0x40000 * (self->direction ? -1 : 1);
             self->position.y += 0x1A0000;
             if (Player_CheckCollisionTouch(player, self, &IceBomba->bombHitbox)) {
-                RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-                CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bombAnimator, true, 0);
+                RSDK.PlaySfx(IceBomba->explosionSFX, false, 0xFF);
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
                 self->state = IceBomba_Fly_FlyAway;
                 Ice_FreezePlayer((Entity*)player);
             }
@@ -183,9 +183,10 @@ void IceBomba_Fly_Idle(void)
     self->position.x += self->velocity.x;
     self->position.y = self->dip * RSDK.Sin1024(self->angle) + self->spawnPos.y;
     if (--self->spawnDist <= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->wingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 1, &self->wingAnimator, true, 0);
         self->state = IceBomba_Fly_Turn;
     }
+
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &IceBomba->checkbox)) {
@@ -193,7 +194,7 @@ void IceBomba_Fly_Idle(void)
             bomb->position.x += 0x40000 * (self->direction ? -1 : 1);
             bomb->position.y += 0x1A0000;
             bomb->direction = self->direction;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bombAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
             self->state = IceBomba_Fly_FlyAway;
             foreach_break;
         }

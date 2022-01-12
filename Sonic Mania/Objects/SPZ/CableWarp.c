@@ -350,7 +350,7 @@ void CableWarp_EditorDraw(void)
     switch (self->type) {
         case CABLEWARP_ENTRY: RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &self->animator, true, 0); break;
         case CABLEWARP_EXIT: RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &self->animator, true, 2); break;
-        case CABLEWARP_NODE: RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 2); break;
+        case CABLEWARP_NODE: RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 2); break;
         default: break;
     }
 

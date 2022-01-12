@@ -381,7 +381,7 @@ void PBL_Crane_State_Unknown4(void)
             if (crane->type == 2) {
                 if (abs(crane->position.x - self->position.x) < 0x100000) {
                     memcpy(&self->animator1, &crane->animator1, sizeof(Animator));
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &crane->animator1, false, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &crane->animator1, false, 0);
                 }
             }
         }
@@ -427,7 +427,7 @@ void PBL_Crane_State_Unknown6(void)
             EntityPBL_Crane *crane = CREATE_ENTITY(PBL_Crane, intToVoid(3), self->position.x, self->position.y + 0x1A0000);
             crane->animator1       = self->animator1;
             crane->parent          = self->parent;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, false, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator1, false, 0);
 
             crane->velocity.y = -0x20000;
             if (self->position.x > parent->position.x)

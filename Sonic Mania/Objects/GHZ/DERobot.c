@@ -251,8 +251,8 @@ void DERobot_HandleTerrainDestruction(void)
         bool32 playSFX = false;
         for (int32 i = 0; i < 32; ++i) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-            if (tile != 0xFFFF) {
-                RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+            if (tile != (uint16)-1) {
+                RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), (tx << 20) + 0x80000, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
@@ -282,8 +282,8 @@ void DERobot_DestroyTerrainFinal(void)
         int32 spawnY = (ty << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-            if (tile != 0xFFFF) {
-                RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
+            if (tile != (uint16)-1) {
+                RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
@@ -307,8 +307,8 @@ void DERobot_DestroyTerrainFinal(void)
         int32 spawnY = (ty << 20) + 0x80000;
         for (int32 x = 0; x < 32; ++x) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-            if (tile != 0xFFFF) {
-                RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+            if (tile != (uint16)-1) {
+                RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
@@ -1069,7 +1069,7 @@ void DERobot_State_Walk(void)
         if (self->position.x > 0x4D800000) {
             self->health = 1;
             DERobot_Hit();
-            foreach_active(CollapsingPlatform, platform) { platform->playerPos.x = platform->position.x; }
+            foreach_active(CollapsingPlatform, platform) { platform->stoodPos.x = platform->position.x; }
         }
     }
     DERobot_CheckPlayerCollisions_Body();

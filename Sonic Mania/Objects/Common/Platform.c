@@ -137,7 +137,7 @@ void Platform_Draw(void)
             self->animator.frameID = self->frameID;
         }
 
-        if (Platform->aniFrames == 0xFFFF)
+        if (Platform->aniFrames == (uint16)-1)
             RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 64 << 16, 32 << 16, 0x8080A0, 255, INK_NONE, false);
         else
             RSDK.DrawSprite(&self->animator, &self->drawPos, false);
@@ -313,13 +313,13 @@ void Platform_Create(void *data)
             self->animator.frameID = f;
         }
         else {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
         }
 
         if (!SceneInfo->inEditor) {
             if (self->collision != PLATFORM_C_SOLID_NONE) {
                 Hitbox *hitbox = RSDK.GetHitbox(&self->animator, self->collision != PLATFORM_C_SOLID_TOP);
-                if (Platform->aniFrames != 0xFFFF && hitbox) {
+                if (Platform->aniFrames != (uint16)-1 && hitbox) {
                     self->hitbox.left   = hitbox->left;
                     self->hitbox.top    = hitbox->top;
                     self->hitbox.right  = hitbox->right;
@@ -2103,7 +2103,7 @@ void Platform_EditorDraw_Normal(void)
 {
     RSDK_THIS(Platform);
 
-    if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
+    if (Platform->aniFrames == (uint16)-1 || self->frameID == -1)
         RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
     else
         RSDK.DrawSprite(&self->animator, &self->drawPos, false);
@@ -2131,7 +2131,7 @@ void Platform_EditorDraw_Swinging(Vector2 amplitude)
     for (int32 i = 0; i < cnt; ++i) {
         drawPos.x = angle * RSDK.Cos1024(ang) + self->centerPos.x;
         drawPos.y = angle * RSDK.Sin1024(ang) + self->centerPos.y;
-        if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
+        if (Platform->aniFrames == (uint16)-1 || self->frameID == -1)
             RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
         else
             RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -2142,13 +2142,13 @@ void Platform_EditorDraw_Swinging(Vector2 amplitude)
 
     self->drawFX           = fxStore;
     self->animator.frameID = frame + 2;
-    if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
+    if (Platform->aniFrames == (uint16)-1 || self->frameID == -1)
         RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
     else
         RSDK.DrawSprite(&self->animator, &self->centerPos, false);
     self->animator.frameID = frame;
 
-    if (Platform->aniFrames == 0xFFFF || self->frameID == -1)
+    if (Platform->aniFrames == (uint16)-1 || self->frameID == -1)
         RSDK.DrawRect(self->drawPos.x - 0x200000, self->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, self->alpha, self->inkEffect, false);
     else
         RSDK.DrawSprite(&self->animator, &self->drawPos, false);
@@ -2178,7 +2178,7 @@ void Platform_EditorDraw(void)
         self->animator.frameID = f;
     }
     else {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
     }
 
     Vector2 amplitude;

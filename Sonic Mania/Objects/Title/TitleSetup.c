@@ -68,9 +68,9 @@ void TitleSetup_StageLoad(void)
 #if RETRO_USE_PLUS
     API.ClearUserDB(globals->replayTableID);
     API.ClearUserDB(globals->taTableID);
-    globals->replayTableID     = 0xFFFF;
+    globals->replayTableID     = (uint16)-1;
     globals->replayTableLoaded = STATUS_NONE;
-    globals->taTableID         = 0xFFFF;
+    globals->taTableID         = (uint16)-1;
     globals->taTableLoaded     = STATUS_NONE;
 #endif
     TitleSetup->aniFrames     = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);

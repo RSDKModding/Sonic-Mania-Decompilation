@@ -194,9 +194,9 @@ void TurboSpiker_Hermit_IdleWater(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &TurboSpiker->checkbox)) {
-            CREATE_ENTITY(Water, intToVoid(6), self->position.x, self->position.y + 0x80000)->childPtr = intToVoid(1);
-            RSDK.PlaySfx(TurboSpiker->splashSFX, 0, 255);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->spikeAnimator, true, 0);
+            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, self->position.y + 0x80000)->childPtr = intToVoid(1);
+            RSDK.PlaySfx(TurboSpiker->splashSFX, false, 0xFF);
+            RSDK.SetSpriteAnimation(-1, 0, &self->spikeAnimator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &self->animator, true, 0);
             self->drawOrder = Zone->drawOrderLow + 1;
             if (self->spike)

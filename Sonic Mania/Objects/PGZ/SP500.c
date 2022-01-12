@@ -293,7 +293,7 @@ void SP500_Unknown7(void)
         }
     }
 
-    uint16 tile = 0xFFFF;
+    uint16 tile = (uint16)-1;
 
     switch (self->inkColour) {
         default: break;
@@ -302,7 +302,7 @@ void SP500_Unknown7(void)
         case 2: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcY.x + (self->offset >> 20), self->srcY.y + self->field_8C); break;
     }
 
-    if (tile != 0xFFFF) {
+    if (tile != (uint16)-1) {
         self->position.y += 0x100000;
         self->successFlag = (Zone->timer >> 1) & 1;
         RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->offset) >> 20, self->position.y >> 20, tile);

@@ -742,13 +742,13 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
 
     int32 act = control->buttons[0]->selection;
     while (API.GetSortedUserDBRowCount(globals->taTableID) > 0) {
-        int32 value = API.GetSortedUserDBRowID(globals->taTableID, 0);
-        API.RemoveDBRow(globals->taTableID, value);
+        int32 rowID = API.GetSortedUserDBRowID(globals->taTableID, 0);
+        API.RemoveDBRow(globals->taTableID, rowID);
         TimeAttackData_ConfigureTableView(banner->zoneID, act, banner->characterID, TimeAttackMenu->encoreMode);
     }
 
     control->buttonID = 0;
-    if (!checkNoSave && globals->taTableID != 0xFFFF && globals->taTableLoaded == STATUS_OK) {
+    if (!checkNoSave && globals->taTableID != (uint16)-1 && globals->taTableLoaded == STATUS_OK) {
         LogHelpers_Print("Saving Time Attack DB");
         TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = NULL;

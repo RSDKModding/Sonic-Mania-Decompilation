@@ -13,7 +13,7 @@ void PrintBlock_Update(void)
 {
     RSDK_THIS(PrintBlock);
     if (self->state == Platform_State_Fixed) {
-        if (self->interval != 0xFFFF) {
+        if (self->interval != (uint16)-1) {
             int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
             if (timer >= self->duration) {
                 if (timer >= self->duration + 12) {
@@ -131,7 +131,7 @@ void PrintBlock_State_Disappear(void)
 void PrintBlock_EditorDraw(void)
 {
     RSDK_THIS(PrintBlock);
-    RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, self->interval == 0xFFFF ? 0 : 4);
+    RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, self->interval == (uint16)-1 ? 0 : 4);
     self->alpha   = 128;
     self->drawPos = self->position;
 
@@ -141,7 +141,7 @@ void PrintBlock_EditorDraw(void)
 void PrintBlock_EditorLoad(void)
 {
     PrintBlock->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PrintBlock.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(0xFFFF, 12, &PrintBlock->animator, true, 0);
+    RSDK.SetSpriteAnimation(-1, 12, &PrintBlock->animator, true, 0);
 
     RSDK_ACTIVE_VAR(PrintBlock, letter);
     RSDK_ENUM_VAR("E", PRINTBLOCK_LETTER_E);
