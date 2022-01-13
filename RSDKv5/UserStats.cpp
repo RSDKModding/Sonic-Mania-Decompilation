@@ -1,12 +1,11 @@
 #include "RetroEngine.hpp"
 
-
 // Start Dummy Stats
-std::vector<StatInfo> statList;
+std::vector<RSDK::SKU::StatInfo> RSDK::SKU::statList;
 //End Dummy Stats
 
 #if RETRO_REV02
-UserStats *stats = NULL;
+RSDK::SKU::UserStats *RSDK::SKU::stats = NULL;
 #endif
 
 #if !RETRO_REV02
@@ -18,11 +17,11 @@ void GetLeaderboardName(char *buffer, int zoneID, int actID, int characterID)
     sprintf(buffer, "%s%d_%s", zoneIDs[zoneID], actID + 1, characterIDs[characterID]);
 }
 
-void TrackActClear(byte zoneID, byte actID, byte characterID, int time, int rings, int score)
+void RSDK::SKU::TrackActClear(byte zoneID, byte actID, byte characterID, int time, int rings, int score)
 {
     PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d) -> %s", zoneID, actID, characterID, time, rings, score);
 }
-void TrackTAClear(byte zoneID, byte actID, byte characterID, int score)
+void RSDK::SKU::TrackTAClear(byte zoneID, byte actID, byte characterID, int score)
 {
     char leaderboardName[0x404];
     memset(leaderboardName, 0, 0x400);
@@ -31,16 +30,16 @@ void TrackTAClear(byte zoneID, byte actID, byte characterID, int score)
 
     PrintLog(PRINT_NORMAL, "DUMMY TrackTAClear(%d, %d, %d, %d) -> %s", zoneID, actID, characterID, score, leaderboardName);
 }
-void TrackEnemyDefeat(byte zoneID, byte actID, byte characterID, int entityX, int entityY)
+void RSDK::SKU::TrackEnemyDefeat(byte zoneID, byte actID, byte characterID, int entityX, int entityY)
 {
     PrintLog(PRINT_NORMAL, "DUMMY TrackEnemyDefeat(%d, %d, %d, %d, %d)", zoneID, actID, characterID, entityX, entityY);
 }
-void TrackGameProgress(float percent) { PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100); }
+void RSDK::SKU::TrackGameProgress(float percent) { PrintLog(PRINT_NORMAL, "DUMMY TrackGameProgress() -> %f percent complete", percent * 100); }
 #else
 #define voidToInt(x)   (int)(size_t)(x)
 #define voidToFloat(x) *(float *)&(x)
 
-void DummyStats::TryTrackStat(StatInfo *stat)
+void RSDK::SKU::DummyStats::TryTrackStat(StatInfo *stat)
 {
     if (stats->enabled) {
         std::string str = __FILE__;

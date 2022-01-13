@@ -161,13 +161,12 @@ void CheckerBall_HandlePhysics(void)
         }
         self->velocity.x       = self->groundVel * RSDK.Cos256(self->angle) >> 8;
         self->velocity.y       = self->groundVel * RSDK.Sin256(self->angle) >> 8;
-        self->playerControlled = false;
     }
     else {
         self->velocity.y += 0x3800;
         self->groundVel        = self->velocity.x;
-        self->playerControlled = false;
     }
+    self->playerControlled = false;
 }
 
 void CheckerBall_HandlePlayerMovement(void)
@@ -555,8 +554,8 @@ void CheckerBall_HandleObjectCollisions(void)
         if (buzzBomber->state == BuzzBomber_State_ProjectileCharge || buzzBomber->state == BuzzBomber_State_ProjectileShot) {
             if (RSDK.CheckObjectCollisionTouchBox(buzzBomber, &BuzzBomber->hitboxProjectile, self, &CheckerBall->hitbox)) {
                 int32 angle            = RSDK.ATan2(self->position.x - buzzBomber->position.x, self->position.y - buzzBomber->position.y);
-                buzzBomber->velocity.x = -0x80 * RSDK.Cos256(angle);
-                buzzBomber->velocity.y = -0x80 * RSDK.Sin256(angle);
+                buzzBomber->velocity.x = -0x800 * RSDK.Cos256(angle);
+                buzzBomber->velocity.y = -0x800 * RSDK.Sin256(angle);
             }
         }
         else {
@@ -571,8 +570,8 @@ void CheckerBall_HandleObjectCollisions(void)
         if (crabmeat->state == Crabmeat_State_Projectile) {
             if (RSDK.CheckObjectCollisionTouchBox(crabmeat, &Crabmeat->projectileHitbox, self, &CheckerBall->hitbox)) {
                 int32 angle          = RSDK.ATan2(self->position.x - crabmeat->position.x, self->position.y - crabmeat->position.y);
-                crabmeat->velocity.x = -0x80 * RSDK.Cos256(angle);
-                crabmeat->velocity.y = -0x80 * RSDK.Sin256(angle);
+                crabmeat->velocity.x = -0x800 * RSDK.Cos256(angle);
+                crabmeat->velocity.y = -0x800 * RSDK.Sin256(angle);
             }
         }
         else {
@@ -613,7 +612,7 @@ void CheckerBall_HandleObjectCollisions(void)
             itemBox->storedEntity  = (Entity *)player1;
             itemBox->alpha         = 0x100;
             itemBox->contentsSpeed = -0x38000;
-            itemBox->active        = 1;
+            itemBox->active        = ACTIVE_ALWAYS;
             itemBox->velocity.y    = -0x20000;
             itemBox->state         = ItemBox_State_ContentsShown;
             RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);

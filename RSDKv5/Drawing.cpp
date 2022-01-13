@@ -118,8 +118,8 @@ bool32 InitRenderDevice()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
+                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -375,8 +375,8 @@ void UpdateWindow()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
+                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -2567,10 +2567,10 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
     }
 }
 
-void DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative)
+void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelative)
 {
     if (animator && animator->framePtrs) {
-        SpriteFrame *frame = &animator->framePtrs[animator->frameID];
+        RSDK::SpriteFrame *frame = &animator->framePtrs[animator->frameID];
         Vector2 pos;
         if (!position)
             pos = sceneInfo.entity->position;
@@ -2588,32 +2588,32 @@ void DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative)
         int drawFX   = sceneInfo.entity->drawFX;
         if (sceneInfo.entity->drawFX & FX_ROTATE) {
             switch (animator->rotationFlag) {
-                case ROTFLAG_NONE:
+                case RSDK::ROTFLAG_NONE:
                     rotation = 0;
                     if ((sceneInfo.entity->drawFX & FX_ROTATE) != FX_NONE)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_FULL:
+                case RSDK::ROTFLAG_FULL:
                     rotation = sceneInfo.entity->rotation & 0x1FF;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_45DEG: // 0x00, 0x40, 0x80, 0xC0, 0x100, 0x140, 0x180, 0x1C0
+                case RSDK::ROTFLAG_45DEG: // 0x00, 0x40, 0x80, 0xC0, 0x100, 0x140, 0x180, 0x1C0
                     rotation = (sceneInfo.entity->rotation + 0x20) & 0x1C0;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_90DEG: // 0x00, 0x80, 0x100, 0x180
+                case RSDK::ROTFLAG_90DEG: // 0x00, 0x80, 0x100, 0x180
                     rotation = (sceneInfo.entity->rotation + 0x40) & 0x180;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_180DEG: // 0x00, 0x100
+                case RSDK::ROTFLAG_180DEG: // 0x00, 0x100
                     rotation = (sceneInfo.entity->rotation + 0x80) & 0x100;
                     if (rotation == 0)
                         drawFX ^= FX_ROTATE;
                     break;
-                case ROTFLAG_STATICFRAMES:
+                case RSDK::ROTFLAG_STATICFRAMES:
                     if (sceneInfo.entity->rotation >= 0x100) {
                         rotation = 0x08 - ((0x214 - sceneInfo.entity->rotation) >> 6);
                     }
@@ -4098,7 +4098,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
     }
 }
 
-void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
+void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
               Vector2 *charOffsets, bool32 screenRelative)
 {
     if (animator && info && animator->framePtrs) {
@@ -4135,7 +4135,7 @@ void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFr
                     for (; startFrame < endFrame; ++startFrame) {
                         ushort curChar = info->text[startFrame];
                         if (curChar < animator->frameCount) {
-                            SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height,
                                               frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -4147,7 +4147,7 @@ void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFr
                     for (; startFrame < endFrame; ++startFrame) {
                         ushort curChar = info->text[startFrame];
                         if (curChar < animator->frameCount) {
-                            SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -4162,7 +4162,7 @@ void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFr
                     for (Vector2 *charOffset = &charOffsets[endFrame]; endFrame >= startFrame; --endFrame) {
                         ushort curChar = info->text[endFrame];
                         if (curChar < animator->frameCount) {
-                            SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
                                               frame->height, frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha,
                                               frame->sheetID);
@@ -4175,7 +4175,7 @@ void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int startFr
                     for (; endFrame >= startFrame; --endFrame) {
                         ushort curChar = info->text[endFrame];
                         if (curChar < animator->frameCount) {
-                            SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
                             DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x = (x - frame->width) - spacing;

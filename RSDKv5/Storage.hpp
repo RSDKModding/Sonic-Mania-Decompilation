@@ -1,6 +1,8 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
+namespace RSDK
+{
 #define STORAGE_ENTRY_COUNT (0x1000)
 
 enum StorageDataSets {
@@ -9,7 +11,7 @@ enum StorageDataSets {
     DATASET_SFX = 2,
     DATASET_STR = 3,
     DATASET_TMP = 4,
-    DATASET_MAX, //used to signify limits
+    DATASET_MAX, // used to signify limits
 };
 
 struct DataStorage {
@@ -24,17 +26,18 @@ struct DataStorage {
 
 template <typename T> class List
 {
-    T *entries = NULL;
+    T *entries   = NULL;
     int32 count  = 0;
-    int32 length  = 0;
+    int32 length = 0;
 
-    public:
+public:
     List()
     {
         entries = NULL;
         count   = 0;
     }
-    ~List() {
+    ~List()
+    {
         if (entries) {
             free(entries);
             entries = NULL;
@@ -44,7 +47,7 @@ template <typename T> class List
     {
         if (count == length) {
             length += 32;
-            size_t len = sizeof(T) * length;
+            size_t len         = sizeof(T) * length;
             T *entries_realloc = (T *)realloc(entries, len);
 
             if (entries_realloc) {
@@ -62,7 +65,7 @@ template <typename T> class List
         // move every item back one
         for (int i = index; i < count; i++) {
             if (i + 1 < count) {
-                entries[i]  = entries[i + 1];
+                entries[i] = entries[i + 1];
             }
             else { // Last Item, free it
                 count--;
@@ -71,7 +74,7 @@ template <typename T> class List
 
         if (count < length - 32) {
             length -= 32;
-            size_t len = sizeof(T) * length;
+            size_t len         = sizeof(T) * length;
             T *entries_realloc = (T *)realloc(entries, len);
 
             if (entries_realloc)
@@ -106,5 +109,7 @@ void ClearUnusedStorage(StorageDataSets set);
 void RemoveStorageEntry(void **dataPtr);
 void CopyStorage(int32 **src, int32 **dst);
 void CleanEmptyStorage(StorageDataSets dataSet);
+
+} // namespace RSDK
 
 #endif // STORAGE_H

@@ -49,7 +49,7 @@ struct SceneInfo {
     bool32 inEditor;
     bool32 effectGizmo;
     bool32 debugMode;
-    bool32 useGlobalScripts;
+    bool32 useGlobalObjects;
     bool32 timeEnabled;
     uint8 activeCategory;
     uint8 categoryCount;

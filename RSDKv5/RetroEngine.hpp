@@ -172,7 +172,7 @@ enum GameRegions {
 //Determines if the engine should use EGS features like achievements or not (must be rev02)
 #define RETRO_VER_EGS (RETRO_REV02 && 0)
 
-//enables only EGS's ingame achievements without enabling anything else
+//enables only EGS's ingame achievements popup without enabling anything else
 #define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
 
 //enables the use of the mod loader
@@ -205,6 +205,7 @@ enum SeverityModes {
     PRINT_FATAL,
 };
 
+// Engine
 #include "Storage.hpp"
 #include "Math.hpp"
 #include "Text.hpp"
@@ -233,6 +234,7 @@ enum SeverityModes {
 #include "ModAPI.hpp"
 #endif
 
+// Default Objects
 #include "DefaultObject.hpp"
 #if RETRO_REV02
 #include "DevOutput.hpp"
@@ -245,9 +247,9 @@ struct RetroEngine {
     bool32 useExternalCode = true;
 #else
     bool32 useExternalCode = false;
-#endif  
+#endif
 
-    bool32 devMenu    = false;
+    bool32 devMenu      = false;
     bool32 printConsole = false;
 
     bool32 hasPlus     = true;  // are sonic mania plus features enabled?
@@ -260,7 +262,7 @@ struct RetroEngine {
     int32 prevEngineMode      = ENGINESTATE_LOAD;
     int32 gameSpeed           = 1;
     int32 fastForwardSpeed    = 8;
-    bool32 frameStep        = false;
+    bool32 frameStep          = false;
     bool32 showPaletteOverlay = false;
     bool32 drawLayerVisible[DRAWLAYER_COUNT];
 
@@ -268,21 +270,21 @@ struct RetroEngine {
 
     bool32 windowActive    = false;
     bool32 startFullScreen = false;
-    bool32 hasBorder      = false;
+    bool32 hasBorder       = false;
     bool32 exclusiveFS     = false;
     bool32 vsync           = false;
     bool32 tripleBuffer    = false;
-    int32 windowWidth        = 424;
-    int32 windowHeight       = SCREEN_YSIZE;
-    int32 fsWidth            = 0;
-    int32 fsHeight           = 0;
-    int32 gameHeight         = SCREEN_YSIZE;
-    int32 refreshRate        = 60;
+    int32 windowWidth      = 424;
+    int32 windowHeight     = SCREEN_YSIZE;
+    int32 fsWidth          = 0;
+    int32 fsHeight         = 0;
+    int32 gameHeight       = SCREEN_YSIZE;
+    int32 refreshRate      = 60;
 
     //Image/Video support
-    float displayTime;
-    float imageDelta;
-    bool32 (*skipCallback)(void);
+    float displayTime            = 0;
+    float imageDelta             = 0;
+    bool32 (*skipCallback)(void) = NULL;
 
     bool32 shaderSupport = true;
     int32 shaderID       = 0;
@@ -314,7 +316,7 @@ struct RetroEngine {
 
 extern RetroEngine engine;
 
-typedef void (*linkPtr)(GameInfo *);
+typedef void (*linkPtr)(RSDK::GameInfo *);
 extern linkPtr linkGameLogic;
 
 bool32 initRetroEngine();
@@ -347,7 +349,7 @@ extern int32 *globalVarsPtr;
 
 inline void RegisterGlobalVariables(void **globals, int32 size)
 {
-    AllocateStorage(size, globals, DATASET_STG, true);
+    RSDK::AllocateStorage(size, globals, RSDK::DATASET_STG, true);
     globalVarsPtr = (int *)*globals;
 }
 

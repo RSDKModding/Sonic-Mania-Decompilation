@@ -1,12 +1,11 @@
 #include "RetroEngine.hpp"
+
 #if RETRO_USE_MOD_LOADER
 
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
 #include <functional>
-
-int32 currentObjectID = 0;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
 namespace fs = std::__fs::filesystem;
@@ -25,22 +24,24 @@ namespace fs = std::filesystem;
 #endif
 #endif
 
+int32 RSDK::currentObjectID = 0;
+
 // this helps later on just trust me
 #define MODAPI_ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
 
 std::map<std::string, size_t> langMap;
 
-std::vector<ModInfo> modList;
-int32 activeMod = -1;
-std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
-ModInfo *currentMod;
+std::vector<RSDK::ModInfo> RSDK::modList;
+int32 RSDK::activeMod = -1;
+std::vector<RSDK::ModCallbackSTD> RSDK::modCallbackList[RSDK::MODCB_MAX];
+RSDK::ModInfo *RSDK::currentMod;
 
-std::vector<ModPublicFunctionInfo> gamePublicFuncs;
+std::vector<RSDK::ModPublicFunctionInfo> gamePublicFuncs;
 
 // did we try to load a logic of a different lang? load it later
 std::vector<int32> waitList;
 
-void *modFunctionTable[ModTable_Max];
+void *RSDK::modFunctionTable[RSDK::ModTable_Max];
 
 #define addToModFunctionTable(id, func) modFunctionTable[id] = (void *)func;
 
@@ -60,8 +61,9 @@ std::string trim(const std::string &s)
     return std::string(start, end + 1);
 }
 
-void initModAPI()
+void RSDK::initModAPI()
 {
+
     memset(modFunctionTable, 0, sizeof(modFunctionTable));
 
     addToModFunctionTable(ModTable_GetGlobals, GetGlobals);
@@ -99,7 +101,7 @@ void initModAPI()
     loadMods();
 }
 
-void sortMods()
+void RSDK::sortMods()
 {
     std::sort(modList.begin(), modList.end(), [](ModInfo a, ModInfo b) {
         if (!(a.active && b.active))
@@ -109,7 +111,7 @@ void sortMods()
     });
 }
 
-void unloadMods()
+void RSDK::unloadMods()
 {
     for (ModInfo &mod : modList)
         if (mod.unloadMod)
@@ -120,12 +122,12 @@ void unloadMods()
     for (int32 c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
 }
 
-void loadMods()
+void RSDK::loadMods()
 {
     using namespace std;
     unloadMods();
     char modBuf[0x100];
-    sprintf(modBuf, "%smods/", userFileDir);
+    sprintf(modBuf, "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);
 
     if (fs::exists(modPath) && fs::is_directory(modPath)) {
@@ -193,7 +195,7 @@ void loadMods()
     sortMods();
 }
 
-void loadCfg(ModInfo *info, std::string path)
+void loadCfg(RSDK::ModInfo *info, std::string path)
 {
     FileInfo *cfg     = new FileInfo();
     cfg->externalFile = true;
@@ -224,7 +226,7 @@ void loadCfg(ModInfo *info, std::string path)
     CloseFile(cfg);
 }
 
-bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active)
+bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 active)
 {
     if (!info)
         return false;
@@ -405,7 +407,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         linkInfo.functionPtrs = RSDKFunctionTable;
 #if RETRO_REV02
                         linkInfo.APIPtrs    = APIFunctionTable;
-                        linkInfo.currentSKU = &curSKU;
+                        linkInfo.currentSKU = &SKU::curSKU;
 #endif
                         linkInfo.engineInfo = &gameVerInfo;
                         linkInfo.sceneInfo  = &sceneInfo;
@@ -418,7 +420,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 #endif
                         linkInfo.touchMouse = &touchMouseData;
 #if RETRO_REV02
-                        linkInfo.unknown = &unknownInfo;
+                        linkInfo.unknown = &SKU::unknownInfo;
 #endif
                         linkInfo.screenInfo = screens;
                         linkInfo.modPtrs    = modFunctionTable;
@@ -546,7 +548,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     continue; // don't save no-categories
                 byte len = kv.first.length();
                 fWrite(&len, 1, 1, cfg);
-                writeText(cfg, kv.first.c_str());
+                SKU::writeText(cfg, kv.first.c_str());
                 byte kt = kv.second.size();
                 fWrite(&kt, 1, 1, cfg);
                 for (auto kkv : kv.second) {
@@ -560,13 +562,13 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     } catch (...) {
                     }
                     fWrite(&len, 1, 1, cfg);
-                    writeText(cfg, kkv.first.c_str());
+                    SKU::writeText(cfg, kkv.first.c_str());
                     if (isint)
                         fWrite(&r, sizeof(int32), 1, cfg);
                     else {
                         byte len = kkv.second.length();
                         fWrite(&len, 1, 1, cfg);
-                        writeText(cfg, kkv.second.c_str());
+                        SKU::writeText(cfg, kkv.second.c_str());
                     }
                 }
             }
@@ -582,11 +584,11 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
     return false;
 }
 
-void saveMods()
+void RSDK::saveMods()
 {
     ModInfo *cur = currentMod;
     char modBuf[0x100];
-    sprintf(modBuf, "%smods/", userFileDir);
+    sprintf(modBuf, "%smods/", SKU::userFileDir);
     fs::path modPath(modBuf);
 
     sortMods();
@@ -597,19 +599,19 @@ void saveMods()
         std::string mod_config = modPath.string() + "/modconfig.ini";
         FileIO *file           = fOpen(mod_config.c_str(), "w");
 
-        writeText(file, "[Mods]\n");
+        SKU::writeText(file, "[Mods]\n");
 
         for (int32 m = 0; m < modList.size(); ++m) {
             currentMod = &modList[m];
             SaveSettings();
-            writeText(file, "%s=%c\n", currentMod->id.c_str(), currentMod->active ? 'y' : 'n');
+            SKU::writeText(file, "%s=%c\n", currentMod->id.c_str(), currentMod->active ? 'y' : 'n');
         }
         fClose(file);
     }
     currentMod = cur;
 }
 
-void RunModCallbacks(int32 callbackID, void *data)
+void RSDK::RunModCallbacks(int32 callbackID, void *data)
 {
     if (callbackID < 0 || callbackID >= MODCB_MAX)
         return;
@@ -621,7 +623,7 @@ void RunModCallbacks(int32 callbackID, void *data)
 }
 
 // Mod API
-bool32 LoadModInfo(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active)
+bool32 RSDK::LoadModInfo(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active)
 {
     for (int32 m = 0; m < modList.size(); ++m) {
         if (modList[m].id == id) {
@@ -640,7 +642,7 @@ bool32 LoadModInfo(const char *id, TextInfo *name, TextInfo *description, TextIn
     return false;
 }
 
-int32 GetModCount(bool32 active)
+int32 RSDK::GetModCount(bool32 active)
 {
     int32 c = 0;
     for (auto &m : modList) {
@@ -650,14 +652,14 @@ int32 GetModCount(bool32 active)
     return c;
 }
 
-const char *GetModIDByIndex(uint32 index)
+const char *RSDK::GetModIDByIndex(uint32 index)
 {
     if (index >= modList.size())
         return NULL;
     return modList[index].id.c_str();
 }
 
-bool32 ForeachModID(TextInfo *id)
+bool32 RSDK::ForeachModID(TextInfo *id)
 {
     if (!id)
         return false;
@@ -680,9 +682,9 @@ bool32 ForeachModID(TextInfo *id)
     return true;
 }
 
-void AddModCallback(int32 callbackID, ModCallback callback) { return AddModCallback_STD(callbackID, callback); }
+void RSDK::AddModCallback(int32 callbackID, ModCallback callback) { return AddModCallback_STD(callbackID, callback); }
 
-void AddModCallback_STD(int32 callbackID, ModCallbackSTD callback)
+void RSDK::AddModCallback_STD(int32 callbackID, ModCallbackSTD callback)
 {
     if (callbackID < 0 || callbackID >= MODCB_MAX)
         return;
@@ -690,7 +692,7 @@ void AddModCallback_STD(int32 callbackID, ModCallbackSTD callback)
     modCallbackList[callbackID].push_back(callback);
 }
 
-void AddPublicFunction(const char *functionName, void *functionPtr)
+void RSDK::AddPublicFunction(const char *functionName, void *functionPtr)
 {
     if (!currentMod)
         return gamePublicFuncs.push_back({ functionName, functionPtr });
@@ -699,7 +701,7 @@ void AddPublicFunction(const char *functionName, void *functionPtr)
     currentMod->functionList.push_back({ functionName, functionPtr });
 }
 
-void *GetPublicFunction(const char *id, const char *functionName)
+void *RSDK::GetPublicFunction(const char *id, const char *functionName)
 {
     if (!id) {
         for (auto &f : gamePublicFuncs)
@@ -720,7 +722,7 @@ void *GetPublicFunction(const char *id, const char *functionName)
     return NULL;
 }
 
-void GetModPath(const char *id, TextInfo *result)
+void RSDK::GetModPath(const char *id, TextInfo *result)
 {
     int32 m;
     for (m = 0; m < modList.size(); ++m)
@@ -730,23 +732,23 @@ void GetModPath(const char *id, TextInfo *result)
         return;
 
     char buf[0x200];
-    sprintf(buf, "%smods/%s", userFileDir, id);
+    sprintf(buf, "%smods/%s", SKU::userFileDir, id);
     SetText(result, buf, strlen(buf));
 }
 
 std::string GetModPath_i(const char *id)
 {
     int32 m;
-    for (m = 0; m < modList.size(); ++m)
-        if (modList[m].active && modList[m].id == id)
+    for (m = 0; m < RSDK::modList.size(); ++m)
+        if (RSDK::modList[m].active && RSDK::modList[m].id == id)
             break;
-    if (m == modList.size())
+    if (m == RSDK::modList.size())
         return std::string();
 
-    return std::string(userFileDir) + "mods/" + id;
+    return std::string(RSDK::SKU::userFileDir) + "mods/" + id;
 }
 
-std::string GetSettingsValue(const char *id, const char *key)
+std::string GetModSettingsValue(const char *id, const char *key)
 {
     std::string skey(key);
     if (!strchr(key, ':'))
@@ -755,7 +757,7 @@ std::string GetSettingsValue(const char *id, const char *key)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    for (ModInfo &m : modList) {
+    for (RSDK::ModInfo &m : RSDK::modList) {
         if (m.active && m.id == id) {
             try {
                 return m.settings.at(cat).at(rkey);
@@ -767,14 +769,14 @@ std::string GetSettingsValue(const char *id, const char *key)
     return std::string();
 }
 
-bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
+bool32 RSDK::GetSettingsBool(const char *id, const char *key, bool32 fallback)
 {
     if (!id) {
         if (!currentMod)
             return fallback;
         id = currentMod->id.c_str();
     }
-    std::string v = GetSettingsValue(id, key);
+    std::string v = GetModSettingsValue(id, key);
     if (!v.length()) {
         if (currentMod->id == id)
             SetSettingsBool(key, fallback);
@@ -790,14 +792,14 @@ bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
     return fallback;
 }
 
-int32 GetSettingsInteger(const char *id, const char *key, int32 fallback)
+int32 RSDK::GetSettingsInteger(const char *id, const char *key, int32 fallback)
 {
     if (!id) {
         if (!currentMod)
             return fallback;
         id = currentMod->id.c_str();
     }
-    std::string v = GetSettingsValue(id, key);
+    std::string v = GetModSettingsValue(id, key);
     if (!v.length()) {
         if (currentMod->id == id)
             SetSettingsInteger(key, fallback);
@@ -812,7 +814,7 @@ int32 GetSettingsInteger(const char *id, const char *key, int32 fallback)
     }
 }
 
-void GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback)
+void RSDK::GetSettingsString(const char *id, const char *key, TextInfo *result, const char *fallback)
 {
     if (!id) {
         if (!currentMod) {
@@ -822,7 +824,7 @@ void GetSettingsString(const char *id, const char *key, TextInfo *result, const 
         id = currentMod->id.c_str();
     }
 
-    std::string v = GetSettingsValue(id, key);
+    std::string v = GetModSettingsValue(id, key);
     if (!v.length()) {
         if (currentMod->id == id)
             SetSettingsString(key, result);
@@ -832,9 +834,9 @@ void GetSettingsString(const char *id, const char *key, TextInfo *result, const 
     SetText(result, (char *)v.c_str(), v.length());
 }
 
-std::string GetConfigValue(const char *key)
+std::string GetNidConfigValue(const char *key)
 {
-    if (!currentMod || !currentMod->active)
+    if (!RSDK::currentMod || !RSDK::currentMod->active)
         return std::string();
     std::string skey(key);
     if (!strchr(key, ':'))
@@ -844,16 +846,16 @@ std::string GetConfigValue(const char *key)
     std::string rkey = skey.substr(skey.find(":") + 1);
 
     try {
-        return currentMod->config.at(cat).at(rkey);
+        return RSDK::currentMod->config.at(cat).at(rkey);
     } catch (std::out_of_range) {
         return std::string();
     }
     return std::string();
 }
 
-bool32 GetConfigBool(const char *key, bool32 fallback)
+bool32 RSDK::GetConfigBool(const char *key, bool32 fallback)
 {
-    std::string v = GetConfigValue(key);
+    std::string v = GetNidConfigValue(key);
     if (!v.length())
         return fallback;
     char first = v.at(0);
@@ -864,9 +866,9 @@ bool32 GetConfigBool(const char *key, bool32 fallback)
     return fallback;
 }
 
-int32 GetConfigInteger(const char *key, int32 fallback)
+int32 RSDK::GetConfigInteger(const char *key, int32 fallback)
 {
-    std::string v = GetConfigValue(key);
+    std::string v = GetNidConfigValue(key);
     if (!v.length())
         return fallback;
     try {
@@ -876,9 +878,9 @@ int32 GetConfigInteger(const char *key, int32 fallback)
     }
 }
 
-void GetConfigString(const char *key, TextInfo *result, const char *fallback)
+void RSDK::GetConfigString(const char *key, TextInfo *result, const char *fallback)
 {
-    std::string v = GetConfigValue(key);
+    std::string v = GetNidConfigValue(key);
     if (!v.length()) {
         SetText(result, (char *)fallback, strlen(fallback));
         return;
@@ -886,7 +888,7 @@ void GetConfigString(const char *key, TextInfo *result, const char *fallback)
     SetText(result, (char *)v.c_str(), v.length());
 }
 
-bool32 ForeachConfigCategory(TextInfo *textInfo)
+bool32 RSDK::ForeachConfigCategory(TextInfo *textInfo)
 {
     if (!textInfo || !currentMod)
         return false;
@@ -927,7 +929,7 @@ bool32 ForeachConfigCategory(TextInfo *textInfo)
     return true;
 }
 
-bool32 ForeachConfig(TextInfo *textInfo)
+bool32 RSDK::ForeachConfig(TextInfo *textInfo)
 {
     if (!textInfo || !currentMod)
         return false;
@@ -974,9 +976,9 @@ bool32 ForeachConfig(TextInfo *textInfo)
     return true;
 }
 
-void SetSettingsValue(const char *key, std::string val)
+void SetModSettingsValue(const char *key, std::string val)
 {
-    if (!currentMod)
+    if (!RSDK::currentMod)
         return;
     std::string skey(key);
     if (!strchr(key, ':'))
@@ -985,19 +987,19 @@ void SetSettingsValue(const char *key, std::string val)
     std::string cat  = skey.substr(0, skey.find(":"));
     std::string rkey = skey.substr(skey.find(":") + 1);
 
-    currentMod->settings[cat][rkey] = val;
+    RSDK::currentMod->settings[cat][rkey] = val;
 }
 
-void SetSettingsBool(const char *key, bool32 val) { SetSettingsValue(key, val ? "Y" : "N"); }
-void SetSettingsInteger(const char *key, int32 val) { SetSettingsValue(key, std::to_string(val)); }
-void SetSettingsString(const char *key, TextInfo *val)
+void RSDK::SetSettingsBool(const char *key, bool32 val) { SetModSettingsValue(key, val ? "Y" : "N"); }
+void RSDK::SetSettingsInteger(const char *key, int32 val) { SetModSettingsValue(key, std::to_string(val)); }
+void RSDK::SetSettingsString(const char *key, TextInfo *val)
 {
     char *buf = new char[val->length];
     GetCString(buf, val);
-    SetSettingsValue(key, buf);
+    SetModSettingsValue(key, buf);
 }
 
-void SaveSettings()
+void RSDK::SaveSettings()
 {
     using namespace std;
     if (!currentMod || !currentMod->settings.size())
@@ -1006,13 +1008,13 @@ void SaveSettings()
     FileIO *file = fOpen((GetModPath_i(currentMod->id.c_str()) + "/modSettings.ini").c_str(), "w");
 
     if (currentMod->settings[""].size()) {
-        for (pair<string, string> pair : currentMod->settings[""]) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+        for (pair<string, string> pair : currentMod->settings[""]) SKU::writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
     for (pair<string, map<string, string>> kv : currentMod->settings) {
         if (!kv.first.length())
             continue;
-        writeText(file, "\n[%s]\n", kv.first.c_str());
-        for (pair<string, string> pair : kv.second) writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
+        SKU::writeText(file, "\n[%s]\n", kv.first.c_str());
+        for (pair<string, string> pair : kv.second) SKU::writeText(file, "%s = %s\n", pair.first.c_str(), pair.second.c_str());
     }
     fClose(file);
     PrintLog(PRINT_NORMAL, "[MOD] Saved mod settings for mod %s", currentMod->id.c_str());
@@ -1022,8 +1024,10 @@ void SaveSettings()
 // i'm going to hell for this
 // nvm im actually so proud of this func yall have no idea i'm insane
 int32 superLevels = 1;
-void SuperInternal(ObjectInfo *super, ModSuper callback, void *data)
+void SuperInternal(ObjectInfo *super, RSDK::ModSuper callback, void *data)
 {
+    using namespace RSDK;
+
     Object *before  = NULL;
     ModInfo *curMod = currentMod;
     if (HASH_MATCH(super->hash, super->inherited->hash)) {
@@ -1089,13 +1093,13 @@ void SuperInternal(ObjectInfo *super, ModSuper callback, void *data)
     currentMod   = curMod;
 }
 
-void Super(int32 objectID, ModSuper callback, void *data) { return SuperInternal(&objectList[stageObjectIDs[objectID]], callback, data); }
+void RSDK::Super(int32 objectID, ModSuper callback, void *data) { return SuperInternal(&objectList[stageObjectIDs[objectID]], callback, data); }
 
-void *GetGlobals() { return (void *)globalVarsPtr; }
+void *RSDK::GetGlobals() { return (void *)globalVarsPtr; }
 
-void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint32 size)
+void RSDK::ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint32 size)
 {
-    AllocateStorage(size, globals, DATASET_STG, true);
+    RSDK::AllocateStorage(size, globals, RSDK::DATASET_STG, true);
     FileInfo info;
     InitFileInfo(&info);
 
@@ -1114,7 +1118,8 @@ void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint32 
     }
 }
 
-void ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
+void RSDK::ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void),
+                             void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                        void (*editorLoad)(void), void (*serialize)(void), const char *inherited)
 {
@@ -1122,7 +1127,7 @@ void ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, 
                                  editorLoad, serialize, inherited);
 }
 
-void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
+void RSDK::ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
                            std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
                            std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                            std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
@@ -1207,36 +1212,36 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySi
     objectCount = preCount;
 }
 
-Object *GetObject(const char *name)
+Object *RSDK::GetObject(const char *name)
 {
     if (int32 o = GetObjectByName(name))
         return *objectList[stageObjectIDs[o]].type;
     return NULL;
 }
 
-void GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved)
+void RSDK::GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved)
 {
-    if (id >= achievementList.size())
+    if (id >= SKU::achievementList.size())
         return;
 
     if (name)
-        SetText(name, (char *)achievementList[id].name.c_str(), 0);
+        SetText(name, (char *)SKU::achievementList[id].name.c_str(), 0);
     if (description)
-        SetText(description, (char *)achievementList[id].description.c_str(), 0);
+        SetText(description, (char *)SKU::achievementList[id].description.c_str(), 0);
     if (identifer)
-        SetText(identifer, (char *)achievementList[id].identifier.c_str(), 0);
+        SetText(identifer, (char *)SKU::achievementList[id].identifier.c_str(), 0);
     if (achieved)
-        *achieved = achievementList[id].achieved;
+        *achieved = SKU::achievementList[id].achieved;
 }
 
-int GetAchievementIndexByID(const char *id)
+int RSDK::GetAchievementIndexByID(const char *id)
 {
-    for (int i = 0; i < achievementList.size(); ++i) {
-        if (achievementList[i].identifier == std::string(id)) {
+    for (int i = 0; i < SKU::achievementList.size(); ++i) {
+        if (SKU::achievementList[i].identifier == std::string(id)) {
             return i;
         }
     }
     return -1;
 }
-int GetAchievementCount() { return achievementList.size(); }
+int RSDK::GetAchievementCount() { return SKU::achievementList.size(); }
 #endif

@@ -1,8 +1,8 @@
 #include "RetroEngine.hpp"
 
-DataStorage dataStorage[DATASET_MAX];
+RSDK::DataStorage RSDK::dataStorage[RSDK::DATASET_MAX];
 
-void InitStorage()
+void RSDK::InitStorage()
 {
     // storage limit (in ints)
     dataStorage[DATASET_STG].storageLimit = 0x1800000;
@@ -19,7 +19,7 @@ void InitStorage()
     }
 }
 
-void ReleaseStorage()
+void RSDK::ReleaseStorage()
 {
     for (int32 s = 0; s < DATASET_MAX; ++s) {
         if (dataStorage[s].memPtr)
@@ -44,7 +44,7 @@ void ReleaseStorage()
 // size
 // [storage bytes]
 
-void AllocateStorage(uint32 size, void **dataPtr, StorageDataSets dataSet, bool32 clear)
+void RSDK::AllocateStorage(uint32 size, void **dataPtr, StorageDataSets dataSet, bool32 clear)
 {
     int32 **data = (int32 **)dataPtr;
     *data        = NULL;
@@ -100,7 +100,7 @@ void AllocateStorage(uint32 size, void **dataPtr, StorageDataSets dataSet, bool3
     }
 }
 
-void RemoveStorageEntry(void **dataPtr)
+void RSDK::RemoveStorageEntry(void **dataPtr)
 {
     if (dataPtr) {
         if (*dataPtr) {
@@ -138,7 +138,7 @@ void RemoveStorageEntry(void **dataPtr)
     }
 }
 
-void ClearUnusedStorage(StorageDataSets set)
+void RSDK::ClearUnusedStorage(StorageDataSets set)
 {
     ++dataStorage[set].unknown;
     CleanEmptyStorage(set);
@@ -222,7 +222,7 @@ void ClearUnusedStorage(StorageDataSets set)
     }
 }
 
-void CopyStorage(int32 **src, int32 **dst)
+void RSDK::CopyStorage(int32 **src, int32 **dst)
 {
     if (src) {
         int32 *dstPtr = *dst;
@@ -240,7 +240,7 @@ void CopyStorage(int32 **src, int32 **dst)
     }
 }
 
-void CleanEmptyStorage(StorageDataSets set)
+void RSDK::CleanEmptyStorage(StorageDataSets set)
 {
     if (set < DATASET_MAX) {
         DataStorage *storage = &dataStorage[set];

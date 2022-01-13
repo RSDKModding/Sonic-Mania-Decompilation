@@ -2,34 +2,33 @@
 #include "zlib/zlib.h"
 
 #if RETRO_REV02
-DummyCore *dummyCore = NULL;
-UserCore *userCore   = NULL;
+RSDK::SKU::DummyCore *RSDK::SKU::dummyCore = NULL;
+RSDK::SKU::UserCore *RSDK::SKU::userCore = NULL;
 #endif
 
-// Start custom achievement code
-// this is added because we don't have access to any store APIs that would otherwise use this feature
+RSDK::SKU::GamePadMappings *RSDK::SKU::gamePadMappings = NULL;
+int RSDK::SKU::gamePadCount                       = 0;
 
-void RegisterAchievement(const char *identifier, const char *name, const char *desc)
+bool32 RSDK::SKU::settingsChanged = false;
+RSDK::SKU::SettingsStorage RSDK::SKU::settingsStorage;
+
+// Start custom achievement code
+// this is added because we don't have access to any store APIs that would otherwise use this featur
+void RSDK::RegisterAchievement(const char *identifier, const char *name, const char *desc)
 {
-    AchievementInfo info;
+    SKU::AchievementInfo info;
     info.identifier  = identifier;
     info.name        = name;
     info.description = desc;
     info.achieved    = false;
-    achievementList.push_back(info);
+    SKU::achievementList.push_back(info);
 }
 
 // End custom achievement code
 
-GamePadMappings *gamePadMappings = NULL;
-int gamePadCount                 = 0;
-
-bool32 settingsChanged = false;
-SettingsStorage settingsStorage;
-
 inline void nullUserFunc() {}
 
-uint32 GetAPIValueID(const char *identifier, int charIndex)
+uint32 RSDK::SKU::GetAPIValueID(const char *identifier, int charIndex)
 {
     if (identifier[charIndex])
         return (33 * GetAPIValueID(identifier, charIndex + 1)) ^ identifier[charIndex];
@@ -37,13 +36,13 @@ uint32 GetAPIValueID(const char *identifier, int charIndex)
         return 5381;
 }
 
-int32 GetAPIValue(uint32 id)
+int32 RSDK::SKU::GetAPIValue(uint32 id)
 {
     switch (id) {
         default: break;
         case 0x3D6BD740: return PLATFORM_DEV; // SYSTEM_PLATFORM
         case 0xD9F55367: return REGION_US;    // SYSTEM_REGION
-        case 0x0CC0762D: return LANGUAGE_EN;   // SYSTEM_LANGUAGE
+        case 0x0CC0762D: return LANGUAGE_EN;  // SYSTEM_LANGUAGE
         case 0xA2ACEF21: return false;        // SYSTEM_CONFIRM_FLIP
         case 0x4205582D: return 120;          // SYSTEM_LEADERBOARD_LOAD_TIME
         case 0xDEF3F8B5: return STATUS_OK;    // SYSTEM_LEADERBOARD_STATUS
@@ -58,7 +57,7 @@ int32 GetAPIValue(uint32 id)
     return 0;
 }
 
-void InitUserData()
+void RSDK::SKU::InitUserData()
 {
     int32 language     = GetAPIValue(GetAPIValueID("SYSTEM_LANGUAGE", 0));
     int32 region       = GetAPIValue(GetAPIValueID("SYSTEM_REGION", 0));
@@ -198,7 +197,7 @@ void InitUserData()
     }
     delete[] statsRAM;
 }
-void releaseUserData()
+void RSDK::SKU::releaseUserData()
 {
     saveUserData();
 
@@ -240,7 +239,7 @@ void releaseUserData()
 #endif
 }
 
-void saveUserData()
+void RSDK::SKU::saveUserData()
 {
     int achievementsRAM[0x100];
     memset(achievementsRAM, 0, 0x100 * sizeof(int));
@@ -290,7 +289,7 @@ void saveUserData()
 }
 
 #if RETRO_REV02
-DummyCore* InitDummyCore()
+RSDK::SKU::DummyCore *RSDK::SKU::InitDummyCore()
 {
     //Initalize API subsystems
     DummyCore *core = new DummyCore;
@@ -334,7 +333,7 @@ DummyCore* InitDummyCore()
     return core;
 }
 
-void HandleUserStatuses()
+void RSDK::SKU::HandleUserStatuses()
 {
     if (userStorage) {
         if (userStorage->authStatus == STATUS_CONTINUE) {
@@ -395,11 +394,11 @@ void HandleUserStatuses()
 #endif
 
 // Found this in Switch 1.00, doesn't seem to show up in rev02 variants but its neat nonetheless
-bool32 GetXYButtonFlip() { return engine.XYFlip; }
+bool32 RSDK::SKU::GetXYButtonFlip() { return engine.XYFlip; }
 
 #if RETRO_REV02
 const char *userValueNames[8] = { "Ext <PLUS>" };
-void UserCore::StageLoad()
+void RSDK::SKU::UserCore::StageLoad()
 {
     achievements->StageLoad();
     leaderboards->StageLoad();
@@ -411,7 +410,7 @@ void UserCore::StageLoad()
         SetDebugValue(userValueNames[i], userCore->values[i], DTYPE_BOOL, false, true);
     }
 }
-void UserCore::FrameInit()
+void RSDK::SKU::UserCore::FrameInit()
 {
     achievements->FrameInit();
     leaderboards->FrameInit();
@@ -419,7 +418,7 @@ void UserCore::FrameInit()
     stats->FrameInit();
     userStorage->FrameInit();
 }
-void UserCore::OnUnknownEvent()
+void RSDK::SKU::UserCore::OnUnknownEvent()
 {
     achievements->OnUnknownEvent();
     leaderboards->OnUnknownEvent();
@@ -428,14 +427,14 @@ void UserCore::OnUnknownEvent()
     userStorage->OnUnknownEvent();
 }
 
-bool32 DummyCore::CheckFocusLost() { return focusState != 0; }
+bool32 RSDK::SKU::DummyCore::CheckFocusLost() { return focusState != 0; }
 
-bool32 DummyCore::GetConfirmButtonFlip()
+bool32 RSDK::SKU::DummyCore::GetConfirmButtonFlip()
 {
     // PrintLog(PRINT_NORMAL, "DUMMY GetConfirmButtonFlip() -> %d", engine.confirmFlip);
     return engine.confirmFlip;
 }
-void DummyCore::LaunchManual()
+void RSDK::SKU::DummyCore::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_USING_SDL2
@@ -445,9 +444,9 @@ void DummyCore::LaunchManual()
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
 #endif
 }
-void DummyCore::ExitGame() { engine.running = false; }
+void RSDK::SKU::DummyCore::ExitGame() { engine.running = false; }
 
-int DummyCore::GetDefaultGamepadType()
+int RSDK::SKU::DummyCore::GetDefaultGamepadType()
 {
 #if RETRO_REV02
     int32 platform = curSKU.platform;
@@ -463,7 +462,7 @@ int DummyCore::GetDefaultGamepadType()
     }
 }
 
-int DummyCore::ShowExtensionOverlay(byte overlay)
+int RSDK::SKU::DummyCore::ShowExtensionOverlay(byte overlay)
 {
     switch (overlay) {
         default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
@@ -472,8 +471,8 @@ int DummyCore::ShowExtensionOverlay(byte overlay)
     return 1;
 }
 #else
-bool32 GetConfirmButtonFlip() { return engine.confirmFlip; }
-void LaunchManual()
+bool32 RSDK::SKU::GetConfirmButtonFlip() { return engine.confirmFlip; }
+void RSDK::SKU::LaunchManual()
 {
     // LaunchManual() just opens the mania manual URL, thats it
 #if RETRO_USING_SDL2
@@ -483,9 +482,9 @@ void LaunchManual()
     PrintLog(PRINT_NORMAL, "EMPTY LaunchManual()");
 #endif
 }
-void ExitGame() { engine.running = false; }
+void RSDK::SKU::ExitGame() { engine.running = false; }
 
-int GetDefaultGamepadType()
+int RSDK::SKU::GetDefaultGamepadType()
 {
 #if RETRO_REV02
     int32 platform = curSKU.platform = PLATFORM_SWITCH;
@@ -501,7 +500,7 @@ int GetDefaultGamepadType()
     }
 }
 
-int ShowExtensionOverlay(byte overlay)
+int RSDK::SKU::ShowExtensionOverlay(byte overlay)
 {
     switch (overlay) {
         default: PrintLog(PRINT_POPUP, "Show Extension Overlay: %d", overlay); break;
@@ -512,12 +511,12 @@ int ShowExtensionOverlay(byte overlay)
 #endif
 
 #if RETRO_VER_EGS
-bool32 DummyCore::ShowCheckoutPage(int a1)
+bool32 RSDK::SKU::DummyCore::ShowCheckoutPage(int a1)
 {
     PrintLog(PRINT_POPUP, "ShowCheckoutPage(%d)");
     return true;
 }
-int DummyCore::ShowEncorePage(int a1)
+int RSDK::SKU::DummyCore::ShowEncorePage(int a1)
 {
     PrintLog(PRINT_POPUP, "Show EncorePage Overlay: %d", a1);
     return 1;
@@ -525,7 +524,7 @@ int DummyCore::ShowEncorePage(int a1)
 void DummyCore::EpicUnknown4(int a1) { PrintLog(PRINT_POPUP, "EpicUnknown4(%d)", a1); }
 #endif
 
-int GetSettingsValue(int id)
+int RSDK::SKU::GetSettingsValue(int id)
 {
     switch (id) {
         case SETTINGS_WINDOWED: return engine.isWindowed; 
@@ -559,7 +558,7 @@ int GetSettingsValue(int id)
     return 0;
 }
 
-void SetSettingsValue(int id, int val)
+void RSDK::SKU::SetSettingsValue(int id, int val)
 {
     bool32 bVal = val;
     switch (id) {
@@ -706,7 +705,7 @@ void SetSettingsValue(int id, int val)
 
 char buttonNames[18][8] = { "U", "D", "L", "R", "START", "SELECT", "LSTICK", "RSTICK", "L1", "R1", "C", "Z", "A", "B", "X", "Y", "L2", "R2" };
 
-void readSettings()
+void RSDK::SKU::readSettings()
 {
     engine.screenCount = 1;
     engine.gameHeight  = SCREEN_YSIZE;
@@ -821,7 +820,7 @@ void readSettings()
             }
         }
 
-        AllocateStorage(sizeof(GamePadMappings) * gamePadCount, (void **)&gamePadMappings, DATASET_STG, true);
+        RSDK::AllocateStorage(sizeof(GamePadMappings) * gamePadCount, (void **)&gamePadMappings, RSDK::DATASET_STG, true);
 
         for (int i = 1; i <= gamePadCount; ++i) {
             char buffer[0x30];
@@ -916,9 +915,7 @@ void readSettings()
     }
 }
 
-
-
-void writeSettings(bool32 writeToFile)
+void RSDK::SKU::writeSettings(bool32 writeToFile)
 {
     // only done on windows and "dev", consoles use "options.bin"
 #if RETRO_REV02

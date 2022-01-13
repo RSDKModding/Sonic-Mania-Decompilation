@@ -1,6 +1,9 @@
 #ifndef OBJ_DEFAULTOBJECT_H
 #define OBJ_DEFAULTOBJECT_H
 
+namespace RSDK
+{
+
 // Object Class
 struct ObjectDefaultObject : Object {
 };
@@ -25,5 +28,6 @@ void DefaultObject_Serialize();
 
 // Extra Entity Functions
 
+} // namespace RSDK
 
 #endif //!OBJ_DEFAULTOBJECT_H

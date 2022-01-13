@@ -1,4 +1,5 @@
 #include "RetroEngine.hpp"
+using namespace RSDK;
 
 Model modelList[MODEL_MAX];
 Scene3D scene3DList[SCENE3D_MAX];
@@ -402,11 +403,11 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         model->vertCount  = ReadInt16(&info);
         model->frameCount = ReadInt16(&info);
 
-        AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, DATASET_STG, true);
+        RSDK::AllocateStorage(sizeof(ModelVertex) * model->vertCount * model->frameCount, (void **)&model->vertices, RSDK::DATASET_STG, true);
         if (model->flags & MODEL_USETEXTURES)
-            AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, DATASET_STG, true);
+            RSDK::AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, RSDK::DATASET_STG, true);
         if (model->flags & MODEL_USECOLOURS)
-            AllocateStorage(sizeof(Colour) * model->vertCount, (void **)&model->colours, DATASET_STG, true);
+            RSDK::AllocateStorage(sizeof(Colour) * model->vertCount, (void **)&model->colours, RSDK::DATASET_STG, true);
 
         if (model->flags & MODEL_USETEXTURES) {
             for (int v = 0; v < model->vertCount; ++v) {
@@ -422,10 +423,8 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         }
 
         model->indexCount = ReadInt16(&info);
-        AllocateStorage(sizeof(ushort) * model->indexCount, (void **)&model->indices, DATASET_STG, true);
-        for (int i = 0; i < model->indexCount; ++i) {
-            model->indices[i] = ReadInt16(&info);
-        }
+        RSDK::AllocateStorage(sizeof(ushort) * model->indexCount, (void **)&model->indices, RSDK::DATASET_STG, true);
+        for (int i = 0; i < model->indexCount; ++i) model->indices[i] = ReadInt16(&info);
 
         for (int f = 0; f < model->frameCount; ++f) {
             for (int v = 0; v < model->vertCount; ++v) {
@@ -480,10 +479,10 @@ uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
     scene->faceCount   = 6;
     scene->projectionX = 8;
     scene->projectionY = 8;
-    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, DATASET_STG, true);
-    AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, DATASET_STG, true);
-    AllocateStorage(sizeof(byte) * vertexLimit, (void **)&scene->faceVertCounts, DATASET_STG, true);
-    AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, DATASET_STG, true);
+    RSDK::AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->vertices, RSDK::DATASET_STG, true);
+    RSDK::AllocateStorage(sizeof(Scene3DVertex) * vertexLimit, (void **)&scene->normals, RSDK::DATASET_STG, true);
+    RSDK::AllocateStorage(sizeof(byte) * vertexLimit, (void **)&scene->faceVertCounts, RSDK::DATASET_STG, true);
+    RSDK::AllocateStorage(sizeof(FaceBufferEntry) * vertexLimit, (void **)&scene->faceBuffer, RSDK::DATASET_STG, true);
 
     return id;
 }
@@ -610,7 +609,8 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
         }
     }
 }
-void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, colour colour)
+void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals,
+                         colour colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && animator) {

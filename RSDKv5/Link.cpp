@@ -1,9 +1,9 @@
 #include "RetroEngine.hpp"
 
-void *RSDKFunctionTable[FUNCTABLE_COUNT];
+void *RSDK::RSDKFunctionTable[FUNCTABLE_COUNT];
 
 #if RETRO_REV02
-void *APIFunctionTable[APITABLE_COUNT];
+void *RSDK::APIFunctionTable[APITABLE_COUNT];
 
 enum UserdataTableIDs {
     APITable_GetUserLanguage,
@@ -81,8 +81,8 @@ enum UserdataTableIDs {
     APITable_Count,
 };
 #else
-APITableEntry APIFunctionTable[APITABLE_COUNT];
-int32 APIFunctionTableCount;
+APITableEntry RSDK::APIFunctionTable[APITABLE_COUNT];
+int32 RSDK::APIFunctionTableCount;
 #endif
 
 enum FunctionTableIDs {
@@ -295,11 +295,11 @@ enum FunctionTableIDs {
 };
 
 #if RETRO_REV02
-SKUInfo curSKU;
-UnknownInfo unknownInfo;
+RSDK::SKU::SKUInfo RSDK::SKU::curSKU;
+RSDK::SKU::UnknownInfo RSDK::SKU::unknownInfo;
 #endif
 
-GameVersionInfo gameVerInfo;
+RSDK::GameVersionInfo RSDK::gameVerInfo;
 
 void NullFunc() {}
 
@@ -341,8 +341,11 @@ void *GetAPIFunction(const char *name)
 }
 #endif
 
-void setupFunctions()
+void RSDK::setupFunctions()
 {
+    using namespace RSDK;
+    using namespace RSDK::SKU;
+
 #if RETRO_USE_MOD_LOADER
     if (RSDKFunctionTable[0]) {
         initModAPI();
@@ -554,7 +557,7 @@ void setupFunctions()
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetScreenSplitVerticies, SetScreenSplitVerticies);
 #endif
-    addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, LoadSpriteSheet);
+    addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_SetLookupTable, SetLookupTable);
 #else
@@ -639,7 +642,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ChannelActive, ChannelActive);
     addToRSDKFunctionTable(FunctionTable_GetChannelPos, GetChannelPos);
     addToRSDKFunctionTable(FunctionTable_LoadVideo, LoadVideo);
-    addToRSDKFunctionTable(FunctionTable_LoadImage, LoadImage);
+    addToRSDKFunctionTable(FunctionTable_LoadImage, RSDK::LoadImage);
 #if RETRO_REV02
     addToRSDKFunctionTable(FunctionTable_ControllerIDForInputID, ControllerIDForInputID);
     addToRSDKFunctionTable(FunctionTable_MostRecentActiveControllerID, MostRecentActiveControllerID);
@@ -685,4 +688,4 @@ void setupFunctions()
 #endif
 }
 
-void LinkGameLogic(GameInfo *info) { PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }
+void RSDK::LinkGameLogic(GameInfo *info) { PrintLog(PRINT_POPUP, "Internal LinkGameLogic() function called, no logic will be linked"); }

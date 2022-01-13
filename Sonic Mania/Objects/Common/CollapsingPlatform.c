@@ -30,7 +30,7 @@ void CollapsingPlatform_Update(void)
             }
         }
 #endif
-        if (!runState && --self->collapseDelay == 0) 
+        if (!runState && --self->collapseDelay == 0)
             runState = true;
     }
     else {
@@ -54,7 +54,7 @@ void CollapsingPlatform_Update(void)
             }
         }
 
-        if (!runState &&& self->stoodPos.x) {
+        if (!runState && self->stoodPos.x) {
             self->collapseDelay = self->delay;
             if (!self->delay)
                 runState = true;
@@ -88,11 +88,9 @@ void CollapsingPlatform_Draw(void)
     drawPos.x -= self->size.x >> 1;
     drawPos.y -= self->size.y >> 1;
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
 
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
@@ -132,8 +130,8 @@ void CollapsingPlatform_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        int32 xOff              = (self->position.x >> 20) - (self->size.x >> 21);
-        int32 yOff              = (self->position.y >> 20) - (self->size.y >> 21);
+        int32 xOff          = (self->position.x >> 20) - (self->size.x >> 21);
+        int32 yOff          = (self->position.y >> 20) - (self->size.y >> 21);
 
         if ((self->size.y & 0xFFF00000) && !(self->size.y & 0xFFF00000 & 0x80000000)) {
             int32 sx = self->size.x >> 20;
@@ -181,10 +179,10 @@ void CollapsingPlatform_State_Left(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = self->storedTiles;
-    int32 startTX   = (self->position.x >> 20) - (self->size.x >> 21);
-    int32 startTY   = (self->position.y >> 20) - (self->size.y >> 21);
-    int32 tx        = self->position.x - (self->size.x >> 1) + 0x80000;
-    int32 ty        = (self->position.y - (self->size.y >> 1)) + 0x80000;
+    int32 startTX = (self->position.x >> 20) - (self->size.x >> 21);
+    int32 startTY = (self->position.y >> 20) - (self->size.y >> 21);
+    int32 tx      = self->position.x - (self->size.x >> 1) + 0x80000;
+    int32 ty      = (self->position.y - (self->size.y >> 1)) + 0x80000;
 
     int32 sx = self->size.x >> 20;
     int32 sy = self->size.y >> 20;
@@ -196,10 +194,10 @@ void CollapsingPlatform_State_Left(void)
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;
             tileChunk->drawOrder = self->drawOrder;
-            tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
-            int32 timerX           = x >> CollapsingPlatform->shift;
-            int32 timerY           = y >> CollapsingPlatform->shift;
+            tileChunk->tilePos.y = y + startTY;
+            int32 timerX         = x >> CollapsingPlatform->shift;
+            int32 timerY         = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (sy + 2 * timerX - timerY);
             ++tiles;
         }
@@ -212,12 +210,12 @@ void CollapsingPlatform_State_Right(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = self->storedTiles;
-    int32 startTX   = (self->position.x >> 20) - (self->size.x >> 21);
-    int32 startTY   = (self->position.y >> 20) - (self->size.y >> 21);
-    int32 tx        = self->position.x - (self->size.x >> 1) + 0x80000;
-    int32 ty        = (self->position.y - (self->size.y >> 1)) + 0x80000;
+    int32 startTX = (self->position.x >> 20) - (self->size.x >> 21);
+    int32 startTY = (self->position.y >> 20) - (self->size.y >> 21);
+    int32 tx      = self->position.x - (self->size.x >> 1) + 0x80000;
+    int32 ty      = (self->position.y - (self->size.y >> 1)) + 0x80000;
 
-    int32 timerSX   = self->size.x >> CollapsingPlatform->shift >> 20;
+    int32 timerSX = self->size.x >> CollapsingPlatform->shift >> 20;
 
     int32 sx = self->size.x >> 20;
     int32 sy = self->size.y >> 20;
@@ -228,10 +226,10 @@ void CollapsingPlatform_State_Right(void)
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;
             tileChunk->drawOrder = self->drawOrder;
-            tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
-            int32 timerX           = x >> CollapsingPlatform->shift;
-            int32 timerY           = y >> CollapsingPlatform->shift;
+            tileChunk->tilePos.y = y + startTY;
+            int32 timerX         = x >> CollapsingPlatform->shift;
+            int32 timerY         = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (sy + 2 * (timerSX - timerX) - timerY);
             ++tiles;
         }
@@ -244,10 +242,10 @@ void CollapsingPlatform_State_Center(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = self->storedTiles;
-    int32 startTX   = (self->position.x >> 20) - (self->size.x >> 21);
-    int32 startTY   = (self->position.y >> 20) - (self->size.y >> 21);
-    int32 tx        = self->position.x - (self->size.x >> 1) + 0x80000;
-    int32 ty        = (self->position.y - (self->size.y >> 1)) + 0x80000;
+    int32 startTX = (self->position.x >> 20) - (self->size.x >> 21);
+    int32 startTY = (self->position.y >> 20) - (self->size.y >> 21);
+    int32 tx      = self->position.x - (self->size.x >> 1) + 0x80000;
+    int32 ty      = (self->position.y - (self->size.y >> 1)) + 0x80000;
 
     int32 timerSX = self->size.x >> CollapsingPlatform->shift >> 20;
     int32 timerSY = self->size.y >> CollapsingPlatform->shift >> 20;
@@ -263,8 +261,8 @@ void CollapsingPlatform_State_Center(void)
             tileChunk->drawOrder = self->drawOrder;
             tileChunk->tilePos.x = x + startTX;
             tileChunk->tilePos.y = y + startTY;
-            int32 timerX           = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
-            int32 timerY           = y >> CollapsingPlatform->shift;
+            int32 timerX         = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
+            int32 timerY         = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (timerSY + 2 * timerX - timerY);
             if (!(timerSX & 1) && x >> CollapsingPlatform->shift < (timerSX >> 1))
                 tileChunk->timer -= 6;
@@ -313,11 +311,9 @@ void CollapsingPlatform_EditorDraw(void)
     drawPos.x -= self->size.x >> 1;
     drawPos.y -= self->size.y >> 1;
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);

@@ -1,9 +1,12 @@
 #ifndef LINK_H
 #define LINK_H
 
+namespace RSDK
+{
+
 #if RETRO_REV02
-#define FUNCTABLE_COUNT  (180)
-#define APITABLE_COUNT (59)
+#define FUNCTABLE_COUNT (180)
+#define APITABLE_COUNT  (59)
 #else
 #define FUNCTABLE_COUNT (155)
 #define APITABLE_COUNT  (32)
@@ -39,7 +42,7 @@ struct GameInfo {
     void *functionPtrs;
 #if RETRO_REV02
     void *APIPtrs;
-    SKUInfo *currentSKU;
+    SKU::SKUInfo *currentSKU;
 #endif
     GameVersionInfo *engineInfo;
     SceneInfo *sceneInfo;
@@ -52,7 +55,7 @@ struct GameInfo {
 #endif
     TouchMouseData *touchMouse;
 #if RETRO_REV02
-    UnknownInfo *unknown;
+    SKU::UnknownInfo *unknown;
 #endif
     ScreenInfo *screenInfo;
 #if RETRO_USE_MOD_LOADER
@@ -63,5 +66,7 @@ struct GameInfo {
 void setupFunctions();
 
 void LinkGameLogic(GameInfo *info);
+
+} // namespace RSDK
 
 #endif

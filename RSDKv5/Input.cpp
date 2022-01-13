@@ -748,7 +748,7 @@ void InitInputDevice()
 
     StartupKeyboardInput();
 
-    for (int c = 0; c < gamePadCount; ++c) {
+    for (int c = 0; c < RSDK::SKU::gamePadCount; ++c) {
         //PrintLog(PRINT_NORMAL, "%s Detected - Vendor ID: %x ProductID: %x\n", gamePadMappings[c].name, gamePadMappings[c].vendorID,
         //         gamePadMappings[c].productID);
     }
@@ -964,7 +964,7 @@ int32 GetControllerType(int32 inputID)
     }
 
 #if RETRO_REV02
-    return userCore->GetDefaultGamepadType();
+    return RSDK::SKU::userCore->GetDefaultGamepadType();
 #else
     int32 platform = gameVerInfo.platform = PLATFORM_SWITCH;
 

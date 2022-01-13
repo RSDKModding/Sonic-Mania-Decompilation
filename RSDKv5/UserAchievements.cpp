@@ -1,18 +1,18 @@
 #include "RetroEngine.hpp"
 
 // Start Dummy Achievements
-std::vector<AchievementInfo> achievementList;
-std::vector<int> achievementStack;
+std::vector<RSDK::SKU::AchievementInfo> RSDK::SKU::achievementList;
+std::vector<int> RSDK::SKU::achievementStack;
 //End Dummy Achievements
 
 #if RETRO_REV02
-UserAchievements *achievements = NULL;
+RSDK::SKU::UserAchievements *RSDK::SKU::achievements = NULL;
 #endif
 
-void ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
+void RSDK::SKU::ClearAchievements() { PrintLog(PRINT_NORMAL, "DUMMY ClearAchievements()"); }
 
 #if RETRO_REV02
-void DummyAchievements::TryUnlockAchievement(const char *name)
+void RSDK::SKU::DummyAchievements::TryUnlockAchievement(const char *name)
 {
     if (achievements->enabled) {
         PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
@@ -40,23 +40,23 @@ void DummyAchievements::TryUnlockAchievement(const char *name)
     }
 }
 
-void DummyAchievements::GetAchievementNames(TextInfo *names, int32 count)
+void RSDK::SKU::DummyAchievements::GetAchievementNames(TextInfo *names, int32 count)
 {
     int i = 0;
-    for (; i < count && i < (int)achievementStack.size(); ++i) {
-        SetText(&names[i], (char *)achievementList[i].name.c_str(), 0);
+    for (; i < count && i < (int)RSDK::SKU::achievementStack.size(); ++i) {
+        SetText(&names[i], (char *)RSDK::SKU::achievementList[i].name.c_str(), 0);
     }
     for (; i < count; ++i) {
         SetText(&names[i], (char *)"Dummy Achievement", 0);
     }
 }
 
-TextInfo *DummyAchievements::GetAchievementText(TextInfo *info)
+TextInfo *RSDK::SKU::DummyAchievements::GetAchievementText(TextInfo *info)
 {
     SetText(info, (char *)"Achievement!", 0);
     return info;
 }
-TextInfo *DummyAchievements::GetAchievementName(TextInfo *info, uint id)
+TextInfo *RSDK::SKU::DummyAchievements::GetAchievementName(TextInfo *info, uint id)
 {
     id--;
     if (id <= achievementList.size())
@@ -64,7 +64,7 @@ TextInfo *DummyAchievements::GetAchievementName(TextInfo *info, uint id)
     return info;
 }
 
-int DummyAchievements::GetNextAchievementID(void)
+int RSDK::SKU::DummyAchievements::GetNextAchievementID(void)
 {
     if (achievementStack.size() > 0)
         return achievementStack[0] + 1;
@@ -72,13 +72,13 @@ int DummyAchievements::GetNextAchievementID(void)
         return 0;
 }
 
-void DummyAchievements::RemoveLastAchievementID(void)
+void RSDK::SKU::DummyAchievements::RemoveLastAchievementID(void)
 {
     if (achievementStack.size() > 0)
         achievementStack.erase(achievementStack.begin());
 }
 #else
-void TryUnlockAchievement(const char *name)
+void RSDK::SKU::TryUnlockAchievement(const char *name)
 {
     PrintLog(PRINT_NORMAL, "DUMMY TryUnlockAchievement(%s)", name);
 
@@ -101,21 +101,21 @@ void TryUnlockAchievement(const char *name)
 #endif
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-bool32 achievementsEnabled = true;
-ushort achievementAniFrames[2];
-Animator achievementAnimator[2];
-TextInfo achievementText[2];
-int achievementTextWidth[2];
-int achievementID             = 0;
-int achievementsDelay         = 0;
-int achievementsDrawn         = 0;
-int achievementStrW           = 0;
-int achievementStrX           = 0;
-bool32 achievementsLoaded     = false;
-bool32 achievementDrawFlag    = false;
-bool32 achievementUnknownFlag = false;
+bool32 RSDK::SKU::achievementsEnabled = true;
+ushort RSDK::SKU::achievementAniFrames[2];
+RSDK::Animator RSDK::SKU::achievementAnimator[2];
+TextInfo RSDK::SKU::achievementText[2];
+int RSDK::SKU::achievementTextWidth[2];
+int RSDK::SKU::achievementID             = 0;
+int RSDK::SKU::achievementsDelay         = 0;
+int RSDK::SKU::achievementsDrawn         = 0;
+int RSDK::SKU::achievementStrW           = 0;
+int RSDK::SKU::achievementStrX           = 0;
+bool32 RSDK::SKU::achievementsLoaded     = false;
+bool32 RSDK::SKU::achievementDrawFlag    = false;
+bool32 RSDK::SKU::achievementUnknownFlag = false;
 
-void LoadAchievementAssets()
+void RSDK::SKU::LoadAchievementAssets()
 {
     if (achievementsEnabled) {
         if (achievements) {
@@ -150,7 +150,7 @@ void LoadAchievementAssets()
         }
     }
 }
-void ProcessAchievements()
+void RSDK::SKU::ProcessAchievements()
 {
     if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
         if (achievementsLoaded) {
@@ -190,7 +190,7 @@ void ProcessAchievements()
         }
     }
 }
-void DrawAchievements()
+void RSDK::SKU::DrawAchievements()
 {
     if (achievementsEnabled && achievements && achievements->CheckAchievementsEnabled()) {
         if (achievementsLoaded && achievementDrawFlag && achievementID) {

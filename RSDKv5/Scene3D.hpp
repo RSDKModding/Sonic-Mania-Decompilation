@@ -138,7 +138,7 @@ inline void Prepare3DScene(uint16 sceneID)
     }
 }
 
-inline void SetMeshAnimation(uint16 model, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
+inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
 {
     if (model >= MODEL_MAX) {
         if (animator)
@@ -150,7 +150,7 @@ inline void SetMeshAnimation(uint16 model, Animator *animator, int16 speed, uint
 
     if (animator->animationID == model && !forceApply)
         return;
-    animator->framePtrs       = (SpriteFrame *)1;
+    animator->framePtrs          = (RSDK::SpriteFrame *)1;
     animator->timer  = 0;
     animator->frameID         = frameID;
     animator->frameCount      = modelList[model].frameCount;
@@ -188,7 +188,7 @@ inline void SetSpecularIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
     }
 }
 void AddModelToScene(uint16 animID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
-void AddMeshFrameToScene(uint16 animID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
+void AddMeshFrameToScene(uint16 animID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
 void Draw3DScene(uint16 sceneID);
 
 #endif

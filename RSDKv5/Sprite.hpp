@@ -1,6 +1,38 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
+namespace RSDK
+{
+
+struct Image {
+    Image()
+    {
+        InitFileInfo(&info);
+        width   = 0;
+        height  = 0;
+        palette = NULL;
+        dataPtr = NULL;
+    }
+
+    virtual bool32 Load(const char *fileName, bool32 loadHeader) { return false; }
+    virtual bool32 Load(TextInfo *fileName, bool32 loadHeader)
+    {
+        if (!fileName->text)
+            return Load("", loadHeader);
+
+        GetCString(textBuffer, fileName);
+        return Load(textBuffer, loadHeader);
+    }
+    virtual void Close() { CloseFile(&info); }
+
+    FileInfo info;
+    int32 width;
+    int32 height;
+    int32 depth;
+    colour *palette;
+    uint8 *dataPtr;
+};
+
 struct GifDecoder {
     int32 depth;
     int32 clearCode;
@@ -23,27 +55,18 @@ struct GifDecoder {
     uint32 prefix[4096];
 };
 
-struct ImageGIF {
-    FileInfo info;
-    int32 width;
-    int32 height;
-    int32 unused;
-    colour* palette;
-    uint8 *dataPtr;
+struct ImageGIF : public Image {
+    ImageGIF() { AllocateStorage(sizeof(GifDecoder), (void **)&decoder, DATASET_TMP, true); }
+
+    bool32 Load(const char *fileName, bool32 loadHeader);
+
     GifDecoder *decoder;
 };
 
 #if RETRO_REV02
-struct ImagePNG {
-#else
-struct ImageTGA {
-#endif
-    FileInfo info;
-    int32 width;
-    int32 height;
-    int32 depth;
-    colour *palette;
-    uint8 *dataPtr;
+struct ImagePNG : public Image {
+    bool32 Load(const char *fileName, bool32 loadHeader);
+
     uint8 bitDepth;
     uint8 clrType;
     uint8 compression;
@@ -55,15 +78,15 @@ struct ImageTGA {
     int32 dataSize;
     uint8 *chunkBuffer;
 };
-
-bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);
-#if RETRO_REV02
-bool32 LoadPNG(ImagePNG *image, const char *fileName, bool32 loadHeader);
 #else
-bool32 LoadTGA(ImageTGA *image, const char *fileName);
+struct ImageTGA : public Image {
+    bool32 Load(const char *fileName, bool32 loadHeader);
+};
 #endif
 
 ushort LoadSpriteSheet(const char *filename, Scopes scope);
 bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void));
+
+} // namespace RSDK
 
 #endif // SPRITE_H

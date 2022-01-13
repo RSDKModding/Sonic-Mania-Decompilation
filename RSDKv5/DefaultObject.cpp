@@ -1,8 +1,8 @@
 #include "RetroEngine.hpp"
 
-ObjectDefaultObject *DefaultObject;
+RSDK::ObjectDefaultObject *RSDK::DefaultObject;
 
-void DefaultObject_Update()
+void RSDK::DefaultObject_Update()
 {
     if (controller[0].keyUp.down) {
         if (screens[0].position.y > 0)
@@ -21,18 +21,18 @@ void DefaultObject_Update()
     }
 }
 
-void DefaultObject_LateUpdate() {}
-void DefaultObject_StaticUpdate() {}
-void DefaultObject_Draw() {}
+void RSDK::DefaultObject_LateUpdate() {}
+void RSDK::DefaultObject_StaticUpdate() {}
+void RSDK::DefaultObject_Draw() {}
 
-void DefaultObject_Create(void *data)
+void RSDK::DefaultObject_Create(void *data)
 {
     EntityDefaultObject *entity = (EntityDefaultObject *)sceneInfo.entity;
     entity->active              = ACTIVE_ALWAYS;
-    DefaultObject->active       = ACTIVE_ALWAYS;
+    RSDK::DefaultObject->active = ACTIVE_ALWAYS;
 }
 
-void DefaultObject_StageLoad() {}
-void DefaultObject_EditorDraw() {}
-void DefaultObject_EditorLoad() {}
-void DefaultObject_Serialize() {}
+void RSDK::DefaultObject_StageLoad() {}
+void RSDK::DefaultObject_EditorDraw() {}
+void RSDK::DefaultObject_EditorLoad() {}
+void RSDK::DefaultObject_Serialize() {}

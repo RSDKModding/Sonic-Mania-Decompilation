@@ -1,6 +1,12 @@
 #ifndef USER_LEADERBOARDS_H
 #define USER_LEADERBOARDS_H
 
+namespace RSDK
+{
+
+namespace SKU
+{
+
 struct LeaderboardID {
     int id1;
     int id2;
@@ -117,5 +123,9 @@ void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type);
 void ClearLeaderboardInfo();
 LeaderboardEntry *ReadLeaderboardEntry(int entryID);
 #endif
+
+} // namespace SKU
+
+} // namespace RSDK
 
 #endif // USER_LEADERBOARDS_H

@@ -1,6 +1,12 @@
 #ifndef USER_STORAGE_H
 #define USER_STORAGE_H
 
+namespace RSDK
+{
+
+namespace SKU
+{
+
 #if RETRO_REV02
 
 #define RETRO_USERDB_MAX     (8)
@@ -90,7 +96,7 @@ struct UserDB {
     byte valid;
     UserDB *parent;
     byte rowsChanged;
-    List<int> sortedRowList;
+    RSDK::List<int> sortedRowList;
     int sortedRowIDs[RETRO_USERDB_ROW_MAX];
     int sortedRowCount;
     int columnCount;
@@ -235,5 +241,9 @@ bool32 DeleteUserFile(const char *filename);
 bool32 TryLoadUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
 bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, int32 (*callback)(int32));
 #endif
+
+} // namespace SKU
+
+} // namespace RSDK
 
 #endif

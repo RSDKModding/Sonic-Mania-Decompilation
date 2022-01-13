@@ -1,9 +1,9 @@
 #include "RetroEngine.hpp"
 
 #if RETRO_REV02
-ObjectDevOutput *DevOutput;
+RSDK::ObjectDevOutput *RSDK::DevOutput;
 
-void DevOutput_Update()
+void RSDK::DevOutput_Update()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
 
@@ -35,17 +35,17 @@ void DevOutput_Update()
     }
 }
 
-void DevOutput_LateUpdate() {}
-void DevOutput_StaticUpdate() {}
+void RSDK::DevOutput_LateUpdate() {}
+void RSDK::DevOutput_StaticUpdate() {}
 
-void DevOutput_Draw()
+void RSDK::DevOutput_Draw()
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
     DrawRectangle(0, 0, currentScreen->size.x, entity->position.y + entity->yOffset, 128, 255, INK_NONE, true);
     DrawDevText(entity->message, 8, entity->position.y + 8, 0, 0xF0F0F0);
 }
 
-void DevOutput_Create(void *source)
+void RSDK::DevOutput_Create(void *source)
 {
     EntityDevOutput *entity = (EntityDevOutput *)sceneInfo.entity;
     entity->active          = ACTIVE_ALWAYS;
@@ -53,14 +53,14 @@ void DevOutput_Create(void *source)
     entity->isPermanent     = true;
     entity->drawOrder       = 15;
     strncpy(entity->message, (char *)source, 0x3F4);
-    entity->id         = 180 * GetEntityCount(DevOutput->objectID, 0);
+    entity->id         = 180 * GetEntityCount(RSDK::DevOutput->objectID, 0);
     entity->yOffset    = DevOutput_GetStringYOffset(entity->message);
     entity->position.y = -entity->yOffset;
 }
 
-void DevOutput_StageLoad() {}
+void RSDK::DevOutput_StageLoad() {}
 
-int DevOutput_GetStringYOffset(char *string)
+int RSDK::DevOutput_GetStringYOffset(char *string)
 {
     char cur = *string;
     int v2   = 0;
@@ -83,7 +83,7 @@ int DevOutput_GetStringYOffset(char *string)
         return 24;
 }
 
-void DevOutput_EditorDraw() {}
-void DevOutput_EditorLoad() {}
-void DevOutput_Serialize() {}
+void RSDK::DevOutput_EditorDraw() {}
+void RSDK::DevOutput_EditorLoad() {}
+void RSDK::DevOutput_Serialize() {}
 #endif

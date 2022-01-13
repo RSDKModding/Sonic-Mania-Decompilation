@@ -1,6 +1,12 @@
 #ifndef USERDATA_H
 #define USERDATA_H
 
+namespace RSDK
+{
+
+namespace SKU
+{
+
 enum StatusCodes { STATUS_NONE = 0, STATUS_CONTINUE = 100, STATUS_OK = 200, STATUS_FORBIDDEN = 403, STATUS_NOTFOUND = 404, STATUS_ERROR = 500 };
 
 #define API_TypeOf(strct, type) ((type *)strct)
@@ -45,7 +51,7 @@ struct UserCore {
     virtual void Shutdown(void) {}
     virtual bool32 CheckAPIInitialized(void) { return true; }
     virtual bool32 CheckFocusLost(void) { return false; }
-    //I do not know what this is, both PC & Switch vers have it as return false always so
+    // I do not know what this is, both PC & Switch vers have it as return false always so
     virtual bool32 CheckEnginePause(void) { return false; }
     virtual void StageLoad(void);
     virtual void FrameInit(void);
@@ -79,7 +85,7 @@ struct UserCore {
     int *values[8];
     byte valueCount = 0;
 
-    //Not Original, but I gotta store it somewhere /shrug
+    // Not Original, but I gotta store it somewhere /shrug
     uint8 focusState = 0;
 };
 
@@ -132,14 +138,14 @@ void saveUserData();
 #if RETRO_REV02
 DummyCore *InitDummyCore();
 
-//Platform-Specific Cores go here
+// Platform-Specific Cores go here
 #endif
 
 #if RETRO_REV02
 void HandleUserStatuses();
 #endif
 
-//these are rev02 only but keeping em helps organization
+// these are rev02 only but keeping em helps organization
 uint32 GetAPIValueID(const char *identifier, int charIndex);
 int32 GetAPIValue(uint32 id);
 
@@ -259,5 +265,9 @@ inline void writeText(FileIO *file, const char *string, ...)
 
     fWrite(buffer, sizeof(char), strlen(buffer), file);
 }
+
+} // namespace SKU
+
+} // namespace RSDK
 
 #endif

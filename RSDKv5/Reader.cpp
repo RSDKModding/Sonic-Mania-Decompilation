@@ -30,7 +30,7 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
     FileInfo info;
 
     char pathBuffer[0x100];
-    sprintf(pathBuffer, "%s%s", userFileDir, filePath);
+    sprintf(pathBuffer, "%s%s", RSDK::SKU::userFileDir, filePath);
 
     InitFileInfo(&info);
     info.externalFile = true;
@@ -85,9 +85,9 @@ bool32 CheckDataFile(const char *filePath, size_t fileOffset, bool32 useBuffer)
 
 bool32 OpenDataFile(FileInfo *info, const char *filename)
 {
-    StringLowerCase(hashBuffer, filename);
+    StringLowerCase(textBuffer, filename);
     uint hash[0x4];
-    GEN_HASH(hashBuffer, hash);
+    GEN_HASH(textBuffer, hash);
 
     for (int f = 0; f < dataFileCount; ++f) {
         RSDKFileInfo *file = &dataFiles[f];
@@ -143,18 +143,18 @@ bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     }
 
     bool addPath = false;
-    if (activeMod != -1) {
+    if (RSDK::activeMod != -1) {
         char buf[0x100];
         sprintf(buf, "%s", filePathBuf);
-        sprintf(filePathBuf, "%smods/%s/%s", userFileDir, modList[activeMod].id.c_str(), buf);
+        sprintf(filePathBuf, "%smods/%s/%s", RSDK::SKU::userFileDir, RSDK::modList[RSDK::activeMod].id.c_str(), buf);
         info->externalFile = true;
         addPath            = false;
     }
     else {
-        for (int m = 0; m < modList.size(); ++m) {
-            if (modList[m].active) {
-                std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
-                if (iter != modList[m].fileMap.cend()) {
+        for (int m = 0; m < RSDK::modList.size(); ++m) {
+            if (RSDK::modList[m].active) {
+                std::map<std::string, std::string>::const_iterator iter = RSDK::modList[m].fileMap.find(pathLower);
+                if (iter != RSDK::modList[m].fileMap.cend()) {
                     strcpy(filePathBuf, iter->second.c_str());
                     info->externalFile = true;
                     break;
@@ -200,8 +200,8 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
     byte hash[0x10];
 
     // StringA
-    StringUpperCase(hashBuffer, key1);
-    GEN_HASH(hashBuffer, (uint *)hash);
+    StringUpperCase(textBuffer, key1);
+    GEN_HASH(textBuffer, (uint *)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyA[y + 3] = hash[y + 0];
@@ -211,8 +211,8 @@ void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
     }
 
     // StringB
-    sprintf(hashBuffer, "%d", key2); // Vary lazy ik
-    GEN_HASH(hashBuffer, (uint *)hash);
+    sprintf(textBuffer, "%d", key2); // Vary lazy ik
+    GEN_HASH(textBuffer, (uint *)hash);
 
     for (int y = 0; y < 0x10; y += 4) {
         info->encryptionKeyB[y + 3] = hash[y + 0];

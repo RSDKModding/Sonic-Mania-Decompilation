@@ -24,7 +24,7 @@ bool32 showHitboxes = false;
 int32 debugHitboxCount = 0;
 DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
 
-int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox)
+int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox)
 {
     int i = 0;
     int entityID = GetEntityID((EntityBase *)entity);
@@ -68,7 +68,7 @@ int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, Hitbox *hitbox)
 }
 #endif
 
-bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox)
+bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox)
 {
     int store = 0;
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
@@ -134,7 +134,7 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
     return collided;
 }
 
-byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
+byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
 {
     if (thisEntity && otherEntity && thisHitbox && otherHitbox) {
         int store            = 0;
@@ -306,7 +306,7 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
     return 0;
 }
 
-bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
+bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
 {
     int store       = 0;
     bool32 collided = false;
@@ -701,7 +701,7 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
     }
 }
 
-void ProcessTileCollisions(Entity *entity, Hitbox *outerBox, Hitbox *innerBox)
+void ProcessTileCollisions(Entity *entity, RSDK::Hitbox *outerBox, RSDK::Hitbox *innerBox)
 {
     if (entity && outerBox && innerBox) {
         if (entity->tileCollisions) {

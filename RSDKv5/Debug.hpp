@@ -38,7 +38,7 @@ inline void PrintVector2(SeverityModes severity, const char *message, int32 x, i
         yCnt = 45;
     PrintLog(severity, "%s: <%c%08X, %c%08X>", message, xCnt, absX, yCnt, absY);
 }
-inline void PrintHitbox(SeverityModes severity, const char *message, Hitbox *hitbox)
+inline void PrintHitbox(SeverityModes severity, const char *message, RSDK::Hitbox *hitbox)
 {
     PrintLog(severity, "%s: <l: %d, r: %d, t: %d, b: %d>", message, hitbox->left, hitbox->right, hitbox->top, hitbox->bottom);
 }

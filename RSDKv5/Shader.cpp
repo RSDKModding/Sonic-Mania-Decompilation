@@ -1,5 +1,7 @@
 #include "RetroEngine.hpp"
 
+using namespace RSDK;
+
 int shaderCount = 0;
 ShaderEntry shaderList[SHADER_MAX];
 
@@ -110,7 +112,7 @@ void LoadShader(const char* fileName, bool32 linear) {
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         byte *fileData = NULL;
-        AllocateStorage(info.fileSize, (void **)&fileData, DATASET_TMP, false);
+        RSDK::AllocateStorage(info.fileSize, (void **)&fileData, RSDK::DATASET_TMP, false);
         ReadBytes(&info, fileData, info.fileSize);
         CloseFile(&info);
 

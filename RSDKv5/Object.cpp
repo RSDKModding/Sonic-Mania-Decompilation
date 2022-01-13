@@ -1,5 +1,7 @@
 #include "RetroEngine.hpp"
 
+using namespace RSDK;
+
 int32 objectCount = 0;
 ObjectInfo objectList[OBJECT_COUNT];
 int32 globalObjectCount = 0;
@@ -61,7 +63,7 @@ void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSi
 {
     uint hash[4];
     GEN_HASH(name, hash);
-    AllocateStorage(objectSize, (void **)structPtr, DATASET_STG, true);
+    RSDK::AllocateStorage(objectSize, (void **)structPtr, RSDK::DATASET_STG, true);
     LoadStaticObject((byte *)*structPtr, hash, 0);
 }
 #endif
@@ -702,7 +704,7 @@ void ProcessObjectDrawLists()
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
                             if (i == list->entityCount - 1) {
-                                DrawAchievements();
+                                SKU::DrawAchievements();
                             }
 #endif
 

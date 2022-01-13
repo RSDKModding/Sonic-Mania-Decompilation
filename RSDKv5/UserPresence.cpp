@@ -1,9 +1,9 @@
 #include "RetroEngine.hpp"
 
 #if RETRO_REV02
-UserRichPresence *richPresence = NULL;
+RSDK::SKU::UserRichPresence *RSDK::SKU::richPresence = NULL;
 
-void DummyRichPresence::SetPresence(byte id, TextInfo *info)
+void RSDK::SKU::DummyRichPresence::SetPresence(byte id, TextInfo *info)
 {
     char buffer[0xFF];
     GetCString(buffer, info);

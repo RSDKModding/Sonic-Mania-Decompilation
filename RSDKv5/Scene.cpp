@@ -18,7 +18,7 @@ void LoadScene()
 {
 #if RETRO_USE_MOD_LOADER
     //run this before the game actually unloads all the objects & scene assets
-    RunModCallbacks(MODCB_STAGEUNLOAD, NULL);
+    RSDK::RunModCallbacks(RSDK::MODCB_STAGEUNLOAD, NULL);
 #endif
 
     sceneInfo.timeCounter  = 0;
@@ -48,7 +48,7 @@ void LoadScene()
 #if RETRO_REV02
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0 && !hardResetFlag) {
         // Reload
-        ClearUnusedStorage(DATASET_STG);
+        RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
         sceneInfo.filter   = sceneInfo.listData[sceneInfo.listPos].filter;
         PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
                  sceneInfo.listData[sceneInfo.listPos].name,
@@ -84,9 +84,9 @@ void LoadScene()
 
     // Unload animations
     for (int32 s = 0; s < SPRFILE_COUNT; ++s) {
-        if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
-            MEM_ZERO(spriteAnimationList[s]);
-            spriteAnimationList[s].scope = SCOPE_NONE;
+        if (RSDK::spriteAnimationList[s].scope != SCOPE_GLOBAL) {
+            MEM_ZERO(RSDK::spriteAnimationList[s]);
+            RSDK::spriteAnimationList[s].scope = SCOPE_NONE;
         }
     }
 
@@ -126,8 +126,8 @@ void LoadScene()
         drawLayers[l].sorted = false;
     }
 
-    ClearUnusedStorage(DATASET_STG);
-    ClearUnusedStorage(DATASET_SFX);
+    RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
+    RSDK::ClearUnusedStorage(RSDK::DATASET_SFX);
 
     for (int32 s = 0; s < SCREEN_MAX; ++s) {
         screens[s].position.x = 0;
@@ -164,10 +164,10 @@ void LoadScene()
             return;
         }
 
-        sceneInfo.useGlobalScripts = ReadInt8(&info);
+        sceneInfo.useGlobalObjects = ReadInt8(&info);
         sceneInfo.classCount       = 0;
 
-        if (sceneInfo.useGlobalScripts) {
+        if (sceneInfo.useGlobalObjects) {
             for (int32 o = 0; o < globalObjectCount; ++o) 
                 stageObjectIDs[o] = globalObjectIDs[o];
             sceneInfo.classCount = globalObjectCount;
@@ -181,10 +181,10 @@ void LoadScene()
 
         uint8 objCnt = ReadInt8(&info);
         for (int32 o = 0; o < objCnt; ++o) {
-            ReadString(&info, hashBuffer);
+            ReadString(&info, textBuffer);
 
             RETRO_HASH(hash);
-            GEN_HASH(hashBuffer, hash);
+            GEN_HASH(textBuffer, hash);
 
             stageObjectIDs[sceneInfo.classCount] = 0;
             for (int32 objID = 0; objID < objectCount; ++objID) {
@@ -198,7 +198,7 @@ void LoadScene()
         for (int32 o = 0; o < sceneInfo.classCount; ++o) {
             ObjectInfo *obj = &objectList[stageObjectIDs[o]];
             if (obj->type && !*obj->type) {
-                AllocateStorage(obj->objectSize, (void **)obj->type, DATASET_STG, true);
+                RSDK::AllocateStorage(obj->objectSize, (void **)obj->type, RSDK::DATASET_STG, true);
                 LoadStaticObject((uint8 *)*obj->type, obj->hash, sizeof(Object));
                 (*obj->type)->objectID = o;
                 if (o >= TYPE_DEFAULTCOUNT)
@@ -244,7 +244,7 @@ void LoadSceneFile()
     char buffer[0x40];
     sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->id);
 
-    dataStorage[DATASET_TMP].usedStorage = 0;
+    RSDK::dataStorage[RSDK::DATASET_TMP].usedStorage = 0;
 
     for (int s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].size.y;
 
@@ -290,8 +290,8 @@ void LoadSceneFile()
             TileLayer *layer = &tileLayers[i];
 
             ReadInt8(&info);
-            ReadString(&info, hashBuffer);
-            GEN_HASH(hashBuffer, layer->name);
+            ReadString(&info, textBuffer);
+            GEN_HASH(textBuffer, layer->name);
 
             layer->type         = ReadInt8(&info);
             layer->drawLayer[0] = ReadInt8(&info);
@@ -323,14 +323,15 @@ void LoadSceneFile()
 
             layer->layout = NULL;
             if (layer->xsize || layer->ysize) {
-                AllocateStorage(sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout, DATASET_STG, true);
+                RSDK::AllocateStorage(sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout,
+                                      RSDK::DATASET_STG, true);
                 memset(layer->layout, 0xFF, sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift));
             }
 
             int32 size = layer->xsize;
             if (size <= layer->ysize)
                 size = layer->ysize;
-            AllocateStorage(TILE_SIZE * size, (void **)&layer->lineScroll, DATASET_STG, true);
+            RSDK::AllocateStorage(TILE_SIZE * size, (void **)&layer->lineScroll, RSDK::DATASET_STG, true);
 
             layer->scrollInfoCount = ReadInt16(&info);
             for (int s = 0; s < layer->scrollInfoCount; ++s) {
@@ -363,11 +364,11 @@ void LoadSceneFile()
         //Objects
         uint8 objCount  = ReadInt8(&info);
         editableVarList = NULL;
-        AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);
+        RSDK::AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, RSDK::DATASET_TMP, false);
 
 #if RETRO_REV02
         EntityBase *entList = NULL;
-        AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&entList, DATASET_TMP, true);
+        RSDK::AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&entList, RSDK::DATASET_TMP, true);
 #endif
         for (int i = 0; i < objCount; ++i) {
             RETRO_HASH(hashBuf);
@@ -393,14 +394,14 @@ void LoadSceneFile()
             ObjectInfo *obj          = &objectList[stageObjectIDs[objID]];
             byte varCnt              = ReadInt8(&info);
             EditableVarInfo *varList = NULL;
-            AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, DATASET_TMP, false);
+            RSDK::AllocateStorage(sizeof(EditableVarInfo) * varCnt, (void **)&varList, RSDK::DATASET_TMP, false);
             editableVarCount = 0;
             if (objID) {
 #if RETRO_REV02
                 SetEditableVar(VAR_UINT8, "filter", objID, offsetof(Entity, filter));
 #endif
 #if RETRO_USE_MOD_LOADER
-                currentObjectID = objID;
+                RSDK::currentObjectID = objID;
 #endif
                 if (obj->serialize)
                     obj->serialize();
@@ -799,14 +800,11 @@ void LoadTileConfig(char *filepath)
 }
 void LoadStageGIF(char *filepath)
 {
-    ImageGIF tileset;
-    MEM_ZERO(tileset);
+    RSDK::ImageGIF tileset;
 
-    AllocateStorage(sizeof(GifDecoder), (void **)&tileset.decoder, DATASET_TMP, true);
-
-    if (LoadGIF(&tileset, filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
+    if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
         tileset.dataPtr = tilesetGFXData;
-        LoadGIF(&tileset, 0, false);
+        tileset.Load(NULL, false);
 
         for (int r = 0; r < 0x10; ++r) {
             // only overwrite inactive rows

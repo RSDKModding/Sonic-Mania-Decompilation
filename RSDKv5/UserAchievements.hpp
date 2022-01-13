@@ -4,6 +4,12 @@
 #include <vector>
 #include <string>
 
+namespace RSDK
+{
+
+namespace SKU
+{
+
 #if RETRO_REV02
 // This is the base struct, it serves as the base for any API-specific stats
 // This struct should never be removed
@@ -49,7 +55,7 @@ struct DummyAchievements : UserAchievements {
 };
 #endif
 
-//Start Dummy Achievment code
+// Start Dummy Achievment code
 struct AchievementInfo {
     std::string identifier;
     std::string name;
@@ -60,7 +66,7 @@ struct AchievementInfo {
 extern std::vector<AchievementInfo> achievementList;
 extern std::vector<int> achievementStack;
 
-//End Dummy Achievement code
+// End Dummy Achievement code
 
 #if RETRO_REV02
 extern UserAchievements *achievements;
@@ -100,5 +106,9 @@ void LoadAchievementAssets();
 void ProcessAchievements();
 void DrawAchievements();
 #endif
+
+} // namespace SKU
+
+} // namespace RSDK
 
 #endif // USER_ACHIEVEMENTS_H

@@ -89,7 +89,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         engine.skipCallback = NULL;
         ProcessVideo();
         engine.skipCallback = skipCallback;
-        settingsChanged     = false;
+        RSDK::SKU::settingsChanged = false;
         sceneInfo.state     = ENGINESTATE_VIDEOPLAYBACK;
     }
 }

@@ -3,13 +3,13 @@
 
 // Start custom leaderboard code
 // this is added because we don't have access to any store APIs that would otherwise use this feature
-std::vector<LeaderboardInfo> leaderboardList;
+std::vector<RSDK::SKU::LeaderboardInfo> RSDK::SKU::leaderboardList;
 // End custom leaderboard code
 
 #if RETRO_REV02
-UserLeaderboards *leaderboards = NULL;
+RSDK::SKU::UserLeaderboards *RSDK::SKU::leaderboards = NULL;
 
-void FillDummyLeaderboardEntries()
+void RSDK::SKU::FillDummyLeaderboardEntries()
 {
     const char *dummyNames[] = { "ORCIHILLARY124",      "AUCTORJOLIE521",       "SENECTUSFLORENCE789", "MAGNAAVRAM503",       "SITVERNON320",
                                  "DUICHRISTEN429",      "NULLAKERMIT649",       "INTEGERGEORGE708",    "HENDRERITDREW443",    "UTULYSSES507",
@@ -50,7 +50,7 @@ void FillDummyLeaderboardEntries()
         SetText(&entry->userID, (char *)"DUMMY_USER_ID", 0);
     }
 }
-void DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser)
+void RSDK::SKU::DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUser)
 {
     if (!leaderboard)
         return;
@@ -72,7 +72,7 @@ void DummyLeaderboards::FetchLeaderboard(LeaderboardID *leaderboard, bool32 isUs
         API_TypeOf(leaderboards, DummyLeaderboards)->loadTime = GetAPIValue(GetAPIValueID("SYSTEM_LEADERBOARD_LOAD_TIME", 0));
     }
 }
-void DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
+void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank))
 {
     if (!leaderboard)
         return;
@@ -107,7 +107,7 @@ void DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 score, void
         API_TypeOf(leaderboards, DummyLeaderboards)->trackCB   = callback;
     }
 }
-Vector2 LeaderboardEntryLength()
+Vector2 RSDK::SKU::LeaderboardEntryLength()
 {
     Vector2 value;
     value.x = leaderboards->entryInfo.entryCount;
@@ -115,7 +115,7 @@ Vector2 LeaderboardEntryLength()
     return value;
 }
 
-Vector2 LeaderboardEntryCount()
+Vector2 RSDK::SKU::LeaderboardEntryCount()
 {
     Vector2 value;
     value.x = leaderboards->entryInfo.entryStart;
@@ -123,7 +123,7 @@ Vector2 LeaderboardEntryCount()
     return value;
 }
 
-void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
+void RSDK::SKU::LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
 {
     switch (type) {
         default:
@@ -153,7 +153,7 @@ void LoadNewLeaderboardEntries(int32 start, uint32 end, int32 type)
     }
 }
 
-void ClearLeaderboardInfo()
+void RSDK::SKU::ClearLeaderboardInfo()
 {
     leaderboards->status             = STATUS_NONE;
     leaderboards->currentLeaderboard = NULL;
@@ -161,7 +161,7 @@ void ClearLeaderboardInfo()
     // SetupLeaderboardEntries(&leaderboards->unknown);
 }
 
-LeaderboardEntry *ReadLeaderboardEntry(int entryID)
+RSDK::SKU::LeaderboardEntry *RSDK::SKU::ReadLeaderboardEntry(int entryID)
 {
     if (entryID < leaderboards->entryInfo.entryStart || entryID >= leaderboards->entryInfo.entryStart + leaderboards->entryInfo.entryLength)
         return NULL;

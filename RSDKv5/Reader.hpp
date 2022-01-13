@@ -289,13 +289,13 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
     uLongf destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    AllocateStorage(complen, (void **)&compData, DATASET_TMP, false);
-    AllocateStorage(destLen, (void **)buffer, DATASET_TMP, false);
+    RSDK::AllocateStorage(complen, (void **)&compData, RSDK::DATASET_TMP, false);
+    RSDK::AllocateStorage(destLen, (void **)buffer, RSDK::DATASET_TMP, false);
     ReadBytes(info, compData, complen);
 
     uncompress(*buffer, &destLen, compData, complen);
 
-    RemoveStorageEntry((void**)&compData);
+    RSDK::RemoveStorageEntry((void **)&compData);
 
     return destLen;
 }
@@ -309,7 +309,7 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     uLongf destLen  = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    AllocateStorage(complen, (void **)&compData, DATASET_TMP, false);
+    RSDK::AllocateStorage(complen, (void **)&compData, RSDK::DATASET_TMP, false);
     ReadBytes(info, compData, complen);
 
     uncompress(*buffer, &destLen, compData, complen);

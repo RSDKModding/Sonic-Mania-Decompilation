@@ -8,7 +8,12 @@
 #include "tinyxml2.h"
 
 #include <functional>
+#endif
 
+namespace RSDK
+{
+
+#if RETRO_USE_MOD_LOADER
 typedef enum {
     MODCB_GAME_STARTUP,
     MODCB_STAGELOAD,
@@ -75,9 +80,9 @@ struct ModPublicFunctionInfo {
     void *ptr;
 };
 
-typedef bool (*modLink)(GameInfo *, const char *);
-typedef std::function<bool(GameInfo *, const char *)> modLinkSTD;
-typedef const char *(*langSetup)(GameInfo *, const char *);
+typedef bool (*modLink)(RSDK::GameInfo *, const char *);
+typedef std::function<bool(RSDK::GameInfo *, const char *)> modLinkSTD;
+typedef const char *(*langSetup)(RSDK::GameInfo *, const char *);
 typedef modLink (*newLangLink)(const char *, const char *, int32 *);
 
 struct ModInfo {
@@ -164,5 +169,7 @@ void GetAchievementInfo(uint32 id, TextInfo *name, TextInfo *description, TextIn
 int GetAchievementIndexByID(const char *id);
 int GetAchievementCount();
 #endif
+
+} // namespace RSDK
 
 #endif // !MOD_API_H

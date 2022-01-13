@@ -1,6 +1,9 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
+namespace RSDK
+{
+
 #define SPRFILE_COUNT (0x400)
 
 #define FRAMEHITBOX_COUNT (0x8)
@@ -157,5 +160,7 @@ inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *nam
 
 int32 GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
 void SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info);
+
+} // namespace RSDK
 
 #endif

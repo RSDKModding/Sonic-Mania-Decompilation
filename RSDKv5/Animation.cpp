@@ -1,8 +1,8 @@
 #include "RetroEngine.hpp"
 
-SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
+RSDK::SpriteAnimation RSDK::spriteAnimationList[SPRFILE_COUNT];
 
-uint16 LoadSpriteAnimation(const char *filename, Scopes scope)
+uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);
@@ -62,8 +62,8 @@ uint16 LoadSpriteAnimation(const char *filename, Scopes scope)
         int frameID = 0;
         for (int a = 0; a < spr->animCount; ++a) {
             SpriteAnimationEntry *animation = &spr->animations[a];
-            ReadString(&info, hashBuffer);
-            GEN_HASH(hashBuffer, animation->hash);
+            ReadString(&info, textBuffer);
+            GEN_HASH(textBuffer, animation->hash);
 
             animation->frameCount      = ReadInt16(&info);
             animation->frameListOffset = frameID;
@@ -100,7 +100,7 @@ uint16 LoadSpriteAnimation(const char *filename, Scopes scope)
     return -1;
 }
 
-uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope)
+uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);
@@ -133,7 +133,7 @@ uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 ani
     return id;
 }
 
-void ProcessAnimation(Animator *animator)
+void RSDK::ProcessAnimation(Animator *animator)
 {
     if (animator) {
         if (animator->framePtrs) {
@@ -159,7 +159,7 @@ void ProcessAnimation(Animator *animator)
     }
 }
 
-int GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
+int RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return 0;
@@ -203,7 +203,7 @@ int GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startI
     return 0;
 }
 
-void SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info)
+void RSDK::SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return;

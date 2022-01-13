@@ -3,6 +3,12 @@
 
 #include <vector>
 
+namespace RSDK
+{
+
+namespace SKU
+{
+
 struct StatInfo {
     byte statID;
     const char *name;
@@ -26,11 +32,11 @@ struct DummyStats : UserStats {
     void TryTrackStat(StatInfo *stat);
 };
 
-//Start Dummy Stats code
+// Start Dummy Stats code
 
 extern std::vector<StatInfo> statList;
 
-//End Dummy Stats code
+// End Dummy Stats code
 
 extern UserStats *stats;
 
@@ -45,5 +51,9 @@ inline void TryTrackStat(StatInfo *stat) { stats->TryTrackStat(stat); }
 inline bool32 GetStatsEnabled() { return stats->enabled; }
 inline void SetStatsEnabled(bool32 enabled) { stats->enabled = enabled; }
 #endif
+
+} // namespace SKU
+
+} // namespace RSDK
 
 #endif // USER_STATS_H

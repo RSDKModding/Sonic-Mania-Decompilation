@@ -55,7 +55,7 @@ inline void StringUpperCase(char *dest, const char *src)
     dest[++destPos] = 0;
 }
 
-extern char hashBuffer[0x400];
+extern char textBuffer[0x400];
 void GenerateHash(uint32 *buffer, int32 len);
 void GenerateCRC(uint32 *id, char *fileName);
 
@@ -63,8 +63,8 @@ void GenerateCRC(uint32 *id, char *fileName);
 #define HASH_SIZE            (4 * sizeof(uint32))
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
 #define GEN_HASH(text, hash)                                                                                                                         \
-    strcpy(hashBuffer, text);                                                                                                                        \
-    GenerateHash(hash, (int32)strlen(hashBuffer))
+    strcpy(textBuffer, text);                                                                                                                        \
+    GenerateHash(hash, (int32)strlen(textBuffer))
 #define HASH_COPY(dst, src) memcpy(dst, src, HASH_SIZE)
 
 inline void SetText(TextInfo *textInfo, char *text, uint size)
@@ -83,7 +83,7 @@ inline void SetText(TextInfo *textInfo, char *text, uint size)
             textInfo->size = textInfo->length;
         if (!textInfo->size)
             textInfo->size = 1;
-        AllocateStorage(sizeof(ushort) * textInfo->size, (void **)&textInfo->text, DATASET_STR, false);
+        RSDK::AllocateStorage(sizeof(ushort) * textInfo->size, (void **)&textInfo->text, RSDK::DATASET_STR, false);
 
         char *txt = text;
         if (*text) {
@@ -105,12 +105,12 @@ inline void CopyString(TextInfo *dst, TextInfo *src)
     dst->text   = NULL;
     if (dst->size >= textLen) {
         if (!dst->text) {
-            AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, DATASET_STR, false);
+            RSDK::AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, RSDK::DATASET_STR, false);
         }
     }
     else {
         dst->size = textLen;
-        AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, DATASET_STR, false);
+        RSDK::AllocateStorage(sizeof(ushort) * dst->size, (void **)&dst->text, RSDK::DATASET_STR, false);
     }
     
     dst->length = src->length;

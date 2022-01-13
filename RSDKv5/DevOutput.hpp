@@ -1,10 +1,12 @@
 #ifndef OBJ_DEVOUTPUT_H
 #define OBJ_DEVOUTPUT_H
 
+namespace RSDK
+{
+
 #if RETRO_REV02
 // Object Class
 struct ObjectDevOutput : Object {
-
 };
 
 // Entity Class
@@ -32,5 +34,7 @@ void DevOutput_Serialize();
 // Extra Entity Functions
 int DevOutput_GetStringYOffset(char *string);
 #endif
+
+} // namespace RSDK
 
 #endif //!OBJ_DEVOUTPUT_H

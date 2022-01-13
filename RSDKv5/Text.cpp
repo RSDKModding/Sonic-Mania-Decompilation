@@ -127,12 +127,12 @@ unsigned *md5(const char *msg, int mlen)
     return h;
 }
 
-char hashBuffer[0x400];
+char textBuffer[0x400];
 // Buffer is expected to be at least 16 bytes long
 void GenerateHash(uint32 *buffer, int32 len)
 {
     uint8 *buf  = (uint8 *)buffer;
-    unsigned *d = md5(hashBuffer, len);
+    unsigned *d = md5(textBuffer, len);
     WBunion u;
 
     for (int i = 0; i < 4; ++i) {
@@ -208,7 +208,7 @@ void PrependText(TextInfo *info, char *text)
 
     if (info->size < len || !info->text) {
         info->size = len;
-        AllocateStorage(sizeof(ushort) * info->size, (void **)&info->text, DATASET_STR, false);
+        RSDK::AllocateStorage(sizeof(ushort) * info->size, (void **)&info->text, RSDK::DATASET_STR, false);
     }
 
     info->length = len;
@@ -256,14 +256,14 @@ void AppendText(TextInfo *info, char *text)
     if (info->size < newLen || !info->text) {
         if (info->text) {
             ushort *buffer = info->text;
-            AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, DATASET_STR, false);
+            RSDK::AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, RSDK::DATASET_STR, false);
             for (int charID = 0; charID < info->length; ++charID) {
                 info->text[charID] = buffer[charID];
             }
             buffer = NULL;
         }
         else {
-            AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, DATASET_STR, false);
+            RSDK::AllocateStorage(sizeof(ushort) * newLen, (void **)&info->text, RSDK::DATASET_STR, false);
         }
         info->size = newLen;
     }
@@ -302,14 +302,14 @@ void AppendString(TextInfo *info, TextInfo *string)
     if (info->size < totalLen || !info->text) {
         if (info->text) {
             ushort *buffer = info->text;
-            AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, DATASET_STR, false);
+            RSDK::AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, RSDK::DATASET_STR, false);
             for (int charID = 0; charID < info->length; ++charID) {
                 info->text[charID] = buffer[charID];
             }
             buffer = NULL;
         }
         else {
-            AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, DATASET_STR, false);
+            RSDK::AllocateStorage(sizeof(ushort) * totalLen, (void **)&info->text, RSDK::DATASET_STR, false);
         }
         info->size = string->length + info->length;
     }
@@ -371,7 +371,7 @@ bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 cou
                 ushort len = c - lastStrPos;
                 if (info->size < len) {
                     info->size = len;
-                    AllocateStorage(sizeof(ushort) * len, (void **)&info->text, DATASET_STR, true);
+                    RSDK::AllocateStorage(sizeof(ushort) * len, (void **)&info->text, RSDK::DATASET_STR, true);
                 }
                 info->length = len;
 
@@ -394,13 +394,13 @@ void InitStringsBuffer(TextInfo *info, int size)
 {
     ushort *text = NULL; 
 
-    AllocateStorage(sizeof(ushort) * size, (void **)&text, DATASET_STR, 0);
+    RSDK::AllocateStorage(sizeof(ushort) * size, (void **)&text, RSDK::DATASET_STR, false);
     
     for (int i = 0; i < size && i < info->length; ++i) {
         text[i] = info->text[i];
     }
     
-    CopyStorage((int **)info, (int **)&text);
+    RSDK::CopyStorage((int **)info, (int **)&text);
     info->size = size;
     if (info->length > (ushort)size)
         info->length = size;

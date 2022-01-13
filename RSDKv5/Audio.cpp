@@ -1,9 +1,5 @@
 #include "RetroEngine.hpp"
 
-#if !RETRO_USE_ORIGINAL_CODE
-// MusicPlaybackInfo musInfo;
-#endif
-
 SFXInfo sfxList[SFX_COUNT];
 ChannelInfo channels[CHANNEL_COUNT];
 
@@ -105,7 +101,7 @@ bool32 InitAudioDevice()
     sfxList[SFX_COUNT - 1].scope              = SCOPE_GLOBAL;
     sfxList[SFX_COUNT - 1].maxConcurrentPlays = 1;
     sfxList[SFX_COUNT - 1].length             = 2048;
-    AllocateStorage(0x2000, (void **)&sfxList[SFX_COUNT - 1].buffer, DATASET_MUS, false);
+    RSDK::AllocateStorage(0x2000, (void **)&sfxList[SFX_COUNT - 1].buffer, RSDK::DATASET_MUS, false);
 
     return true;
 }
@@ -471,14 +467,14 @@ void LoadStream(ChannelInfo *channel)
     if (LoadFile(&info, streamInfo.filename, FMODE_RB)) {
         streamInfo.fileSize   = info.fileSize;
         streamInfo.fileBuffer = NULL;
-        AllocateStorage(info.fileSize, (void **)&streamInfo.fileBuffer, DATASET_MUS, false);
+        RSDK::AllocateStorage(info.fileSize, (void **)&streamInfo.fileBuffer, RSDK::DATASET_MUS, false);
         ReadBytes(&info, streamInfo.fileBuffer, info.fileSize);
         CloseFile(&info);
 
         if (streamInfo.fileSize > 0) {
             streamInfo.bufferSize = 0x80000;
             streamInfo.buffer     = NULL;
-            AllocateStorage(streamInfo.bufferSize, (void **)&streamInfo.buffer, DATASET_MUS, false);
+            RSDK::AllocateStorage(streamInfo.bufferSize, (void **)&streamInfo.buffer, RSDK::DATASET_MUS, false);
 
             ov_callbacks callbacks;
 
@@ -669,7 +665,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                             if (sampleBits == 16) {
                                 length >>= 1;
                             }
-                            AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                            RSDK::AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
                             sfxList[id].length = length;
 
                             if (sampleBits == 8) {
@@ -703,7 +699,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 LockAudioDevice();
                                 GEN_HASH(filename, sfxList[id].hash);
                                 sfxList[id].buffer = NULL;
-                                AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                                AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
                                 memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
                                 sfxList[id].length             = convert.len_cvt / sizeof(float);
                                 sfxList[id].scope              = scope;
@@ -742,7 +738,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
 
                         LockAudioDevice();
                         GEN_HASH(filename, sfxList[id].hash);
-                        AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                        RSDK::AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
                         memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
                         sfxList[id].length             = convert.len_cvt / sizeof(float);
                         sfxList[id].scope              = scope;
@@ -755,7 +751,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                     else {
                         LockAudioDevice();
                         GEN_HASH(filename, sfxList[id].hash);
-                        AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                        RSDK::AllocateStorage(wav_length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
                         memcpy(sfxList[id].buffer, wav_buffer, wav_length);
                         sfxList[id].length             = wav_length / sizeof(float);
                         sfxList[id].scope              = scope;
@@ -812,7 +808,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                 if (sampleBits == 16) {
                     length >>= 1;
                 }
-                AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                RSDK::AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
                 sfxList[id].length = length;
 
                 if (sampleBits == 8) {
@@ -846,7 +842,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                     LockAudioDevice();
                     GEN_HASH(filename, sfxList[id].hash);
                     sfxList[id].buffer = NULL;
-                    AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                    RSDK::AllocateStorage(convert.len_cvt, (void **)&sfxList[id].buffer, RSDK::DATASET_SFX, false);
                     memcpy(sfxList[id].buffer, convert.buf, convert.len_cvt);
                     sfxList[id].length             = convert.len_cvt / sizeof(float);
                     sfxList[id].scope              = scope;
