@@ -6,9 +6,9 @@
 // Object Class
 struct ObjectEncoreIntro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused1;
     uint16 aniFrames;
-    uint16 field_A;
+    uint16 unused2;
     uint16 sfxHighFive;
     uint16 sfxMysticPoof;
     uint16 sfxKingCharge;
@@ -18,7 +18,7 @@ struct ObjectEncoreIntro {
     Entity *fxRuby;
     Entity *phantomRuby;
     Entity *rubyPortal;
-    int32 field_24;
+    int32 unused3;
     bool32 awaitingSaveFinish;
 };
 

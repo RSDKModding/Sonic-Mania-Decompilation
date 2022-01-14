@@ -16,9 +16,9 @@ typedef enum {
 struct ObjectSplats {
     RSDK_OBJECT
     StateMachine(state);
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxGHZ;
+    Hitbox hitboxJar;
+    Hitbox hitboxPGZ;
     uint16 aniFrames;
     uint16 sfxSplatsSpawn;
     uint16 sfxSplatsLand;
@@ -31,11 +31,9 @@ struct EntitySplats {
     uint8 bounceCount;
     uint8 activeCount;
     uint8 numActive;
-    uint8 field_5F;
     uint16 minDelay;
-    uint16 field_62;
     int32 delay;
-    int32 field_68;
+    bool32 isOnScreen;
     Entity *parent;
     Vector2 startPos;
     int32 startDir;

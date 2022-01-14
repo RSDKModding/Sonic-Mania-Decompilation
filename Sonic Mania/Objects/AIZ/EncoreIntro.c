@@ -462,7 +462,7 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
     RSDK_THIS(EncoreIntro);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     if (player->onGround) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, true, 0);
         player->velocity.x = 0;
@@ -583,7 +583,7 @@ bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
         }
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
@@ -598,7 +598,7 @@ bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
             mystic->position.y += mystic->velocity.y;
             self->position.x = mystic->position.x;
             self->position.y = mystic->position.y;
-            HeavyMystic_Unknown2();
+            HeavyMystic_HandleParticleFX();
         }
         else {
             RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
@@ -646,7 +646,7 @@ bool32 EncoreIntro_Cutscene_MysticStealRuby(EntityCutsceneSeq *host)
 
     self->position.x = mystic->position.x;
     self->position.y = mystic->position.y;
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
@@ -685,7 +685,7 @@ bool32 EncoreIntro_Cutscene_MysticEscape(EntityCutsceneSeq *host)
         mystic->position.x += mystic->velocity.x;
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
     return false;
 }
@@ -785,14 +785,14 @@ bool32 EncoreIntro_Cutscene_CameraPanToHBHPile(EntityCutsceneSeq *host)
         int32 storeY     = self->position.y;
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
         self->position.x = storeX;
         self->position.y = storeY;
     }
     else {
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
 
     return false;
@@ -838,7 +838,7 @@ bool32 EncoreIntro_Cutscene_MysticPassRuby(EntityCutsceneSeq *host)
             }
             break;
     }
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
@@ -863,7 +863,7 @@ bool32 EncoreIntro_Cutscene_KingActivate(EntityCutsceneSeq *host)
         case 102: return true;
         default: break;
     }
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
@@ -874,7 +874,7 @@ bool32 EncoreIntro_Cutscene_RubyActivated(EntityCutsceneSeq *host)
         PhantomRuby_SetupFlash(ruby);
     if (ruby->flashFinished)
         return true;
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
@@ -959,7 +959,7 @@ bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
             fxRuby->fadeWhite += 16;
         }
     }
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
     return false;
 }

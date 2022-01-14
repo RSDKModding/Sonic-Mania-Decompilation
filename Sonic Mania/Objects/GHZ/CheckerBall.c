@@ -602,7 +602,7 @@ void CheckerBall_HandleObjectCollisions(void)
         }
     }
 
-    foreach_active(Splats, splats) { CheckerBall_BadnikBreak(splats, &Splats->hitbox1); }
+    foreach_active(Splats, splats) { CheckerBall_BadnikBreak(splats, &Splats->hitboxGHZ); }
 
     foreach_active(ItemBox, itemBox)
     {

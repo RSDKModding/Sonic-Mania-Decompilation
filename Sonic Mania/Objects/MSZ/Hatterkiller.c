@@ -28,7 +28,7 @@ void Hatterkiller_Update(void)
 
     if (HeavyMystic->curtainLinePos) {
         if (!(Zone->timer & 3))
-            HeavyMystic_Unknown1(self->position.x, self->position.y);
+            HeavyMystic_SpawnParticleFX(self->position.x, self->position.y);
         if (++self->field_58 == 40) {
             Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
             RSDK.PlaySfx(Hatterkiller->sfxTransform2, false, 255);

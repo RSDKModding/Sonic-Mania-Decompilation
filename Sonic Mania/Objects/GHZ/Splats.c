@@ -87,20 +87,20 @@ void Splats_StageLoad(void)
         Splats->state     = Splats_State_InkJarSpawner;
     }
 
-    Splats->hitbox1.left   = -10;
-    Splats->hitbox1.top    = -20;
-    Splats->hitbox1.right  = 6;
-    Splats->hitbox1.bottom = 20;
+    Splats->hitboxGHZ.left   = -10;
+    Splats->hitboxGHZ.top    = -20;
+    Splats->hitboxGHZ.right  = 6;
+    Splats->hitboxGHZ.bottom = 20;
 
-    Splats->hitbox2.left   = -18;
-    Splats->hitbox2.top    = -26;
-    Splats->hitbox2.right  = 18;
-    Splats->hitbox2.bottom = 17;
+    Splats->hitboxJar.left   = -18;
+    Splats->hitboxJar.top    = -26;
+    Splats->hitboxJar.right  = 18;
+    Splats->hitboxJar.bottom = 17;
 
-    Splats->hitbox3.left   = -18;
-    Splats->hitbox3.top    = -146;
-    Splats->hitbox3.right  = 18;
-    Splats->hitbox3.bottom = -18;
+    Splats->hitboxPGZ.left   = -18;
+    Splats->hitboxPGZ.top    = -146;
+    Splats->hitboxPGZ.right  = 18;
+    Splats->hitboxPGZ.bottom = -18;
 
     DEBUGMODE_ADD_OBJ(Splats);
     Splats->sfxSplatsSpawn = RSDK.GetSfx("PSZ/SplatsSpawn.wav");
@@ -128,7 +128,7 @@ void Splats_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Splats->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, self, &Splats->hitboxGHZ)) {
             if (Splats->state == Splats_State_BounceAround) {
                 Player_CheckBadnikBreak(self, player, true);
             }
@@ -154,7 +154,7 @@ void Splats_CheckOnScreen(void)
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         self->direction  = self->startDir;
-        self->field_68   = 0;
+        self->isOnScreen = false;
         Splats_Create(NULL);
     }
 }
@@ -194,28 +194,28 @@ void Splats_State_BounceAround(void)
 void Splats_State_SetupInkJar(void)
 {
     RSDK_THIS(Splats);
-    self->field_68 = 0;
-    self->delay    = 0;
-    self->active   = ACTIVE_NORMAL;
-    self->state    = Splats_State_InkJarSpawner;
+    self->isOnScreen = false;
+    self->delay      = 0;
+    self->active     = ACTIVE_NORMAL;
+    self->state      = Splats_State_InkJarSpawner;
     Splats_State_InkJarSpawner();
 }
 
 void Splats_State_InkJarSpawner(void)
 {
     RSDK_THIS(Splats);
-    if (!self->field_68) {
+    if (!self->isOnScreen) {
         if (!self->activeScreens)
             return;
-        self->field_68 = true;
+        self->isOnScreen = true;
     }
     RSDK.ProcessAnimation(&self->animator2);
 
     bool32 flag = false;
     foreach_active(Player, player)
     {
-        Player_CheckCollisionBox(player, self, &Splats->hitbox2);
-        flag |= Player_CheckCollisionTouch(player, self, &Splats->hitbox3);
+        Player_CheckCollisionBox(player, self, &Splats->hitboxJar);
+        flag |= Player_CheckCollisionTouch(player, self, &Splats->hitboxPGZ);
         flag |= (player->animator.animationID == ANI_SPINDASH);
     }
 
@@ -263,8 +263,8 @@ void Splats_State_JumpOutOfJar(void)
             RSDK.PlaySfx(Splats->sfxSplatsLand, false, 255);
             EntitySplats *splats = CREATE_ENTITY(Splats, intToVoid(SPLATS_SPLAT), self->position.x, self->position.y);
             splats->direction    = self->direction;
-            self->delay        = 4;
-            self->state        = Splats_State_HandleLanding;
+            self->delay          = 4;
+            self->state          = Splats_State_HandleLanding;
         }
     }
     Splats_CheckPlayerCollisions();
@@ -393,7 +393,7 @@ void Splats_EditorDraw(void)
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->animator1, true, 0);
     }
     else {
-        self->drawFX = FX_NONE;
+        self->drawFX    = FX_NONE;
         self->drawOrder = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->animator1, true, 0);
     }
@@ -402,9 +402,9 @@ void Splats_EditorDraw(void)
 
 void Splats_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ")) 
+    if (RSDK.CheckStageFolder("GHZ"))
         Splats->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Splats.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ1")) 
+    else if (RSDK.CheckStageFolder("PSZ1"))
         Splats->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Splats.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Splats, direction);

@@ -8,7 +8,7 @@ struct ObjectCPZ1Intro {
     RSDK_OBJECT
     uint16 playerFrames;
     uint16 particleFrames;
-    uint16 field_8;
+    uint16 unused;
     uint16 sfxChemDrop;
     uint16 sfxDNABurst;
     int32 playerAnimID;

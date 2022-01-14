@@ -194,7 +194,7 @@ void Grabber_State_CheckForGrab(void)
         self->turnTimer = 0;
         RSDK.SetSpriteAnimation(Grabber->aniFrames, 3, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->clampAnimator, true, 0);
-        self->state = Grabber_State_Unknown6;
+        self->state = Grabber_State_HandleTurn;
     }
     self->position.x += self->velocity.x;
 
@@ -202,7 +202,7 @@ void Grabber_State_CheckForGrab(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Grabber->hitboxRange)) {
             self->timer = 16;
-            self->state = Grabber_State_Unknown2;
+            self->state = Grabber_State_GrabDelay;
         }
     }
 
@@ -210,7 +210,7 @@ void Grabber_State_CheckForGrab(void)
     Grabber_CheckOnScreen();
 }
 
-void Grabber_State_Unknown2(void)
+void Grabber_State_GrabDelay(void)
 {
     RSDK_THIS(Grabber);
     if (--self->timer < 0) {
@@ -221,7 +221,7 @@ void Grabber_State_Unknown2(void)
     Grabber_CheckOnScreen();
 }
 
-void Grabber_State_Unknown6(void)
+void Grabber_State_HandleTurn(void)
 {
     RSDK_THIS(Grabber);
 

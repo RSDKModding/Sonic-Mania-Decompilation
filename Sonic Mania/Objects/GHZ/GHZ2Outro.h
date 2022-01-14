@@ -6,8 +6,7 @@
 // Object Class
 struct ObjectGHZ2Outro {
     RSDK_OBJECT
-    uint16 field_4;
-    uint16 field_6;
+    int32 unused;
     uint16 sfxRocketJet;
     uint16 sfxShinobiJump;
     uint16 sfxHeliWoosh;

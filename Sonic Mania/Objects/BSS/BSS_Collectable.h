@@ -16,18 +16,18 @@ enum BSSCollectableTypes {
     BSS_SPAWN_RIGHT   = 9,
     BSS_SPAWN_DOWN    = 10,
     BSS_SPAWN_LEFT    = 11,
-    BSS_UNKNOWN12     = 12,
-    BSS_UNKNOWN13     = 13,
-    BSS_UNKNOWN14     = 14,
+    BSS_UNUSED_1      = 12,
+    BSS_UNUSED_2      = 13,
+    BSS_UNUSED_3      = 14,
     BSS_RING_SPARKLE  = 15,
     BSS_EMERALD_CHAOS = 16,
     BSS_EMERALD_SUPER = 17,
     BSS_MEDAL_SILVER  = 18,
     BSS_MEDAL_GOLD    = 19,
-    BSS_UNKNOWN20     = 20,
-    BSS_UNKNOWN21     = 21,
-    BSS_UNKNOWN22     = 22,
-    BSS_UNKNOWN23     = 23,
+    BSS_UNUSED_4      = 20,
+    BSS_UNUSED_5      = 21,
+    BSS_UNUSED_6      = 22,
+    BSS_UNUSED_7      = 23,
 
     BSS_SPHERE_GREEN_STOOD = 1 | 0x80,
     BSS_BLUE_STOOD         = 2 | 0x80,
@@ -55,12 +55,7 @@ struct ObjectBSS_Collectable {
 struct EntityBSS_Collectable {
     RSDK_ENTITY
     int32 type;
-    int32 field_5C;
-    int32 frameID;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
+    Animator animator;
 };
 
 // Object Struct

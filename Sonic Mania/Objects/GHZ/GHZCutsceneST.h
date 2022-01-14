@@ -17,16 +17,17 @@ struct ObjectGHZCutsceneST {
 // Entity Class
 struct EntityGHZCutsceneST {
     RSDK_ENTITY
+    // Cutscene Base (I think)
     Vector2 size;
     bool32 activated;
     bool32 setupKnuxCutscene;
     int32 timer;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
     Hitbox hitbox2;
-
+    // Unique Variables
     Hitbox hitbox;
 };
 

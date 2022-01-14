@@ -78,8 +78,8 @@ void HeavyMystic_EditorLoad(void);
 void HeavyMystic_Serialize(void);
 
 // Extra Entity Functions
-void HeavyMystic_Unknown1(int32 x, int32 y);
-void HeavyMystic_Unknown2(void);
+void HeavyMystic_SpawnParticleFX(int32 x, int32 y);
+void HeavyMystic_HandleParticleFX(void);
 
 void HeavyMystic_CheckPlayerCollisions(void);
 void HeavyMystic_Hit(void);

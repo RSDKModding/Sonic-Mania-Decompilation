@@ -58,8 +58,8 @@ void Grabber_HandleExplode(void);
 
 void Grabber_State_Setup(void);
 void Grabber_State_CheckForGrab(void);
-void Grabber_State_Unknown2(void);
-void Grabber_State_Unknown6(void);
+void Grabber_State_GrabDelay(void);
+void Grabber_State_HandleTurn(void);
 void Grabber_State_TryToGrab(void);
 void Grabber_State_RiseUp(void);
 void Grabber_State_GrabbedPlayer(void);

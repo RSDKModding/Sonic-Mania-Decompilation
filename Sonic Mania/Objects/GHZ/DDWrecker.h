@@ -51,7 +51,7 @@ struct EntityDDWrecker {
     EntityDDWrecker *bodyA;
     EntityDDWrecker *bodyB;
     int32 unused1;
-    int32 unknownAngle;
+    int32 unknownAngle; // updated but never used..
     int32 unused2;
     int32 unused3;
     int32 blendAmount;

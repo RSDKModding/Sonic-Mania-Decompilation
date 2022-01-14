@@ -570,12 +570,12 @@ void ActClear_State_AdjustText(void)
     self->gotThroughPos.y -= 0x8000;
     if (++self->timer == 48) {
         self->timer = 0;
-        self->state = ActClear_State_EnterBonuses;
+        self->state = ActClear_State_EnterResults;
     }
     ActClear_CheckPlayerVictory();
 }
 
-void ActClear_State_EnterBonuses(void)
+void ActClear_State_EnterResults(void)
 {
     RSDK_THIS(ActClear);
 

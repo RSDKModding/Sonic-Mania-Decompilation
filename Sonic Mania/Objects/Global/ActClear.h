@@ -88,7 +88,7 @@ void ActClear_SetupForceOnScreenP2(void);
 
 void ActClear_State_EnterText(void);
 void ActClear_State_AdjustText(void);
-void ActClear_State_EnterBonuses(void);
+void ActClear_State_EnterResults(void);
 void ActClear_State_ScoreShownDelay(void);
 void ActClear_State_TallyScore(void);
 void ActClear_State_SaveGameProgress(void);

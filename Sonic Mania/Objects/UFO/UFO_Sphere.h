@@ -19,7 +19,7 @@ typedef enum {
 // Object Class
 struct ObjectUFO_Sphere {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     TABLE(int32 defaultHeights[4], { 12, 12, 16, 16 });
     uint16 aniFrames;
     uint16 sfxMachSpeed;

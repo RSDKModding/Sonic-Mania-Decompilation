@@ -22,7 +22,7 @@ void SchrodingersCapsule_Update(void)
             if (Player_CheckCollisionBox(player, self, &self->hitboxSolid) == C_TOP)
                 stoodSolid = true;
 
-            if (self->state == SchrodingersCapsule_Unknown2) {
+            if (self->state == SchrodingersCapsule_State_HandleBounds) {
                 if (Player_CheckCollisionBox(player, self, &self->hitboxButton) == C_TOP) {
                     self->buttonPos   = 0x80000;
                     player->velocity.x = 0;
@@ -32,7 +32,7 @@ void SchrodingersCapsule_Update(void)
                     player->state      = Player_State_Ground;
                     player->stateInput = StateMachine_None;
                     self->active     = ACTIVE_NORMAL;
-                    self->state      = SchrodingersCapsule_Unknown3;
+                    self->state      = SchrodingersCapsule_State_Activated;
                 }
                 else {
                     if (Player_CheckCollisionTouch(player, self, &self->hitboxButtonTrigger)) {
@@ -135,7 +135,7 @@ void SchrodingersCapsule_Create(void *data)
         self->hitboxButtonTrigger.top    = -60;
         self->hitboxButtonTrigger.right  = 15;
         self->hitboxButtonTrigger.bottom = -30;
-        self->state          = SchrodingersCapsule_Unknown1;
+        self->state          = SchrodingersCapsule_State_Setup;
         self->active         = ACTIVE_BOUNDS;
         self->updateRange.x  = 0x800000;
         self->updateRange.y  = 0x800000;
@@ -151,13 +151,13 @@ void SchrodingersCapsule_StageLoad(void)
     SchrodingersCapsule->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
 }
 
-void SchrodingersCapsule_Unknown1(void)
+void SchrodingersCapsule_State_Setup(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    self->state = SchrodingersCapsule_Unknown2;
+    self->state = SchrodingersCapsule_State_HandleBounds;
 }
 
-void SchrodingersCapsule_Unknown2(void)
+void SchrodingersCapsule_State_HandleBounds(void)
 {
     RSDK_THIS(SchrodingersCapsule);
     RSDK.ProcessAnimation(&self->glassAnimator);
@@ -179,18 +179,18 @@ void SchrodingersCapsule_Unknown2(void)
     }
 }
 
-void SchrodingersCapsule_Unknown3(void)
+void SchrodingersCapsule_State_Activated(void)
 {
     RSDK_THIS(SchrodingersCapsule);
     RSDK.ProcessAnimation(&self->glassAnimator);
     RSDK.ProcessAnimation(&self->mightyAnimator);
     RSDK.ProcessAnimation(&self->rayAnimator);
     RSDK.SetSpriteAnimation(-1, 0, &self->glassAnimator, true, 0);
-    self->state               = SchrodingersCapsule_Unknown4;
+    self->state               = SchrodingersCapsule_State_Explode;
     SceneInfo->timeEnabled = false;
 }
 
-void SchrodingersCapsule_Unknown4(void)
+void SchrodingersCapsule_State_Explode(void)
 {
     RSDK_THIS(SchrodingersCapsule);
     RSDK.ProcessAnimation(&self->glassAnimator);
@@ -201,7 +201,7 @@ void SchrodingersCapsule_Unknown4(void)
                                                    (RSDK.Rand(-24, 24) << 16) + self->position.x, (RSDK.Rand(-24, 24) << 16) + self->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
 
-        RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, 0, 255);
+        RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, false, 0xFF);
     }
 
     if (++self->timer == 60) {
@@ -274,7 +274,7 @@ void SchrodingersCapsule_Unknown4(void)
         camera->position.x += 0x100000;
 
         self->timer = 0;
-        self->state = SchrodingersCapsule_Unknown5;
+        self->state = SchrodingersCapsule_State_SetupActClear;
 
         EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fade->speedIn      = 256;
@@ -282,7 +282,7 @@ void SchrodingersCapsule_Unknown4(void)
     }
 }
 
-void SchrodingersCapsule_Unknown5(void)
+void SchrodingersCapsule_State_SetupActClear(void)
 {
     RSDK_THIS(SchrodingersCapsule);
     if (++self->timer == 90) {

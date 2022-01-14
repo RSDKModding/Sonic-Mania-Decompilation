@@ -23,7 +23,7 @@ struct EntitySpiny {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-    int32 field_74;
+    int32 unused;
     uint8 type;
     Vector2 startPos;
     uint8 startDir;

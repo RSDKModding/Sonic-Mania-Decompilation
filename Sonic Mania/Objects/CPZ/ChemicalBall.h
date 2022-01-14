@@ -52,7 +52,7 @@ struct EntityChemicalBall {
     Vector2 startPos;
     Vector2 drawPos;
     Animator animator;
-    int32 field_8C;
+    int32 unused2;
     bool32 master;
 };
 

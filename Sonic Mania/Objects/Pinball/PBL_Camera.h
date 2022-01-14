@@ -20,7 +20,7 @@ struct EntityPBL_Camera {
     int32 unused1;
     int32 worldY;
     int32 rotationY;
-    int32 dword68;
+    int32 cameraStartOffset; // I don't think this is every actually set...
     int32 curCamBoundaryT;
     int32 curCamBoundaryB;
     int32 newCamBoundaryT;

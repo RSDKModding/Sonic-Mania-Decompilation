@@ -706,9 +706,8 @@ void DDWrecker_StateBall_Spiked(void)
         self->angleVel += 2;
 
     self->unknownAngle = (self->unknownAngle + self->angleVel) & 0x3FF;
-    if (self->blendAmount < 256) {
+    if (self->blendAmount < 0x100) 
         self->blendAmount += 16;
-    }
 }
 
 void DDWrecker_StateBall_Partnerless(void)
