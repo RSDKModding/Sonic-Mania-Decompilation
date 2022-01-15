@@ -36,7 +36,7 @@ struct EntityCompetitionSession {
     int32 actID;
     int32 matchID;
     int32 matchCount;
-    int32 monitorMode;
+    int32 itemMode;
 #if RETRO_USE_PLUS
     int32 swapFlag;
 #endif

@@ -63,7 +63,7 @@ EntityUIPopover *UIPopover_CreatePopover(void)
             EntityUIPopover *popover = RSDK.GetEntityByID(SLOT_POPOVER);
             popover->position.x      = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
             popover->position.y      = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-            UIPopover->activeEntity  = (Entity *)popover;
+            UIPopover->activeEntity  = popover;
             return popover;
         }
     }

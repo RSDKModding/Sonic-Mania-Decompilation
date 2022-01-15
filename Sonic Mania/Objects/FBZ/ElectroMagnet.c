@@ -133,7 +133,7 @@ void ElectroMagnet_State_MagnetActive(void)
         foreach_all(MagPlatform, platform)
         {
             if (RSDK.CheckObjectCollisionTouchBox(platform, &ElectroMagnet->hitbox, self, &self->hitbox)) {
-                platform->state  = MagPlatform_Unknown3;
+                platform->state  = MagPlatform_State_Rise;
                 platform->active = ACTIVE_NORMAL;
             }
         }

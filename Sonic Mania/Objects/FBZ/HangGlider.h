@@ -18,7 +18,7 @@ struct EntityHangGlider {
     int32 gravityStrength;
     int32 unused2;
     int32 unused3;
-    Entity *playerPtr;
+    EntityPlayer *playerPtr;
     Animator sailAnimator;
     Animator handleBackAnimator;
     Animator handleFrontAnimator;
@@ -42,8 +42,8 @@ void HangGlider_EditorLoad(void);
 void HangGlider_Serialize(void);
 
 // Extra Entity Functions
-void HangGlider_Unknown1(void);
-void HangGlider_Unknown2(void);
+void HangGlider_State_CheckGrab(void);
+void HangGlider_State_Glide(void);
 
 
 #endif //!OBJ_HANGGLIDER_H

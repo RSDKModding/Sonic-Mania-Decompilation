@@ -7,24 +7,24 @@
 // Object Class
 struct ObjectOptionsMenu {
     RSDK_OBJECT
-    Entity *optionsControl;
-    Entity *prompt;
-    Entity *videoControl;
-    Entity *videoControl_Windows;
-    Entity *soundControl;
-    Entity *dataOptionsControl;
-    Entity *controlsControl_Windows;
-    Entity *controlsControl_KB;
-    Entity *controlsControl_PS4;
-    Entity *controlsControl_XB1;
-    Entity *controlsControl_NX;
-    Entity *controlsControl_NXGrip;
-    Entity *controlsControl_NXJoycon;
-    Entity *controlsControl_NXPro;
-    Entity *languageControl;
-    Entity *languageControl_Legacy;
-    Entity *diorama;
-    Entity *label;
+    EntityUIControl *optionsControl;
+    EntityUIButtonPrompt *prompt;
+    EntityUIControl *videoControl;
+    EntityUIControl *videoControl_Windows;
+    EntityUIControl *soundControl;
+    EntityUIControl *dataOptionsControl;
+    EntityUIControl *controlsControl_Windows;
+    EntityUIControl *controlsControl_KB;
+    EntityUIControl *controlsControl_PS4;
+    EntityUIControl *controlsControl_XB1;
+    EntityUIControl *controlsControl_NX;
+    EntityUIControl *controlsControl_NXGrip;
+    EntityUIControl *controlsControl_NXJoycon;
+    EntityUIControl *controlsControl_NXPro;
+    EntityUIControl *languageControl;
+    EntityUIControl *languageControl_Legacy;
+    EntityUIDiorama *diorama;
+    EntityUIInfoLabel *label;
 };
 
 // Entity Class

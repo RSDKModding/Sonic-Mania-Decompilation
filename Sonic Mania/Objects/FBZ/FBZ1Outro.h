@@ -38,12 +38,12 @@ void FBZ1Outro_Serialize(void);
 
 // Extra Entity Functions
 void FBZ1Outro_StartCutscene(void);
-void FBZ1Outro_Unknown2(void);
+void FBZ1Outro_HandleTrash(void);
 void FBZ1Outro_DispenseTrash(void);
 
-bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_Cutscene_Unknown2(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_Cutscene_Unknown3(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_Cutscene_Unknown4(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host);
 
 #endif //!OBJ_FBZ1OUTRO_H

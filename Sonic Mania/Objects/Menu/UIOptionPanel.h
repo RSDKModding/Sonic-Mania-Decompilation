@@ -46,6 +46,6 @@ void UIOptionPanel_EditorLoad(void);
 void UIOptionPanel_Serialize(void);
 
 // Extra Entity Functions
-void UIOptionPanel_Unknown1(void);
+void UIOptionPanel_DrawBG(void);
 
 #endif //!OBJ_UIOPTIONPANEL_H

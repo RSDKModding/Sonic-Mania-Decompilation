@@ -172,9 +172,9 @@ void RubyPortal_State_AwaitOpenTMZ2(void)
 {
     RSDK_THIS(RubyPortal);
 #if RETRO_USE_PLUS
-    if (TMZBarrier->flags == 0xF || RubyPortal->openPortal)
+    if (TMZBarrier->clearedBarriers == (1 | 2 | 4 | 8) || RubyPortal->openPortal)
 #else
-    if (TMZBarrier->flags == 0xF)
+    if (TMZBarrier->clearedBarriers == (1 | 2 | 4 | 8))
 #endif
         self->state = RubyPortal_State_Opening;
 }

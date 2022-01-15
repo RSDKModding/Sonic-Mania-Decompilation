@@ -706,7 +706,7 @@ void BSS_Setup_HandleCollectableMovement(void)
                 collectable->objectID = BSS_Collectable->objectID;
                 collectable->type     = tile & 0x3FF;
                 if (y < 112) {
-                    self->xMultiplier    = BSS_Setup->xMultiplierTable[y];
+                    self->xMultiplier             = BSS_Setup->xMultiplierTable[y];
                     self->divisor                 = BSS_Setup->divisorTable[y];
                     collectable->animator.frameID = BSS_Setup->frameTable[y];
                     collectable->animator.frameID -= abs(x) >> 5;
@@ -733,7 +733,7 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
-        Entity *entity = RSDK.GetEntityByID(slot++);
+        Entity *entity   = RSDK.GetEntityByID(slot++);
         entity->objectID = TYPE_BLANK;
     }
 }
@@ -1058,9 +1058,9 @@ void BSS_Setup_State_PostPinkSphereWarp(void)
     if (self->alpha <= 0) {
         if (player->up)
             self->timer = 1;
-        else if (player->left) 
+        else if (player->left)
             self->state = BSS_Setup_State_SpinLeft;
-        else if (player->right) 
+        else if (player->right)
             self->state = BSS_Setup_State_SpinRight;
     }
     else {

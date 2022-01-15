@@ -14,11 +14,11 @@ void UIRankButton_Update(void)
 {
     RSDK_THIS(UIRankButton);
 
-    self->touchPosStart.x = self->size.x;
-    self->touchPosEnd.x   = 0;
-    self->touchPosEnd.y   = 0;
-    self->touchPosStart.x = self->size.x + 3 * self->size.y;
-    self->touchPosStart.y = self->size.y + 0x60000;
+    self->touchPosSizeS.x = self->size.x;
+    self->touchPosOffsetS.x   = 0;
+    self->touchPosOffsetS.y   = 0;
+    self->touchPosSizeS.x = self->size.x + 3 * self->size.y;
+    self->touchPosSizeS.y = self->size.y + 0x60000;
 
     StateMachine_Run(self->state);
 
@@ -101,7 +101,7 @@ void UIRankButton_Create(void *data)
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->nameTimeText);
     }
     self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
-    self->touchCB            = UIButton_ProcessTouchCB;
+    self->touchCB            = UIButton_ProcessTouchCB_Single;
     self->selectedCB         = UIRankButton_SelectedCB;
     self->failCB             = UIRankButton_FailCB;
     self->buttonEnterCB      = UIRankButton_ButtonEnterCB;

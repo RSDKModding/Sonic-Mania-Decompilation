@@ -89,14 +89,14 @@ typedef enum { DLC_PLUS } GameDLC;
     int32 timer;                                                                                                                                     \
     Vector2 startPos;                                                                                                                                \
     Entity *parent;                                                                                                                                  \
-    Vector2 touchPosStart;                                                                                                                           \
-    Vector2 touchPosEnd;                                                                                                                             \
+    Vector2 touchPosSizeS;                                                                                                                           \
+    Vector2 touchPosOffsetS;                                                                                                                             \
     bool32 touchPressed;                                                                                                                             \
-    Vector2 touchPos1[4];                                                                                                                            \
-    Vector2 touchPos2[4];                                                                                                                            \
+    Vector2 touchPosSizeM[4];   /*size of the touchPos: in 16-bit shifted format*/                                                                    \
+    Vector2 touchPosOffsetM[4]; /*offset of the touchPos: 0,0 is entity pos, negative is left/up, positive is right/down*/                            \
     void (*touchPosCallbacks[4])(void);                                                                                                              \
     int32 touchPosCount;                                                                                                                             \
-    int32 touchCountUnknown;                                                                                                                         \
+    int32 touchPosID;                                                                                                                                \
     bool32 isSelected;                                                                                                                               \
     bool32 disabled;
 

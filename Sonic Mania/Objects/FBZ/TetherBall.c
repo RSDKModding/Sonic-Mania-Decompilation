@@ -38,8 +38,8 @@ void TetherBall_Draw(void)
     drawPos.x += (i + 0x200) * RSDK.Cos1024(self->angle);
     drawPos.y += (i + 0x200) * RSDK.Sin1024(self->angle);
     RSDK.DrawSprite(&TetherBall->animator, &drawPos, false);
+    self->ballPos             = drawPos;
 
-    self->posUnknown             = drawPos;
     TetherBall->animator.frameID = self->type >> 1;
     self->drawFX                 = FX_FLIP;
     RSDK.DrawSprite(&TetherBall->animator, NULL, false);
@@ -91,7 +91,7 @@ void TetherBall_State_CheckPlayerAttach(void)
     RSDK_THIS(TetherBall);
     int32 storeX   = self->position.x;
     int32 storeY   = self->position.y;
-    self->position = self->posUnknown;
+    self->position = self->ballPos;
     self->rotation = self->angle << 16;
     foreach_active(Player, player)
     {

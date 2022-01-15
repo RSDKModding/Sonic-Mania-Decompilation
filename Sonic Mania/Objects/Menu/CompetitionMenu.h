@@ -7,17 +7,17 @@
 // Object Class
 struct ObjectCompetitionMenu {
     RSDK_OBJECT
-    Entity *competitionControl;
-    Entity *competitionControl_Legacy;
-    Entity *compRulesControl;
-    Entity *compZoneControl;
-    int32 field_14;
-    Entity *prompt1;
-    Entity *prompt2;
-    Entity *compRoundControl;
-    Entity *label1;
-    Entity *compTotalControl;
-    Entity *label2;
+    EntityUIControl *competitionControl;
+    EntityUIControl *competitionControl_Legacy;
+    EntityUIControl *compRulesControl;
+    EntityUIControl *compZoneControl;
+    int32 unused;
+    EntityUIButtonPrompt *startCompPrompt;
+    EntityUIButtonPrompt *startCompPrompt_Legacy;
+    EntityUIControl *compRoundControl;
+    EntityUIInfoLabel *resultsLabel_Round;
+    EntityUIControl *compTotalControl;
+    EntityUIInfoLabel *resultsLabel_Total;
     int32 timer;
 };
 
@@ -47,13 +47,13 @@ void CompetitionMenu_Initialize(void);
 void CompetitionMenu_SetupActions(void);
 void CompetitionMenu_HandleMenuReturn(void);
 int32 CompetitionMenu_HandleUnlocks(void);
-void CompetitionMenu_Unknown5(void);
+void CompetitionMenu_HandleStartCompPrompt(void);
 int32 CompetitionMenu_GetReadyPlayerCount(void);
-int32 CompetitionMenu_GetFlaggedReadyPlayerCount(void);
-void CompetitionMenu_Unknown8(void);
-void CompetitionMenu_Unknown9(int32 playerCount);
+int32 CompetitionMenu_GetActivePlayerCount(void);
+void CompetitionMenu_ResetControllerAssignments(void);
+void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount);
 void CompetitionMenu_SetupSplitScreen(int32 mode);
-void CompetitionMenu_Unknown11(void *control);
+void CompetitionMenu_SetupResultsUI(void *control);
 void CompetitionMenu_GotoCompRules(void);
 void CompetitionMenu_GotoCompZones(void);
 void CompetitionMenu_VS_ProcessInputCB(void);
@@ -61,7 +61,7 @@ void CompetitionMenu_VS_MenuSetupCB(void);
 void CompetitionMenu_Rules_MenuSetupCB(void);
 void CompetitionMenu_StartMatch(void);
 void CompetitionMenu_ZoneButtonActionCB(void);
-void CompetitionMenu_RulesButtonActionCB(void);
+void CompetitionMenu_RulesButton_ActionCB(void);
 void CompetitionMenu_GotoCompTotal(void);
 void CompetitionMenu_Round_ProcessInputCB(void);
 void CompetitionMenu_Round_MenuSetupCB(void);
@@ -71,8 +71,8 @@ void CompetitionMenu_Results_MenuSetupCB(void);
 void CompetitionMenu_Results_MenuUpdateCB(void);
 void CompetitionMenu_ExitComp_TransitionCB(void);
 void CompetitionMenu_ExitComp_YesCB(void);
-bool32 CompetitionMenu_Unknown29(void);
-bool32 CompetitionMenu_Unknown30(void);
+bool32 CompetitionMenu_CompRules_BackPressCB(void);
+bool32 CompetitionMenu_CompZones_BackPressCB(void);
 void CompetitionMenu_GotoPuyoVS(void);
 #endif
 

@@ -33,7 +33,7 @@ void ExtrasMenu_Initialize(void)
     {
         RSDK.PrependText(&info, "Extras");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            ExtrasMenu->extrasControl = (Entity *)control;
+            ExtrasMenu->extrasControl = control;
     }
 }
 

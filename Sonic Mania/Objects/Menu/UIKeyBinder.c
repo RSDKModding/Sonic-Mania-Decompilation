@@ -12,11 +12,11 @@ ObjectUIKeyBinder *UIKeyBinder;
 void UIKeyBinder_Update(void)
 {
     RSDK_THIS(UIKeyBinder);
-    self->touchPosStart.x = self->size.x;
-    self->touchPosEnd.x   = 0;
-    self->touchPosEnd.y   = 0;
-    self->touchPosStart.x += 3 * self->size.y;
-    self->touchPosStart.y = self->size.y + 0x60000;
+    self->touchPosSizeS.x = self->size.x;
+    self->touchPosOffsetS.x   = 0;
+    self->touchPosOffsetS.y   = 0;
+    self->touchPosSizeS.x += 3 * self->size.y;
+    self->touchPosSizeS.y = self->size.y + 0x60000;
 
     if (self->textFrames != UIWidgets->textFrames) {
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
@@ -135,7 +135,7 @@ void UIKeyBinder_Create(void *data)
     self->size.y             = 0xC0000;
     self->bgEdgeSize         = 12;
     self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
-    self->touchCB            = UIButton_ProcessTouchCB;
+    self->touchCB            = UIButton_ProcessTouchCB_Single;
     self->actionCB           = UIKeyBinder_ActionCB;
     self->selectedCB         = UIKeyBinder_SelectedCB;
     self->failCB             = StateMachine_None;

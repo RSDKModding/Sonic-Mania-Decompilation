@@ -95,7 +95,7 @@ bool32 FBZ2Outro_Cutscene_RunToGlider(EntityCutsceneSeq *host)
     if (RSDK.GetEntityCount(Player->objectID, true)) {
         foreach_active(HangGlider, glider)
         {
-            if (glider->state == HangGlider_Unknown2) {
+            if (glider->state == HangGlider_State_Glide) {
                 foreach_active(FBZFan, fan)
                 {
                     if (abs(fan->position.x - glider->position.x) < 0x400000 && fan->position.y - glider->position.y < 0xA00000)
@@ -124,7 +124,7 @@ bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host)
             if (abs(fan->position.x - glider->position.x) < 0x400000 && fan->position.y - glider->position.y < 0xA00000)
                 glider->velocity.y -= 0x3000;
         }
-        if (glider->playerPtr == (Entity *)player1 && !glider->activeScreens) {
+        if (glider->playerPtr == player1 && !glider->activeScreens) {
             Zone_StartFadeOut(10, 0x000000);
             return true;
         }

@@ -81,7 +81,7 @@ enum UserdataTableIDs {
     APITable_Count,
 };
 #else
-APITableEntry RSDK::APIFunctionTable[APITABLE_COUNT];
+RSDK::APITableEntry RSDK::APIFunctionTable[APITABLE_COUNT];
 int32 RSDK::APIFunctionTableCount;
 #endif
 
@@ -309,17 +309,17 @@ void NullFunc() {}
 #else
 void addToAPIFunctionTable(const char *name, void *ptr)
 {
-    if (APIFunctionTableCount < APITABLE_COUNT) {
+    if (RSDK::APIFunctionTableCount < APITABLE_COUNT) {
         RETRO_HASH(hash);
         GEN_HASH(name, hash);
-        for (int f = 0; f < APIFunctionTableCount; ++f) {
-            if (HASH_MATCH(hash, APIFunctionTable[f].hash))
+        for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
+            if (HASH_MATCH(hash, RSDK::APIFunctionTable[f].hash))
                 return; // already exists, ignore this call
         }
 
-        HASH_COPY(APIFunctionTable[APIFunctionTableCount].hash, hash);
-        APIFunctionTable[APIFunctionTableCount].ptr = ptr;
-        APIFunctionTableCount++;
+        HASH_COPY(RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].hash, hash);
+        RSDK::APIFunctionTable[RSDK::APIFunctionTableCount].ptr = ptr;
+        RSDK::APIFunctionTableCount++;
     }
 }
 
@@ -330,9 +330,9 @@ void *GetAPIFunction(const char *name)
 
     uint hash[4];
     GEN_HASH(name, hash);
-    for (int f = 0; f < APIFunctionTableCount; ++f) {
-        if (HASH_MATCH(hash, APIFunctionTable[f].hash))
-            return APIFunctionTable[f].ptr;
+    for (int f = 0; f < RSDK::APIFunctionTableCount; ++f) {
+        if (HASH_MATCH(hash, RSDK::APIFunctionTable[f].hash))
+            return RSDK::APIFunctionTable[f].ptr;
     }
 
     if (engine.printConsole)

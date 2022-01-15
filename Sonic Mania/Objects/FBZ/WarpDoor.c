@@ -97,7 +97,7 @@ void WarpDoor_Update(void)
                                     foreach_active(TMZBarrier, barrier)
                                     {
                                         if (barrier->warpTag == self->tag)
-                                           barrier->field_5C = 1;
+                                            barrier->cleared = true;
                                     }
                                     tag->fadeTimer = 512;
                                     if (self->destinationTag == 99 || self->destinationTag == 100)

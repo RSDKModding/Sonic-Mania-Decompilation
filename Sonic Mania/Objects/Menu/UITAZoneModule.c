@@ -136,14 +136,14 @@ void UITAZoneModule_StageLoad(void)
 void UITAZoneModule_Setup(void)
 {
     RSDK_THIS(UITAZoneModule);
-    self->touchPosEnd.x      = 0;
-    self->touchPosEnd.y      = 0;
+    self->touchPosOffsetS.x      = 0;
+    self->touchPosOffsetS.y      = 0;
     self->checkButtonEnterCB = UITAZoneModule_CheckButtonEnterCB;
     self->checkSelectedCB    = UITAZoneModule_CheckSelectedCB;
     if (self->processButtonCB == UIButton_ProcessButtonCB_Scroll) {
-        self->touchPosStart.x = 0x1380000;
-        self->touchPosStart.y = 0x4E0000;
-        self->touchCB         = UIButton_ProcessTouchCB;
+        self->touchPosSizeS.x = 0x1380000;
+        self->touchPosSizeS.y = 0x4E0000;
+        self->touchCB         = UIButton_ProcessTouchCB_Single;
         self->selectedCB      = UITAZoneModule_SelectedCB;
         self->failCB          = UITAZoneModule_FailCB;
         self->buttonEnterCB   = UITAZoneModule_ButtonEnterCB;
@@ -151,25 +151,25 @@ void UITAZoneModule_Setup(void)
     }
 #if !RETRO_USE_PLUS
     else if (self->processButtonCB == UITAZoneModule_ProcessButtonCB_Expanded) {
-        self->touchPos1[0].x       = 0x9C0000;
-        self->touchPos1[0].y       = 0x2C0000;
-        self->touchPos1[1].x       = 0x9C0000;
-        self->touchPos1[1].y       = 0x2C0000;
-        self->touchPos2[0].x       = -0x4E0000;
-        self->touchPos2[1].x       = 0x4E0000;
+        self->touchPosSize[0].x       = 0x9C0000;
+        self->touchPosSize[0].y       = 0x2C0000;
+        self->touchPosSize[1].x       = 0x9C0000;
+        self->touchPosSize[1].y       = 0x2C0000;
+        self->touchPosOffsetM[0].x       = -0x4E0000;
+        self->touchPosOffsetM[1].x       = 0x4E0000;
         self->touchPosCallbacks[0] = UITAZoneModule_TouchCB_Left;
         self->touchPosCallbacks[1] = UITAZoneModule_TouchCB_Right;
         self->touchPosCount        = 2;
         self->buttonEnterCB        = StateMachine_None;
         self->buttonLeaveCB        = StateMachine_None;
-        self->touchCB              = UIButton_ProcessTouchCB_Alt;
+        self->touchCB              = UIButton_ProcessTouchCB_Multi;
         self->selectedCB           = StateMachine_None;
         self->failCB               = StateMachine_None;
     }
 #endif
     else {
-        self->touchPosStart.x = 0;
-        self->touchPosStart.y = 0;
+        self->touchPosSizeS.x = 0;
+        self->touchPosSizeS.y = 0;
         self->touchPosCount   = 0;
         self->selectedCB      = StateMachine_None;
         self->failCB          = StateMachine_None;
@@ -465,7 +465,7 @@ void UITAZoneModule_State_NotSelected(void)
     RSDK_THIS(UITAZoneModule);
     self->position.x = self->startPos.x;
     RSDK.ProcessAnimation(&self->fuzzAnimator);
-    self->touchCB = UIButton_ProcessTouchCB;
+    self->touchCB = UIButton_ProcessTouchCB_Single;
     self->fuzzDir = self->fuzzAnimator.frameID & 3;
 }
 
@@ -832,7 +832,7 @@ void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, int32 
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
         UIDialog_Setup(dialog);
-        MenuSetup->dialog = (Entity *)dialog;
+        MenuSetup->connectingDlg = dialog;
         MenuSetup_StartTransitionLB(callback, 120);
 
         uint16 *records                  = TimeAttackData_GetRecordedTime(zone, act, player, 1);
@@ -925,7 +925,7 @@ void UITAZoneModule_State_ExpandModule(void)
         self->timer           = 0;
         self->state           = UITAZoneModule_State_Expanded;
         self->processButtonCB = UITAZoneModule_ProcessButtonCB_Expanded;
-        self->touchCB         = UIButton_ProcessTouchCB_Alt;
+        self->touchCB         = UIButton_ProcessTouchCB_Multi;
     }
     else {
         if (heading->startPos.y >> 16 < ScreenInfo->position.y) {

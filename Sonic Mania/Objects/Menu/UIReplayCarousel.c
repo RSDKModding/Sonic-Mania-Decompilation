@@ -90,7 +90,7 @@ void UIReplayCarousel_Create(void *data)
     self->updateRange.x   = 0x800000;
     self->updateRange.y   = 0x300000;
     self->processButtonCB = UIReplayCarousel_ProcessButtonCB;
-    self->touchCB         = UIButton_ProcessTouchCB_Alt;
+    self->touchCB         = UIButton_ProcessTouchCB_Multi;
     self->state           = UIReplayCarousel_State_Setup;
     self->sortedRowCount  = 0;
     UIReplayCarousel_HandlePositions();
@@ -102,7 +102,7 @@ void UIReplayCarousel_Create(void *data)
 
         UIReplayCarousel_SetupVisibleReplayButtons();
         self->prevReplayOffset = self->visibleReplayOffset;
-        self->language        = Localization->language;
+        self->language         = Localization->language;
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->createTimeAnimator, true, 0);
         if (Localization->loaded) {
             Localization_GetString(&self->noReplaysText, STR_NOREPLAYS);
@@ -191,7 +191,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
             if (!self->isSelected) {
                 if (parent->buttons[parent->lastButtonID] == (EntityUIButton *)self && !parent->dialogHasFocus && !parent->popoverHasFocus) {
                     self->isSelected = true;
-                    self->state = UIReplayCarousel_State_Selected;
+                    self->state      = UIReplayCarousel_State_Selected;
                 }
             }
         }
@@ -205,7 +205,7 @@ void UIReplayCarousel_HandlePositions(void)
     if (self->curViewOffset) {
         self->visibleReplayOffset = self->curViewOffset / 102;
 
-        int32 pos           = 102 * (self->curViewOffset / 102) - self->curViewOffset - 102;
+        int32 pos        = 102 * (self->curViewOffset / 102) - self->curViewOffset - 102;
         self->popoverPos = pos << 16;
         if (pos < 153) {
             self->visibleReplayCount = (152 - pos) / 0x66 + 1;
@@ -216,8 +216,8 @@ void UIReplayCarousel_HandlePositions(void)
     }
     else {
         self->visibleReplayOffset = 0;
-        self->visibleReplayCount   = minVal(self->sortedRowCount, 3);
-        self->popoverPos   = -0x660000;
+        self->visibleReplayCount  = minVal(self->sortedRowCount, 3);
+        self->popoverPos          = -0x660000;
     }
 }
 
@@ -230,7 +230,7 @@ void UIReplayCarousel_SetupButtonCallbacks(void)
         if (!API.GetUserDBRowsChanged(globals->replayTableID) && globals->replayTableLoaded == STATUS_OK) {
             self->stateDraw       = UIReplayCarousel_Draw_Carousel;
             self->processButtonCB = UIReplayCarousel_ProcessButtonCB;
-            self->touchCB         = UIButton_ProcessTouchCB_Alt;
+            self->touchCB         = UIButton_ProcessTouchCB_Multi;
         }
         else {
             self->stateDraw       = UIReplayCarousel_Draw_Loading;
@@ -254,27 +254,27 @@ void UIReplayCarousel_HandleTouchPositions(void)
 
     if (self->touchCB) {
         self->touchPosCount = self->visibleReplayCount;
-        int32 posX              = self->position.x;
-        int32 posY              = self->popoverPos + self->position.y;
+        int32 posX          = self->position.x;
+        int32 posY          = self->popoverPos + self->position.y;
 
         int32 i = 0;
         for (; i < self->visibleReplayCount; ++i) {
             if (i + self->visibleReplayOffset >= self->sortedRowCount)
                 break;
 
-            self->touchPos2[i].x       = posX - self->position.x;
-            self->touchPos2[i].y       = posY - self->position.y;
-            self->touchPos1[i].x       = 0x1320000;
-            self->touchPos1[i].y       = 0x550000;
+            self->touchPosOffsetM[i].x = posX - self->position.x;
+            self->touchPosOffsetM[i].y = posY - self->position.y;
+            self->touchPosSizeM[i].x   = 0x1320000;
+            self->touchPosSizeM[i].y   = 0x550000;
             self->touchPosCallbacks[i] = UIReplayCarousel_TouchedCB;
             posY += 0x660000;
         }
 
         for (; i < self->visibleReplayCount; ++i) {
-            self->touchPos2[i].x       = 0;
-            self->touchPos2[i].y       = 0;
-            self->touchPos1[i].x       = 0;
-            self->touchPos1[i].y       = 0;
+            self->touchPosOffsetM[i].x = 0;
+            self->touchPosOffsetM[i].y = 0;
+            self->touchPosSizeM[i].x   = 0;
+            self->touchPosSizeM[i].y   = 0;
             self->touchPosCallbacks[i] = StateMachine_None;
         }
     }
@@ -283,7 +283,7 @@ void UIReplayCarousel_HandleTouchPositions(void)
 void UIReplayCarousel_TouchedCB(void)
 {
     RSDK_THIS(UIReplayCarousel);
-    int32 id = self->touchCountUnknown + self->visibleReplayOffset;
+    int32 id = self->touchPosID + self->visibleReplayOffset;
     if (self->curReplayID == id)
         UIReplayCarousel_StartAction();
     else
@@ -368,14 +368,15 @@ void UIReplayCarousel_DrawStageInfo(int32 drawX, int32 drawY, uint8 act, uint8 c
             UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 13, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF);
 
             drawPos.x += 0xE0000;
-            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colours[i + 1] >> 16) & 0xFF, (colours[i + 1] >> 8) & 0xFF, colours[i + 1] & 0xFF);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colours[i + 1] >> 16) & 0xFF, (colours[i + 1] >> 8) & 0xFF,
+                                        colours[i + 1] & 0xFF);
         }
     }
 
     if (!SceneInfo->inEditor) {
         int32 id    = replayID - self->visibleReplayOffset;
-        drawPos.x = drawOffsets[0].x + 0x1E0000;
-        drawPos.y = drawOffsets[0].y;
+        drawPos.x   = drawOffsets[0].x + 0x1E0000;
+        drawPos.y   = drawOffsets[0].y;
         int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->createdAtText[id], 0, self->createdAtText[id].length, 0);
         drawPos.x -= width << 15;
         drawPos.y -= 0x60000;
@@ -424,7 +425,7 @@ void UIReplayCarousel_DrawZoneIcon(int32 drawX, int32 drawY, uint8 zoneID, int16
             RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
         }
         else {
-            int32 width    = self->sprX - 102;
+            int32 width  = self->sprX - 102;
             frame->width = 90 - width;
             RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
 
@@ -436,7 +437,8 @@ void UIReplayCarousel_DrawZoneIcon(int32 drawX, int32 drawY, uint8 zoneID, int16
     }
 }
 
-void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score, int32 replayID)
+void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uint8 act, uint8 characterID, bool32 isEncore, int32 score,
+                                     int32 replayID)
 {
     RSDK_THIS(UIReplayCarousel);
     UIReplayCarousel_DrawStageInfo(drawX, drawY, act, characterID, score, replayID);
@@ -446,7 +448,7 @@ void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uin
     drawPos.x = drawX;
     drawPos.y = drawY - 0x160000;
     if ((self->state != UIReplayCarousel_State_StartAction || self->curReplayID != replayID || !(self->timer & 2)) && !SceneInfo->inEditor) {
-        int32 id    = replayID - self->visibleReplayOffset;
+        int32 id  = replayID - self->visibleReplayOffset;
         drawPos.x = drawX - 0x390000;
         if (zoneID == 5 || zoneID == 10) {
             RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &self->zoneNameAnimators[id], true, 0);
@@ -454,8 +456,7 @@ void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uin
         else {
             RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->zoneNameAnimators[id], true, 0);
         }
-        RSDK.DrawText(&self->zoneNameAnimators[id], &drawPos, &self->zoneNameText[id], 0, self->zoneNameText[id].length, ALIGN_LEFT, 0, 2, 0,
-                      false);
+        RSDK.DrawText(&self->zoneNameAnimators[id], &drawPos, &self->zoneNameText[id], 0, self->zoneNameText[id].length, ALIGN_LEFT, 0, 2, 0, false);
     }
 
     drawPos.x = drawX - 0x430000;
@@ -469,9 +470,9 @@ void UIReplayCarousel_StartAction(void)
     RSDK_THIS(UIReplayCarousel);
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    self->timer             = 0;
-    self->state             = UIReplayCarousel_State_StartAction;
-    self->processButtonCB   = StateMachine_None;
+    self->timer               = 0;
+    self->state               = UIReplayCarousel_State_StartAction;
+    self->processButtonCB     = StateMachine_None;
     parent->selectionDisabled = true;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 }
@@ -480,7 +481,7 @@ void UIReplayCarousel_SetUnselected(void)
 {
     RSDK_THIS(UIReplayCarousel);
     self->isSelected = false;
-    self->state = UIReplayCarousel_State_Unselected;
+    self->state      = UIReplayCarousel_State_Unselected;
     if (!UIControl->hasTouchInput)
         self->curReplayID = -1;
 }
@@ -605,12 +606,12 @@ void UIReplayCarousel_State_StartAction(void)
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     RSDK.ProcessAnimation(&self->fuzzAnimator);
-    self->isSelected = true;
+    self->isSelected    = true;
     self->fuzzDirection = self->fuzzAnimator.frameID & 3;
-    self->touchCB   = StateMachine_None;
+    self->touchCB       = StateMachine_None;
 
     if (self->timer >= 30) {
-        self->timer             = 0;
+        self->timer               = 0;
         parent->selectionDisabled = false;
         StateMachine_Run(self->actionCB);
         self->state = UIReplayCarousel_State_Unselected;

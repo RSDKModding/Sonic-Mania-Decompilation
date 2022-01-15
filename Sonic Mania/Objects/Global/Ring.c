@@ -475,11 +475,11 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     if (BigSqueeze) {
         foreach_active(BigSqueeze, bigSqueeze)
         {
-            if (self->position.x < BigSqueeze->value4[2] + 0x200000)
+            if (self->position.x < BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x200000)
                 flags |= 8;
-            if (self->position.x > BigSqueeze->value4[3] - 0x200000)
+            if (self->position.x > BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x200000)
                 flags |= 4;
-            if (self->position.y > BigSqueeze->value7 - 0x80000)
+            if (self->position.y > BigSqueeze->boundB - 0x80000)
                 flags |= 2;
         }
     }

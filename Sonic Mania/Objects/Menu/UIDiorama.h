@@ -208,7 +208,7 @@ struct EntityUIDiorama {
     bool32 needsSetup;
     StateMachine(state);
     StateMachine(stateDraw);
-    Entity *parent;
+    EntityUIControl *parent;
     int32 maskColour;
     Vector2 dioramaPos;
     Vector2 dioramaSize;

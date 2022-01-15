@@ -26,7 +26,7 @@ void UIOptionPanel_StaticUpdate(void) {}
 void UIOptionPanel_Draw(void)
 {
     RSDK_THIS(UIOptionPanel);
-    UIOptionPanel_Unknown1();
+    UIOptionPanel_DrawBG();
     RSDK.DrawSprite(&self->animator, &self->drawPosTop, false);
     if (!self->botHidden)
         RSDK.DrawSprite(&self->animator2, &self->drawPosBottom, false);
@@ -68,7 +68,7 @@ void UIOptionPanel_Create(void *data)
 
 void UIOptionPanel_StageLoad(void) {}
 
-void UIOptionPanel_Unknown1(void)
+void UIOptionPanel_DrawBG(void)
 {
     RSDK_THIS(UIOptionPanel);
     RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y, 0x30A0F0, 255, INK_NONE,

@@ -7,9 +7,9 @@
 // Object Class
 struct ObjectMainMenu {
     RSDK_OBJECT
-    Entity *menuControlPtr;
-    Entity *promptPtr;
-    Entity *dioramaPtr;
+    EntityUIControl *menuControlPtr;
+    EntityUIButtonPrompt *promptPtr;
+    EntityUIDiorama *dioramaPtr;
 };
 
 // Entity Class

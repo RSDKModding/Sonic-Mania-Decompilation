@@ -16,7 +16,7 @@ typedef enum {
 // Object Class
 struct ObjectUIPopover {
     RSDK_OBJECT
-    Entity *activeEntity;
+    EntityUIPopover *activeEntity;
     EntityUIControl *storedControl;
     StateMachine(storedControlState);
 };

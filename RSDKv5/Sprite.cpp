@@ -200,9 +200,9 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
             return true;
     }
 
-    int data         = ReadInt8(&info);
-    //int has_pallete  = (data & 0x80) >> 7;
-    //int colors       = ((data & 0x70) >> 4) + 1;
+    int data = ReadInt8(&info);
+    // int has_pallete  = (data & 0x80) >> 7;
+    // int colors       = ((data & 0x70) >> 4) + 1;
     int palette_size = (data & 0x7) + 1;
     if (palette_size > 0)
         palette_size = 1 << palette_size;
@@ -231,7 +231,7 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
         ReadInt16(&info);
         ReadInt16(&info);
         ReadInt16(&info);
-        data            = ReadInt8(&info);
+        data              = ReadInt8(&info);
         bool32 interlaced = (data & 0x40) >> 6;
         if (data >> 7 == 1) {
             int c = 0x80;
@@ -250,14 +250,13 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
     return false;
 }
 
-
 #if RETRO_REV02
 void PNGUnpackGreyscale(RSDK::ImagePNG *image, byte *pixelData)
 {
     byte *pixels = image->dataPtr;
     for (int c = 0; c < image->width * image->height; ++c) {
         int brightness = *pixelData++;
-        int alpha = *pixelData++;
+        int alpha      = *pixelData++;
 
         uint colour = 0;
 
@@ -280,7 +279,7 @@ void PNGUnpackGreyscaleA(RSDK::ImagePNG *image, byte *pixelData)
     for (int c = 0; c < image->width * image->height; ++c) {
         int brightness = *pixelData++;
 
-        uint colour    = 0;
+        uint colour = 0;
 
         colour = brightness << 16;
         pixelData++;
@@ -316,7 +315,7 @@ void PNGUnpackRGB(RSDK::ImagePNG *image, byte *pixelData)
 
 void PNGUnpackRGBA(RSDK::ImagePNG *image, byte *pixelData)
 {
-    colour *pixels = (colour*)image->dataPtr;
+    colour *pixels = (colour *)image->dataPtr;
     for (int c = 0; c < image->width * image->height; ++c) {
         uint colour = 0;
 
@@ -342,7 +341,7 @@ void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
         case 6: colourSize *= 4; break;
     }
 
-    int pitch      = colourSize * image->width;
+    int pitch         = colourSize * image->width;
     uint8 *dataBuffer = dataPtr + 1;
 
     if (*dataPtr == 1 || *dataPtr == 3) {
@@ -399,7 +398,7 @@ void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
 
                 if (colourSize < pitch) {
                     uint8 *buf = &dataPtr[-colourSize];
-                    int count = colourSize - pitch;
+                    int count  = colourSize - pitch;
 
                     for (int c = 0; c < pitch - colourSize; ++c) {
                         *dataPtr++ = *dataBuffer++ + ((*(buf - 1) + (buf++)[count]) >> 1);
@@ -417,9 +416,9 @@ void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
                     int countv2 = pitch - (pitch + colourSize);
 
                     for (int c = 0; c < pitch - colourSize; ++c) {
-                        uint8 val1   = buf[count];
-                        uint8 val2   = *buf;
-                        uint8 val3   = buf[countv2];
+                        uint8 val1 = buf[count];
+                        uint8 val2 = *buf;
+                        uint8 val3 = buf[countv2];
                         int dif    = val1 - val3 + val2;
 
                         int count1 = val3 - val2;
@@ -559,7 +558,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
 #if !RETRO_REV02
 bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
 {
-    if (LoadFile(&info, filename, FMODE_RB)) {
+    if (LoadFile(&info, fileName, FMODE_RB)) {
         byte startOffset      = ReadInt8(&info);
         byte colourmaptype    = ReadInt8(&info);
         byte datatypecode     = ReadInt8(&info);
@@ -568,8 +567,8 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
         byte colourmapdepth   = ReadInt8(&info);
         short originX         = ReadInt16(&info);
         short originY         = ReadInt16(&info);
-        width          = ReadInt16(&info);
-        height         = ReadInt16(&info);
+        width                 = ReadInt16(&info);
+        height                = ReadInt16(&info);
         byte imageBPP         = ReadInt8(&info);
         byte imagedescriptor  = ReadInt8(&info);
         bool32 reverse        = (~imagedescriptor >> 4) & 1;
@@ -693,7 +692,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                             }
                         }
                         break;
-                    } 
+                    }
                     case 0x20: {
                         byte channels[sizeof(colour)];
                         memset(channels, 0, sizeof(channels));
@@ -722,7 +721,7 @@ bool32 RSDK::ImageTGA::Load(const char *fileName, bool32 loadHeader)
                             }
                         }
                         break;
-                    } 
+                    }
                 }
             }
             CloseFile(&info);

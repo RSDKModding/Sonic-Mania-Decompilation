@@ -45,7 +45,7 @@ void HangGlider_Create(void *data)
         self->updateRange.x   = 0x400000;
         self->updateRange.y   = 0x400000;
         self->gravityStrength = 0x1000;
-        self->state           = HangGlider_Unknown1;
+        self->state           = HangGlider_State_CheckGrab;
         RSDK.SetSpriteAnimation(HangGlider->aniFrames, 0, &self->sailAnimator, true, 0);
         RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->handleBackAnimator, true, 0);
         RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->handleFrontAnimator, true, 1);
@@ -65,28 +65,28 @@ void HangGlider_StageLoad(void)
     HangGlider->hitbox.bottom = 128;
 }
 
-void HangGlider_Unknown1(void)
+void HangGlider_State_CheckGrab(void)
 {
     RSDK_THIS(HangGlider);
     foreach_active(Player, player)
     {
         if (abs(player->position.x - self->position.x) < 0x40000) {
             if (abs(player->position.y - self->position.y) < 0x140000) {
-                self->playerPtr  = (Entity *)player;
-                player->active     = ACTIVE_NEVER;
-                player->visible    = 0;
+                self->playerPtr  = player;
+                player->active   = ACTIVE_NEVER;
+                player->visible  = 0;
                 self->velocity.x = (0xC0 * player->velocity.x) >> 8;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &self->playerAnimator, true, 0);
                 self->playerAnimator.rotationFlag = 1;
-                self->rotation               = 128;
-                self->drawFX                 = FX_ROTATE;
+                self->rotation                    = 128;
+                self->drawFX                      = FX_ROTATE;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                self->state = HangGlider_Unknown2;
+                self->state = HangGlider_State_Glide;
             }
         }
     }
 }
-void HangGlider_Unknown2(void)
+void HangGlider_State_Glide(void)
 {
     RSDK_THIS(HangGlider);
 
@@ -96,7 +96,7 @@ void HangGlider_Unknown2(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    Entity *player = self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
     if (player) {
         player->position.x = self->position.x;
         player->position.y = self->position.y;

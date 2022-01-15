@@ -966,7 +966,7 @@ int32 GetControllerType(int32 inputID)
 #if RETRO_REV02
     return RSDK::SKU::userCore->GetDefaultGamepadType();
 #else
-    int32 platform = gameVerInfo.platform = PLATFORM_SWITCH;
+    int32 platform = RSDK::gameVerInfo.platform;
 
     switch (platform) {
         case PLATFORM_SWITCH: return (DEVICE_FLAG_NONE << 16) | (DEVICE_TYPE_CONTROLLER << 8) | (DEVICE_SWITCH_HANDHELD << 0);

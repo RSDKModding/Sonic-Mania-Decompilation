@@ -11,8 +11,8 @@ typedef enum {
 // Object Class
 struct ObjectLRZConvItem {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxRock;
+    Hitbox hitboxSpikeball;
     uint16 aniFrames;
     uint16 sfxSizzle;
 };
@@ -23,7 +23,7 @@ struct EntityLRZConvItem {
     StateMachine(state);
     uint8 type;
     Vector2 startPos;
-    int32 field_68;
+    int32 unused;
     Animator animator;
 };
 
@@ -45,9 +45,9 @@ void LRZConvItem_Serialize(void);
 
 // Extra Entity Functions
 void LRZConvItem_SetupHitboxes(void);
-Vector2 LRZConvItem_Unknown2(void *e);
+Vector2 LRZConvItem_GetMoveOffset(void *e);
 
-void LRZConvItem_State_Unknown1(void);
-void LRZConvItem_State_Unknown2(void);
+void LRZConvItem_State_Rock(void);
+void LRZConvItem_State_SpikeBall(void);
 
 #endif //!OBJ_LRZCONVITEM_H

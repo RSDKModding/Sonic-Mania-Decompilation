@@ -12,12 +12,12 @@ ObjectUIVsRoundPicker *UIVsRoundPicker;
 void UIVsRoundPicker_Update(void)
 {
     RSDK_THIS(UIVsRoundPicker);
-    self->touchPosStart.x = self->size.x;
-    self->touchPosStart.y = self->size.y;
-    self->touchPosEnd.y   = 0;
-    self->touchPosStart.x = (self->touchPosStart.x + 3 * self->size.y) >> 1;
-    self->touchPosStart.y = self->size.y + 0x60000;
-    self->touchPosEnd.x   = -(self->touchPosStart.x >> 1);
+    self->touchPosSizeS.x = self->size.x;
+    self->touchPosSizeS.y = self->size.y;
+    self->touchPosOffsetS.y   = 0;
+    self->touchPosSizeS.x = (self->touchPosSizeS.x + 3 * self->size.y) >> 1;
+    self->touchPosSizeS.y = self->size.y + 0x60000;
+    self->touchPosOffsetS.x   = -(self->touchPosSizeS.x >> 1);
 
     if (self->textFrames != UIWidgets->textFrames) {
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
@@ -178,15 +178,15 @@ bool32 UIVsRoundPicker_ProcessTouchCB(void)
     callbacks[0] = UIVsRoundPicker_TouchedCB_Left;
     callbacks[1] = UIVsRoundPicker_TouchedCB_Right;
 
-    touchStart[0].x = self->touchPosStart.x;
-    touchStart[0].y = self->touchPosStart.y;
-    touchStart[1].x = self->touchPosStart.x;
-    touchStart[1].y = self->touchPosStart.y;
+    touchStart[0].x = self->touchPosSizeS.x;
+    touchStart[0].y = self->touchPosSizeS.y;
+    touchStart[1].x = self->touchPosSizeS.x;
+    touchStart[1].y = self->touchPosSizeS.y;
 
-    touchEnd[0].x = self->touchPosEnd.x;
-    touchEnd[0].y = self->touchPosEnd.y;
-    touchEnd[1].x = -self->touchPosEnd.x;
-    touchEnd[1].y = self->touchPosEnd.y;
+    touchEnd[0].x = self->touchPosOffsetS.x;
+    touchEnd[0].y = self->touchPosOffsetS.y;
+    touchEnd[1].x = -self->touchPosOffsetS.x;
+    touchEnd[1].y = self->touchPosOffsetS.y;
 
     bool32 pressed = false;
     for (int32 i = 0; i < 2; ++i) {

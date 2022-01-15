@@ -148,20 +148,20 @@ void Spikes_Update(void)
                                     if (!player->velocity.y) {
                                         player->position.x += self->offset.x;
                                         player->position.y += self->offset.y;
-                                        Player_CheckHit(player, entity);
+                                        Player_CheckHit(player, self);
                                     }
                                     break;
                                 case C_LEFT:
                                     if (!player->velocity.x)
-                                        Player_CheckHit(player, entity);
+                                        Player_CheckHit(player, self);
                                     break;
                                 case C_RIGHT:
                                     if (!player->velocity.x)
-                                        Player_CheckHit(player, entity);
+                                        Player_CheckHit(player, self);
                                     break;
                                 case C_BOTTOM:
                                     if (!player->velocity.y)
-                                        Player_CheckHit(player, entity);
+                                        Player_CheckHit(player, self);
                                     break;
                                 default: break;
                             }

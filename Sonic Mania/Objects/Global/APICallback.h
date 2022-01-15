@@ -84,9 +84,9 @@ struct ObjectAPICallback {
     bool32 authForbiddenFlag;
     bool32 signoutFlag;
     int32 prevLeaderboardEntry;
-    int32 unknown2;
+    int32 unused;
     int32 isAutoSaving;
-    int32 unknown;
+    int32 statusTimer;
     int32 leaderboardsStatus;
     int32 leaderboardEntryCount;
     int32 rankScore;
@@ -111,10 +111,10 @@ struct EntityAPICallback {
     void *fileBuffer;
     uint32 fileSize;
     void(*fileCallback)(int32);
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
+    int32 unused1;
+    int32 unused2;
+    int32 inputID;
+    int32 unused3;
     int32 status;
 };
 
@@ -181,7 +181,7 @@ void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
 void APICallback_CheckUserAuth_OK(void);
 void APICallback_CheckUserAuth_CB(void);
-void APICallback_Wait(int32 success);
+void APICallback_TrackGameProgressCB(bool32 success);
 void APICallback_GetNextNotif(void);
 void APICallback_ManageNotifs(void);
 bool32 APICallback_CheckUnreadNotifs(void);

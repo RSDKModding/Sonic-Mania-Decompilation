@@ -1830,7 +1830,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #if RETRO_USE_PLUS
                                 Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
-                                CompetitionSession_DeriveWinner(playerID, FINISHFLAG_1);
+                                CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
 #endif
                             }
 #if RETRO_USE_PLUS
@@ -1927,7 +1927,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #if RETRO_USE_PLUS
                             Competition_CalculateScore(playerID, FINISHFLAG_TIMEOVER);
 #else
-                            CompetitionSession_DeriveWinner(playerID, FINISHFLAG_1);
+                            CompetitionSession_DeriveWinner(playerID, FINISHFLAG_TIMEOVER);
 #endif
                         }
 #if RETRO_USE_PLUS

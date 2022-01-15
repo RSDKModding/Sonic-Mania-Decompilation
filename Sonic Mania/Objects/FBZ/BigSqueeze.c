@@ -45,7 +45,7 @@ void BigSqueeze_Create(void *data)
                     self->hitbox.top    = 0;
                     self->hitbox.right  = 256;
                     self->hitbox.bottom = 32;
-                    self->state         = BigSqueeze_State1_SetupIntro;
+                    self->state         = BigSqueeze_StateManager_SetupIntro;
                     break;
                 case BIGSQUEEZE_BOSS:
                     self->updateRange.x = 0x8000000;
@@ -97,12 +97,12 @@ void BigSqueeze_StageLoad(void)
     BigSqueeze->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
     BigSqueeze->sfxMagnet     = RSDK.GetSfx("FBZ/Magnet.wav");
     BigSqueeze->sfxOrbinaut   = RSDK.GetSfx("FBZ/Orbinaut.wav");
-    BigSqueeze->value6        = 0;
-    BigSqueeze->isRumbling    = false;
+    BigSqueeze->crushTimer        = 0;
+    BigSqueeze->isCrushing    = false;
     Soundboard_LoadSFX("Stage/Rumble.wav", true, BigSqueeze_RumbleCheckCB, NULL);
 }
 
-bool32 BigSqueeze_RumbleCheckCB(void) { return BigSqueeze->isRumbling && SceneInfo->state == ENGINESTATE_REGULAR; }
+bool32 BigSqueeze_RumbleCheckCB(void) { return BigSqueeze->isCrushing && SceneInfo->state == ENGINESTATE_REGULAR; }
 
 void BigSqueeze_HandleWallCollisions(void)
 {
@@ -131,7 +131,7 @@ void BigSqueeze_HandleWallCollisions(void)
     }
 }
 
-void BigSqueeze_CheckPlayerCollisions(void)
+void BigSqueeze_CheckPlayerCollisions_Vulnerable(void)
 {
     RSDK_THIS(BigSqueeze);
     if (!self->invincible) {
@@ -147,7 +147,7 @@ void BigSqueeze_CheckPlayerCollisions(void)
     }
 }
 
-void BigSqueeze_CheckPlayerCollisions2(void)
+void BigSqueeze_CheckPlayerCollisions_Electrified(void)
 {
     RSDK_THIS(BigSqueeze);
     if (!self->invincible) {
@@ -181,7 +181,7 @@ void BigSqueeze_Hit(void)
 
         RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, true, 0);
 
-        self->state            = BigSqueeze_State2_Die;
+        self->state            = BigSqueeze_StateBoss_Destroyed;
         self->setupTimer       = 0;
         SceneInfo->timeEnabled = false;
         EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -193,10 +193,10 @@ void BigSqueeze_Hit(void)
     }
 }
 
-void BigSqueeze_Unknown6(void)
+void BigSqueeze_HandleBossMovement(void)
 {
     RSDK_THIS(BigSqueeze);
-    if (BigSqueeze->value6 < 10)
+    if (BigSqueeze->crushTimer < 10)
         self->position.x += self->velocity.x;
 
     foreach_active(BigSqueeze, boss)
@@ -281,7 +281,7 @@ void BigSqueeze_Draw_Crusher(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void BigSqueeze_State1_SetupIntro(void)
+void BigSqueeze_StateManager_SetupIntro(void)
 {
     RSDK_THIS(BigSqueeze);
     if (++self->setupTimer >= 8) {
@@ -297,11 +297,11 @@ void BigSqueeze_State1_SetupIntro(void)
         Zone->playerBoundActiveR[0] = true;
         Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XCENTER;
         Zone->cameraBoundsR[0]      = (self->position.x >> 16) + 308;
-        self->state                 = BigSqueeze_State1_SetupEggman;
+        self->state                 = BigSqueeze_StateManager_SetupEggman;
     }
 }
 
-void BigSqueeze_State1_SetupEggman(void)
+void BigSqueeze_StateManager_SetupEggman(void)
 {
     RSDK_THIS(BigSqueeze);
     if (self->setupTimer) {
@@ -311,7 +311,7 @@ void BigSqueeze_State1_SetupEggman(void)
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 5, &eggmanPtr->animator, true, 0);
         if (self->setupTimer == 120) {
             self->setupTimer      = 0;
-            self->state           = BigSqueeze_State1_SetupArena;
+            self->state           = BigSqueeze_StateManager_SetupArena;
             eggmanPtr->onGround   = false;
             eggmanPtr->velocity.x = -0x10000;
             eggmanPtr->velocity.y = -0x40000;
@@ -336,7 +336,7 @@ void BigSqueeze_State1_SetupEggman(void)
     }
 }
 
-void BigSqueeze_State1_SetupArena(void)
+void BigSqueeze_StateManager_SetupArena(void)
 {
     RSDK_THIS(BigSqueeze);
     EntityEggman *eggman = (EntityEggman *)self->eggman;
@@ -347,14 +347,14 @@ void BigSqueeze_State1_SetupArena(void)
         Zone->cameraBoundsB[0] = 1792;
         Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
 
-        BigSqueeze->value7 = (Zone->cameraBoundsB[0] - 16) << 16;
+        BigSqueeze->boundB = (Zone->cameraBoundsB[0] - 16) << 16;
         eggman->state      = Eggman_State_ProcessThenSet;
         eggman->animID     = 0;
-        self->state        = BigSqueeze_State1_SetupBoss;
+        self->state        = BigSqueeze_StateManager_SetupBoss;
     }
 }
 
-void BigSqueeze_State1_SetupBoss(void)
+void BigSqueeze_StateManager_SetupBoss(void)
 {
     RSDK_THIS(BigSqueeze);
     if (++self->setupTimer == 48) {
@@ -365,7 +365,7 @@ void BigSqueeze_State1_SetupBoss(void)
                     
                 case BIGSQUEEZE_BOSS:
                     boss->invincible = true;
-                    boss->state      = BigSqueeze_State2_Unknown1;
+                    boss->state      = BigSqueeze_StateBoss_Idle;
                     boss->velocity.x = -0x10000;
                     break;
                     
@@ -382,26 +382,26 @@ void BigSqueeze_State1_SetupBoss(void)
                     break;
             }
         }
-        self->state = BigSqueeze_State1_Unknown5;
+        self->state = BigSqueeze_StateManager_HandleBoss;
     }
 }
 
-void BigSqueeze_State2_Unknown1(void)
+void BigSqueeze_StateBoss_Idle(void)
 {
     RSDK_THIS(BigSqueeze);
 
     if (self->setupTimer > 30)
-        BigSqueeze_Unknown6();
+        BigSqueeze_HandleBossMovement();
     if (++self->setupTimer == 180) {
         self->invincible = false;
         self->setupTimer = 0;
         RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 5, &self->electricAnimator, true, 0);
-        self->state = BigSqueeze_State2_Unknown2;
+        self->state = BigSqueeze_StateBoss_Electrified;
     }
-    BigSqueeze_CheckPlayerCollisions();
+    BigSqueeze_CheckPlayerCollisions_Vulnerable();
 }
 
-void BigSqueeze_State2_Unknown2(void)
+void BigSqueeze_StateBoss_Electrified(void)
 {
     RSDK_THIS(BigSqueeze);
 
@@ -419,23 +419,22 @@ void BigSqueeze_State2_Unknown2(void)
         self->setupTimer = 0;
         RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 2, &self->domeAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, true, 0);
-        self->state = BigSqueeze_State2_Unknown1;
+        self->state = BigSqueeze_StateBoss_Idle;
     }
     if (!(Zone->timer & 0xF))
         RSDK.PlaySfx(BigSqueeze->sfxMagnet, false, 255);
-    BigSqueeze_CheckPlayerCollisions2();
+    BigSqueeze_CheckPlayerCollisions_Electrified();
 }
 
-void BigSqueeze_State2_Die(void)
+void BigSqueeze_StateBoss_Destroyed(void)
 {
     RSDK_THIS(BigSqueeze);
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(BigSqueeze->sfxExplosion2, false, 255);
         if (Zone->timer & 4) {
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
-                          (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x,
-                          (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y)
-                ->drawOrder = Zone->drawOrderHigh;
+            int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
+            int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
         }
     }
 
@@ -459,7 +458,7 @@ void BigSqueeze_State2_Die(void)
                 Music_TransitionTrack(TRACK_STAGE, 0.0125);
                 self->setupTimer = 0;
                 self->visible    = false;
-                self->state      = BigSqueeze_State2_SpawnSignPost;
+                self->state      = BigSqueeze_StateBoss_SpawnSignPost;
                 foreach_active(FBZTrash, trash)
                 {
                     if (trash->state != FBZTrash_State_LooseTrash) {
@@ -476,10 +475,10 @@ void BigSqueeze_State2_Die(void)
     }
 }
 
-void BigSqueeze_State2_SpawnSignPost(void)
+void BigSqueeze_StateBoss_SpawnSignPost(void)
 {
     RSDK_THIS(BigSqueeze);
-    BigSqueeze->isRumbling = false;
+    BigSqueeze->isCrushing = false;
     if (++self->setupTimer == 48) {
         foreach_all(SignPost, signPost)
         {
@@ -493,16 +492,16 @@ void BigSqueeze_State2_SpawnSignPost(void)
     }
 }
 
-void BigSqueeze_StateManager_Outro(void)
+void BigSqueeze_StateManager_HandleOutro(void)
 {
     RSDK_THIS(BigSqueeze);
-    self->position.y = BigSqueeze->value7;
+    self->position.y = BigSqueeze->boundB;
 }
 
-void BigSqueeze_State1_Unknown5(void)
+void BigSqueeze_StateManager_HandleBoss(void)
 {
     RSDK_THIS(BigSqueeze);
-    self->position.y = BigSqueeze->value7;
+    self->position.y = BigSqueeze->boundB;
 
     foreach_active(Player, player)
     {
@@ -524,8 +523,8 @@ void BigSqueeze_State1_Unknown5(void)
 
     foreach_active(FBZSinkTrash, sinkTrash)
     {
-        sinkTrash->position.y = BigSqueeze->value7 + (sinkTrash->size.y >> 1);
-        sinkTrash->size.x     = BigSqueeze->value4[3] - BigSqueeze->value4[2];
+        sinkTrash->position.y = BigSqueeze->boundB + (sinkTrash->size.y >> 1);
+        sinkTrash->size.x     = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L];
     }
 }
 
@@ -533,18 +532,17 @@ void BigSqueeze_StateCrusher_BeginCrushing(void)
 {
     RSDK_THIS(BigSqueeze);
     BigSqueeze_HandleWallCollisions();
-    BigSqueeze->value4[self->type] = self->position.x;
+    BigSqueeze->crusherX[self->type] = self->position.x;
     if (++self->setupTimer == 8) {
-        BigSqueeze->isRumbling = false;
+        BigSqueeze->isCrushing = false;
     }
 
     if (self->setupTimer == 300) {
         self->setupTimer       = 0;
         self->state            = BigSqueeze_StateCrusher_Crushing;
-        BigSqueeze->isRumbling = true;
-        if (self->velocity.x > 0) {
-            ++BigSqueeze->value6;
-        }
+        BigSqueeze->isCrushing = true;
+        if (self->velocity.x > 0)
+            ++BigSqueeze->crushTimer;
     }
 }
 
@@ -553,16 +551,16 @@ void BigSqueeze_StateCrusher_Crushing(void)
     RSDK_THIS(BigSqueeze);
     BigSqueeze_HandleWallCollisions();
     self->position.x += self->velocity.x;
-    BigSqueeze->value4[self->type] = self->position.x;
+    BigSqueeze->crusherX[self->type] = self->position.x;
 
     if (!(Zone->timer & 3))
         Camera_ShakeScreen(0, 0, 4);
     if (self->type == BIGSQUEEZE_CRUSHER_L) {
-        BigSqueeze->value7 -= 0x4000;
+        BigSqueeze->boundB -= 0x4000;
     }
 
     if (++self->setupTimer == 32) {
-        if (BigSqueeze->value6 < 10) {
+        if (BigSqueeze->crushTimer < 10) {
             self->setupTimer = 0;
             self->state      = BigSqueeze_StateCrusher_BeginCrushing;
         }

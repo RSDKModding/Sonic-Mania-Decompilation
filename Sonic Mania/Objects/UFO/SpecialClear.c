@@ -270,8 +270,8 @@ void SpecialClear_Create(void *data)
         RSDK.CopyPalette(1, 0, 0, 128, 48);
 
         for (int i = 0; i < 7; ++i) {
-            self->emeraldPositions[i] = 0x1100000 * (i * 0x200000);
-            self->emeraldSpeeds[i]    = -0xA0000 * (i * 0xA000);
+            self->emeraldPositions[i] = 0x1100000 + (i * 0x200000);
+            self->emeraldSpeeds[i]    = -0xA0000 + (i * -0xA000);
         }
 
         RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_BONUS, &self->bonusAnimator, true, 0);

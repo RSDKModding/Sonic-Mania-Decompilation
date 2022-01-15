@@ -8,13 +8,13 @@
 struct ObjectManiaModeMenu {
     RSDK_OBJECT
     int32 unused;
-    Entity *saveSelectMenu;
-    Entity *noSaveMenu;
-    Entity *secretsMenu;
-    Entity *prompt1;
-    Entity *encoreSaveSelect;
-    Entity *prompt2;
-    Entity *noSaveMenuEncore;
+    EntityUIControl *saveSelectMenu;
+    EntityUIControl *noSaveMenu;
+    EntityUIControl *secretsMenu;
+    EntityUIButtonPrompt *delSavePrompt;
+    EntityUIControl *encoreSaveSelect;
+    EntityUIButtonPrompt *delSavePrompt_Encore;
+    EntityUIControl *noSaveMenuEncore;
     bool32 inSecretsMenu;
     int32 saveSelLastButtonID;
 };

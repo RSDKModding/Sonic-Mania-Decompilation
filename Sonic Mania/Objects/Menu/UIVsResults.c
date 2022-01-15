@@ -49,7 +49,7 @@ void UIVsResults_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
     self->characterID   = self->playerID;
-    self->state         = UIVsResults_Unknown7;
+    self->state         = UIVsResults_State_Blank;
     UIVsResults_SetupSprites();
     self->textFrames = UIWidgets->textFrames;
 
@@ -225,7 +225,7 @@ void UIVsResults_DrawResults(void)
     UIVsResults_DrawTrophies();
 }
 
-void UIVsResults_Unknown7(void) {}
+void UIVsResults_State_Blank(void) {}
 
 #if RETRO_INCLUDE_EDITOR
 void UIVsResults_EditorDraw(void)

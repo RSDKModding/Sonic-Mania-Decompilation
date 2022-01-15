@@ -54,7 +54,7 @@ void MainMenu_Initialize(void)
     {
         RSDK.PrependText(&text, "Main Menu");
         if (RSDK.StringCompare(&text, &control->tag, false)) {
-            MainMenu->menuControlPtr = (Entity *)control;
+            MainMenu->menuControlPtr = control;
             control->backPressCB     = MainMenu_ReturnToTitleOption;
         }
     }
@@ -71,7 +71,7 @@ void MainMenu_Initialize(void)
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, prompt->position.x, prompt->position.y) && !prompt->buttonID)
-            MainMenu->promptPtr = (Entity *)prompt;
+            MainMenu->promptPtr = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
@@ -84,7 +84,7 @@ void MainMenu_Initialize(void)
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, diorama->position.x, diorama->position.y)) {
-            MainMenu->dioramaPtr = (Entity *)diorama;
+            MainMenu->dioramaPtr = diorama;
             diorama->parent      = MainMenu->menuControlPtr;
         }
     }
@@ -177,7 +177,7 @@ void MainMenu_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
-                EntityUIControl *saveSelect = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
+                EntityUIControl *saveSelect = ManiaModeMenu->saveSelectMenu;
                 saveSelect->buttonID        = 7;
 #if RETRO_USE_PLUS
                 saveSelect->menuWasSetup           = false;
@@ -194,13 +194,13 @@ void MainMenu_MenuButton_ActionCB(void)
             break;
         case 1:
             if (API.CheckDLC(DLC_PLUS)) {
-                EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
+                EntityUIControl *control = TimeAttackMenu->timeAttackControl;
                 control->buttonID        = 0;
                 control->menuWasSetup    = false;
                 UIControl_MatchMenuTag("Time Attack");
             }
             else {
-                EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
+                EntityUIControl *control = TimeAttackMenu->timeAttackControl_Legacy;
                 control->buttonID        = 0;
                 control->menuWasSetup    = false;
                 UIControl_MatchMenuTag("Time Attack Legacy");
@@ -219,7 +219,7 @@ void MainMenu_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("No Save Encore");
             }
             else {
-                EntityUIControl *encoreSaveSel = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
+                EntityUIControl *encoreSaveSel = ManiaModeMenu->encoreSaveSelect;
                 encoreSaveSel->buttonID        = 1;
                 encoreSaveSel->menuWasSetup    = false;
                 for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {

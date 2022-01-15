@@ -72,14 +72,14 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
             player->position.y   = glider->position.y;
             player->active       = ACTIVE_NEVER;
             glider->active       = ACTIVE_NORMAL;
-            glider->playerPtr    = (Entity *)player;
+            glider->playerPtr    = player;
             glider->velocity.x   = 0x40000;
             glider->velocity.y   = -0x20000;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->playerAnimator, true, 0);
             glider->playerAnimator.rotationFlag = 1;
             glider->rotation                    = 128;
             glider->drawFX                      = FX_ROTATE;
-            glider->state                       = HangGlider_Unknown2;
+            glider->state                       = HangGlider_State_Glide;
 
             EntityCamera *camera = player->camera;
             if (camera) {

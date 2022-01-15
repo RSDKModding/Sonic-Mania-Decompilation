@@ -14,7 +14,7 @@ void UIDiorama_Update(void)
 {
     RSDK_THIS(UIDiorama);
 
-    Entity *parent = self->parent;
+    EntityUIControl *parent = self->parent;
     if (parent) {
         if (parent->active != ACTIVE_ALWAYS)
             self->timer = 2;

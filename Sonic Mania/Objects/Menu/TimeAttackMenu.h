@@ -7,20 +7,20 @@
 // Object Class
 struct ObjectTimeAttackMenu {
     RSDK_OBJECT
-    Entity *timeAttackControl;
-    Entity *timeAttackControl_Legacy;
-    Entity *taZoneSelControl;
-    Entity *switchModePrompt;
-    Entity *taDetailsControl;
-    Entity *detailsBanner;
-    Entity *leaderboardsControl;
-    Entity *leaderboard;
-    Entity *topRankPrompt;
-    Entity *leaderboardsBanner;
-    Entity *replaysControl;
-    Entity *replayCarousel;
-    Entity *replayPrompt;
-    Entity *connectingDlg;
+    EntityUIControl *timeAttackControl;
+    EntityUIControl *timeAttackControl_Legacy;
+    EntityUIControl *taZoneSelControl;
+    EntityUIButtonPrompt *switchModePrompt;
+    EntityUIControl *taDetailsControl;
+    EntityUITABanner *detailsBanner;
+    EntityUIControl *leaderboardsControl;
+    EntityUILeaderboard *leaderboard;
+    EntityUIButtonPrompt *topRankPrompt;
+    EntityUITABanner *leaderboardsBanner;
+    EntityUIControl *replaysControl;
+    EntityUIReplayCarousel *replayCarousel;
+    EntityUIButtonPrompt *replayPrompt;
+    EntityUIDialog *connectingDlg;
     bool32 encoreMode;
     bool32 prevIsUser;
     int32 isUser;

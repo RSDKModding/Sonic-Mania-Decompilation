@@ -98,7 +98,7 @@ bool32 LRZ1Outro_CutsceneAct2_Unknown1(EntityCutsceneSeq *host)
 
     self->timer = 256;
     RSDK.SetLimitedFade(0, 1, 5, 256, 128, 256);
-    LRZ2Setup->palTimer2 = 0;
+    LRZ2Setup->conveyorPalTimer = 0;
     return true;
 }
 
@@ -213,7 +213,7 @@ bool32 LRZ1Outro_CutsceneAct2_Unknown2(EntityCutsceneSeq *host)
         if (self->timer > 0)
             self->timer -= 2;
         RSDK.SetLimitedFade(0, 1, 5, self->timer, 128, 256);
-        LRZ2Setup->palTimer2 = 0;
+        LRZ2Setup->conveyorPalTimer = 0;
     }
     else {
         foreach_active(Player, player)

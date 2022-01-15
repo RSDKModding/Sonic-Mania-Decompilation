@@ -37,7 +37,7 @@ struct ObjectUIWidgets {
 // Entity Class
 struct EntityUIWidgets {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
 };
 
 // Object Struct

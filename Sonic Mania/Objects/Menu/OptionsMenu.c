@@ -33,55 +33,55 @@ void OptionsMenu_Initialize(void)
     {
         RSDK.PrependText(&info, "Options");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->optionsControl = (Entity *)control;
+            OptionsMenu->optionsControl = control;
         RSDK.PrependText(&info, "Language");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->languageControl = (Entity *)control;
+            OptionsMenu->languageControl = control;
         RSDK.PrependText(&info, "Language Old");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->languageControl_Legacy = (Entity *)control;
+            OptionsMenu->languageControl_Legacy = control;
         RSDK.PrependText(&info, "Video");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->videoControl = (Entity *)control;
+            OptionsMenu->videoControl = control;
         RSDK.PrependText(&info, "Video WIN");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->videoControl_Windows = (Entity *)control;
+            OptionsMenu->videoControl_Windows = control;
         RSDK.PrependText(&info, "Sound");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->soundControl = (Entity *)control;
+            OptionsMenu->soundControl = control;
         RSDK.PrependText(&info, "Controls WIN");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_Windows = (Entity *)control;
+            OptionsMenu->controlsControl_Windows = control;
         RSDK.PrependText(&info, "Controls KB");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_KB = (Entity *)control;
+            OptionsMenu->controlsControl_KB = control;
         RSDK.PrependText(&info, "Controls PS4");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_PS4 = (Entity *)control;
+            OptionsMenu->controlsControl_PS4 = control;
         RSDK.PrependText(&info, "Controls XB1");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_XB1 = (Entity *)control;
+            OptionsMenu->controlsControl_XB1 = control;
         RSDK.PrependText(&info, "Controls NX");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_NX = (Entity *)control;
+            OptionsMenu->controlsControl_NX = control;
         RSDK.PrependText(&info, "Controls NX Grip");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_NXGrip = (Entity *)control;
+            OptionsMenu->controlsControl_NXGrip = control;
         RSDK.PrependText(&info, "Controls NX Joycon");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_NXJoycon = (Entity *)control;
+            OptionsMenu->controlsControl_NXJoycon = control;
         RSDK.PrependText(&info, "Controls NX Pro");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->controlsControl_NXPro = (Entity *)control;
+            OptionsMenu->controlsControl_NXPro = control;
         RSDK.PrependText(&info, "Data Options");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            OptionsMenu->dataOptionsControl = (Entity *)control;
+            OptionsMenu->dataOptionsControl = control;
     }
 
     Hitbox hitbox;
     foreach_all(UIButtonPrompt, prompt)
     {
-        EntityUIControl *control = (EntityUIControl *)OptionsMenu->optionsControl;
+        EntityUIControl *control = OptionsMenu->optionsControl;
 
         hitbox.right  = control->size.x >> 17;
         hitbox.left   = -(control->size.x >> 17);
@@ -90,12 +90,12 @@ void OptionsMenu_Initialize(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
                                       &hitbox, prompt->position.x, prompt->position.y)
             && prompt->buttonID == 3)
-            OptionsMenu->prompt = (Entity *)prompt;
+            OptionsMenu->prompt = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
     {
-        EntityUIControl *control = (EntityUIControl *)OptionsMenu->videoControl;
+        EntityUIControl *control = OptionsMenu->videoControl;
 
         hitbox.right  = control->size.x >> 17;
         hitbox.left   = -(control->size.x >> 17);
@@ -103,14 +103,14 @@ void OptionsMenu_Initialize(void)
         hitbox.top    = -(control->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
                                       &hitbox, diorama->position.x, diorama->position.y)) {
-            OptionsMenu->diorama = (Entity *)diorama;
-            diorama->parent      = (Entity *)OptionsMenu->videoControl;
+            OptionsMenu->diorama = diorama;
+            diorama->parent      = OptionsMenu->videoControl;
         }
     }
 
     foreach_all(UIInfoLabel, label)
     {
-        EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+        EntityUIControl *control = OptionsMenu->dataOptionsControl;
 
         hitbox.right  = control->size.x >> 17;
         hitbox.left   = -(control->size.x >> 17);
@@ -118,38 +118,38 @@ void OptionsMenu_Initialize(void)
         hitbox.top    = -(control->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
                                       &hitbox, label->position.x, label->position.y))
-            OptionsMenu->label = (Entity *)label;
+            OptionsMenu->label = label;
     }
 }
 
 void OptionsMenu_HandleUnlocks(void)
 {
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+    EntityUIControl *control = OptionsMenu->dataOptionsControl;
 
-    control->buttons[5]   = control->buttons[4];
+    control->buttons[5]  = control->buttons[4];
     control->buttonCount = 6;
     if (!API.CheckDLC(DLC_PLUS)) {
         EntityUIButton *button = control->buttons[2];
         button->invisible      = true;
         button->visible        = false;
 
-        button               = control->buttons[3];
+        button              = control->buttons[3];
         control->buttons[2] = button;
-        button->position.x   = control->buttons[4]->position.x;
-        button->size.x       = control->buttons[4]->size.x;
+        button->position.x  = control->buttons[4]->position.x;
+        button->size.x      = control->buttons[4]->size.x;
     }
 }
 
 void OptionsMenu_SetupActions(void)
 {
-    EntityUIControl *optionsControl      = (EntityUIControl *)OptionsMenu->optionsControl;
-    EntityUIControl *languageControl     = (EntityUIControl *)OptionsMenu->languageControl;
-    EntityUIControl *languageControl_old = (EntityUIControl *)OptionsMenu->languageControl_Legacy;
-    EntityUIControl *videoControl        = (EntityUIControl *)OptionsMenu->videoControl;
-    EntityUIControl *controlsControl_Win = (EntityUIControl *)OptionsMenu->controlsControl_Windows;
-    EntityUIControl *videoControl_Win    = (EntityUIControl *)OptionsMenu->videoControl_Windows;
-    EntityUIControl *soundControl        = (EntityUIControl *)OptionsMenu->soundControl;
-    EntityUIControl *dataControl         = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+    EntityUIControl *optionsControl      = OptionsMenu->optionsControl;
+    EntityUIControl *languageControl     = OptionsMenu->languageControl;
+    EntityUIControl *languageControl_old = OptionsMenu->languageControl_Legacy;
+    EntityUIControl *videoControl        = OptionsMenu->videoControl;
+    EntityUIControl *controlsControl_Win = OptionsMenu->controlsControl_Windows;
+    EntityUIControl *videoControl_Win    = OptionsMenu->videoControl_Windows;
+    EntityUIControl *soundControl        = OptionsMenu->soundControl;
+    EntityUIControl *dataControl         = OptionsMenu->dataOptionsControl;
 
     Hitbox hitbox;
     TextInfo info;
@@ -157,8 +157,8 @@ void OptionsMenu_SetupActions(void)
 
     foreach_all(UIButton, button)
     {
-        int32 posX      = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
-        int32 posY      = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
+        int32 posX    = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
+        int32 posY    = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
         hitbox.right  = controlsControl_Win->size.x >> 17;
         hitbox.left   = -(controlsControl_Win->size.x >> 17);
         hitbox.bottom = controlsControl_Win->size.y >> 17;
@@ -315,9 +315,9 @@ void OptionsMenu_SetupActions(void)
     Localization_GetString(&info, STR_SELECTDATATOERASE);
     UIInfoLabel_SetString(label, &info);
 
-    videoControl_Win->menuUpdateCB     = OptionsMenu_VideoControl_Win_MenuUpdateCB;
-    videoControl_Win->yPressCB         = OptionsMenu_VideoControl_Win_YPressCB;
-    videoControl_Win->backPressCB      = OptionsMenu_VideoControl_Win_BackPressCB;
+    videoControl_Win->menuUpdateCB = OptionsMenu_VideoControl_Win_MenuUpdateCB;
+    videoControl_Win->yPressCB     = OptionsMenu_VideoControl_Win_YPressCB;
+    videoControl_Win->backPressCB  = OptionsMenu_VideoControl_Win_BackPressCB;
 
     if (sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
         optionsControl->yPressCB = OptionsMenu_ShowManual;
@@ -330,10 +330,10 @@ void OptionsMenu_SetupActions(void)
 
 void OptionsMenu_HandleMenuReturn(void)
 {
-    EntityUIControl *languageControl     = (EntityUIControl *)OptionsMenu->languageControl;
-    EntityUIControl *languageControl_old = (EntityUIControl *)OptionsMenu->languageControl_Legacy;
-    EntityUIControl *videoControl        = (EntityUIControl *)OptionsMenu->videoControl;
-    EntityUIControl *soundControl        = (EntityUIControl *)OptionsMenu->soundControl;
+    EntityUIControl *languageControl     = OptionsMenu->languageControl;
+    EntityUIControl *languageControl_old = OptionsMenu->languageControl_Legacy;
+    EntityUIControl *videoControl        = OptionsMenu->videoControl;
+    EntityUIControl *soundControl        = OptionsMenu->soundControl;
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
         OptionsMenu_InitVideoOptionsMenu();
@@ -344,19 +344,19 @@ void OptionsMenu_HandleMenuReturn(void)
     EntityUISlider *slider = (EntityUISlider *)soundControl->buttons[0];
     slider->sliderPos      = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
 
-    slider = (EntityUISlider *)soundControl->buttons[1];
-    slider->sliderPos     = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
+    slider            = (EntityUISlider *)soundControl->buttons[1];
+    slider->sliderPos = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
 
-    languageControl->startingID     = Localization->language;
-    languageControl->buttonID = Localization->language;
+    languageControl->startingID = Localization->language;
+    languageControl->buttonID   = Localization->language;
 
-    languageControl_old->startingID     = Localization->language;
-    languageControl_old->buttonID = Localization->language;
+    languageControl_old->startingID = Localization->language;
+    languageControl_old->buttonID   = Localization->language;
 }
 void OptionsMenu_InitVideoOptionsMenu(void)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
-        EntityUIControl *videoControl_Win = (EntityUIControl *)OptionsMenu->videoControl_Windows;
+        EntityUIControl *videoControl_Win = OptionsMenu->videoControl_Windows;
         EntityOptions *options            = (EntityOptions *)globals->optionsRAM;
         Options_GetWinSize();
 
@@ -378,7 +378,7 @@ void OptionsMenu_InitVideoOptionsMenu(void)
             EntityUIButton *button = videoControl_Win->buttons[i];
 
             if (i == 4) {
-                EntityUIResPicker *child = (EntityUIResPicker*)UIButton_GetChoicePtr(button, button->selection);
+                EntityUIResPicker *child = (EntityUIResPicker *)UIButton_GetChoicePtr(button, button->selection);
                 UIResPicker_GetDisplayInfo(child);
             }
             else if (i == 1) {
@@ -424,7 +424,7 @@ bool32 OptionsMenu_VideoControl_Win_BackPressCB(void)
         Localization_GetString(&info, STR_APPLYCHANGEDSETTINGS);
         UIDialog_CreateDialogYesNo(&info, OptionsMenu_ApplyChangesDlg_YesCB, OptionsMenu_ApplyChangesDlg_BackPress_NoCB, true, true);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-        if (dialog) 
+        if (dialog)
             return true;
     }
     else {
@@ -491,7 +491,7 @@ void OptionsMenu_ControlsMenuButton_Default_ActionCB(void) { UIControl_MatchMenu
 
 void OptionsMenu_ControlsMenuButton_ActionCB(void)
 {
-    int32 id   = RSDK.MostRecentActiveControllerID(1, 0, 5);
+    int32 id          = RSDK.MostRecentActiveControllerID(1, 0, 5);
     int32 gamepadType = RSDK.GetControllerType(id);
 
     TextInfo info;
@@ -552,7 +552,7 @@ void OptionsMenu_SetDefaultMappings(void)
 
 void OptionsMenu_SetupKBControlsMenu(int32 playerID)
 {
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_KB;
+    EntityUIControl *control = OptionsMenu->controlsControl_KB;
     foreach_all(UISubHeading, subHeading)
     {
         Hitbox hitbox;
@@ -571,14 +571,14 @@ void OptionsMenu_SetupKBControlsMenu(int32 playerID)
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
         if (binder->objectID == UIKeyBinder->objectID)
-           binder->inputID = playerID;
+            binder->inputID = playerID;
     }
 }
 
 void OptionsMenu_KeyboardIDButton_Win_ActionCB(void)
 {
     RSDK_THIS(UIButton);
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_Windows;
+    EntityUIControl *control = OptionsMenu->controlsControl_Windows;
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         if (self == control->buttons[i]) {
@@ -595,8 +595,8 @@ void OptionsMenu_MenuSetupCB(void)
         Options_SaveOptionsBin(OptionsMenu_SaveOptionsCB_Load);
     }
 
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->optionsControl;
-    EntityUIButton *eraseDataButton   = control->buttons[4];
+    EntityUIControl *control        = OptionsMenu->optionsControl;
+    EntityUIButton *eraseDataButton = control->buttons[4];
     if (eraseDataButton) {
         eraseDataButton->disabled = checkNoSave;
     }
@@ -615,7 +615,7 @@ void OptionsMenu_SaveOptionsCB_Action(bool32 success)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     UIWaitSpinner_FinishWait();
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->languageControl;
+    EntityUIControl *control = OptionsMenu->languageControl;
     control->startingID      = control->buttonID;
 
     TimeAttackData_Clear();
@@ -626,7 +626,7 @@ void OptionsMenu_SaveOptionsCB_Action(bool32 success)
 void OptionsMenu_LanguageButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
-    EntityUIControl *control = (EntityUIControl *)self->parent;
+    EntityUIControl *control = (EntityUIControl*)self->parent;
     Options_SetLanguage(control->buttonID);
     Localization->language     = control->buttonID;
     control->selectionDisabled = true;
@@ -638,8 +638,8 @@ void OptionsMenu_ShaderButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
-    options->screenShader = self->selection;
-    options->overrideShader       = true;
+    options->screenShader   = self->selection;
+    options->overrideShader = true;
     RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
     Options->changed = true;
@@ -662,7 +662,7 @@ void OptionsMenu_WindowScaleButton_ActionCB(void)
 void OptionsMenu_BorderlessButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
-    EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
     options->windowBorder = self->selection;
     RSDK.SetSettingsValue(SETTINGS_BORDERED, self->selection);
@@ -755,7 +755,7 @@ void OptionsMenu_ShowManual(void)
 void OptionsMenu_EraseSaveDataCB(bool32 success)
 {
     TextInfo message;
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+    EntityUIControl *control = OptionsMenu->dataOptionsControl;
 
     UIWaitSpinner_FinishWait();
     if (success) {
@@ -830,7 +830,7 @@ void OptionsMenu_EraseSaveGameButton_ActionCB(void)
 
 void OptionsMenu_AreYouSureDlg_YesCB_EraseMedallions(void)
 {
-    EntityUIControl *control   = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+    EntityUIControl *control   = OptionsMenu->dataOptionsControl;
     control->selectionDisabled = true;
     GameProgress_ClearBSSSave();
     SaveGame_SaveFile(OptionsMenu_EraseSaveDataCB);
@@ -847,7 +847,7 @@ void OptionsMenu_EraseMedallionsButton_ActionCB(void)
 
 void OptionsMenu_AreYouSureDlg_YesCB_EraseTimeAttack(void)
 {
-    EntityUIControl *control   = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+    EntityUIControl *control   = OptionsMenu->dataOptionsControl;
     control->selectionDisabled = true;
     UIWaitSpinner_StartWait();
     API.RemoveAllDBRows(globals->taTableID);
@@ -866,7 +866,7 @@ void OptionsMenu_EraseTimeAttackButton_ActionCB(void)
 
 void OptionsMenu_AreYouSureDlg_YesCB_EraseReplays(void)
 {
-    EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
+    EntityUIControl *control = OptionsMenu->dataOptionsControl;
 
     if (!control->selectionDisabled) {
         control->selectionDisabled = true;

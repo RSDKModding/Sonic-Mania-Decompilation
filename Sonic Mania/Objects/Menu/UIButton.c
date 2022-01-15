@@ -12,11 +12,11 @@ ObjectUIButton *UIButton;
 void UIButton_Update(void)
 {
     RSDK_THIS(UIButton);
-    self->touchPosStart.x = self->size.x;
-    self->touchPosEnd.x   = 0;
-    self->touchPosEnd.y   = 0;
-    self->touchPosStart.x += 3 * self->size.y;
-    self->touchPosStart.y = self->size.y + 0x60000;
+    self->touchPosSizeS.x   = self->size.x;
+    self->touchPosOffsetS.x = 0;
+    self->touchPosOffsetS.y = 0;
+    self->touchPosSizeS.x += 3 * self->size.y;
+    self->touchPosSizeS.y = self->size.y + 0x60000;
     if (self->textFrames != UIWidgets->textFrames || self->startListID != self->listID || self->startFrameID != self->frameID
         || self->isDisabled != self->disabled) {
         if (self->disabled)
@@ -96,7 +96,7 @@ void UIButton_Create(void *data)
         self->bgEdgeSize         = self->size.y >> 16;
         self->size.y             = abs(self->size.y);
         self->processButtonCB    = UIButton_ProcessButtonCB;
-        self->touchCB            = UIButton_ProcessTouchCB;
+        self->touchCB            = UIButton_ProcessTouchCB_Single;
         self->selectedCB         = UIButton_SelectedCB;
         self->failCB             = UIButton_FailCB;
         self->buttonEnterCB      = UIButton_ButtonEnterCB;
@@ -255,26 +255,22 @@ void UIButton_ProcessButtonCB_Scroll(void)
 
 #if RETRO_USE_PLUS
     UIControl_SetTargetPos(control, self->position.x, self->position.y);
-#else 
+#else
     control->targetPos.y = self->position.y;
 #endif
 
     if (!UIControl_isMoving(control)) {
         int32 rowID = 0;
         int32 colID = 0;
-        if (control->rowCount && control->columnCount) {
+        if (control->rowCount && control->columnCount)
             rowID = control->buttonID / control->columnCount;
-        }
-        else {
+        else
             rowID = 0;
-        }
 
-        if (control->columnCount) {
+        if (control->columnCount)
             colID = control->buttonID % control->columnCount;
-        }
-        else {
+        else
             colID = 0;
-        }
 
         bool32 flag = false;
         if (control->rowCount > 1) {
@@ -341,7 +337,7 @@ void UIButton_ProcessButtonCB_Scroll(void)
             if (control->buttonID != id) {
                 control->buttonID = id;
                 StateMachine_Run(self->buttonLeaveCB);
-                RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfxBleep, false, 0xFF);
             }
         }
         else {
@@ -370,40 +366,39 @@ void UIButton_ProcessButtonCB_Scroll(void)
     }
 }
 
-bool32 UIButton_ProcessTouchCB_Alt(void)
+bool32 UIButton_ProcessTouchCB_Multi(void)
 {
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
-    bool32 touchFlag  = false;
-    int32 lastTouchID = -1;
-    uint32 lastTouch  = 0xFFFFFFFF;
+    bool32 touched       = false;
+    int32 lastTouchID    = -1;
+    uint32 lastTouchDist = 0xFFFFFFFF;
 
     for (int32 i = 0; i < self->touchPosCount; ++i) {
-        Vector2 touchPos1 = self->touchPos1[i];
-        Vector2 touchPos2 = self->touchPos2[i];
+        Vector2 touchPosSize   = self->touchPosSizeM[i];
+        Vector2 touchPosOffset = self->touchPosOffsetM[i];
 
         if (TouchInfo->count) {
             int32 screenX = ScreenInfo->position.x << 16;
             int32 screenY = ScreenInfo->position.y << 16;
             for (int32 t = 0; t < TouchInfo->count; ++t) {
-                int32 x = abs(touchPos2.x + self->position.x - (screenX - (int32)((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f)));
-                int32 y = abs(touchPos2.y + self->position.y - (screenY - (int32)((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f)));
+                int32 x  = abs(touchPosOffset.x + self->position.x - (screenX - (int32)((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f)));
+                int32 y  = abs(touchPosOffset.y + self->position.y - (screenY - (int32)((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f)));
+                int32 x1 = touchPosSize.x >> 1;
+                int32 y1 = touchPosSize.y >> 1;
 
-                int32 x2 = touchPos1.x >> 1;
-                int32 y2 = touchPos1.y >> 1;
-
-                if (x < x2 && y < y2) {
-                    touchFlag = true;
-                    if ((touchPos1.x >> 16) * (touchPos1.y >> 16) < lastTouch) {
-                        lastTouch   = (touchPos1.x >> 16) * (touchPos1.y >> 16);
-                        lastTouchID = i;
+                if (x < x1 && y < y1) {
+                    touched = true;
+                    if ((touchPosSize.x >> 16) * (touchPosSize.y >> 16) < lastTouchDist) {
+                        lastTouchDist = (touchPosSize.x >> 16) * (touchPosSize.y >> 16);
+                        lastTouchID   = i;
                     }
                 }
             }
         }
         else {
-            if (self->touchPressed && self->touchCountUnknown == i && !self->disabled) {
+            if (self->touchPressed && self->touchPosID == i && !self->disabled) {
                 if (!UIControl_isMoving(control)) {
                     StateMachine_Run(self->touchPosCallbacks[i]);
                 }
@@ -411,33 +406,32 @@ bool32 UIButton_ProcessTouchCB_Alt(void)
         }
     }
 
-    self->touchCountUnknown = lastTouchID;
-    self->touchPressed      = touchFlag;
+    self->touchPosID   = lastTouchID;
+    self->touchPressed = touched;
     return self->touchPressed;
 }
 
-bool32 UIButton_ProcessTouchCB(void)
+bool32 UIButton_ProcessTouchCB_Single(void)
 {
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
-    bool32 touchFlag = false;
+    bool32 touched = false;
     if (self->objectID != UIButton->objectID || !self->invisible) {
         if (TouchInfo->count) {
             int32 screenX = (ScreenInfo->position.x << 16);
             int32 screenY = (ScreenInfo->position.y << 16);
-            int32 sizeX   = self->touchPosStart.x >> 1;
-            int32 sizeY   = self->touchPosStart.y >> 1;
+            int32 sizeX   = self->touchPosSizeS.x >> 1;
+            int32 sizeY   = self->touchPosSizeS.y >> 1;
 
             for (int32 i = 0; i < TouchInfo->count; ++i) {
                 int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
                 int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
-                int32 touchX = abs(self->touchPosEnd.x + self->position.x - x);
-                int32 touchY = abs(self->touchPosEnd.y + self->position.y - y);
-                if (touchX < sizeX && touchY < sizeY) {
-                    touchFlag = true;
-                }
+                int32 touchX = abs(self->touchPosOffsetS.x + self->position.x - x);
+                int32 touchY = abs(self->touchPosOffsetS.y + self->position.y - y);
+                if (touchX < sizeX && touchY < sizeY)
+                    touched = true;
             }
         }
         else {
@@ -461,7 +455,7 @@ bool32 UIButton_ProcessTouchCB(void)
         }
     }
 
-    if (!touchFlag) {
+    if (!touched) {
         if (!self->touchPressed && self->checkButtonEnterCB()) {
             for (int32 i = 0; i < control->buttonCount; ++i) {
                 if (self == control->buttons[i] && control->buttonID != i) {
@@ -474,7 +468,7 @@ bool32 UIButton_ProcessTouchCB(void)
     }
 
     bool32 childTouchFlag = false;
-    self->touchPressed    = touchFlag;
+    self->touchPressed    = touched;
     if (self->objectID == UIButton->objectID && self->choiceCount > 0) {
         EntityUIButton *entPtr = UIButton_GetChoicePtr(self, self->selection);
         if (entPtr) {
@@ -519,7 +513,7 @@ void UIButton_ProcessButtonCB(void)
     }
 
     int32 selection = self->selection;
-    bool32 movedH    = 0;
+    bool32 movedH   = 0;
     if (choice && self->choiceCount == 1 && choice->processButtonCB && !self->choiceDir && !self->disabled) {
         Entity *entStore  = SceneInfo->entity;
         SceneInfo->entity = (Entity *)choice;
@@ -757,7 +751,7 @@ void UIButton_State_HandleButtonLeave(void)
     if (self->textBounceOffset) {
         int32 val = -(self->textBounceOffset / abs(self->textBounceOffset));
         self->textBounceOffset += val << 16;
-        if (val < 0 && self->textBounceOffset < 0) 
+        if (val < 0 && self->textBounceOffset < 0)
             self->textBounceOffset = 0;
         else if (val > 0 && self->textBounceOffset > 0)
             self->textBounceOffset = 0;
@@ -766,7 +760,7 @@ void UIButton_State_HandleButtonLeave(void)
     if (self->buttonBounceOffset) {
         int32 val = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
         self->buttonBounceOffset += val << 16;
-        if (val < 0 && self->buttonBounceOffset < 0) 
+        if (val < 0 && self->buttonBounceOffset < 0)
             self->buttonBounceOffset = 0;
         else if (val > 0 && self->buttonBounceOffset > 0)
             self->buttonBounceOffset = 0;

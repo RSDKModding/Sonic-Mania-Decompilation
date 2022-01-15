@@ -60,7 +60,7 @@ void LoadScene()
 #if !RETRO_REV02
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0) {
         // Reload
-        ClearUnusedStorage(DATASET_STG);
+        RSDK::ClearUnusedStorage(RSDK::DATASET_STG);
         PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[sceneInfo.listPos].name);
         return;
     }

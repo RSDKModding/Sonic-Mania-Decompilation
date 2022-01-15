@@ -13,12 +13,12 @@ void UIModeButton_Update(void)
 {
     RSDK_THIS(UIModeButton);
 
-    self->touchPosStart.y = 0x380000;
-    self->touchPosStart.x = 0x800000;
-    self->touchPosStart.x += self->touchPosStart.y;
-    self->touchPosStart.y += 0x60000;
-    self->touchPosEnd.x = 0;
-    self->touchPosEnd.y = -0x120000;
+    self->touchPosSizeS.y = 0x380000;
+    self->touchPosSizeS.x = 0x800000;
+    self->touchPosSizeS.x += self->touchPosSizeS.y;
+    self->touchPosSizeS.y += 0x60000;
+    self->touchPosOffsetS.x = 0;
+    self->touchPosOffsetS.y = -0x120000;
     if (self->textFrames != UIWidgets->textFrames || self->wasDisabled != self->disabled) {
         UIModeButton_SetupSprites();
         self->textFrames  = UIWidgets->textFrames;
@@ -84,7 +84,7 @@ void UIModeButton_Create(void *data)
         self->shadowBounceOffset = 0x280000;
         self->iconBounceOffset   = 0x280000;
         self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
-        self->touchCB            = UIButton_ProcessTouchCB;
+        self->touchCB            = UIButton_ProcessTouchCB_Single;
         self->selectedCB         = UIModeButton_SelectedCB;
         self->failCB             = UIModeButton_FailCB;
         self->buttonEnterCB      = UIModeButton_ButtonEnterCB;

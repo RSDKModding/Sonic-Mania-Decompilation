@@ -591,7 +591,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 void UISaveSlot_SetupButtonElements(void)
 {
     RSDK_THIS(UISaveSlot);
-    self->touchCB            = UIButton_ProcessTouchCB_Alt;
+    self->touchCB            = UIButton_ProcessTouchCB_Multi;
     self->selectedCB         = UISaveSlot_SelectedCB;
     self->failCB             = StateMachine_None;
     self->buttonEnterCB      = UISaveSlot_ButtonEnterCB;
@@ -605,58 +605,65 @@ void UISaveSlot_SetupButtonElements(void)
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
 #endif
     if (self->type == UISAVESLOT_NOSAVE) {
-        self->touchPos1[0].x       = 0x600000;
-        self->touchPos1[0].y       = 0x440000;
-        self->touchPos2[0].x       = 0;
-        self->touchPos2[0].y       = 0;
+        self->touchPosSizeM[0].x   = 0x600000;
+        self->touchPosSizeM[0].y   = 0x440000;
+        self->touchPosOffsetM[0].x = 0;
+        self->touchPosOffsetM[0].y = 0;
         self->touchPosCallbacks[0] = UISaveSlot_SelectedCB;
-        self->touchPos1[1].x       = 0x200000;
-        self->touchPos1[1].y       = 0x200000;
-        self->touchPos2[1].x       = 0;
-        self->touchPos2[1].y       = -0x1A0000;
+
+        self->touchPosSizeM[1].x   = 0x200000;
+        self->touchPosSizeM[1].y   = 0x200000;
+        self->touchPosOffsetM[1].x = 0;
+        self->touchPosOffsetM[1].y = -0x1A0000;
         self->touchPosCallbacks[1] = UISaveSlot_NextCharacter;
-        self->touchPos1[2].x       = 0x200000;
-        self->touchPos1[2].y       = 0x200000;
-        self->touchPos2[2].x       = 0;
-        self->touchPos2[2].y       = 0xE0000;
+
+        self->touchPosSizeM[2].x   = 0x200000;
+        self->touchPosSizeM[2].y   = 0x200000;
+        self->touchPosOffsetM[2].x = 0;
+        self->touchPosOffsetM[2].y = 0xE0000;
         self->touchPosCallbacks[2] = UISaveSlot_PrevCharacter;
-        self->touchPosCount        = 3;
+
+        self->touchPosCount = 3;
     }
     else {
-        self->touchPos1[0].x       = 0x600000;
-        self->touchPos1[0].y       = 0xA40000;
-        self->touchPos2[0].x       = 0;
-        self->touchPos2[0].y       = 0;
+        self->touchPosSizeM[0].x   = 0x600000;
+        self->touchPosSizeM[0].y   = 0xA40000;
+        self->touchPosOffsetM[0].x = 0;
+        self->touchPosOffsetM[0].y = 0;
         self->touchPosCallbacks[0] = UISaveSlot_SelectedCB;
 
         switch (saveRAM->saveState) {
             default:
             case SAVEGAME_BLANK:
-                self->touchPos1[1].x       = 0x200000;
-                self->touchPos1[1].y       = 0x200000;
-                self->touchPos2[1].x       = 0;
-                self->touchPos2[1].y       = 0;
+                self->touchPosSizeM[1].x   = 0x200000;
+                self->touchPosSizeM[1].y   = 0x200000;
+                self->touchPosOffsetM[1].x = 0;
+                self->touchPosOffsetM[1].y = 0;
                 self->touchPosCallbacks[1] = UISaveSlot_NextCharacter;
-                self->touchPos1[2].x       = 0x200000;
-                self->touchPos1[2].y       = 0x200000;
-                self->touchPos2[2].x       = 0;
-                self->touchPos2[2].y       = 0x400000;
+
+                self->touchPosSizeM[2].x   = 0x200000;
+                self->touchPosSizeM[2].y   = 0x200000;
+                self->touchPosOffsetM[2].x = 0;
+                self->touchPosOffsetM[2].y = 0x400000;
                 self->touchPosCallbacks[2] = UISaveSlot_PrevCharacter;
-                self->touchPosCount        = 3;
+
+                self->touchPosCount = 3;
                 break;
             case SAVEGAME_INPROGRESS: self->touchPosCount = 1; break;
             case SAVEGAME_COMPLETE:
-                self->touchPos1[1].x       = 0x200000;
-                self->touchPos1[1].y       = 0x200000;
-                self->touchPos2[1].y       = -0x440000;
-                self->touchPos2[1].x       = 0;
+                self->touchPosSizeM[1].x   = 0x200000;
+                self->touchPosSizeM[1].y   = 0x200000;
+                self->touchPosOffsetM[1].y = -0x440000;
+                self->touchPosOffsetM[1].x = 0;
                 self->touchPosCallbacks[1] = UISaveSlot_NextZone;
-                self->touchPos1[2].x       = 0x200000;
-                self->touchPos1[2].y       = 0x200000;
-                self->touchPos2[2].x       = 0;
-                self->touchPos2[2].y       = 0x280000 - 0x440000;
+
+                self->touchPosSizeM[2].x   = 0x200000;
+                self->touchPosSizeM[2].y   = 0x200000;
+                self->touchPosOffsetM[2].x = 0;
+                self->touchPosOffsetM[2].y = 0x280000 - 0x440000;
                 self->touchPosCallbacks[2] = UISaveSlot_PrevZone;
-                self->touchPosCount        = 3;
+
+                self->touchPosCount = 3;
                 break;
         }
     }

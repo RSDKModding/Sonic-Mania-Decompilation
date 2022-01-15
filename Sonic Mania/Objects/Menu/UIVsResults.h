@@ -83,6 +83,6 @@ void UIVsResults_DrawBG(void);
 void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY);
 void UIVsResults_DrawTrophies(void);
 void UIVsResults_DrawResults(void);
-void UIVsResults_Unknown7(void);
+void UIVsResults_State_Blank(void);
 
 #endif //!OBJ_UIVSRESULTS_H

@@ -12,10 +12,10 @@ ObjectUICharButton *UICharButton;
 void UICharButton_Update(void)
 {
     RSDK_THIS(UICharButton);
-    self->touchPosStart.x = 0x600000;
-    self->touchPosStart.y = 0x600000;
-    self->touchPosEnd.x   = 0;
-    self->touchPosEnd.y   = 0;
+    self->touchPosSizeS.x = 0x600000;
+    self->touchPosSizeS.y = 0x600000;
+    self->touchPosOffsetS.x   = 0;
+    self->touchPosOffsetS.y   = 0;
     StateMachine_Run(self->state);
 
     if (self->isSelected) {
@@ -85,7 +85,7 @@ void UICharButton_Create(void *data)
     self->updateRange.x      = 0x800000;
     self->updateRange.y      = 0x300000;
     self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
-    self->touchCB            = UIButton_ProcessTouchCB;
+    self->touchCB            = UIButton_ProcessTouchCB_Single;
     self->selectedCB         = UICharButton_SelectedCB;
     self->failCB             = StateMachine_None;
     self->buttonEnterCB      = UICharButton_ButtonEnterCB;

@@ -123,7 +123,7 @@ void ManiaModeMenu_InitLocalization(bool32 success)
 
 int32 ManiaModeMenu_GetActiveMenu(void)
 {
-    Entity *control = (Entity *)UIControl_GetUIControl();
+    EntityUIControl *control = UIControl_GetUIControl();
     if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl || control == OptionsMenu->optionsControl
         || control == OptionsMenu->videoControl || control == OptionsMenu->soundControl || control == OptionsMenu->dataOptionsControl
         || control == OptionsMenu->controlsControl_Windows || control == OptionsMenu->controlsControl_KB

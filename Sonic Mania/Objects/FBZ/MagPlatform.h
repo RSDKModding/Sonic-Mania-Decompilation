@@ -32,9 +32,9 @@ void MagPlatform_EditorLoad(void);
 void MagPlatform_Serialize(void);
 
 // Extra Entity Functions
-void MagPlatform_Unknown1(void);
-void MagPlatform_Unknown2(void);
-void MagPlatform_Unknown3(void);
-void MagPlatform_Unknown4(void);
+void MagPlatform_Collide_SolidAllHazardBottom(void);
+void MagPlatform_State_Idle(void);
+void MagPlatform_State_Rise(void);
+void MagPlatform_State_Fall(void);
 
 #endif //!OBJ_MAGPLATFORM_H

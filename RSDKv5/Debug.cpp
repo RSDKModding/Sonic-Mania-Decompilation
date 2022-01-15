@@ -312,7 +312,7 @@ void DevMenu_MainMenu()
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (GetConfirmButtonFlip())
+    if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_P1].keyB.press;
 
@@ -464,7 +464,7 @@ void DevMenu_ListSel()
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (GetConfirmButtonFlip())
+    if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_P1].keyB.press;
 
@@ -593,7 +593,7 @@ void DevMenu_SceneSel()
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (GetConfirmButtonFlip())
+    if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_P1].keyB.press;
 
@@ -689,7 +689,7 @@ void DevMenu_Options()
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (GetConfirmButtonFlip())
+    if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_P1].keyB.press;
 
@@ -892,7 +892,7 @@ void DevMenu_VideoOptions()
 #if RETRO_REV02
             if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-            if (GetConfirmButtonFlip())
+            if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
                 confirm = controller[CONT_P1].keyB.press;
 
@@ -930,7 +930,7 @@ void DevMenu_VideoOptions()
 #if RETRO_REV02
             if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-            if (GetConfirmButtonFlip())
+            if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
                 confirm = controller[CONT_P1].keyB.press;
 
@@ -1069,7 +1069,7 @@ void DevMenu_AudioOptions()
 #if RETRO_REV02
             if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-            if (GetConfirmButtonFlip())
+            if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
                 confirm = controller[CONT_P1].keyB.press;
 
@@ -1160,7 +1160,7 @@ void DevMenu_InputOptions()
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (GetConfirmButtonFlip())
+    if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_P1].keyB.press;
 
@@ -1707,7 +1707,7 @@ void DevMenu_Mods()
 #if RETRO_REV02
     if (RSDK::SKU::userCore->GetConfirmButtonFlip())
 #else
-    if (GetConfirmButtonFlip())
+    if (RSDK::SKU::GetConfirmButtonFlip())
 #endif
         confirm = controller[CONT_P1].keyB.press;
 

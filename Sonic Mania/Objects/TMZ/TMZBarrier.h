@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectTMZBarrier {
     RSDK_OBJECT
-    uint8 flags;
+    uint8 clearedBarriers;
     int32 postID;
 };
 
@@ -16,7 +16,7 @@ struct EntityTMZBarrier {
     uint8 type;
     uint8 warpTag;
     uint8 iD;
-    int32 field_5C;
+    bool32 cleared;
 };
 
 // Object Struct

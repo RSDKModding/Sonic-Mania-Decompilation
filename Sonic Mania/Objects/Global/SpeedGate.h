@@ -7,7 +7,7 @@
 struct ObjectSpeedGate {
     RSDK_OBJECT
     Hitbox hitbox;
-    int32 field_C;
+    int32 unused;
     uint16 aniFrames;
     uint16 sfxStarPost;
 };

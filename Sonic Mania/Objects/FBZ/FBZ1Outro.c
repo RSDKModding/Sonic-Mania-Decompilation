@@ -67,8 +67,8 @@ void FBZ1Outro_StartCutscene(void)
 {
     RSDK_THIS(FBZ1Outro);
 
-    CutsceneSeq_StartSequence(self, FBZ1Outro_Cutscene_Unknown1, FBZ1Outro_Cutscene_Unknown2, FBZ1Outro_Cutscene_Unknown3,
-                              FBZ1Outro_Cutscene_Unknown4, StateMachine_None);
+    CutsceneSeq_StartSequence(self, FBZ1Outro_Cutscene_CrushTrash, FBZ1Outro_Cutscene_TrashDrop, FBZ1Outro_Cutscene_CraneRide,
+                              FBZ1Outro_Cutscene_PrepareFBZ2, StateMachine_None);
 
 #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
@@ -76,7 +76,7 @@ void FBZ1Outro_StartCutscene(void)
 #endif
 }
 
-void FBZ1Outro_Unknown2(void)
+void FBZ1Outro_HandleTrash(void)
 {
     foreach_active(FBZTrash, trash) { trash->velocity.y = 0; }
     foreach_active(FBZSinkTrash, sinkTrash) { sinkTrash->velocity.y = 0; }
@@ -85,15 +85,15 @@ void FBZ1Outro_Unknown2(void)
     {
         signPost->velocity.x = 0;
         signPost->velocity.y = 0;
-        signPost->position.y = BigSqueeze->value7 - 0x180000;
+        signPost->position.y = BigSqueeze->boundB - 0x180000;
 
-        int32 dist = BigSqueeze->value4[3] - 0x180000;
-        if (signPost->position.x < BigSqueeze->value4[3] - 0x180000)
+        int32 dist = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
+        if (signPost->position.x < dist)
             dist = signPost->position.x;
 
-        if (BigSqueeze->value4[2] + 0x180000 <= dist) {
-            dist = BigSqueeze->value4[3] - 0x180000;
-            if (signPost->position.x < BigSqueeze->value4[3] - 0x180000)
+        if (BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x180000 <= dist) {
+            dist = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
+            if (signPost->position.x < dist)
                 dist = signPost->position.x;
         }
         signPost->position.x = dist;
@@ -123,7 +123,7 @@ void FBZ1Outro_DispenseTrash(void)
     }
 }
 
-bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -152,8 +152,8 @@ bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host)
         player2->nextAirState    = StateMachine_None;
     }
 
-    if (BigSqueeze->value4[3] - BigSqueeze->value4[2] <= 0xB00000) {
-        BigSqueeze->isRumbling = false;
+    if (BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] <= 0xB00000) {
+        BigSqueeze->isCrushing = false;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
         player1->state    = Player_State_Air;
         player1->onGround = false;
@@ -170,7 +170,7 @@ bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host)
         bossBorderL->state      = BigSqueeze_StateCrusher_BeginCrushing;
         bossBorderR->setupTimer = 0;
         bossBorderR->state      = BigSqueeze_StateCrusher_BeginCrushing;
-        bossManager->state      = BigSqueeze_StateManager_Outro;
+        bossManager->state      = BigSqueeze_StateManager_HandleOutro;
         Zone->cameraBoundsB[0]  = 2660;
         Zone->cameraBoundsB[1]  = 2660;
         Zone->cameraBoundsR[0]  = 14080;
@@ -180,8 +180,8 @@ bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host)
         return true;
     }
     else {
-        BigSqueeze->isRumbling = true;
-        FBZ1Outro_Unknown2();
+        BigSqueeze->isCrushing = true;
+        FBZ1Outro_HandleTrash();
         if (host->values[0])
             host->values[0] = 1;
         bossBorderL->setupTimer = 0;
@@ -191,7 +191,7 @@ bool32 FBZ1Outro_Cutscene_Unknown1(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 FBZ1Outro_Cutscene_Unknown2(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
 {
     RSDK_THIS(FBZ1Outro);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -225,7 +225,7 @@ bool32 FBZ1Outro_Cutscene_Unknown2(EntityCutsceneSeq *host)
     FBZ1Outro_DispenseTrash();
     return false;
 }
-bool32 FBZ1Outro_Cutscene_Unknown3(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -233,7 +233,7 @@ bool32 FBZ1Outro_Cutscene_Unknown3(EntityCutsceneSeq *host)
     FBZ1Outro_DispenseTrash();
     return player1->onGround && (player2->objectID != Player->objectID || player2->onGround);
 }
-bool32 FBZ1Outro_Cutscene_Unknown4(EntityCutsceneSeq *host)
+bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {

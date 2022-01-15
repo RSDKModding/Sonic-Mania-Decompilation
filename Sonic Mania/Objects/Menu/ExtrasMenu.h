@@ -7,7 +7,7 @@
 // Object Class
 struct ObjectExtrasMenu {
     RSDK_OBJECT
-    Entity *extrasControl;
+    EntityUIControl *extrasControl;
     int32 cheatCode[8];
 };
 

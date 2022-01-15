@@ -88,9 +88,10 @@ void PauseMenu_StaticUpdate(void)
                     }
 #else
                     if (API_InputIDIsDisconnected(i + 1)) {
-                        PauseMenu->controllerDisconnect = true;
-                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        pauseMenu->triggerPlayer = i;
+                        // API is broken rn, todo: fix!
+                        // PauseMenu->controllerDisconnect = true;
+                        // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        // pauseMenu->triggerPlayer = i;
                     }
 #endif
                 }

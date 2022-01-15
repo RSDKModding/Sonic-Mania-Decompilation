@@ -17,7 +17,7 @@ void Options_Create(void *data) {}
 void Options_StageLoad(void)
 {
 #if !RETRO_USE_PLUS
-    Options->state = 0;
+    Options->changed = false;
     if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_PC) {
         Options_Reload();
     }

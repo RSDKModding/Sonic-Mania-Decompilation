@@ -14,7 +14,7 @@ typedef enum {
 // Object Class
 struct ObjectFBZSetup {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     int32 frameA;
     int32 frameC;
     int32 frameD;

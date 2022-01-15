@@ -25,7 +25,7 @@ struct EntityTetherBall {
     int32 timer;
     int32 size;
     int32 swingSpeed;
-    Vector2 posUnknown;
+    Vector2 ballPos;
     EntityPlayer *playerPtr;
 };
 

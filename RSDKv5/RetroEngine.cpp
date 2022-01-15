@@ -645,7 +645,9 @@ void parseArguments(int32 argc, char *argv[])
 {
     memset(currentSceneFolder, 0, sizeof(currentSceneFolder));
     memset(currentSceneID, 0, sizeof(currentSceneID));
+#if RETRO_REV02
     sceneInfo.filter = 0;
+#endif
 
     for (int a = 0; a < argc; ++a) {
         const char *find = "";
@@ -1044,7 +1046,9 @@ void LoadGameConfig()
             strcpy(scene->name, "_RSDK_SCENE");
             strcpy(scene->folder, currentSceneFolder);
             strcpy(scene->id, currentSceneID);
+#if RETRO_REV02
             scene->filter = sceneInfo.filter;
+#endif
             GEN_HASH(scene->name, scene->hash);
 
             // Override existing values

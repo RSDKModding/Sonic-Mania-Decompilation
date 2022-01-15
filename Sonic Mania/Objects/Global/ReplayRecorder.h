@@ -147,7 +147,7 @@ void ReplayRecorder_FinishCB(void);
 void ReplayRecorder_Buffer_Move(void);
 void ReplayRecorder_SaveReplayDLG_NoCB(void);
 void ReplayRecorder_SaveReplayDLG_YesCB(void);
-void ReplayRecorder_Unknown6(void);
+void ReplayRecorder_SaveReplayDLG_CB(void);
 void ReplayRecorder_SaveReplay(void);
 void ReplayRecorder_ReplaySaveFinish_CB(bool32 success);
 void ReplayRecorder_ReplaySave_CB(bool32 success);

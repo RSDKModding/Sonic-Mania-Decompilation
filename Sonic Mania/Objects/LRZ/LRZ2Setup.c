@@ -15,71 +15,69 @@ void LRZ2Setup_LateUpdate(void) {}
 
 void LRZ2Setup_StaticUpdate(void)
 {
-    LRZ2Setup->palTimer1 += 24;
-    if (LRZ2Setup->palTimer1 > 255) {
-        LRZ2Setup->palTimer1 -= 256;
+    // Lava
+    LRZ2Setup->lavaPalTimer += 24;
+    if (LRZ2Setup->lavaPalTimer > 255) {
+        LRZ2Setup->lavaPalTimer -= 256;
         RSDK.RotatePalette(1, 224, 227, true);
         RSDK.RotatePalette(2, 224, 227, true);
         RSDK.RotatePalette(3, 224, 227, true);
         RSDK.RotatePalette(4, 224, 227, true);
     }
 
-    ++LRZ2Setup->palTimer2;
-    if (LRZ2Setup->palTimer2 == 128) {
-        LRZ2Setup->palTimer2 = 0;
-        ++LRZ2Setup->dstPal;
-        ++LRZ2Setup->srcPal;
+    // Conveyor Belt Animations
+    ++LRZ2Setup->conveyorPalTimer;
+    if (LRZ2Setup->conveyorPalTimer == 128) {
+        LRZ2Setup->conveyorPalTimer = 0;
+        ++LRZ2Setup->conveyorDstPal;
+        ++LRZ2Setup->conveyorSrcPal;
 
-        if (LRZ2Setup->dstPal > 3)
-            LRZ2Setup->dstPal = 1;
-        if (LRZ2Setup->srcPal > 3)
-            LRZ2Setup->srcPal = 1;
+        if (LRZ2Setup->conveyorDstPal > 3)
+            LRZ2Setup->conveyorDstPal = 1;
+        if (LRZ2Setup->conveyorSrcPal > 3)
+            LRZ2Setup->conveyorSrcPal = 1;
     }
 
-    RSDK.SetLimitedFade(0, LRZ2Setup->srcPal, LRZ2Setup->dstPal, (RSDK.Cos256(LRZ2Setup->palTimer2) >> 1) + 128, 160, 168);
+    RSDK.SetLimitedFade(0, LRZ2Setup->conveyorSrcPal, LRZ2Setup->conveyorDstPal, (RSDK.Cos256(LRZ2Setup->conveyorPalTimer) >> 1) + 128, 160, 168);
     if (!LRZ2Setup->conveyorOff && !(Zone->timer & 1))
         RSDK.RotatePalette(0, 228, 231, (LRZ2Setup->conveyorDir & 0xFF));
 
-    int32 cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
-    int32 blend = cos >> 3;
-    if (cos >> 3 >= 0)
-        RSDK.SetLimitedFade(5, 1, 4, cos >> 3, 224, 227);
-    else
-        RSDK.SetLimitedFade(5, 1, 3, -blend, 224, 227);
+    // Rock Hues
+    int32 blend   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
 
+    RSDK.SetLimitedFade(5, 1, 4, abs(blend >> 3), 224, 227);
     RSDK.RotatePalette(3, 224, 227, true);
     RSDK.RotatePalette(4, 224, 227, true);
-    if (blend >= 0)
-        RSDK.SetLimitedFade(6, 2, 4, blend, 224, 227);
-    else
-        RSDK.SetLimitedFade(6, 2, 3, -blend, 224, 227);
+    RSDK.SetLimitedFade(6, 2, 4, abs(blend >> 3), 224, 227);
     RSDK.RotatePalette(3, 224, 227, false);
     RSDK.RotatePalette(4, 224, 227, false);
-    RSDK.SetLimitedFade(0, 5, 6, LRZ2Setup->palTimer1, 224, 227);
+    // Apply Lava Fading
+    RSDK.SetLimitedFade(0, 5, 6, LRZ2Setup->lavaPalTimer, 224, 227);
 
+    // Tile Behaviours
     foreach_active(Player, player)
     {
         if (player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            uint8 behaviour      = 0;
+            uint8 behaviour      = LRZ2_TBEHAVE_NORMAL;
             int32 tileInfo       = 0;
 
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
                                   player->moveOffset.x, player->moveOffset.y, &behaviour);
-            if (!behaviour) {
+            if (behaviour == LRZ2_TBEHAVE_NORMAL) {
                 LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->right << 16) + player->position.x,
                                       (playerHitbox->bottom << 16) + player->position.y, player->moveOffset.x, player->moveOffset.y, &behaviour);
-                if (!behaviour) {
+                if (behaviour == LRZ2_TBEHAVE_NORMAL) {
                     LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->left << 16) + player->position.x,
                                           (playerHitbox->bottom << 16) + player->position.y, player->moveOffset.x, player->moveOffset.y, &behaviour);
                 }
             }
 
-            bool32 flag2 = 0;
-            bool32 flag  = 0;
+            bool32 conveyorCollided = false;
+            uint8 conveyorDir       = 0;
             switch (behaviour) {
                 default: break;
-                case 1: {
+                case LRZ2_TBEHAVE_LAVA: {
                     int32 solid = 1 << 14;
                     if (player->collisionPlane)
                         solid = 1 << 12;
@@ -87,19 +85,19 @@ void LRZ2Setup_StaticUpdate(void)
                         Player_CheckHitFlip(player);
                     break;
                 }
-                case 2:
-                    flag2 = true;
-                    flag  = false;
+                case LRZ2_TBEHAVE_CONVEYOR_L:
+                    conveyorCollided = true;
+                    conveyorDir      = 0;
                     break;
-                case 3:
-                    flag2 = true;
-                    flag  = true;
+                case LRZ2_TBEHAVE_CONVEYOR_R:
+                    conveyorCollided = true;
+                    conveyorDir      = 1;
                     break;
             }
 
-            if (!LRZ2Setup->conveyorOff && flag2) {
+            if (!LRZ2Setup->conveyorOff && conveyorCollided) {
                 if (player->onGround) {
-                    player->position.x += (2 * ((((tileInfo & 0x400) != 0) ^ (LRZ2Setup->conveyorDir & 0xFF)) != flag) - 1) << 17;
+                    player->position.x += (2 * ((((tileInfo & 0x400) != 0) ^ (LRZ2Setup->conveyorDir & 0xFF)) != conveyorDir) - 1) << 17;
                     player->position.y += 0x10000;
                 }
             }
@@ -131,8 +129,8 @@ void LRZ2Setup_StageLoad(void)
     }
 #endif
 
-    LRZ2Setup->dstPal = 1;
-    LRZ2Setup->srcPal = 2;
+    LRZ2Setup->conveyorDstPal = 1;
+    LRZ2Setup->conveyorSrcPal = 2;
     if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION)
         GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = NULL;
     else
@@ -276,7 +274,7 @@ void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int3
         tileSolidMove = tileInfoMove >> 12;
 
     *tileInfo  = 0;
-    *behaviour = 0;
+    *behaviour = LRZ2_TBEHAVE_NORMAL;
     if (behaviourMove && (tileSolidMove & 3)) {
         *tileInfo  = tileInfoMove;
         *behaviour = behaviourMove;

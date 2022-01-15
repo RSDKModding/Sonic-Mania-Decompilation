@@ -229,7 +229,7 @@ void APICallback_NotifyAutoSave_CB(void)
     if (APICallback->isAutoSaving) {
         if (!UIDialog->activeDialog) {
             TextInfo info;
-            Localization_GetString(&info, STR_SIGNOUTDETECTED);
+            Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_NotifyAutoSave_OK, true);
             dialog->useAltColour   = true;
         }
@@ -334,8 +334,8 @@ int32 APICallback_LeaderboardStatus(void)
     else {
         LogHelpers_Print("DUMMY LeaderboardStatus()");
         if (APICallback->leaderboardsStatus == STATUS_CONTINUE) {
-            if (APICallback->unknown < 60) {
-                APICallback->unknown++;
+            if (APICallback->statusTimer < 60) {
+                APICallback->statusTimer++;
                 return APICallback->leaderboardsStatus;
             }
 
@@ -429,14 +429,14 @@ int32 APICallback_GetStorageStatus(void)
         }
         else {
             if (APICallback->storageStatus == STATUS_CONTINUE) {
-                if (APICallback->unknown >= 0) {
+                if (APICallback->statusTimer >= 0) {
                     if (RSDK.Rand(0, 100) % 10 > 10)
                         APICallback->storageStatus = STATUS_ERROR;
                     else
                         APICallback->storageStatus = STATUS_OK;
                 }
                 else {
-                    APICallback->unknown++;
+                    APICallback->statusTimer++;
                 }
             }
             status = APICallback->storageStatus;
@@ -496,7 +496,7 @@ int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID
         APICallback->prevRank  = RSDK.Rand(0, APICallback->leaderboardEntryCount - 1);
     }
     APICallback->leaderboardsStatus = STATUS_CONTINUE;
-    APICallback->unknown            = 0;
+    APICallback->statusTimer            = 0;
     return 0;
 }
 
@@ -531,7 +531,7 @@ void APICallback_ClearPrerollErrors(void)
 bool32 APICallback_CheckInputDisconnected(void)
 {
     RSDK_THIS(APICallback);
-    return APICallback_InputIDIsDisconnected(self->field_7C) || PauseMenu->forcedDisconnect;
+    return APICallback_InputIDIsDisconnected(self->inputID) || PauseMenu->forcedDisconnect;
 }
 
 bool32 APICallback_InputIDIsDisconnected(int32 id)
@@ -663,7 +663,7 @@ int32 APICallback_TryAuth(void)
         if (APICallback->authStatus == STATUS_CONTINUE) {
             LogHelpers_Print("WARNING TryAuth() when auth already in progress.");
         }
-        APICallback->unknown    = 0;
+        APICallback->statusTimer = 0;
         APICallback->authStatus = STATUS_CONTINUE;
         CREATE_ENTITY(APICallback, APICallback_TryAuth_CB, 0, 0);
         return STATUS_CONTINUE;
@@ -681,7 +681,7 @@ void APICallback_TryInitStorage(void)
         if (APICallback->storageStatus == STATUS_CONTINUE) {
             LogHelpers_Print("WARNING TryInitStorage() when init already in progress.");
         }
-        APICallback->unknown       = 0;
+        APICallback->statusTimer   = 0;
         APICallback->storageStatus = STATUS_CONTINUE;
     }
 }
@@ -778,7 +778,7 @@ void APICallback_CheckUserAuth_CB(void)
     }
 }
 
-void APICallback_Wait(int32 success) { UIWaitSpinner_FinishWait(); }
+void APICallback_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(); }
 
 void APICallback_GetNextNotif(void)
 {
@@ -808,7 +808,7 @@ void APICallback_ManageNotifs(void)
     else {
         APICallback->activeEntity = NULL;
         UIWaitSpinner_StartWait();
-        GameProgress_TrackGameProgress(APICallback_Wait);
+        GameProgress_TrackGameProgress(APICallback_TrackGameProgressCB);
         destroyEntity(self);
     }
 }
@@ -825,11 +825,11 @@ bool32 APICallback_CheckUnreadNotifs(void)
 bool32 APICallback_NotifyAutosave(void)
 {
     if (globals->notifiedAutosave) {
-        if (!APICallback->isAutoSaving && !APICallback->entityPtr) {
+        if (!APICallback->isAutoSaving && !APICallback->activeEntity) {
             return false;
         }
     }
-    else if (!APICallback->isAutoSaving || !APICallback->entityPtr) {
+    else if (!APICallback->isAutoSaving || !APICallback->activeEntity) {
         UIWaitSpinner_StartWait();
         APICallback->isAutoSaving = true;
         globals->notifiedAutosave = false;

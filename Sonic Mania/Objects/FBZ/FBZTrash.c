@@ -64,13 +64,14 @@ void FBZTrash_SummonOrbinautOrbs(EntityFBZTrash *trashPtr, int32 angle)
     EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, intToVoid(FBZTRASH_ORB), trashPtr->position.x, trashPtr->position.y);
     trash->position.x += RSDK.Cos1024(angle) << 10;
     trash->position.y += RSDK.Sin1024(angle) << 10;
-    trash->targetPos   = trash->position;
-    trash->position.x = (RSDK.Rand(0, (BigSqueeze->value4[3] - BigSqueeze->value4[2]) >> 16) << 16) + BigSqueeze->value4[2];
-    trash->position.y = BigSqueeze->value7 - 0x80000;
+    trash->targetPos  = trash->position;
+    int32 size        = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L];
+    trash->position.x = (RSDK.Rand(0, size >> 16) << 16) + BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L];
+    trash->position.y = BigSqueeze->boundB - 0x80000;
     trash->parent     = (Entity *)trashPtr;
     trash->startPos   = trash->position;
     trash->angle      = angle;
-    trash->radius   = 10;
+    trash->radius     = 10;
     trash->state      = FBZTrash_State_ReactMagnet;
     RSDK.SetSpriteAnimation(FBZTrash->aniFrames, 5, &trash->animator, true, RSDK.Rand(0, 2));
 }
@@ -80,9 +81,10 @@ void FBZTrash_SummonOrbinaut(int32 x, int32 y)
     EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, intToVoid(FBZTRASH_ORBINAUT), x, y);
     FBZTrash_SummonOrbinautOrbs(trash, 0);
     FBZTrash_SummonOrbinautOrbs(trash, 512);
-    trash->targetPos   = trash->position;
-    trash->position.x = (RSDK.Rand(0, (BigSqueeze->value4[3] - BigSqueeze->value4[2]) >> 16) << 16) + BigSqueeze->value4[2];
-    trash->position.y = BigSqueeze->value7 - 0x80000;
+    trash->targetPos  = trash->position;
+    int32 size        = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L];
+    trash->position.x = (RSDK.Rand(0, size >> 16) << 16) + BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L];
+    trash->position.y = BigSqueeze->boundB - 0x80000;
     trash->state      = FBZTrash_State_ReactMagnet;
     trash->startPos   = trash->position;
     RSDK.SetSpriteAnimation(FBZTrash->aniFrames, 1, &trash->animator, true, (x >> 17) & 1);
@@ -104,7 +106,7 @@ void FBZTrash_State_LooseTrash(void)
                 int32 rx = (self->position.x - trash->position.x) >> 16;
                 int32 ry = (self->position.y - trash->position.y) >> 16;
                 if (rx * rx + ry * ry < 288) {
-                    if (BigSqueeze->isRumbling)
+                    if (BigSqueeze->isCrushing)
                         self->rumbleMove = (self->rumbleMove + trash->rumbleMove) >> 1;
                     else
                         self->rumbleMove >>= 1;
@@ -113,7 +115,7 @@ void FBZTrash_State_LooseTrash(void)
                         self->onGround = true;
                     }
                     else {
-                        int32 angle          = RSDK.ATan2(rx, ry);
+                        int32 angle      = RSDK.ATan2(rx, ry);
                         self->velocity.x = minVal(self->rumbleMove << 6, 640) * RSDK.Cos256(angle);
                         self->velocity.y = minVal(self->rumbleMove << 6, 640) * RSDK.Sin256(angle + RSDK.Rand(-32, 32));
                         self->onGround   = false;
@@ -123,16 +125,16 @@ void FBZTrash_State_LooseTrash(void)
         }
     }
 
-    if (self->position.y < BigSqueeze->value7 - 0xC0000)
-        self->position.y = BigSqueeze->value7 - 0xC0000;
+    if (self->position.y < BigSqueeze->boundB - 0xC0000)
+        self->position.y = BigSqueeze->boundB - 0xC0000;
 
     foreach_active(BigSqueeze, boss)
     {
         switch (boss->type) {
             default: break;
             case BIGSQUEEZE_BOSS:
-                if (self->position.y >  boss->position.y + 0xC00000) {
-                    self->position.y =  boss->position.y + 0xC00000;
+                if (self->position.y > boss->position.y + 0xC00000) {
+                    self->position.y = boss->position.y + 0xC00000;
                     self->velocity.y = -abs(self->velocity.y >> 1);
                 }
                 break;
@@ -140,9 +142,9 @@ void FBZTrash_State_LooseTrash(void)
                 if (self->position.x < boss->position.x + 0x180000) {
                     self->position.x = boss->position.x + 0x180000;
                     self->velocity.x = 5 * boss->velocity.x;
-                    if (self->onGround && BigSqueeze->isRumbling) {
+                    if (self->onGround && BigSqueeze->isCrushing) {
                         self->rumbleMove = 128;
-                        self->onGround = false;
+                        self->onGround   = false;
                     }
                 }
                 break;
@@ -150,9 +152,9 @@ void FBZTrash_State_LooseTrash(void)
                 if (self->position.x > boss->position.x - 0x180000) {
                     self->position.x = boss->position.x - 0x180000;
                     self->velocity.x = 5 * boss->velocity.x;
-                    if (self->onGround && BigSqueeze->isRumbling) {
+                    if (self->onGround && BigSqueeze->isCrushing) {
                         self->rumbleMove = 128;
-                        self->onGround = false;
+                        self->onGround   = false;
                     }
                 }
                 break;
@@ -216,11 +218,11 @@ void FBZTrash_State_OrbinautOrb(void)
     int32 angle = 0;
     if (trash->type == FBZTRASH_ORB) {
         self->angle = (self->angle + 8) & 0x3FF;
-        angle         = RSDK.Sin256(self->angle) >> 2;
+        angle       = RSDK.Sin256(self->angle) >> 2;
     }
     else if (trash->type == FBZTRASH_ORBINAUT) {
         self->angle = (self->angle + 16) & 0x3FF;
-        angle         = self->angle;
+        angle       = self->angle;
     }
     self->position.x = trash->position.x;
     self->position.y = trash->position.y;
@@ -232,10 +234,10 @@ void FBZTrash_State_OrbinautMove(void)
 {
     RSDK_THIS(FBZTrash);
     EntityPlayer *playerPtr = Player_GetNearestPlayer();
-    self->angle           = RSDK.ATan2(self->position.x - playerPtr->position.x, self->position.y - playerPtr->position.y);
-    self->velocity.x      = RSDK.Cos256(self->angle) << 8;
-    self->velocity.y      = RSDK.Sin256(self->angle) << 8;
-    self->direction       = self->position.x >= playerPtr->position.x;
+    self->angle             = RSDK.ATan2(self->position.x - playerPtr->position.x, self->position.y - playerPtr->position.y);
+    self->velocity.x        = RSDK.Cos256(self->angle) << 8;
+    self->velocity.y        = RSDK.Sin256(self->angle) << 8;
+    self->direction         = self->position.x >= playerPtr->position.x;
     self->position.x -= self->velocity.x;
     self->position.y -= self->velocity.y;
 

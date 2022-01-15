@@ -18,8 +18,8 @@ void UISlider_Update(void)
         self->textFrames = UIWidgets->textFrames;
     }
 
-    self->touchPosEnd.y = self->buttonBounceOffset;
-    self->touchPosEnd.x = 0x7A0000 + self->buttonBounceOffset;
+    self->touchPosOffsetS.y = self->buttonBounceOffset;
+    self->touchPosOffsetS.x = 0x7A0000 + self->buttonBounceOffset;
 
     StateMachine_Run(self->state);
 
@@ -62,10 +62,10 @@ void UISlider_Create(void *data)
     self->active             = ACTIVE_BOUNDS;
     self->updateRange.x      = 0x800000;
     self->updateRange.y      = 0x400000;
-    self->touchPosEnd.y      = 0;
-    self->touchPosEnd.x      = 0x7A0000;
-    self->touchPosStart.x    = 0x940000;
-    self->touchPosStart.y    = 0x180000;
+    self->touchPosOffsetS.y      = 0;
+    self->touchPosOffsetS.x      = 0x7A0000;
+    self->touchPosSizeS.x    = 0x940000;
+    self->touchPosSizeS.y    = 0x180000;
     self->size.x             = 0x5A0000;
     self->size.y             = 0x180000;
     self->bgEdgeSize         = 24;
@@ -215,14 +215,14 @@ bool32 UISlider_TouchCB(void)
     bool32 touchFlag = false;
     if (TouchInfo->count) {
         if (!UISlider->activeEntity || UISlider->activeEntity == (Entity *)self) {
-            int32 sizeX = self->touchPosStart.x >> 1;
-            int32 sizeY = self->touchPosStart.y >> 1;
+            int32 sizeX = self->touchPosSizeS.x >> 1;
+            int32 sizeY = self->touchPosSizeS.y >> 1;
             for (int32 i = 0; i < TouchInfo->count; ++i) {
                 int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
                 int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
-                int32 touchX = abs(self->touchPosEnd.x + self->position.x - x);
-                int32 touchY = abs(self->touchPosEnd.y + self->position.y - y);
+                int32 touchX = abs(self->touchPosOffsetS.x + self->position.x - x);
+                int32 touchY = abs(self->touchPosOffsetS.y + self->position.y - y);
                 if (!self->isTouchSelected && touchX < sizeX && touchY < sizeY) {
                     self->isTouchSelected = true;
                     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
@@ -232,12 +232,12 @@ bool32 UISlider_TouchCB(void)
                     touchFlag              = true;
                     UISlider->activeEntity = (Entity *)self;
 
-                    self->sliderPosTouch = maxVal(x + sizeX - self->position.x - self->touchPosEnd.x, 0x70000);
-                    if (self->touchPosStart.x - 0x70000 < self->sliderPosTouch)
-                        self->sliderPosTouch = self->touchPosStart.x - 0x70000;
+                    self->sliderPosTouch = maxVal(x + sizeX - self->position.x - self->touchPosOffsetS.x, 0x70000);
+                    if (self->touchPosSizeS.x - 0x70000 < self->sliderPosTouch)
+                        self->sliderPosTouch = self->touchPosSizeS.x - 0x70000;
 
                     int32 val = 16
-                                * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosStart.x - 0xE0000) + 2, UISlider_MaxVal)
+                                * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISlider_MaxVal)
                                    & -(UISlider_Increment / 0x10));
                     if (val != self->sliderPos) {
                         self->sliderPos = val;

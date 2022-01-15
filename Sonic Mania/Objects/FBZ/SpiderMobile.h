@@ -3,14 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPIDERMOBILE_BOSS,
+    SPIDERMOBILE_ORB,
+    SPIDERMOBILE_BUMPERDEBRIS,
+    SPIDERMOBILE_EGGMAN,
+}SpiderMobileTypes;
+
 // Object Class
 struct ObjectSpiderMobile {
     RSDK_OBJECT
     Hitbox hitboxBumper;
     Hitbox hitboxSpikes;
-    int32 field_14;
-    int32 field_18;
-    Hitbox hitbox3;
+    Hitbox hitboxUnused;
+    Hitbox hitboxOrb;
     Hitbox hitboxPlatform;
     int32 boundL;
     int32 boundR;
@@ -29,7 +35,7 @@ struct ObjectSpiderMobile {
     uint16 sfxElevator;
     uint16 sfxHullClose;
     uint16 aniFrames;
-    int32 field_58;
+    int32 unused3;
 };
 
 // Entity Class
@@ -38,24 +44,23 @@ struct EntitySpiderMobile {
     StateMachine(state);
     StateMachine(stateDraw);
     Vector2 origin;
-    Entity *parent;
+    EntitySpiderMobile *parent;
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
+    int32 bounceCount;
+    int32 bounceDelay;
+    int32 knockbackCooldown;
+    int32 armMoveAmplitude;
+    int32 offsetY;
+    int32 angleVel;
+    int32 headRotation;
+    int32 pincerRotation;
+    int32 webCurveAngle;
+    int32 moveAmplitude;
+    int32 webCurveDirection;
     int32 legAngles[12];
-    int32 field_D4[6];
-    int32 field_EC[6];
+    int32 unused[12];
     Vector2 headPos;
     Vector2 legJointPos[2];
     Vector2 pincer1StartPos;
@@ -93,40 +98,40 @@ void SpiderMobile_EditorLoad(void);
 void SpiderMobile_Serialize(void);
 
 // Extra Entity Functions
-void SpiderMobile_Unknown1(void);
-void SpiderMobile_Unknown2(void);
+void SpiderMobile_HandleFallingMovement(void);
+void SpiderMobile_HandleRisingMovement(void);
 void SpiderMobile_CheckPlayerCollisions(void);
 void SpiderMobile_CheckSpikeHit(void);
 void SpiderMobile_Hit(void);
 void SpiderMobile_HandlePlatformMovement(void);
-void SpiderMobile_Unknown7(void);
-void SpiderMobile_Unknown8(void);
-void SpiderMobile_Unknown9(void);
-void SpiderMobile_Unknown10(void);
+void SpiderMobile_HandleWebClimbArmMovement(void);
+void SpiderMobile_HandleDestroyedArmMovement(void);
+void SpiderMobile_HandleIdleArmMovement(void);
+void SpiderMobile_UpdateLimbPositions(void);
 
-void SpiderMobile_StateDraw_Body(void);
-void SpiderMobile_StateDraw2_Unknown1(void);
-void SpiderMobile_StateDraw_Eggman(void);
+void SpiderMobile_Draw_Body(void);
+void SpiderMobile_Draw_Bumper(void);
+void SpiderMobile_Draw_Cockpit(void);
 
 void SpiderMobile_StateBody_SetupBounds(void);
 void SpiderMobile_StateBody_SetupArena(void);
-void SpiderMobile_StateBody_Unknown1(void);
-void SpiderMobile_StateBody_Unknown2(void);
-void SpiderMobile_StateBody_Unknown3(void);
-void SpiderMobile_StateBody_Unknown4(void);
+void SpiderMobile_StateBody_InitialDrop(void);
+void SpiderMobile_StateBody_Rise(void);
+void SpiderMobile_StateBody_Climb(void);
+void SpiderMobile_StateBody_HandleOrbAttack(void);
 void SpiderMobile_StateBody_Destroyed(void);
 
-void SpiderMobile_StateEggman_Unknown1(void);
-void SpiderMobile_StateEggman_Unknown2(void);
-void SpiderMobile_StateEggman_Unknown3(void);
+void SpiderMobile_StateBody_CockpitExplode(void);
+void SpiderMobile_StateBody_MovePlatformToEnd(void);
+void SpiderMobile_StateBody_FinishedMovingPlatform(void);
 
-void SpiderMobile_State2_Unknown1(void);
+void SpiderMobile_State_Bumper(void);
 
-void SpiderMobile_State3_Unknown1(void);
+void SpiderMobile_State_Eggman(void);
 
-void SpiderMobile_StateOrb_Unknown1(void);
-void SpiderMobile_StateOrb_Unknown2(void);
+void SpiderMobile_StateOrb_Charge(void);
+void SpiderMobile_StateOrb_Fired(void);
 
-bool32 SpiderMobile_CheckCB(void);
+bool32 SpiderMobile_ElevatorCheckCB(void);
 
 #endif //!OBJ_SPIDERMOBILE_H
