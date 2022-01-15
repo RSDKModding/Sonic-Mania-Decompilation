@@ -188,6 +188,9 @@ void CPZSetup_EditorLoad(void)
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
     RSDK_ENUM_VAR("Act 2 BG", CPZ_BG_CPZ2);
     RSDK_ENUM_VAR("Act 1 BG", CPZ_BG_CPZ1);
+
+    RSDK_ACTIVE_VAR(Decoration, type);
+    RSDK_ENUM_VAR("Warning Sign", CPZ_DECOR_WARNSIGN);
 }
 #endif
 

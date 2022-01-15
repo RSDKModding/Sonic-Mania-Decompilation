@@ -8,6 +8,13 @@ typedef enum {
     AIZ_BG_SKY,
 } BGSwitchIDsAIZ;
 
+typedef enum {
+    AIZ_DECOR_LEAF1,
+    AIZ_DECOR_LEAF2,
+    AIZ_DECOR_LEAF3,
+    AIZ_DECOR_LEAF4,
+} DecorTypesAIZ;
+
 // Object Class
 struct ObjectAIZSetup {
     RSDK_OBJECT

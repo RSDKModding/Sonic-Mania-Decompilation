@@ -21,12 +21,12 @@ struct EntityStegway {
     uint8 startDir;
     int32 timer;
     int32 unused1;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    bool32 dustFlag;
+    Animator mainAnimator;
+    Animator wheelAnimator;
+    Animator dustAnimator;
+    bool32 showDust;
     int32 unused2;
-    bool32 flag;
+    bool32 noFloor;
 };
 
 // Object Entity
@@ -54,10 +54,10 @@ void Stegway_HandlePlayerInteractions(void);
 void Stegway_SetupAnims(char type, bool32 force);
 
 void Stegway_State_Setup(void);
-void Stegway_Unknown6(void);
-void Stegway_Unknown7(void);
-void Stegway_Unknown8(void);
-void Stegway_Unknown9(void);
-void Stegway_Unknown10(void);
+void Stegway_State_Moving(void);
+void Stegway_State_Turn(void);
+void Stegway_State_RevUp(void);
+void Stegway_State_RevRelease(void);
+void Stegway_State_Dash(void);
 
 #endif //!OBJ_STEGWAY_H

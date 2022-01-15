@@ -889,6 +889,12 @@ void AIZSetup_EditorLoad(void)
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
     RSDK_ENUM_VAR("Jungle BG", AIZ_BG_JUNGLE);
     RSDK_ENUM_VAR("Sky BG", AIZ_BG_SKY);
+
+    RSDK_ACTIVE_VAR(Decoration, type);
+    RSDK_ENUM_VAR("Leaf 1", AIZ_DECOR_LEAF1);
+    RSDK_ENUM_VAR("Leaf 2", AIZ_DECOR_LEAF2);
+    RSDK_ENUM_VAR("Leaf 3", AIZ_DECOR_LEAF3);
+    RSDK_ENUM_VAR("Leaf 4", AIZ_DECOR_LEAF4);
 }
 #endif
 

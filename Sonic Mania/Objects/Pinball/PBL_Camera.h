@@ -50,8 +50,8 @@ void PBL_Camera_EditorLoad(void);
 void PBL_Camera_Serialize(void);
 
 // Extra Entity Functions
-void PBL_Camera_Unknown1(void);
-void PBL_Camera_Unknown2(void);
+void PBL_Camera_HandleScreenPos(void);
+void PBL_Camera_State_Normal(void);
 
 #endif
 

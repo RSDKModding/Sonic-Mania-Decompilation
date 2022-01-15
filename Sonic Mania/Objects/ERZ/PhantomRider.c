@@ -36,7 +36,7 @@ void PhantomRider_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     }
 
     if (self->invincibilityTimer & 1)
@@ -65,10 +65,10 @@ void PhantomRider_Create(void *data)
         else {
             self->active = ACTIVE_BOUNDS;
             self->drawFX = FX_FLIP;
-            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 4, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 5, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 0, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 4, &self->jimmyAnimator, true, 0);
+            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 5, &self->wheelAnimator, true, 0);
+            RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->thrustAnimator, true, 0);
             self->direction       = FLIP_X;
             self->collisionPlane  = 1;
             self->collisionLayers = Zone->fgLayers;
@@ -86,8 +86,8 @@ void PhantomRider_Create(void *data)
             self->tileCollisions  = true;
             self->innerBox.right  = 11;
             self->innerBox.bottom = 30;
-            self->stateDraw       = PhantomRider_StateDraw_Unknown1;
-            self->state           = PhantomRider_State_Unknown1;
+            self->stateDraw       = PhantomRider_Draw_Rider;
+            self->state           = PhantomRider_State_HandleBegin;
         }
     }
 }
@@ -123,17 +123,17 @@ void PhantomRider_ProcessAutoScroll(void)
     }
 }
 
-void PhantomRider_StateDraw_Unknown1(void)
+void PhantomRider_Draw_Rider(void)
 {
     RSDK_THIS(PhantomRider);
 
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->jimmyAnimator, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
+    RSDK.DrawSprite(&self->wheelAnimator, NULL, false);
+    RSDK.DrawSprite(&self->thrustAnimator, NULL, false);
 }
 
-void PhantomRider_State_Unknown1(void)
+void PhantomRider_State_HandleBegin(void)
 {
     RSDK_THIS(PhantomRider);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -151,7 +151,7 @@ void PhantomRider_State_Unknown1(void)
         self->velocity.x    = 0;
         self->child         = (Entity *)child;
         self->active        = ACTIVE_NORMAL;
-        self->state         = PhantomRider_State_Unknown2;
+        self->state         = PhantomRider_State_EnterRider;
         foreach_active(PopOut, popOut)
         {
             popOut->active    = ACTIVE_NORMAL;
@@ -162,14 +162,14 @@ void PhantomRider_State_Unknown1(void)
     }
 }
 
-void PhantomRider_State_Unknown2(void)
+void PhantomRider_State_EnterRider(void)
 {
     RSDK_THIS(PhantomRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->jimmyAnimator);
+    RSDK.ProcessAnimation(&self->wheelAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
     PhantomRider_ProcessAutoScroll();
 
     if (++self->timer > 48) {
@@ -180,7 +180,7 @@ void PhantomRider_State_Unknown2(void)
     if (self->position.x > self->child->position.x + 0x200000) {
         self->timer = 0;
         RSDK.PlaySfx(PhantomRider->sfxRiderLaunch, false, 0xFF);
-        self->state = PhantomRider_State_Unknown3;
+        self->state = PhantomRider_State_InitialRace;
     }
 
     if (!self->onGround) {
@@ -192,14 +192,14 @@ void PhantomRider_State_Unknown2(void)
     RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
 }
 
-void PhantomRider_State_Unknown3(void)
+void PhantomRider_State_InitialRace(void)
 {
     RSDK_THIS(PhantomRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->jimmyAnimator);
+    RSDK.ProcessAnimation(&self->wheelAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
     PhantomRider_ProcessAutoScroll();
 
     if (self->groundVel > Zone->autoScrollSpeed - 0x10000) {
@@ -218,17 +218,17 @@ void PhantomRider_State_Unknown3(void)
 
     EntityPlatformNode *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode);
     if (self->position.x > marker->position.x)
-        self->state = PhantomRider_State_Unknown4;
+        self->state = PhantomRider_State_RacePlayer;
 }
 
-void PhantomRider_State_Unknown4(void)
+void PhantomRider_State_RacePlayer(void)
 {
     RSDK_THIS(PhantomRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->jimmyAnimator);
+    RSDK.ProcessAnimation(&self->wheelAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
     PhantomRider_ProcessAutoScroll();
 
     if (!self->onGround) {
@@ -243,7 +243,7 @@ void PhantomRider_State_Unknown4(void)
         self->timer         = 0;
         Zone->autoScrollSpeed = 0;
         PhantomEgg_SetupScanlineCB();
-        self->state = PhantomRider_State_Unknown5;
+        self->state = PhantomRider_State_ExitRider;
         foreach_active(PopOut, popOut) { popOut->flag = false; }
         foreach_active(Player, player) { Player_ChangePhysicsState(player); }
     }
@@ -265,7 +265,7 @@ void PhantomRider_State_Unknown4(void)
     }
 }
 
-void PhantomRider_State_Unknown5(void)
+void PhantomRider_State_ExitRider(void)
 {
     RSDK_THIS(PhantomRider);
 
@@ -288,7 +288,7 @@ void PhantomRider_State_Unknown5(void)
             button->activated = false;
         }
 
-        self->state = PhantomRider_State_Unknown1;
+        self->state = PhantomRider_State_HandleBegin;
     }
 }
 
@@ -323,13 +323,13 @@ void PhantomRider_EditorDraw(void)
 {
     RSDK_THIS(PhantomRider);
     self->drawFX = FX_FLIP;
-    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 4, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 5, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->animator4, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 0, &self->mainAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 4, &self->jimmyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 5, &self->wheelAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRider->aniFrames, 6, &self->thrustAnimator, true, 0);
     self->direction = FLIP_X;
 
-    PhantomRider_StateDraw_Unknown1();
+    PhantomRider_Draw_Rider();
 }
 
 void PhantomRider_EditorLoad(void) { PhantomRider->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE); }

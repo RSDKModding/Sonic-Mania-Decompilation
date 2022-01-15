@@ -8,6 +8,8 @@ typedef enum {
     GHZ_BG_CAVES,
 } BGSwitchIDsGHZ;
 
+typedef enum { GHZ_DECOR_BRIDGEPOST } DecorTypesGHZ;
+
 // Object Class
 struct ObjectGHZSetup {
     RSDK_OBJECT

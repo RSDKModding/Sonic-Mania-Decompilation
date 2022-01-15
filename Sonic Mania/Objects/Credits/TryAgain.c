@@ -49,7 +49,7 @@ void TryAgain_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = TryAgain_Unknown1;
+        self->state         = TryAgain_State_Setup;
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 0, &self->debrisAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 2, &self->eggmanAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &self->rubyAnimator, true, 0);
@@ -62,7 +62,7 @@ void TryAgain_StageLoad(void)
     RSDK.CopyPalette(0, 0, 1, 0, 128);
 }
 
-void TryAgain_Unknown1(void)
+void TryAgain_State_Setup(void)
 {
     RSDK_THIS(TryAgain);
     if (++self->timer == 60) {
@@ -71,29 +71,29 @@ void TryAgain_Unknown1(void)
 #if RETRO_USE_PLUS
         Music_PlayTrack(TRACK_STAGE);
 #endif
-        self->state = TryAgain_Unknown2;
+        self->state = TryAgain_State_EnterEggman;
     }
 }
 
-void TryAgain_Unknown2(void)
+void TryAgain_State_EnterEggman(void)
 {
     RSDK_THIS(TryAgain);
 
     self->eggmanVelocityY += 0x3800;
-    int32 val = self->position.y - 0x340000;
+    int32 targetPos = self->position.y - 0x340000;
     self->eggmanPos.y += self->eggmanVelocityY;
-    if (self->eggmanPos.y <= val || self->eggmanVelocityY <= 0) {
+    if (self->eggmanPos.y <= targetPos || self->eggmanVelocityY <= 0) {
         self->rubyPos.y = self->eggmanPos.y;
     }
     else {
-        self->eggmanPos.y     = val;
         self->eggmanVelocityY = 0;
-        self->state           = TryAgain_Unknown3;
-        self->rubyPos.y       = val;
+        self->eggmanPos.y     = targetPos;
+        self->rubyPos.y       = targetPos;
+        self->state           = TryAgain_State_EggmanLaugh;
     }
 }
 
-void TryAgain_Unknown3(void)
+void TryAgain_State_EggmanLaugh(void)
 {
     RSDK_THIS(TryAgain);
     if (self->timer > (RETRO_USE_PLUS ? 15 : 30))
@@ -101,11 +101,11 @@ void TryAgain_Unknown3(void)
     if (++self->timer == 120) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(TryAgain->aniFrames, 3, &self->eggmanAnimator, true, 2);
-        self->state = TryAgain_Unknown4;
+        self->state = TryAgain_State_Stinger;
     }
 }
 
-void TryAgain_Unknown4(void)
+void TryAgain_State_Stinger(void)
 {
     RSDK_THIS(TryAgain);
     RSDK.ProcessAnimation(&self->eggmanAnimator);

@@ -11,6 +11,11 @@ typedef enum {
     FBZ_BG_INSIDE1_DUP,
 } BGSwitchIDsFBZ;
 
+typedef enum {
+    FBZ_DECOR_BLUEPRINT1,
+    FBZ_DECOR_BLUEPRINT2,
+} DecorTypesFBZ;
+
 // Object Class
 struct ObjectFBZSetup {
     RSDK_OBJECT

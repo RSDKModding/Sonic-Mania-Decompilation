@@ -52,10 +52,11 @@ void Orbinaut_HandleRotation(void);
 void Orbinaut_CheckOnScreen(void);
 
 void Orbinaut_State_Setup(void);
-void Orbinaut_Unknown6(void);
-void Orbinaut_Unknown7(void);
-void Orbinaut_Unknown8(void);
+void Orbinaut_State_Moving(void);
+void Orbinaut_State_ReleasingOrbs(void);
+void Orbinaut_State_Orbless(void);
+
 void Orbinaut_State_Orb(void);
-void Orbinaut_Unknown10(void);
+void Orbinaut_State_OrbDebris(void);
 
 #endif //!OBJ_ORBINAUT_H

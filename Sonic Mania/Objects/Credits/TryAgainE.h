@@ -42,8 +42,8 @@ void TryAgainE_EditorLoad(void);
 void TryAgainE_Serialize(void);
 
 // Extra Entity Functions
-void TryAgainE_Unknown1(void);
-void TryAgainE_Unknown2(void);
+void TryAgainE_SetupEmeralds(void);
+void TryAgainE_State_Stinger(void);
 #endif
 
 #endif //!OBJ_TRYAGAINE_H

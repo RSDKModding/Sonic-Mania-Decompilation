@@ -114,11 +114,11 @@ void ERZShinobi_HandleTileCollisions(void)
 {
     RSDK_THIS(ERZShinobi);
     if (self->onGround) {
-        self->spearOffset += (4096 - self->spearOffset) >> 3;
+        self->spearOffset += (0x1000 - self->spearOffset) >> 3;
         if (!self->prevOnGround) {
-            if (self->field_78 > 0) {
+            if (self->numBounces > 0) {
                 self->velocity.y = -0x30000;
-                self->field_78--;
+                self->numBounces--;
                 self->onGround = false;
             }
         }
@@ -130,15 +130,15 @@ void ERZShinobi_HandleTileCollisions(void)
         self->spearOffset += (0x1600 - self->spearOffset) >> 3;
     }
 
-    int32 val               = self->spearOffset / 88;
-    self->outerBox.right  = val;
-    self->outerBox.bottom = val;
-    self->outerBox.left   = -val;
-    self->outerBox.top    = -val;
-    self->innerBox.left   = 2 - val;
-    self->innerBox.right  = val - 2;
-    self->innerBox.top    = -val;
-    self->innerBox.bottom = val;
+    int32 size               = self->spearOffset / 88;
+    self->outerBox.right  = size;
+    self->outerBox.bottom = size;
+    self->outerBox.left   = -size;
+    self->outerBox.top    = -size;
+    self->innerBox.left   = 2 - size;
+    self->innerBox.right  = size - 2;
+    self->innerBox.top    = -size;
+    self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;
     RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
@@ -151,7 +151,7 @@ void ERZShinobi_Unknown3(void)
     if (++self->timer == 60) {
         self->timer = 0;
         if (self->onGround) {
-            self->field_78   = 2;
+            self->numBounces   = 2;
             self->velocity.y = -0x80000;
             self->onGround   = false;
         }

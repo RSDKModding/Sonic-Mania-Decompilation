@@ -266,6 +266,10 @@ void FBZSetup_EditorLoad(void)
     RSDK_ENUM_VAR("Show Inside 1", FBZ_BG_INSIDE1);
     RSDK_ENUM_VAR("Show Inside 2", FBZ_BG_INSIDE2);
     RSDK_ENUM_VAR("Show Inside 1 (Duplicate)", FBZ_BG_INSIDE1_DUP);
+
+    RSDK_ACTIVE_VAR(Decoration, type);
+    RSDK_ENUM_VAR("Blueprint 1", FBZ_DECOR_BLUEPRINT1);
+    RSDK_ENUM_VAR("Blueprint 2", FBZ_DECOR_BLUEPRINT2);
 }
 #endif
 

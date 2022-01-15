@@ -57,6 +57,6 @@ void Fireball_State_Move(void);
 void Fireball_State_MoveGravity(void);
 void Fireball_State_Dissipate(void);
 
-void Fireball_StateDraw_Normal(void);
+void Fireball_Draw_Normal(void);
 
 #endif //! OBJ_FIREBALL_H

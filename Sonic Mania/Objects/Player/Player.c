@@ -4480,29 +4480,30 @@ void Player_State_KnuxGlideLeft(void)
                 self->animator.timer   = 0;
             }
             else {
-                if (flag || self->timer != 256) {
-                }
-                else if (collidedA || collidedB) {
-                    self->abilitySpeed = 0;
-                    self->timer        = 0;
-                    if (oldPos == newPos) {
-                        self->state      = Player_State_KnuxWallClimb;
-                        self->velocity.x = 0;
-                        self->velocity.y = 0;
-                        RSDK.PlaySfx(Player->sfxGrab, false, 255);
+                if (!flag && self->timer == 256) {
+                    if (collidedA || collidedB) {
+                        self->abilitySpeed = 0;
+                        self->timer        = 0;
+                        if (oldPos == newPos) {
+                            self->state      = Player_State_KnuxWallClimb;
+                            self->velocity.x = 0;
+                            self->velocity.y = 0;
+                            RSDK.PlaySfx(Player->sfxGrab, false, 255);
+                        }
+                        else {
+                            self->velocity.x >>= 2;
+                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->animator, false, 0);
+                            self->state = Player_State_KnuxGlideDrop;
+                        }
                     }
-                    else {
+                    else if (collidedA)
+                    {
+                        self->timer        = 0;
+                        self->abilitySpeed = 0;
                         self->velocity.x >>= 2;
                         RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->animator, false, 0);
                         self->state = Player_State_KnuxGlideDrop;
                     }
-                }
-                else if (collidedA) {
-                    self->timer        = 0;
-                    self->abilitySpeed = 0;
-                    self->velocity.x >>= 2;
-                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->animator, false, 0);
-                    self->state = Player_State_KnuxGlideDrop;
                 }
             }
         }
@@ -4827,25 +4828,25 @@ void Player_State_KnuxWallClimb(void)
             int32 x = 0;
             bool32 collidedA, collidedB;
             if (self->direction) {
-                collidedA        = RSDK.ObjectTileGrip(self, self->collisionLayers, 3, self->collisionPlane, hitbox->left << 16, y1, 8);
+                collidedA        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, y1, 8);
                 int32 sx         = self->position.x;
                 self->position.x = storeX;
-                collidedB        = RSDK.ObjectTileGrip(self, self->collisionLayers, 3, self->collisionPlane, hitbox->left << 16, y2, 8);
+                collidedB        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, y2, 8);
                 if (self->velocity.y < 0 && self->position.x < sx)
                     self->velocity.y = 0;
                 x = -0x40000;
             }
             else {
-                collidedA        = RSDK.ObjectTileGrip(self, self->collisionLayers, 1, self->collisionPlane, hitbox->right << 16, y1, 8);
+                collidedA        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, y1, 8);
                 int32 sx         = self->position.x;
                 self->position.x = storeX;
-                collidedB        = RSDK.ObjectTileGrip(self, self->collisionLayers, 1, self->collisionPlane, hitbox->right << 16, y2, 8);
+                collidedB        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, y2, 8);
                 if (self->velocity.y < 0 && self->position.x > sx)
                     self->velocity.y = 0;
                 x = 0x40000;
             }
             self->position.y += self->velocity.y;
-            if (RSDK.ObjectTileCollision(self, self->collisionLayers, 2, self->collisionPlane, x, y3, true))
+            if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, x, y3, true))
                 self->velocity.y = 0;
 
             if (collidedA) {
@@ -4878,7 +4879,7 @@ void Player_State_KnuxWallClimb(void)
                 self->position.x     = storeX;
                 self->state          = Player_State_KnuxLedgePullUp;
                 self->timer          = 1;
-                self->tileCollisions = 0;
+                self->tileCollisions = false;
                 self->velocity.y     = 0;
             }
         }

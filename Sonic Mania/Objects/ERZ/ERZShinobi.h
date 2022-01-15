@@ -19,8 +19,8 @@ struct EntityERZShinobi {
     int32 invincibilityTimer;
     int32 spearOffset;
     int32 rotStore;
-    int32 field_74;
-    int32 field_78;
+    int32 unused;
+    int32 numBounces;
     bool32 prevOnGround;
     Hitbox outerBox;
     Hitbox innerBox;

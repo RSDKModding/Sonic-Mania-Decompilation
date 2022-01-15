@@ -129,9 +129,9 @@ void Orbinaut_HandlePlayerInteractions(void)
                 if ((1 << i) & self->activeOrbs) {
                     self->position.x = self->orbPositions[i].x;
                     self->position.y = self->orbPositions[i].y;
-                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(1), self->orbPositions[i].x, self->orbPositions[i].y);
+                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(true), self->orbPositions[i].x, self->orbPositions[i].y);
 
-                    orb->state = Orbinaut_Unknown10;
+                    orb->state = Orbinaut_State_OrbDebris;
                     orb->velocity.x = 0x380 * RSDK.Cos256(angle);
                     orb->velocity.y = 0x380 * RSDK.Sin256(angle);
                 }
@@ -175,11 +175,11 @@ void Orbinaut_State_Setup(void)
 {
     RSDK_THIS(Orbinaut);
     self->active = ACTIVE_NORMAL;
-    self->state  = Orbinaut_Unknown6;
-    Orbinaut_Unknown6();
+    self->state  = Orbinaut_State_Moving;
+    Orbinaut_State_Moving();
 }
 
-void Orbinaut_Unknown6(void)
+void Orbinaut_State_Moving(void)
 {
     RSDK_THIS(Orbinaut);
 
@@ -216,7 +216,7 @@ void Orbinaut_Unknown6(void)
             playerPtr = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (distanceX <= 0x800000) {
-            self->state             = Orbinaut_Unknown7;
+            self->state             = Orbinaut_State_ReleasingOrbs;
             self->animatorFace.frameID = 1;
         }
 
@@ -226,7 +226,7 @@ void Orbinaut_Unknown6(void)
     Orbinaut_CheckOnScreen();
 }
 
-void Orbinaut_Unknown7(void)
+void Orbinaut_State_ReleasingOrbs(void)
 {
     RSDK_THIS(Orbinaut);
 
@@ -249,7 +249,7 @@ void Orbinaut_Unknown7(void)
     Orbinaut_HandlePlayerInteractions();
 
     if (!self->activeOrbs) {
-        self->state = Orbinaut_Unknown8;
+        self->state = Orbinaut_State_Orbless;
         if (self->direction == FLIP_NONE)
             self->velocity.x = -0x4000;
         else
@@ -264,7 +264,7 @@ void Orbinaut_Unknown7(void)
     Orbinaut_CheckOnScreen();
 }
 
-void Orbinaut_Unknown8(void)
+void Orbinaut_State_Orbless(void)
 {
     RSDK_THIS(Orbinaut);
     self->position.x += self->velocity.x;
@@ -292,7 +292,7 @@ void Orbinaut_State_Orb(void)
     }
 }
 
-void Orbinaut_Unknown10(void)
+void Orbinaut_State_OrbDebris(void)
 {
     RSDK_THIS(Orbinaut);
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {

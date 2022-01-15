@@ -16,7 +16,7 @@ void PBL_Camera_LateUpdate(void)
 {
     RSDK_THIS(PBL_Camera);
     StateMachine_Run(self->state);
-    PBL_Camera_Unknown1();
+    PBL_Camera_HandleScreenPos();
     self->targetPos = self->position;
     self->targetPos.y -= (0x100 << 16);
 }
@@ -29,7 +29,7 @@ void PBL_Camera_Create(void *data)
 {
     RSDK_THIS(PBL_Camera);
     self->active          = ACTIVE_NORMAL;
-    self->state           = PBL_Camera_Unknown2;
+    self->state           = PBL_Camera_State_Normal;
     self->position.x      = 0x400 << 16;
     self->angle           = 0x200;
     self->worldY          = 0x100 << 16;
@@ -50,7 +50,7 @@ void PBL_Camera_StageLoad(void)
     PBL_Camera->useAltMatNormal = false;
 }
 
-void PBL_Camera_Unknown1(void)
+void PBL_Camera_HandleScreenPos(void)
 {
     RSDK_THIS(PBL_Camera);
     int32 angle = RSDK.Cos1024(-self->rotationY) << 12;
@@ -73,7 +73,7 @@ void PBL_Camera_Unknown1(void)
     self->centerY          = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
 }
 
-void PBL_Camera_Unknown2(void)
+void PBL_Camera_State_Normal(void)
 {
     RSDK_THIS(PBL_Camera);
     Entity *target = self->targetPtr;

@@ -8,6 +8,8 @@ typedef enum {
     CPZ_BG_CPZ1,
 } BGSwitchIDsCPZ;
 
+typedef enum { CPZ_DECOR_WARNSIGN } DecorTypesCPZ;
+
 // Object Class
 struct ObjectCPZSetup {
     RSDK_OBJECT

@@ -26,7 +26,7 @@ void ERZRider_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     }
 }
 
@@ -42,12 +42,12 @@ void ERZRider_Create(void *data)
         self->isJimmy       = voidToInt(data);
         if (!voidToInt(data)) {
             self->drawFX = FX_FLIP;
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->jimmyAnimator, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->wheelAnimator, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->thrustAnimator, true, 0);
             self->startPos  = self->position;
-            self->stateDraw = ERZRider_StateDraw_Unknown1;
+            self->stateDraw = ERZRider_Draw_Rider;
             self->state     = StateMachine_None;
         }
     }
@@ -55,7 +55,7 @@ void ERZRider_Create(void *data)
 
 void ERZRider_StageLoad(void) { ERZRider->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE); }
 
-void ERZRider_StateDraw_Unknown1(void)
+void ERZRider_Draw_Rider(void)
 {
     // thats all folks!
 }
@@ -65,10 +65,10 @@ void ERZRider_EditorDraw(void)
 {
     RSDK_THIS(ERZRider);
     self->drawFX = FX_FLIP;
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->animator2, false, 0);
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->animator3, false, 0);
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->animator4, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->mainAnimator, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->jimmyAnimator, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->wheelAnimator, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->thrustAnimator, false, 0);
 
     // ???
 }

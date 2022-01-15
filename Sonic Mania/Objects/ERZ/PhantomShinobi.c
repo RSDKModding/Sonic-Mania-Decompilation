@@ -146,15 +146,15 @@ void PhantomShinobi_HandleTileCollisions(void)
         self->spearOffset += (0x1600 - self->spearOffset) >> 3;
     }
 
-    int32 val               = self->spearOffset / 88;
-    self->outerBox.right  = val;
-    self->outerBox.bottom = val;
-    self->outerBox.left   = -val;
-    self->outerBox.top    = -val;
-    self->innerBox.left   = 2 - val;
-    self->innerBox.right  = val - 2;
-    self->innerBox.top    = -val;
-    self->innerBox.bottom = val;
+    int32 size               = self->spearOffset / 88;
+    self->outerBox.right  = size;
+    self->outerBox.bottom = size;
+    self->outerBox.left   = -size;
+    self->outerBox.top    = -size;
+    self->innerBox.left   = 2 - size;
+    self->innerBox.right  = size - 2;
+    self->innerBox.top    = -size;
+    self->innerBox.bottom = size;
 
     self->prevOnGround = self->onGround;
     RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);

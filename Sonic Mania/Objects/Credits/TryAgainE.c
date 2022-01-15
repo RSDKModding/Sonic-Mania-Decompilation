@@ -79,7 +79,7 @@ void TryAgainE_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_FLIP;
-        self->state         = TryAgainE_Unknown2;
+        self->state         = TryAgainE_State_Stinger;
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->handUpAnimator, true, 4);
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &self->handDownAnimator, true, 3);
@@ -94,7 +94,7 @@ void TryAgainE_Create(void *data)
         }
         RSDK.SetSpriteAnimation(TryAgainE->playerFrames, 2 * id, &self->player1Animator, true, 3);
 
-        if (globals->playerID > 255) {
+        if (globals->playerID >= 0x100) {
             id       = -1;
             playerID = (globals->playerID >> 8) & 0xFF;
             if (playerID) {
@@ -116,32 +116,30 @@ void TryAgainE_StageLoad(void)
     RSDK.CopyPalette(0, 0, 1, 0, 128);
 }
 
-void TryAgainE_Unknown1(void)
+void TryAgainE_SetupEmeralds(void)
 {
     int32 id    = 1;
     int32 timer = 0;
     foreach_all(TAEmerald, emerald)
     {
-        int32 store      = timer;
         emerald->state = TAEmerald_State_MoveCircle;
         emerald->timer = timer;
-        timer += 8;
         if (SaveGame->saveRAM) {
-            if ((id & SaveGame->saveRAM->chaosEmeralds) > 0)
-                timer = store;
+            if (!(id & SaveGame->saveRAM->chaosEmeralds))
+                timer += 8;
         }
         id <<= 1;
     }
 }
 
-void TryAgainE_Unknown2(void)
+void TryAgainE_State_Stinger(void)
 {
     RSDK_THIS(TryAgainE);
 
     RSDK.ProcessAnimation(&self->handUpAnimator);
     RSDK.ProcessAnimation(&self->handDownAnimator);
     RSDK.ProcessAnimation(&self->player1Animator);
-    if (globals->playerID > 255)
+    if (globals->playerID >= 0x100)
         RSDK.ProcessAnimation(&self->player2Animator);
 
     if ((self->timer & 0x7F) == 1) {
@@ -149,7 +147,7 @@ void TryAgainE_Unknown2(void)
             RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->handUpAnimator, true, 0);
         if ((int8)(self->timer & 0xFF) >= 0 && self->handDownAnimator.animationID == 2)
             RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->handDownAnimator, true, 0);
-        TryAgainE_Unknown1();
+        TryAgainE_SetupEmeralds();
     }
     else if ((self->timer & 0x7F) == 59) {
         if ((self->timer & 0x80) == 0 && self->handUpAnimator.animationID == 1)

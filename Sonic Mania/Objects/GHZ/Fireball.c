@@ -40,7 +40,7 @@ void Fireball_Create(void *data)
     if (data) {
         self->state     = (Type_StateMachine)data;
         self->active    = ACTIVE_NORMAL;
-        self->stateDraw = Fireball_StateDraw_Normal;
+        self->stateDraw = Fireball_Draw_Normal;
     }
     else {
         self->groundVel <<= 7;
@@ -189,7 +189,7 @@ void Fireball_State_Dissipate(void)
         destroyEntity(self);
 }
 
-void Fireball_StateDraw_Normal(void)
+void Fireball_Draw_Normal(void)
 {
     RSDK_THIS(Fireball);
     RSDK.DrawSprite(&self->animator, NULL, false);
@@ -200,7 +200,7 @@ void Fireball_EditorDraw(void)
 {
     RSDK_THIS(Fireball);
     RSDK.SetSpriteAnimation(Fireball->aniFrames, 0, &self->animator, true, 0);
-    self->stateDraw = Fireball_StateDraw_Normal;
+    self->stateDraw = Fireball_Draw_Normal;
 }
 
 void Fireball_EditorLoad(void)
