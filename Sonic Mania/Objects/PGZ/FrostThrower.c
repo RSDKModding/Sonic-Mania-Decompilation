@@ -22,7 +22,7 @@ void FrostThrower_StaticUpdate(void) {}
 void FrostThrower_Draw(void)
 {
     RSDK_THIS(FrostThrower);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->dispenseAnimator, NULL, false);
     if (self->isActive)
         FrostThrower_DrawGustFX();
 }
@@ -30,29 +30,29 @@ void FrostThrower_Draw(void)
 void FrostThrower_Create(void *data)
 {
     RSDK_THIS(FrostThrower);
-    self->active        = ACTIVE_BOUNDS;
-    self->visible       = true;
-    self->drawFX        = FX_FLIP;
-    self->drawOrder     = Zone->playerDrawLow + 1;
-    self->updateRange.x = 0x100000;
-    self->updateRange.y = 0x100000;
-    self->hitbox.left   = -14;
-    self->hitbox.right  = 15;
-    self->field_A4[0]   = 2;
-    self->field_A4[1]   = 2;
-    self->field_A4[2]   = 3;
-    self->field_A4[3]   = 3;
-    FrostThrower_Unknown3();
-    FrostThrower_Unknown4();
-    RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->animator2, true, 0);
+    self->active          = ACTIVE_BOUNDS;
+    self->visible         = true;
+    self->drawFX          = FX_FLIP;
+    self->drawOrder       = Zone->playerDrawLow + 1;
+    self->updateRange.x   = 0x100000;
+    self->updateRange.y   = 0x100000;
+    self->hitbox.left     = -14;
+    self->hitbox.right    = 15;
+    self->maxGustCount[0] = 2;
+    self->maxGustCount[1] = 2;
+    self->maxGustCount[2] = 3;
+    self->maxGustCount[3] = 3;
+    FrostThrower_HandleGustCount();
+    FrostThrower_HandleGustPos();
+    RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 0, &self->dispenseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->gustAnimator, true, 0);
     self->state = FrostThrower_State_IntervalWait;
 }
 
 void FrostThrower_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
-        FrostThrower->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/FrostThrower.bin", SCOPE_STAGE);
+        FrostThrower->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/FrostThrower.bin", SCOPE_STAGE); // this doesn't actually exist in the final game...
     else if (RSDK.CheckStageFolder("PSZ2"))
         FrostThrower->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/FrostThrower.bin", SCOPE_STAGE);
 
@@ -66,14 +66,14 @@ void FrostThrower_DrawGustFX(void)
 
     int32 pos = 0;
     for (int32 i = 0; i < 4; ++i) {
-        int32 count = minVal(self->field_B4[i], 3);
+        int32 count = minVal(self->gustCount[i], 3);
 
-        RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->animator2, true, i);
+        RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &self->gustAnimator, true, i);
         for (int32 p = 0; p < count; ++p) {
             Vector2 drawPos;
             drawPos.x = self->position.x + self->gustPos[pos + p].x;
             drawPos.y = self->position.y + self->gustPos[pos + p].y;
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->gustAnimator, &drawPos, false);
         }
         pos += 3;
     }
@@ -91,20 +91,20 @@ void FrostThrower_CheckPlayerCollisions(void)
     }
 }
 
-void FrostThrower_Unknown3(void)
+void FrostThrower_HandleGustCount(void)
 {
     RSDK_THIS(FrostThrower);
 
     for (int32 i = 0; i < 4; ++i) {
-        self->field_B4[i] = self->field_A4[i];
-        if (self->field_A4[i] > 1) {
+        self->gustCount[i] = self->maxGustCount[i];
+        if (self->maxGustCount[i] > 1) {
             if (RSDK.Rand(0, 10) <= 6)
-                self->field_B4[i] = RSDK.Rand(1, self->field_A4[i]);
+                self->gustCount[i] = RSDK.Rand(1, self->maxGustCount[i]);
         }
     }
 }
 
-void FrostThrower_Unknown4(void)
+void FrostThrower_HandleGustPos(void)
 {
     RSDK_THIS(FrostThrower);
     int32 pos = 0;
@@ -114,11 +114,9 @@ void FrostThrower_Unknown4(void)
     int32 xMin[] = { -3, -5, -7, -9 };
     int32 xMax[] = { 3, 5, 7, 9 };
     for (int32 i = 0; i < 4; ++i) {
-        if (self->field_B4[i]) {
-            for (int32 p = 0; p < self->field_B4[i]; ++p) {
-                self->gustPos[pos + p].x = RSDK.Rand(xMin[i], xMax[i]) << 16;
-                self->gustPos[pos + p].y = RSDK.Rand(yMin[i], yMax[i]) << 16;
-            }
+        for (int32 p = 0; p < self->gustCount[i]; ++p) {
+            self->gustPos[pos + p].x = RSDK.Rand(xMin[i], xMax[i]) << 16;
+            self->gustPos[pos + p].y = RSDK.Rand(yMin[i], yMax[i]) << 16;
         }
         pos += 3;
     }
@@ -131,12 +129,12 @@ void FrostThrower_State_IntervalWait(void)
         self->active   = ACTIVE_NORMAL;
         self->timer    = 0;
         self->isActive = true;
-        self->state    = FrostThrower_Unknown6;
+        self->state    = FrostThrower_State_Dispensing;
         RSDK.PlaySfx(FrostThrower->sfxFrostThrower, false, 255);
     }
 }
 
-void FrostThrower_Unknown6(void)
+void FrostThrower_State_Dispensing(void)
 {
     RSDK_THIS(FrostThrower);
     self->hitbox.top = 0;
@@ -147,119 +145,92 @@ void FrostThrower_Unknown6(void)
 
     FrostThrower_CheckPlayerCollisions();
 
-    self->field_A4[0] = 0;
     if (self->timer > 3)
-        self->field_A4[0] = 2;
+        self->maxGustCount[0] = 2;
     else
-        self->field_A4[0] = 1;
+        self->maxGustCount[0] = 1;
 
-    self->field_A4[1] = 0;
-    if (self->timer <= 8 && self->timer > 5)
-        self->field_A4[1] = 1;
-    else if (self->timer > 8)
-        self->field_A4[1] = 2;
+    if (self->timer > 8)
+        self->maxGustCount[1] = 2;
+    else if (self->timer > 5)
+        self->maxGustCount[1] = 1;
+    else
+        self->maxGustCount[1] = 0;
 
-    self->field_A4[2] = 0;
-    if (self->timer <= 16) {
-        if (self->timer <= 14) {
-            if (self->timer > 12)
-                self->field_A4[2] = 1;
-        }
-        else {
-            self->field_A4[2] = 2;
-        }
-    }
-    else {
-        self->field_A4[2] = 3;
-    }
+    if (self->timer > 16)
+        self->maxGustCount[2] = 3;
+    else if (self->timer > 14)
+        self->maxGustCount[2] = 2;
+    else if (self->timer > 12)
+        self->maxGustCount[2] = 1;
+    else
+        self->maxGustCount[2] = 0;
 
-    self->field_A4[3] = 0;
-    if (self->timer <= 19) {
-        if (self->timer <= 17) {
-            if (self->timer > 15)
-                self->field_A4[3] = 1;
-        }
-        else {
-            self->field_A4[3] = 2;
-        }
-    }
-    else {
-        self->field_A4[3] = 3;
-    }
+    if (self->timer > 19)
+        self->maxGustCount[3] = 3;
+    else if (self->timer > 17)
+        self->maxGustCount[3] = 2;
+    else if (self->timer > 15)
+        self->maxGustCount[3] = 1;
+    else
+        self->maxGustCount[3] = 0;
 
-    FrostThrower_Unknown3();
-    FrostThrower_Unknown4();
+    FrostThrower_HandleGustCount();
+    FrostThrower_HandleGustPos();
 
-    ++self->timer;
-    if (self->timer >= self->duration) {
-        self->state = FrostThrower_Unknown7;
+    if (++self->timer >= self->duration) {
+        self->state = FrostThrower_State_StopDispensing;
         self->timer = 0;
     }
 }
 
-void FrostThrower_Unknown7(void)
+void FrostThrower_State_StopDispensing(void)
 {
     RSDK_THIS(FrostThrower);
     self->hitbox.top    = 4 * self->timer;
     self->hitbox.bottom = 80;
     FrostThrower_CheckPlayerCollisions();
 
-    self->field_A4[0] = 2;
-    if (self->timer <= 8) {
-        if (self->timer > 5)
-            self->field_A4[0] = 1;
-    }
-    else {
-        self->field_A4[0] = 0;
-    }
+    if (self->timer > 8)
+        self->maxGustCount[0] = 0;
+    else if (self->timer > 5)
+        self->maxGustCount[0] = 1;
+    else
+        self->maxGustCount[1] = 2;
 
-    self->field_A4[1] = 2;
-    if (self->timer <= 8) {
-        if (self->timer > 5)
-            self->field_A4[1] = 1;
-    }
-    else {
-        self->field_A4[1] = 0;
-    }
+    if (self->timer > 8)
+        self->maxGustCount[1] = 0;
+    else if (self->timer > 5)
+        self->maxGustCount[1] = 1;
+    else
+        self->maxGustCount[1] = 2;
 
-    self->field_A4[2] = 3;
-    if (self->timer <= 19) {
-        if (self->timer <= 17) {
-            if (self->timer > 15)
-                self->field_A4[2] = 2;
-        }
-        else {
-            self->field_A4[2] = 1;
-        }
-    }
-    else {
-        self->field_A4[2] = 0;
-    }
+    if (self->timer > 19)
+        self->maxGustCount[2] = 0;
+    else if (self->timer > 17)
+        self->maxGustCount[2] = 1;
+    else if (self->timer > 15)
+        self->maxGustCount[2] = 2;
+    else
+        self->maxGustCount[2] = 3;
 
-    self->field_A4[3] = 3;
-    if (self->timer <= 16) {
-        if (self->timer <= 14) {
-            if (self->timer > 12)
-                self->field_A4[3] = 2;
-        }
-        else {
-            self->field_A4[3] = 1;
-        }
-    }
-    else {
-        self->field_A4[3] = 0;
-    }
-    FrostThrower_Unknown3();
-    FrostThrower_Unknown4();
+    if (self->timer > 16)
+        self->maxGustCount[3] = 0;
+    else if (self->timer > 14)
+        self->maxGustCount[3] = 1;
+    else if (self->timer > 12)
+        self->maxGustCount[3] = 2;
+    else
+        self->maxGustCount[3] = 3;
 
-    if (self->timer >= 20) {
+    FrostThrower_HandleGustCount();
+    FrostThrower_HandleGustPos();
+
+    if (self->timer++ >= 20) {
         self->active   = ACTIVE_BOUNDS;
         self->isActive = false;
         self->state    = FrostThrower_State_IntervalWait;
         self->timer    = 0;
-    }
-    else {
-        self->timer++;
     }
 }
 

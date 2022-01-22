@@ -16,15 +16,15 @@ struct EntityAcetone {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
-    Animator animator1;
-    Animator animator2;
+    Animator dispenseAnimator;
+    Animator gustAnimator;
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
     Hitbox hitbox;
     bool32 isActive;
-    int32 field_A4[4];
-    int32 field_B4[4];
+    int32 maxGustCount[4];
+    int32 gustCount[4];
     Vector2 gustPos[12];
 };
 
@@ -47,11 +47,11 @@ void Acetone_Serialize(void);
 // Extra Entity Functions
 void Acetone_DrawGustFX(void);
 void Acetone_CheckPlayerCollisions(void);
-void Acetone_Unknown3(void);
-void Acetone_Unknown4(void);
+void Acetone_HandleGustCount(void);
+void Acetone_HandleGustPos(void);
 void Acetone_State_IntervalWait(void);
-void Acetone_Unknown6(void);
-void Acetone_Unknown7(void);
+void Acetone_State_Dispensing(void);
+void Acetone_State_StopDispensing(void);
 
 
 #endif //!OBJ_ACETONE_H

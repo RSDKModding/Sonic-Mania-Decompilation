@@ -15,8 +15,8 @@ struct ObjectPSZLauncher {
 struct EntityPSZLauncher {
     RSDK_ENTITY
     StateMachine(state);
+    uint8 stoodPlayers;
     uint8 activePlayers;
-    uint8 activePlayers2;
     Animator animator;
     uint8 power;
 };
@@ -41,9 +41,9 @@ void PSZLauncher_Serialize(void);
 void PSZLauncher_DebugSpawn(void);
 void PSZLauncher_DebugDraw(void);
 
-void PSZLauncher_Unknown3(void);
-void PSZLauncher_Unknown4(void);
+void PSZLauncher_HandlePlayerCollisions(void);
+void PSZLauncher_HandlePlayerInteractions(void);
 void PSZLauncher_State_Setup(void);
-void PSZLauncher_Unknown6(void);
+void PSZLauncher_State_Active(void);
 
 #endif //!OBJ_PSZLAUNCHER_H

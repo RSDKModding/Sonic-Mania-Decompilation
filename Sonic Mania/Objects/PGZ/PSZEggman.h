@@ -15,12 +15,12 @@ struct EntityPSZEggman {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    Vector2 drawPos;
+    Vector2 eggmanPos;
     EntityPhantomRuby *ruby;
-    Animator animator;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Animator eggmanAnimator;
+    Animator terminalAnimator;
+    Animator displayAnimator;
+    Animator scanlinesAnimator;
 };
 
 // Object Struct
@@ -40,7 +40,7 @@ void PSZEggman_EditorLoad(void);
 void PSZEggman_Serialize(void);
 
 // Extra Entity Functions
-void PSZEggman_Unknown1(void);
+void PSZEggman_State_TurnRound(void);
 
 
 #endif //!OBJ_PSZEGGMAN_H

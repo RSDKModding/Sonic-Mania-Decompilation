@@ -17,86 +17,86 @@ void IceSpring_Update(void)
     self->playerBits = 0;
     if (self->state) {
         if (!self->animator.speed) {
-            int32 i = 0;
+            // Bug Details:
+            // due to this foreach loop using playerID as a variable instead of player->playerID there's a bug where if you have P2 hit the spring while P1 is in debug mode
+            // the animator will be copied into P1's slot instead of P2's one
+            // Fix:
+            // use player->playerID instead of a manual playerID variable
+            int32 playerID = 0;
             foreach_active(Player, player)
             {
-                if (self->planeFilter && player->collisionPlane != ((uint8)(self->planeFilter - 1) & 1))
-                    continue;
+                if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+                    int32 storeX = player->position.x;
+                    int32 storeY = player->position.y;
 
-                int32 storeX = player->position.x;
-                int32 storeY = player->position.y;
+                    int32 collided = false;
+                    if (player->state == Ice_State_FrozenPlayer)
+                        collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, 0);
+                    else
+                        collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), 0);
 
-                int32 collided = 0;
-                if (player->state == Ice_State_FrozenPlayer)
-                    collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, 0);
-                else
-                    collided = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), 0);
-                if (!collided) {
-                    ++i;
+                    if (collided) {
+                        int32 type          = self->type;
+                        bool32 collideCheck = false;
+                        switch (self->type) {
+                            case ICESPRING_DIAGONAL:
+                            default: break;
+
+                            case ICESPRING_VERTICAL:
+                                if (self->direction & FLIP_Y)
+                                    collideCheck = collided == C_BOTTOM;
+                                else
+                                    collideCheck = collided == C_TOP;
+                                break;
+
+                            case ICESPRING_HORIZONTAL:
+                                if (self->direction & FLIP_X)
+                                    collideCheck = collided == C_LEFT;
+                                else
+                                    collideCheck = collided == C_RIGHT;
+                                break;
+                        }
+
+                        if (!collideCheck && type == ICESPRING_DIAGONAL) {
+                            collideCheck |= (player->onGround || player->velocity.y >= 0 || abs(player->velocity.x) > -player->velocity.y);
+                        }
+                        if (collideCheck) {
+                            self->playerBits |= 1 << playerID;
+                            memcpy(&IceSpring->animators[playerID], &player->animator, sizeof(Animator));
+                        }
+
+                        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
+                        if (player->state != Ice_State_FrozenPlayer && shield->animator.animationID != 2
+#if RETRO_USE_PLUS
+                            && player->state != Player_State_MightyHammerDrop
+#endif
+                        ) {
+                            if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->timer) {
+                                self->timer = 15;
+                                Ice_ShatterGenerator(8, 8, 6, 0, 0, false);
+                            }
+                            ++playerID;
+                        }
+                        else if (!collideCheck
+#if RETRO_USE_PLUS
+                                 || player->state == Player_State_MightyHammerDrop
+#endif
+                        ) {
+                            switch (collided) {
+                                case C_TOP: IceSpring_Shatter(0, 0); break;
+                                case C_LEFT:
+                                case C_RIGHT: IceSpring_Shatter(player->velocity.x, 0); break;
+                                case C_BOTTOM: IceSpring_Shatter(0, player->velocity.y); break;
+                                default: break;
+                            }
+                            foreach_return;
+                        }
+                    }
+
                     player->position.x = storeX;
                     player->position.y = storeY;
-                    continue;
                 }
-
-                int32 type          = self->type;
-                bool32 collideCheck = false;
-                switch (self->type) {
-                    case ICESPRING_DIAGONAL:
-                    default: break;
-                        
-                    case ICESPRING_VERTICAL:
-                        if (self->direction & FLIP_Y)
-                            collideCheck = collided == C_BOTTOM;
-                        else
-                            collideCheck = collided == C_TOP;
-                        break;
-                        
-                    case ICESPRING_HORIZONTAL:
-                        if (self->direction & FLIP_X)
-                            collideCheck = collided == C_LEFT;
-                        else
-                            collideCheck = collided == C_RIGHT;
-                        break;
-                }
-
-                if (!collideCheck && type == ICESPRING_DIAGONAL) {
-                    collideCheck |= (player->onGround || player->velocity.y >= 0 || abs(player->velocity.x) > -player->velocity.y);
-                }
-                if (collideCheck) {
-                    self->playerBits |= 1 << i;
-                    memcpy(&IceSpring->animators[i], &player->animator, sizeof(Animator));
-                }
-
-                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                if (player->state != Ice_State_FrozenPlayer && shield->animator.animationID != 2
-#if RETRO_USE_PLUS
-                    && player->state != Player_State_MightyHammerDrop
-#endif
-                ) {
-                    if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->timer) {
-                        self->timer = 15;
-                        Ice_ShatterGenerator(8, 8, 6, 0, 0, false);
-                    }
-                    ++i;
-                }
-                else if (!collideCheck
-#if RETRO_USE_PLUS
-                         || player->state == Player_State_MightyHammerDrop
-#endif
-                ) {
-                    switch (collided) {
-                        case C_TOP: IceSpring_Shatter(0, 0); foreach_break;
-                        case C_LEFT:
-                        case C_RIGHT: IceSpring_Shatter(player->velocity.x, 0); foreach_break;
-                        case C_BOTTOM: IceSpring_Shatter(0, player->velocity.y); foreach_break;
-                        // RMG: this is NOT my own bug, this is in mania
-                        // future RDC here, this is just a compiler thing, this code will NEVER be reached
-                        default: IceSpring_Shatter(player->position.x, player->position.y); foreach_break;
-                    }
-                    return;
-                }
-                player->position.x = storeX;
-                player->position.y = storeY;
+                ++playerID;
             }
         }
 
@@ -105,9 +105,8 @@ void IceSpring_Update(void)
         for (int32 i = 0; i < Player->playerCount; ++i) {
             if ((1 << i) & self->playerBits) {
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-                if (IceSpring->animators[i].animationID == ANI_JUMP) {
+                if (IceSpring->animators[i].animationID == ANI_JUMP) 
                     memcpy(&player->animator, &IceSpring->animators[i], sizeof(Animator));
-                }
                 player->jumpAbility = 0;
                 if (player->sidekick && self->playerBits == 0b10) {
                     RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->type, &self->animator, true, 0);

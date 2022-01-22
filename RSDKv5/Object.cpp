@@ -998,25 +998,10 @@ bool32 CheckOnScreen(Entity *entity, Vector2 *range)
     if (!entity)
         return false;
 
-    if (range) {
-        for (int s = 0; s < cameraCount; ++s) {
-            int sx = abs(entity->position.x - cameras[s].position.x);
-            int sy = abs(entity->position.y - cameras[s].position.y);
-            if (sx <= range->x + cameras[s].offset.x && sy <= range->y + cameras[s].offset.y) {
-                return true;
-            }
-        }
-    }
-    else {
-        for (int s = 0; s < cameraCount; ++s) {
-            int sx = abs(entity->position.x - cameras[s].position.x);
-            int sy = abs(entity->position.y - cameras[s].position.y);
-            if (sx <= entity->updateRange.x + cameras[s].offset.x && sy <= entity->updateRange.y + cameras[s].offset.y) {
-                return true;
-            }
-        }
-    }
-    return false;
+    if (!range)
+        range = &entity->updateRange;
+
+    return CheckPosOnScreen(&entity->position, range);
 }
 bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range)
 {

@@ -16,15 +16,15 @@ struct EntityFrostThrower {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
-    Animator animator1;
-    Animator animator2;
+    Animator dispenseAnimator;
+    Animator gustAnimator;
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
     Hitbox hitbox;
     bool32 isActive;
-    int32 field_A4[4];
-    int32 field_B4[4];
+    int32 maxGustCount[4];
+    int32 gustCount[4];
     Vector2 gustPos[12];
 };
 
@@ -47,10 +47,10 @@ void FrostThrower_Serialize(void);
 // Extra Entity Functions
 void FrostThrower_DrawGustFX(void);
 void FrostThrower_CheckPlayerCollisions(void);
-void FrostThrower_Unknown3(void);
-void FrostThrower_Unknown4(void);
+void FrostThrower_HandleGustCount(void);
+void FrostThrower_HandleGustPos(void);
 void FrostThrower_State_IntervalWait(void);
-void FrostThrower_Unknown6(void);
-void FrostThrower_Unknown7(void);
+void FrostThrower_State_Dispensing(void);
+void FrostThrower_State_StopDispensing(void);
 
 #endif //!OBJ_FROSTTHROWER_H

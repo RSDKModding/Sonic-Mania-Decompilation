@@ -285,11 +285,9 @@ void Player_LateUpdate(void)
                 self->camera->adjustY = 0;
         }
     }
-    else {
-        if (self->nextAirState) {
-            self->state        = self->nextAirState;
-            self->nextAirState = StateMachine_None;
-        }
+    else if (self->nextAirState) {
+        self->state        = self->nextAirState;
+        self->nextAirState = StateMachine_None;
     }
 
     if (self->tailFrames != (uint16)-1) {
@@ -3186,14 +3184,13 @@ void Player_CheckStartFlyCarry(EntityPlayer *leader)
         }
 
         if (flag && (leader->animator.animationID != ANI_FAN)) {
-            if (abs(self->position.x - leader->position.x) < 0xC0000) {
-                if (abs(off - leader->position.y) < 0xC0000 && !self->flyCarryTimer && !leader->down && !leader->onGround) {
-                    RSDK.SetSpriteAnimation(leader->aniFrames, ANI_HANG, &leader->animator, false, 0);
-                    leader->state           = Player_State_FlyCarried;
-                    leader->nextAirState    = StateMachine_None;
-                    leader->nextGroundState = StateMachine_None;
-                    RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                }
+            if (abs(self->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !self->flyCarryTimer
+                && !leader->down && !leader->onGround) {
+                RSDK.SetSpriteAnimation(leader->aniFrames, ANI_HANG, &leader->animator, false, 0);
+                leader->state           = Player_State_FlyCarried;
+                leader->nextAirState    = StateMachine_None;
+                leader->nextGroundState = StateMachine_None;
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }
         }
     }
@@ -3210,19 +3207,21 @@ void Player_CheckStartFlyCarry(EntityPlayer *leader)
             move->position.x = -self->moveOffset.x >> 16;
             move->position.y = -self->moveOffset.y >> 16;
         }
+
         RSDK.ProcessTileCollisions(self, sidekickOuterBox, sidekickInnerBox);
         if (self->onGround && !self->collisionMode)
             self->collisionFlagV |= 1;
         leader->sidekickPos.x = self->position.x & 0xFFFF0000;
         leader->sidekickPos.y = self->position.y & 0xFFFF0000;
-        self->velocity.y      = entityYVel;
         self->position.x      = entityXPos;
         self->position.y      = entityYPos;
         self->velocity.x      = entityXVel;
-        leader->velocity.y    = entityYVel;
+        self->velocity.y      = entityYVel;
+
         leader->position.y    = entityYPos + 0x1C0000;
-        leader->position.x = entityXPos;
-        leader->velocity.x = entityXVel;
+        leader->position.x    = entityXPos;
+        leader->velocity.x    = entityXVel;
+        leader->velocity.y    = entityYVel;
 
         Hitbox *leaderOuterBox = RSDK.GetHitbox(&leader->animator, 0);
         Hitbox *leaderInnerBox = RSDK.GetHitbox(&leader->animator, 1);
@@ -4388,8 +4387,8 @@ void Player_State_TailsFlight(void)
 void Player_State_FlyCarried(void)
 {
     RSDK_THIS(Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    if (player2->state != Player_State_TailsFlight)
+    EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+    if (sidekick->state != Player_State_TailsFlight)
         self->state = Player_State_Air;
     if (self->sidekickPos.x != self->leaderPos.x)
         self->state = Player_State_Air;
@@ -4406,7 +4405,7 @@ void Player_State_FlyCarried(void)
         }
     }
     else {
-        player2->flyCarryTimer = 30;
+        sidekick->flyCarryTimer = 30;
     }
 }
 void Player_State_KnuxGlideLeft(void)
@@ -4439,30 +4438,30 @@ void Player_State_KnuxGlideLeft(void)
                 self->timer += 4;
             int32 storeX = self->position.x;
 
-            int32 y1, y2;
+            int32 highY = 0, lowY = 0;
             if (self->isChibi) {
-                y1 = -0x10000;
-                y2 = 0x30000;
+                highY = -0x10000;
+                lowY = 0x30000;
             }
             else {
-                y1 = -0x20000;
-                y2 = 0xB0000;
+                highY = -0x20000;
+                lowY = 0xB0000;
             }
 
-            bool32 collidedA, collidedB;
-            int32 oldPos = 0, newPos = 0;
+            bool32 collidedHigh = false, collidedLow = false;
+            int32 highPos = 0, lowPos = 0;
             if (self->timer >= 128) {
                 self->position.x += self->velocity.x;
-                collidedA = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xC0000, y1, true);
-                oldPos    = self->position.x;
-                self->position.x += self->velocity.x;
-                collidedB = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xC0000, y2, true);
-                newPos    = self->position.x;
+                int32 startPos = self->position.x;
+
+                collidedHigh = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xC0000, highY, true);
+                highPos      = self->position.x;
+
+                self->position.x = startPos;
+                collidedLow = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xC0000, lowY, true);
+                lowPos      = self->position.x;
             }
-            else {
-                collidedA = false;
-                collidedB = false;
-            }
+
             int32 vx         = self->velocity.x;
             bool32 flag      = self->velocity.x;
             self->velocity.x = self->abilitySpeed * RSDK.Cos512(self->timer) >> 9;
@@ -4481,10 +4480,10 @@ void Player_State_KnuxGlideLeft(void)
             }
             else {
                 if (!flag && self->timer == 256) {
-                    if (collidedA || collidedB) {
+                    if (collidedHigh || collidedLow) {
                         self->abilitySpeed = 0;
                         self->timer        = 0;
-                        if (oldPos == newPos) {
+                        if (highPos == lowPos) {
                             self->state      = Player_State_KnuxWallClimb;
                             self->velocity.x = 0;
                             self->velocity.y = 0;
@@ -4496,7 +4495,7 @@ void Player_State_KnuxGlideLeft(void)
                             self->state = Player_State_KnuxGlideDrop;
                         }
                     }
-                    else if (collidedA)
+                    else if (collidedHigh)
                     {
                         self->timer        = 0;
                         self->abilitySpeed = 0;
@@ -4561,30 +4560,30 @@ void Player_State_KnuxGlideRight(void)
                 self->timer -= 4;
             int32 storeX = self->position.x;
 
-            int32 y1, y2;
+            int32 highY = 0, lowY = 0;
             if (self->isChibi) {
-                y1 = -0x10000;
-                y2 = 0x30000;
+                highY = -0x10000;
+                lowY  = 0x30000;
             }
             else {
-                y1 = -0x20000;
-                y2 = 0xB0000;
+                highY = -0x20000;
+                lowY  = 0xB0000;
             }
 
-            bool32 collidedA, collidedB;
-            int32 oldPos = 0, newPos = 0;
+            bool32 collidedHigh = false, collidedLow = false;
+            int32 highPos = 0, lowPos = 0;
             if (self->timer < 128) {
                 self->position.x += self->velocity.x;
-                collidedA = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xC0000, y1, true);
-                oldPos    = self->position.x;
-                self->position.x += self->velocity.x;
-                collidedB = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xC0000, y2, true);
-                newPos    = self->position.x;
+                int32 startPos = self->position.x;
+
+                collidedHigh = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xC0000, highY, true);
+                highPos      = self->position.x;
+
+                self->position.x = startPos;
+                collidedLow = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xC0000, lowY, true);
+                lowPos      = self->position.x;
             }
-            else {
-                collidedA = false;
-                collidedB = false;
-            }
+
             int32 vx         = self->velocity.x;
             bool32 flag      = self->velocity.x;
             self->velocity.x = self->abilitySpeed * RSDK.Cos512(self->timer) >> 9;
@@ -4603,10 +4602,10 @@ void Player_State_KnuxGlideRight(void)
             }
             else {
                 if (!flag && !self->timer) {
-                    if (collidedA || collidedB) {
+                    if (collidedHigh || collidedLow) {
                         self->abilitySpeed = 0;
                         self->timer        = 0;
-                        if (oldPos == newPos) {
+                        if (highPos == lowPos) {
                             self->state      = Player_State_KnuxWallClimb;
                             self->velocity.x = 0;
                             self->velocity.y = 0;
@@ -4618,7 +4617,7 @@ void Player_State_KnuxGlideRight(void)
                             self->state = Player_State_KnuxGlideDrop;
                         }
                     }
-                    else if (collidedA) {
+                    else if (collidedHigh) {
                         self->timer        = 0;
                         self->abilitySpeed = 0;
                         self->velocity.x >>= 2;
@@ -4811,64 +4810,66 @@ void Player_State_KnuxWallClimb(void)
             Hitbox *hitbox = Player_GetHitbox(self);
             int32 storeX   = self->position.x;
 
-            int32 y1 = 0;
-            int32 y2 = 0;
-            int32 y3 = 0;
+            int32 highY = 0;
+            int32 lowY  = 0;
+
+            int32 roofX = 0;
+            int32 roofY = 0;
             if (self->isChibi) {
-                y1 = -0x40000;
-                y2 = 0x40000;
-                y3 = -0xC0000;
+                highY = -0x40000;
+                lowY  = 0x40000;
+                roofY = -0xC0000;
             }
             else {
-                y1 = -0xA0000;
-                y2 = 0xB0000;
-                y3 = -0x140000;
+                highY = -0xA0000;
+                lowY  = 0xB0000;
+                roofY = -0x140000;
             }
 
-            int32 x = 0;
-            bool32 collidedA, collidedB;
+            bool32 collidedHigh = false, collidedLow = false;
             if (self->direction) {
-                collidedA        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, y1, 8);
-                int32 sx         = self->position.x;
+                collidedHigh = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, highY, 8);
+                int32 highX  = self->position.x;
+
                 self->position.x = storeX;
-                collidedB        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, y2, 8);
-                if (self->velocity.y < 0 && self->position.x < sx)
+                collidedLow      = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, hitbox->left << 16, lowY, 8);
+                if (self->velocity.y < 0 && self->position.x < highX)
                     self->velocity.y = 0;
-                x = -0x40000;
+                roofX = -0x40000;
             }
             else {
-                collidedA        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, y1, 8);
-                int32 sx         = self->position.x;
+                collidedHigh = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, highY, 8);
+                int32 highY  = self->position.x;
+
                 self->position.x = storeX;
-                collidedB        = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, y2, 8);
-                if (self->velocity.y < 0 && self->position.x > sx)
+                collidedLow      = RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, lowY, 8);
+                if (self->velocity.y < 0 && self->position.x > highY)
                     self->velocity.y = 0;
-                x = 0x40000;
+                roofX = 0x40000;
             }
             self->position.y += self->velocity.y;
-            if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, x, y3, true))
+
+            if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_ROOF, self->collisionPlane, roofX, roofY, true))
                 self->velocity.y = 0;
 
-            if (collidedA) {
-                if (collidedB) {
-                    if (self->velocity.y >= 0) {
-                        if (self->velocity.y <= 0)
-                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIM, &self->animator, false, 0);
-                        else
-                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMLIFT, &self->animator, false, 0);
-                    }
-                    else {
-                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMTIRED, &self->animator, false, 0);
-                    }
-                    self->velocity.y = 0;
+            if (collidedHigh && collidedLow) {
+                if (self->velocity.y >= 0) {
+                    if (self->velocity.y <= 0)
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIM, &self->animator, false, 0);
+                    else
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMLIFT, &self->animator, false, 0);
                 }
                 else {
-                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->animator, false, 2);
-                    self->velocity.y = 0;
-                    self->state      = Player_State_KnuxGlideDrop;
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMTIRED, &self->animator, false, 0);
                 }
+                self->velocity.y = 0;
             }
-            else {
+            else if (collidedHigh) {
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->animator, false, 2);
+                self->velocity.y = 0;
+                self->state      = Player_State_KnuxGlideDrop;
+            }
+            else if (collidedLow) {
                 self->position.y &= 0xFFF00000;
                 if (self->isChibi)
                     self->position.y -= 0x10000;

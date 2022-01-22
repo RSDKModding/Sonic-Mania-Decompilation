@@ -72,11 +72,11 @@ void PetalPile_EditorLoad(void);
 void PetalPile_Serialize(void);
 
 // Extra Entity Functions
-int32 PetalPile_GetLeafPattern(int32 *patternPtr);
+int32 PetalPile_GetLeafPattern(Vector2 *patternPtr);
 
 void PetalPile_State_Setup(void);
 void PetalPile_State_HandleInteractions(void);
-void PetalPile_State_Unknown3(void);
+void PetalPile_State_SetupEmitter(void);
 void PetalPile_State_Emitter(void);
 
 void PetalPile_StateLeaf_Setup(void);

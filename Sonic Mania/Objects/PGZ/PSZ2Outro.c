@@ -110,8 +110,8 @@ bool32 PSZ2Outro_Cutscene_WalkIntoPlace(EntityCutsceneSeq *host)
             }
             else {
                 if (!player->skidding) {
-                    RSDK.SetSpriteAnimation(PSZEggman->aniFrames, 1, &eggman->animator, false, 0);
-                    eggman->state    = PSZEggman_Unknown1;
+                    RSDK.SetSpriteAnimation(PSZEggman->aniFrames, 1, &eggman->eggmanAnimator, false, 0);
+                    eggman->state    = PSZEggman_State_TurnRound;
                     player->skidding = 24;
                 }
                 player->right = false;

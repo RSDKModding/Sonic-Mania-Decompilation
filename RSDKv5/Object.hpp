@@ -263,7 +263,9 @@ bool32 GetEntities(ushort type, Entity **entity);
 
 inline void BreakForeachLoop() { --foreachStackPtr; }
 
+// CheckPosOnScreen but if range is NULL it'll use entity->updateRange
 bool32 CheckOnScreen(Entity *entity, Vector2 *range);
+// Checks if a position is on screen & within range
 bool32 CheckPosOnScreen(Vector2 *position, Vector2 *range);
 
 #endif // !OBJECT_H

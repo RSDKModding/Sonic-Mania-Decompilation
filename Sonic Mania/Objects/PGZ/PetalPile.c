@@ -64,7 +64,7 @@ void PetalPile_StageLoad(void)
     PetalPile->sfxPetals = RSDK.GetSfx("PSZ/Petals.wav");
 }
 
-int32 PetalPile_GetLeafPattern(int32 *patternPtr)
+int32 PetalPile_GetLeafPattern(Vector2 *patternPtr)
 {
     RSDK_THIS(PetalPile);
 
@@ -81,9 +81,9 @@ int32 PetalPile_GetLeafPattern(int32 *patternPtr)
 
     int32 sizeX = maxVal(self->pileSize.x, 0x20000);
     int32 sizeY = maxVal(self->pileSize.y, 0x20000);
-    for (int32 i = 0; i < count * 2; i += 2) {
-        patternPtr[i + 0] = pattern[i + 0] * (sizeX >> 17);
-        patternPtr[i + 1] = pattern[i + 1] * (sizeY >> 17);
+    for (int32 i = 0; i < count; ++i) {
+        patternPtr[i].x = pattern[(i * 2) + 0] * (sizeX >> 17);
+        patternPtr[i].y = pattern[(i * 2) + 1] * (sizeY >> 17);
     }
     return count;
 }
@@ -98,8 +98,8 @@ void PetalPile_State_Setup(void)
     self->hitbox.bottom = self->pileSize.y >> 17;
 
     if (self->noRemoveTiles) {
-        self->state = PetalPile_State_Unknown3;
-        PetalPile_State_Unknown3();
+        self->state = PetalPile_State_SetupEmitter;
+        PetalPile_State_SetupEmitter();
     }
     else {
         self->state = PetalPile_State_HandleInteractions;
@@ -130,7 +130,7 @@ void PetalPile_State_HandleInteractions(void)
                     self->distance.x = player->position.x - self->position.x;
                     self->distance.y   = 0;
                     RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
-                    self->state = PetalPile_State_Unknown3;
+                    self->state = PetalPile_State_SetupEmitter;
                     foreach_break;
                 }
             }
@@ -140,7 +140,7 @@ void PetalPile_State_HandleInteractions(void)
         }
     }
 
-    if (self->state != PetalPile_State_Unknown3) {
+    if (self->state != PetalPile_State_SetupEmitter) {
         Hitbox hitbox;
         hitbox.left   = -8;
         hitbox.top    = -8;
@@ -154,20 +154,20 @@ void PetalPile_State_HandleInteractions(void)
                 self->distance.x   = explosion->position.x - self->position.x;
                 self->distance.y  = 0;
                 RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
-                self->state = PetalPile_State_Unknown3;
+                self->state = PetalPile_State_SetupEmitter;
                 foreach_break;
             }
         }
     }
 }
 
-void PetalPile_State_Unknown3(void)
+void PetalPile_State_SetupEmitter(void)
 {
     RSDK_THIS(PetalPile);
 
-    Vector2 buffer[0x100];
-    memset(buffer, 0, sizeof(buffer));
-    int32 count = PetalPile_GetLeafPattern((int32 *)buffer);
+    Vector2 pattern[0x100];
+    memset(pattern, 0, sizeof(pattern));
+    int32 count = PetalPile_GetLeafPattern(pattern);
 
     int32 offsetX = 0, offsetY = 0;
     switch (self->petalDir) {
@@ -187,14 +187,14 @@ void PetalPile_State_Unknown3(void)
 
     int32 pos = 0;
     for (int32 i = 0; i < count; ++i) {
-        int32 val = abs((self->position.x - offsetX) + buffer[i].x);
+        int32 val = abs((self->position.x - offsetX) + pattern[i].x);
         if (pos <= val)
             pos = val;
     }
 
     for (int32 i = 0; i < count; ++i) {
-        int32 spawnX = buffer[i].x + self->position.x;
-        int32 spawnY = buffer[i].y + self->position.y;
+        int32 spawnX = pattern[i].x + self->position.x;
+        int32 spawnY = pattern[i].y + self->position.y;
 
         int32 angle              = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
         EntityPetalPile *petal = CREATE_ENTITY(PetalPile, self, spawnX, spawnY);
@@ -205,7 +205,7 @@ void PetalPile_State_Unknown3(void)
         if (self->petalDir) {
             petal->direction = self->petalDir <= 0;
             petal->petalVel  = self->petalVel;
-            radius              = (self->petalRadius >> 8) * ((16 * (abs(spawnX - offsetX) / (pos >> 16))) >> 12);
+            radius           = (self->petalRadius >> 8) * ((16 * (abs(spawnX - offsetX) / (pos >> 16))) >> 12);
             petal->timer     = (pos - abs(spawnX - offsetX)) >> 18;
         }
         else {

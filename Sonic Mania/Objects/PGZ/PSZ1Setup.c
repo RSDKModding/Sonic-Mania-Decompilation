@@ -148,11 +148,11 @@ void PSZ1Setup_StaticUpdate(void)
             foreach_active(Player, player)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
-                uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
-                bool32 lowFlag = true;
+                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                bool32 isLowLayer = true;
                 if (tile == (uint16)-1) {
-                    tile    = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
-                    lowFlag = false;
+                    tile       = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    isLowLayer = false;
                 }
 
                 if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
@@ -160,7 +160,7 @@ void PSZ1Setup_StaticUpdate(void)
                         RSDK_THIS_GEN();
                         EntityPetalPile *pile = CREATE_ENTITY(PetalPile, self, player->position.x, player->position.y + (playerHitbox->bottom << 16));
                         pile->leafPattern     = PETALPILE_PATTERN_4;
-                        pile->tileLayer       = lowFlag;
+                        pile->tileLayer       = isLowLayer;
                         pile->pileSize.x      = 0x40000;
                         pile->pileSize.y      = 0x40000;
                         pile->noRemoveTiles   = true;
