@@ -287,6 +287,22 @@ void SpiderMobile_Hit(void)
     }
 }
 
+void SpiderMobile_Explode(void)
+{
+    RSDK_THIS(SpiderMobile);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(SpiderMobile->sfxExplosion, false, 0xFF);
+
+        if (Zone->timer & 4) {
+            int32 x                    = self->headPos.x + (RSDK.Rand(-48, 48) << 16);
+            int32 y                    = self->headPos.x + (RSDK.Rand(-48, 48) << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            explosion->drawOrder       = Zone->drawOrderHigh;
+        }
+    }
+}
+
 void SpiderMobile_HandlePlatformMovement(void)
 {
     RSDK_THIS(SpiderMobile);
@@ -910,16 +926,8 @@ void SpiderMobile_StateBody_HandleOrbAttack(void)
 void SpiderMobile_StateBody_Destroyed(void)
 {
     RSDK_THIS(SpiderMobile);
-    if (!(Zone->timer % 3)) {
-        RSDK.PlaySfx(SpiderMobile->sfxExplosion, false, 255);
-        if (Zone->timer & 4) {
-            int32 x = RSDK.Rand(-48, 48) << 16;
-            int32 y = RSDK.Rand(-48, 48) << 16;
-            EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), self->headPos.x + x, self->headPos.y + y);
-            explosion->drawOrder = Zone->drawOrderHigh;
-        }
-    }
+
+    SpiderMobile_Explode();
     SpiderMobile_HandlePlatformMovement();
     SpiderMobile_HandleDestroyedArmMovement();
     SpiderMobile_UpdateLimbPositions();

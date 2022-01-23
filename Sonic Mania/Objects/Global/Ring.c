@@ -48,7 +48,7 @@ void Ring_Create(void *data)
             self->amplitude.y >>= 10;
             self->active = ACTIVE_BOUNDS;
             switch (self->moveType) {
-                case RING_MOVE_NORMAL:
+                case RING_MOVE_MOVING:
                     self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
                     self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
                     self->state         = Ring_State_Move;
@@ -213,7 +213,7 @@ void Ring_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         ring->state          = Ring_State_Bounce;
         ring->stateDraw      = Ring_Draw_Normal;
         ring->drawOrder      = self->drawOrder;
-        ring->moveType       = RING_MOVE_NORMAL;
+        ring->moveType       = RING_MOVE_MOVING;
         angle += 16;
     }
 
@@ -793,7 +793,7 @@ void Ring_EditorDraw(void)
         amplitude.y = self->amplitude.y >> 10;
 
         switch (self->moveType) {
-            case RING_MOVE_NORMAL:
+            case RING_MOVE_MOVING:
                 self->updateRange.x = (abs(amplitude.x) + 0x1000) << 10;
                 self->updateRange.y = (abs(amplitude.y) + 0x1000) << 10;
 
@@ -869,7 +869,7 @@ void Ring_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(Ring, moveType);
     RSDK_ENUM_VAR("Fixed", RING_MOVE_FIXED);
-    RSDK_ENUM_VAR("Normal", RING_MOVE_NORMAL);
+    RSDK_ENUM_VAR("Moving", RING_MOVE_MOVING);
     RSDK_ENUM_VAR("Circle", RING_MOVE_CIRCLE);
     RSDK_ENUM_VAR("Track", RING_MOVE_TRACK);
     RSDK_ENUM_VAR("Path", RING_MOVE_PATH);

@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectPSZ2Outro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
 };
 
 // Entity Class

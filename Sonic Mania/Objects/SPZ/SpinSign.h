@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPINSIGN_SONIC_H,
+    SPINSIGN_SONIC_V,
+    SPINSIGN_MANIA_H,
+    SPINSIGN_MANIA_V,
+}SpinSignTypes;
+
 // Object Class
 struct ObjectSpinSign {
     RSDK_OBJECT
@@ -18,9 +25,9 @@ struct EntitySpinSign {
     StateMachine(state);
     uint8 type;
     int32 timer;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator eggmanAnimator;
+    Animator frontAnimator;
+    Animator sidesAnimator;
 };
 
 // Object Struct
@@ -43,12 +50,12 @@ void SpinSign_Serialize(void);
 void SpinSign_DebugSpawn(void);
 void SpinSign_DebugDraw(void);
 
-void SpinSign_Unknown1(void);
-void SpinSign_Unknown2(void);
+void SpinSign_State_Spinning(void);
+void SpinSign_State_SlowDown(void);
 
-void SpinSign_Unknown3(void);
-void SpinSign_Unknown4(void);
-void SpinSign_Unknown5(void);
-void SpinSign_Unknown6(void);
+void SpinSign_Draw_SonicH(void);
+void SpinSign_Draw_SonicV(void);
+void SpinSign_Draw_ManiaH(void);
+void SpinSign_Draw_ManiaV(void);
 
 #endif //!OBJ_SPINSIGN_H

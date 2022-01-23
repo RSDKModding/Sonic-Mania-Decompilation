@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectPSZ2Intro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     uint16 sfxExplosion3;
     EntityFXFade *fxFade;
     Entity *signPost;

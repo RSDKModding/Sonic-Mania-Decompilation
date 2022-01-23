@@ -7,7 +7,7 @@
 struct ObjectFunnel {
     RSDK_OBJECT
     Hitbox hitbox;
-    uint16 field_C;
+    uint16 unused;
     uint16 sfxFunnel;
     uint16 sfxPimPom;
     uint16 aniFrames;
@@ -43,7 +43,7 @@ void Funnel_EditorLoad(void);
 void Funnel_Serialize(void);
 
 // Extra Entity Functions
-void Funnel_Unknown1(void);
+void Funnel_State_None(void);
 
 
 #endif //!OBJ_FUNNEL_H

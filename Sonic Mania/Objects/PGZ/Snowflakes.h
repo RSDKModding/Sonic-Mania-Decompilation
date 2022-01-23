@@ -7,7 +7,7 @@
 struct ObjectSnowflakes {
     RSDK_OBJECT
     uint8 count;
-    int32 field_4;
+    int32 unused;
     uint16 aniFrames;
 };
 

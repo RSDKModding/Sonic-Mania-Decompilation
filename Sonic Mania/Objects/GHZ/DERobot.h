@@ -48,11 +48,11 @@ struct EntityDERobot {
     int32 unused3;
     int32 unused4;
     Entity *parent;
-    Entity *head;
-    Entity *shoulderFront;
-    Entity *eggman;
-    Entity *legs[6]; //knee, leg, foot (for back, then for front)
-    Entity *arms[4]; //arm, hand, (for back, then for front)
+    EntityDERobot *head;
+    EntityDERobot *shoulderFront;
+    EntityEggman *eggman;
+    EntityDERobot *legs[6]; //knee, leg, foot (for back, then for front)
+    EntityDERobot *arms[4]; //arm, hand, (for back, then for front)
     int32 movingSide;
     int32 unused5;
     int32 angleVel;
@@ -98,6 +98,8 @@ void DERobot_HandleArmMovement(int32 offset);
 void DERobot_HandleTerrainDestruction(void);
 void DERobot_DestroyTerrainFinal(void);
 void DERobot_Hit(void);
+void DERobot_Explode(void);
+
 void DERobot_CheckPlayerCollisions_Body(void);
 void DERobot_CheckPlayerCollisions_ArmExtend(void);
 void DERobot_CheckPlayerCollisions_Hand(void);

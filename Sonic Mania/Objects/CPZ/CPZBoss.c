@@ -70,6 +70,34 @@ void CPZBoss_StageLoad(void)
 void CPZBoss_DrawLayerCB_SetupPuyoDropperClip(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
 void CPZBoss_DrawLayerCB_RemovePuyoDropperClip(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
 
+void CPZBoss_Explode_Eggman(void)
+{
+    RSDK_THIS(CPZBoss);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(CPZBoss->sfxExplosion, false, 0xFF);
+        if (Zone->timer & 4) {
+            int32 x = self->explosionPos.x + RSDK.Rand(-0x300000, 0x300000);
+            int32 y = self->explosionPos.y + RSDK.Rand(-0x100000, 0x100000);
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->hudDrawOrder;
+        }
+    }
+}
+
+void CPZBoss_Explode_Player(void)
+{
+    RSDK_THIS(CPZBoss);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(CPZBoss->sfxExplosion, false, 0xFF);
+        if (Zone->timer & 4) {
+            int32 x = self->position.x + RSDK.Rand(-0x100000, 0x100000);
+            int32 y = self->position.y + RSDK.Rand(-0x100000, 0x100000);
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->hudDrawOrder;
+        }
+    }
+}
+
 bool32 CPZBoss_CheckMatchReset(void)
 {
     RSDK_THIS(CPZBoss);
@@ -325,14 +353,8 @@ void CPZBoss_State_HandleMatchFinish_EggmanLose(void)
 
     if (!CPZBoss_CheckMatchReset()) {
         RSDK.ProcessAnimation(&self->playerAnimator);
-        if (!(Zone->timer % 3)) {
-            RSDK.PlaySfx(CPZBoss->sfxExplosion, false, 255);
-            if (Zone->timer & 4) {
-                int32 x = self->explosionPos.x + RSDK.Rand(-0x300000, 0x300000);
-                int32 y = self->explosionPos.y + RSDK.Rand(-0x100000, 0x100000);
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->hudDrawOrder;
-            }
-        }
+        CPZBoss_Explode_Eggman();
+
         self->explosionPos.y -= 0x40000;
         if (self->explosionPos.y < self->position.y - 0xD00000) {
             RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 5, &self->playerAnimator, false, 0);
@@ -348,14 +370,7 @@ void CPZBoss_State_PlayerWin(void)
 
     if (!CPZBoss_CheckMatchReset()) {
         RSDK.ProcessAnimation(&self->playerAnimator);
-        if (!(Zone->timer % 3)) {
-            RSDK.PlaySfx(CPZBoss->sfxExplosion, false, 255);
-            if (Zone->timer & 4) {
-                int32 x = self->position.x + RSDK.Rand(-0x100000, 0x100000);
-                int32 y = self->position.y + RSDK.Rand(-0x100000, 0x100000);
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->hudDrawOrder;
-            }
-        }
+        CPZBoss_Explode_Player();
 
         if (++self->timer == 60) {
             self->timer  = 0;

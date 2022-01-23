@@ -103,6 +103,7 @@ void SpiderMobile_HandleRisingMovement(void);
 void SpiderMobile_CheckPlayerCollisions(void);
 void SpiderMobile_CheckSpikeHit(void);
 void SpiderMobile_Hit(void);
+void SpiderMobile_Explode(void);
 void SpiderMobile_HandlePlatformMovement(void);
 void SpiderMobile_HandleWebClimbArmMovement(void);
 void SpiderMobile_HandleDestroyedArmMovement(void);

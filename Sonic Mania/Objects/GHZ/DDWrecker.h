@@ -98,6 +98,7 @@ void DDWrecker_StateBall_Partnerless(void);
 void DDWrecker_Hit(void);
 void DDWrecker_Spin(void);
 void DDWrecker_Swing(void);
+void DDWrecker_Explode(void);
 
 void DDWrecker_State_Debris(void);
 void DDWrecker_State_Die(void);

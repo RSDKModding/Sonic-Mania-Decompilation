@@ -13,7 +13,7 @@ typedef enum {
 
 typedef enum {
     RING_MOVE_FIXED,
-    RING_MOVE_NORMAL,
+    RING_MOVE_MOVING,
     RING_MOVE_CIRCLE,
     RING_MOVE_TRACK,
     RING_MOVE_PATH,

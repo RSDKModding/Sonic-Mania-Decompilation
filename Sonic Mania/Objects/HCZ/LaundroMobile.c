@@ -161,6 +161,10 @@ void LaundroMobile_Create(void *data)
 
 void LaundroMobile_StageLoad(void)
 {
+    sizeof(ObjectLaundroMobile);
+    int32 offset1 = offsetof(ObjectLaundroMobile, attackDelays);
+    int32 offset2 = offsetof(ObjectLaundroMobile, debrisInfo);
+
     LaundroMobile->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/LaundroMobile.bin", SCOPE_STAGE);
     LaundroMobile->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanHCZ2.bin", SCOPE_STAGE);
 

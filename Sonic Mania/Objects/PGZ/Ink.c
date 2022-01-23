@@ -23,14 +23,15 @@ void Ink_Update(void)
             if (!((1 << playerID) & self->inkedPlayers)) {
                 self->inkedPlayers = self->inkedPlayers | (1 << playerID);
                 switch (player->characterID) {
+                    default: break;
+                    // Bug Details:
                     // This actually wont work on sonic specifically, it uses the "old" sonic palette
                     // This palette starts at index 2, instead of index 64 like usual
-                    // To fix this up to work as "intended", simply replace the "2"s with "64"
+                    // Fix:
+                    // to fix this up to work as "intended", simply replace the "2"s with "64"
                     case ID_SONIC: RSDK.CopyPalette(self->type + 3, 2, 0, 2, 6); break;
                     case ID_TAILS: RSDK.CopyPalette(self->type + 3, 70, 0, 70, 6); break;
-                    case ID_KNUCKLES:
-                        RSDK.CopyPalette(self->type + 3, 80, 0, 80, 6);
-                        break;
+                    case ID_KNUCKLES: RSDK.CopyPalette(self->type + 3, 80, 0, 80, 6); break;
                         // This is an unused object that was scrapped before plus was created, so there's no mighty/ray code
                         // I've created a mock-up of what mighty/ray code could've looked like, had it been implimented:
                         // case ID_MIGHTY: RSDK.CopyPalette(self->type + 3, 96, 0, 96, 6); break;

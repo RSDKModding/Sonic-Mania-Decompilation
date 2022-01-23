@@ -15,7 +15,7 @@ void GreenScreen_LateUpdate(void) {}
 
 void GreenScreen_StaticUpdate(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_active(GreenScreen, screen)
     {
         RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(screen));
@@ -38,9 +38,10 @@ void GreenScreen_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->field_6C      = true;
+    self->showBG        = true;
     if (!self->paraYFactor)
         self->paraYFactor = 32;
+
     GreenScreen->hitbox.left   = -104;
     GreenScreen->hitbox.top    = -64;
     GreenScreen->hitbox.right  = 104;
@@ -49,50 +50,51 @@ void GreenScreen_Create(void *data)
 
 void GreenScreen_StageLoad(void)
 {
-    GreenScreen->aniFrames     = RSDK.LoadSpriteAnimation("SPZ2/GreenScreen.bin", SCOPE_STAGE);
+    GreenScreen->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/GreenScreen.bin", SCOPE_STAGE);
+
     GreenScreen->hitbox.left   = -104;
     GreenScreen->hitbox.top    = -64;
     GreenScreen->hitbox.right  = 104;
     GreenScreen->hitbox.bottom = 64;
-    GreenScreen->field_C[0]    = 0;
-    GreenScreen->field_C[1]    = 42;
-    GreenScreen->field_C[2]    = 64;
-    GreenScreen->field_C[3]    = 96;
-    GreenScreen->field_C[4]    = 112;
-    GreenScreen->field_20[0]   = 0x100000;
-    GreenScreen->field_20[1]   = 0xB40000;
-    GreenScreen->field_20[2]   = 0xBE0000;
-    GreenScreen->field_20[3]   = 0xC00000;
-    GreenScreen->field_20[4]   = 0xC00000;
+
+    GreenScreen->parallaxFactor[0] = 0;
+    GreenScreen->parallaxFactor[1] = 42;
+    GreenScreen->parallaxFactor[2] = 64;
+    GreenScreen->parallaxFactor[3] = 96;
+    GreenScreen->parallaxFactor[4] = 112;
+
+    GreenScreen->bgSize[0] = 16 << 16;
+    GreenScreen->bgSize[1] = 180 << 16;
+    GreenScreen->bgSize[2] = 190 << 16;
+    GreenScreen->bgSize[3] = 192 << 16;
+    GreenScreen->bgSize[4] = 192 << 16;
 }
 
-void GreenScreen_Unknown1(int fieldC, uint8 id, int a3, int a4)
+void GreenScreen_DrawBG(int32 x, int32 y, uint8 bgID, int32 parallaxFactor)
 {
     RSDK_THIS(GreenScreen);
     Vector2 drawPos;
 
-    int offset = fieldC * (-a3 / 128);
-    while (offset >= 0) {
-        offset -= GreenScreen->field_20[id];
-    }
+    int32 paraX = parallaxFactor * (-x / 128);
+    while (paraX >= 0) paraX -= GreenScreen->bgSize[bgID];
 
     drawPos = self->position;
-    drawPos.y += (self->paraYFactor * (-a4 / 128));
-    drawPos.x += offset + (GreenScreen->hitbox.left << 16);
+    drawPos.y += (self->paraYFactor * (-y / 128));
+    drawPos.x += (GreenScreen->hitbox.left << 16) + paraX;
 
-    int sizwX = self->position.x + (GreenScreen->hitbox.right << 16);
-    RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 1, &self->animator, true, id);
-    while (drawPos.x < sizwX) {
+    int32 sizeX = self->position.x + (GreenScreen->hitbox.right << 16);
+    RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 1, &self->animator, true, bgID);
+    while (drawPos.x < sizeX) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
-        drawPos.x += GreenScreen->field_20[id];
+        drawPos.x += GreenScreen->bgSize[bgID];
     }
 }
 
-void GreenScreen_Unknown2(void)
+void GreenScreen_DrawBackgrounds(void)
 {
     RSDK_THIS(GreenScreen);
 
-    int clipX1 = 0, clipY1 = 0, clipX2 = 0, clipY2 = 0;
+    int32 clipX1 = 0, clipY1 = 0, clipX2 = 0, clipY2 = 0;
     if (!SceneInfo->inEditor) {
         clipX1 = ScreenInfo->clipBound_X1;
         clipY1 = ScreenInfo->clipBound_Y1;
@@ -104,9 +106,9 @@ void GreenScreen_Unknown2(void)
                            (self->position.y >> 16) + GreenScreen->hitbox.bottom - ScreenInfo->position.y);
     }
 
-    for (int i = 0; i < 5; ++i) {
-        GreenScreen_Unknown1(GreenScreen->field_C[i], i, self->position.x - self->startPos.x + self->paraOffset.x,
-                             self->position.y - self->startPos.y + self->paraOffset.y);
+    for (int32 bgID = 0; bgID < 5; ++bgID) {
+        GreenScreen_DrawBG(self->position.x - self->startPos.x + self->paraOffset.x, self->position.y - self->startPos.y + self->paraOffset.y, bgID,
+                           GreenScreen->parallaxFactor[bgID]);
     }
 
     if (!SceneInfo->inEditor)
@@ -117,8 +119,8 @@ void GreenScreen_DrawSprites(void)
 {
     RSDK_THIS(GreenScreen);
 
-    if ((SceneInfo->currentDrawGroup != Zone->drawOrderHigh && self->field_6C) || (SceneInfo->inEditor && self->paraPreview))
-        GreenScreen_Unknown2();
+    if ((SceneInfo->currentDrawGroup != Zone->drawOrderHigh && self->showBG) || (SceneInfo->inEditor && self->paraPreview))
+        GreenScreen_DrawBackgrounds();
 
     if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 0, &self->animator, true, 0);
@@ -131,17 +133,19 @@ void GreenScreen_EditorDraw(void) { GreenScreen_DrawSprites(); }
 
 void GreenScreen_EditorLoad(void)
 {
-    GreenScreen->aniFrames   = RSDK.LoadSpriteAnimation("SPZ2/GreenScreen.bin", SCOPE_STAGE);
-    GreenScreen->field_C[0]  = 0;
-    GreenScreen->field_C[1]  = 42;
-    GreenScreen->field_C[2]  = 64;
-    GreenScreen->field_C[3]  = 96;
-    GreenScreen->field_C[4]  = 112;
-    GreenScreen->field_20[0] = 0x100000;
-    GreenScreen->field_20[1] = 0xB40000;
-    GreenScreen->field_20[2] = 0xBE0000;
-    GreenScreen->field_20[3] = 0xC00000;
-    GreenScreen->field_20[4] = 0xC00000;
+    GreenScreen->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/GreenScreen.bin", SCOPE_STAGE);
+
+    GreenScreen->parallaxFactor[0] = 0;
+    GreenScreen->parallaxFactor[1] = 42;
+    GreenScreen->parallaxFactor[2] = 64;
+    GreenScreen->parallaxFactor[3] = 96;
+    GreenScreen->parallaxFactor[4] = 112;
+
+    GreenScreen->bgSize[0] = 16 << 16;
+    GreenScreen->bgSize[1] = 180 << 16;
+    GreenScreen->bgSize[2] = 190 << 16;
+    GreenScreen->bgSize[3] = 192 << 16;
+    GreenScreen->bgSize[4] = 192 << 16;
 }
 #endif
 

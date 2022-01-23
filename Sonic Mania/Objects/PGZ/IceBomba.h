@@ -6,12 +6,12 @@
 // Object Class
 struct ObjectIceBomba {
 	RSDK_OBJECT
-	Hitbox flyHitbox;
-	Hitbox bombHitbox;
-	Hitbox checkbox;
-	uint16 animID;
-	uint16 explosionSFX;
-	uint16 freezeSFX;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxBomb;
+    Hitbox hitboxRange;
+	uint16 aniFrames;
+	uint16 sfxExplosion;
+	uint16 sfxFreeze;
 };
 
 // Entity Class
@@ -52,11 +52,11 @@ void IceBomba_DebugSpawn(void);
 void IceBomba_CheckOnScreen(void);
 
 void IceBomba_Fly_Collide(void);
-void IceBomba_Fly_Create(void);
-void IceBomba_Fly_Idle(void);
-void IceBomba_Fly_Turn(void);
-void IceBomba_Fly_FlyAway(void);
+void IceBomba_State_Setup(void);
+void IceBomba_State_Flying(void);
+void IceBomba_State_FlyTurn(void);
+void IceBomba_State_FlyAway(void);
 
-void IceBomba_Bomb_Handle(void);
+void IceBomba_State_Bomb(void);
 
 #endif //!OBJ_ICEBOMBA_H

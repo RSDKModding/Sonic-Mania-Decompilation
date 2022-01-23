@@ -193,6 +193,21 @@ void BigSqueeze_Hit(void)
     }
 }
 
+void BigSqueeze_Explode(void)
+{
+    RSDK_THIS(BigSqueeze);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(BigSqueeze->sfxExplosion2, false, 0xFF);
+
+        if (Zone->timer & 4) {
+            int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
+            int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+        }
+    }
+}
+
 void BigSqueeze_HandleBossMovement(void)
 {
     RSDK_THIS(BigSqueeze);
@@ -429,14 +444,8 @@ void BigSqueeze_StateBoss_Electrified(void)
 void BigSqueeze_StateBoss_Destroyed(void)
 {
     RSDK_THIS(BigSqueeze);
-    if (!(Zone->timer % 3)) {
-        RSDK.PlaySfx(BigSqueeze->sfxExplosion2, false, 255);
-        if (Zone->timer & 4) {
-            int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
-            int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
-        }
-    }
+
+    BigSqueeze_Explode();
 
     ++self->setupTimer;
     if (self->type == BIGSQUEEZE_BOSS) {

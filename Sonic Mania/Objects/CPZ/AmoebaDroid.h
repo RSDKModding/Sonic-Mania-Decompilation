@@ -72,7 +72,9 @@ void AmoebaDroid_Serialize(void);
 void AmoebaDroid_HandleSmallBlobMovement(void);
 void AmoebaDroid_HandleSmallBlobRelease(bool32 interact);
 
-// Interaction States
+// Interaction funcs
+void AmoebaDroid_Hit(void);
+void AmoebaDroid_Explode(void);
 void AmoebaDroid_CheckHit(void);
 void AmoebaDroid_CheckPlayerHit(void);
 

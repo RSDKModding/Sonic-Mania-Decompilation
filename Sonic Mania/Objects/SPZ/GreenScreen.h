@@ -7,8 +7,8 @@
 struct ObjectGreenScreen {
     RSDK_OBJECT
     Hitbox hitbox;
-    int32 field_C[5];
-    int32 field_20[5];
+    int32 parallaxFactor[5];
+    int32 bgSize[5];
     uint16 aniFrames;
     bool32 greenScreenActive;
 };
@@ -20,11 +20,11 @@ struct EntityGreenScreen {
     Vector2 paraOffset;
     int32 paraYFactor;
     bool32 paraPreview;
-    bool32 field_6C;
-    int32 field_70;
-    int32 field_74;
+    bool32 showBG;
+    int32 unused1;
+    int32 unused2;
     Vector2 startPos;
-    int32 field_80;
+    int32 unused3;
     Animator animator;
 };
 
@@ -45,8 +45,8 @@ void GreenScreen_EditorLoad(void);
 void GreenScreen_Serialize(void);
 
 // Extra Entity Functions
-void GreenScreen_Unknown1(int fieldC, uint8 id, int a3, int a4);
-void GreenScreen_Unknown2(void);
+void GreenScreen_DrawBG(int32 x, int32 y, uint8 bgID, int32 parallaxFactor);
+void GreenScreen_DrawBackgrounds(void);
 void GreenScreen_DrawSprites(void);
 
 #endif //!OBJ_GREENSCREEN_H

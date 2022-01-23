@@ -7,9 +7,9 @@
 struct ObjectSP500MkII {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxButton;
+    Hitbox hitboxBody;
+    Hitbox hitboxSolid;
 };
 
 // Entity Class
@@ -21,19 +21,17 @@ struct EntitySP500MkII {
     int32 printRows;
     int32 length;
     int32 printRowID;
-    int32 field_6C;
-    bool32 field_70;
-    bool32 field_74;
-    bool32 printStarted;
-    int32 field_7C;
+    int32 xDir;
+    bool32 showGreenLight;
+    bool32 showRedLight;
+    bool32 buttonDown;
+    bool32 isActive;
     uint8 activePlayers;
-    int32 field_84;
+    int32 printDistance;
     Vector2 pos2;
     Vector2 pos;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
+    Vector2 printPos;
+    Vector2 printMoveOffset;
     int32 timer;
     Animator animator;
 };
@@ -46,7 +44,7 @@ void SP500MkII_Update(void);
 void SP500MkII_LateUpdate(void);
 void SP500MkII_StaticUpdate(void);
 void SP500MkII_Draw(void);
-void SP500MkII_Create(void* data);
+void SP500MkII_Create(void *data);
 void SP500MkII_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SP500MkII_EditorDraw(void);
@@ -55,14 +53,14 @@ void SP500MkII_EditorLoad(void);
 void SP500MkII_Serialize(void);
 
 // Extra Entity Functions
-void SP500MkII_Unknown1(void);
-void SP500MkII_Unknown2(void);
-void SP500MkII_Unknown3(void);
+void SP500MkII_DrawDebugOverlay(void);
+void SP500MkII_DrawPrinter(void);
+void SP500MkII_DrawRails(void);
 
 void SP500MkII_CheckPlayerCollisions(void);
-void SP500MkII_Unknown5(void);
-void SP500MkII_Unknown6(void);
-void SP500MkII_Unknown7(void);
-void SP500MkII_Unknown8(void);
+void SP500MkII_State_Setup(void);
+void SP500MkII_State_CheckActivated(void);
+void SP500MkII_State_PrintX(void);
+void SP500MkII_State_PrintY(void);
 
-#endif //!OBJ_SP500MKII_H
+#endif //! OBJ_SP500MKII_H

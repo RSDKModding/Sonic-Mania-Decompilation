@@ -52,6 +52,9 @@ void CPZBoss_Serialize(void);
 void CPZBoss_DrawLayerCB_SetupPuyoDropperClip(void);
 void CPZBoss_DrawLayerCB_RemovePuyoDropperClip(void);
 
+void CPZBoss_Explode_Eggman(void);
+void CPZBoss_Explode_Player(void);
+
 bool32 CPZBoss_CheckMatchReset(void);
 
 void CPZBoss_State_SetupArena(void);

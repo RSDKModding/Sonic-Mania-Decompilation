@@ -153,6 +153,38 @@ void AmoebaDroid_HandleSmallBlobRelease(bool32 interact)
     }
 }
 
+void AmoebaDroid_Hit(void)
+{
+    RSDK_THIS(AmoebaDroid);
+
+    if (--self->health <= 0) {
+        AmoebaDroid_HandleSmallBlobRelease(false);
+        self->state            = AmoebaDroid_State_Destroyed;
+        self->timer            = 0;
+        SceneInfo->timeEnabled = false;
+        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
+    }
+    else {
+        self->invincibleTimer = 48;
+        RSDK.PlaySfx(AmoebaDroid->sfxHit, false, 0xFF);
+    }
+}
+
+void AmoebaDroid_Explode(void)
+{
+    RSDK_THIS(AmoebaDroid);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(AmoebaDroid->sfxExplosion, false, 255);
+
+        if (Zone->timer & 4) {
+            int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
+            int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+        }
+    }
+}
+
 void AmoebaDroid_CheckHit(void)
 {
     RSDK_THIS(AmoebaDroid);
@@ -163,17 +195,7 @@ void AmoebaDroid_CheckHit(void)
     foreach_active(Player, player)
     {
         if (!self->invincibleTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
-            if (--self->health <= 0) {
-                AmoebaDroid_HandleSmallBlobRelease(false);
-                self->state            = AmoebaDroid_State_Destroyed;
-                self->timer            = 0;
-                SceneInfo->timeEnabled = false;
-                Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
-            }
-            else {
-                self->invincibleTimer = 48;
-                RSDK.PlaySfx(AmoebaDroid->sfxHit, false, 255);
-            }
+            AmoebaDroid_Hit();
         }
     }
 }
@@ -662,14 +684,8 @@ void AmoebaDroid_State_PoolSplash(void)
 void AmoebaDroid_State_Destroyed(void)
 {
     RSDK_THIS(AmoebaDroid);
-    if (!(Zone->timer % 3)) {
-        RSDK.PlaySfx(AmoebaDroid->sfxExplosion, false, 255);
-        if (Zone->timer & 4) {
-            int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
-            int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
-        }
-    }
+
+    AmoebaDroid_Explode();
 
     ++self->timer;
     if (self->timer == 30) {

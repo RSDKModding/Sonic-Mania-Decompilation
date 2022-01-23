@@ -823,6 +823,24 @@ void DDWrecker_Swing(void)
     }
     child->rotation = RSDK.Sin1024(-self->spinAngle) >> 5;
 }
+
+void DDWrecker_Explode(void)
+{
+    RSDK_THIS(DDWrecker);
+
+    if (!(Zone->timer % 3)) {
+        RSDK.PlaySfx(DDWrecker->sfxExplosion, false, 255);
+
+        if (Zone->timer & 4) {
+            int x                      = self->position.x + (RSDK.Rand(-20, 20) << 16);
+            int y                      = self->position.y + (RSDK.Rand(-20, 20) << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+
+            explosion->drawOrder = Zone->drawOrderHigh;
+        }
+    }
+}
+
 void DDWrecker_State_Debris(void)
 {
     RSDK_THIS(DDWrecker);
@@ -832,19 +850,12 @@ void DDWrecker_State_Debris(void)
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }
+
 void DDWrecker_State_Die(void)
 {
     RSDK_THIS(DDWrecker);
-    if (!(Zone->timer % 3)) {
-        RSDK.PlaySfx(DDWrecker->sfxExplosion, false, 255);
-        if (Zone->timer & 4) {
-            int x                      = self->position.x + (RSDK.Rand(-20, 20) << 16);
-            int y                      = self->position.y + (RSDK.Rand(-20, 20) << 16);
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
-            explosion->drawOrder = Zone->drawOrderHigh;
-        }
-    }
+    DDWrecker_Explode();
 
     if (++self->timer == 80) {
         int32 cnt = 0;

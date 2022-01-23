@@ -432,6 +432,9 @@ void Platform_StageLoad(void)
     else if (RSDK.CheckStageFolder("AIZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
     }
+    else if (RSDK.CheckStageFolder("SBZ")) {
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("SBZ/Platform.bin", SCOPE_STAGE);
+    }
     else if (RSDK.CheckStageFolder("Blueprint")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
     }

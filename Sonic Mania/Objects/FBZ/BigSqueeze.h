@@ -69,6 +69,7 @@ void BigSqueeze_HandleWallCollisions(void);
 void BigSqueeze_CheckPlayerCollisions_Vulnerable(void);
 void BigSqueeze_CheckPlayerCollisions_Electrified(void);
 void BigSqueeze_Hit(void);
+void BigSqueeze_Explode(void);
 
 void BigSqueeze_HandleBossMovement(void);
 void BigSqueeze_SpawnDebris(int32 *debrisData);
