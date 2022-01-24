@@ -205,3 +205,6 @@ endif
 
 clean:
 	rm -rf $(RSDK_OBJDIR) && rm -rf $(GAME_OBJDIR) && rm -rf $(RSDKPATH)
+
+clean-rsdk:
+	rm -rf $(RSDK_OBJDIR) && rm -rf $(RSDKPATH)

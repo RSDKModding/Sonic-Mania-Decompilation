@@ -331,6 +331,8 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                     autodec = ".dylib";
 #elif RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
                     autodec = ".so";
+#elif RETRO_PLATFORM == RETRO_SWITCH
+                    autodec = ".nro";
 #endif
                     file += autodec;
                     if (fs::exists(file)) {
@@ -379,6 +381,10 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
 #endif
                     void *link_handle = (void *)dlopen(fl.c_str(), RTLD_LOCAL | RTLD_LAZY);
 #define getAddress dlsym
+#elif RETRO_PLATFORM == RETRO_SWITCH
+                    // TODO
+                    void* link_handle = NULL;
+#define getAddress(x, y) NULL
 #endif
 
                     if (link_handle) {
