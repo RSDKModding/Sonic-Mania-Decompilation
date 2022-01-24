@@ -12,6 +12,9 @@ DEFINES     =
 
 STATICGAME 	?= 0
 GAMENAME    ?= Game
+USERTYPE    ?= Core
+
+USE_ALLC    ?= 0
 
 # =============================================================================
 # Detect default platform if not explicitly specified
@@ -30,10 +33,6 @@ else
 		PLATFORM ?= macOS
 	endif
 
-endif
-
-ifdef EMSCRIPTEN
-	PLATFORM = Emscripten
 endif
 
 PLATFORM ?= Unknown
@@ -112,55 +111,65 @@ RSDK_INCLUDES += $(LIBS)
 # Main Sources
 RSDK_SOURCES = \
     RSDKv5/main 							\
-    RSDKv5/RSDK/Graphics/Animation    					\
-    RSDKv5/RSDK/Audio/Audio        					\
-    RSDKv5/RSDK/Scene/Collision    					\
-    RSDKv5/RSDK/Dev/Debug        					\
-    RSDKv5/RSDK/Scene/Objects/DefaultObject        			\
-    RSDKv5/RSDK/Scene/Objects/DevOutput        				\
-    RSDKv5/RSDK/Graphics/Drawing      					\
-    RSDKv5/RSDK/Input/Input        					\
-    RSDKv5/RSDK/Core/Link        						\
-    RSDKv5/RSDK/Core/Math         					\
-    RSDKv5/RSDK/Core/ModAPI       					\
-    RSDKv5/RSDK/Scene/Object       					\
-    RSDKv5/RSDK/Graphics/Palette      					\
-    RSDKv5/RSDK/Core/Reader       					\
-    RSDKv5/RSDK/Core/RetroEngine  					\
-    RSDKv5/RSDK/Scene/Scene        					\
-    RSDKv5/RSDK/Graphics/Scene3D      					\
-    RSDKv5/RSDK/Graphics/Shader       					\
-    RSDKv5/RSDK/Graphics/Sprite       					\
-    RSDKv5/RSDK/Storage/Storage       					\
-    RSDKv5/RSDK/Storage/Text         					\
-    RSDKv5/RSDK/Graphics/Video     						\
-    RSDKv5/RSDK/User/Core/UserAchievements     	\
-    RSDKv5/RSDK/User/Core/UserCore     			\
-    RSDKv5/RSDK/User/Core/UserLeaderboards     	\
-    RSDKv5/RSDK/User/Core/UserPresence     		\
-    RSDKv5/RSDK/User/Core/UserStats     			\
-    RSDKv5/RSDK/User/Core/UserStorage     		\
-    RSDKv5/RSDK/User/Dummy/DummyAchievements     	\
-    RSDKv5/RSDK/User/Dummy/DummyCore     			\
-    RSDKv5/RSDK/User/Dummy/DummyLeaderboards     	\
-    RSDKv5/RSDK/User/Dummy/DummyPresence     		\
-    RSDKv5/RSDK/User/Dummy/DummyStats     			\
-    RSDKv5/RSDK/User/Dummy/DummyStorage     		\
+    RSDKv5/RSDK/Core/RetroEngine  			\
+    RSDKv5/RSDK/Core/Math         			\
+    RSDKv5/RSDK/Core/Reader       			\
+    RSDKv5/RSDK/Core/Link        			\
+    RSDKv5/RSDK/Core/ModAPI       			\
+    RSDKv5/RSDK/Dev/Debug        			\
+    RSDKv5/RSDK/Storage/Storage       		\
+    RSDKv5/RSDK/Storage/Text         		\
+    RSDKv5/RSDK/Graphics/Drawing      		\
+    RSDKv5/RSDK/Graphics/Shader       		\
+    RSDKv5/RSDK/Graphics/Scene3D      		\
+    RSDKv5/RSDK/Graphics/Animation    		\
+    RSDKv5/RSDK/Graphics/Sprite       		\
+    RSDKv5/RSDK/Graphics/Palette      		\
+    RSDKv5/RSDK/Graphics/Video     			\
+    RSDKv5/RSDK/Audio/Audio        			\
+    RSDKv5/RSDK/Input/Input        			\
+    RSDKv5/RSDK/Scene/Scene        			\
+    RSDKv5/RSDK/Scene/Collision    			\
+    RSDKv5/RSDK/Scene/Object       			\
+    RSDKv5/RSDK/Scene/Objects/DefaultObject \
+    RSDKv5/RSDK/Scene/Objects/DevOutput     \
     dependencies/all/tinyxml2/tinyxml2 		\
 	dependencies/all/theoraplay/theoraplay 	\
 	dependencies/all/iniparser/iniparser 	\
 	dependencies/all/iniparser/dictionary
 
+ifeq ($(USERTYPE),Core) 
+RSDK_SOURCES += \
+    RSDKv5/RSDK/User/Core/UserAchievements  \
+    RSDKv5/RSDK/User/Core/UserCore     		\
+    RSDKv5/RSDK/User/Core/UserLeaderboards  \
+    RSDKv5/RSDK/User/Core/UserPresence     	\
+    RSDKv5/RSDK/User/Core/UserStats     	\
+    RSDKv5/RSDK/User/Core/UserStorage     		
+else
+RSDK_SOURCES += \
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Achievements   	\
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Core     		\
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Leaderboards   	\
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Presence    	\
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Stats     		\
+    RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Storage     		
+endif
+
 GAME_INCLUDES = \
-	-I./Game/   	\
+	-I./Game/   		\
 	-I./Game/Objects/
 
 GAME_SOURCES = \
 	Game/GameObjects	\
 	Game/GameVariables 
 
+ifeq ($(USE_ALLC),1)
+GAME_SOURCES += Game/Objects/All
+else
+# execute Game/objectmake.py?
 include Game/Objects.cfg
-
+endif
 
 RSDKPATH = $(OUTDIR)/$(NAME)$(SUFFIX)
 GAMEPATH = $(OUTDIR)/$(GAMENAME)$(SUFFIX)
@@ -171,11 +180,9 @@ PKGPATH = $(OUTDIR)/$(NAME)$(PKGSUFFIX)
 RSDK_OBJECTS += $(addprefix $(RSDK_OBJDIR)/, $(addsuffix .o, $(RSDK_SOURCES)))
 GAME_OBJECTS += $(addprefix $(GAME_OBJDIR)/, $(addsuffix .o, $(GAME_SOURCES)))
 
-
 $(shell mkdir -p $(OUTDIR))
 $(shell mkdir -p $(RSDK_OBJDIR))
 $(shell mkdir -p $(GAME_OBJDIR))
-
 
 $(GAME_OBJDIR)/%.o: %.c
 	@mkdir -p $(@D)
@@ -210,7 +217,7 @@ $(RSDKPATH): $(RSDK_OBJECTS) $(GAME_OBJECTS)
 	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(GAME_OBJECTS) -o $(GAMEPATH) $(LIBS_ALL)
 	@echo done
 	$(STRIP) $@
-	$(STRIP) $(GAMEPAHT)
+	$(STRIP) $(GAMEPATH)
 endif
 
 

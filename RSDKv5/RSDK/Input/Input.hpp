@@ -465,7 +465,7 @@ inline InputDevice *controllerInit(uint8 controllerID)
         controllerType = DEVICE_XBOX;
     else if (strstr(name, "PS4") || strstr(name, "PS5"))
         controllerType = DEVICE_PS4;
-    else if (strstr(name, "Nintendo"))
+    else if (strstr(name, "Nintendo") || strstr(name, "Switch"))
         controllerType = DEVICE_SWITCH_PRO;
     else if (strstr(name, "Saturn"))
         controllerType = DEVICE_SATURN;
