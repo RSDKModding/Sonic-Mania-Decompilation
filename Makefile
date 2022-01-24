@@ -44,38 +44,29 @@ OUTDIR = bin/$(PLATFORM)
 RSDK_OBJDIR = RSDKv5/obj/$(PLATFORM)
 GAME_OBJDIR = Game/obj/$(PLATFORM)
 
-
 include makefiles/$(PLATFORM).cfg
 
 # =============================================================================
+CFLAGS ?= $(CXXFLAGS)
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS += -g
+	CFLAGS += -g
 	STRIP = :
 else
 	CXXFLAGS += -O3
+	CFLAGS += -O3
 endif
-
 
 ifeq ($(STATIC),1)
 	CXXFLAGS += -static
+	CFLAGS += -static
 	STATICGAME = 1
 endif
 
-CXXFLAGS_ALL = `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
-LIBS_ALL = `$(PKGCONFIG) --libs --static sdl2 vorbisfile vorbis theora theoradec zlib`
-
-CXXFLAGS_ALL += $(CXXFLAGS) \
-               -DBASE_PATH='"$(BASE_PATH)"' \
-               --std=c++17 \
-               -fsigned-char \
-			   -fpermissive
-
-LDFLAGS_ALL = $(LDFLAGS)
-LIBS_ALL += -pthread $(LIBS)
-
 ifeq ($(PROFILE),1)
-	CXXFLAGS_ALL += -pg -g -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls -fno-default-inline
+	CXXFLAGS += -pg -g -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls -fno-default-inline
+	CFLAGS += -pg -g -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls -fno-default-inline
 endif
 
 ifeq ($(VERBOSE),0)
@@ -84,10 +75,30 @@ ifeq ($(VERBOSE),0)
 endif
 
 ifeq ($(STATICGAME),0)
-	CXXFLAGS_ALL += -DRETRO_STANDALONE=1
+	CXXFLAGS += -DRETRO_STANDALONE=1
+	CFLAGS += -DRETRO_STANDALONE=1
 else
-	CXXFLAGS_ALL += -DRETRO_STANDALONE=0
+	CXXFLAGS += -DRETRO_STANDALONE=0
+	CFLAGS += -DRETRO_STANDALONE=0
 endif
+
+CFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
+CXXFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
+LIBS += `$(PKGCONFIG) --libs --static sdl2 vorbisfile vorbis theora theoradec zlib`
+
+CFLAGS_ALL += $(CFLAGS) \
+			   -DBASE_PATH='"$(BASE_PATH)"' \
+               -fsigned-char 
+		
+CXXFLAGS_ALL += $(CXXFLAGS) \
+               -DBASE_PATH='"$(BASE_PATH)"' \
+               -std=c++17 \
+               -fsigned-char \
+			   -fpermissive
+
+LDFLAGS_ALL = $(LDFLAGS)
+LIBS_ALL += -pthread $(LIBS)
+
 
 RSDK_INCLUDES  += \
     -I./RSDKv5/ 					\
@@ -100,35 +111,41 @@ RSDK_INCLUDES += $(LIBS)
 
 # Main Sources
 RSDK_SOURCES = \
-    RSDKv5/Animation    					\
-    RSDKv5/Audio        					\
-    RSDKv5/Collision    					\
-    RSDKv5/Debug        					\
-    RSDKv5/DefaultObject        			\
-    RSDKv5/DevOutput        				\
-    RSDKv5/Drawing      					\
-    RSDKv5/Input        					\
-    RSDKv5/Link        						\
-    RSDKv5/Math         					\
-    RSDKv5/ModAPI       					\
-    RSDKv5/Object       					\
-    RSDKv5/Palette      					\
-    RSDKv5/Reader       					\
-    RSDKv5/RetroEngine  					\
-    RSDKv5/Scene        					\
-    RSDKv5/Scene3D      					\
-    RSDKv5/Shader       					\
-    RSDKv5/Sprite       					\
-    RSDKv5/Storage       					\
-    RSDKv5/Text         					\
-    RSDKv5/Video     						\
-    RSDKv5/User/Core/UserAchievements     	\
-    RSDKv5/User/Core/UserCore     			\
-    RSDKv5/User/Core/UserLeaderboards     	\
-    RSDKv5/User/Core/UserPresence     		\
-    RSDKv5/User/Core/UserStats     			\
-    RSDKv5/User/Core/UserStorage     		\
     RSDKv5/main 							\
+    RSDKv5/RSDK/Graphics/Animation    					\
+    RSDKv5/RSDK/Audio/Audio        					\
+    RSDKv5/RSDK/Scene/Collision    					\
+    RSDKv5/RSDK/Dev/Debug        					\
+    RSDKv5/RSDK/Scene/Objects/DefaultObject        			\
+    RSDKv5/RSDK/Scene/Objects/DevOutput        				\
+    RSDKv5/RSDK/Graphics/Drawing      					\
+    RSDKv5/RSDK/Input/Input        					\
+    RSDKv5/RSDK/Core/Link        						\
+    RSDKv5/RSDK/Core/Math         					\
+    RSDKv5/RSDK/Core/ModAPI       					\
+    RSDKv5/RSDK/Scene/Object       					\
+    RSDKv5/RSDK/Graphics/Palette      					\
+    RSDKv5/RSDK/Core/Reader       					\
+    RSDKv5/RSDK/Core/RetroEngine  					\
+    RSDKv5/RSDK/Scene/Scene        					\
+    RSDKv5/RSDK/Graphics/Scene3D      					\
+    RSDKv5/RSDK/Graphics/Shader       					\
+    RSDKv5/RSDK/Graphics/Sprite       					\
+    RSDKv5/RSDK/Storage/Storage       					\
+    RSDKv5/RSDK/Storage/Text         					\
+    RSDKv5/RSDK/Graphics/Video     						\
+    RSDKv5/RSDK/User/Core/UserAchievements     	\
+    RSDKv5/RSDK/User/Core/UserCore     			\
+    RSDKv5/RSDK/User/Core/UserLeaderboards     	\
+    RSDKv5/RSDK/User/Core/UserPresence     		\
+    RSDKv5/RSDK/User/Core/UserStats     			\
+    RSDKv5/RSDK/User/Core/UserStorage     		\
+    RSDKv5/RSDK/User/Dummy/DummyAchievements     	\
+    RSDKv5/RSDK/User/Dummy/DummyCore     			\
+    RSDKv5/RSDK/User/Dummy/DummyLeaderboards     	\
+    RSDKv5/RSDK/User/Dummy/DummyPresence     		\
+    RSDKv5/RSDK/User/Dummy/DummyStats     			\
+    RSDKv5/RSDK/User/Dummy/DummyStorage     		\
     dependencies/all/tinyxml2/tinyxml2 		\
 	dependencies/all/theoraplay/theoraplay 	\
 	dependencies/all/iniparser/iniparser 	\
@@ -163,13 +180,13 @@ $(shell mkdir -p $(GAME_OBJDIR))
 $(GAME_OBJDIR)/%.o: %.c
 	@mkdir -p $(@D)
 	@echo compiling $<...
-	$(CXX) -c $(CXXFLAGS_ALL) -w $(GAME_INCLUDES) $(DEFINES) $< -o $@
+	$(CC) -c $(CFLAGS_ALL) $(GAME_INCLUDES) $(DEFINES) $< -o $@
 	@echo done $<
 
 $(RSDK_OBJDIR)/%.o: %.c
 	@mkdir -p $(@D)
 	@echo compiling $<...
-	$(CXX) -c $(CXXFLAGS_ALL) $(RSDK_INCLUDES) $(DEFINES) $< -o $@
+	$(CC) -c $(CFLAGS_ALL) $(RSDK_INCLUDES) $(DEFINES) $< -o $@
 	@echo done $<
 
 $(RSDK_OBJDIR)/%.o: %.cpp
@@ -208,3 +225,6 @@ clean:
 
 clean-rsdk:
 	rm -rf $(RSDK_OBJDIR) && rm -rf $(RSDKPATH)
+
+clean-game:
+	rm -rf $(GAME_OBJDIR) && rm -rf $(RSDKPATH)
