@@ -50,6 +50,7 @@ cmake/
 [Dd]ependencies/all/*
 ![Dd]ependencies/all/dependencies.txt
 ![Dd]ependencies/windows/dependencies.txt
+![Dd]ependencies/windows/unistd.h
 ![Dd]ependencies/ios/dependencies.txt
 ![Dd]ependencies/mac/dependencies.txt
 ![Dd]ependencies/windows-uwp/dependencies.txt
