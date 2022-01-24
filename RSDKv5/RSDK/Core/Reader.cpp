@@ -15,9 +15,9 @@ SDL_RWops *fOpen(const char *path, const char *mode)
 {
     char buffer[0x200];
     int a = 0;
-    if (!strncmp(path, userFileDir, strlen(userFileDir)))
-        a = strlen(userFileDir);
-    sprintf(buffer, "%s%s", userFileDir, path + a);
+    if (!strncmp(path, RSDK::SKU::userFileDir, strlen(RSDK::SKU::userFileDir)))
+        a = strlen(RSDK::SKU::userFileDir);
+    sprintf(buffer, "%s%s", RSDK::SKU::userFileDir, path + a);
 
     return SDL_RWFromFile(buffer, mode);
 }

@@ -101,6 +101,8 @@ enum GameRegions {
 #endif
 #elif defined __ANDROID__
 #define RETRO_PLATFORM   (RETRO_ANDROID)
+#elif defined __linux__
+#define RETRO_PLATFORM   (RETRO_LINUX)
 #elif defined __SWITCH__
 #define RETRO_PLATFORM   (RETRO_SWITCH) 
 #else
@@ -169,6 +171,11 @@ enum GameRegions {
 #include <vorbis/vorbisfile.h>
 
 #include "cocoaHelpers.hpp"
+#elif RETRO_PLATFORM == RETRO_LINUX
+#include <SDL2/SDL.h>
+#include <vorbis/vorbisfile.h>
+#include <theora/theora.h>
+#include <theoraplay/theoraplay.h>
 #elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
 #include <vorbis/vorbisfile.h>

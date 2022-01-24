@@ -260,7 +260,7 @@ bool32 initRetroEngine()
 #if RETRO_PLATFORM == RETRO_OSX
     char buffer[0x100];
     sprintf(buffer, "%s/RSDKv5/", getResourcesPath());
-    RSDK::SetUserFileCallbacks(buffer, NULL, NULL);
+    RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 #elif RETRO_PLATFORM == RETRO_ANDROID
     char buffer[0x200];
 
@@ -272,10 +272,12 @@ bool32 initRetroEngine()
 
     strcpy(buffer, env->GetStringUTFChars((jstring)ret, NULL));
 
-    RSDK::SetUserFileCallbacks(buffer, NULL, NULL);
+    RSDK::SKU::SetUserFileCallbacks(buffer, NULL, NULL);
 
     env->DeleteLocalRef(activity);
     env->DeleteLocalRef(cls);
+#elif RETRO_PLATFORM == RETRO_LINUX
+    RSDK::SKU::SetUserFileCallbacks("./", NULL, NULL);
 #else
     RSDK::SKU::SetUserFileCallbacks("", NULL, NULL);
 #endif
@@ -1187,7 +1189,7 @@ void InitScriptSystem()
 #endif
 #if RETRO_PLATFORM == RETRO_OSX
         char buffer[0x100];
-        sprintf(buffer, "%s%s.dylib", userFileDir, gameLogicName);
+        sprintf(buffer, "%s%s.dylib", RSDK::SKU::userFileDir, gameLogicName);
         if (!link_handle)
             link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
 
@@ -1200,10 +1202,11 @@ void InitScriptSystem()
         }
 #endif
 #if RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_ANDROID
-        sprintf(gameLogicName, "%s%s.so", userFileDir, gameLogicName);
+        char buffer[0x100];
+        sprintf(buffer, "%s%s.so", RSDK::SKU::userFileDir, gameLogicName);
         if (!link_handle)
-            link_handle = dlopen(gameLogicName, RTLD_LOCAL | RTLD_LAZY);
-
+            link_handle = dlopen(buffer, RTLD_LOCAL | RTLD_LAZY);
+        
         if (link_handle) {
             linkPtr linkGameLogic = (linkPtr)dlsym(link_handle, "LinkGameLogicDLL");
             if (linkGameLogic) {

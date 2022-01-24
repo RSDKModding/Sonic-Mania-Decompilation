@@ -12,7 +12,8 @@ DEFINES     =
 
 STATICGAME 	?= 0
 GAMENAME    ?= Game
-USERTYPE    ?= Core
+GAMESUFFIX  ?= .so
+USERTYPE    ?= Dummy
 
 USE_ALLC    ?= 0
 
@@ -133,20 +134,18 @@ RSDK_SOURCES = \
     RSDKv5/RSDK/Scene/Object       			\
     RSDKv5/RSDK/Scene/Objects/DefaultObject \
     RSDKv5/RSDK/Scene/Objects/DevOutput     \
-    dependencies/all/tinyxml2/tinyxml2 		\
-	dependencies/all/theoraplay/theoraplay 	\
-	dependencies/all/iniparser/iniparser 	\
-	dependencies/all/iniparser/dictionary
-
-ifeq ($(USERTYPE),Core) 
-RSDK_SOURCES += \
     RSDKv5/RSDK/User/Core/UserAchievements  \
     RSDKv5/RSDK/User/Core/UserCore     		\
     RSDKv5/RSDK/User/Core/UserLeaderboards  \
     RSDKv5/RSDK/User/Core/UserPresence     	\
     RSDKv5/RSDK/User/Core/UserStats     	\
-    RSDKv5/RSDK/User/Core/UserStorage     		
-else
+    RSDKv5/RSDK/User/Core/UserStorage     	\
+    dependencies/all/tinyxml2/tinyxml2 		\
+	dependencies/all/theoraplay/theoraplay 	\
+	dependencies/all/iniparser/iniparser 	\
+	dependencies/all/iniparser/dictionary
+
+
 RSDK_SOURCES += \
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Achievements   	\
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Core     		\
@@ -154,7 +153,6 @@ RSDK_SOURCES += \
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Presence    	\
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Stats     		\
     RSDKv5/RSDK/User/$(USERTYPE)/$(USERTYPE)Storage     		
-endif
 
 GAME_INCLUDES = \
 	-I./Game/   		\
@@ -172,7 +170,7 @@ include Game/Objects.cfg
 endif
 
 RSDKPATH = $(OUTDIR)/$(NAME)$(SUFFIX)
-GAMEPATH = $(OUTDIR)/$(GAMENAME)$(SUFFIX)
+GAMEPATH = $(OUTDIR)/$(GAMENAME)$(GAMESUFFIX)
 
 PKGSUFFIX ?= $(SUFFIX)
 PKGPATH = $(OUTDIR)/$(NAME)$(PKGSUFFIX)
@@ -187,7 +185,7 @@ $(shell mkdir -p $(GAME_OBJDIR))
 $(GAME_OBJDIR)/%.o: %.c
 	@mkdir -p $(@D)
 	@echo compiling $<...
-	$(CC) -c $(CFLAGS_ALL) $(GAME_INCLUDES) $(DEFINES) $< -o $@
+	$(CC) -c -fPIC $(CFLAGS_ALL) $(GAME_INCLUDES) $(DEFINES) $< -o $@
 	@echo done $<
 
 $(RSDK_OBJDIR)/%.o: %.c
@@ -214,7 +212,7 @@ $(RSDKPATH): $(RSDK_OBJECTS) $(GAME_OBJECTS)
 	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_OBJECTS) -o $@ $(LIBS_ALL)
 	@echo done
 	@echo -n linking game...
-	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(GAME_OBJECTS) -o $(GAMEPATH) $(LIBS_ALL)
+	$(CXX) -shared $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(GAME_OBJECTS) -o $(GAMEPATH) $(LIBS_ALL)
 	@echo done
 	$(STRIP) $@
 	$(STRIP) $(GAMEPATH)
