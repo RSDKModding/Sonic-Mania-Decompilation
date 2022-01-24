@@ -21,7 +21,13 @@
 #ifndef _MSC_VER
 #include <unistd.h>
 #else
-#include "../../RSDKv5/unistd.h"
+
+#ifdef _WIN64
+#define ssize_t __int64
+#else
+#define ssize_t long
+#endif
+
 #endif
 
 /** Maximum value size for integers and doubles. */
