@@ -5,12 +5,12 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSDKv5", "RSDKv5\RSDKv5.vcxproj", "{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}"
 EndProject
-#Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania", "Sonic Mania\Sonic Mania.vcxproj", "{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}"
-#EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_All", "Sonic Mania\Sonic Mania_All.vcxproj", "{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}"
 EndProject
-#Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_PrePlus", "Sonic Mania\Sonic Mania_PrePlus.vcxproj", "{EEE41353-F9F9-491E-A325-85A98CF0B9AB}"
-#EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania", "Sonic Mania\Sonic Mania.vcxproj", "{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonic Mania_PrePlus", "Sonic Mania\Sonic Mania_PrePlus.vcxproj", "{EEE41353-F9F9-491E-A325-85A98CF0B9AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,14 +27,6 @@ Global
 		{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}.Release|x64.Build.0 = Release|x64
 		{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}.Release|x86.ActiveCfg = Release|Win32
 		{EC733EB3-8EC1-48B4-A00F-8BF36F61C117}.Release|x86.Build.0 = Release|Win32
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x64.ActiveCfg = Debug|x64
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x64.Build.0 = Debug|x64
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x86.ActiveCfg = Debug|Win32
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x86.Build.0 = Debug|Win32
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x64.ActiveCfg = Release|x64
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x64.Build.0 = Release|x64
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x86.ActiveCfg = Release|Win32
-		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x86.Build.0 = Release|Win32
 		{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}.Debug|x64.ActiveCfg = Debug|x64
 		{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}.Debug|x64.Build.0 = Debug|x64
 		{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}.Debug|x86.ActiveCfg = Debug|Win32
@@ -43,6 +35,14 @@ Global
 		{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}.Release|x64.Build.0 = Release|x64
 		{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}.Release|x86.ActiveCfg = Release|Win32
 		{036106BF-6DD0-4CB5-8F01-67C84F00CD6A}.Release|x86.Build.0 = Release|Win32
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x64.ActiveCfg = Debug|x64
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x64.Build.0 = Debug|x64
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x86.ActiveCfg = Debug|Win32
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Debug|x86.Build.0 = Debug|Win32
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x64.ActiveCfg = Release|x64
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x64.Build.0 = Release|x64
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x86.ActiveCfg = Release|Win32
+		{E179BA4D-FEE4-49DC-B5A0-14A7AF1FBB06}.Release|x86.Build.0 = Release|Win32
 		{EEE41353-F9F9-491E-A325-85A98CF0B9AB}.Debug|x64.ActiveCfg = Debug|x64
 		{EEE41353-F9F9-491E-A325-85A98CF0B9AB}.Debug|x64.Build.0 = Debug|x64
 		{EEE41353-F9F9-491E-A325-85A98CF0B9AB}.Debug|x86.ActiveCfg = Debug|Win32

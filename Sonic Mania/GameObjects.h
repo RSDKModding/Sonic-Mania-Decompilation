@@ -402,11 +402,11 @@ extern RSDKFunctionTable RSDK;
 #include "All.h"
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->objectID, offsetof(Entity##object, var))
-#define RSDK_EDITABLE_ARRAY(object, type, var, size)                                                                                                 \
-    for (int i = 0; i < size; ++i) {                                                                                                                 \
+#define RSDK_EDITABLE_ARRAY(object, type, var, count, size)                                                                                          \
+    for (int i = 0; i < (count); ++i) {                                                                                                                 \
         char buffer[0x40];                                                                                                                           \
         sprintf(buffer, "%s%d", #var, i);                                                                                                            \
-        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var) + sizeof(Entity##object::var[0]) * i);                          \
+        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var) + (size) * i);              \
     }
 
 #if RETRO_INCLUDE_EDITOR

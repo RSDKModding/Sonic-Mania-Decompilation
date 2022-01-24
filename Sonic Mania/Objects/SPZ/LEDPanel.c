@@ -609,7 +609,7 @@ void LEDPanel_EditorLoad(void) { LEDPanel->aniFrames = RSDK.LoadSpriteAnimation(
 
 void LEDPanel_Serialize(void)
 {
-    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, text, LEDPanel_TextCount);
-    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, seq, LEDPanel_RowCount);
+    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, text, LEDPanel_TextCount, sizeof(TextInfo));
+    RSDK_EDITABLE_ARRAY(LEDPanel, VAR_STRING, seq, LEDPanel_RowCount, sizeof(TextInfo));
     RSDK_EDITABLE_VAR(LEDPanel, VAR_VECTOR2, size);
 }
