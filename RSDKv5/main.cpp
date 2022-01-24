@@ -1,4 +1,4 @@
-#include "RetroEngine.hpp"
+#include "RSDK/Core/RetroEngine.hpp"
 #include "main.hpp"
 
 #ifdef __SWITCH__
@@ -30,13 +30,13 @@ static void initNxLink()
 int main(int argc, char *argv[]) { return RSDK_main(argc, argv, RSDK::LinkGameLogic); }
 #endif
 
-int RSDK_main(int argc, char *argv[], linkPtr linkLogicPtr)
+int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *))
 {
 #ifdef __SWITCH__
     initNxLink();
 #endif
 
-    linkGameLogic = linkLogicPtr;
+    linkGameLogic = (linkPtr)linkLogicPtr;
 
     parseArguments(argc, argv);
     if (initRetroEngine()) {
@@ -48,8 +48,4 @@ int RSDK_main(int argc, char *argv[], linkPtr linkLogicPtr)
 #endif
 
     return 0;
-}
-
-int RSDK_main(int argc, char **argv, void (*ptr)(void*)) {
-    return RSDK_main(argc, argv, (linkPtr)ptr); //switch won't link w/o this
 }

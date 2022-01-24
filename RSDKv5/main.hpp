@@ -9,10 +9,10 @@
 #endif
 
 extern "C" {
-DLLExport int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(RSDK::GameInfo *info));
+DLLExport int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *info));
 }
 #else
-int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(RSDK::GameInfo *info));
+int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *info));
 #endif
 
 #endif
