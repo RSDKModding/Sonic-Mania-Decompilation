@@ -4,6 +4,8 @@
 namespace RSDK
 {
 
+void RegisterAchievement(const char *identifier, const char *name, const char *desc);
+
 namespace SKU
 {
 

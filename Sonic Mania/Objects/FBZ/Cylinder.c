@@ -312,7 +312,7 @@ void Cylinder_State_Spiral(void)
                     player->velocity.y = 0;
                 }
                 break;
-            case 2:
+            case 2: {
                 self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + (player->groundVel >> 15)) & 0x3FF;
                 player->position.x                     = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.x;
 
@@ -388,7 +388,8 @@ void Cylinder_State_Spiral(void)
                     }
                 }
                 break;
-            case 3:
+            }
+            case 3: {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxRange)) {
                     if (abs(player->groundVel) <= 0x30000) {
                         self->playerStatuses[player->playerID] = 0;
@@ -438,6 +439,7 @@ void Cylinder_State_Spiral(void)
                     }
                 }
                 break;
+            }
             default: break;
         }
     }

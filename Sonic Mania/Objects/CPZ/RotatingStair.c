@@ -33,7 +33,7 @@ void RotatingStair_Create(void *data)
         self->amplitude.x = -self->amplitude.x;
 
     int32 typeStore = self->mode;
-    self->mode      = PLATFORM_MOVING;
+    self->mode      = (RotatingStairModes)PLATFORM_MOVING;
     Platform_Create(NULL);
     self->mode = typeStore;
 

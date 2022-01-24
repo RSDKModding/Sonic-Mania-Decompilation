@@ -58,7 +58,10 @@ enum GameRegions {
 };
 
 #define RETRO_USE_ORIGINAL_CODE (0)
+
+#ifndef RETRO_STANDALONE
 #define RETRO_STANDALONE        (1)
+#endif
 
 #define RETRO_WIN     (0)
 #define RETRO_PS4     (1)
@@ -98,6 +101,8 @@ enum GameRegions {
 #endif
 #elif defined __ANDROID__
 #define RETRO_PLATFORM   (RETRO_ANDROID)
+#elif defined __SWITCH__
+#define RETRO_PLATFORM   (RETRO_SWITCH) 
 #else
 #define RETRO_PLATFORM   (RETRO_WIN)
 #endif
@@ -116,7 +121,18 @@ enum GameRegions {
 #define RETRO_USING_MOUSE
 #define RETRO_USING_TOUCH
 
-#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
+// Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
+#define RETRO_REV02 (1)
+// Determines if the engine should use EGS features like achievements or not (must be rev02)
+#define RETRO_VER_EGS (RETRO_REV02 && 0)
+
+// enables only EGS's ingame achievements popup without enabling anything else
+#define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
+
+// enables the use of the mod loader
+#define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)
+
+#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID || RETRO_PLATFORM == RETRO_SWITCH
 #undef RETRO_USING_SDL2
 #define RETRO_USING_SDL2 (1)
 
@@ -153,9 +169,7 @@ enum GameRegions {
 #include <vorbis/vorbisfile.h>
 
 #include "cocoaHelpers.hpp"
-#endif
-
-#if RETRO_PLATFORM == RETRO_ANDROID
+#elif RETRO_PLATFORM == RETRO_ANDROID
 #include <SDL.h>
 #include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
@@ -165,19 +179,14 @@ enum GameRegions {
 #undef RETRO_STANDALONE
 #define RETRO_STANDALONE (0)
 #undef RETRO_USING_MOUSE
+#elif RETRO_PLATFORM == RETRO_SWITCH
+#include <SDL2/SDL.h>
+#include <vorbis/vorbisfile.h>
+#include <theora/theora.h>
+#include <theoraplay/theoraplay.h>
+
+#undef RETRO_USING_MOUSE
 #endif
-
-//Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
-#define RETRO_REV02 (1)
-//Determines if the engine should use EGS features like achievements or not (must be rev02)
-#define RETRO_VER_EGS (RETRO_REV02 && 0)
-
-//enables only EGS's ingame achievements popup without enabling anything else
-#define RETRO_USE_DUMMY_ACHIEVEMENTS (1 && RETRO_REV02)
-
-//enables the use of the mod loader
-#define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)
-#define RETRO_USE_PYTHON (RETRO_USE_MOD_LOADER && 0)
 
 enum EngineStates {
     ENGINESTATE_LOAD,
@@ -222,12 +231,12 @@ enum SeverityModes {
 #include "Scene.hpp"
 #include "Sprite.hpp"
 #include "Video.hpp"
-#include "UserAchievements.hpp"
-#include "UserLeaderboards.hpp"
-#include "UserStats.hpp"
-#include "UserPresence.hpp"
-#include "UserStorage.hpp"
-#include "UserCore.hpp"
+#include "User/Core/UserAchievements.hpp"
+#include "User/Core/UserLeaderboards.hpp"
+#include "User/Core/UserStats.hpp"
+#include "User/Core/UserPresence.hpp"
+#include "User/Core/UserStorage.hpp"
+#include "User/Core/UserCore.hpp"
 #include "Debug.hpp"
 #include "Link.hpp"
 #if RETRO_USE_MOD_LOADER

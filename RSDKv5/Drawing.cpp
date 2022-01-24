@@ -90,7 +90,9 @@ bool32 InitRenderDevice()
 
     SDL_DisableScreenSaver();
 
-#if RETRO_PLATFORM == RETRO_ANDROID
+    byte flags = 0;
+
+#if RETRO_PLATFORM == RETRO_ANDROID || RETRO_PLATFORM == RETRO_SWITCH
     engine.startFullScreen = true;
     SDL_DisplayMode dm;
     SDL_GetDesktopDisplayMode(0, &dm);
@@ -101,6 +103,12 @@ bool32 InitRenderDevice()
     int w          = landscape ? dm.h : dm.w;
 
     engine.windowWidth = pixWidth = ((float)SCREEN_YSIZE * h / w);
+#endif
+
+#if RETRO_PLATFORM == RETRO_SWITCH
+    engine.windowWidth = 1920;
+    engine.windowHeight = 1080;
+    flags |= SDL_WINDOW_FULLSCREEN;
 #endif
 
     for (int s = 0; s < SCREEN_MAX; ++s) {
@@ -119,7 +127,7 @@ bool32 InitRenderDevice()
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
     engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
-                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN | flags);
 
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
 

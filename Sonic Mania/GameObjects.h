@@ -19,8 +19,6 @@
 typedef uint32 colour;
 typedef uint32 color;
 
-#define RETRO_USE_MOD_LOADER (1)
-
 #if RETRO_USE_MOD_LOADER
 typedef enum {
     MODCB_GAME_STARTUP,
@@ -408,7 +406,7 @@ extern RSDKFunctionTable RSDK;
     for (int i = 0; i < size; ++i) {                                                                                                                 \
         char buffer[0x40];                                                                                                                           \
         sprintf(buffer, "%s%d", #var, i);                                                                                                            \
-        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var[i]));                                                \
+        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var) + sizeof(Entity##object::var[0]) * i);                          \
     }
 
 #if RETRO_INCLUDE_EDITOR

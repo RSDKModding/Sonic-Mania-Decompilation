@@ -720,8 +720,12 @@ void InitInputDevice()
         return;
     char buffer[0x100];
 #if RETRO_USING_SDL2
+#if RETRO_PLATFORM == RETRO_SWITCH
+    SDL_GameControllerAddMapping("53776974636820436f6e74726f6c6c65,Switch "
+                                 "Controller,a:b0,b:b1,back:b11,dpdown:b15,dpleft:b12,dpright:b14,dpup:b13,leftshoulder:b6,leftstick:b4,lefttrigger:"
+                                 "b8,leftx:a0,lefty:a1,rightshoulder:b7,rightstick:b5,righttrigger:b9,rightx:a2,righty:a3,start:b10,x:b3,y:b2,");
     // Support for extra controller types SDL doesn't recognise
-#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_UWP
+#elif RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_UWP
     // if (!usingCWD)
     //    sprintf(buffer, "%s/controllerdb.txt", getResourcesPath());
     // else
@@ -729,7 +733,7 @@ void InitInputDevice()
     sprintf(buffer, BASE_PATH "controllerdb.txt");
 #else
     sprintf(buffer, BASE_PATH "controllerdb.txt");
-#endif
+#endif // ! RETRO_PLATFORM == RETRO_SWITCH
     FileIO *file = fOpen(buffer, "rb");
     if (file) {
         fClose(file);
@@ -739,7 +743,7 @@ void InitInputDevice()
         if (nummaps >= 0)
             PrintLog(PRINT_NORMAL, "loaded %d controller mappings from '%s'", buffer, nummaps);
     }
-#endif
+#endif // ! RETRO_USING_SDL2
 
     for (int i = 0; i < PLAYER_COUNT; ++i) {
         activeControllers[i]  = CONT_AUTOASSIGN;

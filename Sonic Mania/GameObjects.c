@@ -985,7 +985,7 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
 #endif
 
 #if !RETRO_STANDALONE
-int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void *info));
+int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void *info)); //make sure other side has a void* too
 
-int32 SDL_main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
+int32 main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif

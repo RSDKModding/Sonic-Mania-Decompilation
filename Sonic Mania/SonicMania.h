@@ -25,7 +25,9 @@
 // This is a copy of what the original game likely had, as the original game does not include EditorLoad or EditorDraw funcs for any objects
 #define RETRO_INCLUDE_EDITOR (1)
 
+#ifndef RETRO_USE_MOD_LOADER
 #define RETRO_USE_MOD_LOADER (1)
+#endif
 
 // used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
 #ifndef RETRO_STANDALONE
