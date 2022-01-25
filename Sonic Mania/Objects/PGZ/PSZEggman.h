@@ -4,24 +4,24 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPSZEggman {
     RSDK_OBJECT
     uint16 controlFrames;
     uint16 aniFrames;
-} ObjectPSZEggman;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZEggman {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    Vector2 drawPos;
+    Vector2 eggmanPos;
     EntityPhantomRuby *ruby;
-    Animator animator;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-} EntityPSZEggman;
+    Animator eggmanAnimator;
+    Animator terminalAnimator;
+    Animator displayAnimator;
+    Animator scanlinesAnimator;
+};
 
 // Object Struct
 extern ObjectPSZEggman *PSZEggman;
@@ -40,7 +40,7 @@ void PSZEggman_EditorLoad(void);
 void PSZEggman_Serialize(void);
 
 // Extra Entity Functions
-void PSZEggman_Unknown1(void);
+void PSZEggman_State_TurnRound(void);
 
 
 #endif //!OBJ_PSZEGGMAN_H

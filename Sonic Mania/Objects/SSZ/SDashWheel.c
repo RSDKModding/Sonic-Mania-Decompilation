@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SDashWheel Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSDashWheel *SDashWheel;
@@ -7,23 +14,23 @@ void SDashWheel_Update(void)
     RSDK_THIS(SDashWheel);
 
     Hitbox hitbox;
-    hitbox.left       = -32;
-    hitbox.right      = 32;
-    self->field_64  = false;
-    self->activated = false;
+    hitbox.left           = -32;
+    hitbox.right          = 32;
+    self->down            = false;
+    self->currentlyActive = false;
 
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &SDashWheel->hitbox) && player->animator.animationID == ANI_SPINDASH) {
-            if (!self->field_74) {
-                self->field_68 ^= 1;
-                self->activated = true;
+            if (!self->wasActivated) {
+                self->toggled ^= true;
+                self->currentlyActive = true;
                 RSDK.PlaySfx(SDashWheel->sfxBumper, false, 255);
             }
-            self->field_74 = true;
-            self->field_64 = true;
-            self->field_70 = true;
-            self->cooldown = 60;
+            self->wasActivated = true;
+            self->down         = true;
+            self->activated    = true;
+            self->cooldown     = 60;
             if (player->direction == FLIP_NONE)
                 self->rotateOffset = -32;
             else
@@ -35,7 +42,7 @@ void SDashWheel_Update(void)
         hitbox.bottom = -4 - hitbox.top;
         if (Player_CheckCollisionBox(player, self, &hitbox) == C_TOP) {
             player->position.y += 0x40000;
-            if (player->animator.animationID == 15 || self->cooldown > 0) {
+            if (player->animator.animationID == ANI_SPINDASH || self->cooldown > 0) {
                 RSDK.PlaySfx(SDashWheel->sfxBumper, false, 255);
                 if (player->animator.animationID == ANI_SPINDASH) {
                     self->cooldown = 60;
@@ -56,8 +63,8 @@ void SDashWheel_Update(void)
         }
     }
 
-    if (!self->field_64)
-        self->field_74 = false;
+    if (!self->down)
+        self->wasActivated = false;
 
     if (self->cooldown > 0) {
         self->cooldown--;
@@ -96,7 +103,7 @@ void SDashWheel_Create(void *data)
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &self->animator1, true, 0);
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->animator3, true, 0);
-        if (RSDK.GetFrameID(&self->animator1))
+        if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
             self->drawOrder = Zone->drawOrderHigh;
         else
             self->drawOrder = Zone->drawOrderLow;
@@ -139,7 +146,7 @@ void SDashWheel_EditorDraw(void)
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &self->animator1, false, 0);
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->animator2, false, 0);
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->animator3, false, 0);
-    if (RSDK.GetFrameID(&self->animator1))
+    if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
         self->drawOrder = Zone->drawOrderHigh;
     else
         self->drawOrder = Zone->drawOrderLow;

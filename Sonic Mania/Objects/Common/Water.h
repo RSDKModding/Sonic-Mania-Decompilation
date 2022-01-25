@@ -16,7 +16,7 @@ typedef enum {
 } WaterTypes;
 
 // Object Class
-typedef struct {
+struct ObjectWater {
     RSDK_OBJECT
     int32 waterLevel;
     int32 newWaterLevel;
@@ -54,10 +54,10 @@ typedef struct {
     Animator wakeData;
     int32 unused3;
     bool32 playingSkimSFX;
-} ObjectWater;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWater {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -87,10 +87,10 @@ typedef struct {
     uint8 activePlayers;
     uint8 activePlayers2;
     Vector2 bubbleOffset;
-    Vector2 bubbleVelocity; // never set, but can tell what they're for in the code
+    Vector2 bubbleVelocity;
     EntityButton *taggedObject;
     Animator animator;
-} EntityWater;
+};
 
 // Object Struct
 extern ObjectWater *Water;

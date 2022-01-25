@@ -5,13 +5,13 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUIRankButton {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIRankButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIRankButton {
     MANIA_UI_ITEM_BASE
     bool32 showsName;
     LeaderboardEntry *leaderboardEntry;
@@ -19,31 +19,29 @@ typedef struct {
     TextInfo nameTimeText;
     LeaderboardEntry *prevLeaderboardEntry;
     int32 prevLeaderboardEntryStatus;
-    int32 field_124;
-    int32 field_128;
-    int32 dword12C;
+    Vector2 popoverPos;
+    bool32 hasChanged; //never actually set to true, but who knows!
     int32 rank;
     int32 score;
-    int32 row;
-    int32 dword13C;
-    int32 dword140;
-    int32 dword144;
-    int32 field_148;
-    int32 field_14C;
-    int32 field_150;
-    int32 field_154;
-    int32 dword158;
-    int32 gap15C;
-    int32 field_160;
-    int32 field_164;
-    int32 field_168;
-    int32 field_16C;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    uint16 textSpriteIndex;
-} EntityUIRankButton;
+    int32 replayID;
+    Vector2 size;
+    int32 bgEdgeSize; //just a guess but maybe its right, its unused anyways
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    Animator textAnimator; // unused, despite being set in Create
+    Animator fontAnimator;
+    Animator replayIconAnimator;
+    Animator rankingAnimator;
+    uint16 textFrames;
+};
 
 // Object Struct
 extern ObjectUIRankButton *UIRankButton;
@@ -63,19 +61,22 @@ void UIRankButton_Serialize(void);
 
 // Extra Entity Functions
 void UIRankButton_SetRankText(EntityUIRankButton *button, int32 rank);
-void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, int32 row);
-void UIRankButton_SetupRank(EntityUIRankButton *rankButton, LeaderboardEntry *entry);
-void UIRankButton_Unknown4(void);
-void UIRankButton_Unknown5(int32 colour, int32 a2, int32 a3, int32 a4, int32 a5);
-bool32 UIRankButton_Options7CB(void);
-bool32 UIRankButton_Options8CB(void);
-void UIRankButton_Options5CB(void);
-void UIRankButton_Options6CB(void);
+void UIRankButton_SetTimeAttackRank(EntityUIRankButton *button, int32 rank, int32 score, int32 replayID);
+void UIRankButton_SetupLeaderboardRank(EntityUIRankButton *button, LeaderboardEntry *entry);
+
+void UIRankButton_DrawSprites(void);
+void UIRankButton_DrawBackgroundShape(int32 x, int32 y, int32 width, int32 height, int32 colour);
+
+bool32 UIRankButton_CheckButtonEnterCB(void);
+bool32 UIRankButton_CheckSelectedCB(void);
+void UIRankButton_ButtonEnterCB(void);
+void UIRankButton_ButtonLeaveCB(void);
 void UIRankButton_FailCB(void);
-void UIRankButton_Options3CB(void);
-void UIRankButton_Unknown12(void);
-void UIRankButton_Unknown13(void);
-void UIRankButton_Unknown14(void);
+void UIRankButton_SelectedCB(void);
+
+void UIRankButton_State_HandleButtonLeave(void);
+void UIRankButton_State_HandleButtonEnter(void);
+void UIRankButton_State_Selected(void);
 
 #endif
 

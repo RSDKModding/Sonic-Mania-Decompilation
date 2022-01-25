@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoLabel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPuyoLabel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoLabel {
     RSDK_ENTITY
     StateMachine(state);
     int32 listID;
@@ -19,7 +19,7 @@ typedef struct {
     int32 field_68;
     int32 field_6C;
     Animator animator;
-} EntityPuyoLabel;
+};
 
 // Object Struct
 extern ObjectPuyoLabel *PuyoLabel;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZSpotlight {
     RSDK_OBJECT
     TABLE(colour coloursManiaA[8], { 0x000020, 0x000020, 0x40D080, 0x40D080, 0x40D080, 0x40D080, 0x000020, 0x000020 });
     TABLE(colour coloursManiaB[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
@@ -13,10 +13,10 @@ typedef struct {
     TABLE(colour coloursEncoreB[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
 #endif
     uint16 aniFrames;
-} ObjectSSZSpotlight;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZSpotlight {
     RSDK_ENTITY
     uint8 color;
     uint8 size;
@@ -29,7 +29,7 @@ typedef struct {
     Vector2 vertPos[8];
     colour *vertClrPtrs;
     Animator animator;
-} EntitySSZSpotlight;
+};
 
 // Object Struct
 extern ObjectSSZSpotlight *SSZSpotlight;

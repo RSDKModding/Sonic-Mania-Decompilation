@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUncurlPlant {
     RSDK_OBJECT
     Hitbox hitbox;
     TABLE(int32 array1[8], { 0, 16, 64, 96, 112, 144, 160, 192 });
     TABLE(int32 array2[8], { 0, -8, 32, 64, 64, 64, 64, 64 });
     TABLE(int32 array3[8], { 0, -24, 8, 8, 8, 8, 8, 8 });
     uint16 aniFrames;
-} ObjectUncurlPlant;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUncurlPlant {
     RSDK_ENTITY
     int32 field_58;
     int32 field_5C;
@@ -28,7 +28,7 @@ typedef struct {
     int32 field_12C;
     Animator animator;
     Animator animators[8];
-} EntityUncurlPlant;
+};
 
 // Object Struct
 extern ObjectUncurlPlant *UncurlPlant;

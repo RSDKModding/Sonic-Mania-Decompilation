@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: HeavyMystic Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHeavyMystic *HeavyMystic;
@@ -11,7 +18,7 @@ void HeavyMystic_Update(void)
 
     if (self->timer2) {
         self->timer2--;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
 
     StateMachine_Run(self->state);
@@ -26,7 +33,7 @@ void HeavyMystic_StaticUpdate(void)
 {
     foreach_active(HeavyMystic, mystic)
     {
-        if (mystic->type == 2) {
+        if (mystic->type == MYSTIC_BOX) {
             RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(mystic));
         }
     }
@@ -171,7 +178,7 @@ void HeavyMystic_StageLoad(void)
     HeavyMystic->sfxTransform   = RSDK.GetSfx("MSZ/MysticTransform.wav");
 }
 
-void HeavyMystic_Unknown1(int32 x, int32 y)
+void HeavyMystic_SpawnParticleFX(int32 x, int32 y)
 {
     int32 velX = RSDK.Rand(-0xC000, 0xC000);
     int32 velY = RSDK.Rand(-0xC000, 0xC000);
@@ -197,12 +204,12 @@ void HeavyMystic_Unknown1(int32 x, int32 y)
     debris->timer = 3 * debris->animator.frameCount;
 }
 
-void HeavyMystic_Unknown2(void)
+void HeavyMystic_HandleParticleFX(void)
 {
     RSDK_THIS(HeavyMystic);
     if (!(Zone->timer & 7)) {
-        HeavyMystic_Unknown1(self->position.x + RSDK.Rand(-0x200000, -0x100000), self->position.y + RSDK.Rand(-0x100000, 0));
-        HeavyMystic_Unknown1(self->position.x + RSDK.Rand(0x100000, 0x200000), self->position.y + RSDK.Rand(-0x100000, 0));
+        HeavyMystic_SpawnParticleFX(self->position.x + RSDK.Rand(-0x200000, -0x100000), self->position.y + RSDK.Rand(-0x100000, 0));
+        HeavyMystic_SpawnParticleFX(self->position.x + RSDK.Rand(0x100000, 0x200000), self->position.y + RSDK.Rand(-0x100000, 0));
     }
 }
 
@@ -362,6 +369,7 @@ void HeavyMystic_State0_Unknown1(void)
     RSDK.ProcessAnimation(&self->animator);
     if (++self->timer >= 8) {
         self->velocity.x = 0x20000;
+        //I'd prolly put a position check here too, its not hard to go into the special stage, then not hit the starpost, doing so causes a softlock
         if (StarPost->postIDs[0])
             HeavyMystic->curtainLinePos = 1;
         self->targetPos.x = self->position.x;
@@ -427,7 +435,7 @@ void HeavyMystic_State0_Unknown2(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
     if (self->timer > 0) {
         self->timer--;
@@ -449,7 +457,7 @@ void HeavyMystic_State0_Unknown3(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -468,7 +476,7 @@ void HeavyMystic_State1_Unknown3(void)
     RSDK_THIS(HeavyMystic);
 
     if (self->alpha > 0xC0)
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
@@ -495,11 +503,10 @@ void HeavyMystic_State0_Unknown7(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
-    HeavyMystic_Unknown2();
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
+    HeavyMystic_HandleParticleFX();
 }
 
 void HeavyMystic_State0_Unknown4(void)
@@ -509,11 +516,10 @@ void HeavyMystic_State0_Unknown4(void)
     RSDK.ProcessAnimation(&self->animator);
     self->position.x += 0x8000;
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
-    HeavyMystic_Unknown2();
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
+    HeavyMystic_HandleParticleFX();
 
     if (++self->timer == 90) {
         self->timer = 0;
@@ -527,12 +533,11 @@ void HeavyMystic_State0_Unknown9(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
+    HeavyMystic_HandleParticleFX();
 
     if (++self->timer == 60) {
         self->timer = 0;
@@ -546,12 +551,11 @@ void HeavyMystic_State0_Unknown6(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
+    HeavyMystic_HandleParticleFX();
 
     if (++self->timer == 60) {
         if (RSDK.CheckStageFolder("MSZCutscene")) {
@@ -570,11 +574,10 @@ void HeavyMystic_State0_Unknown5(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
@@ -586,11 +589,10 @@ void HeavyMystic_State0_Unknown8(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     if (self->animator.frameID == 8 && !self->timer) {
         RSDK.PlaySfx(HeavyMystic->sfxHatNode, false, 255);
         CREATE_ENTITY(Hatterkiller, intToVoid(RSDK.Rand(-0x20000, 0x20000)), self->position.x + 0x320000, self->position.y);
@@ -609,7 +611,7 @@ void HeavyMystic_State0_Unknown10(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         if (!HeavyMystic->curtainLinePos) {
@@ -641,7 +643,7 @@ void HeavyMystic_State_Finish(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x3800;
@@ -684,11 +686,10 @@ void HeavyMystic_State1_Unknown5(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
-    HeavyMystic_Unknown2();
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
+    HeavyMystic_HandleParticleFX();
 
     if (++self->timer == 45) {
         self->timer = 0;
@@ -701,11 +702,10 @@ void HeavyMystic_State1_Unknown6(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     if (self->animator.frameID == self->animator.frameCount - 8)
         RSDK.PlaySfx(HeavyMystic->sfxHat, false, 255);
 
@@ -720,10 +720,9 @@ void HeavyMystic_State1_Unknown7(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     if (self->angle == 192) {
         foreach_active(HeavyMystic, boss)
@@ -741,10 +740,9 @@ void HeavyMystic_State1_Unknown8(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     if (self->angle == 252)
         self->state = HeavyMystic_State1_Unknown9;
@@ -818,8 +816,7 @@ void HeavyMystic_State1_MysticReveal(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     HeavyMystic_CheckPlayerCollisions();
     if (--self->timer <= 0) {
@@ -847,7 +844,7 @@ void HeavyMystic_State1_Unknown22(void)
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
     if (self->position.x != self->targetPos.x) {
         if (self->position.x <= self->targetPos.x) {
@@ -888,10 +885,9 @@ void HeavyMystic_State1_Unknown23(void)
 {
     RSDK_THIS(HeavyMystic);
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
 
-    self->angle      = (self->angle + 4) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 11) + self->targetPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     if (self->position.x == self->targetPos.x) {
         ++self->rougeID;
@@ -920,7 +916,7 @@ void HeavyMystic_State1_Unknown24(void)
 {
     RSDK_THIS(HeavyMystic);
     RSDK.ProcessAnimation(&self->animator);
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     if (self->animator.frameID == self->animator.frameCount - 5)
         RSDK.PlaySfx(HeavyMystic->sfxTransform, false, 255);
 
@@ -1574,7 +1570,6 @@ void HeavyMystic_StateDraw2_Unknown2(void)
 void HeavyMystic_StateDraw2_Unknown3(void)
 {
     RSDK_THIS(HeavyMystic);
-    Vector2 drawPos;
 
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         self->drawFX           = FX_SCALE | FX_ROTATE;

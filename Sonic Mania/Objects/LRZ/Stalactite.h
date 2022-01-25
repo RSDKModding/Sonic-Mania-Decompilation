@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectStalactite {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
     uint16 sfxShoot;
-} ObjectStalactite;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStalactite {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-} EntityStalactite;
+};
 
 // Object Struct
 extern ObjectStalactite *Stalactite;

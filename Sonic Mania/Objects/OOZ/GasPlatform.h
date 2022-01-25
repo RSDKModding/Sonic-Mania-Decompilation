@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGasPlatform {
     RSDK_OBJECT
     Hitbox hitbox;
     Vector2 range;
     uint16 sfxGasPop;
     uint16 sfxSpring;
-} ObjectGasPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGasPlatform {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     Animator animator2;
-} EntityGasPlatform;
+};
 
 // Object Struct
 extern ObjectGasPlatform *GasPlatform;

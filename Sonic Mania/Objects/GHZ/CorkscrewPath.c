@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CorkscrewPath Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCorkscrewPath *CorkscrewPath;
@@ -91,7 +98,6 @@ void CorkscrewPath_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     // Bounds
-    Vector2 drawPos;
 
     Vector2 size;
     size.x = abs(self->period) << 15;

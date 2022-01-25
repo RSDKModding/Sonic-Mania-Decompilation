@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPullSwitch {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 field_C;
     uint16 aniFrames;
     uint16 sfxButton;
     uint16 sfxSmogClear;
-} ObjectPullSwitch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPullSwitch {
     RSDK_ENTITY
     int32 field_58;
     int32 field_5C;
@@ -27,7 +27,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityPullSwitch;
+};
 
 // Object Struct
 extern ObjectPullSwitch *PullSwitch;

@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWallBumper {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBouncer;
-} ObjectWallBumper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWallBumper {
     RSDK_ENTITY
     int32 type;
     int32 size;
@@ -19,7 +19,7 @@ typedef struct {
     bool32 destructible;
     Animator animator;
     Hitbox hitbox;
-} EntityWallBumper;
+};
 
 // Object Struct
 extern ObjectWallBumper *WallBumper;

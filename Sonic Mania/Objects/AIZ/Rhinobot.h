@@ -5,15 +5,15 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectRhinobot {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxHuff;
-} ObjectRhinobot;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRhinobot {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDelay);
@@ -28,7 +28,7 @@ typedef struct {
     uint8 startDir;
     Animator animatorBot;
     Animator animatorDust;
-} EntityRhinobot;
+};
 
 // Object Struct
 extern ObjectRhinobot *Rhinobot;

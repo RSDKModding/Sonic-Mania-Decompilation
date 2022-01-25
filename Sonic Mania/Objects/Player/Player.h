@@ -61,7 +61,7 @@ typedef enum {
     ANI_SWIM,
     ANI_SWIMTIRED,
     ANI_SWIMLIFT,
-} PLAYER_ANI;
+} PlayerAnimationIDs;
 
 typedef enum {
     CHAR_NONE,
@@ -83,11 +83,18 @@ typedef enum {
 } ShieldTypes;
 
 typedef enum {
-    HURTFLAG_NONE,
-    HURTFLAG_HURT,
-    HURTFLAG_DIE,
-    HURTFLAG_DROWN,
-} HurtFlags;
+    PLAYER_DEATH_NONE,
+    PLAYER_DEATH_DIE_USESFX,
+    PLAYER_DEATH_DIE_NOSFX,
+    PLAYER_DEATH_DROWN,
+} DeathTypes;
+
+typedef enum {
+    PLAYER_HURT_NONE,
+    PLAYER_HURT_HASSHIELD,
+    PLAYER_HURT_RINGLOSS,
+    PLAYER_HURT_DIE,
+} HurtTypes;
 
 typedef enum {
     SUPERSTATE_NONE,
@@ -99,7 +106,7 @@ typedef enum {
 
 // Object Class
 #if RETRO_USE_PLUS
-typedef struct {
+struct ObjectPlayer {
     RSDK_OBJECT
     TABLE(int32 sonicPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
@@ -178,13 +185,13 @@ typedef struct {
     STATIC(int32 savedLives, 3);
     int32 savedScore;
     STATIC(int32 savedScore1UP, 50000);
-    uint16 sonicSpriteIndex;
-    uint16 superSpriteIndex;
-    uint16 tailsSpriteIndex;
-    uint16 tailsTailsSpriteIndex;
-    uint16 knuxSpriteIndex;
-    uint16 mightySpriteIndex;
-    uint16 raySpriteIndex;
+    uint16 sonicFrames;
+    uint16 superFrames;
+    uint16 tailsFrames;
+    uint16 tailsTailsFrames;
+    uint16 knuxFrames;
+    uint16 mightyFrames;
+    uint16 rayFrames;
     uint16 sfxJump;
     uint16 sfxRoll;
     uint16 sfxCharge;
@@ -217,9 +224,9 @@ typedef struct {
     StateMachine(configureGhostCB);
     bool32 (*canSuperCB)(bool32 isHUD);
     int32 superDashCooldown;
-} ObjectPlayer;
+};
 #else
-typedef struct {
+struct ObjectPlayer {
     RSDK_OBJECT
     int32 playerCount;
     TABLE(int32 sonicPhysicsTable[64],
@@ -250,18 +257,18 @@ typedef struct {
     int32 P2JumpActionDelay;
     int32 jumpInDelay;
     int32 p2InputDelay;
-    uint8 value17;
+    bool32 disableP2KeyCheck;
     int32 rings;
     STATIC(int32 ringExtraLife, 100);
     int32 powerups;
     STATIC(int32 savedLives, 3);
     int32 savedScore;
     STATIC(int32 savedScore1UP, 50000);
-    uint16 sonicSpriteIndex;
-    uint16 superSpriteIndex;
-    uint16 tailsTailsSpriteIndex;
-    uint16 tailsSpriteIndex;
-    uint16 knuxSpriteIndex;
+    uint16 sonicFrames;
+    uint16 superFrames;
+    uint16 tailsTailsFrames;
+    uint16 tailsFrames;
+    uint16 knuxFrames;
     TABLE(colour superPalette_Sonic[18], { 0x000080, 0x0038C0, 0x0068F0, 0x1888F0, 0x30A0F0, 0x68D0F0, 0xF0C001, 0xF0D028, 0xF0E040, 0xF0E860,
                                            0xF0E898, 0xF0E8D0, 0xF0D898, 0xF0E0B0, 0xF0E8C0, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 });
     TABLE(colour superPalette_Tails[18], { 0x800801, 0xB01801, 0xD05001, 0xE07808, 0xE89008, 0xF0A801, 0xF03830, 0xF06848, 0xF09860, 0xF0B868,
@@ -301,11 +308,11 @@ typedef struct {
     uint16 sfxOuttahere;
     uint16 sfxTransform2;
     bool32 gotHit[4];
-} ObjectPlayer;
+};
 #endif
 
 // Entity Class
-typedef struct {
+struct EntityPlayer {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(nextAirState);
@@ -320,7 +327,7 @@ typedef struct {
     int32 tailRotation;
     int32 tailDirection;
     uint16 aniFrames;
-    uint16 tailSpriteIndex;
+    uint16 tailFrames;
     uint16 storedAnim;
     uint16 playerID;
     Hitbox *outerbox;
@@ -387,12 +394,12 @@ typedef struct {
     bool32 jumpHold;
     int32 jumpAbility;
     int32 jumpAbilityTimer;
-    StateMachine(movesetState);
-    StateMachine(peeloutState);
+    StateMachine(stateAbility);
+    StateMachine(statePeelout);
     int32 flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;
-    uint8 hurtFlag;
+    uint8 deathType;
     bool32 forceJumpIn;
 #if RETRO_USE_PLUS
     bool32 isGhost;
@@ -405,7 +412,7 @@ typedef struct {
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif
-} EntityPlayer;
+};
 
 // Object Struct
 extern ObjectPlayer *Player;
@@ -428,7 +435,7 @@ void Player_LoadSprites(void);
 void Player_LoadSpritesVS(void);
 void Player_SaveValues(void);
 void Player_GiveScore(EntityPlayer *player, int32 score);
-void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSFX);
+void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSfx); // USERCALL -> player, amount, playSfx
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int32 character);
@@ -441,16 +448,15 @@ void Player_BlendSuperMightyColours(int32 bankID);
 void Player_BlendSuperRayColours(int32 bankID);
 #endif
 void Player_HandleSuperForm(void);
-bool32 Player_CheckKeyPress(void);
+bool32 Player_CheckP2KeyPress(void);
 //returns the pointer to the nearest player to the current entity on the x axis only
 EntityPlayer *Player_GetNearestPlayerX(void);
-// returns the pointer to the nearest player to the current entity on both the x & y axis'
+// returns the pointer to the nearest player to the current entity on both the x & y axis
 EntityPlayer *Player_GetNearestPlayer(void);
 #if RETRO_USE_PLUS
 void Player_RemoveEncoreLeader(void);
 #endif
 void Player_ResetBoundaries(EntityPlayer *player);
-void Player_State_TransportTube(void);
 void Player_HandleDeath(EntityPlayer *player);
 void Player_ResetState(EntityPlayer *player);
 
@@ -475,7 +481,7 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
 //checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate
 bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 //checks if the player is attacking the badnik, returns true if the player attacked the badnik, otherwise the player is hit and returns false
-bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy);
+bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy); // USERCALL -> player, entity, destroy
 //similar to checkBadnikTouch, this time for bosses, handles rebounds and stuff properly, does NOT check for hammerdrop/instashield hitboxes. returns true if player hit the boss, otherwise the player is hit and returns false
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 //similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false
@@ -486,7 +492,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
 bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int velY);
 #endif
 // idk yet, needs more research
-bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
+bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 hitIfNotAttacking);
 
 // State helpers
 void Player_ChangePhysicsState(EntityPlayer *entity);
@@ -496,12 +502,12 @@ void Player_HandleAirMovement(void);
 void Player_HandleAirFriction(void);
 void Player_StartJump(EntityPlayer *entity);
 void Player_StartRoll(void);
-bool32 Player_SwapMainPlayer(bool32 flag);
+bool32 Player_SwapMainPlayer(bool32 forceSwap);
 void Player_StartPeelout(void);
 void Player_HandleRollDeceleration(void);
 void Player_Hit(EntityPlayer *player);
 bool32 Player_CheckValidState(EntityPlayer *player);
-void Player_CheckStartFlyCarry(EntityPlayer *player);
+void Player_CheckStartFlyCarry(EntityPlayer *leader);
 void Player_P2JumpBackIn(void);
 void Player_ForceSuperTransform(void);
 
@@ -535,17 +541,18 @@ void Player_State_KnuxLedgePullUp(void);
 void Player_State_MightyHammerDrop(void);
 void Player_State_MightyUnspin(void);
 void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox);
-bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer);
+bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer); // USERCALL -> player, bounceDistance, checkHammerDrop, uncurlTimer
 void Player_State_RayGlide(void);
 #endif
 void Player_State_FlyIn(void);
 void Player_State_JumpIn(void);
 void Player_State_StartJumpIn(void);
-void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player);
+void Player_EndFlyJumpIn(EntityPlayer *player, EntityPlayer *leader);
 void Player_State_EncoreRespawn(void);
 void Player_State_Victory(void);
 void Player_State_Bubble(void);
 void Player_State_WaterSlide(void);
+void Player_State_TransportTube(void);
 
 void Player_SonicJumpAbility(void);
 void Player_TailsJumpAbility(void);

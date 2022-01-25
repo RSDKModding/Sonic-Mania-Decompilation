@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSkyTeleporter {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectSkyTeleporter;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySkyTeleporter {
     RSDK_ENTITY
     int32 field_58;
     int32 field_5C;
@@ -19,7 +19,7 @@ typedef struct {
     int32 timer;
     Hitbox hitbox;
     Animator animator;
-} EntitySkyTeleporter;
+};
 
 // Object Struct
 extern ObjectSkyTeleporter *SkyTeleporter;

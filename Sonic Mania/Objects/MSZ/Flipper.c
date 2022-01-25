@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Flipper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFlipper *Flipper;
@@ -28,7 +35,7 @@ void Flipper_Update(void)
                         if ((1 << i) & self->activePlayers) {
                             EntityPlayer *playerPtr                  = RSDK_GET_ENTITY(i, Player);
                             int vel                                  = (playerPtr->position.x - self->position.x) - 0x40000;
-                            playerPtr->animator.animationSpeed = 120;
+                            playerPtr->animator.speed = 120;
                             playerPtr->state                         = Player_State_Air;
                             playerPtr->jumpAbilityTimer              = 1;
                             playerPtr->onGround                      = false;
@@ -76,7 +83,7 @@ void Flipper_Update(void)
                         if ((1 << i) & self->activePlayers) {
                             EntityPlayer *playerPtr                  = RSDK_GET_ENTITY(i, Player);
                             int vel                                  = (self->position.x - player->position.x) - 0x40000;
-                            playerPtr->animator.animationSpeed = 120;
+                            playerPtr->animator.speed = 120;
                             playerPtr->state                         = Player_State_Air;
                             playerPtr->jumpAbilityTimer              = 1;
                             playerPtr->onGround                      = false;

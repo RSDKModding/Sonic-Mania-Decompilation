@@ -6,7 +6,7 @@
 #define Shiversaw_SawCount (2)
 
 // Object Class
-typedef struct {
+struct ObjectShiversaw {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
@@ -27,34 +27,34 @@ typedef struct {
     uint16 sfxTargeting;
     uint16 sfxRocketJet;
     uint16 sfxExplosion3;
-} ObjectShiversaw;
+};
 
 // Entity Class
-typedef struct {
+struct EntityShiversaw {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateSaw[Shiversaw_SawCount]);
     uint8 sawID;
     int32 timer;
     int32 sawTimers[Shiversaw_SawCount];
-    int32 field_74[Shiversaw_SawCount];
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    Vector2 field_88;
-    int32 field_90[Shiversaw_SawCount];
+    int32 sawRadiusVel[Shiversaw_SawCount];
+    int32 unused1;
+    int32 unused2;
+    int32 startY;
+    Vector2 origin;
+    int32 sawRadius[Shiversaw_SawCount];
     int32 sawAngles[Shiversaw_SawCount];
-    int32 field_A0[Shiversaw_SawCount];
+    int32 sawTargetAngles[Shiversaw_SawCount];
     Vector2 sawPos[Shiversaw_SawCount];
-    int32 field_B8;
+    int32 storedVelX;
     int32 circleRadius;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    Animator tanksAnimator;
+    Animator bellowsAnimator;
+    Animator connectorAnimator;
+    Animator armAnimator;
+    Animator spinnerAnimator;
     Animator sawAnimator[Shiversaw_SawCount];
-} EntityShiversaw;
+};
 
 // Object Struct
 extern ObjectShiversaw *Shiversaw;
@@ -75,34 +75,37 @@ void Shiversaw_Serialize(void);
 // Extra Entity Functions
 bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID);
 void Shiversaw_CheckPlayerCollisions(void);
-void Shiversaw_Unknown3(void);
-void Shiversaw_Unknown4(void);
-void Shiversaw_Unknown5(EntityPlayer *player);
+void Shiversaw_SetupSawPos(void);
+void Shiversaw_Hit(void);
+void Shiversaw_Explode(void);
+void Shiversaw_CheckBoxCollisions(EntityPlayer *player);
 
 void Shiversaw_State_Entry(void);
 void Shiversaw_State_SetupBounds(void);
-void Shiversaw_State_Unknown1(void);
-void Shiversaw_Unknown9(void);
-void Shiversaw_State_Unknown2(void);
-void Shiversaw_State_Unknown3(void);
+void Shiversaw_State_EnterShiversaw(void);
+void Shiversaw_State_HitRecoil_Tutorial(void);
+void Shiversaw_State_Idle(void);
+void Shiversaw_State_MoveToPlayer(void);
 void Shiversaw_State_HitRecoil(void);
 void Shiversaw_State_Destroyed(void);
-void Shiversaw_Unknown10(void);
-void Shiversaw_Unknown11(void);
-void Shiversaw_Unknown12(void);
-void Shiversaw_Unknown13(void);
+void Shiversaw_State_StageFinishCB(void);
+void Shiversaw_State_Explode(void);
+void Shiversaw_State_Explode_NoTransition(void);
+void Shiversaw_State_DropSignPost(void);
 
 void Shiversaw_CheckCrateCollisions(void);
-void Shiversaw_Unknown14(int32 speed);
-void Shiversaw_StateSaw_Unknown2(void);
-void Shiversaw_StateSaw_Unknown3(void);
-void Shiversaw_StateSaw_Unknown4(void);
-void Shiversaw_StateSaw_Unknown5(void);
+void Shiversaw_HandleSawMovement(int32 speed);
+
+void Shiversaw_StateSaw_Active(void);
+void Shiversaw_StateSaw_Targeting(void);
+void Shiversaw_StateSaw_Extend(void);
+void Shiversaw_StateSaw_Retract(void);
 void Shiversaw_StateSaw_Destroyed(void);
-void Shiversaw_StateSaw_Unknown7(void);
-void Shiversaw_StateSaw_Unknown1(void);
+void Shiversaw_StateSaw_Form(void);
+void Shiversaw_StateSaw_Setup(void);
+
 void Shiversaw_ProcessSawMovement(int32 sawID);
 
-void Shiversaw_StateDust_Unknown(void);
+void Shiversaw_StateDust_Debris(void);
 
 #endif //!OBJ_SHIVERSAW_H

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PBL_Camera Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -9,7 +16,7 @@ void PBL_Camera_LateUpdate(void)
 {
     RSDK_THIS(PBL_Camera);
     StateMachine_Run(self->state);
-    PBL_Camera_Unknown1();
+    PBL_Camera_HandleScreenPos();
     self->targetPos = self->position;
     self->targetPos.y -= (0x100 << 16);
 }
@@ -21,13 +28,13 @@ void PBL_Camera_Draw(void) {}
 void PBL_Camera_Create(void *data)
 {
     RSDK_THIS(PBL_Camera);
-    self->active     = ACTIVE_NORMAL;
-    self->state      = PBL_Camera_Unknown2;
-    self->position.x = 0x400 << 16;
-    self->angle      = 0x200;
-    self->worldY     = 0x100 << 16;
-    self->rotationY  = -0x60;
-    self->position.y = self->dword68 + (0x700 << 16);
+    self->active          = ACTIVE_NORMAL;
+    self->state           = PBL_Camera_State_Normal;
+    self->position.x      = 0x400 << 16;
+    self->angle           = 0x200;
+    self->worldY          = 0x100 << 16;
+    self->rotationY       = -0x60;
+    self->position.y      = self->cameraStartOffset + (0x700 << 16);
     self->curCamBoundaryT = 0x100 << 16;
     self->curCamBoundaryB = 0x700 << 16;
     self->newCamBoundaryT = 0x100 << 16;
@@ -43,7 +50,7 @@ void PBL_Camera_StageLoad(void)
     PBL_Camera->useAltMatNormal = false;
 }
 
-void PBL_Camera_Unknown1(void)
+void PBL_Camera_HandleScreenPos(void)
 {
     RSDK_THIS(PBL_Camera);
     int32 angle = RSDK.Cos1024(-self->rotationY) << 12;
@@ -60,13 +67,13 @@ void PBL_Camera_Unknown1(void)
     else
         ScreenInfo->position.x -= 2 * ang;
 
-    int32 height               = ((RSDK.Sin1024(-self->rotationY) << 12) << 8) / angle;
+    int32 height           = ((RSDK.Sin1024(-self->rotationY) << 12) << 8) / angle;
     ScreenInfo->position.y = height - ScreenInfo->centerY + 512;
-    self->prevAngle         = self->angle;
-    self->centerY         = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
+    self->prevAngle        = self->angle;
+    self->centerY          = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
 }
 
-void PBL_Camera_Unknown2(void)
+void PBL_Camera_State_Normal(void)
 {
     RSDK_THIS(PBL_Camera);
     Entity *target = self->targetPtr;

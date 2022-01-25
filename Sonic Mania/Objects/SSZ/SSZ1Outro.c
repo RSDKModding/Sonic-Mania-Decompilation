@@ -1,17 +1,24 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SSZ1Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSSZ1Outro *SSZ1Outro;
 
 void SSZ1Outro_Update(void)
 {
-    void *states[] = { SSZ1Outro_CutsceneState_Unknown1, SSZ1Outro_CutsceneState_Unknown2, NULL };
-
     RSDK_THIS(SSZ1Outro);
     if (!self->activated) {
         self->activated = true;
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-        CutsceneSeq_StartSequence((Entity *)self, states);
+#endif
+        CutsceneSeq_StartSequence(self, SSZ1Outro_Cutscene_TimeWarpRunway, SSZ1Outro_Cutscene_TimeWarp, StateMachine_None);
     }
 }
 
@@ -35,12 +42,12 @@ void SSZ1Outro_StageLoad(void)
     foreach_all(RTeleporter, teleporter) { SSZ1Outro->teleporter = teleporter; }
 }
 
-bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
 {
+    RSDK_THIS(SSZ1Outro);
+
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
-    
-    RSDK_THIS(SSZ1Outro);
 
     if (!host->timer) {
         foreach_all(FXFade, fxFade)
@@ -111,7 +118,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
     return player1->position.x >= self->position.x + (self->hitbox.right << 16);
 }
-bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host)
 {
     if (host->timer == 10)
         SSZ1Outro->fxFade->state = FXFade_State_FadeIn;
@@ -123,7 +130,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-void SSZ1Outro_Unknown3(Entity *entity)
+void SSZ1Outro_DestroyHotaru(Entity *entity)
 {
     CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), entity->position.x, entity->position.y);
     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
@@ -131,12 +138,12 @@ void SSZ1Outro_Unknown3(Entity *entity)
     destroyEntity(entity);
 }
 
-void SSZ1Outro_Unknown4(void)
+void SSZ1Outro_DestroyLeftoverHotarus(void)
 {
     foreach_active(HotaruMKII, hotaru)
     {
         if (!hotaru->type)
-            SSZ1Outro_Unknown3((Entity *)hotaru);
+            SSZ1Outro_DestroyHotaru((Entity *)hotaru);
     }
 }
 

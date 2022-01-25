@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SSZ2Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSSZ2Setup *SSZ2Setup;
@@ -13,7 +20,7 @@ void SSZ2Setup_StaticUpdate(void)
         {
             Hitbox *hitbox = Player_GetHitbox(player);
             uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
-            if (tile == 0xFFFF)
+            if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
             if (RSDK.GetTileBehaviour(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
@@ -62,7 +69,7 @@ void SSZ2Setup_StageLoad(void)
     }
 #if RETRO_USE_PLUS
     if ((SceneInfo->filter & FILTER_ENCORE))
-        RSDK.LoadPalette(0, "EncoreSSZ2.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreSSZ2.act", 0b0000000011111111);
 #endif
     GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCallback1;
     GenericTrigger->callbacks[1] = SSZ2Setup_GenericTriggerCallback2;

@@ -1,11 +1,16 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SPZ1Intro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSPZ1Intro *SPZ1Intro;
 
 void SPZ1Intro_Update(void)
 {
-    void *states[] = { SPZ1Intro_CutsceneState_Unknown1, SPZ1Intro_CutsceneState_Unknown2, SPZ1Intro_CutsceneState_Unknown3, NULL };
-
     RSDK_THIS(SPZ1Intro);
     if (!self->timer) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
@@ -13,7 +18,7 @@ void SPZ1Intro_Update(void)
         }
         else {
             self->timer = 1;
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, SPZ1Intro_Cutscene_SetupAct, SPZ1Intro_Cutscene_ExitPipe, SPZ1Intro_Cutscene_BeginAct1, NULL);
         }
     }
 }
@@ -40,11 +45,11 @@ void SPZ1Intro_StageLoad(void)
     SPZ1Intro->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ManholeCover.bin", SCOPE_STAGE);
 }
 
-bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SPZ1Intro);
     RSDK_GET_PLAYER(player1, player2, camera);
-    Entity *curEnt = host->cutsceneCurEntity;
+    Entity *curEnt = host->activeEntity;
     if (!host->timer) {
         player1->position.x = self->position.x;
         camera->position.x  = self->position.x;
@@ -82,35 +87,35 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (!host->values[0]) {
             SceneInfo->timeEnabled  = false;
             SceneInfo->milliseconds = 0;
-            camera->state                = StateMachine_None;
+            camera->state           = StateMachine_None;
             return false;
         }
     }
     else if (!host->values[0]) {
-        host->values[0] = 1;
-        host->storedValue2    = host->timer;
+        host->values[0]   = 1;
+        host->storedTimer = host->timer;
         if (!host->values[0]) {
             SceneInfo->timeEnabled  = false;
             SceneInfo->milliseconds = 0;
-            camera->state                = StateMachine_None;
+            camera->state           = StateMachine_None;
             return false;
         }
     }
 
     if (host->timer == 45)
-        RSDK.PlaySfx(Player->sfxRoll, 0, 255);
+        RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
     if (host->timer == 90) {
         return true;
     }
     else {
         SceneInfo->timeEnabled  = false;
         SceneInfo->milliseconds = 0;
-        camera->state                = StateMachine_None;
+        camera->state           = StateMachine_None;
         return false;
     }
 }
 
-bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -119,10 +124,10 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->velocity.x      = 0;
         player1->velocity.y      = -0x80000;
         player1->state           = Player_State_Air;
-        player1->nextAirState    = 0;
-        player1->nextGroundState = 0;
-        RSDK.PlaySfx(SPZ1Intro->sfxGasPop, false, 255);
-        RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 255);
+        player1->nextAirState    = StateMachine_None;
+        player1->nextGroundState = StateMachine_None;
+        RSDK.PlaySfx(SPZ1Intro->sfxGasPop, false, 0xFF);
+        RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 0xFF);
         RSDK.StopSfx(Player->sfxRoll);
         Camera_ShakeScreen(0, 0, 2);
         EntityDebris *debris = SPZ1Intro->debris;
@@ -147,7 +152,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             player2->nextGroundState = StateMachine_None;
         }
         if (player2->velocity.y > 0)
-            player2->tileCollisions = 1;
+            player2->tileCollisions = true;
         if (!player1->onGround || !player2->onGround)
             return false;
     }
@@ -157,7 +162,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {

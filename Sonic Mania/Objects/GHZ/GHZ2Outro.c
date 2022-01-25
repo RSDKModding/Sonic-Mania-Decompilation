@@ -1,29 +1,37 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GHZ2Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGHZ2Outro *GHZ2Outro;
 
 void GHZ2Outro_Update(void)
 {
-    void *states_GHZ2[]  = { GHZ2Outro_Cutscene_FinishActClear, GHZ2Outro_Cutscene_JumpIntoHole, NULL };
-    void *states_Outro[] = { GHZ2Outro_Cutscene_HoleSceneFadeIn, GHZ2Outro_Cutscene_SpyOnEggman,
-                              GHZ2Outro_Cutscene_BreakupGroup, GHZ2Outro_Cutscene_RubyHover,
-                              GHZ2Outro_Cutscene_StartRubyWarp, GHZ2Outro_Cutscene_HandleRubyWarp,
-                              GHZ2Outro_Cutscene_LoadCPZ1,           NULL };
-
     RSDK_THIS(GHZ2Outro);
+
     if (!self->activated) {
-        CutsceneSeq_StartSequence((Entity *)self, states_Outro);
+        CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_HoleSceneFadeIn, GHZ2Outro_Cutscene_SpyOnEggman, GHZ2Outro_Cutscene_BreakupGroup,
+                                  GHZ2Outro_Cutscene_RubyHover, GHZ2Outro_Cutscene_StartRubyWarp, GHZ2Outro_Cutscene_HandleRubyWarp,
+                                  GHZ2Outro_Cutscene_LoadCPZ1, StateMachine_None);
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             seq->skipType         = SKIPTYPE_CALLBACK;
             seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
         }
+#endif
         self->active = ACTIVE_NEVER;
     }
     else {
-        CutsceneSeq_StartSequence((Entity *)self, states_GHZ2);
+        CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_FinishActClear, GHZ2Outro_Cutscene_JumpIntoHole, StateMachine_None);
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         self->active = ACTIVE_NEVER;
@@ -353,28 +361,28 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (fxRuby->fullyExpanded) {
-            if (host->storedValue2) {
-                if (host->timer == host->storedValue2 + 48) {
+            if (host->storedTimer) {
+                if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
                     fxRuby->state     = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->storedValue2 + 180) {
+                else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
                     fxRuby->state     = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedValue2    = host->timer;
+                    host->storedTimer    = host->timer;
                     host->values[0] = true;
                 }
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
 
-            if (host->timer >= host->storedValue2 + 52) {
+            if (host->timer >= host->storedTimer + 52) {
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x10) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
@@ -385,8 +393,8 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
                     int32 valX = (ruby->position.x - 0x400000) - player->position.x;
                     int32 valY = (ruby->position.y - (0xA00000 + 944)) - player->position.y;
 
-                    player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->storedValue2)) << 12) + valX) >> 5;
-                    player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) << 12) + valY) >> 5;
+                    player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->storedTimer)) << 12) + valX) >> 5;
+                    player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) << 12) + valY) >> 5;
                     player->state          = Player_State_None;
                     player->tileCollisions = false;
                     player->onGround       = false;
@@ -397,7 +405,7 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer == host->storedValue2 + 150)
+                if (host->timer == host->storedTimer + 150)
                     return true;
             }
             else {
@@ -428,6 +436,7 @@ bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_USE_PLUS
 void GHZ2Outro_Cutscene_SkipCB(void)
 {
 #if RETRO_USE_PLUS
@@ -437,6 +446,7 @@ void GHZ2Outro_Cutscene_SkipCB(void)
 #endif
         RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void GHZ2Outro_EditorDraw(void)

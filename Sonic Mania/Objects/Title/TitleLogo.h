@@ -17,17 +17,17 @@ typedef enum {
 }TitleLogoTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTitleLogo {
     RSDK_OBJECT
     uint16 aniFrames;
 #if RETRO_USE_PLUS
     uint16 plusFrames;
     uint16 sfxPlus;
 #endif
-} ObjectTitleLogo;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTitleLogo {
     RSDK_ENTITY
     int32 type;
 #if RETRO_USE_PLUS
@@ -41,7 +41,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     Animator animator3;
 #endif
-} EntityTitleLogo;
+};
 
 // Object Struct
 extern ObjectTitleLogo *TitleLogo;

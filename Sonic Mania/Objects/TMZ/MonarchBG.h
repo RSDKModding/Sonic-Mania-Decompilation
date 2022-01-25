@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMonarchBG {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 meshIndex;
     uint16 sceneIndex;
-} ObjectMonarchBG;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMonarchBG {
     RSDK_ENTITY
     StateMachine(state);
     int32 field_5C;
@@ -22,7 +22,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     Matrix matrix4;
-} EntityMonarchBG;
+};
 
 // Object Struct
 extern ObjectMonarchBG *MonarchBG;

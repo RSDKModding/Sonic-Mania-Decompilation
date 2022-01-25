@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CPZSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCPZSetup *CPZSetup;
@@ -15,7 +22,7 @@ void CPZSetup_StaticUpdate(void)
     }
 
     if (!(Zone->timer & 7)) {
-        ++CPZSetup->layerPtr->deformationOffset;
+        ++CPZSetup->cpz1BG->deformationOffset;
 
         ++CPZSetup->palAnimFrameA;
         CPZSetup->palAnimFrameA &= 0xF;
@@ -52,23 +59,23 @@ void CPZSetup_StageLoad(void)
     CPZSetup->palAnimFrameC = 0;
     CPZSetup->palAnimFrameD = 1;
     CPZSetup->palAnimFrameE = 2;
-    CPZSetup->layerPtr      = RSDK.GetSceneLayer(0);
+    CPZSetup->cpz1BG      = RSDK.GetSceneLayer(0);
     for (int32 i = 0; i < 0x400; ++i) {
-        CPZSetup->layerPtr->deformationData[i] = CPZSetup->deformation[i & 0x3F];
+        CPZSetup->cpz1BG->deformationData[i] = CPZSetup->deformation[i & 0x3F];
     }
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreCPZ.act", 0xFF);
-        RSDK.LoadPalette(2, "EncoreCPZw.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreCPZ.act", 0b0000000011111111);
+        RSDK.LoadPalette(2, "EncoreCPZw.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 0, 10);
     }
 #endif
     Animals->animalTypes[0] = ANIMAL_LOCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
     if (Zone->actID) {
-        RSDK.SetPaletteMask(0xF000);
-        RSDK.SetPaletteEntry(0, 0xFF, 0xF000);
+        RSDK.SetPaletteMask(0x00F000);
+        RSDK.SetPaletteEntry(0, 0xFF, 0x00F000);
         BGSwitch->switchCallback[CPZ_BG_CPZ2] = CPZSetup_BGSwitchCB_Act2BG;
         BGSwitch->switchCallback[CPZ_BG_CPZ1] = CPZSetup_BGSwitchCB_Act1BG;
         BGSwitch->layerIDs[0]                 = CPZ_BG_CPZ1;
@@ -76,21 +83,21 @@ void CPZSetup_StageLoad(void)
         BGSwitch->layerIDs[2]                 = CPZ_BG_CPZ1;
         BGSwitch->layerIDs[3]                 = CPZ_BG_CPZ1;
 
-        bool32 flag = false;
+        bool32 setCPZ1BG = false;
         if (PlayerHelpers_CheckStageReload() && !PlayerHelpers_CheckPlayerPos(0x18900000, 0xAC0000, 0x2560000, 0x19800000)) {
-            flag = false;
+            setCPZ1BG = false;
         }
         else {
-            flag                    = true;
-            Zone->cameraBoundsB[0] = 0x1980;
-            Zone->cameraBoundsB[1] = 0x1980;
-            Zone->cameraBoundsB[2] = 0x1980;
-            Zone->cameraBoundsB[3] = 0x1980;
+            setCPZ1BG                    = true;
+            Zone->cameraBoundsB[0] = 6528;
+            Zone->cameraBoundsB[1] = 6528;
+            Zone->cameraBoundsB[2] = 6528;
+            Zone->cameraBoundsB[3] = 6528;
         }
 
         if (isMainGameMode() && globals->atlEnabled) {
             if (!PlayerHelpers_CheckStageReload())
-                Zone_ReloadStoredEntities(0x19800000, 0x1800000, true);
+                Zone_ReloadStoredEntities(384 << 16, 6528 << 16, true);
         }
 
         if (isMainGameMode() && PlayerHelpers_CheckAct2()) {
@@ -103,7 +110,7 @@ void CPZSetup_StageLoad(void)
         }
 
         BGSwitch->screenID = 0;
-        if (flag) {
+        if (setCPZ1BG) {
             for (; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID++) {
                 CPZSetup_BGSwitchCB_Act1BG();
             }
@@ -181,6 +188,9 @@ void CPZSetup_EditorLoad(void)
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
     RSDK_ENUM_VAR("Act 2 BG", CPZ_BG_CPZ2);
     RSDK_ENUM_VAR("Act 1 BG", CPZ_BG_CPZ1);
+
+    RSDK_ACTIVE_VAR(Decoration, type);
+    RSDK_ENUM_VAR("Warning Sign", CPZ_DECOR_WARNSIGN);
 }
 #endif
 

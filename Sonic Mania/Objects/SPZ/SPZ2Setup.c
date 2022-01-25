@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SPZ2Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSPZ2Setup *SPZ2Setup;
@@ -97,8 +104,8 @@ void SPZ2Setup_StageLoad(void)
 
     if (isMainGameMode() && globals->atlEnabled) {
         if (!PlayerHelpers_CheckStageReload()) {
-            Zone->cameraBoundsL[0] = 256 - ScreenInfo->centerX;
-            Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
+            Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->centerX;
+            Zone_ReloadStoredEntities(256 << 16, 1376 << 16, true);
             CREATE_ENTITY(SPZ2Setup, NULL, 0, 0);
         }
     }
@@ -111,8 +118,8 @@ void SPZ2Setup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(4, "EncoreSPZ1.act", 255);
-        RSDK.LoadPalette(0, "EncoreSPZ2.act", 255);
+        RSDK.LoadPalette(4, "EncoreSPZ1.act", 0b0000000011111111);
+        RSDK.LoadPalette(0, "EncoreSPZ2.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 5, 128, 128);
     }
 #endif

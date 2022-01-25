@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MSZSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMSZSetup *MSZSetup;
@@ -89,7 +96,7 @@ void MSZSetup_Create(void *data)
     if (MSZSetup->flag) {
 #if RETRO_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
-            RSDK.LoadPalette(0, "EncoreMSZ2.act", 0xFF);
+            RSDK.LoadPalette(0, "EncoreMSZ2.act", 0b0000000011111111);
             self->state = MSZSetup_Unknown10;
         }
         else {
@@ -108,9 +115,9 @@ void MSZSetup_Create(void *data)
     }
 #if RETRO_USE_PLUS
     else if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreMSZ1.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreMSZ1.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 3, 128, 80);
-        RSDK.LoadPalette(4, "EncoreMSZ2.act", 0xFF);
+        RSDK.LoadPalette(4, "EncoreMSZ2.act", 0b0000000011111111);
     }
 #endif
     else {
@@ -143,7 +150,7 @@ void MSZSetup_StageLoad(void)
 #if RETRO_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
                 RSDK.CopyPalette(0, 128, 5, 128, 128);
-                RSDK.LoadPalette(0, "EncoreMSZ2.act", 255);
+                RSDK.LoadPalette(0, "EncoreMSZ2.act", 0b0000000011111111);
                 RSDK.CopyPalette(0, 128, 1, 128, 128);
                 RSDK.CopyPalette(0, 128, 2, 128, 128);
                 RSDK.RotatePalette(2, 204, 207, false);
@@ -171,7 +178,7 @@ void MSZSetup_StageLoad(void)
                     Zone->cameraBoundsB[3] = 564;
                 }
                 if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
-                    Zone_ReloadStoredEntities(0x2300000, 0x1200000, true);
+                    Zone_ReloadStoredEntities(288 << 16, 560 << 16, true);
                 }
             }
             else if (isMainGameMode() && globals->atlEnabled) {
@@ -284,7 +291,7 @@ void MSZSetup_Unknown2(void)
     for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
         MSZSetup->field_138[id++] = bg1->scrollInfo[i].parallaxFactor;
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_MANIA)
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             bg1->scrollInfo[i].parallaxFactor = 0;
     }
@@ -293,7 +300,7 @@ void MSZSetup_Unknown2(void)
     for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
         MSZSetup->field_138[id++] = bg2->scrollInfo[i].parallaxFactor;
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_MANIA)
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             bg2->scrollInfo[i].parallaxFactor = 0;
     }
@@ -302,7 +309,7 @@ void MSZSetup_Unknown2(void)
     {
         MSZSetup->field_138[id++] = (parallaxSprite->parallaxFactor.x >> 8);
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_MANIA)
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_MANIA))
 #endif
             parallaxSprite->parallaxFactor.x = 0;
     }
@@ -373,7 +380,7 @@ void MSZSetup_ManageFadeE(void)
     foreach_all(Decoration, decoration)
     {
         if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
-            decoration->animator.animationSpeed = 0;
+            decoration->animator.speed = 0;
     }
     self->state = MSZSetup_Unknown9;
 }
@@ -432,7 +439,7 @@ void MSZSetup_SwitchPalettes(void)
 
 void MSZSetup_HandleRestart(void)
 {
-    Zone_ReloadStoredEntities(0x5A00000, 0xD40000, true);
+    Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1440 << 16, true);
 
     int32 id       = 0;
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
@@ -467,7 +474,7 @@ void MSZSetup_Unknown10(void)
         foreach_all(Decoration, decoration)
         {
             if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
-                decoration->animator.animationSpeed = 1;
+                decoration->animator.speed = 1;
         }
         Zone->cameraBoundsL[0] = 0x2980;
         Zone->playerBoundsL[0] = 0x29800000;
@@ -621,7 +628,7 @@ void MSZSetup_StoreMSZ1EScrollPos(void)
                 ((sprite->scrollPos.x + sprite->parallaxFactor.x * ScreenInfo->position.x) & 0x7FFF0000) % sprite->loopPoint.x;
         }
 
-        Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 0x5A00000);
+        Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 1440 << 16);
         globals->atlEnabled = true;
         RSDK.LoadScene();
         destroyEntity(self);
@@ -645,7 +652,7 @@ void MSZSetup_StoreMSZ1STScrollPos(void)
 
     foreach_all(ParallaxSprite, sprite) { globals->parallaxOffset[id++] = sprite->scrollPos.x; }
 
-    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, 0x5A00000);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, 1440 << 16);
     ++SceneInfo->listPos;
     globals->atlEnabled = true;
     RSDK.LoadScene();

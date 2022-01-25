@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UIWaitSpinner Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUIWaitSpinner *UIWaitSpinner;
@@ -47,7 +54,7 @@ void UIWaitSpinner_Create(void *data)
 {
     RSDK_THIS(UIWaitSpinner);
     self->active    = ACTIVE_ALWAYS;
-    self->visible   = 1;
+    self->visible   = true;
     self->drawOrder = 15;
     RSDK.SetSpriteAnimation(UIWaitSpinner->aniFrames, 0, &self->animator, true, 0);
     self->state = UIWaitSpinner_State_Wait;
@@ -56,17 +63,17 @@ void UIWaitSpinner_Create(void *data)
 void UIWaitSpinner_StageLoad(void)
 {
     UIWaitSpinner->timer         = 0;
-    UIWaitSpinner->activeSpinner = 0;
-    UIWaitSpinner->aniFrames   = RSDK.LoadSpriteAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
+    UIWaitSpinner->activeSpinner = NULL;
+    UIWaitSpinner->aniFrames     = RSDK.LoadSpriteAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
 }
 
-void UIWaitSpinner_Wait(void)
+void UIWaitSpinner_StartWait(void)
 {
     ++UIWaitSpinner->timer;
     EntityUIWaitSpinner *activeSpinner = (EntityUIWaitSpinner *)UIWaitSpinner->activeSpinner;
     if (UIWaitSpinner->timer <= 0) {
         if (activeSpinner)
-            activeSpinner->state = UIWaitSpinner_State_Wait2;
+            activeSpinner->state = UIWaitSpinner_State_WaitAndDestroy;
     }
     else {
         if (!activeSpinner) {
@@ -77,7 +84,7 @@ void UIWaitSpinner_Wait(void)
         activeSpinner->state = UIWaitSpinner_State_Wait;
     }
 }
-void UIWaitSpinner_Wait2(void)
+void UIWaitSpinner_FinishWait(void)
 {
     if (UIWaitSpinner->timer > 0) {
         UIWaitSpinner->timer--;
@@ -86,7 +93,7 @@ void UIWaitSpinner_Wait2(void)
     EntityUIWaitSpinner *activeSpinner = (EntityUIWaitSpinner *)UIWaitSpinner->activeSpinner;
     if (UIWaitSpinner->timer <= 0) {
         if (activeSpinner)
-            activeSpinner->state = UIWaitSpinner_State_Wait2;
+            activeSpinner->state = UIWaitSpinner_State_WaitAndDestroy;
     }
     else {
         if (!activeSpinner) {
@@ -101,26 +108,26 @@ void UIWaitSpinner_State_Wait(void)
 {
     RSDK_THIS(UIWaitSpinner);
     if (self->timer >= 16) {
-        self->timer = 16;
-        self->flag  = true;
+        self->timer   = 16;
+        self->fadedIn = true;
     }
     else {
         self->timer += 3;
     }
 }
-void UIWaitSpinner_State_Wait2(void)
+void UIWaitSpinner_State_WaitAndDestroy(void)
 {
     RSDK_THIS(UIWaitSpinner);
     if (self->timer <= 0) {
         UIWaitSpinner->activeSpinner = NULL;
         destroyEntity(self);
     }
-    else if (self->flag) {
+    else if (self->fadedIn) {
         self->timer -= 3;
     }
     else if (self->timer >= 16) {
-        self->timer = 16;
-        self->flag  = true;
+        self->timer   = 16;
+        self->fadedIn = true;
     }
     else {
         self->timer += 3;

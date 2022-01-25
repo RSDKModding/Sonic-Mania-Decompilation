@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: ShopWindow Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectShopWindow *ShopWindow;
@@ -111,7 +118,7 @@ void ShopWindow_State_Shard(void)
 void ShopWindow_State_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
-    if (++self->animator.animationTimer == 2) {
+    if (++self->animator.timer == 2) {
         int32 cntY = (self->size.y >> 3) + 1;
         int32 cntX = (self->size.x >> 3) + 1;
 

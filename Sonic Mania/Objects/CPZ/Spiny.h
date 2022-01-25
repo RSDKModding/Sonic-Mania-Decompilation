@@ -3,29 +3,34 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPINY_FLOOR,
+    SPINY_WALL,
+}SpinyTypes;
+
 // Object Class
-typedef struct {
+struct ObjectSpiny {
     RSDK_OBJECT
     Hitbox hitboxSpiny;
     Hitbox hitboxRange;
     Hitbox hitboxShot;
     uint16 aniFrames;
     uint16 sfxShot;
-} ObjectSpiny;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpiny {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-    int32 field_74;
+    int32 unused;
     uint8 type;
     Vector2 startPos;
     uint8 startDir;
     int32 shotSpeed;
     int32 timer2;
     int32 timer;
-} EntitySpiny;
+};
 
 // Object Struct
 extern ObjectSpiny *Spiny;

@@ -10,13 +10,13 @@ typedef enum {
 }HPZEmeraldTypes;
 
 // Object Class
-typedef struct {
+struct ObjectHPZEmerald {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectHPZEmerald;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHPZEmerald {
     RSDK_ENTITY
     int32 field_58;
     int32 type;
@@ -25,7 +25,7 @@ typedef struct {
     Hitbox *hitbox;
     Animator animator2;
     Animator animator;
-} EntityHPZEmerald;
+};
 
 // Object Struct
 extern ObjectHPZEmerald *HPZEmerald;

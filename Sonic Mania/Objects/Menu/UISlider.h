@@ -8,32 +8,31 @@
 #define UISlider_Increment (UISlider_MaxVal / 0x10)
 
 // Object Class
-typedef struct {
+struct ObjectUISlider {
     RSDK_OBJECT
-    int32 field_4;
-    Entity *entityPtr;
-} ObjectUISlider;
+    uint16 aniFrames; //prolly used in-editor
+    Entity *activeEntity;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUISlider {
 	MANIA_UI_ITEM_BASE
     int32 listID;
     int32 frameID;
-    int32 field_10C;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
+    Vector2 size;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
     int32 sliderPos;
-    bool32 textFlag;
-    bool32 flagB;
-    int32 field_134;
-    void(*sliderChangedCB)(void);
+    bool32 textVisible;
+    bool32 isTouchSelected;
+    int32 sliderPosTouch;
+    StateMachine(sliderChangedCB);
     Animator textAnimator;
-    uint16 textSpriteIndex;
-} EntityUISlider;
+    uint16 textFrames;
+};
 
 // Object Struct
 extern ObjectUISlider *UISlider;
@@ -52,17 +51,17 @@ void UISlider_EditorLoad(void);
 void UISlider_Serialize(void);
 
 // Extra Entity Functions
-void UISlider_Unknown1(void);
-void UISlider_Unknown2(void);
+void UISlider_DrawBGShapes(void);
+void UISlider_DrawSlider(void);
 
 void UISlider_ButtonPressCB(void);
 bool32 UISlider_TouchCB(void);
-void UISlider_Options5CB(void);
-void UISlider_Options6CB(void);
-bool32 UISlider_Options7CB(void);
-bool32 UISlider_Options8CB(void);
+void UISlider_ButtonEnterCB(void);
+void UISlider_ButtonLeaveCB(void);
+bool32 UISlider_CheckButtonEnterCB(void);
+bool32 UISlider_CheckSelectedCB(void);
 
-void UISlider_Unknown9(void);
-void UISlider_Unknown10(void);
+void UISlider_State_HandleButtonLeave(void);
+void UISlider_State_HandleButtonEnter(void);
 
 #endif //!OBJ_UISLIDER_H

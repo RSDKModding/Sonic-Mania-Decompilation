@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UIButtonPrompt Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUIButtonPrompt *UIButtonPrompt;
@@ -7,10 +14,10 @@ void UIButtonPrompt_Update(void)
     RSDK_THIS(UIButtonPrompt);
 
     bool32 textChanged = false;
-    if (self->textSprite != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
-        textChanged        = true;
-        self->textSprite = UIWidgets->textSpriteIndex;
+    if (self->textSprite != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->promptAnimator, true, self->promptID);
+        textChanged      = true;
+        self->textSprite = UIWidgets->textFrames;
     }
     if (self->scale.x == 0x200 && self->scaleMax == 0x200 && self->scaleSpeed)
         self->scaleSpeed = 0;
@@ -32,21 +39,21 @@ void UIButtonPrompt_Update(void)
     self->scale.y = self->scale.x;
 
     if (self->prevPrompt != self->promptID) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->promptAnimator, true, self->promptID);
         self->prevPrompt = self->promptID;
     }
 
     int32 button = self->buttonID;
     if (self->prevButton != button) {
-        UIButtonPrompt_Unknown4();
-        button             = self->buttonID;
+        UIButtonPrompt_SetButtonSprites();
+        button           = self->buttonID;
         self->prevButton = button;
     }
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
         if (textChanged || self->mappings != mappings) {
-            UIButtonPrompt_Unknown4();
+            UIButtonPrompt_SetButtonSprites();
             self->mappings = mappings;
         }
     }
@@ -86,27 +93,31 @@ void UIButtonPrompt_StaticUpdate(void)
 {
     UIButtonPrompt->type = UIButtonPrompt_GetGamepadType();
 #if RETRO_USE_PLUS
-    int32 id                       = API_MostRecentActiveControllerID(0, 0, 0);
+    int32 id = API_MostRecentActiveControllerID(0, 0, 0);
 #else
     int32 id = API_MostRecentActiveControllerID(0);
 #endif
-    int32 type                   = API_GetControllerType(id);
-    if ((type & 0xFF00) == 0x100)
-        UIButtonPrompt->inputID = type & 0xFF;
+    int32 gamepadType = API_GetControllerType(id);
+    int32 deviceType  = (gamepadType >> 8) & 0xFF;
+
+    if (deviceType == DEVICE_TYPE_KEYBOARD)
+        UIButtonPrompt->inputID = gamepadType & 0xFF;
     else
-        UIButtonPrompt->inputID = 1;
+        UIButtonPrompt->inputID = CONT_P1;
 }
 
 void UIButtonPrompt_Draw(void)
 {
     RSDK_THIS(UIButtonPrompt);
-    UIButtonPrompt_Unknown4();
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    UIButtonPrompt_SetButtonSprites();
+    RSDK.DrawSprite(&self->decorAnimator, NULL, false);
+
     self->drawFX = FX_SCALE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->buttonAnimator, NULL, false);
+
     self->drawFX = FX_NONE;
-    if (self->flag)
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+    if (self->textVisible)
+        RSDK.DrawSprite(&self->promptAnimator, NULL, false);
 }
 
 void UIButtonPrompt_Create(void *data)
@@ -120,16 +131,16 @@ void UIButtonPrompt_Create(void *data)
         self->scaleSpeed    = 0x10;
         self->scale.x       = 0x200;
         self->scale.y       = 0x200;
-        self->field_94      = 0;
+        self->disableScale  = false;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x2000000;
         self->updateRange.y = 0x800000;
-        self->flag          = true;
-        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
-        UIButtonPrompt_Unknown4();
-        self->textSprite  = UIWidgets->textSpriteIndex;
-        self->state       = UIButtonPrompt_Unknown6;
+        self->textVisible   = true;
+        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->decorAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->promptAnimator, true, self->promptID);
+        UIButtonPrompt_SetButtonSprites();
+        self->textSprite  = UIWidgets->textFrames;
+        self->state       = UIButtonPrompt_State_CheckIfSelected;
         self->parent      = 0;
         self->touchSize.x = 0x580000;
         self->touchSize.y = 0x100000;
@@ -139,8 +150,8 @@ void UIButtonPrompt_Create(void *data)
 
 void UIButtonPrompt_StageLoad(void)
 {
-    UIButtonPrompt->type      = 1;
-    UIButtonPrompt->inputID   = 1;
+    UIButtonPrompt->type      = UIBUTTONPROMPT_KEYBOARD;
+    UIButtonPrompt->inputID   = CONT_P1;
     UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
 }
 
@@ -160,7 +171,7 @@ int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 
 int32 UIButtonPrompt_GetGamepadType(void)
 {
-#if RETRO_USE_PLUS 
+#if RETRO_USE_PLUS
     int32 id = API_MostRecentActiveControllerID(0, 0, 0);
 #else
     int32 id = API_MostRecentActiveControllerID(0);
@@ -170,31 +181,34 @@ int32 UIButtonPrompt_GetGamepadType(void)
     int32 deviceType = (gamepadType >> 8) & 0xFF;
     if (deviceType == DEVICE_TYPE_KEYBOARD) {
         switch (Localization->language) {
-            case LANGUAGE_FR: return 9;
-            case LANGUAGE_IT: return 10;
-            case LANGUAGE_GE: return 11;
-            case LANGUAGE_SP: return 12;
-            default: return 1;
+            case LANGUAGE_FR: return UIBUTTONPROMPT_KEYBOARD_FR;
+            case LANGUAGE_IT: return UIBUTTONPROMPT_KEYBOARD_IT;
+            case LANGUAGE_GE: return UIBUTTONPROMPT_KEYBOARD_GE;
+            case LANGUAGE_SP: return UIBUTTONPROMPT_KEYBOARD_SP;
+            default: return UIBUTTONPROMPT_KEYBOARD;
         }
     }
     else if (deviceType == DEVICE_TYPE_CONTROLLER) {
+        // I don't actually think saturn type is ever set in-engine, neat that it exists though
+
         switch (gamepadType & 0xFF) {
-            case DEVICE_PS4: return 3;
-            case DEVICE_SATURN: return 6;
-            case DEVICE_SWITCH:
-            case DEVICE_SWITCH_PRO:
-            case DEVICE_SWITCH_JOY_GRIP: return 4;
-            case DEVICE_SWITCH_JOY_L: return 7;
-            case DEVICE_SWITCH_JOY_R: return 8;
+            case DEVICE_XBOX: return UIBUTTONPROMPT_XBOX;
+            case DEVICE_PS4: return UIBUTTONPROMPT_PS4;
+            case DEVICE_SATURN: return UIBUTTONPROMPT_SATURN_WHITE;
+            case DEVICE_SWITCH_HANDHELD:
+            case DEVICE_SWITCH_JOY_GRIP:
+            case DEVICE_SWITCH_PRO: return UIBUTTONPROMPT_SWITCH;
+            case DEVICE_SWITCH_JOY_L: return UIBUTTONPROMPT_JOYCON_L;
+            case DEVICE_SWITCH_JOY_R: return UIBUTTONPROMPT_JOYCON_R;
             default: break;
         }
     }
-    return 2;
+    return UIBUTTONPROMPT_XBOX;
 }
 
 uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
 {
-    //case values: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+    // case values: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
     switch (mappings) {
         case 8: return 14;
         case 9: return 15;
@@ -288,24 +302,26 @@ uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
     return 0;
 }
 
-void UIButtonPrompt_Unknown4(void)
+void UIButtonPrompt_SetButtonSprites(void)
 {
     RSDK_THIS(UIButtonPrompt);
     if (SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 2, &self->animator2, true, self->buttonID);
+        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_XBOX, &self->buttonAnimator, true, self->buttonID);
     }
     else {
         int32 buttonID = self->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
 
-        if (UIButtonPrompt->type != 1 && (UIButtonPrompt->type <= 8 || UIButtonPrompt->type > 12)) {
-            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &self->animator2, true, buttonID);
+        if (UIButtonPrompt->type != UIBUTTONPROMPT_KEYBOARD
+            && (UIButtonPrompt->type < UIBUTTONPROMPT_KEYBOARD_FR || UIButtonPrompt->type > UIBUTTONPROMPT_KEYBOARD_SP)) {
+            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &self->buttonAnimator, true, buttonID);
         }
         else {
+            // despite different languages existing here, the english one is always the one used
             int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, buttonID);
             int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
-            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 1, &self->animator2, true, frame);
+            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIBUTTONPROMPT_KEYBOARD, &self->buttonAnimator, true, frame);
         }
     }
 }
@@ -321,7 +337,7 @@ bool32 UIButtonPrompt_CheckTouch(void)
             int32 sizeX   = self->touchSize.x >> 1;
             int32 sizeY   = self->touchSize.y >> 1;
 
-            bool32 flag = false;
+            bool32 wasTouched = false;
             for (int32 i = 0; i < TouchInfo->count; ++i) {
                 int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
                 int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
@@ -329,17 +345,17 @@ bool32 UIButtonPrompt_CheckTouch(void)
                 int32 touchX = abs(self->touchPos.x + self->position.x - x);
                 int32 touchY = abs(self->touchPos.y + self->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
-                    flag = true;
+                    wasTouched = true;
                 }
             }
 
-            self->touched = flag;
+            self->touched = wasTouched;
             return true;
         }
         else {
             if (self->touched) {
                 self->timer = 0;
-                self->state = UIButtonPrompt_Unknown7;
+                self->state = UIButtonPrompt_State_Selected;
             }
             self->touched = false;
         }
@@ -347,36 +363,36 @@ bool32 UIButtonPrompt_CheckTouch(void)
     return false;
 }
 
-void UIButtonPrompt_Unknown6(void)
+void UIButtonPrompt_State_CheckIfSelected(void)
 {
     RSDK_THIS(UIButtonPrompt);
     if (self->visible) {
         if (UIButtonPrompt_CheckTouch()) {
-            self->scaleMax = 640;
-            if (self->scaleSpeed < 16)
-                self->scaleSpeed = 16;
+            self->scaleMax = 0x280;
+            if (self->scaleSpeed < 0x10)
+                self->scaleSpeed = 0x10;
         }
-        else if (!self->field_94) {
-            self->scaleMax = 512;
+        else if (!self->disableScale) {
+            self->scaleMax = 0x200;
         }
     }
 }
 
-void UIButtonPrompt_Unknown7(void)
+void UIButtonPrompt_State_Selected(void)
 {
     RSDK_THIS(UIButtonPrompt);
 
-    self->scaleMax = 640;
-    if (self->timer == 16) {
-        self->timer = 0;
-        self->flag  = true;
-        self->state = UIButtonPrompt_Unknown6;
-        int32 buttonID  = self->buttonID;
+    self->scaleMax = 0x280;
+    if (++self->timer == 16) {
+        self->timer       = 0;
+        self->textVisible = true;
+        self->state       = UIButtonPrompt_State_CheckIfSelected;
+        int32 buttonID    = self->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
         UIControl_ClearInputs(buttonID);
     }
-    self->flag = !((++self->timer >> 1) & 1);
+    self->textVisible = !((self->timer >> 1) & 1);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -386,14 +402,14 @@ void UIButtonPrompt_EditorDraw(void)
 
     self->startPos      = self->position;
     self->drawOrder     = 2;
-    self->field_94      = 0;
+    self->disableScale  = false;
     self->updateRange.x = 0x2000000;
     self->updateRange.y = 0x800000;
-    self->flag          = true;
-    RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
-    UIButtonPrompt_Unknown4();
-    self->textSprite = UIWidgets->textSpriteIndex;
+    self->textVisible   = true;
+    RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->decorAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->promptAnimator, true, self->promptID);
+    UIButtonPrompt_SetButtonSprites();
+    self->textSprite = UIWidgets->textFrames;
 
     UIButtonPrompt_Draw();
 }

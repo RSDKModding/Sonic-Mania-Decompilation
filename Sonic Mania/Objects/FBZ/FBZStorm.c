@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: FBZStorm Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFBZStorm *FBZStorm;
@@ -40,12 +47,12 @@ void FBZStorm_Update(void)
     }
 
     if (RSDK.GetSceneLayer(3)->drawLayer[0] < DRAWLAYER_COUNT) {
-        self->flag = true;
+        self->enabled = true;
         if (self->blendAmount < 0x100)
             self->blendAmount += 8;
     }
     else {
-        self->flag = false;
+        self->enabled = false;
         if (self->blendAmount > 0)
             self->blendAmount -= 8;
     }
@@ -57,14 +64,14 @@ void FBZStorm_LateUpdate(void) {}
 
 void FBZStorm_StaticUpdate(void)
 {
-    bool32 flag = false;
+    bool32 enabled = false;
     foreach_all(FBZStorm, storm)
     {
-        if (storm->flag)
-            flag = true;
+        if (storm->enabled)
+            enabled = true;
     }
 
-    if (!flag || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
+    if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
         if (FBZStorm->playingRainSFX) {
             RSDK.StopSfx(FBZStorm->sfxRain);
             FBZStorm->playingRainSFX = false;
@@ -101,7 +108,7 @@ void FBZStorm_Create(void *data)
         self->inkEffect  = INK_ALPHA;
         self->velocity.x = -0x40000;
         self->velocity.y = 0xC0000;
-        self->state      = FBZStorm_Unknown1;
+        self->state      = FBZStorm_State_WaitForActive;
 
         for (int32 p = 0; p < Player->playerCount; ++p) {
             for (int32 i = 0; i < 0x40; ++i) {
@@ -122,16 +129,16 @@ void FBZStorm_StageLoad(void)
     FBZStorm->sfxThunder = RSDK.GetSfx("FBZ/Thunder.wav");
 }
 
-void FBZStorm_Unknown1(void)
+void FBZStorm_State_WaitForActive(void)
 {
     RSDK_THIS(FBZStorm);
-    if (self->flag) {
+    if (self->enabled) {
         if (RSDK.GetEntityCount(Current->objectID, true) > 0)
-            self->state = FBZStorm_Unknown2;
+            self->state = FBZStorm_State_StormStart;
     }
 }
 
-void FBZStorm_Unknown2(void)
+void FBZStorm_State_StormStart(void)
 {
     RSDK_THIS(FBZStorm);
 
@@ -139,21 +146,21 @@ void FBZStorm_Unknown2(void)
     if (self->alpha >= 128) {
         FBZStorm->srcPal = 4;
         self->inkEffect   = INK_BLEND;
-        self->state  = FBZStorm_Unknown4;
+        self->state  = FBZStorm_State_Storming;
     }
     else {
         self->alpha += 4;
     }
 
-    bool32 flag = false;
+    bool32 enabled = false;
     foreach_all(FBZStorm, storm)
     {
-        if (storm->flag)
-            flag = true;
+        if (storm->enabled)
+            enabled = true;
     }
 
     if (FBZStorm->playingRainSFX) {
-        if (!flag || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
+        if (!enabled || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
             RSDK.StopSfx(FBZStorm->sfxRain);
             FBZStorm->playingRainSFX = false;
         }
@@ -164,7 +171,7 @@ void FBZStorm_Unknown2(void)
     }
 }
 
-void FBZStorm_Unknown3(void)
+void FBZStorm_State_StormFinish(void)
 {
     RSDK_THIS(FBZStorm);
 
@@ -173,37 +180,38 @@ void FBZStorm_Unknown3(void)
         if (FBZStorm->playingRainSFX) {
             RSDK.StopSfx(FBZStorm->sfxRain);
         }
-        self->state = FBZStorm_Unknown1;
+        self->state = FBZStorm_State_WaitForActive;
     }
     else {
         self->alpha -= 4;
     }
 }
 
-void FBZStorm_Unknown4(void)
+void FBZStorm_State_Storming(void)
 {
     RSDK_THIS(FBZStorm);
     if (self->timer <= 0) {
-        self->state = FBZStorm_Unknown5;
+        self->state = FBZStorm_State_Thunder;
     }
     else {
         self->timer--;
-        if (!self->flag) {
+        if (!self->enabled) {
             self->inkEffect = INK_ALPHA;
-            self->state          = FBZStorm_Unknown3;
+            self->state     = FBZStorm_State_StormFinish;
         }
     }
 }
 
-void FBZStorm_Unknown5(void)
+void FBZStorm_State_Thunder(void)
 {
     RSDK_THIS(FBZStorm);
-    RSDK.SetLimitedFade(0, 2, 3, FBZStorm->array1[self->timer], 0x80, 0x100);
+    RSDK.SetLimitedFade(0, 2, 3, FBZStorm->thunderFade[self->timer], 0x80, 0x100);
+
     if (!self->timer)
-        RSDK.PlaySfx(FBZStorm->sfxThunder, 0, 255);
+        RSDK.PlaySfx(FBZStorm->sfxThunder, false, 255);
     if (++self->timer == 20) {
         self->timer = RSDK.Rand(180, 320);
-        self->state = FBZStorm_Unknown4;
+        self->state = FBZStorm_State_Storming;
     }
 }
 

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MMZ2Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -33,20 +40,14 @@ void MMZ2Outro_StageLoad(void)
 void MMZ2Outro_StartCutscene(void)
 {
     RSDK_THIS(MMZ2Outro);
-    void *states[] = { MMZ2Outro_CutsceneState_Unknown1,
-                       MMZ2Outro_CutsceneState_Unknown2,
-                       MMZ2Outro_CutsceneState_Unknown3,
-                       MMZ2Outro_CutsceneState_Unknown4,
-                       MMZ2Outro_CutsceneState_Unknown5,
-                       MMZ2Outro_CutsceneState_Unknown6,
-                       NULL };
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
-    RSDK.CopyPalette(0, 1, 1, 1, 255);
-    for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0);
+    CutsceneSeq_StartSequence(self, MMZ2Outro_Cutscene_PowerDown, MMZ2Outro_Cutscene_Rumble, MMZ2Outro_Cutscene_CameraMoveToWindow,
+                              MMZ2Outro_Cutscene_PlayerMoveToWindow, MMZ2Outro_Cutscene_EnterMonarchEyes, MMZ2Outro_Cutscene_ViewMonarch, StateMachine_None);
+    RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
+    for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
     for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
-    RSDK.GetSceneLayer(0)->drawLayer[0] = 16;
-    RSDK.GetSceneLayer(1)->drawLayer[0] = 16;
+    RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
+    RSDK.GetSceneLayer(1)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
     RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
     RSDK.GetSceneLayer(4)->drawLayer[0] = 0;
@@ -56,7 +57,7 @@ void MMZ2Outro_StartCutscene(void)
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-bool32 MMZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 MMZ2Outro_Cutscene_PowerDown(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
     if (++self->timer == 60) {
@@ -75,14 +76,14 @@ bool32 MMZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
                 player->velocity.x = 0;
             }
         }
-        RSDK.PlaySfx(MMZ2Outro->sfxLightsOut, false, 255);
+        RSDK.PlaySfx(MMZ2Outro->sfxLightsOut, false, 0xFF);
         Zone->cameraBoundsT[0] = 0;
         return true;
     }
     return false;
 }
 
-bool32 MMZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 MMZ2Outro_Cutscene_Rumble(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
 
@@ -109,7 +110,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 MMZ2Outro_Cutscene_CameraMoveToWindow(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
 
@@ -139,11 +140,11 @@ bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 MMZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 MMZ2Outro_Cutscene_PlayerMoveToWindow(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
 
-    bool32 flag = true;
+    bool32 finished = true;
 
     foreach_active(Player, player)
     {
@@ -158,7 +159,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         if (player->groundVel > 0x40000)
             player->groundVel = 0x40000;
         if (player->position.x <= self->position.x - 0x180000 * player->playerID - 0x200000) {
-            flag = false;
+            finished = false;
         }
         else {
             player->groundVel = 0;
@@ -166,10 +167,10 @@ bool32 MMZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         }
     }
 
-    return flag;
+    return finished;
 }
 
-bool32 MMZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
+bool32 MMZ2Outro_Cutscene_EnterMonarchEyes(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
 
@@ -190,13 +191,13 @@ bool32 MMZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 MMZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
+bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host)
 {
     RSDK_THIS(MMZ2Outro);
 
-    if (--self->flashTimer < 1) {
-        CREATE_ENTITY(MMZLightning, MMZLightning_Unknown1, 0, 0);
-        CREATE_ENTITY(MMZLightning, MMZLightning_Unknown3, 0, 0);
+    if (--self->flashTimer <= 0) {
+        CREATE_ENTITY(MMZLightning, MMZLightning_State_BeginFadeIn, 0, 0);
+        CREATE_ENTITY(MMZLightning, MMZLightning_State_SetupLightningBig, 0, 0);
         RSDK.PlaySfx(MMZ2Outro->sfxThunda, false, 255);
         self->flashTimer = RSDK.Rand(120, 240);
 
@@ -211,7 +212,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         }
     }
     if ((self->timer & 7) == 4 && self->flashTimer < 48)
-        CREATE_ENTITY(MMZLightning, MMZLightning_Unknown6, 0, 0);
+        CREATE_ENTITY(MMZLightning, MMZLightning_State_SetupLightningSmall, 0, 0);
 
     if (++self->timer == 120) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);

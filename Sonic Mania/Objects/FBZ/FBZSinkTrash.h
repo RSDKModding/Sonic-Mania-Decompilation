@@ -3,26 +3,32 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FBZSINKTRASH_LOOSE,
+    FBZSINKTRASH_SOLID,
+    FBZSINKTRASH_DECOR,
+}FBZSinkTrashTypes;
+
 // Object Class
-typedef struct {
+struct ObjectFBZSinkTrash {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectFBZSinkTrash;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZSinkTrash {
     RSDK_ENTITY
     int32 type;
     Vector2 size;
     Vector2 positions[64];
     uint8 frameIDs[64];
     uint8 directions[64];
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-} EntityFBZSinkTrash;
+    Hitbox hitboxTrash;
+    Hitbox hitboxDebris;
+    Animator trashAnimator;
+    Animator topAnimator;
+    Animator mainAnimator;
+};
 
 // Object Struct
 extern ObjectFBZSinkTrash *FBZSinkTrash;

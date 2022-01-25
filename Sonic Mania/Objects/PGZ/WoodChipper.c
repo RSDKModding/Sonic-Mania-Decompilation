@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: WoodChipper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectWoodChipper *WoodChipper;
@@ -57,12 +64,12 @@ void WoodChipper_Draw(void)
     else {
         Vector2 drawPos = self->position;
 
-        if (self->field_80 < 0) {
+        if (self->height < 0) {
             self->animator1.frameID = 3;
-            drawPos.y += self->field_80 + (RSDK.Sin256(self->angle) << 10);
+            drawPos.y += self->height + (RSDK.Sin256(self->angle) << 10);
             RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-            int32 pos = self->field_80 >> 16;
+            int32 pos = self->height >> 16;
             if (pos <= -16) {
                 self->animator1.frameID = 4;
                 int32 dist                  = -16 - pos;
@@ -90,22 +97,22 @@ void WoodChipper_Draw(void)
         self->rotation          = 512 - self->rotation;
         self->drawFX            = 0;
         self->animator1.frameID = 0;
-        drawPos.x                 = self->position.x + self->field_68[0].x;
-        drawPos.y                 = self->position.y + self->field_68[0].y;
+        drawPos.x                 = self->position.x + self->shakeOffsets[0].x;
+        drawPos.y                 = self->position.y + self->shakeOffsets[0].y;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
         self->drawFX            = FX_FLIP;
         self->animator1.frameID = 2;
-        drawPos.x                 = self->position.x + self->field_68[1].x;
-        drawPos.y                 = self->position.y + self->field_68[1].y;
+        drawPos.x                 = self->position.x + self->shakeOffsets[1].x;
+        drawPos.y                 = self->position.y + self->shakeOffsets[1].y;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
         self->animator1.frameID = 6;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
         self->animator1.frameID = 1;
-        drawPos.x                 = self->position.x + self->field_68[2].x;
-        drawPos.y                 = self->position.y + self->field_68[2].y;
+        drawPos.x                 = self->position.x + self->shakeOffsets[2].x;
+        drawPos.y                 = self->position.y + self->shakeOffsets[2].y;
         RSDK.DrawSprite(&self->animator1, &drawPos, false);
         self->drawFX = FX_NONE;
     }
@@ -131,7 +138,7 @@ void WoodChipper_Create(void *data)
             self->speed <<= 12;
             self->updateRange.x = 0x1000000;
             self->updateRange.y = (self->size + 256) << 16;
-            self->field_80      = -0x10000 * self->size;
+            self->height      = -0x10000 * self->size;
             RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->animator2, true, 0);
             self->state = WoodChipper_State_Chipper;
@@ -164,12 +171,12 @@ void WoodChipper_HandlePlayerCollisions(void)
     RSDK_THIS(WoodChipper);
     int32 prevPlayers             = self->activePlayers;
     self->activePlayers       = 0;
-    WoodChipper->hitboxWood.top = (((RSDK.Sin256(self->angle) << 10) + self->field_80) >> 16) - 48;
+    WoodChipper->hitboxWood.top = (((RSDK.Sin256(self->angle) << 10) + self->height) >> 16) - 48;
     EntityPlayer *player2       = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &WoodChipper->hitboxRazor)
-            && (!self->field_80 || (prevPlayers && (prevPlayers != 2 || !player2->sidekick)))) {
+            && (!self->height || (prevPlayers && (prevPlayers != 2 || !player2->sidekick)))) {
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
 #endif
@@ -177,10 +184,10 @@ void WoodChipper_HandlePlayerCollisions(void)
         }
 
         if (WoodChipper->hitboxWood.top > -48) {
-            self->field_80 = 0;
+            self->height = 0;
             Player_CheckCollisionBox(player, self, &WoodChipper->hitboxStump);
         }
-        else if (Player_CheckCollisionBox(player, self, &WoodChipper->hitboxWood) == 1) {
+        else if (Player_CheckCollisionBox(player, self, &WoodChipper->hitboxWood) == C_TOP) {
             self->activePlayers |= 1 << player->playerID;
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
@@ -202,43 +209,43 @@ void WoodChipper_State_Chipper(void)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     if (!self->activePlayers || (self->activePlayers == 2 && player2->sidekick)) {
-        if (self->field_80) {
+        if (self->height) {
             if (self->timer < 30)
                 self->timer++;
 
             if (self->angle > 0) {
                 self->angle -= 4;
             }
-            self->field_68[0].x = 0;
-            self->field_68[0].y = 0;
-            self->field_68[1].x = 0;
-            self->field_68[1].y = 0;
-            self->field_68[2].x = 0;
-            self->field_68[2].y = 0;
+            self->shakeOffsets[0].x = 0;
+            self->shakeOffsets[0].y = 0;
+            self->shakeOffsets[1].x = 0;
+            self->shakeOffsets[1].y = 0;
+            self->shakeOffsets[2].x = 0;
+            self->shakeOffsets[2].y = 0;
         }
         else {
-            self->field_68[0].x = 2 * RSDK.Rand(-1, 2);
-            self->field_68[0].y = 2 * RSDK.Rand(-1, 2);
-            self->field_68[1].x = 2 * RSDK.Rand(-1, 2);
-            self->field_68[1].y = 2 * RSDK.Rand(-1, 2);
-            self->field_68[2].x = 2 * RSDK.Rand(-1, 2);
-            self->field_68[2].y = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[0].x = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[0].y = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[1].x = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[1].y = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[2].x = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[2].y = 2 * RSDK.Rand(-1, 2);
             self->rotation      = (self->rotation + 8) & 0x1FF;
         }
     }
     else {
         if (self->timer <= 0) {
-            if (self->field_80 < 0) {
-                int32 val = ((RSDK.Sin256(self->angle) << 10) + self->field_80) & 0xFFFF0000;
+            if (self->height < 0) {
+                int32 val = ((RSDK.Sin256(self->angle) << 10) + self->height) & 0xFFFF0000;
 
-                self->field_80 += self->speed;
-                if (self->field_80 > 0)
-                    self->field_80 = 0;
+                self->height += self->speed;
+                if (self->height > 0)
+                    self->height = 0;
 
                 if (self->angle < 64)
                     self->angle += 4;
 
-                int32 move = val - (((RSDK.Sin256(self->angle) << 10) + self->field_80) & 0xFFFF0000);
+                int32 move = val - (((RSDK.Sin256(self->angle) << 10) + self->height) & 0xFFFF0000);
 
                 foreach_active(Player, player)
                 {
@@ -248,7 +255,7 @@ void WoodChipper_State_Chipper(void)
 
                 for (int32 i = self->speed >> 12; i > 0; --i) {
                     EntityWoodChipper *debris =
-                        CREATE_ENTITY(WoodChipper, intToVoid(1), self->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + self->position.y);
+                        CREATE_ENTITY(WoodChipper, intToVoid(true), self->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + self->position.y);
                     if (self->direction) {
                         debris->position.x += -0x530000 - (RSDK.Rand(-3, 4) << 16);
                         debris->velocity.x = -RSDK.Rand(4, 17) << 15;
@@ -257,33 +264,33 @@ void WoodChipper_State_Chipper(void)
                         debris->position.x += (RSDK.Rand(-3, 4) + 83) << 16;
                         debris->velocity.x = RSDK.Rand(4, 17) << 15;
                     }
-                    debris->animator1.animationSpeed = RSDK.Rand(1, 3);
+                    debris->animator1.speed = RSDK.Rand(1, 3);
                     debris->direction                = RSDK.Rand(0, 4);
                 }
             }
-            self->field_68[0].x = 2 * RSDK.Rand(-1, 2);
-            self->field_68[0].y = 2 * RSDK.Rand(-1, 2);
-            self->field_68[1].x = 2 * RSDK.Rand(-1, 2);
-            self->field_68[1].y = 2 * RSDK.Rand(-1, 2);
-            self->field_68[2].x = 2 * RSDK.Rand(-1, 2);
-            self->field_68[2].y = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[0].x = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[0].y = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[1].x = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[1].y = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[2].x = 2 * RSDK.Rand(-1, 2);
+            self->shakeOffsets[2].y = 2 * RSDK.Rand(-1, 2);
             self->rotation      = (self->rotation + 8) & 0x1FF;
         }
         else {
             self->timer--;
-            self->field_68[0].x = 0;
-            self->field_68[0].y = 0;
-            self->field_68[1].x = 0;
-            self->field_68[1].y = 0;
-            self->field_68[2].x = 0;
-            self->field_68[2].y = 0;
+            self->shakeOffsets[0].x = 0;
+            self->shakeOffsets[0].y = 0;
+            self->shakeOffsets[1].x = 0;
+            self->shakeOffsets[1].y = 0;
+            self->shakeOffsets[2].x = 0;
+            self->shakeOffsets[2].y = 0;
 
-            int32 val = ((RSDK.Sin256(self->angle) << 10) + (self->field_80 & 0xFC00)) & 0xFFFF0000;
+            int32 val = ((RSDK.Sin256(self->angle) << 10) + (self->height & 0xFC00)) & 0xFFFF0000;
 
             if (self->angle < 64)
                 self->angle += 4;
 
-            int32 move = val - (((RSDK.Sin256(self->angle) << 10) + (self->field_80 & 0xFC00)) & 0xFFFF0000);
+            int32 move = val - (((RSDK.Sin256(self->angle) << 10) + (self->height & 0xFC00)) & 0xFFFF0000);
 
             foreach_active(Player, player)
             {
@@ -307,9 +314,27 @@ void WoodChipper_State_Debris(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void WoodChipper_EditorDraw(void) {}
+void WoodChipper_EditorDraw(void)
+{
+    RSDK_THIS(WoodChipper);
 
-void WoodChipper_EditorLoad(void) {}
+    self->updateRange.x = 0x1000000;
+    self->updateRange.y = (self->size + 256) << 16;
+    self->height      = -0x10000 * self->size;
+    RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->animator2, true, 0);
+
+    WoodChipper_Draw();
+}
+
+void WoodChipper_EditorLoad(void)
+{
+    WoodChipper->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/WoodChipper.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(WoodChipper, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void WoodChipper_Serialize(void)

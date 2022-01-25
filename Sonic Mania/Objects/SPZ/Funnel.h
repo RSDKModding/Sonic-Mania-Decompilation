@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFunnel {
     RSDK_OBJECT
     Hitbox hitbox;
-    uint16 field_C;
+    uint16 unused;
     uint16 sfxFunnel;
     uint16 sfxPimPom;
     uint16 aniFrames;
-} ObjectFunnel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFunnel {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
@@ -24,7 +24,7 @@ typedef struct {
     int32 playerYVel[PLAYER_MAX];
     int32 playerTimers[PLAYER_MAX];
     Animator animator;
-} EntityFunnel;
+};
 
 // Object Struct
 extern ObjectFunnel *Funnel;
@@ -43,7 +43,7 @@ void Funnel_EditorLoad(void);
 void Funnel_Serialize(void);
 
 // Extra Entity Functions
-void Funnel_Unknown1(void);
+void Funnel_State_None(void);
 
 
 #endif //!OBJ_FUNNEL_H

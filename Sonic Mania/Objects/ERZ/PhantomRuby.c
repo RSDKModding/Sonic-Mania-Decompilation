@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PhantomRuby Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPhantomRuby *PhantomRuby;
@@ -6,10 +13,13 @@ void PhantomRuby_Update(void)
 {
     RSDK_THIS(PhantomRuby);
     StateMachine_Run(self->state);
+
     if (self->animator1.animationID == 1 && self->animator1.frameID == self->animator1.frameCount - 1)
         RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
+
     if (self->animator2.animationID == 2 && self->animator2.frameID == self->animator2.frameCount - 1)
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0xFFFF, &self->animator2, true, 0);
+
     RSDK.ProcessAnimation(&self->animator1);
     RSDK.ProcessAnimation(&self->animator2);
 }
@@ -34,7 +44,8 @@ void PhantomRuby_Create(void *data)
 {
     RSDK_THIS(PhantomRuby);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderHigh;
+    if (!SceneInfo->inEditor)
+        self->drawOrder = Zone->drawOrderHigh;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = true;

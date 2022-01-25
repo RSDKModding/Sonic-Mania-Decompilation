@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLaunchSpring {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 flag;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 sfxGrab;
     uint16 sfxClack;
     uint16 sfxSpeedBooster;
-} ObjectLaunchSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLaunchSpring {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator1;
@@ -32,7 +32,7 @@ typedef struct {
     int16 field_B4;
     int16 field_B6;
     Entity *playerPtr;
-} EntityLaunchSpring;
+};
 
 // Object Struct
 extern ObjectLaunchSpring *LaunchSpring;

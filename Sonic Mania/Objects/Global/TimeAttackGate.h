@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTimeAttackGate {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
@@ -20,10 +20,10 @@ typedef struct {
     int32 teleportChannel;
     StateMachine(startCB);
     StateMachine(endCB);
-} ObjectTimeAttackGate;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTimeAttackGate {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     Animator baseAnimator;
     Animator topAnimator;
     Animator finAnimator;
-} EntityTimeAttackGate;
+};
 
 // Object Struct
 extern ObjectTimeAttackGate *TimeAttackGate;
@@ -67,16 +67,18 @@ void TimeAttackGate_Serialize(void);
 void TimeAttackGate_HandleSpin(void);
 void TimeAttackGate_HandleStart(void);
 #if RETRO_USE_PLUS
-void TimeAttackGate_Unknown1(void);
+void TimeAttackGate_AddRecord(void);
 #endif
-void TimeAttackGate_LeaderboardCB(int32 status);
+void TimeAttackGate_LeaderboardCB(bool32 success);
 void TimeAttackGate_CheckTouch(void);
 
-void TimeAttackGate_State_Main(void);
+// States
+void TimeAttackGate_State_Gate(void);
 void TimeAttackGate_State_Restarter(void);
 void TimeAttackGate_State_Fadeout(void);
 
-void TimeAttackGate_Draw_Main(void);
+// Draw States
+void TimeAttackGate_Draw_Gate(void);
 void TimeAttackGate_Draw_Restarter(void);
 
 #endif //!OBJ_TIMEATTACKGATE_H

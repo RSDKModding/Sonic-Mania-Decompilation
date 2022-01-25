@@ -5,17 +5,17 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectMonarchPlans {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 field_10;
     uint16 meshIndex;
     uint16 sceneIndex;
-} ObjectMonarchPlans;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMonarchPlans {
     RSDK_ENTITY
     int32 field_58;
     int32 field_5C;
@@ -31,7 +31,7 @@ typedef struct {
     Matrix matrix2;
     Matrix matrix3;
     Matrix matrix4;
-} EntityMonarchPlans;
+};
 
 // Object Struct
 extern ObjectMonarchPlans *MonarchPlans;

@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpikeCorridor {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDrop;
     uint16 sfxImpact;
     uint16 sfxIndicator;
-} ObjectSpikeCorridor;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpikeCorridor {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -30,7 +30,7 @@ typedef struct {
     Hitbox hitbox;
     Hitbox hitboxes[4];
     Entity* parent;
-} EntitySpikeCorridor;
+};
 
 // Object Struct
 extern ObjectSpikeCorridor *SpikeCorridor;

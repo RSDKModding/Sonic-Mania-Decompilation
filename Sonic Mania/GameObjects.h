@@ -19,8 +19,6 @@
 typedef uint32 colour;
 typedef uint32 color;
 
-#define RETRO_USE_MOD_LOADER (1)
-
 #if RETRO_USE_MOD_LOADER
 typedef enum {
     MODCB_GAME_STARTUP,
@@ -53,11 +51,15 @@ typedef struct {
     void (*Super)(int32 objectID, ModSuper callback, void *data);
 
     bool32 (*LoadModInfo)(const char *id, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active);
+    void (*GetModPath)(const char *id, TextInfo *result);
+    int32 (*GetModCount)(bool32 active);
+    const char *(*GetModIDByIndex)(uint32 index);
+    bool32 (*ForeachModID)(TextInfo *id);
+
     void *AddModCallback_FuncP;
     void *AddModCallback_STD;
     void (*AddPublicFunction)(const char *functionName, void *functionPtr);
     void *(*GetPublicFunction)(const char *id, const char *functionName);
-    const char *(*GetModPath)(const char *id);
 
     bool32 (*GetSettingsBool)(const char *id, const char *key, bool32 fallback);
     int32 (*GetSettingsInteger)(const char *id, const char *key, int32 fallback);
@@ -76,6 +78,11 @@ typedef struct {
     bool32 (*ForeachConfigCategory)(TextInfo *textInfo);
 
     Object *(*GetObject)(const char *name);
+
+    void (*RegisterAchievement)(const char *identifier, const char *name, const char *desc);
+    void (*GetAchievementInfo)(uint32 id, TextInfo *name, TextInfo *description, TextInfo *identifer, bool32 *achieved);
+    int32 (*GetAchievementIndexByID)(const char *identifier);
+    int32 (*GetAchievementCount)(void);
 } ModFunctionTable;
 #endif
 
@@ -86,7 +93,7 @@ typedef struct {
     bool32 (*GetConfirmButtonFlip)(void);
     void (*ExitGame)(void);
     void (*LaunchManual)(void);
-    bool32 (*Unknown4)(uint8 inputID);
+    bool32 (*IsOverlayEnabled)(uint32 inputID);
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
 #if RETRO_USE_EGS
@@ -95,9 +102,9 @@ typedef struct {
     void (*CoreUnknown4)(int32 value);
     void (*RegisterHIDDevice)(void);
 #endif
-    void (*UnlockAchievement)(const char *achName);
-    void (*GetAchievementStatus)(void);
-    void (*SetAchievementStatus)(int32 status);
+    void (*UnlockAchievement)(const char *identifier);
+    bool32 (*GetAchievementsEnabled)(void);
+    void (*SetAchievementsEnabled)(bool32 enabled);
 #if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(TextInfo *names, int32 count);
@@ -106,35 +113,39 @@ typedef struct {
 #if RETRO_USE_EGS
     void (*LeaderboardUnknown1)(void);
 #endif
-    void (*FetchLeaderboard)(const char *name, int32 a2);
-    void (*TrackScore)(const char *name, int32 score, void (*callback)(int32 status, int32 rank));
+    void (*FetchLeaderboard)(LeaderboardID *leaderboard, bool32 isUser);
+    void (*TrackScore)(LeaderboardID *leaderboard, int32 score, void (*callback)(bool32 success, int32 rank));
     int32 (*GetLeaderboardsStatus)(void);
     Vector2 (*LeaderboardEntryCount)(void);
-    int32 (*GetLeaderboardUnknown2)(void);
-    void (*Unknown12)(int32 a2, uint32 a3, int32 a4);
-    void (*LeaderboardsUnknown8)(void);
-    LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 a1);
+    Vector2 (*LeaderboardEntryLength)(void);
+    void (*LoadNewLeaderboardEntries)(int32 start, uint32 end, int32 type);
+    void (*ClearLeaderboardInfo)(void);
+    LeaderboardEntry *(*ReadLeaderboardEntry)(uint32 entryID);
     void (*SetRichPresence)(int32, TextInfo *text);
     void (*TryTrackStat)(StatInfo *stat);
-    int32 (*GetStatsStatus)(void);
-    void (*SetStatsStatus)(int32 status);
+    bool32 (*GetStatsEnabled)(void);
+    void (*SetStatsEnabled)(bool32 enabled);
     void (*ClearPrerollErrors)(void);
     void (*TryAuth)(void);
     int32 (*GetUserAuthStatus)(void);
-    bool32 (*GetUsername)(TextInfo *text);
+    bool32 (*GetUsername)(TextInfo *name);
     void (*TryInitStorage)(void);
-    int32 (*UserStorageStatusUnknown1)(void);
+    int32 (*GetStorageStatus)(void);
     int32 (*GetSaveStatus)(void);
-    void (*ClearUserStorageStatus)(void);
-    void (*SetUserStorageStatus)(void);
+    void (*ClearSaveStatus)(void);
+    void (*SetSaveStatusContinue)(void);
     void (*SetSaveStatusOK)(void);
     void (*SetSaveStatusForbidden)(void);
     void (*SetSaveStatusError)(void);
-    void (*SetUserStorageNoSave)(bool32 state);
-    bool32 (*GetUserStorageNoSave)(void);
-    void (*LoadUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status));                  // load user file from game dir
-    void (*SaveUserFile)(const char *name, int32 *data, int32 size, void (*callback)(int32 status), bool32 compress); // save user file to game dir
-    void (*DeleteUserFile)(const char *filename, void (*callback)(int32 status));                                 // delete user file from game dir
+    void (*SetNoSave)(bool32 noSave);
+    bool32 (*GetNoSave)(void);
+    // load user file from game dir
+    void (*LoadUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status));
+    // save user file to game dir
+    void (*SaveUserFile)(const char *name, void *buffer, int32 size, void (*callback)(int32 status), bool32 compress);
+    // delete user file from game dir
+    void (*DeleteUserFile)(const char *name, void (*callback)(int32 status));
+    // format: name, [colType, colName] for how ever many columns you want (max of 8), DBVAR_NONE (or NULL)
     uint16 (*InitUserDB)(const char *name, ...);
     uint16 (*LoadUserDB)(const char *filename, void (*callback)(int32 status));
     void (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
@@ -142,19 +153,18 @@ typedef struct {
     void (*ClearAllUserDBs)(void);
     void (*SetupUserDBRowSorting)(uint16 tableID);
     bool32 (*GetUserDBRowsChanged)(uint16 tableID);
-    void (*AddRowSortFilter)(uint16 tableID, int32 size, const char *name, void *value);
-    void (*SortDBRows)(uint16 tableID, int32 size, const char *name, bool32 flag);
+    void (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
+    void (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 sortAscending);
     int32 (*GetSortedUserDBRowCount)(uint16 tableID);
     int32 (*GetSortedUserDBRowID)(uint16 tableID, uint16 row);
     int32 (*AddUserDBRow)(uint16 tableID);
-    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 size, const char *name, void *value);
-    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 size, const char *name, void *value);
+    void (*SetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
+    void (*GetUserDBValue)(uint16 tableID, int32 row, int32 type, const char *name, void *value);
     uint32 (*GetUserDBRowUUID)(uint16 tableID, uint16 row);
-    int32 (*GetUserDBByID)(uint16 tableID, uint32 uuid);
-    void (*GetUserDBCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 sizeInBytes, const char *format);
+    int32 (*GetUserDBRowByID)(uint16 tableID, uint32 uuid);
+    void (*GetUserDBRowCreationTime)(uint16 tableID, uint16 row, char *buffer, uint32 bufferSize, const char *format);
     void (*RemoveDBRow)(uint16 tableID, uint16 row);
     void (*RemoveAllDBRows)(uint16 tableID);
-    // count: 59
 } APIFunctionTable;
 #endif
 
@@ -248,7 +258,11 @@ typedef struct {
     void (*SetScreenSplitVerticies)(int8 p2_1, int8 p2_2, int8 p3_1, int8 p3_2, int8 p3_3);
 #endif
     int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
+#if RETRO_USE_PLUS
     void (*SetLookupTable)(uint16 *tablePtr);
+#else
+    uint16 *(*GetLookupTable)(void);
+#endif
     void (*SetPaletteMask)(uint32 maskColour);
     void (*SetPaletteEntry)(uint8 paletteID, uint8 index, uint32 colour);
     uint32 (*GetPaletteEntry)(uint8 paletteID, uint8 index);
@@ -258,7 +272,7 @@ typedef struct {
     void (*LoadPalette)(uint8 bank, const char *path, uint16 rowFlags);
 #endif
     void (*RotatePalette)(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 right);
-    void (*SetLimitedFade)(uint8 destPaletteID, uint8 srcPaletteA, uint8 srcPaletteB, uint16 blendAmount, int32 startIndex, int32 endIndex);
+    void (*SetLimitedFade)(uint8 destPaletteID, uint8 srcPaletteA, uint8 srcPaletteB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_USE_PLUS
     void (*BlendColours)(uint8 paletteID, uint8 *coloursA, uint8 *coloursB, int32 alpha, int32 index, int32 count);
 #endif
@@ -270,8 +284,8 @@ typedef struct {
     void (*DrawBlendedQuad)(Vector2 *verticies, colour *vertColours, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startCharID, int32 endCharID, Alignments align, int32 spacing, int32 a8,
-                     Vector2 *charPos, bool32 ScreenRelative);
+    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startCharID, int32 endCharID, Alignments align, int32 spacing,
+                     int32 a8, Vector2 *charPos, bool32 ScreenRelative);
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
@@ -283,21 +297,21 @@ typedef struct {
     void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, colour colour);
-    void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 animSpeed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
+    void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
     void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
                                   colour colour);
     void (*Draw3DScene)(uint16 index);
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
-    uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);
-    void (*SetSpriteAnimation)(uint16 aniFrames, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID);
-    void (*EditSpriteAnimation)(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
-                                uint8 loopIndex, uint8 rotationFlag);
-    void (*SetSpriteString)(uint16 aniFrames, uint16 animID, TextInfo *info);
+    uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 listCount, Scopes scope);
+    void (*SetSpriteAnimation)(uint16 aniFrames, uint16 listID, Animator *animator, bool32 forceApply, int16 frameID);
+    void (*EditSpriteAnimation)(uint16 aniFrames, uint16 listID, const char *name, int32 frameOffset, uint16 frameCount, int16 speed, uint8 loopIndex,
+                                uint8 rotationFlag);
+    void (*SetSpriteString)(uint16 aniFrames, uint16 listID, TextInfo *info);
     void *(*GetSpriteAnimation)(uint16 aniFrames, const char *name);
-    SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 anim, int32 frame);
+    SpriteFrame *(*GetFrame)(uint16 aniFrames, uint16 listID, int32 frameID);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
     int16 (*GetFrameID)(Animator *animator);
-    int32 (*GetStringWidth)(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
+    int32 (*GetStringWidth)(uint16 aniFrames, uint16 listID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
     void (*ProcessAnimation)(Animator *animator);
     int32 (*GetSceneLayerID)(const char *name);
     TileLayer *(*GetSceneLayer)(int32 layerID);
@@ -335,7 +349,7 @@ typedef struct {
     bool32 (*LoadImage)(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void));
 #if RETRO_USE_PLUS
     int32 (*ControllerIDForInputID)(uint8 inputID);
-    int32 (*MostRecentActiveControllerID)(int32 deviceID, int32 a2, uint32 a3);
+    int32 (*MostRecentActiveControllerID)(int32 type, bool32 unassignedOnly, uint32 maxInactiveTimer);
     int32 (*GetControllerType)(int32 inputID);
     int32 (*GetAssignedControllerID)(int32 inputID);
     int32 (*GetAssignedUnknown)(int32 inputID);
@@ -349,10 +363,12 @@ typedef struct {
     void (*ResetControllerAssignments)(void);
 #endif
 #if !RETRO_USE_PLUS
-    void (*Unknown92)(int32 a1, int32 a2, int32 *a3);
+    void (*InputUnknown)(int32 controllerID, int32 type, int32 *valuePtr);
 #endif
-    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size); // load user file from exe dir
-    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size); // save use file to exe dir
+    // load user file from exe dir
+    int32 (*LoadUserFile)(const char *filename, void *buffer, uint32 size);
+    // save use file to exe dir
+    int32 (*SaveUserFile)(const char *fileName, void *buffer, uint32 size);
 #if RETRO_USE_PLUS
     void (*PrintLog)(SeverityModes severity, const char *message, ...);
     void (*PrintString)(SeverityModes severity, const char *message);
@@ -386,11 +402,11 @@ extern RSDKFunctionTable RSDK;
 #include "All.h"
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->objectID, offsetof(Entity##object, var))
-#define RSDK_EDITABLE_ARRAY(object, type, var, size)                                                                                                 \
-    for (int i = 0; i < size; ++i) {                                                                                                                 \
+#define RSDK_EDITABLE_ARRAY(object, type, var, count, arrType)                                                                                       \
+    for (int i = 0; i < (count); ++i) {                                                                                                              \
         char buffer[0x40];                                                                                                                           \
         sprintf(buffer, "%s%d", #var, i);                                                                                                            \
-        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var[i]));                                                \
+        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var) + sizeof(arrType) * i);                             \
     }
 
 #if RETRO_INCLUDE_EDITOR
@@ -424,9 +440,9 @@ extern RSDKFunctionTable RSDK;
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
-    info.text       = NULL;                                                                                                                          \
-    info.textLength = 0;                                                                                                                             \
-    info.length     = 0
+    info.text   = NULL;                                                                                                                              \
+    info.length = 0;                                                                                                                                 \
+    info.size   = 0
 
 //Initializes entity values to the defaults
 #define INIT_ENTITY(entity)                                                                                                                          \
@@ -441,6 +457,23 @@ extern RSDKFunctionTable RSDK;
 #define foreach_all(type, entityOut)                                                                                                                 \
     Entity##type *entityOut = NULL;                                                                                                                  \
     while (RSDK.GetEntities(type->objectID, (Entity **)&entityOut))
+
+#define foreach_active_group(group, entityOut)                                                                                                       \
+    Entity *entityOut = NULL;                                                                                                                        \
+    while (RSDK.GetActiveEntities(group, (Entity **)&entityOut))
+#define foreach_all_group(group, entityOut)                                                                                                          \
+    Entity *entityOut = NULL;                                                                                                                        \
+    while (RSDK.GetEntities(group, (Entity **)&entityOut))
+
+#if RETRO_USE_MOD_LOADER
+#define foreach_config(text)                                                                                                                         \
+    TextInfo *text = NULL;                                                                                                                           \
+    while (Mod.ForeachConfig(&text))
+#define foreach_configCategory(text)                                                                                                      \
+    TextInfo *text = NULL;                                                                                                                           \
+    while (Mod.ForeachConfigCategory(&text))
+#endif
+
 #define foreach_break                                                                                                                                \
     RSDK.BreakForeachLoop();                                                                                                                         \
     break

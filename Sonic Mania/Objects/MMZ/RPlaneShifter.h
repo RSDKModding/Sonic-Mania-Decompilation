@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRPlaneShifter {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxTicTock;
-} ObjectRPlaneShifter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRPlaneShifter {
     RSDK_ENTITY
     StateMachine(state);
     uint32 height;
@@ -27,7 +27,7 @@ typedef struct {
     int32 field_78;
     Animator animator;
     Hitbox hitbox;
-} EntityRPlaneShifter;
+};
 
 // Object Struct
 extern ObjectRPlaneShifter *RPlaneShifter;

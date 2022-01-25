@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHatch {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -17,10 +17,10 @@ typedef struct {
     uint16 sfxDescend;
     uint16 sfxSurface;
     uint16 sfxGasPop;
-} ObjectHatch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHatch {
     RSDK_ENTITY
     StateMachine(state);
     uint8 go;
@@ -41,7 +41,7 @@ typedef struct {
     Animator animator2;
     Hitbox hitbox;
     Hitbox warpHitbox;
-} EntityHatch;
+};
 
 // Object Struct
 extern ObjectHatch *Hatch;

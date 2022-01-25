@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Player {
     RSDK_OBJECT
     int32 maxSpeed;
     uint16 aniFrames; //unused
@@ -23,10 +23,10 @@ typedef struct {
     uint16 ballModel;
     uint16 tumbleModel;
     uint16 sceneIndex;
-} ObjectUFO_Player;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Player {
     RSDK_ENTITY
     StateMachine(state);
     int32 machQuota1;
@@ -61,7 +61,7 @@ typedef struct {
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif
-} EntityUFO_Player;
+};
 
 // Object Struct
 extern ObjectUFO_Player *UFO_Player;

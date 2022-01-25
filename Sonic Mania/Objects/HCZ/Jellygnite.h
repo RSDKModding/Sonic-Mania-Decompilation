@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectJellygnite {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox hitbox2;
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxElectrify;
-} ObjectJellygnite;
+};
 
 // Entity Class
-typedef struct {
+struct EntityJellygnite {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -31,7 +31,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityJellygnite;
+};
 
 // Object Struct
 extern ObjectJellygnite *Jellygnite;

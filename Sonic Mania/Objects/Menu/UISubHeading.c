@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UISubHeading Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUISubHeading *UISubHeading;
@@ -6,9 +13,9 @@ void UISubHeading_Update(void)
 {
     RSDK_THIS(UISubHeading);
 
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex || self->storedListID != self->listID || self->storedFrameID != self->frameID) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator, true, self->frameID);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textFrames != UIWidgets->textFrames || self->storedListID != self->listID || self->storedFrameID != self->frameID) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator, true, self->frameID);
+        self->textFrames = UIWidgets->textFrames;
         self->storedListID    = self->listID;
         self->storedFrameID   = self->frameID;
     }
@@ -54,12 +61,16 @@ void UISubHeading_Create(void *data)
         self->updateRange.y = 0x400000;
         self->shiftedY      = self->size.y >> 16;
         self->size.y        = abs(self->size.y);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator, true, self->frameID);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator, true, self->frameID);
+        self->textFrames = UIWidgets->textFrames;
     }
 }
 
 void UISubHeading_StageLoad(void) {}
+
+// ???
+// Why is this all here
+// Wouldn't it make more sense to make a "SaveSelectMenu" object like options, extras, time attack, competition and main menus have?
 
 #if RETRO_USE_PLUS
 void UISubHeading_Initialize(void)
@@ -71,29 +82,29 @@ void UISubHeading_Initialize(void)
     {
         RSDK.PrependText(&tag, "Save Select");
         if (RSDK.StringCompare(&tag, &control->tag, false))
-            ManiaModeMenu->saveSelectMenu = (Entity *)control;
+            ManiaModeMenu->saveSelectMenu = control;
 
         RSDK.PrependText(&tag, "Encore Mode");
         if (RSDK.StringCompare(&tag, &control->tag, false))
-            ManiaModeMenu->encoreSaveSelect = (Entity *)control;
+            ManiaModeMenu->encoreSaveSelect = control;
 
         RSDK.PrependText(&tag, "No Save Mode");
         if (RSDK.StringCompare(&tag, &control->tag, false))
-            ManiaModeMenu->noSaveMenu = (Entity *)control;
+            ManiaModeMenu->noSaveMenu = control;
 
         RSDK.PrependText(&tag, "No Save Encore");
         if (RSDK.StringCompare(&tag, &control->tag, false))
-            ManiaModeMenu->noSaveMenuEncore = (Entity *)control;
+            ManiaModeMenu->noSaveMenuEncore = control;
 
         RSDK.PrependText(&tag, "Secrets");
         if (RSDK.StringCompare(&tag, &control->tag, false))
-            ManiaModeMenu->secretsMenu = (Entity *)control;
+            ManiaModeMenu->secretsMenu = control;
     }
 }
 
-void UISubHeading_Unknown2(void)
+void UISubHeading_HandleUnlocks(void)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
+    EntityUIControl *control = ManiaModeMenu->secretsMenu;
     EntityUIButton *button   = control->buttons[1];
     button->disabled         = !GameProgress_CheckUnlock(5) && globals->superSecret;
     if (button->disabled)
@@ -116,14 +127,14 @@ void UISubHeading_Unknown2(void)
         UIButton_ManageChoices(button);
 }
 
-void UISubHeading_Unknown3(void)
+void UISubHeading_SetupActions(void)
 {
-    foreach_all(UISaveSlot, slot) { slot->options2 = UISubHeading_StartNewSave; }
+    foreach_all(UISaveSlot, slot) { slot->actionCB = UISubHeading_SaveButton_ActionCB; }
 
     foreach_all(UIButtonPrompt, prompt)
     {
         Hitbox hitbox;
-        EntityUIControl *saveSel = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
+        EntityUIControl *saveSel = ManiaModeMenu->saveSelectMenu;
         hitbox.right             = saveSel->size.x >> 17;
         hitbox.left              = -(saveSel->size.x >> 17);
         hitbox.bottom            = saveSel->size.y >> 17;
@@ -132,10 +143,10 @@ void UISubHeading_Unknown3(void)
         if (MathHelpers_PointInHitbox(FLIP_NONE, saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
                                       &hitbox, prompt->position.x, prompt->position.y)
             && prompt->buttonID == 2) {
-            ManiaModeMenu->prompt1 = (Entity *)prompt;
+            ManiaModeMenu->delSavePrompt = prompt;
         }
         else {
-            saveSel = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
+            saveSel = ManiaModeMenu->encoreSaveSelect;
 
             hitbox.right  = saveSel->size.x >> 17;
             hitbox.left   = -(saveSel->size.x >> 17);
@@ -144,21 +155,21 @@ void UISubHeading_Unknown3(void)
             if (MathHelpers_PointInHitbox(FLIP_NONE, saveSel->startPos.x - saveSel->cameraOffset.x, saveSel->startPos.y - saveSel->cameraOffset.y,
                                           &hitbox, prompt->position.x, prompt->position.y)
                 && prompt->buttonID == 2)
-                ManiaModeMenu->prompt2 = (Entity *)prompt;
+                ManiaModeMenu->delSavePrompt_Encore = prompt;
         }
     }
 
-    EntityUIControl *saveSel  = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
-    saveSel->unknownCallback4 = UISubHeading_Unknown10;
-    saveSel->yPressCB         = UISubHeading_Unknown11;
+    EntityUIControl *saveSel  = ManiaModeMenu->saveSelectMenu;
+    saveSel->menuUpdateCB    = UISubHeading_SaveSel_MenuUpdateCB;
+    saveSel->yPressCB         = UISubHeading_SaveSel_YPressCB;
 
-    EntityUIControl *saveSelEncore  = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
-    saveSelEncore->unknownCallback4 = UISubHeading_Unknown10;
+    EntityUIControl *saveSelEncore  = ManiaModeMenu->encoreSaveSelect;
+    saveSelEncore->menuUpdateCB    = UISubHeading_SaveSel_MenuUpdateCB;
 }
 
-void UISubHeading_Unknown4(int32 slot)
+void UISubHeading_HandleMenuReturn(int32 slot)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
+    EntityUIControl *control = ManiaModeMenu->secretsMenu;
     EntitySaveGame *saveGame  = (EntitySaveGame *)SaveGame_GetDataPtr(slot, false);
 
     UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & getMod(MEDAL_NOTIMEOVER)) != 0);
@@ -185,7 +196,7 @@ void UISubHeading_Unknown4(int32 slot)
 
 int32 UISubHeading_GetMedalMods(void)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
+    EntityUIControl *control = ManiaModeMenu->secretsMenu;
 
     int32 mods = 0;
     if (control->buttons[0]->selection == 1)
@@ -209,74 +220,74 @@ int32 UISubHeading_GetMedalMods(void)
     return mods;
 }
 
-void UISubHeading_SaveFileCB(int32 status)
+void UISubHeading_SaveFileCB(bool32 success)
 {
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
     RSDK.LoadScene();
 }
 
 void UISubHeading_SecretsTransitionCB(void)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
+    EntityUIControl *control = ManiaModeMenu->saveSelectMenu;
     control->childHasFocus   = true;
     UIControl_MatchMenuTag("Secrets");
 }
 
-void UISubHeading_Unknown9(void)
+void UISubHeading_LeaveSecretsMenu(void)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
-    if (ManiaModeMenu->field_24) {
-        EntityUISaveSlot *slot = (EntityUISaveSlot *)control->buttons[control->field_D8];
-        UISubHeading_Unknown4(slot->slotID);
-        ManiaModeMenu->field_24 = 0;
+    EntityUIControl *control = ManiaModeMenu->saveSelectMenu;
+    if (ManiaModeMenu->inSecretsMenu) {
+        EntityUISaveSlot *slot = (EntityUISaveSlot *)control->buttons[control->lastButtonID];
+        UISubHeading_HandleMenuReturn(slot->slotID);
+        ManiaModeMenu->inSecretsMenu = false;
     }
 }
 
-void UISubHeading_Unknown10(void)
+void UISubHeading_SaveSel_MenuUpdateCB(void)
 {
     RSDK_THIS(UIControl);
     if (self->active == ACTIVE_ALWAYS) {
-        EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)ManiaModeMenu->prompt1;
-        if (self == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect) {
-            prompt = (EntityUIButtonPrompt *)ManiaModeMenu->prompt2;
-        }
-        else if (self->field_D8 != ManiaModeMenu->field_28) {
-            UISubHeading_Unknown9();
-            ManiaModeMenu->field_28 = self->field_D8;
+        EntityUIButtonPrompt *prompt = ManiaModeMenu->delSavePrompt;
+        if (self == ManiaModeMenu->encoreSaveSelect) 
+            prompt = ManiaModeMenu->delSavePrompt_Encore;
+
+        else if (self->lastButtonID != ManiaModeMenu->saveSelLastButtonID) {
+            UISubHeading_LeaveSecretsMenu();
+            ManiaModeMenu->saveSelLastButtonID = self->lastButtonID;
         }
 
-        bool32 flag  = false;
-        bool32 flag2 = false;
+        bool32 canDeleteSave  = false;
+        bool32 showPrompt = false;
         for (int32 i = 0; i < self->buttonCount; ++i) {
-            flag2 |= self->buttons[i]->state == UISaveSlot_Unknown28;
-            if (self->field_D8 >= 0) {
-                if (self->buttons[i] == self->buttons[self->field_D8]) {
-                    EntityUISaveSlot *slot = (EntityUISaveSlot *)self->buttons[self->field_D8];
+            showPrompt |= self->buttons[i]->state == UISaveSlot_State_Selected;
+            if (self->lastButtonID >= 0) {
+                if (self->buttons[i] == self->buttons[self->lastButtonID]) {
+                    EntityUISaveSlot *slot = (EntityUISaveSlot *)self->buttons[self->lastButtonID];
                     if (!slot->isNewSave)
-                        flag = true;
+                        canDeleteSave = true;
                 }
             }
         }
 
-        if (!flag2) {
-            if ((self == (EntityUIControl *)ManiaModeMenu->saveSelectMenu && self->field_D8 == 8)
-                || (self == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect && !self->field_D8)) {
+        if (!showPrompt) {
+            if ((self == ManiaModeMenu->saveSelectMenu && self->lastButtonID == 8)
+                || (self == ManiaModeMenu->encoreSaveSelect && !self->lastButtonID)) {
                 prompt->visible = false;
             }
             else {
-                prompt->visible = flag;
+                prompt->visible = canDeleteSave;
             }
         }
     }
 }
 
-void UISubHeading_Unknown11(void)
+void UISubHeading_SaveSel_YPressCB(void)
 {
-    EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
+    EntityUIControl *control = ManiaModeMenu->saveSelectMenu;
     if (control->active == ACTIVE_ALWAYS) {
-        if (!ManiaModeMenu->field_24) {
-            UISubHeading_Unknown4(control->buttons[control->activeEntityID]->stopMusic);
-            ManiaModeMenu->field_24 = 1;
+        if (!ManiaModeMenu->inSecretsMenu) {
+            UISubHeading_HandleMenuReturn(((EntityUISaveSlot*)control->buttons[control->buttonID])->slotID);
+            ManiaModeMenu->inSecretsMenu = true;
         }
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
@@ -285,16 +296,16 @@ void UISubHeading_Unknown11(void)
     }
 }
 
-void UISubHeading_StartNewSave(void)
+void UISubHeading_SaveButton_ActionCB(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     RSDK_THIS(UISaveSlot);
+    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     RSDK.GetCString(param->menuTag, &control->tag);
-    param->selectionID = control->field_D8;
+    param->selectionID = control->lastButtonID;
     param->replayID    = 0;
     globals->gameMode = self->encoreMode != false;
 
@@ -318,7 +329,7 @@ void UISubHeading_StartNewSave(void)
             saveRAM->lives         = 3;
             saveRAM->chaosEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
-            UIWaitSpinner_Wait();
+            UIWaitSpinner_StartWait();
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
         }
@@ -379,11 +390,11 @@ void UISubHeading_StartNewSave(void)
         globals->stock          = saveRAM->stock;
         globals->characterFlags = saveRAM->characterFlags;
         RSDK.SetScene("Encore Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, self->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, 0, self->frameID);
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, self->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, 0, self->frameID);
     }
 
     if (!loadingSave) {
@@ -405,8 +416,8 @@ void UISubHeading_EditorDraw(void)
     self->updateRange.y = 0x400000;
     self->shiftedY      = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator, true, self->frameID);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator, true, self->frameID);
+    self->textFrames = UIWidgets->textFrames;
 
     UISubHeading_Draw();
 }

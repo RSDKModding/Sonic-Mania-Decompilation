@@ -4,6 +4,13 @@
 #include "SonicMania.h"
 
 typedef enum {
+    SC_MSG_SPECIALCLEAR,
+    SC_MSG_GOTEMERALD,
+    SC_MSG_ALLEMERALDS,
+    SC_MSG_SUPER,
+} SpecialClearTypes;
+
+typedef enum {
     SC_ANI_SONIC,
     SC_ANI_TAILS,
     SC_ANI_KNUX,
@@ -20,7 +27,7 @@ typedef enum {
 }SpecialClearAniIDs;
 
 // Object Class
-typedef struct {
+struct ObjectSpecialClear {
     RSDK_OBJECT
     uint16 aniFrames;
 #if !RETRO_USE_PLUS
@@ -32,17 +39,17 @@ typedef struct {
     uint16 sfxSpecialWarp;
     uint16 sfxContinue;
     uint16 sfxEmerald;
-} ObjectSpecialClear;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpecialClear {
     RSDK_ENTITY
     StateMachine(state);
     bool32 isBSS;
-    int32 finishType;
+    int32 messageType;
     int32 timer;
-    int32 flag;
-    int32 field_6C;
+    bool32 showFade;
+    bool32 continuesVisible;
     bool32 continuesFlag;
     int32 fillColour;
     int32 score;
@@ -51,24 +58,30 @@ typedef struct {
     int32 ringBonus;
     int32 perfectBonus;
     int32 machBonus;
-    Vector2 positions[7];
+    Vector2 messagePos1;
+    Vector2 messagePos2;
+    Vector2 scoreBonusPos;
+    Vector2 ringBonusPos;
+    Vector2 perfectBonusPos;
+    Vector2 machBonusPos;
+    Vector2 continuePos;
     int32 emeraldPositions[7];
     int32 emeraldSpeeds[7];
-    int32 field_100;
-    int32 field_104;
-    int32 field_108;
-    int32 field_10C;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-} EntitySpecialClear;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
+    int32 unused7;
+    int32 unused8;
+    bool32 saveInProgress;
+    Animator playerNameAnimator;
+    Animator bonusAnimator;
+    Animator numbersAnimator;
+    Animator emeraldsAnimator;
+    Animator continueAnimator;
+};
 
 // Object Struct
 extern ObjectSpecialClear *SpecialClear;
@@ -89,21 +102,21 @@ void SpecialClear_Serialize(void);
 // Extra Entity Functions
 void SpecialClear_DrawNumbers(Vector2 *pos, int32 value);
 void SpecialClear_GiveScoreBonus(int32 score);
-void SpecialClear_SaveCB(int32 success);
-void SpecialClear_LoadScene(void);
-void SpecialClear_TallyScore(void);
+void SpecialClear_SaveCB(bool32 success);
 
-void SpecialClear_Unknown3(void);
-void SpecialClear_Unknown4(void);
-void SpecialClear_Unknown5(void);
-void SpecialClear_HandlePositions(void);
-void SpecialClear_Unknown6(void);
-void SpecialClear_Unknown7(void);
-void SpecialClear_Unknown9(void);
-void SpecialClear_Unknown10(void);
-void SpecialClear_Unknown11(void);
-void SpecialClear_Unknown12(void);
-void SpecialClear_Unknown13(void);
-void SpecialClear_Unknown15(void);
+void SpecialClear_State_SetupDelay(void);
+void SpecialClear_State_EnterText(void);
+void SpecialClear_State_AdjustText(void);
+void SpecialClear_HandleEmeraldAppear(void);
+void SpecialClear_State_EnterBonuses(void);
+void SpecialClear_State_ScoreShownDelay(void);
+void SpecialClear_State_TallyScore(void);
+void SpecialClear_State_ShowTotalScore_Continues(void);
+void SpecialClear_State_ShowTotalScore_NoContinues(void);
+void SpecialClear_State_ExitFinishMessage(void);
+void SpecialClear_State_EnterSuperMessage(void);
+void SpecialClear_State_ShowSuperMessage(void);
+void SpecialClear_State_ExitFadeOut(void);
+void SpecialClear_State_ExitResults(void);
 
 #endif //!OBJ_SPECIALCLEAR_H

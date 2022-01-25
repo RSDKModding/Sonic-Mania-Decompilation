@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLightBulb {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBulbPop;
-} ObjectLightBulb;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLightBulb {
     RSDK_ENTITY
     StateMachine(state);
     bool32 respawn;
     int32 priority;
     Animator animator;
-} EntityLightBulb;
+};
 
 // Object Struct
 extern ObjectLightBulb *LightBulb;

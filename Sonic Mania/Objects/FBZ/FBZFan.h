@@ -4,25 +4,25 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFBZFan {
     RSDK_OBJECT
     int32 activePlayers;
     Hitbox fanHitbox;
     Hitbox solidHitbox;
     Hitbox playerHitbox;
     uint16 aniFrames;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator baseAnimator;
+    Animator fanAnimator;
+    Animator fan2Animator;
     uint16 sfxFan;
-} ObjectFBZFan;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZFan {
     RSDK_ENTITY
     Hitbox hitbox;
     uint8 activePlayers;
-} EntityFBZFan;
+};
 
 // Object Struct
 extern ObjectFBZFan *FBZFan;

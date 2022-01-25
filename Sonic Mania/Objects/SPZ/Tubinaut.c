@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Tubinaut Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTubinaut *Tubinaut;
@@ -333,12 +340,12 @@ void Tubinaut_HandleOrbs(void)
 
         if (self->orbState == Tubinaut_Orb_Cooldown || self->orbCount <= 1 || self->attackTimer < 192) {
             self->ballAnimators[i].frameID        = (2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7)));
-            self->ballAnimators[i].animationTimer = (self->ballAnimators[i].animationTimer + 1) & 3;
-            self->ballAnimators[i].frameID += (self->ballAnimators[i].animationTimer >> 1);
+            self->ballAnimators[i].timer = (self->ballAnimators[i].timer + 1) & 3;
+            self->ballAnimators[i].frameID += (self->ballAnimators[i].timer >> 1);
         }
         else {
-            int val                               = ((self->ballAnimators[i].animationTimer + 1) & 7) >> 1;
-            self->ballAnimators[i].animationTimer = (self->ballAnimators[i].animationTimer + 1) & 7;
+            int val                               = ((self->ballAnimators[i].timer + 1) & 7) >> 1;
+            self->ballAnimators[i].timer = (self->ballAnimators[i].timer + 1) & 7;
             switch (val) {
                 case 0:
                 case 2: self->ballAnimators[i].frameID = (val + 2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7))); break;

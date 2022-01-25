@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: EncoreIntro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -19,21 +26,16 @@ void EncoreIntro_Update(void)
         }
     }
 
-    //skip part 2 flag
+    // skip part 2 flag
     if (self->field_64) {
-        void *states[] = { EncoreIntro_CutsceneState_Unknown7,  EncoreIntro_CutsceneState_Unknown8,
-                           EncoreIntro_CutsceneState_Unknown9,  EncoreIntro_CutsceneState_Unknown10,
-                           EncoreIntro_CutsceneState_Unknown11, EncoreIntro_CutsceneState_Unknown12,
-                           EncoreIntro_CutsceneState_Unknown13, EncoreIntro_CutsceneState_Unknown14,
-                           EncoreIntro_CutsceneState_Unknown15, EncoreIntro_CutsceneState_Unknown16,
-                           EncoreIntro_CutsceneState_Unknown17, EncoreIntro_CutsceneState_Unknown18,
-                           EncoreIntro_CutsceneState_Unknown19, EncoreIntro_CutsceneState_Unknown20,
-                           EncoreIntro_CutsceneState_Unknown21, EncoreIntro_CutsceneState_Unknown22,
-                           EncoreIntro_CutsceneState_Unknown23, EncoreIntro_CutsceneState_Unknown24,
-                           EncoreIntro_CutsceneState_Unknown21, NULL };
-
         EncoreIntro_SetupCutscenePart2();
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, EncoreIntro_Cutscene_AIZEncore, EncoreIntro_Cutscene_CapsuleFound, EncoreIntro_Cutscene_BuddySelect,
+                                  EncoreIntro_Cutscene_ViewEncoreTutorial, EncoreIntro_Cutscene_MysticGetRuby, EncoreIntro_Cutscene_MysticStealRuby,
+                                  EncoreIntro_Cutscene_MysticEscape, EncoreIntro_Cutscene_AIZEncoreTutorial, EncoreIntro_Cutscene_CameraPanToHBHPile,
+                                  EncoreIntro_Cutscene_MysticPassRuby, EncoreIntro_Cutscene_KingActivate, EncoreIntro_Cutscene_RubyActivated,
+                                  EncoreIntro_Cutscene_RubyWarp, EncoreIntro_Cutscene_LoadGHZ, EncoreIntro_Cutscene_AwaitSaveFinish,
+                                  EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
+                                  EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
         self->field_64 = false;
     }
 }
@@ -55,19 +57,20 @@ void EncoreIntro_Create(void *data)
         if (globals->enableIntro) {
             foreach_all(HUD, hud)
             {
-                hud->maxOffset = hud->offsets[HUDOFF_SCORE].x;
-                hud->offsets[HUDOFF_SCORE].x -= 0x1000000;
-                hud->offsets[HUDOFF_TIME].x -= 0x1100000;
-                hud->offsets[HUDOFF_RINGS].x -= 0x1200000;
-                hud->offsets[HUDOFF_LIFE].x -= 0x1300000;
+                hud->maxOffset = hud->scoreOffset.x;
+                hud->scoreOffset.x -= 0x1000000;
+                hud->timeOffset.x -= 0x1100000;
+                hud->ringsOffset.x -= 0x1200000;
+                hud->lifeOffset.x -= 0x1300000;
                 hud->state = HUD_State_ComeOnScreen;
+                hud->state = StateMachine_None;
             }
 
             EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
             ruby->alpha             = 0;
             ruby->inkEffect         = INK_ALPHA;
-            ruby->state             = EncoreIntro_PhantomRuby_Unknown1;
-            RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &ruby->animator2, true, 0);
+            ruby->state             = EncoreIntro_PhantomRuby_OscillateFX;
+            RSDK.SetSpriteAnimation(-1, -1, &ruby->animator2, true, 0);
             ruby->animator2.animationID = -1;
         }
         else {
@@ -127,22 +130,17 @@ void EncoreIntro_SetupEntities(void)
 
 void EncoreIntro_SetupCutscene(void)
 {
-    void *states[] = { EncoreIntro_CutsceneState_Unknown1,  EncoreIntro_CutsceneState_Unknown2,
-                       EncoreIntro_CutsceneState_Unknown3,  EncoreIntro_CutsceneState_Unknown4,
-                       EncoreIntro_CutsceneState_Unknown5,  EncoreIntro_CutsceneState_Unknown6,
-                       EncoreIntro_CutsceneState_Unknown7,  EncoreIntro_CutsceneState_Unknown8,
-                       EncoreIntro_CutsceneState_Unknown9,  EncoreIntro_CutsceneState_Unknown10,
-                       EncoreIntro_CutsceneState_Unknown11, EncoreIntro_CutsceneState_Unknown12,
-                       EncoreIntro_CutsceneState_Unknown13, EncoreIntro_CutsceneState_Unknown14,
-                       EncoreIntro_CutsceneState_Unknown15, EncoreIntro_CutsceneState_Unknown16,
-                       EncoreIntro_CutsceneState_Unknown17, EncoreIntro_CutsceneState_Unknown18,
-                       EncoreIntro_CutsceneState_Unknown19, EncoreIntro_CutsceneState_Unknown20,
-                       EncoreIntro_CutsceneState_Unknown21, EncoreIntro_CutsceneState_Unknown22,
-                       EncoreIntro_CutsceneState_Unknown23, EncoreIntro_CutsceneState_Unknown24,
-                       EncoreIntro_CutsceneState_Unknown21, NULL };
     RSDK_THIS(EncoreIntro);
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, EncoreIntro_Cutscene_SetupAIZEncore, EncoreIntro_Cutscene_PlayerAppear, EncoreIntro_Cutscene_RubyAppear,
+                              EncoreIntro_Cutscene_PortalClose, EncoreIntro_Cutscene_Empty, EncoreIntro_Cutscene_BeginAIZEncore,
+                              EncoreIntro_Cutscene_AIZEncore, EncoreIntro_Cutscene_CapsuleFound, EncoreIntro_Cutscene_BuddySelect,
+                              EncoreIntro_Cutscene_ViewEncoreTutorial, EncoreIntro_Cutscene_MysticGetRuby, EncoreIntro_Cutscene_MysticStealRuby,
+                              EncoreIntro_Cutscene_MysticEscape, EncoreIntro_Cutscene_AIZEncoreTutorial, EncoreIntro_Cutscene_CameraPanToHBHPile,
+                              EncoreIntro_Cutscene_MysticPassRuby, EncoreIntro_Cutscene_KingActivate, EncoreIntro_Cutscene_RubyActivated,
+                              EncoreIntro_Cutscene_RubyWarp, EncoreIntro_Cutscene_LoadGHZ, EncoreIntro_Cutscene_AwaitSaveFinish,
+                              EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
+                              EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
 }
 
 void EncoreIntro_SetupCutscenePart2(void)
@@ -162,31 +160,36 @@ void EncoreIntro_SetupCutscenePart2(void)
 
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
-    Zone->cameraBoundsR[0]     = size.x;
-    Zone->playerBoundsR[0]     = size.x << 16;
+    Zone->cameraBoundsR[0]      = size.x;
+    Zone->playerBoundsR[0]      = size.x << 16;
     Zone->playerBoundActiveR[0] = true;
-    Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-    Zone->playerBoundsL[0]     = Zone->cameraBoundsL[0] << 16;
+    Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+    Zone->playerBoundsL[0]      = Zone->cameraBoundsL[0] << 16;
     Zone->playerBoundActiveL[0] = true;
 
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     foreach_all(SchrodingersCapsule, capsule)
     {
         ruby->position.x = capsule->position.x;
-        ruby->state      = EncoreIntro_PhantomRuby_Unknown1;
+        ruby->state      = EncoreIntro_PhantomRuby_OscillateFX;
         ruby->startPos.y = capsule->position.y - 0x800000;
         ruby->position.y = capsule->position.y - 0x800000;
     }
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)EncoreIntro->fxRuby;
+
+    // ok idk HOW this is meant to be triggered
+    // I assume its via dying and hitting a StarPost
+    // big problem there: there aren't any!
+    // so there doesn't seem to be any way to get this to run normally
     if (SceneInfo->minutes || SceneInfo->seconds) {
-        host->stateID   = 21;
+        host->stateID  = 21; // EncoreIntro_Cutscene_FadeOutAndReset
         host->skipType = SKIPTYPE_DISABLED;
     }
     else {
@@ -212,13 +215,13 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
         else if (host->timer == 240) {
             fxRuby->delay = 32;
-            fxRuby->state    = FXRuby_State_IncreaseStageDeform;
+            fxRuby->state = FXRuby_State_IncreaseStageDeform;
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
             Camera_ShakeScreen(0, 4, 4);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.01);
             foreach_active(Animals, animal)
             {
-                animal->behaviour = 0;
+                animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
                 animal->active    = ACTIVE_NORMAL;
             }
         }
@@ -226,7 +229,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (host->timer < 360) {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->animator, false, 0);
             player1->position.x += (player1->position.x - player1->position.x) >> 3;
-            player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->storedValue2)) + ruby->position.y - player1->position.y) >> 3;
+            player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->storedTimer)) + ruby->position.y - player1->position.y) >> 3;
             player1->state = Player_State_None;
         }
         else {
@@ -239,7 +242,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_PlayerAppear(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -247,10 +250,10 @@ bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player->alpha += 2;
         if (player->alpha >= 0x100) {
             player->inkEffect = INK_NONE;
-            RSDK.Sin256(2 * (host->timer - host->storedValue2));
+            RSDK.Sin256(2 * (host->timer - host->storedTimer));
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-            player->state     = Player_State_Air;
-            player->up        = true;
+            player->state   = Player_State_Air;
+            player->up      = true;
             host->values[0] = 1;
             return true;
         }
@@ -259,7 +262,7 @@ bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_RubyAppear(EntityCutsceneSeq *host)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
@@ -274,7 +277,7 @@ bool32 EncoreIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_PortalClose(EntityCutsceneSeq *host)
 {
     EntityPhantomRuby *ruby  = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityRubyPortal *portal = (EntityRubyPortal *)EncoreIntro->rubyPortal;
@@ -283,7 +286,7 @@ bool32 EncoreIntro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         portal->alpha -= 4;
         if (portal->alpha <= 0) {
             destroyEntity(portal);
-            ruby->state = EncoreIntro_PhantomRuby_Unknown2;
+            ruby->state = EncoreIntro_PhantomRuby_EscapeRight;
             Music_FadeOut(0.012);
             host->skipType = SKIPTYPE_DISABLED;
             return true;
@@ -293,12 +296,12 @@ bool32 EncoreIntro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_Empty(EntityCutsceneSeq *host)
 {
     return true; // what the
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_BeginAIZEncore(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -309,13 +312,13 @@ bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_State_Initial;
-            titleCard->stateDraw = TitleCard_Draw_Default;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
         foreach_all(HUD, hud)
         {
             hud->vsStates[0] = HUD_State_ComeOnScreen;
-            hud->state                = hud->vsStates[0];
+            hud->state       = hud->vsStates[0];
         }
         Music_PlayTrack(TRACK_STAGE);
         EncoreIntro_SetupCutscenePart2();
@@ -325,7 +328,7 @@ bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_AIZEncore(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -333,8 +336,8 @@ bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
     if (player->position.x <= self->position.x + 0x2000000) {
-        Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
-        Zone->playerBoundsL[0]     = Zone->cameraBoundsL[0] << 16;
+        Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
+        Zone->playerBoundsL[0]      = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundActiveL[0] = true;
     }
     else {
@@ -352,36 +355,36 @@ bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_CapsuleFound(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     RSDK_THIS(EncoreIntro);
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
-    if (!self->field_88) {
+    if (!self->seenActClear) {
         if (actClear->objectID == ActClear->objectID)
-            self->field_88 = 1;
+            self->seenActClear = true;
     }
     else {
         player->velocity.x = 0;
         player->groundVel  = 0;
         if (actClear->objectID != ActClear->objectID) {
-            self->field_88 = false;
+            self->seenActClear = false;
             Music_TransitionTrack(TRACK_EGGMAN2, 0.05);
 
             StarPost->playerPositions[0] = player->position;
             StarPost->playerPositions[1] = player->position;
             player->state                = EncoreIntro_PlayerState_BuddySel;
             player->stateInput           = EncoreIntro_PlayerState_InputNone;
-            RSDK.SetSpriteAnimation(player->aniFrames, 0, &player->animator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, true, 0);
 
             EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
             buddy1->state        = Player_State_Ground;
-            RSDK.SetSpriteAnimation(buddy1->aniFrames, 0, &buddy1->animator, true, 0);
+            RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_IDLE, &buddy1->animator, true, 0);
 
             EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
             buddy2->state        = Player_State_Ground;
-            RSDK.SetSpriteAnimation(buddy2->aniFrames, 0, &buddy2->animator, true, 0);
+            RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_IDLE, &buddy2->animator, true, 0);
             return true;
         }
     }
@@ -389,7 +392,7 @@ bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown9(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -451,7 +454,7 @@ bool32 EncoreIntro_CutsceneState_Unknown9(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -459,7 +462,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
     RSDK_THIS(EncoreIntro);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     if (player->onGround) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, true, 0);
         player->velocity.x = 0;
@@ -520,7 +523,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
             mystic->drawOrder  = Zone->playerDrawHigh - 1;
             destroyEntity(otherBuddy);
 
-            RSDK.PlaySfx(EncoreIntro->sfxMysticPoof, 0, 255);
+            RSDK.PlaySfx(EncoreIntro->sfxMysticPoof, false, 0xFF);
             CREATE_ENTITY(Explosion, intToVoid(2), mystic->position.x, mystic->position.y)->drawOrder = Zone->playerDrawHigh - 1;
             Music_PlayTrack(TRACK_HBHMISCHIEF);
 
@@ -536,7 +539,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -572,30 +575,30 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
         if (host->timer > 24) {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
             if (player->animator.frameID == 5)
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
 
             RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->animator, false, 1);
             if (buddy->animator.frameID == 5)
-                buddy->animator.animationSpeed = 0;
+                buddy->animator.speed = 0;
         }
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->animator, false, 1);
         if (player->animator.frameID == 5)
-            player->animator.animationSpeed = 0;
+            player->animator.speed = 0;
 
         RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->animator, false, 1);
         if (buddy->animator.frameID == 5)
-            buddy->animator.animationSpeed = 0;
+            buddy->animator.speed = 0;
 
         if (mystic->position.y > ruby->startPos.y + 0x140000) {
             mystic->position.y += mystic->velocity.y;
             self->position.x = mystic->position.x;
             self->position.y = mystic->position.y;
-            HeavyMystic_Unknown2();
+            HeavyMystic_HandleParticleFX();
         }
         else {
             RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
@@ -606,7 +609,7 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_MysticStealRuby(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -619,7 +622,7 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
     buddy->direction  = ruby->position.x < buddy->position.x;
 
     if (host->timer == 33) {
-        RSDK.PlaySfx(EncoreIntro->sfxMysticTransform, 0, 255);
+        RSDK.PlaySfx(EncoreIntro->sfxMysticTransform, false, 255);
         ruby->state = StateMachine_None;
     }
     else if (host->timer >= 34) {
@@ -636,18 +639,18 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
             Zone->playerBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->cameraBoundsT[0] = 784;
             Zone->playerBoundsT[0] = 784;
-            mystic->direction       = FLIP_NONE;
+            mystic->direction      = FLIP_NONE;
             return true;
         }
     }
 
     self->position.x = mystic->position.x;
     self->position.y = mystic->position.y;
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_MysticEscape(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -682,12 +685,12 @@ bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host)
         mystic->position.x += mystic->velocity.x;
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_AIZEncoreTutorial(EntityCutsceneSeq *host)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -696,8 +699,8 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
     EntityCutsceneHBH *king = CutsceneHBH_GetEntity(HBH_KINGDAMAGED);
 
     if (player->position.x >= king->position.x - 0x2600000) {
-        self->position.x = player->position.x;
-        self->position.y = player->position.y;
+        self->position.x   = player->position.x;
+        self->position.y   = player->position.y;
         player->stateInput = StateMachine_None;
         if (player->onGround)
             player->state = Player_State_Ground;
@@ -706,11 +709,11 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
         player->right = true;
         if (player->velocity.x >= 0x20000)
             player->velocity.x = 0x20000;
-        self->velocity.x = player->velocity.x;
+        self->velocity.x  = player->velocity.x;
         camera->targetPtr = (Entity *)self;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
+            cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
             cutsceneSeq->skipCallback      = AIZEncoreTutorial_State_ReturnToCutscene;
         }
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
@@ -719,7 +722,7 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_CameraPanToHBHPile(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreIntro);
     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
@@ -778,24 +781,24 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
 
     self->position.y = mystic->position.y;
     if (self->position.x <= mystic->position.x) {
-        int32 storeX         = self->position.x;
-        int32 storeY         = self->position.y;
+        int32 storeX     = self->position.x;
+        int32 storeY     = self->position.y;
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
         self->position.x = storeX;
         self->position.y = storeY;
     }
     else {
         self->position.x = mystic->position.x;
         self->position.y = mystic->position.y;
-        HeavyMystic_Unknown2();
+        HeavyMystic_HandleParticleFX();
     }
 
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_MysticPassRuby(EntityCutsceneSeq *host)
 {
     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
     EntityCutsceneHBH *king   = CutsceneHBH_GetEntity(HBH_KINGDAMAGED);
@@ -810,48 +813,41 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
 
     switch (host->timer) {
         case 33:
-            RSDK.PlaySfx(EncoreIntro->sfxPon, 0, 255);
-            ruby->visible    = 1;
+            RSDK.PlaySfx(EncoreIntro->sfxPon, false, 0xFF);
+            ruby->visible    = true;
             ruby->position.x = mystic->position.x + 0x320000;
             ruby->position.y = mystic->position.y;
             ruby->velocity.x = 0;
             ruby->velocity.y = -0x40000;
-            ruby->state      = EncoreIntro_PhantomRuby_Unknown3;
+            ruby->state      = EncoreIntro_PhantomRuby_Fall;
             Music_TransitionTrack(TRACK_EGGMAN1, 0.025);
-            HeavyMystic_Unknown2();
             break;
-        case 40:
-            mystic->drawOrder = Zone->playerDrawLow;
-            HeavyMystic_Unknown2();
-            break;
+        case 40: mystic->drawOrder = Zone->playerDrawLow; break;
         case 75:
             RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
             player->up = false;
             buddy->up  = false;
-            HeavyMystic_Unknown2();
             break;
         default:
-            if (ruby->position.y < king->position.y + 0x60000) {
-                HeavyMystic_Unknown2();
-            }
-            else {
+            if (ruby->position.y >= king->position.y + 0x60000) {
                 ruby->position.y = king->position.y + 0x60000;
                 ruby->state      = StateMachine_None;
-                RSDK.PlaySfx(Player->sfxGrab, 0, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                 RSDK.SetSpriteAnimation(king->aniFrames, 3, &king->animator2, true, 0);
                 return true;
             }
             break;
     }
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_KingActivate(EntityCutsceneSeq *host)
 {
-    EntityCutsceneHBH *king   = CutsceneHBH_GetEntity(HBH_KINGDAMAGED);
-    EntityPhantomRuby *ruby   = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
-    EntityPlayer *player      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *buddy       = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+    EntityCutsceneHBH *king = CutsceneHBH_GetEntity(HBH_KINGDAMAGED);
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+    EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntityPlayer *buddy     = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     player->timer = 0;
     buddy->timer  = 0;
@@ -859,38 +855,30 @@ bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host)
         buddy->velocity.x = player->velocity.x;
 
     switch (host->timer) {
-        case 9:
-            ruby->drawOrder = Zone->drawOrderLow;
-            HeavyMystic_Unknown2();
-            break;
-        case 42:
-            RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->animator, true, 0);
-            HeavyMystic_Unknown2();
-            break;
+        case 9: ruby->drawOrder = Zone->drawOrderLow; break;
+        case 42: RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->animator, true, 0); break;
         case 58:
         case 66:
-        case 74:
-            RSDK.PlaySfx(EncoreIntro->sfxKingCharge, 0, 255);
-            HeavyMystic_Unknown2();
-            break;
+        case 74: RSDK.PlaySfx(EncoreIntro->sfxKingCharge, false, 0xFF); break;
         case 102: return true;
-        default: HeavyMystic_Unknown2(); break;
+        default: break;
     }
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown18(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_RubyActivated(EntityCutsceneSeq *host)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     if (!host->timer)
         PhantomRuby_SetupFlash(ruby);
     if (ruby->flashFinished)
         return true;
-    HeavyMystic_Unknown2();
+    HeavyMystic_HandleParticleFX();
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -904,7 +892,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
         fxRuby              = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder   = Zone->playerDrawHigh + 1;
         EncoreIntro->fxRuby = (Entity *)fxRuby;
-        PhantomRuby_PlaySFX(7);
+        PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         Camera_ShakeScreen(0, 4, 4);
         player->drawOrder = Zone->playerDrawHigh + 1;
         if (buddy->objectID == Player->objectID)
@@ -913,28 +901,28 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
 
     if (!host->values[0]) {
         if (fxRuby->fullyExpanded) {
-            if (host->storedValue2) {
-                if (host->timer == host->storedValue2 + 30) {
+            if (host->storedTimer) {
+                if (host->timer == host->storedTimer + 30) {
                     fxRuby->delay = 64;
-                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
+                    fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->storedValue2 + 210) {
+                else if (host->timer == host->storedTimer + 210) {
                     fxRuby->delay = 32;
-                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
+                    fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedValue2    = host->timer;
-                    host->values[0] = 1;
+                    host->storedTimer = host->timer;
+                    host->values[0]    = 1;
                 }
             }
             else {
-                host->storedValue2 = host->timer;
+                host->storedTimer = host->timer;
             }
 
-            if (host->timer >= host->storedValue2 + 32) {
+            if (host->timer >= host->storedTimer + 32) {
                 EntityPlayer *players[2];
                 players[0] = player;
                 players[1] = buddy;
@@ -947,7 +935,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
 
                     playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
                     playerPtr->position.y +=
-                        (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - playerPtr->position.y) >> 3;
+                        (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - playerPtr->position.y) >> 3;
                     playerPtr->tileCollisions = false;
                     playerPtr->velocity.x     = 0;
                     playerPtr->velocity.y     = 0;
@@ -955,44 +943,39 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
                 }
             }
         }
-        HeavyMystic_Unknown2();
     }
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer < host->storedValue2 + 150) {
-                    HeavyMystic_Unknown2();
-                }
-                else {
+                if (host->timer >= host->storedTimer + 150) {
                     return true;
                 }
             }
             else {
                 fxRuby->fadeBlack += 16;
-                HeavyMystic_Unknown2();
             }
         }
         else {
             fxRuby->fadeWhite += 16;
-            HeavyMystic_Unknown2();
         }
     }
+    HeavyMystic_HandleParticleFX();
 
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_LoadGHZ(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreIntro);
     Player->playerCount = 2;
     SaveGame_SavePlayerState();
-    SaveGame->saveRAM->saveState = 1; // save file is active
+    SaveGame->saveRAM->saveState = SAVEGAME_INPROGRESS; // save file is active
     RSDK.SetScene("Cutscenes", "Green Hill Zone");
-    EncoreIntro->field_28 = true;
+    EncoreIntro->awaitingSaveFinish = true;
     SaveGame_SaveFile(EncoreIntro_SaveGameCB);
-    if (EncoreIntro->field_28) {
-        UIWaitSpinner_Wait();
-        if (EncoreIntro->field_28)
+    if (EncoreIntro->awaitingSaveFinish) {
+        UIWaitSpinner_StartWait();
+        if (EncoreIntro->awaitingSaveFinish)
             return true;
     }
     RSDK.LoadScene();
@@ -1001,27 +984,27 @@ bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown21(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_AwaitSaveFinish(EntityCutsceneSeq *host)
 {
     RSDK_THIS(EncoreIntro);
-    if (!EncoreIntro->field_28) {
+    if (!EncoreIntro->awaitingSaveFinish) {
         RSDK.LoadScene();
         destroyEntity(self);
     }
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
 {
     EntityFXRuby *fxRuby = (EntityFXRuby *)EncoreIntro->fxRuby;
 
     if (fxRuby->fadeBlack >= 512) {
-        EntityPlayer *player         = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        EntityCamera *camera         = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        EntityPhantomRuby *ruby      = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
-        destroyEntity(RubyPortal);
+        EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+        EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+        destroyEntity(EncoreIntro->rubyPortal);
 
-        ruby->state     = EncoreIntro_PhantomRuby_Unknown2;
+        ruby->state     = EncoreIntro_PhantomRuby_EscapeRight;
         ruby->inkEffect = INK_NONE;
 
         player->inkEffect = INK_NONE;
@@ -1029,7 +1012,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
         player->state          = Player_State_Air;
         player->up             = true;
         player->camera         = NULL;
-        host->values[0]      = true;
+        host->values[0]        = true;
         player->stateInput     = Player_ProcessP1Input;
         player->tileCollisions = true;
         player->onGround       = true;
@@ -1050,26 +1033,26 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
             EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->objectID);
             titleCard->active          = ACTIVE_NORMAL;
             titleCard->state           = TitleCard_State_Initial;
-            titleCard->stateDraw       = TitleCard_Draw_Default;
+            titleCard->stateDraw       = TitleCard_Draw_SlideIn;
         }
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
-        Zone->playerBoundsR[0]     = size.x;
-        Zone->cameraBoundsR[0]     = size.x;
+        Zone->playerBoundsR[0]      = size.x;
+        Zone->cameraBoundsR[0]      = size.x;
         Zone->playerBoundActiveR[0] = true;
 
         foreach_all(HUD, hud)
         {
             hud->vsStates[0] = HUD_State_ComeOnScreen;
-            hud->state                = hud->vsStates[0];
+            hud->state       = hud->vsStates[0];
         }
 
         foreach_all(SchrodingersCapsule, capsule)
         {
             ruby->position.x = capsule->position.x;
             ruby->startPos.y = capsule->position.y - 0x800000;
-            ruby->state      = EncoreIntro_PhantomRuby_Unknown1;
+            ruby->state      = EncoreIntro_PhantomRuby_OscillateFX;
         }
 
         foreach_active(Animals, animal) { destroyEntity(animal); }
@@ -1081,12 +1064,12 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown23(EntityCutsceneSeq *host)
+bool32 EncoreIntro_Cutscene_FadeInAndStart(EntityCutsceneSeq *host)
 {
     EntityFXRuby *fxRuby = (EntityFXRuby *)EncoreIntro->fxRuby;
 
     if (fxRuby->fadeBlack <= 0) {
-        host->stateID = 6;
+        host->stateID = 6; // EncoreIntro_Cutscene_AIZEncore
         host->timer   = 0;
     }
     else {
@@ -1095,7 +1078,8 @@ bool32 EncoreIntro_CutsceneState_Unknown23(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host)
+// Called as skipCB when mystic shows up with the pile
+bool32 EncoreIntro_Cutscene_SkipAndFadeOut(EntityCutsceneSeq *host)
 {
     EntityFXRuby *fxRuby = (EntityFXRuby *)EncoreIntro->fxRuby;
 
@@ -1107,27 +1091,27 @@ bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host)
         return 0;
     }
     else if (host->timer >= 150) {
-        return EncoreIntro_CutsceneState_Unknown20(host);
+        return EncoreIntro_Cutscene_LoadGHZ(host);
     }
     return false;
 }
 
-void EncoreIntro_SaveGameCB(int32 status)
+void EncoreIntro_SaveGameCB(bool32 success)
 {
-    UIWaitSpinner_Wait2();
-    EncoreIntro->field_28 = 0;
+    UIWaitSpinner_FinishWait();
+    EncoreIntro->awaitingSaveFinish = false;
 }
 
-void EncoreIntro_PhantomRuby_Unknown1(void)
+void EncoreIntro_PhantomRuby_OscillateFX(void)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
-    EntityFXRuby *fxRuby      = (EntityFXRuby *)EncoreIntro->fxRuby;
-    ruby->angle += 2;
-    ruby->position.y = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
+    EntityFXRuby *fxRuby    = (EntityFXRuby *)EncoreIntro->fxRuby;
+
+    ruby->position.y   = BadnikHelpers_Oscillate(ruby->startPos.y, 2, 10);
     fxRuby->position.x = ruby->position.x;
     fxRuby->position.y = ruby->position.y;
 }
-void EncoreIntro_PhantomRuby_Unknown2(void)
+void EncoreIntro_PhantomRuby_EscapeRight(void)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
@@ -1137,14 +1121,14 @@ void EncoreIntro_PhantomRuby_Unknown2(void)
     ruby->position.x += ruby->velocity.x;
     ruby->position.y = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
 }
-void EncoreIntro_PhantomRuby_Unknown3(void)
+void EncoreIntro_PhantomRuby_Fall(void)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     ruby->position.x += ruby->velocity.x;
     ruby->position.y += ruby->velocity.y;
     ruby->velocity.y += 0x3800;
 }
-void EncoreIntro_PhantomRuby_Unknown4(void)
+void EncoreIntro_PhantomRuby_CapsuleRiseUp(void)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
@@ -1152,7 +1136,7 @@ void EncoreIntro_PhantomRuby_Unknown4(void)
     if (ruby->velocity.y <= -0x60000) {
         ruby->velocity.y = -ruby->velocity.y;
         ruby->velocity.x = 0;
-        ruby->state      = EncoreIntro_PhantomRuby_Unknown5;
+        ruby->state      = EncoreIntro_PhantomRuby_CapsuleFallDown;
     }
     else {
         ruby->position.y += ruby->velocity.y;
@@ -1160,7 +1144,7 @@ void EncoreIntro_PhantomRuby_Unknown4(void)
     }
     RSDK.SetChannelAttributes(Music->channelID, 1.0 - (((ruby->startPos.y - ruby->position.y) >> 16) / 120.0), 0.0, 1.0);
 }
-void EncoreIntro_PhantomRuby_Unknown5(void)
+void EncoreIntro_PhantomRuby_CapsuleFallDown(void)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
@@ -1168,7 +1152,7 @@ void EncoreIntro_PhantomRuby_Unknown5(void)
         if (ruby->velocity.y <= 0) {
             ruby->velocity.y = 0;
             ruby->active     = ACTIVE_BOUNDS;
-            ruby->state      = EncoreIntro_PhantomRuby_Unknown1;
+            ruby->state      = EncoreIntro_PhantomRuby_OscillateFX;
         }
         else {
             ruby->velocity.y -= 0x3800;
@@ -1197,16 +1181,16 @@ void EncoreIntro_PlayerState_HandleAir(void)
 void EncoreIntro_PlayerState_InputNone(void)
 {
     RSDK_THIS(Player);
-    ControllerInfo[1].keyX.down       = false;
-    ControllerInfo[1].keyX.press      = false;
-    ControllerInfo[1].keyY.down       = false;
-    ControllerInfo[1].keyY.press      = false;
-    ControllerInfo[1].keyZ.down       = false;
-    ControllerInfo[1].keyZ.press      = false;
-    ControllerInfo[1].keyStart.down   = false;
-    ControllerInfo[1].keyStart.press  = false;
-    ControllerInfo[1].keySelect.down  = false;
-    ControllerInfo[1].keySelect.press = false;
+    ControllerInfo[CONT_P1].keyX.down       = false;
+    ControllerInfo[CONT_P1].keyX.press      = false;
+    ControllerInfo[CONT_P1].keyY.down       = false;
+    ControllerInfo[CONT_P1].keyY.press      = false;
+    ControllerInfo[CONT_P1].keyZ.down       = false;
+    ControllerInfo[CONT_P1].keyZ.press      = false;
+    ControllerInfo[CONT_P1].keyStart.down   = false;
+    ControllerInfo[CONT_P1].keyStart.press  = false;
+    ControllerInfo[CONT_P1].keySelect.down  = false;
+    ControllerInfo[CONT_P1].keySelect.press = false;
     Player_ProcessP1Input();
     self->up        = false;
     self->down      = false;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: RisingLava Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectRisingLava *RisingLava;
@@ -75,7 +82,6 @@ void RisingLava_State_RiseShake(void)
 
 void RisingLava_State_StoppedRising(void)
 {
-    RSDK_THIS(RisingLava);
     TileLayer *move = RSDK.GetSceneLayer(Zone->moveLayer);
 
     foreach_active(Player, player)

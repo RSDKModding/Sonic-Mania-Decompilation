@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SpeedBooster Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSpeedBooster *SpeedBooster;
@@ -38,7 +45,7 @@ void SpeedBooster_Create(void *data)
         self->active = ACTIVE_NORMAL;
         self->drawFX = INK_ALPHA;
         RSDK.SetSpriteAnimation(SpeedBooster->animID, 1, &self->animator, true, 0);
-        self->state = SpeedBooster_SSZ_Bullet;
+        self->state = SpeedBooster_State_SSZBullet;
     }
     else {
         self->active = ACTIVE_BOUNDS;
@@ -46,7 +53,7 @@ void SpeedBooster_Create(void *data)
             self->speed = RSDK.CheckStageFolder("CPZ") ? 10 : 16;
         self->groundVel = self->speed << 16;
         RSDK.SetSpriteAnimation(SpeedBooster->animID, 0, &self->animator, true, 0);
-        self->state = SpeedBooster_State_Main;
+        self->state = SpeedBooster_State_SpeedBooster;
     }
 }
 
@@ -59,7 +66,7 @@ void SpeedBooster_StageLoad(void)
         SpeedBooster->hitbox.right  = 16;
         SpeedBooster->hitbox.bottom = 16;
         SpeedBooster->sfxID         = RSDK.GetSfx("Global/Spring.wav");
-        SpeedBooster->defaultState  = SpeedBooster_State_Main;
+        SpeedBooster->defaultState  = SpeedBooster_State_SpeedBooster;
     }
     else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
         SpeedBooster->animID =
@@ -86,7 +93,7 @@ void SpeedBooster_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void SpeedBooster_State_Main(void)
+void SpeedBooster_State_SpeedBooster(void)
 {
     RSDK_THIS(SpeedBooster);
     RSDK.ProcessAnimation(&self->animator);
@@ -96,22 +103,22 @@ void SpeedBooster_State_Main(void)
 void SpeedBooster_Interact(void)
 {
     RSDK_THIS(SpeedBooster);
+
     bool32 isSSZ = RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2");
     foreach_active(Player, player)
     {
-        int32 playerID   = RSDK.GetEntityID(player);
-        Hitbox *hitbox = &SpeedBooster->hitbox;
-        if (self->playerCooldown[playerID] || player->animator.animationID == ANI_HURT || !Player_CheckCollisionTouch(player, self, hitbox)
-            || !player->onGround) {
+        int32 playerID = RSDK.GetEntityID(player);
+        if (self->playerCooldown[playerID] || player->animator.animationID == ANI_HURT
+            || !Player_CheckCollisionTouch(player, self, &SpeedBooster->hitbox) || !player->onGround) {
             self->playerPos[playerID] = player->position.x;
         }
         else {
             self->velocity.x       = 2 * (player->position.x < self->position.x) - 1;
             self->state            = SpeedBooster->defaultState;
             self->animator.frameID = 0;
-            RSDK.PlaySfx(SpeedBooster->sfxID, 0, 255);
+            RSDK.PlaySfx(SpeedBooster->sfxID, false, 255);
             self->active = ACTIVE_NORMAL;
-            bool32 check   = isSSZ ? (self->playerPos[playerID] <= self->position.x) : (!self->direction);
+            bool32 check = isSSZ ? self->playerPos[playerID] <= self->position.x : !self->direction;
             if (check) {
                 if (player->groundVel < self->groundVel)
                     player->groundVel = self->groundVel;
@@ -123,9 +130,9 @@ void SpeedBooster_Interact(void)
                 player->direction = FLIP_X;
             }
             self->playerCooldown[playerID] = 30;
-            player->controlLock              = 16;
-            player->pushing                  = false;
-            player->tileCollisions           = true;
+            player->controlLock            = 16;
+            player->pushing                = false;
+            player->tileCollisions         = true;
             if (player->state != Player_State_Roll)
                 player->state = Player_State_Ground;
             self->playerPos[playerID] = player->position.x;
@@ -136,19 +143,19 @@ void SpeedBooster_Interact(void)
 void SpeedBooster_State_SSZFire(void)
 {
     RSDK_THIS(SpeedBooster);
-    self->velocity.x = 0x55550 * self->velocity.x;
-    self->drawPos.x  = self->position.x;
-    self->drawPos.y  = self->position.y;
-    EntitySpeedBooster *child = CREATE_ENTITY(SpeedBooster, intToVoid(1), self->position.x, self->position.y);
-    int32 newVel        = 0x10000;
-    child->velocity.y = -0x70000;
+    self->velocity.x          = 0x55550 * self->velocity.x;
+    self->drawPos.x           = self->position.x;
+    self->drawPos.y           = self->position.y;
+    EntitySpeedBooster *child = CREATE_ENTITY(SpeedBooster, intToVoid(true), self->position.x, self->position.y);
+    int32 newVel              = 0x10000;
+    child->velocity.y         = -0x70000;
     if (self->velocity.x > 0)
         newVel = -0x10000;
     child->velocity.x = newVel;
-    self->active    = ACTIVE_NORMAL;
-    self->cooldown  = 6;
+    self->active      = ACTIVE_NORMAL;
+    self->cooldown    = 6;
     self->drawPos.x -= self->velocity.x;
-    if (self->cooldown-- == 1) {
+    if (!--self->cooldown) {
         self->cooldown = 6;
         self->state    = SpeedBooster_State_SSZRetract;
     }
@@ -174,12 +181,12 @@ void SpeedBooster_State_SSZRetract(void)
     self->drawPos.x += self->velocity.x;
     if (!--self->cooldown) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = SpeedBooster_State_Main;
+        self->state  = SpeedBooster_State_SpeedBooster;
     }
     SpeedBooster_Interact();
 }
 
-void SpeedBooster_SSZ_Bullet(void)
+void SpeedBooster_State_SSZBullet(void)
 {
     RSDK_THIS(SpeedBooster);
     self->position.x += self->velocity.x;
@@ -198,12 +205,16 @@ void SpeedBooster_EditorDraw(void) { SpeedBooster_Draw(); }
 void SpeedBooster_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("CPZ")) {
-        SpeedBooster->animID        = RSDK.LoadSpriteAnimation("CPZ/SpeedBooster.bin", SCOPE_STAGE);
+        SpeedBooster->animID = RSDK.LoadSpriteAnimation("CPZ/SpeedBooster.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
         SpeedBooster->animID =
             RSDK.LoadSpriteAnimation((RSDK.CheckStageFolder("SSZ1") ? "SSZ1/SpeedBooster.bin" : "SSZ2/SpeedBooster.bin"), SCOPE_STAGE);
     }
+
+    RSDK_ACTIVE_VAR(Spiny, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 

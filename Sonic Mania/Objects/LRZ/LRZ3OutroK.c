@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZ3OutroK Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLRZ3OutroK *LRZ3OutroK;
@@ -53,19 +60,19 @@ void LRZ3OutroK_StartCutscene(void)
 {
     RSDK_THIS(MSZCutsceneK);
 
-    void *states[] = { LRZ3OutroK_CutsceneState_Unknown1, LRZ3OutroK_CutsceneState_Unknown2, LRZ3OutroK_CutsceneState_Unknown3,
-                       LRZ3OutroK_CutsceneState_Unknown4, NULL };
+    CutsceneSeq_StartSequence(self, LRZ3OutroK_Cutscene_RunToTeleporter, LRZ3OutroK_Cutscene_LandOnTeleporter, LRZ3OutroK_Cutscene_UseTeleporter,
+                              LRZ3OutroK_Cutscene_TeleporterActivated, StateMachine_None);
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
-
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->objectID)
         sequence->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ3OutroK);
     RSDK_GET_PLAYER(player1, player2, camera);
@@ -104,7 +111,7 @@ bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ3OutroK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -120,7 +127,7 @@ bool32 LRZ3OutroK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ3OutroK);
     EntitySkyTeleporter *teleporter = (EntitySkyTeleporter *)LRZ3OutroK->teleporter;
@@ -188,7 +195,7 @@ bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ3OutroK_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 LRZ3OutroK_Cutscene_TeleporterActivated(EntityCutsceneSeq *host)
 {
     if (host->timer >= 60) {
         if (host->timer == 60)

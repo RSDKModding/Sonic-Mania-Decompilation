@@ -5,17 +5,17 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectMainMenu {
     RSDK_OBJECT
-    Entity *menuControlPtr;
-    Entity *promptPtr;
-    Entity *dioramaPtr;
-} ObjectMainMenu;
+    EntityUIControl *menuControlPtr;
+    EntityUIButtonPrompt *promptPtr;
+    EntityUIDiorama *dioramaPtr;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMainMenu {
 	RSDK_ENTITY
-} EntityMainMenu;
+};
 
 // Object Struct
 extern ObjectMainMenu *MainMenu;
@@ -37,17 +37,17 @@ void MainMenu_Serialize(void);
 void MainMenu_Initialize(void);
 bool32 MainMenu_ReturnToTitleOption(void);
 void MainMenu_ExitGame(void);
-void MainMenu_ExitGameOption(void);
+void MainMenu_ExitButton_ActionCB(void);
 void MainMenu_StartExitGame(void);
-void MainMenu_ChangeMenu(void);
+void MainMenu_MenuButton_ActionCB(void);
 
 #if RETRO_USE_EGS
 int32 MainMenu_BuyPlusDialogCB(void)
 #endif
 
-void MainMenu_Unknown2(void);
-void MainMenu_Unknown3(void);
-void MainMenu_Unknown4(void);
+void MainMenu_HandleUnlocks(void);
+void MainMenu_SetupActions(void);
+void MainMenu_MenuSetupCB(void);
 #endif
 
 #endif //!OBJ_MAINMENU_H

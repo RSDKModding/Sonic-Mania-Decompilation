@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCollapsingSand {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxSandFall;
-} ObjectCollapsingSand;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCollapsingSand {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
@@ -26,7 +26,7 @@ typedef struct {
     int32 tileMaxX;
     int32 tileMaxY;
     Hitbox hitbox;
-} EntityCollapsingSand;
+};
 
 // Object Struct
 extern ObjectCollapsingSand *CollapsingSand;

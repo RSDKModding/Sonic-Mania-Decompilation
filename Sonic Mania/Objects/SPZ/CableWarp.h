@@ -11,18 +11,18 @@ typedef enum {
 }CableWarpTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCableWarp {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxPlug;
+    Hitbox hitboxTransport;
     uint16 aniFrames;
     uint16 sfxCharge;
     uint16 sfxPulse;
     uint16 sfxLedgeBreak;
-} ObjectCableWarp;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCableWarp {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -31,7 +31,7 @@ typedef struct {
     uint16 slotID;
     uint16 nextSlot;
     Animator animator;
-} EntityCableWarp;
+};
 
 // Object Struct
 extern ObjectCableWarp *CableWarp;
@@ -50,13 +50,13 @@ void CableWarp_EditorLoad(void);
 void CableWarp_Serialize(void);
 
 // Extra Entity Functions
-void CableWarp_State0_Unknown(void);
-void CableWarp_State1_Unknown(void);
+void CableWarp_State_CablePlug(void);
+void CableWarp_State_CheckPlayerEntry(void);
 
-void CableWarp_State3_Unknown1(void);
-void CableWarp_State3_Unknown2(void);
-void CableWarp_State3_Unknown3(void);
-void CableWarp_State3_Unknown4(void);
-void CableWarp_State3_Unknown5(void);
+void CableWarp_StateTransport_BeginEnter(void);
+void CableWarp_StateTransport_Enter(void);
+void CableWarp_StateTransport_MoveToNextNode(void);
+void CableWarp_StateTransport_EndNode(void);
+void CableWarp_StateTransport_Exit(void);
 
 #endif //!OBJ_CABLEWARP_H

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGrabber {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -12,25 +12,25 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxDestroy;
-} ObjectGrabber;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGrabber {
     RSDK_ENTITY
     StateMachine(state);
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator bodyAnimator;
+    Animator clampAnimator;
+    Animator wheelAnimator;
     Entity *grabbedPlayer;
-    uint16 field_A8;
+    uint16 struggleDelay;
     uint16 struggleTimer;
     uint16 struggleFlags;
-    uint16 timer;
+    uint16 explodeTimer;
     Vector2 startPos;
     uint8 startDir;
-    int32 field_BC;
-    int32 explodeTimer;
-} EntityGrabber;
+    int32 turnTimer;
+    int32 timer;
+};
 
 // Object Struct
 extern ObjectGrabber *Grabber;
@@ -57,13 +57,13 @@ void Grabber_CheckOnScreen(void);
 void Grabber_HandleExplode(void);
 
 void Grabber_State_Setup(void);
-void Grabber_State_Unknown5(void);
-void Grabber_State_Unknown2(void);
-void Grabber_State_Unknown6(void);
-void Grabber_State_Unknown3(void);
-void Grabber_State_Unknown4(void);
-void Grabber_State_Unknown7(void);
+void Grabber_State_CheckForGrab(void);
+void Grabber_State_GrabDelay(void);
+void Grabber_State_HandleTurn(void);
+void Grabber_State_TryToGrab(void);
+void Grabber_State_RiseUp(void);
+void Grabber_State_GrabbedPlayer(void);
 void Grabber_State_Struggle(void);
-void Grabber_State_Unknown9(void);
+void Grabber_State_PlayerEscaped(void);
 
 #endif //!OBJ_GRABBER_H

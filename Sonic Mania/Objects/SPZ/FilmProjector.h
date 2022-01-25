@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFilmProjector {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectFilmProjector;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFilmProjector {
     RSDK_ENTITY
     uint8 pathMovement;
     Vector2 posUnknown;
@@ -20,7 +20,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Animator animator6;
-} EntityFilmProjector;
+};
 
 // Object Struct
 extern ObjectFilmProjector *FilmProjector;

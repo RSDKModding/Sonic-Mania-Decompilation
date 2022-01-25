@@ -3,38 +3,42 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIVSCHARSELECTOR_1P,
+    UIVSCHARSELECTOR_2P,
+#if RETRO_USE_PLUS
+    UIVSCHARSELECTOR_3P,
+    UIVSCHARSELECTOR_4P,
+#endif
+} UIVsCharSelectorPlayerIDs;
+
 // Object Class
-typedef struct {
+struct ObjectUIVsCharSelector {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIVsCharSelector;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVsCharSelector {
 	MANIA_UI_ITEM_BASE
     uint8 playerID;
-    bool32 prevFlag;
+    bool32 prevSelected;
     int32 frameID;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
+    int32 triBounceVelocity;
+    int32 triBounceOffset;
+    int32 playerBounceVelocity;
+    int32 playerBounceOffset;
     bool32 ready;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    int32 field_130;
-    int32 field_134;
-    int32 field_138;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    uint16 textSpriteIndex;
+    Animator unusedAnimator;
+    Animator playerAnimator;
+    Animator shadowAnimator;
+    Animator playerNameAnimator;
+    Animator edgeAnimator;
+    Animator playerIDAnimator;
+    Animator waitingAnimator;
+    uint16 textFrames;
     int32 prevFrameID;
-} EntityUIVsCharSelector;
+};
 
 // Object Struct
 extern ObjectUIVsCharSelector *UIVsCharSelector;
@@ -54,17 +58,17 @@ void UIVsCharSelector_Serialize(void);
 
 // Extra Entity Functions
 void UIVsCharSelector_SetupText(void);
-void UIVsCharSelector_Unknown2(void);
-void UIVsCharSelector_Unknown3(void);
-void UIVsCharSelector_Unknown4(void);
+void UIVsCharSelector_DrawOutline(void);
+void UIVsCharSelector_DrawBG(void);
+void UIVsCharSelector_DrawPlayer(void);
 void UIVsCharSelector_ProcessButtonCB(void);
-void UIVsCharSelector_ProcessButtonCB_Alt(void);
-void UIVsCharSelector_Unknown7(void);
-void UIVsCharSelector_Unknown8(void);
-void UIVsCharSelector_Unknown9(void);
+void UIVsCharSelector_ProcessButtonCB_CharSelected(void);
+void UIVsCharSelector_State_ResetState(void);
+void UIVsCharSelector_State_CharSelect(void);
+void UIVsCharSelector_State_WaitingForPlayer(void);
 #if RETRO_USE_PLUS
-void UIVsCharSelector_Unknown10(void);
+void UIVsCharSelector_State_HandlePlayerJoin(void);
 #endif
-void UIVsCharSelector_Unknown11(void);
+void UIVsCharSelector_State_Selected(void);
 
 #endif //!OBJ_UIVSCHARSELECTOR_H

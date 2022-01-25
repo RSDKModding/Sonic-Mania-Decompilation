@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUILeaderboard {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUILeaderboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUILeaderboard {
     MANIA_UI_ITEM_BASE
-    int32 field_104;
+    int32 unused;
     LeaderboardEntry *leaderboardEntry;
     TextInfo text1[5];
     TextInfo rankText[5];
@@ -23,32 +23,32 @@ typedef struct {
     uint8 playerID;
     uint8 zoneID;
     uint8 actID;
-    int32 timer2;
-    uint8 editorFlip;
-    bool32 field_1CC;
+    int32 zoneIconSprX;
+    uint8 fuzzDir;
+    bool32 lostFocus;
     int32 entryOffset;
     int32 entryLength;
 #if !RETRO_USE_PLUS
     int32 entryIsUser;
     int32 taRecord;
 #endif
-    int32 field_1D8;
+    bool32 yPressCBEnabled;
     StateMachine(yPressCB);
-    TextInfo field_1E0;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
-    Animator animator8;
-    Animator animator9;
-    Animator animator10;
-    Animator animator11;
-    Animator animator12;
-    uint16 textSpriteIndex;
-} EntityUILeaderboard;
+    TextInfo zoneName;
+    Animator unusedAnimator1;
+    Animator unusedAnimator2;
+    Animator zoneIconAnimator;
+    Animator zoneNameAnimator;
+    Animator textAnimator;
+    Animator fuzzAnimator;
+    Animator playerAnimator;
+    Animator playerShadowAnimator;
+    Animator playerNameAnimator;
+    Animator actNumAnimator;
+    Animator taAnimator;
+    Animator timeAnimator;
+    uint16 textFrames;
+};
 
 // Object Struct
 extern ObjectUILeaderboard *UILeaderboard;
@@ -76,13 +76,13 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity);
 
 void UILeaderboard_DrawPrimitives(void);
 void UILeaderboard_DrawEntries(void);
-void UILeaderboard_Unknown3(void);
+void UILeaderboard_DrawZonePreview(void);
 void UILeaderboard_DrawTime(int32 mins, int32 secs, int32 millisecs, int32 x, int32 y);
 void UILeaderboard_DrawRank(int32 id);
 
-void UILeaderboard_State_Unknown1(void);
-void UILeaderboard_State_Unknown2(void);
-void UILeaderboard_State_Unknown3(void);
+void UILeaderboard_State_Setup(void);
+void UILeaderboard_State_Unselected(void);
+void UILeaderboard_State_Selected(void);
 
 void UILeaderboard_ProcessButtonCB(void);
 

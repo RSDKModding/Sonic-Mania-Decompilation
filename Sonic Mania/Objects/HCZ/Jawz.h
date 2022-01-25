@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectJawz {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectJawz;
+};
 
 // Entity Class
-typedef struct {
+struct EntityJawz {
     RSDK_ENTITY
     uint8 triggerDir;
     StateMachine(state);
     Vector2 startPos;
     Animator animator;
-} EntityJawz;
+};
 
 // Object Struct
 extern ObjectJawz *Jawz;

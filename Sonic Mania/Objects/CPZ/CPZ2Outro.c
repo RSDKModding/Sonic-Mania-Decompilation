@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CPZ2Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCPZ2Outro *CPZ2Outro;
@@ -6,7 +13,7 @@ void CPZ2Outro_Update(void)
 {
     RSDK_THIS(CPZ2Outro);
     if (!self->activated) {
-        CPZ2Outro_HandleCutsceneSeq();
+        CPZ2Outro_SetupCutscene();
         self->activated = true;
     }
 }
@@ -23,7 +30,7 @@ void CPZ2Outro_Create(void *data)
 
     INIT_ENTITY(self);
     CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
-    self->active        = ACTIVE_NEVER;
+    self->active = ACTIVE_NEVER;
 }
 
 void CPZ2Outro_StageLoad(void)
@@ -36,23 +43,21 @@ void CPZ2Outro_StageLoad(void)
     }
 }
 
-void CPZ2Outro_HandleCutsceneSeq(void)
+void CPZ2Outro_SetupCutscene(void)
 {
-    void *states[] = {
-        CPZ2Outro_CutsceneSeq, NULL
-    };
-
     RSDK_THIS(CPZ2Outro);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, CPZ2Outro_Cutscene_Outro, StateMachine_None);
+#if RETRO_USE_PLUS
     if (seq->objectID)
         seq->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-bool32 CPZ2Outro_CutsceneSeq(void *h)
+bool32 CPZ2Outro_Cutscene_Outro(void *h)
 {
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
 
@@ -68,8 +73,8 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
         Zone->cameraBoundsT[1]                              = 0;
         Zone->cameraBoundsR[0]                              = size.x;
         Zone->cameraBoundsR[1]                              = size.x;
-        Zone->playerBoundActiveR[0]                          = 0;
-        Zone->playerBoundActiveR[1]                          = 0;
+        Zone->playerBoundActiveR[0]                         = 0;
+        Zone->playerBoundActiveR[1]                         = 0;
         CutsceneSeq_LockAllPlayerControl();
         player1->stateInput = StateMachine_None;
         player1->state      = Player_State_Ground;
@@ -85,9 +90,9 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     if (player1->jumpPress)
         player1->jumpPress = false;
 
-    if (player1->onGround && player1->position.x >= host->cutsceneCurEntity->position.x && !host->values[0]) {
+    if (player1->onGround && player1->position.x >= host->activeEntity->position.x && !host->values[0]) {
         player1->jumpPress = true;
-        host->values[0]  = 1;
+        host->values[0]    = 1;
     }
 
     if (player1->position.x > size.x << 16) {
@@ -97,6 +102,7 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(CPZ2Outro);
@@ -104,5 +110,6 @@ void CPZ2Outro_EditorDraw(void)
 }
 
 void CPZ2Outro_EditorLoad(void) {}
+#endif
 
 void CPZ2Outro_Serialize(void) { RSDK_EDITABLE_VAR(CPZ2Outro, VAR_VECTOR2, size); }

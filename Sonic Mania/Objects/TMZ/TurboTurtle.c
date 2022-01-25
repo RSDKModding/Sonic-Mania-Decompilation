@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TurboTurtle Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTurboTurtle *TurboTurtle;
@@ -8,9 +15,9 @@ void TurboTurtle_Update(void)
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.animationID == 1) {
-        if (!self->animator.frameID && self->animator.animationTimer == 1)
+        if (!self->animator.frameID && self->animator.timer == 1)
             RSDK.PlaySfx(TurboTurtle->sfxWalk, false, 255);
-        if (self->animator.frameID == 5 && self->animator.animationTimer == 1)
+        if (self->animator.frameID == 5 && self->animator.timer == 1)
             RSDK.PlaySfx(TurboTurtle->sfxWalk2, false, 255);
     }
 
@@ -231,7 +238,7 @@ void TurboTurtle_HandleFans(void)
                     if (player->position.x < right)
                         right = player->position.x;
                     int pos = self->position.x + (self->hitbox2.left << 16);
-                    player->position.x += (strength * (((length << 16) - right + (pos != 0) ? (length << 16) - right + pos : 0) / length)) >> 1;
+                    player->position.x += (strength * (((length << 16) - right + ((pos != 0) ? (length << 16) - right + pos : 0)) / length)) >> 1;
                 }
             }
         }
@@ -328,7 +335,7 @@ void TurboTurtle_State_Unknown1(void)
         TurboTurtle_SetupState();
     }
     else if (self->animator.frameID == self->animator.frameCount - 1) {
-        if (self->animator.animationTimer == self->animator.frameDelay) {
+        if (self->animator.timer == self->animator.frameDuration) {
             if (self->stepTimer < self->stepCount) {
                 self->stepTimer++;
             }

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BarStool Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBarStool *BarStool;
@@ -60,7 +67,7 @@ void BarStool_Update(void)
                     player->animator.frameID = 11 - frame;
                 else
                     player->animator.frameID = frame;
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
                 player->position.x += self->position.x;
 
                 if (self->playerVal2[playerID] <= 0)

@@ -5,12 +5,12 @@
 
 
 // Object Class
-typedef struct {
+struct ObjectUIButton {
 	RSDK_OBJECT
-} ObjectUIButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIButton {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 listID;
@@ -24,21 +24,21 @@ typedef struct {
     bool32 transition;
     bool32 stopMusic;
     bool32 isDisabled;
-    int32 dword138;
-    int32 field_13C;
-    int32 field_140;
-    int32 field_144;
-    int32 field_148;
-    int32 dword14C;
-    int32 field_150;
-    Vector2 posUnknown;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
+    bool32 clearParentState;
+    Vector2 firstChoicePos;
     int32 selection;
     void (*choiceChangeCB)(void);
     Animator animator;
-    uint16 textSpriteIndex;
+    uint16 textFrames;
     int32 startListID;
     int32 startFrameID;
-} EntityUIButton;
+};
 
 // Object Struct
 extern ObjectUIButton *UIButton;
@@ -61,19 +61,19 @@ void UIButton_ManageChoices(EntityUIButton *button);
 EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 a2);
 void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 a2);
 void UIButton_SetChoiceSelection(EntityUIButton *button, int32 a2);
-void *UIButton_GetOptions2(void);
-void UIButton_Fail(void);
-void UIButton_Unknown6(void);
-bool32 UIButton_TouchCB_Alt(void);
-bool32 UIButton_ProcessTouch(void);
-void UIButton_ProcessButtonInputs(void);
-bool32 UIButton_Unknown10(void);
-bool32 UIButton_Unknown11(void);
-void UIButton_Unknown12(void);
-void UIButton_Unknown13(void);
-void UIButton_Unknown15(void);
-void UIButton_Unknown16(void);
-void UIButton_Unknown17(void);
-void UIButton_Unknown18(void);
+void *UIButton_GetActionCB(void);
+void UIButton_FailCB(void);
+void UIButton_ProcessButtonCB_Scroll(void);
+bool32 UIButton_ProcessTouchCB_Multi(void);
+bool32 UIButton_ProcessTouchCB_Single(void);
+void UIButton_ProcessButtonCB(void);
+bool32 UIButton_CheckButtonEnterCB(void);
+bool32 UIButton_CheckSelectedCB(void);
+void UIButton_ButtonEnterCB(void);
+void UIButton_ButtonLeaveCB(void);
+void UIButton_SelectedCB(void);
+void UIButton_State_HandleButtonLeave(void);
+void UIButton_State_HandleButtonEnter(void);
+void UIButton_State_Selected(void);
 
 #endif //!OBJ_UIBUTTON_H

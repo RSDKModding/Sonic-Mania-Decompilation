@@ -46,7 +46,7 @@
 //90% sure this is "DialogRunner" in plus/1.05
 #if !RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectAPICallback {
     RSDK_OBJECT
     int32(*LaunchManual)(void);
     int32 (*ExitGame)(void);
@@ -84,9 +84,9 @@ typedef struct {
     bool32 authForbiddenFlag;
     bool32 signoutFlag;
     int32 prevLeaderboardEntry;
-    int32 unknown2;
+    int32 unused;
     int32 isAutoSaving;
-    int32 unknown;
+    int32 statusTimer;
     int32 leaderboardsStatus;
     int32 leaderboardEntryCount;
     int32 rankScore;
@@ -99,10 +99,10 @@ typedef struct {
     int32 authStatus;
     int32 storageStatus;
     bool32 achievementsDisabled;
-} ObjectAPICallback;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAPICallback {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -111,12 +111,12 @@ typedef struct {
     void *fileBuffer;
     uint32 fileSize;
     void(*fileCallback)(int32);
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
+    int32 unused1;
+    int32 unused2;
+    int32 inputID;
+    int32 unused3;
     int32 status;
-} EntityAPICallback;
+};
 
 // Object Struct
 extern ObjectAPICallback *APICallback;
@@ -167,9 +167,10 @@ int32 APICallback_ControllerIDForInputID(int32 id);
 int32 APICallback_MostRecentActiveControllerID(int32 id);
 void APICallback_AssignControllerID(int32 controllerID, int32 id);
 void APICallback_ResetControllerAssignments(void);
-void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 score, int32 rings, int32 time);
+void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time, int32 rings, int32 score);
 void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time);
 void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int32 entityX, int32 entityY);
+void APICallback_TrackGameProgress(float percent);
 void APICallback_TryAuth_No(void);
 void APICallback_TryAuth_Yes(void);
 void APICallback_TryAuth_CB(void);
@@ -180,7 +181,7 @@ void APICallback_ClearAchievements(void);
 void APICallback_UnlockAchievement(const char *name);
 void APICallback_CheckUserAuth_OK(void);
 void APICallback_CheckUserAuth_CB(void);
-void APICallback_Wait(int32 success);
+void APICallback_TrackGameProgressCB(bool32 success);
 void APICallback_GetNextNotif(void);
 void APICallback_ManageNotifs(void);
 bool32 APICallback_CheckUnreadNotifs(void);

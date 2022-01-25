@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Bumper {
     RSDK_OBJECT
     Animator unusedAnimator1;
     Hitbox hitbox;
@@ -13,10 +13,10 @@ typedef struct {
     uint16 modelFrames;
     uint16 sceneIndex;
     uint16 sfxBumper;
-} ObjectPBL_Bumper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Bumper {
     RSDK_ENTITY
     StateMachine(state);
     int32 height;
@@ -28,7 +28,7 @@ typedef struct {
     Matrix matWorld;
     Matrix matNormal;
     Animator animator;
-} EntityPBL_Bumper;
+};
 
 // Object Struct
 extern ObjectPBL_Bumper *PBL_Bumper;

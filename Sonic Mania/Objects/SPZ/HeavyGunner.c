@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: HeavyGunner Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHeavyGunner *HeavyGunner;
@@ -195,8 +202,6 @@ bool32 HeavyGunner_BurnCheckCB(void)
 
 void HeavyGunner_HandleBGWrap(int multiplier)
 {
-    RSDK_THIS(HeavyGunner);
-
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
     for (int s = 0; s < bg1->scrollInfoCount; ++s) {
         bg1->scrollInfo[s].scrollPos += multiplier * bg1->scrollInfo[s].parallaxFactor;
@@ -223,7 +228,7 @@ void HeavyGunner_Unknown5(void)
             if (gunner->type == HEAVYGUNNER_MISSILE_F || gunner->type == HEAVYGUNNER_MISSILE) {
                 RSDK.PlaySfx(HeavyGunner->sfxFlip, false, 255);
                 gunner->velocity.x = -0x10000;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &gunner->animator11, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &gunner->animator11, true, 0);
                 gunner->direction = FLIP_NONE;
                 gunner->rotation  = 256;
                 gunner->state     = HeavyGunner_State6_Unknown5;
@@ -857,7 +862,7 @@ void HeavyGunner_State6_Unknown4(void)
                 }
 #endif
                 self->velocity.x = -0x10000;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator11, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->animator11, true, 0);
                 self->direction = FLIP_NONE;
                 self->rotation  = 256;
                 self->state     = HeavyGunner_State6_Unknown5;
@@ -1179,7 +1184,7 @@ void HeavyGunner_State6_Unknown8(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 12, &parent->animator3, true, 1);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 12, &parent->animator4, true, 2);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 12, &parent->animator6, true, 3);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &parent->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &parent->animator2, true, 0);
         --parent->field_7C;
         parent->state               = HeavyGunner_State2_Unknown8;
         SceneInfo->timeEnabled = false;
@@ -1397,7 +1402,7 @@ void HeavyGunner_State2_Unknown7(void)
 
     if (!self->timer) {
         self->timer = 1;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator9, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator9, true, 0);
         CREATE_ENTITY(HeavyGunner, intToVoid(HEAVYGUNNER_ESCAPE_HBH), self->position.x - 0x80000, self->position.y - 0x20000);
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x - 0x300000, self->position.y - 0x240000);
@@ -1460,8 +1465,8 @@ void HeavyGunner_State2_Unknown8(void)
         debris->velocity.x = Zone->autoScrollSpeed + 0x10000;
         debris->gravity    = 0x3800;
         debris->drawOrder  = Zone->drawOrderLow - 1;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator7, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator8, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator7, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator8, true, 0);
         self->state = HeavyGunner_State2_Unknown9;
     }
 }

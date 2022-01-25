@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCutsceneRules {
 	RSDK_OBJECT
-} ObjectCutsceneRules;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCutsceneRules {
     MANIA_CUTSCENE_BASE
-} EntityCutsceneRules;
+};
 
 // Object Entity
 extern ObjectCutsceneRules *CutsceneRules;

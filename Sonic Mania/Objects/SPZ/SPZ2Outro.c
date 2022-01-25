@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SPZ2Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSPZ2Outro *SPZ2Outro;
@@ -48,17 +55,18 @@ void SPZ2Outro_StageLoad(void)
 void SPZ2Outro_StartCutscene(void)
 {
     RSDK_THIS(SPZ2Outro);
-    void *states[] = { SPZ2Outro_CutsceneState_Unknown1, SPZ2Outro_CutsceneState_Unknown2, SPZ2Outro_CutsceneState_Unknown3,
-                       SPZ2Outro_CutsceneState_Unknown4, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, SPZ2Outro_Cutscene_SetupFBZTV, SPZ2Outro_Cutscene_ExitStageRight, SPZ2Outro_Cutscene_AsSeenOnTV,
+                              SPZ2Outro_Cutscene_FBZFlyAway, StateMachine_None);
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     EntityTVFlyingBattery *tvFlyingBattery = (EntityTVFlyingBattery *)SPZ2Outro->tvFlyingBattery;
@@ -141,7 +149,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -184,7 +192,8 @@ void SPZ2Outro_DrawLayerCB(void)
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
 }
 
-bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+// State where they are on da TV and jump onto FBZ
+bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -200,7 +209,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->nextGroundState = StateMachine_None;
         player1->position.x      = weatherTV->position.x - 0x700000;
         player1->position.y      = weatherTV->position.y + 0x140000;
-        host->storedValue2           = player1->position.y;
+        host->storedTimer           = player1->position.y;
         player1->onGround        = false;
         player1->right           = false;
         player1->velocity.x      = 0x10000;
@@ -264,7 +273,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return flag != false;
 }
 
-bool32 SPZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);

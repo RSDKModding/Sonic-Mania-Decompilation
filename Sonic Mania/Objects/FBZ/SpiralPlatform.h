@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpiralPlatform {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectSpiralPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpiralPlatform {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -37,8 +37,9 @@ typedef struct {
     int32 childCount;
     Vector2 tileSize;
     uint16 tiles[0x100];
+
     int32 fallY;
-} EntitySpiralPlatform;
+};
 
 // Object Struct
 extern ObjectSpiralPlatform *SpiralPlatform;
@@ -57,6 +58,6 @@ void SpiralPlatform_EditorLoad(void);
 void SpiralPlatform_Serialize(void);
 
 // Extra Entity Functions
-void SpiralPlatform_Unknown1(void);
+void SpiralPlatform_State_Move(void);
 
 #endif //! OBJ_SPIRALPLATFORM_H

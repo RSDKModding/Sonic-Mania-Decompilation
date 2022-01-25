@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TilePlatform Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTilePlatform *TilePlatform;
@@ -74,7 +81,7 @@ void TilePlatform_EditorLoad(void) {
     RSDK_ENUM_VAR("Swinging", PLATFORM_SWINGING);
     RSDK_ENUM_VAR("Controlled", PLATFORM_CONTROLLED);
     RSDK_ENUM_VAR("Pushable", PLATFORM_PUSHABLE);
-    RSDK_ENUM_VAR("Moving (Static)", PLATFORM_MOVING_STATIC);
+    RSDK_ENUM_VAR("Moving (Static)", PLATFORM_TRACK);
     RSDK_ENUM_VAR("Wait for Player", PLATFORM_WAIT);
     RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_WAIT_OSC);
     RSDK_ENUM_VAR("Activate when Above", PLATFORM_ACTIVEABOVE);

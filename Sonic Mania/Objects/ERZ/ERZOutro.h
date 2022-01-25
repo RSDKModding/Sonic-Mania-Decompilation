@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZOutro {
     RSDK_OBJECT
     int32 field_4;
     int32 field_8;
@@ -18,12 +18,12 @@ typedef struct {
     int32 field_28;
     int32 field_2C;
     bool32 savedGame;
-} ObjectERZOutro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZOutro {
     MANIA_CUTSCENE_BASE
-} EntityERZOutro;
+};
 
 // Object Struct
 extern ObjectERZOutro *ERZOutro;
@@ -45,14 +45,14 @@ void ERZOutro_Serialize(void);
 void ERZOutro_SetEmeraldStates(void);
 void ERZOutro_HandleRubyHover(void);
 
-bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_LoseEmeralds(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_OpenPortal(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_FadeOut(EntityCutsceneSeq *host);
-bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_AttackEggman(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_LoseEmeralds(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_EnterPortal(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_FadeOut(EntityCutsceneSeq *host);
+bool32 ERZOutro_Cutscene_ShowEnding(EntityCutsceneSeq *host);
 
-void ERZOutro_SaveFileCB(int32 status);
+void ERZOutro_SaveFileCB(bool32 success);
 
 #endif //!OBJ_ERZOUTRO_H

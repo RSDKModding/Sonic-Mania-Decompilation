@@ -14,7 +14,7 @@ typedef enum {
 }WeatherMobileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectWeatherMobile {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0,
                             0x28000, -0x20000, 4, 0,        -0x10000, -0x10000, 5, 0,        0x10000,  -0x10000, 6, 0,       -0x8000,  -0x10000 });
@@ -37,10 +37,10 @@ typedef struct {
     bool32 playingRainSfx;
     uint16 aniFrames;
     uint16 eggmanFrames;
-} ObjectWeatherMobile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWeatherMobile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -60,7 +60,7 @@ typedef struct {
     Animator animator6;
     Animator animator7;
     Hitbox hitbox;
-} EntityWeatherMobile;
+};
 
 // Object Struct
 extern ObjectWeatherMobile *WeatherMobile;

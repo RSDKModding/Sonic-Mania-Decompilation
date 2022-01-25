@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSZCutsceneK {
     RSDK_OBJECT
     int32 field_4;
     uint16 playerFrames;
@@ -15,12 +15,12 @@ typedef struct {
     Vector2 pos3;
     Entity *tornado;
     Entity *mystic;
-} ObjectMSZCutsceneK;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZCutsceneK {
 	MANIA_CUTSCENE_BASE
-} EntityMSZCutsceneK;
+};
 
 // Object Struct
 extern ObjectMSZCutsceneK *MSZCutsceneK;
@@ -39,11 +39,13 @@ void MSZCutsceneK_EditorLoad(void);
 void MSZCutsceneK_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void MSZCutsceneK_SkipCB(void);
+#endif
 void MSZCutsceneK_StartCutscene(void);
 void MSZCutsceneK_SetupP2(int posX, int posY);
 
-bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host);
+bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZCUTSCENEK_H

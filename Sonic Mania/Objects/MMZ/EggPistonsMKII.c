@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: EggPistonsMKII Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectEggPistonsMKII *EggPistonsMKII;
@@ -144,7 +151,7 @@ void EggPistonsMKII_CheckPlayerCollisions_Piston(void)
             player->position.y &= 0xFFFF0000;
         }
         else if (side == C_BOTTOM && player->onGround)
-            player->hurtFlag = 1;
+            player->deathType = PLAYER_DEATH_DIE_USESFX;
     }
 
     self->position.y += self->velocity.y;
@@ -207,7 +214,7 @@ void EggPistonsMKII_HandlePlayerCollisions(void)
     {
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_BOTTOM) {
             if (player->onGround)
-                player->hurtFlag = 1;
+                player->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
 }
@@ -266,7 +273,7 @@ bool32 EggPistonsMKII_CheckPlayerAttacking(void *p)
             player->groundVel  = -0x30000;
         }
         if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
-            RSDK.SetSpriteAnimation(Player->knuxSpriteIndex, ANI_FLYTIRED, &player->animator, true, 0);
+            RSDK.SetSpriteAnimation(Player->knuxFrames, ANI_FLYTIRED, &player->animator, true, 0);
             player->state = Player_State_KnuxGlideDrop;
         }
         return true;
@@ -363,7 +370,7 @@ void EggPistonsMKII_State_PistonReveal(void)
             if (platform->objectID == CollapsingPlatform->objectID) {
                 platform->active        = ACTIVE_NORMAL;
                 platform->collapseDelay = 8;
-                platform->playerPos.x   = self->position.x;
+                platform->stoodPos.x    = self->position.x;
             }
         }
 
@@ -400,7 +407,7 @@ void EggPistonsMKII_State_ClassicMode(void)
             EggPistonsMKII_GetNextPiston();
             EggPistonsMKII_GetNextPiston()->parent = (Entity *)self;
             RSDK.SetSpriteAnimation(EggPistonsMKII->eggmanFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
             self->timer = 165;
             RSDK.PlaySfx(EggPistonsMKII->sfxWall, false, 255);
         }
@@ -445,7 +452,7 @@ void EggPistonsMKII_State_PinchMode(void)
         if (!self->pistonID) {
             piston->parent = (Entity *)self;
             RSDK.SetSpriteAnimation(EggPistonsMKII->eggmanFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         }
         self->pistonID = (self->pistonID + 1) & 3;
         RSDK.PlaySfx(EggPistonsMKII->sfxWall, false, 255);
@@ -691,7 +698,7 @@ void EggPistonsMKII_StateOrb_Unknown2(void)
         self->timer      = 133;
         RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 3, &self->animator2, true, 0);
         self->state = EggPistonsMKII_StateOrb_Unknown3;
-        self->animator1.animationSpeed *= 2;
+        self->animator1.speed *= 2;
     }
     RSDK.ProcessAnimation(&self->animator1);
 }
@@ -744,7 +751,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
             destroyEntity(barrier);
         }
 
-        Zone->cameraBoundsR[0] += 424;
+        Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
         Zone->playerBoundActiveR[0] = false;
         destroyEntity(self);
     }
@@ -801,7 +808,7 @@ void EggPistonsMKII_EditorDraw(void)
         case EGGPISTON_EMITTER: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 1, &self->animator1, true, 0); break;
         case EGGPISTON_BARRIER: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 5, &self->animator1, true, 0); break;
         case EGGPISTON_PLASMABALL: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 2, &self->animator1, true, 0); break;
-        case EGGPISTON_ALARM: RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, true, 0); break;
+        case EGGPISTON_ALARM: RSDK.SetSpriteAnimation(-1, 0, &self->animator1, true, 0); break;
         default: break;
     }
 

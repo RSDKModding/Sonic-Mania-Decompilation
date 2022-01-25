@@ -4,8 +4,184 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
-// Object Class
+
+typedef enum {
+    UIDIORAMA_MANIAMODE,
+    UIDIORAMA_PLUSUPSELL,
+    UIDIORAMA_ENCOREMODE,
+    UIDIORAMA_TIMEATTACK,
+    UIDIORAMA_COMPETITION,
+    UIDIORAMA_OPTIONS,
+    UIDIORAMA_EXTRAS,
+    UIDIORAMA_EXIT,
+} UIDioramaIDs;
+
+typedef enum {
+    UIDIORAMA_ALT_RUN,
+    UIDIORAMA_ALT_JOG,
+    UIDIORAMA_ALT_LOOP,
+} UIDioramaAlts;
+
+//=======================
+// STATE-STRUCTS BEGIN
+//=======================
+
 typedef struct {
+    int32 scrollPos;
+    int32 clouds1ScrollPos;
+    int32 clouds2ScrollPos;
+    int32 clouds3ScrollPos;
+    int32 valuesPadding[12];
+
+    Vector2 playerPos;
+    Vector2 vectorsPadding[15];
+
+    Animator terrainAnimator;
+    Animator clouds1Animator;
+    Animator clouds2Animator;
+    Animator clouds3Animator;
+    Animator mountainsAnimator;
+    Animator backgroundAnimator;
+    Animator sonicAnimator;
+    Animator tailsAnimator;
+    Animator animatorsPadding[8];
+} UIDiorama_StateInfo_ManiaMode;
+
+typedef struct {
+    bool32 showFlash;
+    int32 flashAlpha;
+    int32 unused;
+    int32 delay;
+    int32 lineCount;
+    int32 linePos[4];
+    int32 valuesPadding[7];
+
+    Vector2 plusPos;
+    Vector2 plusVelocity;
+    Vector2 vectorsPadding[14];
+
+    Animator dioramaAnimator;
+    Animator flashAnimator;
+    Animator logoAnimator;
+    Animator plusAnimator;
+    Animator arrowAnimator;
+    Animator lightningAnimator;
+    Animator textAnimator;
+    Animator animatorsPadding[9];
+} UIDiorama_StateInfo_PlusUpsell;
+
+typedef struct {
+    int32 valuesPadding[16];
+
+    Vector2 vectorsPadding[16];
+
+    Animator dioramaAnimator;
+    Animator capsuleAnimator;
+    Animator buttonAnimator;
+    Animator glassAnimator;
+    Animator mightyAnimator;
+    Animator rayAnimator;
+    Animator animatorsPadding[10];
+} UIDiorama_StateInfo_EncoreMode;
+
+typedef struct {
+    int32 valuesPadding[16];
+
+    Vector2 vectorsPadding[16];
+
+    Animator dioramaAnimator;
+    Animator sonicAnimator;
+    Animator ringAnimator;
+    Animator gateBaseAnimator;
+    Animator gateTopAnimator;
+    Animator gateFinsAnimator;
+    Animator animatorsPadding[10];
+} UIDiorama_StateInfo_TimeAttack;
+
+typedef struct {
+    int32 tailsAngle;
+    int32 rayAngle;
+    int32 scrollPos[9];
+    int32 valuesPadding[5];
+
+    Vector2 terrainPos;
+    Vector2 platformPos;
+    Vector2 tailsPos;
+    Vector2 knuxPos;
+    Vector2 rayPos;
+    Vector2 mightyPos;
+    Vector2 vectorsPadding[10];
+
+    Animator dioramaAnimator;
+    Animator platformAnimator;
+    Animator ringAnimator;
+    Animator tailsAnimator;
+    Animator knuxAnimator;
+    Animator rayAnimator;
+    Animator mightyAnimator;
+    Animator animatorsPadding[9];
+} UIDiorama_StateInfo_Competition;
+
+typedef struct {
+    int32 itemAlpha;
+    int32 contAlpha;
+    int32 audioAlpha;
+    int32 itemAngle;
+    int32 contAngle;
+    int32 audioAngle;
+    int32 valuesPadding[10];
+
+    Vector2 itemPos;
+    Vector2 contPos;
+    Vector2 audioPos;
+    Vector2 itemOffset;
+    Vector2 contOffset;
+    Vector2 audioOffset;
+    Vector2 vectorsPadding[10];
+
+    Animator dioramaAnimator;
+    Animator sonicAnimator;
+    Animator tailsAnimator;
+    Animator knuxAnimator;
+    Animator itemConstellationAnimator;
+    Animator contConstellationAnimator;
+    Animator audioConstellationAnimator;
+    Animator animatorsPadding[9];
+} UIDiorama_StateInfo_Options;
+
+typedef struct {
+    int32 valuesPadding[16];
+
+    Vector2 vectorsPadding[16];
+
+    Animator dioramaAnimator;
+    Animator medalAnimator;
+    Animator sonicAnimator;
+    Animator animatorsPadding[13];
+} UIDiorama_StateInfo_Extras;
+
+typedef struct {
+    int32 animDelay;
+    bool32 processVelocity;
+    bool32 isOffScreen;
+    int32 valuesPadding[13];
+
+    Vector2 sonicPos;
+    Vector2 sonicVelocity;
+    Vector2 vectorsPadding[14];
+
+    Animator dioramaAnimator;
+    Animator sonicAnimator;
+    Animator animatorsPadding[14];
+} UIDiorama_StateInfo_Exit;
+
+//=======================
+// STATE-STRUCTS END
+//=======================
+
+
+// Object Class
+struct ObjectUIDiorama {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 capsuleFrames;
@@ -20,147 +196,29 @@ typedef struct {
     uint16 bssSonicFrames;
     uint16 bssFrames;
     uint8 dioramaAlt;
-} ObjectUIDiorama;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIDiorama {
     RSDK_ENTITY
     int32 dioramaID;
-    int32 dioramaSubID;
+    int32 lastDioramaID;
     int32 timer;
-    uint8 field_64;
-    bool32 flag;
+    uint8 parentActivity;
+    bool32 needsSetup;
     StateMachine(state);
     StateMachine(stateDraw);
-    Entity *parent;
+    EntityUIControl *parent;
     int32 maskColour;
     Vector2 dioramaPos;
     Vector2 dioramaSize;
-    Animator animator1;
-    Animator animator2;
-    int32 field_BC;
-    int32 field_C0;
-    int32 field_C4;
-    int32 field_C8;
-    int32 field_CC;
-    int32 field_D0;
-    int32 field_D4;
-    int32 field_D8;
-    int32 field_DC;
-    int32 field_E0;
-    int32 field_E4;
-    int32 field_E8;
-    int32 field_EC;
-    int32 field_F0;
-    int32 field_F4;
-    int32 field_F8;
-    Vector2 field_FC;
-    Vector2 field_104;
-    Vector2 field_10C;
-    Vector2 field_114;
-    Vector2 field_11C;
-    Vector2 field_124;
-    int32 field_12C;
-    int32 field_130;
-    int32 field_134;
-    int32 field_138;
-    int32 field_13C;
-    int32 field_140;
-    int32 field_144;
-    int32 field_148;
-    int32 field_14C;
-    int32 field_150;
-    int32 field_154;
-    int32 field_158;
-    int32 field_15C;
-    int32 field_160;
-    int32 field_164;
-    int32 field_168;
-    int32 field_16C;
-    int32 field_170;
-    int32 field_174;
-    int32 field_178;
-    Animator animators[8];
-    int32 field_23C;
-    int32 field_240;
-    int32 field_244;
-    int32 field_248;
-    int32 field_24C;
-    int32 field_250;
-    int32 field_254;
-    int32 field_258;
-    int32 field_25C;
-    int32 field_260;
-    int32 field_264;
-    int32 field_268;
-    int32 field_26C;
-    int32 field_270;
-    int32 field_274;
-    int32 field_278;
-    int32 field_27C;
-    int32 field_280;
-    int32 field_284;
-    int32 field_288;
-    int32 field_28C;
-    int32 field_290;
-    int32 field_294;
-    int32 field_298;
-    int32 field_29C;
-    int32 field_2A0;
-    int32 field_2A4;
-    int32 field_2A8;
-    int32 field_2AC;
-    int32 field_2B0;
-    int32 field_2B4;
-    int32 field_2B8;
-    int32 field_2BC;
-    int32 field_2C0;
-    int32 field_2C4;
-    int32 field_2C8;
-    int32 field_2CC;
-    int32 field_2D0;
-    int32 field_2D4;
-    int32 field_2D8;
-    int32 field_2DC;
-    int32 field_2E0;
-    int32 field_2E4;
-    int32 field_2E8;
-    int32 field_2EC;
-    int32 field_2F0;
-    int32 field_2F4;
-    int32 field_2F8;
-    TextInfo textInfo;
-    int32 field_304;
-    int32 field_308;
-    int32 field_30C;
-    int32 field_310;
-    int32 field_314;
-    int32 field_318;
-    int32 field_31C;
-    int32 field_320;
-    int32 field_324;
-    int32 field_328;
-    int32 field_32C;
-    int32 field_330;
-    int32 field_334;
-    int32 field_338;
-    int32 field_33C;
-    int32 field_340;
-    int32 field_344;
-    int32 field_348;
-    int32 field_34C;
-    int32 field_350;
-    int32 field_354;
-    int32 field_358;
-    int32 field_35C;
-    int32 field_360;
-    int32 field_364;
-    int32 field_368;
-    int32 field_36C;
-    int32 field_370;
-    int32 field_374;
-    int32 field_378;
-} EntityUIDiorama;
+    Animator maskAnimator;
+    Animator staticAnimator;
+    int32 values[16];
+    Vector2 vectors[16];
+    Animator animators[16];
+    TextInfo texts[16];
+};
 
 // Object Struct
 extern ObjectUIDiorama *UIDiorama;
@@ -179,12 +237,12 @@ void UIDiorama_EditorLoad(void);
 void UIDiorama_Serialize(void);
 
 // Extra Entity Functions
-void UIDiorama_ManageStates(uint8 dioramaID);
+void UIDiorama_ChangeDiorama(uint8 dioramaID);
 void UIDiorama_SetText(TextInfo *info);
 
-void UIDiorama_State_ManiaMode_Alt0(void);
-void UIDiorama_State_ManiaMode_Alt1(void);
-void UIDiorama_State_ManiaMode_Alt2(void);
+void UIDiorama_State_ManiaMode_Alt_Run(void);
+void UIDiorama_State_ManiaMode_Alt_Jog(void);
+void UIDiorama_State_ManiaMode_Alt_Loop(void);
 void UIDiorama_State_PlusUpsell(void);
 void UIDiorama_State_EncoreMode(void);
 void UIDiorama_State_TimeAttack(void);
@@ -193,14 +251,14 @@ void UIDiorama_State_Options(void);
 void UIDiorama_State_Extras(void);
 void UIDiorama_State_Exit(void);
 
-void UIDiorama_StateDraw_ManiaMode(void);
-void UIDiorama_StateDraw_PlusUpsell(void);
-void UIDiorama_StateDraw_EncoreMode(void);
-void UIDiorama_StateDraw_TimeAttack(void);
-void UIDiorama_StateDraw_Competition(void);
-void UIDiorama_StateDraw_Options(void);
-void UIDiorama_StateDraw_Extras(void);
-void UIDiorama_StateDraw_Exit(void);
+void UIDiorama_Draw_ManiaMode(void);
+void UIDiorama_Draw_PlusUpsell(void);
+void UIDiorama_Draw_EncoreMode(void);
+void UIDiorama_Draw_TimeAttack(void);
+void UIDiorama_Draw_Competition(void);
+void UIDiorama_Draw_Options(void);
+void UIDiorama_Draw_Extras(void);
+void UIDiorama_Draw_Exit(void);
 
 #endif
 

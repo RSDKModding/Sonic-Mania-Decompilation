@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZ1Outro {
 	RSDK_OBJECT
-} ObjectLRZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ1Outro {
     RSDK_ENTITY
     EntityDashLift *lift;
     int32 timer;
-} EntityLRZ1Outro;
+};
 
 // Object Struct
 extern ObjectLRZ1Outro *LRZ1Outro;
@@ -32,12 +32,13 @@ void LRZ1Outro_Serialize(void);
 // Extra Entity Functions
 void LRZ1Outro_StartCutscene(void);
 
-bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown1(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_Unknown1(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown2(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown3(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_Unknown4(EntityCutsceneSeq *host);
+
+bool32 LRZ1Outro_CutsceneAct2_Unknown2(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_Unknown3(EntityCutsceneSeq *host);
 
 #endif //!OBJ_LRZ1OUTRO_H

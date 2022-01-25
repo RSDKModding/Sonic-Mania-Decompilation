@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Vultron Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectVultron *Vultron;
@@ -114,7 +121,7 @@ void Vultron_CheckOnScreen(void)
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         self->direction  = self->startDir;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         Vultron_Create(NULL);
     }
 }
@@ -191,7 +198,7 @@ void Vultron_State_Unknown4(void)
     self->position.y += self->velocity.y;
     if (!--self->distance) {
         RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->state = Vultron_State_Unknown5;
     }
     RSDK.ProcessAnimation(&self->animator2);
@@ -296,7 +303,7 @@ void Vultron_EditorDraw(void)
         case 0:
             self->drawFX = FX_NONE;
             RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 2, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(-1, 2, &self->animator2, true, 0);
             break;
         case 1:
             self->drawFX   = FX_ROTATE;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Turbine Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTurbine *Turbine;
@@ -15,7 +22,7 @@ void Turbine_LateUpdate(void) {}
 
 void Turbine_StaticUpdate(void)
 {
-    bool32 flag = false;
+    bool32 playingSfx = false;
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
 
         foreach_active(Turbine, turbine)
@@ -24,12 +31,12 @@ void Turbine_StaticUpdate(void)
                 RSDK.PlaySfx(Turbine->sfxTurbine, 34161, 255);
                 Turbine->playingTurbineSfx = true;
             }
-            flag = true;
+            playingSfx = true;
             foreach_break;
         }
     }
 
-    if (!flag) {
+    if (!playingSfx) {
         if (Turbine->playingTurbineSfx) {
             RSDK.StopSfx(Turbine->sfxTurbine);
             Turbine->playingTurbineSfx = false;
@@ -52,17 +59,16 @@ void Turbine_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Turbine->aniFrames, self->type, &self->animator, true, 0);
-        if (self->type) {
-            if (self->type == 1)
-                self->state = Turbine_CheckPlayerCollisions_Hurt;
-            else
-                self->state = StateMachine_None;
-            self->drawOrder = Zone->drawOrderHigh;
+
+        switch (self->type) {
+            case TURBINE_HANDLES: self->state = Turbine_State_Handles; break;
+
+            case TURBINE_SPIKES: self->state = Turbine_State_Spikes; break;
+
+            default:
+            case TURBINE_WALLDECOR: self->state = StateMachine_None; break;
         }
-        else {
-            self->state     = Turbine_CheckPlayerCollisions;
-            self->drawOrder = Zone->drawOrderHigh;
-        }
+        self->drawOrder = Zone->drawOrderHigh;
     }
 }
 
@@ -81,7 +87,7 @@ void Turbine_StageLoad(void)
     Turbine->sfxTurbine        = RSDK.GetSfx("LRZ/Turbine.wav");
 }
 
-void Turbine_CheckPlayerCollisions(void)
+void Turbine_State_Handles(void)
 {
     RSDK_THIS(Turbine);
 
@@ -104,7 +110,7 @@ void Turbine_CheckPlayerCollisions(void)
                     player->onGround        = false;
                     player->state           = Player_State_None;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, true, 0);
-                    player->animator.animationSpeed = 0;
+                    player->animator.speed = 0;
 
                     if (player->position.y >= self->position.y)
                         self->playerAngles[playerID] = 0x80;
@@ -116,12 +122,12 @@ void Turbine_CheckPlayerCollisions(void)
             }
         }
         else if ((1 << playerID) & self->activePlayers) {
-            player->velocity.x             = 0;
-            player->velocity.y             = 0;
-            player->groundVel              = 0;
+            player->velocity.x           = 0;
+            player->velocity.y           = 0;
+            player->groundVel            = 0;
             self->playerAngles[playerID] = (self->playerAngles[playerID] + 6) % 512;
-            player->position.x             = self->position.x;
-            player->position.y             = self->position.y;
+            player->position.x           = self->position.x;
+            player->position.y           = self->position.y;
 
             player->position.y += 0x1700 * RSDK.Sin512(self->playerAngles[playerID]) + 0x20000;
             if ((uint32)(self->playerAngles[playerID] - 0x81) > 0xFF)
@@ -139,19 +145,19 @@ void Turbine_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->animator, true, 0);
 
                 self->activePlayers &= ~(1 << playerID);
-                player->state                  = Player_State_Air;
+                player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
             }
             else if (player->animator.animationID != ANI_POLESWINGH || player->state != Player_State_None) {
                 self->activePlayers &= ~(1 << playerID);
-                player->state                  = Player_State_Air;
+                player->state                = Player_State_Air;
                 self->playerTimers[playerID] = 30;
             }
         }
     }
 }
 
-void Turbine_CheckPlayerCollisions_Hurt(void)
+void Turbine_State_Spikes(void)
 {
     RSDK_THIS(Turbine);
 
@@ -174,7 +180,15 @@ void Turbine_EditorDraw(void)
     Turbine_Draw();
 }
 
-void Turbine_EditorLoad(void) { Turbine->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Turbine.bin", SCOPE_STAGE); }
+void Turbine_EditorLoad(void)
+{
+    Turbine->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Turbine.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Turbine, type);
+    RSDK_ENUM_VAR("Handles", TURBINE_HANDLES);
+    RSDK_ENUM_VAR("Spikes", TURBINE_SPIKES);
+    RSDK_ENUM_VAR("Wall Decor", TURBINE_WALLDECOR);
+}
 #endif
 
 void Turbine_Serialize(void) { RSDK_EDITABLE_VAR(Turbine, VAR_UINT8, type); }

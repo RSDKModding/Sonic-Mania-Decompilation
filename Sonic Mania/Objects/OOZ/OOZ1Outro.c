@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: OOZ1Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectOOZ1Outro *OOZ1Outro;
@@ -6,11 +13,9 @@ void OOZ1Outro_Update(void)
 {
     RSDK_THIS(OOZ1Outro);
 
-    void *states[] = { OOZ1Outro_Unknown1, OOZ1Outro_Unknown2, OOZ1Outro_Unknown3, OOZ1Outro_Unknown4, NULL };
-
     if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()) {
         self->activated = true;
-        CutsceneSeq_StartSequence((Entity*)self, states);
+        CutsceneSeq_StartSequence(self, OOZ1Outro_Cutscene_FadeIn, OOZ1Outro_Cutscene_PostActClearSetup, OOZ1Outro_Cutscene_FallIntoAct2, OOZ1Outro_Cutscene_BeginAct, StateMachine_None);
     }
     self->active = ACTIVE_NEVER;
 }
@@ -43,16 +48,16 @@ void OOZ1Outro_Create(void *data)
 
 void OOZ1Outro_StageLoad(void) { OOZ1Outro->sfxDrop = RSDK.GetSfx("Stage/Drop.wav"); }
 
-bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
+bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
     RSDK_THIS(OOZ1Outro);
 
     if (host->timer) {
-        if (host->fillTimerA > 0)
-            host->fillTimerA -= 4;
+        if (host->fadeWhite > 0)
+            host->fadeWhite -= 4;
     }
     else {
-        host->fillTimerA = 512;
+        host->fadeWhite = 512;
     }
 
     if (host->timer == 1) {
@@ -75,10 +80,11 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
         camera->boundsR         = Zone->cameraBoundsR[0];
         camera->boundsT         = Zone->cameraBoundsT[0];
         camera->boundsB         = Zone->cameraBoundsB[0];
-        Smog->field_4           = true;
+        Smog->forceEnabled      = true;
     }
+
     if (host->timer == 30) {
-        ActClear->actID = 1;
+        ActClear->displayedActID = 1;
 
         foreach_active(SignPost, signpost)
         {
@@ -86,17 +92,17 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
             signpost->active = ACTIVE_NORMAL;
         }
 
-        RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
+        RSDK.PlaySfx(SignPost->sfxTwinkle, false, 0xFF);
         return true;
     }
     return false;
 }
 
-bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
+bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host)
 {
     RSDK_THIS(OOZ1Outro);
-    if (host->fillTimerA > 0)
-        host->fillTimerA -= 4;
+    if (host->fadeWhite > 0)
+        host->fadeWhite -= 4;
 
     CutsceneSeq_LockAllPlayerControl();
     if (ActClear->finished) {
@@ -114,14 +120,16 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
         Zone->cameraBoundsR[0] = self->boundsR;
         Zone->cameraBoundsT[0] = self->boundsT;
         Zone->cameraBoundsB[0] = self->boundsB;
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         return true;
     }
     return false;
 }
 
-bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host)
+bool32 OOZ1Outro_Cutscene_FallIntoAct2(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -130,7 +138,7 @@ bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host)
         if (player2->objectID == Player->objectID)
             player2->interaction = true;
     }
-    if (Smog->field_4 && player1->animator.animationID)
+    if (Smog->forceEnabled && player1->animator.animationID)
         return false;
     player1->direction  = FLIP_NONE;
     player1->stateInput = Player_ProcessP1Input;
@@ -139,7 +147,7 @@ bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host)
+bool32 OOZ1Outro_Cutscene_BeginAct(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
         globals->suppressTitlecard = true;
@@ -147,7 +155,7 @@ bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host)
         {
             titlecard->active    = ACTIVE_NORMAL;
             titlecard->state     = TitleCard_State_Initial;
-            titlecard->stateDraw = TitleCard_Draw_Default;
+            titlecard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
 

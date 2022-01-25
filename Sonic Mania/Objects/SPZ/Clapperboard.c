@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Clapperboard Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectClapperboard *Clapperboard;
@@ -213,7 +220,7 @@ void Clapperboard_StateCollide_FlipX(void)
             player->position.y += (self->field_64 + 2) << 16;
             if (angVal > Angle >> 2) {
                 self->field_68 |= RSDK.GetEntityID(player) + 1;
-                if (self->state == Clapperboard_State_Unknown5 || abs(player->groundVel) > 0x80000 && angVal > Angle - (Angle >> 2)) {
+                if (self->state == Clapperboard_State_Unknown5 || (abs(player->groundVel) > 0x80000 && angVal > Angle - (Angle >> 2))) {
                     player->onGround   = false;
                     player->state      = Player_State_Air;
                     player->velocity.y = -0x40000 - 0x60000 * angVal / Angle;

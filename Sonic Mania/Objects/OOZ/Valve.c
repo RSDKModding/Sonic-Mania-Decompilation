@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Valve Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectValve *Valve;
@@ -14,7 +21,7 @@ void Valve_Update(void)
             OOZSetup->fadeTimer = 0;
     }
 
-    if (self->animator2.animationID == 2 && self->animator2.frameID == 5 && self->animator2.animationTimer == 1)
+    if (self->animator2.animationID == 2 && self->animator2.frameID == 5 && self->animator2.timer == 1)
         RSDK.PlaySfx(Valve->sfxClick, 0, 255);
 }
 

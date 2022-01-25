@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Soundboard Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSoundboard *Soundboard;
@@ -80,10 +87,7 @@ uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCa
         return -1;
     int32 sfxID = Soundboard->sfxCount;
 
-    Soundboard->sfxList[sfxID] = RSDK.GetSfx(sfxName);
-    int32 loop                 = true;
-    if (loopPoint >= 1)
-        loop = loopPoint;
+    Soundboard->sfxList[sfxID]            = RSDK.GetSfx(sfxName);
     Soundboard->sfxLoopPoint[sfxID]       = loopPoint;
     Soundboard->sfxCheckCallback[sfxID]   = checkCallback;
     Soundboard->sfxUpdateCallback[sfxID]  = updateCallback;

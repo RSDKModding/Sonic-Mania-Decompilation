@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDecoration {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectDecoration;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDecoration {
     RSDK_ENTITY
     Animator animator;
     uint8 type;
@@ -18,7 +18,7 @@ typedef struct {
     Vector2 repeatTimes;
     Vector2 repeatSpacing;
     bool32 isTMZ;
-} EntityDecoration;
+};
 
 // Object Struct
 extern ObjectDecoration *Decoration;

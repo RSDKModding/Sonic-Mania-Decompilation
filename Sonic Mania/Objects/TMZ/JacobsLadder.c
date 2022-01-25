@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: JacobsLadder Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectJacobsLadder *JacobsLadder;
@@ -16,7 +23,7 @@ void JacobsLadder_Update(void)
     }
     else {
         if (!self->field_80 && self->activeScreens == 1)
-            RSDK.PlaySfx(JacobsLadder->sfxLadder, 0, 255);
+            RSDK.PlaySfx(JacobsLadder->sfxLadder, false, 255);
         self->field_80 = true;
     }
 
@@ -43,7 +50,7 @@ void JacobsLadder_Update(void)
                         player->jumpAbilityTimer = 1;
                         player->state            = Player_State_Air;
                         SceneInfo->entity   = (Entity *)player;
-                        player->movesetState();
+                        player->stateAbility();
                         SceneInfo->entity = (Entity *)self;
                     }
                     else {

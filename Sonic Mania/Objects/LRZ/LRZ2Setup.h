@@ -3,25 +3,25 @@
 
 #include "SonicMania.h"
 
-typedef enum {
-    GENERICTRIGGER_LRZ2_OUTRO
-}GenericTriggerTypesLRZ2;
+typedef enum { GENERICTRIGGER_LRZ2_OUTRO } GenericTriggerTypesLRZ2;
+
+typedef enum { LRZ2_TBEHAVE_NORMAL, LRZ2_TBEHAVE_LAVA, LRZ2_TBEHAVE_CONVEYOR_L, LRZ2_TBEHAVE_CONVEYOR_R } TileBehavioursLRZ2;
 
 // Object Class
-typedef struct {
+struct ObjectLRZ2Setup {
     RSDK_OBJECT
-    int32 palTimer1;
-    int32 palTimer2;
-    int32 dstPal;
-    int32 srcPal;
+    int32 lavaPalTimer;
+    int32 conveyorPalTimer;
+    int32 conveyorDstPal;
+    int32 conveyorSrcPal;
     bool32 conveyorOff;
     uint8 conveyorDir;
-} ObjectLRZ2Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ2Setup {
 	RSDK_ENTITY
-} EntityLRZ2Setup;
+};
 
 // Object Struct
 extern ObjectLRZ2Setup *LRZ2Setup;

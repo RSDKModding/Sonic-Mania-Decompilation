@@ -4,38 +4,33 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIWinSize {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIWinSize;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIWinSize {
     MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
     int32 arrowWidth;
     int32 selection;
     int32 prevSelection;
-    int32 height;
-    int32 field_120;
-    int32 offset;
-    int32 field_128;
-    int32 field_12C;
-    bool32 textFlag;
+    int32 bgEdgeSize;
+    int32 textBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
     TextInfo text;
-    int32 field_13C;
+    int32 touchID;
     int32 maxScale;
-    int32 field_144;
-    int32 field_148;
-    int32 field_14C;
-    int32 field_150;
-    int32 field_154;
-    int32 field_158;
+    Animator unusedAnimator;
     Animator textAnimator;
-    Animator animator1;
-    Animator animator2;
-} EntityUIWinSize;
+    Animator arrowAnimatorL;
+    Animator arrowAnimatorR;
+};
 
 // Object Struct
 extern ObjectUIWinSize *UIWinSize;
@@ -60,8 +55,9 @@ void UIWinSize_ProcessButtonCB(void);
 bool32 UIWinSize_ProcessTouchCB(void);
 void UIWinSize_TouchedCB_Left(void);
 void UIWinSize_TouchedCB_Right(void);
-void UIWinSize_Unknown3(EntityUIWinSize *entity);
-void UIWinSize_Unknown7(void);
-void UIWinSize_Unknown8(void);
+void UIWinSize_SetChoiceActive(EntityUIWinSize *entity);
+void UIWinSize_SetChoiceInactive(EntityUIWinSize *entity);
+void UIWinSize_State_HandleButtonLeave(void);
+void UIWinSize_State_HandleButtonEnter(void);
 
 #endif //!OBJ_UIWINSIZE_H

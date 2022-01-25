@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Water Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectWater *Water;
@@ -454,7 +461,7 @@ void Water_State_Palette(void)
                 }
                 if (!player->sidekick && player->airTimer >= 1080) {
                     player->airTimer = 0;
-                    Music_ResumePrevTrack(TRACK_DROWNING, false);
+                    Music_EndQueuedTrack(TRACK_DROWNING, false);
                 }
             }
             else {
@@ -515,7 +522,7 @@ void Water_State_Palette(void)
                             case 1560: Water_SpawnCountDownBubble(player, p, 1); break;
                             case 1680: Water_SpawnCountDownBubble(player, p, 0); break;
                             case 1800:
-                                player->hurtFlag = 3;
+                                player->deathType = PLAYER_DEATH_DROWN;
                                 if (!water)
                                     player->drawOrder = Zone->playerDrawHigh;
                                 break;
@@ -592,17 +599,17 @@ void Water_HandleBubbleMovement(void)
     }
 
     if (self->position.y < Water->waterLevel) {
-        bool32 flag = false;
+        bool32 inWater = false;
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitbox))
-                flag = true;
+                inWater = true;
         }
 
-        if (!flag) {
+        if (!inWater) {
             if (self->animator.animationID == 3) {
                 if (self->animator.frameID > 12) {
-                    RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, 0, 0);
+                    RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, false, 0);
                     self->velocity.y = 0;
                 }
             }
@@ -731,8 +738,8 @@ void Water_State_Bubble(void)
                                     self->childPtr    = player;
                                 }
 
-                                if (player->state != Current_Player_State_Type1 && player->state != Current_Player_State_Type0
-                                    && player->state != Current_Player_State_Type2 && player->state != Current_Player_State_Type3) {
+                                if (player->state != Current_Player_State_CurrentRight && player->state != Current_Player_State_CurrentLeft
+                                    && player->state != Current_Player_State_CurrentUp && player->state != Current_Player_State_CurrentDown) {
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;
@@ -766,7 +773,7 @@ void Water_State_Bubble(void)
                                 }
                                 player->airTimer = 0;
                                 if (!player->sidekick)
-                                    Music_ResumePrevTrack(TRACK_DROWNING, false);
+                                    Music_EndQueuedTrack(TRACK_DROWNING, false);
                                 RSDK.PlaySfx(Water->sfxBreathe, false, 255);
                             }
                         }
@@ -866,18 +873,19 @@ void Water_State_HCZBubble(void)
 
                     player->airTimer = 0;
                     if (!player->sidekick)
-                        Music_ResumePrevTrack(TRACK_DROWNING, false);
+                        Music_EndQueuedTrack(TRACK_DROWNING, false);
 
                     RSDK.PlaySfx(Water->sfxDNAGrab, false, 255);
                     self->activePlayers |= 1 << playerID;
                     self->activePlayers2 |= 1 << playerID;
                     if (RSDK.GetEntityID(self) >= RESERVE_ENTITY_COUNT) {
-                        int32 id = 32;
-                        while (RSDK_GET_ENTITY(id, )->objectID) {
-                            if (++id >= 32 + PLAYER_MAX)
+                        int32 id = SLOT_HCZBUBBLE_P1;
+                        for (; id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX; ++id) {
+                            if (!RSDK_GET_ENTITY(id, )->objectID)
                                 break;
                         }
-                        if (id >= 0 && id < 32 + PLAYER_MAX) {
+
+                        if (id >= 0 && id < SLOT_HCZBUBBLE_P1 + PLAYER_MAX) {
                             RSDK.AddDrawListRef(self->drawOrder, id);
                             RSDK.CopyEntity(RSDK.GetEntityByID(id), self, true);
                             foreach_return;
@@ -1064,7 +1072,7 @@ void Water_State_Bubbler(void)
             bubble->childPtr = NULL;
             bubble->bubbleX  = bubble->position.x;
             if (self->bubbleFlags & 2 && (!RSDK.Rand(0, 4) || !self->bubbleType1) && !(self->bubbleFlags & 4)) {
-                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &bubble->animator, 0, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &bubble->animator, false, 0);
                 bubble->isPermanent = true;
                 self->bubbleFlags |= 4;
             }
@@ -1275,6 +1283,7 @@ void Water_EditorDraw(void)
             self->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
 
+            Water->waterLevel = self->position.y;
             Water_Draw_Palette();
             break;
         case WATER_RECT:
@@ -1284,7 +1293,7 @@ void Water_EditorDraw(void)
 
             self->inkEffect = INK_BLEND;
             RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y,
-                          self->b + ((self->g + (self->r << 8)) << 8), 0x100, INK_SUB, false);
+                          self->b + ((self->g + (self->r << 8)) << 8), 0x20, INK_ALPHA, false);
             if (showGizmos()) {
                 self->inkEffect = INK_NONE;
                 DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);

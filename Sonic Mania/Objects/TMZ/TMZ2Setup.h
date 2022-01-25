@@ -3,8 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum { TMZ2_WARPDOOR_EFFECT_MIST = 1 } TMZ2WarpDoorEffects;
+
 // Object Class
-typedef struct {
+struct ObjectTMZ2Setup {
     RSDK_OBJECT
     bool32 paletteInit;
     int32 palDelay;
@@ -13,12 +15,12 @@ typedef struct {
     int32 dword14;
     uint16 aniTiles;
     uint16 dynTiles;
-} ObjectTMZ2Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZ2Setup {
 	RSDK_ENTITY
-} EntityTMZ2Setup;
+};
 
 // Object Struct
 extern ObjectTMZ2Setup *TMZ2Setup;

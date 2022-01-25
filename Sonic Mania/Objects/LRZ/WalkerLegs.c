@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: WalkerLegs Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectWalkerLegs *WalkerLegs;
@@ -301,7 +308,7 @@ void WalkerLegs_CheckTileCollisions(void)
         self->flag  = true;
         uint16 tile   = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
-        if (tile == 0xFFFF)
+        if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
         uint8 behaviour = RSDK.GetTileBehaviour(tile, self->collisionPlane);
@@ -337,7 +344,7 @@ void WalkerLegs_CheckStoodLava(void)
         self->position.y = y;
         uint16 tile        = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
-        if (tile == 0xFFFF)
+        if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
         uint8 behaviour = RSDK.GetTileBehaviour(tile, self->collisionPlane);
         if ((behaviour == 1 || behaviour == 2) && y - y2 < 0x500000) {
@@ -453,7 +460,7 @@ void WalkerLegs_State_Unknown1(void)
     self->field_80[1].y    = 0;
     self->field_68[2].x += (2 * (self->direction == FLIP_NONE) - 1) << 22;
     self->field_A0 -= (WalkerLegs->hitbox.top << 16);
-    self->field_A4 = self->field_68[2].y - WalkerLegs->hitbox.top << 16;
+    self->field_A4 = self->field_68[2].y - (WalkerLegs->hitbox.top << 16);
     self->state    = WalkerLegs_State_Unknown2;
 }
 

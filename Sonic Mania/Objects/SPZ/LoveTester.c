@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LoveTester Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLoveTester *LoveTester;
@@ -71,8 +78,6 @@ void LoveTester_StageLoad(void)
 
 void LoveTester_SetupHitboxes(void)
 {
-    RSDK_THIS(LoveTester);
-
     LoveTester->hitbox1.left   = -16;
     LoveTester->hitbox1.top    = -16;
     LoveTester->hitbox1.right  = 16;
@@ -89,8 +94,6 @@ void LoveTester_SetupHitboxes(void)
 
 void LoveTester_SetupPositions(void)
 {
-    RSDK_THIS(LoveTester);
-
     LoveTester->positions[0].x = -0x1C0000;
     LoveTester->positions[0].y = -0x1F0000;
     LoveTester->positions[1].x = 0x1C0000;
@@ -256,7 +259,6 @@ void LoveTester_CheckPlayerCollisions2(bool32 flag)
 
 void LoveTester_GiveScore(void *p)
 {
-    RSDK_THIS(LoveTester);
     EntityPlayer *player = (EntityPlayer *)p;
 
     EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, player->position.x, player->position.y);

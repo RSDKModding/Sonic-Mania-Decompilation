@@ -11,18 +11,18 @@ typedef enum {
 }ExplosionTypes;
 
 // Object Class
-typedef struct {
+struct ObjectExplosion {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDestroy;
-} ObjectExplosion;
+};
 
 // Entity Class
-typedef struct {
+struct EntityExplosion {
     RSDK_ENTITY
     Animator animator;
     int32 planeFilter;
-} EntityExplosion;
+};
 
 // Object Struct
 extern ObjectExplosion *Explosion;

@@ -1,27 +1,41 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GHZCutsceneST Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGHZCutsceneST *GHZCutsceneST;
 
 void GHZCutsceneST_Update(void)
 {
-    void *states[5] = { GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp, GHZCutsceneST_Cutscene_ExitHBH,
-                        GHZCutsceneST_Cutscene_SetupGHZ1, NULL };
-
     RSDK_THIS(GHZCutsceneST);
+
+    if (!self->setupKnuxCutscene) {
+        GHZCutsceneST_SetupKnuxCutscene();
+        self->setupKnuxCutscene = true;
+    }
+
     if (!self->activated) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
-                CutsceneSeq_StartSequence((Entity *)self, states);
+                CutsceneSeq_StartSequence(self, GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp,
+                                          GHZCutsceneST_Cutscene_ExitHBH, GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
+#if RETRO_USE_PLUS
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
+#endif
                 self->activated = true;
             }
         }
     }
+    ++self->timer;
 }
 
 void GHZCutsceneST_LateUpdate(void) {}
@@ -83,6 +97,31 @@ void GHZCutsceneST_SetupObjects(void)
     foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = (Entity *)cutsceneHBH; }
 }
 
+void GHZCutsceneST_SetupKnuxCutscene(void)
+{
+    if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
+        EntityPlatform *platform = (EntityPlatform *)GHZCutsceneST->platform;
+        Entity *claw             = GHZCutsceneST->claw;
+        Entity *fxRuby           = GHZCutsceneST->fxRuby;
+        Entity *phantomRuby      = GHZCutsceneST->phantomRuby;
+
+        GHZCutsceneST->cutsceneHBH[0]->position.y += 0x2C00000;
+        GHZCutsceneST->cutsceneHBH[1]->position.y += 0x2C00000;
+        GHZCutsceneST->cutsceneHBH[2]->position.y += 0x2C00000;
+        GHZCutsceneST->cutsceneHBH[3]->position.y += 0x2C00000;
+        GHZCutsceneST->cutsceneHBH[4]->position.y += 0x2C00000;
+        fxRuby->position.y += 0x2C00000;
+        phantomRuby->position.y += 0x2C00000;
+        platform->position.y += 0x2C00000;
+        platform->drawPos.x   = platform->position.x;
+        platform->drawPos.y   = platform->position.y;
+        platform->centerPos.x = platform->position.x;
+        platform->centerPos.y = platform->position.y;
+        claw->position.y += 0x2C00000;
+    }
+}
+
+#if RETRO_USE_PLUS
 void GHZCutsceneST_SkipCB(void)
 {
 #if RETRO_USE_PLUS
@@ -92,6 +131,7 @@ void GHZCutsceneST_SkipCB(void)
 #endif
         RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
+#endif
 
 
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
@@ -134,7 +174,7 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
             break;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
-        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
     }
     return false;
@@ -157,7 +197,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x              = (player->position.x - player->position.x) >> 3;
-            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -177,7 +217,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
-            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
+            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;
             ++curPlayer;
         }
@@ -223,7 +263,7 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
                     case HBH_SHINOBI:
                         if (host->timer == 60) {
                             RSDK.SetSpriteAnimation(hbh->aniFrames, 3, &hbh->animator, true, 0);
-                            RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->animator2, true, 0);
+                            RSDK.SetSpriteAnimation(-1, 0, &hbh->animator2, true, 0);
                         }
                         hbh->position.x -= 0x4000;
                         hbh->position.y -= 0x40000;
@@ -267,7 +307,7 @@ bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
     else
 #endif
         RSDK.SetScene("Mania Mode", "");
-    globals->parallaxOffset[0] = self->field_68;
+    globals->parallaxOffset[0] = self->timer;
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;

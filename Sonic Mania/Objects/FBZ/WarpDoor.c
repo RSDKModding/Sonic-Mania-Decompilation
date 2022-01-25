@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: WarpDoor Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectWarpDoor *WarpDoor;
@@ -17,7 +24,7 @@ void WarpDoor_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                     flag = true;
-                    if (!self->field_A4) {
+                    if (!self->hasWarped) {
                         EntityCamera *camera = player->camera;
                         int32 camRelPosX       = 0;
                         int32 camRelPosY       = 0;
@@ -74,14 +81,14 @@ void WarpDoor_Update(void)
 
                         if (tag->definesBounds)
                             boundID = tag->boundID;
-                        tag->field_A4      = true;
+                        tag->hasWarped      = true;
                         player->position.x = posPtr.x;
                         player->position.y = posPtr.y;
                         WarpDoor_CheckAllBounds();
 
                         if (!player->sidekick) {
                             if (RSDK.CheckStageFolder("TMZ2")) {
-                                if (self->effect == 1) {
+                                if (self->effect == TMZ2_WARPDOOR_EFFECT_MIST) {
                                     int32 sfx     = RSDK.Rand(0, 6);
                                     int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
@@ -90,7 +97,7 @@ void WarpDoor_Update(void)
                                     foreach_active(TMZBarrier, barrier)
                                     {
                                         if (barrier->warpTag == self->tag)
-                                           barrier->field_5C = 1;
+                                            barrier->cleared = true;
                                     }
                                     tag->fadeTimer = 512;
                                     if (self->destinationTag == 99 || self->destinationTag == 100)
@@ -100,21 +107,21 @@ void WarpDoor_Update(void)
                                 }
                             }
                             else if (RSDK.CheckStageFolder("OOZ2")) {
-                                if (self->effect == 1 || self->effect == 2) {
-                                    OOZSetup->flags = self->effect == 2 ? 1 : 0;
+                                if (self->effect == OOZ_WARPDOOR_EFFECT_TO_SUB || self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB) {
+                                    OOZSetup->flags = self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB ? 1 : 0;
                                     destroyEntity(self);
                                     foreach_return;
                                 }
                             }
                             else if (RSDK.CheckStageFolder("FBZ")) {
-                                RSDK.PlaySfx(WarpDoor->sfxWarpDoor, 0, 255);
+                                RSDK.PlaySfx(WarpDoor->sfxWarpDoor, false, 255);
                                 flag = false;
                                 if (self->go) {
                                     tag->fadeTimer = 256;
-                                    tag->field_B4  = 1;
+                                    tag->fadeOut   = true;
                                 }
                                 else {
-                                    tag->field_B4  = 0;
+                                    tag->fadeOut   = false;
                                     tag->fadeTimer = 320;
                                 }
                             }
@@ -124,8 +131,8 @@ void WarpDoor_Update(void)
             }
             if (flag)
                 return;
-            if (self->field_A4)
-                self->field_A4 = false;
+            if (self->hasWarped)
+                self->hasWarped = false;
         }
     }
 }
@@ -134,7 +141,7 @@ void WarpDoor_LateUpdate(void) {}
 
 void WarpDoor_StaticUpdate(void)
 {
-    if (!WarpDoor->field_1408) {
+    if (!WarpDoor->hasSetupTags) {
         foreach_all(WarpDoor, warpDoor)
         {
             if (warpDoor->tag >= 1) {
@@ -148,20 +155,20 @@ void WarpDoor_StaticUpdate(void)
                 warpDoor->boundID                                 = WarpDoor->boundCount++;
             }
         }
-        WarpDoor->field_1408 = true;
+        WarpDoor->hasSetupTags = true;
     }
 
     if (WarpDoor->boundCount) {
-        if (!WarpDoor->field_140C) {
+        if (!WarpDoor->hasSetupStartBounds) {
             if (WarpDoor_SetupBoundaries(-1, NULL)) {
-                WarpDoor->field_140C = 1;
+                WarpDoor->hasSetupStartBounds = true;
                 WarpDoor_SetupPlayerCamera();
                 WarpDoor_CheckAllBounds();
             }
         }
 
-        if (WarpDoor->field_1406 > 0)
-            WarpDoor->field_1406--;
+        if (WarpDoor->boundsTimer > 0)
+            WarpDoor->boundsTimer--;
     }
 }
 
@@ -172,7 +179,7 @@ void WarpDoor_Draw(void)
         WarpDoor_DrawDebug();
     if (self->fadeTimer > 0) {
         if (RSDK.CheckStageFolder("FBZ")) {
-            if (self->field_B4)
+            if (self->fadeOut)
                 RSDK.FillScreen(0x000000, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
             else
                 RSDK.FillScreen(0x800080, self->fadeTimer, self->fadeTimer - 256, self->fadeTimer);
@@ -192,7 +199,7 @@ void WarpDoor_Create(void *data)
         self->active        = ACTIVE_ALWAYS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->field_A4      = false;
+        self->hasWarped      = false;
         self->drawFX        = FX_NONE;
         self->inkEffect     = INK_NONE;
         self->visible       = true;
@@ -204,8 +211,8 @@ void WarpDoor_StageLoad(void)
 {
     WarpDoor->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
     WarpDoor_SetStageBounds();
-    WarpDoor->field_140C = false;
-    WarpDoor->field_1408 = 0;
+    WarpDoor->hasSetupStartBounds = false;
+    WarpDoor->hasSetupTags = 0;
     WarpDoor->boundCount = 0;
     for (int32 i = 0; i < 0x100; ++i) {
         WarpDoor->tags[i] = NULL;
@@ -277,8 +284,8 @@ void WarpDoor_SetWarpBounds(uint8 id)
     Zone->playerBoundsB[0]     = WarpDoor->boundaries[id].bottom << 16;
     Zone->playerBoundsL[0]     = WarpDoor->boundaries[id].left << 16;
     Zone->deathBoundary[0]      = WarpDoor->boundaries[id].bottom << 16;
-    WarpDoor->field_1406        = 16;
-    WarpDoor->field_1405        = id;
+    WarpDoor->boundsTimer        = 16;
+    WarpDoor->lastBoundsID        = id;
 }
 
 void WarpDoor_CheckAllBounds(void)
@@ -411,7 +418,17 @@ void WarpDoor_EditorDraw(void)
     WarpDoor_DrawDebug();
 }
 
-void WarpDoor_EditorLoad(void) { WarpDoor->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void WarpDoor_EditorLoad(void)
+{
+    WarpDoor->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+
+    // RSDK_ACTIVE_VAR(WarpDoor, effect);
+    // RSDK_ENUM_VAR("None", WARPDOOR_EFFECT_NONE);
+
+    RSDK_ACTIVE_VAR(WarpDoor, forcePlayerState);
+    RSDK_ENUM_VAR("None", WARPDOOR_PLRSTATE_NONE);
+    RSDK_ENUM_VAR("Hurt", WARPDOOR_PLRSTATE_HURT);
+}
 #endif
 
 void WarpDoor_Serialize(void)

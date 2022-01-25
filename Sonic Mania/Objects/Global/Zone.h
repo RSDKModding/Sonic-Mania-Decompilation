@@ -3,30 +3,49 @@
 
 #include "SonicMania.h"
 
-#define Zone_AddCallback(callback)                                                                                                                   \
-    if (Zone->callbackCount < 0x10) {                                                                                                                \
-        Zone->callbacks[Zone->callbackCount] = callback;                                                                                             \
-        ++Zone->callbackCount;                                                                                                                       \
+#define Zone_AddVSSwapCallback(callback)                                                                                                                   \
+    if (Zone->vsSwapCBCount < 0x10) {                                                                                                                \
+        Zone->vsSwapCB[Zone->vsSwapCBCount] = callback;                                                                                              \
+        ++Zone->vsSwapCBCount;                                                                                                                       \
     }
 
+typedef enum {
+    ZONE_INVALID = -1,
+    ZONE_GHZ,
+    ZONE_CPZ,
+    ZONE_SPZ,
+    ZONE_FBZ,
+    ZONE_PGZ,
+    ZONE_SSZ,
+    ZONE_HCZ,
+    ZONE_MSZ,
+    ZONE_OOZ,
+    ZONE_LRZ,
+    ZONE_MMZ,
+    ZONE_TMZ,
+    ZONE_ERZ,
+#if RETRO_USE_PLUS
+    ZONE_AIZ,
+#endif
+    ZONE_COUNT,
+}ZoneIDs;
+
 // Object Class
-typedef struct {
+struct ObjectZone {
     RSDK_OBJECT
     int32 actID;
     StateMachine(stageFinishCallback);
     bool32 forcePlayerOnScreenFlag;
-    StateMachine(callbacks[0x10]);
+    StateMachine(vsSwapCB[0x10]);
+    int32 vsSwapCBCount;
 #if RETRO_USE_PLUS
-    int32 callbackCount;
-    int32 playerFlags[PLAYER_MAX];
-    uint8 playerID;
-    uint8 playerCount;
-    uint8 playerIDs[PLAYER_MAX];
-    uint8 playerIDs2[PLAYER_MAX];
+    int32 playerSwapEnabled[PLAYER_MAX];
+    uint8 swapPlayerID;
+    uint8 swapPlayerCount;
+    uint8 preSwapPlayerIDs[PLAYER_MAX];
+    uint8 swappedPlayerIDs[PLAYER_MAX];
 #else
-    int32 field_94;
-    int32 callbackCount;
-    int32 playerFlags;
+    bool32 playerSwapEnabled;
 #endif
     int32 listPos;
     int32 prevListPos;
@@ -47,7 +66,7 @@ typedef struct {
     int32 playerBoundActiveT[PLAYER_MAX];
     int32 playerBoundActiveB[PLAYER_MAX];
     int32 autoScrollSpeed;
-    bool32 atlReloadFlag;
+    bool32 setATLBounds;
     bool32 gotTimeOver;
     StateMachine(timeOverCallback);
     uint16 fgLayers;
@@ -67,7 +86,7 @@ typedef struct {
     uint8 playerDrawLow;
     uint8 playerDrawHigh;
     uint8 hudDrawOrder;
-    uint16 sfxfail;
+    uint16 sfxFail;
 #if RETRO_USE_PLUS
     uint8 entityData[16][ENTITY_SIZE];
     int32 screenPosX[PLAYER_MAX];
@@ -76,10 +95,10 @@ typedef struct {
     bool32 teleportActionActive;
     int32 randSeed;
 #endif
-} ObjectZone;
+};
 
 // Entity Class
-typedef struct {
+struct EntityZone {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -87,7 +106,7 @@ typedef struct {
     int32 timer;
     int32 fadeSpeed;
     int32 fadeColour;
-} EntityZone;
+};
 
 // Object Struct
 extern ObjectZone *Zone;
@@ -108,21 +127,27 @@ void Zone_Serialize(void);
 // Extra Entity Functions
 int32 Zone_GetZoneID(void);
 void Zone_StoreEntities(int32 xOffset, int32 yOffset);
-void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setCamera);
+void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds);
 void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
-void Zone_StartFadeOut_MusicFade(void);
+void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour);
+void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour);
 void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
-bool32 Zone_IsAct2(void);
+
+bool32 Zone_IsZoneLastAct(void);
 int32 Zone_GetEncoreStageID(void);
 int32 Zone_GetManiaStageID(void);
+
+// Draw States
 void Zone_Draw_Fade(void);
+
+// States & Stuff
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
-void Zone_State_Fadeout_Unknown(void);
+void Zone_State_Fadeout_Competition(void);
 void Zone_TitleCard_SupressCB(void);
 void Zone_State_ReloadScene(void);
 void Zone_State_Fadeout_Destroy(void);

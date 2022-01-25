@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUITAZoneModule {
     RSDK_OBJECT
     uint16 aniFrames;
-    Entity *entityPtr;
+    EntityUIButtonPrompt *leaderboardsPrompt;
 #if RETRO_USE_PLUS
     bool32 isEncoreMode;
 #endif
-    bool32 flag;
-} ObjectUITAZoneModule;
+    bool32 showLBPrompt;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUITAZoneModule {
     MANIA_UI_ITEM_BASE
 #if !RETRO_USE_PLUS
-    int32 value;
+    bool32 isExpanding;
 #endif
     uint8 zoneID;
     TextInfo text1;
@@ -27,17 +27,17 @@ typedef struct {
     bool32 debugExpand;
 #endif
     bool32 wasDisabled;
-    TextInfo text3;
-    TextInfo text4;
-    int32 field_12C;
+    TextInfo text1Store;
+    TextInfo text2Store;
+    int32 zoneIconSprX;
     Vector2 drawPos;
 #if !RETRO_USE_PLUS
-    int32 field_138_2;
-    int32 id;
-    int32 field_140;
+    int32 prevExpandAmount;
+    int32 expandAmount;
+    uint8 expandTimer;
     int32 announceTimer;
 #endif
-    uint8 field_138;
+    uint8 fuzzDir;
     uint8 characterID;
     uint8 actID;
 #if RETRO_USE_PLUS
@@ -45,22 +45,21 @@ typedef struct {
 #else
     uint8 rank;
 #endif
-    int32 field_14C;
-    int32 field_150;
+    int32 unused1;
+    int32 unused2;
 #if RETRO_USE_PLUS
-    int32 field_154;
-    int32 field_158;
+    int32 unused3;
+    int32 unused4;
 #endif
 #if !RETRO_USE_PLUS
-    Animator animator7;
+    Animator textAnimator;
 #endif
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-} EntityUITAZoneModule;
+    Animator zoneIconsAnimator;
+    Animator fuzzAnimator;
+    Animator timeAttackAnimator;
+    Animator medLetterAnimator1;
+    Animator medLetterAnimator2;
+};
 
 // Object Struct
 extern ObjectUITAZoneModule *UITAZoneModule;
@@ -81,39 +80,39 @@ void UITAZoneModule_Serialize(void);
 // Extra Entity Functions
 void UITAZoneModule_Setup(void);
 void UITAZoneModule_SetupText(void);
-void UITAZoneModule_Unknown3(void);
-void UITAZoneModule_Unknown4(void);
-void UITAZoneModule_Unknown5(void);
-void UITAZoneModule_Unknown6(void);
+void UITAZoneModule_DrawBGShapes(void);
+void UITAZoneModule_DrawFGShapes(void);
+void UITAZoneModule_DrawZonePreview(void);
+void UITAZoneModule_DrawModuleInfo(void);
 void UITAZoneModule_FailCB(void);
-void UITAZoneModule_Options3CB(void);
-bool32 UITAZoneModule_Options7CB(void);
-bool32 UITAZoneModule_Options8CB(void);
-void UITAZoneModule_Options5CB(void);
-void UITAZoneModule_Options6CB(void);
+void UITAZoneModule_SelectedCB(void);
+bool32 UITAZoneModule_CheckButtonEnterCB(void);
+bool32 UITAZoneModule_CheckSelectedCB(void);
+void UITAZoneModule_ButtonEnterCB(void);
+void UITAZoneModule_ButtonLeaveCB(void);
 void UITAZoneModule_TransitionCB(void);
-void UITAZoneModule_Unknown14(void);
-void UITAZoneModule_Unknown15(void);
-void UITAZoneModule_Unknown16(void);
-void UITAZoneModule_Unknown17(void);
-void UITAZoneModule_Unknown18(void);
+void UITAZoneModule_ShowLeaderboards_CB(void);
+void UITAZoneModule_State_Setup(void);
+void UITAZoneModule_State_NotSelected(void);
+void UITAZoneModule_State_Selected(void);
+void UITAZoneModule_State_HasBeenSelected(void);
 
 #if !RETRO_USE_PLUS
 Vector2 UITAZoneModule_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
-void UITAZoneModule_Unknown8(void);
-void UITAZoneModule_Unknown7(void);
-void UITAZoneModule_Unknown19(void);
-void UITAZoneModule_Unknown21(void);
-void UITAZoneModule_Unknown22(void);
-void UITAZoneModule_Unknown23(void);
-void UITAZoneModule_Unknown24(void);
-void UITAZoneModule_Unknown25(int32 player, int32 zone, int32 act, int32 a4, void (*callback)(void));
-void UITAZoneModule_Unknown26(EntityUIControl *control, uint8 characterID, uint32 zoneID, uint8 actID, int32 score);
-void UITAZoneModule_Unknown27(void);
-void UITAZoneModule_Unknown28(void);
-void UITAZoneModule_Unknown29(void);
-void UITAZoneModule_Unknown30(void);
-void UITAZoneModule_Unknown31(void);
+void UITAZoneModule_DrawActInfo_Expanded(void);
+void UITAZoneModule_DrawExpandedView(void);
+void UITAZoneModule_State_Expanded(void);
+void UITAZoneModule_State_StartTimeAttackAttempt(void);
+void UITAZoneModule_TouchCB_Left(void);
+void UITAZoneModule_TouchCB_Right(void);
+void UITAZoneModule_ProcessButtonCB_Expanded(void);
+void UITAZoneModule_ShowLeaderboards(int32 player, int32 zone, int32 act, int32 a4, void (*callback)(void));
+void UITAZoneModule_SetStartupModule(EntityUIControl *control, uint8 characterID, uint32 zoneID, uint8 actID, int32 score);
+void UITAZoneModule_State_ExpandModule(void);
+void UITAZoneModule_State_ContractModule(void);
+void UITAZoneModule_State_MoveOffScreen(void);
+void UITAZoneModule_State_Inactive(void);
+void UITAZoneModule_State_ComeBackOnScreen(void);
 #endif
 
 #endif //!OBJ_UITAZONEMODULE_H

@@ -5,34 +5,34 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectTimeAttackMenu {
     RSDK_OBJECT
-    Entity *timeAttackControl;
-    Entity *timeAttackControl_Legacy;
-    Entity *taZoneSelControl;
-    Entity *prompt1;
-    Entity *taDetailsControl;
-    Entity *banner;
-    Entity *leaderboardsControl;
-    Entity *leaderboard;
-    Entity *prompt2;
-    Entity *banner2;
-    Entity *replaysControl;
-    Entity *replayCarousel;
-    Entity *replayPrompt;
-    Entity *connectingDlg;
+    EntityUIControl *timeAttackControl;
+    EntityUIControl *timeAttackControl_Legacy;
+    EntityUIControl *taZoneSelControl;
+    EntityUIButtonPrompt *switchModePrompt;
+    EntityUIControl *taDetailsControl;
+    EntityUITABanner *detailsBanner;
+    EntityUIControl *leaderboardsControl;
+    EntityUILeaderboard *leaderboard;
+    EntityUIButtonPrompt *topRankPrompt;
+    EntityUITABanner *leaderboardsBanner;
+    EntityUIControl *replaysControl;
+    EntityUIReplayCarousel *replayCarousel;
+    EntityUIButtonPrompt *replayPrompt;
+    EntityUIDialog *connectingDlg;
     bool32 encoreMode;
-    bool32 field_40;
-    bool32 field_44;
-} ObjectTimeAttackMenu;
+    bool32 prevIsUser;
+    int32 isUser;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTimeAttackMenu {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
-    int32 timeOut;
-} EntityTimeAttackMenu;
+    int32 delay;
+};
 
 // Object Struct
 extern ObjectTimeAttackMenu *TimeAttackMenu;
@@ -52,48 +52,48 @@ void TimeAttackMenu_Serialize(void);
 
 // Extra Entity Functions
 void TimeAttackMenu_Initialize(void);
-void TimeAttackMenu_Unknown2(void);
-void TimeAttackMenu_Unknown3(void);
-void TimeAttackMenu_Unknown4(void);
+void TimeAttackMenu_HandleUnlocks(void);
+void TimeAttackMenu_SetupActions(void);
+void TimeAttackMenu_HandleMenuReturn(void);
 void TimeAttackMenu_SetEncoreLayouts(bool32 enabled);
-void TimeAttackMenu_DeleteReplayCB(void);
-void TimeAttackMenu_Unknown7(void);
-void TimeAttackMenu_Unknown8(bool32 success);
-void TimeAttackMenu_UnknownCB4_LB(void);
-void TimeAttackMenu_Unknown10(int32 zone, int32 playerID, int32 act, int32 encore, int32 a5, void (*callback)(void));
-void TimeAttackMenu_Options2CB_ReplayCarousel(void);
-void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost);
-void TimeAttackMenu_ReplayLoad_CB(bool32 a1);
-void TimeAttackMenu_WatchReplayCB(void);
-void TimeAttackMenu_ChallengeReplayCB(void);
-void TimeAttackMenu_Unknown15(void);
-void TimeAttackMenu_Unknown16(void);
-void TimeAttackMenu_Unknown17(void);
-void TimeAttackMenu_UnknownCB3_Replay(void);
-void TimeAttackMenu_UnknownCB4_Replay(void);
-void TimeAttackMenu_Unknown20(void);
-void TimeAttackMenu_Unknown21(void);
+void TimeAttackMenu_DeleteReplayActionCB(void);
+void TimeAttackMenu_ConfirmDeleteReplay_Yes_CB(void);
+void TimeAttackMenu_DeleteReplayCB(bool32 success);
+void TimeAttackMenu_MenuUpdateCB_LB(void);
+void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act, bool32 isEncore, bool32 noRows, void (*callback)(void));
+void TimeAttackMenu_ReplayCarousel_ActionCB(void);
+void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost);
+void TimeAttackMenu_ReplayLoad_CB(bool32 success);
+void TimeAttackMenu_WatchReplayActionCB_ReplaysMenu(void);
+void TimeAttackMenu_ChallengeReplayActionCB_ReplaysMenu(void);
+void TimeAttackMenu_WatchReplayCB_RanksMenu(void);
+void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void);
+void TimeAttackMenu_LoadScene_Fadeout(void);
+void TimeAttackMenu_MenuSetupCB_Replay(void);
+void TimeAttackMenu_MenuUpdateCB_Replay(void);
+void TimeAttackMenu_MenuUpdateCB(void);
+void TimeAttackMenu_ReplayButton_ActionCB(void);
 void TimeAttackMenu_YPressCB_Replay(void);
 void TimeAttackMenu_SortReplayChoiceCB(void);
-void TimeAttackMenu_Unknown24(void);
-void TimeAttackMenu_TAModuleCB(void);
-void TimeAttackMenu_Unknown26(void);
-void TimeAttackMenu_Unknown27(void);
+void TimeAttackMenu_SetupDetailsView(void);
+void TimeAttackMenu_TAModule_ActionCB(void);
+void TimeAttackMenu_StartTAAttempt(void);
+void TimeAttackMenu_LoadScene(void);
 void TimeAttackMenu_YPressCB_ZoneSel(void);
 bool32 TimeAttackMenu_BackPressCB_ZoneSel(void);
 void TimeAttackMenu_YPressCB_Details(void);
 void TimeAttackMenu_ResetTimes_YesCB(void);
 void TimeAttackMenu_XPressCB_Details(void);
-void TimeAttackMenu_Options2CB_Replays(void);
-void TimeAttackMenu_Unknown34(void);
-void TimeAttackMenu_UnknownCB3_Details(void);
-void TimeAttackMenu_UnknownCB1_Replays(void);
-void TimeAttackMenu_Options2CB_CharButton(void);
-void TimeAttackMenu_Unknown38(void);
+void TimeAttackMenu_Replays_ActionCB(void);
+void TimeAttackMenu_RankButton_ActionCB(void);
+void TimeAttackMenu_MenuSetupCB_Details(void);
+void TimeAttackMenu_Replays_ChoiceChangeCB(void);
+void TimeAttackMenu_CharButton_ActionCB(void);
+void TimeAttackMenu_TransitionToDetailsCB(void);
 bool32 TimeAttackMenu_LeaderboardsBackPressCB(void);
 void TimeAttackMenu_YPressCB_LB(void);
-void TimeAttackMenu_Unknown41(void);
-void TimeAttackMenu_Unknown42(void *c);
+void TimeAttackMenu_State_SetupLeaderboards(void);
+void TimeAttackMenu_SetupLeaderboardsCarousel(void *c);
 
 #endif
 

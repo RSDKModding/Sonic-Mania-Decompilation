@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFirework {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxRocketJet;
@@ -14,10 +14,10 @@ typedef struct {
     bool32 playingFlameSfx;
     Hitbox hitbox1;
     Hitbox hitbox2;
-} ObjectFirework;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFirework {
     RSDK_ENTITY
     int32 distance;
     int32 innerRadius;
@@ -35,7 +35,7 @@ typedef struct {
     bool32 field_A0;
     Animator animator1;
     Animator animator2;
-} EntityFirework;
+};
 
 // Object Struct
 extern ObjectFirework *Firework;

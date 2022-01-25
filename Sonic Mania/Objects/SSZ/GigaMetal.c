@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GigaMetal Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -86,7 +93,7 @@ void GigaMetal_Create(void *data)
                     self->drawOrder  = Zone->drawOrderHigh;
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->animator, true, 0);
                     break;
-                case GIGAMETAL_BODY:
+                case GIGAMETAL_BODY: {
                     self->active   = ACTIVE_BOUNDS;
                     self->head     = RSDK_GET_ENTITY(slot + 1, );
                     self->ruby     = RSDK_GET_ENTITY(slot + 2, );
@@ -99,14 +106,16 @@ void GigaMetal_Create(void *data)
                     self->health = 8;
                     self->state  = GigaMetal_State_SetupBounds;
                     break;
-                case GIGAMETAL_COVER:
+                }
+                case GIGAMETAL_COVER: {
                     self->body      = RSDK_GET_ENTITY(slot - 3, );
                     self->stateDraw = GigaMetal_StateDraw3_Unknown;
                     self->inkEffect = INK_ADD;
                     self->alpha     = 255;
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_COVER, &self->animator, true, 0);
                     break;
-                case GIGAMETAL_ARMFRONT:
+                }
+                case GIGAMETAL_ARMFRONT: {
                     self->body       = RSDK_GET_ENTITY(slot - 4, );
                     self->stateDraw  = GigaMetal_StateDraw6_Unknown;
                     self->field_8C.x = -0x1C0000;
@@ -117,7 +126,8 @@ void GigaMetal_Create(void *data)
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator3, true, 2);
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator4, true, 3);
                     break;
-                case GIGAMETAL_ARMBACK:
+                }
+                case GIGAMETAL_ARMBACK: {
                     self->body       = RSDK_GET_ENTITY(slot + 1, );
                     self->stateDraw  = GigaMetal_StateDraw6_Unknown;
                     self->field_8C.x = -0xC0000;
@@ -127,7 +137,8 @@ void GigaMetal_Create(void *data)
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator3, true, 2);
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator4, true, 3);
                     break;
-                case GIGAMETAL_LASEREDGE:
+                }
+                case GIGAMETAL_LASEREDGE: {
                     self->stateDraw = GigaMetal_StateDraw8_Unknown;
                     self->drawFX    = FX_ROTATE;
                     self->field_10C = -1;
@@ -141,7 +152,8 @@ void GigaMetal_Create(void *data)
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERBEAM, &self->animator2, true, 0);
                     RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->animator3, true, 1);
                     break;
-                case GIGAMETAL_SHARD:
+                }
+                case GIGAMETAL_SHARD: {
                     self->scale.x    = RSDK.Rand(0x200, 0x400);
                     self->scale.y    = RSDK.Rand(0x200, 0x400);
                     self->field_100  = RSDK.Rand(0, 0x400);
@@ -156,6 +168,7 @@ void GigaMetal_Create(void *data)
                     self->state      = GigaMetal_State10_Unknown;
                     self->stateDraw  = GigaMetal_StateDraw10_Unknown;
                     break;
+                }
                 default: break;
             }
         }
@@ -618,14 +631,13 @@ void GigaMetal_State_Unknown5(void)
         if (endX > 224)
             RSDK.CopyTileLayer(Zone->fgHigh, endX - 224, endY - 5, Zone->fgHigh, endX - 224, endY - 5 + 8, 1, 6);
 
-        int delay  = 4;
         int tileX  = (ScreenInfo->position.x >> 4) + 8;
         int spawnY = (endY << 20) + 0x80000;
 
         for (int delay = 4; delay < 40; delay += 6) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, endY);
 
-            if (tile != 0xFFFF) {
+            if (tile != (uint16)-1) {
                 EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
                 block->drawOrder           = Zone->drawOrderHigh;
                 block->layerID             = Zone->fgHigh;
@@ -731,16 +743,16 @@ void GigaMetal_State_Destroyed(void)
         dango->direction   = FLIP_X;
         dango->state       = Dango_StateTaunt_Unknown1;
 
-        int tileX = ScreenInfo->position.x >> 4;
-        int tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
+        int32 tileX = ScreenInfo->position.x >> 4;
+        int32 tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
 
-        int spawnX = (tileX << 20) + 0x80000;
+        int32 spawnX = (tileX << 20) + 0x80000;
         for (int x = 0; x < 32; ++x) {
-            int spawnY = (tileY << 20) + 0x80000;
-            for (int y = 0; y < 6; ++y) {
+            int32 spawnY = (tileY << 20) + 0x80000;
+            for (int32 y = 0; y < 6; ++y) {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, tileY);
-                if (tile != 0xFFFF) {
-                    RSDK.SetTileInfo(Zone->fgHigh, tileX, tileY, 0xFFFF);
+                if (tile != (uint16)-1) {
+                    RSDK.SetTileInfo(Zone->fgHigh, tileX, tileY, -1);
                     EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     block->drawOrder           = Zone->drawOrderHigh;
                     block->visible             = true;
@@ -937,7 +949,7 @@ void GigaMetal_StateHead_Unknown6(void)
 
     if (self->rotation >= 0) {
         if (++self->timer == 2) {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, false, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator3, false, 0);
 
             foreach_active(GigaMetal, arm)
             {
@@ -981,7 +993,7 @@ void GigaMetal_StateHead_Unknown8(void)
         RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_EYE, &self->animator2, false, 3);
     }
     else if (self->timer == 88) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
         self->field_94 = self->field_8C;
         self->timer    = 0;
         self->state    = GigaMetal_StateHead_Unknown9;

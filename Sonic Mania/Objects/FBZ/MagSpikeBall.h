@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMagSpikeBall {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectMagSpikeBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMagSpikeBall {
     RSDK_ENTITY
     Animator animator;
-} EntityMagSpikeBall;
+};
 
 // Object Struct
 extern ObjectMagSpikeBall *MagSpikeBall;

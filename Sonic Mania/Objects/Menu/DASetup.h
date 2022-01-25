@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDASetup {
     RSDK_OBJECT
     bool32 initialized;
     int32 flag;
@@ -20,12 +20,17 @@ typedef struct {
     uint16 sfxMedal;
     uint16 sfxSSExit;
     uint16 sfxScoreTotal;
-} ObjectDASetup;
+#if RETRO_USE_TOUCH_CONTROLS
+    uint8 touchDir;
+    uint8 touchConfirm;
+    uint8 touchBack;
+#endif
+};
 
 // Entity Class
-typedef struct {
+struct EntityDASetup {
 	RSDK_ENTITY
-} EntityDASetup;
+};
 
 // Object Struct
 extern ObjectDASetup *DASetup;

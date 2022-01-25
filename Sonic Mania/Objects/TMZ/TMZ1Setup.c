@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TMZ1Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTMZ1Setup *TMZ1Setup;
@@ -95,9 +102,9 @@ void TMZ1Setup_StageLoad(void)
     if (!TMZ1Setup->paletteInit) {
 #if RETRO_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
-            RSDK.LoadPalette(0, "EncoreTMZ1.act", 0xFF);
-            RSDK.LoadPalette(1, "EncoreTMZ1d.act", 0xFF);
-            RSDK.LoadPalette(2, "EncoreTMZ1l.act", 0xFF);
+            RSDK.LoadPalette(0, "EncoreTMZ1.act", 0b0000000011111111);
+            RSDK.LoadPalette(1, "EncoreTMZ1d.act", 0b0000000011111111);
+            RSDK.LoadPalette(2, "EncoreTMZ1l.act", 0b0000000011111111);
         }
 #endif
         for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0);

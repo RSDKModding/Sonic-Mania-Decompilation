@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectReagent {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxLand;
-} ObjectReagent;
+};
 
 // Entity Class
-typedef struct {
+struct EntityReagent {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -23,7 +23,7 @@ typedef struct {
     int32 g;
     int32 b;
     Animator animator;
-} EntityReagent;
+};
 
 // Object Struct
 extern ObjectReagent *Reagent;
@@ -42,7 +42,7 @@ void Reagent_EditorLoad(void);
 void Reagent_Serialize(void);
 
 // Extra Entity Functions
-void Reagent_Unknown1(void);
-void Reagent_Unknown2(void);
+void Reagent_State_CheckPoolCollisions(void);
+void Reagent_State_ChangingPoolType(void);
 
 #endif //!OBJ_REAGENT_H

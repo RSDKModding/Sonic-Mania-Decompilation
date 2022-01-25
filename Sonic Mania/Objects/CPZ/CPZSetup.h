@@ -8,11 +8,13 @@ typedef enum {
     CPZ_BG_CPZ1,
 } BGSwitchIDsCPZ;
 
+typedef enum { CPZ_DECOR_WARNSIGN } DecorTypesCPZ;
+
 // Object Class
-typedef struct {
+struct ObjectCPZSetup {
     RSDK_OBJECT
     uint16 aniTiles;
-    TileLayer* layerPtr;
+    TileLayer *cpz1BG;
     TABLE(int32 deformation[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
                                  1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
     int32 palAnimFrameA;
@@ -22,12 +24,12 @@ typedef struct {
     int32 palAnimFrameE;
     uint16 aniTileFrame;
     Entity* outro;
-} ObjectCPZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCPZSetup {
 	RSDK_ENTITY
-} EntityCPZSetup;
+};
 
 // Object Struct
 extern ObjectCPZSetup *CPZSetup;

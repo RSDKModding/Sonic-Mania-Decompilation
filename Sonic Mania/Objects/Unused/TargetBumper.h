@@ -8,13 +8,13 @@ typedef enum { TARGETBUMP_HORIZONTAL, TARGETBUMP_VERTICAL, TARGETBUMP_CIRCLE } T
 typedef enum { TARGETBUMP_THREE_HIT, TARGETBUMP_TWO_HIT, TARGETBUMP_ONE_HIT } TargetBumperHitCount;
 
 // Object Class
-typedef struct {
+struct ObjectTargetBumper {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTargetBumper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTargetBumper {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -23,7 +23,7 @@ typedef struct {
     Vector2 curPos;
     int32 hitTimer;
     Animator animator;
-} EntityTargetBumper;
+};
 
 // Object Entity
 extern ObjectTargetBumper *TargetBumper;

@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Flipper {
     RSDK_OBJECT
     Animator unusedAnimator1;
     Hitbox hitbox;
@@ -16,10 +16,10 @@ typedef struct {
     uint16 sceneIndex;
     uint16 sfxFlipper;
     uint16 sfxFlipperStage;
-} ObjectPBL_Flipper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Flipper {
     RSDK_ENTITY
     StateMachine(state);
     uint8 minCraneID;
@@ -33,7 +33,7 @@ typedef struct {
     bool32 buttonDown;
     bool32 flipperActive;
     Animator animator;
-} EntityPBL_Flipper;
+};
 
 // Object Struct
 extern ObjectPBL_Flipper *PBL_Flipper;

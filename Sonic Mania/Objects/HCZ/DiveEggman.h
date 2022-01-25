@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDiveEggman {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -16,10 +16,10 @@ typedef struct {
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxRockemSockem;
-} ObjectDiveEggman;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDiveEggman {
     RSDK_ENTITY
     StateMachine(state);
     int32 startY;
@@ -27,7 +27,7 @@ typedef struct {
     int32 invincibilityTimer;
     uint8 health;
     Animator animator;
-} EntityDiveEggman;
+};
 
 // Object Struct
 extern ObjectDiveEggman *DiveEggman;

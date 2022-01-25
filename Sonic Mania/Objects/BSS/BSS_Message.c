@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BSS_Message Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBSS_Message *BSS_Message;
@@ -154,11 +161,11 @@ void BSS_Message_State_Finish(void)
     if (self->timer2 > 320)
         destroyEntity(self);
 }
-void BSS_Message_TrackProgress_CB(int32 success)
+void BSS_Message_TrackProgressCB(bool32 success)
 {
     RSDK_THIS(BSS_Message);
-    self->field_6C = 0;
-    UIWaitSpinner_Wait2();
+    self->saveInProgress = false;
+    UIWaitSpinner_FinishWait();
 }
 
 void BSS_Message_LoadPrevScene(void)
@@ -190,10 +197,10 @@ void BSS_Message_LoadPrevScene(void)
                 self->state = StateMachine_None;
             }
             else {
-                self->state    = BSS_Message_LoadGameState;
-                self->field_6C = 1;
-                UIWaitSpinner_Wait();
-                GameProgress_TrackGameProgress(BSS_Message_TrackProgress_CB);
+                self->state          = BSS_Message_LoadGameState;
+                self->saveInProgress = true;
+                UIWaitSpinner_StartWait();
+                GameProgress_TrackGameProgress(BSS_Message_TrackProgressCB);
             }
         }
     }
@@ -202,7 +209,7 @@ void BSS_Message_LoadPrevScene(void)
 void BSS_Message_LoadGameState(void)
 {
     RSDK_THIS(BSS_Message);
-    if (!self->field_6C) {
+    if (!self->saveInProgress) {
         globals->blueSpheresInit = true;
         GameProgress_ShuffleBSSID();
         EntitySaveGame *saveRAM = SaveGame->saveRAM;

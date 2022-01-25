@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: FBZSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFBZSetup *FBZSetup;
@@ -100,18 +107,18 @@ void FBZSetup_StageLoad(void)
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act2;
 
     if ((SceneInfo->filter & FILTER_ENCORE)) {
-        RSDK.LoadPalette(0, "EncoreFBZ.act", 0xFF);
-        RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
-        RSDK.LoadPalette(2, "EncoreFBZs.act", 0xFF);
-        RSDK.LoadPalette(3, "EncoreFBZf.act", 0xFF);
-        RSDK.LoadPalette(4, "EncoreFBZi.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreFBZ.act", 0b0000000011111111);
+        RSDK.CopyPalette(0, 1, 1, 1, 0b0000000011111111);
+        RSDK.LoadPalette(2, "EncoreFBZs.act", 0b0000000011111111);
+        RSDK.LoadPalette(3, "EncoreFBZf.act", 0b0000000011111111);
+        RSDK.LoadPalette(4, "EncoreFBZi.act", 0b0000000011111111);
     }
 #endif
 }
 
 void FBZSetup_ActTransitionLoad(void)
 {
-    Zone_ReloadStoredEntities(0x10E40000, 0xD40000, false);
+    Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 4324 << 16, false);
     Zone->cameraBoundsL[0] = 0;
     Zone->cameraBoundsB[0] = 4324;
     Zone->cameraBoundsL[1] = 0;
@@ -134,11 +141,11 @@ void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 val          = (a3 * screen->position.y) >> 8;
-    int32 start        = a4 - val;
-    int32 end          = a4 - val + a5;
+    int32 scroll          = (a3 * screen->position.y) >> 8;
+    int32 start        = a4 - scroll;
+    int32 end          = a4 - scroll + a5;
     int32 x            = (a1 * screen->position.x) << 8;
-    if (a4 - val < SCREEN_YSIZE && end > 0) {
+    if (start < SCREEN_YSIZE && end > 0) {
         int32 y = a6;
         if (start < 0) {
             y     = a6 - (start << 16);
@@ -259,6 +266,10 @@ void FBZSetup_EditorLoad(void)
     RSDK_ENUM_VAR("Show Inside 1", FBZ_BG_INSIDE1);
     RSDK_ENUM_VAR("Show Inside 2", FBZ_BG_INSIDE2);
     RSDK_ENUM_VAR("Show Inside 1 (Duplicate)", FBZ_BG_INSIDE1_DUP);
+
+    RSDK_ACTIVE_VAR(Decoration, type);
+    RSDK_ENUM_VAR("Blueprint 1", FBZ_DECOR_BLUEPRINT1);
+    RSDK_ENUM_VAR("Blueprint 2", FBZ_DECOR_BLUEPRINT2);
 }
 #endif
 

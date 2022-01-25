@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TMZBarrier Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTMZBarrier *TMZBarrier;
@@ -5,8 +12,8 @@ ObjectTMZBarrier *TMZBarrier;
 void TMZBarrier_Update(void)
 {
     RSDK_THIS(TMZBarrier);
-    if (self->field_5C) {
-        TMZBarrier->flags |= 1 << self->iD;
+    if (self->cleared) {
+        TMZBarrier->clearedBarriers |= 1 << self->iD;
         if (self->type)
             RSDK.CopyTileLayer(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
         else
@@ -19,10 +26,10 @@ void TMZBarrier_LateUpdate(void) {}
 
 void TMZBarrier_StaticUpdate(void)
 {
-    globals->tempFlags = TMZBarrier->flags;
+    globals->tempFlags = TMZBarrier->clearedBarriers;
     if (TMZBarrier->postID != StarPost->postIDs[0]) {
         TMZBarrier->postID    = StarPost->postIDs[0];
-        globals->restartFlags = TMZBarrier->flags;
+        globals->restartFlags = TMZBarrier->clearedBarriers;
     }
 }
 
@@ -40,16 +47,16 @@ void TMZBarrier_StageLoad(void)
     if (SceneInfo->minutes || SceneInfo->seconds || SceneInfo->milliseconds) {
         if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
             || SceneInfo->milliseconds != globals->tempMilliseconds) {
-            TMZBarrier->flags = globals->restartFlags;
+            TMZBarrier->clearedBarriers = globals->restartFlags;
         }
         else {
-            TMZBarrier->flags = globals->tempFlags;
+            TMZBarrier->clearedBarriers = globals->tempFlags;
         }
 
         TMZBarrier->postID = StarPost->postIDs[0];
         foreach_all(TMZBarrier, barrier)
         {
-            if ((1 << barrier->iD) & TMZBarrier->flags) {
+            if ((1 << barrier->iD) & TMZBarrier->clearedBarriers) {
                 if (barrier->type)
                     RSDK.CopyTileLayer(Zone->fgLow, barrier->position.x >> 20, barrier->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
                 else
@@ -59,10 +66,10 @@ void TMZBarrier_StageLoad(void)
         }
     }
     else {
-        TMZBarrier->postID    = 0;
-        TMZBarrier->flags     = 0;
-        globals->restartFlags = 0;
-        globals->tempFlags    = 0;
+        TMZBarrier->postID          = 0;
+        TMZBarrier->clearedBarriers = 0;
+        globals->restartFlags       = 0;
+        globals->tempFlags          = 0;
     }
 }
 

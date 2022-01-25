@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTitle3DSprite {
     RSDK_OBJECT
     int32 islandSize;
     int32 height;
     int32 baseDepth;
     uint16 aniFrames;
-} ObjectTitle3DSprite;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTitle3DSprite {
     RSDK_ENTITY
     int32 frame;
     int32 relX;
     int32 relY;
     Animator animator;
-} EntityTitle3DSprite;
+};
 
 // Object Struct
 extern ObjectTitle3DSprite *Title3DSprite;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TTCutscene Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTTCutscene *TTCutscene;
@@ -38,30 +45,31 @@ void TTCutscene_StageLoad(void)
 
 void TTCutscene_StartCutscene(void)
 {
-    void *cutsceneStates[6] = { TTCutscene_CutsceneState_Setup,  TTCutscene_CutsceneState_FlyIn,     TTCutscene_CutsceneState_Wait,
-                                TTCutscene_CutsceneState_FlyOut, TTCutscene_CutsceneState_NextScene, NULL };
-
     RSDK_THIS(TTCutscene);
-    CutsceneSeq_StartSequence((Entity *)self, cutsceneStates);
+
+    CutsceneSeq_StartSequence(self, TTCutscene_Cutscene_Setup, TTCutscene_Cutscene_FlyIn, TTCutscene_Cutscene_Wait,
+                              TTCutscene_Cutscene_FlyOut, TTCutscene_Cutscene_NextScene, StateMachine_None);
+#if RETRO_USE_PLUS
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (cutsceneSeq->objectID != TYPE_BLANK) {
         cutsceneSeq->skipType    = SKIPTYPE_CALLBACK;
         cutsceneSeq->skipCallback = TTCutscene_SkipCB;
     }
+#endif
 }
 
+#if RETRO_USE_PLUS
 void TTCutscene_SkipCB(void)
 {
-#if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "Stardust Speedway Zone+ 1");
     else
-#endif
         RSDK.SetScene("Mania Mode", "Stardust Speedway Zone 1");
     ++SceneInfo->listPos;
 }
+#endif
 
-bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
+bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     if (!host->timer) {
@@ -94,7 +102,7 @@ bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
     return host->timer == 64;
 }
 
-bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
+bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -109,7 +117,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
         }
         else {
             Vector2 *pos = &player1->position;
-            pos->y       = MathHelpers_Unknown5((timerP1 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
+            pos->y       = MathHelpers_GetBezierPoint((timerP1 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
         }
     }
     else {
@@ -126,7 +134,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
             }
             else if (timerP2 < 60) {
                 Vector2 *pos = &player2->position;
-                pos->y       = MathHelpers_Unknown5((timerP2 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
+                pos->y       = MathHelpers_GetBezierPoint((timerP2 << 16) / 60, pos->x, scrY2, pos->x, scrY - 0x800000, pos->x, scrY, pos->x, scrY).y;
             }
         }
         else {
@@ -138,7 +146,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
     return host->timer == 75;
 }
 
-bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host)
+bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -150,7 +158,7 @@ bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host)
     return host->timer == 100;
 }
 
-bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
+bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -165,7 +173,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
         }
         else {
             Vector2 *pos = &player1->position;
-            pos->y       = MathHelpers_Unknown5((timerP1 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
+            pos->y       = MathHelpers_GetBezierPoint((timerP1 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
         }
     }
     else {
@@ -182,7 +190,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
             }
             else {
                 Vector2 *pos = &player2->position;
-                pos->y       = MathHelpers_Unknown5((timerP2 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
+                pos->y       = MathHelpers_GetBezierPoint((timerP2 << 16) / 60, pos->x, scrY, pos->x, scrY, pos->x, scrY + 0x800000, pos->x, scrY2).y;
             }
         }
         else {
@@ -197,7 +205,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
     return host->timer == 75;
 }
 
-bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
+bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player1);

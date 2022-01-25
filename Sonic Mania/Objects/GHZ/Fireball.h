@@ -10,15 +10,15 @@ typedef enum {
 }FireballTypes;
 
 // Object Class
-typedef struct {
+struct ObjectFireball {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 sfxFireball;
-} ObjectFireball;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFireball {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -28,7 +28,7 @@ typedef struct {
     uint8 intervalOffset;
     int32 unused1;
     int32 unused2;
-} EntityFireball;
+};
 
 // Object Entity
 extern ObjectFireball *Fireball;
@@ -57,6 +57,6 @@ void Fireball_State_Move(void);
 void Fireball_State_MoveGravity(void);
 void Fireball_State_Dissipate(void);
 
-void Fireball_StateDraw_Normal(void);
+void Fireball_Draw_Normal(void);
 
 #endif //! OBJ_FIREBALL_H

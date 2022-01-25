@@ -6,7 +6,7 @@
 #define MonkeyDude_MaxBodyParts (4)
 
 // Object Class
-typedef struct {
+struct ObjectMonkeyDude {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox coconutHitbox;
@@ -17,10 +17,10 @@ typedef struct {
 #if RETRO_USE_PLUS
     uint16 sfxDrop;
 #endif
-} ObjectMonkeyDude;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMonkeyDude {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -41,7 +41,7 @@ typedef struct {
     Animator bodyAnimator;
     Animator handAnimator;
     int32 coconutFrame;
-} EntityMonkeyDude;
+};
 
 // Object Struct
 extern ObjectMonkeyDude *MonkeyDude;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoBean {
     RSDK_OBJECT
     TABLE(int32 fallDelays[5], { 16, 12, 8, 4, 2 });
     Hitbox hitbox;
@@ -22,10 +22,10 @@ typedef struct {
     uint16 chainFrames[6];
     uint16 sfxJunk;
     uint16 sfxFall;
-} ObjectPuyoBean;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoBean {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
@@ -66,7 +66,7 @@ typedef struct {
     int32 touchRight;
     int32 touchLeft;
 #endif
-} EntityPuyoBean;
+};
 
 // Object Struct
 extern ObjectPuyoBean *PuyoBean;
@@ -87,7 +87,7 @@ void PuyoBean_Serialize(void);
 // Extra Entity Functions
 EntityPuyoBean *PuyoBean_GetPuyoBean(int playerID, int x, int y);
 void PuyoBean_StateInput_HandlePlayerInputs(void);
-void PuyoBean_Unknown2(void);
+void PuyoBean_DestroyPuyoBeans(void);
 void PuyoBean_Unknown3(void);
 void PuyoBean_CheckBeanLinks(EntityPuyoBean *bean, EntityPuyoBean *curLink);
 void PuyoBean_HandleMoveBounds(void);
@@ -109,6 +109,6 @@ void PuyoBean_Unknown20(void);
 void PuyoBean_Unknown21(void);
 void PuyoBean_Unknown22(void);
 void PuyoBean_Unknown23(void);
-void PuyoBean_Unknown24(void);
+void PuyoBean_State_MatchLoseFall(void);
 
 #endif //!OBJ_PUYOBEAN_H

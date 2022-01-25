@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Tornado Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTornado *Tornado;
@@ -106,7 +113,7 @@ void Tornado_State_SetupPlayers(void)
     RSDK_THIS(Tornado);
     Tornado_HandlePlayerCollisions();
     if (StarPost->postIDs[0]) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animatorKnux, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
         self->state = Tornado_Unknown6;
     }
     else {
@@ -151,7 +158,7 @@ void Tornado_Unknown4(void)
     self->knuxOffset.y += self->knuxVel.y;
     if (++self->timer == 120) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animatorKnux, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
         self->state = Tornado_Unknown6;
     }
 }
@@ -194,7 +201,7 @@ void Tornado_HandlePlayerCollisions(void)
         if (player1->objectID == Player->objectID) {
             int32 deathBounds = (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16));
             if (player1->position.y > deathBounds)
-                player1->hurtFlag = 1;
+                player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
 }
@@ -350,7 +357,7 @@ void Tornado_Unknown6(void)
 
         if (player1->objectID == Player->objectID) {
             if (player1->position.y > (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16)))
-                player1->hurtFlag = 1;
+                player1->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
     if (player1->state == Player_State_TailsFlight) {

@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Camera {
     RSDK_OBJECT
     Matrix matWorld;
     Matrix matView;
     Matrix matTemp;
     bool32 isSS7;
-} ObjectUFO_Camera;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Camera {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -25,7 +25,7 @@ typedef struct {
     Entity *target;
     Matrix matWorld;
     Matrix matView;
-} EntityUFO_Camera;
+};
 
 // Object Struct
 extern ObjectUFO_Camera *UFO_Camera;

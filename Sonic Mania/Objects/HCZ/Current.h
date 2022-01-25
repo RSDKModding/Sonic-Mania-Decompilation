@@ -3,33 +3,50 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CURRENT_C_LEFT,
+    CURRENT_C_RIGHT,
+    CURRENT_C_UP,
+    CURRENT_C_DOWN,
+    CURRENT_W_LEFT,
+    CURRENT_W_RIGHT,
+    CURRENT_W_UP,
+    CURRENT_W_DOWN,
+} CurrentTypes;
+
+typedef enum {
+    CURRENT_CHILD_NONE,
+    CURRENT_CHILD_WIND,
+    CURRENT_CHILD_BUBBLE,
+} CurrentChildTypes;
+
 // Object Class
-typedef struct {
+struct ObjectCurrent {
     RSDK_OBJECT
     uint8 activePlayers;
     Animator animator;
     uint16 aniFrames;
     uint16 sfxRush;
-} ObjectCurrent;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCurrent {
     RSDK_ENTITY
     StateMachine(state);
-    int32 type;
+    CurrentTypes type;
     Vector2 size;
     uint8 strength;
     Hitbox hitbox;
     uint8 activePlayers;
-    Vector2 playerPositions[4];
+    Vector2 playerPositions[PLAYER_MAX];
     int32 buttonTag;
     EntityButton *taggedButton;
     bool32 activated;
-    int32 planeFilter;
+    PlaneFilterTypes planeFilter;
     bool32 waterOnly;
     bool32 fbzAchievement;
     Animator animator;
-} EntityCurrent;
+};
 
 // Object Struct
 extern ObjectCurrent *Current;
@@ -49,22 +66,22 @@ void Current_Serialize(void);
 
 // Extra Entity Functions
 void Current_GetTaggedButton(void);
-Vector2 Current_Unknown2(uint8 a1);
-Vector2 Current_Unknown3(uint8 a1);
+Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right);
+Vector2 Current_GetBubbleSpawnPosVertical(uint8 down);
 
-void Current_State_Type0(void);
-void Current_State_Type1(void);
-void Current_State_Type2(void);
-void Current_State_Type3(void);
-void Current_State_Type4(void);
-void Current_State_Type5(void);
-void Current_State_Type6(void);
-void Current_State_Type7(void);
-void Current_State_LaundoMobile(void);
+void Current_State_WaterLeft(void);
+void Current_State_WaterRight(void);
+void Current_State_WaterUp(void);
+void Current_State_WaterDown(void);
+void Current_State_PushLeft(void);
+void Current_State_PushRight(void);
+void Current_State_PushUp(void);
+void Current_State_PushDown(void);
+void Current_State_Child(void);
 
-void Current_Player_State_Type0(void);
-void Current_Player_State_Type1(void);
-void Current_Player_State_Type2(void);
-void Current_Player_State_Type3(void);
+void Current_Player_State_CurrentLeft(void);
+void Current_Player_State_CurrentRight(void);
+void Current_Player_State_CurrentUp(void);
+void Current_Player_State_CurrentDown(void);
 
 #endif //!OBJ_CURRENT_H

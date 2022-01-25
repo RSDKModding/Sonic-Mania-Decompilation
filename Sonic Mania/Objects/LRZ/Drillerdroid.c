@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Drillerdroid Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectDrillerdroid *Drillerdroid;
@@ -588,7 +595,6 @@ void Drillerdroid_State_Unknown10(void)
             Drillerdroid->field_6E = 0;
             RSDK.PlaySfx(Drillerdroid->sfxSizzle, false, 255);
 
-            int spawnX           = 0;
             EntityDebris *debris = NULL;
             switch (Drillerdroid->armorHealth) {
                 default: break;
@@ -596,7 +602,7 @@ void Drillerdroid_State_Unknown10(void)
                     self->state = Drillerdroid_State_Unknown11;
                     Drillerdroid_Hit();
                     break;
-                case 1:
+                case 1: {
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 6);
                     debris->velocity.x    = -0x10000;
@@ -656,6 +662,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     break;
+                }
                 case 2:
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 4);

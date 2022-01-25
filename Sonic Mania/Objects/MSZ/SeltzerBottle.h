@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSeltzerBottle {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 layerBitFlags;
     uint16 aniFrames;
     uint16 sfxSpray;
-} ObjectSeltzerBottle;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySeltzerBottle {
     RSDK_ENTITY
     StateMachine(state);
     int32 sprayTime;
@@ -31,7 +31,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntitySeltzerBottle;
+};
 
 // Object Struct
 extern ObjectSeltzerBottle *SeltzerBottle;

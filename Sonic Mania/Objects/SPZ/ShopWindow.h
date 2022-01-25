@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectShopWindow {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxShatter;
-} ObjectShopWindow;
+};
 
 // Entity Class
-typedef struct {
+struct EntityShopWindow {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -24,7 +24,7 @@ typedef struct {
     Vector2 field_88;
     Vector2 field_90;
     Animator animator;
-} EntityShopWindow;
+};
 
 // Object Struct
 extern ObjectShopWindow *ShopWindow;

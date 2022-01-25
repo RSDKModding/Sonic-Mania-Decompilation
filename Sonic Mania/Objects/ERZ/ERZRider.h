@@ -4,27 +4,27 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZRider {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectERZRider;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZRider {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     Vector2 startPos;
     bool32 isJimmy;
-    int32 field_6C;
-    int32 field_70;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-} EntityERZRider;
+    int32 unused1;
+    int32 unused2;
+    Animator mainAnimator;
+    Animator jimmyAnimator;
+    Animator wheelAnimator;
+    Animator thrustAnimator;
+    Animator unusedAnimator1;
+    Animator unusedAnimator2;
+};
 
 // Object Struct
 extern ObjectERZRider *ERZRider;
@@ -43,6 +43,6 @@ void ERZRider_EditorLoad(void);
 void ERZRider_Serialize(void);
 
 // Extra Entity Functions
-void ERZRider_StateDraw_Unknown1(void);
+void ERZRider_Draw_Rider(void);
 
 #endif //!OBJ_ERZRIDER_H

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PhantomEgg Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPhantomEgg *PhantomEgg;
@@ -63,8 +70,8 @@ void PhantomEgg_StageLoad(void)
     PhantomEgg->savedGameProgress = false;
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreTMZ3.act", 0xFF);
-        RSDK.LoadPalette(1, "EncoreTMZ3.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreTMZ3.act", 0b0000000011111111);
+        RSDK.LoadPalette(1, "EncoreTMZ3.act", 0b0000000011111111);
     }
 #endif
     if (!PhantomEgg->setupPalette) {
@@ -102,7 +109,7 @@ void PhantomEgg_HandleAnimations(void)
         self->invincibilityTimer--;
 
     if (self->animator6.animationID == 17) {
-        self->animator6.animationSpeed = 0;
+        self->animator6.speed = 0;
     }
     else {
         if (self->animator6.animationID == 18 || self->animator6.animationID == 19) {
@@ -139,6 +146,7 @@ void PhantomEgg_Hit(void)
             if (cable->cableID == id || !self->health) {
                 RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &cable->animator, true, 0);
                 cable->state = TMZCable_Unknown6;
+                // Bug Details:
                 // uncomment to fix a minor visual bug where the start few cable nodes wont be destroyed properly
                 // cable->timer = 0;
             }
@@ -154,7 +162,7 @@ void PhantomEgg_Hit(void)
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 20, &self->animator6, true, 0);
         self->field_80.x          = self->position.x;
         self->field_80.y          = self->position.y;
-        self->state               = PhantomEgg_State_Unknown16;
+        self->state               = PhantomEgg_State_Destroyed;
         self->timer               = 0;
         PhantomEgg->superFlag       = true;
         SceneInfo->timeEnabled = false;
@@ -237,8 +245,6 @@ void PhantomEgg_SetupScanlineCB(void)
 
 void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
 {
-    RSDK_THIS(PhantomEgg);
-
     int id                    = phantomID & 3;
     PhantomEgg->boundsStoreL1 = Zone->cameraBoundsL[0];
     PhantomEgg->boundsStoreR1 = Zone->cameraBoundsR[0];
@@ -353,8 +359,6 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
 
 void PhantomEgg_HandleReturnWarp(void)
 {
-    RSDK_THIS(PhantomEgg);
-
     for (int p = 0; p < Player->playerCount; ++p) {
         Zone->cameraBoundsL[p] = PhantomEgg->boundsStoreL1;
         Zone->cameraBoundsR[p] = PhantomEgg->boundsStoreR1;
@@ -801,12 +805,12 @@ void PhantomEgg_State_Unknown10(void)
     if (self->timer == 4 * self->health + 160)
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 14, &self->animator7, true, 0);
 
-    if (self->animator7.animationID == 14 && self->animator7.frameID == self->animator7.frameCount - 2 || self->timer > 288) {
+    if ((self->animator7.animationID == 14 && self->animator7.frameID == self->animator7.frameCount - 2) || self->timer > 288) {
         self->timer = 0;
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         if (self->animator3.frameID > 0) {
             self->animator3.frameID        = 6;
-            self->animator3.animationTimer = 0;
+            self->animator3.timer = 0;
             self->state                    = PhantomEgg_State_Unknown8;
         }
         else {
@@ -942,7 +946,7 @@ void PhantomEgg_State_Unknown15(void)
     }
 }
 
-void PhantomEgg_State_Unknown16(void)
+void PhantomEgg_State_Destroyed(void)
 {
     RSDK_THIS(PhantomEgg);
 
@@ -976,6 +980,7 @@ void PhantomEgg_State_Unknown16(void)
                     break;
                 default: break;
             }
+            missile->state = PhantomMissile_Unknown9;
         }
 
         foreach_active(PhantomShield, shield)
@@ -1133,13 +1138,13 @@ void PhantomEgg_State_Unknown21(void)
     if (self->timer >= 512) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
             if (self->timer == 512) {
-                if (Zone_IsAct2())
+                if (Zone_IsZoneLastAct())
                     GameProgress_MarkZoneCompleted(Zone_GetZoneID());
                 SaveGame_SaveFile(PhantomEgg_SaveGameCB);
-                UIWaitSpinner_Wait();
+                UIWaitSpinner_StartWait();
             }
             if (PhantomEgg->savedGameProgress)
-                UIWaitSpinner_Wait2();
+                UIWaitSpinner_FinishWait();
         }
 
         if (globals->saveSlotID == NO_SAVE_SLOT || PhantomEgg->savedGameProgress) {
@@ -1150,7 +1155,7 @@ void PhantomEgg_State_Unknown21(void)
     }
 }
 
-void PhantomEgg_SaveGameCB(int32 status) { PhantomEgg->savedGameProgress = true; }
+void PhantomEgg_SaveGameCB(bool32 success) { PhantomEgg->savedGameProgress = true; }
 
 #if RETRO_INCLUDE_EDITOR
 void PhantomEgg_EditorDraw(void)

@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPhantomShield {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectPhantomShield;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomShield {
     RSDK_ENTITY
     StateMachine(state);
     bool32 shieldActive;
@@ -19,7 +19,7 @@ typedef struct {
     int32 playerTimer[4];
     Entity *parent;
     Animator animator;
-} EntityPhantomShield;
+};
 
 // Object Struct
 extern ObjectPhantomShield *PhantomShield;

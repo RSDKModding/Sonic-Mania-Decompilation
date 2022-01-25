@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Bomb Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBomb *Bomb = NULL;
@@ -242,7 +249,6 @@ void Bomb_State_Shrapnel(void)
 #if RETRO_INCLUDE_EDITOR
 void Bomb_EditorDraw(void)
 {
-    RSDK_THIS(Bomb);
     Bomb_Draw();
 }
 

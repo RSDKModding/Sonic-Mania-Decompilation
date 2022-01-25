@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: EscapeCar Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectEscapeCar *EscapeCar;
@@ -118,7 +125,7 @@ void EscapeCar_StateMania_Unknown1(void)
                 player->position.y -= 0x80000;
             }
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, false, 0);
-            player->animator.animationSpeed = 0;
+            player->animator.speed = 0;
         }
         else {
             allAboard = false;

@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBomb {
     RSDK_OBJECT
     Hitbox hitboxHurt;
     Hitbox hitboxRange;
     Hitbox hitboxShrapnel;
     uint16 aniFrames;
     uint16 sfxExplosion;
-} ObjectBomb;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBomb {
     RSDK_ENTITY
     StateMachine(state);
     int32 planeFilter;
@@ -24,7 +24,7 @@ typedef struct {
     int32 fuseOffset;
     Animator animator;
     Animator animator2;
-} EntityBomb;
+};
 
 // Object Entity
 extern ObjectBomb *Bomb;

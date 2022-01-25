@@ -5,24 +5,24 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectManiaModeMenu {
     RSDK_OBJECT
-    int32 field_4;
-    Entity *saveSelectMenu;
-    Entity *noSaveMenu;
-    Entity *secretsMenu;
-    Entity *prompt1;
-    Entity *encoreSaveSelect;
-    Entity *prompt2;
-    Entity *noSaveMenuEncore;
-    int32 field_24;
-    int32 field_28;
-} ObjectManiaModeMenu;
+    int32 unused;
+    EntityUIControl *saveSelectMenu;
+    EntityUIControl *noSaveMenu;
+    EntityUIControl *secretsMenu;
+    EntityUIButtonPrompt *delSavePrompt;
+    EntityUIControl *encoreSaveSelect;
+    EntityUIButtonPrompt *delSavePrompt_Encore;
+    EntityUIControl *noSaveMenuEncore;
+    bool32 inSecretsMenu;
+    int32 saveSelLastButtonID;
+};
 
 // Entity Class
-typedef struct {
+struct EntityManiaModeMenu {
 	RSDK_ENTITY
-} EntityManiaModeMenu;
+};
 
 // Object Struct
 extern ObjectManiaModeMenu *ManiaModeMenu;
@@ -42,16 +42,17 @@ void ManiaModeMenu_Serialize(void);
 
 // Extra Entity Functions
 void ManiaModeMenu_Initialize(void);
-bool32 ManiaModeMenu_InitUserdata(void);
-void ManiaModeMenu_InitLocalization(int32 a1);
+bool32 ManiaModeMenu_InitAPI(void);
+void ManiaModeMenu_InitLocalization(bool32 success);
 int32 ManiaModeMenu_GetActiveMenu(void);
 void ManiaModeMenu_ChangeMenuTrack(void);
 int32 ManiaModeMenu_StartReturnToTitle(void);
 void ManiaModeMenu_SetBGColours(void);
 void ManiaModeMenu_ReturnToTitle(void);
-void ManiaModeMenu_Unknown13(void);
-void ManiaModeMenu_Unknown3(void);
-void ManiaModeMenu_Unknown7(void);
+void ManiaModeMenu_State_HandleTransition(void);
+void ManiaModeMenu_HandleUnlocks(void);
+void ManiaModeMenu_SetupActions(void);
+void ManiaModeMenu_HandleMenuReturn(void);
 #endif
 
 #endif //!OBJ_MANIAMODEMENU_H

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Orbinaut Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectOrbinaut *Orbinaut = NULL;
@@ -64,14 +71,17 @@ void Orbinaut_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         Orbinaut->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Orbinaut.bin", SCOPE_STAGE);
-    Orbinaut->hitbox1.left   = -8;
-    Orbinaut->hitbox1.top    = -8;
-    Orbinaut->hitbox1.right  = 8;
-    Orbinaut->hitbox1.bottom = 8;
-    Orbinaut->hitbox2.left   = -4;
-    Orbinaut->hitbox2.top    = -4;
-    Orbinaut->hitbox2.right  = 4;
-    Orbinaut->hitbox2.bottom = 4;
+
+    Orbinaut->hitboxBadnik.left   = -8;
+    Orbinaut->hitboxBadnik.top    = -8;
+    Orbinaut->hitboxBadnik.right  = 8;
+    Orbinaut->hitboxBadnik.bottom = 8;
+
+    Orbinaut->hitboxOrb.left   = -4;
+    Orbinaut->hitboxOrb.top    = -4;
+    Orbinaut->hitboxOrb.right  = 4;
+    Orbinaut->hitboxOrb.bottom = 4;
+
     DEBUGMODE_ADD_OBJ(Orbinaut);
 }
 
@@ -84,7 +94,7 @@ void Orbinaut_DebugSpawn(void)
 void Orbinaut_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Orbinaut_HandlePlayerInteractions(void)
@@ -100,7 +110,7 @@ void Orbinaut_HandlePlayerInteractions(void)
             foreach_active(Player, player)
             {
                 if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
-                    if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitbox2)) {
+                    if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
                         Player_CheckHit(player, self);
                     }
                 }
@@ -113,15 +123,15 @@ void Orbinaut_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Orbinaut->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &Orbinaut->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
             int32 angle = self->angle;
             for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
                 if ((1 << i) & self->activeOrbs) {
                     self->position.x = self->orbPositions[i].x;
                     self->position.y = self->orbPositions[i].y;
-                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(1), self->orbPositions[i].x, self->orbPositions[i].y);
+                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(true), self->orbPositions[i].x, self->orbPositions[i].y);
 
-                    orb->state = Orbinaut_Unknown10;
+                    orb->state = Orbinaut_State_OrbDebris;
                     orb->velocity.x = 0x380 * RSDK.Cos256(angle);
                     orb->velocity.y = 0x380 * RSDK.Sin256(angle);
                 }
@@ -165,11 +175,11 @@ void Orbinaut_State_Setup(void)
 {
     RSDK_THIS(Orbinaut);
     self->active = ACTIVE_NORMAL;
-    self->state  = Orbinaut_Unknown6;
-    Orbinaut_Unknown6();
+    self->state  = Orbinaut_State_Moving;
+    Orbinaut_State_Moving();
 }
 
-void Orbinaut_Unknown6(void)
+void Orbinaut_State_Moving(void)
 {
     RSDK_THIS(Orbinaut);
 
@@ -206,7 +216,7 @@ void Orbinaut_Unknown6(void)
             playerPtr = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (distanceX <= 0x800000) {
-            self->state             = Orbinaut_Unknown7;
+            self->state             = Orbinaut_State_ReleasingOrbs;
             self->animatorFace.frameID = 1;
         }
 
@@ -216,7 +226,7 @@ void Orbinaut_Unknown6(void)
     Orbinaut_CheckOnScreen();
 }
 
-void Orbinaut_Unknown7(void)
+void Orbinaut_State_ReleasingOrbs(void)
 {
     RSDK_THIS(Orbinaut);
 
@@ -239,22 +249,22 @@ void Orbinaut_Unknown7(void)
     Orbinaut_HandlePlayerInteractions();
 
     if (!self->activeOrbs) {
-        self->state = Orbinaut_Unknown8;
+        self->state = Orbinaut_State_Orbless;
         if (self->direction == FLIP_NONE)
             self->velocity.x = -0x4000;
         else
             self->velocity.x = 0x4000;
     }
 
-    if (self->animatorFace.animationTimer >= 0x10)
+    if (self->animatorFace.timer >= 0x10)
         self->animatorFace.frameID = 2;
     else
-        self->animatorFace.animationTimer++;
+        self->animatorFace.timer++;
 
     Orbinaut_CheckOnScreen();
 }
 
-void Orbinaut_Unknown8(void)
+void Orbinaut_State_Orbless(void)
 {
     RSDK_THIS(Orbinaut);
     self->position.x += self->velocity.x;
@@ -271,7 +281,7 @@ void Orbinaut_State_Orb(void)
         foreach_active(Player, player)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
-                if (Player_CheckCollisionTouch(player, self, &Sol->hitbox2)) {
+                if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitboxOrb)) {
                     Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
@@ -282,7 +292,7 @@ void Orbinaut_State_Orb(void)
     }
 }
 
-void Orbinaut_Unknown10(void)
+void Orbinaut_State_OrbDebris(void)
 {
     RSDK_THIS(Orbinaut);
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {

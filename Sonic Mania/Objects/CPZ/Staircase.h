@@ -6,25 +6,25 @@
 #define Starcase_StairCount (4)
 
 // Object Class
-typedef struct {
+struct ObjectStaircase {
     RSDK_OBJECT
     Hitbox blockHitbox;
     uint16 animID;
-    uint16 field_E;
+    uint16 unused;
     uint16 sfxID;
-} ObjectStaircase;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStaircase {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(drawState);
+    StateMachine(stateDraw);
     Vector2 blocks[Starcase_StairCount];
     int32 timer;
     Animator animator;
     uint8 type;
     bool32 bumpable;
-} EntityStaircase;
+};
 
 // Object Struct
 extern ObjectStaircase *Staircase;
@@ -45,12 +45,12 @@ void Staircase_Serialize(void);
 // Extra Entity Functions
 bool32 Staircase_CheckCB(void);
 
-void Staircase_MainState(void);
-void Staircase_Wait(void);
-void Staircase_MoveBlocks(void);
-void Staircase_BasicCollision(void);
+void Staircase_State_Idle(void);
+void Staircase_State_Wait(void);
+void Staircase_State_MoveBlocks(void);
+void Staircase_State_MovedBlocks(void);
 
-void Staircase_DrawBlocks(void);
-void Staircase_DrawShake(void);
+void Staircase_Draw_Blocks(void);
+void Staircase_Draw_Shake(void);
 
 #endif //! OBJ_STAIRCASE_H

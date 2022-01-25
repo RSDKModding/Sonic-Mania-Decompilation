@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Gachapandora Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGachapandora *Gachapandora;
@@ -30,7 +37,7 @@ void Gachapandora_Create(void *data)
                 self->type = voidToInt(data);
 
             switch (self->type) {
-                case GACHAPANDORA_MAIN:
+                case GACHAPANDORA_MAIN: {
                     self->visible   = false;
                     self->drawOrder = Zone->drawOrderLow;
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 0, &self->animator1, true, 0);
@@ -92,7 +99,8 @@ void Gachapandora_Create(void *data)
                     self->state     = Gachapandora_State_SetupArena;
                     self->stateDraw = Gachapandora_StateDraw_Unknown1;
                     break;
-                case GACHAPANDORA_1:
+                }
+                case GACHAPANDORA_1: {
                     RSDK.SetSpriteAnimation(Gachapandora->eggmanFrames, 4, &self->animator1, true, 0);
                     self->state         = Gachapandora_State1_Unknown1;
                     self->stateDraw     = Gachapandora_StateDraw8_Unknown;
@@ -102,7 +110,8 @@ void Gachapandora_Create(void *data)
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderLow;
                     break;
-                case GACHAPANDORA_PRIZE:
+                }
+                case GACHAPANDORA_PRIZE: {
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 2, &self->animator1, true, 0);
                     self->state         = Gachapandora_State2_Unknown1;
                     self->stateDraw     = Gachapandora_StateDraw2_Unknown;
@@ -112,7 +121,8 @@ void Gachapandora_Create(void *data)
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderLow;
                     break;
-                case GACHAPANDORA_FIREBALL:
+                }
+                case GACHAPANDORA_FIREBALL: {
                     RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 11, &self->animator1, true, 0);
                     self->hitbox.left   = -2;
                     self->hitbox.top    = -2;
@@ -126,7 +136,8 @@ void Gachapandora_Create(void *data)
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderLow;
                     break;
-                case GACHAPANDORA_DEBRIS:
+                }
+                case GACHAPANDORA_DEBRIS: {
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderLow;
@@ -136,7 +147,8 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->updateRange.x = 0x800000;
                     break;
-                case GACHAPANDORA_SPARK:
+                }
+                case GACHAPANDORA_SPARK: {
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderHigh;
@@ -146,6 +158,7 @@ void Gachapandora_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->updateRange.x = 0x800000;
                     break;
+                }
                 default: break;
             }
         }
@@ -662,7 +675,7 @@ void Gachapandora_State_Unknown4(void)
 
             self->invincibilityTimer = 120;
             RSDK.SetSpriteAnimation(Gachapandora->eggmanFrames, 1, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
             self->state     = Gachapandora_State_Unknown5;
             self->stateDraw = Gachapandora_StateDraw_Unknown2;
         }
@@ -792,7 +805,7 @@ void Gachapandora_State_Unknown9(void)
     self->position.y = BadnikHelpers_Oscillate(self->posUnknown.y, 2, 10);
     if (!--self->invincibilityTimer) {
         CREATE_ENTITY(Gachapandora, intToVoid(GACHAPANDORA_1), self->position.x, self->position.y - 0x100000)->parent = (Entity *)self;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->invincibilityTimer = 60;
         self->state              = Gachapandora_State_Unknown10;
     }
@@ -836,7 +849,7 @@ void Gachapandora_State_Finish(void)
         self->velocity.y += 0x1800;
 
         if (self->position.y > (ScreenInfo->position.y + ScreenInfo->height + 128) << 16) {
-            Zone->cameraBoundsR[0] += 424;
+            Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
             self->state = StateMachine_None;
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
         }

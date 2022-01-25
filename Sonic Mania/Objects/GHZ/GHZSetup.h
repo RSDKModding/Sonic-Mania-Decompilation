@@ -8,8 +8,10 @@ typedef enum {
     GHZ_BG_CAVES,
 } BGSwitchIDsGHZ;
 
+typedef enum { GHZ_DECOR_BRIDGEPOST } DecorTypesGHZ;
+
 // Object Class
-typedef struct {
+struct ObjectGHZSetup {
     RSDK_OBJECT
     int32 waterFadeAmount;
     STATIC(int32 delayA, 30);
@@ -19,12 +21,12 @@ typedef struct {
     int32 frameB;
     TABLE(int32 delayListB[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
     uint16 aniTiles;
-} ObjectGHZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGHZSetup {
     RSDK_ENTITY
-} EntityGHZSetup;
+};
 
 // Object Struct
 extern ObjectGHZSetup *GHZSetup;

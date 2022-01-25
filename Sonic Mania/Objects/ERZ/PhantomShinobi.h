@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPhantomShinobi {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBlade;
     uint16 sfxHit;
-} ObjectPhantomShinobi;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomShinobi {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -31,7 +31,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityPhantomShinobi;
+};
 
 // Object Struct
 extern ObjectPhantomShinobi *PhantomShinobi;

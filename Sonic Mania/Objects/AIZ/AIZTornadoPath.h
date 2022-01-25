@@ -15,17 +15,17 @@ typedef enum {
 } AIZTornadoPathTypes;
 
 // Object Class
-typedef struct {
+struct ObjectAIZTornadoPath {
     RSDK_OBJECT
     EntityAIZTornado *tornado;
     Entity *camera;
     Vector2 moveVel;
     uint16 aniFrames;
     Animator animator;
-} ObjectAIZTornadoPath;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZTornadoPath {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -34,7 +34,7 @@ typedef struct {
     bool32 easeToSpeed;
     int32 speed;
     Animator animator;
-} EntityAIZTornadoPath;
+};
 
 // Object Struct
 extern ObjectAIZTornadoPath *AIZTornadoPath;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BuzzBomber Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBuzzBomber *BuzzBomber;
@@ -57,8 +64,8 @@ void BuzzBomber_Create(void *data)
         self->updateRange.x = 0x200000;
         self->updateRange.y = 0x200000;
         RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 4, &self->animator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->wingAnimator, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->wingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
         self->state = BuzzBomber_State_ProjectileCharge;
     }
     else {
@@ -134,7 +141,7 @@ void BuzzBomber_CheckPlayerCollisions(void)
             if (Player_CheckCollisionTouch(player, self, &self->rangeHitbox)) {
                 self->detectedPlayer = true;
                 self->timer    = 90;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
                 self->state = BuzzBomber_State_DetectedPlayer;
             }
         }
@@ -160,12 +167,12 @@ void BuzzBomber_State_BuzzAround(void)
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    if (!self->timer) {
+    if (!--self->timer) {
         self->direction ^= FLIP_X;
         self->timer      = 60;
         self->velocity.x = -self->velocity.x;
         self->detectedPlayer   = false;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
         self->state = BuzzBomber_State_IdleDelay;
     }
 
@@ -262,7 +269,21 @@ void BuzzBomber_State_ProjectileShot(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BuzzBomber_EditorDraw(void) { BuzzBomber_Draw(); }
+void BuzzBomber_EditorDraw(void)
+{
+    RSDK_THIS(BuzzBomber);
+
+    BuzzBomber_Draw();
+
+    if (showGizmos()) {
+        self->rangeHitbox.right  = self->shotRange;
+        self->rangeHitbox.left   = -self->shotRange;
+        self->rangeHitbox.top    = -256;
+        self->rangeHitbox.bottom = 256;
+
+        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->rangeHitbox);
+    }
+}
 
 void BuzzBomber_EditorLoad(void)
 {

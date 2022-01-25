@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: DBTower Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectDBTower *DBTower;
@@ -211,7 +218,7 @@ void DBTower_State_SetupArena(void)
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
 
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_ENCORE) {
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
             self->timer = 60;
             self->state = DBTower_State_Setup_Encore;
         }
@@ -363,7 +370,7 @@ void DBTower_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
 #if RETRO_USE_PLUS
-        if (SceneInfo->filter == SCN_FILTER_ENCORE) {
+        if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE)) {
             self->timer = 0;
             self->state = DBTower_State_SpawnSignPost;
         }
@@ -419,7 +426,7 @@ void DBTower_CheckPlayerCollisions2(void)
                 }
                 else if (
 #if RETRO_USE_PLUS
-                    player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH ||
+                    (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) ||
 #endif
                     Player_CheckBossHit(player, self)) {
                     RSDK.PlaySfx(DBTower->sfxBumper3, false, 255);

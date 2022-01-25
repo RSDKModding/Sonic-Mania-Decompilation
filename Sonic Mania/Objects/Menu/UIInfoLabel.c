@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UIInfoLabel Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUIInfoLabel *UIInfoLabel;
@@ -21,8 +28,8 @@ void UIInfoLabel_Create(void *data)
     self->updateRange.y = 0x300000;
     self->width         = self->size.y >> 0x10;
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->text);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->text);
     }
 }
 
@@ -33,18 +40,18 @@ void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
     if (!SceneInfo->inEditor) {
         RSDK.SetText(&label->text, text, 0);
         if (!SceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &label->animator2, true, 0);
-            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &label->text);
+            RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &label->animator2, true, 0);
+            RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &label->text);
         }
     }
 }
-void UIInfoLabel_SetString(EntityUIInfoLabel *self, TextInfo *text)
+void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
 {
     if (!SceneInfo->inEditor) {
-        RSDK.CopyString(&self->text, text);
+        RSDK.CopyString(&entity->text, text);
         if (!SceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
-            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->text);
+            RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &entity->animator2, true, 0);
+            RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->text);
         }
     }
 }
@@ -67,8 +74,8 @@ void UIInfoLabel_DrawSprites(void)
     }
     else {
         drawPos.y -= 0x10000;
-        drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->text, 0, self->text.textLength, 0) << 15;
-        RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.textLength, 0, 0, 0, 0, 0);
+        drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->text, 0, self->text.length, 0) << 15;
+        RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.length, 0, 0, 0, 0, 0);
     }
 }
 
@@ -76,7 +83,7 @@ void UIInfoLabel_DrawSprites(void)
 void UIInfoLabel_EditorDraw(void)
 {
     RSDK_THIS(UIInfoLabel);
-    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->animator2, true, 0);
 
     UIInfoLabel_DrawSprites();
 }

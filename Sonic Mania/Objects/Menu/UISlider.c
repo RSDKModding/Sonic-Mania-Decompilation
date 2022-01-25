@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UISlider Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUISlider *UISlider;
@@ -6,13 +13,13 @@ void UISlider_Update(void)
 {
     RSDK_THIS(UISlider);
 
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->textAnimator, true, self->frameID);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textFrames != UIWidgets->textFrames) {
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
+        self->textFrames = UIWidgets->textFrames;
     }
 
-    self->touchPosEnd.y = self->field_11C;
-    self->touchPosEnd.x = 0x7A0000 + self->field_11C;
+    self->touchPosOffsetS.y = self->buttonBounceOffset;
+    self->touchPosOffsetS.x = 0x7A0000 + self->buttonBounceOffset;
 
     StateMachine_Run(self->state);
 
@@ -26,13 +33,13 @@ void UISlider_Update(void)
         }
     }
 
-    if (self->state == UISlider_Unknown10 && (control->state != UIControl_ProcessInputs || control->activeEntityID != id)) {
-        self->flag      = false;
-        self->field_118 = 0;
-        self->field_11C = 0;
-        if (self->flag) {
-            self->flag  = false;
-            self->state = UISlider_Unknown9;
+    if (self->state == UISlider_State_HandleButtonEnter && (control->state != UIControl_ProcessInputs || control->buttonID != id)) {
+        self->isSelected         = false;
+        self->textBounceOffset   = 0;
+        self->buttonBounceOffset = 0;
+        if (self->isSelected) {
+            self->isSelected  = false;
+            self->state = UISlider_State_HandleButtonLeave;
         }
     }
 }
@@ -43,74 +50,74 @@ void UISlider_StaticUpdate(void) {}
 
 void UISlider_Draw(void)
 {
-    UISlider_Unknown1();
-    UISlider_Unknown2();
+    UISlider_DrawBGShapes();
+    UISlider_DrawSlider();
 }
 
 void UISlider_Create(void *data)
 {
     RSDK_THIS(UISlider);
-    self->visible         = true;
-    self->drawOrder       = 2;
-    self->active          = ACTIVE_BOUNDS;
-    self->updateRange.x   = 0x800000;
-    self->updateRange.y   = 0x400000;
-    self->touchPosEnd.y   = 0;
-    self->touchPosEnd.x   = 0x7A0000;
-    self->touchPosStart.x = 0x940000;
-    self->touchPosStart.y = 0x180000;
-    self->field_10C       = 0x5A0000;
-    self->field_114       = 24;
-    self->field_110       = 0x180000;
-    self->processButtonCB = UISlider_ButtonPressCB;
-    self->touchCB         = UISlider_TouchCB;
-    self->options3        = 0;
-    self->failCB          = 0;
-    self->options5        = UISlider_Options5CB;
-    self->options6        = UISlider_Options6CB;
-    self->options7        = UISlider_Options7CB;
-    self->options8        = UISlider_Options8CB;
-    self->textFlag        = true;
-    self->sliderPos       = (UISlider_MaxVal - UISlider_MinVal) / 2;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->textAnimator, true, self->frameID);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->visible            = true;
+    self->drawOrder          = 2;
+    self->active             = ACTIVE_BOUNDS;
+    self->updateRange.x      = 0x800000;
+    self->updateRange.y      = 0x400000;
+    self->touchPosOffsetS.y      = 0;
+    self->touchPosOffsetS.x      = 0x7A0000;
+    self->touchPosSizeS.x    = 0x940000;
+    self->touchPosSizeS.y    = 0x180000;
+    self->size.x             = 0x5A0000;
+    self->size.y             = 0x180000;
+    self->bgEdgeSize         = 24;
+    self->processButtonCB    = UISlider_ButtonPressCB;
+    self->touchCB            = UISlider_TouchCB;
+    self->selectedCB         = StateMachine_None;
+    self->failCB             = StateMachine_None;
+    self->buttonEnterCB      = UISlider_ButtonEnterCB;
+    self->buttonLeaveCB      = UISlider_ButtonLeaveCB;
+    self->checkButtonEnterCB = UISlider_CheckButtonEnterCB;
+    self->checkSelectedCB    = UISlider_CheckSelectedCB;
+    self->textVisible        = true;
+    self->sliderPos          = (UISlider_MaxVal - UISlider_MinVal) / 2;
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
+    self->textFrames = UIWidgets->textFrames;
 }
 
 void UISlider_StageLoad(void) {}
 
-void UISlider_Unknown1(void)
+void UISlider_DrawBGShapes(void)
 {
     RSDK_THIS(UISlider);
     Vector2 drawPos;
 
-    int32 size  = self->field_110 + self->field_10C;
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    UIWidgets_DrawParallelogram((self->field_110 >> 16), size >> 16, self->field_114, 0, 0, 0, self->position.x, self->position.y);
+    int32 width = self->size.y + self->size.x;
+    drawPos.x   = self->position.x;
+    drawPos.y   = self->position.y;
+    UIWidgets_DrawParallelogram((self->size.y >> 16), width >> 16, self->bgEdgeSize, 0, 0, 0, self->position.x, self->position.y);
 
-    if (self->textFlag) {
+    if (self->textVisible) {
         drawPos = self->position;
-        drawPos.y += self->field_118;
-        drawPos.x += -0x60000 - (self->field_10C >> 1);
+        drawPos.y += self->textBounceOffset;
+        drawPos.x += -0x60000 - (self->size.x >> 1);
         RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
     }
 }
 
-void UISlider_Unknown2(void)
+void UISlider_DrawSlider(void)
 {
     RSDK_THIS(UISlider);
     Vector2 drawPos;
 
-    int32 drawX = 0x7A0000 + self->position.x;
-    int32 sliderPos        = (((34048 * self->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
-    int32 drawX2            = drawX - ((0x7A0000 - sliderPos) >> 1);
-    UIWidgets_DrawParallelogram(12, 122, 12, 240, 240, 240, drawX - self->field_11C, self->position.y - self->field_11C);
-    UIWidgets_DrawParallelogram(12, 122, 12, 0, 0, 0, self->field_11C + drawX, self->field_11C + self->position.y);
-    UIWidgets_DrawParallelogram(12, sliderPos >> 16, 12, 232, 40, 88, self->field_11C + drawX2, self->field_11C + self->position.y);
+    int32 drawX     = 0x7A0000 + self->position.x;
+    int32 sliderPos = (((34048 * self->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
+    int32 drawX2    = drawX - ((0x7A0000 - sliderPos) >> 1);
+    UIWidgets_DrawParallelogram(12, 122, 12, 240, 240, 240, drawX - self->buttonBounceOffset, self->position.y - self->buttonBounceOffset);
+    UIWidgets_DrawParallelogram(12, 122, 12, 0, 0, 0, self->buttonBounceOffset + drawX, self->buttonBounceOffset + self->position.y);
+    UIWidgets_DrawParallelogram(12, sliderPos >> 16, 12, 232, 40, 88, self->buttonBounceOffset + drawX2, self->buttonBounceOffset + self->position.y);
 
-    drawPos.x = drawX2 + (sliderPos >> 1) + self->field_11C + 0x60000;
-    drawPos.y = self->field_11C + self->position.y;
-    if (self->flag) {
+    drawPos.x = drawX2 + (sliderPos >> 1) + self->buttonBounceOffset + 0x60000;
+    drawPos.y = self->buttonBounceOffset + self->position.y;
+    if (self->isSelected) {
         drawPos.x += 0x30000;
         drawPos.y += 0x30000;
         UIWidgets_DrawRectOutline_Blended(24, 14, drawPos.x, drawPos.y);
@@ -119,7 +126,7 @@ void UISlider_Unknown2(void)
     }
 
     RSDK.DrawRect(drawPos.x - 0x70000, drawPos.y - 0xC0000, 0xE0000, 0x180000, 0xF0F0F0, 255, INK_NONE, false);
-    if (self->flag)
+    if (self->isSelected)
         UIWidgets_DrawRectOutline_Flash(24, 14, drawPos.x, drawPos.y);
 }
 
@@ -130,13 +137,13 @@ void UISlider_ButtonPressCB(void)
 
     int32 rowID = 0;
     if (parent->rowCount && parent->columnCount)
-        rowID = parent->activeEntityID / parent->columnCount;
+        rowID = parent->buttonID / parent->columnCount;
     else
         rowID = 0;
 
     int32 columnID = 0;
     if (parent->columnCount)
-        columnID = parent->activeEntityID % parent->columnCount;
+        columnID = parent->buttonID % parent->columnCount;
     else
         columnID = 0;
 
@@ -144,22 +151,22 @@ void UISlider_ButtonPressCB(void)
     if (parent->rowCount > 1) {
         if (UIControl->keyUp) {
             --rowID;
-            moveV = 1;
+            moveV = true;
         }
         if (UIControl->keyDown) {
             ++rowID;
-            moveV = 1;
+            moveV = true;
         }
     }
 
     bool32 valueChanged = false;
     if (UIControl->keyLeft && self->sliderPos > UISlider_MinVal) {
         self->sliderPos = (self->sliderPos & -UISlider_Increment) - UISlider_Increment;
-        valueChanged        = true;
+        valueChanged    = true;
     }
     if (UIControl->keyRight && self->sliderPos < UISlider_MaxVal) {
         self->sliderPos = (self->sliderPos & -UISlider_Increment) + UISlider_Increment;
-        valueChanged        = true;
+        valueChanged    = true;
     }
 
     if (valueChanged) {
@@ -177,11 +184,11 @@ void UISlider_ButtonPressCB(void)
         if (rowID * parent->columnCount + columnID < max)
             max = rowID * parent->columnCount + columnID;
 
-        if (parent->activeEntityID != max) {
-            parent->activeEntityID = max;
-            if (self->flag) {
-                self->flag  = false;
-                self->state = UISlider_Unknown9;
+        if (parent->buttonID != max) {
+            parent->buttonID = max;
+            if (self->isSelected) {
+                self->isSelected  = false;
+                self->state = UISlider_State_HandleButtonLeave;
             }
             RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         }
@@ -195,8 +202,8 @@ void UISlider_ButtonPressCB(void)
             }
         }
 
-        if (!self->flag && parent->activeEntityID == id && parent->state == UIControl_ProcessInputs && !parent->dialogHasFocus) {
-            UISlider_Options5CB();
+        if (!self->isSelected && parent->buttonID == id && parent->state == UIControl_ProcessInputs && !parent->dialogHasFocus) {
+            UISlider_ButtonEnterCB();
         }
     }
 }
@@ -207,29 +214,31 @@ bool32 UISlider_TouchCB(void)
 
     bool32 touchFlag = false;
     if (TouchInfo->count) {
-        if (!UISlider->entityPtr || UISlider->entityPtr == (Entity *)self) {
-            int32 sizeX = self->touchPosStart.x >> 1;
-            int32 sizeY = self->touchPosStart.y >> 1;
+        if (!UISlider->activeEntity || UISlider->activeEntity == (Entity *)self) {
+            int32 sizeX = self->touchPosSizeS.x >> 1;
+            int32 sizeY = self->touchPosSizeS.y >> 1;
             for (int32 i = 0; i < TouchInfo->count; ++i) {
                 int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
                 int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
-                int32 touchX = abs(self->touchPosEnd.x + self->position.x - x);
-                int32 touchY = abs(self->touchPosEnd.y + self->position.y - y);
-                if (!self->flagB && touchX < sizeX && touchY < sizeY) {
-                    self->flagB = true;
+                int32 touchX = abs(self->touchPosOffsetS.x + self->position.x - x);
+                int32 touchY = abs(self->touchPosOffsetS.y + self->position.y - y);
+                if (!self->isTouchSelected && touchX < sizeX && touchY < sizeY) {
+                    self->isTouchSelected = true;
                     RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
                 }
 
-                if (self->flagB) {
-                    touchFlag           = true;
-                    UISlider->entityPtr = (Entity *)self;
+                if (self->isTouchSelected) {
+                    touchFlag              = true;
+                    UISlider->activeEntity = (Entity *)self;
 
-                    self->field_134 = maxVal(x + sizeX - self->position.x - self->touchPosEnd.x, 0x70000);
-                    if (self->touchPosStart.x - 0x70000 < self->field_134)
-                        self->field_134 = self->touchPosStart.x - 0x70000;
+                    self->sliderPosTouch = maxVal(x + sizeX - self->position.x - self->touchPosOffsetS.x, 0x70000);
+                    if (self->touchPosSizeS.x - 0x70000 < self->sliderPosTouch)
+                        self->sliderPosTouch = self->touchPosSizeS.x - 0x70000;
 
-                    int32 val = 16 * (minVal(((self->field_134 - 0x70000) >> 4 << 10) / (self->touchPosStart.x - 0xE0000) + 2, UISlider_MaxVal) & -(UISlider_Increment / 0x10));
+                    int32 val = 16
+                                * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISlider_MaxVal)
+                                   & -(UISlider_Increment / 0x10));
                     if (val != self->sliderPos) {
                         self->sliderPos = val;
                         StateMachine_Run(self->sliderChangedCB);
@@ -242,94 +251,95 @@ bool32 UISlider_TouchCB(void)
         }
     }
     else {
-        UISlider->entityPtr = NULL;
+        UISlider->activeEntity = NULL;
     }
+
     if (self->touchPressed)
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
-    self->flagB        = false;
-    self->touchPressed = false;
+    self->isTouchSelected = false;
+    self->touchPressed    = false;
     return false;
 }
 
-void UISlider_Options5CB(void)
+void UISlider_ButtonEnterCB(void)
 {
     RSDK_THIS(UISlider);
-    if (!self->flag) {
-        self->flag      = true;
-        self->field_118 = 0;
-        self->field_11C = 0;
-        self->field_120 = -0x20000;
-        self->field_124 = -0x20000;
-        self->state     = UISlider_Unknown10;
+    if (!self->isSelected) {
+        self->isSelected           = true;
+        self->textBounceOffset     = 0;
+        self->buttonBounceOffset   = 0;
+        self->textBounceVelocity   = -0x20000;
+        self->buttonBounceVelocity = -0x20000;
+        self->state                = UISlider_State_HandleButtonEnter;
     }
 }
 
-void UISlider_Options6CB(void)
+void UISlider_ButtonLeaveCB(void)
 {
     RSDK_THIS(UISlider);
-    if (self->flag) {
-        self->flag  = false;
-        self->state = UISlider_Unknown9;
+    if (self->isSelected) {
+        self->isSelected  = false;
+        self->state = UISlider_State_HandleButtonLeave;
     }
 }
 
-bool32 UISlider_Options7CB(void)
+bool32 UISlider_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UISlider);
-    return self->flag;
+    return self->isSelected;
 }
 
-bool32 UISlider_Options8CB(void) { return false; }
+bool32 UISlider_CheckSelectedCB(void) { return false; }
 
-void UISlider_Unknown9(void)
+void UISlider_State_HandleButtonLeave(void)
 {
     RSDK_THIS(UISlider);
 
-    if (self->field_118) {
-        int32 dist = -(self->field_118 / abs(self->field_118));
-        self->field_118 += dist << 15;
+    if (self->textBounceOffset) {
+        int32 dist = -(self->textBounceOffset / abs(self->textBounceOffset));
+        self->textBounceOffset += dist << 15;
         if (dist < 0) {
-            if (self->field_118 < 0) {
-                self->field_118 = 0;
+            if (self->textBounceOffset < 0) {
+                self->textBounceOffset = 0;
             }
-            else if (dist > 0 && self->field_118 > 0)
-                self->field_118 = 0;
+            else if (dist > 0 && self->textBounceOffset > 0)
+                self->textBounceOffset = 0;
         }
-        else if (dist > 0 && self->field_118 > 0)
-            self->field_118 = 0;
+        else if (dist > 0 && self->textBounceOffset > 0)
+            self->textBounceOffset = 0;
     }
 
-    if (self->field_11C) {
-        int32 dist = -(self->field_11C / abs(self->field_11C));
-        self->field_11C += dist << 16;
+    if (self->buttonBounceOffset) {
+        int32 dist = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
+        self->buttonBounceOffset += dist << 16;
         if (dist < 0) {
-            if (self->field_11C < 0) {
-                self->field_11C = 0;
+            if (self->buttonBounceOffset < 0) {
+                self->buttonBounceOffset = 0;
             }
-            else if (dist > 0 && self->field_11C > 0)
-                self->field_11C = 0;
+            else if (dist > 0 && self->buttonBounceOffset > 0)
+                self->buttonBounceOffset = 0;
         }
-        else if (dist > 0 && self->field_11C > 0)
-            self->field_11C = 0;
+        else if (dist > 0 && self->buttonBounceOffset > 0)
+            self->buttonBounceOffset = 0;
     }
 }
 
-void UISlider_Unknown10(void)
+void UISlider_State_HandleButtonEnter(void)
 {
     RSDK_THIS(UISlider);
 
-    self->field_120 += 0x4000;
-    self->field_118 += self->field_120;
-    if (self->field_118 >= 0 && self->field_120 > 0) {
-        self->field_118 = 0;
-        self->field_120 = 0;
+    self->textBounceVelocity += 0x4000;
+    self->textBounceOffset += self->textBounceVelocity;
+    if (self->textBounceOffset >= 0 && self->textBounceVelocity > 0) {
+        self->textBounceOffset   = 0;
+        self->textBounceVelocity = 0;
     }
 
-    self->field_124 += 0x4800;
-    self->field_11C += self->field_124;
-    if (self->field_11C >= -0x20000 && self->field_124 > 0) {
-        self->field_11C = -0x20000;
-        self->field_124 = 0;
+    self->buttonBounceVelocity += 0x4800;
+    self->buttonBounceOffset += self->buttonBounceVelocity;
+    if (self->buttonBounceOffset >= -0x20000 && self->buttonBounceVelocity > 0) {
+        self->buttonBounceOffset   = -0x20000;
+        self->buttonBounceVelocity = 0;
     }
 }
 

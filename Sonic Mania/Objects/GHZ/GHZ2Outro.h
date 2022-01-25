@@ -4,23 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGHZ2Outro {
     RSDK_OBJECT
-    uint16 field_4;
-    uint16 field_6;
+    int32 unused;
     uint16 sfxRocketJet;
     uint16 sfxShinobiJump;
     uint16 sfxHeliWoosh;
-} ObjectGHZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGHZ2Outro {
     MANIA_CUTSCENE_BASE
     Entity *eggman;
     Entity *DERobot;
     Entity *phantomRuby;
     Entity *fxRuby;
-} EntityGHZ2Outro;
+};
 
 // Object Struct
 extern ObjectGHZ2Outro *GHZ2Outro;
@@ -48,6 +47,8 @@ bool32 GHZ2Outro_Cutscene_StartRubyWarp(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host);
 bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host);
 
+#if RETRO_USE_PLUS
 void GHZ2Outro_Cutscene_SkipCB(void);
+#endif
 
 #endif //!OBJ_GHZ2OUTRO_H

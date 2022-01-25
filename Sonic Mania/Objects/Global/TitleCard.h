@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTitleCard {
     RSDK_OBJECT
     uint16 aniFrames;
     StateMachine(finishedCB);
     StateMachine(suppressCB);
-} ObjectTitleCard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTitleCard {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -50,7 +50,7 @@ typedef struct {
     Animator zoneLetterAnimator;
     Animator actNumbersAnimator;
     colour colours[5];
-} EntityTitleCard;
+};
 
 // Object Struct
 extern ObjectTitleCard *TitleCard;
@@ -85,8 +85,8 @@ void TitleCard_State_SlideAway(void);
 void TitleCard_State_Supressed(void);
 
 // Draw States
-void TitleCard_Draw_Default(void);
-void TitleCard_Draw_SolidBG(void);
+void TitleCard_Draw_SlideIn(void);
+void TitleCard_Draw_ShowTitleCard(void);
 void TitleCard_Draw_SlideAway(void);
 
 #endif //! OBJ_TITLECARD_H

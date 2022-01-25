@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFXSpinRay {
 	RSDK_OBJECT
-} ObjectFXSpinRay;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFXSpinRay {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +23,7 @@ typedef struct {
     Vector2 vertexPos[4];
     Vector2 vertices[20];
     Vector2 vertexOffset;
-} EntityFXSpinRay;
+};
 
 // Object Struct
 extern ObjectFXSpinRay *FXSpinRay;

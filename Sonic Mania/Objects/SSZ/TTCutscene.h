@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTTCutscene {
     RSDK_OBJECT
     int32 field_4;
     EntityFXFade *fxFade;
-} ObjectTTCutscene;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTTCutscene {
     MANIA_CUTSCENE_BASE
-} EntityTTCutscene;
+};
 
 // Object Struct
 extern ObjectTTCutscene *TTCutscene;
@@ -33,12 +33,14 @@ void TTCutscene_Serialize(void);
 
 // Extra Entity Functions
 void TTCutscene_StartCutscene(void);
+#if RETRO_USE_PLUS
 void TTCutscene_SkipCB(void);
+#endif
 
-bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host);
-bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_FlyIn(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_Wait(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_FlyOut(EntityCutsceneSeq *host);
+bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host);
 
 #endif //!OBJ_TTCUTSCENE_H

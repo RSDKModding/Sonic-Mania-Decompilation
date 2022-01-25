@@ -5,16 +5,16 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectExtrasMenu {
     RSDK_OBJECT
-    Entity *extrasControl;
+    EntityUIControl *extrasControl;
     int32 cheatCode[8];
-} ObjectExtrasMenu;
+};
 
 // Entity Class
-typedef struct {
+struct EntityExtrasMenu {
 	RSDK_ENTITY
-} EntityExtrasMenu;
+};
 
 // Object Struct
 extern ObjectExtrasMenu *ExtrasMenu;
@@ -34,25 +34,25 @@ void ExtrasMenu_Serialize(void);
 
 // Extra Entity Functions
 void ExtrasMenu_Initialize(void);
-void ExtrasMenu_Unknown2(void);
-void ExtrasMenu_Unknown3(void);
+void ExtrasMenu_HandleUnlocks(void);
+void ExtrasMenu_SetupActions(void);
 
 void ExtrasMenu_ProcessMedallionCheat(void);
 bool32 ExtrasMenu_CheckMedallionCheat(void);
 void ExtrasMenu_ProcessInputs(void);
 
 void ExtrasMenu_Start_Puyo_vsAI(void);
-void ExtrasMenu_Callback_Puyo_vsAI(void);
+void ExtrasMenu_Puyo_vsAI_ActionCB(void);
 void ExtrasMenu_Start_Puyo_vs2P(void);
 void ExtrasMenu_Callback_Puyo_vs2P(void);
 void ExtrasMenu_Start_Credits(void);
-void ExtrasMenu_Callback_Credits(void);
+void ExtrasMenu_CreditsButton_ActionCB(void);
 void ExtrasMenu_Start_DAGarden(void);
-void ExtrasMenu_Callback_DAGarden(void);
+void ExtrasMenu_DAGarden_ActionCB(void);
 void ExtrasMenu_Start_BSS_3K(void);
-void ExtrasMenu_Callback_BSS_3K(void);
+void ExtrasMenu_BSS_S3_ActionCB(void);
 void ExtrasMenu_Start_BSS_Mania(void);
-void ExtrasMenu_Callback_BSS_Mania(void);
+void ExtrasMenu_BSS_Mania_ActionCB(void);
 #endif
 
 #endif //!OBJ_EXTRASMENU_H

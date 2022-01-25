@@ -6,14 +6,14 @@
 #define Caterkiller_BodyCount (3)
 
 // Object Class
-typedef struct {
+struct ObjectCaterkiller {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectCaterkiller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCaterkiller {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -25,9 +25,9 @@ typedef struct {
     uint8 timer;
     Vector2 startPos;
     uint8 startDir;
-    Animator animator;
-    Animator animator2;
-} EntityCaterkiller;
+    Animator headAnimator;
+    Animator bodyAnimator;
+};
 
 // Object Entity
 extern ObjectCaterkiller *Caterkiller;
@@ -53,21 +53,21 @@ void Caterkiller_DebugSpawn(void);
 void Caterkiller_CheckOnScreen(void);
 void Caterkiller_CheckTileCollisions(void);
 
-void Caterkiller_StateDraw_Body(void);
-void Caterkiller_StateDraw_Split(void);
+void Caterkiller_Draw_Body(void);
+void Caterkiller_Draw_Segment(void);
 
 void Caterkiller_HandlePlayerInteractions(void);
 bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir);
 
 //Body States
-void Caterkiller_Unknown5(void);
-void Caterkiller_Unknown6(void);
-void Caterkiller_Unknown7(void);
-void Caterkiller_Unknown8(void);
-void Caterkiller_Unknown9(void);
+void Caterkiller_State_Setup(void);
+void Caterkiller_State_Contract(void);
+void Caterkiller_State_LiftHead(void);
+void Caterkiller_State_Uncontract(void);
+void Caterkiller_State_LowerHead(void);
 
 //Split States
-void Caterkiller_State_Split_Head(void);
-void Caterkiller_State_Split_Body(void);
+void Caterkiller_StateSplit_Head(void);
+void Caterkiller_StateSplit_Body(void);
 
 #endif //!OBJ_CATERKILLER_H

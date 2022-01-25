@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UILeaderboard Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUILeaderboard *UILeaderboard;
@@ -5,18 +12,18 @@ ObjectUILeaderboard *UILeaderboard;
 void UILeaderboard_Update(void)
 {
     RSDK_THIS(UILeaderboard);
-    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
+    if (self->textFrames != UIWidgets->textFrames) {
         UILeaderboard_SetupEntrySprites(self);
-        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textFrames = UIWidgets->textFrames;
     }
     StateMachine_Run(self->state);
-    if (++self->timer2 >= 192)
-        self->timer2 -= 192;
+    if (++self->zoneIconSprX >= 192)
+        self->zoneIconSprX -= 192;
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
-    if (self->state == UILeaderboard_State_Unknown3 && (parent->activeEntityID != self->zoneID || parent->state != UIControl_ProcessInputs)) {
-        self->flag  = false;
-        self->state = UILeaderboard_State_Unknown2;
+    if (self->state == UILeaderboard_State_Selected && (parent->buttonID != self->zoneID || parent->state != UIControl_ProcessInputs)) {
+        self->isSelected = false;
+        self->state      = UILeaderboard_State_Unselected;
     }
 }
 
@@ -33,8 +40,8 @@ void UILeaderboard_Draw(void)
 void UILeaderboard_Create(void *data)
 {
     RSDK_THIS(UILeaderboard);
-    self->posUnknown2.x   = self->position.x;
-    self->posUnknown2.y   = self->position.y;
+    self->startPos.x      = self->position.x;
+    self->startPos.y      = self->position.y;
     self->active          = ACTIVE_BOUNDS;
     self->drawOrder       = 2;
     self->visible         = true;
@@ -42,9 +49,9 @@ void UILeaderboard_Create(void *data)
     self->updateRange.x   = 0x800000;
     self->updateRange.y   = 0x300000;
     self->processButtonCB = UILeaderboard_ProcessButtonCB;
-    self->state           = UILeaderboard_State_Unknown1;
+    self->state           = UILeaderboard_State_Setup;
     UILeaderboard_SetupEntrySprites(self);
-    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textFrames = UIWidgets->textFrames;
     if (!SceneInfo->inEditor) {
         RSDK.SetText(self->text1, "", 0);
         RSDK.SetText(&self->text1[1], "", 0);
@@ -63,31 +70,31 @@ void UILeaderboard_StageLoad(void) { UILeaderboard->aniFrames = RSDK.LoadSpriteA
 
 void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
 {
-    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 12, &entity->animator6, true, 0);
-    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 13, &entity->animator3, true, entity->zoneID);
+    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 12, &entity->fuzzAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 13, &entity->zoneIconAnimator, true, entity->zoneID);
 
     int32 frame = 0;
     if (entity->playerID <= 1)
         frame = 0;
     else
         frame = entity->playerID - 1;
-    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 1, &entity->animator7, true, frame);
-    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 2, &entity->animator8, true, frame);
+    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 1, &entity->playerAnimator, true, frame);
+    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 2, &entity->playerShadowAnimator, true, frame);
 
     if (entity->playerID <= 1)
         frame = 5;
     else
         frame = entity->playerID + 4;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator9, true, frame);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator10, true, entity->actID + 3);
-    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &entity->playerNameAnimator, true, frame);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &entity->actNumAnimator, true, entity->actID + 3);
+    RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &entity->textAnimator, true, 0);
     UILeaderboard_LoadEntries(entity);
 }
 
 #if !RETRO_USE_PLUS
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
 {
-    int32 count = APICallback_LeaderboardEntryCount();
+    int32 count              = APICallback_LeaderboardEntryCount();
     leaderboard->entryLength = count;
     if (leaderboard->entryIsUser && count >= 1) {
         int32 i = 0;
@@ -110,11 +117,10 @@ void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
     UILeaderboard_SetupEntrySprites(leaderboard);
 }
 
-
 void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 player, uint8 zone, uint8 act)
 {
-    leaderboard->timer       = 0;
-    leaderboard->entryOffset = 0;
+    leaderboard->zoneIconSprX = 0;
+    leaderboard->entryOffset  = 0;
 
     leaderboard->entryLength = APICallback_LeaderboardEntryCount();
     leaderboard->playerID    = player;
@@ -122,10 +128,10 @@ void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 play
     leaderboard->actID       = act;
     RSDK.CopyPalette((zone >> 3) + 1, 32 * zone, 0, 224, 32);
     UILeaderboard_SetupEntrySprites(leaderboard);
-    Localization_GetZoneName(&leaderboard->field_1E0, zone);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &leaderboard->animator4, true, 0);
+    Localization_GetZoneName(&leaderboard->zoneName, zone);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &leaderboard->zoneNameAnimator, true, 0);
     if (!SceneInfo->inEditor)
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &leaderboard->field_1E0);
+        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &leaderboard->zoneName);
 }
 
 #endif
@@ -147,29 +153,29 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
                 else
                     sprintf(buffer, "%d", entry->globalRank);
                 RSDK.PrependText(&entity->rankText[i], buffer);
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->rankText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
                 RSDK.CopyString(&entity->nameText[i], &entry->username);
-                if (entity->nameText[i].textLength > 19) {
-                    entity->nameText[i].textLength = 19;
+                if (entity->nameText[i].length > 19) {
+                    entity->nameText[i].length = 19;
                     RSDK.AppendText(&entity->nameText[i], "...");
                 }
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->nameText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->nameText[i]);
                 entity->times[i]  = entry->score;
                 entity->ranks[i]  = entry->globalRank;
                 entity->isUser[i] = entry->isUser;
             }
             else {
                 RSDK.PrependText(&entity->rankText[i], "--");
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->rankText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->rankText[i]);
 
                 RSDK.PrependText(&entity->nameText[i], "--------");
-                RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->nameText[i]);
+                RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->nameText[i]);
 
                 entity->times[i] = 0;
-                if (entry) 
+                if (entry)
                     entity->ranks[i] = entry->globalRank;
-                else 
+                else
                     entity->ranks[i] = 0;
                 entity->isUser[i] = false;
             }
@@ -254,53 +260,53 @@ void UILeaderboard_DrawEntries(void)
     RSDK_THIS(UILeaderboard);
     Vector2 drawPos;
 
-    UILeaderboard_Unknown3();
+    UILeaderboard_DrawZonePreview();
     drawPos.x = self->position.x - 0x8C0000;
     drawPos.y = self->position.y - 0x4C0000;
     if (!SceneInfo->inEditor) {
         drawPos.x += 0xC0000;
         drawPos.y += 0x70000;
-        RSDK.DrawText(&self->animator4, &drawPos, &self->field_1E0, 0, self->field_1E0.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->zoneNameAnimator, &drawPos, &self->zoneName, 0, self->zoneName.length, ALIGN_LEFT, 0, 0, 0, false);
 
         drawPos.x -= 0xC0000;
         drawPos.y -= 0x70000;
     }
     drawPos.y += 0x1C0000;
-    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 9, &self->animator11, true, 10);
-    RSDK.DrawSprite(&self->animator11, &drawPos, false);
+    RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 9, &self->taAnimator, true, 10);
+    RSDK.DrawSprite(&self->taAnimator, &drawPos, false);
 
     drawPos.x += 0x6F0000;
     drawPos.y += 0x40000;
-    RSDK.DrawSprite(&self->animator10, &drawPos, false);
+    RSDK.DrawSprite(&self->actNumAnimator, &drawPos, false);
 
     drawPos.x += 0x490000;
-    RSDK.DrawSprite(&self->animator9, &drawPos, false);
+    RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, false);
 
     drawPos.x = self->position.x + 0xA10000;
     drawPos.y = self->position.y - 0x350000;
-    RSDK.DrawSprite(&self->animator8, &drawPos, false);
+    RSDK.DrawSprite(&self->playerShadowAnimator, &drawPos, false);
 
     drawPos.x -= 0x30000;
     drawPos.y -= 0x30000;
-    RSDK.DrawSprite(&self->animator7, &drawPos, false);
+    RSDK.DrawSprite(&self->playerAnimator, &drawPos, false);
 
     drawPos.x = self->position.x - 0x980000;
     drawPos.y = self->position.y - 0x100000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &self->animator11, true, 0);
-    RSDK.DrawSprite(&self->animator11, &drawPos, false);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &self->taAnimator, true, 0);
+    RSDK.DrawSprite(&self->taAnimator, &drawPos, false);
 
     drawPos.x += 0x8E0000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &self->animator11, true, 1);
-    RSDK.DrawSprite(&self->animator11, &drawPos, false);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &self->taAnimator, true, 1);
+    RSDK.DrawSprite(&self->taAnimator, &drawPos, false);
 
     drawPos.x += 0x8E0000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &self->animator11, true, 2);
-    RSDK.DrawSprite(&self->animator11, &drawPos, false);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 11, &self->taAnimator, true, 2);
+    RSDK.DrawSprite(&self->taAnimator, &drawPos, false);
 
     for (int32 i = 0; i < 5; ++i) UILeaderboard_DrawRank(i);
 }
 
-void UILeaderboard_Unknown3(void)
+void UILeaderboard_DrawZonePreview(void)
 {
     RSDK_THIS(UILeaderboard);
     Vector2 drawPos;
@@ -310,9 +316,9 @@ void UILeaderboard_Unknown3(void)
     UIWidgets_DrawRectOutline_Black(40, 72, drawPos.x, drawPos.y);
 
     if (SceneInfo->inEditor) {
-        self->direction = self->editorFlip;
+        self->direction = self->fuzzDir;
         self->drawFX    = FX_FLIP;
-        RSDK.DrawSprite(&self->animator6, &drawPos, false);
+        RSDK.DrawSprite(&self->fuzzAnimator, &drawPos, false);
         self->direction = FLIP_NONE;
         self->drawFX    = FX_NONE;
     }
@@ -320,18 +326,18 @@ void UILeaderboard_Unknown3(void)
         SpriteFrame *frame = RSDK.GetFrame(UILeaderboard->aniFrames, 13, self->zoneID);
         frame->pivotX      = -33;
         frame->width       = 66;
-        frame->sprX        = self->timer;
-        if (self->timer <= 126) {
-            RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        frame->sprX        = self->zoneIconSprX;
+        if (self->zoneIconSprX <= 126) {
+            RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
         }
         else {
-            frame->width = 66 - (self->timer - 126);
-            RSDK.DrawSprite(&self->animator3, &drawPos, false);
+            frame->width = 66 - (self->zoneIconSprX - 126);
+            RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
 
             frame->pivotX += frame->width;
             frame->sprX  = 0;
-            frame->width = self->timer - 126;
-            RSDK.DrawSprite(&self->animator3, &drawPos, false);
+            frame->width = self->zoneIconSprX - 126;
+            RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
         }
     }
 }
@@ -354,8 +360,8 @@ void UILeaderboard_DrawTime(int32 mins, int32 secs, int32 millisecs, int32 x, in
     for (int32 i = 0; i < 8; ++i) {
         if (!scoreText[i])
             break;
-        RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 8, &self->animator12, true, (scoreText[i] - '0'));
-        RSDK.DrawSprite(&self->animator12, &drawPos, false);
+        RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 8, &self->timeAnimator, true, (scoreText[i] - '0'));
+        RSDK.DrawSprite(&self->timeAnimator, &drawPos, false);
         drawPos.x += 0x80000;
     }
 }
@@ -383,9 +389,9 @@ void UILeaderboard_DrawRank(int32 id)
             drawPos.x += 0xE60000;
         }
         else {
-            RSDK.DrawText(&self->animator5, &drawPos, &self->rankText[id], 0, self->rankText[id].textLength, ALIGN_RIGHT, 0, 0, 0, false);
+            RSDK.DrawText(&self->textAnimator, &drawPos, &self->rankText[id], 0, self->rankText[id].length, ALIGN_RIGHT, 0, 0, 0, false);
             drawPos.x += 0x320000;
-            RSDK.DrawText(&self->animator5, &drawPos, &self->nameText[id], 0, self->nameText[id].textLength, ALIGN_LEFT, 0, 0, 0, false);
+            RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText[id], 0, self->nameText[id].length, ALIGN_LEFT, 0, 0, 0, false);
             drawPos.x += 0xB40000;
         }
 
@@ -396,26 +402,26 @@ void UILeaderboard_DrawRank(int32 id)
     }
 }
 
-void UILeaderboard_State_Unknown1(void)
+void UILeaderboard_State_Setup(void)
 {
     RSDK_THIS(UILeaderboard);
-    self->state = UILeaderboard_State_Unknown2;
-    RSDK.ProcessAnimation(&self->animator6);
-    self->editorFlip = self->animator6.frameID & 3;
+    self->state = UILeaderboard_State_Unselected;
+    RSDK.ProcessAnimation(&self->fuzzAnimator);
+    self->fuzzDir = self->fuzzAnimator.frameID & 3;
 }
 
-void UILeaderboard_State_Unknown2(void)
+void UILeaderboard_State_Unselected(void)
 {
     RSDK_THIS(UILeaderboard);
-    RSDK.ProcessAnimation(&self->animator6);
-    self->editorFlip = self->animator6.frameID & 3;
+    RSDK.ProcessAnimation(&self->fuzzAnimator);
+    self->fuzzDir = self->fuzzAnimator.frameID & 3;
 }
 
-void UILeaderboard_State_Unknown3(void)
+void UILeaderboard_State_Selected(void)
 {
     RSDK_THIS(UILeaderboard);
-    RSDK.ProcessAnimation(&self->animator6);
-    self->editorFlip = self->animator6.frameID & 3;
+    RSDK.ProcessAnimation(&self->fuzzAnimator);
+    self->fuzzDir = self->fuzzAnimator.frameID & 3;
 }
 
 void UILeaderboard_ProcessButtonCB(void)
@@ -424,7 +430,7 @@ void UILeaderboard_ProcessButtonCB(void)
 #if RETRO_USE_PLUS
     Vector2 entryCount = API.LeaderboardEntryCount();
 
-    int32 newID      = self->entryOffset;
+    int32 newID = self->entryOffset;
     if (UIControl->keyUp)
         newID--;
     else if (UIControl->keyDown)
@@ -448,14 +454,16 @@ void UILeaderboard_ProcessButtonCB(void)
         if (entryCount.x <= 1 || newID >= entryCount.x + 2) {
             if (newID > (entryCount.x + entryCount.y - 7)) {
                 LogHelpers_Print("Load down");
-                API.Unknown12(entryCount.x, entryCount.y + 20, 2);
+                API.LoadNewLeaderboardEntries(entryCount.x, entryCount.y + 20, 2);
             }
         }
         else {
             LogHelpers_Print("Load up");
-            API.Unknown12(entryCount.x - 20, entryCount.y + 20, 1);
+            API.LoadNewLeaderboardEntries(entryCount.x - 20, entryCount.y + 20, 1);
         }
     }
+
+    if (UIControl->keyY && self->yPressCBEnabled) {
 #else
     int32 newID = self->entryOffset;
     if (UIControl->keyUp)
@@ -478,16 +486,17 @@ void UILeaderboard_ProcessButtonCB(void)
         UILeaderboard_LoadEntries(self);
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
-#endif
 
-    if (UIControl->keyY && self->field_1D8) {
+    if (UIControl->keyY && self->taRecord) {
+#endif
         self->yPressCB();
         RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
-    if (self->state == UILeaderboard_State_Unknown2 || !self->flag) {
-        self->flag      = true;
-        self->state     = UILeaderboard_State_Unknown3;
-        self->field_1CC = 0;
+
+    if (self->state == UILeaderboard_State_Unselected || !self->isSelected) {
+        self->isSelected = true;
+        self->state      = UILeaderboard_State_Selected;
+        self->lostFocus  = false; // used literally just here so idk what it actually is
     }
 }
 

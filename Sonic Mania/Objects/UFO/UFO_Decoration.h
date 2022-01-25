@@ -15,17 +15,17 @@ typedef enum {
 }UFO_DecorationTypes;
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Decoration {
     RSDK_OBJECT
     Animator unusedAnimator1;
     int32 drawType;
     uint16 aniFrames; // unused
     uint16 modelIndices[8];
     uint16 sceneIndex;
-} ObjectUFO_Decoration;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Decoration {
     RSDK_ENTITY
     int32 unused1;
     int32 type;
@@ -36,7 +36,7 @@ typedef struct {
     Matrix matWorld;
     Matrix matNormal;
     Animator animator;
-} EntityUFO_Decoration;
+};
 
 // Object Struct
 extern ObjectUFO_Decoration *UFO_Decoration;

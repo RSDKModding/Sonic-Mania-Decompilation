@@ -6,15 +6,15 @@
 #define KingClaw_JointCount (12)
 
 // Object Class
-typedef struct {
+struct ObjectKingClaw {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxClack;
     uint16 sfxWalkerLegs;
-} ObjectKingClaw;
+};
 
 // Entity Class
-typedef struct {
+struct EntityKingClaw {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -27,7 +27,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityKingClaw;
+};
 
 // Object Struct
 extern ObjectKingClaw *KingClaw;

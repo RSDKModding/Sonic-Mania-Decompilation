@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectWaterGush {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGush;
-} ObjectWaterGush;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWaterGush {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -28,7 +28,7 @@ typedef struct {
     Hitbox hitbox2;
     Animator animator1;
     Animator animator2;
-} EntityWaterGush;
+};
 
 // Object Struct
 extern ObjectWaterGush *WaterGush;

@@ -4,23 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRubyPortal {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
 #if RETRO_USE_PLUS
     bool32 openPortal;
 #endif
-} ObjectRubyPortal;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRubyPortal {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Animator animator;
     Hitbox hitbox;
-} EntityRubyPortal;
+};
 
 // Object Struct
 extern ObjectRubyPortal *RubyPortal;

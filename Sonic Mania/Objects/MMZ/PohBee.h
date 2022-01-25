@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPohBee {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectPohBee;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPohBee {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -30,7 +30,7 @@ typedef struct {
     uint8 spikeCount;
     Vector2 amplitude;
     PlaneFilterTypes planeFilter;
-} EntityPohBee;
+};
 
 // Object Struct
 extern ObjectPohBee *PohBee;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpecialRing {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 sfxSpecialWarp;
     uint16 modelIndex;
     uint16 sceneIndex;
-} ObjectSpecialRing;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpecialRing {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -30,7 +30,7 @@ typedef struct {
     Matrix matTransform;
     Matrix matWorld;
     Matrix matNormal;
-} EntitySpecialRing;
+};
 
 // Object Struct
 extern ObjectSpecialRing *SpecialRing;
@@ -52,7 +52,7 @@ void SpecialRing_Serialize(void);
 void SpecialRing_DebugDraw(void);
 void SpecialRing_DebugSpawn(void);
 
-void SpecialRing_StartWarp(void);
+void SpecialRing_State_StartWarp(void);
 void SpecialRing_State_Warp(void);
 void SpecialRing_State_Normal(void);
 

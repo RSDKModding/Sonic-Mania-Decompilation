@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpikeLog {
     RSDK_OBJECT
     bool32 hasAchievement;
     uint8 timer;
     uint16 aniFrames;
     Hitbox hitbox;
     Hitbox burnHitbox;
-} ObjectSpikeLog;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpikeLog {
     RSDK_ENTITY
     StateMachine(state);
     uint8 frame;
     Animator animator;
-} EntitySpikeLog;
+};
 
 // Object Struct
 extern ObjectSpikeLog *SpikeLog;

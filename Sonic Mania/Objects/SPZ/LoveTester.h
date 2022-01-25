@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLoveTester {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -14,10 +14,10 @@ typedef struct {
     Vector2 field_20;
     Vector2 field_28;
     Vector2 positions[10];
-} ObjectLoveTester;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLoveTester {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLate);
@@ -39,7 +39,7 @@ typedef struct {
     int32 field_88;
     Animator animator1;
     Animator animators[10];
-} EntityLoveTester;
+};
 
 // Object Struct
 extern ObjectLoveTester *LoveTester;

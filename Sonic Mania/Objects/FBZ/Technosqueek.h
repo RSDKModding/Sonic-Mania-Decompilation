@@ -3,30 +3,35 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TECHNOSQUEEK_H,
+    TECHNOSQUEEK_V,
+} TechnosqueekTypes;
+
 // Object Class
-typedef struct {
+struct ObjectTechnosqueek {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectTechnosqueek;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTechnosqueek {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     uint8 speed;
     uint16 distance;
-    uint8 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    bool32 flag;
+    uint8 distRemain;
+    int32 acceleration;
+    int32 targetVel;
+    int32 tailOffset;
+    bool32 shouldTurn;
     Vector2 startPos;
     uint8 startDir;
-    Animator animator1;
-    Animator animator2;
-} EntityTechnosqueek;
+    Animator animator;
+    Animator tailAnimator;
+};
 
 // Object Struct
 extern ObjectTechnosqueek *Technosqueek;
@@ -51,11 +56,11 @@ void Technosqueek_DebugDraw(void);
 void Technosqueek_HandlePlayerInteractions(void);
 void Technosqueek_CheckOnScreen(void);
 
-void Technosqueek_State_Unknown1(void);
-void Technosqueek_State_Unknown2(void);
-void Technosqueek_State_Unknown3(void);
-void Technosqueek_State_Unknown4(void);
-void Technosqueek_State_Unknown5(void);
-void Technosqueek_State_Unknown6(void);
+void Technosqueek_State_Setup(void);
+void Technosqueek_State_MoveHorizontal(void);
+void Technosqueek_State_TurnHorizontal(void);
+void Technosqueek_State_MoveVertical(void);
+void Technosqueek_State_TurnVertical(void);
+void Technosqueek_State_Fall(void);
 
 #endif //!OBJ_TECHNOSQUEEK_H

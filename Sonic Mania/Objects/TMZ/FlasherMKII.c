@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: FlasherMKII Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFlasherMKII *FlasherMKII;
@@ -74,7 +81,6 @@ void FlasherMKII_DebugSpawn(void)
 
 void FlasherMKII_DebugDraw(void)
 {
-    RSDK_THIS(FlasherMKII);
     RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
@@ -233,7 +239,7 @@ void FlasherMKII_State_Unknown2(void)
 {
     RSDK_THIS(FlasherMKII);
 
-    if ((self->animator.frameID == 5 || self->animator.frameID == 12) && self->animator.animationTimer == 1) {
+    if ((self->animator.frameID == 5 || self->animator.frameID == 12) && self->animator.timer == 1) {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
         if (self->activeScreens == 1)

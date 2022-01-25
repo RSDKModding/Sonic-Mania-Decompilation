@@ -16,6 +16,24 @@ public class RSDKv5 extends SDLActivity {
         getBasePath();
     }
 
+    //Idk what the hell "has multi window" is, but I do NOT have multiple windows and therefore DO wanna pause/resume these threads
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mHasMultiWindow) {
+            pauseNativeThread();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        if (mHasMultiWindow) {
+            resumeNativeThread();
+        }
+    }
+
     public String getBasePath() {
         Context c = getApplicationContext();
         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);

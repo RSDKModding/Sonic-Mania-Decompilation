@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectArmadiloid {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxShot;
-} ObjectArmadiloid;
+};
 
 // Entity Class
-typedef struct {
+struct EntityArmadiloid {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -23,7 +23,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityArmadiloid;
+};
 
 // Object Struct
 extern ObjectArmadiloid *Armadiloid;

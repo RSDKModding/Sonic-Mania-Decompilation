@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectDialogRunner {
     RSDK_OBJECT
     int32 authForbiddenFlag;
     bool32 signoutFlag;
@@ -15,25 +15,25 @@ typedef struct {
     void *entityPtr;
     int32 unused3;
     int32 unused4;
-} ObjectDialogRunner;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDialogRunner {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     StateMachine(callback);
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
+    int32 unused7;
+    int32 unused8;
     int32 status;
     bool32 useGenericText;
-} EntityDialogRunner;
+};
 
 // Object Struct
 extern ObjectDialogRunner *DialogRunner;
@@ -59,8 +59,8 @@ void DialogRunner_SetNoSaveDisabled(void);
 void DialogRunner_SetNoSaveEnabled(void);
 void DialogRunner_PromptSavePreference_CB(void);
 void DialogRunner_CheckUserAuth_CB(void);
-void DialogRunner_ManageNotifs(int32 success);
-void DialogRunner_Wait(int32 success);
+void DialogRunner_ManageNotifs(void);
+void DialogRunner_TrackGameProgressCB(bool32 success);
 void DialogRunner_GetNextNotif(void);
 bool32 DialogRunner_CheckUnreadNotifs(void);
 bool32 DialogRunner_NotifyAutosave(void);

@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectAIZEggRobo {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectAIZEggRobo;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZEggRobo {
     RSDK_ENTITY
     StateMachine(state); // unused
     bool32 oscillate;
@@ -25,7 +25,7 @@ typedef struct {
     Animator animatorBody;
     Animator animatorArm;
     Animator animatorLegs;
-} EntityAIZEggRobo;
+};
 
 // Object Struct
 extern ObjectAIZEggRobo *AIZEggRobo;

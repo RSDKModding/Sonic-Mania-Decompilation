@@ -39,7 +39,7 @@ typedef enum {
 } TrackPriorityValues;
 
 // Object Class
-typedef struct {
+struct ObjectMusic {
     RSDK_OBJECT
     char trackNames[16][32];
     uint32 trackLoops[16];
@@ -54,10 +54,10 @@ typedef struct {
     bool32 playing1UPTrack;
 #endif
     uint16 aniFrames;
-} ObjectMusic;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMusic {
     RSDK_ENTITY
     StateMachine(state);
     TextInfo trackFile;
@@ -72,7 +72,7 @@ typedef struct {
     float volume;
     float fadeSpeed;
     Animator animator;
-} EntityMusic;
+};
 
 // Object Struct
 extern ObjectMusic *Music;
@@ -92,21 +92,25 @@ void Music_Serialize(void);
 
 // Extra Entity Functions
 void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint);
-void Music_State_PlayMusic(void);
-void Music_PlayMusicTrack(uint8 trackID);
+void Music_State_PlayAutoMusic(void);
+// Plays a track, and manages the music stack so it can be returned to
+void Music_PlayQueuedTrack(uint8 trackID);
+//Plays a track, doesn't use the music stack at all
 void Music_PlayTrack(uint8 trackID);
+//Play a track using the info from a music entity
 void Music_PlayTrackPtr(EntityMusic *entity);
 
-void Music_Unknown2(uint8 trackID);
-void Music_CheckMusicStack_Powerup(EntityMusic *entity);
+void Music_PlayAutoMusicQueuedTrack(uint8 trackID);
+void Music_HandleMusicStack_Powerups(EntityMusic *entity);
 bool32 Music_CheckMusicStack_Active(void);
-void Music_GetNextTrack(EntityMusic *entity);
-void Music_ResumePrevTrack(uint8 trackID, bool32 transitionFade);
-void Music_Unknown7(EntityMusic *entity);
+void Music_GetNextTrackStartPos(EntityMusic *entity);
+void Music_EndQueuedTrack(uint8 trackID, bool32 transitionFade);
+void Music_HandleMusicStackTrackRemoval(EntityMusic *entity);
 void Music_ClearMusicStack(void);
 void Music_TransitionTrack(uint8 trackID, float fadeSpeed);
 void Music_FadeOut(float fadeSpeed);
-void Music_State_Unknown11(void);
+
+void Music_State_HandleQueuedTrack(void);
 void Music_State_FadeTrackOut(void);
 void Music_State_FadeTrackIn(void);
 void Music_State_FadeOut(void);

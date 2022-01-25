@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSwitchDoor {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectSwitchDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySwitchDoor {
     RSDK_ENTITY
     int32 go;
     bool32 reversible;
     bool32 field_60;
     Animator animator;
-} EntitySwitchDoor;
+};
 
 // Object Struct
 extern ObjectSwitchDoor *SwitchDoor;

@@ -5,21 +5,21 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectMSBomb {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion;
-} ObjectMSBomb;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSBomb {
     RSDK_ENTITY
     StateMachine(state);
     int field_5C;
     int timer;
     Hitbox hitbox;
     Animator animator;
-} EntityMSBomb;
+};
 
 // Object Struct
 extern ObjectMSBomb *MSBomb;

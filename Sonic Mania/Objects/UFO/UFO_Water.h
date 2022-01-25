@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Water {
     RSDK_OBJECT
     int32 timer;
     uint16 aniFrames;
-} ObjectUFO_Water;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Water {
 	RSDK_ENTITY
-} EntityUFO_Water;
+};
 
 // Object Struct
 extern ObjectUFO_Water *UFO_Water;

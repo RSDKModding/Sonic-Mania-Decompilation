@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLauncher {
     RSDK_OBJECT
     uint16 sfxLaunch;
-} ObjectLauncher;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLauncher {
     MANIA_PLATFORM_BASE
     int32 releaseDelay;
     int32 speedIncDelay;
-} EntityLauncher;
+};
 
 // Object Struct
 extern ObjectLauncher *Launcher;

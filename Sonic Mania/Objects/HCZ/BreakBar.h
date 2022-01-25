@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBreakBar {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxBreak;
-} ObjectBreakBar;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBreakBar {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -24,7 +24,7 @@ typedef struct {
     bool32 destroyFlag;
     Hitbox hitbox;
     Animator animator;
-} EntityBreakBar;
+};
 
 // Object Struct
 extern ObjectBreakBar *BreakBar;

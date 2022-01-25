@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRisingLava {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxRumble;
-} ObjectRisingLava;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRisingLava {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 size;
     Vector2 offset;
     int32 limit;
     Hitbox hitbox;
-} EntityRisingLava;
+};
 
 // Object Struct
 extern ObjectRisingLava *RisingLava;

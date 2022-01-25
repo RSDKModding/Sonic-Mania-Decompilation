@@ -4,23 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUITransition {
     RSDK_OBJECT
     Entity *activeTransition;
     char *newTag;
-} ObjectUITransition;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUITransition {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
     Entity *prevEntity;
     int32 timer;
-    int32 timeLimit;
-    bool32 field_6C;
+    int32 delay;
+    bool32 isTransitioning;
     Vector2 drawPos[3];
-} EntityUITransition;
+};
 
 // Object Struct
 extern ObjectUITransition *UITransition;
@@ -39,7 +39,7 @@ void UITransition_EditorLoad(void);
 void UITransition_Serialize(void);
 
 // Extra Entity Functions
-void UITransition_StartTransition(void (*callback)(void), int32 timeLimit);
+void UITransition_StartTransition(void (*callback)(void), int32 delay);
 void UITransition_MatchNewTag(void);
 void UITransition_SetNewTag(const char *text);
 

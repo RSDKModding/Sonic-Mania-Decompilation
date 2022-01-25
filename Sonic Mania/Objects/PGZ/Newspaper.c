@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Newspaper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectNewspaper *Newspaper;
@@ -37,13 +44,13 @@ void Newspaper_Create(void *data)
         self->updateRange.y = 0x400000;
         RSDK.SetSpriteAnimation(Newspaper->aniFrames, 1, &self->animator, true, self->type);
         switch (self->type) {
-            case 0:
-            case 1:
+            case NEWSPAPER_WHITE_FG:
+            case NEWSPAPER_BLUE_FG:
                 self->state     = Newspaper_HandleInteractions;
                 self->drawOrder = Zone->playerDrawLow;
                 break;
-            case 2:
-            case 3: self->drawOrder = Zone->drawOrderLow; break;
+            case NEWSPAPER_WHITE_BG:
+            case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->drawOrderLow; break;
             default: break;
         }
 
@@ -106,9 +113,49 @@ void Newspaper_HandleInteractions(void)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void Newspaper_EditorDraw(void) {}
+void Newspaper_EditorDraw(void)
+{
+    RSDK_THIS(Newspaper);
+#if RETRO_USE_PLUS
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    RSDK.SetSpriteAnimation(Newspaper->aniFrames, 1, &self->animator, true, self->type);
+    switch (self->type) {
+        case NEWSPAPER_WHITE_FG:
+        case NEWSPAPER_BLUE_FG:
+            self->state     = Newspaper_HandleInteractions;
+            self->drawOrder = Zone->playerDrawLow;
+            break;
+        case NEWSPAPER_WHITE_BG:
+        case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->drawOrderLow; break;
+        default: break;
+    }
+#else
+    RSDK.SetSpriteAnimation(Newspaper->aniFrames, 0, &self->animator, true, 0);
+    self->drawPos = self->position;
+#endif 
 
-void Newspaper_EditorLoad(void) {}
+    Newspaper_Draw();
+}
+
+void Newspaper_EditorLoad(void)
+{
+#if RETRO_USE_PLUS
+    Newspaper->aniFrames     = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
+    Newspaper->sfxPaperStack = RSDK.GetSfx("PSZ/PaperStack.wav");
+
+    RSDK_ACTIVE_VAR(Newspaper, type);
+    RSDK_ENUM_VAR("White (FG)", NEWSPAPER_WHITE_FG);
+    RSDK_ENUM_VAR("Blue (FG)", NEWSPAPER_WHITE_FG);
+    RSDK_ENUM_VAR("White (BG)", NEWSPAPER_WHITE_BG);
+    RSDK_ENUM_VAR("Blue (BG)", NEWSPAPER_WHITE_BG);
+
+#else
+    if (RSDK.CheckStageFolder("PSZ1"))
+        Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
+#endif 
+}
 #endif
 
 void Newspaper_Serialize(void)

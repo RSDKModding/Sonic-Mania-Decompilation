@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Fireflies Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFireflies *Fireflies;
@@ -156,7 +163,7 @@ void Fireflies_State_Unknown2(void)
     }
 
     int percent      = (self->timer << 16) / self->field_84;
-    self->position = MathHelpers_Unknown5(percent, self->pos1.x, self->pos1.y, self->pos2.x, self->pos2.y, self->pos3.x, self->pos3.y,
+    self->position = MathHelpers_GetBezierPoint(percent, self->pos1.x, self->pos1.y, self->pos2.x, self->pos2.y, self->pos3.x, self->pos3.y,
                                             self->pos4.x, self->pos4.y);
     if (!percent)
         self->position = self->pos1;

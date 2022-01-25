@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LottoMachine Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLottoMachine *LottoMachine;
@@ -136,7 +143,7 @@ void LottoMachine_Create(void *data)
         self->field_A4                 = 0x180000;
         self->field_A0                 = 0x180000;
         self->drawOrderHigh            = Zone->drawOrderHigh;
-        self->animator4.animationSpeed = 0;
+        self->animator4.speed = 0;
         self->state                    = LottoMachine_State_Unknown1;
     }
 }
@@ -156,17 +163,17 @@ void LottoMachine_StageLoad(void)
     LottoMachine->active         = ACTIVE_ALWAYS;
     LottoMachine->sfxPimPom      = RSDK.GetSfx("Stage/PimPom.wav");
     LottoMachine->sfxFail        = RSDK.GetSfx("Stage/Fail.wav");
-    Zone_AddCallback(LottoMachine_ZoneCB);
+    Zone_AddVSSwapCallback(LottoMachine_ZoneCB);
 }
 
 void LottoMachine_ZoneCB(void)
 {
 #if RETRO_USE_PLUS
-    if ((1 << Zone->playerID) & LottoMachine->activePlayers)
-        Zone->playerFlags[Zone->playerID] = 0;
+    if ((1 << Zone->swapPlayerID) & LottoMachine->activePlayers)
+        Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
     if (LottoMachine->activePlayers)
-        Zone->playerFlags = 0;
+        Zone->playerSwapEnabled = false;
 #endif
 }
 
@@ -322,7 +329,7 @@ void LottoMachine_Unknown4(void)
         }
         if (vel < self->field_74)
             self->field_74 = vel;
-        self->animator4.animationSpeed = -self->field_74 >> 11;
+        self->animator4.speed = -self->field_74 >> 11;
     }
     else {
         if (self->field_74 > 0x10000) {
@@ -332,10 +339,10 @@ void LottoMachine_Unknown4(void)
         }
         if (vel > self->field_74)
             self->field_74 = vel;
-        self->animator4.animationSpeed = self->field_74 >> 11;
+        self->animator4.speed = self->field_74 >> 11;
     }
-    if (self->animator4.animationSpeed > 0x80)
-        self->animator4.animationSpeed = 0x80;
+    if (self->animator4.speed > 0x80)
+        self->animator4.speed = 0x80;
 }
 
 void LottoMachine_Unknown5(void)
@@ -659,7 +666,7 @@ void LottoMachine_State_Unknown6(void)
 
     LottoMachine_CheckPlayerCollisions();
     self->field_74 -= self->field_74 >> 4;
-    self->animator4.animationSpeed -= self->animator4.animationSpeed >> 4;
+    self->animator4.speed -= self->animator4.speed >> 4;
     RSDK.ProcessAnimation(&self->animator4);
     self->animator5.frameID = self->animator4.frameID;
     if (++self->timer == 60) {
@@ -690,7 +697,7 @@ void LottoMachine_State_Unknown7(void)
     LottoMachine_CheckPlayerCollisions();
     ++self->timer;
     self->field_74 -= (self->field_74 >> 4);
-    self->animator4.animationSpeed -= self->animator4.animationSpeed >> 4;
+    self->animator4.speed -= self->animator4.speed >> 4;
     if (self->timer == 30) {
         self->playerPtrs[0]     = NULL;
         self->playerPtrs[1]     = NULL;

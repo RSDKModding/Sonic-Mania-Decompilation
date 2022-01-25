@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFoldingPlatform {
 	RSDK_OBJECT
-} ObjectFoldingPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFoldingPlatform {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     int32 duration;
-} EntityFoldingPlatform;
+};
 
 // Object Struct
 extern ObjectFoldingPlatform *FoldingPlatform;
@@ -33,7 +33,7 @@ void FoldingPlatform_EditorLoad(void);
 void FoldingPlatform_Serialize(void);
 
 // Extra Entity Functions
-void FoldingPlatform_Unknown1(void);
-void FoldingPlatform_Unknown2(void);
+void FoldingPlatform_State_Appear(void);
+void FoldingPlatform_State_Disappear(void);
 
 #endif //!OBJ_FOLDINGPLATFORM_H

@@ -11,7 +11,7 @@ typedef enum {
 }SpikeTypes;
 
 // Object Class
-typedef struct {
+struct ObjectSpikes {
     RSDK_OBJECT
     StateMachine(stateDraw);
     Animator verticalAnimator;
@@ -21,10 +21,10 @@ typedef struct {
     int32 unused2; // both set on StageLoad but then never used
     uint16 sfxMove;
     uint16 sfxSpike;
-} ObjectSpikes;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpikes {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -40,7 +40,7 @@ typedef struct {
     uint8 shatterTimer;
     Hitbox hitbox;
     Animator animator;
-} EntitySpikes;
+};
 
 // Object Struct
 extern ObjectSpikes *Spikes;
@@ -63,6 +63,8 @@ void Spikes_Draw_Global(void);
 void Spikes_Draw_Stage(void);
 
 void Spikes_Shatter(int32 velX, int32 velY);
+#if RETRO_USE_PLUS
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY);
+#endif
 
 #endif //!OBJ_SPIKES_H

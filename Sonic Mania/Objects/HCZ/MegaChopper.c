@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MegaChopper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMegaChopper *MegaChopper;
@@ -254,8 +261,8 @@ void MegaChopper_State_Unknown2(void)
 void MegaChopper_State_Unknown3(void)
 {
     RSDK_THIS(MegaChopper);
-    if (++self->animator.animationTimer == 3) {
-        self->animator.animationTimer = 0;
+    if (++self->animator.timer == 3) {
+        self->animator.timer = 0;
         self->animator.frameID        = (self->animator.frameID + 6) % 12;
     }
     EntityPlayer *player = (EntityPlayer *)self->playerPtr;

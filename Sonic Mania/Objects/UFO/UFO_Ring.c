@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UFO_Ring Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUFO_Ring *UFO_Ring;
@@ -101,7 +108,7 @@ void UFO_Ring_LoseRings(EntityUFO_Player *player)
         ring->bounceVelocity          = RSDK.Rand(0x40000, 0x60000);
         ring->inkEffect               = INK_ALPHA;
         ring->alpha                   = 0x200;
-        ring->animator.animationSpeed = 0x100;
+        ring->animator.speed = 0x100;
         ring->state                   = UFO_Ring_State_LoseRing;
     }
 }
@@ -148,8 +155,8 @@ void UFO_Ring_State_LoseRing(void)
         self->bounceVelocity = -(self->bounceVelocity >> 1);
     }
 
-    if (self->animator.animationSpeed > 0x40)
-        self->animator.animationSpeed--;
+    if (self->animator.speed > 0x40)
+        self->animator.speed--;
 
     self->alpha -= 4;
     if (!self->alpha)

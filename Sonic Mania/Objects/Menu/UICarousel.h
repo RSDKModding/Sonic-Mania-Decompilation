@@ -5,41 +5,33 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUICarousel {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-} ObjectUICarousel;
+    uint16 aniFrames;  // both of these aren't used, and are thus prolly editor-only
+    Animator animator; // both of these aren't used, and are thus prolly editor-only
+};
 
 // Entity Class
-typedef struct {
+struct EntityUICarousel {
     RSDK_ENTITY
     Vector2 shift;
     Vector2 clipSize;
     Vector2 clipOffset;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    Entity *field_7C;
-    char field_80;
-    char field_81;
-    char field_82;
-    char field_83;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    Entity *unused4;
+    int32 unused;
     int32 scrollOffset;
     int32 virtualIndex;
-    int32 field_8C;
+    int32 unused5;
     Vector2 startPos;
-    int32 field_98;
+    int32 buttonID;
     int32 minOffset;
     int32 maxOffset;
     Vector2 offset;
     Entity *parent;
-} EntityUICarousel;
+};
 
 // Object Struct
 extern ObjectUICarousel *UICarousel;
@@ -58,8 +50,8 @@ void UICarousel_EditorLoad(void);
 void UICarousel_Serialize(void);
 
 // Extra Entity Functions
-void UICarousel_Unknown1(void);
-void UICarousel_Unknown2(void);
+void UICarousel_HandleScrolling(void);
+void UICarousel_HandleButtonPositions(void);
 
 #endif
 

@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMotobug {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectMotobug;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMotobug {
     RSDK_ENTITY
     StateMachine(state);
     int32 turnTimer;
@@ -20,7 +20,7 @@ typedef struct {
     uint8 startDir;
     bool32 wasTurning;
     Animator animator;
-} EntityMotobug;
+};
 
 // Object Struct
 extern ObjectMotobug *Motobug;
@@ -47,9 +47,9 @@ void Motobug_CheckPlayerCollisions(void);
 
 //States
 void Motobug_State_Fall(void);
-void Motobug_State_HandleMove(void);
-void Motobug_State_Move2(void);
 void Motobug_State_Move(void);
+void Motobug_State_Idle(void);
+void Motobug_State_Setup(void);
 void Motobug_State_Smoke(void);
 void Motobug_State_Turn(void);
 

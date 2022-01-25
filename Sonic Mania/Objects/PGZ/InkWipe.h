@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectInkWipe {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectInkWipe;
+};
 
 // Entity Class
-typedef struct {
+struct EntityInkWipe {
     RSDK_ENTITY
     Animator animator;
-} EntityInkWipe;
+};
 
 // Object Struct
 extern ObjectInkWipe *InkWipe;

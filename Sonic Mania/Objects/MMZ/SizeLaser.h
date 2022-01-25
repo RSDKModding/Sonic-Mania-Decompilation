@@ -4,27 +4,27 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSizeLaser {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox playerOuterBox[4];
     Hitbox playerInnerBox[4];
     Vector2 playerPositions[4];
     uint16 aniFrames;
-    uint16 sonicIndex;
-    uint16 tailsIndex;
-    uint16 tailSpriteIndex;
-    uint16 knuxIndex;
+    uint16 sonicFrames;
+    uint16 tailsFrames;
+    uint16 tailFrames;
+    uint16 knuxFrames;
 #if RETRO_USE_PLUS
-    uint16 mightyIndex;
-    uint16 rayIndex;
+    uint16 mightyFrames;
+    uint16 rayFrames;
 #endif
     uint16 sfxShrink2;
     uint16 sfxGrow2;
-} ObjectSizeLaser;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySizeLaser {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -34,7 +34,7 @@ typedef struct {
     int32 extend;
     Animator animator1;
     Animator animator2;
-} EntitySizeLaser;
+};
 
 // Object Struct
 extern ObjectSizeLaser *SizeLaser;

@@ -8,6 +8,12 @@
 #define competition_PlayerCount (2)
 #endif
 
+typedef enum {
+    FINISHFLAG_NOTFINISHED,
+    FINISHFLAG_TIMEOVER,
+    FINISHFLAG_FINISHED,
+}vsFinishFlags;
+
 //created so I can easily set up times in an array
 typedef struct {
     int32 minutes;
@@ -16,12 +22,12 @@ typedef struct {
 } vsTime;
 
 // Object Class
-typedef struct {
+struct ObjectCompetitionSession {
 	RSDK_OBJECT
-} ObjectCompetitionSession;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCompetitionSession {
 	RSDK_ENTITY
     bool32 inMatch;
     int32 playerCount;
@@ -30,7 +36,7 @@ typedef struct {
     int32 actID;
     int32 matchID;
     int32 matchCount;
-    int32 monitorMode;
+    int32 itemMode;
 #if RETRO_USE_PLUS
     int32 swapFlag;
 #endif
@@ -51,7 +57,7 @@ typedef struct {
     int32 controllerIDs[PLAYER_MAX];
     int32 prevMatchID;
 #endif
-} EntityCompetitionSession;
+};
 
 // Object Entity
 extern ObjectCompetitionSession *CompetitionSession;

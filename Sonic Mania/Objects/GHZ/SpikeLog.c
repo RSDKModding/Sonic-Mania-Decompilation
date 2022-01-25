@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SpikeLog Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSpikeLog *SpikeLog;
@@ -38,10 +45,10 @@ void SpikeLog_StageLoad(void)
     if (RSDK.CheckStageFolder("GHZ"))
         SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
 
-    SpikeLog->hitbox.left       = -8;
-    SpikeLog->hitbox.top        = -16;
-    SpikeLog->hitbox.right      = 8;
-    SpikeLog->hitbox.bottom     = 0;
+    SpikeLog->hitbox.left   = -8;
+    SpikeLog->hitbox.top    = -16;
+    SpikeLog->hitbox.right  = 8;
+    SpikeLog->hitbox.bottom = 0;
 
     SpikeLog->burnHitbox.left   = -9;
     SpikeLog->burnHitbox.top    = -16;
@@ -69,12 +76,12 @@ void SpikeLog_State_Main(void)
                                 player->onGround         = 0;
                                 player->jumpAbility      = 0;
                                 player->jumpAbilityTimer = 0;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, 0, 0);
-                                RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
+                                RSDK.PlaySfx(Player->sfxMightyUnspin, false, 255);
                             }
                             if (!player->uncurlTimer) {
                                 player->uncurlTimer = 15;
-                                RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
+                                RSDK.PlaySfx(Player->sfxPimPom, false, 255);
                             }
                         }
                     }
@@ -96,7 +103,7 @@ void SpikeLog_State_Main(void)
                     SpikeLog->hasAchievement = true;
                 }
                 CREATE_ENTITY(BurningLog, intToVoid(0x10), self->position.x, self->position.y);
-                RSDK.SetTileInfo(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, 0xFFFF);
+                RSDK.SetTileInfo(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, -1);
                 self->frame = 8;
                 self->state = SpikeLog_State_Burn;
             }
@@ -113,7 +120,7 @@ void SpikeLog_State_Burn(void)
             if (other->state == SpikeLog_State_Main
                 && RSDK.CheckObjectCollisionTouchBox(other, &SpikeLog->burnHitbox, self, &SpikeLog->burnHitbox)) {
                 CREATE_ENTITY(BurningLog, intToVoid(0x10), other->position.x, other->position.y);
-                RSDK.SetTileInfo(Zone->fgLow, other->position.x >> 20, other->position.y >> 20, 0xFFFF);
+                RSDK.SetTileInfo(Zone->fgLow, other->position.x >> 20, other->position.y >> 20, -1);
                 other->frame  = 8;
                 other->state  = SpikeLog_State_Burn;
                 other->active = ACTIVE_NORMAL;

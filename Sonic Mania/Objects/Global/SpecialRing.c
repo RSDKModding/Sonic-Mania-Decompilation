@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SpecialRing Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSpecialRing *SpecialRing;
@@ -122,12 +129,13 @@ void SpecialRing_DebugSpawn(void)
     EntitySpecialRing *specialRing = CREATE_ENTITY(SpecialRing, NULL, self->position.x, self->position.y);
     specialRing->enabled           = true;
 }
-void SpecialRing_StartWarp(void)
+
+void SpecialRing_State_StartWarp(void)
 {
     RSDK_THIS(SpecialRing);
     if (++self->warpTimer == 30) {
         SaveGame_SaveGameState();
-        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, 0, 254);
+        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, false, 0xFE);
         destroyEntity(self);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         saveRAM->storedStageID  = SceneInfo->listPos;
@@ -152,7 +160,7 @@ void SpecialRing_State_Warp(void)
             ring->state     = Ring_State_Sparkle;
             ring->stateDraw = Ring_Draw_Sparkle;
             ring->active    = ACTIVE_NORMAL;
-            ring->visible   = 0;
+            ring->visible   = false;
             ring->drawOrder = Zone->drawOrderLow;
             RSDK.SetSpriteAnimation(Ring->aniFrames, i % 3 + 2, &ring->animator, true, 0);
             int32 cnt = ring->animator.frameCount;
@@ -161,7 +169,7 @@ void SpecialRing_State_Warp(void)
                 cnt >>= 1;
             }
             ring->maxFrameCount           = cnt - 1;
-            ring->animator.animationSpeed = RSDK.Rand(6, 8);
+            ring->animator.speed = RSDK.Rand(6, 8);
             ring->timer                   = 2 * i;
         }
         self->sparkleRadius -= 0x80000;
@@ -174,7 +182,7 @@ void SpecialRing_State_Warp(void)
         if (self->warpAnimator.frameID == self->warpAnimator.frameCount - 1) {
             self->warpTimer = 0;
             self->visible   = false;
-            self->state     = SpecialRing_StartWarp;
+            self->state     = SpecialRing_State_StartWarp;
         }
     }
 }

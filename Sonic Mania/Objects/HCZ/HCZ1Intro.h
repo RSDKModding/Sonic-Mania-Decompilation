@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHCZ1Intro {
 	RSDK_OBJECT
-} ObjectHCZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHCZ1Intro {
 	MANIA_CUTSCENE_BASE
-} EntityHCZ1Intro;
+};
 
 // Object Struct
 extern ObjectHCZ1Intro *HCZ1Intro;
@@ -28,6 +28,6 @@ void HCZ1Intro_EditorLoad(void);
 void HCZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host);
+bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host);
 
 #endif //!OBJ_HCZ1INTRO_H

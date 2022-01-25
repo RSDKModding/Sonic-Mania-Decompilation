@@ -3,8 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TUESDAY_GONDOLA,
+    TUESDAY_NODE,
+}TuesdayTypes;
+
 // Object Class
-typedef struct {
+struct ObjectTuesday {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -14,10 +19,10 @@ typedef struct {
     uint16 sfxBossHit;
     uint16 sfxExplosion;
     uint16 sfxDrop;
-} ObjectTuesday;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTuesday {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -26,18 +31,17 @@ typedef struct {
     uint8 health;
     Vector2 drawPos;
     Entity *linkPtrs[8];
-    Entity *field_88;
-    uint8 field_8C;
-    uint8 field_8D;
-    uint8 field_8E;
-    uint8 field_8F;
+    Entity *parent;
+    uint8 linkFlags;
+    uint8 nextShockFlags;
+    uint8 shockFlags;
+    uint8 shockType;
     uint16 timer;
-    uint16 field_92;
-    uint16 field_94;
-    uint16 field_96;
-    Animator animator1;
-    Animator animator2;
-} EntityTuesday;
+    uint16 shockTimer;
+    uint16 linkCount;
+    Animator nodeAnimator;
+    Animator gondolaAnimator;
+};
 
 // Object Struct
 extern ObjectTuesday *Tuesday;
@@ -57,8 +61,8 @@ void Tuesday_Serialize(void);
 
 // Extra Entity Functions
 void Tuesday_DrawElectricity(void);
-void Tuesday_Unknown2(void);
-void Tuesday_Unknown3(void);
+void Tuesday_State_Controller(void);
+void Tuesday_State_Node(void);
 void Tuesday_State_Destroyed(void);
 void Tuesday_State_Debris(void);
 

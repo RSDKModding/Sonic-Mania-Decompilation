@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TwistingSlide Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTwistingSlide *TwistingSlide;
@@ -205,13 +212,13 @@ void TwistingSlide_Update(void)
             }
 
             if (player->characterID == ID_TAILS) {
-                player->animator.animationSpeed = 120;
+                player->animator.speed = 120;
             }
             else {
-                player->animator.animationSpeed = ((abs(player->groundVel) * 0xF0) / 0x60000) + 0x30;
+                player->animator.speed = ((abs(player->groundVel) * 0xF0) / 0x60000) + 0x30;
             }
-            if (player->animator.animationSpeed > 0xF0)
-                player->animator.animationSpeed = 0xF0;
+            if (player->animator.speed > 0xF0)
+                player->animator.speed = 0xF0;
 
             int32 x = player->position.x - storeX;
             int32 y = player->position.y - storeY;

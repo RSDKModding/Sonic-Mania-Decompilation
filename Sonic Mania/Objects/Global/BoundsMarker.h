@@ -11,19 +11,19 @@ typedef enum {
 }BoundsMarkerTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBoundsMarker {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectBoundsMarker;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBoundsMarker {
     RSDK_ENTITY
     uint8 type;
     int32 width;
     bool32 vsDisable;
     int32 offset;
-} EntityBoundsMarker;
+};
 
 // Object Struct
 extern ObjectBoundsMarker *BoundsMarker;

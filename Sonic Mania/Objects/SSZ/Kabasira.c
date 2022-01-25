@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Kabasira Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectKabasira *Kabasira;
@@ -139,7 +146,6 @@ void Kabasira_DrawSegment(int32 angle, int32 alpha)
     drawPos.y    = (RSDK.Cos512(angle) << 13) + self->startPos.y;
     RSDK.SetSpriteAnimation(Kabasira->aniFrames, 0, &self->animator1, true, (11 - rotation % 512 / 42 % 12));
 
-    int scale = 0;
     if ((uint32)(self->animator1.frameID - 1) > 5) {
         self->scale.x = 0x200;
         self->scale.y = 0x200;

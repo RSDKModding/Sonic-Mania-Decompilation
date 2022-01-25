@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTwistingSlide {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectTwistingSlide;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTwistingSlide {
     RSDK_ENTITY
     uint8 type;
     int32 endLen;
@@ -23,7 +23,7 @@ typedef struct {
     Hitbox hitbox3;
     Hitbox hitbox1;
     Animator animator;
-} EntityTwistingSlide;
+};
 
 // Object Struct
 extern ObjectTwistingSlide *TwistingSlide;

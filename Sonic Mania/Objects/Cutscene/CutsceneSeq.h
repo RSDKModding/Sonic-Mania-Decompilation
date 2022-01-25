@@ -3,36 +3,40 @@
 
 #include "SonicMania.h"
 
+#if RETRO_USE_PLUS
 typedef enum {
     SKIPTYPE_DISABLED,
     SKIPTYPE_RELOADSCN,
     SKIPTYPE_NEXTSCENE,
     SKIPTYPE_CALLBACK,
 } SkipTypes;
+#endif
 
 // Object Class
-typedef struct {
+struct ObjectCutsceneSeq {
 	RSDK_OBJECT
-} ObjectCutsceneSeq;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCutsceneSeq {
     RSDK_ENTITY
     bool32 (*currentState)(Entity *host);
     uint8 stateID;
     int32 timer;
-    int32 storedValue1;
-    int32 storedValue2;
+    int32 storedValue; // never reset, unlike timer & the 8 values
+    int32 storedTimer;
     int32 values[8];
-    Entity *cutsceneCurEntity;
-    Entity *hostEntity;
+    Entity *activeEntity;  // the entity that called StartSequence
+    Entity *managerEntity; // the host entity of the sequence
     void *cutsceneStates[0x40];
     Vector2 points[8];
-    int32 fillTimerA;
-    int32 fillTimerB;
+    int32 fadeWhite;
+    int32 fadeBlack;
+#if RETRO_USE_PLUS
     int32 skipType;
     void (*skipCallback)(void);
-} EntityCutsceneSeq;
+#endif
+};
 
 // Object Struct
 extern ObjectCutsceneSeq *CutsceneSeq;
@@ -51,11 +55,20 @@ void CutsceneSeq_EditorLoad(void);
 void CutsceneSeq_Serialize(void);
 
 // Extra Entity Functions
+// Initializes a new state with ID of `nextState`
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq);
+#if RETRO_USE_PLUS
+// Checks if the cutscene was skipped
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void));
+#endif
+// Does a foreach loop for the entity of type `type`
 Entity *CutsceneSeq_GetEntity(int32 type);
+// Locks control of the selected player
 void CutsceneSeq_LockPlayerControl(void *plr);
+// Locks Control of all players
 void CutsceneSeq_LockAllPlayerControl(void);
-void CutsceneSeq_StartSequence(Entity *host, void **states);
+// Sets up a cutscene sequence, the cutscene object should be passed as 'manager', then the cutscene states should be passed in order, make sure to
+// end the states with StateMachine_None to tell it when to stop reading states
+void CutsceneSeq_StartSequence(void *manager, ...);
 
 #endif //!OBJ_CUTSCENESEQ_H

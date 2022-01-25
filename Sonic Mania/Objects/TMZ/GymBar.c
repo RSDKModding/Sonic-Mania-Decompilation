@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GymBar Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGymBar *GymBar;
@@ -111,7 +118,7 @@ void GymBar_HandlePlayerInteractions(void)
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGV, &player->animator, false, 2);
                             else
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGV, &player->animator, false, 9);
-                            player->animator.animationSpeed = ((abs(player->velocity.x) - 0x40000) >> 12) + 224;
+                            player->animator.speed = ((abs(player->velocity.x) - 0x40000) >> 12) + 224;
                             player->abilityValues[0]              = 0;
                             player->abilityValues[1]              = player->animator.frameID;
                             player->abilityValues[2]              = player->velocity.x;
@@ -124,7 +131,7 @@ void GymBar_HandlePlayerInteractions(void)
                         player->position.y = self->position.y;
                         if (abs(player->velocity.y) < 0x40000 || self->noSwing) {
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, false, 0);
-                            player->animator.animationSpeed = 0;
+                            player->animator.speed = 0;
                             player->abilityPtrs[0]                = self;
                             player->state                         = GymBar_PlayerState_Hang;
                         }
@@ -133,7 +140,7 @@ void GymBar_HandlePlayerInteractions(void)
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, false, 2);
                             else
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, false, 9);
-                            player->animator.animationSpeed = ((abs(player->velocity.y) - 0x40000) >> 12) + 256;
+                            player->animator.speed = ((abs(player->velocity.y) - 0x40000) >> 12) + 256;
                             player->abilityValues[0]              = 0;
                             player->abilityValues[1]              = player->animator.frameID;
                             player->abilityValues[2]              = player->velocity.y;
@@ -167,13 +174,13 @@ void GymBar_HandleSwingJump(void)
         self->velocity.y = -0x50000;
     RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
     if (self->characterID == ID_TAILS) {
-        self->animator.animationSpeed = 120;
+        self->animator.speed = 120;
     }
     else {
-        self->animator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
+        self->animator.speed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
     }
-    if (self->animator.animationSpeed > 0xF0)
-        self->animator.animationSpeed = 0xF0;
+    if (self->animator.speed > 0xF0)
+        self->animator.speed = 0xF0;
     self->jumpAbility      = 1;
     self->jumpAbilityTimer = 1;
     self->abilityPtrs[0]   = NULL;

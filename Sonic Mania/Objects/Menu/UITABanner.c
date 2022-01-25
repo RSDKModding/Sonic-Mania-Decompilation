@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UITABanner Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -21,15 +28,15 @@ void UITABanner_Draw(void)
     EntityUIControl *control = self->parent;
     if (control) {
         if (control->active == ACTIVE_ALWAYS) {
-            int32 zone = self->zoneID % 0xC;
+            int32 zone = self->zoneID % 12;
             if (self->isEncore)
                 RSDK.CopyPalette((zone >> 3) + 4, (32 * zone), 0, 224, 32);
             else
                 RSDK.CopyPalette((zone >> 3) + 1, (32 * zone), 0, 224, 32);
-            RSDK.SetSpriteAnimation(UITABanner->aniFrames, 11, &self->animator1, true, zone);
+            RSDK.SetSpriteAnimation(UITABanner->aniFrames, 11, &self->zoneIconAnimator, true, zone);
         }
-        UITABanner_Unknown2(self->position.x, self->position.y, self->isEncore);
-        UITABanner_Unknown5(self->actID, self->zoneID % 0xC, self->characterID, self->isEncore, self->position.x, self->position.y);
+        UITABanner_DrawBGShapes(self->position.x, self->position.y, self->isEncore);
+        UITABanner_DrawBannerInfo(self->actID, self->zoneID % 12, self->characterID, self->isEncore, self->position.x, self->position.y);
     }
 }
 
@@ -45,29 +52,29 @@ void UITABanner_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&self->text, "", 0);
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->labelAnimator, true, 0);
+        RSDK.SetText(&self->zoneName, "", 0);
+        RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->labelAnimator, true, 0);
     }
-    RSDK.SetSpriteAnimation(UITABanner->aniFrames, 10, &self->animator2, false, 0);
+    RSDK.SetSpriteAnimation(UITABanner->aniFrames, 10, &self->fuzzAnimator, false, 0);
 }
 
 void UITABanner_StageLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-void UITABanner_Unknown1(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore)
+void UITABanner_SetupDetails(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore)
 {
-    RSDK.SetText(&banner->text, "", 0);
-    Localization_GetZoneName(&banner->text, zoneID);
+    RSDK.SetText(&banner->zoneName, "", 0);
+    Localization_GetZoneName(&banner->zoneName, zoneID);
     if (zoneID == 5 || zoneID == 10)
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 5, &banner->text);
+        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 5, &banner->zoneName);
     else
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &banner->text);
+        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &banner->zoneName);
     banner->actID       = actID;
     banner->characterID = characterID;
     banner->zoneID      = zoneID;
     banner->isEncore    = isEncore;
 }
 
-void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore)
+void UITABanner_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore)
 {
     if (!SceneInfo->inEditor)
         RSDK.DrawRect(drawX - 0x990000, drawY - 0x1E8000, 0x1320000, 0x3D0000, 0xFFFFFF, 127, INK_BLEND, false);
@@ -88,7 +95,7 @@ void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore)
     UIWidgets_DrawRectOutline_Black(67, 312, drawX, drawY);
 }
 
-void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
+void UITABanner_DrawStageInfo(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
@@ -99,7 +106,7 @@ void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 
     else
         colours[0] = 0xF26C4F;
     colours[1] = 0xF0D808;
-    colours[2] = 0x10101;
+    colours[2] = 0x010101;
 
     int32 widths[3];
     widths[0] = 60;
@@ -123,23 +130,23 @@ void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 
         }
     }
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator3, true, isEncore + 15);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->textAnimator, true, isEncore + 15);
     drawPos.x = drawOffsets[0].x + 0x1E0000;
     drawPos.y = drawOffsets[0].y - 0x70000;
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator3, true, actID + 5);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->textAnimator, true, actID + 5);
     drawPos.x = drawOffsets[1].x + 0x1A0000;
     drawPos.y = drawOffsets[1].y - 0x70000;
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &self->animator3, true, characterID - 1);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, 8, &self->textAnimator, true, characterID - 1);
     drawPos.x = drawOffsets[2].x + 0x230000;
     drawPos.y = drawOffsets[2].y - 0x60000;
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 }
 
-void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
+void UITABanner_DrawZoneIcon(int32 drawX, int32 drawY, int32 zoneID)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
@@ -161,24 +168,24 @@ void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
         frame->width       = 90;
         frame->sprX        = self->timer;
         if (self->timer <= 102) {
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
         }
         else {
             int32 width    = self->timer - 102;
             frame->width = 90 - width;
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
 
             frame->pivotX += frame->width;
             frame->sprX  = 0;
             frame->width = width;
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->zoneIconAnimator, &drawPos, false);
         }
         RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
     }
     else {
         self->direction = self->startDir;
         self->drawFX    = FX_FLIP;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->fuzzAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
         self->drawFX    = FX_NONE;
@@ -186,22 +193,22 @@ void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
     UIWidgets_DrawRectOutline_Black(61, 96, drawPos.x, drawPos.y);
 }
 
-void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
+void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
-    UITABanner_Unknown3(actID, characterID, isEncore, drawX, drawY);
-    UITABanner_Unknown4(drawX, drawY, zoneID);
+    UITABanner_DrawStageInfo(actID, characterID, isEncore, drawX, drawY);
+    UITABanner_DrawZoneIcon(drawX, drawY, zoneID);
     drawPos.y = drawY - 0x100000;
     drawPos.x = drawX - 0x390000;
     if (!SceneInfo->inEditor) {
         if (zoneID == 5 || zoneID == 10) {
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &self->zoneNameAnimator, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->zoneNameAnimator, true, 0);
         }
-        RSDK.DrawText(&self->animator5, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 2, 0, false);
+        RSDK.DrawText(&self->zoneNameAnimator, &drawPos, &self->zoneName, 0, self->zoneName.length, ALIGN_LEFT, 0, 2, 0, false);
     }
 }
 
@@ -210,9 +217,9 @@ void UITABanner_EditorDraw(void)
 {
     RSDK_THIS(UITABanner);
 
-    RSDK.SetSpriteAnimation(UITABanner->aniFrames, 11, &self->animator1, true, self->zoneID % 0xC);
-    UITABanner_Unknown2(self->position.x, self->position.y, self->isEncore);
-    UITABanner_Unknown5(self->actID, self->zoneID % 0xC, self->characterID, self->isEncore, self->position.x, self->position.y);
+    RSDK.SetSpriteAnimation(UITABanner->aniFrames, 11, &self->zoneIconAnimator, true, self->zoneID % 12);
+    UITABanner_DrawBGShapes(self->position.x, self->position.y, self->isEncore);
+    UITABanner_DrawBannerInfo(self->actID, self->zoneID % 12, self->characterID, self->isEncore, self->position.x, self->position.y);
 }
 
 void UITABanner_EditorLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }

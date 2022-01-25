@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Shutterbug Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectShutterbug *Shutterbug;
@@ -282,9 +289,9 @@ void Shutterbug_HandleBodyAnim(void)
 
     RSDK_THIS(Shutterbug);
 
-    ++self->animator.animationTimer;
-    self->animator.animationTimer &= 3;
-    int animTimer = self->animator.animationTimer;
+    ++self->animator.timer;
+    self->animator.timer &= 3;
+    int animTimer = self->animator.timer;
     if (!self->flickerTimer || self->turnTimer) {
         if (self->direction == self->moveDir) {
             if (self->turnTimer)

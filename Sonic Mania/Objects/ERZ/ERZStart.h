@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZStart {
     RSDK_OBJECT
     int32 timer;
     int32 field_8;
@@ -19,13 +19,13 @@ typedef struct {
     EntityChaosEmerald *emeralds[7];
     Entity *king;
     Entity *eggman;
-} ObjectERZStart;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZStart {
     MANIA_CUTSCENE_BASE
     int32 timer;
-} EntityERZStart;
+};
 
 // Object Struct
 extern ObjectERZStart *ERZStart;
@@ -47,20 +47,20 @@ void ERZStart_Serialize(void);
 void ERZStart_SetupObjects(void);
 void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, void *p, int posY);
 
-bool32 ERZStart_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown4(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown6(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown9(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown10(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Unknown11(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_PlayerTransform(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_StartFight(EntityCutsceneSeq *host);
-bool32 ERZStart_CutsceneState_Fight(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown1(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown2(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown3(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown4(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown5(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown6(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown7(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown8(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown9(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown10(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Unknown11(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_Fight(EntityCutsceneSeq *host);
 
 void ERZStart_RubyHover(void);
 void ERZStart_RubyMove(void);

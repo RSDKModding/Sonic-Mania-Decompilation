@@ -4,24 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIUsernamePopup {
     RSDK_OBJECT
     Entity *popup;
-} ObjectUIUsernamePopup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIUsernamePopup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 timeOut;
-    bool32 drawFlag;
-    int32 field_68;
-    int32 dword6C;
-    Vector2 posUnknown;
+    int32 delay;
+    bool32 isVisible;
+    Vector2 size;
+    Vector2 drawPos;
     TextInfo username;
     Animator animator;
-} EntityUIUsernamePopup;
+};
 
 // Object Struct
 extern ObjectUIUsernamePopup *UIUsernamePopup;
@@ -45,8 +44,8 @@ void UIUsernamePopup_ShowPopup(void);
 void UIUsernamePopup_DrawSprites(void);
 
 void UIUsernamePopup_State_Setup(void);
-void UIUsernamePopup_Unknown4(void);
-void UIUsernamePopup_Unknown5(void);
-void UIUsernamePopup_Unknown6(void);
+void UIUsernamePopup_State_Appear(void);
+void UIUsernamePopup_State_Shown(void);
+void UIUsernamePopup_State_Disappear(void);
 
 #endif //!OBJ_UIUSERNAMEPOPUP_H

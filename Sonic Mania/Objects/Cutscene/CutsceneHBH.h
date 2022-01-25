@@ -18,14 +18,14 @@ typedef enum {
 } HBHTypes;
 
 // Object Class
-typedef struct {
+struct ObjectCutsceneHBH {
     RSDK_OBJECT
     uint16 aniFrames;
     colour paletteColours[128];
-} ObjectCutsceneHBH;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCutsceneHBH {
     RSDK_ENTITY
     StateMachine(state);
     uint8 characterID;
@@ -44,7 +44,7 @@ typedef struct {
     uint16 aniFrames;
     Animator animator;
     Animator animator2;
-} EntityCutsceneHBH;
+};
 
 // Object Struct
 extern ObjectCutsceneHBH *CutsceneHBH;

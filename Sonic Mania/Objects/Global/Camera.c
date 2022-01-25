@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Camera Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCamera *Camera;
@@ -45,8 +52,8 @@ void Camera_Draw(void) {}
 
 void Camera_Create(void *data)
 {
-    int32 screen = voidToInt(data);
     RSDK_THIS(Camera);
+    int32 screen = voidToInt(data);
     self->offset.x = 0x80000;
     self->centerY  = ScreenInfo->centerY - 16;
     if (self->active != ACTIVE_NORMAL) {
@@ -56,7 +63,7 @@ void Camera_Create(void *data)
     self->boundsOffset.x = 3;
     self->boundsOffset.y = 2;
     self->active         = ACTIVE_NORMAL;
-    if (!Zone->atlReloadFlag) {
+    if (!Zone->setATLBounds) {
         self->boundsL = Zone->cameraBoundsL[self->screenID];
         self->boundsR = Zone->cameraBoundsR[self->screenID];
         self->boundsT = Zone->cameraBoundsT[self->screenID];
@@ -302,7 +309,7 @@ void Camera_State_Follow(void)
         Camera_HandleHBounds();
         Camera_HandleVBounds();
         Entity *target = self->targetPtr;
-        target->position.x += self->field_6C.x;
+        target->position.x += self->targetMoveVel.x;
         if (target->position.x <= self->position.x + self->offset.x) {
             if (target->position.x < self->position.x - self->offset.x) {
                 int32 pos = target->position.x + self->offset.x - self->position.x;
@@ -310,17 +317,17 @@ void Camera_State_Follow(void)
                     pos = -Camera->centerBounds.x;
                 self->position.x += pos;
             }
-            target->position.x -= self->field_6C.x;
+            target->position.x -= self->targetMoveVel.x;
         }
         else {
             int32 pos = target->position.x - self->position.x - self->offset.x;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             self->position.x += pos;
-            target->position.x -= self->field_6C.x;
+            target->position.x -= self->targetMoveVel.x;
         }
 
-        target->position.y += self->field_6C.y;
+        target->position.y += self->targetMoveVel.y;
         int32 adjust = target->position.y - self->adjustY;
         if (adjust <= self->position.y + self->offset.y) {
             if (adjust < self->position.y - self->offset.y) {
@@ -329,14 +336,14 @@ void Camera_State_Follow(void)
                     pos = -Camera->centerBounds.y;
                 self->position.y += pos;
             }
-            target->position.y -= self->field_6C.y;
+            target->position.y -= self->targetMoveVel.y;
         }
         else {
             int32 pos = adjust - self->position.y - self->offset.y;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             self->position.y += pos;
-            target->position.y -= self->field_6C.y;
+            target->position.y -= self->targetMoveVel.y;
         }
     }
 }
@@ -346,7 +353,7 @@ void Camera_State_HLock(void)
     if (self->targetPtr) {
         Camera_HandleHBounds();
         Entity *target = self->targetPtr;
-        target->position.x += self->field_6C.x;
+        target->position.x += self->targetMoveVel.x;
         if (target->position.x <= self->position.x + self->offset.x) {
             if (target->position.x < self->position.x - self->offset.x) {
                 int32 pos = target->position.x + self->offset.x - self->position.x;
@@ -354,14 +361,14 @@ void Camera_State_HLock(void)
                     pos = -Camera->centerBounds.x;
                 self->position.x = self->position.x + pos;
             }
-            target->position.x -= self->field_6C.x;
+            target->position.x -= self->targetMoveVel.x;
         }
         else {
             int32 pos = target->position.x - self->position.x - self->offset.x;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             self->position.x = self->position.x + pos;
-            target->position.x -= self->field_6C.x;
+            target->position.x -= self->targetMoveVel.x;
         }
     }
 }
@@ -371,7 +378,7 @@ void Camera_State_VLock(void)
     if (self->targetPtr) {
         Camera_HandleVBounds();
         Entity *target = self->targetPtr;
-        target->position.y += self->field_6C.y;
+        target->position.y += self->targetMoveVel.y;
         int32 adjust = target->position.y - self->adjustY;
         if (adjust <= self->position.y + self->offset.y) {
             if (adjust < self->position.y - self->offset.y) {
@@ -380,14 +387,14 @@ void Camera_State_VLock(void)
                     pos = -Camera->centerBounds.y;
                 self->position.y = self->position.y + pos;
             }
-            target->position.y -= self->field_6C.y;
+            target->position.y -= self->targetMoveVel.y;
         }
         else {
             int32 pos = adjust - self->position.y - self->offset.y;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             self->position.y = self->position.y + pos;
-            target->position.y -= self->field_6C.y;
+            target->position.y -= self->targetMoveVel.y;
         }
     }
 }
@@ -423,7 +430,15 @@ void Camera_State_HandleLerp(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Camera_EditorDraw(void) {}
+void Camera_EditorDraw(void)
+{
+    RSDK_THIS(Camera);
+
+    // Camera preview :)
+    if (showGizmos()) {
+        DrawHelpers_DrawRectOutline(0xFF0000, self->position.x, self->position.y, WIDE_SCR_XSIZE << 16, SCREEN_YSIZE << 16);
+    }
+}
 
 void Camera_EditorLoad(void) {}
 #endif

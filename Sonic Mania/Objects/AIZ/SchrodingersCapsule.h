@@ -5,15 +5,15 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectSchrodingersCapsule {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion2;
     uint16 sfxExplosion3;
-} ObjectSchrodingersCapsule;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySchrodingersCapsule {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -29,7 +29,7 @@ typedef struct {
     Animator buttonAnimator;
     Animator mightyAnimator;
     Animator rayAnimator;
-} EntitySchrodingersCapsule;
+};
 
 // Object Struct
 extern ObjectSchrodingersCapsule *SchrodingersCapsule;
@@ -48,11 +48,11 @@ void SchrodingersCapsule_EditorLoad(void);
 void SchrodingersCapsule_Serialize(void);
 
 // Extra Entity Functions
-void SchrodingersCapsule_Unknown1(void);
-void SchrodingersCapsule_Unknown2(void);
-void SchrodingersCapsule_Unknown3(void);
-void SchrodingersCapsule_Unknown4(void);
-void SchrodingersCapsule_Unknown5(void);
+void SchrodingersCapsule_State_Setup(void);
+void SchrodingersCapsule_State_HandleBounds(void);
+void SchrodingersCapsule_State_Activated(void);
+void SchrodingersCapsule_State_Explode(void);
+void SchrodingersCapsule_State_SetupActClear(void);
 
 #endif
 

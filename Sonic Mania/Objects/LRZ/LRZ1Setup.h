@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZ1Setup {
     RSDK_OBJECT
     int32 palTimer;
     int32 fadeTimer;
@@ -15,12 +15,12 @@ typedef struct {
     TABLE(int32 deformFG[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
     TABLE(int32 deformBG[32],
           { -2, -2, -2, 0, -2, 0, -4, -2, 0, -4, -4, -1, 0, 0, -3, -4, -4, -1, -4, -4, -3, -4, -1, 0, 0, 0, -3, -1, -1, -1, -2, 0 });
-} ObjectLRZ1Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ1Setup {
 	RSDK_ENTITY
-} EntityLRZ1Setup;
+};
 
 // Object Struct
 extern ObjectLRZ1Setup *LRZ1Setup;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Setup {
     RSDK_OBJECT
     StateMachine(deformCB);
     int32 timedOut;
@@ -25,15 +25,15 @@ typedef struct {
     uint16 sfxEmerald;
     uint16 sfxEvent;
     bool32 resetToTitle;
-} ObjectUFO_Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Setup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     colour fadeColour;
-} EntityUFO_Setup;
+};
 
 // Object Struct
 extern ObjectUFO_Setup *UFO_Setup;

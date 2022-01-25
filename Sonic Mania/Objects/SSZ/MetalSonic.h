@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMetalSonic {
     RSDK_OBJECT 
     int32 field_4;
     int32 field_8;
@@ -30,10 +30,10 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
-} ObjectMetalSonic;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMetalSonic {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 targetPos;
@@ -58,7 +58,7 @@ typedef struct {
     Hitbox* innerBox;
     Animator animator;
     Animator animator2;
-} EntityMetalSonic;
+};
 
 // Object Struct
 extern ObjectMetalSonic *MetalSonic;

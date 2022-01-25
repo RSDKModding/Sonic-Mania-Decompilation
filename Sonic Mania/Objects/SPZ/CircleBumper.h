@@ -3,16 +3,24 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CIRCLEBUMPER_FIXED,
+    CIRCLEBUMPER_MOVING,
+    CIRCLEBUMPER_CIRCLE,
+    CIRCLEBUMPER_TRACK,
+    CIRCLEBUMPER_PATH,
+}CircleBumperTypes;
+
 // Object Class
-typedef struct {
+struct ObjectCircleBumper {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxBumper;
-} ObjectCircleBumper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCircleBumper {
     RSDK_ENTITY
     StateMachine(stateCollide);
     StateMachine(stateMove);
@@ -22,8 +30,8 @@ typedef struct {
     int32 speed;
     Vector2 originPos;
     Animator animator;
-    int32 field_94;
-} EntityCircleBumper;
+    int32 unused;
+};
 
 // Object Struct
 extern ObjectCircleBumper *CircleBumper;
@@ -45,12 +53,15 @@ void CircleBumper_Serialize(void);
 void CircleBumper_DebugDraw(void);
 void CircleBumper_DebugSpawn(void);
 
-void CircleBumper_Unknown1(void);
-void CircleBumper_Unknown2(void);
-void CircleBumper_Unknown3(void);
-void CircleBumper_Unknown4(void);
-void CircleBumper_Unknown5(void);
-void CircleBumper_Unknown6(void);
-void CircleBumper_Unknown7(void);
-void CircleBumper_Unknown8(void);
+void CircleBumper_CheckPlayerCollisions(void);
+
+void CircleBumper_Collide_Normal(void);
+void CircleBumper_Collide_Bumped(void);
+
+void CircleBumper_Move_Fixed(void);
+void CircleBumper_Move_Moving(void);
+void CircleBumper_Move_Circular(void);
+void CircleBumper_Move_Path(void);
+void CircleBumper_Move_Track(void);
+
 #endif //! OBJ_CIRCLEBUMPER_H

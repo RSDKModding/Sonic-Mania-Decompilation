@@ -5,24 +5,22 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectUIShifter {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
-} ObjectUIShifter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIShifter {
     RSDK_ENTITY
     Vector2 shift;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
+    Vector2 lastButtonShift;
+    Vector2 shiftOffset;
+    int32 unused;
     Vector2 startPos;
     EntityUIControl *parent;
-} EntityUIShifter;
+};
 
 // Object Struct
 extern ObjectUIShifter *UIShifter;
@@ -41,7 +39,7 @@ void UIShifter_EditorLoad(void);
 void UIShifter_Serialize(void);
 
 // Extra Entity Functions
-void UIShifter_Unknown(void);
+void UIShifter_HandleShift(void);
 #endif
 
 #endif //!OBJ_UISHIFTER_H

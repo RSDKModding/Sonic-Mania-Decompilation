@@ -3,16 +3,23 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PSZDOOR_ORIENATION_D,
+    PSZDOOR_ORIENATION_U,
+    PSZDOOR_ORIENATION_L,
+    PSZDOOR_ORIENATION_R,
+}PSZDoorOrientations;
+
 // Object Class
-typedef struct {
+struct ObjectPSZDoor {
     RSDK_OBJECT
     Hitbox hitboxes[2];
     uint16 aniFrames;
     uint16 sfxOpen;
-} ObjectPSZDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZDoor {
     RSDK_ENTITY
     uint8 orientation;
     bool32 open;
@@ -20,14 +27,14 @@ typedef struct {
     uint8 id;
     int32 automatic;
     EntityDoorTrigger *trigger;
-    int32 field_70;
-    Vector2 startPos;
+    bool32 shouldMove;
+    Vector2 doorPos;
     Vector2 offset;
-    Vector2 field_84;
-    Vector2 field_8C;
-    Animator animator1;
-    Animator animator2;
-} EntityPSZDoor;
+    Vector2 startPos; //its set once and never used
+    Vector2 targetPos;
+    Animator doorAnimator;
+    Animator cogAnimator;
+};
 
 // Object Struct
 extern ObjectPSZDoor *PSZDoor;
@@ -46,6 +53,6 @@ void PSZDoor_EditorLoad(void);
 void PSZDoor_Serialize(void);
 
 // Extra Entity Functions
-int32 PSZDoor_Unknown1(void);
+int32 PSZDoor_GetRemainingDistance(void);
 
 #endif //!OBJ_PSZDOOR_H

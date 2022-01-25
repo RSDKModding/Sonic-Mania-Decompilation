@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTimeTravelSetup {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 timer;
-} ObjectTimeTravelSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTimeTravelSetup {
 	RSDK_ENTITY
-} EntityTimeTravelSetup;
+};
 
 // Object Struct
 extern ObjectTimeTravelSetup *TimeTravelSetup;

@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHandLauncher {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox1;
@@ -12,10 +12,10 @@ typedef struct {
     Hitbox hitbox3;
     bool32 dunkeyMode;
     uint16 sfxDunkey;
-} ObjectHandLauncher;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHandLauncher {
     RSDK_ENTITY
     StateMachine(state);
     int32 speed;
@@ -27,7 +27,7 @@ typedef struct {
     int32 field_80;
     Animator animator1;
     Animator animator2;
-} EntityHandLauncher;
+};
 
 // Object Struct
 extern ObjectHandLauncher *HandLauncher;

@@ -4,11 +4,11 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectEncoreIntro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused1;
     uint16 aniFrames;
-    uint16 field_A;
+    uint16 unused2;
     uint16 sfxHighFive;
     uint16 sfxMysticPoof;
     uint16 sfxKingCharge;
@@ -18,15 +18,15 @@ typedef struct {
     Entity *fxRuby;
     Entity *phantomRuby;
     Entity *rubyPortal;
-    int32 field_24;
-    int32 field_28;
-} ObjectEncoreIntro;
+    int32 unused3;
+    bool32 awaitingSaveFinish;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEncoreIntro {
     MANIA_CUTSCENE_BASE
-    int32 field_88;
-} EntityEncoreIntro;
+    bool32 seenActClear;
+};
 
 // Object Struct
 extern ObjectEncoreIntro *EncoreIntro;
@@ -50,38 +50,38 @@ void EncoreIntro_SetupEntities(void);
 void EncoreIntro_SetupCutscene(void);
 void EncoreIntro_SetupCutscenePart2(void);
 
-bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown5(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown6(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown9(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown18(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown21(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown23(EntityCutsceneSeq *host);
-bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_PlayerAppear(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_RubyAppear(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_PortalClose(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_Empty(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_BeginAIZEncore(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_AIZEncore(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_CapsuleFound(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_BuddySelect(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_MysticStealRuby(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_MysticEscape(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_AIZEncoreTutorial(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_CameraPanToHBHPile(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_MysticPassRuby(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_KingActivate(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_RubyActivated(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_RubyWarp(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_LoadGHZ(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_AwaitSaveFinish(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_FadeInAndStart(EntityCutsceneSeq *host);
+bool32 EncoreIntro_Cutscene_SkipAndFadeOut(EntityCutsceneSeq *host);
 
-void EncoreIntro_SaveGameCB(int32 status);
+void EncoreIntro_SaveGameCB(bool32 success);
 
-void EncoreIntro_PhantomRuby_Unknown1(void);
-void EncoreIntro_PhantomRuby_Unknown2(void);
-void EncoreIntro_PhantomRuby_Unknown3(void);
-void EncoreIntro_PhantomRuby_Unknown4(void);
-void EncoreIntro_PhantomRuby_Unknown5(void);
+void EncoreIntro_PhantomRuby_OscillateFX(void);
+void EncoreIntro_PhantomRuby_EscapeRight(void);
+void EncoreIntro_PhantomRuby_Fall(void);
+void EncoreIntro_PhantomRuby_CapsuleRiseUp(void);
+void EncoreIntro_PhantomRuby_CapsuleFallDown(void);
 
 void EncoreIntro_PlayerState_BuddySel(void);
 void EncoreIntro_PlayerState_HandleAir(void);

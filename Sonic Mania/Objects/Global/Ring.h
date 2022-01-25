@@ -13,23 +13,23 @@ typedef enum {
 
 typedef enum {
     RING_MOVE_FIXED,
-    RING_MOVE_NORMAL,
+    RING_MOVE_MOVING,
     RING_MOVE_CIRCLE,
     RING_MOVE_TRACK,
     RING_MOVE_PATH,
 }RingMoveTypes;
 
 // Object Class
-typedef struct {
+struct ObjectRing {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 pan;
     uint16 aniFrames;
     uint16 sfxRing;
-} ObjectRing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRing {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -45,7 +45,7 @@ typedef struct {
     int32 speed;
     Vector2 drawPos;
     Animator animator;
-} EntityRing;
+};
 
 // Object Struct
 extern ObjectRing *Ring;
@@ -75,6 +75,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder);
 uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
 void Ring_CheckObjectCollisions(int32 offsetX, int32 offsetY);
 
+//States
 void Ring_State_Normal(void);
 void Ring_State_Move(void);
 void Ring_State_Circular(void);
@@ -86,6 +87,7 @@ void Ring_State_Big(void);
 void Ring_State_Attract(void);
 void Ring_State_Sparkle(void);
 
+//Draw States
 void Ring_Draw_Normal(void);
 void Ring_Draw_Oscillating(void);
 void Ring_Draw_Sparkle(void);

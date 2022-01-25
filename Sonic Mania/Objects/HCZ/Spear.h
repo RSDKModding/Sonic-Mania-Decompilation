@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpear {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxSpear;
-} ObjectSpear;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpear {
     RSDK_ENTITY
     int32 field_58;
     uint8 orientation;
@@ -25,7 +25,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator;
     Animator animator2;
-} EntitySpear;
+};
 
 // Object Struct
 extern ObjectSpear *Spear;

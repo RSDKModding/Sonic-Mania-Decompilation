@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSuperSparkle {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectSuperSparkle;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySuperSparkle {
     RSDK_ENTITY
     EntityPlayer *player;
     int32 timer;
     bool32 activeFlag;
-} EntitySuperSparkle;
+};
 
 // Object Struct
 extern ObjectSuperSparkle *SuperSparkle;

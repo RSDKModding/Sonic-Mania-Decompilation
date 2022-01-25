@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SizeLaser Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSizeLaser *SizeLaser;
@@ -12,7 +19,37 @@ void SizeLaser_Update(void)
 
 void SizeLaser_LateUpdate(void) {}
 
-void SizeLaser_StaticUpdate(void) {}
+void SizeLaser_StaticUpdate(void)
+{
+    foreach_active(Player, player)
+    {
+        int32 playerID = RSDK.GetEntityID(player);
+
+        SizeLaser->playerPositions[playerID].x = player->position.x;
+        SizeLaser->playerPositions[playerID].y = player->position.y;
+
+        if (player->scale.x > 0x200) {
+            Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
+            if (!playerHitbox)
+                playerHitbox = &defaultHitbox;
+
+            SizeLaser->playerOuterBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
+            SizeLaser->playerOuterBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
+            SizeLaser->playerOuterBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
+            SizeLaser->playerOuterBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
+
+            playerHitbox = RSDK.GetHitbox(&player->animator, 1);
+            if (!playerHitbox)
+                playerHitbox = &defaultHitbox;
+            SizeLaser->playerInnerBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
+            SizeLaser->playerInnerBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
+            SizeLaser->playerInnerBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
+            SizeLaser->playerInnerBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
+            player->outerbox                           = &SizeLaser->playerOuterBox[playerID];
+            player->innerbox                           = &SizeLaser->playerInnerBox[playerID];
+        }
+    }
+}
 
 void SizeLaser_Draw(void)
 {
@@ -28,7 +65,7 @@ void SizeLaser_Create(void *data)
 
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        int32 type            = voidToInt(data);
+        int32 type          = voidToInt(data);
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -86,29 +123,29 @@ void SizeLaser_StageLoad(void)
 {
     SizeLaser->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
     switch (globals->playerID & 0xFF) {
-        case ID_SONIC: SizeLaser->sonicIndex = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
+        case ID_SONIC: SizeLaser->sonicFrames = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
         case ID_TAILS:
-            SizeLaser->tailsIndex      = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
-            SizeLaser->tailSpriteIndex = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
+            SizeLaser->tailsFrames = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
+            SizeLaser->tailFrames  = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
-        case ID_KNUCKLES: SizeLaser->knuxIndex = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
+        case ID_KNUCKLES: SizeLaser->knuxFrames = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
 #if RETRO_USE_PLUS
-        case ID_MIGHTY: SizeLaser->mightyIndex = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
-        case ID_RAY: SizeLaser->rayIndex = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
+        case ID_MIGHTY: SizeLaser->mightyFrames = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
+        case ID_RAY: SizeLaser->rayFrames = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
 #endif
         default: break;
     }
 
     switch ((globals->playerID >> 8) & 0xFF) {
-        case ID_SONIC: SizeLaser->sonicIndex = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
+        case ID_SONIC: SizeLaser->sonicFrames = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
         case ID_TAILS:
-            SizeLaser->tailsIndex      = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
-            SizeLaser->tailSpriteIndex = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
+            SizeLaser->tailsFrames = RSDK.LoadSpriteAnimation("Players/ChibiTails.bin", SCOPE_STAGE);
+            SizeLaser->tailFrames  = RSDK.LoadSpriteAnimation("Players/CTailSprite.bin", SCOPE_STAGE);
             break;
-        case ID_KNUCKLES: SizeLaser->knuxIndex = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
+        case ID_KNUCKLES: SizeLaser->knuxFrames = RSDK.LoadSpriteAnimation("Players/ChibiKnux.bin", SCOPE_STAGE); break;
 #if RETRO_USE_PLUS
-        case ID_MIGHTY: SizeLaser->mightyIndex = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
-        case ID_RAY: SizeLaser->rayIndex = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
+        case ID_MIGHTY: SizeLaser->mightyFrames = RSDK.LoadSpriteAnimation("Players/ChibiMighty.bin", SCOPE_STAGE); break;
+        case ID_RAY: SizeLaser->rayFrames = RSDK.LoadSpriteAnimation("Players/ChibiRay.bin", SCOPE_STAGE); break;
 #endif
         default: break;
     }
@@ -139,62 +176,62 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag)
     if (chibiFlag) {
         switch (player->characterID) {
             case ID_TAILS:
-                player->aniFrames     = SizeLaser->tailsIndex;
-                player->tailSpriteIndex = SizeLaser->tailSpriteIndex;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = SizeLaser->tailsFrames;
+                player->tailFrames = SizeLaser->tailFrames;
+                player->isChibi    = chibiFlag;
                 break;
             case ID_KNUCKLES:
-                player->aniFrames     = SizeLaser->knuxIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = SizeLaser->knuxFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                player->aniFrames     = SizeLaser->mightyIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = SizeLaser->mightyFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
             case ID_RAY:
-                player->aniFrames     = SizeLaser->rayIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = SizeLaser->rayFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
 #endif
             default:
-                player->aniFrames     = SizeLaser->sonicIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = SizeLaser->sonicFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
         }
     }
     else {
         switch (player->characterID) {
             case ID_TAILS:
-                player->aniFrames     = Player->tailsSpriteIndex;
-                player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
-                player->isChibi         = false;
+                player->aniFrames  = Player->tailsFrames;
+                player->tailFrames = Player->tailsTailsFrames;
+                player->isChibi    = false;
                 break;
             case ID_KNUCKLES:
-                player->aniFrames     = Player->knuxSpriteIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = Player->knuxFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                player->aniFrames     = Player->mightySpriteIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = Player->mightyFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
             case ID_RAY:
-                player->aniFrames     = Player->raySpriteIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = Player->rayFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
 #endif
             default:
-                player->aniFrames     = Player->sonicSpriteIndex;
-                player->tailSpriteIndex = -1;
-                player->isChibi         = chibiFlag;
+                player->aniFrames  = Player->sonicFrames;
+                player->tailFrames = -1;
+                player->isChibi    = chibiFlag;
                 break;
         }
     }
@@ -202,7 +239,7 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag)
 
 void SizeLaser_P2JumpInResize(void)
 {
-    EntityPlayer *self  = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    EntityPlayer *self    = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     self->position.x = player1->position.x;
@@ -250,8 +287,8 @@ void SizeLaser_P2JumpInResize(void)
 
 void SizeLaser_P2JumpInGrow(void)
 {
-    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
-    StateMachine(state)  = self->abilityPtrs[0];
+    EntityPlayer *self  = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    StateMachine(state) = self->abilityPtrs[0];
     StateMachine_Run(state);
 
     if (self->scale.x >= 0x200) {
@@ -276,33 +313,33 @@ void SizeLaser_P2JumpInGrow(void)
 
 void SizeLaser_P2JumpInShrink(void)
 {
-    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
-    StateMachine(state)  = self->abilityPtrs[0];
+    EntityPlayer *self  = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    StateMachine(state) = self->abilityPtrs[0];
     StateMachine_Run(state);
 
     if (self->scale.x <= 0x140) {
         switch (self->characterID) {
             case ID_TAILS:
-                self->aniFrames     = SizeLaser->tailsIndex;
-                self->tailSpriteIndex = SizeLaser->tailSpriteIndex;
+                self->aniFrames  = SizeLaser->tailsFrames;
+                self->tailFrames = SizeLaser->tailFrames;
                 break;
             case ID_KNUCKLES:
-                self->aniFrames     = SizeLaser->knuxIndex;
-                self->tailSpriteIndex = -1;
+                self->aniFrames  = SizeLaser->knuxFrames;
+                self->tailFrames = -1;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                self->aniFrames     = SizeLaser->mightyIndex;
-                self->tailSpriteIndex = -1;
+                self->aniFrames  = SizeLaser->mightyFrames;
+                self->tailFrames = -1;
                 break;
             case ID_RAY:
-                self->aniFrames     = SizeLaser->rayIndex;
-                self->tailSpriteIndex = -1;
+                self->aniFrames  = SizeLaser->rayFrames;
+                self->tailFrames = -1;
                 break;
 #endif
             default:
-                self->aniFrames     = SizeLaser->sonicIndex;
-                self->tailSpriteIndex = -1;
+                self->aniFrames  = SizeLaser->sonicFrames;
+                self->tailFrames = -1;
                 break;
         }
         self->cameraOffset = 0x40000;
@@ -349,61 +386,62 @@ void SizeLaser_Unknown3(void)
     int32 entityX = self->position.x;
     int32 entityY = self->position.y;
 
-    int32 tx1[2];
-    int32 tx2[2];
-    int32 ty1[2];
-    int32 ty2[2];
+    int32 extendX1[2];
+    int32 extendY1[2];
+    int32 extendX2[2];
+    int32 extendY2[2];
 
     switch (self->orientation) {
         case 0:
-            tx1[0] = entityX - 0x80000;
-            tx1[1] = entityX + 0x80000;
-            tx2[0] = entityY - 0x200000;
-            tx2[1] = entityY - 0x200000;
-            ty1[0] = entityX - 0x80000;
-            ty1[1] = entityX + 0x80000;
-            ty2[1] = (self->extend << 16) + entityY;
-            ty2[0] = (self->extend << 16) + entityY;
+            extendX1[0] = entityX - 0x80000;
+            extendX1[1] = entityX + 0x80000;
+
+            extendY1[0] = entityY - 0x200000;
+            extendY1[1] = entityY - 0x200000;
+
+            extendX2[0] = entityX - 0x80000;
+            extendX2[1] = entityX + 0x80000;
+
+            extendY2[0] = entityY + (self->extend << 16);
+            extendY2[1] = entityY + (self->extend << 16);
             break;
+
         case 1:
-            tx1[0] = entityX - 0x200000;
-            tx1[1] = entityX - 0x200000;
-            tx2[0] = entityY - 0x80000;
-            tx2[1] = entityY + 0x80000;
-            ty1[0] = (self->extend << 16) + entityX;
-            ty1[1] = (self->extend << 16) + entityX;
-            ty2[1] = entityY + 0x80000;
-            ty2[0] = entityY - 0x80000;
+            extendX1[0] = entityX - 0x200000;
+            extendX1[1] = entityX - 0x200000;
+
+            extendY1[0] = entityY - 0x80000;
+            extendY1[1] = entityY + 0x80000;
+
+            extendX2[0] = entityX + (self->extend << 16);
+            extendX2[1] = entityX + (self->extend << 16);
+
+            extendY2[1] = entityY + 0x80000;
+            extendY2[0] = entityY - 0x80000;
             break;
+
         case 2:
-            tx1[0] = entityX + 0x200000;
-            tx1[1] = entityX;
-            tx2[0] = entityY - 0x80000;
-            tx2[1] = entityY + 0x80000;
-            ty1[0] = entityX - 0x80000;
-            ty1[1] = entityX - (self->extend << 16);
-            ty2[1] = entityY + 0x80000;
-            ty2[0] = entityY - 0x80000;
-            break;
-        default: // what
-            tx1[0] = entityX;
-            tx1[1] = entityX;
-            tx2[0] = entityY;
-            tx2[1] = entityX;
-            ty1[0] = entityX;
-            ty1[1] = entityX;
-            ty2[0] = entityY;
-            ty2[1] = entityX;
+            extendX1[0] = entityX - 0x200000;
+            extendX1[1] = entityX;
+
+            extendY1[0] = entityY - 0x80000;
+            extendY1[1] = entityY + 0x80000;
+
+            extendX2[0] = entityX + 0x200000;
+            extendX2[1] = entityX - (self->extend << 16);
+
+            extendY2[0] = entityY + 0x80000;
+            extendY2[1] = entityY - 0x80000;
             break;
     }
 
     foreach_active(Player, player)
     {
-        int32 pID = RSDK.GetEntityID(player);
-        if (MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
-                                  tx1[0], tx2[0], ty1[0], ty2[0])
-            || MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
-                                     tx1[1], tx2[1], ty1[1], ty2[1])) {
+        int32 playerID = RSDK.GetEntityID(player);
+        if (MathHelpers_Unknown12(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
+                                  player->position.y, extendX1[0], extendY1[0], extendX2[0], extendY2[0])
+            || MathHelpers_Unknown12(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
+                                     player->position.y, extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
 
             if (self->type) {
                 if (player->state == SizeLaser_P2JumpInShrink || player->state == SizeLaser_P2JumpInGrow || !player->isChibi) {
@@ -441,29 +479,29 @@ void SizeLaser_Unknown3(void)
                     player->scale.y = 0x140;
                     switch (player->characterID) {
                         case ID_TAILS:
-                            player->aniFrames     = Player->tailsSpriteIndex;
-                            player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
+                            player->aniFrames  = Player->tailsFrames;
+                            player->tailFrames = Player->tailsTailsFrames;
                             break;
                         case ID_KNUCKLES:
-                            player->aniFrames     = Player->knuxSpriteIndex;
-                            player->tailSpriteIndex = -1;
+                            player->aniFrames  = Player->knuxFrames;
+                            player->tailFrames = -1;
                             break;
 #if RETRO_USE_PLUS
                         case ID_MIGHTY:
-                            player->aniFrames     = Player->mightySpriteIndex;
-                            player->tailSpriteIndex = -1;
+                            player->aniFrames  = Player->mightyFrames;
+                            player->tailFrames = -1;
                             break;
                         case ID_RAY:
-                            player->aniFrames     = Player->raySpriteIndex;
-                            player->tailSpriteIndex = -1;
+                            player->aniFrames  = Player->rayFrames;
+                            player->tailFrames = -1;
                             break;
 #endif
                         default:
                             if (player->superState == SUPERSTATE_SUPER)
-                                player->aniFrames = Player->superSpriteIndex;
+                                player->aniFrames = Player->superFrames;
                             else
-                                player->aniFrames = Player->sonicSpriteIndex;
-                            player->tailSpriteIndex = -1;
+                                player->aniFrames = Player->sonicFrames;
+                            player->tailFrames = -1;
                             break;
                     }
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
@@ -536,7 +574,8 @@ void SizeLaser_Unknown10(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SizeLaser_EditorDraw(void) {
+void SizeLaser_EditorDraw(void)
+{
     RSDK_THIS(SizeLaser);
 
     switch (self->orientation) {

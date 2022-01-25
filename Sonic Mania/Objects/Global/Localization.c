@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Localization Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLocalization *Localization;
@@ -89,7 +96,7 @@ void Localization_GetString(TextInfo *textInfo, uint8 id)
     memset(textInfo, 0, sizeof(TextInfo));
     RSDK.SetText(textInfo, "", 0);
     RSDK.CopyString(textInfo, &Localization->strings[id]);
-    for (int32 c = 0; c < textInfo->textLength; ++c) {
+    for (int32 c = 0; c < textInfo->length; ++c) {
         if (textInfo->text[c] == '\\')
             textInfo->text[c] = '\n';
     }

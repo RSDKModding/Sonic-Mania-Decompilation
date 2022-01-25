@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Jellygnite Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectJellygnite *Jellygnite;
@@ -148,7 +155,7 @@ void Jellygnite_CheckPlayerCollisions(void)
                 player->onGround        = false;
                 player->direction       = self->direction;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
                 player->direction                     = self->direction ^ 1;
             }
 
@@ -374,7 +381,6 @@ void Jellygnite_State_Unknown3(void)
 #if RETRO_INCLUDE_EDITOR
 void Jellygnite_EditorDraw(void)
 {
-    RSDK_THIS(Jellygnite);
     Jellygnite_SetupAnimations(0);
 
     Jellygnite_Draw();

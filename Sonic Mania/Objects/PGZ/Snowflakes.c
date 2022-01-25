@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Snowflakes Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSnowflakes *Snowflakes;
@@ -9,22 +16,22 @@ void Snowflakes_Update(void)
         for (int32 i = 0; i < 0x40; ++i) {
             if (!self->positions[i].x && !self->positions[i].y) {
                 if ((i & 0x8000) == 0) {
-                    int32 screenY            = ScreenInfo->position.y;
+                    int32 screenY = ScreenInfo->position.y;
                     int32 scrX    = ScreenInfo->position.x % ScreenInfo->width;
 #if RETRO_USE_PLUS
-                    int32 posX               = (scrX + RSDK.RandSeeded(0, ScreenInfo->width, &Zone->randSeed)) % ScreenInfo->width;
+                    int32 posX = (scrX + RSDK.RandSeeded(0, ScreenInfo->width, &Zone->randSeed)) % ScreenInfo->width;
 #else
-                    int32 posX             = (scrX + RSDK.Rand(0, ScreenInfo->width)) % ScreenInfo->width;
+                    int32 posX         = (scrX + RSDK.Rand(0, ScreenInfo->width)) % ScreenInfo->width;
 #endif
                     self->positions[i].y = (screenY - 5) << 16;
                     self->positions[i].x = posX << 16;
                     self->frameIDs[i]    = 0;
 #if RETRO_USE_PLUS
-                    self->flipFlags[i] = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
+                    self->priority[i] = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
 #else
-                    self->flipFlags[i] = RSDK.Rand(0, 10) > 7;
+                    self->priority[i] = RSDK.Rand(0, 10) > 7;
 #endif
-                    if (self->flipFlags[i]) {
+                    if (self->priority[i]) {
 #if RETRO_USE_PLUS
                         self->animIDs[i] = 2 * (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7) + 2;
 #else
@@ -33,16 +40,11 @@ void Snowflakes_Update(void)
                     }
                     else {
 #if RETRO_USE_PLUS
-                        int32 val = RSDK.RandSeeded(0, 10, &Zone->randSeed);
+                        int32 type = RSDK.RandSeeded(0, 10, &Zone->randSeed);
 #else
-                        int32 val = RSDK.Rand(0, 10);
+                        int32 type       = RSDK.Rand(0, 10);
 #endif
-                        if (val > 8) {
-                            self->animIDs[i] = 3;
-                        }
-                        else {
-                            self->animIDs[i] = val > 4;
-                        }
+                        self->animIDs[i] = type > 8 ? 3 : (type > 4 ? 1 : 0);
                     }
 #if RETRO_USE_PLUS
                     self->angles[i] = RSDK.RandSeeded(0, 256, &Zone->randSeed);
@@ -62,8 +64,8 @@ void Snowflakes_Update(void)
 
     for (int32 i = 0; i < 0x40; ++i) {
         if (self->positions[i].x || self->positions[i].y) {
-            Vector2 pos = Snowflakes_Unknown1(i);
-            int32 angle   = RSDK.Sin256(self->angles[i]) << 6;
+            Vector2 pos = Snowflakes_HandleWrap(i);
+            int32 angle = RSDK.Sin256(self->angles[i]) << 6;
             self->positions[i].y += 0x8000;
             pos.y += 0x8000;
             self->positions[i].x += angle;
@@ -103,11 +105,11 @@ void Snowflakes_Draw(void)
 
     for (int32 i = 0; i < 0x40; ++i) {
         if (self->positions[i].x || self->positions[i].y) {
-            int32 val = self->flipFlags[i];
-            if ((val || drawLayer != drawHigh) && (val != 1 || drawLayer == drawHigh)) {
-                Vector2 drawPos   = Snowflakes_Unknown1(i);
+            int32 priority = self->priority[i];
+            if ((priority || drawLayer != drawHigh) && (priority != 1 || drawLayer == drawHigh)) {
+                Vector2 drawPos = Snowflakes_HandleWrap(i);
                 self->direction = FLIP_NONE;
-                int32 angle         = RSDK.Sin256(self->angles[i]) << 6;
+                int32 angle     = RSDK.Sin256(self->angles[i]) << 6;
                 if (self->animIDs[i] <= 2) {
                     RSDK.SetSpriteAnimation(Snowflakes->aniFrames, self->animIDs[i], &self->animator, true, self->frameIDs[i] >> 2);
                     RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -150,20 +152,20 @@ void Snowflakes_StageLoad(void)
     Snowflakes->active    = ACTIVE_ALWAYS;
 }
 
-Vector2 Snowflakes_Unknown1(int32 id)
+Vector2 Snowflakes_HandleWrap(int32 id)
 {
     RSDK_THIS(Snowflakes);
     int32 x    = self->positions[id].x;
     int32 y    = self->positions[id].y;
     int32 mult = 128;
-    if (!self->flipFlags[id])
+    if (!self->priority[id])
         mult = 64;
 
-    int32 i = x - (ScreenInfo->position.x << 8) * mult;
-    while (i < 0) i += ScreenInfo->width << 16;
+    int32 newX = x - (ScreenInfo->position.x << 8) * mult;
+    while (newX < 0) newX += ScreenInfo->width << 16;
 
     int32 posX = ScreenInfo->position.x / ScreenInfo->width;
-    if ((i % (ScreenInfo->width << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->width)
+    if ((newX % (ScreenInfo->width << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->width)
         posX = ScreenInfo->position.x / ScreenInfo->width + 1;
 
     int32 posY = 0;
@@ -171,15 +173,20 @@ Vector2 Snowflakes_Unknown1(int32 id)
         posY = -ScreenInfo->height;
 
     Vector2 pos;
-    pos.x = (posX * ScreenInfo->width << 16) + (i % (ScreenInfo->width << 16));
+    pos.x = (posX * ScreenInfo->width << 16) + (newX % (ScreenInfo->width << 16));
     pos.y = (posY << 16) + y;
     return pos;
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Snowflakes_EditorDraw(void) {}
+void Snowflakes_EditorDraw(void)
+{
+    RSDK_THIS(Snowflakes);
+    RSDK.SetSpriteAnimation(Snowflakes->aniFrames, 5, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void Snowflakes_EditorLoad(void) {}
+void Snowflakes_EditorLoad(void) { Snowflakes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Snowflakes.bin", SCOPE_STAGE); }
 #endif
 
 void Snowflakes_Serialize(void) {}

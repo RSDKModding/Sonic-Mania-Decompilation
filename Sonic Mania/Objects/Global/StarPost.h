@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectStarPost {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 hasAchievement;
@@ -18,10 +18,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxStarPost;
     uint16 sfxWarp;
-} ObjectStarPost;
+};
 
 // Entity Class
-typedef struct {
+struct EntityStarPost {
     RSDK_ENTITY
     StateMachine(state);
     int32 id;
@@ -29,17 +29,17 @@ typedef struct {
     int32 ballSpeed;
     int32 timer;
     int32 starTimer;
-    int32 starFlag;
-    int32 starAngle2;
-    int32 starAngle;
-    int32 starOffset;
+    int32 bonusStageID;
+    int32 starAngleX;
+    int32 starAngleY;
+    int32 starRadius;
     Vector2 ballPos;
     Animator poleAnimator;
     Animator ballAnimator;
     Animator starAnimator;
     Hitbox starHitbox;
     uint8 activated;
-} EntityStarPost;
+};
 
 // Object Struct
 extern ObjectStarPost *StarPost;
@@ -63,6 +63,8 @@ void StarPost_DebugSpawn(void);
 void StarPost_ResetStarPosts(void);
 void StarPost_CheckBonusStageEntry(void);
 void StarPost_CheckCollisions(void);
+
+// States
 void StarPost_State_Idle(void);
 void StarPost_State_BallSpin(void);
 

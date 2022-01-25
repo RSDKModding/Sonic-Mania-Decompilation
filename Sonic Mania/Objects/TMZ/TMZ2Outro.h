@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZ2Outro {
     RSDK_OBJECT
     TABLE(colour colours[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
     uint16 sfxAlarm;
@@ -17,16 +17,16 @@ typedef struct {
     uint16 sfxRubyGet;
     bool32 flag1;
     int32 playerID;
-} ObjectTMZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZ2Outro {
     RSDK_ENTITY
     EntityEscapeCar *escapeCar;
 #if RETRO_USE_PLUS
     EntityCutsceneHBH *heavyKing;
 #endif
-} EntityTMZ2Outro;
+};
 
 // Object Struct
 extern ObjectTMZ2Outro *TMZ2Outro;
@@ -45,27 +45,27 @@ void TMZ2Outro_Serialize(void);
 // Extra Entity Functions
 void TMZ2Outro_SetupCutscene(void);
 
-bool32 TMZ2Outro_CutsceneState_SetupOutro(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host);
 
 void TMZ2Outro_PlayerStateInput_Escape(void);
-bool32 TMZ2Outro_CutsceneState_EggmanFall(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_StartAlert(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_TimeToEscape(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_StartFadeOut(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_EggmanFall(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_TimeToEscape(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_HurryToCar(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_StartFadeOut(EntityCutsceneSeq *host);
 
 #if RETRO_USE_PLUS
-bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host);
 #endif
 
-bool32 TMZ2Outro_CutsceneState_FadeOut(EntityCutsceneSeq *host);
-bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host);
+bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host);
 
-void TMZ2Outro_SaveFileCB(int32 status);
+void TMZ2Outro_SaveFileCB(bool32 success);
 
 #endif //!OBJ_TMZ2OUTRO_H

@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_SpeedLines {
     RSDK_OBJECT
     int32 unused1;
     int32 unused2;
     int32 unused3;
-} ObjectUFO_SpeedLines;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_SpeedLines {
     RSDK_ENTITY
     int32 lineX[32];
     int32 lineY[32];
@@ -20,7 +20,7 @@ typedef struct {
     int32 lineAlpha[32];
     int32 unused1;
     int32 unused2;
-} EntityUFO_SpeedLines;
+};
 
 // Object Struct
 extern ObjectUFO_SpeedLines *UFO_SpeedLines;

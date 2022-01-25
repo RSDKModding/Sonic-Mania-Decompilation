@@ -12,7 +12,7 @@ typedef enum {
 }FBZMissileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectFBZMissile {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -23,10 +23,10 @@ typedef struct {
     uint16 sfxPush;
     uint16 sfxPush2;
     uint16 sfxExplosion;
-} ObjectFBZMissile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZMissile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -35,7 +35,7 @@ typedef struct {
     uint8 intervalOffset;
     int32 timer;
     Animator animator;
-} EntityFBZMissile;
+};
 
 // Object Struct
 extern ObjectFBZMissile *FBZMissile;
@@ -56,11 +56,11 @@ void FBZMissile_Serialize(void);
 // Extra Entity Functions
 void FBZMissile_StateLauncher_Delay(void);
 void FBZMissile_StateLauncher_Launch(void);
-void FBZMissile_Unknown3(void);
-void FBZMissile_Unknown4(void);
+void FBZMissile_State_LauncherHFire(void);
+void FBZMissile_State_LauncherHPrepare(void);
 void FBZMissile_StateVertical_Rise(void);
 void FBZMissile_StateVertical_Fall(void);
-void FBZMissile_Unknown7(void);
+void FBZMissile_StateHorizontal_Move(void);
 void FBZMissile_State_Hull(void);
 
 #endif //!OBJ_FBZMISSILE_H

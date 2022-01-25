@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectNoSwap {
     RSDK_OBJECT
     int32 counter;
     uint16 aniFrames; // unused in-game (likely used in-editor)
-} ObjectNoSwap;
+};
 
 // Entity Class
-typedef struct {
+struct EntityNoSwap {
     RSDK_ENTITY
     Vector2 size;
     bool32 always;
@@ -21,7 +21,7 @@ typedef struct {
     Vector2 playerPos;
     Animator animator1; // unused in-game (likely used in-editor)
     Animator animator2; // unused in-game (likely used in-editor)
-} EntityNoSwap;
+};
 
 // Object Struct
 extern ObjectNoSwap *NoSwap;

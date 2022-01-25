@@ -4,23 +4,23 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFBZ1Outro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused1;
     uint16 sfxDrop;
-    EntityBigSqueeze *boss1;
-    EntityBigSqueeze *boss2;
-    EntityBigSqueeze *boss3;
+    EntityBigSqueeze *bossBorderL;
+    EntityBigSqueeze *bossBorderR;
+    EntityBigSqueeze *bossManager;
     EntityCollapsingPlatform *collapsingPlatform;
     EntityCrane *craneP1;
     EntityCrane *craneP2;
-} ObjectFBZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFBZ1Outro {
     MANIA_CUTSCENE_BASE
     int32 grabbedPlayers;
-} EntityFBZ1Outro;
+};
 
 // Object Struct
 extern ObjectFBZ1Outro *FBZ1Outro;
@@ -38,12 +38,12 @@ void FBZ1Outro_Serialize(void);
 
 // Extra Entity Functions
 void FBZ1Outro_StartCutscene(void);
-void FBZ1Outro_Unknown2(void);
+void FBZ1Outro_HandleTrash(void);
 void FBZ1Outro_DispenseTrash(void);
 
-bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_CraneRide(EntityCutsceneSeq *host);
+bool32 FBZ1Outro_Cutscene_PrepareFBZ2(EntityCutsceneSeq *host);
 
 #endif //!OBJ_FBZ1OUTRO_H

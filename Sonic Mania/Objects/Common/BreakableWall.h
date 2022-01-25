@@ -13,12 +13,17 @@ typedef enum {
 } BreakableWallTypes;
 
 typedef enum {
+    BREAKWALL_PRIO_HIGH,
+    BREAKWALL_PRIO_LOW,
+} BreakableWallPriorities;
+
+typedef enum {
     BREAKWALL_TILE_FIXED = 1,
     BREAKWALL_TILE_DYNAMIC,
 } BreakableWallTileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectBreakableWall {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
@@ -33,17 +38,17 @@ typedef struct {
     TABLE(int32 breakVelocitiesR[8], { -0x20000, -0x20000, 0x20000, -0x20000, -0x10000, -0x10000, 0x10000, -0x10000 });
     uint16 sfxBreak;
     uint16 farPlaneLayer;
-} ObjectBreakableWall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBreakableWall {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     uint8 type;
     bool32 onlyKnux;
     bool32 onlyMighty;
-    bool32 priority;
+    BreakableWallPriorities priority;
     Vector2 size;
     uint16 tileInfo;
     uint16 layerID;
@@ -52,7 +57,7 @@ typedef struct {
     int32 tileRotation;
     int32 gravityStrength;
     Hitbox hitbox;
-} EntityBreakableWall;
+};
 
 // Object Struct
 extern ObjectBreakableWall *BreakableWall;

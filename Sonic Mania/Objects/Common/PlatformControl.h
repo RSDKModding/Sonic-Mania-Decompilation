@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPlatformControl {
 	RSDK_OBJECT
-} ObjectPlatformControl;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlatformControl {
     RSDK_ENTITY
     int32 nodeCount;
     int32 childCount;
@@ -19,7 +19,7 @@ typedef struct {
     bool32 isActive;
     int32 buttonTag;
     Entity *taggedButton;
-} EntityPlatformControl;
+};
 
 // Object Struct
 extern ObjectPlatformControl *PlatformControl;

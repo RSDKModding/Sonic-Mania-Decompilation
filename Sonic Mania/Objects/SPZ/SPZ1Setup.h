@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSPZ1Setup {
     RSDK_OBJECT
     int32 palRotateTimerA;
     int32 palRotateTimerB;
@@ -16,12 +16,12 @@ typedef struct {
     uint16 aniTiles;
     TileLayer *bgLayer;
     TileLayer *bgLayer2;
-} ObjectSPZ1Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySPZ1Setup {
 	RSDK_ENTITY
-} EntitySPZ1Setup;
+};
 
 // Object Struct
 extern ObjectSPZ1Setup *SPZ1Setup;

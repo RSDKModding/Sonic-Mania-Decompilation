@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTurboSpiker {
 	RSDK_OBJECT
 	Hitbox hermitHitbox;
 	Hitbox spikeHitbox;
@@ -12,10 +12,10 @@ typedef struct {
 	uint16 animID;
 	uint16 launchSFX;
 	uint16 splashSFX;
-} ObjectTurboSpiker;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTurboSpiker {
 	RSDK_ENTITY
 	StateMachine(state);
 	uint32 type;
@@ -27,7 +27,7 @@ typedef struct {
 	Animator animator;
 	Animator spikeAnimator;
 	bool32 launchPlayed;
-} EntityTurboSpiker;
+};
 
 // Object Struct
 extern ObjectTurboSpiker *TurboSpiker;

@@ -5,7 +5,7 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Player {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 unused1;
@@ -15,10 +15,10 @@ typedef struct {
     uint16 jumpFrames;
     uint16 ballFrames;
     uint16 sceneIndex;
-} ObjectPBL_Player;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Player {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -39,7 +39,7 @@ typedef struct {
     bool32 jumpPress;
     int32 unused3;
     Animator animator;
-} EntityPBL_Player;
+};
 
 // Object Struct
 extern ObjectPBL_Player *PBL_Player;

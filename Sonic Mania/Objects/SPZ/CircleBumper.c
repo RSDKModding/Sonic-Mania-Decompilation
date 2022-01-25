@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CircleBumper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCircleBumper *CircleBumper;
@@ -33,57 +40,58 @@ void CircleBumper_Create(void *data)
     }
 
     switch (self->type) {
-        case 0:
         default:
+        case CIRCLEBUMPER_FIXED:
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &self->animator, true, 0);
-            self->stateMove = CircleBumper_Unknown4;
+            self->stateMove = CircleBumper_Move_Fixed;
             break;
-        case 1:
+        case CIRCLEBUMPER_MOVING:
             self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
-            self->stateMove     = CircleBumper_Unknown5;
+            self->stateMove     = CircleBumper_Move_Moving;
             self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
             break;
-        case 2:
+        case CIRCLEBUMPER_CIRCLE:
             self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
             self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
             RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &self->animator, true, 0);
-            self->stateMove = CircleBumper_Unknown6;
+            self->stateMove = CircleBumper_Move_Circular;
             break;
-        case 3:
+        case CIRCLEBUMPER_TRACK:
             self->updateRange.x = (abs(self->amplitude.x) + 0x2000) << 9;
-            self->stateMove     = CircleBumper_Unknown8;
+            self->stateMove     = CircleBumper_Move_Track;
             self->updateRange.y = (abs(self->amplitude.y) + 0x2000) << 9;
             break;
-        case 4:
+        case CIRCLEBUMPER_PATH:
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             self->active        = ACTIVE_NEVER;
-            self->stateMove     = CircleBumper_Unknown7;
+            self->stateMove     = CircleBumper_Move_Path;
             break;
     }
 
     RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &self->animator, true, 0);
-    self->stateCollide = CircleBumper_Unknown2;
+    self->stateCollide = CircleBumper_Collide_Normal;
     if (!self->hitCount)
         self->hitCount = 5;
 }
 
 void CircleBumper_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1")) 
+    if (RSDK.CheckStageFolder("SPZ1"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/CircleBumper.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("SPZ2")) 
+    else if (RSDK.CheckStageFolder("SPZ2"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CircleBumper.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("Blueprint")) 
+    else if (RSDK.CheckStageFolder("Blueprint"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CircleBumper.bin", SCOPE_STAGE);
 
     CircleBumper->hitbox.left   = -7;
     CircleBumper->hitbox.top    = -6;
     CircleBumper->hitbox.right  = 7;
     CircleBumper->hitbox.bottom = 6;
-    CircleBumper->sfxBumper     = RSDK.GetSfx("Stage/Bumper.wav");
+
+    CircleBumper->sfxBumper = RSDK.GetSfx("Stage/Bumper.wav");
 
     DEBUGMODE_ADD_OBJ(CircleBumper);
 }
@@ -101,23 +109,23 @@ void CircleBumper_DebugSpawn(void)
     CREATE_ENTITY(CircleBumper, NULL, self->position.x, self->position.y);
 }
 
-void CircleBumper_Unknown1(void)
+void CircleBumper_CheckPlayerCollisions(void)
 {
     RSDK_THIS(CircleBumper);
-    int32 storeX         = self->position.x;
-    int32 storeY         = self->position.y;
+    int32 storeX     = self->position.x;
+    int32 storeY     = self->position.y;
     self->position.x = self->originPos.x;
     self->position.y = self->originPos.y;
     foreach_active(Player, player)
     {
         if (player->animator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &CircleBumper->hitbox)) {
             self->animator.frameID = 0;
-            self->stateCollide     = CircleBumper_Unknown3;
-            RSDK.PlaySfx(CircleBumper->sfxBumper, 0, 255);
+            self->stateCollide     = CircleBumper_Collide_Bumped;
+            RSDK.PlaySfx(CircleBumper->sfxBumper, false, 0xFF);
             self->active = ACTIVE_NORMAL;
-            int32 angle      = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-            int32 xVel       = 0x700 * RSDK.Cos256(angle);
-            int32 yVel       = 0x700 * RSDK.Sin256(angle);
+            int32 angle  = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
+            int32 xVel   = 0x700 * RSDK.Cos256(angle);
+            int32 yVel   = 0x700 * RSDK.Sin256(angle);
             if (player->state == Player_State_FlyCarried)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
@@ -147,7 +155,7 @@ void CircleBumper_Unknown1(void)
             player->tileCollisions = true;
             if (self->hitCount) {
                 EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
-                bonus->animator.frameID     = 16;
+                bonus->animator.frameID = 16;
                 Player_GiveScore(player, 10);
                 --self->hitCount;
             }
@@ -157,42 +165,42 @@ void CircleBumper_Unknown1(void)
     self->position.y = storeY;
 }
 
-void CircleBumper_Unknown2(void) { CircleBumper_Unknown1(); }
+void CircleBumper_Collide_Normal(void) { CircleBumper_CheckPlayerCollisions(); }
 
-void CircleBumper_Unknown3(void)
+void CircleBumper_Collide_Bumped(void)
 {
     RSDK_THIS(CircleBumper);
-    CircleBumper_Unknown1();
+    CircleBumper_CheckPlayerCollisions();
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == self->animator.frameCount - 1) {
         self->animator.frameID = 0;
         self->active           = ACTIVE_BOUNDS;
-        self->stateCollide     = CircleBumper_Unknown2;
+        self->stateCollide     = CircleBumper_Collide_Normal;
     }
 }
 
-void CircleBumper_Unknown4(void)
+void CircleBumper_Move_Fixed(void)
 {
     RSDK_THIS(CircleBumper);
     self->originPos.x = self->position.x;
     self->originPos.y = self->position.y;
 }
 
-void CircleBumper_Unknown5(void)
+void CircleBumper_Move_Moving(void)
 {
     RSDK_THIS(CircleBumper);
     self->originPos.x = self->amplitude.x * RSDK.Sin1024(self->speed * Zone->timer) + self->position.x;
     self->originPos.y = self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer) + self->position.y;
 }
 
-void CircleBumper_Unknown6(void)
+void CircleBumper_Move_Circular(void)
 {
     RSDK_THIS(CircleBumper);
     self->originPos.x = self->amplitude.x * RSDK.Cos1024(self->speed * Zone->timer + 4 * self->angle) + self->position.x;
     self->originPos.y = self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer + 4 * self->angle) + self->position.y;
 }
 
-void CircleBumper_Unknown7(void)
+void CircleBumper_Move_Path(void)
 {
     RSDK_THIS(CircleBumper);
     self->originPos.x += self->velocity.x;
@@ -216,7 +224,7 @@ void CircleBumper_Unknown7(void)
     }
 }
 
-void CircleBumper_Unknown8(void)
+void CircleBumper_Move_Track(void)
 {
     RSDK_THIS(CircleBumper);
     int32 val = Zone->timer << 7;
@@ -236,24 +244,24 @@ void CircleBumper_EditorDraw(void)
     RSDK_THIS(CircleBumper);
 
     switch (self->type) {
-        case 0:
         default:
+        case CIRCLEBUMPER_FIXED:
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             break;
-        case 1:
+        case CIRCLEBUMPER_MOVING:
             self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
             self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
             break;
-        case 2:
+        case CIRCLEBUMPER_CIRCLE:
             self->updateRange.x = (abs(self->amplitude.x) + 0x1000) << 10;
             self->updateRange.y = (abs(self->amplitude.y) + 0x1000) << 10;
             break;
-        case 3:
+        case CIRCLEBUMPER_TRACK:
             self->updateRange.x = (abs(self->amplitude.x) + 0x2000) << 9;
             self->updateRange.y = (abs(self->amplitude.y) + 0x2000) << 9;
             break;
-        case 4:
+        case CIRCLEBUMPER_PATH:
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             break;
@@ -272,6 +280,13 @@ void CircleBumper_EditorLoad(void)
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CircleBumper.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Blueprint"))
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CircleBumper.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(CircleBumper, type);
+    RSDK_ENUM_VAR("Fixed", CIRCLEBUMPER_FIXED);
+    RSDK_ENUM_VAR("Moving", CIRCLEBUMPER_MOVING);
+    RSDK_ENUM_VAR("Circle", CIRCLEBUMPER_CIRCLE);
+    RSDK_ENUM_VAR("Track", CIRCLEBUMPER_TRACK);
+    RSDK_ENUM_VAR("Path", CIRCLEBUMPER_PATH);
 }
 #endif
 

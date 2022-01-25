@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: DashLift Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectDashLift *DashLift;
@@ -90,7 +97,7 @@ void DashLift_State_HandleDash(void)
                 player->velocity.x -= player->velocity.x >> 5;
                 player->position.x = self->position.x;
                 if (player->direction == FLIP_X) {
-                    if (player->sidekick && totalSpeed < 0 || self->drawPos.y >= self->amplitude.y)
+                    if ((player->sidekick && totalSpeed < 0) || self->drawPos.y >= self->amplitude.y)
                         continue;
 
                     int speed = 0;
@@ -113,9 +120,9 @@ void DashLift_State_HandleDash(void)
 
                     self->drawPos.y += speed >> 2;
                     totalSpeed += speed >> 2;
-                    self->animator.animationTimer += abs((speed >> 2) >> 16);
-                    if (self->animator.animationTimer >= 4) {
-                        self->animator.animationTimer = 0;
+                    self->animator.timer += abs((speed >> 2) >> 16);
+                    if (self->animator.timer >= 4) {
+                        self->animator.timer = 0;
                         if (++self->animator.frameID > 4)
                             self->animator.frameID = 0;
                     }
@@ -123,7 +130,7 @@ void DashLift_State_HandleDash(void)
                         RSDK.PlaySfx(DashLift->sfxPulley, false, 255);
                 }
                 else {
-                    if (player->sidekick && totalSpeed > 0 || self->drawPos.y <= self->amplitude.x)
+                    if ((player->sidekick && totalSpeed > 0) || self->drawPos.y <= self->amplitude.x)
                         continue;
 
                     int speed = 0;
@@ -146,9 +153,9 @@ void DashLift_State_HandleDash(void)
 
                     self->drawPos.y += speed >> 2;
                     totalSpeed += speed >> 2;
-                    self->animator.animationTimer -= abs((speed >> 2) >> 16);
-                    if (self->animator.animationTimer <= 0) {
-                        self->animator.animationTimer = 3;
+                    self->animator.timer -= abs((speed >> 2) >> 16);
+                    if (self->animator.timer <= 0) {
+                        self->animator.timer = 3;
                         if (--self->animator.frameID < 0)
                             self->animator.frameID = 4;
                     }

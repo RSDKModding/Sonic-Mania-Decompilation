@@ -3,34 +3,41 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIMODEBUTTON_MANIA,
+    UIMODEBUTTON_TA,
+    UIMODEBUTTON_VS,
+    UIMODEBUTTON_OPTIONS,
+}UIModeButtonIDs;
+
 // Object Class
-typedef struct {
+struct ObjectUIModeButton {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIModeButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIModeButton {
     MANIA_UI_ITEM_BASE
     int32 buttonID;
     bool32 stopMusic;
     bool32 wasDisabled;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    bool32 field_130;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    uint16 textSpriteIndex;
-} EntityUIModeButton;
+    int32 textBounceOffset;
+    int32 iconBounceOffset;
+    int32 shadowBounceOffset;
+    int32 buttonBounceOffset;
+    int32 textBounceVelocity;
+    int32 iconBounceVelocity;
+    int32 shadowBounceVelocity;
+    int32 buttonBounceVelocity;
+    bool32 textVisible;
+    Animator iconAnimator;
+    Animator altIconAnimator;
+    Animator shadowAnimator;
+    Animator altShadowAnimator;
+    Animator textAnimator;
+    uint16 textFrames;
+};
 
 // Object Struct
 extern ObjectUIModeButton *UIModeButton;
@@ -49,15 +56,17 @@ void UIModeButton_EditorLoad(void);
 void UIModeButton_Serialize(void);
 
 // Extra Entity Functions
-void UIModeButton_Unknown1(void);
-bool32 UIModeButton_Options7CB(void);
-bool32 UIModeButton_Options8CB(void);
-void UIModeButton_Options5CB(void);
-void UIModeButton_Options3CB(void);
+void UIModeButton_SetupSprites(void);
+
+bool32 UIModeButton_CheckButtonEnterCB(void);
+bool32 UIModeButton_CheckSelectedCB(void);
+void UIModeButton_ButtonEnterCB(void);
+void UIModeButton_SelectedCB(void);
 void UIModeButton_FailCB(void);
-void UIModeButton_Options6CB(void);
-void UIModeButton_Unknown8(void);
-void UIModeButton_Unknown9(void);
-void UIModeButton_Unknown10(void);
+void UIModeButton_ButtonLeaveCB(void);
+
+void UIModeButton_State_HandleButtonLeave(void);
+void UIModeButton_State_HandleButtonEnter(void);
+void UIModeButton_State_Selected(void);
 
 #endif //!OBJ_UIMODEBUTTON_H

@@ -15,12 +15,12 @@ typedef enum {
 } ProjectileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectProjectile {
     RSDK_OBJECT
-} ObjectProjectile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityProjectile {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -31,7 +31,7 @@ typedef struct {
     int32 rotationSpeed;
     Hitbox hitbox;
     Animator animator;
-} EntityProjectile;
+};
 
 // Object Struct
 extern ObjectProjectile *Projectile;

@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCamera {
     RSDK_OBJECT
     Vector2 centerBounds;
-} ObjectCamera;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCamera {
     RSDK_ENTITY
     StateMachine(state);
     Entity *targetPtr;
     int32 screenID;
     Vector2 center;
-    Vector2 field_6C;
+    Vector2 targetMoveVel;
     Vector2 lastPos;
     Vector2 shakePos;
     Vector2 lookPos;
@@ -34,7 +34,7 @@ typedef struct {
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-} EntityCamera;
+};
 
 // Object Struct
 extern ObjectCamera *Camera;

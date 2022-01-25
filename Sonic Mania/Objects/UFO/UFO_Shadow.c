@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UFO_Shadow Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUFO_Shadow *UFO_Shadow;
@@ -11,7 +18,7 @@ void UFO_Shadow_LateUpdate(void)
     if (parent->objectID) {
         self->position.x = parent->position.x;
         self->position.y = parent->position.y;
-        if (RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) >= 0xFFFF || parent->drawOrder != 4) {
+        if (RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20) == (uint16)-1 || parent->drawOrder != 4) {
             self->visible = false;
         }
         else {

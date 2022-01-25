@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFlipper {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxFlipper;
-} ObjectFlipper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFlipper {
     RSDK_ENTITY
     StateMachine(state);
     uint8 activePlayers;
     Hitbox hitbox;
     Animator animator;
-} EntityFlipper;
+};
 
 // Object Struct
 extern ObjectFlipper *Flipper;

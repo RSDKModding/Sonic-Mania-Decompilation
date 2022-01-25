@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Hatch Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHatch *Hatch;
@@ -74,11 +81,11 @@ void Hatch_Create(void *data)
 
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
         if (warpDoor->objectID == WarpDoor->objectID) {
-            self->warpHitbox  = warpDoor->hitbox;
+            self->warpHitbox        = warpDoor->hitbox;
             warpDoor->hitbox.left   = 0;
-            warpDoor->hitbox.top    = -0x800;
+            warpDoor->hitbox.top    = 0x7FFF;
             warpDoor->hitbox.right  = 0;
-            warpDoor->hitbox.bottom = -0x800;
+            warpDoor->hitbox.bottom = 0x7FFF;
         }
 
         switch (self->go) {
@@ -160,8 +167,18 @@ void Hatch_Unknown1(void)
     RSDK.ProcessAnimation(&self->animator2);
 
     int32 flag = 0;
-    foreach_active(Player, player)
+    foreach_all(Player, player)
     {
+        // Bug Details:
+        // this does foreach_all, instead of foreach_active
+        // meaning that even killed players are included
+        // Fix:
+        // this entire block of code should have a Player_CheckValidState call to make sure the player isn't dead or some other "invalid" state
+
+        // Extra notes: if you manage to die and fall into the hatch, you'll be brough back sorta (this is because it changes your state from Player_State_Death to Player_State_None)
+        // though the death state stuff will still be applied so you'll be on the highest layer (until its changed) and the player->active var will be set to ACTIVE_ALWAYS
+        // this means you can do really weird stuff such as move during the pause menu
+
         if (Player_CheckCollisionBox(player, self, &Hatch->hitbox3) == C_TOP) {
             flag = 1;
         }
@@ -171,8 +188,8 @@ void Hatch_Unknown1(void)
         else if (Player_CheckCollisionBox(player, self, &Hatch->hitbox5) == C_TOP) {
             if (player->onGround) {
                 if (!player->sidekick) {
-                    self->active          = ACTIVE_NORMAL;
-                    self->playerPtr       = (Entity *)player;
+                    self->active            = ACTIVE_NORMAL;
+                    self->playerPtr         = (Entity *)player;
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
@@ -187,7 +204,7 @@ void Hatch_Unknown1(void)
                     player->state = Player_State_None;
                     RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->animator2, false, 0);
                     self->state = Hatch_Unknown2;
-                    flag          = 2;
+                    flag        = 2;
                     foreach_break;
                 }
             }

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PhantomMissile Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPhantomMissile *PhantomMissile;
@@ -203,9 +210,9 @@ void PhantomMissile_Unknown6(void)
     if (rx * rx + ry * ry < 64) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->drawPos.x, self->drawPos.y - 0x80000)->drawOrder = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->animator0, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
         self->timer     = 0;
         self->field_68  = 0;
         self->drawOrder = Zone->drawOrderLow;
@@ -265,9 +272,9 @@ void PhantomMissile_Unknown9(void)
     RSDK_THIS(PhantomMissile);
 
     self->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->rotation = (self->rotation + self->groundVel) & 0x1FF;
-    self->position.x += self->velocity.x;
 
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);

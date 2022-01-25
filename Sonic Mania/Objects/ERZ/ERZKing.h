@@ -3,8 +3,19 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    ERZKING_KING,
+    ERZKING_ARM_L,
+    ERZKING_ARM_R,
+} ERZKingTypes;
+
+typedef enum {
+    ERZKING_HEAVY_GUNNER,
+    ERZKING_HEAVY_MYSTIC,
+} ERZKingHeavyTypes;
+
 // Object Class
-typedef struct {
+struct ObjectERZKing {
     RSDK_OBJECT
     int32 boundsL;
     int32 boundsR;
@@ -14,14 +25,14 @@ typedef struct {
     uint16 sfxHit;
     uint16 sfxExplosion2;
     uint16 aniFrames;
-} ObjectERZKing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZKing {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Vector2 posUnknown;
+    Vector2 originPos;
     int32 type;
     int32 timer;
     int32 nextType;
@@ -47,7 +58,7 @@ typedef struct {
     Animator animator10;
     Hitbox hitbox;
     uint8 storeDrawFX;
-} EntityERZKing;
+};
 
 // Object Struct
 extern ObjectERZKing *ERZKing;
@@ -69,12 +80,12 @@ void ERZKing_Serialize(void);
 void ERZKing_CheckPlayerCollisions(void);
 void ERZKing_HandleFrames(void);
 
-void ERZKing_StateDraw_Body(void);
-void ERZKing_StateDraw_Arm(void);
+void ERZKing_Draw_Body(void);
+void ERZKing_Draw_Arm(void);
 
-void ERZKing_State_Unknown1(void);
-void ERZKing_State_Unknown2(void);
-void ERZKing_State_Unknown3(void);
+void ERZKing_State_SetupArena(void);
+void ERZKing_State_SetupBody(void);
+void ERZKing_State_EnterKing(void);
 void ERZKing_State_Unknown4(void);
 void ERZKing_State_ChangeHBH(void);
 void ERZKing_State_Arm(void);

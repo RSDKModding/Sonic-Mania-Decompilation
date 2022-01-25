@@ -17,14 +17,14 @@ typedef enum {
 }PBL_HUDMessageTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPBL_HUD {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 unused1;
-} ObjectPBL_HUD;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_HUD {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -34,7 +34,7 @@ typedef struct {
     Animator displayAnimator;
     Animator baseAnimator;
     Animator textAnimator;
-} EntityPBL_HUD;
+};
 
 // Object Struct
 extern ObjectPBL_HUD *PBL_HUD;

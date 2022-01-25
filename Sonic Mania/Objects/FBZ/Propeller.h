@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPropeller {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFan;
-} ObjectPropeller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPropeller {
     RSDK_ENTITY
     Hitbox playerHitbox;
-    Hitbox hitbox2;
+    Hitbox hitboxFan;
     Hitbox hitbox;
     bool32 fanEnabled;
     uint8 activePlayers;
     Animator animator;
-} EntityPropeller;
+};
 
 // Object Struct
 extern ObjectPropeller *Propeller;

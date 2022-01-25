@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSentryBug {
     RSDK_OBJECT
     TABLE(int32 value1[84], { -0x50000, 0x30000, -0x90000, 0xA0000, -0x70000, 0x100000, 0x70000,  0x30000, 0x30000,  0xA0000, -0x30000, 0x100000,
                             -0x70000, 0x30000, -0xB0000, 0xA0000, -0x80000, 0x100000, 0x90000,  0x30000, 0x60000,  0xA0000, 0,        0x100000,
@@ -21,10 +21,10 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxPon;
     uint16 sfxSwarm;
-} ObjectSentryBug;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySentryBug {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLate);
@@ -69,7 +69,7 @@ typedef struct {
     Matrix matrix2;
     Animator animator2;
     Animator animator1;
-} EntitySentryBug;
+};
 
 // Object Struct
 extern ObjectSentryBug *SentryBug;

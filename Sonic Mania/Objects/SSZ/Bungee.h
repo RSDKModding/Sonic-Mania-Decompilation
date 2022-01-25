@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBungee {
     RSDK_OBJECT
     uint16 aniFrames;
     Animator animator;
-} ObjectBungee;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBungee {
     RSDK_ENTITY
     Vector2 startPos;
     Vector2 bungeePos;
@@ -21,7 +21,7 @@ typedef struct {
     int32 field_80;
     int32 playerDeathBoundary[PLAYER_MAX];
     uint8 timer;
-} EntityBungee;
+};
 
 // Object Struct
 extern ObjectBungee *Bungee;

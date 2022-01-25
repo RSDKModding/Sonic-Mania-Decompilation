@@ -3,23 +3,34 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CRANE_START_UP,
+    CRANE_START_DOWN,
+} CraneStartTypes;
+
+typedef enum {
+    CRANE_PLAYER1_ONLY,
+    CRANE_PLAYER2_ONLY,
+    CRANE_PLAYER_ALL,
+}CranePlayerTypes;
+
 // Object Class
-typedef struct {
+struct ObjectCrane {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
     uint16 aniFrames;
     uint16 sfxGrab;
-} ObjectCrane;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCrane {
     RSDK_ENTITY
     StateMachine(state);
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator frontAnimator;
+    Animator backAnimator;
+    Animator chainAnimator;
     Entity *grabbedPlayer;
     uint16 distance;
     uint8 startType;
@@ -28,7 +39,7 @@ typedef struct {
     uint8 startDir;
     int32 timer2;
     int32 timer;
-} EntityCrane;
+};
 
 // Object Struct
 extern ObjectCrane *Crane;
@@ -54,15 +65,15 @@ void Crane_HandlePlayerInteractions(void);
 void Crane_CheckOnScreen(void);
 
 void Crane_State_CheckOnScreen(void);
-void Crane_State_Unknown1(void);
-void Crane_State_Unknown2(void);
-void Crane_State_Unknown3(void);
-void Crane_State_Unknown4(void);
-void Crane_State_Unknown5(void);
-void Crane_State_Unknown6(void);
-void Crane_State_Unknown7(void);
-void Crane_State_Unknown8(void);
-void Crane_State_Unknown9(void);
-void Crane_State_Unknown10(void);
+void Crane_State_Setup(void);
+void Crane_State_CheckForPlayers(void);
+void Crane_State_LowerToGrab(void);
+void Crane_State_CheckGrab(void);
+void Crane_State_RiseUp(void);
+void Crane_State_ToDest1stHalf(void);
+void Crane_State_ToDest2ndHalf(void);
+void Crane_State_DropDelay(void);
+void Crane_State_ToStart1stHalf(void);
+void Crane_State_ToStart2ndHalf(void);
 
 #endif //!OBJ_CRANE_H

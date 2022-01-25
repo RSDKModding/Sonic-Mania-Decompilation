@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZ3Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -150,32 +157,30 @@ void LRZ3Outro_State_Unknown3(void)
 
 void LRZ3Outro_StageFinishCB(void)
 {
-    EntityLRZ3Outro *entity = NULL;
+    EntityLRZ3Outro *cutscene = NULL;
     foreach_all(LRZ3Outro, outro)
     {
-        entity = outro;
+        cutscene = outro;
         foreach_break;
     }
 
-    if (entity) {
-        void *states[] = { LRZ3Outro_CutsceneState_Unknown1, LRZ3Outro_CutsceneState_Unknown2, NULL };
-
-        CutsceneSeq_StartSequence((Entity*)entity, states);
+    if (cutscene) {
+        CutsceneSeq_StartSequence(cutscene, LRZ3Outro_Cutscene_StopPlayers, LRZ3Outro_Cutscene_LightUpLittlePlanet, StateMachine_None);
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
-        entity->active = ACTIVE_NEVER;
+        cutscene->active = ACTIVE_NEVER;
     }
 }
 
-bool32 LRZ3Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ3Outro_Cutscene_StopPlayers(EntityCutsceneSeq *host)
 {
     foreach_active(Player, player) { player->state = Player_State_None; }
     return true;
 }
 
-bool32 LRZ3Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ3Outro_Cutscene_LightUpLittlePlanet(EntityCutsceneSeq *host)
 {
     if (host->timer > 60) {
         int frame = 23 - minVal((host->timer - 60) >> 2, 6);
@@ -198,9 +203,11 @@ bool32 LRZ3Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZ3Outro_EditorDraw(void) {}
 
 void LRZ3Outro_EditorLoad(void) {}
+#endif
 
 void LRZ3Outro_Serialize(void) {}
 #endif

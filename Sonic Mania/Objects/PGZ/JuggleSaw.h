@@ -8,26 +8,26 @@ typedef enum { JSAW_NO_SAW = 0, JSAW_HAS_SAW = 1, JSAW_AWAITING_SAW = 2 } Juggle
 #define JuggleSaw_MaxFriends (8)
 
 // Object Class
-typedef struct {
+struct ObjectJuggleSaw {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox friendbox;
-    Hitbox sawHitbox;
-    Hitbox grabboxFloor;
-    Hitbox grabboxWall;
-    uint16 animID;
-    uint16 explodeSFX;
-    uint16 juggleSFX;
-    uint16 throwSFX;
-} ObjectJuggleSaw;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxFriend;
+    Hitbox hitboxSaw;
+    Hitbox hitboxGrabV;
+    Hitbox hitboxGrabH;
+    uint16 aniFrames;
+    uint16 sfxExplode;
+    uint16 sfxJuggle;
+    uint16 sfxThrow;
+};
 
 // Entity Class
-typedef struct {
+struct EntityJuggleSaw {
     RSDK_ENTITY
     StateMachine(state);
     uint16 sawDelay;
     uint32 sawSpeed;
-    JuggleSawMode hasSaw;
+    bool32 hasSaw;
     uint16 setID;
     Entity *friends[JuggleSaw_MaxFriends];
     uint8 friendCount;
@@ -35,7 +35,7 @@ typedef struct {
     Vector2 spawnPos;
     uint8 spawnDir;
     Animator animator;
-} EntityJuggleSaw;
+};
 
 // Object Struct
 extern ObjectJuggleSaw *JuggleSaw;
@@ -57,13 +57,14 @@ void JuggleSaw_DebugDraw(void);
 void JuggleSaw_DebugSpawn(void);
 
 // Extra Entity Functions
-void JuggleSaw_Crab_Collide(void);
-void JuggleSaw_Crab_CheckOnScreen(void);
-void JuggleSaw_Crab_Handle(void);
-void JuggleSaw_Crab_Create(void);
-void JuggleSaw_Crab_ThrowSaw(void);
+void JuggleSaw_CheckPlayerCollisions(void);
+void JuggleSaw_CheckOnScreen(void);
 
-void JuggleSaw_Saw_Handle(void);
-void JuggleSaw_Saw_Knocked(void);
+void JuggleSaw_StateCrab_Setup(void);
+void JuggleSaw_StateCrab_Handle(void);
+void JuggleSaw_StateCrab_ThrowSaw(void);
+
+void JuggleSaw_StateSaw_Handle(void);
+void JuggleSaw_StateSaw_Debris(void);
 
 #endif //!OBJ_JUGGLESAW_H

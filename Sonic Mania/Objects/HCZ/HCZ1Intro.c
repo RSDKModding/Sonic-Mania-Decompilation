@@ -1,19 +1,25 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: HCZ1Intro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHCZ1Intro *HCZ1Intro;
 
 void HCZ1Intro_Update(void)
 {
-    void *states[] = { HCZ1Intro_CutsceneState, NULL };
-
     RSDK_THIS(HCZ1Intro);
+
     if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             self->active = ACTIVE_NEVER;
         }
         else {
             self->activated = true;
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, HCZ1Intro_Cutscene_Intro, StateMachine_None);
         }
     }
 }
@@ -40,7 +46,7 @@ void HCZ1Intro_StageLoad(void)
     }
 }
 
-bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
+bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
 {
     RSDK_THIS(HCZ1Intro);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -103,7 +109,7 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
     }
     else if (!host->values[0]) {
         host->values[0] = 1;
-        host->storedValue2    = host->timer;
+        host->storedTimer    = host->timer;
     }
 
     if (host->timer >= 8) {

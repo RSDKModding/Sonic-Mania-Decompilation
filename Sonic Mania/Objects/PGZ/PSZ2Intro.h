@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPSZ2Intro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     uint16 sfxExplosion3;
     EntityFXFade *fxFade;
     Entity *signPost;
-} ObjectPSZ2Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ2Intro {
     MANIA_CUTSCENE_BASE
-} EntityPSZ2Intro;
+};
 
 // Object Struct
 extern ObjectPSZ2Intro *PSZ2Intro;
@@ -32,9 +32,9 @@ void PSZ2Intro_EditorLoad(void);
 void PSZ2Intro_Serialize(void);
 
 // Extra Entity Functions
-bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 PSZ2Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host);
+bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host);
 
 #endif //!OBJ_PSZ2INTRO_H

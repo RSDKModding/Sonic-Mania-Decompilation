@@ -6,7 +6,7 @@
 #define UberCaterkiller_SegmentCount (10)
 
 // Object Class
-typedef struct {
+struct ObjectUberCaterkiller {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 defeated;
@@ -18,10 +18,10 @@ typedef struct {
     uint16 sfxBumper3;
     uint16 sfxCaterJump;
     uint16 aniFrames;
-} ObjectUberCaterkiller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUberCaterkiller {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -41,7 +41,7 @@ typedef struct {
     uint8 field_1DC[PLAYER_MAX];
     Animator animator1;
     Animator animator2;
-} EntityUberCaterkiller;
+};
 
 // Object Struct
 extern ObjectUberCaterkiller *UberCaterkiller;

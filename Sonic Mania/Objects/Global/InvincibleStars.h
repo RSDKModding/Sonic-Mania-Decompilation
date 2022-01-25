@@ -4,20 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectInvincibleStars {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectInvincibleStars;
+};
 
 // Entity Class
-typedef struct {
+struct EntityInvincibleStars {
     RSDK_ENTITY
     Entity *parent;
     Vector2 starPos[8];
-    int32 starAngle[4];
+    int32 starAngle[2];
+    int32 starFrame[2];
     int32 starOffset;
-    Animator starsData[4];
-} EntityInvincibleStars;
+    Animator starAnimator[4];
+};
 
 // Object Struct
 extern ObjectInvincibleStars *InvincibleStars;

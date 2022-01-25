@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectOptions {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
 #endif
     Entity *loadEntityPtr;
-    void (*loadCallback)(int32);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int32);
-    int32 state;
-} ObjectOptions;
+    void (*saveCallback)(bool32 success);
+    bool32 changed;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOptions {
     RSDK_ENTITY
     uint8 language;
     int32 overrideLanguage;
@@ -26,12 +26,12 @@ typedef struct {
     bool32 overrideMusicVol;
     int32 volSfx;
     bool32 overrideSfxVol;
-    int32 vSync;
+    bool32 vSync;
     uint8 windowSize;
-    int32 windowBorder;
-    int32 windowed;
-    int32 tripleBuffering;
-} EntityOptions;
+    bool32 windowBorder;
+    bool32 windowed;
+    bool32 tripleBuffering;
+};
 
 // Object Struct
 extern ObjectOptions *Options;
@@ -52,9 +52,9 @@ void Options_Serialize(void);
 //Funcs
 void Options_Reload(void);
 void Options_GetWinSize(void);
-void Options_LoadCallback(int32 success);
+void Options_LoadCallback(bool32 success);
 void Options_LoadOptionsBin(void);
-void Options_SaveOptionsBin(void (*callback)(int32));
+void Options_SaveOptionsBin(void (*callback)(bool32 success));
 void Options_SetLanguage(int32 language);
 void Options_LoadValuesFromSettings(EntityOptions *options);
 void Options_LoadOptionsCallback(int32 statusCode);

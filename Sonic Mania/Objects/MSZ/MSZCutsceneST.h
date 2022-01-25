@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSZCutsceneST {
     RSDK_OBJECT
     TABLE(int32 signPostOffsets[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
     uint16 value2;
@@ -24,10 +24,10 @@ typedef struct {
     uint16 sfxMayday;
     uint16 sfxLedgeBreak;
     bool32 playingMaydaySfx;
-} ObjectMSZCutsceneST;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSZCutsceneST {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -39,7 +39,7 @@ typedef struct {
     int32 field_74;
     int32 field_78;
     Hitbox hitbox;
-} EntityMSZCutsceneST;
+};
 
 // Object Struct
 extern ObjectMSZCutsceneST *MSZCutsceneST;

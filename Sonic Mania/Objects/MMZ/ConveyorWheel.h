@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectConveyorWheel {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectConveyorWheel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityConveyorWheel {
     RSDK_ENTITY
     Animator animator;
-} EntityConveyorWheel;
+};
 
 // Object Struct
 extern ObjectConveyorWheel *ConveyorWheel;

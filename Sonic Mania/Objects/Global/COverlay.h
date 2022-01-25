@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCOverlay {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectCOverlay;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCOverlay {
 	RSDK_ENTITY
-} EntityCOverlay;
+};
 
 // Object Struct
 extern ObjectCOverlay *COverlay;

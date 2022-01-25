@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSPZ2Outro {
     RSDK_OBJECT
     bool32 flag;
     int32 field_8;
     Entity *tvFlyingBattery;
     Entity *weatherTV;
     EntityEggPrison *prison;
-} ObjectSPZ2Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySPZ2Outro {
     MANIA_CUTSCENE_BASE
-} EntitySPZ2Outro;
+};
 
 // Object Struct
 extern ObjectSPZ2Outro *SPZ2Outro;
@@ -35,12 +35,12 @@ void SPZ2Outro_Serialize(void);
 // Extra Entity Functions
 void SPZ2Outro_StartCutscene(void);
 
-bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_ExitStageRight(EntityCutsceneSeq *host);
 
 void SPZ2Outro_DrawLayerCB(void);
 
-bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 SPZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_AsSeenOnTV(EntityCutsceneSeq *host);
+bool32 SPZ2Outro_Cutscene_FBZFlyAway(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SPZ2OUTRO_H

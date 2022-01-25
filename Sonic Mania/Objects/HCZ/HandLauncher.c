@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: HandLauncher Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHandLauncher *HandLauncher;
@@ -173,7 +180,7 @@ void HandLauncher_Unknown5(void)
     self->position.x = self->field_74.x;
     self->position.y = self->field_74.y;
     RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &self->animator1, true, 0);
-    self->animator1.animationSpeed = 0;
+    self->animator1.speed = 0;
     RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &self->animator2, true, 0);
     self->state = HandLauncher_Unknown6;
 }
@@ -206,7 +213,7 @@ void HandLauncher_Unknown7(void)
     if (self->activePlayers) {
         RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 2, &self->animator2, true, 0);
         self->field_7C                 = 0;
-        self->animator1.animationSpeed = 1;
+        self->animator1.speed = 1;
         self->state                    = HandLauncher_Unknown8;
     }
 
@@ -259,7 +266,7 @@ void HandLauncher_Unknown8(void)
             self->position                 = self->playerPos;
             self->field_80                 = 30;
             self->field_7C                 = 0;
-            self->animator1.animationSpeed = 0;
+            self->animator1.speed = 0;
             self->state                    = HandLauncher_Unknown6;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();

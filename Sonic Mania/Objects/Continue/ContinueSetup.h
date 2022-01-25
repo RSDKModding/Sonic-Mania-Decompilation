@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectContinueSetup {
     RSDK_OBJECT
     Animator animator;
     uint16 sfxAccept;
     uint16 countIndex[10];
     uint16 sceneIndex;
-} ObjectContinueSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityContinueSetup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -28,7 +28,7 @@ typedef struct {
     Matrix matRotateX;
     Matrix matRotateY;
     Matrix matFinal;
-} EntityContinueSetup;
+};
 
 // Object Struct
 extern ObjectContinueSetup *ContinueSetup;

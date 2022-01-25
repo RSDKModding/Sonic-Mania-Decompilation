@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SSZ1Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSSZ1Setup *SSZ1Setup;
@@ -28,7 +35,7 @@ void SSZ1Setup_StageLoad(void)
 
     Animals->animalTypes[0]      = ANIMAL_FLICKY;
     Animals->animalTypes[1]      = ANIMAL_RICKY;
-    GenericTrigger->callbacks[0] = SSZ1Outro_Unknown4;
+    GenericTrigger->callbacks[0] = SSZ1Outro_DestroyLeftoverHotarus;
 
     if (isMainGameMode()) {
         if (globals->enableIntro) {
@@ -50,7 +57,7 @@ void SSZ1Setup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if ((SceneInfo->filter & FILTER_ENCORE)) {
-        RSDK.LoadPalette(0, "EncoreSSZ1.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreSSZ1.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 128);
     }
 #endif

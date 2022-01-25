@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PhantomShield Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPhantomShield *PhantomShield;
@@ -27,8 +34,8 @@ void PhantomShield_Draw(void)
 
     if (self->blendAmount > 0)
         RSDK.SetLimitedFade(0, 1, 3, self->blendAmount, 136, 143);
-    self->direction = RSDK.GetFrameID(&self->animator) != 98 ? 0 : 2;
-    RSDK.DrawSprite(&self->animator, 0, false);
+    self->direction = RSDK.GetFrameID(&self->animator) == 'b' ? FLIP_Y : FLIP_NONE;
+    RSDK.DrawSprite(&self->animator, NULL, false);
     if (self->blendAmount > 0)
         RSDK.CopyPalette(1, 136, 0, 136, 8);
 }

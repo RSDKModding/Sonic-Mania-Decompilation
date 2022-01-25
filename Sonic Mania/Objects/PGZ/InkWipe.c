@@ -1,6 +1,15 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: InkWipe Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectInkWipe *InkWipe;
+
+// This object doesn't look like it was ever fully finished, a bummer indeed
 
 void InkWipe_Update(void)
 {
@@ -8,15 +17,9 @@ void InkWipe_Update(void)
     RSDK.ProcessAnimation(&self->animator);
 }
 
-void InkWipe_LateUpdate(void)
-{
+void InkWipe_LateUpdate(void) {}
 
-}
-
-void InkWipe_StaticUpdate(void)
-{
-
-}
+void InkWipe_StaticUpdate(void) {}
 
 void InkWipe_Draw(void)
 {
@@ -25,7 +28,7 @@ void InkWipe_Draw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void InkWipe_Create(void* data)
+void InkWipe_Create(void *data)
 {
     RSDK_THIS(InkWipe);
     if (!SceneInfo->inEditor) {
@@ -47,17 +50,16 @@ void InkWipe_StageLoad(void)
 #if RETRO_INCLUDE_EDITOR
 void InkWipe_EditorDraw(void)
 {
+    RSDK_THIS(InkWipe);
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(InkWipe->aniFrames, 0, &self->animator, true, 0);
 
+    InkWipe_Draw();
 }
 
-void InkWipe_EditorLoad(void)
-{
-
-}
+void InkWipe_EditorLoad(void) { InkWipe->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE); }
 #endif
 
-void InkWipe_Serialize(void)
-{
-
-}
-
+void InkWipe_Serialize(void) {}

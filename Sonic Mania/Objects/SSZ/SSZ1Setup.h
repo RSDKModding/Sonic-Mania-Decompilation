@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZ1Setup {
     RSDK_OBJECT
     int32 field_4;
     TileLayer *layer1Ptr;
     EntitySSZ1Outro *outroPtr;
-} ObjectSSZ1Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZ1Setup {
 	RSDK_ENTITY
-} EntitySSZ1Setup;
+};
 
 // Object Struct
 extern ObjectSSZ1Setup *SSZ1Setup;

@@ -3,30 +3,30 @@
 
 #include "SonicMania.h"
 
-#define Dragonfly_BodyCount (6)
+#define Dragonfly_SpineCount (6)
 
 // Object Class
-typedef struct {
-	RSDK_OBJECT
-	Hitbox hurtbox;
-	Hitbox hitbox;
-	uint16 animID;
-} ObjectDragonfly;
+struct ObjectDragonfly {
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitboxSpine;
+    uint16 aniFrames;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDragonfly {
     RSDK_ENTITY
     StateMachine(state);
     uint8 dir;
     uint8 dist;
     uint8 speed;
-    Vector2 positions[Dragonfly_BodyCount];
-    uint8 directions[Dragonfly_BodyCount];
+    Vector2 positions[Dragonfly_SpineCount];
+    uint8 directions[Dragonfly_SpineCount];
     Vector2 spawnPos;
     Animator animator;
     Animator wingAnimator;
     Animator bodyAnimator;
-} EntityDragonfly;
+};
 
 // Object Struct
 extern ObjectDragonfly *Dragonfly;
@@ -48,9 +48,10 @@ void Dragonfly_DebugDraw(void);
 void Dragonfly_DebugSpawn(void);
 
 // Extra Entity Functions
-void Dragonfly_Collide(void);
-void Dragonfly_Turn(void);
-void Dragonfly_DefaultState(void);
-void Dragonfly_DrawDead(void);
+void Dragonfly_CheckPlayerCollisions(void);
+
+void Dragonfly_State_Setup(void);
+void Dragonfly_State_Move(void);
+void Dragonfly_State_Debris(void);
 
 #endif //!OBJ_DRAGONFLY_H

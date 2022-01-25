@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBatbot {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox spinbox;
@@ -12,10 +12,10 @@ typedef struct {
     Hitbox hitboxPlayer;
     uint16 aniFrames;
     uint8 dirFlag[5];
-} ObjectBatbot;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBatbot {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -30,10 +30,10 @@ typedef struct {
     Entity *playerPtr;
     uint8 lastDir;
     bool32 showWings;
-    uint16 unused3; // set to 0, not used
+    uint16 unused3; // set to 0, not used, also happens to be unused in S2
     Animator animator1;
     Animator animator2;
-} EntityBatbot;
+};
 
 // Object Entity
 extern ObjectBatbot *Batbot;

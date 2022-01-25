@@ -4,29 +4,29 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMenuParam {
 	RSDK_OBJECT
-} ObjectMenuParam;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMenuParam {
     RSDK_ENTITY
     uint8 selectionFlag;
     uint8 selectionType;
     char menuTag[0x100];
     int32 selectionID;
-    int32 unused1; //field_160
-    int32 clearFlag;
+    bool32 startedTAAttempt; // only used in pre-plus, goes unused by the time plus rolled around
+    bool32 inTimeAttack;
     int32 replayID;
     int32 characterID;
     int32 zoneID;
     int32 actID;
     int32 timeAttackRank;
 #if RETRO_USE_PLUS
-    int32 isEncoreMode;
+    bool32 isEncoreMode;
     int32 replayUUID;
-    int32 viewReplay;
-    int32 showGhost;
+    bool32 viewReplay;
+    bool32 showGhost;
     uint8 selectedReplay;
     uint8 replayRankID;
 #else
@@ -39,7 +39,7 @@ typedef struct {
     int32 vsZoneID;
     int32 vsActID;
     int32 creditsReturnToMenu;
-} EntityMenuParam;
+};
 
 // Object Struct
 extern ObjectMenuParam *MenuParam;

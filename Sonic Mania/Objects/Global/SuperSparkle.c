@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SuperSparkle Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSuperSparkle *SuperSparkle;
@@ -48,9 +55,9 @@ void SuperSparkle_Update(void)
                 cnt >>= 1;
             }
             ring->maxFrameCount           = cnt - 1;
-            ring->animator.animationSpeed = RSDK.Rand(6, 8);
+            ring->animator.speed = RSDK.Rand(6, 8);
         }
-        if (player->superState != SUPERSTATE_SUPER || !player->active)
+        if (player->superState != SUPERSTATE_SUPER || player->active == ACTIVE_NEVER)
             destroyEntity(self);
     }
 }

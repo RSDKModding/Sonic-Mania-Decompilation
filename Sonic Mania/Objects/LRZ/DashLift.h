@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectDashLift {
     RSDK_OBJECT
     uint16 sfxPulley;
-} ObjectDashLift;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDashLift {
     RSDK_ENTITY
     //Platform Base
     StateMachine(state);
@@ -37,7 +37,7 @@ typedef struct {
     //Dash Lift
     int32 startOff;
     uint8 activePlayers;
-} EntityDashLift;
+};
 
 // Object Struct
 extern ObjectDashLift *DashLift;

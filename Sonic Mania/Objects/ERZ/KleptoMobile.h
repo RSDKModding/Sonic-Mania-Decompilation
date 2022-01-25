@@ -3,8 +3,14 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    KLEPTOMOBILE_EGGMAN,
+    KLEPTOMOBILE_ARM_L,
+    KLEPTOMOBILE_ARM_R,
+} KleptoMobileTypes;
+
 // Object Class
-typedef struct {
+struct ObjectKleptoMobile {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
                                   -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
@@ -21,10 +27,10 @@ typedef struct {
     uint16 sfxRocketJet;
     uint16 aniFrames;
     bool32 defeated;
-} ObjectKleptoMobile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityKleptoMobile {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -32,7 +38,7 @@ typedef struct {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    Vector2 field_70;
+    Vector2 originPos;
     int32 frameIDs[10];
     Vector2 framePositions[10];
     Vector2 field_F0;
@@ -60,7 +66,7 @@ typedef struct {
     Animator animator10;
     Animator animator11;
     Hitbox hitbox;
-} EntityKleptoMobile;
+};
 
 // Object Struct
 extern ObjectKleptoMobile *KleptoMobile;
@@ -85,7 +91,7 @@ void KleptoMobile_Hit(void);
 void KleptoMobile_HandleFrames(void);
 void KleptoMobile_SwitchToKing(void);
 
-void KleptoMobile_StateDraw_Unknown1(void);
+void KleptoMobile_Draw_KleptoMobile(void);
 void KleptoMobile_State_SetupArena(void);
 void KleptoMobile_State_Unknown1(void);
 void KleptoMobile_State_Unknown2(void);
@@ -107,7 +113,7 @@ void KleptoMobile_State1_Unknown1(void);
 void KleptoMobile_State1_Unknown2(void);
 void KleptoMobile_State1_Unknown3(void);
 void KleptoMobile_State1_Unknown4(void);
-void KleptoMobile_StateDraw1_Unknown1(void);
+void KleptoMobile_Draw_Arm(void);
 
 void KleptoMobile_State_Destroyed(void);
 void KleptoMobile_State_Explode(void);

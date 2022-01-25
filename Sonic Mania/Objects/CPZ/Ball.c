@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Ball Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBall *Ball = NULL;
@@ -28,7 +35,7 @@ void Ball_Create(void *data)
     self->updateRange.y = 0x800000;
     if (data) {
         RSDK.SetSpriteAnimation(Ball->aniFrames, 2, &self->animator, true, 0);
-        self->state = Ball_State2_Unknown1;
+        self->state = Ball_State_Splash;
     }
     else {
         self->startPos = self->position;
@@ -37,7 +44,7 @@ void Ball_Create(void *data)
             self->state = Ball_State_Setup;
         }
         else {
-            self->state = Ball_State4_Unknown1;
+            self->state = Ball_State_Spawner;
         }
     }
 }
@@ -46,16 +53,20 @@ void Ball_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("CPZ"))
         Ball->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Ball.bin", SCOPE_STAGE);
-    Ball->hitbox1.left   = -10;
-    Ball->hitbox1.top    = -10;
-    Ball->hitbox1.right  = 10;
-    Ball->hitbox1.bottom = 10;
-    Ball->hitbox2.left   = -128;
-    Ball->hitbox2.top    = -128;
-    Ball->hitbox2.right  = 128;
-    Ball->hitbox2.bottom = 128;
+
+    Ball->hitboxBall.left   = -10;
+    Ball->hitboxBall.top    = -10;
+    Ball->hitboxBall.right  = 10;
+    Ball->hitboxBall.bottom = 10;
+
+    Ball->hitboxRange.left   = -128;
+    Ball->hitboxRange.top    = -128;
+    Ball->hitboxRange.right  = 128;
+    Ball->hitboxRange.bottom = 128;
+
     Ball->sfxSplash      = RSDK.GetSfx("Stage/Splash2.wav");
     DEBUGMODE_ADD_OBJ(Ball);
+
 }
 
 void Ball_DebugSpawn(void)
@@ -67,7 +78,7 @@ void Ball_DebugSpawn(void)
 void Ball_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Ball_HandleInteractions(void)
@@ -75,13 +86,13 @@ void Ball_HandleInteractions(void)
     RSDK_THIS(Ball);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Ball->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &Ball->hitboxBall)) {
             Player_CheckHit(player, self);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
-            self->state = Ball_State_Unknown3;
+            self->state = Ball_State_Chemical;
         }
     }
 }
@@ -98,7 +109,7 @@ void Ball_CheckOnScreen(void)
     }
 }
 
-void Ball_SpawnChildren(void)
+void Ball_SpawnSplashes(void)
 {
     RSDK_THIS(Ball);
     RSDK.PlaySfx(Ball->sfxSplash, false, 255);
@@ -120,11 +131,11 @@ void Ball_State_Setup(void)
 {
     RSDK_THIS(Ball);
     self->active = ACTIVE_NORMAL;
-    self->state  = Ball_State_Unknown1;
-    Ball_State_Unknown1();
+    self->state  = Ball_State_LookForPlayer;
+    Ball_State_LookForPlayer();
 }
 
-void Ball_State_Unknown1(void)
+void Ball_State_LookForPlayer(void)
 {
     RSDK_THIS(Ball);
     if (self->direction == FLIP_X) {
@@ -142,16 +153,16 @@ void Ball_State_Unknown1(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Ball->hitbox2)) {
+        if (Player_CheckCollisionTouch(player, self, &Ball->hitboxRange)) {
             self->playerPtr = (Entity *)player;
-            self->state     = Ball_State_Unknown2;
+            self->state     = Ball_State_TargetingPlayer;
         }
     }
     Ball_HandleInteractions();
     Ball_CheckOnScreen();
 }
 
-void Ball_State_Unknown2(void)
+void Ball_State_TargetingPlayer(void)
 {
     RSDK_THIS(Ball);
     Entity *playerPtr = self->playerPtr;
@@ -184,7 +195,7 @@ void Ball_State_Unknown2(void)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
-            self->state = Ball_State_Unknown3;
+            self->state = Ball_State_Chemical;
         }
     }
     RSDK.ProcessAnimation(&self->animator);
@@ -192,21 +203,21 @@ void Ball_State_Unknown2(void)
     Ball_CheckOnScreen();
 }
 
-void Ball_State_Unknown3(void)
+void Ball_State_Chemical(void)
 {
     RSDK_THIS(Ball);
     RSDK.ProcessAnimation(&self->animator);
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
-        Ball_SpawnChildren();
+        Ball_SpawnSplashes();
     }
     else {
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &Ball->hitbox1)) {
+            if (Player_CheckCollisionTouch(player, self, &Ball->hitboxBall)) {
                 Player_CheckElementalHit(player, self, SHIELD_BUBBLE);
-                Ball_SpawnChildren();
+                Ball_SpawnSplashes();
             }
         }
 
@@ -215,7 +226,7 @@ void Ball_State_Unknown3(void)
     }
 }
 
-void Ball_State2_Unknown1(void)
+void Ball_State_Splash(void)
 {
     RSDK_THIS(Ball);
 
@@ -226,7 +237,7 @@ void Ball_State2_Unknown1(void)
         destroyEntity(self);
 }
 
-void Ball_State3_Unknown1(void)
+void Ball_State_StraightMovement(void)
 {
     RSDK_THIS(Ball);
     RSDK.ProcessAnimation(&self->animator);
@@ -247,12 +258,12 @@ void Ball_State3_Unknown1(void)
     if (!self->velocity.x && !self->velocity.y) {
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
-        self->state      = Ball_State_Unknown1;
+        self->state      = Ball_State_LookForPlayer;
     }
     Ball_HandleInteractions();
 }
 
-void Ball_State4_Unknown1(void)
+void Ball_State_Spawner(void)
 {
     RSDK_THIS(Ball);
     EntityBall *child = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Ball);
@@ -261,21 +272,12 @@ void Ball_State4_Unknown1(void)
         child->active     = ACTIVE_NORMAL;
         child->position.x = self->position.x;
         child->position.y = self->position.y;
-        child->state      = Ball_State3_Unknown1;
+        child->state      = Ball_State_StraightMovement;
         switch (self->type) {
-            case 1: child->velocity.x = -0x20000; break;
-            case 2:
-                child->velocity.y = -0x20000;
-                child->state      = Ball_State3_Unknown1;
-                break;
-            case 3:
-                child->velocity.x = 0x20000;
-                child->state      = Ball_State3_Unknown1;
-                break;
-            case 4:
-                child->velocity.y = 0x20000;
-                child->state      = Ball_State3_Unknown1;
-                break;
+            case BALL_SPAWN_LEFT: child->velocity.x = -0x20000; break;
+            case BALL_SPAWN_UP: child->velocity.y = -0x20000; break;
+            case BALL_SPAWN_RIGHT: child->velocity.x = 0x20000; break;
+            case BALL_SPAWN_DOWN: child->velocity.y = 0x20000; break;
             default: break;
         }
     }
@@ -287,15 +289,40 @@ void Ball_EditorDraw(void)
     RSDK_THIS(Ball);
 
     self->startPos = self->position;
-    if (!self->type) 
-        RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &self->animator, true, 0);
-    else 
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &self->animator, true, 0);
 
     Ball_Draw();
+
+    if (showGizmos()) {
+        switch (self->type) {
+            case BALL_SPAWN_LEFT:
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x - 0x200000, self->position.y);
+                break;
+            case BALL_SPAWN_UP:
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x, self->position.y - 0x200000);
+                break;
+            case BALL_SPAWN_RIGHT:
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x + 0x200000, self->position.y);
+                break;
+            case BALL_SPAWN_DOWN:
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x, self->position.y + 0x200000);
+                break;
+            default: break;
+        }
+    }
 }
 
-void Ball_EditorLoad(void) { Ball->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Ball.bin", SCOPE_STAGE); }
+void Ball_EditorLoad(void)
+{
+    Ball->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Ball.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Ball, type);
+    RSDK_ENUM_VAR("Single Ball", BALL_SINGLE);
+    RSDK_ENUM_VAR("Spawner (Left)", BALL_SPAWN_LEFT);
+    RSDK_ENUM_VAR("Spawner (Up)", BALL_SPAWN_UP);
+    RSDK_ENUM_VAR("Spawner (Right)", BALL_SPAWN_RIGHT);
+    RSDK_ENUM_VAR("Spawner (Down)", BALL_SPAWN_DOWN);
+}
 #endif
 
 void Ball_Serialize(void) { RSDK_EDITABLE_VAR(Ball, VAR_UINT8, type); }

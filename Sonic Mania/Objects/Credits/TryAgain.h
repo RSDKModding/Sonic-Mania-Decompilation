@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTryAgain {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTryAgain;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTryAgain {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -24,7 +24,7 @@ typedef struct {
     Animator debrisAnimator;
     Animator eggmanAnimator;
     Animator rubyAnimator;
-} EntityTryAgain;
+};
 
 // Object Struct
 extern ObjectTryAgain *TryAgain;
@@ -43,9 +43,9 @@ void TryAgain_EditorLoad(void);
 void TryAgain_Serialize(void);
 
 // Extra Entity Functions
-void TryAgain_Unknown1(void);
-void TryAgain_Unknown2(void);
-void TryAgain_Unknown3(void);
-void TryAgain_Unknown4(void);
+void TryAgain_State_Setup(void);
+void TryAgain_State_EnterEggman(void);
+void TryAgain_State_EggmanLaugh(void);
+void TryAgain_State_Stinger(void);
 
 #endif //!OBJ_TRYAGAIN_H

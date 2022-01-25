@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectValve {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxClick;
-} ObjectValve;
+};
 
 // Entity Class
-typedef struct {
+struct EntityValve {
     RSDK_ENTITY
     Animator animator1;
     Animator animator2;
-} EntityValve;
+};
 
 // Object Struct
 extern ObjectValve *Valve;

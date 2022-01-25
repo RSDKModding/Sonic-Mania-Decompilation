@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Smog Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSmog *Smog;
@@ -5,9 +12,9 @@ ObjectSmog *Smog;
 void Smog_Update(void)
 {
     RSDK_THIS(Smog);
-    if (Smog->field_4 == 1) {
+    if (Smog->forceEnabled) {
         OOZSetup->fadeTimer = 0;
-        self->alpha     = 128;
+        self->alpha         = 128;
         RSDK.SetLimitedFade(0, 1, 2, 224, 0, 255);
     }
     else {
@@ -112,11 +119,11 @@ void Smog_Create(void *data)
             if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
                 || SceneInfo->milliseconds != globals->tempMilliseconds) {
                 OOZSetup->flags = globals->restartFlags;
-                Zone_StartFadeOut_MusicFade();
+                Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
             else {
                 OOZSetup->flags = globals->tempFlags;
-                Zone_StartFadeOut_MusicFade();
+                Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
         }
 

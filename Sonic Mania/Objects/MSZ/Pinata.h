@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPinata {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxPinata;
-} ObjectPinata;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPinata {
     RSDK_ENTITY
     StateMachine(state);
     bool32 respawn;
     int priority;
     Animator animator;
-} EntityPinata;
+};
 
 // Object Struct
 extern ObjectPinata *Pinata;

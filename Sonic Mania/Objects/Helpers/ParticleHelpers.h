@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectParticleHelpers {
 	RSDK_OBJECT
-} ObjectParticleHelpers;
+};
 
 // Entity Class
-typedef struct {
+struct EntityParticleHelpers {
 	RSDK_ENTITY
-} EntityParticleHelpers;
+};
 
 // Object Entity
 extern ObjectParticleHelpers *ParticleHelpers;

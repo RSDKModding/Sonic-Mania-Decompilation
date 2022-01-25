@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCrashTest {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxExplosion;
@@ -12,10 +12,10 @@ typedef struct {
     uint16 sfxTrafficLight;
     uint16 sfxCarRev;
     uint16 sfxSpeedBooster;
-} ObjectCrashTest;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCrashTest {
     RSDK_ENTITY
     StateMachine(state);
     int32 length;
@@ -39,7 +39,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityCrashTest;
+};
 
 // Object Struct
 extern ObjectCrashTest *CrashTest;

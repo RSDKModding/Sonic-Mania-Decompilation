@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: FarPlane Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFarPlane *FarPlane;
@@ -66,7 +73,7 @@ void FarPlane_Create(void *data)
 void FarPlane_StageLoad(void)
 {
     FarPlane->layerID = RSDK.GetSceneLayerID("Far Plane");
-    if (FarPlane->layerID != 0xFFFF) {
+    if (FarPlane->layerID != (uint16)-1) {
         TileLayer *layer                               = RSDK.GetSceneLayer(FarPlane->layerID);
         layer->drawLayer[0]                            = DRAWLAYER_COUNT;
         layer->scanlineCallback                        = FarPlane_ScanlineCB;

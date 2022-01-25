@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPendulum {
 	RSDK_OBJECT
-} ObjectPendulum;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPendulum {
 	RSDK_ENTITY
-} EntityPendulum;
+};
 
 // Object Entity
 extern ObjectPendulum *Pendulum;

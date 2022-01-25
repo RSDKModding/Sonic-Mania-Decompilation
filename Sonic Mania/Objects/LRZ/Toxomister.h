@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectToxomister {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
-} ObjectToxomister;
+};
 
 // Entity Class
-typedef struct {
+struct EntityToxomister {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -24,7 +24,7 @@ typedef struct {
     uint16 shakeCount;
     uint16 prevShakeFlags;
     Animator animator;
-} EntityToxomister;
+};
 
 // Object Struct
 extern ObjectToxomister *Toxomister;

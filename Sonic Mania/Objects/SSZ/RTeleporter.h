@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRTeleporter {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
@@ -13,10 +13,10 @@ typedef struct {
     uint16 field_12;
     uint16 sfxExplosion;
     uint16 sfxGoodFuture;
-} ObjectRTeleporter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRTeleporter {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -24,7 +24,7 @@ typedef struct {
     int32 timer;
     Animator animator1;
     Animator animator2;
-} EntityRTeleporter;
+};
 
 // Object Struct
 extern ObjectRTeleporter *RTeleporter;

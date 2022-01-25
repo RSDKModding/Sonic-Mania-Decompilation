@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PuyoGame Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 #include <time.h>
 
@@ -14,11 +21,7 @@ void PuyoGame_Update(void)
     StateMachine_Run(self->state);
     RSDK.ProcessAnimation(&self->animator);
 
-#if RETRO_USE_PLUS
-    if ((ControllerInfo->keyStart.press || UnknownInfo->field_10) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
-#else
-    if ((ControllerInfo->keyStart.press) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
-#endif
+    if ((ControllerInfo->keyStart.press || Unknown_pausePress) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 255);
@@ -99,13 +102,13 @@ void PuyoGame_SetupPlayer(uint8 player)
     EntityPuyoMatch *manager           = (EntityPuyoMatch *)PuyoGame->managers[player];
     EntityCollapsingPlatform *platform = (EntityCollapsingPlatform *)PuyoGame->platforms[player];
 
-    int32 foe             = player ^ 1;
-    self->field_9C      = 1;
-    self->field_A0      = player ^ 1;
-    platform->playerPos.x = manager->position.x;
-    manager->timer        = 7;
-    PuyoAI->value3[0]   = false;
-    PuyoAI->value3[1]   = false;
+    int32 foe            = player ^ 1;
+    self->field_9C       = 1;
+    self->field_A0       = player ^ 1;
+    platform->stoodPos.x = manager->position.x;
+    manager->timer       = 7;
+    PuyoAI->value3[0]    = false;
+    PuyoAI->value3[1]    = false;
 
     EntityPuyoMatch *foeManager = (EntityPuyoMatch *)PuyoGame->managers[foe];
     EntityPuyoScore *foeScore   = (EntityPuyoScore *)PuyoGame->score2[foe];
@@ -113,7 +116,7 @@ void PuyoGame_SetupPlayer(uint8 player)
     foeScore->flag    = true;
     foeManager->state = StateMachine_None;
 
-    PuyoBean_Unknown2();
+    PuyoBean_DestroyPuyoBeans();
     PuyoGame_Unknown5();
     self->timer = 0;
     if (!self->field_98)
@@ -164,7 +167,7 @@ void PuyoGame_Unknown4(void)
         score->score           = match->score;
     }
 
-    foreach_all(CollapsingPlatform, platform) { platform->playerPos.x = 0; }
+    foreach_all(CollapsingPlatform, platform) { platform->stoodPos.x = 0; }
 }
 
 void PuyoGame_Unknown5(void)
@@ -208,8 +211,8 @@ void PuyoGame_Unknown8(void)
     levelSelP2->flag = true;
 
     if (levelSelP1->ready && levelSelP2->ready) {
-        levelSelP1->flag          = false;
-        levelSelP2->flag          = false;
+        levelSelP1->flag        = false;
+        levelSelP2->flag        = false;
         self->selectedLevels[0] = levelSelP1->optionID;
         self->selectedLevels[1] = levelSelP2->optionID;
         self->state             = PuyoGame_Unknown9;
@@ -233,8 +236,8 @@ void PuyoGame_Unknown9(void)
 
             foreach_all(PuyoMatch, match)
             {
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator1, true, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator2, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->animator1, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->animator2, true, 0);
                 match->active   = ACTIVE_NORMAL;
                 match->matchKey = matchKey;
                 match->field_74 = self->selectedLevels[match->playerID];
@@ -258,7 +261,7 @@ void PuyoGame_SetupEntities(void)
     {
         match->timer  = true;
         match->active = ACTIVE_NORMAL;
-        match->state  = PuyoMatch_State_Unknown1;
+        match->state  = PuyoMatch_State_HandleMatch;
         if (match->playerID) {
             if (param->selectionFlag == 1 || !param->selectionFlag) {
                 match->stateInput                        = PuyoAI_StateInput;
@@ -292,7 +295,7 @@ void PuyoGame_Unknown11(void)
     for (int p = 0; p < 2; ++p) {
         EntityPuyoMatch *match                          = (EntityPuyoMatch *)PuyoGame->managers[p];
         ((EntityPuyoScore *)PuyoGame->score1[p])->score = match->score;
-        if (match->state == PuyoMatch_State_Unknown4)
+        if (match->state == PuyoMatch_State_Lose)
             PuyoGame_SetupPlayer(p);
     }
 }
@@ -344,7 +347,7 @@ void PuyoGame_Unknown13(void)
             fxFade->speedIn      = 16;
             fxFade->drawOrder    = 15;
             fxFade->state        = FXFade_State_FadeIn;
-            self->state        = PuyoGame_Unknown14;
+            self->state          = PuyoGame_Unknown14;
         }
     }
     else {
@@ -361,7 +364,7 @@ void PuyoGame_Unknown14(void)
     EntityFXFade *fxFade = PuyoGame->fxFade;
     if (fxFade->timer == 512) {
         if (param->selectionFlag == 3)
-            session->wins[self->field_A1];
+            session->wins[self->field_A1]++;
         destroyEntity(self);
         RSDK.SetScene("Presentation", "Menu");
         RSDK.LoadScene();

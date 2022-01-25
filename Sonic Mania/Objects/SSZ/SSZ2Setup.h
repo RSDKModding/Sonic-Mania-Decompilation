@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZ2Setup {
     RSDK_OBJECT
     uint8 towerID;
     uint16 sparkTimer;
     bool32 hasAchievement;
     uint16 sfxSpark;
     TileLayer *towerLayer;
-} ObjectSSZ2Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZ2Setup {
 	RSDK_ENTITY
-} EntitySSZ2Setup;
+};
 
 // Object Struct
 extern ObjectSSZ2Setup *SSZ2Setup;

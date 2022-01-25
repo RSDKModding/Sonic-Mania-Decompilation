@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: EggLoco Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectEggLoco *EggLoco;
@@ -195,7 +202,7 @@ void EggLoco_State_Unknown3(void)
     RSDK_THIS(EggLoco);
 
     RSDK.ProcessAnimation(&self->animator2);
-    self->field_64 = (RSDK.GetFrameID(&self->animator2) - 97) << 16;
+    self->field_64 = (RSDK.GetFrameID(&self->animator2) - 'a') << 16;
     if (self->field_64 >= 0x10000 && !(Zone->timer & 3)) {
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - 0x240000, self->position.y - 0x4E0000);
         dust->state      = Dust_State_MoveGravity;

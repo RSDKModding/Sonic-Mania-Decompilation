@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: ERZGunner Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectERZGunner *ERZGunner;
@@ -177,7 +184,7 @@ void ERZGunner_CheckPlayerMissileCollisions(void)
     {
         if (self->animator4.frameID > 0 && player->velocity.y >= 0 && Player_CheckBadnikTouch(player, self, &ERZGunner->hitbox2)
             && player->animator.animationID != ANI_HURT) {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
             player->velocity.y = -0x60000;
             ERZGunner_SpawnDust();
             self->state = ERZGunner_State1_Unknown3;

@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFlingRamp {
     RSDK_OBJECT
     Hitbox hitbox;
-} ObjectFlingRamp;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFlingRamp {
 	RSDK_ENTITY
-} EntityFlingRamp;
+};
 
 // Object Struct
 extern ObjectFlingRamp *FlingRamp;

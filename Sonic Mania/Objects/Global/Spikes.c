@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Spikes Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSpikes *Spikes;
@@ -69,14 +76,14 @@ void Spikes_Update(void)
                     uint8 side = Player_CheckCollisionBox(player, self, &self->hitbox);
                     if (side) {
                         if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !self->shatterTimer) {
-                            Ice_ShatterGenerator(16, 16, 8, 0, 0, 0);
+                            Ice_ShatterGenerator(16, 16, 8, 0, 0, false);
                             self->shatterTimer = 15;
                         }
 
-                        bool32 flag = false;
+                        bool32 shouldShatter = false;
                         if (side == C_BOTTOM) {
                             player->collisionFlagV |= 2;
-                            flag = false;
+                            shouldShatter = false;
                         }
                         else {
                             if (side == C_TOP) {
@@ -84,12 +91,12 @@ void Spikes_Update(void)
                                 if (self->moveOffset == 0x80000)
                                     player->onGround = false;
                             }
-                            flag = false;
+                            shouldShatter = false;
 #if RETRO_USE_PLUS
                             if (side == C_TOP && player->state == Player_State_MightyHammerDrop) {
                                 if (Ice) {
                                     if (!Press) {
-                                        flag = true;
+                                        shouldShatter = true;
                                         if (self->type != C_TOP) {
                                             player->onGround   = false;
                                             player->velocity.y = playerVelY;
@@ -100,6 +107,7 @@ void Spikes_Update(void)
 #endif
                         }
 
+#if RETRO_USE_PLUS
                         switch (side) {
                             case C_TOP:
                                 player->collisionFlagV |= 1;
@@ -133,10 +141,36 @@ void Spikes_Update(void)
                                 break;
                             default: break;
                         }
+#else
+                        if (side == self->type) {
+                            switch (side) {
+                                case C_TOP:
+                                    if (!player->velocity.y) {
+                                        player->position.x += self->offset.x;
+                                        player->position.y += self->offset.y;
+                                        Player_CheckHit(player, self);
+                                    }
+                                    break;
+                                case C_LEFT:
+                                    if (!player->velocity.x)
+                                        Player_CheckHit(player, self);
+                                    break;
+                                case C_RIGHT:
+                                    if (!player->velocity.x)
+                                        Player_CheckHit(player, self);
+                                    break;
+                                case C_BOTTOM:
+                                    if (!player->velocity.y)
+                                        Player_CheckHit(player, self);
+                                    break;
+                                default: break;
+                            }
+                        }
+#endif
 
-                        if (flag) {
+                        if (shouldShatter) {
                             RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-                            Ice_ShatterGenerator(16, 16, 16, 0, 0, 0);
+                            Ice_ShatterGenerator(16, 16, 16, 0, 0, false);
                             destroyEntity(self);
                         }
                     }
@@ -147,7 +181,7 @@ void Spikes_Update(void)
 
                     uint8 side = C_NONE;
                     if (player->state == Ice_State_FrozenPlayer) {
-                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitbox2, false);
+                        side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
                     }
                     else {
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
@@ -260,7 +294,7 @@ void Spikes_Create(void *data)
             self->type = voidToInt(data);
 
         self->active  = ACTIVE_BOUNDS;
-        int32 dir         = self->type & 1;
+        int32 dir     = self->type & 1;
         self->visible = true;
         self->type    = (self->type >> 1) & 1;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
@@ -270,7 +304,7 @@ void Spikes_Create(void *data)
         self->alpha = 128;
 
         switch (self->type) {
-            case 0: //vertical
+            case 0: // vertical
                 self->updateRange.x = (self->count + 6) << 20;
                 self->updateRange.y = 0x600000;
                 self->direction     = FLIP_Y * dir;
@@ -287,7 +321,7 @@ void Spikes_Create(void *data)
                 self->hitbox.right  = 8 * self->count;
                 self->hitbox.bottom = 16;
                 break;
-            case 1: //horizontal
+            case 1: // horizontal
                 self->updateRange.x = 0x600000;
                 self->updateRange.y = (self->count + 6) << 20;
                 self->direction     = dir;
@@ -325,12 +359,12 @@ void Spikes_StageLoad(void)
     }
     else {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
-        Spikes->stateDraw   = Spikes_Draw_Global;
+        Spikes->stateDraw = Spikes_Draw_Global;
     }
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->verticalAnimator, true, 0);
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->horizontalAnimator, true, 0);
-    Spikes->unused1   = 0x100000;
-    Spikes->unused2   = 0x100000;
+    Spikes->unused1  = 0x100000;
+    Spikes->unused2  = 0x100000;
     Spikes->sfxMove  = RSDK.GetSfx("Global/SpikesMove.wav");
     Spikes->sfxSpike = RSDK.GetSfx("Global/Spike.wav");
 }
@@ -342,7 +376,7 @@ void Spikes_Draw_Global(void)
     RSDK_THIS(Spikes);
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    int32 cnt   = self->count >> 1;
+    int32 cnt = self->count >> 1;
     switch (self->type) {
         case 1:
         case 4:
@@ -385,7 +419,7 @@ void Spikes_Draw_Stage(void)
     RSDK_THIS(Spikes);
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    int32 cnt   = self->count >> 1;
+    int32 cnt = self->count >> 1;
     switch (self->type) {
         case 1:
         case 4:
@@ -419,9 +453,10 @@ void Spikes_Shatter(int32 velX, int32 velY)
 {
     RSDK_THIS(Spikes);
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-    Ice_ShatterGenerator(16, 16, 16, velX, velY, 0);
+    Ice_ShatterGenerator(16, 16, 16, velX, velY, false);
     destroyEntity(self);
 }
+#if RETRO_USE_PLUS
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 {
     RSDK_THIS(Spikes);
@@ -430,14 +465,14 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
     if (!Player_CheckValidState(player) || player->invincibleTimer || player->blinkTimer > 0)
         return;
 
-#if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY
         && (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_SPINDASH
             || player->animator.animationID == ANI_DROPDASH)) {
 
         if (abs(playerVelX) < 0x20000) {
             switch (self->type) {
-                case 1:
+                default: break;
+                case C_TOP:
                     if (player->animator.animationID != ANI_DROPDASH || (Ice && !Press)) {
                         player->velocity.y = -0x48000;
                         if (!(player->direction & FLIP_X))
@@ -459,21 +494,20 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 
                     player->velocity.x -= player->velocity.x >> 2;
                     break;
-                case 2:
+                case C_LEFT:
                     player->velocity.y = -0x40000;
                     player->velocity.x = -0x28000;
                     player->state      = Player_State_Air;
                     break;
-                case 3:
+                case C_RIGHT:
                     player->velocity.y = -0x40000;
                     player->velocity.x = 0x28000;
                     player->state      = Player_State_Air;
                     break;
-                case 4:
+                case C_BOTTOM:
                     player->velocity.y = 0x20000;
                     player->state      = Player_State_Air;
                     break;
-                default: break;
             }
 
             player->onGround         = false;
@@ -539,15 +573,14 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
         }
         return; // dont do the code below
     }
-#endif
 
     if (player->position.x > self->position.x)
         player->velocity.x = 0x20000;
     else
         player->velocity.x = -0x20000;
     Player_Hit(player);
-    if (player->hurtFlag == 1) {
-        player->hurtFlag = 2;
+    if (player->deathType == PLAYER_DEATH_DIE_USESFX) {
+        player->deathType = PLAYER_DEATH_DIE_NOSFX;
         RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
     }
     else if (player->state == Player_State_Hit && (player->shield || player->sidekick)) {
@@ -555,27 +588,28 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
         RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
     }
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void Spikes_EditorDraw(void)
 {
     RSDK_THIS(Spikes);
 
-    int32 dir = self->type & 1;
+    int32 dir  = self->type & 1;
     int32 type = 0;
     switch ((self->type >> 1) & 1) {
         case 0:
             self->direction = FLIP_Y * dir;
             if (self->direction)
                 type = 4;
-            else 
+            else
                 type = 1;
             break;
         case 1:
             self->direction = dir;
-            if (self->direction) 
+            if (self->direction)
                 type = 2;
-            else 
+            else
                 type = 3;
             break;
     }
@@ -613,7 +647,6 @@ void Spikes_EditorDraw(void)
             break;
         default: break;
     }
-
 }
 
 void Spikes_EditorLoad(void)
@@ -627,7 +660,7 @@ void Spikes_EditorLoad(void)
     }
     else {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
-        Spikes->stateDraw   = Spikes_Draw_Global;
+        Spikes->stateDraw = Spikes_Draw_Global;
     }
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->verticalAnimator, true, 0);
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->horizontalAnimator, true, 0);

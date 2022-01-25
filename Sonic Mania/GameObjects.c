@@ -278,7 +278,7 @@ void LinkGameLogicDLL(EngineInfo *info)
 #if RETRO_USE_PLUS
     RSDK_ADD_OBJECT_CONTAINER(GameProgress);
 #else
-    // RSDK_ADD_OBJECT(GameProgress); //TODO: lol
+    RSDK_ADD_OBJECT(GameProgress);
 #endif
     RSDK_ADD_OBJECT(GasPlatform);
     RSDK_ADD_OBJECT(GenericTrigger);
@@ -816,6 +816,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_State_Victory);
         ADD_PUBLIC_FUNC(Player_State_Bubble);
         ADD_PUBLIC_FUNC(Player_State_WaterSlide);
+        ADD_PUBLIC_FUNC(Player_State_TransportTube);
 
         ADD_PUBLIC_FUNC(Player_SonicJumpAbility);
         ADD_PUBLIC_FUNC(Player_TailsJumpAbility);
@@ -864,6 +865,8 @@ void LinkGameLogicDLL(EngineInfo *info)
 
         ADD_PUBLIC_FUNC(Player_CheckHit);
         ADD_PUBLIC_FUNC(Player_CheckHitFlip);
+        ADD_PUBLIC_FUNC(Player_CheckElementalHit);
+        ADD_PUBLIC_FUNC(Player_CheckAttacking);
         ADD_PUBLIC_FUNC(Player_CheckBadnikTouch);
         ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
         ADD_PUBLIC_FUNC(Player_CheckBossHit);
@@ -902,9 +905,9 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_LerpSin1024);
         ADD_PUBLIC_FUNC(MathHelpers_Lerp2Sin1024);
         ADD_PUBLIC_FUNC(MathHelpers_LerpSin512);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown5);
+        ADD_PUBLIC_FUNC(MathHelpers_GetBezierPoint);
         ADD_PUBLIC_FUNC(MathHelpers_SquareRoot);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
+        ADD_PUBLIC_FUNC(MathHelpers_GetBezierCurveLength);
         ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown9);
         ADD_PUBLIC_FUNC(MathHelpers_GetValueSign);
@@ -950,8 +953,8 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
 
         ADD_PUBLIC_FUNC(Music_SetMusicTrack);
-        ADD_PUBLIC_FUNC(Music_State_PlayMusic);
-        ADD_PUBLIC_FUNC(Music_PlayMusicTrack);
+        ADD_PUBLIC_FUNC(Music_State_PlayAutoMusic);
+        ADD_PUBLIC_FUNC(Music_PlayQueuedTrack);
         ADD_PUBLIC_FUNC(Music_PlayTrack);
         ADD_PUBLIC_FUNC(Music_PlayTrackPtr);
 
@@ -964,9 +967,11 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Zone_StartFadeIn);
         ADD_PUBLIC_FUNC(Zone_StartTeleportAction);
         ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
-        ADD_PUBLIC_FUNC(Zone_IsAct2);
+        ADD_PUBLIC_FUNC(Zone_IsZoneLastAct);
         ADD_PUBLIC_FUNC(Zone_GetEncoreStageID);
         ADD_PUBLIC_FUNC(Zone_GetManiaStageID);
+
+        ADD_PUBLIC_FUNC(UIControl_MatchMenuTag);
     }
 #endif
 }
@@ -980,7 +985,7 @@ bool32 LinkModLogic(EngineInfo *info, const char *id)
 #endif
 
 #if !RETRO_STANDALONE
-int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void *info));
+int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void *info)); //make sure other side has a void* too
 
-int32 SDL_main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
+int32 main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif

@@ -4,24 +4,24 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHangPoint {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     Hitbox hitbox;
-} ObjectHangPoint;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHangPoint {
     RSDK_ENTITY
     uint8 activePlayers;
-    int32 field_5C[4];
+    int32 moveDistance[4];
     int32 playerTimer[4];
-    int32 field_7C;
-    int32 field_80;
+    int32 pullPos;
+    int32 maxVel;
     int32 length;
     uint8 speed;
-} EntityHangPoint;
+};
 
 // Object Struct
 extern ObjectHangPoint *HangPoint;
@@ -40,6 +40,6 @@ void HangPoint_EditorLoad(void);
 void HangPoint_Serialize(void);
 
 // Extra Entity Functions
-void HangPoint_Unknown1(EntityHangPoint *self, void *p, int32 playerID);
+void HangPoint_HandlePlayerMovement(EntityHangPoint *self, void *p, int32 playerID);
 
 #endif //!OBJ_HANGPOINT_H

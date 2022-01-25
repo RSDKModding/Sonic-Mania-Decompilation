@@ -6,17 +6,17 @@
 #define Hatterkiller_SegmentCount (10)
 
 // Object Class
-typedef struct {
+struct ObjectHatterkiller {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 sfxRocketJet;
     uint16 sfxTransform2;
     uint16 sfxPowerup;
     uint16 aniFrames;
-} ObjectHatterkiller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHatterkiller {
     RSDK_ENTITY
     int field_58;
     Vector2 positions[Hatterkiller_SegmentCount];
@@ -26,7 +26,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityHatterkiller;
+};
 
 // Object Struct
 extern ObjectHatterkiller *Hatterkiller;

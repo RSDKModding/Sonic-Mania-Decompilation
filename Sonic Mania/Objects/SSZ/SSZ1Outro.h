@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZ1Outro {
     RSDK_OBJECT
     int32 field_4;
     EntityFXFade *fxFade;
     EntityRTeleporter *teleporter;
-} ObjectSSZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZ1Outro {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -23,7 +23,7 @@ typedef struct {
     int32 field_74;
     int32 field_78;
     Hitbox hitbox;
-} EntitySSZ1Outro;
+};
 
 // Object Struct
 extern ObjectSSZ1Outro *SSZ1Outro;
@@ -40,10 +40,10 @@ void SSZ1Outro_EditorLoad(void);
 void SSZ1Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host);
+bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host);
 
-void SSZ1Outro_Unknown3(Entity *entity);
-void SSZ1Outro_Unknown4(void);
+void SSZ1Outro_DestroyHotaru(Entity *entity);
+void SSZ1Outro_DestroyLeftoverHotarus(void);
 
 #endif //!OBJ_SSZ1OUTRO_H

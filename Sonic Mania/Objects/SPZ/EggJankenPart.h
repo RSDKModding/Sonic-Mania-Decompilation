@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectEggJankenPart {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectEggJankenPart;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEggJankenPart {
     RSDK_ENTITY
     Animator animator;
-} EntityEggJankenPart;
+};
 
 // Object Entity
 extern ObjectEggJankenPart *EggJankenPart;

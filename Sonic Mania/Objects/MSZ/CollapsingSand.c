@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CollapsingSand Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCollapsingSand *CollapsingSand;
@@ -134,13 +141,13 @@ void CollapsingSand_State_CollapseLeft(void)
 
                     uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
                         flag = true;
                     }
 
                     tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                         flag = true;
                     }
 
@@ -150,7 +157,7 @@ void CollapsingSand_State_CollapseLeft(void)
                         debris->drawOrder = Zone->drawOrderHigh;
                         debris->timer     = 44;
                         if (ty == self->tileY)
-                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, ((self->field_70 & 1) + 168) | 0xF000);
+                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, ((self->field_70 & 1) + 168) | 0b1111000000000000);
                     }
 
                     y -= 0x100000;
@@ -192,13 +199,13 @@ void CollapsingSand_State_CollapseLeft(void)
 
                     uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
                         flag = true;
                     }
 
                     tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                         flag = true;
                     }
 
@@ -248,13 +255,13 @@ void CollapsingSand_State_CollapseRight(void)
 
                     uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
                         flag = true;
                     }
 
                     tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                         flag = true;
                     }
 
@@ -264,7 +271,7 @@ void CollapsingSand_State_CollapseRight(void)
                         debris->drawOrder = Zone->drawOrderHigh;
                         debris->timer     = 44;
                         if (ty == self->tileY)
-                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (169 - (self->field_70 & 1)) | 0xF000);
+                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (169 - (self->field_70 & 1)) | 0b1111000000000000);
                     }
 
                     x += 0x100000;
@@ -305,13 +312,13 @@ void CollapsingSand_State_CollapseRight(void)
 
                     uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
                         flag = 1;
                     }
 
                     tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
                     if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                         flag = true;
                     }
 

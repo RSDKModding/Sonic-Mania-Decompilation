@@ -3,20 +3,26 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TIPPINGPLATFORM_NONE,
+    TIPPINGPLATFORM_PLAYER,
+    TIPPINGPLATFORM_EGGMAN,
+}TippingPlatformBossIDs;
+
 // Object Class
-typedef struct {
+struct ObjectTippingPlatform {
 	RSDK_OBJECT
-} ObjectTippingPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTippingPlatform {
     MANIA_PLATFORM_BASE
     uint8 interval;
     uint8 intervalOffset;
     uint8 duration;
     uint8 bossID;
     EntitySyringe *syringe;
-} EntityTippingPlatform;
+};
 
 // Object Struct
 extern ObjectTippingPlatform *TippingPlatform;
@@ -35,10 +41,10 @@ void TippingPlatform_EditorLoad(void);
 void TippingPlatform_Serialize(void);
 
 // Extra Entity Functions
-void TippingPlatform_Unknown1(void);
-void TippingPlatform_Unknown2(void);
-void TippingPlatform_Unknown3(void);
-void TippingPlatform_Unknown4(void);
-void TippingPlatform_Unknown5(void);
+void TippingPlatform_State_Tipping_Boss(void);
+void TippingPlatform_State_RestorePlatform(void);
+void TippingPlatform_State_Tipping(void);
+void TippingPlatform_State_Restore(void);
+void TippingPlatform_State_Tipping_Delay(void);
 
 #endif //!OBJ_TIPPINGPLATFORM_H

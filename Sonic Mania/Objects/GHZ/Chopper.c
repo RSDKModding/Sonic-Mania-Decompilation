@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Chopper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectChopper *Chopper;
@@ -137,15 +144,15 @@ void Chopper_State_Jump(void)
     self->velocity.y += 0x1800;
     if (self->velocity.y >= -0x38000) {
         if (self->velocity.y <= 0x38000) {
-            self->animator.animationSpeed = 2;
+            self->animator.speed = 2;
         }
         else {
-            self->animator.frameID        = 0;
-            self->animator.animationSpeed = 0;
+            self->animator.frameID = 0;
+            self->animator.speed   = 0;
         }
     }
     else {
-        self->animator.animationSpeed = 1;
+        self->animator.speed = 1;
     }
 
     if (self->position.y > self->startPos.y) {
@@ -293,7 +300,7 @@ void Chopper_EditorLoad(void)
 {
     Chopper->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
 
-    RSDK_ACTIVE_VAR(Chopper, direction);
+    RSDK_ACTIVE_VAR(Chopper, type);
     RSDK_ENUM_VAR("Jump", CHOPPER_JUMP);
     RSDK_ENUM_VAR("Swim", CHOPPER_SWIM);
 

@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectConstellation {
     RSDK_OBJECT
     uint16 aniFrames;
     TileLayer *bg1;
-} ObjectConstellation;
+};
 
 // Entity Class
-typedef struct {
+struct EntityConstellation {
     RSDK_ENTITY
     uint8 shape;
     Vector2 startPos;
     int32 field_64;
     ScrollInfo *scrollInfo;
     Animator animator;
-} EntityConstellation;
+};
 
 // Object Struct
 extern ObjectConstellation *Constellation;

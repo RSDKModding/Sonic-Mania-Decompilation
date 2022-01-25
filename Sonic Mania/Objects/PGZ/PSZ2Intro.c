@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PSZ2Intro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPSZ2Intro *PSZ2Intro;
@@ -5,11 +12,10 @@ ObjectPSZ2Intro *PSZ2Intro;
 void PSZ2Intro_Update(void)
 {
     RSDK_THIS(PSZ2Intro);
-    void *states[] = { PSZ2Intro_CutsceneState_Unknown1, PSZ2Intro_CutsceneState_Unknown2, PSZ2Intro_CutsceneState_Unknown3,
-                       PSZ2Intro_CutsceneState_Unknown4, NULL };
 
     self->activated = true;
-    CutsceneSeq_StartSequence((Entity *)self, states);
+    CutsceneSeq_StartSequence(self, PSZ2Intro_Cutscene_HandleAct1Finish, PSZ2Intro_Cutscene_ShowActClear, PSZ2Intro_Cutscene_RunToAct2,
+                              PSZ2Intro_Cutscene_JogIntoPlace, StateMachine_None);
     self->active = ACTIVE_NEVER;
 }
 
@@ -41,7 +47,7 @@ void PSZ2Intro_StageLoad(void)
     }
 }
 
-bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 PSZ2Intro_Cutscene_HandleAct1Finish(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -58,17 +64,17 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             player2->pushing = false;
     }
     if (host->values[0]) {
-        if (host->timer - host->storedValue2 == 30) {
-            ActClear->actID = 1;
-            post->state     = SignPost_State_Fall;
-            post->active    = ACTIVE_NORMAL;
-            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
+        if (host->timer - host->storedTimer == 30) {
+            ActClear->displayedActID = 1;
+            post->state              = SignPost_State_Fall;
+            post->active             = ACTIVE_NORMAL;
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 0xFF);
             return true;
         }
     }
     else if (!fxFade->timer) {
         host->values[0] = 1;
-        host->storedValue2    = host->timer;
+        host->storedTimer    = host->timer;
         foreach_all(SignPost, post)
         {
             PSZ2Intro->signPost = (Entity *)post;
@@ -78,17 +84,19 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 PSZ2Intro_Cutscene_ShowActClear(EntityCutsceneSeq *host)
 {
     if (ActClear->finished) {
+#if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         return true;
     }
     return false;
 }
 
-bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 PSZ2Intro_Cutscene_RunToAct2(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
@@ -133,12 +141,16 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
+bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     if (ScreenInfo->position.x < Zone->cameraBoundsL[0]) {
+        // Bug Details:
+        // groundVel is set here, but the game doesn't make sure you're facing that direction
+        // meaning you can be moving right but facing left, a simple player->direction = FLIP_NONE would fix this
+        // though it'd be best to place it up where player->right = true; is set
         if (player1->groundVel < 0x20000)
             player1->groundVel = 0x20000;
         if (player2->objectID == Player->objectID) {
@@ -153,7 +165,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_State_Initial;
-            titleCard->stateDraw = TitleCard_Draw_Default;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
         Music_PlayTrack(TRACK_STAGE);

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Crabmeat Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCrabmeat *Crabmeat;
@@ -112,7 +119,7 @@ void Crabmeat_State_Main(void)
 
     self->position.x += self->velocity.x;
     if (self->timer >= 128
-        || (!RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, 0, ((self->velocity.x >> 31) & 0xFFE40000) + 0xE0000, 0xF0000, 8))) {
+        || (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xE0000 * (self->velocity.x > 0 ? 1 : -1), 0xF0000, 8))) {
         self->timer = 0;
         if (self->shootState == 0)
             RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 0, &self->animator, true, 0);

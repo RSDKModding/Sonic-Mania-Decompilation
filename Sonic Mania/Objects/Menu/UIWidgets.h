@@ -4,24 +4,25 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIWidgets {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     int32 buttonColours[16];
     int32 timer;
-    int32 field_48[12];
+    Animator unusedAnimator1;
+    Animator unusedAnimator2;
 #else
     int32 timer;
     int32 buttonColours[16];
 #endif
-    Animator animator1;
-    Animator animator2;
+    Animator frameAnimator;
+    Animator arrowsAnimator;
     uint16 uiSpriteIndex;
 #if RETRO_USE_PLUS
-    uint16 saveSelectSpriteIndex;
+    uint16 saveSelFrames;
 #endif
-    uint16 textSpriteIndex;
-    uint16 labelSpriteIndex;
+    uint16 textFrames;
+    uint16 fontFrames;
     uint16 sfxBleep;
     uint16 sfxAccept;
     uint16 sfxWarp;
@@ -31,13 +32,13 @@ typedef struct {
 #if RETRO_USE_PLUS
     colour buttonColour;
 #endif
-} ObjectUIWidgets;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIWidgets {
     RSDK_ENTITY
-    int32 field_58;
-} EntityUIWidgets;
+    StateMachine(state); // unused
+};
 
 // Object Struct
 extern ObjectUIWidgets *UIWidgets;
@@ -58,12 +59,12 @@ void UIWidgets_Serialize(void);
 // Extra Entity Functions
 void UIWidgets_ApplyLanguage(void);
 
-void UIWidgets_DrawRectOutline_Black(int32 height, int32 width, int32 x, int32 y);   // -> x, y, w, h
-void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32 y); // -> x, y, w, h
-void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y); // -> x, y, w, h
+void UIWidgets_DrawRectOutline_Black(int32 height, int32 width, int32 x, int32 y);   // USERCALL -> x, y, w, h
+void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32 y); // USERCALL -> x, y, w, h
+void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y);   // USERCALL -> x, y, w, h
 void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue);
 void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag, int32 red, int32 green, int32 blue, InkEffects ink);
-void UIWidgets_DrawParallelogram(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y); // -> x, y, w, size, r, g, b
+void UIWidgets_DrawParallelogram(int32 height, int32 width, int32 edgeSize, int32 red, int32 green, int32 blue, int32 x, int32 y); // USERCALL -> x, y, w, h, edgeSize, r, g, b
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, colour leftColour, colour rightColour);

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Options Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectOptions *Options;
@@ -10,7 +17,7 @@ void Options_Create(void *data) {}
 void Options_StageLoad(void)
 {
 #if !RETRO_USE_PLUS
-    Options->state = 0;
+    Options->changed = false;
     if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_PC) {
         Options_Reload();
     }
@@ -23,9 +30,6 @@ void Options_StageLoad(void)
     }
 #endif
 }
-void Options_EditorDraw(void) {}
-void Options_EditorLoad(void) {}
-void Options_Serialize(void) {}
 
 void Options_Reload(void)
 {
@@ -33,7 +37,7 @@ void Options_Reload(void)
     options->screenShader     = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
     options->volMusic         = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
     options->volSfx           = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
-    options->language         = RSDK.GetSettingsValue(SETTINGS_LANGUAGE) << 16;
+    options->language         = RSDK.GetSettingsValue(SETTINGS_LANGUAGE);
     options->overrideLanguage = true;
     options->vSync            = RSDK.GetSettingsValue(SETTINGS_VSYNC);
     options->windowBorder     = RSDK.GetSettingsValue(SETTINGS_BORDERED);
@@ -61,9 +65,9 @@ void Options_GetWinSize(void)
     }
     else {
         int32 width = RSDK.GetSettingsValue(SETTINGS_WINDOW_WIDTH);
-        if (width > 424) {
-            if (width > 848) {
-                options->windowSize = (width > 1272) + 2;
+        if (width > WIDE_SCR_XSIZE) {
+            if (width > (WIDE_SCR_XSIZE * 2)) {
+                options->windowSize = (width > (WIDE_SCR_XSIZE * 3)) + 2;
             }
             else {
                 options->windowSize = 1;
@@ -75,7 +79,7 @@ void Options_GetWinSize(void)
     }
 }
 
-void Options_LoadCallback(int32 success)
+void Options_LoadCallback(bool32 success)
 {
     if (success) {
         Localization->loaded = false;
@@ -90,10 +94,7 @@ void Options_LoadOptionsBin(void)
     if (sku_platform && sku_platform != PLATFORM_DEV) {
         if (globals->optionsLoaded != STATUS_CONTINUE) {
             if (globals->optionsLoaded == STATUS_OK) {
-                Localization->loaded = 0;
-                Localization_LoadStrings();
-                UIWidgets_ApplyLanguage();
-                UIHeading_LoadSprites();
+                Options_LoadCallback(true);
             }
             else {
                 globals->optionsLoaded = STATUS_CONTINUE;
@@ -105,16 +106,13 @@ void Options_LoadOptionsBin(void)
     }
     else {
         globals->optionsLoaded = STATUS_OK;
-        Localization->loaded   = false;
-        Localization_LoadStrings();
-        UIWidgets_ApplyLanguage();
-        UIHeading_LoadSprites();
+        Options_LoadCallback(true);
     }
 }
 
-void Options_SaveOptionsBin(void (*callback)(int32))
+void Options_SaveOptionsBin(void (*callback)(bool32 success))
 {
-    if (Options->state) {
+    if (Options->changed) {
         if (sku_platform && sku_platform != PLATFORM_DEV) {
             if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = SceneInfo->entity;
@@ -126,7 +124,7 @@ void Options_SaveOptionsBin(void (*callback)(int32))
 #endif
             }
             else {
-                Options->state = 0;
+                Options->changed = false;
                 if (callback)
                     callback(false);
             }
@@ -159,7 +157,7 @@ void Options_SetLanguage(int32 language)
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
         RSDK.SetSettingsValue(SETTINGS_LANGUAGE, language);
-    Options->state = 1;
+    Options->changed = true;
 }
 
 void Options_LoadValuesFromSettings(EntityOptions *options)
@@ -185,9 +183,9 @@ void Options_LoadValuesFromSettings(EntityOptions *options)
 void Options_LoadOptionsCallback(int32 statusCode)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    bool32 status          = false;
+    bool32 success          = false;
     if (statusCode == STATUS_OK || statusCode == STATUS_NOTFOUND) {
-        status                 = true;
+        success                 = true;
         globals->optionsLoaded = STATUS_OK;
         LogHelpers_Print("dataPtr.language = %d", options->language);
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
@@ -197,7 +195,7 @@ void Options_LoadOptionsCallback(int32 statusCode)
         RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
     }
     else {
-        status                 = false;
+        success                 = false;
         globals->optionsLoaded = STATUS_ERROR;
     }
 
@@ -205,25 +203,31 @@ void Options_LoadOptionsCallback(int32 statusCode)
         Entity *entStore = SceneInfo->entity;
         if (Options->loadEntityPtr)
             SceneInfo->entity = Options->loadEntityPtr;
-        Options->loadCallback(status);
+        Options->loadCallback(success);
         SceneInfo->entity = entStore;
 
-        Options->loadCallback  = false;
-        Options->loadEntityPtr = false;
+        Options->loadCallback  = NULL;
+        Options->loadEntityPtr = NULL;
     }
 }
 
 void Options_SaveOptionsCallback(int32 statusCode)
 {
-    Options->state = 0;
+    Options->changed = false;
     if (Options->saveCallback) {
         Entity *entStore = SceneInfo->entity;
         if (Options->saveEntityPtr)
             SceneInfo->entity = Options->saveEntityPtr;
-        Options->saveCallback(statusCode);
+        Options->saveCallback(statusCode == STATUS_OK);
         SceneInfo->entity = entStore;
 
         Options->saveCallback  = NULL;
         Options->saveEntityPtr = NULL;
     }
 }
+
+#if RETRO_INCLUDE_EDITOR
+void Options_EditorDraw(void) {}
+void Options_EditorLoad(void) {}
+#endif
+void Options_Serialize(void) {}

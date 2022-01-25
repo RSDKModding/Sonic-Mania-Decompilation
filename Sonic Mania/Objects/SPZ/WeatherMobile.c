@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: WeatherMobile Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectWeatherMobile *WeatherMobile;
@@ -204,7 +211,7 @@ void WeatherMobile_HandleAnimations(void)
         }
     }
     else {
-        self->animator3.animationSpeed = 0;
+        self->animator3.speed = 0;
     }
 }
 
@@ -849,12 +856,12 @@ void WeatherMobile_State_Defeated(void)
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator6, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator7, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator6, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator7, true, 0);
             break;
         case 96:
             Debris_FallFlickerAnimSetup(WeatherMobile->aniFrames, WeatherMobile->debrisInfo, 24);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator5, true, 0);
             break;
         case 144:
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
@@ -949,7 +956,7 @@ void WeatherMobile_EditorDraw(void)
     WeatherMobile_StateDraw_Unknown1();
 
     if (showGizmos()) {
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -212, -SCREEN_YSIZE, 212, 0);
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0);
     }
 }
 

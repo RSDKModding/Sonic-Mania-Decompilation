@@ -6,7 +6,7 @@
 // (Old) Object Class
 // NOTE: this struct is not used anywhere in the game, it was recreated from the data inside the "static object" file and is here only for preservation purposes
 // This struct is a remnamt from a time when SPZ1 & SPZ2 likely shared a setup object much earlier in dev, the proper SPZ2Setup (which is the final version) can be found below
-typedef struct {
+struct ObjectSPZSetup {
     RSDK_OBJECT
     int32 palTimer;
     int32 angle;
@@ -17,10 +17,10 @@ typedef struct {
     int32 frameD;
     uint16 aniTiles;
     uint16 aniTiles2;
-} ObjectSPZSetup;
+};
 
 // Object Class
-typedef struct {
+struct ObjectSPZ2Setup {
     RSDK_OBJECT
     int32 palTimer;
     int32 angle;
@@ -42,14 +42,14 @@ typedef struct {
     uint16 aniTiles;
     uint16 aniTiles2;
     Entity* outroPtr;
-} ObjectSPZ2Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySPZ2Setup {
     RSDK_ENTITY
     int32 palTimer;
     int32 timer;
-} EntitySPZ2Setup;
+};
 
 // Object Struct
 extern ObjectSPZ2Setup *SPZ2Setup;

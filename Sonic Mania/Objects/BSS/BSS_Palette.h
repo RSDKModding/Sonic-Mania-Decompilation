@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBSS_Palette {
     RSDK_OBJECT
     int32 startColourID;
     int32 skyAlpha;
     int32 globeAlpha;
     int32 unused1;
-} ObjectBSS_Palette;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBSS_Palette {
     RSDK_ENTITY
     bool32 useStageConfig;
     int32 paletteID;
@@ -24,7 +24,7 @@ typedef struct {
     colour bgColor1;
     colour bgColor2;
     colour bgColor3;
-} EntityBSS_Palette;
+};
 
 // Object Struct
 extern ObjectBSS_Palette *BSS_Palette;

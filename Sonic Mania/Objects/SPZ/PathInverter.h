@@ -9,13 +9,13 @@ typedef enum {
 } PathInverterTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPathInverter {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPathInverter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPathInverter {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -25,7 +25,7 @@ typedef struct {
     int32 groundVelStore[PLAYER_MAX];
     int32 playerFlipFlags[PLAYER_MAX];
     Animator animator;
-} EntityPathInverter;
+};
 
 // Object Struct
 extern ObjectPathInverter *PathInverter;

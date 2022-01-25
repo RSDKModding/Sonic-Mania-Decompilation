@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: EggJanken Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectEggJanken *EggJanken = NULL;
@@ -148,7 +155,7 @@ void EggJanken_CheckPlayerCollisions(void)
                 break;
             case C_BOTTOM:
                 if (player->onGround)
-                    player->hurtFlag = 1;
+                    player->deathType = PLAYER_DEATH_DIE_USESFX;
                 break;
         }
 
@@ -1190,11 +1197,10 @@ void EggJanken_StateDraw_Unknown3(void)
 #if RETRO_INCLUDE_EDITOR
 void EggJanken_EditorDraw(void)
 {
-    RSDK_THIS(EggJanken);
     EggJanken_StateDraw_Unknown1();
 
     if (showGizmos())
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -212, -SCREEN_YSIZE, 212, 208);
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 208);
 }
 
 void EggJanken_EditorLoad(void)

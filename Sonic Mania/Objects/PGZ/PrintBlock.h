@@ -3,22 +3,37 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PRINTBLOCK_LETTER_E,
+    PRINTBLOCK_LETTER_T,
+    PRINTBLOCK_LETTER_A,
+    PRINTBLOCK_LETTER_O,
+    PRINTBLOCK_LETTER_I,
+    PRINTBLOCK_LETTER_N,
+    PRINTBLOCK_LETTER_S,
+    PRINTBLOCK_LETTER_H,
+    PRINTBLOCK_LETTER_R,
+    PRINTBLOCK_LETTER_D,
+    PRINTBLOCK_LETTER_L,
+    PRINTBLOCK_LETTER_U,
+}PrintBlockLetters;
+
 // Object Class
-typedef struct {
+struct ObjectPrintBlock {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
     uint16 sfxLetter;
-} ObjectPrintBlock;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPrintBlock {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
     uint8 letter;
-} EntityPrintBlock;
+};
 
 // Object Struct
 extern ObjectPrintBlock *PrintBlock;
@@ -37,7 +52,7 @@ void PrintBlock_EditorLoad(void);
 void PrintBlock_Serialize(void);
 
 // Extra Entity Functions
-void PrintBlock_Unknown1(void);
-void PrintBlock_Unknown2(void);
+void PrintBlock_State_Appear(void);
+void PrintBlock_State_Disappear(void);
 
 #endif //!OBJ_PRINTBLOCK_H

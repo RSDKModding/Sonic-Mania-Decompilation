@@ -4,13 +4,19 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
-#define checkNoSave API.GetUserStorageNoSave()
+#define checkNoSave API.GetNoSave()
 #else
 #define checkNoSave globals->noSave
 #endif
 
+typedef enum {
+    SAVEGAME_BLANK,
+    SAVEGAME_INPROGRESS,
+    SAVEGAME_COMPLETE,
+}SaveGameStates;
+
 // Entity Class
-typedef struct {
+struct EntitySaveGame {
     RSDK_ENTITY
     int32 saveState;
     int32 characterID;
@@ -34,20 +40,20 @@ typedef struct {
     int32 stock;
     int32 playerID; // encore playerID
 #endif
-} EntitySaveGame;
+};
 
 // Object Class
-typedef struct {
+struct ObjectSaveGame {
 #if !RETRO_USE_PLUS
     RSDK_OBJECT
 #endif
     void *loadEntityPtr;
-    void (*loadCallback)(int32);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int32);
+    void (*saveCallback)(bool32 success);
     EntitySaveGame *saveRAM;
     int32 unused1;
-} ObjectSaveGame;
+};
 
 extern ObjectSaveGame *SaveGame;
 
@@ -72,8 +78,8 @@ int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
 void SaveGame_LoadFile(void);
-void SaveGame_SaveFile(void (*callback)(int32 status));
-void SaveGame_SaveLoadedCB(int32 status);
+void SaveGame_SaveFile(void (*callback)(bool32 success));
+void SaveGame_SaveLoadedCB(bool32 success);
 void SaveGame_SaveGameState(void);
 void SaveGame_SaveProgress(void);
 void SaveGame_ClearRestartData(void);

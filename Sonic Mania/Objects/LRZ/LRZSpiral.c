@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZSpiral Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLRZSpiral *LRZSpiral;
@@ -67,9 +74,9 @@ void LRZSpiral_Unknown1(void *p)
     EntityPlayer *player = (EntityPlayer *)p;
     if (abs(player->groundVel) < player->maxRunSpeed) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 1);
-        player->animator.animationSpeed = (abs(player->groundVel) >> 12) + 96;
-        if (player->animator.animationSpeed > 0x200)
-            player->animator.animationSpeed = 0x200;
+        player->animator.speed = (abs(player->groundVel) >> 12) + 96;
+        if (player->animator.speed > 0x200)
+            player->animator.speed = 0x200;
         player->maxJogSpeed = 0x58000;
         player->maxRunSpeed = 0xC0000;
     }
@@ -136,7 +143,7 @@ void LRZSpiral_Unknown2(void)
                 if (player->groundVel < 0x60000)
                     player->groundVel = 0x60000;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPIRALRUN, &player->animator, false, 0);
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
                 player->state                         = Player_State_None;
                 player->nextAirState                  = StateMachine_None;
                 player->nextGroundState               = StateMachine_None;
@@ -198,7 +205,7 @@ void LRZSpiral_Unknown3(void)
                 if (player->groundVel < 0x40000)
                     player->groundVel = 0x40000;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->animator, false, 0);
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
                 player->state                         = Player_State_None;
                 player->nextAirState                  = StateMachine_None;
                 player->nextGroundState               = StateMachine_None;
@@ -261,7 +268,7 @@ void LRZSpiral_Unknown4(void)
                 if (player->groundVel > -0x40000)
                     player->groundVel = -0x40000;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->animator, false, 0);
-                player->animator.animationSpeed = 0;
+                player->animator.speed = 0;
                 player->state                         = Player_State_None;
                 player->nextAirState                  = StateMachine_None;
                 player->nextGroundState               = StateMachine_None;

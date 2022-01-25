@@ -3,18 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum { TURBINE_HANDLES, TURBINE_SPIKES, TURBINE_WALLDECOR } TurbineTypes;
+
 // Object Class
-typedef struct {
+struct ObjectTurbine {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxTurbine;
     Hitbox hitbox1;
     Hitbox hitboxHurt;
     bool32 playingTurbineSfx;
-} ObjectTurbine;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTurbine {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -22,7 +24,7 @@ typedef struct {
     int32 playerAngles[4];
     int32 playerTimers[4];
     Animator animator;
-} EntityTurbine;
+};
 
 // Object Struct
 extern ObjectTurbine *Turbine;
@@ -41,7 +43,7 @@ void Turbine_EditorLoad(void);
 void Turbine_Serialize(void);
 
 // Extra Entity Functions
-void Turbine_CheckPlayerCollisions(void);
-void Turbine_CheckPlayerCollisions_Hurt(void);
+void Turbine_State_Handles(void);
+void Turbine_State_Spikes(void);
 
 #endif //!OBJ_TURBINE_H

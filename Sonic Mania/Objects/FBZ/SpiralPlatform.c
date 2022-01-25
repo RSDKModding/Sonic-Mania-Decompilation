@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SpiralPlatform Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSpiralPlatform *SpiralPlatform;
@@ -13,7 +20,7 @@ void SpiralPlatform_Update(void)
     {
         if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitbox) == C_BOTTOM) {
             if (player->onGround && !player->collisionMode)
-                player->hurtFlag = 1;
+                player->deathType = PLAYER_DEATH_DIE_USESFX;
         }
     }
 }
@@ -47,7 +54,7 @@ void SpiralPlatform_Create(void *data)
         self->fallY         = self->offRange.x;
         self->active        = ACTIVE_XBOUNDS;
         self->updateRange.y = 0x800000 + self->offRange.y;
-        self->state         = SpiralPlatform_Unknown1;
+        self->state         = SpiralPlatform_State_Move;
     }
 }
 
@@ -59,7 +66,7 @@ void SpiralPlatform_StageLoad(void)
     SpiralPlatform->hitbox.bottom = 7;
 }
 
-void SpiralPlatform_Unknown1(void)
+void SpiralPlatform_State_Move(void)
 {
     RSDK_THIS(SpiralPlatform);
 
@@ -73,9 +80,25 @@ void SpiralPlatform_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SpiralPlatform_EditorDraw(void) {}
+void SpiralPlatform_EditorDraw(void)
+{
+    RSDK_THIS(SpiralPlatform);
+    self->active = ACTIVE_BOUNDS;
 
-void SpiralPlatform_EditorLoad(void) {}
+    RSDK.DrawSprite(&SpiralPlatform->animator, NULL, false);
+
+    if (showGizmos()) {
+        DrawHelpers_DrawRectOutline(0xFFFF00, 0x400000, 0x280000, 0x600000, 0x300000);
+        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, 0x400000, 0x280000);
+        self->active = ACTIVE_NORMAL;
+    }
+}
+
+void SpiralPlatform_EditorLoad(void)
+{
+    SpiralPlatform->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Platform.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(SpiralPlatform->aniFrames, 1, &SpiralPlatform->animator, true, 0);
+}
 #endif
 
 void SpiralPlatform_Serialize(void)

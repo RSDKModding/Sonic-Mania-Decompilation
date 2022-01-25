@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: HeavyKing Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHeavyKing *HeavyKing;
@@ -172,8 +179,8 @@ void HeavyKing_HandleAnimators(void)
 {
     RSDK_THIS(HeavyKing);
 
-    self->animator1.animationSpeed = 0;
-    self->animator2.animationSpeed = 0;
+    self->animator1.speed = 0;
+    self->animator2.speed = 0;
     if (self->velocity.y >= 0) {
         if (self->velocity.y <= 0x10000) {
             self->animator1.frameID = 7;
@@ -476,7 +483,7 @@ void HeavyKing_State_CutsceneUnknown1(void)
     ++self->timer;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->animator.frameID == 5)
-        player1->animator.animationSpeed = 0;
+        player1->animator.speed = 0;
     if (self->timer == 30) {
         self->timer = 0;
         foreach_all(HPZEmerald, emerald)
@@ -851,7 +858,7 @@ void HeavyKing_State_Unknown4(void)
 {
     RSDK_THIS(HeavyKing);
 
-    if (self->animator2.frameID == 7 && self->animator2.animationTimer == 1)
+    if (self->animator2.frameID == 7 && self->animator2.timer == 1)
         RSDK.PlaySfx(HeavyKing->sfxRodPlant, false, 255);
     if (self->animator1.frameID == 12) {
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 18, &self->animator3, false, 0);
@@ -875,11 +882,11 @@ void HeavyKing_State_Unknown5(void)
         masterEmerald->alpha = 0;
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 2, &self->animator1, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 11, &self->animator2, false, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, false, 0);
         self->state = HeavyKing_State_Unknown6;
     }
     if (!(self->timer & 7))
-        RSDK.PlaySfx(HeavyKing->sfxCharge, false, 255);
+        RSDK.PlaySfx(HeavyKing->sfxCharge, false, 0xFF);
     HeavyKing_CheckPlayerCollisions_Charging();
 }
 
@@ -1065,8 +1072,8 @@ void HeavyKing_State_Destroyed(void)
     }
     if (self->timer == 120) {
         EntityKingClaw *claw             = (EntityKingClaw *)self->claw;
-        self->animator1.animationSpeed = 0;
-        self->animator2.animationSpeed = 0;
+        self->animator1.speed = 0;
+        self->animator2.speed = 0;
         self->timer                    = 0;
         self->state                    = HeavyKing_State_Escape;
         if (self->direction == FLIP_NONE)
@@ -1105,7 +1112,7 @@ void HeavyKing_State_Escape(void)
     if (!claw->state) {
         claw->state = KingClaw_Unknown7;
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 7, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
         self->state = HeavyKing_State_Finish;
     }
 }

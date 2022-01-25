@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PSZLauncher Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPSZLauncher *PSZLauncher;
@@ -21,7 +28,7 @@ void PSZLauncher_Draw(void)
 void PSZLauncher_Create(void *data)
 {
     RSDK_THIS(PSZLauncher);
-    self->visible   = 1;
+    self->visible   = true;
     self->drawOrder = Zone->drawOrderHigh - 1;
     self->drawFX    = FX_FLIP;
     if (SceneInfo->inEditor && !self->power)
@@ -34,11 +41,13 @@ void PSZLauncher_Create(void *data)
 
 void PSZLauncher_StageLoad(void)
 {
-    PSZLauncher->aniFrames     = RSDK.LoadSpriteAnimation("PSZ1/PSZLauncher.bin", SCOPE_STAGE);
+    PSZLauncher->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZLauncher.bin", SCOPE_STAGE);
+
     PSZLauncher->hitbox.left   = -32;
     PSZLauncher->hitbox.top    = 0;
     PSZLauncher->hitbox.right  = 32;
     PSZLauncher->hitbox.bottom = 1;
+
     DEBUGMODE_ADD_OBJ(PSZLauncher);
 }
 
@@ -52,21 +61,21 @@ void PSZLauncher_DebugSpawn(void)
 void PSZLauncher_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(PSZLauncher->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void PSZLauncher_State_Setup(void)
 {
     RSDK_THIS(PSZLauncher);
     RSDK.SetSpriteAnimation(PSZLauncher->aniFrames, 0, &self->animator, true, 0);
-    self->activePlayers  = 0;
-    self->activePlayers2 = 0;
-    self->state          = PSZLauncher_Unknown6;
-    PSZLauncher_Unknown3();
-    PSZLauncher_Unknown4();
+    self->stoodPlayers  = 0;
+    self->activePlayers = 0;
+    self->state         = PSZLauncher_State_Active;
+    PSZLauncher_HandlePlayerCollisions();
+    PSZLauncher_HandlePlayerInteractions();
 }
 
-void PSZLauncher_Unknown3(void)
+void PSZLauncher_HandlePlayerCollisions(void)
 {
     RSDK_THIS(PSZLauncher);
 
@@ -84,20 +93,20 @@ void PSZLauncher_Unknown3(void)
             pos = 31;
 
         hitbox.top = -PSZLauncher->heights[pos];
-        if ((1 << playerID) & self->activePlayers)
+        if ((1 << playerID) & self->stoodPlayers)
             player->position.y += 0x10000;
 
-        if (Player_CheckCollisionPlatform(player, self, &hitbox) == 1) {
-            self->activePlayers |= (1 << playerID);
+        if (Player_CheckCollisionPlatform(player, self, &hitbox)) {
+            self->stoodPlayers |= (1 << playerID);
             player->position.y &= 0xFFFF0000;
         }
         else {
-            self->activePlayers &= ~(1 << playerID);
+            self->stoodPlayers &= ~(1 << playerID);
         }
     }
 }
 
-void PSZLauncher_Unknown4(void)
+void PSZLauncher_HandlePlayerInteractions(void)
 {
     RSDK_THIS(PSZLauncher);
 
@@ -105,8 +114,8 @@ void PSZLauncher_Unknown4(void)
     {
         int32 playerID = RSDK.GetEntityID(player);
         if (Player_CheckCollisionTouch(player, self, &PSZLauncher->hitbox)) {
-            if (!((1 << playerID) & self->activePlayers2) && !((1 << playerID) & self->activePlayers) && player->velocity.y <= 0) {
-                self->activePlayers2 |= (1 << playerID);
+            if (!((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers) && player->velocity.y <= 0) {
+                self->activePlayers |= (1 << playerID);
                 player->velocity.y = -0x10000 * self->power;
                 player->velocity.x = 0;
                 if (self->direction)
@@ -124,26 +133,38 @@ void PSZLauncher_Unknown4(void)
             }
         }
         else {
-            self->activePlayers2 &= ~(1 << playerID);
+            self->activePlayers &= ~(1 << playerID);
         }
     }
 }
 
-void PSZLauncher_Unknown6(void)
+void PSZLauncher_State_Active(void)
 {
-    PSZLauncher_Unknown3();
-    PSZLauncher_Unknown4();
+    PSZLauncher_HandlePlayerCollisions();
+    PSZLauncher_HandlePlayerInteractions();
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PSZLauncher_EditorDraw(void) {}
+void PSZLauncher_EditorDraw(void)
+{
+    RSDK_THIS(PSZLauncher);
+    RSDK.SetSpriteAnimation(PSZLauncher->aniFrames, 0, &self->animator, true, 0);
 
-void PSZLauncher_EditorLoad(void) {}
+    PSZLauncher_Draw();
+}
+
+void PSZLauncher_EditorLoad(void)
+{
+    PSZLauncher->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZLauncher.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PSZLauncher, direction);
+    RSDK_ENUM_VAR("Up", FLIP_NONE);
+    RSDK_ENUM_VAR("Down", FLIP_X);
+}
 #endif
 
 void PSZLauncher_Serialize(void)
 {
-    RSDK_EDITABLE_VAR(PSZLauncher, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(PSZLauncher, VAR_UINT8, direction);
     RSDK_EDITABLE_VAR(PSZLauncher, VAR_UINT8, power);
 }

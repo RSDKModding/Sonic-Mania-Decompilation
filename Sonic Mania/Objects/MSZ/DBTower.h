@@ -6,7 +6,7 @@
 #define DBTower_SegmentCount (4)
 
 // Object Class
-typedef struct {
+struct ObjectDBTower {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 defeated;
@@ -19,10 +19,10 @@ typedef struct {
     uint16 sfxRocketJet2;
     uint16 sfxRockemSockem;
     uint16 aniFrames;
-} ObjectDBTower;
+};
 
 // Entity Class
-typedef struct {
+struct EntityDBTower {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -40,7 +40,7 @@ typedef struct {
     uint8 playerTimers[PLAYER_MAX];
     Animator animator1;
     Animator animator2;
-} EntityDBTower;
+};
 
 // Object Struct
 extern ObjectDBTower *DBTower;

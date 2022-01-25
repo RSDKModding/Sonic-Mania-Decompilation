@@ -4,3 +4,6 @@
 [submodule "mods/PZTC"]
 	path = mods/PZTC
 	url = https://github.com/MGRich/PerZoneTitleCards
+[submodule "mods/ManiaModMenu"]
+	path = mods/ManiaModMenu
+	url = https://github.com/MGRich/ManiaModMenu

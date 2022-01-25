@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TVFlyingBattery Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTVFlyingBattery *TVFlyingBattery;
@@ -109,7 +116,6 @@ void TVFlyingBattery_DrawSprites(void)
     RSDK.SetSpriteAnimation(TVFlyingBattery->aniFrames, 0, &self->animator1, true, 1);
     RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    int startX = drawPos.x;
     for (int i = 0; i < 3; ++i) {
         drawPos2.x = drawPos.x;
         drawPos2.y = drawPos.y;

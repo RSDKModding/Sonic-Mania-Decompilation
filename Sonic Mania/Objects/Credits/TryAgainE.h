@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectTryAgainE {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 playerFrames;
-} ObjectTryAgainE;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTryAgainE {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -23,7 +23,7 @@ typedef struct {
     Animator handDownAnimator;
     Animator player1Animator;
     Animator player2Animator;
-} EntityTryAgainE;
+};
 
 // Object Struct
 extern ObjectTryAgainE *TryAgainE;
@@ -42,8 +42,8 @@ void TryAgainE_EditorLoad(void);
 void TryAgainE_Serialize(void);
 
 // Extra Entity Functions
-void TryAgainE_Unknown1(void);
-void TryAgainE_Unknown2(void);
+void TryAgainE_SetupEmeralds(void);
+void TryAgainE_State_Stinger(void);
 #endif
 
 #endif //!OBJ_TRYAGAINE_H

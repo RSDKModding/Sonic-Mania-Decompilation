@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCheckerBall {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox innerBox;
@@ -12,10 +12,10 @@ typedef struct {
     uint8 heightArray[24];
     int8 unusedArray[24];
     uint16 aniFrames;
-} ObjectCheckerBall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCheckerBall {
     RSDK_ENTITY
     bool32 playerControlled;
     int32 angleVel;
@@ -24,7 +24,7 @@ typedef struct {
     Vector2 collisionOffset;
     uint8 activePlayers;
     Animator animator;
-} EntityCheckerBall;
+};
 
 // Object Struct
 extern ObjectCheckerBall *CheckerBall;
@@ -46,9 +46,9 @@ void CheckerBall_Serialize(void);
 void CheckerBall_DebugSpawn(void);
 void CheckerBall_DebugDraw(void);
 
-void CheckerBall_Unknown1(void);
-void CheckerBall_Unknown2(void);
-void CheckerBall_Unknown3(void);
+void CheckerBall_HandlePhysics(void);
+void CheckerBall_HandlePlayerMovement(void);
+void CheckerBall_HandlePlayerInteractions(void);
 void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox);
 void CheckerBall_HandleObjectCollisions(void);
 

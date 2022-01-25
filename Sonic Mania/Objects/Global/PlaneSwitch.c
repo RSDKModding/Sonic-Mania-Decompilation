@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PlaneSwitch Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPlaneSwitch *PlaneSwitch;
@@ -40,10 +47,8 @@ void PlaneSwitch_DrawSprites(void)
     RSDK_THIS(PlaneSwitch);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= 0x80000;
-    drawPos.y -= self->size << 19;
+    drawPos.x = self->position.x - 0x80000;
+    drawPos.y = self->position.y - (self->size << 19);
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     self->animator.frameID = self->flags & 3;
@@ -56,10 +61,10 @@ void PlaneSwitch_DrawSprites(void)
     drawPos.x = self->position.x + 0x80000;
     drawPos.y = self->position.y - (self->size << 19);
 
-    int32 dx  = (drawPos.x + 0x80000 - self->position.x) >> 8;
+    int32 dx  = (drawPos.x - self->position.x) >> 8;
     int32 dy  = (drawPos.y - self->position.y) >> 8;
-    drawPos.x = (dy * RSDK.Sin256(self->angle)) + dx * RSDK.Cos256(self->angle) + self->position.x;
-    drawPos.y = (dy * RSDK.Cos256(self->angle)) - dx * RSDK.Sin256(self->angle) + self->position.y;
+    drawPos.x = self->position.x + (dy * RSDK.Sin256(self->angle) + dx * RSDK.Cos256(self->angle));
+    drawPos.y = self->position.y + (dy * RSDK.Cos256(self->angle) - dx * RSDK.Sin256(self->angle));
 
     self->animator.frameID = (self->flags >> 2) & 3;
     for (int32 i = 0; i < self->size; ++i) {
@@ -80,7 +85,7 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
     int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
     RSDK.Cos256(self->negAngle);
     RSDK.Sin256(self->negAngle);
-    if (!(self->onPath && !other->onGround)) {
+    if (!self->onPath || other->onGround) {
         int32 xDif = abs(scanX - self->position.x);
         int32 yDif = abs(scanY - self->position.y);
 

@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectIwamodoki {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
     uint16 aniFrames;
-} ObjectIwamodoki;
+};
 
 // Entity Class
-typedef struct {
+struct EntityIwamodoki {
     RSDK_ENTITY
     StateMachine(state);
     bool32 lrzConvPhys;
@@ -25,7 +25,7 @@ typedef struct {
     int32 timer1;
     int32 timer2;
     Animator animator;
-} EntityIwamodoki;
+};
 
 // Object Struct
 extern ObjectIwamodoki *Iwamodoki;

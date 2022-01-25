@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Decoration Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectDecoration *Decoration;
@@ -45,7 +52,7 @@ void Decoration_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
-        if (RSDK.GetFrameID(&self->animator))
+        if (RSDK.GetFrameID(&self->animator)) // ideally use 'h'
             self->drawOrder = Zone->drawOrderHigh;
         else
             self->drawOrder = Zone->drawOrderLow;
@@ -68,8 +75,10 @@ void Decoration_StageLoad(void)
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("MSZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
+#if RETRO_USE_PLUS
     else if (RSDK.CheckStageFolder("MSZEnding"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Ending.bin", SCOPE_STAGE);
+#endif
     else if (RSDK.CheckStageFolder("HCZ"))
         Decoration->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
@@ -105,6 +114,7 @@ void Decoration_EditorDraw(void)
 {
     RSDK_THIS(Decoration);
     RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
+
     if (self->rotSpeed)
         self->drawFX |= FX_ROTATE;
     else
@@ -113,12 +123,15 @@ void Decoration_EditorDraw(void)
     Decoration_DrawSprite();
 }
 
-void Decoration_EditorLoad(void) { Decoration_StageLoad(); 
+void Decoration_EditorLoad(void)
+{
+    Decoration_StageLoad();
+
     RSDK_ACTIVE_VAR(Decoration, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
     RSDK_ENUM_VAR("Flip X", FLIP_X);
     RSDK_ENUM_VAR("Flip Y", FLIP_Y);
-    RSDK_ENUM_VAR("Flip X & Y", FLIP_XY);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
 }
 #endif
 

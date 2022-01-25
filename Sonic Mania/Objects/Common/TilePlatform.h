@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTilePlatform {
     RSDK_OBJECT
-} ObjectTilePlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTilePlatform {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
@@ -34,7 +34,7 @@ typedef struct {
     int32 childCount;
     Vector2 size;
     uint16 tiles[0x100];
-} EntityTilePlatform;
+};
 
 // Object Struct
 extern ObjectTilePlatform *TilePlatform;

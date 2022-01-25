@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPointdexter {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectPointdexter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPointdexter {
     RSDK_ENTITY
     StateMachine(state);
     uint8 timer;
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-} EntityPointdexter;
+};
 
 // Object Struct
 extern ObjectPointdexter *Pointdexter;

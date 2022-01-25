@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: RPlaneShifter Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectRPlaneShifter *RPlaneShifter;
@@ -301,7 +308,7 @@ void RPlaneShifter_Unknown4(void)
                 default: break;
             }
             player->animator.frameID        = frame % 24;
-            player->animator.animationSpeed = 0;
+            player->animator.speed = 0;
         }
 
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))

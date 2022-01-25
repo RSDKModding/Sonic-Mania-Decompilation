@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZConvDropper Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLRZConvDropper *LRZConvDropper;
@@ -13,8 +20,8 @@ void LRZConvDropper_Update(void)
                 LRZConvDropper_HandleButtonDrop(self);
             break;
         case LRZCONVDROP_TRIGGER_PLAYER: {
-            bool32 dropFlag  = false;
-            bool32 enterFlag = false;
+            bool32 shouldDrop    = false;
+            bool32 playerEntered = false;
 
             self->position.x += self->detectOffset.x;
             self->position.y += self->detectOffset.y;
@@ -29,13 +36,13 @@ void LRZConvDropper_Update(void)
 
                 if (!((1 << playerID) & self->activePlayers) && flag) {
                     if (!player->sidekick)
-                        enterFlag = true;
+                        playerEntered = true;
                     self->activePlayers |= (1 << playerID);
                 }
 
                 if ((1 << playerID) & self->activePlayers) {
                     if (!player->sidekick)
-                        dropFlag = true;
+                        shouldDrop = true;
                     if (!flag)
                         self->activePlayers &= ~(1 << playerID);
                 }
@@ -43,16 +50,13 @@ void LRZConvDropper_Update(void)
             self->position.x -= self->detectOffset.x;
             self->position.y -= self->detectOffset.y;
 
-            if (enterFlag) {
+            if (playerEntered) {
                 if (!self->timerStore || Zone->timer - self->timerStore > self->interval)
                     self->timerStore = Zone->timer;
             }
 
-            int32 timer = 0;
-            if (dropFlag)
-                timer = Zone->timer - self->timerStore;
-
-            if (dropFlag) {
+            if (shouldDrop) {
+                int32 timer = Zone->timer - self->timerStore;
                 if (!((timer + self->intervalOffset) % self->interval))
                     LRZConvDropper_HandleButtonDrop(self);
             }
@@ -109,7 +113,7 @@ void LRZConvDropper_SetupDropperChildren(void)
 
     int slot = RSDK.GetEntityID(self) - self->seqCount;
     for (int i = 0; i < self->seqCount; ++i) {
-        EntityLRZConvItem *child = RSDK_GET_ENTITY(slot--, LRZConvItem);
+        EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
         child->active            = ACTIVE_NEVER;
         child->visible           = false;
     }
@@ -119,7 +123,8 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
 {
     if (entity->seqCount && entity->seqPos < entity->seqCount) {
         int slot                  = RSDK.GetEntityID(entity);
-        EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(entity->seqPos - entity->seqCount + slot, LRZConvItem);
+        int32 seqPos              = entity->seqPos - entity->seqCount;
+        EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
         if (seqEnt->objectID == LRZConvItem->objectID) {
             EntityLRZConvItem *item = CREATE_ENTITY(LRZConvItem, intToVoid(seqEnt->type), entity->position.x, entity->position.y);

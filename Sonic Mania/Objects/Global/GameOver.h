@@ -6,14 +6,14 @@
 #define GameOver_LetterCount (8)
 
 // Object Class
-typedef struct {
+struct ObjectGameOver {
     RSDK_OBJECT
     int32 activeScreens;
     uint16 aniFrames;
-} ObjectGameOver;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGameOver {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -27,7 +27,7 @@ typedef struct {
     int32 letterRotations[GameOver_LetterCount];
     int32 letterRotateSpeed[GameOver_LetterCount];
     Animator animator;
-} EntityGameOver;
+};
 
 // Object Struct
 extern ObjectGameOver *GameOver;
@@ -46,7 +46,8 @@ void GameOver_EditorLoad(void);
 void GameOver_Serialize(void);
 
 // Extra Entity Functions
-void GameOver_SaveGameCallback(int32 status);
+void GameOver_SaveGameCallback(bool32 success);
+
 void GameOver_State_EnterLetters(void);
 void GameOver_State_HandleMultiplayer(void);
 void GameOver_State_ShowMessage(void);

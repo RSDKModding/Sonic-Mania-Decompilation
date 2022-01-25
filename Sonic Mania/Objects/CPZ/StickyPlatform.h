@@ -3,28 +3,35 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    STICKYPLATFORM_UP,
+    STICKYPLATFORM_DOWN,
+    STICKYPLATFORM_LEFT,
+    STICKYPLATFORM_RIGHT,
+} StickyPlatformTypes;
+
 // Object Class
-typedef struct {
+struct ObjectStickyPlatform {
 	RSDK_OBJECT
 	uint16 sfxID;
 	uint16 animID;
-} ObjectStickyPlatform;
+};
 
 // Entity Class
-typedef struct {
-	RSDK_ENTITY
-	StateMachine(state);
-	int32 type;
-	Vector2 amplitude;
-	int32 speed;
-	bool32 oscillate;
-	int32 unused_70;
-	int32 playerBits;
-	int32 cooldowns[4];
-	Vector2 internalPos;
-	Hitbox hitbox;
-	Animator animator;
-} EntityStickyPlatform;
+struct EntityStickyPlatform {
+    RSDK_ENTITY
+    StateMachine(state);
+    StickyPlatformTypes type;
+    Vector2 amplitude;
+    int32 speed;
+    bool32 oscillate;
+    int32 unused;
+    int32 playerBits;
+    int32 cooldowns[4];
+    Vector2 startPos;
+    Hitbox hitbox;
+    Animator animator;
+};
 
 // Object Struct
 extern ObjectStickyPlatform *StickyPlatform;
@@ -45,9 +52,9 @@ void StickyPlatform_Serialize(void);
 // Extra Entity Functions
 void StickyPlatform_Interact(void);
 
-void StickyPlatform_HandleMovement(void);
-void StickyPlatform_MoveBack(void);
-void StickyPlatform_MoveBackForth(void);
-void StickyPlatform_AddSpeed(void);
+void StickyPlatform_State_HandleMovement(void);
+void StickyPlatform_State_MoveBack(void);
+void StickyPlatform_State_MoveBackForth(void);
+void StickyPlatform_State_AddSpeed(void);
 
 #endif //!OBJ_STICKYPLATFORM_H

@@ -6,16 +6,16 @@
 #define Fireworm_SegmentCount (5)
 
 // Object Class
-typedef struct {
+struct ObjectFireworm {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     Animator animator;
     uint16 aniFrames;
-} ObjectFireworm;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFireworm {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -32,7 +32,7 @@ typedef struct {
     int32 field_F0;
     Animator animators1[Fireworm_SegmentCount];
     Animator animators2[Fireworm_SegmentCount];
-} EntityFireworm;
+};
 
 // Object Struct
 extern ObjectFireworm *Fireworm;

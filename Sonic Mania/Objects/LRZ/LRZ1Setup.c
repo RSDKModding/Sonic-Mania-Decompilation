@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZ1Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLRZ1Setup *LRZ1Setup;
@@ -99,7 +106,7 @@ void LRZ1Setup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreLRZ1.act", 255);
+        RSDK.LoadPalette(0, "EncoreLRZ1.act", 0b0000000011111111);
 
         for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->fgLow->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
         for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->fgHigh->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
@@ -125,7 +132,7 @@ void LRZ1Setup_StageFinishCB(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
 
 void LRZ1Setup_DrawLayerCB(void)
 {
-    int32 scroll                = maxVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
+    int32 scroll              = minVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
     LRZ1Setup->bg1->scrollPos = scroll;
     LRZ1Setup->bg2->scrollPos = scroll;
 }

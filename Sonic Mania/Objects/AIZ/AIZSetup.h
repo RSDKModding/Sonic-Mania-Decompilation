@@ -8,8 +8,15 @@ typedef enum {
     AIZ_BG_SKY,
 } BGSwitchIDsAIZ;
 
+typedef enum {
+    AIZ_DECOR_LEAF1,
+    AIZ_DECOR_LEAF2,
+    AIZ_DECOR_LEAF3,
+    AIZ_DECOR_LEAF4,
+} DecorTypesAIZ;
+
 // Object Class
-typedef struct {
+struct ObjectAIZSetup {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     TABLE(int32 aniTiles1[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
@@ -46,12 +53,12 @@ typedef struct {
     uint16 sfxImpact;
     uint16 sfxHeliWoosh;
     uint16 aniTiles;
-} ObjectAIZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZSetup {
 	RSDK_ENTITY
-} EntityAIZSetup;
+};
 
 // Object Struct
 extern ObjectAIZSetup *AIZSetup;
@@ -75,35 +82,38 @@ void AIZSetup_BGSwitchCB_Jungle(void);
 void AIZSetup_BGSwitchCB_Sky(void);
 #endif
 
-void AIZSetup_Unknown4(void);
-void AIZSetup_Unknown5(void);
-void AIZSetup_Unknown24(void);
+void AIZSetup_PlayerState_Static(void);
+void AIZSetup_PlayerState_P2Enter(void);
+
+void AIZSetup_HandleHeavyMovement(void);
 
 void AIZSetup_SetupObjects(void);
 
 void AIZSetup_GetCutsceneSetupPtr(void);
+#if RETRO_USE_PLUS
 void AIZSetup_SkipCB(void);
+#endif
 
 void AIZSetup_CutsceneST_Setup(void);
-bool32 AIZSetup_Cutscene1_Unknown1(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown2(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown3(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown4(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown5(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown6(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown7(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown8(Entity *h);
-bool32 AIZSetup_Cutscene1_Unknown9(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterAIZ(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h);
+bool32 AIZSetup_CutsceneSonic_P2FlyIn(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterClaw(Entity *h);
+bool32 AIZSetup_CutsceneSonic_WatchClaw(Entity *h);
+bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h);
+bool32 AIZSetup_CutsceneSonic_RubyAppear(Entity *h);
+bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h);
 
 void AIZSetup_CutsceneK_Setup(void);
-bool32 AIZSetup_Cutscene2_Unknown1(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown2(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown3(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown4(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown5(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown6(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown7(Entity *h);
-bool32 AIZSetup_Cutscene2_Unknown8(Entity *h);
+bool32 AIZSetup_CutsceneKnux_Chillin(Entity *h);
+bool32 AIZSetup_CutsceneKnux_StartDrillin(Entity *h);
+bool32 AIZSetup_CutsceneKnux_Drillin(Entity *h);
+bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(Entity *h);
+bool32 AIZSetup_CutsceneKnux_EnterThreat(Entity *h);
+bool32 AIZSetup_CutsceneKnux_HeaviesAppear(Entity *h);
+bool32 AIZSetup_CutsceneKnux_RubyImpact(Entity *h);
+bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h);
 
 bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h);
 

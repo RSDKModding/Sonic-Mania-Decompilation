@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Shadow {
     RSDK_OBJECT
     uint16 sceneID;
     uint16 modelIndex;
-} ObjectUFO_Shadow;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Shadow {
     RSDK_ENTITY
     int32 shadowScale;
     Entity *parent;
     Matrix matrix;
     Animator animator;
-} EntityUFO_Shadow;
+};
 
 // Object Struct
 extern ObjectUFO_Shadow *UFO_Shadow;

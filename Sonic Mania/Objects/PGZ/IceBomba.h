@@ -4,30 +4,30 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectIceBomba {
 	RSDK_OBJECT
-	Hitbox flyHitbox;
-	Hitbox bombHitbox;
-	Hitbox checkbox;
-	uint16 animID;
-	uint16 explosionSFX;
-	uint16 freezeSFX;
-} ObjectIceBomba;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxBomb;
+    Hitbox hitboxRange;
+	uint16 aniFrames;
+	uint16 sfxExplosion;
+	uint16 sfxFreeze;
+};
 
 // Entity Class
-typedef struct {
+struct EntityIceBomba {
 	RSDK_ENTITY
-	StateMachine(state);
-	uint8 dir;
-	uint16 dist;
-	uint16 dip;
-	uint8 unused_62;
-	Vector2 spawnPos;
-	uint32 spawnDist;
-	Animator animator;
-	Animator wingAnimator;
-	Animator bombAnimator;
-} EntityIceBomba;
+    StateMachine(state);
+    uint8 dir;
+    uint16 dist;
+    uint16 dip;
+    uint8 spawnDir;
+    Vector2 spawnPos;
+    uint32 spawnDist;
+    Animator animator;
+    Animator wingAnimator;
+    Animator bombAnimator;
+};
 
 // Object Struct
 extern ObjectIceBomba *IceBomba;
@@ -52,11 +52,11 @@ void IceBomba_DebugSpawn(void);
 void IceBomba_CheckOnScreen(void);
 
 void IceBomba_Fly_Collide(void);
-void IceBomba_Fly_Create(void);
-void IceBomba_Fly_Idle(void);
-void IceBomba_Fly_Turn(void);
-void IceBomba_Fly_FlyAway(void);
+void IceBomba_State_Setup(void);
+void IceBomba_State_Flying(void);
+void IceBomba_State_FlyTurn(void);
+void IceBomba_State_FlyAway(void);
 
-void IceBomba_Bomb_Handle(void);
+void IceBomba_State_Bomb(void);
 
 #endif //!OBJ_ICEBOMBA_H

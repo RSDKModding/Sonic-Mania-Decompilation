@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: ContinuePlayer Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectContinuePlayer *ContinuePlayer;
@@ -88,24 +95,24 @@ void ContinuePlayer_HandleDashAnim(void)
         if (self->groundVel >= 0x60000) {
             if (self->groundVel >= 0xA0000) {
                 RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->animator, false, 0);
-                self->animator.animationSpeed = 256;
+                self->animator.speed = 256;
             }
             else {
                 RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->animator, false, 1);
-                self->animator.animationSpeed = (self->groundVel >> 12) + 96;
-                if (self->animator.animationSpeed > 0x100)
-                    self->animator.animationSpeed = 0x100;
+                self->animator.speed = (self->groundVel >> 12) + 96;
+                if (self->animator.speed > 0x100)
+                    self->animator.speed = 0x100;
             }
         }
         else {
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->animator, false, 0);
             int32 iVel                        = (self->groundVel >> 16);
-            self->animator.animationSpeed = 4 * ((iVel << 1) + iVel) + 64;
+            self->animator.speed = 4 * ((iVel << 1) + iVel) + 64;
         }
     }
     else {
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->animator, false, 0);
-        self->animator.animationSpeed = (self->groundVel >> 12) + 48;
+        self->animator.speed = (self->groundVel >> 12) + 48;
     }
 }
 

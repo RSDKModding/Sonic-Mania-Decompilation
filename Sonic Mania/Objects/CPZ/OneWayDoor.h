@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
-	RSDK_OBJECT
-	uint16 animID;
-	Hitbox hitbox1;
-	Hitbox hitbox2;
-	Hitbox touchBox;
-} ObjectOneWayDoor;
+struct ObjectOneWayDoor {
+    RSDK_OBJECT
+    uint16 animID;
+    Hitbox hitboxTop;
+    Hitbox hitboxBottom;
+    Hitbox hitboxRange;
+};
 
 // Entity Class
-typedef struct {
-	RSDK_ENTITY
-	StateMachine(state);
-	StateMachine(drawState);
+struct EntityOneWayDoor {
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
 	int32 yChange;
 	Animator animator;
-} EntityOneWayDoor;
+};
 
 // Object Struct
 extern ObjectOneWayDoor *OneWayDoor;
@@ -43,7 +43,7 @@ void OneWayDoor_Interact(void);
 void OneWayDoor_State_MoveDown(void);
 void OneWayDoor_State_MoveUp(void);
 
-void OneWayDoor_MMZDraw(void);
-void OneWayDoor_CPZDraw(void);
+void OneWayDoor_Draw_MMZ(void);
+void OneWayDoor_Draw_CPZ(void);
 
 #endif //!OBJ_ONEWAYDOOR_H

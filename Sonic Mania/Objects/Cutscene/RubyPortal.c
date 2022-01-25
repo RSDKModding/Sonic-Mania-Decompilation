@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: RubyPortal Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectRubyPortal *RubyPortal;
@@ -117,7 +124,7 @@ void RubyPortal_HandleTileDestruction(void)
             int32 spawnY = (ty << 20) + 0x80000;
             for (int32 y = 4; y < 52; y += 3) {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-                if (tile != 0xFFFF) {
+                if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     wall->drawOrder           = Zone->drawOrderLow + 1;
                     wall->layerID             = Zone->fgLow;
@@ -132,11 +139,11 @@ void RubyPortal_HandleTileDestruction(void)
                     wall->velocity.y          = RSDK.Rand(-0x20000, 0x20000);
                     wall->gravityStrength     = 0;
                     wall->active              = ACTIVE_NORMAL;
-                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
+                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
                 }
 
                 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-                if (tile != 0xFFFF) {
+                if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     wall->drawOrder           = Zone->drawOrderHigh;
                     wall->layerID             = Zone->fgHigh;
@@ -151,7 +158,7 @@ void RubyPortal_HandleTileDestruction(void)
                     wall->velocity.y          = RSDK.Rand(-0x20000, 0x20000);
                     wall->gravityStrength     = 0;
                     wall->active              = ACTIVE_NORMAL;
-                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
+                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                 }
                 spawnY += 0x100000;
             }
@@ -165,9 +172,9 @@ void RubyPortal_State_AwaitOpenTMZ2(void)
 {
     RSDK_THIS(RubyPortal);
 #if RETRO_USE_PLUS
-    if (TMZBarrier->flags == 0xF || RubyPortal->openPortal)
+    if (TMZBarrier->clearedBarriers == (1 | 2 | 4 | 8) || RubyPortal->openPortal)
 #else
-    if (TMZBarrier->flags == 0xF)
+    if (TMZBarrier->clearedBarriers == (1 | 2 | 4 | 8))
 #endif
         self->state = RubyPortal_State_Opening;
 }

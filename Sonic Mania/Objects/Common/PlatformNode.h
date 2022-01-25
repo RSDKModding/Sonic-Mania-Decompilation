@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPlatformNode {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectPlatformNode;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlatformNode {
     RSDK_ENTITY
     int32 nodeFlag;
     Animator animator;
-} EntityPlatformNode;
+};
 
 // Object Struct
 extern ObjectPlatformNode *PlatformNode;

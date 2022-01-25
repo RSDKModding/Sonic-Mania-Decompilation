@@ -5,14 +5,14 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectAIZEncoreTutorial {
     RSDK_OBJECT
     uint16 cutsceneFrames;
     uint16 dustFrames;
-} ObjectAIZEncoreTutorial;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZEncoreTutorial {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityAIZEncoreTutorial;
+};
 
 // Object Struct
 extern ObjectAIZEncoreTutorial *AIZEncoreTutorial;

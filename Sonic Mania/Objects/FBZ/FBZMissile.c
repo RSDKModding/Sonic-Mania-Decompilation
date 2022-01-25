@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: FBZMissile Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFBZMissile *FBZMissile;
@@ -44,7 +51,7 @@ void FBZMissile_Create(void *data)
                 break;
             case FBZMISSILE_LAUNCHER_H:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
-                self->state = FBZMissile_Unknown3;
+                self->state = FBZMissile_State_LauncherHFire;
                 break;
             case FBZMISSILE_HULL:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &self->animator, true, 0);
@@ -58,7 +65,7 @@ void FBZMissile_Create(void *data)
                 break;
             case FBZMISSILE_HORIZONTAL:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
-                self->state = FBZMissile_Unknown7;
+                self->state = FBZMissile_StateHorizontal_Move;
                 break;
             default: break;
         }
@@ -126,7 +133,7 @@ void FBZMissile_StateLauncher_Launch(void)
     }
 }
 
-void FBZMissile_Unknown3(void)
+void FBZMissile_State_LauncherHFire(void)
 {
     RSDK_THIS(FBZMissile);
 
@@ -144,11 +151,11 @@ void FBZMissile_Unknown3(void)
             self->position.x += 500000;
         }
         self->timer = 62;
-        self->state = FBZMissile_Unknown4;
+        self->state = FBZMissile_State_LauncherHPrepare;
     }
 }
 
-void FBZMissile_Unknown4(void)
+void FBZMissile_State_LauncherHPrepare(void)
 {
     RSDK_THIS(FBZMissile);
     if (--self->timer > 0) {
@@ -158,7 +165,7 @@ void FBZMissile_Unknown4(void)
             self->position.x -= 0x2000;
     }
     else {
-        self->state = FBZMissile_Unknown3;
+        self->state = FBZMissile_State_LauncherHFire;
     }
 }
 
@@ -235,7 +242,7 @@ void FBZMissile_StateVertical_Fall(void)
     }
 }
 
-void FBZMissile_Unknown7(void)
+void FBZMissile_StateHorizontal_Move(void)
 {
     RSDK_THIS(FBZMissile);
     self->position.x += self->velocity.x;

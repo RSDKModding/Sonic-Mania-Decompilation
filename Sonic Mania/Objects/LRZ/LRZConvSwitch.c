@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZConvSwitch Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLRZConvSwitch *LRZConvSwitch;
@@ -9,8 +16,8 @@ void LRZConvSwitch_Update(void)
     if ((LRZ2Setup->conveyorDir != self->conveyorDir) != self->calibration)
         LRZConvSwitch_Calibrate();
 
-    int ty1 = self->position.x;
-    int ty2 = self->position.y - 0x180000;
+    int extendX2 = self->position.x;
+    int extendY2 = self->position.y - 0x180000;
 
     foreach_active(Player, player)
     {
@@ -26,11 +33,11 @@ void LRZConvSwitch_Update(void)
                 dir = 1;
             }
 
-            int val = MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPositions[playerID].x,
-                                            self->playerPositions[playerID].y, self->position.x, self->position.y, ty1, ty2);
+            bool32 collided = MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPositions[playerID].x,
+                                            self->playerPositions[playerID].y, self->position.x, self->position.y, extendX2, extendY2);
             if (!self->dir && !player->sidekick) {
                 if (dir < 0) {
-                    if (val && !self->conveyorDir) {
+                    if (collided && !self->conveyorDir) {
                         RSDK.PlaySfx(LRZConvSwitch->sfxClack, false, 255);
                         RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 1, &self->animator, true, 0);
                         self->conveyorDir    = 1;
@@ -38,7 +45,7 @@ void LRZConvSwitch_Update(void)
                         self->dir            = 1;
                     }
                 }
-                if (dir > 0 && val && self->conveyorDir == 1) {
+                if (dir > 0 && collided && self->conveyorDir == 1) {
                     RSDK.PlaySfx(LRZConvSwitch->sfxClack, false, 255);
                     RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 3, &self->animator, true, 0);
                     self->conveyorDir    = 0;

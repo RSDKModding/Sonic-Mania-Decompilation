@@ -11,7 +11,7 @@ typedef enum {
 } FlamethrowerOrientations;
 
 // Object Class
-typedef struct {
+struct ObjectFlamethrower {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlame;
@@ -21,10 +21,10 @@ typedef struct {
     Hitbox hitbox3;
     Hitbox hitbox4;
     Hitbox hitbox5;
-} ObjectFlamethrower;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFlamethrower {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
@@ -42,7 +42,7 @@ typedef struct {
     Vector2 origin;
     Vector2 field_84;
     Animator animator;
-} EntityFlamethrower;
+};
 
 // Object Struct
 extern ObjectFlamethrower *Flamethrower;

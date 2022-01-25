@@ -3,31 +3,36 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UICHARBUTTON_SONIC,
+    UICHARBUTTON_TAILS,
+    UICHARBUTTON_KNUX,
+#if RETRO_USE_PLUS
+    UICHARBUTTON_MIGHTY,
+    UICHARBUTTON_RAY,
+#endif
+}UICharButtonCharacterIDs;
+
 // Object Class
-typedef struct {
+struct ObjectUICharButton {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUICharButton;
+};
 
 // Entity Class
-typedef struct {
-	MANIA_UI_ITEM_BASE
+struct EntityUICharButton {
+    MANIA_UI_ITEM_BASE
     uint8 characterID;
-    int32 field_108;
-    int32 field_10C;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    int32 field_130;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-} EntityUICharButton;
+    int32 triBounceVelocity;
+    int32 triBounceOffset;
+    int32 playerBounceVelocity;
+    int32 playerBounceOffset;
+    int32 unused;
+    Animator unusedAnimator;
+    Animator playerAnimator;
+    Animator shadowAnimator;
+    Animator nameAnimator;
+};
 
 // Object Struct
 extern ObjectUICharButton *UICharButton;
@@ -46,16 +51,18 @@ void UICharButton_EditorLoad(void);
 void UICharButton_Serialize(void);
 
 // Extra Entity Functions
-void UICharButton_Unknown1(void);
-void UICharButton_Unknown2(void);
-void UICharButton_Unknown3(void);
-void UICharButton_Unknown4(void);
-bool32 UICharButton_Unknown5(void);
-bool32 UICharButton_Unknown6(void);
-void UICharButton_Unknown7(void);
-void UICharButton_Unknown8(void);
-void UICharButton_Unknown9(void);
-void UICharButton_Unknown10(void);
-void UICharButton_Unknown11(void);
+void UICharButton_DrawOutlines(void);
+void UICharButton_DrawBG(void);
+void UICharButton_DrawPlayers(void);
+
+void UICharButton_SelectedCB(void);
+bool32 UICharButton_CheckButtonEnterCB(void);
+bool32 UICharButton_CheckSelectedCB(void);
+void UICharButton_ButtonEnterCB(void);
+void UICharButton_ButtonLeaveCB(void);
+
+void UICharButton_State_HandleButtonLeave(void);
+void UICharButton_State_HandleButtonEnter(void);
+void UICharButton_State_Selected(void);
 
 #endif //!OBJ_UICHARBUTTON_H

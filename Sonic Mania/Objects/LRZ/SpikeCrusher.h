@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpikeCrusher {
     RSDK_OBJECT
     uint16 sfxHuff;
     uint16 sfxImpact;
-} ObjectSpikeCrusher;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpikeCrusher {
     MANIA_PLATFORM_BASE
     int32 startDir;
     Animator animator2;
-} EntitySpikeCrusher;
+};
 
 // Object Struct
 extern ObjectSpikeCrusher *SpikeCrusher;

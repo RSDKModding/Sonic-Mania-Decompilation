@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Funnel Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectFunnel *Funnel;
@@ -19,18 +26,16 @@ void Funnel_Update(void)
                 else {
                     if (Player_CheckValidState(player) && player->state == Player_State_None) {
                         if (player->sidekick == false && ++self->playerScoreTimer[p] >= 30) {
-                            self->playerScoreTimer[p]     = 0;
-                            EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y - 0x180000);
-                            bonus->drawOrder        = Zone->drawOrderHigh;
-                            bonus->animator.frameID = 0;
+                            self->playerScoreTimer[p] = 0;
+                            EntityScoreBonus *bonus   = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y - 0x180000);
+                            bonus->drawOrder          = Zone->drawOrderHigh;
+                            bonus->animator.frameID   = 0;
                             Player_GiveScore(player, 100);
                         }
 
                         self->playerYVel[p] += 64 + (self->playerYVel[p] >> 8);
 
                         int distX = maxVal(((self->position.y - player->position.y) >> 8) - 0xA00, 0x400);
-                        if (distX < 1024)
-                            distX = 1024;
 
                         player->position.x = distX * RSDK.Cos256(self->playerAngle[p]) + self->position.x;
                         self->playerAngle[p] -= self->playerXVel[p] >> 16;
@@ -48,17 +53,18 @@ void Funnel_Update(void)
                             player->scale.y = ((((player->position.y - self->position.y) >> 16) * RSDK.Sin256(self->playerAngle[p])) >> 7) + 0x200;
                             player->scale.x = player->scale.y;
                         }
+
                         player->velocity.y += (self->playerYVel[p] >> 5) + 64;
                         if (player->position.y > self->position.y + 0x140000) {
                             self->activePlayers &= ~(1 << p);
                             player->drawFX &= ~FX_SCALE;
-                            player->interaction     = true;
-                            player->tileCollisions  = true;
-                            player->scale.y         = 0x200;
-                            player->scale.x         = 0x200;
-                            player->position.x      = self->position.x;
-                            player->velocity.x      = 0;
-                            self->playerTimers[p] = 32;
+                            player->interaction    = true;
+                            player->tileCollisions = true;
+                            player->scale.y        = 0x200;
+                            player->scale.x        = 0x200;
+                            player->position.x     = self->position.x;
+                            player->velocity.x     = 0;
+                            self->playerTimers[p]  = 32;
                             if (player->camera)
                                 player->scrollDelay = 1;
                             if (!self->activePlayers)
@@ -70,13 +76,13 @@ void Funnel_Update(void)
                     else {
                         self->activePlayers &= ~(1 << p);
                         player->drawFX &= ~FX_SCALE;
-                        player->interaction     = true;
-                        player->tileCollisions  = true;
-                        player->scale.y         = 0x200;
-                        player->scale.x         = 0x200;
-                        player->position.x      = self->position.x;
-                        player->velocity.x      = 0;
-                        self->playerTimers[p] = 32;
+                        player->interaction    = true;
+                        player->tileCollisions = true;
+                        player->scale.y        = 0x200;
+                        player->scale.x        = 0x200;
+                        player->position.x     = self->position.x;
+                        player->velocity.x     = 0;
+                        self->playerTimers[p]  = 32;
                         if (player->camera)
                             player->scrollDelay = 1;
                         if (!self->activePlayers)
@@ -95,7 +101,7 @@ void Funnel_Update(void)
                         dy = distY - 10;
 
                     int distX = abs(player->position.x - self->position.x) >> 16;
-                    if (distX <= dy && player->position.y < self->position.y || player->position.y < self->position.y - 0x280000 && distX <= 64) {
+                    if ((distX <= dy && player->position.y < self->position.y) || (player->position.y < self->position.y - 0x280000 && distX <= 64)) {
                         if (player->camera) {
                             player->scrollDelay = 0;
                             Camera_SetupLerp(2, p, self->position.x, self->position.y - 0x400000, 8);
@@ -115,6 +121,7 @@ void Funnel_Update(void)
                         if (player->position.x < self->position.x)
                             x = -x;
                         self->playerAngle[p] = RSDK.ATan2(x, y);
+
                         player->velocity.y -= abs(9 * (player->velocity.x >> 4));
                         if (player->velocity.y < 0x1000)
                             player->velocity.y = 0x1000;
@@ -126,9 +133,9 @@ void Funnel_Update(void)
                         else
 #endif
                             RSDK.PlaySfx(Funnel->sfxFunnel, false, 255);
-                        player->velocity.x  = 0;
+                        player->velocity.x        = 0;
                         self->playerScoreTimer[p] = 0;
-                        self->playerYVel[p] = 0;
+                        self->playerYVel[p]       = 0;
                         self->activePlayers |= 1 << p;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->interaction     = false;
@@ -148,6 +155,7 @@ void Funnel_Update(void)
                                 max = (self->position.y - player->position.y) >> 16;
                             max += 40;
                         }
+
                         if (distX < max) {
                             int x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
                             int y = x;
@@ -168,6 +176,7 @@ void Funnel_Update(void)
                                     x = -x;
                                 }
                             }
+
                             if (player->position.y < self->position.y || player->position.y > self->position.y + 0x160000) {
                                 if (player->velocity.y > 0)
                                     continue;
@@ -175,6 +184,7 @@ void Funnel_Update(void)
                             else {
                                 y = player->velocity.y;
                             }
+
                             if (player->animator.animationID != ANI_FLY) {
                                 player->velocity.x = x;
                                 player->groundVel  = x;
@@ -182,7 +192,7 @@ void Funnel_Update(void)
                             player->velocity.y  = y;
                             player->onGround    = false;
                             player->jumpAbility = 0;
-                            RSDK.PlaySfx(Funnel->sfxPimPom, false, 255);
+                            RSDK.PlaySfx(Funnel->sfxPimPom, false, 0xFF);
                         }
                     }
                     else {
@@ -196,6 +206,7 @@ void Funnel_Update(void)
                                 max = (self->position.y - player->position.y) >> 16;
                             max += 40;
                         }
+
                         if (distX < max) {
                             int x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
                             int y = x;
@@ -224,6 +235,7 @@ void Funnel_Update(void)
                             else {
                                 y = player->velocity.y;
                             }
+
                             if (player->animator.animationID != ANI_FLY) {
                                 player->velocity.x = x;
                                 player->groundVel  = x;
@@ -231,7 +243,7 @@ void Funnel_Update(void)
                             player->velocity.y  = y;
                             player->onGround    = false;
                             player->jumpAbility = 0;
-                            RSDK.PlaySfx(Funnel->sfxPimPom, false, 255);
+                            RSDK.PlaySfx(Funnel->sfxPimPom, false, 0xFF);
                         }
                     }
                 }
@@ -268,23 +280,26 @@ void Funnel_Create(void *data)
         self->updateRange.y = 0x1000000;
         self->visible       = true;
         self->drawOrder     = Zone->drawOrderHigh + 1;
-        self->state         = Funnel_Unknown1;
+        self->state         = Funnel_State_None;
     }
 }
 
 void Funnel_StageLoad(void)
 {
-    Funnel->aniFrames     = RSDK.LoadSpriteAnimation("SPZ2/Funnel.bin", SCOPE_STAGE);
+    Funnel->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Funnel.bin", SCOPE_STAGE);
+
     Funnel->hitbox.left   = -64;
     Funnel->hitbox.top    = -48;
     Funnel->hitbox.right  = 64;
     Funnel->hitbox.bottom = 0;
-    Funnel->active        = ACTIVE_ALWAYS;
-    Funnel->sfxFunnel     = RSDK.GetSfx("SPZ/Funnel.wav");
-    Funnel->sfxPimPom     = RSDK.GetSfx("Stage/PimPom.wav");
+
+    Funnel->active = ACTIVE_ALWAYS;
+
+    Funnel->sfxFunnel = RSDK.GetSfx("SPZ/Funnel.wav");
+    Funnel->sfxPimPom = RSDK.GetSfx("Stage/PimPom.wav");
 }
 
-void Funnel_Unknown1(void) {}
+void Funnel_State_None(void) {}
 
 #if RETRO_INCLUDE_EDITOR
 void Funnel_EditorDraw(void)

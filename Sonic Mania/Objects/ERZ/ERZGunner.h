@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectERZGunner {
     RSDK_OBJECT
     TABLE(int32 value1[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
                               10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
@@ -13,10 +13,10 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     uint16 aniFrames;
-} ObjectERZGunner;
+};
 
 // Entity Class
-typedef struct {
+struct EntityERZGunner {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -35,7 +35,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-} EntityERZGunner;
+};
 
 // Object Struct
 extern ObjectERZGunner *ERZGunner;

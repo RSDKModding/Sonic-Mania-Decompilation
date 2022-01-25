@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: TippingPlatform Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectTippingPlatform *TippingPlatform;
@@ -15,11 +22,11 @@ void TippingPlatform_Update(void)
             self->stateCollide = Platform_CollisionState_TopSolid;
             self->collision    = PLATFORM_C_SOLID_TOP;
         }
-        if (!self->stoodAngle && self->bossID > 2 && self->syringe->activated) {
-            self->stoodAngle    = 1;
-            self->timer = self->intervalOffset + 1;
+        if (!self->stoodAngle && self->bossID > TIPPINGPLATFORM_EGGMAN && self->syringe->activated) {
+            self->stoodAngle = 1;
+            self->timer      = self->intervalOffset + 1;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-            self->state = TippingPlatform_Unknown5;
+            self->state = TippingPlatform_State_Tipping_Delay;
         }
     }
     else {
@@ -32,30 +39,30 @@ void TippingPlatform_Update(void)
                 else {
                     self->active = ACTIVE_NORMAL;
                     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, (timer - self->duration) >> 2);
-                    self->state = TippingPlatform_Unknown4;
+                    self->state = TippingPlatform_State_Restore;
                 }
             }
             else {
-                self->active        = ACTIVE_NORMAL;
-                self->timer = self->duration - timer;
+                self->active = ACTIVE_NORMAL;
+                self->timer  = self->duration - timer;
                 if (self->duration - timer < self->duration - 24) {
                     RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 6);
-                    self->state = TippingPlatform_Unknown3;
+                    self->state = TippingPlatform_State_Tipping;
                 }
                 else {
                     RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, timer >> 2);
-                    self->state                   = TippingPlatform_Unknown3;
-                    self->animator.animationTimer = (self->duration - self->timer) & 3;
+                    self->state          = TippingPlatform_State_Tipping;
+                    self->animator.timer = (self->duration - self->timer) & 3;
                 }
             }
         }
 
-        bool32 flag = false;
+        bool32 isSolid = false;
         if (self->animator.animationID == 1)
-            flag = self->animator.frameID == 0;
+            isSolid = self->animator.frameID == 0;
         else
-            flag = self->animator.frameID == 6;
-        if (flag) {
+            isSolid = self->animator.frameID == 6;
+        if (isSolid) {
             self->stateCollide = Platform_CollisionState_TopSolid;
             self->collision    = PLATFORM_C_SOLID_TOP;
         }
@@ -89,7 +96,7 @@ void TippingPlatform_Create(void *data)
 
     if (self->bossID) {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
     }
     else {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
@@ -97,7 +104,7 @@ void TippingPlatform_Create(void *data)
 
     self->state = Platform_State_Fixed;
     if (!SceneInfo->inEditor) {
-        if (self->bossID > 1) {
+        if (self->bossID > TIPPINGPLATFORM_PLAYER) {
             foreach_all(Syringe, syringe)
             {
                 if (syringe->tag == self->bossID) {
@@ -113,7 +120,7 @@ void TippingPlatform_Create(void *data)
             }
         }
 
-        if (self->bossID == 1) {
+        if (self->bossID == TIPPINGPLATFORM_PLAYER) {
             self->direction = FLIP_X;
             self->drawFX    = FX_FLIP;
         }
@@ -122,46 +129,46 @@ void TippingPlatform_Create(void *data)
 
 void TippingPlatform_StageLoad(void) {}
 
-void TippingPlatform_Unknown1(void)
+void TippingPlatform_State_Tipping_Boss(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (self->animator.frameID < 6 && ++self->animator.animationTimer == 4) {
-        self->animator.animationTimer = 0;
+    if (self->animator.frameID < 6 && ++self->animator.timer == 4) {
+        self->animator.timer = 0;
         self->animator.frameID++;
     }
 
     if (--self->timer <= 0) {
         self->active = ACTIVE_BOUNDS;
-        if (self->bossID < 3)
-            self->state = TippingPlatform_Unknown2;
+        if (self->bossID <= TIPPINGPLATFORM_EGGMAN)
+            self->state = TippingPlatform_State_RestorePlatform;
         else
             self->state = Platform_State_Fixed;
     }
 }
 
-void TippingPlatform_Unknown2(void)
+void TippingPlatform_State_RestorePlatform(void)
 {
     RSDK_THIS(TippingPlatform);
     if (self->animator.frameID <= 0) {
         self->active = ACTIVE_BOUNDS;
         self->state  = Platform_State_Fixed;
     }
-    else if (++self->animator.animationTimer == 4) {
-        self->animator.animationTimer = 0;
+    else if (++self->animator.timer == 4) {
+        self->animator.timer = 0;
         self->animator.frameID--;
     }
 }
 
-void TippingPlatform_Unknown3(void)
+void TippingPlatform_State_Tipping(void)
 {
     RSDK_THIS(TippingPlatform);
     if (--self->timer <= 0) {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
-        self->state = TippingPlatform_Unknown2;
+        self->state = TippingPlatform_State_RestorePlatform;
     }
 }
 
-void TippingPlatform_Unknown4(void)
+void TippingPlatform_State_Restore(void)
 {
     RSDK_THIS(TippingPlatform);
     if (self->animator.frameID == 6) {
@@ -170,19 +177,20 @@ void TippingPlatform_Unknown4(void)
     }
 }
 
-void TippingPlatform_Unknown5(void)
+void TippingPlatform_State_Tipping_Delay(void)
 {
     RSDK_THIS(TippingPlatform);
     if (--self->timer <= 0)
-        self->state = TippingPlatform_Unknown1;
+        self->state = TippingPlatform_State_Tipping_Boss;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TippingPlatform_EditorDraw(void)
 {
     RSDK_THIS(TippingPlatform);
     if (self->bossID) {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
     }
     else {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
@@ -192,6 +200,7 @@ void TippingPlatform_EditorDraw(void)
 }
 
 void TippingPlatform_EditorLoad(void) {}
+#endif
 
 void TippingPlatform_Serialize(void)
 {

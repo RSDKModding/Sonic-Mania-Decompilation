@@ -54,33 +54,59 @@
     <ClCompile Include="..\dependencies\all\zlib\trees.c" />
     <ClCompile Include="..\dependencies\all\zlib\uncompr.c" />
     <ClCompile Include="..\dependencies\all\zlib\zutil.c" />
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="DefaultObject.cpp" />
-    <ClCompile Include="DevOutput.cpp" />
-    <ClCompile Include="Drawing.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Link.cpp" />
-    <ClCompile Include="Math.cpp" />
-    <ClCompile Include="ModAPI.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Palette.cpp" />
-    <ClCompile Include="Reader.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Scene3D.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="Storage.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="UserAchievements.cpp" />
-    <ClCompile Include="Userdata.cpp" />
+    <ClCompile Include="RSDK\Audio\Audio.cpp" />
+    <ClCompile Include="RSDK\Core\Link.cpp" />
+    <ClCompile Include="RSDK\Core\Math.cpp" />
+    <ClCompile Include="RSDK\Core\ModAPI.cpp" />
+    <ClCompile Include="RSDK\Core\Reader.cpp" />
+    <ClCompile Include="RSDK\Core\RetroEngine.cpp" />
+    <ClCompile Include="RSDK\Dev\Debug.cpp" />
+    <ClCompile Include="RSDK\Graphics\Animation.cpp" />
+    <ClCompile Include="RSDK\Graphics\Drawing.cpp" />
+    <ClCompile Include="RSDK\Graphics\Palette.cpp" />
+    <ClCompile Include="RSDK\Graphics\Scene3D.cpp" />
+    <ClCompile Include="RSDK\Graphics\Shader.cpp" />
+    <ClCompile Include="RSDK\Graphics\Sprite.cpp" />
+    <ClCompile Include="RSDK\Graphics\Video.cpp" />
+    <ClCompile Include="RSDK\Input\Input.cpp" />
+    <ClCompile Include="RSDK\Scene\Collision.cpp" />
+    <ClCompile Include="RSDK\Scene\Object.cpp" />
+    <ClCompile Include="RSDK\Scene\Objects\DefaultObject.cpp" />
+    <ClCompile Include="RSDK\Scene\Objects\DevOutput.cpp" />
+    <ClCompile Include="RSDK\Scene\Scene.cpp" />
+    <ClCompile Include="RSDK\Storage\Storage.cpp" />
+    <ClCompile Include="RSDK\Storage\Text.cpp" />
+    <ClCompile Include="RSDK\User\Core\UserAchievements.cpp" />
+    <ClCompile Include="RSDK\User\Core\UserCore.cpp" />
+    <ClCompile Include="RSDK\User\Core\UserLeaderboards.cpp" />
+    <ClCompile Include="RSDK\User\Core\UserPresence.cpp" />
+    <ClCompile Include="RSDK\User\Core\UserStats.cpp" />
+    <ClCompile Include="RSDK\User\Core\UserStorage.cpp" />
+    <ClCompile Include="RSDK\User\Dummy\DummyAchievements.cpp" />
+    <ClCompile Include="RSDK\User\Dummy\DummyCore.cpp" />
+    <ClCompile Include="RSDK\User\Dummy\DummyLeaderboards.cpp" />
+    <ClCompile Include="RSDK\User\Dummy\DummyPresence.cpp" />
+    <ClCompile Include="RSDK\User\Dummy\DummyStats.cpp" />
+    <ClCompile Include="RSDK\User\Dummy\DummyStorage.cpp" />
+    <ClCompile Include="RSDK\User\EOS\EOSAchievements.cpp" />
+    <ClCompile Include="RSDK\User\EOS\EOSCore.cpp" />
+    <ClCompile Include="RSDK\User\EOS\EOSLeaderboards.cpp" />
+    <ClCompile Include="RSDK\User\EOS\EOSPresence.cpp" />
+    <ClCompile Include="RSDK\User\EOS\EOSStats.cpp" />
+    <ClCompile Include="RSDK\User\EOS\EOSStorage.cpp" />
+    <ClCompile Include="RSDK\User\NX\NXAchievements.cpp" />
+    <ClCompile Include="RSDK\User\NX\NXCore.cpp" />
+    <ClCompile Include="RSDK\User\NX\NXLeaderboards.cpp" />
+    <ClCompile Include="RSDK\User\NX\NXPresence.cpp" />
+    <ClCompile Include="RSDK\User\NX\NXStats.cpp" />
+    <ClCompile Include="RSDK\User\NX\NXStorage.cpp" />
+    <ClCompile Include="RSDK\User\Steam\SteamAchievements.cpp" />
+    <ClCompile Include="RSDK\User\Steam\SteamCore.cpp" />
+    <ClCompile Include="RSDK\User\Steam\SteamLeaderboards.cpp" />
+    <ClCompile Include="RSDK\User\Steam\SteamPresence.cpp" />
+    <ClCompile Include="RSDK\User\Steam\SteamStats.cpp" />
+    <ClCompile Include="RSDK\User\Steam\SteamStorage.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RetroEngine.cpp" />
-    <ClCompile Include="UserLeaderboards.cpp" />
-    <ClCompile Include="UserStorage.cpp" />
-    <ClCompile Include="Video.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\iniparser\dictionary.h" />
@@ -99,35 +125,62 @@
     <ClInclude Include="..\dependencies\all\zlib\zconf.h" />
     <ClInclude Include="..\dependencies\all\zlib\zlib.h" />
     <ClInclude Include="..\dependencies\all\zlib\zutil.h" />
-    <ClInclude Include="Animation.hpp" />
-    <ClInclude Include="Audio.hpp" />
-    <ClInclude Include="Collision.hpp" />
-    <ClInclude Include="Debug.hpp" />
-    <ClInclude Include="DefaultObject.hpp" />
-    <ClInclude Include="DevOutput.hpp" />
-    <ClInclude Include="Drawing.hpp" />
-    <ClInclude Include="DevFont.hpp" />
-    <ClInclude Include="Input.hpp" />
-    <ClInclude Include="Link.hpp" />
-    <ClInclude Include="Math.hpp" />
-    <ClInclude Include="ModAPI.hpp" />
-    <ClInclude Include="Object.hpp" />
-    <ClInclude Include="Palette.hpp" />
-    <ClInclude Include="Reader.hpp" />
+    <ClInclude Include="main.hpp" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Scene.hpp" />
-    <ClInclude Include="Scene3D.hpp" />
-    <ClInclude Include="Shader.hpp" />
-    <ClInclude Include="Sprite.hpp" />
-    <ClInclude Include="Storage.hpp" />
-    <ClInclude Include="Text.hpp" />
+    <ClInclude Include="RSDK\Audio\Audio.hpp" />
+    <ClInclude Include="RSDK\Core\Link.hpp" />
+    <ClInclude Include="RSDK\Core\Math.hpp" />
+    <ClInclude Include="RSDK\Core\ModAPI.hpp" />
+    <ClInclude Include="RSDK\Core\Reader.hpp" />
+    <ClInclude Include="RSDK\Core\RetroEngine.hpp" />
+    <ClInclude Include="RSDK\Dev\Debug.hpp" />
+    <ClInclude Include="RSDK\Dev\DevFont.hpp" />
+    <ClInclude Include="RSDK\Graphics\Animation.hpp" />
+    <ClInclude Include="RSDK\Graphics\Drawing.hpp" />
+    <ClInclude Include="RSDK\Graphics\Palette.hpp" />
+    <ClInclude Include="RSDK\Graphics\Scene3D.hpp" />
+    <ClInclude Include="RSDK\Graphics\Shader.hpp" />
+    <ClInclude Include="RSDK\Graphics\Sprite.hpp" />
+    <ClInclude Include="RSDK\Graphics\Video.hpp" />
+    <ClInclude Include="RSDK\Input\Input.hpp" />
+    <ClInclude Include="RSDK\Scene\Collision.hpp" />
+    <ClInclude Include="RSDK\Scene\Object.hpp" />
+    <ClInclude Include="RSDK\Scene\Objects\DefaultObject.hpp" />
+    <ClInclude Include="RSDK\Scene\Objects\DevOutput.hpp" />
+    <ClInclude Include="RSDK\Scene\Scene.hpp" />
+    <ClInclude Include="RSDK\Storage\Storage.hpp" />
+    <ClInclude Include="RSDK\Storage\Text.hpp" />
+    <ClInclude Include="RSDK\User\Core\UserAchievements.hpp" />
+    <ClInclude Include="RSDK\User\Core\UserCore.hpp" />
+    <ClInclude Include="RSDK\User\Core\UserLeaderboards.hpp" />
+    <ClInclude Include="RSDK\User\Core\UserPresence.hpp" />
+    <ClInclude Include="RSDK\User\Core\UserStats.hpp" />
+    <ClInclude Include="RSDK\User\Core\UserStorage.hpp" />
+    <ClInclude Include="RSDK\User\Dummy\DummyAchievements.hpp" />
+    <ClInclude Include="RSDK\User\Dummy\DummyCore.hpp" />
+    <ClInclude Include="RSDK\User\Dummy\DummyLeaderboards.hpp" />
+    <ClInclude Include="RSDK\User\Dummy\DummyPresence.hpp" />
+    <ClInclude Include="RSDK\User\Dummy\DummyStats.hpp" />
+    <ClInclude Include="RSDK\User\Dummy\DummyStorage.hpp" />
+    <ClInclude Include="RSDK\User\EOS\EOSAchievements.hpp" />
+    <ClInclude Include="RSDK\User\EOS\EOSCore.hpp" />
+    <ClInclude Include="RSDK\User\EOS\EOSLeaderboards.hpp" />
+    <ClInclude Include="RSDK\User\EOS\EOSPresence.hpp" />
+    <ClInclude Include="RSDK\User\EOS\EOSStats.hpp" />
+    <ClInclude Include="RSDK\User\EOS\EOSStorage.hpp" />
+    <ClInclude Include="RSDK\User\NX\NXAchievements.hpp" />
+    <ClInclude Include="RSDK\User\NX\NXCore.hpp" />
+    <ClInclude Include="RSDK\User\NX\NXLeaderboards.hpp" />
+    <ClInclude Include="RSDK\User\NX\NXPresence.hpp" />
+    <ClInclude Include="RSDK\User\NX\NXStats.hpp" />
+    <ClInclude Include="RSDK\User\NX\NXStorage.hpp" />
+    <ClInclude Include="RSDK\User\Steam\SteamAchievements.hpp" />
+    <ClInclude Include="RSDK\User\Steam\SteamCore.hpp" />
+    <ClInclude Include="RSDK\User\Steam\SteamLeaderboards.hpp" />
+    <ClInclude Include="RSDK\User\Steam\SteamPresence.hpp" />
+    <ClInclude Include="RSDK\User\Steam\SteamStats.hpp" />
+    <ClInclude Include="RSDK\User\Steam\SteamStorage.hpp" />
     <ClInclude Include="unistd.h" />
-    <ClInclude Include="UserAchievements.hpp" />
-    <ClInclude Include="Userdata.hpp" />
-    <ClInclude Include="RetroEngine.hpp" />
-    <ClInclude Include="UserLeaderboards.hpp" />
-    <ClInclude Include="UserStorage.hpp" />
-    <ClInclude Include="Video.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RSDKv5.rc" />
@@ -268,7 +321,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -331,7 +384,7 @@ cd..</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -396,7 +449,7 @@ cd..</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -467,7 +520,7 @@ cd..</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;$(SolutionDir)dependencies/windows/SDL2/include/;$(SolutionDir)dependencies/windows/libogg/include/;$(SolutionDir)dependencies/windows/libvorbis/include/;$(SolutionDir)dependencies/windows/libtheora/include/;$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>

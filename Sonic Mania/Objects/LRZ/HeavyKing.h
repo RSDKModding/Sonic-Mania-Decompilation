@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHeavyKing {
     RSDK_OBJECT
     TABLE(int32 attackPattern[32], { 0, 0, 1, 0, 2, 2, 1, 0, 0, 1, 1, 2, 0, 2, 0, 0, 2, 1, 1, 2, 1, 0, 1, 0, 2, 2, 0, 1, 0, 0, 2, 1 });
     int32 attackPatternPos;
@@ -29,10 +29,10 @@ typedef struct {
     uint16 sfxImpact6;
     uint16 aniFrames;
     uint16 cutsceneFrames;
-} ObjectHeavyKing;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHeavyKing {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateStore);
@@ -50,7 +50,7 @@ typedef struct {
     Animator animator3;
     Animator animator1Store;
     Animator animator2Store;
-} EntityHeavyKing;
+};
 
 // Object Struct
 extern ObjectHeavyKing *HeavyKing;

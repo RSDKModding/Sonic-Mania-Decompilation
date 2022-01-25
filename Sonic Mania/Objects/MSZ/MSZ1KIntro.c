@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MSZ1KIntro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMSZ1KIntro *MSZ1KIntro;
@@ -10,12 +17,13 @@ void MSZ1KIntro_Update(void)
             self->active = ACTIVE_NEVER;
         }
         else {
-            void *states[] = { MSZ1KIntro_CutsceneState_Unknown1, MSZ1KIntro_CutsceneState_Unknown2, MSZ1KIntro_CutsceneState_Unknown3, NULL };
-
             self->activated = true;
-            CutsceneSeq_StartSequence((Entity *)self, states);
+            CutsceneSeq_StartSequence(self, MSZ1KIntro_Cutscene_SetupPlane, MSZ1KIntro_Cutscene_MagicianMischief, MSZ1KIntro_Cutscene_StartAct,
+                                      StateMachine_None);
+#if RETRO_USE_PLUS
             if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
                 RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
         }
     }
 }
@@ -43,7 +51,7 @@ void MSZ1KIntro_StageLoad(void)
     MSZ1KIntro->sfxImpact    = RSDK.GetSfx("Stage/Impact3.wav");
 }
 
-bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+bool32 MSZ1KIntro_Cutscene_SetupPlane(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -69,7 +77,7 @@ bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 MSZ1KIntro_Cutscene_MagicianMischief(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -81,9 +89,9 @@ bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->tileCollisions = false;
     }
     if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->values[0]) {
-        RSDK.PlaySfx(MSZ1KIntro->sfxImpact, false, 255);
+        RSDK.PlaySfx(MSZ1KIntro->sfxImpact, false, 0xFF);
         Camera_ShakeScreen(0, 0, 4);
-        host->values[0] = 1;
+        host->values[0] = true;
     }
     if (host->timer == 60)
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->animator, false, 0);
@@ -96,7 +104,7 @@ bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 MSZ1KIntro_Cutscene_StartAct(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -110,7 +118,7 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_State_Initial;
-            titleCard->stateDraw = TitleCard_Draw_Default;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
         Music_PlayTrack(TRACK_STAGE);

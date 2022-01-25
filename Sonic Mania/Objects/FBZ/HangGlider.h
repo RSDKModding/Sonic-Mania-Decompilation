@@ -4,26 +4,26 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHangGlider {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
-} ObjectHangGlider;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHangGlider {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    Entity *playerPtr;
-    Animator animator1;
-    Animator animator2;
-    Animator animator4;
-    Animator animator3;
-} EntityHangGlider;
+    int32 unused1;
+    int32 gravityStrength;
+    int32 unused2;
+    int32 unused3;
+    EntityPlayer *playerPtr;
+    Animator sailAnimator;
+    Animator handleBackAnimator;
+    Animator handleFrontAnimator;
+    Animator playerAnimator;
+};
 
 // Object Struct
 extern ObjectHangGlider *HangGlider;
@@ -42,8 +42,8 @@ void HangGlider_EditorLoad(void);
 void HangGlider_Serialize(void);
 
 // Extra Entity Functions
-void HangGlider_Unknown1(void);
-void HangGlider_Unknown2(void);
+void HangGlider_State_CheckGrab(void);
+void HangGlider_State_Glide(void);
 
 
 #endif //!OBJ_HANGGLIDER_H

@@ -6,17 +6,17 @@
 typedef enum { CHOPPER_JUMP, CHOPPER_SWIM } ChopperTypes;
 
 // Object Class
-typedef struct {
+struct ObjectChopper {
     RSDK_OBJECT
     Hitbox hitboxJump;
     Hitbox hitboxSwim;
     Hitbox hitboxRange;
     Hitbox hitboxWater;
     uint16 aniFrames;
-} ObjectChopper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityChopper {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -25,7 +25,7 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
-} EntityChopper;
+};
 
 // Object Struct
 extern ObjectChopper *Chopper;

@@ -6,15 +6,15 @@
 #define Rattlekiller_SegmentCount (10)
 
 // Object Class
-typedef struct {
+struct ObjectRattlekiller {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 sfxRocketJet;
     uint16 aniFrames;
-} ObjectRattlekiller;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRattlekiller {
     RSDK_ENTITY
     int32 field_58;
     int32 field_5C;
@@ -33,7 +33,7 @@ typedef struct {
     Vector2 playerPos;
     int32 length;
     Animator animators[3];
-} EntityRattlekiller;
+};
 
 // Object Struct
 extern ObjectRattlekiller *Rattlekiller;

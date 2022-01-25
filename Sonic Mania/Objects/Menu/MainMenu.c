@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MainMenu Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -12,23 +19,24 @@ void MainMenu_StaticUpdate(void)
     EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
     if (control && control->active) {
         EntityUIDiorama *diorama     = (EntityUIDiorama *)MainMenu->dioramaPtr;
-        MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->field_6C & 0xFFFF0000) > -0x700000;
-        EntityUIButton *button       = control->buttons[control->field_D8];
+        MainMenu->promptPtr->visible = (((EntityUIShifter *)control->shifter)->shiftOffset.y & 0xFFFF0000) > -0x700000;
+        EntityUIButton *button       = control->buttons[control->lastButtonID];
         if (button) {
             switch (button->frameID) {
-                case 0: diorama->dioramaID = 0; break;
-                case 1: diorama->dioramaID = 3; break;
-                case 2: diorama->dioramaID = 4; break;
-                case 3: diorama->dioramaID = 5; break;
-                case 4: diorama->dioramaID = 6; break;
-                case 5: diorama->dioramaID = 2; break;
-                case 6: diorama->dioramaID = 1; break;
-                case 7: diorama->dioramaID = 7; break;
+                case 0: diorama->dioramaID = UIDIORAMA_MANIAMODE; break;
+                case 1: diorama->dioramaID = UIDIORAMA_TIMEATTACK; break;
+                case 2: diorama->dioramaID = UIDIORAMA_COMPETITION; break;
+                case 3: diorama->dioramaID = UIDIORAMA_OPTIONS; break;
+                case 4: diorama->dioramaID = UIDIORAMA_EXTRAS; break;
+                case 5: diorama->dioramaID = UIDIORAMA_ENCOREMODE; break;
+                case 6: diorama->dioramaID = UIDIORAMA_PLUSUPSELL; break;
+                case 7: diorama->dioramaID = UIDIORAMA_EXIT; break;
                 default: break;
             }
+
+            if (button->disabled)
+                diorama->timer = 12;
         }
-        if (button->disabled)
-           diorama->timer = 12;
     }
 }
 
@@ -46,7 +54,7 @@ void MainMenu_Initialize(void)
     {
         RSDK.PrependText(&text, "Main Menu");
         if (RSDK.StringCompare(&text, &control->tag, false)) {
-            MainMenu->menuControlPtr = (Entity*)control;
+            MainMenu->menuControlPtr = control;
             control->backPressCB     = MainMenu_ReturnToTitleOption;
         }
     }
@@ -63,7 +71,7 @@ void MainMenu_Initialize(void)
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, prompt->position.x, prompt->position.y) && !prompt->buttonID)
-            MainMenu->promptPtr = (Entity*)prompt;
+            MainMenu->promptPtr = prompt;
     }
 
     foreach_all(UIDiorama, diorama)
@@ -76,18 +84,18 @@ void MainMenu_Initialize(void)
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
         if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, diorama->position.x, diorama->position.y)) {
-            MainMenu->dioramaPtr = (Entity *)diorama;
-            diorama->parent = MainMenu->menuControlPtr;
+            MainMenu->dioramaPtr = diorama;
+            diorama->parent      = MainMenu->menuControlPtr;
         }
     }
 
 #if RETRO_USE_PLUS
-    int32 button1Frame         = 1;
-    int32 button2Frame         = 2;
-    int32 button3Frame         = 3;
+    int32 button1Frame       = 1;
+    int32 button2Frame       = 2;
+    int32 button3Frame       = 3;
     bool32 button3StopMus    = false;
-    int32 button4Frame         = 4;
-    int32 button5Frame         = 6;
+    int32 button4Frame       = 4;
+    int32 button5Frame       = 6;
     bool32 button5Transition = false;
     if (API.CheckDLC(DLC_PLUS)) {
         button1Frame      = 5;
@@ -142,21 +150,13 @@ bool32 MainMenu_ReturnToTitleOption(void)
     return true;
 }
 
-void MainMenu_ExitGame(void)
-{
-    API.ExitGame();
-}
+void MainMenu_ExitGame(void) { API.ExitGame(); }
 
-void MainMenu_ExitGameOption(void)
+void MainMenu_ExitButton_ActionCB(void)
 {
-    TextInfo buffer;
-    Localization_GetString(&buffer, STR_QUITWARNING);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
-        UIDialog_AddButton(DIALOG_YES, dialog, MainMenu_StartExitGame, 1);
-        UIDialog_Setup(dialog);
-    }
+    TextInfo msg;
+    Localization_GetString(&msg, STR_QUITWARNING);
+    UIDialog_CreateDialogYesNo(&msg, MainMenu_StartExitGame, StateMachine_None, true, true);
 }
 
 void MainMenu_StartExitGame(void)
@@ -168,7 +168,7 @@ void MainMenu_StartExitGame(void)
     MenuSetup_StartTransition(MainMenu_ExitGame, 64);
 }
 
-void MainMenu_ChangeMenu(void)
+void MainMenu_MenuButton_ActionCB(void)
 {
     EntityUIButton *button = (EntityUIButton *)SceneInfo->entity;
     switch (button->frameID) {
@@ -177,15 +177,15 @@ void MainMenu_ChangeMenu(void)
                 UIControl_MatchMenuTag("No Save Mode");
             }
             else {
-                EntityUIControl *saveSelect = (EntityUIControl *)ManiaModeMenu->saveSelectMenu;
-                saveSelect->activeEntityID  = 7;
+                EntityUIControl *saveSelect = ManiaModeMenu->saveSelectMenu;
+                saveSelect->buttonID        = 7;
 #if RETRO_USE_PLUS
-                saveSelect->dwordCC     = 0;
-                ManiaModeMenu->field_28 = -1;
+                saveSelect->menuWasSetup           = false;
+                ManiaModeMenu->saveSelLastButtonID = -1;
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
-                    Entity *store          = SceneInfo->entity;
+                    Entity *store     = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)saveSelect->buttons[i];
-                    UISaveSlot_Unknown21();
+                    UISaveSlot_HandleSaveIconChange();
                     SceneInfo->entity = store;
                 }
 #endif
@@ -194,15 +194,15 @@ void MainMenu_ChangeMenu(void)
             break;
         case 1:
             if (API.CheckDLC(DLC_PLUS)) {
-                EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl;
-                control->activeEntityID  = 0;
-                control->dwordCC         = 0;
+                EntityUIControl *control = TimeAttackMenu->timeAttackControl;
+                control->buttonID        = 0;
+                control->menuWasSetup    = false;
                 UIControl_MatchMenuTag("Time Attack");
             }
             else {
-                EntityUIControl *control = (EntityUIControl *)TimeAttackMenu->timeAttackControl_Legacy;
-                control->activeEntityID  = 0;
-                control->dwordCC         = 0;
+                EntityUIControl *control = TimeAttackMenu->timeAttackControl_Legacy;
+                control->buttonID        = 0;
+                control->menuWasSetup    = false;
                 UIControl_MatchMenuTag("Time Attack Legacy");
             }
             break;
@@ -215,17 +215,17 @@ void MainMenu_ChangeMenu(void)
         case 3: UIControl_MatchMenuTag("Options"); break;
         case 4: UIControl_MatchMenuTag("Extras"); break;
         case 5:
-            if (API.GetUserStorageNoSave()) {
+            if (checkNoSave) {
                 UIControl_MatchMenuTag("No Save Encore");
             }
             else {
-                EntityUIControl *encoreSaveSel = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
-                encoreSaveSel->activeEntityID  = 1;
-                encoreSaveSel->dwordCC         = 0;
+                EntityUIControl *encoreSaveSel = ManiaModeMenu->encoreSaveSelect;
+                encoreSaveSel->buttonID        = 1;
+                encoreSaveSel->menuWasSetup    = false;
                 for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {
-                    Entity *store          = SceneInfo->entity;
+                    Entity *store     = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
-                    UISaveSlot_Unknown21();
+                    UISaveSlot_HandleSaveIconChange();
                     SceneInfo->entity = store;
                 }
                 UIControl_MatchMenuTag("Encore Mode");
@@ -263,7 +263,7 @@ int32 MainMenu_BuyPlusDialogCB(void)
 }
 #endif
 
-void MainMenu_Unknown2(void)
+void MainMenu_HandleUnlocks(void)
 {
     EntityUIControl *control = (EntityUIControl *)MainMenu->menuControlPtr;
     EntityUIButton *taButton = control->buttons[1];
@@ -277,7 +277,7 @@ void MainMenu_Unknown2(void)
     compButton->disabled = !GameProgress_CheckUnlock(1);
 }
 
-void MainMenu_Unknown3(void)
+void MainMenu_SetupActions(void)
 {
     foreach_all(UIButton, button)
     {
@@ -291,21 +291,18 @@ void MainMenu_Unknown3(void)
                     mainMenu->buttons[6] = NULL;
                 }
                 else {
-                    button->options2 = MainMenu_ExitGameOption;
+                    button->actionCB = MainMenu_ExitButton_ActionCB;
                 }
             }
             else {
-                button->options2 = MainMenu_ChangeMenu;
+                button->actionCB = MainMenu_MenuButton_ActionCB;
             }
         }
     }
-    ((EntityUIControl *)MainMenu->menuControlPtr)->unknownCallback3 = MainMenu_Unknown4;
+    ((EntityUIControl *)MainMenu->menuControlPtr)->menuSetupCB = MainMenu_MenuSetupCB;
 }
 
-void MainMenu_Unknown4()
-{
-    ((EntityUIDiorama *)MainMenu->dioramaPtr)->dioramaSubID = -1;
-}
+void MainMenu_MenuSetupCB(void) { ((EntityUIDiorama *)MainMenu->dioramaPtr)->lastDioramaID = -1; }
 
 #if RETRO_INCLUDE_EDITOR
 void MainMenu_EditorDraw(void) {}

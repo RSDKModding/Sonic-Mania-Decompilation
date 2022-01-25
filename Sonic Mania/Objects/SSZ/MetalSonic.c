@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MetalSonic Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMetalSonic *MetalSonic;
@@ -348,7 +355,7 @@ void MetalSonic_Hit(void)
         self->velocity.y          = -0x1800;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 10, &self->animator, false, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 13, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 13, &self->animator2, false, 0);
         self->drawFX |= FX_ROTATE;
         self->state = MetalSonic_State_Explode;
     }
@@ -417,7 +424,7 @@ void MetalSonic_State_WaitForHologram(void)
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 9, &self->animator, false, 6);
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 13, &self->animator2, false, 0);
             self->direction               = FLIP_X;
-            self->animator.animationSpeed = 0;
+            self->animator.speed = 0;
             self->active                  = ACTIVE_NORMAL;
             self->state                   = MetalSonic_State_Appear;
             Camera_ShakeScreen(0, 6, 6);
@@ -435,7 +442,7 @@ void MetalSonic_State_Appear(void)
 
     if (self->velocity.y >= 0) {
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, false, 3);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
         self->velocity.x = 0x18000;
         self->onGround   = false;
         self->state      = MetalSonic_State_Land;
@@ -454,7 +461,7 @@ void MetalSonic_State_Land(void)
     if (self->onGround) {
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &self->animator, false, 0);
         self->state                   = MetalSonic_State_Taunt;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->direction               = FLIP_NONE;
     }
 }
@@ -465,7 +472,7 @@ void MetalSonic_State_Taunt(void)
 
     if (++self->timer == 60) {
         self->timer                   = 0;
-        self->animator.animationSpeed = 1;
+        self->animator.speed = 1;
         self->state                   = MetalSonic_State_GetReady;
     }
 }
@@ -521,10 +528,10 @@ void MetalSonic_State_Unknown1(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.y >= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, false, 6);
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->targetPos.x             = player1->position.x;
         self->targetPos.y             = player1->position.y;
         self->velocity.x              = 0;
@@ -1037,7 +1044,7 @@ void MetalSonic_State_EnterPanel(void)
     int ry = self->position.y - self->targetPos.y;
     if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 4096 && self->timer > 96) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
         self->state = MetalSonic_State_StartPanelSeq;
     }
 }
@@ -1111,9 +1118,9 @@ void MetalSonic_HandlePanelAttack(void)
         EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
         ring->radiusOffset     = 24;
         ring->timer            = 24;
-        ring->r                = 0x00;
+        ring->r                = 0xF0;
         ring->g                = 0x80;
-        ring->b                = 0xF0;
+        ring->b                = 0x00;
         ring->shrinkSpeed      = 1;
 #endif
     }
@@ -1301,7 +1308,7 @@ void MetalSonic_State_Transform(void)
     foreach_active(PhantomRuby, ruby) { ruby->startPos.y -= 0x2000; }
 
     if (++self->timer == 30) {
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0xFFFF, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, -1, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &self->animator, true, 0);
     }
 
@@ -1313,8 +1320,8 @@ void MetalSonic_State_Transform(void)
         EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
         ring->radiusOffset     = timer;
         ring->timer            = 24;
-        ring->r                = 0x00;
-        ring->g                = 0xF0;
+        ring->r                = 0xF0;
+        ring->g                = 0x00;
         ring->b                = 0xF0;
         ring->shrinkSpeed      = 2;
     }
@@ -1461,7 +1468,7 @@ void MetalSonic_State_Unknown18(void)
         self->velocity.x = 0;
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &self->animator, false, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
         self->direction = 0;
         self->state = MetalSonic_State_Unknown19;
     }
@@ -1603,7 +1610,7 @@ void MetalSonic_State_Unknown23(void)
             case 0:
                 RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 0xFF);
                 RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 6, &self->animator, false, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
                 self->timer2 = 60;
                 self->state = MetalSonic_State_Unknown30;
                 break;

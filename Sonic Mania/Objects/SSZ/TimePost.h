@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTimePost {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sparkleFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 sfxFuture;
-} ObjectTimePost;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTimePost {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -28,7 +28,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityTimePost;
+};
 
 // Object Struct
 extern ObjectTimePost *TimePost;

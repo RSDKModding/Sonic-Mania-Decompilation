@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BoundsMarker Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBoundsMarker *BoundsMarker;
@@ -103,8 +110,6 @@ void BoundsMarker_EditorDraw(void)
     Animator animator;
     RSDK.SetSpriteAnimation(BoundsMarker->aniFrames, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, false);
-
-    Vector2 drawPos;
 
     int w = self->width << 16;
     if (!self->width)

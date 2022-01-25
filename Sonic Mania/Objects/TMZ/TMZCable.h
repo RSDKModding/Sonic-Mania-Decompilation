@@ -6,13 +6,13 @@
 #define TMZCable_JointCount (8)
 
 // Object Class
-typedef struct {
+struct ObjectTMZCable {
     RSDK_OBJECT
     Hitbox hitbox;
-} ObjectTMZCable;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZCable {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -22,7 +22,7 @@ typedef struct {
     bool32 drawFlags[TMZCable_JointCount];
     Vector2 *posPtr;
     Animator animator;
-} EntityTMZCable;
+};
 
 // Object Struct
 extern ObjectTMZCable *TMZCable;

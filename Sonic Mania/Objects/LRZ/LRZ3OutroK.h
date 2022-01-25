@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZ3OutroK {
     RSDK_OBJECT
     int32 field_4;
     uint16 sfxWarp;
     EntityEggPrison *prison;
     Entity *teleporter;
     EntityFXRuby *fxRuby;
-} ObjectLRZ3OutroK;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ3OutroK {
 	MANIA_CUTSCENE_BASE
     Vector2 playerPos[2];
-} EntityLRZ3OutroK;
+};
 
 // Object Struct
 extern ObjectLRZ3OutroK *LRZ3OutroK;
@@ -36,9 +36,9 @@ void LRZ3OutroK_Serialize(void);
 // Extra Entity Functions
 void LRZ3OutroK_StartCutscene(void);
 
-bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ3OutroK_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 LRZ3OutroK_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_Cutscene_TeleporterActivated(EntityCutsceneSeq *host);
 
 #endif //!OBJ_LRZ3OUTROK_H

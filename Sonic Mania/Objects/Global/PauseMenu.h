@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPauseMenu {
     RSDK_OBJECT
     uint16 sfxBleep;
     uint16 sfxAccept;
@@ -16,11 +16,13 @@ typedef struct {
     bool32 plusChanged;
 #endif
     bool32 channelFlags[0x10];
+#if RETRO_USE_PLUS
     uint16 lookupTable[0x10000];
-} ObjectPauseMenu;
+#endif
+};
 
 // Entity Class
-typedef struct {
+struct EntityPauseMenu {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -43,7 +45,7 @@ typedef struct {
     void (*fadeCB)(void);
     int32 unused1;
     int32 unused2; // these may possibly be leftover or editor things 
-} EntityPauseMenu;
+};
 
 // Object Struct
 extern ObjectPauseMenu *PauseMenu;
@@ -91,7 +93,7 @@ void PauseMenu_ExitDialog_YesCB(void);
 void PauseMenu_RestartFadeCB(void);
 void PauseMenu_ExitFadeCB(void);
 
-void PauseMenu_ButtonActionWrapper(void);
+void PauseMenu_ButtonActionCB(void);
 
 //States
 void PauseMenu_State_SetupButtons(void);

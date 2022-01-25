@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: YoyoPulley Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectYoyoPulley *YoyoPulley;
@@ -41,7 +48,7 @@ void YoyoPulley_Update(void)
                     self->playerTimers[playerID] = 30;
                     player->tileCollisions         = true;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                    player->animator.animationSpeed = 48;
+                    player->animator.speed = 48;
                     player->onGround                      = false;
                     player->state                         = Player_State_Air;
                 }
@@ -111,7 +118,7 @@ void YoyoPulley_Create(void *data)
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->animator3, true, 0);
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->animator4, true, 0);
-        if (RSDK.GetFrameID(&self->animator1))
+        if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
             self->drawOrder = Zone->drawOrderHigh;
         else
             self->drawOrder = Zone->drawOrderLow;
@@ -245,7 +252,7 @@ void YoyoPulley_EditorDraw(void)
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->animator2, false, 0);
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->animator3, false, 0);
     RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->animator4, false, 0);
-    if (RSDK.GetFrameID(&self->animator1))
+    if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
         self->drawOrder = Zone->drawOrderHigh;
     else
         self->drawOrder = Zone->drawOrderLow;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CrimsonEye Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCrimsonEye *CrimsonEye;
@@ -193,7 +200,7 @@ void CrimsonEye_HandleBGMovement(void)
         uint16 tile = RSDK.GetTileInfo(1, 0, y + 24 * (2 - y / 24));
         RSDK.SetTileInfo(1, 0, y, tile);
         RSDK.SetTileInfo(1, 31, y, tile);
-        for (int x = 1; x < 31; ++x) RSDK.SetTileInfo(1, x, y, 0xFFFF);
+        for (int x = 1; x < 31; ++x) RSDK.SetTileInfo(1, x, y, -1);
     }
 
     TileLayer *layer = RSDK.GetSceneLayer(1);
@@ -611,7 +618,6 @@ void CrimsonEye_SetupPositions(void)
 
 void CrimsonEye_DestroyBall(void)
 {
-    RSDK_THIS(CrimsonEye);
     if (CrimsonEye->destroyedBallCount < 8) {
         EntityCrimsonEye *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + CrimsonEye->ballDestroyOrder[CrimsonEye->destroyedBallCount], CrimsonEye);
         child->state            = CrimsonEye_StateBall_Unknown2;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Ink Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectInk *Ink;
@@ -5,23 +12,33 @@ ObjectInk *Ink;
 void Ink_Update(void)
 {
     RSDK_THIS(Ink);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->splashAnimator);
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
         Player_CheckCollisionBox(player, self, &Ink->hitbox);
         Player_CheckCollisionBox(player, self, &Ink->hitbox2);
-        if (Player_CheckCollisionBox(player, self, &Ink->hitbox3)) {
+        if (Player_CheckCollisionBox(player, self, &Ink->hitbox3) == C_TOP) {
             if (!((1 << playerID) & self->inkedPlayers)) {
                 self->inkedPlayers = self->inkedPlayers | (1 << playerID);
                 switch (player->characterID) {
+                    default: break;
+                    // Bug Details:
+                    // This actually wont work on sonic specifically, it uses the "old" sonic palette
+                    // This palette starts at index 2, instead of index 64 like usual
+                    // Fix:
+                    // to fix this up to work as "intended", simply replace the "2"s with "64"
                     case ID_SONIC: RSDK.CopyPalette(self->type + 3, 2, 0, 2, 6); break;
                     case ID_TAILS: RSDK.CopyPalette(self->type + 3, 70, 0, 70, 6); break;
                     case ID_KNUCKLES: RSDK.CopyPalette(self->type + 3, 80, 0, 80, 6); break;
+                        // This is an unused object that was scrapped before plus was created, so there's no mighty/ray code
+                        // I've created a mock-up of what mighty/ray code could've looked like, had it been implimented:
+                        // case ID_MIGHTY: RSDK.CopyPalette(self->type + 3, 96, 0, 96, 6); break;
+                        // case ID_RAY: RSDK.CopyPalette(self->type + 3, 113, 0, 113, 6); break;
                 }
                 Ink->playerColours[playerID] = self->type + 1;
-                RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 6, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 6, &self->splashAnimator, true, 0);
             }
         }
         else {
@@ -39,11 +56,11 @@ void Ink_Draw(void)
     RSDK_THIS(Ink);
 
     self->inkEffect = INK_SUB;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->splashAnimator, NULL, false);
+    RSDK.DrawSprite(&self->contentAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->bottleAnimator, NULL, false);
 }
 
 void Ink_Create(void *data)
@@ -56,8 +73,8 @@ void Ink_Create(void *data)
         self->alpha         = 0x180;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Ink->aniFrames, self->type, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 3, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Ink->aniFrames, self->type, &self->bottleAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 3, &self->contentAnimator, true, 0);
     }
 }
 
@@ -81,9 +98,27 @@ void Ink_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Ink_EditorDraw(void) {}
+void Ink_EditorDraw(void)
+{
+    RSDK_THIS(Ink);
+    self->alpha         = 0x180;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(Ink->aniFrames, self->type, &self->bottleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 3, &self->contentAnimator, true, 0);
 
-void Ink_EditorLoad(void) {}
+    Ink_Draw();
+}
+
+void Ink_EditorLoad(void)
+{
+    Ink->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ink.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Ink, type);
+    RSDK_ENUM_VAR("Cyan", INK_C);
+    RSDK_ENUM_VAR("Magenta", INK_M);
+    RSDK_ENUM_VAR("Yellow", INK_Y);
+}
 #endif
 
 void Ink_Serialize(void) { RSDK_EDITABLE_VAR(Ink, VAR_UINT8, type); }

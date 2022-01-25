@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UICharButton Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUICharButton *UICharButton;
@@ -5,43 +12,43 @@ ObjectUICharButton *UICharButton;
 void UICharButton_Update(void)
 {
     RSDK_THIS(UICharButton);
-    self->touchPosStart.x = 0x600000;
-    self->touchPosStart.y = 0x600000;
-    self->touchPosEnd.x   = 0;
-    self->touchPosEnd.y   = 0;
+    self->touchPosSizeS.x = 0x600000;
+    self->touchPosSizeS.y = 0x600000;
+    self->touchPosOffsetS.x   = 0;
+    self->touchPosOffsetS.y   = 0;
     StateMachine_Run(self->state);
 
-    if (self->flag) {
-        self->field_108 -= 0x600;
-        self->field_10C += self->field_108;
-        if (self->field_10C <= 0x10000 && self->field_108 < 0) {
-            self->field_10C = 0x10000;
-            self->field_108 = 0;
+    if (self->isSelected) {
+        self->triBounceVelocity -= 0x600;
+        self->triBounceOffset += self->triBounceVelocity;
+        if (self->triBounceOffset <= 0x10000 && self->triBounceVelocity < 0) {
+            self->triBounceOffset   = 0x10000;
+            self->triBounceVelocity = 0;
         }
 
-        self->field_110 -= 0x1800;
-        self->field_114 += self->field_110;
-        if (self->field_114 <= 0x8000 && self->field_110 < 0) {
-            self->field_114 = 0x8000;
-            self->field_110 = 0;
+        self->playerBounceVelocity -= 0x1800;
+        self->playerBounceOffset += self->playerBounceVelocity;
+        if (self->playerBounceOffset <= 0x8000 && self->playerBounceVelocity < 0) {
+            self->playerBounceOffset   = 0x8000;
+            self->playerBounceVelocity = 0;
         }
     }
-    else if (self->state != UICharButton_Unknown11) {
-        if (self->field_10C > 0) {
-            self->field_10C -= 0x2000;
-            if (self->field_10C < 0)
-                self->field_10C = 0;
+    else if (self->state != UICharButton_State_Selected) {
+        if (self->triBounceOffset > 0) {
+            self->triBounceOffset -= 0x2000;
+            if (self->triBounceOffset < 0)
+                self->triBounceOffset = 0;
         }
 
-        if (self->field_114 > 0) {
-            self->field_114 -= 0x2000;
-            if (self->field_114 < 0)
-                self->field_114 = 0;
+        if (self->playerBounceOffset > 0) {
+            self->playerBounceOffset -= 0x2000;
+            if (self->playerBounceOffset < 0)
+                self->playerBounceOffset = 0;
         }
     }
 
     EntityUIControl *parent = (EntityUIControl *)self->parent;
-    int32 id                  = -1;
+    int32 id                = -1;
     for (int32 i = 0; i < parent->buttonCount; ++i) {
         if (self == (EntityUICharButton *)parent->buttons[i]) {
             id = i;
@@ -49,9 +56,9 @@ void UICharButton_Update(void)
         }
     }
 
-    if (self->flag && (parent->state != UIControl_ProcessInputs || parent->activeEntityID != id)) {
-        self->flag  = false;
-        self->state = UICharButton_Unknown9;
+    if (self->isSelected && (parent->state != UIControl_ProcessInputs || parent->buttonID != id)) {
+        self->isSelected = false;
+        self->state      = UICharButton_State_HandleButtonLeave;
     }
 }
 
@@ -63,54 +70,54 @@ void UICharButton_Draw(void)
 {
     RSDK_THIS(UICharButton);
     RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y - 0x2D0000, 0x600000, 0x600000, 0xFFFFFF, 127, INK_BLEND, false);
-    UICharButton_Unknown2();
-    UICharButton_Unknown1();
-    UICharButton_Unknown3();
+    UICharButton_DrawBG();
+    UICharButton_DrawOutlines();
+    UICharButton_DrawPlayers();
 }
 
 void UICharButton_Create(void *data)
 {
     RSDK_THIS(UICharButton);
-    self->active          = ACTIVE_BOUNDS;
-    self->drawOrder       = 2;
-    self->visible         = true;
-    self->drawFX          = FX_FLIP;
-    self->updateRange.x   = 0x800000;
-    self->updateRange.y   = 0x300000;
-    self->processButtonCB = UIButton_Unknown6;
-    self->touchCB         = UIButton_ProcessTouch;
-    self->options3        = UICharButton_Unknown4;
-    self->failCB          = 0;
-    self->options5        = UICharButton_Unknown7;
-    self->options6        = UICharButton_Unknown8;
-    self->options7        = UICharButton_Unknown5;
-    self->options8        = UICharButton_Unknown6;
-    self->state           = UICharButton_Unknown9;
+    self->active             = ACTIVE_BOUNDS;
+    self->drawOrder          = 2;
+    self->visible            = true;
+    self->drawFX             = FX_FLIP;
+    self->updateRange.x      = 0x800000;
+    self->updateRange.y      = 0x300000;
+    self->processButtonCB    = UIButton_ProcessButtonCB_Scroll;
+    self->touchCB            = UIButton_ProcessTouchCB_Single;
+    self->selectedCB         = UICharButton_SelectedCB;
+    self->failCB             = StateMachine_None;
+    self->buttonEnterCB      = UICharButton_ButtonEnterCB;
+    self->buttonLeaveCB      = UICharButton_ButtonLeaveCB;
+    self->checkButtonEnterCB = UICharButton_CheckButtonEnterCB;
+    self->checkSelectedCB    = UICharButton_CheckSelectedCB;
+    self->state              = UICharButton_State_HandleButtonLeave;
 }
 
 void UICharButton_StageLoad(void) { UICharButton->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-void UICharButton_Unknown1(void)
+void UICharButton_DrawOutlines(void)
 {
     RSDK_THIS(UICharButton);
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
 
-    if (self->flag)
+    if (self->isSelected)
         UIWidgets_DrawRectOutline_Flash(96, 96, self->position.x, self->position.y);
     else
         UIWidgets_DrawRectOutline_Black(96, 96, self->position.x, self->position.y);
 }
 
-void UICharButton_Unknown2(void)
+void UICharButton_DrawBG(void)
 {
     RSDK_THIS(UICharButton);
-    UIWidgets_DrawRightTriangle(self->position.x - 0x2D0000, self->position.y - 0x2D0000, (self->field_10C >> 11), 232, 40, 88);
-    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-64 * self->field_10C) >> 16, 96, 160, 176);
-    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-44 * self->field_10C) >> 16, 88, 112, 224);
+    UIWidgets_DrawRightTriangle(self->position.x - 0x2D0000, self->position.y - 0x2D0000, (self->triBounceOffset >> 11), 232, 40, 88);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-64 * self->triBounceOffset) >> 16, 96, 160, 176);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-44 * self->triBounceOffset) >> 16, 88, 112, 224);
 }
 
-void UICharButton_Unknown3(void)
+void UICharButton_DrawPlayers(void)
 {
     RSDK_THIS(UICharButton);
     Vector2 drawPos;
@@ -120,96 +127,98 @@ void UICharButton_Unknown3(void)
     drawPos.y += 0x180000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
 
-    if (self->state != UICharButton_Unknown11 || !(self->timer & 2)) {
+    if (self->state != UICharButton_State_Selected || !(self->timer & 2)) {
         int32 frame = self->characterID;
-        if (self->characterID > 2)
+#if RETRO_USE_PLUS
+        if (self->characterID > UICHARBUTTON_KNUX)
             frame = self->characterID + 1;
-        RSDK.SetSpriteAnimation(UICharButton->aniFrames, 1, &self->animator1, true, frame);
-        RSDK.SetSpriteAnimation(UICharButton->aniFrames, 2, &self->animator2, true, frame);
+#endif
+        RSDK.SetSpriteAnimation(UICharButton->aniFrames, 1, &self->playerAnimator, true, frame);
+        RSDK.SetSpriteAnimation(UICharButton->aniFrames, 2, &self->shadowAnimator, true, frame);
         drawPos.x = self->position.x;
         drawPos.y = self->position.y - 0x80000;
-        drawPos.x += 4 * self->field_114;
-        drawPos.y += 4 * self->field_114;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        drawPos.x += 4 * self->playerBounceOffset;
+        drawPos.y += 4 * self->playerBounceOffset;
+        RSDK.DrawSprite(&self->shadowAnimator, &drawPos, false);
 
-        drawPos.x -= 8 * self->field_114;
-        drawPos.y -= 8 * self->field_114;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        drawPos.x -= 8 * self->playerBounceOffset;
+        drawPos.y -= 8 * self->playerBounceOffset;
+        RSDK.DrawSprite(&self->playerAnimator, &drawPos, false);
 
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &self->animator3, true, self->characterID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, 8, &self->nameAnimator, true, self->characterID);
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x200000;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->nameAnimator, &drawPos, false);
     }
 }
 
-void UICharButton_Unknown4(void)
+void UICharButton_SelectedCB(void)
 {
     RSDK_THIS(UICharButton);
     self->timer           = 0;
-    self->state           = UICharButton_Unknown11;
-    self->processButtonCB = 0;
-    UITransition_StartTransition(self->options2, 30);
+    self->state           = UICharButton_State_Selected;
+    self->processButtonCB = StateMachine_None;
+    UITransition_StartTransition(self->actionCB, 30);
     if (UIControl_GetUIControl())
         UIControl_GetUIControl()->selectionDisabled = true;
     ((EntityUIControl *)self->parent)->backoutTimer = 30;
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 }
 
-bool32 UICharButton_Unknown5(void)
+bool32 UICharButton_CheckButtonEnterCB(void)
 {
     RSDK_THIS(UICharButton);
-    return self->state == UICharButton_Unknown10;
+    return self->state == UICharButton_State_HandleButtonEnter;
 }
 
-bool32 UICharButton_Unknown6(void)
+bool32 UICharButton_CheckSelectedCB(void)
 {
     RSDK_THIS(UICharButton);
-    return self->state == UICharButton_Unknown11;
+    return self->state == UICharButton_State_Selected;
 }
 
-void UICharButton_Unknown7(void)
+void UICharButton_ButtonEnterCB(void)
 {
     RSDK_THIS(UICharButton);
-    if (!self->flag) {
-        self->field_10C = 0;
-        self->field_108 = 0x4000;
-        self->field_114 = 0;
-        self->field_110 = 0x8000;
-        self->flag      = true;
-        self->state     = UICharButton_Unknown10;
+    if (!self->isSelected) {
+        self->triBounceOffset   = 0;
+        self->triBounceVelocity = 0x4000;
+        self->playerBounceOffset   = 0;
+        self->playerBounceVelocity = 0x8000;
+        self->isSelected           = true;
+        self->state                = UICharButton_State_HandleButtonEnter;
     }
 }
 
-void UICharButton_Unknown8(void)
+void UICharButton_ButtonLeaveCB(void)
 {
     RSDK_THIS(UICharButton);
-    self->flag  = false;
-    self->state = UICharButton_Unknown9;
+    self->isSelected = false;
+    self->state      = UICharButton_State_HandleButtonLeave;
 }
 
-void UICharButton_Unknown9(void) {}
+void UICharButton_State_HandleButtonLeave(void) {}
 
-void UICharButton_Unknown10(void) {}
+void UICharButton_State_HandleButtonEnter(void) {}
 
-void UICharButton_Unknown11(void)
+void UICharButton_State_Selected(void)
 {
     RSDK_THIS(UICharButton);
     if (self->timer >= 30) {
-        self->flag            = false;
+        self->isSelected      = false;
         self->timer           = 0;
-        self->state           = UICharButton_Unknown9;
-        self->processButtonCB = UIButton_Unknown6;
+        self->state           = UICharButton_State_HandleButtonLeave;
+        self->processButtonCB = UIButton_ProcessButtonCB_Scroll;
     }
     else {
         if (self->timer == 2) {
             switch (self->characterID) {
-                case 0: RSDK.PlaySfx(Announcer->sfxSonic, false, 255); break;
-                case 1: RSDK.PlaySfx(Announcer->sfxTails, false, 255); break;
-                case 2: RSDK.PlaySfx(Announcer->sfxKnuckles, false, 255); break;
+                case UICHARBUTTON_SONIC: RSDK.PlaySfx(Announcer->sfxSonic, false, 255); break;
+                case UICHARBUTTON_TAILS: RSDK.PlaySfx(Announcer->sfxTails, false, 255); break;
+                case UICHARBUTTON_KNUX: RSDK.PlaySfx(Announcer->sfxKnuckles, false, 255); break;
 #if RETRO_USE_PLUS
-                case 3: RSDK.PlaySfx(Announcer->sfxMighty, false, 255); break;
-                case 4: RSDK.PlaySfx(Announcer->sfxRay, false, 255); break;
+                case UICHARBUTTON_MIGHTY: RSDK.PlaySfx(Announcer->sfxMighty, false, 255); break;
+                case UICHARBUTTON_RAY: RSDK.PlaySfx(Announcer->sfxRay, false, 255); break;
 #endif
                 default: break;
             }
@@ -219,9 +228,27 @@ void UICharButton_Unknown11(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UICharButton_EditorDraw(void) { UICharButton_Draw(); }
+void UICharButton_EditorDraw(void)
+{
+    RSDK_THIS(UICharButton);
+    self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
 
-void UICharButton_EditorLoad(void) { UICharButton->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
+    UICharButton_Draw();
+}
+
+void UICharButton_EditorLoad(void)
+{
+    UICharButton->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(UICharButton, characterID);
+    RSDK_ENUM_VAR("Player 1", UICHARBUTTON_SONIC);
+    RSDK_ENUM_VAR("Tails", UICHARBUTTON_TAILS);
+    RSDK_ENUM_VAR("Knuckles", UICHARBUTTON_KNUX);
+#if RETRO_USE_PLUS
+    RSDK_ENUM_VAR("Mighty", UICHARBUTTON_MIGHTY);
+    RSDK_ENUM_VAR("Ray", UICHARBUTTON_RAY);
+#endif
+}
 #endif
 
 void UICharButton_Serialize(void)

@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSPZ1Intro {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxGasPop;
     uint16 sfxPon;
     EntityDebris *debris;
-} ObjectSPZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySPZ1Intro {
     RSDK_ENTITY
     Vector2 size;
     int32 timer;
@@ -25,7 +25,7 @@ typedef struct {
     int32 field_78;
     Hitbox hitbox;
     int32 field_84;
-} EntitySPZ1Intro;
+};
 
 // Object Struct
 extern ObjectSPZ1Intro *SPZ1Intro;
@@ -42,8 +42,8 @@ void SPZ1Intro_EditorLoad(void);
 void SPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host);
+bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SPZ1INTRO_H

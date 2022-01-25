@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectActClear {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxScoreAdd;
@@ -12,30 +12,30 @@ typedef struct {
 #if RETRO_USE_PLUS
     uint16 sfxEvent;
 #endif
-    bool32 isTimeAttack;
-    int32 finishedSavingGame;
+    bool32 bufferMoveEnabled;
+    bool32 isSavingGame;
 #if RETRO_USE_PLUS
-    int32 disableResultsInput;
+    bool32 disableResultsInput;
 #endif
-    int32 actID;
+    int32 displayedActID;
     bool32 finished;
 #if RETRO_USE_PLUS
     bool32 forceNoSave;
     StateMachine(bufferMove_CB);
     StateMachine(saveReplay_CB);
-    int32 hasSavedReplay;
-    int32 disableTimeBonus;
+    bool32 hasSavedReplay;
+    bool32 disableTimeBonus;
     bool32 actClearActive;
 #endif
-} ObjectActClear;
+};
 
 // Entity Class
-typedef struct {
+struct EntityActClear {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     int32 stageFinishTimer;
-    int32 scoreBonus;
+    int32 timeBonus;
     int32 ringBonus;
     int32 coolBonus;
     int32 totalScore;
@@ -59,7 +59,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     Animator timeElementsAnimator;
 #endif
-} EntityActClear;
+};
 
 // Object Struct
 extern ObjectActClear *ActClear;
@@ -83,19 +83,19 @@ void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
 void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);
-void ActClear_SaveGameCallback(int32 success);
-void ActClear_Unknown5(void);
+void ActClear_SaveGameCallback(bool32 success);
+void ActClear_SetupForceOnScreenP2(void);
 
 void ActClear_State_EnterText(void);
 void ActClear_State_AdjustText(void);
-void ActClear_State_EnterBonuses(void);
+void ActClear_State_EnterResults(void);
 void ActClear_State_ScoreShownDelay(void);
 void ActClear_State_TallyScore(void);
 void ActClear_State_SaveGameProgress(void);
 #if RETRO_USE_PLUS
 void ActClear_State_ShowResultsTA(void);
 #endif
-void ActClear_State_StartExitSequence(void);
+void ActClear_State_WaitForSaveFinish(void);
 void ActClear_State_ExitActClear(void);
 
 void ActClear_State_ForcePlayerOnScreen(void);

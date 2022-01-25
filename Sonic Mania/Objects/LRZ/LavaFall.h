@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLavaFall {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint8 shouldPlayLavaSfx;
     bool32 playingLavaSfx;
     uint16 sfxLava;
-} ObjectLavaFall;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLavaFall {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
@@ -22,7 +22,7 @@ typedef struct {
     uint16 intervalOffset;
     uint16 duration;
     int32 timer;
-} EntityLavaFall;
+};
 
 // Object Struct
 extern ObjectLavaFall *LavaFall;

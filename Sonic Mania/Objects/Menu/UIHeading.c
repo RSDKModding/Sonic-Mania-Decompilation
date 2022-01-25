@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UIHeading Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUIHeading *UIHeading;
@@ -5,9 +12,9 @@ ObjectUIHeading *UIHeading;
 void UIHeading_Update(void)
 {
     RSDK_THIS(UIHeading);
-    if (self->textSpriteIndex != UIHeading->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, self->headingID, &self->animator, true, 0);
-        self->textSpriteIndex = UIHeading->textSpriteIndex;
+    if (self->textFrames != UIHeading->textFrames) {
+        RSDK.SetSpriteAnimation(UIHeading->textFrames, self->headingID, &self->textAnimator, true, 0);
+        self->textFrames = UIHeading->textFrames;
     }
     StateMachine_Run(self->state);
 }
@@ -19,8 +26,8 @@ void UIHeading_StaticUpdate(void) {}
 void UIHeading_Draw(void)
 {
     RSDK_THIS(UIHeading);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.DrawSprite(&self->headingAnimator, NULL, false);
+    RSDK.DrawSprite(&self->textAnimator, NULL, false);
 }
 
 void UIHeading_Create(void *data)
@@ -33,9 +40,9 @@ void UIHeading_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x300000;
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, self->headingID, &self->animator, true, 0);
-        self->textSpriteIndex = UIHeading->textSpriteIndex;
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->headingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIHeading->textFrames, self->headingID, &self->textAnimator, true, 0);
+        self->textFrames = UIHeading->textFrames;
     }
 }
 
@@ -44,16 +51,16 @@ void UIHeading_StageLoad(void) { UIHeading_LoadSprites(); }
 void UIHeading_LoadSprites(void)
 {
     switch (Localization->language) {
-        case LANGUAGE_EN: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); break;
-        case LANGUAGE_FR: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsFR.bin", SCOPE_STAGE); break;
-        case LANGUAGE_IT: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsIT.bin", SCOPE_STAGE); break;
-        case LANGUAGE_GE: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsGE.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SP: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsSP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_JP: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsJP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_EN: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); break;
+        case LANGUAGE_FR: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsFR.bin", SCOPE_STAGE); break;
+        case LANGUAGE_IT: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsIT.bin", SCOPE_STAGE); break;
+        case LANGUAGE_GE: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsGE.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SP: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsSP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_JP: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsJP.bin", SCOPE_STAGE); break;
 #if RETRO_GAMEVER != VER_100
-        case LANGUAGE_KO: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsKO.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SC: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsSC.bin", SCOPE_STAGE); break;
-        case LANGUAGE_TC: UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsTC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_KO: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsKO.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SC: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsSC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_TC: UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsTC.bin", SCOPE_STAGE); break;
 #endif
         default: break;
     }
@@ -67,14 +74,14 @@ void UIHeading_EditorDraw(void)
     self->drawOrder     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, self->headingID, &self->animator, true, 0);
-    self->textSpriteIndex = UIHeading->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->headingAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIHeading->textFrames, self->headingID, &self->textAnimator, true, 0);
+    self->textFrames = UIHeading->textFrames;
 
     UIHeading_Draw();
 }
 
-void UIHeading_EditorLoad(void) { UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); }
+void UIHeading_EditorLoad(void) { UIHeading->textFrames = RSDK.LoadSpriteAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); }
 #endif
 
 void UIHeading_Serialize(void) { RSDK_EDITABLE_VAR(UIHeading, VAR_ENUM, headingID); }

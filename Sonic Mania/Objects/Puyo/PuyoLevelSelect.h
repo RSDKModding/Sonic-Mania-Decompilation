@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPuyoLevelSelect {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxMenuBleep;
     uint16 sfxMenuAccept;
-} ObjectPuyoLevelSelect;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPuyoLevelSelect {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
@@ -28,7 +28,7 @@ typedef struct {
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchFlags;
 #endif
-} EntityPuyoLevelSelect;
+};
 
 // Object Struct
 extern ObjectPuyoLevelSelect *PuyoLevelSelect;

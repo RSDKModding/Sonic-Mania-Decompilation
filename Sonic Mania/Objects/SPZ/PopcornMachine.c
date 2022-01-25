@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PopcornMachine Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPopcornMachine *PopcornMachine;
@@ -289,7 +296,6 @@ void PopcornMachine_State_Unknown3(void)
     }
 
     if (self->field_60 == 160) {
-        int i = self->position.y - (0xA00000 * self->height) - 0xD00000;
         foreach_active(PopcornKernel, kernel)
         {
             kernel->state      = PopcornKernel_Unknown2;
@@ -350,7 +356,6 @@ void PopcornMachine_State2_Unknown1(void)
 void PopcornMachine_State2_Unknown2(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
     EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {

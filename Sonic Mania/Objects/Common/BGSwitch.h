@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBGSwitch {
     RSDK_OBJECT
     int32 screenID;
     int32 layerIDs[8];
     StateMachine(switchCallback[8]);
     uint16 aniFrames;
-} ObjectBGSwitch;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBGSwitch {
     RSDK_ENTITY
     Vector2 size;
     uint8 bgID;
     Animator animator;
-} EntityBGSwitch;
+};
 
 // Object Struct
 extern ObjectBGSwitch *BGSwitch;

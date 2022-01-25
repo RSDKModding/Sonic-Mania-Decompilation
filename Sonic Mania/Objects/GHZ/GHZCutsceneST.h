@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectGHZCutsceneST {
     RSDK_OBJECT
     int32 unused1;
     Entity *fxRuby;
@@ -12,22 +12,24 @@ typedef struct {
     Entity *platform;
     Entity *phantomRuby;
     Entity *cutsceneHBH[5];
-} ObjectGHZCutsceneST;
+};
 
 // Entity Class
-typedef struct {
+struct EntityGHZCutsceneST {
     RSDK_ENTITY
+    // Cutscene Base (I think)
     Vector2 size;
     bool32 activated;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    bool32 setupKnuxCutscene;
+    int32 timer;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
     Hitbox hitbox2;
+    // Unique Variables
     Hitbox hitbox;
-} EntityGHZCutsceneST;
+};
 
 // Object Struct
 extern ObjectGHZCutsceneST *GHZCutsceneST;
@@ -47,7 +49,10 @@ void GHZCutsceneST_Serialize(void);
 
 // Extra Entity Functions
 void GHZCutsceneST_SetupObjects(void);
+void GHZCutsceneST_SetupKnuxCutscene(void);
+#if RETRO_USE_PLUS
 void GHZCutsceneST_SkipCB(void);
+#endif
 
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host);
 bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);

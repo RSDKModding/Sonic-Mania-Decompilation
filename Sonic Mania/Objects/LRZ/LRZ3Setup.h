@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLRZ3Setup {
     RSDK_OBJECT
     int32 field_4;
     int32 field_8;
     int32 field_C;
     Entity *cutscenePtr;
-} ObjectLRZ3Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZ3Setup {
 	RSDK_ENTITY
-} EntityLRZ3Setup;
+};
 
 // Object Struct
 extern ObjectLRZ3Setup *LRZ3Setup;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Whirlpool Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectWhirlpool *Whirlpool;
@@ -135,7 +142,7 @@ void Whirlpool_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
     self->posUnknown2   = self->position;
-    self->inkEffect     = INK_ALPHA;
+    self->inkEffect     = INK_ADD;
     self->visible       = true;
     self->updateRange.x = 0x800000 + self->size.x;
     self->updateRange.y = 0x800000 + self->size.y;

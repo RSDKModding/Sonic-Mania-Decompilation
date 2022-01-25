@@ -19,15 +19,15 @@ typedef enum {
 } PimPomMoveTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPimPom {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPimPom;
     uint16 sfxBumper2;
-} ObjectPimPom;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPimPom {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateMove);
@@ -49,7 +49,7 @@ typedef struct {
     Vector2 offset;
     Vector2 moveAmount;
     Animator animator;
-} EntityPimPom;
+};
 
 // Object Struct
 extern ObjectPimPom *PimPom;

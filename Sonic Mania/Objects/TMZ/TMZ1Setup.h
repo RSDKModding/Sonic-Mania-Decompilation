@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZ1Setup {
     RSDK_OBJECT
     bool32 paletteInit;
     int32 aniTileDelay;
@@ -17,14 +17,14 @@ typedef struct {
     bool32 hasAchievement;
     uint16 aniTiles;
     TileLayer* bgPtr;
-} ObjectTMZ1Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZ1Setup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-} EntityTMZ1Setup;
+};
 
 // Object Struct
 extern ObjectTMZ1Setup *TMZ1Setup;

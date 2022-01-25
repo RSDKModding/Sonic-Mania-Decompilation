@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectCrabmeat {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox projectileHitbox;
     uint16 aniFrames;
-} ObjectCrabmeat;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCrabmeat {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 startPos;
     int32 startDir;
     Animator animator;
-} EntityCrabmeat;
+};
 
 // Object Struct
 extern ObjectCrabmeat *Crabmeat;

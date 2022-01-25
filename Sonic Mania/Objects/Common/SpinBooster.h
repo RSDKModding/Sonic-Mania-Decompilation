@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSpinBooster {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectSpinBooster;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySpinBooster {
     RSDK_ENTITY
     uint8 autoGrip;
     uint8 bias;
@@ -23,7 +23,7 @@ typedef struct {
     uint8 activePlayers;
     int32 unused;
     Animator animator;
-} EntitySpinBooster;
+};
 
 // Object Struct
 extern ObjectSpinBooster *SpinBooster;

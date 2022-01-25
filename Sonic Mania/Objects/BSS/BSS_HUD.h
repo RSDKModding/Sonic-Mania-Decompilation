@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectBSS_HUD {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectBSS_HUD;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBSS_HUD {
     RSDK_ENTITY
     Animator sphereAnimator;
     Animator ringAnimator;
     Animator numbersAnimator;
-} EntityBSS_HUD;
+};
 
 // Object Struct
 extern ObjectBSS_HUD *BSS_HUD;

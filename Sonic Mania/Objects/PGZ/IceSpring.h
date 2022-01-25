@@ -3,29 +3,36 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    ICESPRING_VERTICAL,
+    ICESPRING_HORIZONTAL,
+    ICESPRING_DIAGONAL,
+}IceSpringTypes;
+
 // Object Class
-typedef struct {
+struct ObjectIceSpring {
 	RSDK_OBJECT
-	uint16 animID;
-	uint16 bounceSFX;
-	uint16 shatterSFX;
+	uint16 aniFrames;
+	uint16 sfxBounce;
+	uint16 sfxShatter;
 	Animator animators[4];
-} ObjectIceSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityIceSpring {
     RSDK_ENTITY
     StateMachine(state);
-    int32 type;
-    int32 flipFlag;
+    IceSpringTypes type;
+    FlipFlags flipFlag;
     uint8 planeFilter;
     int32 basetimer;
     Animator animator;
     Hitbox hitbox;
 	//END SPRING INHERITANCE
+
     int32 timer;
     uint8 playerBits;
-} EntityIceSpring;
+};
 
 // Object Struct
 extern ObjectIceSpring *IceSpring;

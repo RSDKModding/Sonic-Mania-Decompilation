@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PhantomGunner Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPhantomGunner *PhantomGunner;
@@ -185,7 +192,7 @@ void PhantomGunner_CheckPlayerMissileCollisions(void)
     {
         if (self->animator4.frameID > 0 && player->velocity.y >= 0 && Player_CheckBadnikTouch(player, self, &PhantomGunner->hitbox2)
             && player->animator.animationID != ANI_HURT) {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
             player->velocity.y = -0x60000;
             PhantomGunner_SpawnDust();
             self->state = PhantomGunner_State1_Unknown3;

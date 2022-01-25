@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MagPlatform Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMagPlatform *MagPlatform;
@@ -30,14 +37,14 @@ void MagPlatform_Create(void *data)
     RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
         self->length <<= 16;
-        self->stateCollide = MagPlatform_Unknown1;
-        self->state        = MagPlatform_Unknown2;
+        self->stateCollide = MagPlatform_Collide_SolidAllHazardBottom;
+        self->state        = MagPlatform_State_Idle;
     }
 }
 
 void MagPlatform_StageLoad(void) { MagPlatform->sfxChain = RSDK.GetSfx("Stage/Chain.wav"); }
 
-void MagPlatform_Unknown1(void)
+void MagPlatform_Collide_SolidAllHazardBottom(void)
 {
     RSDK_THIS(MagPlatform);
     Hitbox *hitbox       = RSDK.GetHitbox(&self->animator, 1);
@@ -88,7 +95,7 @@ void MagPlatform_Unknown1(void)
                     }
                 }
                 else {
-                    player->hurtFlag = true;
+                    player->deathType = PLAYER_DEATH_DIE_USESFX;
                 }
                 break;
             default: break;
@@ -97,9 +104,9 @@ void MagPlatform_Unknown1(void)
     }
 }
 
-void MagPlatform_Unknown2(void) {}
+void MagPlatform_State_Idle(void) {}
 
-void MagPlatform_Unknown3(void)
+void MagPlatform_State_Rise(void)
 {
     RSDK_THIS(MagPlatform);
 
@@ -117,10 +124,10 @@ void MagPlatform_Unknown3(void)
         self->velocity.y = 0;
     }
     self->position.y = posY;
-    self->state      = MagPlatform_Unknown4;
+    self->state      = MagPlatform_State_Fall;
 }
 
-void MagPlatform_Unknown4(void)
+void MagPlatform_State_Fall(void)
 {
     RSDK_THIS(MagPlatform);
 
@@ -133,12 +140,27 @@ void MagPlatform_Unknown4(void)
         self->velocity.y = 0;
         self->drawPos.y  = self->centerPos.y;
         self->active     = ACTIVE_BOUNDS;
-        self->state      = MagPlatform_Unknown2;
+        self->state      = MagPlatform_State_Idle;
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MagPlatform_EditorDraw(void) {}
+void MagPlatform_EditorDraw(void)
+{
+    RSDK_THIS(MagPlatform);
+    self->drawPos = self->centerPos = self->position;
+
+    MagPlatform_Draw();
+
+    if (showGizmos()) {
+        self->inkEffect = INK_BLEND;
+
+        self->drawPos.y = self->centerPos.y - (self->length << 16);
+        MagPlatform_Draw();
+
+        self->inkEffect = INK_NONE;
+    }
+}
 
 void MagPlatform_EditorLoad(void) {}
 #endif

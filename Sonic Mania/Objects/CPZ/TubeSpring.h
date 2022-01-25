@@ -4,16 +4,25 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTubeSpring {
 	RSDK_OBJECT
 	uint16 aniFrames;
 	uint16 sfxExit;
 	Hitbox hitbox;
-} ObjectTubeSpring;
+};
 
 // Entity Class
-// rdc's gonna fire me LQWDOJWQ
-typedef EntitySpring EntityTubeSpring;
+struct EntityTubeSpring {
+    // Spring Inherit
+    RSDK_ENTITY
+    StateMachine(state);
+    SpringTypes type;
+    FlipFlags flipFlag;
+    uint8 planeFilter;
+    int32 timer;
+    Animator animator;
+    Hitbox hitbox;
+};
 
 // Object Struct
 extern ObjectTubeSpring *TubeSpring;

@@ -4,18 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSparkRail {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPon;
-} ObjectSparkRail;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySparkRail {
     RSDK_ENTITY
     Vector2 size;
     Hitbox hitbox;
-} EntitySparkRail;
+};
 
 // Object Struct
 extern ObjectSparkRail *SparkRail;

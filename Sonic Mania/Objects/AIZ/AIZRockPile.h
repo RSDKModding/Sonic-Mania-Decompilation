@@ -12,7 +12,7 @@ typedef enum {
 }AIZRockPileTypes;
 
 // Object Class
-typedef struct {
+struct ObjectAIZRockPile {
     RSDK_OBJECT
     TABLE(int32 rockPositions_small[8], { -0x40000, -0x40000, 0xC0000, -0x40000, -0xC0000, 0x40000, 0xC0000, 0x40000 });
     TABLE(int32 rockSpeedsT_small[8], { -0x10000, -0x20000, 0x10000, -0x1E000, -0x1B000, -0x1C000, 0x1C000, -0x1C000 });
@@ -34,10 +34,10 @@ typedef struct {
                                          -0x18000, 0x20000, -0x10000, 0x24000, -0x10000 });
     uint16 aniFrames;
     uint16 sfxBreak;
-} ObjectAIZRockPile;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAIZRockPile {
     RSDK_ENTITY
     int32 size;
     bool32 smashTop;
@@ -49,7 +49,7 @@ typedef struct {
     int32 *rockSpeedsL;
     int32 *rockSpeedsR;
     Animator animator;
-} EntityAIZRockPile;
+};
 
 // Object Struct
 extern ObjectAIZRockPile *AIZRockPile;

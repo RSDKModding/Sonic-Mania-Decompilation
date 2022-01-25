@@ -10,7 +10,7 @@ typedef enum {
 }PopcornMachineTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPopcornMachine {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox1;
@@ -20,10 +20,10 @@ typedef struct {
     uint16 sfxFanStart;
     uint16 sfxShoot;
     uint16 sfxPopcornLaunch;
-} ObjectPopcornMachine;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPopcornMachine {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
@@ -40,7 +40,7 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-} EntityPopcornMachine;
+};
 
 // Object Struct
 extern ObjectPopcornMachine *PopcornMachine;

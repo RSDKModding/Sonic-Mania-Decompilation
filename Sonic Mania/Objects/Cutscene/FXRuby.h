@@ -4,16 +4,18 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFXRuby {
     RSDK_OBJECT
     int32 deformData[0x200];
+#if RETRO_USE_PLUS
     uint16 lookupTable[0x10000];
+#endif
     TileLayer *fgLow;
     TileLayer *fgHigh;
-} ObjectFXRuby;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFXRuby {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
@@ -30,7 +32,7 @@ typedef struct {
     int32 unused3;
     int32 unused4;
     bool32 fullyExpanded;
-} EntityFXRuby;
+};
 
 // Object Struct
 extern ObjectFXRuby *FXRuby;

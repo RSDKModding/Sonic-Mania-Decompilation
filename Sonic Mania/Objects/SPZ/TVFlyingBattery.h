@@ -4,17 +4,17 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTVFlyingBattery {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlyover;
     bool32 isPlayingFlyover;
     int32 flyoverChannel;
     Entity *weatherTV;
-} ObjectTVFlyingBattery;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTVFlyingBattery {
     RSDK_ENTITY
     int32 field_58;
     Vector2 field_5C;
@@ -25,7 +25,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-} EntityTVFlyingBattery;
+};
 
 // Object Struct
 extern ObjectTVFlyingBattery *TVFlyingBattery;

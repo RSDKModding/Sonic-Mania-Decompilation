@@ -166,26 +166,34 @@ typedef struct {
 #define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
 
 #if RETRO_USE_PLUS
+#define Unknown_pausePress UnknownInfo->pausePress
+#define Unknown_anyPress   UnknownInfo->anyPress
+
 typedef struct {
     int32 platform;
     int32 language;
     int32 region;
 } RSDKSKUInfo;
 
+// None of these besides the named 2 are even used
+// and even then they're not even set in plus
 typedef struct {
-    int32 field_0;
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
+    int32 unknown1;
+    int32 unknown2;
+    int32 unknown3;
+    int32 unknown4;
+    bool32 pausePress;
+    int32 unknown5;
+    int32 unknown6;
+    int32 unknown7;
+    int32 unknown8;
+    int32 unknown9;
+    bool32 anyPress;
+    int32 unknown10;
 } RSDKUnknownInfo;
+#else
+#define Unknown_pausePress TouchInfo->pausePress
+#define Unknown_anyPress   TouchInfo->anyPress
 #endif
 
 typedef struct {
@@ -272,6 +280,13 @@ typedef struct {
     float y[0x10];
     bool32 down[0x10];
     uint8 count;
+#if !RETRO_USE_PLUS
+    bool32 pausePressActive;
+    bool32 pausePress;
+    bool32 anyPressActive;
+    bool32 anyPress;
+    int32 unknown1;
+#endif
 } RSDKTouchInfo;
 
 typedef struct {
@@ -321,8 +336,8 @@ typedef struct {
 
 typedef struct {
     uint16 *text;
-    uint16 textLength;
     uint16 length;
+    uint16 size;
 } TextInfo;
 
 typedef struct {
@@ -351,9 +366,9 @@ typedef struct {
     int32 frameID;
     int16 animationID;
     int16 prevAnimationID;
-    int16 animationSpeed;
-    int16 animationTimer;
-    int16 frameDelay;
+    int16 speed;
+    int16 timer;
+    int16 frameDuration;
     int16 frameCount;
     uint8 loopIndex;
     uint8 rotationFlag;
@@ -395,6 +410,14 @@ typedef struct {
     uint16 *layout;
     uint8 *lineScroll;
 } TileLayer;
+
+typedef struct {
+    int id1;
+    int id2;
+    int id_switch;
+    const char *name_legacy;
+    const char *name;
+} LeaderboardID;
 
 typedef struct {
     TextInfo username;
@@ -455,9 +478,11 @@ typedef enum {
 } ControllerIDs;
 
 typedef enum {
-    DEVICE_TYPE_UNKNOWN    = 0,
-    DEVICE_TYPE_KEYBOARD   = 1,
-    DEVICE_TYPE_CONTROLLER = 2,
+    DEVICE_TYPE_NONE         = 0,
+    DEVICE_TYPE_KEYBOARD     = 1,
+    DEVICE_TYPE_CONTROLLER   = 2,
+    DEVICE_TYPE_UNKNOWN3     = 3,
+    DEVICE_TYPE_STEAMOVERLAY = 4,
 } InputDeviceTypes;
 
 typedef enum {
@@ -465,12 +490,20 @@ typedef enum {
     DEVICE_XBOX            = 1,
     DEVICE_PS4             = 2,
     DEVICE_SATURN          = 3,
-    DEVICE_SWITCH          = 4,
-    DEVICE_SWITCH_PRO      = 5,
+    DEVICE_SWITCH_HANDHELD = 4,
+    DEVICE_SWITCH_JOY_GRIP = 5,
     DEVICE_SWITCH_JOY_L    = 6,
     DEVICE_SWITCH_JOY_R    = 7,
-    DEVICE_SWITCH_JOY_GRIP = 8,
+    DEVICE_SWITCH_PRO      = 8,
 } InputDeviceIDs;
+
+typedef enum {
+    DEVICE_FLAG_NONE         = 0,
+    DEVICE_FLAG_UNKNOWN1     = 1,
+    DEVICE_FLAG_UNKNOWN2     = 2,
+    DEVICE_FLAG_UNKNOWN3     = 3,
+    DEVICE_FLAG_STEAMOVERLAY = 4,
+} InputDeviceFlags;
 
 typedef enum {
     ALIGN_LEFT,
@@ -499,6 +532,26 @@ typedef enum {
     VAR_UNKNOWN,
     VAR_COLOUR,
 } VarTypes;
+
+typedef enum {
+    DBVAR_NONE,
+    DBVAR_UNKNOWN1,
+    DBVAR_UINT8,
+    DBVAR_UINT16,
+    DBVAR_UINT32,
+    DBVAR_UNUSED1,
+    DBVAR_INT8,
+    DBVAR_INT16,
+    DBVAR_INT32,
+    DBVAR_UNUSED2,
+    DBVAR_FLOAT,
+    DBVAR_UNUSED3,
+    DBVAR_UNUSED4,
+    DBVAR_UNUSED5,
+    DBVAR_UNUSED6,
+    DBVAR_UNKNOWN2,
+    DBVAR_STRING,
+} DBVarTypes;
 
 typedef enum {
     DTYPE_BOOL = 1,

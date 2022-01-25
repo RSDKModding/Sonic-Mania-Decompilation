@@ -11,7 +11,7 @@ typedef enum {
     PLATFORM_SWINGING,
     PLATFORM_CONTROLLED,
     PLATFORM_PUSHABLE,
-    PLATFORM_MOVING_STATIC,
+    PLATFORM_TRACK,
     PLATFORM_WAIT,
     PLATFORM_WAIT_OSC,
     PLATFORM_ACTIVEABOVE,
@@ -43,7 +43,7 @@ typedef enum {
 } PlatformCollisionTypes;
 
 // Object Class
-typedef struct {
+struct ObjectPlatform {
     RSDK_OBJECT
     uint16 aniFrames;
     Vector2 stoodPos[PLAYER_MAX];
@@ -53,12 +53,12 @@ typedef struct {
     uint16 sfxClack;
     bool32 playingPushSFX;
     bool32 useClack;
-} ObjectPlatform;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPlatform {
     MANIA_PLATFORM_BASE
-} EntityPlatform;
+};
 
 // Object Struct
 extern ObjectPlatform *Platform;
@@ -109,7 +109,7 @@ void Platform_State_Pushable_FallingR(void);
 void Platform_State_Pushable_Falling(void);
 void Platform_State_Controlled(void);
 void Platform_State_WaitForControl(void);
-void Platform_State_Moving_Static(void);
+void Platform_State_Track(void);
 void Platform_State_Wait(void);
 void Platform_State_WaitOscillating(void);
 void Platform_State_PlayerMove_Starting(void);

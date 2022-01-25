@@ -5,21 +5,21 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectBloominator {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox projectileHitbox;
     uint16 aniFrames;
     uint16 sfxShot;
-} ObjectBloominator;
+};
 
 // Entity Class
-typedef struct {
+struct EntityBloominator {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Animator animator;
-} EntityBloominator;
+};
 
 // Object Struct
 extern ObjectBloominator *Bloominator;

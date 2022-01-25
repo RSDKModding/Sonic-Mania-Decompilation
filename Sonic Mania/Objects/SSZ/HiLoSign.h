@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHiLoSign {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxes[2];
     uint16 sfxSignPost;
-} ObjectHiLoSign;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHiLoSign {
     RSDK_ENTITY
     StateMachine(stateDraw);
     StateMachine(state);
@@ -20,7 +20,7 @@ typedef struct {
     int32 spinSpeed;
     Animator animator1;
     Animator animator2;
-} EntityHiLoSign;
+};
 
 // Object Struct
 extern ObjectHiLoSign *HiLoSign;

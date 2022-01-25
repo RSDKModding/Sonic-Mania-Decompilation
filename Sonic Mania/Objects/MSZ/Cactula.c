@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Cactula Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCactula *Cactula;
@@ -144,7 +151,7 @@ void Cactula_State_Unknown3(void)
             }
         }
 
-        if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == 0xFFFF)
+        if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
             Cactula_CheckPlayerCollisions();
     }
 }

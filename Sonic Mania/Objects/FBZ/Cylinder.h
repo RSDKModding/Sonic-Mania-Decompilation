@@ -3,29 +3,40 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CYLINDER_TUBE_H,
+    CYLINDER_TUBE_V,
+    CYLINDER_SPIRAL,
+    CYLINDER_SPIRAL_FLIPPED,
+    CYLINDER_INKROLLER,
+    CYLINDER_UNUSED1,
+    CYLINDER_UNUSED2,
+    CYLINDER_PILLAR,
+}CylinderTypes;
+
 // Object Class
-typedef struct {
+struct ObjectCylinder {
     RSDK_OBJECT
     TABLE(int32 frameArray[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     Animator animator;
     uint16 aniFrames;
-} ObjectCylinder;
+};
 
 // Entity Class
-typedef struct {
+struct EntityCylinder {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
     int32 length;
     int32 radius;
-    int32 field_68;
-    int32 playerFrameIDs[4];
+    int32 unused1;
+    int32 playerStatuses[4];
     int32 playerAngles[4];
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-} EntityCylinder;
+    Hitbox hitboxRange;
+    Hitbox hitboxSize;
+    Hitbox hitboxL;
+    Hitbox hitboxR;
+};
 
 // Object Struct
 extern ObjectCylinder *Cylinder;
@@ -44,15 +55,15 @@ void Cylinder_EditorLoad(void);
 void Cylinder_Serialize(void);
 
 // Extra Entity Functions
-void Cylinder_State_Unknown1(void);
-void Cylinder_State_Unknown2(void);
-void Cylinder_State_Unknown3(void);
-void Cylinder_State_Unknown4(void);
-void Cylinder_State_Unknown5(void);
+void Cylinder_State_TubeH(void);
+void Cylinder_State_TubeV(void);
+void Cylinder_State_Spiral(void);
+void Cylinder_State_InkRoller(void);
+void Cylinder_State_Pillar(void);
 
-void Cylinder_Player_State_Unknown2(void);
-void Cylinder_Player_State_Unknown3(void);
-void Cylinder_Player_State_Unknown4(void);
-void Cylinder_Player_State_Unknown1(void);
+void Cylinder_Player_State_InkRoller_Stand(void);
+void Cylinder_Player_State_InkRoller_Roll(void);
+void Cylinder_Player_State_Pillar(void);
+void Cylinder_Player_State_Spiral(void);
 
 #endif //!OBJ_CYLINDER_H

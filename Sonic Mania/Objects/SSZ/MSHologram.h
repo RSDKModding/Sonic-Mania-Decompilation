@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSHologram {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
     uint16 sfxExplosion;
-} ObjectMSHologram;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSHologram {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
@@ -22,7 +22,7 @@ typedef struct {
     Animator animator4;
     Animator animator3;
     Animator animator5;
-} EntityMSHologram;
+};
 
 // Object Struct
 extern ObjectMSHologram *MSHologram;

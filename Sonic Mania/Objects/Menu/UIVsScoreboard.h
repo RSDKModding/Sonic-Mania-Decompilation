@@ -4,21 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIVsScoreboard {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIVsScoreboard;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIVsScoreboard {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    Vector2 *posPtr;
+    Animator unusedAnimator;
+    Vector2 *parentPos;
     EntityUIControl *parent;
     Vector2 offset;
     Vector2 size;
@@ -26,14 +21,14 @@ typedef struct {
     uint8 p2Score;
     bool32 showWinner;
     uint8 winnerID;
-    int32 sizeY;
+    int32 bgEdgeSize;
     TextInfo scoreText;
-    Animator animator1;
+    Animator totalAnimator;
     Animator textAnimator;
-    Animator animator2;
-    Animator animator3;
-    uint16 textSpriteIndex;
-} EntityUIVsScoreboard;
+    Animator winnerAnimator;
+    Animator winsAnimator;
+    uint16 textFrames;
+};
 
 // Object Struct
 extern ObjectUIVsScoreboard *UIVsScoreboard;

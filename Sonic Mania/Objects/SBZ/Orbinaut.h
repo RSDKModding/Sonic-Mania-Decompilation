@@ -6,15 +6,15 @@
 #define Orbinaut_MaxOrbs (4)
 
 // Object Class
-typedef struct {
+struct ObjectOrbinaut {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxOrb;
     uint16 aniFrames;
-} ObjectOrbinaut;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOrbinaut {
     RSDK_ENTITY
     StateMachine(state);
     int32 planeFilter;
@@ -25,7 +25,7 @@ typedef struct {
     bool32 fireOrbs;
     Animator animatorFace;
     Animator animatorOrb;
-} EntityOrbinaut;
+};
 
 // Object Entity
 extern ObjectOrbinaut *Orbinaut;
@@ -52,10 +52,11 @@ void Orbinaut_HandleRotation(void);
 void Orbinaut_CheckOnScreen(void);
 
 void Orbinaut_State_Setup(void);
-void Orbinaut_Unknown6(void);
-void Orbinaut_Unknown7(void);
-void Orbinaut_Unknown8(void);
+void Orbinaut_State_Moving(void);
+void Orbinaut_State_ReleasingOrbs(void);
+void Orbinaut_State_Orbless(void);
+
 void Orbinaut_State_Orb(void);
-void Orbinaut_Unknown10(void);
+void Orbinaut_State_OrbDebris(void);
 
 #endif //!OBJ_ORBINAUT_H

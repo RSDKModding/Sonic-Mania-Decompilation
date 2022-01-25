@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSideBarrel {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDrop;
-} ObjectSideBarrel;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySideBarrel {
     RSDK_ENTITY
     int field_58;
     int field_5C;
@@ -21,7 +21,7 @@ typedef struct {
     bool32 timeAttackFreeze;
     Hitbox hitbox;
     Animator animator;
-} EntitySideBarrel;
+};
 
 // Object Struct
 extern ObjectSideBarrel *SideBarrel;

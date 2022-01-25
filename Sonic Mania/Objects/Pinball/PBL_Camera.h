@@ -5,22 +5,22 @@
 
 #if RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectPBL_Camera {
     RSDK_OBJECT
     Matrix matWorld;
     Matrix matNormalItem;
     Matrix matNormal;
     bool32 useAltMatNormal;
-} ObjectPBL_Camera;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPBL_Camera {
     RSDK_ENTITY
     StateMachine(state);
     int32 unused1;
     int32 worldY;
     int32 rotationY;
-    int32 dword68;
+    int32 cameraStartOffset; // I don't think this is every actually set...
     int32 curCamBoundaryT;
     int32 curCamBoundaryB;
     int32 newCamBoundaryT;
@@ -31,7 +31,7 @@ typedef struct {
     Matrix matTransform;
     Matrix unusedMatrix1;
     Vector2 targetPos;
-} EntityPBL_Camera;
+};
 
 // Object Struct
 extern ObjectPBL_Camera *PBL_Camera;
@@ -50,8 +50,8 @@ void PBL_Camera_EditorLoad(void);
 void PBL_Camera_Serialize(void);
 
 // Extra Entity Functions
-void PBL_Camera_Unknown1(void);
-void PBL_Camera_Unknown2(void);
+void PBL_Camera_HandleScreenPos(void);
+void PBL_Camera_State_Normal(void);
 
 #endif
 

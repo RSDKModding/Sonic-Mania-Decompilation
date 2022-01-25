@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMMZSetup {
     RSDK_OBJECT
     int32 aniTileFrameB;
     STATIC(int32 aniTileDelay3, 60);
@@ -17,12 +17,12 @@ typedef struct {
     int32 aniTileFrameC;
     int32 aniTileFrameD;
     uint16 aniTiles;
-} ObjectMMZSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMMZSetup {
 	RSDK_ENTITY
-} EntityMMZSetup;
+};
 
 // Object Struct
 extern ObjectMMZSetup *MMZSetup;

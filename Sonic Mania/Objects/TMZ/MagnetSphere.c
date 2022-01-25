@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MagnetSphere Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMagnetSphere *MagnetSphere;
@@ -21,12 +28,16 @@ void MagnetSphere_Draw(void)
 
     self->inkEffect = INK_SUB;
     RSDK.DrawSprite(&self->animator1, NULL, false);
+
     self->inkEffect = INK_ADD;
     RSDK.DrawSprite(&self->animator3, NULL, false);
+
     self->direction = INK_ADD;
     RSDK.DrawSprite(&self->animator4, NULL, false);
+
     self->direction = INK_NONE;
     RSDK.DrawSprite(&self->animator2, NULL, false);
+
     self->inkEffect = INK_NONE;
     RSDK.DrawSprite(&self->animator5, NULL, false);
 }
@@ -106,7 +117,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 player->state             = Player_State_Air;
                 self->playerTimers[pid] = 30;
                 self->activePlayers &= ~(1 << pid);
-                RSDK.PlaySfx(Player->sfxJump, 0, 255);
+                RSDK.PlaySfx(Player->sfxJump, false, 255);
             }
         }
         else {
@@ -126,12 +137,12 @@ void MagnetSphere_CheckPlayerCollision(void)
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
-                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->animator, 0, 0);
-                    player->onGround        = 0;
-                    player->tileCollisions  = 0;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+                    player->onGround        = false;
+                    player->tileCollisions  = false;
                     player->state           = Player_State_None;
-                    player->nextAirState    = 0;
-                    player->nextGroundState = 0;
+                    player->nextAirState    = StateMachine_None;
+                    player->nextGroundState = StateMachine_None;
                     self->activePlayers |= 1 << pid;
                     MagnetSphere_MovePlayer(player, pid);
                 }
@@ -165,8 +176,11 @@ void MagnetSphere_MovePlayer(void *p, int32 playerID)
 
     uint8 angle = MagnetSphere->sphereAngle[playerID];
     MagnetSphere->sphereAngle[playerID] += 4;
-    if ((((MagnetSphere->sphereAngle[playerID] + 64) >> 7) & 1) != ((angle + 64) >> 7) && !player->sidekick)
-        RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, 0, 255);
+
+    uint32 angVal    = (((uint32)MagnetSphere->sphereAngle[playerID] + 64) >> 7) & 1;
+    uint8 angValPrev = ((angle + 64) >> 7) & 1;
+    if (angVal != angValPrev && !player->sidekick)
+        RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, false, 255);
 }
 
 #if RETRO_INCLUDE_EDITOR

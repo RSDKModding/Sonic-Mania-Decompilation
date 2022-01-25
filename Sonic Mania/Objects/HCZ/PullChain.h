@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPullChain {
     RSDK_OBJECT
     TABLE(int32 dunkeyCode[18], { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 });
     uint16 aniFrames;
     uint16 sfxPullChain;
-} ObjectPullChain;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPullChain {
     RSDK_ENTITY
     int32 type;
     bool32 walkOnto;
@@ -36,7 +36,7 @@ typedef struct {
     int32 field_D0[18];
     Hitbox hitbox;
     Animator animator2;
-} EntityPullChain;
+};
 
 // Object Struct
 extern ObjectPullChain *PullChain;

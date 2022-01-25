@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTeeterTotter {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTeeterTotter;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTeeterTotter {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
@@ -26,7 +26,7 @@ typedef struct {
     int32 field_110[32];
     Hitbox hitbox;
     Animator animator;
-} EntityTeeterTotter;
+};
 
 // Object Struct
 extern ObjectTeeterTotter *TeeterTotter;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: RingField Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectRingField *RingField;
@@ -19,7 +26,7 @@ void RingField_Update(void)
                 Vector2 pos;
                 RingField_GetPos(&pos);
                 EntityRing *ring          = CREATE_ENTITY(Ring, &pos, pos.x, pos.y);
-                ring->animator.animationSpeed = 512;
+                ring->animator.speed = 512;
                 ring->state               = Ring_State_Normal;
                 ring->drawOrder           = Zone->drawOrderLow;
                 ring->stateDraw           = Ring_Draw_Normal;

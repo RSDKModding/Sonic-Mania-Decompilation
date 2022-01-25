@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: HCZSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectHCZSetup *HCZSetup;
@@ -200,7 +207,7 @@ void HCZSetup_StageLoad(void)
         Zone->cameraBoundsL[2] = 168;
         Zone->cameraBoundsL[3] = 168;
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
-            Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
+            Zone_ReloadStoredEntities(388 << 16, 1696 << 16, true);
         }
         Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
     }
@@ -211,8 +218,8 @@ void HCZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreHCZ.act", 255);
-        RSDK.LoadPalette(1, "EncoreHCZw.act", 255);
+        RSDK.LoadPalette(0, "EncoreHCZ.act", 0b0000000011111111);
+        RSDK.LoadPalette(1, "EncoreHCZw.act", 0b0000000011111111);
     }
 
     HCZSetup->sfxWaterfall     = RSDK.GetSfx("Stage/Waterfall.wav");

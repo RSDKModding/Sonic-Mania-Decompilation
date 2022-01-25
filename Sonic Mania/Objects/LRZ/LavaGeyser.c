@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LavaGeyser Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLavaGeyser *LavaGeyser;
@@ -113,7 +120,7 @@ void LavaGeyser_State_Unknown2(void)
 
     RSDK.ProcessAnimation(&self->animator1);
     if (self->animator1.frameID == 16) {
-        --self->animator1.animationTimer;
+        --self->animator1.timer;
         RSDK.PlaySfx(LavaGeyser->sfxLavaGeyser, false, 255);
         self->state = LavaGeyser_State_Unknown3;
         LavaGeyser_State_Unknown3();

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PSZ2Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPSZ2Setup *PSZ2Setup;
@@ -31,30 +38,30 @@ void PSZ2Setup_StaticUpdate(void)
     else
         RSDK.SetLimitedFade(0, 1, 2, -RSDK.Sin256(16 * Zone->timer), 224, 227);
 
-    if (PSZ2Setup->flag) {
+    if (PSZ2Setup->petalBehaviourActive) {
         if (PSZ2Setup->petalTimer <= 0) {
             foreach_active(Player, player)
             {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
-                uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
-                bool32 lowFlag = true;
-                if (tile == 0xFFFF) {
-                    tile    = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
-                    lowFlag = false;
+                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                bool32 isLowLayer = true;
+                if (tile == (uint16)-1) {
+                    tile       = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                    isLowLayer = false;
                 }
 
                 if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
                         RSDK_THIS_GEN();
                         EntityPetalPile *pile = CREATE_ENTITY(PetalPile, self, player->position.x, player->position.y + (playerHitbox->bottom << 16));
-                        pile->leafPattern     = 4;
-                        pile->tileLayer       = lowFlag;
+                        pile->leafPattern     = PETALPILE_PATTERN_4;
+                        pile->tileLayer       = isLowLayer;
                         pile->pileSize.x      = 0x40000;
                         pile->pileSize.y      = 0x40000;
-                        pile->flag            = 1;
-                        pile->field_98        = 0xB5555;
-                        pile->field_94        = 2 * (player->direction != FLIP_NONE) - 1;
-                        pile->field_8C        = player->groundVel >> 1;
+                        pile->noRemoveTiles   = true;
+                        pile->petalRadius     = 0xB5555;
+                        pile->petalDir        = 2 * (player->direction != FLIP_NONE) - 1;
+                        pile->petalVel        = player->groundVel >> 1;
                         PSZ2Setup->petalTimer = 3;
                     }
                 }
@@ -72,9 +79,9 @@ void PSZ2Setup_Create(void *data) {}
 
 void PSZ2Setup_StageLoad(void)
 {
-    PSZ2Setup->flag              = false;
-    GenericTrigger->callbacks[0] = PSZ2Setup_TriggerCB1;
-    GenericTrigger->callbacks[1] = PSZ2Setup_TriggerCB2;
+    PSZ2Setup->petalBehaviourActive                               = false;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSINACTIVE] = PSZ2Setup_TriggerCB_DeactivatePetalBehaviour;
+    GenericTrigger->callbacks[GENERICTRIGGER_PSZ2_PETALSACTIVE]   = PSZ2Setup_TriggerCB_ActivatePetalBehaviour;
     PSZ2Setup->aniTiles1         = RSDK.LoadSpriteSheet("PSZ2/AniTiles.gif", SCOPE_STAGE);
     PSZ2Setup->aniTiles2         = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
 
@@ -98,20 +105,20 @@ void PSZ2Setup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE)
-        RSDK.LoadPalette(0, "EncorePSZ2.act", 0xFF);
+        RSDK.LoadPalette(0, "EncorePSZ2.act", 0b0000000011111111);
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_BECKY;
 #endif
 }
 
-void PSZ2Setup_TriggerCB2(void) { PSZ2Setup->flag = true; }
+void PSZ2Setup_TriggerCB_ActivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = true; }
 
-void PSZ2Setup_TriggerCB1(void) { PSZ2Setup->flag = false; }
+void PSZ2Setup_TriggerCB_DeactivatePetalBehaviour(void) { PSZ2Setup->petalBehaviourActive = false; }
 
 void PSZ2Setup_ActTransitionLoad(void)
 {
     SaveGame_LoadPlayerState();
-    Zone_ReloadStoredEntities(0x6140000, 0x1D80000, false);
+    Zone_ReloadStoredEntities(472 << 16, 1556 << 16, false);
     globals->recallEntities      = false;
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
@@ -138,8 +145,15 @@ void PSZ2Setup_ActTransitionLoad(void)
 
 void PSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZ2Setup_EditorDraw(void) {}
 
-void PSZ2Setup_EditorLoad(void) {}
+void PSZ2Setup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
+    RSDK_ENUM_VAR("Stop Petal Behaviour", GENERICTRIGGER_PSZ2_PETALSINACTIVE);
+    RSDK_ENUM_VAR("Start Petal Behaviour", GENERICTRIGGER_PSZ2_PETALSACTIVE);
+}
+#endif
 
 void PSZ2Setup_Serialize(void) {}

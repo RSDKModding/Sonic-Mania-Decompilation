@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PBL_HUD Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -60,46 +67,46 @@ void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char *message, int32 ty
             case PBL_HUD_MSG_SCROLL_LEFT_SLOW:
                 entity->offset.x = 0x410000;
                 entity->state    = PBL_HUD_StateMessage_ScrollLeftSlow;
-                entity->timer    = 12 * entity->text.textLength + 128;
+                entity->timer    = 12 * entity->text.length + 128;
                 break;
             case PBL_HUD_MSG_SCROLL_LEFT:
                 entity->offset.x = 0x410000;
                 entity->state    = PBL_HUD_StateMessage_ScrollLeftFast;
-                entity->timer    = 6 * entity->text.textLength + 64;
+                entity->timer    = 6 * entity->text.length + 64;
                 break;
             case PBL_HUD_MSG_SCROLL_RIGHT_SLOW:
                 entity->state    = PBL_HUD_StateMessage_ScrollRightSlow;
-                entity->timer    = 12 * entity->text.textLength + 128;
-                entity->offset.x = -0x410000 - 0xC0000 * entity->text.textLength;
+                entity->timer    = 12 * entity->text.length + 128;
+                entity->offset.x = -0x410000 - 0xC0000 * entity->text.length;
                 break;
             case PBL_HUD_MSG_SCROLL_RIGHT:
                 entity->state    = PBL_HUD_StateMessage_ScrollRightFast;
-                entity->timer    = 6 * entity->text.textLength + 64;
-                entity->offset.x = -0x410000 - 0xC0000 * entity->text.textLength;
+                entity->timer    = 6 * entity->text.length + 64;
+                entity->offset.x = -0x410000 - 0xC0000 * entity->text.length;
                 break;
             case PBL_HUD_MSG_SHOW_RISE:
                 entity->offset.y   = 0x120000;
                 entity->timer      = -9;
                 entity->velocity.y = -0x20000;
                 entity->state      = PBL_HUD_StateMessage_ShowMove;
-                entity->offset.x   = -0x60000 * entity->text.textLength;
+                entity->offset.x   = -0x60000 * entity->text.length;
                 break;
             case PBL_HUD_MSG_SHOW_FALL:
                 entity->offset.y   = -0x120000;
                 entity->timer      = -9;
                 entity->velocity.y = 0x20000;
                 entity->state      = PBL_HUD_StateMessage_ShowMove;
-                entity->offset.x   = -0x60000 * entity->text.textLength;
+                entity->offset.x   = -0x60000 * entity->text.length;
                 break;
             case PBL_HUD_MSG_FLASH:
                 entity->state    = PBL_HUD_StateMessage_Flash;
                 entity->timer    = 60;
-                entity->offset.x = -0x60000 * entity->text.textLength;
+                entity->offset.x = -0x60000 * entity->text.length;
                 break;
             case PBL_HUD_MSG_FLASH_CRANE:
                 entity->state    = PBL_HUD_StateMessage_FlashThenCrane;
                 entity->timer    = 60;
-                entity->offset.x = -0x60000 * entity->text.textLength;
+                entity->offset.x = -0x60000 * entity->text.length;
                 break;
             default: break;
         }

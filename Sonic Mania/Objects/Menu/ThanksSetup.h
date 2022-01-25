@@ -4,20 +4,20 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectThanksSetup {
     RSDK_OBJECT
     uint16 sfxSega;
-} ObjectThanksSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityThanksSetup {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     Entity *picture;
     int32 timer;
-    int32 offset;
-} EntityThanksSetup;
+    int32 radius;
+};
 
 // Object Struct
 extern ObjectThanksSetup *ThanksSetup;

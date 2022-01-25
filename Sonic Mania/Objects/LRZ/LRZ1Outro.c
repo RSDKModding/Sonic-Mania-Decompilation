@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: LRZ1Outro Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectLRZ1Outro *LRZ1Outro;
@@ -28,24 +35,25 @@ void LRZ1Outro_StartCutscene(void)
     RSDK_THIS(LRZ1Outro);
 
     if (Zone->actID) {
-        void *states[] = { LRZ1Outro_CutsceneState2_Unknown1, LRZ1Outro_CutsceneState2_Unknown2, LRZ1Outro_CutsceneState2_Unknown3, NULL };
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, LRZ1Outro_CutsceneAct2_Unknown1, LRZ1Outro_CutsceneAct2_Unknown2, LRZ1Outro_CutsceneAct2_Unknown3,
+                                  StateMachine_None);
     }
     else {
-        void *states[] = { LRZ1Outro_CutsceneState1_Unknown1, LRZ1Outro_CutsceneState1_Unknown2, LRZ1Outro_CutsceneState1_Unknown3,
-                           LRZ1Outro_CutsceneState1_Unknown4, NULL };
-        CutsceneSeq_StartSequence((Entity *)self, states);
+        CutsceneSeq_StartSequence(self, LRZ1Outro_CutsceneAct1_Unknown1, LRZ1Outro_CutsceneAct1_Unknown2, LRZ1Outro_CutsceneAct1_Unknown3,
+                                  LRZ1Outro_CutsceneAct1_Unknown4, StateMachine_None);
     }
 
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
 
     for (int i = 0; i < 0x100; ++i) {
         RSDK.SetPaletteEntry(5, i, 0x000000);
     }
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown1(EntityCutsceneSeq *host)
 {
     CutsceneSeq_LockAllPlayerControl();
 
@@ -64,7 +72,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
     return true;
 }
 
-bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct2_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
 
@@ -90,11 +98,11 @@ bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
 
     self->timer = 256;
     RSDK.SetLimitedFade(0, 1, 5, 256, 128, 256);
-    LRZ2Setup->palTimer2 = 0;
+    LRZ2Setup->conveyorPalTimer = 0;
     return true;
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
 
@@ -118,7 +126,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
     return RSDK.GetEntityCount(DashLift->objectID, true) > 0;
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = self->lift;
@@ -158,7 +166,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct1_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = self->lift;
@@ -189,7 +197,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct2_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = self->lift;
@@ -205,7 +213,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
         if (self->timer > 0)
             self->timer -= 2;
         RSDK.SetLimitedFade(0, 1, 5, self->timer, 128, 256);
-        LRZ2Setup->palTimer2 = 0;
+        LRZ2Setup->conveyorPalTimer = 0;
     }
     else {
         foreach_active(Player, player)
@@ -225,7 +233,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 LRZ1Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
+bool32 LRZ1Outro_CutsceneAct2_Unknown3(EntityCutsceneSeq *host)
 {
     bool32 flag = true;
     foreach_active(Player, player)
@@ -253,7 +261,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         {
             titleCard->active    = ACTIVE_NORMAL;
             titleCard->state     = TitleCard_State_Initial;
-            titleCard->stateDraw = TitleCard_Draw_Default;
+            titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }
 

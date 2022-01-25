@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUIInfoLabel {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUIInfoLabel;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUIInfoLabel {
     RSDK_ENTITY
     Animator animator;
-    int32 field_70;
-    int32 field_74;
+    int32 unused1;
+    int32 unused2;
     Vector2 size;
     TextInfo text;
     int32 width;
     Animator animator2;
-} EntityUIInfoLabel;
+};
 
 // Object Struct
 extern ObjectUIInfoLabel *UIInfoLabel;

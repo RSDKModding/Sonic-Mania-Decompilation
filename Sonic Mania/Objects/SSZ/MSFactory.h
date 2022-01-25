@@ -4,21 +4,21 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMSFactory {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxMachineActivate;
     uint16 sfxHullClose;
-} ObjectMSFactory;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMSFactory {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
     Vector2 drawPos;
     Animator animator;
-} EntityMSFactory;
+};
 
 // Object Struct
 extern ObjectMSFactory *MSFactory;

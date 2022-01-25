@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PBL_Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -34,7 +41,7 @@ void PBL_Setup_StaticUpdate(void)
 
     PBL_Setup->scanlineTimer += 0x8000;
     PBL_Setup->scanlineTimer &= 0x7FFFFFFF;
-    if ((ControllerInfo->keyStart.press || UnknownInfo->field_10 == 1) && SceneInfo->state == ENGINESTATE_REGULAR
+    if ((ControllerInfo->keyStart.press || Unknown_pausePress) && SceneInfo->state == ENGINESTATE_REGULAR
         && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
@@ -218,7 +225,7 @@ void PBL_Setup_GiveLife(void)
     if (globals->gameMode != MODE_TIMEATTACK && globals->gameMode != MODE_ENCORE) {
         if (saveRAM->lives < 99)
             saveRAM->lives++;
-        Music_PlayMusicTrack(TRACK_1UP);
+        Music_PlayQueuedTrack(TRACK_1UP);
     }
 }
 

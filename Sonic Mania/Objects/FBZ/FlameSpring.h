@@ -3,18 +3,37 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FLAMESPRING_BOTH,
+    FLAMESPRING_RIGHT,
+    FLAMESPRING_LEFT,
+    FLAMESPRING_BOTH_NOSPRING,
+    FLAMESPRING_RIGHT_NOSPRING,
+    FLAMESPRING_LEFT_NOSPRING,
+} FlameSpringTypes;
+
+typedef enum {
+    FLAMESPRING_FORCE_WEAK,
+    FLAMESPRING_FORCE_STRONG,
+} FlameSpringForceTypes;
+
+typedef enum {
+    FLAMESPRING_PANI_DIAGONAL,
+    FLAMESPRING_PANI_TWIRL,
+} FlameSpringPAniTypes;
+
 // Object Class
-typedef struct {
+struct ObjectFlameSpring {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxSpring;
+    Hitbox hitboxFlame;
     uint16 sfxSpring;
     uint16 sfxFlame;
-} ObjectFlameSpring;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFlameSpring {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -22,13 +41,13 @@ typedef struct {
     int32 force;
     uint8 playerAni;
     uint8 offset;
-    Vector2 field_6C;
-    Vector2 field_74;
-    bool32 flag;
+    Vector2 flamePosL;
+    Vector2 flamePosR;
+    bool32 spittingFire;
     uint8 timer;
     Animator animator1;
     Animator animator2;
-} EntityFlameSpring;
+};
 
 // Object Struct
 extern ObjectFlameSpring *FlameSpring;
@@ -47,10 +66,10 @@ void FlameSpring_EditorLoad(void);
 void FlameSpring_Serialize(void);
 
 // Extra Entity Functions
-void FlameSpring_State_Unknown1(void);
-void FlameSpring_State_Unknown2(void);
+void FlameSpring_State_Spring(void);
+void FlameSpring_State_Flame(void);
 
-void FlameSpring_StateDraw_Unknown1(void);
-void FlameSpring_StateDraw_Unknown2(void);
+void FlameSpring_Draw_Spring(void);
+void FlameSpring_Draw_Flame(void);
 
 #endif //!OBJ_FLAMESPRING_H

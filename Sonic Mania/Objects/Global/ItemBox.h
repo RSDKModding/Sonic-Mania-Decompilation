@@ -28,7 +28,7 @@ typedef enum {
 }ItemBoxTypes;
 
 // Object Class
-typedef struct {
+struct ObjectItemBox {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox hiddenHitbox;
@@ -41,10 +41,10 @@ typedef struct {
     uint16 sfxPowerDown;
     uint16 sfxRevovery;
 #endif
-} ObjectItemBox;
+};
 
 // Entity Class
-typedef struct {
+struct EntityItemBox {
     RSDK_ENTITY
     StateMachine(state);
     ItemBoxTypes type;
@@ -58,14 +58,14 @@ typedef struct {
     bool32 hidden;
     PlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
-    Animator animatorBox;
-    Animator animatorContents;
-    Animator animatorOverlay;
-    Animator animatorDebris;
+    Animator boxAnimator;
+    Animator contentsAnimator;
+    Animator overlayAnimator;
+    Animator debrisAnimator;
 #if RETRO_USE_PLUS
     Entity *parent;
 #endif
-} EntityItemBox;
+};
 
 // Object Struct
 extern ObjectItemBox *ItemBox;

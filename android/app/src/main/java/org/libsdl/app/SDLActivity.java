@@ -561,7 +561,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         // Try a transition to init state
         if (mNextNativeState == NativeState.INIT) {
-
             mCurrentNativeState = mNextNativeState;
             return;
         }

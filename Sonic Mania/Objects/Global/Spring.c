@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Spring Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSpring *Spring;
@@ -11,7 +18,7 @@ void Spring_Update(void)
     StateMachine_Run(self->state);
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == 8)
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
 }
 
 void Spring_LateUpdate(void) {}
@@ -37,7 +44,7 @@ void Spring_Create(void *data)
         }
         RSDK.SetSpriteAnimation(Spring->aniFrames, self->type, &self->animator, true, 0);
         self->active                  = ACTIVE_BOUNDS;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->updateRange.x           = 0x600000;
         self->updateRange.y           = 0x600000;
         self->visible                 = true;
@@ -133,8 +140,8 @@ void Spring_State_Vertical(void)
                     player->onGround                = false;
                     player->velocity.y              = self->velocity.y;
                     player->tileCollisions          = true;
-                    self->animator.animationSpeed = 0x80;
-                    self->animator.animationTimer = 0;
+                    self->animator.speed = 0x80;
+                    self->animator.timer = 0;
                     self->animator.frameID        = 1;
                     if (self->timer == 0) {
                         RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -158,8 +165,8 @@ void Spring_State_Vertical(void)
                 player->onGround                = false;
                 player->velocity.y              = self->velocity.y;
                 player->tileCollisions          = true;
-                self->animator.animationSpeed = 0x80;
-                self->animator.animationTimer = 0;
+                self->animator.speed = 0x80;
+                self->animator.timer = 0;
                 self->animator.frameID        = 1;
                 if (!self->timer) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -202,8 +209,8 @@ void Spring_State_Horizontal(void)
                 player->pushing                 = false;
                 player->direction               = FLIP_NONE;
                 player->tileCollisions          = true;
-                self->animator.animationSpeed = 0x80;
-                self->animator.animationTimer = 0;
+                self->animator.speed = 0x80;
+                self->animator.timer = 0;
                 self->animator.frameID        = 1;
                 if (self->timer == 0) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -242,8 +249,8 @@ void Spring_State_Horizontal(void)
                 player->pushing                 = false;
                 player->direction               = FLIP_X;
                 player->tileCollisions          = true;
-                self->animator.animationSpeed = 0x80;
-                self->animator.animationTimer = 0;
+                self->animator.speed = 0x80;
+                self->animator.timer = 0;
                 self->animator.frameID        = 1;
                 if (self->timer == 0) {
                     RSDK.PlaySfx(Spring->sfxSpring, false, 255);
@@ -260,23 +267,20 @@ void Spring_State_Diagonal(void)
     {
         if ((!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                bool32 flag = false;
+                bool32 collided = false;
                 if (player->onGround) {
-                    flag = true;
+                    collided = true;
                 }
                 else {
                     int32 y = player->velocity.y;
                     if (y >= 0) {
-                        flag = true;
+                        collided = true;
                     }
                     else {
-                        int32 x = player->velocity.x;
-                        if (x < 0)
-                            x = -x;
-                        flag = x > -y;
+                        collided = abs(player->velocity.x) > -y;
                     }
                 }
-                if (flag) {
+                if (collided) {
                     if (player->state != Ice_State_FrozenPlayer) {
                         if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground) {
                             player->state = Player_State_ForceRoll_Air;
@@ -303,8 +307,8 @@ void Spring_State_Diagonal(void)
                     player->velocity.x              = self->velocity.x;
                     player->velocity.y              = self->velocity.y;
                     player->tileCollisions          = true;
-                    self->animator.animationSpeed = 0x80;
-                    self->animator.animationTimer = 0;
+                    self->animator.speed = 0x80;
+                    self->animator.timer = 0;
                     self->animator.frameID        = 1;
                     if (self->timer == 0) {
                         RSDK.PlaySfx(Spring->sfxSpring, false, 255);

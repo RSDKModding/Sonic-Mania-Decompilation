@@ -5,17 +5,17 @@
 
 #if !RETRO_USE_PLUS
 // Object Class
-typedef struct {
+struct ObjectE3MenuSetup {
     RSDK_OBJECT
     int32 unused1;
     bool32 initialized;
     int32 unused2;
     Entity *charSelControl;
     Entity *zoneControl;
-} ObjectE3MenuSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityE3MenuSetup {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDelay);
@@ -25,7 +25,7 @@ typedef struct {
     int32 fadeTimer;
     int32 fadeColour;
     int32 unused1;
-} EntityE3MenuSetup;
+};
 
 // Object Entity
 extern ObjectE3MenuSetup *E3MenuSetup;
@@ -45,10 +45,10 @@ void E3MenuSetup_Serialize(void);
 void E3MenuSetup_SetupUI(void);
 void E3MenuSetup_SetupButtons(void);
 void E3MenuSetup_Delay_LoadScene(void);
-void E3MenuSetup_ZoneSelectCB(void);
-void E3MenuSetup_SelectCB_Sonic(void);
-void E3MenuSetup_SelectCB_Tails(void);
-void E3MenuSetup_SelectCB_Knux(void);
+void E3MenuSetup_ZoneSelect_ActionCB(void);
+void E3MenuSetup_ActionCB_Sonic(void);
+void E3MenuSetup_ActionCB_Tails(void);
+void E3MenuSetup_ActionCB_Knux(void);
 void E3MenuSetup_State_FadeOut(void);
 
 #endif

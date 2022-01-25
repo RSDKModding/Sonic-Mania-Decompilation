@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Armadiloid Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectArmadiloid *Armadiloid;
@@ -205,8 +212,8 @@ void Armadiloid_EditorDraw(void)
 
     if (self->type) {
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 4, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 3, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 3, &self->animator3, true, 0);
     }
     else {
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 0, &self->animator1, true, 0);

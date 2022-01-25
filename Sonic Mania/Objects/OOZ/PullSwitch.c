@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PullSwitch Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPullSwitch *PullSwitch;
@@ -17,11 +24,11 @@ void PullSwitch_Update(void)
         self->field_5C += 0x20000;
     }
     else {
-        if (OOZSetup->fadeTimer > 16 || Smog->field_4) {
-            RSDK.PlaySfx(PullSwitch->sfxSmogClear, 0, 255);
+        if (OOZSetup->fadeTimer > 16 || Smog->forceEnabled) {
+            RSDK.PlaySfx(PullSwitch->sfxSmogClear, false, 0xFF);
         }
         OOZSetup->fadeTimer = 0;
-        Smog->field_4       = 0;
+        Smog->forceEnabled  = false;
     }
 
     self->activated = false;
@@ -46,7 +53,7 @@ void PullSwitch_Update(void)
                     player->groundedStore          = false;
                     player->jumpAbilityTimer       = 1;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                    player->animator.animationSpeed = 48;
+                    player->animator.speed = 48;
                     player->state                         = Player_State_Air;
                 }
             }

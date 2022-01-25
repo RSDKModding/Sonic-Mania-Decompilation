@@ -4,15 +4,15 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectSSZ1Intro {
     RSDK_OBJECT
     int32 field_4;
     int32 field_8;
     EntityFXRuby *fxRuby;
-} ObjectSSZ1Intro;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySSZ1Intro {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -23,7 +23,7 @@ typedef struct {
     int32 field_74;
     int32 field_78;
     Hitbox hitbox;
-} EntitySSZ1Intro;
+};
 
 // Object Struct
 extern ObjectSSZ1Intro *SSZ1Intro;
@@ -42,8 +42,8 @@ void SSZ1Intro_Serialize(void);
 // Extra Entity Functions
 void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPlayer *player2, int32 offset);
 
-bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 SSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);
+bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host);
+bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host);
 
 #endif //!OBJ_SSZ1INTRO_H

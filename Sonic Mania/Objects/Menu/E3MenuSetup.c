@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: E3MenuSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if !RETRO_USE_PLUS
@@ -65,9 +72,9 @@ void E3MenuSetup_SetupButtons(void)
     {
         if (button->parent == E3MenuSetup->charSelControl) {
             switch (button->characterID) {
-                case 0: button->options2 = E3MenuSetup_SelectCB_Sonic; break;
-                case 1: button->options2 = E3MenuSetup_SelectCB_Tails; break;
-                case 2: button->options2 = E3MenuSetup_SelectCB_Knux; break;
+                case 0: button->actionCB = E3MenuSetup_ActionCB_Sonic; break;
+                case 1: button->actionCB = E3MenuSetup_ActionCB_Tails; break;
+                case 2: button->actionCB = E3MenuSetup_ActionCB_Knux; break;
             }
         }
     }
@@ -75,7 +82,7 @@ void E3MenuSetup_SetupButtons(void)
     int32 id = 0;
     foreach_all(UITAZoneModule, module)
     {
-        module->options2 = E3MenuSetup_ZoneSelectCB;
+        module->actionCB = E3MenuSetup_ZoneSelect_ActionCB;
         if (!id) { // GHZ
             module->zoneID = 0;
             module->actID = 1;
@@ -94,7 +101,7 @@ void E3MenuSetup_Delay_LoadScene(void)
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.SetScene("Mania Mode", "");
-    EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->activeEntityID];
+    EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->buttonID];
     param->zoneID                = module->zoneID;
     param->actID                 = module->actID;
     SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
@@ -107,7 +114,7 @@ void E3MenuSetup_Delay_LoadScene(void)
     RSDK.LoadScene();
 }
 
-void E3MenuSetup_ZoneSelectCB(void)
+void E3MenuSetup_ZoneSelect_ActionCB(void)
 {
     EntityE3MenuSetup *entity = CREATE_ENTITY(E3MenuSetup, NULL, 0xFFF00000, 0xFFF00000);
     entity->fadeColour        = 0x000000;
@@ -118,10 +125,10 @@ void E3MenuSetup_ZoneSelectCB(void)
 }
 
 // Sonic Sel
-void E3MenuSetup_SelectCB_Sonic(void)
+void E3MenuSetup_ActionCB_Sonic(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 1;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
@@ -131,10 +138,10 @@ void E3MenuSetup_SelectCB_Sonic(void)
 }
 
 // Tails Sel
-void E3MenuSetup_SelectCB_Tails(void)
+void E3MenuSetup_ActionCB_Tails(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 2;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
@@ -144,10 +151,10 @@ void E3MenuSetup_SelectCB_Tails(void)
 }
 
 // Knux Sel
-void E3MenuSetup_SelectCB_Knux(void)
+void E3MenuSetup_ActionCB_Knux(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    TimeAttackData_ClearOptions();
+    TimeAttackData_Clear();
     param->characterID = 3;
     EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {

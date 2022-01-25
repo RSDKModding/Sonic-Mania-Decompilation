@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectUICreditsText {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUICreditsText;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUICreditsText {
     RSDK_ENTITY
     StateMachine(state);
     TextInfo text;
@@ -26,7 +26,7 @@ typedef struct {
     int16 charTimers[64];
     int32 clipY2;
     Animator animator;
-} EntityUICreditsText;
+};
 
 // Object Struct
 extern ObjectUICreditsText *UICreditsText;

@@ -87,9 +87,6 @@
     <Filter Include="Sources\Objects\Pinball">
       <UniqueIdentifier>{846d9760-ad37-43da-9de8-9feaf672f5d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Objects\Player">
-      <UniqueIdentifier>{6683cb63-3523-43ff-93b4-1968f39aaf47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Objects\Puyo">
       <UniqueIdentifier>{4f81f463-caed-4d90-aa12-b835868fb8f1}</UniqueIdentifier>
     </Filter>
@@ -1769,15 +1766,6 @@
     <ClInclude Include="Objects\LRZ\WalkerLegs.h">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Player\Player.h">
-      <Filter>Sources\Objects\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Player\PlayerHelpers.h">
-      <Filter>Sources\Objects\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Player\PlayerProbe.h">
-      <Filter>Sources\Objects\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Helpers\BadnikHelpers.h">
       <Filter>Sources\Objects\Helpers</Filter>
     </ClInclude>
@@ -1945,6 +1933,15 @@
     </ClInclude>
     <ClInclude Include="GameVariables.h">
       <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Player\Player.h">
+      <Filter>Sources\Objects\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Player\PlayerHelpers.h">
+      <Filter>Sources\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Player\PlayerProbe.h">
+      <Filter>Sources\Objects\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3604,15 +3601,6 @@
     <ClCompile Include="Objects\LRZ\WalkerLegs.c">
       <Filter>Sources\Objects\LRZ</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Player\Player.c">
-      <Filter>Sources\Objects\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Player\PlayerHelpers.c">
-      <Filter>Sources\Objects\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Player\PlayerProbe.c">
-      <Filter>Sources\Objects\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Helpers\BadnikHelpers.c">
       <Filter>Sources\Objects\Helpers</Filter>
     </ClCompile>
@@ -3783,6 +3771,15 @@
     </ClCompile>
     <ClCompile Include="GameVariables.c">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Player\Player.c">
+      <Filter>Sources\Objects\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Player\PlayerHelpers.c">
+      <Filter>Sources\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Player\PlayerProbe.c">
+      <Filter>Sources\Objects\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

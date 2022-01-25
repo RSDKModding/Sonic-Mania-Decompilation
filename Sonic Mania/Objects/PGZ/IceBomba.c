@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: IceBomba Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectIceBomba *IceBomba;
@@ -19,7 +26,7 @@ void IceBomba_Draw(void)
     drawPos.x += 0x40000;
     drawPos.y += 0x1A0000;
 
-    int32 dirStore      = self->direction;
+    int32 dirStore  = self->direction;
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&self->bombAnimator, &drawPos, false);
     RSDK.DrawSprite(&self->animator, NULL, false);
@@ -43,8 +50,8 @@ void IceBomba_Create(void *data)
             self->active        = ACTIVE_NORMAL;
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &self->animator, true, 0);
-            self->state = IceBomba_Bomb_Handle;
+            RSDK.SetSpriteAnimation(IceBomba->aniFrames, 2, &self->animator, true, 0);
+            self->state = IceBomba_State_Bomb;
         }
         else {
             self->active        = ACTIVE_BOUNDS;
@@ -54,9 +61,9 @@ void IceBomba_Create(void *data)
             self->updateRange.y = (self->dip + 0x8000) << 8;
             self->spawnPos.x    = self->position.x;
             self->spawnPos.y    = self->position.y;
-            RSDK.SetSpriteAnimation(IceBomba->animID, 0, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &self->wingAnimator, true, 0);
-            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &self->bombAnimator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->aniFrames, 1, &self->wingAnimator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->aniFrames, 2, &self->bombAnimator, true, 0);
             self->direction = self->dir;
             if (self->dir) {
                 self->animator.frameID     = 4;
@@ -66,7 +73,7 @@ void IceBomba_Create(void *data)
                 self->animator.frameID     = 0;
                 self->bombAnimator.frameID = 0;
             }
-            self->state = IceBomba_Fly_Create;
+            self->state = IceBomba_State_Setup;
         }
     }
 }
@@ -74,31 +81,34 @@ void IceBomba_Create(void *data)
 void IceBomba_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
-        IceBomba->animID = RSDK.LoadSpriteAnimation("PSZ1/IceBomba.bin", SCOPE_STAGE);
+        IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/IceBomba.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("PSZ2"))
-        IceBomba->animID = RSDK.LoadSpriteAnimation("PSZ2/IceBomba.bin", SCOPE_STAGE);
+        IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/IceBomba.bin", SCOPE_STAGE);
 
-    IceBomba->flyHitbox.left    = -12;
-    IceBomba->flyHitbox.top     = -12;
-    IceBomba->flyHitbox.right   = 12;
-    IceBomba->flyHitbox.bottom  = 12;
-    IceBomba->bombHitbox.left   = -16;
-    IceBomba->bombHitbox.top    = -16;
-    IceBomba->bombHitbox.right  = 16;
-    IceBomba->bombHitbox.bottom = 16;
-    IceBomba->checkbox.left     = -12;
-    IceBomba->checkbox.top      = 64;
-    IceBomba->checkbox.right    = 12;
-    IceBomba->checkbox.bottom   = 128;
-    IceBomba->explosionSFX = RSDK.GetSfx("Stage/Explosion.wav");
-    IceBomba->freezeSFX    = RSDK.GetSfx("PSZ/Freeze.wav");
+    IceBomba->hitboxBadnik.left   = -12;
+    IceBomba->hitboxBadnik.top    = -12;
+    IceBomba->hitboxBadnik.right  = 12;
+    IceBomba->hitboxBadnik.bottom = 12;
+
+    IceBomba->hitboxBomb.left   = -16;
+    IceBomba->hitboxBomb.top    = -16;
+    IceBomba->hitboxBomb.right  = 16;
+    IceBomba->hitboxBomb.bottom = 16;
+
+    IceBomba->hitboxRange.left   = -12;
+    IceBomba->hitboxRange.top    = 64;
+    IceBomba->hitboxRange.right  = 12;
+    IceBomba->hitboxRange.bottom = 128;
+
+    IceBomba->sfxExplosion = RSDK.GetSfx("Stage/Explosion.wav");
+    IceBomba->sfxFreeze    = RSDK.GetSfx("PSZ/Freeze.wav");
     DEBUGMODE_ADD_OBJ(IceBomba);
 }
 
 void IceBomba_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(IceBomba->animID, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.SetSpriteAnimation(IceBomba->aniFrames, 0, &DebugMode->animator, true, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void IceBomba_DebugSpawn(void)
@@ -110,14 +120,15 @@ void IceBomba_DebugSpawn(void)
 void IceBomba_Fly_Collide(void)
 {
     RSDK_THIS(IceBomba);
-    int32 oldDir        = self->direction;
-    self->direction = 0;
+    int32 storeDir  = self->direction;
+    self->direction = FLIP_NONE;
+
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &IceBomba->flyHitbox)) {
+        if (Player_CheckBadnikTouch(player, self, &IceBomba->hitboxBadnik)) {
             if (Player_CheckBadnikBreak(self, player, false)) {
-                if (self->state != IceBomba_Fly_FlyAway) {
-                    EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), self->position.x, self->position.y);
+                if (self->state != IceBomba_State_FlyAway) {
+                    EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(true), self->position.x, self->position.y);
                     if (self->direction)
                         bomb->position.x -= 0x40000;
                     else
@@ -128,39 +139,39 @@ void IceBomba_Fly_Collide(void)
                 destroyEntity(self);
             }
         }
-        else if (self->state != IceBomba_Fly_FlyAway) {
+        else if (self->state != IceBomba_State_FlyAway) {
             Vector2 prePos = self->position;
             self->position.x += 0x40000 * (self->direction ? -1 : 1);
             self->position.y += 0x1A0000;
-            if (Player_CheckCollisionTouch(player, self, &IceBomba->bombHitbox)) {
-                RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-                CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bombAnimator, true, 0);
-                self->state = IceBomba_Fly_FlyAway;
-                Ice_FreezePlayer((Entity*)player);
+            if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
+                RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
+                self->state = IceBomba_State_FlyAway;
+                Ice_FreezePlayer((Entity *)player);
             }
             self->position = prePos;
         }
     }
-    self->direction = oldDir;
+    self->direction = storeDir;
 }
 
-void IceBomba_Fly_Create(void)
+void IceBomba_State_Setup(void)
 {
     RSDK_THIS(IceBomba);
     self->active     = ACTIVE_NORMAL;
     self->angle      = 0;
     self->direction  = self->dir;
-    self->unused_62  = self->dir;
+    self->spawnDir   = self->dir;
     self->velocity.x = 0x8000 * (self->dir ? 1 : -1);
-    self->state      = IceBomba_Fly_Idle;
-    IceBomba_Fly_Idle();
+    self->state      = IceBomba_State_Flying;
+    IceBomba_State_Flying();
 }
 
 void IceBomba_CheckOnScreen(void)
 {
     RSDK_THIS(IceBomba);
-    if (!RSDK.CheckOnScreen(self, 0) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
         self->dip >>= 7;
         self->position.x = self->spawnPos.x;
         self->position.y = self->spawnPos.y;
@@ -168,7 +179,7 @@ void IceBomba_CheckOnScreen(void)
     }
 }
 
-void IceBomba_Fly_Idle(void)
+void IceBomba_State_Flying(void)
 {
     RSDK_THIS(IceBomba);
     RSDK.ProcessAnimation(&self->wingAnimator);
@@ -176,18 +187,19 @@ void IceBomba_Fly_Idle(void)
     self->position.x += self->velocity.x;
     self->position.y = self->dip * RSDK.Sin1024(self->angle) + self->spawnPos.y;
     if (--self->spawnDist <= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->wingAnimator, true, 0);
-        self->state = IceBomba_Fly_Turn;
+        RSDK.SetSpriteAnimation(-1, 1, &self->wingAnimator, true, 0);
+        self->state = IceBomba_State_FlyTurn;
     }
+
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &IceBomba->checkbox)) {
-            EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), self->position.x, self->position.y);
+        if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxRange)) {
+            EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(true), self->position.x, self->position.y);
             bomb->position.x += 0x40000 * (self->direction ? -1 : 1);
             bomb->position.y += 0x1A0000;
             bomb->direction = self->direction;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bombAnimator, true, 0);
-            self->state = IceBomba_Fly_FlyAway;
+            RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
+            self->state = IceBomba_State_FlyAway;
             foreach_break;
         }
     }
@@ -195,45 +207,45 @@ void IceBomba_Fly_Idle(void)
     IceBomba_CheckOnScreen();
 }
 
-void IceBomba_Fly_Turn(void)
+void IceBomba_State_FlyTurn(void)
 {
     RSDK_THIS(IceBomba);
     self->angle += 4;
     self->position.x += self->velocity.x;
     self->position.y = self->dip * RSDK.Sin1024(self->angle) + self->spawnPos.y;
     self->velocity.x += 0x1000 * (self->direction ? -1 : 1);
-    int32 animTimer = ++self->animator.animationTimer;
+    int32 animTimer = ++self->animator.timer;
     if (self->direction) {
         if (animTimer >= 3) {
             --self->bombAnimator.frameID;
             --self->animator.frameID;
-            self->animator.animationTimer = 0;
+            self->animator.timer = 0;
             if (self->animator.frameID <= 0) {
                 self->direction ^= 1;
-                self->spawnDist = 2 * self->dist;
+                self->spawnDist  = 2 * self->dist;
                 self->velocity.x = 0x8000 * (self->direction ? 1 : -1);
-                RSDK.SetSpriteAnimation(IceBomba->animID, 1, &self->wingAnimator, true, 0);
-                self->state = IceBomba_Fly_Idle;
+                RSDK.SetSpriteAnimation(IceBomba->aniFrames, 1, &self->wingAnimator, true, 0);
+                self->state = IceBomba_State_Flying;
             }
         }
     }
     else if (animTimer >= 3) {
         ++self->bombAnimator.frameID;
         ++self->animator.frameID;
-        self->animator.animationTimer = 0;
+        self->animator.timer = 0;
         if (self->animator.frameID >= 4) {
-            self->direction  ^= 1; //ida says its a direct =. this does not make any sense
+            self->direction ^= FLIP_X;
             self->spawnDist  = 2 * self->dist;
             self->velocity.x = 0x8000;
-            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &self->wingAnimator, true, 0);
-            self->state = IceBomba_Fly_Idle;
+            RSDK.SetSpriteAnimation(IceBomba->aniFrames, 1, &self->wingAnimator, true, 0);
+            self->state = IceBomba_State_Flying;
         }
     }
     IceBomba_Fly_Collide();
     IceBomba_CheckOnScreen();
 }
 
-void IceBomba_Fly_FlyAway(void)
+void IceBomba_State_FlyAway(void)
 {
     RSDK_THIS(IceBomba);
     RSDK.ProcessAnimation(&self->wingAnimator);
@@ -255,27 +267,27 @@ void IceBomba_Fly_FlyAway(void)
     IceBomba_CheckOnScreen();
 }
 
-void IceBomba_Bomb_Handle(void)
+void IceBomba_State_Bomb(void)
 {
     RSDK_THIS(IceBomba);
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (RSDK.CheckOnScreen(self, 0)) {
+    if (RSDK.CheckOnScreen(self, NULL)) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
-            RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-            CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
-            CREATE_ENTITY(Ice, intToVoid(2), self->position.x, self->position.y + 0x100000);
-            RSDK.PlaySfx(IceBomba->freezeSFX, 0, 255);
+            RSDK.PlaySfx(IceBomba->sfxExplosion, false, 255);
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PILLAR), self->position.x, self->position.y + 0x100000);
+            RSDK.PlaySfx(IceBomba->sfxFreeze, false, 0xFF);
             destroyEntity(self);
         }
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &IceBomba->bombHitbox)) {
-                RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-                CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
-                Ice_FreezePlayer((Entity*)player);
+            if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
+                RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                Ice_FreezePlayer((Entity *)player);
                 destroyEntity(self);
-                foreach_return;
+                foreach_break;
             }
         }
     }
@@ -283,9 +295,41 @@ void IceBomba_Bomb_Handle(void)
         destroyEntity(self);
 }
 
-void IceBomba_EditorDraw(void) { IceBomba_DebugDraw(); }
+#if RETRO_INCLUDE_EDITOR
+void IceBomba_EditorDraw(void)
+{
+    RSDK_THIS(IceBomba);
 
-void IceBomba_EditorLoad(void) { IceBomba_StageLoad(); }
+    self->drawFX |= FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->alpha         = 0x80;
+    self->spawnDist     = self->dist;
+    self->updateRange.x = (self->dist + 0x80) << 16;
+    self->updateRange.y = ((self->dip << 7) + 0x8000) << 8;
+    RSDK.SetSpriteAnimation(IceBomba->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(IceBomba->aniFrames, 1, &self->wingAnimator, true, 0);
+    RSDK.SetSpriteAnimation(IceBomba->aniFrames, 2, &self->bombAnimator, true, 0);
+    self->direction = self->dir;
+    if (self->dir) {
+        self->animator.frameID     = 4;
+        self->bombAnimator.frameID = 4;
+    }
+    else {
+        self->animator.frameID     = 0;
+        self->bombAnimator.frameID = 0;
+    }
+
+    IceBomba_Draw();
+}
+
+void IceBomba_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("PSZ1"))
+        IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/IceBomba.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("PSZ2"))
+        IceBomba->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/IceBomba.bin", SCOPE_STAGE);
+}
+#endif
 
 void IceBomba_Serialize(void)
 {

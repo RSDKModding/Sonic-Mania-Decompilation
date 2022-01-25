@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectFXFade {
 	RSDK_OBJECT
-} ObjectFXFade;
+};
 
 // Entity Class
-typedef struct {
+struct EntityFXFade {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
@@ -24,7 +24,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     bool32 transitionScene;
 #endif
-} EntityFXFade;
+};
 
 // Object Struct
 extern ObjectFXFade *FXFade;

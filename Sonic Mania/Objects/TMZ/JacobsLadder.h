@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectJacobsLadder {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxLadder;
-} ObjectJacobsLadder;
+};
 
 // Entity Class
-typedef struct {
+struct EntityJacobsLadder {
     RSDK_ENTITY
     int32 height;
     int32 interval;
@@ -30,7 +30,7 @@ typedef struct {
     Hitbox hitbox;
     Animator animator2;
     Animator animator;
-} EntityJacobsLadder;
+};
 
 // Object Struct
 extern ObjectJacobsLadder *JacobsLadder;

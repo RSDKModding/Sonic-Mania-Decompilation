@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: OneWayDoor Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectOneWayDoor *OneWayDoor;
@@ -16,7 +23,7 @@ void OneWayDoor_StaticUpdate(void) {}
 void OneWayDoor_Draw(void)
 {
     RSDK_THIS(OneWayDoor);
-    StateMachine_Run(self->drawState);
+    StateMachine_Run(self->stateDraw);
 }
 
 void OneWayDoor_Create(void *data)
@@ -33,11 +40,11 @@ void OneWayDoor_Create(void *data)
 #if RETRO_USE_PLUS
         RSDK.SetSpriteAnimation(OneWayDoor->animID, self->direction ? 4 : 2, &self->animator, true, 0);
 #endif
-        self->drawState = OneWayDoor_MMZDraw;
+        self->stateDraw = OneWayDoor_Draw_MMZ;
         self->groundVel = 0x60000;
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        self->drawState = OneWayDoor_CPZDraw;
+        self->stateDraw = OneWayDoor_Draw_CPZ;
         self->groundVel = 0x80000;
     }
 }
@@ -48,20 +55,20 @@ void OneWayDoor_StageLoad(void)
         OneWayDoor->animID = RSDK.LoadSpriteAnimation("MMZ/OneWayDoor.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("CPZ"))
         OneWayDoor->animID = RSDK.LoadSpriteAnimation("CPZ/OneWayDoor.bin", SCOPE_STAGE);
-    OneWayDoor->hitbox1.left   = -8;
-    OneWayDoor->hitbox1.top    = -32;
-    OneWayDoor->hitbox1.right  = 8;
-    OneWayDoor->hitbox1.bottom = 0;
+    OneWayDoor->hitboxTop.left   = -8;
+    OneWayDoor->hitboxTop.top    = -32;
+    OneWayDoor->hitboxTop.right  = 8;
+    OneWayDoor->hitboxTop.bottom = 0;
 
-    OneWayDoor->hitbox2.left   = -8;
-    OneWayDoor->hitbox2.top    = 0;
-    OneWayDoor->hitbox2.right  = 8;
-    OneWayDoor->hitbox2.bottom = 32;
+    OneWayDoor->hitboxBottom.left   = -8;
+    OneWayDoor->hitboxBottom.top    = 0;
+    OneWayDoor->hitboxBottom.right  = 8;
+    OneWayDoor->hitboxBottom.bottom = 32;
 
-    OneWayDoor->touchBox.left   = -64;
-    OneWayDoor->touchBox.top    = -32;
-    OneWayDoor->touchBox.right  = 8;
-    OneWayDoor->touchBox.bottom = 32;
+    OneWayDoor->hitboxRange.left   = -64;
+    OneWayDoor->hitboxRange.top    = -32;
+    OneWayDoor->hitboxRange.right  = 8;
+    OneWayDoor->hitboxRange.bottom = 32;
 }
 
 void OneWayDoor_Interact(void)
@@ -80,27 +87,27 @@ void OneWayDoor_Interact(void)
 
     foreach_active(Player, currentPlayer)
     {
-        int32 yChange = self->yChange;
-        if (self->drawState != OneWayDoor_MMZDraw)
-            yChange *= 2;
+        if (self->stateDraw != OneWayDoor_Draw_MMZ)
+            self->position.y -= 2 * self->yChange;
+        else
+            self->position.y -= self->yChange;
 
-        self->position.y -= yChange;
-        Player_CheckCollisionBox(currentPlayer, self, &OneWayDoor->hitbox1);
-        if (self->drawState == OneWayDoor_MMZDraw)
+        Player_CheckCollisionBox(currentPlayer, self, &OneWayDoor->hitboxTop);
+        if (self->stateDraw == OneWayDoor_Draw_MMZ)
             self->position.y += 2 * self->yChange;
 
-        Player_CheckCollisionBox(currentPlayer, self, &OneWayDoor->hitbox2);
-        if (self->drawState == OneWayDoor_MMZDraw)
+        Player_CheckCollisionBox(currentPlayer, self, &OneWayDoor->hitboxBottom);
+        if (self->stateDraw == OneWayDoor_Draw_MMZ)
             self->position.y -= self->yChange;
         else
             self->position.y += 2 * self->yChange;
 
         if (currentPlayer->velocity.x < 0x60000)
-            OneWayDoor->touchBox.left = -64;
+            OneWayDoor->hitboxRange.left = -64;
         else
-            OneWayDoor->touchBox.left = -88;
+            OneWayDoor->hitboxRange.left = -88;
 
-        if (Player_CheckCollisionTouch(currentPlayer, self, &OneWayDoor->touchBox)) {
+        if (Player_CheckCollisionTouch(currentPlayer, self, &OneWayDoor->hitboxRange)) {
 #if RETRO_USE_PLUS
             if (isMMZ1 && currentPlayer->sidekick && !playerIsBehind) {
                 Player->cantSwap = true;
@@ -130,7 +137,7 @@ void OneWayDoor_State_MoveUp(void)
     OneWayDoor_Interact();
 }
 
-void OneWayDoor_MMZDraw(void)
+void OneWayDoor_Draw_MMZ(void)
 {
     RSDK_THIS(OneWayDoor);
 
@@ -143,7 +150,7 @@ void OneWayDoor_MMZDraw(void)
     self->position.y += -0x200000 - self->yChange;
 }
 
-void OneWayDoor_CPZDraw(void)
+void OneWayDoor_Draw_CPZ(void)
 {
     RSDK_THIS(OneWayDoor);
 
@@ -164,11 +171,11 @@ void OneWayDoor_EditorDraw(void)
 
     if (RSDK.CheckStageFolder("MMZ")) {
         RSDK.SetSpriteAnimation(OneWayDoor->animID, self->direction ? 4 : 2, &self->animator, true, 0);
-        OneWayDoor_MMZDraw();
+        OneWayDoor_Draw_MMZ();
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
         RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &self->animator, true, 0);
-        OneWayDoor_CPZDraw();
+        OneWayDoor_Draw_CPZ();
     }
 }
 
@@ -178,6 +185,10 @@ void OneWayDoor_EditorLoad(void)
         OneWayDoor->animID = RSDK.LoadSpriteAnimation("MMZ/OneWayDoor.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("CPZ"))
         OneWayDoor->animID = RSDK.LoadSpriteAnimation("CPZ/OneWayDoor.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(OneWayDoor, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 

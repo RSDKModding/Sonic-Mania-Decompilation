@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BSS_Player Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBSS_Player *BSS_Player;
@@ -47,11 +54,11 @@ void BSS_Player_Update(void)
         self->position.y += 0xAA0000;
 
     if (self->animator.animationID == 1) {
-        self->animator.animationTimer += abs(setup->globeSpeed);
-        self->animator.animationSpeed = abs(setup->globeSpeed);
+        self->animator.timer += abs(setup->globeSpeed);
+        self->animator.speed = abs(setup->globeSpeed);
 
-        if (self->animator.animationTimer > 0x1F) {
-            self->animator.animationTimer &= 0x1F;
+        if (self->animator.timer > 0x1F) {
+            self->animator.timer &= 0x1F;
             if (setup->globeSpeed <= 0) {
                 if (--self->animator.frameID < 0)
                     self->animator.frameID = 11;
@@ -62,11 +69,11 @@ void BSS_Player_Update(void)
         }
     }
     else if (self->animator.animationID >= 2) {
-        self->animator.animationSpeed = maxVal(abs(setup->maxSpeed), 0x10);
+        self->animator.speed = maxVal(abs(setup->maxSpeed), 0x10);
         RSDK.ProcessAnimation(&self->animator);
     }
 
-    self->tailAnimator.animationSpeed = abs(setup->maxSpeed) + 40;
+    self->tailAnimator.speed = abs(setup->maxSpeed) + 40;
     RSDK.ProcessAnimation(&self->tailAnimator);
 }
 
@@ -242,12 +249,7 @@ void BSS_Player_ProcessP1Input(void)
         }
         self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
 
-#if RETRO_USE_PLUS
-        if (controller->keyStart.press || UnknownInfo->field_10 == 1) {
-#else
-        if (controller->keyStart.press) {
-#endif
-
+        if (controller->keyStart.press || Unknown_pausePress) {
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->objectID) {

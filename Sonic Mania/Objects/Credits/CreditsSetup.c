@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CreditsSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCreditsSetup *CreditsSetup;
@@ -114,15 +121,15 @@ void CreditsSetup_LoadCreditsStrings(void)
 
     int32 offset = (ScreenInfo->height + 128) << 16;
     for (int32 i = 0; RSDK.SplitStringList(&info, &buffer, i, 1); ++i) {
-        if (info.textLength <= 4) {
+        if (info.length <= 4) {
             offset += 0x200000;
         }
         else {
             int32 type      = info.text[1] - '0';
             bool32 hasShape = info.text[2] == 'U';
 
-            info.textLength -= 3;
-            for (int32 c = 0; c < info.textLength; ++c) {
+            info.length -= 3;
+            for (int32 c = 0; c < info.length; ++c) {
                 info.text[c] = info.text[c + 3];
             }
 

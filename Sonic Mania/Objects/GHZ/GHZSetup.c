@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GHZSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGHZSetup *GHZSetup;
@@ -82,7 +89,7 @@ void GHZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && globals->gameMode == MODE_ENCORE)) {
-        RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreGHZ.act", 0b0000000011111111);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 2, 128, 80);
         RSDK.RotatePalette(2, 181, 184, true);
@@ -109,10 +116,10 @@ void GHZSetup_SetupStartingBG(void)
         for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
             GHZSetup_BGSwitch_CB_Caves_Act2();
         }
-        Zone_ReloadStoredEntities(0x6BC0000, 0xD40000, true);
+        Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1724 << 16, true);
     }
     else {
-        Zone_ReloadStoredEntities(0x3EC0000, 0xD40000, true);
+        Zone_ReloadStoredEntities(WIDE_SCR_XCENTER << 16, 1004 << 16, true);
         TileLayer *outsideLayer = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("BG Outside"));
         EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -125,14 +132,14 @@ void GHZSetup_SetupStartingBG(void)
 }
 void GHZSetup_SetupActTransition(void)
 {
-    Zone_StoreEntities(0x3DB00000, 0x6340000);
+    Zone_StoreEntities(15792 << 16, 1588 << 16);
     RSDK.LoadScene();
 }
 void GHZSetup_HandleActTransition(void)
 {
     Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->centerX;
     Zone->cameraBoundsB[0] = 1412;
-    Zone_ReloadStoredEntities(0x5840000, 0x1000000, true);
+    Zone_ReloadStoredEntities(256 << 16, 1412 << 16, true);
 
     TileLayer *layer2 = RSDK.GetSceneLayer(2);
     layer2->scrollPos += 0xB000 * layer2->parallaxFactor;
@@ -186,6 +193,9 @@ void GHZSetup_EditorLoad(void)
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
     RSDK_ENUM_VAR("Outside BG", GHZ_BG_OUTSIDE);
     RSDK_ENUM_VAR("Caves BG", GHZ_BG_CAVES);
+
+    RSDK_ACTIVE_VAR(Decoration, type);
+    RSDK_ENUM_VAR("Bridge Post", GHZ_DECOR_BRIDGEPOST);
 }
 #endif
 

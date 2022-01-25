@@ -3,13 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum { GENERICTRIGGER_PSZ1_PETALSINACTIVE, GENERICTRIGGER_PSZ1_PETALSACTIVE, GENERICTRIGGER_PSZ1_ACHIEVEMENT } GenericTriggerTypesPSZ1;
+
+typedef enum {
+    PSZ1_BG_INSIDE,
+    PSZ1_BG_OUTSIDE,
+} BGSwitchIDsPSZ1;
+
 // Object Class
-typedef struct {
+struct ObjectPSZ1Setup {
     RSDK_OBJECT
     TABLE(int32 aniTileDelays1[7], { 64, 2, 1, 2, 2, 6, 2 });
     TABLE(int32 aniTileDelays2[14], { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 });
-    int32 field_58;
-    bool32 flag;
+    int32 unused;
+    bool32 petalBehaviourActive;
     int32 petalTimer;
     int32 aniTilesDelayC;
     int32 aniTilesFrameC;
@@ -26,17 +33,17 @@ typedef struct {
     int32 aniTilesFrameI;
     int32 aniTilesFrameB;
     int32 aniTilesFrameA;
-    int32 field_A0;
+    int32 levelWrapType;
     bool32 hasAchievement;
     uint16 aniTilesA;
     uint16 aniTilesB;
     uint16 aniTilesC;
-} ObjectPSZ1Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPSZ1Setup {
 	RSDK_ENTITY
-} EntityPSZ1Setup;
+};
 
 // Object Struct
 extern ObjectPSZ1Setup *PSZ1Setup;
@@ -48,18 +55,20 @@ void PSZ1Setup_StaticUpdate(void);
 void PSZ1Setup_Draw(void);
 void PSZ1Setup_Create(void* data);
 void PSZ1Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PSZ1Setup_EditorDraw(void);
 void PSZ1Setup_EditorLoad(void);
+#endif
 void PSZ1Setup_Serialize(void);
 
 // Extra Entity Functions
 #if RETRO_USE_PLUS
-void PSZ1Setup_BGSwitchCB1(void);
-void PSZ1Setup_BGSwitchCB2(void);
+void PSZ1Setup_BGSwitch_CB_Inside(void);
+void PSZ1Setup_BGSwitch_CB_Outside(void);
 #endif
-void PSZ1Setup_TriggerCB1(void);
-void PSZ1Setup_TriggerCB2(void);
-void PSZ1Setup_TriggerCB3(void);
+void PSZ1Setup_TriggerCB_DeactivatePetalBehaviour(void);
+void PSZ1Setup_TriggerCB_ActivatePetalBehaviour(void);
+void PSZ1Setup_TriggerCB_AchievementArea(void);
 void PSZ1Setup_ActTransitionCB(void);
 void PSZ1Setup_LevelWrap_Top(void);
 void PSZ1Setup_LevelWrap_Bottom(void);

@@ -1,18 +1,51 @@
-#include "RetroEngine.hpp"
+#include "RSDK/Core/RetroEngine.hpp"
 #include "main.hpp"
 
-#if RETRO_STANDALONE
-int main(int argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogic); }
+#ifdef __SWITCH__
+#include <switch.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/errno.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+
+static int s_nxlinkSock = -1;
+
+static void initNxLink()
+{
+    if (R_FAILED(socketInitializeDefault()))
+        return;
+
+    s_nxlinkSock = nxlinkStdio();
+    if (s_nxlinkSock >= 0)
+        printf("printf output now goes to nxlink server\n");
+    else
+        socketExit();
+}
 #endif
 
-int RSDK_main(int argc, char *argv[], linkPtr linkLogicPtr)
+#if RETRO_STANDALONE
+int main(int argc, char *argv[]) { return RSDK_main(argc, argv, RSDK::LinkGameLogic); }
+#endif
+
+int RSDK_main(int argc, char **argv, void (*linkLogicPtr)(void *))
 {
-    linkGameLogic = linkLogicPtr;
+#ifdef __SWITCH__
+    initNxLink();
+#endif
+
+    linkGameLogic = (linkPtr)linkLogicPtr;
 
     parseArguments(argc, argv);
     if (initRetroEngine()) {
         runRetroEngine();
     }
 
-	return 0;
+#ifdef __SWITCH__
+    socketExit();
+#endif
+
+    return 0;
 }

@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTurboTurtle {
     RSDK_OBJECT
     Hitbox hitbox;
     uint16 aniFrames;
     uint16 sfxWalk;
     uint16 sfxWalk2;
-} ObjectTurboTurtle;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTurboTurtle {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -39,7 +39,7 @@ typedef struct {
     int32 rightFanDuration;
     int32 rightFanStrength;
     int32 rightFanLength;
-} EntityTurboTurtle;
+};
 
 // Object Struct
 extern ObjectTurboTurtle *TurboTurtle;

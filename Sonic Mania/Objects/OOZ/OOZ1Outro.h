@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectOOZ1Outro {
     RSDK_OBJECT
     int32 field_4;
     uint16 sfxDrop;
-} ObjectOOZ1Outro;
+};
 
 // Entity Class
-typedef struct {
+struct EntityOOZ1Outro {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
@@ -26,7 +26,7 @@ typedef struct {
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-} EntityOOZ1Outro;
+};
 
 // Object Struct
 extern ObjectOOZ1Outro *OOZ1Outro;
@@ -43,9 +43,9 @@ void OOZ1Outro_EditorLoad(void);
 void OOZ1Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host);
-bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host);
-bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host);
-bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_PostActClearSetup(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_FallIntoAct2(EntityCutsceneSeq *host);
+bool32 OOZ1Outro_Cutscene_BeginAct(EntityCutsceneSeq *host);
 
 #endif //!OBJ_OOZ1OUTRO_H

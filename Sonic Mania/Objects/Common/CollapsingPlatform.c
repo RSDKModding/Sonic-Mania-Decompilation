@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: CollapsingPlatform Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectCollapsingPlatform *CollapsingPlatform;
@@ -9,92 +16,60 @@ void CollapsingPlatform_Update(void)
     if (DebugMode)
         self->visible = DebugMode->debugActive;
 
+    bool32 runState = false;
+
     if (self->collapseDelay) {
 #if RETRO_USE_PLUS
         if (Player) {
             foreach_active(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
-                    StateMachine_Run(self->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-                    if (self->respawn) {
-                        self->collapseDelay = 0;
-                        self->playerPos.x   = 0;
-                    }
-                    else {
-                        destroyEntity(self);
-                    }
-                    foreach_return;
-                }
-            }
-        }
-#endif
-        if (--self->collapseDelay == 0) {
-            StateMachine_Run(self->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-            if (self->respawn) {
-                self->collapseDelay = 0;
-                self->playerPos.x   = 0;
-            }
-            else {
-                destroyEntity(self);
-            }
-        }
-    }
-    else if (Player) {
-        self->direction = FLIP_NONE;
-        foreach_active(Player, player)
-        {
-            if (Player_CheckCollisionTouch(player, self, &self->hitbox)
-#if RETRO_USE_PLUS
-                && (!self->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
-#endif
-                && !player->sidekick && player->onGround && !player->collisionMode && !self->eventOnly && self->delay < 0xFFFF) {
-                self->playerPos.x = player->position.x;
-#if RETRO_USE_PLUS
-                if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
-                    StateMachine_Run(self->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-                    if (self->respawn) {
-                        self->collapseDelay = 0;
-                        self->playerPos.x   = 0;
-                    }
-                    else {
-                        destroyEntity(self);
-                    }
+                    runState = true;
                     foreach_break;
                 }
+            }
+        }
 #endif
+        if (!runState && --self->collapseDelay == 0)
+            runState = true;
+    }
+    else {
+        if (Player) {
+            self->direction = FLIP_NONE;
+            foreach_active(Player, player)
+            {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox)
+#if RETRO_USE_PLUS
+                    && (!self->mightyOnly || (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop))
+#endif
+                    && !player->sidekick && player->onGround && !player->collisionMode && !self->eventOnly && self->delay < 0xFFFF) {
+                    self->stoodPos.x = player->position.x;
+#if RETRO_USE_PLUS
+                    if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
+                        runState = true;
+                        foreach_break;
+                    }
+#endif
+                }
             }
         }
 
-        if (self->playerPos.x) {
+        if (!runState && self->stoodPos.x) {
             self->collapseDelay = self->delay;
-            if (!self->delay) {
-                StateMachine_Run(self->state);
-                RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-                if (self->respawn) {
-                    self->collapseDelay = 0;
-                    self->playerPos.x   = 0;
-                }
-                else {
-                    destroyEntity(self);
-                }
-            }
+            if (!self->delay)
+                runState = true;
         }
     }
-    else if (self->playerPos.x) {
-        self->collapseDelay = self->delay;
-        if (!self->delay) {
-            StateMachine_Run(self->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
-            if (self->respawn) {
-                self->collapseDelay = 0;
-                self->playerPos.x   = 0;
-            }
-            else {
-                destroyEntity(self);
-            }
+
+    if (runState) {
+        StateMachine_Run(self->state);
+        RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 0xFF);
+        if (self->respawn) {
+            self->collapseDelay = 0;
+            self->stoodPos.x    = 0;
+        }
+        else {
+            destroyEntity(self);
         }
     }
 }
@@ -113,11 +88,9 @@ void CollapsingPlatform_Draw(void)
     drawPos.x -= self->size.x >> 1;
     drawPos.y -= self->size.y >> 1;
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
 
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
@@ -144,7 +117,7 @@ void CollapsingPlatform_Create(void *data)
     self->position.y &= 0xFFF80000;
     self->drawFX |= FX_FLIP;
     self->drawOrder = Zone->drawOrderLow;
-    if (self->targetLayer == 0) {
+    if (self->targetLayer == COLLAPSEPLAT_TARGET_LOW) {
         self->targetLayer = Zone->fgLow;
         self->drawOrder   = Zone->drawOrderLow;
     }
@@ -157,8 +130,8 @@ void CollapsingPlatform_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        int32 xOff              = (self->position.x >> 20) - (self->size.x >> 21);
-        int32 yOff              = (self->position.y >> 20) - (self->size.y >> 21);
+        int32 xOff          = (self->position.x >> 20) - (self->size.x >> 21);
+        int32 yOff          = (self->position.y >> 20) - (self->size.y >> 21);
 
         if ((self->size.y & 0xFFF00000) && !(self->size.y & 0xFFF00000 & 0x80000000)) {
             int32 sx = self->size.x >> 20;
@@ -206,10 +179,10 @@ void CollapsingPlatform_State_Left(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = self->storedTiles;
-    int32 startTX   = (self->position.x >> 20) - (self->size.x >> 21);
-    int32 startTY   = (self->position.y >> 20) - (self->size.y >> 21);
-    int32 tx        = self->position.x - (self->size.x >> 1) + 0x80000;
-    int32 ty        = (self->position.y - (self->size.y >> 1)) + 0x80000;
+    int32 startTX = (self->position.x >> 20) - (self->size.x >> 21);
+    int32 startTY = (self->position.y >> 20) - (self->size.y >> 21);
+    int32 tx      = self->position.x - (self->size.x >> 1) + 0x80000;
+    int32 ty      = (self->position.y - (self->size.y >> 1)) + 0x80000;
 
     int32 sx = self->size.x >> 20;
     int32 sy = self->size.y >> 20;
@@ -221,10 +194,10 @@ void CollapsingPlatform_State_Left(void)
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;
             tileChunk->drawOrder = self->drawOrder;
-            tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
-            int32 timerX           = x >> CollapsingPlatform->shift;
-            int32 timerY           = y >> CollapsingPlatform->shift;
+            tileChunk->tilePos.y = y + startTY;
+            int32 timerX         = x >> CollapsingPlatform->shift;
+            int32 timerY         = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (sy + 2 * timerX - timerY);
             ++tiles;
         }
@@ -237,12 +210,12 @@ void CollapsingPlatform_State_Right(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = self->storedTiles;
-    int32 startTX   = (self->position.x >> 20) - (self->size.x >> 21);
-    int32 startTY   = (self->position.y >> 20) - (self->size.y >> 21);
-    int32 tx        = self->position.x - (self->size.x >> 1) + 0x80000;
-    int32 ty        = (self->position.y - (self->size.y >> 1)) + 0x80000;
+    int32 startTX = (self->position.x >> 20) - (self->size.x >> 21);
+    int32 startTY = (self->position.y >> 20) - (self->size.y >> 21);
+    int32 tx      = self->position.x - (self->size.x >> 1) + 0x80000;
+    int32 ty      = (self->position.y - (self->size.y >> 1)) + 0x80000;
 
-    int32 timerSX   = self->size.x >> CollapsingPlatform->shift >> 20;
+    int32 timerSX = self->size.x >> CollapsingPlatform->shift >> 20;
 
     int32 sx = self->size.x >> 20;
     int32 sy = self->size.y >> 20;
@@ -253,10 +226,10 @@ void CollapsingPlatform_State_Right(void)
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;
             tileChunk->drawOrder = self->drawOrder;
-            tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
-            int32 timerX           = x >> CollapsingPlatform->shift;
-            int32 timerY           = y >> CollapsingPlatform->shift;
+            tileChunk->tilePos.y = y + startTY;
+            int32 timerX         = x >> CollapsingPlatform->shift;
+            int32 timerY         = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (sy + 2 * (timerSX - timerX) - timerY);
             ++tiles;
         }
@@ -269,10 +242,10 @@ void CollapsingPlatform_State_Center(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = self->storedTiles;
-    int32 startTX   = (self->position.x >> 20) - (self->size.x >> 21);
-    int32 startTY   = (self->position.y >> 20) - (self->size.y >> 21);
-    int32 tx        = self->position.x - (self->size.x >> 1) + 0x80000;
-    int32 ty        = (self->position.y - (self->size.y >> 1)) + 0x80000;
+    int32 startTX = (self->position.x >> 20) - (self->size.x >> 21);
+    int32 startTY = (self->position.y >> 20) - (self->size.y >> 21);
+    int32 tx      = self->position.x - (self->size.x >> 1) + 0x80000;
+    int32 ty      = (self->position.y - (self->size.y >> 1)) + 0x80000;
 
     int32 timerSX = self->size.x >> CollapsingPlatform->shift >> 20;
     int32 timerSY = self->size.y >> CollapsingPlatform->shift >> 20;
@@ -288,8 +261,8 @@ void CollapsingPlatform_State_Center(void)
             tileChunk->drawOrder = self->drawOrder;
             tileChunk->tilePos.x = x + startTX;
             tileChunk->tilePos.y = y + startTY;
-            int32 timerX           = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
-            int32 timerY           = y >> CollapsingPlatform->shift;
+            int32 timerX         = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
+            int32 timerY         = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (timerSY + 2 * timerX - timerY);
             if (!(timerSX & 1) && x >> CollapsingPlatform->shift < (timerSX >> 1))
                 tileChunk->timer -= 6;
@@ -302,7 +275,7 @@ void CollapsingPlatform_State_Center(void)
 void CollapsingPlatform_State_LeftOrRight(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int32 px = self->playerPos.x;
+    int32 px = self->stoodPos.x;
     int32 x  = self->position.x;
 
     if (px < x)
@@ -313,7 +286,7 @@ void CollapsingPlatform_State_LeftOrRight(void)
 void CollapsingPlatform_State_PlayerPos(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int32 px = self->playerPos.x;
+    int32 px = self->stoodPos.x;
     int32 x  = self->position.x;
 
     if (abs(px - x) < self->size.x / 6) {
@@ -338,11 +311,9 @@ void CollapsingPlatform_EditorDraw(void)
     drawPos.x -= self->size.x >> 1;
     drawPos.y -= self->size.y >> 1;
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
@@ -371,6 +342,10 @@ void CollapsingPlatform_EditorLoad(void)
     RSDK_ENUM_VAR("Center", COLLAPSEPLAT_CENTER);
     RSDK_ENUM_VAR("Left or Right", COLLAPSEPLAT_LR);
     RSDK_ENUM_VAR("Base on Player Position", COLLAPSEPLAT_PLAYER);
+
+    RSDK_ACTIVE_VAR(CollapsingPlatform, targetLayer);
+    RSDK_ENUM_VAR("Low", COLLAPSEPLAT_TARGET_LOW);
+    RSDK_ENUM_VAR("High", COLLAPSEPLAT_TARGET_HIGH);
 }
 #endif
 

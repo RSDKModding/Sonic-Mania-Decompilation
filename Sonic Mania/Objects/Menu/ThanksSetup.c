@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: ThanksSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectThanksSetup *ThanksSetup;
@@ -30,7 +37,7 @@ void ThanksSetup_Create(void *data)
         self->state              = ThanksSetup_State_ThanksForPlaying;
         self->stateDraw          = ThanksSetup_Draw_Fade;
         self->timer              = 0x300;
-        self->offset             = 0x10000;
+        self->radius             = 0x10000;
         self->scale.x            = 0x200;
         self->scale.y            = 0x200;
         EntityUIPicture *picture = RSDK_GET_ENTITY(80, UIPicture);
@@ -59,8 +66,8 @@ void ThanksSetup_HandleIconsPos(void)
     foreach_active(UIPicture, picture)
     {
         if (!picture->animator.animationID) {
-            picture->position.x = 0x1000000 + self->offset * RSDK.Sin512(angle);
-            picture->position.y = 0x780000 + self->offset * RSDK.Cos512(angle);
+            picture->position.x = 0x1000000 + self->radius * RSDK.Sin512(angle);
+            picture->position.y = 0x780000 + self->radius * RSDK.Cos512(angle);
             angle += 32;
         }
     }
@@ -72,12 +79,12 @@ void ThanksSetup_State_ThanksForPlaying(void)
 
     if (self->timer <= 0) {
         self->timer = 0;
-        self->offset += (0x3000 - self->offset) >> 4;
+        self->radius += (0x3000 - self->radius) >> 4;
         self->state     = ThanksSetup_State_FlipOverIcon;
         self->stateDraw = 0;
     }
     else {
-        self->offset += (0x3000 - self->offset) >> 4;
+        self->radius += (0x3000 - self->radius) >> 4;
         self->timer -= 16;
     }
     ThanksSetup_HandleIconsPos();
@@ -97,7 +104,7 @@ void ThanksSetup_State_FlipOverIcon(void)
             self->state = ThanksSetup_State_Mania2017;
         }
     }
-    self->offset += (0x3000 - self->offset) >> 4;
+    self->radius += (0x3000 - self->radius) >> 4;
     ThanksSetup_HandleIconsPos();
 }
 
@@ -133,7 +140,7 @@ void ThanksSetup_State_FadeOut(void)
     else {
         self->timer += 16;
     }
-    self->offset += (self->offset - 0x2000) >> 4;
+    self->radius += (self->radius - 0x2000) >> 4;
     ThanksSetup_HandleIconsPos();
 }
 

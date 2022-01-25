@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Iwamodoki Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectIwamodoki *Iwamodoki;
@@ -9,7 +16,7 @@ void Iwamodoki_Update(void)
     if (LRZConvItem && self->lrzConvPhys) {
         self->preMovePos.x = self->position.x;
         self->preMovePos.y = self->position.y;
-        self->moveOffset   = LRZConvItem_Unknown2(self);
+        self->moveOffset   = LRZConvItem_GetMoveOffset(self);
     }
     else {
         self->preMovePos.x = self->position.x;

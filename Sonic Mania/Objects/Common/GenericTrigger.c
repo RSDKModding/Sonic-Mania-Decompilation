@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GenericTrigger Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGenericTrigger *GenericTrigger;
@@ -29,10 +36,10 @@ void GenericTrigger_Create(void *data)
         self->updateRange.x = self->size.x;
         self->updateRange.y = self->size.y;
         self->active        = ACTIVE_BOUNDS;
-        self->hitbox.left   = -(self->size.x >> 0x10);
-        self->hitbox.right  = (self->size.x >> 0x10);
-        self->hitbox.top    = -(self->size.y >> 0x10);
-        self->hitbox.bottom = (self->size.y >> 0x10);
+        self->hitbox.left   = -(self->size.x >> 16);
+        self->hitbox.right  = (self->size.x >> 16);
+        self->hitbox.top    = -(self->size.y >> 16);
+        self->hitbox.bottom = (self->size.y >> 16);
     }
 }
 
@@ -48,7 +55,7 @@ void GenericTrigger_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     if (showGizmos())
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x << 1, self->size.y << 1);
 }
 
 void GenericTrigger_EditorLoad(void) { GenericTrigger->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

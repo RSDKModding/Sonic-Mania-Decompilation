@@ -4,22 +4,22 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectHonkytonk {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 sfxPiano;
     uint16 aniFrames;
-} ObjectHonkytonk;
+};
 
 // Entity Class
-typedef struct {
+struct EntityHonkytonk {
     RSDK_ENTITY
     StateMachine(state);
     int32 negAngle;
     int32 depression;
     Animator animator;
-} EntityHonkytonk;
+};
 
 // Object Struct
 extern ObjectHonkytonk *Honkytonk;

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: GiantPistol Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectGiantPistol *GiantPistol;
@@ -283,7 +290,7 @@ void GiantPistol_State_Aiming(void)
                 }
 
 #if RETRO_USE_PLUS
-                if (SceneInfo->filter == SCN_FILTER_ENCORE && GiantPistol->flag) {
+                if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE) && GiantPistol->flag) {
                     player->velocity.x += 0x18000;
                     player->state           = GiantPistol_Player_State_Unknown1;
                     player->nextGroundState = GiantPistol_Player_State_Unknown2;

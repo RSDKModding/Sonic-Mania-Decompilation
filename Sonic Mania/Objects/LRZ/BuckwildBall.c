@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BuckwildBall Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectBuckwildBall *BuckwildBall;
@@ -306,7 +313,7 @@ void BuckwildBall_State_Unknown3(void)
             self->state                   = BuckwildBall_State_Unknown5;
             self->velocity.x              = 0;
             self->velocity.y              = -0x40000;
-            self->animator.animationSpeed = 0;
+            self->animator.speed = 0;
             self->drawOrder               = Zone->drawOrderHigh;
         }
         else {
@@ -356,7 +363,7 @@ void BuckwildBall_State_Unknown4(void)
         Camera_ShakeScreen(0, 0, 5);
         self->velocity.x              = 0;
         self->velocity.y              = -0x40000;
-        self->animator.animationSpeed = 0;
+        self->animator.speed = 0;
         self->drawOrder               = Zone->drawOrderHigh;
     }
 

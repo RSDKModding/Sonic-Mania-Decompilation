@@ -14,20 +14,20 @@ typedef enum {
 }TAEmeraldColours;
 
 // Object Class
-typedef struct {
+struct ObjectTAEmerald {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectTAEmerald;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTAEmerald {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
     int32 timer;
     Vector2 startPos;
     Animator animator;
-} EntityTAEmerald;
+};
 
 // Object Struct
 extern ObjectTAEmerald *TAEmerald;

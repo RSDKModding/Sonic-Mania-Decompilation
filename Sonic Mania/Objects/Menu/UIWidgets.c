@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: UIWidgets Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectUIWidgets *UIWidgets;
@@ -12,7 +19,7 @@ void UIWidgets_StaticUpdate(void)
     UIWidgets->timer &= 0x7FFF;
 #if RETRO_USE_PLUS
     UIWidgets->buttonColour = UIWidgets->buttonColours[(UIWidgets->timer >> 1) & 0xF];
-#endif  
+#endif
 }
 
 void UIWidgets_Draw(void) {}
@@ -21,15 +28,15 @@ void UIWidgets_Create(void *data) {}
 
 void UIWidgets_StageLoad(void)
 {
-    UIWidgets->active                = ACTIVE_ALWAYS;
+    UIWidgets->active        = ACTIVE_ALWAYS;
     UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
-    UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
-    UIWidgets->labelSpriteIndex      = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
     UIWidgets->sfxBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     UIWidgets->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     UIWidgets->sfxWarp   = RSDK.GetSfx("Global/SpecialWarp.wav");
@@ -61,16 +68,16 @@ void UIWidgets_ApplyLanguage(void)
 {
     LogHelpers_Print("Apply Language %d", Localization->language);
     switch (Localization->language) {
-        case LANGUAGE_EN: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
-        case LANGUAGE_FR: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
-        case LANGUAGE_IT: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextIT.bin", SCOPE_STAGE); break;
-        case LANGUAGE_GE: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
-        case LANGUAGE_JP: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_EN: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
+        case LANGUAGE_FR: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
+        case LANGUAGE_IT: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextIT.bin", SCOPE_STAGE); break;
+        case LANGUAGE_GE: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextGE.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SP: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextSP.bin", SCOPE_STAGE); break;
+        case LANGUAGE_JP: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextJP.bin", SCOPE_STAGE); break;
 #if RETRO_GAMEVER != VER_100
-        case LANGUAGE_KO: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
-        case LANGUAGE_SC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
-        case LANGUAGE_TC: UIWidgets->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_KO: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextKO.bin", SCOPE_STAGE); break;
+        case LANGUAGE_SC: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextSC.bin", SCOPE_STAGE); break;
+        case LANGUAGE_TC: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextTC.bin", SCOPE_STAGE); break;
 #endif
         default: break;
     }
@@ -96,8 +103,8 @@ void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32
 }
 void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y)
 {
-    int32 w    = width << 16 >> 1;
-    int32 h    = height << 16 >> 1;
+    int32 w       = width << 16 >> 1;
+    int32 h       = height << 16 >> 1;
     colour colour = RSDK.GetPaletteEntry(3, (UIWidgets->timer >> 1) & 0xF);
     RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, colour, 255, INK_NONE, false);
     RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
@@ -180,26 +187,26 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag,
         }
     }
 }
-void UIWidgets_DrawParallelogram(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y)
+void UIWidgets_DrawParallelogram(int32 height, int32 width, int32 edgeSize, int32 red, int32 green, int32 blue, int32 x, int32 y)
 {
     Vector2 verts[4];
 
-    verts[0].x = x - (height << 15);
-    verts[0].y = y - (width << 15);
-    verts[1].x = x + (height << 15);
-    verts[1].y = y - (width << 15);
+    verts[0].x = x - (width << 15);
+    verts[0].y = y - (height << 15);
+    verts[1].x = x + (width << 15);
+    verts[1].y = y - (height << 15);
     verts[2].x = verts[1].x;
-    verts[2].y = y + (width << 15);
+    verts[2].y = y + (height << 15);
     verts[3].x = verts[0].x;
-    verts[3].y = y + (width << 15);
+    verts[3].y = y + (height << 15);
 
-    if (size << 16 <= 0) {
-        verts[0].x -= size << 16;
-        verts[2].x += size << 16;
+    if (edgeSize << 16 <= 0) {
+        verts[0].x -= edgeSize << 16;
+        verts[2].x += edgeSize << 16;
     }
     else {
-        verts[1].x += size << 16;
-        verts[3].x -= size << 16;
+        verts[1].x += edgeSize << 16;
+        verts[3].x -= edgeSize << 16;
     }
 
     if (SceneInfo->inEditor) {
@@ -227,27 +234,27 @@ void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
 
-    drawPos.x                    = x;
-    drawPos.y                    = y;
-    UIWidgets->animator2.frameID = 2;
+    drawPos.x                         = x;
+    drawPos.y                         = y;
+    UIWidgets->arrowsAnimator.frameID = 2;
     drawPos.y -= arrowDist << 15;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
-    UIWidgets->animator2.frameID = 3;
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
+    UIWidgets->arrowsAnimator.frameID = 3;
     drawPos.y += arrowDist << 16;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
 }
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
 
-    drawPos.x                    = x;
-    drawPos.y                    = y;
-    UIWidgets->animator2.frameID = 0;
+    drawPos.x                         = x;
+    drawPos.y                         = y;
+    UIWidgets->arrowsAnimator.frameID = 0;
     drawPos.x -= arrowDist >> 1;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
-    UIWidgets->animator2.frameID = 1;
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
+    UIWidgets->arrowsAnimator.frameID = 1;
     drawPos.x += arrowDist;
-    RSDK.DrawSprite(&UIWidgets->animator2, &drawPos, false);
+    RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
 }
 Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, colour leftColour, colour rightColour)
 {
@@ -265,17 +272,17 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
 {
     Vector2 drawPos;
     Animator animator;
-    Animator animator2;
+    Animator arrowsAnimator;
     char strBuf[16];
 
     memset(&animator, 0, sizeof(Animator));
-    memset(&animator2, 0, sizeof(Animator));
+    memset(&arrowsAnimator, 0, sizeof(Animator));
 
     drawPos.x = x;
     drawPos.y = y + 0x20000;
 
-    RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 9, &animator2, true, 9);
-    RSDK.DrawSprite(&animator2, &drawPos, false);
+    RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 9, &arrowsAnimator, true, 9);
+    RSDK.DrawSprite(&arrowsAnimator, &drawPos, false);
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
     if (minutes) {
@@ -296,7 +303,7 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
     for (int32 i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
-        RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 8, &animator, true, (uint8)(strBuf[i] - '0'));
+        RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 8, &animator, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&animator, &drawPos, false);
         drawPos.x += 0x80000;
     }
@@ -310,12 +317,12 @@ void UIWidgets_EditorLoad(void)
 {
     UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
-    UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
-    UIWidgets->labelSpriteIndex = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
-    UIWidgets->textSpriteIndex  = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
+    UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
 #if RETRO_USE_PLUS
     UIWidgets->buttonColour = 0xF0F0F0;
 #endif

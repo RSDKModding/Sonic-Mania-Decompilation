@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MatryoshkaBom Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMatryoshkaBom *MatryoshkaBom;
@@ -244,7 +251,7 @@ void MatryoshkaBom_Unknown6(void)
             case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &self->animator1, true, 0); break;
             case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &self->animator1, true, 0); break;
         }
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
         self->state = MatryoshkaBom_Unknown7;
     }
     RSDK.ProcessAnimation(&self->animator1);
@@ -357,7 +364,7 @@ void MatryoshkaBom_State_Exploding(void)
         self->canExplode      = false;
     }
 
-    if (self->animator1.frameID >= self->animator1.frameDelay - 1)
+    if (self->animator1.frameID >= self->animator1.frameDuration - 1)
         self->state = MatryoshkaBom_Unknown5;
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();

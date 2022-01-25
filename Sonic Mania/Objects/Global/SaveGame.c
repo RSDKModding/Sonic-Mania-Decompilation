@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: SaveGame Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSaveGame *SaveGame;
@@ -39,7 +46,7 @@ void SaveGame_LoadSaveData(void)
 {
     int32 slot = globals->saveSlotID;
     if (slot == NO_SAVE_SLOT)
-        SaveGame->saveRAM = (EntitySaveGame*)globals->noSaveSlot;
+        SaveGame->saveRAM = (EntitySaveGame *)globals->noSaveSlot;
     else
 #if RETRO_USE_PLUS
         SaveGame->saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(slot, globals->gameMode == MODE_ENCORE);
@@ -50,10 +57,8 @@ void SaveGame_LoadSaveData(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     if (!saveRAM->lives)
         saveRAM->lives = 3;
-    if (saveRAM->score1UP <= saveRAM->score) {
-        do
-            saveRAM->score1UP += 50000;
-        while (saveRAM->score1UP <= saveRAM->score);
+    while (saveRAM->score1UP <= saveRAM->score) {
+        saveRAM->score1UP += 50000;
     }
 
     if (Player) {
@@ -108,10 +113,10 @@ void SaveGame_LoadSaveData(void)
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(e);
-                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorContents, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->boxAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->overlayAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->debrisAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &itemBox->contentsAnimator, true, 0);
                     itemBox->state = ItemBox_State_Broken;
                 }
             }
@@ -156,7 +161,7 @@ void SaveGame_LoadFile(void)
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
     API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
-void SaveGame_SaveFile(void (*callback)(int32 status))
+void SaveGame_SaveFile(void (*callback)(bool32 success))
 {
     if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
@@ -173,17 +178,17 @@ void SaveGame_SaveFile(void (*callback)(int32 status))
     }
 }
 
-void SaveGame_SaveLoadedCB(int32 status)
+void SaveGame_SaveLoadedCB(bool32 success)
 {
-    LogHelpers_Print("SaveLoadedCB(%d)", status);
-    if (status) {
+    LogHelpers_Print("SaveLoadedCB(%d)", success);
+    if (success) {
         foreach_all(UISaveSlot, entity)
         {
             if (!entity->type) {
                 Entity* store                     = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)entity;
                 UISaveSlot_LoadSaveInfo();
-                UISaveSlot_Unknown8();
+                UISaveSlot_HandleSaveIcons();
                 SceneInfo->entity = store;
             }
         }
@@ -193,15 +198,7 @@ void SaveGame_SaveLoadedCB(int32 status)
 
 #if RETRO_USE_PLUS
     if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
-        LogHelpers_Print("Loading Time Attack DB");
-        globals->taTableLoaded        = STATUS_CONTINUE;
-        TimeAttackData->loadEntityPtr = SceneInfo->entity;
-        TimeAttackData->loadCallback  = NULL;
-        globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
-        if (globals->taTableID == -1) {
-            LogHelpers_Print("Couldn't claim a slot for loading %s", "TimeAttackDB.bin");
-            globals->taTableLoaded = STATUS_ERROR;
-        }
+        TimeAttackData_LoadTimeAttackDB(NULL);
     }
 #endif
 }
@@ -242,9 +239,9 @@ void SaveGame_SaveGameState(void)
     globals->restart1UP      = player1->ringExtraLife;
     globals->restartPowerups = player1->shield | (player1->hyperRing << 6);
 
-    for (int32 i = 0x40; i < 0x40 + 0x800; ++i) {
+    for (int32 i = RESERVE_ENTITY_COUNT; i < RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
-        if (itemBox->objectID || (itemBox->active != 0xFF)) {
+        if (itemBox->objectID || (itemBox->active != ACTIVE_NEVER2)) {
             if (itemBox->objectID == ItemBox->objectID) {
                 if (itemBox->state == ItemBox_State_Broken) {
                     globals->atlEntityData[(0x200 * 1) + i] = 2;
@@ -270,26 +267,26 @@ void SaveGame_SaveProgress(void)
     saveRAM->characterFlags = globals->characterFlags;
     saveRAM->stock          = globals->stock;
     saveRAM->playerID       = globals->playerID;
-    if (!ActClear || ActClear->actID <= 0) {
+    if (!ActClear || ActClear->displayedActID <= 0) {
         if (globals->saveSlotID != NO_SAVE_SLOT) {
-            if (Zone_IsAct2()) {
+            if (Zone_IsZoneLastAct()) {
                 if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                     saveRAM->zoneID = Zone_GetZoneID() + 1;
-                if (saveRAM->zoneID > 11) {
-                    saveRAM->zoneID = 2;
-                    saveRAM->zoneID = 12;
+                if (saveRAM->zoneID >= ZONE_ERZ) {
+                    saveRAM->saveState = SAVEGAME_COMPLETE;
+                    saveRAM->zoneID = ZONE_ERZ;
                 }
             }
         }
     }
 #else
     if (globals->gameMode == MODE_MANIA) {
-        if (Zone_IsAct2()) {
+        if (Zone_IsZoneLastAct()) {
             if (saveRAM->zoneID < Zone_GetZoneID() + 1)
                 saveRAM->zoneID = Zone_GetZoneID() + 1;
-            if (saveRAM->zoneID > 11) {
-                saveRAM->zoneID = 2;
-                saveRAM->zoneID = 12;
+            if (saveRAM->zoneID >= ZONE_ERZ) {
+                saveRAM->saveState = SAVEGAME_COMPLETE;
+                saveRAM->zoneID    = ZONE_ERZ;
             }
         }
     }
@@ -297,11 +294,11 @@ void SaveGame_SaveProgress(void)
 }
 void SaveGame_ClearRestartData(void)
 {
-    globals->recallEntities      = 0;
+    globals->recallEntities      = false;
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
     globals->restartMinutes      = 0;
-    memset(globals->atlEntityData, 0, 0x840 * sizeof(int32));
+    memset(globals->atlEntityData, 0, (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT) * sizeof(int32));
 }
 void SaveGame_SavePlayerState(void)
 {
@@ -357,13 +354,13 @@ void SaveGame_ResetPlayerState(void)
 }
 void SaveGame_LoadFile_CB(int32 status)
 {
-    int32 state = 0;
+    bool32 success = false;
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {
-        state               = 1;
+        success             = true;
         globals->saveLoaded = STATUS_OK;
     }
     else {
-        state               = 0;
+        success             = false;
         globals->saveLoaded = STATUS_ERROR;
     }
 
@@ -371,7 +368,7 @@ void SaveGame_LoadFile_CB(int32 status)
         Entity *store = SceneInfo->entity;
         if (SaveGame->loadEntityPtr)
             SceneInfo->entity = (Entity *)SaveGame->loadEntityPtr;
-        SaveGame->loadCallback(state);
+        SaveGame->loadCallback(success);
         SceneInfo->entity  = store;
         SaveGame->loadCallback  = NULL;
         SaveGame->loadEntityPtr = NULL;

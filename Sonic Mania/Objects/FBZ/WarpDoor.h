@@ -3,24 +3,28 @@
 
 #include "SonicMania.h"
 
+typedef enum { WARPDOOR_EFFECT_NONE } WarpDoorEffects;
+
+typedef enum { WARPDOOR_PLRSTATE_NONE, WARPDOOR_PLRSTATE_HURT } WarpDoorPlayerStates;
+
 // Object Class
-typedef struct {
+struct ObjectWarpDoor {
     RSDK_OBJECT
     Entity *tags[256];
     Hitbox boundaries[256];
     uint8 boundCount;
-    uint8 field_1405;
-    uint8 field_1406;
-    int32 field_1408;
-    int32 field_140C;
+    uint8 lastBoundsID;
+    uint8 boundsTimer;
+    bool32 hasSetupTags;
+    bool32 hasSetupStartBounds;
     uint16 aniFrames;
     uint16 sfxRubyAttackL[6];
     uint16 sfxRubyAttackR[6];
     uint16 sfxWarpDoor;
-} ObjectWarpDoor;
+};
 
 // Entity Class
-typedef struct {
+struct EntityWarpDoor {
     RSDK_ENTITY
     int32 go;
     int32 width;
@@ -36,18 +40,13 @@ typedef struct {
     bool32 warpToCenter;
     uint8 forcePlayerState;
     Animator animator;
-    int32 field_A4;
-    uint8 field_A8;
-    uint8 field_A9;
-    uint8 field_AA;
-    uint8 field_AB;
+    int32 hasWarped;
+    int32 unused1;
     uint16 boundID;
-    uint8 field_AE;
-    uint8 field_AF;
     int32 fadeTimer;
-    int32 field_B4;
+    bool32 fadeOut;
     Hitbox hitbox;
-} EntityWarpDoor;
+};
 
 // Object Struct
 extern ObjectWarpDoor *WarpDoor;

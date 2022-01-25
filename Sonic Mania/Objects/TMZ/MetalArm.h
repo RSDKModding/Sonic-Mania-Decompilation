@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectMetalArm {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectMetalArm;
+};
 
 // Entity Class
-typedef struct {
+struct EntityMetalArm {
     RSDK_ENTITY
     StateMachine(state);
     int32 startAngleA;
@@ -32,7 +32,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityMetalArm;
+};
 
 // Object Struct
 extern ObjectMetalArm *MetalArm;

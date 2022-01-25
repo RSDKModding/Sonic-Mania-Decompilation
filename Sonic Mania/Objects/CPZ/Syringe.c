@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: Syringe Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectSyringe *Syringe;
@@ -20,9 +27,9 @@ void Syringe_Update(void)
 
     foreach_active(Player, player)
     {
-        Player_CheckCollisionPlatform(player, self, &Syringe->bodyHitbox);
+        Player_CheckCollisionPlatform(player, self, &Syringe->hitboxBody);
         self->position.y += self->offsetY;
-        if (Player_CheckCollisionPlatform(player, self, &Syringe->handleHitbox)) {
+        if (Player_CheckCollisionPlatform(player, self, &Syringe->hitboxHandle)) {
             self->activated = true;
             player->position.y += 0x10000;
             EntityCamera *camera = player->camera;
@@ -64,9 +71,9 @@ void Syringe_Create(void *data)
         self->updateRange.y = 0x800000;
 
         switch (self->type) {
-            case 0: self->colour = 0x0008C0; break;
-            case 1: self->colour = 0x189000; break;
-            case 2: self->colour = 0x0080B0; break;
+            case CHEMICALPOOL_BLUE: self->colour = 0x0008C0; break;
+            case CHEMICALPOOL_GREEN: self->colour = 0x189000; break;
+            case CHEMICALPOOL_CYAN: self->colour = 0x0080B0; break;
         }
 
         RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->animator2, true, 0);
@@ -76,16 +83,19 @@ void Syringe_Create(void *data)
 
 void Syringe_StageLoad(void)
 {
-    Syringe->aniFrames           = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE);
-    Syringe->bodyHitbox.left     = -0x10;
-    Syringe->bodyHitbox.top      = 0x00;
-    Syringe->bodyHitbox.right    = 0x10;
-    Syringe->bodyHitbox.bottom   = 0x08;
-    Syringe->handleHitbox.left   = -0x18;
-    Syringe->handleHitbox.top    = -0x31;
-    Syringe->handleHitbox.right  = 0x18;
-    Syringe->handleHitbox.bottom = -0x27;
-    Syringe->sfxBloop            = RSDK.GetSfx("Stage/Bloop.wav");
+    Syringe->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE);
+
+    Syringe->hitboxBody.left   = -16;
+    Syringe->hitboxBody.top    = 0;
+    Syringe->hitboxBody.right  = 16;
+    Syringe->hitboxBody.bottom = 8;
+
+    Syringe->hitboxHandle.left   = -24;
+    Syringe->hitboxHandle.top    = -49;
+    Syringe->hitboxHandle.right  = 24;
+    Syringe->hitboxHandle.bottom = -40;
+
+    Syringe->sfxBloop = RSDK.GetSfx("Stage/Bloop.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -93,9 +103,9 @@ void Syringe_EditorDraw(void)
 {
     RSDK_THIS(Syringe);
     switch (self->type) {
-        case 0: self->colour = 0x0008C0; break;
-        case 1: self->colour = 0x189000; break;
-        case 2: self->colour = 0x0080B0; break;
+        case CHEMICALPOOL_BLUE: self->colour = 0x0008C0; break;
+        case CHEMICALPOOL_GREEN: self->colour = 0x189000; break;
+        case CHEMICALPOOL_CYAN: self->colour = 0x0080B0; break;
     }
 
     RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->animator2, true, 0);
@@ -104,7 +114,15 @@ void Syringe_EditorDraw(void)
     Syringe_Draw();
 }
 
-void Syringe_EditorLoad(void) { Syringe->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE); }
+void Syringe_EditorLoad(void)
+{
+    Syringe->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Syringe, type);
+    RSDK_ENUM_VAR("Blue", CHEMICALPOOL_BLUE);
+    RSDK_ENUM_VAR("Green", CHEMICALPOOL_GREEN);
+    RSDK_ENUM_VAR("Cyan", CHEMICALPOOL_CYAN);
+}
 #endif
 
 void Syringe_Serialize(void)

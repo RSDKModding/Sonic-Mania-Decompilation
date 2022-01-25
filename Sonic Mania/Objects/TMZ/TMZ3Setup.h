@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectTMZ3Setup {
     RSDK_OBJECT
     int32 value;
     int32 dword8;
     int32 field_C;
     int32 aniTileFrame;
     uint16 aniTiles;
-} ObjectTMZ3Setup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTMZ3Setup {
 	RSDK_ENTITY
-} EntityTMZ3Setup;
+};
 
 // Object Struct
 extern ObjectTMZ3Setup *TMZ3Setup;

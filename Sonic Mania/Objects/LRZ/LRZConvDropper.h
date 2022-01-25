@@ -6,13 +6,13 @@
 typedef enum { LRZCONVDROP_TRIGGER_BUTTON, LRZCONVDROP_TRIGGER_PLAYER } LRZConvDropperTriggerModes;
 
 // Object Class
-typedef struct {
+struct ObjectLRZConvDropper {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectLRZConvDropper;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZConvDropper {
     RSDK_ENTITY
     uint8 triggerMode;
     int32 interval;
@@ -27,7 +27,7 @@ typedef struct {
     int32 field_84;
     Hitbox hitbox;
     Animator animator;
-} EntityLRZConvDropper;
+};
 
 // Object Struct
 extern ObjectLRZConvDropper *LRZConvDropper;

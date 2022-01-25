@@ -4,14 +4,14 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectThoughtBubble {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 dustFrames;
-} ObjectThoughtBubble;
+};
 
 // Entity Class
-typedef struct {
+struct EntityThoughtBubble {
     RSDK_ENTITY
     StateMachine(state);
     int32 type;
@@ -22,7 +22,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-} EntityThoughtBubble;
+};
 
 // Object Struct
 extern ObjectThoughtBubble *ThoughtBubble;

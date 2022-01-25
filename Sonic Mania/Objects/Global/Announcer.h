@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectAnnouncer {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxThree;
@@ -38,10 +38,10 @@ typedef struct {
     uint16 sfxItsADraw;
     uint16 sfxItsADraw_Set;
     bool32 finishedCountdown;
-} ObjectAnnouncer;
+};
 
 // Entity Class
-typedef struct {
+struct EntityAnnouncer {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -51,7 +51,7 @@ typedef struct {
     Vector2 drawOffset;
     Animator animator;
     Animator animator2;
-} EntityAnnouncer;
+};
 
 // Object Struct
 extern ObjectAnnouncer *Announcer;
@@ -72,8 +72,10 @@ void Announcer_Serialize(void);
 // Extra Entity Functions
 void Announcer_StartCountdown(void);
 void Announcer_AnnounceGoal(int32 screen);
+
 void Announcer_Draw_Countdown(void);
 void Announcer_Draw_Finished(void);
+
 void Announcer_State_Countdown(void);
 void Announcer_State_Finished(void);
 void Announcer_State_AnnounceWinner(void);

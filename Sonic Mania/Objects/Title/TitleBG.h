@@ -12,21 +12,21 @@ typedef enum {
 }TitleBGTypes;
 
 // Object Class
-typedef struct {
+struct ObjectTitleBG {
     RSDK_OBJECT
     int32 palTimer;
     int32 timer;
     int32 angle;
     uint16 aniFrames;
-} ObjectTitleBG;
+};
 
 // Entity Class
-typedef struct {
+struct EntityTitleBG {
     RSDK_ENTITY
     TitleBGTypes type;
     int32 timer;
     Animator animator;
-} EntityTitleBG;
+};
 
 // Object Struct
 extern ObjectTitleBG *TitleBG;

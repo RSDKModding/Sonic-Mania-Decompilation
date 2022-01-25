@@ -6,15 +6,15 @@
 #define Sol_MaxFlameOrbs (4)
 
 // Object Class
-typedef struct {
+struct ObjectSol {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxOrb;
     uint16 aniFrames;
-} ObjectSol;
+};
 
 // Entity Class
-typedef struct {
+struct EntitySol {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
@@ -26,7 +26,7 @@ typedef struct {
     bool32 fireOrbs;
     Animator animator1;
     Animator animator2;
-} EntitySol;
+};
 
 // Object Struct
 extern ObjectSol *Sol;

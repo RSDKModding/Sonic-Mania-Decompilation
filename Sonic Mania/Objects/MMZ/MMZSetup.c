@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: MMZSetup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectMMZSetup *MMZSetup;
@@ -72,7 +79,7 @@ void MMZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
         for (int32 i = 3; i < 5; ++i) {
-            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (256 - ScreenInfo->centerX) << 16;
+            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (0x100 - ScreenInfo->centerX) << 16;
         }
 #endif
 
@@ -86,7 +93,7 @@ void MMZSetup_StageLoad(void)
 
         if (isMainGameMode() && globals->atlEnabled) {
             if (!PlayerHelpers_CheckStageReload())
-                Zone_ReloadStoredEntities(0x82C0000, 0x1000000, true);
+                Zone_ReloadStoredEntities(256 << 16, 2092 << 16, true);
         }
 
 #if RETRO_USE_PLUS
@@ -107,9 +114,9 @@ void MMZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
-        RSDK.LoadPalette(0, "EncoreMMZ.act", 0xFF);
-        RSDK.LoadPalette(3, "EncoreMMZfp.act", 0xFF);
-        RSDK.LoadPalette(4, "EncoreMMZf.act", 0xFF);
+        RSDK.LoadPalette(0, "EncoreMMZ.act", 0b0000000011111111);
+        RSDK.LoadPalette(3, "EncoreMMZfp.act", 0b0000000011111111);
+        RSDK.LoadPalette(4, "EncoreMMZf.act", 0b0000000011111111);
     }
 #endif
 }

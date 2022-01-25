@@ -11,13 +11,13 @@ typedef enum {
 } UFO_MessageTypes;
 
 // Object Class
-typedef struct {
+struct ObjectUFO_Message {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectUFO_Message;
+};
 
 // Entity Class
-typedef struct {
+struct EntityUFO_Message {
     RSDK_ENTITY
     StateMachine(state);
     int32 delay;
@@ -26,7 +26,7 @@ typedef struct {
     Animator rightAnimator;
     int32 unused1;
     int32 unused2;
-} EntityUFO_Message;
+};
 
 // Object Struct
 extern ObjectUFO_Message *UFO_Message;

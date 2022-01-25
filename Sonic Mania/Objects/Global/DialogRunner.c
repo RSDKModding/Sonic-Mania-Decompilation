@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: DialogRunner Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
@@ -31,20 +38,20 @@ void DialogRunner_StageLoad(void)
     DialogRunner->signoutFlag       = false;
     DialogRunner->unused2           = 0;
     DialogRunner->unused1           = 0;
-    DialogRunner->isAutoSaving      = 0;
+    DialogRunner->isAutoSaving      = false;
     if (!globals->hasPlusInitial) {
         globals->lastHasPlus    = API.CheckDLC(DLC_PLUS);
         globals->hasPlusInitial = true;
     }
     DialogRunner->entityPtr = NULL;
     SaveGame_LoadSaveData();
-    TimeAttackData->status  = 0;
-    TimeAttackData->uuid    = 0;
-    TimeAttackData->rowID   = -1;
-    TimeAttackData->dbRank  = 0;
-    TimeAttackData->rank    = 0;
-    TimeAttackData->dword1C = 0;
-    Options->state          = 0;
+    TimeAttackData->loaded          = false;
+    TimeAttackData->uuid            = 0;
+    TimeAttackData->rowID           = -1;
+    TimeAttackData->personalRank    = 0;
+    TimeAttackData->leaderboardRank = 0;
+    TimeAttackData->isMigratingData = false;
+    Options->changed                = false;
     if (sku_platform && sku_platform != PLATFORM_DEV) {
         EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
         options->vSync           = false;
@@ -74,7 +81,7 @@ void DialogRunner_NotifyAutoSave_CB(void)
 {
     DialogRunner->isAutoSaving = false;
     globals->notifiedAutosave  = true;
-    UIWaitSpinner_Wait2();
+    UIWaitSpinner_FinishWait();
 }
 
 void DialogRunner_NotifyAutoSave(void)
@@ -87,7 +94,7 @@ void DialogRunner_NotifyAutoSave(void)
         if (!UIDialog->activeDialog) {
             Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_NotifyAutoSave_CB, true);
-            dialog->field_B8       = 1;
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -99,13 +106,13 @@ void DialogRunner_NotifyAutoSave(void)
 void DialogRunner_SetNoSaveDisabled(void)
 {
     API.SetSaveStatusForbidden();
-    API.SetUserStorageNoSave(false);
+    API.SetNoSave(false);
 }
 
 void DialogRunner_SetNoSaveEnabled(void)
 {
     API.SetSaveStatusError();
-    API.SetUserStorageNoSave(true);
+    API.SetNoSave(true);
 }
 
 void DialogRunner_PromptSavePreference_CB(void)
@@ -128,7 +135,7 @@ void DialogRunner_PromptSavePreference_CB(void)
             }
             Localization_GetString(&info, stringID);
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, DialogRunner_SetNoSaveEnabled, DialogRunner_SetNoSaveDisabled, true, true);
-            dialog->field_B8       = 1;
+            dialog->useAltColour   = true;
         }
     }
     else {
@@ -142,7 +149,7 @@ void DialogRunner_CheckUserAuth_CB()
     if (self->timer) {
         if (DialogRunner->signoutFlag) {
             if (!UIDialog->activeDialog) {
-                if (Zone && Zone_GetZoneID() != -1) {
+                if (Zone && Zone_GetZoneID() != ZONE_INVALID) {
                     RSDK.SetScene("Presentation", "Title Screen");
                     Zone_StartFadeOut(10, 0x000000);
                 }
@@ -183,23 +190,18 @@ void DialogRunner_CheckUserAuth_CB()
                 id = STR_RETRURNINGTOTITLE;
             Localization_GetString(&info, id);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_SignedOutCB, true);
-            dialog->field_B8       = 1;
+            dialog->useAltColour   = true;
         }
     }
     else {
         EntityUIDialog *dialog = UIDialog->activeDialog;
         if (dialog) {
-            if (dialog->state != UIDialog_Unknown13) {
-                dialog->parent->selectionDisabled = true;
-                dialog->timer                     = 0;
-                dialog->state                     = UIDialog_Unknown13;
-                dialog->curCallback               = StateMachine_None;
-            }
+            UIDialog_CloseOnSel_HandleSelection(dialog, StateMachine_None);
         }
         else {
             if (UIControl) {
                 if (UIControl_GetUIControl())
-                    UIControl_Unknown6(UIControl_GetUIControl());
+                    UIControl_SetInactiveMenu(UIControl_GetUIControl());
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
@@ -207,7 +209,7 @@ void DialogRunner_CheckUserAuth_CB()
         }
     }
 }
-void DialogRunner_ManageNotifs(int32 success)
+void DialogRunner_ManageNotifs(void)
 {
     RSDK_THIS(DialogRunner);
     if (GameProgress_CountUnreadNotifs()) {
@@ -218,20 +220,20 @@ void DialogRunner_ManageNotifs(int32 success)
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_GetNextNotif, true);
             dialog->playEventSfx   = true;
-            dialog->field_B8       = true;
+            dialog->useAltColour   = true;
         }
     }
     else {
         DialogRunner->entityPtr = NULL;
-        UIWaitSpinner_Wait();
-        GameProgress_TrackGameProgress(DialogRunner_Wait);
+        UIWaitSpinner_StartWait();
+        GameProgress_TrackGameProgress(DialogRunner_TrackGameProgressCB);
         destroyEntity(self);
     }
 }
-void DialogRunner_Wait(int32 success) { UIWaitSpinner_Wait2(); }
+void DialogRunner_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(); }
 void DialogRunner_GetNextNotif(void)
 {
-    if (SceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API.GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }
@@ -252,12 +254,13 @@ bool32 DialogRunner_CheckUnreadNotifs(void)
 }
 bool32 DialogRunner_NotifyAutosave(void)
 {
-    if (!DialogRunner->isAutoSaving && !DialogRunner->entityPtr) {
-        return false;
+    if (globals->notifiedAutosave) {
+        if (!DialogRunner->isAutoSaving && !DialogRunner->entityPtr) {
+            return false;
+        }
     }
-
-    if (!DialogRunner->entityPtr || (!globals->notifiedAutosave && !DialogRunner->isAutoSaving)) {
-        UIWaitSpinner_Wait();
+    else if (!DialogRunner->isAutoSaving || !DialogRunner->entityPtr) {
+        UIWaitSpinner_StartWait();
         DialogRunner->isAutoSaving = true;
         globals->notifiedAutosave  = false;
         LogHelpers_Print("DUMMY NotifyAutosave()");
@@ -289,7 +292,7 @@ void DialogRunner_GetUserAuthStatus(void)
 }
 void DialogRunner_PromptSavePreference(int32 id)
 {
-    if (API.GetUserStorageNoSave()) {
+    if (API.GetNoSave()) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
@@ -297,7 +300,7 @@ void DialogRunner_PromptSavePreference(int32 id)
     if (API.GetSaveStatus() == STATUS_CONTINUE) {
         LogHelpers_Print("WARNING PromptSavePreference() when prompt already in progress.");
     }
-    API.SetUserStorageStatus();
+    API.ClearSaveStatus();
     EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_PromptSavePreference_CB, 0, 0);
     dialogRunner->status             = id;
     DialogRunner->entityPtr          = dialogRunner;

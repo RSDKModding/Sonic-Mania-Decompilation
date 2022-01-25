@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectPhantomEgg {
     RSDK_OBJECT
     TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
                                   -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
@@ -37,10 +37,10 @@ typedef struct {
     uint16 sfxMissile;
     uint16 aniFrames;
     bool32 superFlag;
-} ObjectPhantomEgg;
+};
 
 // Entity Class
-typedef struct {
+struct EntityPhantomEgg {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
@@ -65,7 +65,7 @@ typedef struct {
     Animator animator6;
     Animator animator7;
     Hitbox hitbox;
-} EntityPhantomEgg;
+};
 
 // Object Struct
 extern ObjectPhantomEgg *PhantomEgg;
@@ -113,13 +113,13 @@ void PhantomEgg_State_Unknown12(void);
 void PhantomEgg_State_Unknown13(void);
 void PhantomEgg_State_Unknown14(void);
 void PhantomEgg_State_Unknown15(void);
-void PhantomEgg_State_Unknown16(void);
+void PhantomEgg_State_Destroyed(void);
 void PhantomEgg_State_Unknown17(void);
 void PhantomEgg_State_Unknown18(void);
 void PhantomEgg_State_Unknown19(void);
 void PhantomEgg_State_Unknown20(void);
 void PhantomEgg_State_Unknown21(void);
 
-void PhantomEgg_SaveGameCB(int32 status);
+void PhantomEgg_SaveGameCB(bool32 success);
 
 #endif //!OBJ_PHANTOMEGG_H

@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: BSS_Setup Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 #include <time.h>
 
@@ -699,12 +706,12 @@ void BSS_Setup_HandleCollectableMovement(void)
                 collectable->objectID = BSS_Collectable->objectID;
                 collectable->type     = tile & 0x3FF;
                 if (y < 112) {
-                    self->xMultiplier    = BSS_Setup->xMultiplierTable[y];
-                    self->divisor        = BSS_Setup->divisorTable[y];
-                    collectable->frameID = BSS_Setup->frameTable[y];
-                    collectable->frameID -= abs(x) >> 5;
-                    if (collectable->frameID < 0)
-                        collectable->frameID = 0;
+                    self->xMultiplier             = BSS_Setup->xMultiplierTable[y];
+                    self->divisor                 = BSS_Setup->divisorTable[y];
+                    collectable->animator.frameID = BSS_Setup->frameTable[y];
+                    collectable->animator.frameID -= abs(x) >> 5;
+                    if (collectable->animator.frameID < 0)
+                        collectable->animator.frameID = 0;
 
                     int32 finalX = self->xMultiplier * x;
                     int32 distX  = finalX * finalX >> 16;
@@ -726,7 +733,7 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
-        Entity *entity = RSDK.GetEntityByID(slot++);
+        Entity *entity   = RSDK.GetEntityByID(slot++);
         entity->objectID = TYPE_BLANK;
     }
 }
@@ -771,13 +778,13 @@ void BSS_Setup_State_PinkSphereWarp(void)
         RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->animator, true, 0);
 
         int32 count = BSS_Setup->pinkSphereCount;
-        int32 val   = RSDK.Rand(0, count - 1);
+        int32 dir   = RSDK.Rand(0, count - 1);
         bool32 flag = false;
-        for (; (count && val >= 0) && !flag; --count) {
+        for (; (count && dir >= 0) && !flag; --count) {
             for (int32 y = 0; y < BSS_PLAYFIELD_H; ++y) {
                 for (int32 x = 0; x < BSS_PLAYFIELD_W; ++x) {
                     uint16 tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
-                    if ((tile & 0x7F) == BSS_SPHERE_PINK && (x != self->playerPos.x || y != self->playerPos.y) && --val < 0) {
+                    if ((tile & 0x7F) == BSS_SPHERE_PINK && (x != self->playerPos.x || y != self->playerPos.y) && --dir < 0) {
                         self->playerPos.x = x;
                         self->playerPos.y = y;
 
@@ -789,12 +796,12 @@ void BSS_Setup_State_PinkSphereWarp(void)
             }
         }
 
-        val  = RSDK.Rand(0, 4);
+        dir  = RSDK.Rand(0, 4);
         flag = false;
         for (int32 i = 0; i < 4; ++i) {
             int32 x = self->playerPos.x;
             int32 y = self->playerPos.y;
-            switch (val) {
+            switch (dir) {
                 case 0: y = (y - 1) & 0x1F; break;
                 case 1: x = (x + 1) & 0x1F; break;
                 case 2: y = (y + 1) & 0x1F; break;
@@ -807,14 +814,14 @@ void BSS_Setup_State_PinkSphereWarp(void)
                 break;
             }
 
-            val = (val + 1) & 3;
+            dir = (dir + 1) & 3;
         }
 
         if (!flag) {
             for (int32 i = 0; i < 4; ++i) {
                 int32 x = self->playerPos.x;
                 int32 y = self->playerPos.y;
-                switch (val) {
+                switch (dir) {
                     case 0: y = (y - 2) & 0x1F; break;
                     case 1: x = (x + 2) & 0x1F; break;
                     case 2: y = (y + 2) & 0x1F; break;
@@ -828,15 +835,15 @@ void BSS_Setup_State_PinkSphereWarp(void)
                     break;
                 }
 
-                val = (val + 1) & 3;
+                dir = (dir + 1) & 3;
             }
         }
 
-        self->angle = val << 6;
+        self->angle = dir << 6;
         CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_PINK), self->playerPos.x, self->playerPos.y);
         BSS_Setup->playField[self->playerPos.y + (BSS_PLAYFIELD_H * self->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
         self->timer                                                                     = 100;
-        self->state                                                                     = BSS_Setup_State_Unknown23;
+        self->state                                                                     = BSS_Setup_State_PostPinkSphereWarp;
     }
     BSS_Setup_HandleCollectableMovement();
 }
@@ -991,7 +998,7 @@ void BSS_Setup_State_SpinLeft(void)
         if (!self->timer)
             self->state = BSS_Setup_State_HandleStage;
         else
-            self->state = BSS_Setup_State_Unknown23;
+            self->state = BSS_Setup_State_PostPinkSphereWarp;
         BSS_Setup_HandleCollectableMovement();
     }
     else {
@@ -1026,7 +1033,7 @@ void BSS_Setup_State_SpinRight(void)
         if (!self->timer)
             self->state = BSS_Setup_State_HandleStage;
         else
-            self->state = BSS_Setup_State_Unknown23;
+            self->state = BSS_Setup_State_PostPinkSphereWarp;
         BSS_Setup_HandleCollectableMovement();
     }
     else {
@@ -1043,21 +1050,18 @@ void BSS_Setup_State_SpinRight(void)
     }
 }
 
-void BSS_Setup_State_Unknown23(void)
+void BSS_Setup_State_PostPinkSphereWarp(void)
 {
     RSDK_THIS(BSS_Setup);
 
     EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     if (self->alpha <= 0) {
-        if (player->up) {
+        if (player->up)
             self->timer = 1;
-        }
-        else if (player->left) {
+        else if (player->left)
             self->state = BSS_Setup_State_SpinLeft;
-        }
-        else if (player->right) {
+        else if (player->right)
             self->state = BSS_Setup_State_SpinRight;
-        }
     }
     else {
         self->alpha -= 8;
@@ -1068,11 +1072,11 @@ void BSS_Setup_State_Unknown23(void)
 
         EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         if (player1->onGround)
-            RSDK.SetSpriteAnimation(player1->aniFrames, 1, &player1->animator, 0, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, 1, &player1->animator, false, 0);
 
-        EntityBSS_Player *player2 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER2);
+        EntityBSS_Player *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, BSS_Player);
         if (player2->onGround)
-            RSDK.SetSpriteAnimation(player2->aniFrames, 1, &player2->animator, 0, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, 1, &player2->animator, false, 0);
     }
     BSS_Setup_HandleCollectableMovement();
 }

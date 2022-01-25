@@ -4,19 +4,19 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectLogoSetup {
     RSDK_OBJECT
     int32 timer;
     uint16 sfxSega;
-} ObjectLogoSetup;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLogoSetup {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
     int32 timer;
-} EntityLogoSetup;
+};
 
 // Object Struct
 extern ObjectLogoSetup *LogoSetup;

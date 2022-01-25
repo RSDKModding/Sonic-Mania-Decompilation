@@ -9,19 +9,19 @@ typedef enum {
     EGGPRISON_DUD,
     EGGPRISON_RINGS,
     EGGPRISON_TRAP,
-    EGGPRISON_ANIMALS,
+    EGGPRISON_SPRING,
 }EggPrisonTypes;
 
 // Object Class
-typedef struct {
+struct ObjectEggPrison {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxDestroy;
     uint16 sfxSpring;
-} ObjectEggPrison;
+};
 
 // Entity Class
-typedef struct {
+struct EntityEggPrison {
     RSDK_ENTITY
     StateMachine(state);
     EggPrisonTypes type;
@@ -37,7 +37,7 @@ typedef struct {
     Animator propellerAnimator;
     Animator panelAnimator;
     Animator buttonAnimator;
-} EntityEggPrison;
+};
 
 // Object Struct
 extern ObjectEggPrison *EggPrison;

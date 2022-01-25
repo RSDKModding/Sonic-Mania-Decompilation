@@ -6,7 +6,7 @@
 typedef enum { BUTTON_FLOOR, BUTTON_ROOF, BUTTON_RWALL, BUTTON_LWALL } ButtonTypes;
 
 // Object Class
-typedef struct {
+struct ObjectButton {
     RSDK_OBJECT
     uint16 aniFrames;
     bool32 hasEggman;
@@ -18,10 +18,10 @@ typedef struct {
     int32 hitboxOffset;
     int32 unused1; // set in stageload, but never used. no way to tell what it is
     uint16 sfxButton;
-} ObjectButton;
+};
 
 // Entity Class
-typedef struct {
+struct EntityButton {
     RSDK_ENTITY
     int32 type;
     bool32 walkOnto;
@@ -35,7 +35,7 @@ typedef struct {
     Hitbox hitbox;
     Animator buttonAnimator;
     Animator baseAnimator;
-} EntityButton;
+};
 
 // Object Struct
 extern ObjectButton *Button;

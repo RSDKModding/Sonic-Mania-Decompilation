@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 // Object Class
-typedef struct {
+struct ObjectRotatingSpikes {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectRotatingSpikes;
+};
 
 // Entity Class
-typedef struct {
+struct EntityRotatingSpikes {
     RSDK_ENTITY
     Animator animator1;
     Animator animator2;
@@ -20,7 +20,7 @@ typedef struct {
     int32 rotSpeed;
     int32 angleOffset;
     int32 priority;
-} EntityRotatingSpikes;
+};
 
 // Object Struct
 extern ObjectRotatingSpikes *RotatingSpikes;

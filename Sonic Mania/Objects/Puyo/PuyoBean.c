@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------
+// RSDK Project: Sonic Mania
+// Object Description: PuyoBean Object
+// Object Author: Christian Whitehead/Simon Thomley/Hunter Bridges
+// Decompiled by: Rubberduckycooly & RMGRich
+// ---------------------------------------------------------------------
+
 #include "SonicMania.h"
 
 ObjectPuyoBean *PuyoBean;
@@ -196,7 +203,7 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
     }
 }
 
-void PuyoBean_Unknown2(void)
+void PuyoBean_DestroyPuyoBeans(void)
 {
     foreach_all(PuyoBean, bean)
     {
@@ -1116,7 +1123,7 @@ void PuyoBean_Unknown23(void)
     }
 }
 
-void PuyoBean_Unknown24(void)
+void PuyoBean_State_MatchLoseFall(void)
 {
     RSDK_THIS(PuyoBean);
 
@@ -1139,7 +1146,6 @@ void PuyoBean_Unknown24(void)
 #if RETRO_INCLUDE_EDITOR
 void PuyoBean_EditorDraw(void)
 {
-    RSDK_THIS(PuyoBean);
     RSDK.DrawSprite(&PuyoBean->animator, NULL, false);
 }
 

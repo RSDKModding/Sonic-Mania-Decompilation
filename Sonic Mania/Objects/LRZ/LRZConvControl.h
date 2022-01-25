@@ -11,13 +11,13 @@ typedef enum {
     LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP
 } LRZConvControlBehaviours;
 // Object Class
-typedef struct {
+struct ObjectLRZConvControl {
     RSDK_OBJECT
     uint16 aniFrames;
-} ObjectLRZConvControl;
+};
 
 // Entity Class
-typedef struct {
+struct EntityLRZConvControl {
     RSDK_ENTITY
     StateMachine(state);
     uint8 triggerMode;
@@ -30,7 +30,7 @@ typedef struct {
     uint8 field_75;
     Hitbox hitbox;
     Animator animator;
-} EntityLRZConvControl;
+};
 
 // Object Struct
 extern ObjectLRZConvControl *LRZConvControl;
