@@ -422,6 +422,9 @@ struct RetroEngine {
     int32 displayCount        = 0;
 
     SDL_Event sdlEvents;
+#if RETRO_USING_OPENGL
+    SDL_GLContext glContext; // OpenGL context
+#endif
 #endif
 };
 

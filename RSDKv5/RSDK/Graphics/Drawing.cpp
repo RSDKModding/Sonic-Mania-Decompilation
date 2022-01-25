@@ -48,7 +48,7 @@ public:
         glGetProgramiv(ID, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(ID, 0x1000, NULL, infoLog);
-            printLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
+            PrintLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
         }
         glDeleteShader(f);
         glDeleteShader(v);
@@ -335,7 +335,6 @@ bool32 InitRenderDevice()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    byte flags = 0;
 #if RETRO_USING_OPENGL
     flags |= SDL_WINDOW_OPENGL;
 
@@ -421,14 +420,18 @@ bool32 InitRenderDevice()
 
     SDL_GL_SetSwapInterval(engine.vsync ? 1 : 0);
 
-#if RETRO_PLATFORM != RETRO_ANDROID && RETRO_PLATFORM != RETRO_OSX
+#if RETRO_PLATFORM == RETRO_SWITCH
+    // Should probably add error
+    gladLoadGL();
+#elif RETRO_PLATFORM != RETRO_ANDROID && RETRO_PLATFORM != RETRO_OSX
     // glew Setup
     GLenum err = glewInit();
     if (err != GLEW_OK) {
-        printLog(PRINT_ERROR, "glew init error:\n%s", glewGetErrorString(err));
+        PrintLog(PRINT_ERROR, "glew init error:\n%s", glewGetErrorString(err));
         return false;
     }
 #endif
+
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
     glDisable(GL_DEPTH_TEST);
@@ -690,7 +693,7 @@ void UpdateWindow()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
+    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
                                      SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
 #if RETRO_SOFTWARE_RENDER

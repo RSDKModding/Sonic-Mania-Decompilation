@@ -17,6 +17,8 @@ USERTYPE    ?= Dummy
 
 USE_ALLC    ?= 0
 
+HW_RENDER 	?= 0 
+
 # =============================================================================
 # Detect default platform if not explicitly specified
 # =============================================================================
@@ -80,6 +82,10 @@ ifeq ($(STATICGAME),0)
 else
 	CXXFLAGS += -DRETRO_STANDALONE=0
 	CFLAGS += -DRETRO_STANDALONE=0
+endif
+
+ifeq ($(HW_RENDER),1)
+	DEFINES += -DUSE_HW_REN
 endif
 
 CFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
