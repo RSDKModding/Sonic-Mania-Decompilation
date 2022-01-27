@@ -52,7 +52,7 @@ void TVPole_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
 
-        int len               = (8 * self->length) >> 1;
+        int len             = (8 * self->length) >> 1;
         self->hitbox.left   = -8 - len;
         self->hitbox.right  = len + 8;
         self->hitbox.top    = -32;
@@ -69,7 +69,7 @@ void TVPole_State_CheckGrab(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;
 
@@ -94,13 +94,13 @@ void TVPole_State_CheckGrab(void)
             player->position.y = self->position.y - 0x140000;
             if (player->left) {
                 player->position.x -= 0x10000;
-                int x = self->position.x + ((self->hitbox.left + 16) << 16);
+                int32 x = self->position.x + ((self->hitbox.left + 16) << 16);
                 if (player->position.x < x)
                     player->position.x = x;
             }
             else if (player->right) {
                 player->position.x += 0x10000;
-                int x = self->position.x + ((self->hitbox.right - 16) << 16);
+                int32 x = self->position.x + ((self->hitbox.right - 16) << 16);
                 if (player->position.x > x)
                     player->position.x = x;
             }
@@ -108,8 +108,8 @@ void TVPole_State_CheckGrab(void)
             if (player->jumpPress) {
                 self->activePlayers &= ~(1 << playerID);
                 self->playerTimers[playerID] = 60;
-                player->onGround               = false;
-                player->velocity.y             = -0x30000;
+                player->onGround             = false;
+                player->velocity.y           = -0x30000;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                 player->state = Player_State_Air;
             }
@@ -123,7 +123,7 @@ void TVPole_State_ForceRelease(void)
 
     foreach_active(Player, player)
     {
-        int playerID                   = RSDK.GetEntityID(player);
+        int32 playerID               = RSDK.GetEntityID(player);
         self->playerTimers[playerID] = 0;
         if ((1 << playerID) & self->activePlayers) {
             player->onGround   = false;

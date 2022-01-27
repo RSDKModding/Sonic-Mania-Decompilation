@@ -33,12 +33,12 @@ struct ObjectAIZSetup {
     TileLayer *bg2Info;
     TileLayer *bg3Info;
     TileLayer *bg4Info;
-    Entity *tornado;
-    Entity *claw;
-    Entity *platform;
-    Entity *phantomRuby;
-    Entity *fxRuby;
-    Entity *decorations[3];
+    EntityAIZTornado *tornado;
+    EntityAIZKingClaw *claw;
+    EntityPlatform *platform;
+    EntityPhantomRuby *phantomRuby;
+    EntityFXRuby *fxRuby;
+    EntityDecoration *decorations[3];
 #if RETRO_USE_PLUS
     int32 aniTileFrameA;
     int32 aniTilesDelay1;
@@ -95,26 +95,26 @@ void AIZSetup_SkipCB(void);
 #endif
 
 void AIZSetup_CutsceneST_Setup(void);
-bool32 AIZSetup_CutsceneSonic_EnterAIZ(Entity *h);
-bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(Entity *h);
-bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h);
-bool32 AIZSetup_CutsceneSonic_P2FlyIn(Entity *h);
-bool32 AIZSetup_CutsceneSonic_EnterClaw(Entity *h);
-bool32 AIZSetup_CutsceneSonic_WatchClaw(Entity *h);
-bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h);
-bool32 AIZSetup_CutsceneSonic_RubyAppear(Entity *h);
-bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h);
+bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_EnterClaw(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_WatchClaw(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_RubyAppear(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host);
 
 void AIZSetup_CutsceneK_Setup(void);
-bool32 AIZSetup_CutsceneKnux_Chillin(Entity *h);
-bool32 AIZSetup_CutsceneKnux_StartDrillin(Entity *h);
-bool32 AIZSetup_CutsceneKnux_Drillin(Entity *h);
-bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(Entity *h);
-bool32 AIZSetup_CutsceneKnux_EnterThreat(Entity *h);
-bool32 AIZSetup_CutsceneKnux_HeaviesAppear(Entity *h);
-bool32 AIZSetup_CutsceneKnux_RubyImpact(Entity *h);
-bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h);
+bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_Drillin(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host);
+bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host);
 
-bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h);
+bool32 AIZSetup_Cutscene_LoadGHZ(EntityCutsceneSeq *host);
 
 #endif //!OBJ_AIZSETUP_H

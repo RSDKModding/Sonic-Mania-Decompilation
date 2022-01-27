@@ -11,11 +11,11 @@ typedef enum {
 } PimPomTypes;
 
 typedef enum {
-    PIMPOM_MOVE_NONE,
+    PIMPOM_MOVE_FIXED,
     PIMPOM_MOVE_NORMAL,
     PIMPOM_MOVE_CIRCLE,
-    PIMPOM_MOVE_3,
-    PIMPOM_MOVE_4,
+    PIMPOM_MOVE_TRACK,
+    PIMPOM_MOVE_PATH,
 } PimPomMoveTypes;
 
 // Object Class
@@ -33,10 +33,10 @@ struct EntityPimPom {
     StateMachine(stateMove);
     int32 type;
     uint8 color;
-    int32 angle2;
+    int32 newAngle;
     uint8 spinSpeed;
     int32 negAngle;
-    int32 timer;
+    int32 sfxTimer;
     Hitbox hitbox;
     int32 moveType;
     Vector2 amplitude;
@@ -68,14 +68,14 @@ void PimPom_EditorLoad(void);
 void PimPom_Serialize(void);
 
 // Extra Entity Functions
-void PimPom_State0_Unknown(void);
-void PimPom_State1_Unknown(void);
-void PimPom_State3_Unknown(void);
+void PimPom_State_Single(void);
+void PimPom_State_Horizontal(void);
+void PimPom_State_Vertical(void);
 
-void PimPom_StateMove_None(void);
-void PimPom_StateMove_Normal(void);
-void PimPom_StateMove_Circle(void);
-void PimPom_StateMove_ToTarget(void);
-void PimPom_StateMove3_Unknown(void);
+void PimPom_Move_Fixed(void);
+void PimPom_Move_Normal(void);
+void PimPom_Move_Circle(void);
+void PimPom_Move_Path(void);
+void PimPom_Move_Track(void);
 
 #endif //!OBJ_PIMPOM_H

@@ -18,11 +18,11 @@ struct EntityShopWindow {
     Vector2 size;
     bool32 shatter;
     bool32 silhouette;
-    Hitbox hitbox;
-    Hitbox windowHitbox;
-    Hitbox hitbox2;
-    Vector2 field_88;
-    Vector2 field_90;
+    Hitbox hitboxWindowX;
+    Hitbox hitboxWindowY;
+    Hitbox hitboxItem;
+    Vector2 scaleSpeed;
+    Vector2 shardScale;
     Animator animator;
 };
 

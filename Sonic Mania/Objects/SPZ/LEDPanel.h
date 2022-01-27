@@ -30,7 +30,7 @@ struct EntityLEDPanel {
     Vector2 textMoveVel[LEDPanel_RowCount];
     int32 activeTextSize[LEDPanel_RowCount];
     int32 activeTextLen[LEDPanel_RowCount];
-    bool32 rowFlag[LEDPanel_RowCount];
+    bool32 rowSignaled[LEDPanel_RowCount];
     Vector2 size;
     int32 left;
     int32 right;
@@ -70,6 +70,7 @@ void LEDPanel_Serialize(void);
 void LEDPanel_SetupActiveText(int index, TextInfo *src);
 void LEDPanel_SetupTextPos(int index, int x, int y);
 void LEDPanel_HandleCharacters(void);
+
 void LEDPanel_StateText_Move(void);
 void LEDPanel_StateText_Delay(void);
 void LEDPanel_StateText_ChangeClipBounds(void);

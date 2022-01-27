@@ -13,10 +13,10 @@ struct ObjectPopcornKernel {
 struct EntityPopcornKernel {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused1;
     int32 angleVel;
-    int32 field_64;
-    int32 field_68;
+    int32 gravityStrength;
+    int32 maxY;
     Vector2 bounds;
     Animator animator;
 };

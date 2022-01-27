@@ -8,9 +8,9 @@
 // Object Class
 struct ObjectTubinaut {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxFace;
+    Hitbox hitboxOrb;
+    Hitbox hitboxSpin;
     uint16 aniFrames;
     uint16 sfxPowerdown;
     uint16 sfxRepel;
@@ -27,7 +27,7 @@ struct EntityTubinaut {
     Vector2 orbPositions[Tubinaut_OrbCount];
     int32 orbAngles[Tubinaut_OrbCount];
     int16 reAdjustTimers[Tubinaut_OrbCount];
-    int32 ballsVisible[Tubinaut_OrbCount]; // hehe
+    bool32 ballsVisible[Tubinaut_OrbCount]; // hehe
     Animator ballAnimators[Tubinaut_OrbCount];
     uint16 playerTimers[PLAYER_MAX];
     int32 attackTimer;

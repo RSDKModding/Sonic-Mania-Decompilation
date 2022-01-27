@@ -40,13 +40,13 @@ void PopcornKernel_Create(void *data)
             self->drawOrder = Zone->drawOrderLow - 1;
         else
             self->drawOrder = Zone->drawOrderLow;
-        self->active        = ACTIVE_NORMAL;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x2000000;
-        self->field_64      = 0x4000;
-        self->scale.x       = 0x200;
-        self->scale.y       = 0x200;
-        self->visible       = true;
+        self->active          = ACTIVE_NORMAL;
+        self->updateRange.x   = 0x800000;
+        self->updateRange.y   = 0x2000000;
+        self->gravityStrength = 0x4000;
+        self->scale.x         = 0x200;
+        self->scale.y         = 0x200;
+        self->visible         = true;
     }
 }
 
@@ -56,7 +56,7 @@ void PopcornKernel_Unknown1(void)
 {
     RSDK_THIS(PopcornKernel);
 
-    self->velocity.y += self->field_64;
+    self->velocity.y += self->gravityStrength;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -64,10 +64,10 @@ void PopcornKernel_Unknown1(void)
         foreach_active(PopcornKernel, kernel)
         {
             if (kernel != self) {
-                int rx = (self->position.x - kernel->position.x) >> 16;
-                int ry = (self->position.y - kernel->position.y) >> 16;
+                int32 rx = (self->position.x - kernel->position.x) >> 16;
+                int32 ry = (self->position.y - kernel->position.y) >> 16;
                 if (rx * rx + ry * ry < 0x100) {
-                    int angle        = RSDK.ATan2(rx, ry);
+                    int32 angle      = RSDK.ATan2(rx, ry);
                     self->velocity.x = RSDK.Cos256(angle) << 17 >> 8;
                     self->velocity.y = RSDK.Sin256(angle) << 17 >> 8;
                 }
@@ -97,7 +97,7 @@ void PopcornKernel_Unknown2(void)
     self->velocity.y += 0x800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    if (self->position.y < self->field_68) {
+    if (self->position.y < self->maxY) {
         self->state = PopcornKernel_Unknown3;
         //???
         // Dunno why this is here but removing it would change the internal randSeed

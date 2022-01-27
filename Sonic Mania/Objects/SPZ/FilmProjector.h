@@ -13,13 +13,13 @@ struct ObjectFilmProjector {
 struct EntityFilmProjector {
     RSDK_ENTITY
     uint8 pathMovement;
-    Vector2 posUnknown;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
+    Vector2 filmPos;
+    Animator projectorAnimator;
+    Animator screenAnimator;
+    Animator filmReelAnimator;
+    Animator reelEdgeAnimator;
+    Animator celluoidAnimator;
+    Animator eggmanAnimator;
 };
 
 // Object Struct

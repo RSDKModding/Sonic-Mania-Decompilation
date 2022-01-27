@@ -16,51 +16,48 @@ void SPZ1Setup_LateUpdate(void) {}
 void SPZ1Setup_StaticUpdate(void)
 {
     if (!(Zone->timer & 3)) {
-        ++SPZ1Setup->bgLayer->deformationOffset;
-        ++SPZ1Setup->bgLayer2->deformationOffset;
+        ++SPZ1Setup->cityBGLow->deformationOffset;
+        ++SPZ1Setup->cityBGHigh->deformationOffset;
     }
 
-    SPZ1Setup->timerA += 16;
-    SPZ1Setup->timerA &= 0x3F;
-    RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 613, 144, SPZ1Setup->timerA + 160, 112, 16);
+    SPZ1Setup->conveyorFrame += 16;
+    SPZ1Setup->conveyorFrame &= 0x3F;
+    RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 613, 144, SPZ1Setup->conveyorFrame + 160, 112, 16);
 
-    SPZ1Setup->palRotateTimerA += 6;
-    if (SPZ1Setup->palRotateTimerA >= 0x100) {
-        SPZ1Setup->palRotateTimerA -= 0x100;
+    SPZ1Setup->fgLightsPalTimer += 6;
+    if (SPZ1Setup->fgLightsPalTimer >= 0x100) {
+        SPZ1Setup->fgLightsPalTimer -= 0x100;
         RSDK.RotatePalette(1, 128, 135, false);
         RSDK.RotatePalette(2, 128, 135, false);
     }
-    RSDK.SetLimitedFade(0, 1, 2, SPZ1Setup->palRotateTimerA, 128, 135);
+    RSDK.SetLimitedFade(0, 1, 2, SPZ1Setup->fgLightsPalTimer, 128, 135);
 
-    ++SPZ1Setup->palRotateTimerB;
-    if (SPZ1Setup->palRotateTimerB == 6) {
-        SPZ1Setup->palRotateTimerB = 0;
+    ++SPZ1Setup->bgLightsPalTimer;
+    if (SPZ1Setup->bgLightsPalTimer == 6) {
+        SPZ1Setup->bgLightsPalTimer = 0;
         RSDK.RotatePalette(0, 240, 243, true);
     }
 
-    SPZ1Setup->angle += 3;
-    SPZ1Setup->angle &= 0x1FF;
-    int32 percent = RSDK.Sin512(SPZ1Setup->angle) >> 1;
-    if (percent <= 0)
-        RSDK.SetLimitedFade(0, 1, 2, -percent, 152, 159);
-    else
-        RSDK.SetLimitedFade(0, 1, 3, percent, 152, 159);
-    ++SPZ1Setup->timerB;
+    SPZ1Setup->palFadePercent += 3;
+    SPZ1Setup->palFadePercent &= 0x1FF;
+    RSDK.SetLimitedFade(0, 1, 3, abs(RSDK.Sin512(SPZ1Setup->palFadePercent) >> 1), 152, 159);
+    ++SPZ1Setup->streetLightTimer;
 
-    if (SPZ1Setup->timerB == 3) {
-        SPZ1Setup->timerB = 0;
-        SPZ1Setup->aniTilesFrameB += 9;
-        SPZ1Setup->aniTilesFrameB &= 0xF;
-        RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 221, 8 * (SPZ1Setup->aniTilesFrameB & 0xFFFC), 32 * ((SPZ1Setup->aniTilesFrameB & 3) + 4), 32, 32);
-        SPZ1Setup->aniTilesFrameB += 8;
-        SPZ1Setup->aniTilesFrameB &= 0xF;
-        RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 225, 8 * (SPZ1Setup->aniTilesFrameB & 0xFFFC), 32 * ((SPZ1Setup->aniTilesFrameB & 3) + 4), 32, 32);
+    if (SPZ1Setup->streetLightTimer == 3) {
+        SPZ1Setup->streetLightTimer = 0;
+        SPZ1Setup->streetLightFrame += 9;
+        SPZ1Setup->streetLightFrame &= 0xF;
+        RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 221, 8 * (SPZ1Setup->streetLightFrame & 0xFFFC), 32 * ((SPZ1Setup->streetLightFrame & 3) + 4), 32, 32);
+
+        SPZ1Setup->streetLightFrame += 8;
+        SPZ1Setup->streetLightFrame &= 0xF;
+        RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 225, 8 * (SPZ1Setup->streetLightFrame & 0xFFFC), 32 * ((SPZ1Setup->streetLightFrame & 3) + 4), 32, 32);
     }
 
     if (!(Zone->timer & 0xF)) {
-        SPZ1Setup->aniTilesFrameC += 16;
-        SPZ1Setup->aniTilesFrameC &= 0x1F;
-        RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 64, 128, SPZ1Setup->aniTilesFrameC + 128, 128, 16);
+        SPZ1Setup->flashingLightsFrame += 0x10;
+        SPZ1Setup->flashingLightsFrame &= 0x1F;
+        RSDK.DrawAniTiles(SPZ1Setup->aniTiles, 64, 128, SPZ1Setup->flashingLightsFrame + 128, 128, 16);
     }
 }
 
@@ -71,56 +68,25 @@ void SPZ1Setup_Create(void *data) {}
 void SPZ1Setup_StageLoad(void)
 {
     SPZ1Setup->aniTiles = RSDK.LoadSpriteSheet("SPZ1/AniTiles.gif", SCOPE_STAGE);
-    SPZ1Setup->bgLayer  = RSDK.GetSceneLayer(0);
-    SPZ1Setup->bgLayer2 = RSDK.GetSceneLayer(0);
 
-    int32 id = 0;
+    SPZ1Setup->cityBGLow  = RSDK.GetSceneLayer(0);
+    SPZ1Setup->cityBGHigh = RSDK.GetSceneLayer(0);
+
+    int32 pos = 0;
     for (int32 i = 0; i < 0x200; ++i) {
-        int32 off = 0;
-        int32 val = RSDK.Rand(0, 4);
-        if (id >= 0) {
-            off = id;
-            if (id > 512)
-                off = 512;
-        }
-        else {
-            off = 0;
-        }
-
+        int32 off = clampVal(pos, 0, 0x200);
+        int32 deform = RSDK.Rand(0, 4);
+        
         int32 ang     = 0;
-        int32 *deform = &SPZ1Setup->bgLayer->deformationData[off];
         for (int32 d = 0; d < 0x10; ++d) {
-            *deform = val * RSDK.Sin1024(ang) >> 10;
-            *deform = val * RSDK.Sin1024(ang) >> 10;
+            SPZ1Setup->cityBGLow->deformationData[off + d]  = deform * RSDK.Sin1024(ang) >> 10;
+            SPZ1Setup->cityBGHigh->deformationData[off + d] = deform * RSDK.Sin1024(ang) >> 10;
             ang += 64;
         }
-        memcpy(SPZ1Setup->bgLayer->deformationData + 0x200, SPZ1Setup->bgLayer->deformationData, 0x200 * sizeof(int32));
-        id += 16;
+        pos += 16;
     }
-
-    id = 0;
-    for (int32 i = 0; i < 0x200; ++i) {
-        int32 off = 0;
-        int32 val = RSDK.Rand(0, 4);
-        if (id >= 0) {
-            off = id;
-            if (id > 512)
-                off = 512;
-        }
-        else {
-            off = 0;
-        }
-
-        int32 ang     = 0;
-        int32 *deform = &SPZ1Setup->bgLayer2->deformationData[off];
-        for (int32 d = 0; d < 0x10; ++d) {
-            *deform = val * RSDK.Sin1024(ang) >> 10;
-            *deform = val * RSDK.Sin1024(ang) >> 10;
-            ang += 64;
-        }
-        memcpy(SPZ1Setup->bgLayer2->deformationData + 0x200, SPZ1Setup->bgLayer2->deformationData, 0x200 * sizeof(int32));
-        id += 16;
-    }
+    memcpy(&SPZ1Setup->cityBGLow->deformationData[0x200], &SPZ1Setup->cityBGLow->deformationData[0], 0x200 * sizeof(int32));
+    memcpy(&SPZ1Setup->cityBGHigh->deformationData[0x200], &SPZ1Setup->cityBGHigh->deformationData[0], 0x200 * sizeof(int32));
 
     Animals->animalTypes[0] = ANIMAL_PECKY;
     Animals->animalTypes[1] = ANIMAL_MICKY;
@@ -148,8 +114,10 @@ void SPZ1Setup_SetupActTransition(void)
     RSDK.LoadScene();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SPZ1Setup_EditorDraw(void) {}
 
 void SPZ1Setup_EditorLoad(void) {}
+#endif
 
 void SPZ1Setup_Serialize(void) {}

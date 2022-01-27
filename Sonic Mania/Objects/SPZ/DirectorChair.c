@@ -20,9 +20,9 @@ void DirectorChair_Draw(void)
     RSDK_THIS(DirectorChair);
     Vector2 drawPos;
 
-    int sin = RSDK.Sin512(self->rotation);
+    int32 sin = RSDK.Sin512(self->rotation);
 
-    drawPos                  = self->centerPos;
+    drawPos                = self->centerPos;
     self->animator.frameID = 2;
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 
@@ -34,23 +34,23 @@ void DirectorChair_Draw(void)
     RSDK.DrawSprite(&self->animator, &self->centerPos, false);
 
     drawPos.x += -0x10000 - (RSDK.Cos512(self->rotation) << 11);
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->scissorAnimator, &drawPos, false);
 
     self->direction = FLIP_X;
     self->rotation  = 0x100 - self->rotation;
     drawPos.y += sin << 12;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->scissorAnimator, &drawPos, false);
 
     self->direction = FLIP_NONE;
     self->rotation  = 0x100 - self->rotation;
 
-    for (int i = 0; i < self->size; ++i) {
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    for (int32 i = 0; i < self->size; ++i) {
+        RSDK.DrawSprite(&self->scissorAnimator, &drawPos, false);
 
         self->direction = FLIP_X;
         self->rotation  = 0x100 - self->rotation;
         drawPos.y += sin << 12;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->scissorAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
         self->rotation  = 0x100 - self->rotation;
@@ -61,7 +61,7 @@ void DirectorChair_Create(void *data)
 {
     RSDK_THIS(DirectorChair);
 
-    RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 0, &self->scissorAnimator, true, 0);
     RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 1, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
         self->centerPos     = self->position;
@@ -73,16 +73,16 @@ void DirectorChair_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (self->size + 1);
         self->drawOrder     = Zone->drawOrderLow;
-        self->field_E8      = (self->size >> 2) - 16;
-        if (!self->type)
-            self->rotation = self->field_E8;
+        self->minRetract    = (self->size >> 2) - 16;
+        if (self->type == DIRECTORCHAIR_CLOSED)
+            self->rotation = self->minRetract;
         else
             self->rotation = -96;
         self->angle        = self->rotation << 8;
-        self->state        = DirectorChair_Unknown2;
-        self->stateCollide = DirectorChair_StateCollide_Chair;
+        self->state        = DirectorChair_State_Idle;
+        self->stateCollide = DirectorChair_Collide_Chair;
         self->speed <<= 7;
-        self->field_EC = maxVal(32 - 2 * self->size, 1);
+        self->initExtendVel = maxVal(32 - 2 * self->size, 1);
     }
 }
 
@@ -90,37 +90,42 @@ void DirectorChair_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("SPZ1"))
         DirectorChair->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/DirectorChair.bin", SCOPE_STAGE);
-    DirectorChair->hitbox1.top    = -18;
-    DirectorChair->hitbox1.left   = -18;
-    DirectorChair->hitbox1.right  = 18;
-    DirectorChair->hitbox1.bottom = -4;
-    DirectorChair->hitbox2.top    = -35;
-    DirectorChair->hitbox2.left   = -24;
-    DirectorChair->hitbox2.right  = -16;
-    DirectorChair->hitbox2.bottom = -3;
-    DirectorChair->hitbox3.top    = -35;
-    DirectorChair->hitbox3.left   = 16;
-    DirectorChair->hitbox3.right  = 24;
-    DirectorChair->hitbox3.bottom = -3;
-    DirectorChair->field_3        = 0;
-    DirectorChair->field_4        = 0;
-    DirectorChair->sfxUnravel     = RSDK.GetSfx("Stage/Unravel.wav");
-    DirectorChair->sfxExtend      = RSDK.GetSfx("Stage/Extend.wav");
-    DirectorChair->sfxRetract     = RSDK.GetSfx("Stage/Retract.wav");
+
+    DirectorChair->hitboxChair.top    = -18;
+    DirectorChair->hitboxChair.left   = -18;
+    DirectorChair->hitboxChair.right  = 18;
+    DirectorChair->hitboxChair.bottom = -4;
+
+    DirectorChair->hitboxL.top    = -35;
+    DirectorChair->hitboxL.left   = -24;
+    DirectorChair->hitboxL.right  = -16;
+    DirectorChair->hitboxL.bottom = -3;
+
+    DirectorChair->hitboxR.top    = -35;
+    DirectorChair->hitboxR.left   = 16;
+    DirectorChair->hitboxR.right  = 24;
+    DirectorChair->hitboxR.bottom = -3;
+
+    DirectorChair->extendCount  = 0;
+    DirectorChair->retractCount = 0;
+
+    DirectorChair->sfxUnravel = RSDK.GetSfx("Stage/Unravel.wav");
+    DirectorChair->sfxExtend  = RSDK.GetSfx("Stage/Extend.wav");
+    DirectorChair->sfxRetract = RSDK.GetSfx("Stage/Retract.wav");
 }
 
-void DirectorChair_StateCollide_Chair(void)
+void DirectorChair_Collide_Chair(void)
 {
     RSDK_THIS(DirectorChair);
 
-    int playerID         = 0;
+    int32 playerID     = 0;
     self->stoodPlayers = 0;
     foreach_active(Player, player)
     {
         bool32 prevOnGround = player->onGround;
-        if (Player_CheckCollisionPlatform(player, self, &DirectorChair->hitbox1)) {
+        if (Player_CheckCollisionPlatform(player, self, &DirectorChair->hitboxChair)) {
 #if RETRO_USE_PLUS
-            if (self->state == DirectorChair_Unknown2 && player->state == Player_State_MightyHammerDrop)
+            if (self->state == DirectorChair_State_Idle && player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
             self->timer = 0;
@@ -132,7 +137,7 @@ void DirectorChair_StateCollide_Chair(void)
                 player->position.y &= 0xFFFF0000;
             }
         }
-        if (Player_CheckCollisionBox(player, self, &DirectorChair->hitbox2) == C_TOP) {
+        if (Player_CheckCollisionBox(player, self, &DirectorChair->hitboxL) == C_TOP) {
             self->timer = 0;
             if (!prevOnGround) {
                 self->stoodPlayers |= 1 << playerID;
@@ -141,7 +146,7 @@ void DirectorChair_StateCollide_Chair(void)
                 player->position.y &= 0xFFFF0000;
             }
         }
-        if (Player_CheckCollisionBox(player, self, &DirectorChair->hitbox3) == C_TOP) {
+        if (Player_CheckCollisionBox(player, self, &DirectorChair->hitboxR) == C_TOP) {
             self->timer = 0;
             if (!prevOnGround) {
                 self->stoodPlayers |= 1 << playerID;
@@ -151,155 +156,157 @@ void DirectorChair_StateCollide_Chair(void)
             }
         }
 
+        // Extend Hitbox
         Hitbox hitbox;
-        hitbox.top    = 0;
-        hitbox.bottom = (self->centerPos.y - self->drawPos.y) >> 16;
         hitbox.right  = (RSDK.Cos512(self->rotation) >> 5) + 8;
+        hitbox.bottom = (self->centerPos.y - self->drawPos.y) >> 16;
         hitbox.left   = -hitbox.right;
+        hitbox.top    = 0;
         Player_CheckCollisionBox(player, self, &hitbox);
+
         ++playerID;
     }
 }
 
-void DirectorChair_Unknown2(void)
+void DirectorChair_State_Idle(void)
 {
     RSDK_THIS(DirectorChair);
 
-    int sin           = RSDK.Sin512(self->rotation);
+    int32 sin       = RSDK.Sin512(self->rotation);
     self->drawPos.x = self->centerPos.x;
     self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 
     if (self->stood) {
-        self->active   = ACTIVE_NORMAL;
-        self->field_E4 = 512;
-        if (!self->type) {
-            RSDK.PlaySfx(DirectorChair->sfxUnravel, false, 255);
-            self->state = DirectorChair_Unknown3;
+        self->active    = ACTIVE_NORMAL;
+        self->extendVel = 512;
+        if (self->type == DIRECTORCHAIR_CLOSED) {
+            RSDK.PlaySfx(DirectorChair->sfxUnravel, false, 0xFF);
+            self->state = DirectorChair_State_StartExtend;
         }
         else {
-            ++DirectorChair->field_4;
-            RSDK.PlaySfx(DirectorChair->sfxRetract, false, 255);
-            self->state = DirectorChair_Unknown6;
+            ++DirectorChair->retractCount;
+            RSDK.PlaySfx(DirectorChair->sfxRetract, false, 0xFF);
+            self->state = DirectorChair_State_Retract;
         }
     }
 }
 
-void DirectorChair_Unknown3(void)
+void DirectorChair_State_StartExtend(void)
 {
     RSDK_THIS(DirectorChair);
 
-    self->angle += self->field_E4;
-    self->field_E4 -= self->field_EC;
+    self->angle += self->extendVel;
+    self->extendVel -= self->initExtendVel;
     self->rotation = self->angle >> 8;
     if (self->rotation >= 0) {
-        self->rotation = 0;
-        self->angle    = 0;
-        self->field_E4 = -self->field_EC;
-        ++DirectorChair->field_3;
-        RSDK.PlaySfx(DirectorChair->sfxExtend, false, 255);
-        self->state = DirectorChair_Unknown4;
+        self->rotation  = 0;
+        self->angle     = 0;
+        self->extendVel = -self->initExtendVel;
+        ++DirectorChair->extendCount;
+        RSDK.PlaySfx(DirectorChair->sfxExtend, false, 0xFF);
+        self->state = DirectorChair_State_Extend;
     }
 
-    int sin           = RSDK.Sin512(self->rotation);
+    int32 sin       = RSDK.Sin512(self->rotation);
     self->drawPos.x = self->centerPos.x;
     self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
-void DirectorChair_Unknown4(void)
+void DirectorChair_State_Extend(void)
 {
     RSDK_THIS(DirectorChair);
 
-    self->angle -= self->field_E4;
-    if (self->field_E4 != self->speed) {
-        if (self->field_E4 >= self->speed) {
+    self->angle -= self->extendVel;
+    if (self->extendVel != self->speed) {
+        if (self->extendVel >= self->speed) {
             self->speed -= 32;
-            if (self->field_E4 < self->speed)
-                self->field_E4 = self->speed;
+            if (self->extendVel < self->speed)
+                self->extendVel = self->speed;
         }
         else {
-            self->field_E4 += 0x20;
-            if (self->field_E4 > self->speed)
-                self->field_E4 = self->speed;
+            self->extendVel += 0x20;
+            if (self->extendVel > self->speed)
+                self->extendVel = self->speed;
         }
     }
 
     self->rotation = self->angle >> 8;
     if (self->rotation <= -96) {
         self->rotation = -96;
-        if (!--DirectorChair->field_3)
+        if (!--DirectorChair->extendCount)
             RSDK.StopSfx(DirectorChair->sfxExtend);
-        if (self->type) {
-            self->active = ACTIVE_BOUNDS;
-            self->state  = DirectorChair_Unknown2;
+        if (self->type == DIRECTORCHAIR_CLOSED) {
+            self->state  = DirectorChair_State_StartRetract;
         }
         else {
-            self->state = DirectorChair_Unknown5;
+            self->active = ACTIVE_BOUNDS;
+            self->state  = DirectorChair_State_Idle;
         }
     }
 
-    int sin           = RSDK.Sin512(self->rotation);
+    int32 sin       = RSDK.Sin512(self->rotation);
     self->drawPos.x = self->centerPos.x;
     self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
-void DirectorChair_Unknown5(void)
+void DirectorChair_State_StartRetract(void)
 {
     RSDK_THIS(DirectorChair);
 
     if (++self->timer >= 60) {
-        self->timer = 0;
-        self->field_E4      = 0;
-        if (!self->type) {
-            ++DirectorChair->field_4;
-            RSDK.PlaySfx(DirectorChair->sfxRetract, false, 255);
-            self->state = DirectorChair_Unknown6;
+        self->timer     = 0;
+        self->extendVel = 0;
+        if (self->type == DIRECTORCHAIR_CLOSED) {
+            ++DirectorChair->retractCount;
+            RSDK.PlaySfx(DirectorChair->sfxRetract, false, 0xFF);
+            self->state = DirectorChair_State_Retract;
         }
         else {
-            ++DirectorChair->field_3;
-            RSDK.PlaySfx(DirectorChair->sfxExtend, false, 255);
-            self->state = DirectorChair_Unknown4;
+            ++DirectorChair->extendCount;
+            RSDK.PlaySfx(DirectorChair->sfxExtend, false, 0xFF);
+            self->state = DirectorChair_State_Extend;
         }
     }
 
-    int sin           = RSDK.Sin512(self->rotation);
+    int32 sin       = RSDK.Sin512(self->rotation);
     self->drawPos.x = self->centerPos.x;
     self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
-void DirectorChair_Unknown6(void)
+void DirectorChair_State_Retract(void)
 {
     RSDK_THIS(DirectorChair);
 
-    self->angle += self->field_E4;
+    self->angle += self->extendVel;
 
-    if (self->field_E4 != self->speed) {
-        if (self->field_E4 >= self->speed) {
-            self->field_E4 -= 32;
-            if (self->field_E4 < self->speed)
-                self->field_E4 = self->speed;
+    if (self->extendVel != self->speed) {
+        if (self->extendVel >= self->speed) {
+            self->extendVel -= 32;
+            if (self->extendVel < self->speed)
+                self->extendVel = self->speed;
         }
         else {
-            self->field_E4 += 0x20;
-            if (self->field_E4 > self->speed)
-                self->field_E4 = self->speed;
+            self->extendVel += 0x20;
+            if (self->extendVel > self->speed)
+                self->extendVel = self->speed;
         }
     }
 
     self->rotation = self->angle >> 8;
-    if (self->rotation >= self->field_E8) {
-        if (!--DirectorChair->field_4)
+    if (self->rotation >= self->minRetract) {
+        if (!--DirectorChair->retractCount)
             RSDK.StopSfx(DirectorChair->sfxRetract);
-        self->rotation = self->field_E8;
-        if (!self->type) {
+        self->rotation = self->minRetract;
+        if (self->type == DIRECTORCHAIR_CLOSED) {
             self->active = ACTIVE_BOUNDS;
-            self->state  = DirectorChair_Unknown2;
+            self->state  = DirectorChair_State_Idle;
         }
         else {
-            self->state = DirectorChair_Unknown5;
+            self->state = DirectorChair_State_StartRetract;
         }
     }
 
-    int sin           = RSDK.Sin512(self->rotation);
+    int32 sin       = RSDK.Sin512(self->rotation);
     self->drawPos.x = self->centerPos.x;
     self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
@@ -317,13 +324,13 @@ void DirectorChair_EditorDraw(void)
     self->updateRange.x = 0x800000;
     self->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (self->size + 1);
     self->drawOrder     = Zone->drawOrderLow;
-    self->field_E8      = (self->size >> 2) - 16;
-    if (!self->type)
-        self->rotation = self->field_E8;
+    self->minRetract    = (self->size >> 2) - 16;
+    if (self->type == DIRECTORCHAIR_CLOSED)
+        self->rotation = self->minRetract;
     else
         self->rotation = -96;
-    self->angle = self->rotation << 8;
-    self->field_EC = maxVal(32 - 2 * self->size, 1);
+    self->angle         = self->rotation << 8;
+    self->initExtendVel = maxVal(32 - 2 * self->size, 1);
 
     DirectorChair_Draw();
 }

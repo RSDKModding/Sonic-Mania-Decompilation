@@ -59,10 +59,12 @@ void BallHog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
         BallHog->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/BallHog.bin", SCOPE_STAGE);
+
     BallHog->hitboxBadnik.left   = -12;
     BallHog->hitboxBadnik.top    = -18;
     BallHog->hitboxBadnik.right  = 12;
     BallHog->hitboxBadnik.bottom = 18;
+
     BallHog->hitboxBomb.left     = -6;
     BallHog->hitboxBomb.top      = -6;
     BallHog->hitboxBomb.right    = 6;
@@ -85,7 +87,7 @@ void BallHog_DebugSpawn(void)
 void BallHog_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(BallHog->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void BallHog_CheckPlayerCollisions(void)
@@ -191,7 +193,7 @@ void BallHog_State_DropBomb(void)
     }
     else {
         self->timer = 18;
-        RSDK.PlaySfx(BallHog->sfxDrop, false, 255);
+        RSDK.PlaySfx(BallHog->sfxDrop, false, 0xFF);
 
         EntityBallHog *bomb = CREATE_ENTITY(BallHog, intToVoid(true), self->position.x, self->position.y);
         if (self->direction) {
@@ -256,7 +258,7 @@ void BallHog_State_Bomb(void)
 
         if (flag || !--self->timer) {
             RSDK.PlaySfx(BallHog->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             destroyEntity(self);
         }
     }

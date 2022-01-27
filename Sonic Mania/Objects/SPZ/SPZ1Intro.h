@@ -9,22 +9,13 @@ struct ObjectSPZ1Intro {
     uint16 aniFrames;
     uint16 sfxGasPop;
     uint16 sfxPon;
-    EntityDebris *debris;
+    EntityDebris *sewerLid;
 };
 
 // Entity Class
 struct EntitySPZ1Intro {
-    RSDK_ENTITY
-    Vector2 size;
-    int32 timer;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    Hitbox hitbox;
-    int32 field_84;
+    MANIA_CUTSCENE_BASE
+    int32 unused;
 };
 
 // Object Struct

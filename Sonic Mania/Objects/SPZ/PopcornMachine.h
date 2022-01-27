@@ -13,10 +13,10 @@ typedef enum {
 struct ObjectPopcornMachine {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    int32 field_16;
-    int32 field_1A;
+    Hitbox hitboxEntryL;
+    Hitbox hitboxEntryR;
+    int32 unused1;
+    int32 unused2;
     uint16 sfxFanStart;
     uint16 sfxShoot;
     uint16 sfxPopcornLaunch;
@@ -28,18 +28,16 @@ struct EntityPopcornMachine {
     StateMachine(state);
     uint8 type;
     uint8 height;
-    int32 field_60;
+    int32 timer;
     Entity *parent;
     EntityPlayer *player;
     int32 bounds[PLAYER_MAX];
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
+    Vector2 dispenserHolderPos;
+    Vector2 dispenserPos;
     Animator animator;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxSideL;
+    Hitbox hitboxSideR;
+    Hitbox hitboxTop;
 };
 
 // Object Struct
@@ -62,14 +60,14 @@ void PopcornMachine_Serialize(void);
 void PopcornMachine_LinkPlayer(EntityPlayer *player);
 void PopcornMachine_CheckPlayerCollisions(void);
 
-void PopcornMachine_State_Unknown1(void);
-void PopcornMachine_State_Unknown2(void);
-void PopcornMachine_State_Unknown4(void);
-void PopcornMachine_State_Unknown3(void);
+void PopcornMachine_State_Idle(void);
+void PopcornMachine_State_ShowDispenser(void);
+void PopcornMachine_State_Shaking(void);
+void PopcornMachine_State_HideDispenser(void);
 
-void PopcornMachine_State2_Unknown1(void);
-void PopcornMachine_State2_Unknown2(void);
-void PopcornMachine_State2_Unknown3(void);
-void PopcornMachine_State2_Unknown4(void);
+void PopcornMachine_StateController_ReadyPlayer(void);
+void PopcornMachine_StateController_RisePlayer(void);
+void PopcornMachine_StateController_FirePlayer(void);
+void PopcornMachine_StateController_HandleFinish(void);
 
 #endif //!OBJ_POPCORNMACHINE_H

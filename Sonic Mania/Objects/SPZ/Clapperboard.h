@@ -16,17 +16,15 @@ struct EntityClapperboard {
     StateMachine(state);
     StateMachine(stateCollide);
     uint8 takeID;
-    int32 field_64;
-    int32 field_68;
+    int32 clapSpeed;
+    int32 stoodPlayers;
     Hitbox hitbox;
-    int32 dword74;
-    int32 dword78;
-    int32 dword7C;
-    int32 dword80;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Vector2 amplitudeL;
+    Vector2 amplitudeR;
+    Animator clapperTopAnimator;
+    Animator clapperBottomAnimator;
+    Animator boardAnimator;
+    Animator numbersAnimator;
 };
 
 // Object Struct
@@ -46,13 +44,13 @@ void Clapperboard_EditorLoad(void);
 void Clapperboard_Serialize(void);
 
 // Extra Entity Functions
-void Clapperboard_StateCollide_NoFlip(void);
-void Clapperboard_StateCollide_FlipX(void);
+void Clapperboard_Collide_Left(void);
+void Clapperboard_Collide_Right(void);
 
-void Clapperboard_State_Unknown1(void);
-void Clapperboard_State_Unknown2(void);
-void Clapperboard_State_Unknown3(void);
-void Clapperboard_State_Unknown4(void);
-void Clapperboard_State_Unknown5(void);
+void Clapperboard_State_Idle(void);
+void Clapperboard_State_ClappingL(void);
+void Clapperboard_State_ClapReboundL(void);
+void Clapperboard_State_ClappingR(void);
+void Clapperboard_State_ClapReboundR(void);
 
 #endif //!OBJ_CLAPPERBOARD_H

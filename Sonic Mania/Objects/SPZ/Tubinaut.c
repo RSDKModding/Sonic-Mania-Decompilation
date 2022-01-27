@@ -60,15 +60,18 @@ void Tubinaut_Create(void *data)
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, &self->ballAnimators[0], true, 0);
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 2, &self->ballAnimators[1], true, 0);
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 3, &self->ballAnimators[2], true, 0);
-        self->orbAngles[0]    = 0;
-        self->orbAngles[1]    = 0x500;
-        self->orbAngles[2]    = 0xA00;
-        self->ballsVisible[0] = true;
-        self->ballsVisible[1] = true;
-        self->ballsVisible[2] = true;
-        self->activeOrbs      = 0b111;
-        self->orbCount        = 3;
-        self->attackTimer     = 64;
+
+        int32 angle = 0x000;
+        for (int32 o = 0; o < Tubinaut_OrbCount; ++o) {
+            self->orbAngles[o]    = angle;
+            self->ballsVisible[o] = true;
+
+            angle += 0x500;
+        }
+
+        self->activeOrbs  = 0b111;
+        self->orbCount    = 3;
+        self->attackTimer = 64;
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &self->bodyAnimator, true, 0);
         RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &self->fieldAnimator, true, 0);
         self->state    = Tubinaut_State_Setup;
@@ -82,19 +85,24 @@ void Tubinaut_StageLoad(void)
         Tubinaut->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Tubinaut.bin", SCOPE_STAGE);
     else
         Tubinaut->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Tubinaut.bin", SCOPE_STAGE);
-    Tubinaut->hitbox1.left   = -10;
-    Tubinaut->hitbox1.top    = -10;
-    Tubinaut->hitbox1.right  = 10;
-    Tubinaut->hitbox1.bottom = 10;
-    Tubinaut->hitbox2.left   = -7;
-    Tubinaut->hitbox2.top    = -7;
-    Tubinaut->hitbox2.right  = 7;
-    Tubinaut->hitbox2.bottom = 7;
-    Tubinaut->hitbox3.left   = -20;
-    Tubinaut->hitbox3.top    = -20;
-    Tubinaut->hitbox3.right  = 20;
-    Tubinaut->hitbox3.bottom = 20;
+
+    Tubinaut->hitboxFace.left   = -10;
+    Tubinaut->hitboxFace.top    = -10;
+    Tubinaut->hitboxFace.right  = 10;
+    Tubinaut->hitboxFace.bottom = 10;
+
+    Tubinaut->hitboxOrb.left   = -7;
+    Tubinaut->hitboxOrb.top    = -7;
+    Tubinaut->hitboxOrb.right  = 7;
+    Tubinaut->hitboxOrb.bottom = 7;
+
+    Tubinaut->hitboxSpin.left   = -20;
+    Tubinaut->hitboxSpin.top    = -20;
+    Tubinaut->hitboxSpin.right  = 20;
+    Tubinaut->hitboxSpin.bottom = 20;
+
     DEBUGMODE_ADD_OBJ(Tubinaut);
+
     Tubinaut->sfxPowerdown = RSDK.GetSfx("Stage/PowerDown.wav");
     Tubinaut->sfxRepel     = RSDK.GetSfx("Stage/Repel.wav");
 }
@@ -111,16 +119,16 @@ void Tubinaut_DebugSpawn(void)
 void Tubinaut_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Tubinaut_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Tubinaut);
 
-    int storeX   = self->position.x;
-    int storeY   = self->position.y;
-    int playerID = 0;
+    int32 storeX   = self->position.x;
+    int32 storeY   = self->position.y;
+    int32 playerID = 0;
 
     foreach_active(Player, player)
     {
@@ -128,7 +136,7 @@ void Tubinaut_CheckPlayerCollisions(void)
             --self->playerTimers[playerID];
         }
         else if (self->orbState == Tubinaut_Orb_Attack && self->orbCount > 1) {
-            if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitbox3) && !Player_CheckHit(player, self)) {
+            if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitboxSpin) && !Player_CheckHit(player, self)) {
                 Tubinaut_HandleRepel(player, playerID);
             }
         }
@@ -139,7 +147,7 @@ void Tubinaut_CheckPlayerCollisions(void)
                     self->position.x = self->orbPositions[i].x;
                     self->position.y = self->orbPositions[i].y;
 
-                    if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitbox2)) {
+                    if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitboxOrb)) {
                         Tubinaut_OrbHit(player, i);
 #if RETRO_USE_PLUS
                         if (player->state != Player_State_MightyHammerDrop) {
@@ -172,7 +180,7 @@ void Tubinaut_CheckPlayerCollisions(void)
 
             self->position.x = storeX;
             self->position.y = storeY;
-            if (!flag && Player_CheckBadnikTouch(player, self, &Tubinaut->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
+            if (!flag && Player_CheckBadnikTouch(player, self, &Tubinaut->hitboxFace) && Player_CheckBadnikBreak(self, player, false)) {
                 for (int i = 0; i < Tubinaut_OrbCount; ++i) {
                     if (self->ballsVisible[i]) {
                         EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, intToVoid(i + 1), self->orbPositions[i].x, self->orbPositions[i].y);
@@ -255,7 +263,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int orbID)
         }
 #endif
 
-        self->ballsVisible[orbID] = 0;
+        self->ballsVisible[orbID] = false;
         --self->orbCount;
         self->activeOrbs &= ~(1 << orbID);
 
@@ -285,7 +293,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         self->playerTimers[playerID] = 15;
-        RSDK.PlaySfx(Tubinaut->sfxRepel, false, 255);
+        RSDK.PlaySfx(Tubinaut->sfxRepel, false, 0xFF);
 
         if (self->position.x > player->position.x)
             player->groundVel = -0x20000;
@@ -295,9 +303,9 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
     else {
 #endif
         if (Tubinaut_CheckAttacking(player)) {
-            int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-            int velX  = 0x700 * RSDK.Cos256(angle);
-            int velY  = 0x700 * RSDK.Sin256(angle);
+            int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
+            int32 velX  = 0x700 * RSDK.Cos256(angle);
+            int32 velY  = 0x700 * RSDK.Sin256(angle);
             if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = velX;
                 player->groundVel   = velX;
@@ -307,7 +315,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
             player->onGround             = false;
             player->tileCollisions       = true;
             self->playerTimers[playerID] = 15;
-            RSDK.PlaySfx(Tubinaut->sfxRepel, false, 255);
+            RSDK.PlaySfx(Tubinaut->sfxRepel, false, 0xFF);
         }
 #if RETRO_USE_PLUS
     }
@@ -339,16 +347,16 @@ void Tubinaut_HandleOrbs(void)
         self->orbAngles[i] &= 0xFFF;
 
         if (self->orbState == Tubinaut_Orb_Cooldown || self->orbCount <= 1 || self->attackTimer < 192) {
-            self->ballAnimators[i].frameID        = (2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7)));
-            self->ballAnimators[i].timer = (self->ballAnimators[i].timer + 1) & 3;
+            self->ballAnimators[i].frameID = (2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7)));
+            self->ballAnimators[i].timer   = (self->ballAnimators[i].timer + 1) & 3;
             self->ballAnimators[i].frameID += (self->ballAnimators[i].timer >> 1);
         }
         else {
-            int val                               = ((self->ballAnimators[i].timer + 1) & 7) >> 1;
+            int32 id                     = ((self->ballAnimators[i].timer + 1) & 7) >> 1;
             self->ballAnimators[i].timer = (self->ballAnimators[i].timer + 1) & 7;
-            switch (val) {
+            switch (id) {
                 case 0:
-                case 2: self->ballAnimators[i].frameID = (val + 2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7))); break;
+                case 2: self->ballAnimators[i].frameID = (id + 2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7))); break;
                 case 1: self->ballAnimators[i].frameID = 17; break;
                 case 3: self->ballAnimators[i].frameID = 16; break;
                 default: break;
@@ -498,18 +506,21 @@ void Tubinaut_EditorDraw(void)
 {
     RSDK_THIS(Tubinaut);
 
-    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, self->ballAnimators, true, 0);
+    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, &self->ballAnimators[0], true, 0);
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 2, &self->ballAnimators[1], true, 0);
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 3, &self->ballAnimators[2], true, 0);
-    self->orbAngles[0]    = 0;
-    self->orbAngles[1]    = 0x500;
-    self->orbAngles[2]    = 0xA00;
-    self->ballsVisible[0] = true;
-    self->ballsVisible[1] = true;
-    self->ballsVisible[2] = true;
-    self->activeOrbs      = 0b111;
-    self->orbCount        = 3;
-    self->attackTimer     = 64;
+
+    int angle = 0x000;
+    for (int o = 0; o < Tubinaut_OrbCount; ++o) {
+        self->orbAngles[o]    = angle;
+        self->ballsVisible[o] = true;
+
+        angle += 0x500;
+    }
+
+    self->activeOrbs  = 0b111;
+    self->orbCount    = 3;
+    self->attackTimer = 64;
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &self->fieldAnimator, true, 0);
     self->state    = Tubinaut_State_Setup;

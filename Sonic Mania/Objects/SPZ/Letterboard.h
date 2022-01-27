@@ -16,7 +16,7 @@ struct ObjectLetterboard {
 struct EntityLetterboard {
     RSDK_ENTITY
     StateMachine(state);
-    bool32 ControllerInfo;
+    bool32 controller;
     uint8 letterID;
     int32 spinSpeed;
     int32 timer;

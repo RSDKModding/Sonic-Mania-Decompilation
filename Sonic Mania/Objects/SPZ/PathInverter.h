@@ -19,9 +19,9 @@ struct EntityPathInverter {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    Vector2 size2;
+    Vector2 size2x;
     Vector2 size;
-    Entity *playerPtrs[PLAYER_MAX];
+    EntityPlayer *playerPtrs[PLAYER_MAX];
     int32 groundVelStore[PLAYER_MAX];
     int32 playerFlipFlags[PLAYER_MAX];
     Animator animator;
@@ -44,7 +44,7 @@ void PathInverter_EditorLoad(void);
 void PathInverter_Serialize(void);
 
 // Extra Entity Functions
-void PathInverter_HandlePathSwitch(void *p);
+void PathInverter_HandlePathSwitch(EntityPlayer *player);
 void PathInverter_State_Horizontal(void);
 void PathInverter_State_Vertical(void);
 

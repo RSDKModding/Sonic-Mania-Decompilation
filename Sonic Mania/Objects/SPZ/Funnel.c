@@ -35,7 +35,7 @@ void Funnel_Update(void)
 
                         self->playerYVel[p] += 64 + (self->playerYVel[p] >> 8);
 
-                        int distX = maxVal(((self->position.y - player->position.y) >> 8) - 0xA00, 0x400);
+                        int32 distX = maxVal(((self->position.y - player->position.y) >> 8) - 0xA00, 0x400);
 
                         player->position.x = distX * RSDK.Cos256(self->playerAngle[p]) + self->position.x;
                         self->playerAngle[p] -= self->playerXVel[p] >> 16;
@@ -95,12 +95,12 @@ void Funnel_Update(void)
             else {
                 if (Player_CheckValidState(player) && Player_CheckCollisionTouch(player, self, &Funnel->hitbox)) {
 
-                    int dy    = 0;
-                    int distY = (self->position.y - player->position.y) >> 16;
+                    int32 dy    = 0;
+                    int32 distY = (self->position.y - player->position.y) >> 16;
                     if (distY - 10 >= 0)
                         dy = distY - 10;
 
-                    int distX = abs(player->position.x - self->position.x) >> 16;
+                    int32 distX = abs(player->position.x - self->position.x) >> 16;
                     if ((distX <= dy && player->position.y < self->position.y) || (player->position.y < self->position.y - 0x280000 && distX <= 64)) {
                         if (player->camera) {
                             player->scrollDelay = 0;
@@ -116,8 +116,8 @@ void Funnel_Update(void)
                         }
                         self->playerXVel[p] = clampVal(player->velocity.x, -0x100000, 0x100000);
 
-                        int x = ((player->position.x - self->position.x) >> 16) * ((player->position.x - self->position.x) >> 16);
-                        int y = dy * dy - x;
+                        int32 x = ((player->position.x - self->position.x) >> 16) * ((player->position.x - self->position.x) >> 16);
+                        int32 y = dy * dy - x;
                         if (player->position.x < self->position.x)
                             x = -x;
                         self->playerAngle[p] = RSDK.ATan2(x, y);
@@ -132,7 +132,7 @@ void Funnel_Update(void)
                             player->velocity.y = 0x80000;
                         else
 #endif
-                            RSDK.PlaySfx(Funnel->sfxFunnel, false, 255);
+                            RSDK.PlaySfx(Funnel->sfxFunnel, false, 0xFF);
                         player->velocity.x        = 0;
                         self->playerScoreTimer[p] = 0;
                         self->playerYVel[p]       = 0;
@@ -145,7 +145,7 @@ void Funnel_Update(void)
                         player->nextAirState    = StateMachine_None;
                     }
                     else if (player->velocity.y <= 0x10000) {
-                        int max = 0;
+                        int32 max = 0;
                         if (player->position.y >= self->position.y) {
                             max = 28;
                         }
@@ -157,8 +157,8 @@ void Funnel_Update(void)
                         }
 
                         if (distX < max) {
-                            int x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
-                            int y = x;
+                            int32 x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
+                            int32 y = x;
                             if (player->position.y >= self->position.y + 0x160000) {
                                 x = player->velocity.x;
                             }
@@ -196,7 +196,7 @@ void Funnel_Update(void)
                         }
                     }
                     else {
-                        int max = 0;
+                        int32 max = 0;
                         if (player->position.y >= self->position.y) {
                             max = 28;
                         }
@@ -208,8 +208,8 @@ void Funnel_Update(void)
                         }
 
                         if (distX < max) {
-                            int x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
-                            int y = x;
+                            int32 x = RSDK.Rand(0x20000, maxVal(abs(player->velocity.y + player->velocity.x) >> 8, 0x4000));
+                            int32 y = x;
                             if (player->position.y >= self->position.y + 0x160000) {
                                 x = player->velocity.x;
                                 x = -x;

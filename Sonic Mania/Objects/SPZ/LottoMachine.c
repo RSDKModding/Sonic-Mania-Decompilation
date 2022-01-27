@@ -34,7 +34,7 @@ void LottoMachine_LateUpdate(void) {}
 
 void LottoMachine_StaticUpdate(void)
 {
-    LottoMachine->animator.frameID = SPZ2Setup->frameD;
+    LottoMachine->animator.frameID = SPZ2Setup->stageLightsFrame;
     foreach_all(LottoMachine, lottoMachine)
     {
         int slot = RSDK.GetEntityID(lottoMachine);

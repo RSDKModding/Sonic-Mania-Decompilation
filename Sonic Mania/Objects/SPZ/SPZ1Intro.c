@@ -12,12 +12,13 @@ ObjectSPZ1Intro *SPZ1Intro;
 void SPZ1Intro_Update(void)
 {
     RSDK_THIS(SPZ1Intro);
-    if (!self->timer) {
+
+    if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             self->active = ACTIVE_NEVER;
         }
         else {
-            self->timer = 1;
+            self->activated = true;
             CutsceneSeq_StartSequence(self, SPZ1Intro_Cutscene_SetupAct, SPZ1Intro_Cutscene_ExitPipe, SPZ1Intro_Cutscene_BeginAct1, NULL);
         }
     }
@@ -42,6 +43,7 @@ void SPZ1Intro_StageLoad(void)
 {
     SPZ1Intro->sfxGasPop = RSDK.GetSfx("OOZ/GasPop.wav");
     SPZ1Intro->sfxPon    = RSDK.GetSfx("Stage/Pon.wav");
+
     SPZ1Intro->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ManholeCover.bin", SCOPE_STAGE);
 }
 
@@ -71,48 +73,36 @@ bool32 SPZ1Intro_Cutscene_SetupAct(EntityCutsceneSeq *host)
             player2->stateInput     = StateMachine_None;
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->animator, false, 0);
         }
-        EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, curEnt->position.x, curEnt->position.y + 0x390000);
-        debris->drawOrder     = Zone->playerDrawHigh;
-        debris->state         = StateMachine_None;
-        debris->drawFX        = FX_SCALE | FX_ROTATE;
-        debris->scale.x       = 0x200;
-        debris->scale.y       = 0x200;
-        debris->updateRange.x = 0x800000;
-        debris->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 0, &debris->animator, true, 0);
-        SPZ1Intro->debris = debris;
+
+        EntityDebris *lid  = CREATE_ENTITY(Debris, NULL, curEnt->position.x, curEnt->position.y + 0x390000);
+        lid->drawOrder     = Zone->playerDrawHigh;
+        lid->state         = StateMachine_None;
+        lid->drawFX        = FX_SCALE | FX_ROTATE;
+        lid->scale.x       = 0x200;
+        lid->scale.y       = 0x200;
+        lid->updateRange.x = 0x800000;
+        lid->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 0, &lid->animator, true, 0);
+        SPZ1Intro->sewerLid = lid;
     }
 
-    if (RSDK.GetEntityCount(TitleCard->objectID, 0) || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
-        if (!host->values[0]) {
-            SceneInfo->timeEnabled  = false;
-            SceneInfo->milliseconds = 0;
-            camera->state           = StateMachine_None;
-            return false;
-        }
-    }
-    else if (!host->values[0]) {
-        host->values[0]   = 1;
+    if (!RSDK.GetEntityCount(TitleCard->objectID, false) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID && !host->values[0]) {
+        host->values[0]   = true;
         host->storedTimer = host->timer;
-        if (!host->values[0]) {
-            SceneInfo->timeEnabled  = false;
-            SceneInfo->milliseconds = 0;
-            camera->state           = StateMachine_None;
-            return false;
-        }
     }
 
-    if (host->timer == 45)
-        RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
-    if (host->timer == 90) {
-        return true;
+    if (host->values[0]) {
+        if (host->timer == 45)
+            RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
+
+        if (host->timer == 90) 
+            return true;
     }
-    else {
-        SceneInfo->timeEnabled  = false;
-        SceneInfo->milliseconds = 0;
-        camera->state           = StateMachine_None;
-        return false;
-    }
+
+    SceneInfo->timeEnabled  = false;
+    SceneInfo->milliseconds = 0;
+    camera->state           = StateMachine_None;
+    return false;
 }
 
 bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
@@ -130,16 +120,17 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
         RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 0xFF);
         RSDK.StopSfx(Player->sfxRoll);
         Camera_ShakeScreen(0, 0, 2);
-        EntityDebris *debris = SPZ1Intro->debris;
-        debris->state        = Debris_State_Fall;
-        debris->velocity.y   = -0x60000;
-        debris->velocity.x   = -0x18000;
-        debris->gravity      = 0x3800;
-        debris->scaleInc.x   = 8;
-        debris->scaleInc.y   = 8;
-        debris->rotSpeed     = -1;
-        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 1, &debris->animator, true, 0);
+        EntityDebris *lid = SPZ1Intro->sewerLid;
+        lid->state        = Debris_State_Fall;
+        lid->velocity.y   = -0x60000;
+        lid->velocity.x   = -0x18000;
+        lid->gravity      = 0x3800;
+        lid->scaleInc.x   = 8;
+        lid->scaleInc.y   = 8;
+        lid->rotSpeed     = -1;
+        RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 1, &lid->animator, true, 0);
     }
+
     if (player1->velocity.y > 0)
         player1->tileCollisions = true;
 
@@ -151,20 +142,24 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
             player2->nextAirState    = StateMachine_None;
             player2->nextGroundState = StateMachine_None;
         }
+
         if (player2->velocity.y > 0)
             player2->tileCollisions = true;
-        if (!player1->onGround || !player2->onGround)
-            return false;
+
+        if (player1->onGround && player2->onGround)
+            return true;
     }
-    else if (!player1->onGround) {
-        return false;
+    else if (player1->onGround) {
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
+
     if (!host->timer) {
         camera->targetPtr   = (Entity *)player1;
         camera->state       = Camera_State_Follow;
@@ -176,6 +171,7 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
         SceneInfo->timeEnabled = true;
         return true;
     }
+
     return false;
 }
 

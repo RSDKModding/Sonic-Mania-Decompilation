@@ -18,12 +18,7 @@ struct EntityEggTV {
     bool32 drawOverTV;
     int32 lineAlpha;
     Hitbox hitbox;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
+    Animator unusedAnimator;
 };
 
 // Object Struct

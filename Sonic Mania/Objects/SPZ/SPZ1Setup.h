@@ -6,16 +6,16 @@
 // Object Class
 struct ObjectSPZ1Setup {
     RSDK_OBJECT
-    int32 palRotateTimerA;
-    int32 palRotateTimerB;
-    int32 angle;
-    int32 aniTilesFrameC;
-    int32 timerA;
-    int32 timerB;
-    int32 aniTilesFrameB;
+    int32 fgLightsPalTimer;
+    int32 bgLightsPalTimer;
+    int32 palFadePercent;
+    int32 flashingLightsFrame;
+    int32 conveyorFrame;
+    int32 streetLightTimer;
+    int32 streetLightFrame;
     uint16 aniTiles;
-    TileLayer *bgLayer;
-    TileLayer *bgLayer2;
+    TileLayer *cityBGLow;
+    TileLayer *cityBGHigh;
 };
 
 // Entity Class
@@ -33,8 +33,10 @@ void SPZ1Setup_StaticUpdate(void);
 void SPZ1Setup_Draw(void);
 void SPZ1Setup_Create(void* data);
 void SPZ1Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SPZ1Setup_EditorDraw(void);
 void SPZ1Setup_EditorLoad(void);
+#endif
 void SPZ1Setup_Serialize(void);
 
 // Extra Entity Functions

@@ -20,19 +20,19 @@ struct EntityFilmReel {
     uint8 spinDirection;
     Vector2 drawPos;
     Vector2 endPos;
-    Vector2 field_74;
-    Vector2 field_7C;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    bool32 flag;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Vector2 lastPos;
+    Vector2 moveOffset;
+    int32 spinAngle;
+    int32 unused;
+    int32 spinSpeed;
+    int32 pathFlags;
+    int32 pathDir;
+    int32 lineDir;
+    bool32 moveCamera;
+    Animator reelAnimator;
+    Animator celluoidAnimator;
+    Animator edgeAnimator;
+    Animator pinAnimator;
 };
 
 // Object Struct

@@ -11,12 +11,12 @@ typedef enum {
 // Object Class
 struct ObjectDirectorChair {
     RSDK_OBJECT
-    uint8 field_3;
-    uint8 field_4;
+    uint8 extendCount;
+    uint8 retractCount;
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxChair;
+    Hitbox hitboxL;
+    Hitbox hitboxR;
     uint16 sfxUnravel;
     uint16 sfxExtend;
     uint16 sfxRetract;
@@ -47,10 +47,10 @@ struct EntityDirectorChair {
     Animator animator;
     int32 childCount;
 
-    Animator animator2;
-    int32 field_E4;
-    int32 field_E8;
-    int32 field_EC;
+    Animator scissorAnimator;
+    int32 extendVel;
+    int32 minRetract;
+    int32 initExtendVel;
 };
 
 // Object Struct
@@ -70,12 +70,12 @@ void DirectorChair_EditorLoad(void);
 void DirectorChair_Serialize(void);
 
 // Extra Entity Functions
-void DirectorChair_StateCollide_Chair(void);
+void DirectorChair_Collide_Chair(void);
 
-void DirectorChair_Unknown2(void);
-void DirectorChair_Unknown3(void);
-void DirectorChair_Unknown4(void);
-void DirectorChair_Unknown5(void);
-void DirectorChair_Unknown6(void);
+void DirectorChair_State_Idle(void);
+void DirectorChair_State_StartExtend(void);
+void DirectorChair_State_Extend(void);
+void DirectorChair_State_StartRetract(void);
+void DirectorChair_State_Retract(void);
 
 #endif //!OBJ_DIRECTORCHAIR_H

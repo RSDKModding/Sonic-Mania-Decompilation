@@ -3,13 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CANISTA_TRIGGER_STATIC,
+    CANISTA_TRIGGER_DETECT,
+} CanistaTriggerModes;
+
 // Object Class
 struct ObjectCanista {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Hitbox hitboxDetect;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxPon;
 };
@@ -23,19 +28,19 @@ struct EntityCanista {
     Vector2 detectSize;
     int32 shootOffset;
     int32 shootSize;
-    int32 timer3;
-    int32 timer2;
-    Entity *detectedPlayer;
+    int32 stopTimer;
+    int32 detectDelay;
+    EntityPlayer *detectedPlayer;
     Vector2 startPos;
     uint8 startDir;
-    uint8 field_8D;
+    uint8 moveDir;
     uint8 timer;
-    Hitbox hitbox;
-    int32 field_98;
-    int32 field_9C;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Hitbox hitboxDetect;
+    int32 unused1;
+    int32 unused2;
+    Animator mainAnimator;
+    Animator tapeAnimator;
+    Animator cannonAnimator;
 };
 
 // Object Struct
@@ -58,15 +63,15 @@ void Canista_Serialize(void);
 void Canista_DebugSpawn(void);
 void Canista_DebugDraw(void);
 
-void Canista_CheckPlayerCollisions(void);
+void Canista_CheckPlayerBadnikCollisions(void);
 void Canista_CheckOnScreen(void);
 
 void Canista_State_Setup(void);
-void Canista_State_Unknown1(void);
-void Canista_State_Unknown2(void);
+void Canista_State_Moving(void);
+void Canista_State_Stopped(void);
 
-void Canista_CheckPlayerCollisions2(void);
-void Canista_State2_Unknown1(void);
-void Canista_State2_Unknown2(void);
+void Canista_CheckPlayerProjectileCollisions(void);
+void Canista_StateProjectile_Shot(void);
+void Canista_StateProjectile_Fall(void);
 
 #endif //!OBJ_CANISTA_H

@@ -175,13 +175,13 @@ void AIZSetup_StageLoad(void)
         AIZSetup->bg4Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 4"));
 
         for (int32 i = 0; i < AIZSetup->bg2Info->scrollInfoCount; ++i) {
-            int32 pFac                                 = AIZSetup->bg2Info->scrollInfo[i].parallaxFactor;
-            AIZSetup->bg2Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * pFac);
+            int32 parallaxFactor                       = AIZSetup->bg2Info->scrollInfo[i].parallaxFactor;
+            AIZSetup->bg2Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
         }
 
         for (int32 i = 0; i < AIZSetup->bg3Info->scrollInfoCount; ++i) {
-            int32 pFac                                 = AIZSetup->bg3Info->scrollInfo[i].parallaxFactor;
-            AIZSetup->bg3Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * pFac);
+            int32 parallaxFactor                       = AIZSetup->bg3Info->scrollInfo[i].parallaxFactor;
+            AIZSetup->bg3Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
         }
 #if RETRO_USE_PLUS
     }
@@ -248,7 +248,7 @@ void AIZSetup_PlayerState_P2Enter(void)
 
 void AIZSetup_HandleHeavyMovement(void)
 {
-    EntityAIZKingClaw *claw = (EntityAIZKingClaw *)AIZSetup->claw;
+    EntityAIZKingClaw *claw = AIZSetup->claw;
     int32 x                 = -0x10000;
     foreach_all(AIZEggRobo, robo)
     {
@@ -271,7 +271,7 @@ void AIZSetup_SetupObjects(void)
 {
     foreach_all(AIZTornado, tornado)
     {
-        AIZSetup->tornado = (Entity *)tornado;
+        AIZSetup->tornado = tornado;
         foreach_break;
     }
 
@@ -279,25 +279,25 @@ void AIZSetup_SetupObjects(void)
     {
         if (!platform->frameID) {
             platform->drawOrder = Zone->drawOrderHigh - 1;
-            AIZSetup->platform  = (Entity *)platform;
+            AIZSetup->platform  = platform;
             foreach_break;
         }
     }
 
     foreach_all(AIZKingClaw, claw)
     {
-        AIZSetup->claw = (Entity *)claw;
+        AIZSetup->claw = claw;
         foreach_break;
     }
 
     foreach_all(PhantomRuby, ruby)
     {
-        AIZSetup->phantomRuby = (Entity *)ruby;
+        AIZSetup->phantomRuby = ruby;
         foreach_break;
     }
 
     int32 id = 0;
-    foreach_all(Decoration, decoration) { AIZSetup->decorations[id++] = (Entity *)decoration; }
+    foreach_all(Decoration, decoration) { AIZSetup->decorations[id++] = decoration; }
 }
 
 void AIZSetup_GetCutsceneSetupPtr(void)
@@ -344,13 +344,11 @@ void AIZSetup_CutsceneST_Setup(void)
 #endif
 }
 
-bool32 AIZSetup_CutsceneSonic_EnterAIZ(Entity *h)
+bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host   = (EntityCutsceneSeq *)h;
-    EntityCamera *camera      = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-    EntityPlayer *player1     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2     = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityAIZTornado *tornado = (EntityAIZTornado *)AIZSetup->tornado;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    EntityAIZTornado *tornado = AIZSetup->tornado;
+
     if (!host->timer) {
         CutsceneSeq_LockAllPlayerControl();
         player1->stateInput = StateMachine_None;
@@ -362,15 +360,16 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZ(Entity *h)
         camera->position.x = ScreenInfo->width << 16;
     return tornado->disableInteractions;
 }
-bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(Entity *h)
+bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x >= 0x27100000) {
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.01);
-        player1->right     = false;
-        player1->left      = true;
+        player1->right    = false;
+        player1->left     = true;
         host->storedValue = player1->groundVel;
         return true;
     }
@@ -379,17 +378,16 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(Entity *h)
     }
     return false;
 }
-bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h)
+bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (player1->position.x >= 0x2A300000) {
         if (player1->groundVel <= 0) {
             if (!host->storedTimer) {
-                player1->right     = false;
-                player1->left      = false;
+                player1->right    = false;
+                player1->left     = false;
                 host->storedTimer = host->timer;
             }
         }
@@ -422,12 +420,11 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(Entity *h)
 
     return false;
 }
-bool32 AIZSetup_CutsceneSonic_P2FlyIn(Entity *h)
+bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (player2->objectID == Player->objectID) {
         if (player2->onGround) {
             player2->stateInput = StateMachine_None;
@@ -449,11 +446,10 @@ bool32 AIZSetup_CutsceneSonic_P2FlyIn(Entity *h)
 
     return false;
 }
-bool32 AIZSetup_CutsceneSonic_EnterClaw(Entity *h)
+bool32 AIZSetup_CutsceneSonic_EnterClaw(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
-
     RSDK_GET_PLAYER(player1, player2, camera);
+
     if (!host->timer) {
         player1->camera = NULL;
         Camera_SetupLerp(0, 0, AIZSetup->platform->position.x - 0x400000, camera->position.y, 3);
@@ -480,11 +476,9 @@ bool32 AIZSetup_CutsceneSonic_EnterClaw(Entity *h)
     }
     return false;
 }
-bool32 AIZSetup_CutsceneSonic_WatchClaw(Entity *h)
+bool32 AIZSetup_CutsceneSonic_WatchClaw(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
-
-    EntityAIZKingClaw *claw = (EntityAIZKingClaw *)AIZSetup->claw;
+    EntityAIZKingClaw *claw = AIZSetup->claw;
 
     if (claw->position.y < -0x1C0000) {
         claw->position.y += 0x10000;
@@ -496,20 +490,21 @@ bool32 AIZSetup_CutsceneSonic_WatchClaw(Entity *h)
         }
         else {
             host->storedTimer = host->timer;
-            claw->state        = AIZKingClaw_State_Grab;
+            claw->state       = AIZKingClaw_State_Grab;
         }
     }
 
     return false;
 }
-bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h)
+bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player1);
+    unused(camera);
 
-    EntityAIZKingClaw *claw  = (EntityAIZKingClaw *)AIZSetup->claw;
-    EntityPlatform *platform = (EntityPlatform *)AIZSetup->platform;
-    EntityPlayer *player2    = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityPhantomRuby *ruby  = (EntityPhantomRuby *)AIZSetup->phantomRuby;
+    EntityAIZKingClaw *claw  = AIZSetup->claw;
+    EntityPlatform *platform = AIZSetup->platform;
+    EntityPhantomRuby *ruby  = AIZSetup->phantomRuby;
 
     if (!host->timer) {
         claw->grabbedEntities[0] = (Entity *)platform;
@@ -523,7 +518,7 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h)
             Camera_ShakeScreen(0, 0, 2);
         claw->position.y -= 0x4000;
         for (int32 i = 0; i < 3; ++i) {
-            EntityDecoration *decor = (EntityDecoration *)AIZSetup->decorations[i];
+            EntityDecoration *decor = AIZSetup->decorations[i];
             decor->drawFX |= FX_ROTATE;
             decor->rotation = ((2 * (!(i & 1)) - 1) * RSDK.Sin256(16 * host->timer)) >> 7;
         }
@@ -547,16 +542,16 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h)
                 }
             }
             else {
-                host->values[0]    = 1;
+                host->values[0]   = 1;
                 host->storedTimer = host->timer + 60;
             }
         }
         else {
-            AIZSetup->playDrillSfxFlag                               = false;
-            host->storedTimer                                        = host->timer;
-            host->storedValue                                       = claw->position.y;
-            ((EntityDecoration *)AIZSetup->decorations[0])->rotSpeed = 0;
-            ((EntityDecoration *)AIZSetup->decorations[1])->rotSpeed = 0;
+            AIZSetup->playDrillSfxFlag         = false;
+            host->storedTimer                  = host->timer;
+            host->storedValue                  = claw->position.y;
+            AIZSetup->decorations[0]->rotSpeed = 0;
+            AIZSetup->decorations[1]->rotSpeed = 0;
             if (checkPlayerID(ID_TAILS, 2))
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
             RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0);
@@ -566,31 +561,29 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(Entity *h)
 
     return false;
 }
-bool32 AIZSetup_CutsceneSonic_RubyAppear(Entity *h)
+bool32 AIZSetup_CutsceneSonic_RubyAppear(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
 
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)AIZSetup->phantomRuby;
     if (!host->timer)
         PhantomRuby_SetupFlash(ruby);
     return ruby->flashFinished;
 }
-bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h)
+bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)AIZSetup->phantomRuby;
-    EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+    EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {
-        fxRuby = (EntityFXRuby *)AIZSetup->fxRuby;
+        fxRuby = AIZSetup->fxRuby;
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
-        AIZSetup->fxRuby  = (Entity *)fxRuby;
+        AIZSetup->fxRuby  = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
@@ -613,7 +606,7 @@ bool32 AIZSetup_CutsceneSonic_RubyFX(Entity *h)
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->storedTimer = host->timer;
-                    host->values[0]    = true;
+                    host->values[0]   = true;
                 }
             }
             else {
@@ -672,11 +665,12 @@ void AIZSetup_CutsceneK_Setup(void)
 #endif
 }
 
-bool32 AIZSetup_CutsceneKnux_Chillin(Entity *h)
+bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (!host->timer) {
         player1->state      = Player_State_None;
         player1->stateInput = StateMachine_None;
@@ -686,11 +680,12 @@ bool32 AIZSetup_CutsceneKnux_Chillin(Entity *h)
     }
     return host->timer == 180;
 }
-bool32 AIZSetup_CutsceneKnux_StartDrillin(Entity *h)
+bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     switch (host->timer) {
         case 0: RSDK.PlaySfx(AIZKingClaw->sfxClack, false, 0); break;
         case 10:
@@ -702,10 +697,8 @@ bool32 AIZSetup_CutsceneKnux_StartDrillin(Entity *h)
     }
     return false;
 }
-bool32 AIZSetup_CutsceneKnux_Drillin(Entity *h)
+bool32 AIZSetup_CutsceneKnux_Drillin(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
-
     if (host->timer < 120) {
         AIZSetup->playDrillSfxFlag = true;
         if (!(host->timer % 5)) {
@@ -719,11 +712,12 @@ bool32 AIZSetup_CutsceneKnux_Drillin(Entity *h)
     }
     return host->timer == 200;
 }
-bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(Entity *h)
+bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 0, &player1->animator, true, 0);
     }
@@ -738,12 +732,10 @@ bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(Entity *h)
     }
     return host->timer == 60;
 }
-bool32 AIZSetup_CutsceneKnux_EnterThreat(Entity *h)
+bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
-
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
 
     if (!host->timer) {
         player1->camera = NULL;
@@ -763,16 +755,17 @@ bool32 AIZSetup_CutsceneKnux_EnterThreat(Entity *h)
     }
     return false;
 }
-bool32 AIZSetup_CutsceneKnux_HeaviesAppear(Entity *h)
+bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
 
-    EntityAIZKingClaw *claw = (EntityAIZKingClaw *)AIZSetup->claw;
-    EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)AIZSetup->phantomRuby;
+    EntityAIZKingClaw *claw = AIZSetup->claw;
+    EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
 
     if (!host->timer) {
-        claw->grabbedEntities[0] = AIZSetup->platform;
+        claw->grabbedEntities[0] = (Entity *)AIZSetup->platform;
         claw->grabbedEntities[1] = (Entity *)ruby;
         claw->grabCount          = 2;
         claw->angle              = -16;
@@ -786,21 +779,21 @@ bool32 AIZSetup_CutsceneKnux_HeaviesAppear(Entity *h)
     AIZSetup_HandleHeavyMovement();
     return ruby->position.x >= player1->position.x - 0x100000;
 }
-bool32 AIZSetup_CutsceneKnux_RubyImpact(Entity *h)
+bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
 
-    EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)AIZSetup->phantomRuby;
+    EntityPhantomRuby *ruby = AIZSetup->phantomRuby;
+
     if (!host->timer) {
-        RSDK.PlaySfx(AIZSetup->sfxImpact, false, 0);
+        RSDK.PlaySfx(AIZSetup->sfxImpact, false, 0x00);
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         Music_TransitionTrack(TRACK_EGGMAN1, 1.0);
 
         EntityFXRuby *fxRuby     = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder        = Zone->playerDrawHigh;
-        AIZSetup->fxRuby         = (Entity *)fxRuby;
+        AIZSetup->fxRuby         = fxRuby;
         player1->velocity.x      = 0x20000;
         player1->velocity.y      = -0x40000;
         player1->nextGroundState = StateMachine_None;
@@ -833,12 +826,13 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(Entity *h)
     }
     return false;
 }
-bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h)
+bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+    unused(camera);
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityFXRuby *fxRuby  = (EntityFXRuby *)AIZSetup->fxRuby;
+    EntityFXRuby *fxRuby = AIZSetup->fxRuby;
 
     if (player1->velocity.x > 0)
         player1->velocity.x -= 4096;
@@ -852,7 +846,7 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h)
         Camera_ShakeScreen(0, 4, 4);
         Music_FadeOut(0.025);
         host->storedTimer = host->timer;
-        host->values[0]    = 1;
+        host->values[0]   = 1;
     }
 
     AIZSetup_HandleHeavyMovement();
@@ -871,9 +865,8 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(Entity *h)
     return false;
 }
 
-bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h)
+bool32 AIZSetup_Cutscene_LoadGHZ(EntityCutsceneSeq *host)
 {
-    EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
     unused(host);
 
     RSDK.SetScene("Cutscenes", "Green Hill Zone");

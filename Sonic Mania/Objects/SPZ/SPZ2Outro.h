@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectSPZ2Outro {
     RSDK_OBJECT
-    bool32 flag;
-    int32 field_8;
-    Entity *tvFlyingBattery;
-    Entity *weatherTV;
+    bool32 ignoreP2;
+    int32 unused;
+    EntityTVFlyingBattery *tvFlyingBattery;
+    EntityWeatherTV *weatherTV;
     EntityEggPrison *prison;
 };
 

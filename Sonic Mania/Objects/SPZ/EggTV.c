@@ -70,6 +70,7 @@ void EggTV_DrawScanlines(void)
 void EggTV_DrawTV(void)
 {
     RSDK_THIS(EggTV);
+
     self->alpha     = 0xFF;
     self->drawFX    = FX_SCALE;
     self->inkEffect = INK_NONE;
