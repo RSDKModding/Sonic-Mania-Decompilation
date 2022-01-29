@@ -29,16 +29,15 @@ struct EntityLottoBall {
     int32 ringCount;
     int32 timer;
     Vector2 startPos;
-    int32 field_70;
-    int32 field_74;
+    Vector2 bounds;
     int32 gravityStrength;
     int32 angleVel;
     Entity *parent;
-    int32 screenFlags[4];
-    bool32 screenRelative;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 isVisible[PLAYER_MAX];
+    bool32 isUIBall;
+    Animator ballAnimator;
+    Animator leftNumAnimator;
+    Animator rightNumAnimator;
 };
 
 // Object Struct
@@ -58,13 +57,15 @@ void LottoBall_EditorLoad(void);
 void LottoBall_Serialize(void);
 
 // Extra Entity Functions
-void LottoBall_Unknown1(void);
-void LottoBall_Unknown2(void);
 void LottoBall_CheckOnScreen(void);
-void LottoBall_Unknown4(void);
-void LottoBall_Unknown5(void);
-void LottoBall_Unknown6(void);
-void LottoBall_Unknown7(void);
-void LottoBall_Unknown8(void);
+
+void LottoBall_State_FallIntoMachine(void);
+void LottoBall_State_InMachine(void);
+void LottoBall_State_Collected(void);
+void LottoBall_State_CollectFall(void);
+
+void LottoBall_State_SetupUIBall(void);
+void LottoBall_State_EnterUIBall(void);
+void LottoBall_State_ShowUIBall(void);
 
 #endif //!OBJ_LOTTOBALL_H

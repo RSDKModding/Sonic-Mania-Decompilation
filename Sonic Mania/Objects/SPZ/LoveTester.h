@@ -3,42 +3,50 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LOVETESTER_LIST_NONE,
+    LOVETESTER_LIST_SONIC,
+    LOVETESTER_LIST_TAILS,
+    LOVETESTER_LIST_KNUX,
+    LOVETESTER_LIST_EGGMAN,
+    LOVETESTER_LIST_AMY,
+    LOVETESTER_LIST_HEART,
+    LOVETESTER_LIST_HEARTBROKEN,
+} LoveTesterDisplays;
+
 // Object Class
 struct ObjectLoveTester {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxEntry;
+    Hitbox hitboxL;
+    Hitbox hitboxR;
     uint16 aniFrames;
     uint16 sfxScore;
-    Vector2 field_20;
-    Vector2 field_28;
-    Vector2 positions[10];
+    Vector2 tvOffsetTop;
+    Vector2 tvOffsetBottom;
+    Vector2 lightOffset[10];
 };
 
 // Entity Class
 struct EntityLoveTester {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateLate);
+    StateMachine(stateLights);
     uint8 activePlayers;
     Vector2 storedPos;
-    Entity *playerPtr;
-    int32 field_70;
-    int32 field_74;
-    uint8 playerID;
-    uint8 field_79;
-    uint8 field_7A;
-    uint8 field_7B;
-    int32 field_7C;
-    uint8 field_80;
-    uint8 field_81;
-    uint8 field_82;
-    uint8 field_83;
+    EntityPlayer *playerPtr;
+    bool32 matchingFinished;
+    bool32 isTVActiveTop;
+    uint8 tvDisplayTop;
+    uint8 tvFrameTop;
+    bool32 isTVActiveBottom;
+    uint8 tvDisplayBottom;
+    uint8 tvFrameBottom;
+    uint8 nextDisplayBottom;
     int32 timer;
-    int32 field_88;
-    Animator animator1;
-    Animator animators[10];
+    int32 lightsID;
+    Animator mainAnimator;
+    Animator lightAnimator[10];
 };
 
 // Object Struct
@@ -59,27 +67,27 @@ void LoveTester_Serialize(void);
 
 // Extra Entity Functions
 void LoveTester_SetupHitboxes(void);
-void LoveTester_SetupPositions(void);
+void LoveTester_SetupLightOffsets(void);
 void LoveTester_DrawSprites(void);
-void LoveTester_Unknown2(uint8 list, bool32 flag, uint8 frame);
+void LoveTester_DrawTVDisplay(uint8 displayList, uint8 frame, bool32 isTVActive);
 void LoveTester_CheckPlayerCollisions(void);
-void LoveTester_CheckPlayerCollisions2(bool32 flag);
-void LoveTester_GiveScore(void *p);
-void LoveTester_Unknown6(void);
+void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick);
+void LoveTester_GiveScore(EntityPlayer *player);
+void LoveTester_CreateHeartParticles(void);
 
-void LoveTester_State_Unknown1(void);
-void LoveTester_State_Unknown2(void);
-void LoveTester_State_Unknown3(void);
-void LoveTester_State_Unknown4(void);
-void LoveTester_State_Unknown5(void);
-void LoveTester_State_Unknown6(void);
-void LoveTester_State_Unknown7(void);
-void LoveTester_State_Unknown8(void);
+void LoveTester_State_Setup(void);
+void LoveTester_State_WaitForActivated(void);
+void LoveTester_State_SetupTopDisplay(void);
+void LoveTester_State_SetupMatching(void);
+void LoveTester_State_UnluckyMatch(void);
+void LoveTester_State_GoodMatch(void);
+void LoveTester_State_BadMatch(void);
+void LoveTester_State_ReleasePlayers(void);
 
-void LoveTester_State2_Unknown(void);
+void LoveTester_State_HeartParticles(void);
 
-void LoveTester_StateLate_Unknown1(void);
-void LoveTester_StateLate_Unknown2(void);
-void LoveTester_StateLate_Unknown3(void);
+void LoveTester_StateLights_FlashSlow(void);
+void LoveTester_StateLights_FlashMed(void);
+void LoveTester_StateLights_FlashFast(void);
 
 #endif //!OBJ_LOVETESTER_H

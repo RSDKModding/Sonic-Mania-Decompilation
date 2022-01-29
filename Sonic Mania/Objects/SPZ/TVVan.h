@@ -26,11 +26,11 @@ typedef enum {
 struct ObjectTVVan {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    Hitbox hitbox5;
+    Hitbox hitboxFloor;
+    Hitbox hitboxFront;
+    Hitbox hitboxRoof;
+    Hitbox hitboxEntry;
+    Hitbox hitboxShopWindow;
     uint16 sfxDoor;
     uint16 sfxSatellite1;
     uint16 sfxSatellite2;
@@ -43,26 +43,26 @@ struct EntityTVVan {
     StateMachine(state);
     StateMachine(stateDraw[DRAWLAYER_COUNT]);
     uint8 type;
-    Vector2 drawPos;
-    Vector2 drawPos2;
-    int32 field_B0;
-    int32 field_B4;
-    int32 field_B8;
-    int32 field_BC;
+    Vector2 vanPos;
+    Vector2 movePos;
+    int32 moveOffsetY;
+    int32 stoodAngle;
+    bool32 stood;
+    int32 stoodPos;
     int32 timer;
-    int32 field_C4[2];
-    int32 field_CC[2];
-    Entity *nextNode;
+    int32 targetAngles1[2];
+    int32 targetAngles2[2];
+    EntityTVVan *nextNode;
     EntityPlayer *player;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
-    Animator animator8;
-    Animator animator9;
+    Animator satelliteAnimator;
+    Animator leftDoorAnimator;
+    Animator rightDoorAnimator;
+    Animator windowAnimator;
+    Animator radioAnimator;
+    Animator tvAnimator;
+    Animator tvVanAnimator;
+    Animator playerAnimator;
+    Animator tvSnowAnimator;
 };
 
 // Object Struct

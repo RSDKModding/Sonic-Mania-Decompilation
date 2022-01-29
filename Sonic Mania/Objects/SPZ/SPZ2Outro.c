@@ -84,9 +84,9 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         prison->drawOrder           = Zone->playerDrawHigh;
         tvFlyingBattery->position.y = 0x81E0000;
         tvFlyingBattery->active     = ACTIVE_NORMAL;
-        weatherTV->stateDraw        = WeatherTV_StateDraw_Unknown14;
-        weatherTV->timer2           = 0;
+        weatherTV->stateDraw        = WeatherTV_Draw_Outro;
         weatherTV->state            = WeatherTV_State_Outro;
+        weatherTV->timer            = 0;
         RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(weatherTV));
         WeatherTV->useHighLayer = true;
         camera->targetPtr       = NULL;

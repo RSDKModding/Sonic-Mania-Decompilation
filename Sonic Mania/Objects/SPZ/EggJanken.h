@@ -11,11 +11,11 @@
 struct ObjectEggJanken {
     RSDK_OBJECT
     uint16 aniFrames;
-    Animator animator;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
+    Animator armAnimator;
+    Hitbox hitboxBody;
+    Hitbox hitboxButtonSolid;
+    Hitbox hitboxButton;
+    Hitbox hitboxArm;
     StateMachine(stateJankenResult[9]);
     uint16 sfxBeep3;
     uint16 sfxBeep4;
@@ -31,18 +31,18 @@ struct ObjectEggJanken {
 // Entity Class
 struct EntityEggJanken {
     RSDK_ENTITY
-    StateMachine(state1);
+    StateMachine(state);
     StateMachine(stateDraw);
-    StateMachine(state2);
+    StateMachine(stateEyes);
     uint8 health;
     int32 timer;
     uint8 invincibilityTimer;
-    int32 timer2;
+    int32 slotTimer;
     Vector2 solidPos;
-    Vector2 solidMoveOffset;
+    Vector2 moveOffset;
     uint16 radius;
-    Vector2 startPos;
-    int32 yCap;
+    Vector2 origin;
+    int32 startY;
     int32 storedXVel;
     uint8 eyeFrames[EggJanken_ArmCount];
     uint8 jankenResult2[EggJanken_ArmCount];
@@ -61,11 +61,11 @@ struct EntityEggJanken {
     uint8 armJointID;
     int32 fullRotation;
     bool32 isMoving;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    Animator eyeAnimator;
+    Animator bodyAnimator;
+    Animator buttonAnimator;
+    Animator propellorLAnimator;
+    Animator propellorRAnimator;
 };
 
 // Object Entity
@@ -88,59 +88,59 @@ void EggJanken_Serialize(void);
 void EggJanken_CheckPlayerCollisions(void);
 void EggJanken_HandleMovement(void);
 
-void EggJanken_StateResult_Win(void);
-void EggJanken_StateResult_Lose(void);
-void EggJanken_StateResult_Draw(void);
+void EggJanken_ResetStates(void);
+void EggJanken_SwapArmSwingDir(void);
 
-void EggJanken_State1_SetupArena(void);
-void EggJanken_State1_StartFight(void);
-void EggJanken_State1_Unknown1(void);
-void EggJanken_State1_Unknown2(void);
-void EggJanken_State1_Unknown3(void);
-void EggJanken_State1_Unknown4(void);
-void EggJanken_State1_Unknown5(void);
-void EggJanken_State1_Unknown6(void);
-void EggJanken_State1_Destroyed(void);
-void EggJanken_State1_Unknown7(void);
-void EggJanken_State1_JankenWin(void);
-void EggJanken_State1_Unknown9(void);
-void EggJanken_Unknown18(void);
-void EggJanken_State1_Unknown10(void);
-void EggJanken_State1_Unknown11(void);
-void EggJanken_State1_Unknown12(void);
-void EggJanken_State1_JankenDraw(void);
-void EggJanken_State1_Unknown14(void);
-void EggJanken_State1_Unknown15(void);
-void EggJanken_State1_Unknown16(void);
-void EggJanken_State1_Unknown17(void);
-void EggJanken_State1_JankenLose(void);
-void EggJanken_State1_Unknown19(void);
-void EggJanken_State1_Unknown21(void);
-void EggJanken_State1_Unknown20(void);
-void EggJanken_State1_Unknown22(void);
-void EggJanken_State1_Unknown23(void);
-void EggJanken_State1_Unknown24(void);
-void EggJanken_State1_Unknown25(void);
-void EggJanken_State1_Unknown26(void);
-void EggJanken_State1_Unknown27(void);
+void EggJanken_Result_Win(void);
+void EggJanken_Result_Lose(void);
+void EggJanken_Result_Draw(void);
 
-void EggJanken_State2_Unknown1(void);
-void EggJanken_State2_Unknown2(void);
-void EggJanken_State2_Unknown3(void);
+void EggJanken_State_SetupArena(void);
+void EggJanken_State_StartFight(void);
+void EggJanken_State_EnterJanken(void);
+void EggJanken_State_WaitForButton(void);
+void EggJanken_State_Opened(void);
+void EggJanken_State_InitialArmExtend(void);
+void EggJanken_State_InitialArmRaise(void);
+void EggJanken_State_None(void);
+void EggJanken_State_Destroyed(void);
+void EggJanken_State_ButtonPressed(void);
+void EggJanken_State_ResultWinner(void);
+void EggJanken_State_HitShake(void);
+void EggJanken_State_FinishedBeingHit(void);
+void EggJanken_State_RaiseArms(void);
+void EggJanken_State_SwingDropArms(void);
+void EggJanken_State_ResultDraw(void);
+void EggJanken_State_WaitForArmAttackExtend(void);
+void EggJanken_State_PrepareArmAttack(void);
+void EggJanken_State_ArmAttack(void);
+void EggJanken_State_FinishedArmAttack(void);
+void EggJanken_State_ResultLoser(void);
+void EggJanken_State_FlipOver(void);
+void EggJanken_State_ExtendDropArms(void);
+void EggJanken_State_DropTarget(void);
+void EggJanken_State_Drop(void);
+void EggJanken_State_DropArms(void);
+void EggJanken_State_Dropped(void);
+void EggJanken_State_RetractDropArms(void);
+void EggJanken_State_RiseUp(void);
+void EggJanken_State_FlipBackOver(void);
 
-void EggJanken_Unknown40(void);
+void EggJanken_StateEyes_Setup(void);
+void EggJanken_StateEyes_ChangeSlots(void);
+void EggJanken_StateEyes_None(void);
 
-void EggJanken_StateArm_Unknown1(void);
-void EggJanken_StateArm_Unknown7(void);
-void EggJanken_StateArm_Unknown8(void);
-void EggJanken_StateArm_Unknown3(void);
-void EggJanken_StateArm_Unknown2(void);
-void EggJanken_StateArm_Unknown4(void);
-void EggJanken_StateArm_Unknown5(void);
-void EggJanken_StateArm_Unknown6(void);
+void EggJanken_StateArm_None(void);
+void EggJanken_StateArm_Idle(void);
+void EggJanken_StateArm_RetractArm(void);
+void EggJanken_StateArm_ExtendArm(void);
+void EggJanken_StateArm_StretchRetractArm(void);
+void EggJanken_StateArm_SwingArm(void);
+void EggJanken_StateArm_ArmAttack(void);
+void EggJanken_StateArm_Dropping(void);
 
-void EggJanken_StateDraw_Unknown1(void);
-void EggJanken_StateDraw_Unknown2(void);
-void EggJanken_StateDraw_Unknown3(void);
+void EggJanken_Draw_Closed(void);
+void EggJanken_Draw_Active(void);
+void EggJanken_Draw_Destroyed(void);
 
 #endif //!OBJ_EGGJANKEN_H

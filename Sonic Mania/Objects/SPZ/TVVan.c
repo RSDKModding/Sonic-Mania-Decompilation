@@ -40,126 +40,138 @@ void TVVan_Create(void *data)
         self->drawFX        = FX_FLIP;
         switch (self->type) {
             case TVVAN_SATELLITE_NE_SW:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NE_SW;
-                self->field_C4[0]                    = 0xE0;
-                self->field_C4[1]                    = 0xE0;
-                self->field_CC[0]                    = 0x60;
-                self->field_CC[1]                    = 0x60;
+                self->targetAngles1[0]               = 0xE0;
+                self->targetAngles1[1]               = 0xE0;
+                self->targetAngles2[0]               = 0x60;
+                self->targetAngles2[1]               = 0x60;
                 break;
+
             case TVVAN_SATELLITE_NW_SE:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NW_SE;
-                self->field_C4[0]                    = 0x20;
-                self->field_C4[1]                    = 0x20;
-                self->field_CC[0]                    = 0xA0;
-                self->field_CC[1]                    = 0xA0;
+                self->targetAngles1[0]               = 0x20;
+                self->targetAngles1[1]               = 0x20;
+                self->targetAngles2[0]               = 0xA0;
+                self->targetAngles2[1]               = 0xA0;
                 break;
+
             case TVVAN_SATELLITE_NW_SW:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NW_SW;
-                self->field_C4[0]                    = 0x20;
-                self->field_C4[1]                    = 0x20;
-                self->field_CC[0]                    = 0xE0;
-                self->field_CC[1]                    = 0xE0;
+                self->targetAngles1[0]               = 0x20;
+                self->targetAngles1[1]               = 0x20;
+                self->targetAngles2[0]               = 0xE0;
+                self->targetAngles2[1]               = 0xE0;
                 break;
+
             case TVVAN_SATELLITE_NE_SE:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NE_SE;
-                self->field_C4[0]                    = 0x60;
-                self->field_C4[1]                    = 0x60;
-                self->field_CC[0]                    = 0xA0;
-                self->field_CC[1]                    = 0xA0;
+                self->targetAngles1[0]               = 0x60;
+                self->targetAngles1[1]               = 0x60;
+                self->targetAngles2[0]               = 0xA0;
+                self->targetAngles2[1]               = 0xA0;
                 break;
+
             case TVVAN_SATELLITE_NE_NW:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NE_NW;
-                self->field_C4[0]                    = 0x20;
-                self->field_C4[1]                    = 0x20;
-                self->field_CC[0]                    = 0x60;
-                self->field_CC[1]                    = 0x60;
+                self->targetAngles1[0]               = 0x20;
+                self->targetAngles1[1]               = 0x20;
+                self->targetAngles2[0]               = 0x60;
+                self->targetAngles2[1]               = 0x60;
                 break;
+
             case TVVAN_SATELLITE_SE_SW:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_SE_SW;
-                self->field_C4[0]                    = 0xE0;
-                self->field_C4[1]                    = 0xE0;
-                self->field_CC[0]                    = 0xA0;
-                self->field_CC[1]                    = 0xA0;
+                self->targetAngles1[0]               = 0xE0;
+                self->targetAngles1[1]               = 0xE0;
+                self->targetAngles2[0]               = 0xA0;
+                self->targetAngles2[1]               = 0xA0;
                 break;
+
             case TVVAN_SATELLITE_SW_N:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_SW_N;
-                self->field_C4[0]                    = 0xA0;
-                self->field_C4[1]                    = 0xA0;
-                self->field_CC[0]                    = 0x00;
-                self->field_CC[1]                    = 0x00;
+                self->targetAngles1[0]               = 0xA0;
+                self->targetAngles1[1]               = 0xA0;
+                self->targetAngles2[0]               = 0x00;
+                self->targetAngles2[1]               = 0x00;
                 break;
+
             case TVVAN_SATELLITE_NW_S:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NW_S;
-                self->field_C4[0]                    = 0x20;
-                self->field_C4[1]                    = 0x20;
-                self->field_CC[0]                    = 0xC0;
-                self->field_CC[1]                    = 0xC0;
+                self->targetAngles1[0]               = 0x20;
+                self->targetAngles1[1]               = 0x20;
+                self->targetAngles2[0]               = 0xC0;
+                self->targetAngles2[1]               = 0xC0;
                 break;
+
             case TVVAN_SATELLITE_SE_N:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_SE_N;
-                self->field_C4[0]                    = 0xA0;
-                self->field_C4[1]                    = 0xA0;
-                self->field_CC[0]                    = 0x40;
-                self->field_CC[1]                    = 0x40;
+                self->targetAngles1[0]               = 0xA0;
+                self->targetAngles1[1]               = 0xA0;
+                self->targetAngles2[0]               = 0x40;
+                self->targetAngles2[1]               = 0x40;
                 break;
+
             case TVVAN_SATELLITE_NE_S:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Satellite_NE_S;
-                self->field_C4[0]                    = 0xC0;
-                self->field_C4[1]                    = 0xC0;
-                self->field_CC[0]                    = 0x40;
-                self->field_CC[1]                    = 0x40;
+                self->targetAngles1[0]               = 0xC0;
+                self->targetAngles1[1]               = 0xC0;
+                self->targetAngles2[0]               = 0x40;
+                self->targetAngles2[1]               = 0x40;
                 break;
+
             case TVVAN_EXITTV:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->animator7, true, 9);
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->animator6, true, 0);
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->animator9, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->tvVanAnimator, true, 9);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->tvAnimator, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->tvSnowAnimator, true, 0);
                 self->drawOrder                     = Zone->drawOrderLow;
                 self->stateDraw[Zone->drawOrderLow] = TVVan_Draw_ExitTV_Active;
                 self->updateRange.x                 = 0x1000000;
                 self->updateRange.y                 = 0x1000000;
                 self->state                         = TVVan_StateTV_Idle;
                 break;
+
             case TVVAN_RADIO:
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->animator5, true, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
                 self->active                         = ACTIVE_NORMAL;
                 self->visible                        = 0;
                 self->drawOrder                      = Zone->drawOrderHigh;
                 self->state                          = TVVan_StateRadio_StartBroadcast;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Radio;
                 break;
+
             default:
                 self->drawOrder = Zone->drawOrderLow;
                 self->state     = TVVan_StateVan_Idle;
                 if (self->type == TVVAN_VAN_RIGHT)
                     self->direction = FLIP_X;
-                self->drawPos                        = self->position;
-                self->drawPos2                       = self->position;
+                self->vanPos                         = self->position;
+                self->movePos                        = self->position;
                 self->stateDraw[Zone->drawOrderLow]  = TVVan_Draw_Van_Low;
                 self->stateDraw[Zone->drawOrderHigh] = TVVan_Draw_Van_High;
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->animator1, false, 0);
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 1, &self->animator2, false, 0);
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 2, &self->animator3, false, 0);
-                RSDK.SetSpriteAnimation(TVVan->aniFrames, 5, &self->animator4, false, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->satelliteAnimator, false, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 1, &self->leftDoorAnimator, false, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 2, &self->rightDoorAnimator, false, 0);
+                RSDK.SetSpriteAnimation(TVVan->aniFrames, 5, &self->windowAnimator, false, 0);
                 break;
         }
     }
@@ -167,40 +179,46 @@ void TVVan_Create(void *data)
 
 void TVVan_StageLoad(void)
 {
-    TVVan->aniFrames      = RSDK.LoadSpriteAnimation("SPZ1/TVVan.bin", SCOPE_STAGE);
-    TVVan->hitbox3.left   = -40;
-    TVVan->hitbox3.right  = 28;
-    TVVan->hitbox3.top    = -28;
-    TVVan->hitbox3.bottom = -20;
-    TVVan->hitbox1.left   = -56;
-    TVVan->hitbox1.right  = 24;
-    TVVan->hitbox1.top    = 22;
-    TVVan->hitbox1.bottom = 32;
-    TVVan->hitbox2.left   = 20;
-    TVVan->hitbox2.right  = 28;
-    TVVan->hitbox2.top    = -20;
-    TVVan->hitbox2.bottom = 32;
-    TVVan->hitbox4.left   = 12;
-    TVVan->hitbox4.right  = 20;
-    TVVan->hitbox4.top    = -16;
-    TVVan->hitbox4.bottom = 24;
-    TVVan->hitbox5.left   = -24;
-    TVVan->hitbox5.right  = 24;
-    TVVan->hitbox5.top    = -24;
-    TVVan->hitbox5.bottom = 24;
-    TVVan->sfxDoor        = RSDK.GetSfx("Stage/Door.wav");
-    TVVan->sfxSatellite1  = RSDK.GetSfx("Stage/Satellite1.wav");
-    TVVan->sfxSatellite2  = RSDK.GetSfx("Stage/Satellite2.wav");
-    TVVan->sfxExplosion   = RSDK.GetSfx("Stage/Explosion3.wav");
+    TVVan->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/TVVan.bin", SCOPE_STAGE);
+
+    TVVan->hitboxRoof.left   = -40;
+    TVVan->hitboxRoof.right  = 28;
+    TVVan->hitboxRoof.top    = -28;
+    TVVan->hitboxRoof.bottom = -20;
+
+    TVVan->hitboxFloor.left   = -56;
+    TVVan->hitboxFloor.right  = 24;
+    TVVan->hitboxFloor.top    = 22;
+    TVVan->hitboxFloor.bottom = 32;
+
+    TVVan->hitboxFront.left   = 20;
+    TVVan->hitboxFront.right  = 28;
+    TVVan->hitboxFront.top    = -20;
+    TVVan->hitboxFront.bottom = 32;
+
+    TVVan->hitboxEntry.left   = 12;
+    TVVan->hitboxEntry.right  = 20;
+    TVVan->hitboxEntry.top    = -16;
+    TVVan->hitboxEntry.bottom = 24;
+
+    TVVan->hitboxShopWindow.left   = -24;
+    TVVan->hitboxShopWindow.right  = 24;
+    TVVan->hitboxShopWindow.top    = -24;
+    TVVan->hitboxShopWindow.bottom = 24;
+
+    TVVan->sfxDoor       = RSDK.GetSfx("Stage/Door.wav");
+    TVVan->sfxSatellite1 = RSDK.GetSfx("Stage/Satellite1.wav");
+    TVVan->sfxSatellite2 = RSDK.GetSfx("Stage/Satellite2.wav");
+    TVVan->sfxExplosion  = RSDK.GetSfx("Stage/Explosion3.wav");
 }
 
 void TVVan_HandleVanTilt(void)
 {
     RSDK_THIS(TVVan);
 
-    if (self->field_B8 != 1) {
-        if (self->field_B4 > 0)
-            self->field_B4 -= 4;
+    if (!self->stood) {
+        if (self->stoodAngle > 0)
+            self->stoodAngle -= 4;
 
         if (self->angle <= 0) {
             if (self->angle < 0)
@@ -210,45 +228,45 @@ void TVVan_HandleVanTilt(void)
             self->angle--;
         }
     }
-    else if (self->field_B4 < 64)
-        self->field_B4 += 4;
+    else if (self->stoodAngle < 64)
+        self->stoodAngle += 4;
 
-    self->angle = clampVal(self->angle + self->field_BC, -8, 8);
+    self->angle = clampVal(self->angle + self->stoodPos, -8, 8);
 
-    self->position.x = self->drawPos2.x;
-    self->position.y = self->drawPos2.y;
-    self->drawPos2.x = self->drawPos.x;
-    self->drawPos2.y = self->drawPos.y;
-    self->drawPos2.y = (RSDK.Sin256(self->field_B4) + self->drawPos2.y) & 0xFFFF0000;
-    self->field_B0   = self->drawPos2.y - self->position.y;
+    self->position.x  = self->movePos.x;
+    self->position.y  = self->movePos.y;
+    self->movePos.x   = self->vanPos.x;
+    self->movePos.y   = self->vanPos.y;
+    self->movePos.y   = (RSDK.Sin256(self->stoodAngle) + self->movePos.y) & 0xFFFF0000;
+    self->moveOffsetY = self->movePos.y - self->position.y;
 }
 
 void TVVan_Draw_Van_Low(void)
 {
     RSDK_THIS(TVVan);
 
-    self->drawFX            = FX_ROTATE | FX_FLIP;
-    self->animator1.frameID = 1;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->drawFX                    = FX_ROTATE | FX_FLIP;
+    self->satelliteAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->drawFX            = FX_FLIP;
-    self->animator1.frameID = 4;
-    RSDK.DrawSprite(&self->animator1, &self->drawPos, false);
-
-    self->drawFX |= FX_ROTATE;
-    self->animator1.frameID = 2;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-
-    self->animator1.frameID = 8;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator5, NULL, false);
-
-    self->drawFX            = FX_FLIP;
-    self->animator1.frameID = 3;
-    RSDK.DrawSprite(&self->animator1, &self->drawPos, false);
+    self->drawFX                    = FX_FLIP;
+    self->satelliteAnimator.frameID = 4;
+    RSDK.DrawSprite(&self->satelliteAnimator, &self->vanPos, false);
 
     self->drawFX |= FX_ROTATE;
-    RSDK.DrawSprite(&self->animator2, 0, false);
+    self->satelliteAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
+
+    self->satelliteAnimator.frameID = 8;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
+    RSDK.DrawSprite(&self->radioAnimator, NULL, false);
+
+    self->drawFX                    = FX_FLIP;
+    self->satelliteAnimator.frameID = 3;
+    RSDK.DrawSprite(&self->satelliteAnimator, &self->vanPos, false);
+
+    self->drawFX |= FX_ROTATE;
+    RSDK.DrawSprite(&self->leftDoorAnimator, 0, false);
     RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
 }
 
@@ -256,200 +274,200 @@ void TVVan_Draw_Van_High(void)
 {
     RSDK_THIS(TVVan);
 
-    self->drawFX            = FX_FLIP;
-    self->animator1.frameID = 5;
-    RSDK.DrawSprite(&self->animator1, &self->drawPos, false);
+    self->drawFX                    = FX_FLIP;
+    self->satelliteAnimator.frameID = 5;
+    RSDK.DrawSprite(&self->satelliteAnimator, &self->vanPos, false);
 
-    self->animator1.frameID = 6;
-    RSDK.DrawSprite(&self->animator1, &self->drawPos, false);
+    self->satelliteAnimator.frameID = 6;
+    RSDK.DrawSprite(&self->satelliteAnimator, &self->vanPos, false);
 
-    self->animator1.frameID = 7;
-    RSDK.DrawSprite(&self->animator1, &self->drawPos, false);
+    self->satelliteAnimator.frameID = 7;
+    RSDK.DrawSprite(&self->satelliteAnimator, &self->vanPos, false);
 
     self->drawFX |= FX_ROTATE;
-    self->animator1.frameID = 0;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
+    RSDK.DrawSprite(&self->rightDoorAnimator, NULL, false);
+    RSDK.DrawSprite(&self->windowAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NE_SW(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
     self->direction = FLIP_XY;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NW_SE(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_X;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_X;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
     self->direction = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NW_SW(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_X;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_X;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
     self->direction = FLIP_XY;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NE_SE(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
     self->direction = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NE_NW(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
     self->direction = FLIP_X;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_SE_SW(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_Y;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
     self->direction = FLIP_XY;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_SW_N(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 1;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 1;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_XY;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_XY;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NW_S(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 1;
-    self->direction         = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 1;
+    self->direction                 = FLIP_Y;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_X;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_X;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_SE_N(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 1;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 1;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_Y;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Satellite_NE_S(void)
 {
     RSDK_THIS(TVVan);
 
-    self->animator1.frameID = 1;
-    self->direction         = FLIP_Y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 1;
+    self->direction                 = FLIP_Y;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 0;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 0;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 
-    self->animator1.frameID = 2;
-    self->direction         = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->satelliteAnimator.frameID = 2;
+    self->direction                 = FLIP_NONE;
+    RSDK.DrawSprite(&self->satelliteAnimator, NULL, false);
 }
 
 void TVVan_Draw_Radio(void)
 {
     RSDK_THIS(TVVan);
 
-    RSDK.DrawSprite(&self->animator5, NULL, false);
+    RSDK.DrawSprite(&self->radioAnimator, NULL, false);
 }
 
 void TVVan_Draw_ExitTV_Active(void)
 {
     RSDK_THIS(TVVan);
 
-    RSDK.DrawSprite(&self->animator7, NULL, false);
-    RSDK.DrawSprite(&self->animator6, NULL, false);
+    RSDK.DrawSprite(&self->tvVanAnimator, NULL, false);
+    RSDK.DrawSprite(&self->tvAnimator, NULL, false);
 }
 
 void TVVan_Draw_ExitTV_Destroyed(void)
@@ -457,16 +475,16 @@ void TVVan_Draw_ExitTV_Destroyed(void)
     RSDK_THIS(TVVan);
     Vector2 drawPos;
 
-    RSDK.DrawSprite(&self->animator7, NULL, false);
-    RSDK.DrawSprite(&self->animator6, NULL, false);
+    RSDK.DrawSprite(&self->tvVanAnimator, NULL, false);
+    RSDK.DrawSprite(&self->tvAnimator, NULL, false);
 
     self->drawFX = FX_SCALE;
     drawPos.x    = self->position.x;
     drawPos.y    = self->position.y - 0x40000;
-    RSDK.DrawSprite(&self->animator8, &drawPos, false);
+    RSDK.DrawSprite(&self->playerAnimator, &drawPos, false);
 
     self->drawFX = FX_NONE;
-    RSDK.DrawSprite(&self->animator9, NULL, false);
+    RSDK.DrawSprite(&self->tvSnowAnimator, NULL, false);
 }
 
 void TVVan_StateVan_Idle(void)
@@ -474,47 +492,48 @@ void TVVan_StateVan_Idle(void)
     RSDK_THIS(TVVan);
 
     TVVan_HandleVanTilt();
-    self->field_B8 = 0;
-    self->field_BC = 0;
+    self->stood    = false;
+    self->stoodPos = 0;
     bool32 entered = false;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, self, &TVVan->hitbox3) == C_TOP) {
-            player->position.y += self->field_B0;
+        if (Player_CheckCollisionBox(player, self, &TVVan->hitboxRoof) == C_TOP) {
+            player->position.y += self->moveOffsetY;
             player->position.y &= 0xFFFF0000;
-            self->field_B8 = 1;
+            self->stood = true;
 
-            int dist = player->position.x - self->position.x;
+            int32 dist = player->position.x - self->position.x;
             if (self->direction == FLIP_NONE)
                 dist += 0x100000;
-            self->field_BC += dist >> 20;
+            self->stoodPos += dist >> 20;
         }
-        Player_CheckCollisionBox(player, self, &TVVan->hitbox2);
+        Player_CheckCollisionBox(player, self, &TVVan->hitboxFront);
 
-        int dist = 0;
+        int32 dist = 0;
         if (self->direction)
             dist = player->position.x - self->position.x;
         else
             dist = self->position.x - player->position.x;
-        TVVan->hitbox1.top = dist >> 17;
+        TVVan->hitboxFloor.top = dist >> 17;
 
-        if (TVVan->hitbox1.top >= 22) {
-            if (TVVan->hitbox1.top > 32)
-                TVVan->hitbox1.top = 32;
+        if (TVVan->hitboxFloor.top >= 22) {
+            if (TVVan->hitboxFloor.top > 32)
+                TVVan->hitboxFloor.top = 32;
         }
         else {
-            TVVan->hitbox1.top = 22;
+            TVVan->hitboxFloor.top = 22;
         }
 
-        if (Player_CheckCollisionPlatform(player, self, &TVVan->hitbox1) == C_TOP) {
-            player->position.y += self->field_B0;
+        if (Player_CheckCollisionPlatform(player, self, &TVVan->hitboxFloor) == C_TOP) {
+            player->position.y += self->moveOffsetY;
             player->position.y &= 0xFFFF0000;
-            if (TVVan->hitbox1.top == 22)
-                self->field_B8 = 1;
+            if (TVVan->hitboxFloor.top == 22)
+                self->stood = true;
         }
+
         if (!player->sidekick) {
-            if (Player_CheckCollisionTouch(player, self, &TVVan->hitbox4)) {
+            if (Player_CheckCollisionTouch(player, self, &TVVan->hitboxEntry)) {
                 player->state           = Player_State_None;
                 player->nextAirState    = StateMachine_None;
                 player->nextGroundState = StateMachine_None;
@@ -535,15 +554,15 @@ void TVVan_StateVan_Idle(void)
     }
 
     self->rotation   = self->angle >> 2;
-    self->position.y = self->drawPos2.y - abs(self->rotation << 15);
+    self->position.y = self->movePos.y - abs(self->rotation << 15);
     if (entered) {
         self->state = TVVan_StateVan_BroadcastRadio;
         RSDK.PlaySfx(TVVan->sfxSatellite1, false, 255);
-        self->animator2.speed = 1;
-        self->animator3.speed = 1;
-        self->animator4.speed = 1;
+        self->leftDoorAnimator.speed  = 1;
+        self->rightDoorAnimator.speed = 1;
+        self->windowAnimator.speed    = 1;
     }
-    RSDK.ProcessAnimation(&self->animator5);
+    RSDK.ProcessAnimation(&self->radioAnimator);
 }
 
 void TVVan_CheckPlayerCollisions(void)
@@ -552,12 +571,12 @@ void TVVan_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        Player_CheckCollisionBox(player, self, &TVVan->hitbox3);
-        Player_CheckCollisionBox(player, self, &TVVan->hitbox2);
+        Player_CheckCollisionBox(player, self, &TVVan->hitboxRoof);
+        Player_CheckCollisionBox(player, self, &TVVan->hitboxFront);
         self->direction ^= FLIP_X;
-        Player_CheckCollisionBox(player, self, &TVVan->hitbox2);
+        Player_CheckCollisionBox(player, self, &TVVan->hitboxFront);
         self->direction ^= FLIP_X;
-        Player_CheckCollisionPlatform(player, self, &TVVan->hitbox1);
+        Player_CheckCollisionPlatform(player, self, &TVVan->hitboxFloor);
     }
 }
 
@@ -567,30 +586,30 @@ void TVVan_StateVan_BroadcastRadio(void)
 
     TVVan_HandleVanTilt();
     TVVan_CheckPlayerCollisions();
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->leftDoorAnimator);
+    RSDK.ProcessAnimation(&self->rightDoorAnimator);
+    RSDK.ProcessAnimation(&self->windowAnimator);
 
-    if (self->animator4.frameID >= self->animator4.frameCount - 1) {
+    if (self->windowAnimator.frameID >= self->windowAnimator.frameCount - 1) {
         self->state = TVVan_StateVan_FinishedBroadcast;
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 3, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 4, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 5, &self->animator4, true, 0);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 7, &self->animator5, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 3, &self->leftDoorAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 4, &self->rightDoorAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 5, &self->windowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 7, &self->radioAnimator, true, 0);
 
         if (self->direction) {
             EntityTVVan *van = CREATE_ENTITY(TVVan, intToVoid(TVVAN_RADIO), self->position.x + 0x80000, self->position.y - 0x420000);
             van->isPermanent = true;
             van->player      = self->player;
             van->angle       = 0xA0;
-            van->nextNode    = (Entity *)self;
+            van->nextNode    = self;
         }
         else {
             EntityTVVan *van = CREATE_ENTITY(TVVan, intToVoid(TVVAN_RADIO), self->position.x - 0x80000, self->position.y - 0x420000);
             van->isPermanent = true;
             van->player      = self->player;
             van->angle       = 0xE0;
-            van->nextNode    = (Entity *)self;
+            van->nextNode    = self;
         }
         self->player = NULL;
     }
@@ -602,14 +621,14 @@ void TVVan_StateVan_FinishedBroadcast(void)
 
     TVVan_HandleVanTilt();
     TVVan_CheckPlayerCollisions();
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator5);
+    RSDK.ProcessAnimation(&self->leftDoorAnimator);
+    RSDK.ProcessAnimation(&self->rightDoorAnimator);
+    RSDK.ProcessAnimation(&self->radioAnimator);
 
-    if (self->animator2.frameID >= self->animator2.frameCount - 1) {
+    if (self->leftDoorAnimator.frameID >= self->leftDoorAnimator.frameCount - 1) {
         self->state = TVVan_StateVan_Idle;
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 2, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 1, &self->leftDoorAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 2, &self->rightDoorAnimator, true, 0);
     }
 }
 
@@ -647,26 +666,27 @@ void TVVan_StateRadio_HandleMovement(void)
     if (Player_CheckValidState(player)) {
         foreach_active(TVVan, van)
         {
-            if (self != van && self->nextNode != (Entity *)van) {
+            if (self != van && self->nextNode != van) {
                 if (van->type && van->type < TVVAN_RADIO) {
-                    int rx = (van->position.x - self->position.x) >> 16;
-                    int ry = (van->position.y - self->position.y) >> 16;
+                    int32 rx = (van->position.x - self->position.x) >> 16;
+                    int32 ry = (van->position.y - self->position.y) >> 16;
                     if (rx * rx + ry * ry < 0x800) {
                         self->position.x = van->position.x;
                         self->position.y = van->position.y;
-                        self->nextNode   = (Entity *)van;
+                        self->nextNode   = van;
                         self->visible    = true;
                         if (van->type == TVVAN_EXITTV) {
-                            RSDK.SetSpriteAnimation(TVVan->aniFrames, 14, &self->animator5, true, 0);
-                            RSDK.SetSpriteAnimation(TVVan->aniFrames, 16, &van->animator6, true, 0);
+                            RSDK.SetSpriteAnimation(TVVan->aniFrames, 14, &self->radioAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(TVVan->aniFrames, 16, &van->tvAnimator, true, 0);
                             switch (player->characterID) {
-                                case ID_TAILS: RSDK.SetSpriteAnimation(TVVan->aniFrames, 20, &van->animator8, true, 0); break;
-                                case ID_KNUCKLES: RSDK.SetSpriteAnimation(TVVan->aniFrames, 21, &van->animator8, true, 0); break;
+                                case ID_TAILS: RSDK.SetSpriteAnimation(TVVan->aniFrames, 20, &van->playerAnimator, true, 0); break;
+                                case ID_KNUCKLES: RSDK.SetSpriteAnimation(TVVan->aniFrames, 21, &van->playerAnimator, true, 0); break;
 #if RETRO_USE_PLUS
-                                case ID_MIGHTY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 22, &van->animator8, true, 0); break;
-                                case ID_RAY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 23, &van->animator8, true, 0); break;
+                                case ID_MIGHTY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 22, &van->playerAnimator, true, 0); break;
+                                case ID_RAY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 23, &van->playerAnimator, true, 0); break;
 #endif
-                                default: RSDK.SetSpriteAnimation(TVVan->aniFrames, 19, &van->animator8, true, 0); break;
+                                case ID_SONIC:
+                                default: RSDK.SetSpriteAnimation(TVVan->aniFrames, 19, &van->playerAnimator, true, 0); break;
                             }
                             van->scale.x                       = 0x000;
                             van->scale.y                       = 0x000;
@@ -679,35 +699,35 @@ void TVVan_StateRadio_HandleMovement(void)
                         else {
                             switch (self->angle >> 5) {
                                 case 1:
-                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->animator5, true, 0);
+                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->radioAnimator, true, 0);
                                     self->direction = FLIP_X;
                                     break;
                                 case 2:
-                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 11, &self->animator5, true, 0);
+                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 11, &self->radioAnimator, true, 0);
                                     self->direction = FLIP_NONE;
                                     break;
                                 case 3:
-                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->animator5, true, 0);
+                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->radioAnimator, true, 0);
                                     self->direction = FLIP_NONE;
                                     break;
                                 case 5:
-                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->animator5, true, 0);
+                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->radioAnimator, true, 0);
                                     self->direction = FLIP_Y;
                                     break;
                                 case 6:
-                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 11, &self->animator5, true, 0);
+                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 11, &self->radioAnimator, true, 0);
                                     self->direction = FLIP_Y;
                                     break;
                                 case 7:
-                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->animator5, true, 0);
+                                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 9, &self->radioAnimator, true, 0);
                                     self->direction = FLIP_XY;
                                     break;
                                 default: break;
                             }
-                            self->field_C4[0] = van->field_C4[0];
-                            self->field_C4[1] = van->field_C4[1];
-                            self->field_CC[0] = van->field_CC[0];
-                            self->field_CC[1] = van->field_CC[1];
+                            self->targetAngles1[0] = van->targetAngles1[0];
+                            self->targetAngles1[1] = van->targetAngles1[1];
+                            self->targetAngles2[0] = van->targetAngles2[0];
+                            self->targetAngles2[1] = van->targetAngles2[1];
                             RSDK.PlaySfx(TVVan->sfxSatellite2, false, 255);
                             self->state = TVVan_StateRadio_EnterSatellite1;
                         }
@@ -727,42 +747,49 @@ void TVVan_StateRadio_EnterSatellite1(void)
     RSDK_THIS(TVVan);
     EntityPlayer *player = self->player;
 
-    RSDK.ProcessAnimation(&self->animator5);
+    RSDK.ProcessAnimation(&self->radioAnimator);
     player = self->player;
     player->position.x += (self->position.x - player->position.x) >> 2;
     player->position.y += (self->position.y - player->position.y) >> 2;
 
     if (Player_CheckValidState(player)) {
-        if (self->animator5.frameID >= self->animator5.frameCount - 1) {
-            if (self->angle == self->field_C4[0] || self->angle == self->field_C4[1])
-                self->angle = self->field_CC[Zone->timer & 1];
+        if (self->radioAnimator.frameID >= self->radioAnimator.frameCount - 1) {
+            if (self->angle == self->targetAngles1[0] || self->angle == self->targetAngles1[1])
+                self->angle = self->targetAngles2[Zone->timer & 1];
             else
-                self->angle = self->field_C4[Zone->timer & 1];
+                self->angle = self->targetAngles1[Zone->timer & 1];
+
             switch (self->angle >> 5) {
                 case 1:
-                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->animator5, true, 0);
+                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->radioAnimator, true, 0);
                     self->direction = FLIP_X;
                     break;
+
                 case 2:
-                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->animator5, true, 0);
+                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
                     self->direction = FLIP_NONE;
                     break;
+
                 case 3:
-                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->animator5, true, 0);
+                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->radioAnimator, true, 0);
                     self->direction = FLIP_NONE;
                     break;
+
                 case 5:
-                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->animator5, true, 0);
+                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->radioAnimator, true, 0);
                     self->direction = FLIP_Y;
                     break;
+
                 case 6:
-                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->animator5, true, 0);
+                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
                     self->direction = FLIP_Y;
                     break;
+
                 case 7:
-                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->animator5, true, 0);
+                    RSDK.SetSpriteAnimation(TVVan->aniFrames, 8, &self->radioAnimator, true, 0);
                     self->direction = FLIP_XY;
                     break;
+
                 default: break;
             }
             self->angle = (self->angle + 0x80) & 0xFF;
@@ -780,13 +807,13 @@ void TVVan_StateRadio_ExitSatellite2(void)
     RSDK_THIS(TVVan);
     EntityPlayer *player = self->player;
 
-    RSDK.ProcessAnimation(&self->animator5);
+    RSDK.ProcessAnimation(&self->radioAnimator);
     player->position.x += (self->position.x - player->position.x) >> 2;
     player->position.y += (self->position.y - player->position.y) >> 2;
     if (Player_CheckValidState(player)) {
-        if (self->animator5.frameID >= self->animator5.frameCount - 1) {
-            int vel = 0;
-            if (self->animator5.animationID == 8)
+        if (self->radioAnimator.frameID >= self->radioAnimator.frameCount - 1) {
+            int32 vel = 0;
+            if (self->radioAnimator.animationID == 8)
                 vel = 0x240000;
             else
                 vel = 0;
@@ -812,20 +839,20 @@ void TVVan_StateRadio_ExitSatellite2(void)
 void TVVan_StateTV_Idle(void)
 {
     RSDK_THIS(TVVan);
-    RSDK.ProcessAnimation(&self->animator6);
+    RSDK.ProcessAnimation(&self->tvAnimator);
 }
 
 void TVVan_StateTV_Exploding(void)
 {
     RSDK_THIS(TVVan);
 
-    RSDK.ProcessAnimation(&self->animator6);
-    RSDK.ProcessAnimation(&self->animator8);
-    RSDK.ProcessAnimation(&self->animator9);
+    RSDK.ProcessAnimation(&self->tvAnimator);
+    RSDK.ProcessAnimation(&self->playerAnimator);
+    RSDK.ProcessAnimation(&self->tvSnowAnimator);
 
     if (self->scale.x >= 0x200) {
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator7, true, 0);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 17, &self->animator6, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->tvVanAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 17, &self->tvAnimator, true, 0);
         self->state                         = TVVan_StateTV_Destroyed;
         self->stateDraw[Zone->drawOrderLow] = TVVan_Draw_ExitTV_Active;
         self->active                        = ACTIVE_NORMAL;
@@ -841,9 +868,9 @@ void TVVan_StateTV_Destroyed(void)
     RSDK_THIS(TVVan);
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->animator7, true, 9);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->animator6, true, 0);
-        RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->animator9, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->tvVanAnimator, true, 9);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->tvAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->tvSnowAnimator, true, 0);
         self->state  = TVVan_StateTV_Idle;
         self->active = ACTIVE_BOUNDS;
     }
@@ -857,7 +884,7 @@ void TVVan_StateRadio_EnterTV(void)
     player->position.x += (self->position.x - player->position.x) >> 2;
     player->position.y += (self->position.y - player->position.y) >> 2;
     if (Player_CheckValidState(player)) {
-        RSDK.ProcessAnimation(&self->animator5);
+        RSDK.ProcessAnimation(&self->radioAnimator);
         if (++self->timer != 32)
             return;
         player->state = Player_State_Air;
@@ -878,9 +905,9 @@ void TVVan_StateRadio_EnterTV(void)
     explosion->scale.x         = 0x300;
     explosion->scale.y         = 0x300;
 
-    for (int i = 0; i < 12; ++i) {
-        int x                = self->position.x + RSDK.Rand(-0xC0000, 0xC0000);
-        int y                = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
+    for (int32 i = 0; i < 12; ++i) {
+        int32 x              = self->position.x + RSDK.Rand(-0xC0000, 0xC0000);
+        int32 y              = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
         debris->state        = Debris_State_Fall;
         debris->gravity      = 0x4000;
@@ -896,7 +923,7 @@ void TVVan_StateRadio_EnterTV(void)
 
     foreach_active(ShopWindow, window)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(self, &TVVan->hitbox5, window, &window->hitboxWindowX)) {
+        if (RSDK.CheckObjectCollisionTouchBox(self, &TVVan->hitboxShopWindow, window, &window->hitboxWindowX)) {
             window->stateDraw = ShopWindow_Draw_Shattered;
             window->state     = ShopWindow_State_Shattered;
         }
@@ -913,119 +940,131 @@ void TVVan_EditorDraw(void)
     self->drawFX = FX_FLIP;
     switch (self->type) {
         case TVVAN_SATELLITE_NE_SW:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0xE0;
-            self->field_C4[1] = 0xE0;
-            self->field_CC[0] = 0x60;
-            self->field_CC[1] = 0x60;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0xE0;
+            self->targetAngles1[1] = 0xE0;
+            self->targetAngles2[0] = 0x60;
+            self->targetAngles2[1] = 0x60;
             TVVan_Draw_Satellite_NE_SW();
             break;
+
         case TVVAN_SATELLITE_NW_SE:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0x20;
-            self->field_C4[1] = 0x20;
-            self->field_CC[0] = 0xA0;
-            self->field_CC[1] = 0xA0;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0x20;
+            self->targetAngles1[1] = 0x20;
+            self->targetAngles2[0] = 0xA0;
+            self->targetAngles2[1] = 0xA0;
             TVVan_Draw_Satellite_NW_SE();
             break;
+
         case TVVAN_SATELLITE_NW_SW:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0x20;
-            self->field_C4[1] = 0x20;
-            self->field_CC[0] = 0xE0;
-            self->field_CC[1] = 0xE0;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0x20;
+            self->targetAngles1[1] = 0x20;
+            self->targetAngles2[0] = 0xE0;
+            self->targetAngles2[1] = 0xE0;
             TVVan_Draw_Satellite_NW_SW();
             break;
+
         case TVVAN_SATELLITE_NE_SE:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0x60;
-            self->field_C4[1] = 0x60;
-            self->field_CC[0] = 0xA0;
-            self->field_CC[1] = 0xA0;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0x60;
+            self->targetAngles1[1] = 0x60;
+            self->targetAngles2[0] = 0xA0;
+            self->targetAngles2[1] = 0xA0;
             TVVan_Draw_Satellite_NE_SE();
             break;
+
         case TVVAN_SATELLITE_NE_NW:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0x20;
-            self->field_C4[1] = 0x20;
-            self->field_CC[0] = 0x60;
-            self->field_CC[1] = 0x60;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0x20;
+            self->targetAngles1[1] = 0x20;
+            self->targetAngles2[0] = 0x60;
+            self->targetAngles2[1] = 0x60;
             TVVan_Draw_Satellite_NE_NW();
             break;
+
         case TVVAN_SATELLITE_SE_SW:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0xE0;
-            self->field_C4[1] = 0xE0;
-            self->field_CC[0] = 0xA0;
-            self->field_CC[1] = 0xA0;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0xE0;
+            self->targetAngles1[1] = 0xE0;
+            self->targetAngles2[0] = 0xA0;
+            self->targetAngles2[1] = 0xA0;
             TVVan_Draw_Satellite_SE_SW();
             break;
+
         case TVVAN_SATELLITE_SW_N:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0xA0;
-            self->field_C4[1] = 0xA0;
-            self->field_CC[0] = 0x00;
-            self->field_CC[1] = 0x00;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0xA0;
+            self->targetAngles1[1] = 0xA0;
+            self->targetAngles2[0] = 0x00;
+            self->targetAngles2[1] = 0x00;
             TVVan_Draw_Satellite_SW_N();
             break;
+
         case TVVAN_SATELLITE_NW_S:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0x20;
-            self->field_C4[1] = 0x20;
-            self->field_CC[0] = 0xC0;
-            self->field_CC[1] = 0xC0;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0x20;
+            self->targetAngles1[1] = 0x20;
+            self->targetAngles2[0] = 0xC0;
+            self->targetAngles2[1] = 0xC0;
             TVVan_Draw_Satellite_NW_S();
             break;
+
         case TVVAN_SATELLITE_SE_N:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0xA0;
-            self->field_C4[1] = 0xA0;
-            self->field_CC[0] = 0x40;
-            self->field_CC[1] = 0x40;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0xA0;
+            self->targetAngles1[1] = 0xA0;
+            self->targetAngles2[0] = 0x40;
+            self->targetAngles2[1] = 0x40;
             TVVan_Draw_Satellite_SE_N();
             break;
+
         case TVVAN_SATELLITE_NE_S:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->animator1, true, 0);
-            self->drawOrder   = Zone->drawOrderHigh;
-            self->field_C4[0] = 0xC0;
-            self->field_C4[1] = 0xC0;
-            self->field_CC[0] = 0x40;
-            self->field_CC[1] = 0x40;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 6, &self->satelliteAnimator, true, 0);
+            self->drawOrder        = Zone->drawOrderHigh;
+            self->targetAngles1[0] = 0xC0;
+            self->targetAngles1[1] = 0xC0;
+            self->targetAngles2[0] = 0x40;
+            self->targetAngles2[1] = 0x40;
             TVVan_Draw_Satellite_NE_S();
             break;
+
         case TVVAN_EXITTV:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->animator7, true, 9);
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->animator6, true, 0);
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->animator9, true, 0);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->tvVanAnimator, true, 9);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 15, &self->tvAnimator, true, 0);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 18, &self->tvSnowAnimator, true, 0);
             self->drawOrder = Zone->drawOrderLow;
             TVVan_Draw_ExitTV_Active();
             break;
+
         case TVVAN_RADIO:
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 10, &self->radioAnimator, true, 0);
             self->active    = ACTIVE_NORMAL;
             self->drawOrder = Zone->drawOrderHigh;
             TVVan_Draw_Radio();
             break;
+
         default:
             self->drawOrder = Zone->drawOrderLow;
             self->state     = TVVan_StateVan_Idle;
             if (self->type == TVVAN_VAN_RIGHT)
                 self->direction = FLIP_X;
-            self->drawPos  = self->position;
-            self->drawPos2 = self->position;
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 1, &self->animator2, false, 0);
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 2, &self->animator3, false, 0);
-            RSDK.SetSpriteAnimation(TVVan->aniFrames, 5, &self->animator4, false, 0);
+            self->vanPos  = self->position;
+            self->movePos = self->position;
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 0, &self->satelliteAnimator, false, 0);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 1, &self->leftDoorAnimator, false, 0);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 2, &self->rightDoorAnimator, false, 0);
+            RSDK.SetSpriteAnimation(TVVan->aniFrames, 5, &self->windowAnimator, false, 0);
 
             TVVan_Draw_Van_Low();
             TVVan_Draw_Van_High();

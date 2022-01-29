@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectMicDrop {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxElectrify;
 };
@@ -16,16 +16,15 @@ struct ObjectMicDrop {
 struct EntityMicDrop {
     RSDK_ENTITY
     StateMachine(state);
-    Animator animator1;
-    Animator animator2;
+    Animator bodyAnimator;
+    Animator wireAnimator;
     Vector2 startPos;
     uint16 distance;
-    uint16 field_96;
     int32 timer;
-    int32 field_9C;
-    int32 field_A0;
+    int32 swingSpeed;
+    int32 swingVel;
     int32 radius;
-    int32 field_A8;
+    int32 swingPos;
 };
 
 // Object Struct
@@ -52,11 +51,11 @@ void MicDrop_CheckPlayerCollisions(void);
 void MicDrop_CheckOnScreen(void);
 
 void MicDrop_State_Setup(void);
-void MicDrop_State_Unknown1(void);
-void MicDrop_State_Unknown2(void);
-void MicDrop_State_Unknown3(void);
-void MicDrop_State_Unknown4(void);
-void MicDrop_State_Unknown5(void);
-void MicDrop_State_Unknown6(void);
+void MicDrop_State_CheckForPlayer(void);
+void MicDrop_State_DropDown(void);
+void MicDrop_State_DropRecoil(void);
+void MicDrop_State_Idle(void);
+void MicDrop_State_Swinging(void);
+void MicDrop_State_Electrify(void);
 
 #endif //!OBJ_MICDROP_H

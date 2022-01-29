@@ -34,7 +34,7 @@ void PopcornKernel_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->drawFX = FX_ROTATE;
-        self->state  = PopcornKernel_Unknown1;
+        self->state  = PopcornKernel_State_BounceAround;
         RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 7));
         if (self->animator.frameID >= 0 && (self->animator.frameID <= 1 || self->animator.frameID == 5))
             self->drawOrder = Zone->drawOrderLow - 1;
@@ -52,7 +52,7 @@ void PopcornKernel_Create(void *data)
 
 void PopcornKernel_StageLoad(void) { PopcornKernel->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/PopcornMachine.bin", SCOPE_STAGE); }
 
-void PopcornKernel_Unknown1(void)
+void PopcornKernel_State_BounceAround(void)
 {
     RSDK_THIS(PopcornKernel);
 
@@ -90,7 +90,7 @@ void PopcornKernel_Unknown1(void)
     }
 }
 
-void PopcornKernel_Unknown2(void)
+void PopcornKernel_State_RiseUp(void)
 {
     RSDK_THIS(PopcornKernel);
 
@@ -98,14 +98,14 @@ void PopcornKernel_Unknown2(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     if (self->position.y < self->maxY) {
-        self->state = PopcornKernel_Unknown3;
+        self->state = PopcornKernel_State_FallDown;
         //???
         // Dunno why this is here but removing it would change the internal randSeed
         RSDK.Rand(-0x80000, 0x80000);
     }
 }
 
-void PopcornKernel_Unknown3(void)
+void PopcornKernel_State_FallDown(void)
 {
     RSDK_THIS(PopcornKernel);
 

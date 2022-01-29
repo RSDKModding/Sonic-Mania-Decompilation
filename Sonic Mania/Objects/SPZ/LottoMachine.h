@@ -7,11 +7,11 @@
 struct ObjectLottoMachine {
     RSDK_OBJECT
     Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxMotor;
     uint8 activePlayers;
     uint16 sfxPimPom;
     uint16 sfxFail;
-    Animator animator;
+    Animator shineAnimator;
     uint16 aniFrames;
 };
 
@@ -20,23 +20,23 @@ struct EntityLottoMachine {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerCount;
-    Entity *playerPtrs[PLAYER_MAX];
+    EntityPlayer *playerPtrs[PLAYER_MAX];
     int32 timer;
-    int32 field_74;
-    int32 field_78;
+    int32 spinSpeed;
+    int32 playerDir;
     int32 playerTimers[PLAYER_MAX];
-    int32 field_8C;
-    int32 field_90[PLAYER_MAX];
-    int32 field_A0;
-    int32 field_A4;
-    int32 field_A8;
+    int32 collectedBallCount;
+    int32 collectedBallTypes[4];
+    int32 chutePos;
+    int32 chuteTargetPos;
+    int32 chuteVel;
     uint8 drawOrderHigh;
-    int32 playerAngles[4];
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    int32 playerAngles[PLAYER_MAX];
+    Animator machineAnimator;
+    Animator supportAnimator;
+    Animator chuteAnimator;
+    Animator motorAnimator;
+    Animator glassAnimator;
 };
 
 // Object Struct
@@ -56,20 +56,20 @@ void LottoMachine_EditorLoad(void);
 void LottoMachine_Serialize(void);
 
 // Extra Entity Functions
-void LottoMachine_ZoneCB(void);
+void LottoMachine_VSSwapCB(void);
 void LottoMachine_CheckPlayerCollisions(void);
 void LottoMachine_CheckPlayerCollisions2(void);
-void LottoMachine_Unknown4(void);
-void LottoMachine_Unknown5(void);
-void LottoMachine_Unknown6(void);
+void LottoMachine_HandleMotor(void);
+void LottoMachine_SetupBalls(void);
+void LottoMachine_SetupUIBalls(void);
 void LottoMachine_GiveRings(void);
 
-void LottoMachine_State_Unknown1(void);
-void LottoMachine_State_Unknown2(void);
-void LottoMachine_State_Unknown3(void);
-void LottoMachine_State_Unknown4(void);
-void LottoMachine_State_Unknown5(void);
-void LottoMachine_State_Unknown6(void);
-void LottoMachine_State_Unknown7(void);
+void LottoMachine_State_Startup(void);
+void LottoMachine_State_HandleBallCollect(void);
+void LottoMachine_State_CollectBall(void);
+void LottoMachine_State_HandleBallCollected(void);
+void LottoMachine_State_DropPlayers(void);
+void LottoMachine_State_ReleasePlayers(void);
+void LottoMachine_State_StopSpinning(void);
 
 #endif //!OBJ_LOTTOMACHINE_H

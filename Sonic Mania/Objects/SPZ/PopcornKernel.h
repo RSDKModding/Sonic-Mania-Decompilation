@@ -38,8 +38,8 @@ void PopcornKernel_EditorLoad(void);
 void PopcornKernel_Serialize(void);
 
 // Extra Entity Functions
-void PopcornKernel_Unknown1(void);
-void PopcornKernel_Unknown2(void);
-void PopcornKernel_Unknown3(void);
+void PopcornKernel_State_BounceAround(void);
+void PopcornKernel_State_RiseUp(void);
+void PopcornKernel_State_FallDown(void);
 
 #endif //!OBJ_POPCORNKERNEL_H

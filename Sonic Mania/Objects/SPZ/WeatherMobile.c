@@ -19,10 +19,10 @@ void WeatherMobile_LateUpdate(void) {}
 
 void WeatherMobile_StaticUpdate(void)
 {
-    int windCount1    = 0;
-    int windCount2    = 0;
-    int rainCount = 0;
-    int windCount = 0;
+    int32 windCount1 = 0;
+    int32 windCount2 = 0;
+    int32 rainCount  = 0;
+    int32 windCount  = 0;
 
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
         foreach_all(WeatherMobile, weatherMobile)
@@ -32,7 +32,7 @@ void WeatherMobile_StaticUpdate(void)
 
             if (weatherMobile->type == WEATHERMOBILE_WIND_MANAGER) {
                 ++windCount1;
-                if (weatherMobile->state == WeatherMobile_State2_Unknown3)
+                if (weatherMobile->state == WeatherMobile_StateWindManager_FinishWind)
                     windCount++;
             }
 
@@ -53,11 +53,12 @@ void WeatherMobile_StaticUpdate(void)
     }
 
     if (windCount || WeatherMobile->windSfxTimer > 0) {
-        int timer = WeatherMobile->windSfxTimer;
+        int32 timer = WeatherMobile->windSfxTimer;
         if (timer < 60)
             RSDK.SetChannelAttributes(WeatherMobile->windSfxChannel, (60 - timer) / 60.0, 0.0, (((60 - timer) * 0.5) / 60.0) + 0.5);
         ++WeatherMobile->windSfxTimer;
     }
+
     if ((windCount1 || windCount2) && !WeatherMobile->playingWindSfx) {
         WeatherMobile->windSfxChannel = RSDK.PlaySfx(WeatherMobile->sfxWind, 60067, 255);
         WeatherMobile->playingWindSfx = true;
@@ -78,7 +79,7 @@ void WeatherMobile_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     }
 }
 
@@ -102,63 +103,69 @@ void WeatherMobile_Create(void *data)
                     self->hitbox.bottom = 22;
                     self->drawFX        = FX_FLIP;
                     self->health        = 8;
-                    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 4, &self->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 0, &self->animator3, true, 0);
-                    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 6, &self->animator4, true, 0);
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 23, &self->animator5, true, 0);
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 21, &self->animator6, true, 0);
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 22, &self->animator7, true, 0);
-                    self->stateDraw = WeatherMobile_StateDraw_Unknown1;
+                    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 4, &self->seatAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 6, &self->eggMobileAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 23, &self->decorAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 21, &self->radarDishLAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 22, &self->radarDishRAnimator, true, 0);
+                    self->stateDraw = WeatherMobile_Draw_Eggman;
                     self->state     = WeatherMobile_State_SetupArena;
                     break;
+
                 case WEATHERMOBILE_LIGHTS:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderHigh;
                     self->drawFX    = FX_FLIP;
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 12, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 12, &self->animator3, true, 2);
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 12, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 12, &self->eggmanAnimator, true, 2);
                     self->position.y = -0x180000;
                     RSDK.PlaySfx(WeatherMobile->sfxSun, false, 255);
-                    self->stateDraw = WeatherMobile_StateDraw1_Unknown;
-                    self->state     = WeatherMobile_State1_Unknown1;
+                    self->stateDraw = WeatherMobile_Draw_Lights;
+                    self->state     = WeatherMobile_StateLights_EnterLights;
                     break;
+
                 case WEATHERMOBILE_WIND_MANAGER:
                     self->active     = ACTIVE_NORMAL;
                     self->velocity.y = -0x80000;
-                    self->state      = WeatherMobile_State2_Unknown1;
+                    self->state      = WeatherMobile_StateWindManager_SetupWind;
                     break;
+
                 case WEATHERMOBILE_WIND:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderHigh;
                     if (RSDK.Rand(0, 8) == 4) {
-                        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 14, &self->animator1, true, 0);
+                        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 14, &self->mainAnimator, true, 0);
                     }
                     else {
-                        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 13, &self->animator1, true, RSDK.Rand(0, 3));
+                        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 13, &self->mainAnimator, true, RSDK.Rand(0, 3));
                         self->drawFX    = FX_SCALE;
                         self->inkEffect = INK_ADD;
                         self->alpha     = 0xC0;
                         self->scale.x   = 0x200;
                         self->scale.y   = 0x400;
                     }
-                    self->state = WeatherMobile_State3_Unknown;
+                    self->state = WeatherMobile_State_Wind;
                     break;
+
                 case WEATHERMOBILE_RAIN_MANAGER:
                     self->active = ACTIVE_NORMAL;
                     self->angle  = 32;
-                    self->state  = WeatherMobile_State4_Unknown;
+                    self->state  = WeatherMobile_State_RainManager;
                     break;
+
                 case WEATHERMOBILE_RAIN:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderHigh;
                     self->drawFX    = FX_ROTATE;
                     self->groundVel = 512;
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 19, &self->animator1, true, 0);
-                    self->state = WeatherMobile_State5_Unknown1;
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 19, &self->mainAnimator, true, 0);
+                    self->state = WeatherMobile_State_RainDrop;
                     break;
+
                 case WEATHERMOBILE_CLOUD:
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
@@ -168,10 +175,11 @@ void WeatherMobile_Create(void *data)
                     self->hitbox.right  = 8;
                     self->hitbox.bottom = 128;
                     self->inkEffect     = INK_ALPHA;
-                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 15, &self->animator1, true, 0);
-                    self->drawPos = self->position;
-                    self->state   = WeatherMobile_State6_Unknown1;
+                    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 15, &self->mainAnimator, true, 0);
+                    self->origin = self->position;
+                    self->state   = WeatherMobile_StateCloud_Idle;
                     break;
+
                 default: break;
             }
         }
@@ -184,8 +192,10 @@ void WeatherMobile_Create(void *data)
 void WeatherMobile_StageLoad(void)
 {
     WeatherMobile->active       = ACTIVE_ALWAYS;
+
     WeatherMobile->aniFrames    = RSDK.LoadSpriteAnimation("SPZ2/WeatherMobile.bin", SCOPE_STAGE);
     WeatherMobile->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggMobile.bin", SCOPE_STAGE);
+
     WeatherMobile->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
     WeatherMobile->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
     WeatherMobile->sfxCloud     = RSDK.GetSfx("SPZ2/Cloud.wav");
@@ -199,19 +209,19 @@ void WeatherMobile_HandleAnimations(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
-    if (self->animator3.animationID) {
-        if (self->animator3.animationID == 1 || (self->animator3.animationID - 1) == 1) {
-            if (self->animator3.frameID == self->animator3.frameCount - 1)
-                RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 0, &self->animator3, true, 0);
+    if (self->eggmanAnimator.animationID) {
+        if (self->eggmanAnimator.animationID == 1 || (self->eggmanAnimator.animationID - 1) == 1) {
+            if (self->eggmanAnimator.frameID == self->eggmanAnimator.frameCount - 1)
+                RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
         }
     }
     else {
-        self->animator3.speed = 0;
+        self->eggmanAnimator.speed = 0;
     }
 }
 
@@ -227,7 +237,7 @@ void WeatherMobile_CheckPlayerCollisions(void)
             }
             else {
                 self->invincibilityTimer = 48;
-                RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 2, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 2, &self->eggmanAnimator, true, 0);
                 RSDK.PlaySfx(WeatherMobile->sfxHit, false, 255);
             }
         }
@@ -238,7 +248,7 @@ void WeatherMobile_HandleDefeat(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 3, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 3, &self->eggmanAnimator, true, 0);
     self->state = WeatherMobile_State_Defeated;
     self->timer = 0;
 
@@ -246,9 +256,9 @@ void WeatherMobile_HandleDefeat(void)
     {
         switch (weatherMobile->type) {
             case WEATHERMOBILE_LIGHTS:
-                if (weatherMobile->state == WeatherMobile_State1_Unknown2) {
+                if (weatherMobile->state == WeatherMobile_StateLights_Shine) {
                     weatherMobile->timer = 0;
-                    weatherMobile->state = WeatherMobile_State1_Unknown3;
+                    weatherMobile->state = WeatherMobile_StateLights_DimAndDissapear;
                 }
                 break;
             case WEATHERMOBILE_WIND_MANAGER:
@@ -257,10 +267,10 @@ void WeatherMobile_HandleDefeat(void)
                 Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
                 break;
             case WEATHERMOBILE_CLOUD:
-                if (weatherMobile->state != WeatherMobile_State6_Unknown4) {
+                if (weatherMobile->state != WeatherMobile_StateCloud_FadeAway) {
                     weatherMobile->timer     = 0;
                     weatherMobile->stateDraw = StateMachine_None;
-                    weatherMobile->state     = WeatherMobile_State6_Unknown4;
+                    weatherMobile->state     = WeatherMobile_StateCloud_FadeAway;
                 }
                 break;
             default: break;
@@ -272,53 +282,53 @@ void WeatherMobile_HandleDefeat(void)
     Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
 }
 
-void WeatherMobile_StateDraw_Unknown1(void)
+void WeatherMobile_Draw_Eggman(void)
 {
     RSDK_THIS(WeatherMobile);
 
     if (self->invincibilityTimer & 1) {
         RSDK.CopyPalette(2, 32, 0, 32, 10);
         RSDK.SetPaletteEntry(0, 128, 0xF0F0F0);
-        RSDK.DrawSprite(&self->animator6, NULL, false);
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
-        RSDK.DrawSprite(&self->animator4, NULL, false);
-        RSDK.DrawSprite(&self->animator5, NULL, false);
-        RSDK.DrawSprite(&self->animator7, NULL, false);
+        RSDK.DrawSprite(&self->radarDishLAnimator, NULL, false);
+        RSDK.DrawSprite(&self->seatAnimator, NULL, false);
+        RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
+        RSDK.DrawSprite(&self->eggMobileAnimator, NULL, false);
+        RSDK.DrawSprite(&self->decorAnimator, NULL, false);
+        RSDK.DrawSprite(&self->radarDishRAnimator, NULL, false);
         RSDK.CopyPalette(1, 32, 0, 32, 10);
         RSDK.SetPaletteEntry(0, 128, 0x000000);
     }
     else {
-        RSDK.DrawSprite(&self->animator6, NULL, false);
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
-        RSDK.DrawSprite(&self->animator4, NULL, false);
-        RSDK.DrawSprite(&self->animator5, NULL, false);
-        RSDK.DrawSprite(&self->animator7, NULL, false);
+        RSDK.DrawSprite(&self->radarDishLAnimator, NULL, false);
+        RSDK.DrawSprite(&self->seatAnimator, NULL, false);
+        RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
+        RSDK.DrawSprite(&self->eggMobileAnimator, NULL, false);
+        RSDK.DrawSprite(&self->decorAnimator, NULL, false);
+        RSDK.DrawSprite(&self->radarDishRAnimator, NULL, false);
     }
 }
 
-void WeatherMobile_StateDraw1_Unknown(void)
+void WeatherMobile_Draw_Lights(void)
 {
     RSDK_THIS(WeatherMobile);
     Vector2 drawPos;
 
     self->direction = FLIP_NONE;
-    self->alpha     = 3 * self->timer2;
+    self->alpha     = 3 * self->lightsTimer;
     drawPos.y         = self->position.y;
     for (drawPos.x = 0x200000; drawPos.x < (ScreenInfo->width + 32) << 16; drawPos.x += 0x400000) {
         self->inkEffect         = INK_NONE;
-        self->animator1.frameID = 0;
-        RSDK.DrawSprite(&self->animator1, &drawPos, true);
+        self->mainAnimator.frameID = 0;
+        RSDK.DrawSprite(&self->mainAnimator, &drawPos, true);
 
         self->inkEffect         = INK_ADD;
-        self->animator1.frameID = 1;
-        RSDK.DrawSprite(&self->animator1, &drawPos, true);
+        self->mainAnimator.frameID = 1;
+        RSDK.DrawSprite(&self->mainAnimator, &drawPos, true);
     }
 
-    self->alpha     = self->timer2;
+    self->alpha     = self->lightsTimer;
     self->direction = self->parent->direction;
-    RSDK.DrawSprite(&self->animator3, &self->parent->position, false);
+    RSDK.DrawSprite(&self->eggmanAnimator, &self->parent->position, false);
 
     drawPos.x     = (self->parent->position.x >> 16) - ScreenInfo->position.x;
     drawPos.y     = (self->parent->position.y >> 16) - ScreenInfo->position.y;
@@ -335,12 +345,12 @@ void WeatherMobile_StateDraw1_Unknown(void)
     }
 }
 
-void WeatherMobile_StateDraw6_Unknown1(void)
+void WeatherMobile_Draw_Lightning(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.DrawSprite(&self->animator5, &self->drawPos, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->decorAnimator, &self->origin, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void WeatherMobile_State_SetupArena(void)
@@ -348,19 +358,19 @@ void WeatherMobile_State_SetupArena(void)
     RSDK_THIS(WeatherMobile);
 
     if (++self->timer >= 8) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]     = ScreenInfo->centerX + (self->position.x >> 16);
-        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
-        Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = ScreenInfo->centerX + (self->position.x >> 16);
+        Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsB[0]      = (self->position.y >> 16);
         WeatherMobile->boundsL      = (Zone->cameraBoundsL[0] + 64) << 16;
         WeatherMobile->boundsR      = (Zone->cameraBoundsR[0] - 64) << 16;
         WeatherMobile->boundsM      = self->position.x;
         WeatherMobile->boundsT      = (Zone->cameraBoundsT[0] + 48) << 16;
         WeatherMobile->boundsB      = (Zone->cameraBoundsB[0] - 96) << 16;
-        self->state               = WeatherMobile_State_StartBoss;
+        self->state                 = WeatherMobile_State_StartBoss;
     }
 }
 
@@ -369,20 +379,19 @@ void WeatherMobile_State_StartBoss(void)
     RSDK_THIS(WeatherMobile);
 
     if (self->timer) {
-        self->timer++;
-        if (self->timer == 120) {
+        if (++self->timer == 120) {
             self->position.x += 0x800000;
             self->timer   = 0;
             self->visible = true;
-            self->state   = WeatherMobile_State_Unknown2;
+            self->state   = WeatherMobile_State_EnterEggman;
             self->position.y += -0x400000 - (ScreenInfo->height << 16);
 
             foreach_active(WeatherTV, weatherTV)
             {
-                weatherTV->state     = WeatherTV_State_Unknown1;
-                weatherTV->stateDraw = WeatherTV_StateDraw_Unknown2;
+                weatherTV->state     = WeatherTV_State_TurnOn;
+                weatherTV->stateDraw = WeatherTV_Draw_TurningOn;
                 weatherTV->eggman    = self;
-                self->weatherTV    = (Entity *)weatherTV;
+                self->weatherTV      = weatherTV;
             }
         }
     }
@@ -394,47 +403,47 @@ void WeatherMobile_State_StartBoss(void)
     }
 }
 
-void WeatherMobile_State_Unknown2(void)
+void WeatherMobile_State_EnterEggman(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator6);
-    RSDK.ProcessAnimation(&self->animator7);
+    RSDK.ProcessAnimation(&self->radarDishLAnimator);
+    RSDK.ProcessAnimation(&self->radarDishRAnimator);
     self->position.y += 0x8000;
 
     if (self->position.y >= WeatherMobile->boundsT) {
         self->position.y = WeatherMobile->boundsT;
-        self->drawPos.x  = self->position.x;
-        self->drawPos.y  = self->position.y;
+        self->origin.x  = self->position.x;
+        self->origin.y  = self->position.y;
         self->velocity.x = -0xC000;
-        self->state      = WeatherMobile_State_Unknown3;
+        self->state      = WeatherMobile_State_HandleMovement;
     }
     WeatherMobile_HandleAnimations();
     WeatherMobile_CheckPlayerCollisions();
 }
 
-void WeatherMobile_State_Unknown3(void)
+void WeatherMobile_State_HandleMovement(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator6);
-    RSDK.ProcessAnimation(&self->animator7);
+    RSDK.ProcessAnimation(&self->radarDishLAnimator);
+    RSDK.ProcessAnimation(&self->radarDishRAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 3, 11);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 3, 11);
     self->position.x += self->velocity.x;
 
-    if (self->drawPos.y < WeatherMobile->boundsT) {
-        self->drawPos.y += 0x10000;
-        if (self->drawPos.y >= WeatherMobile->boundsT) {
+    if (self->origin.y < WeatherMobile->boundsT) {
+        self->origin.y += 0x10000;
+        if (self->origin.y >= WeatherMobile->boundsT) {
             self->velocity.y = 0;
-            self->drawPos.y  = WeatherMobile->boundsT;
+            self->origin.y  = WeatherMobile->boundsT;
         }
     }
-    else if (self->drawPos.y > WeatherMobile->boundsT) {
-        self->drawPos.y -= 0x10000;
-        if (self->drawPos.y <= WeatherMobile->boundsT) {
+    else if (self->origin.y > WeatherMobile->boundsT) {
+        self->origin.y -= 0x10000;
+        if (self->origin.y <= WeatherMobile->boundsT) {
             self->velocity.y = 0;
-            self->drawPos.y  = WeatherMobile->boundsT;
+            self->origin.y  = WeatherMobile->boundsT;
         }
     }
 
@@ -453,18 +462,18 @@ void WeatherMobile_State_Unknown3(void)
     WeatherMobile_CheckPlayerCollisions();
 }
 
-void WeatherMobile_State_Unknown4(void)
+void WeatherMobile_State_WindAttack(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator6);
-    RSDK.ProcessAnimation(&self->animator7);
+    RSDK.ProcessAnimation(&self->radarDishLAnimator);
+    RSDK.ProcessAnimation(&self->radarDishRAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 3, 11);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 3, 11);
     self->position.x += 4 * self->velocity.x;
 
-    if (self->drawPos.y > WeatherMobile->boundsT - 0x400000)
-        self->drawPos.y -= 0x10000;
+    if (self->origin.y > WeatherMobile->boundsT - 0x400000)
+        self->origin.y -= 0x10000;
 
     if (self->direction) {
         if (self->position.x > WeatherMobile->boundsR) {
@@ -481,39 +490,39 @@ void WeatherMobile_State_Unknown4(void)
     WeatherMobile_CheckPlayerCollisions();
 }
 
-void WeatherMobile_State_Unknown5(void)
+void WeatherMobile_State_SunAttack(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator6);
-    RSDK.ProcessAnimation(&self->animator7);
+    RSDK.ProcessAnimation(&self->radarDishLAnimator);
+    RSDK.ProcessAnimation(&self->radarDishRAnimator);
 
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 3, 11);
-    self->drawPos.y += self->velocity.y;
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 3, 11);
+    self->origin.y += self->velocity.y;
 
     WeatherMobile_HandleAnimations();
     WeatherMobile_CheckPlayerCollisions();
 }
 
-void WeatherMobile_State1_Unknown1(void)
+void WeatherMobile_StateLights_EnterLights(void)
 {
     RSDK_THIS(WeatherMobile);
     EntityWeatherMobile *parent = (EntityWeatherMobile *)self->parent;
 
-    if (parent->state == WeatherMobile_State_Defeated || parent->state == WeatherMobile_State_Unknown6
-        || parent->state == WeatherMobile_State_Unknown7 || parent->state == WeatherMobile_State_Unknown8
-        || parent->state == WeatherMobile_State_Unknown9) {
+    if (parent->state == WeatherMobile_State_Defeated || parent->state == WeatherMobile_State_DefeatFall
+        || parent->state == WeatherMobile_State_FleeRise || parent->state == WeatherMobile_State_FleeAdjust
+        || parent->state == WeatherMobile_State_Flee) {
         self->timer = 0;
-        self->state = WeatherMobile_State1_Unknown3;
+        self->state = WeatherMobile_StateLights_DimAndDissapear;
     }
     else {
         if (self->position.y >= 0x100000) {
-            if (self->timer2 >= 64) {
+            if (self->lightsTimer >= 64) {
                 parent->velocity.y = 0x8000;
-                self->state      = WeatherMobile_State1_Unknown2;
+                self->state      = WeatherMobile_StateLights_Shine;
             }
             else {
-                self->timer2++;
+                self->lightsTimer++;
             }
         }
         else {
@@ -522,34 +531,33 @@ void WeatherMobile_State1_Unknown1(void)
                 SPZ2Setup->fgLow->scrollInfo[0].deform  = true;
                 SPZ2Setup->fgHigh->scrollInfo[0].deform = true;
                 parent->velocity.y                      = 0;
-                parent->state                           = WeatherMobile_State_Unknown5;
+                parent->state                           = WeatherMobile_State_SunAttack;
             }
         }
     }
 }
 
-void WeatherMobile_State1_Unknown2(void)
+void WeatherMobile_StateLights_Shine(void)
 {
     RSDK_THIS(WeatherMobile);
     EntityWeatherMobile *parent = (EntityWeatherMobile *)self->parent;
 
-    if (parent->state == WeatherMobile_State_Defeated || parent->state == WeatherMobile_State_Unknown6
-        || parent->state == WeatherMobile_State_Unknown7 || parent->state == WeatherMobile_State_Unknown8
-        || parent->state == WeatherMobile_State_Unknown9) {
+    if (parent->state == WeatherMobile_State_Defeated || parent->state == WeatherMobile_State_DefeatFall
+        || parent->state == WeatherMobile_State_FleeRise || parent->state == WeatherMobile_State_FleeAdjust
+        || parent->state == WeatherMobile_State_Flee) {
         self->timer = 0;
-        self->state = WeatherMobile_State1_Unknown3;
+        self->state = WeatherMobile_StateLights_DimAndDissapear;
     }
     else {
         foreach_active(Player, player)
         {
-            if ((abs(parent->position.x - player->position.x) >= 0x200000 || player->position.y - parent->position.y + 0x200000 < 0)) {
+            if ((abs(parent->position.x - player->position.x) >= 0x200000 || player->position.y - parent->position.y + 0x200000 < 0)) 
                 Player_CheckElementalHit(player, self, SHIELD_FIRE);
-            }
         }
 
         if (!(self->timer & 7)) {
-            int x            = parent->position.x + RSDK.Rand(-0x140000, 0x140000);
-            int y            = parent->position.y + RSDK.Rand(-0x180000, -0x140000);
+            int32 x            = parent->position.x + RSDK.Rand(-0x140000, 0x140000);
+            int32 y            = parent->position.y + RSDK.Rand(-0x180000, -0x140000);
             EntityDust *dust = CREATE_ENTITY(Dust, self, x, y);
             dust->state      = Dust_State_Move;
             dust->drawOrder  = parent->drawOrder;
@@ -557,16 +565,16 @@ void WeatherMobile_State1_Unknown2(void)
         if (++self->timer == 120) {
             self->timer      = 0;
             parent->velocity.y = -0x10000;
-            self->state      = WeatherMobile_State1_Unknown3;
+            self->state      = WeatherMobile_StateLights_DimAndDissapear;
         }
     }
 }
 
-void WeatherMobile_State1_Unknown3(void)
+void WeatherMobile_StateLights_DimAndDissapear(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    if (self->timer2 <= 0) {
+    if (self->lightsTimer <= 0) {
         if (self->position.y <= -0x180000) {
             destroyEntity(self);
         }
@@ -575,26 +583,26 @@ void WeatherMobile_State1_Unknown3(void)
         }
     }
     else {
-        if (!--self->timer2) {
+        if (!--self->lightsTimer) {
             SPZ2Setup->fgLow->scrollInfo[0].deform  = false;
             SPZ2Setup->fgHigh->scrollInfo[0].deform = false;
             EntityWeatherMobile *parent             = (EntityWeatherMobile *)self->parent;
             if (parent->health > 0)
-                parent->state = WeatherMobile_State_Unknown3;
+                parent->state = WeatherMobile_State_HandleMovement;
         }
     }
 }
 
-void WeatherMobile_State2_Unknown1(void)
+void WeatherMobile_StateWindManager_SetupWind(void)
 {
     RSDK_THIS(WeatherMobile);
 
     if (!(Zone->timer & 3)) {
-        for (int i = 0; i < 4; ++i) {
-            int x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
-            int y                      = self->position.y + 0xD00000;
+        for (int32 i = 0; i < 4; ++i) {
+            int32 x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
+            int32 y                      = self->position.y + 0xD00000;
             EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND), x, y);
-            if (child->animator1.animationID == 13)
+            if (child->mainAnimator.animationID == 13)
                 child->velocity.y = self->velocity.y;
             else
                 child->velocity.y = self->velocity.y >> 1;
@@ -603,14 +611,14 @@ void WeatherMobile_State2_Unknown1(void)
 
     if (!self->timer) {
         EntityWeatherMobile *parent = (EntityWeatherMobile *)self->parent;
-        parent->state               = WeatherMobile_State_Unknown4;
+        parent->state               = WeatherMobile_State_WindAttack;
         ++self->timer;
     }
 
     if (self->velocity.y <= -0x180000) {
         self->timer = 0;
         Zone->cameraBoundsT[0] -= 128;
-        self->state = WeatherMobile_State2_Unknown2;
+        self->state = WeatherMobile_StateWindManager_StrongWind;
         foreach_active(TVPole, pole) { pole->state = TVPole_State_CheckGrab; }
     }
     else {
@@ -618,16 +626,16 @@ void WeatherMobile_State2_Unknown1(void)
     }
 }
 
-void WeatherMobile_State2_Unknown2(void)
+void WeatherMobile_StateWindManager_StrongWind(void)
 {
     RSDK_THIS(WeatherMobile);
 
     if (!(Zone->timer & 3)) {
-        for (int i = 0; i < 4; ++i) {
-            int x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
-            int y                      = self->position.y + 0xD00000;
+        for (int32 i = 0; i < 4; ++i) {
+            int32 x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
+            int32 y                      = self->position.y + 0xD00000;
             EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND), x, y);
-            if (child->animator1.animationID == 13)
+            if (child->mainAnimator.animationID == 13)
                 child->velocity.y = self->velocity.y;
             else
                 child->velocity.y = self->velocity.y >> 1;
@@ -646,22 +654,22 @@ void WeatherMobile_State2_Unknown2(void)
 
     if (++self->timer == 180) {
         EntityWeatherMobile *parent = (EntityWeatherMobile *)self->parent;
-        parent->state               = WeatherMobile_State_Unknown3;
+        parent->state               = WeatherMobile_State_HandleMovement;
         self->timer               = 0;
-        self->state               = WeatherMobile_State2_Unknown3;
+        self->state               = WeatherMobile_StateWindManager_FinishWind;
     }
 }
 
-void WeatherMobile_State2_Unknown3(void)
+void WeatherMobile_StateWindManager_FinishWind(void)
 {
     RSDK_THIS(WeatherMobile);
 
     if (!(Zone->timer & 3)) {
-        for (int i = 0; i < 4; ++i) {
-            int x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
-            int y                      = self->position.y + 0xD00000;
+        for (int32 i = 0; i < 4; ++i) {
+            int32 x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
+            int32 y                      = self->position.y + 0xD00000;
             EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND), x, y);
-            if (child->animator1.animationID == 13)
+            if (child->mainAnimator.animationID == 13)
                 child->velocity.y = self->velocity.y;
             else
                 child->velocity.y = self->velocity.y >> 1;
@@ -678,26 +686,26 @@ void WeatherMobile_State2_Unknown3(void)
     }
 }
 
-void WeatherMobile_State3_Unknown(void)
+void WeatherMobile_State_Wind(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->mainAnimator);
     self->position.y += self->velocity.y;
 
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }
 
-void WeatherMobile_State4_Unknown(void)
+void WeatherMobile_State_RainManager(void)
 {
     RSDK_THIS(WeatherMobile);
     self->angle = RSDK.Sin512(self->timer++) >> 4;
 
     if (!(Zone->timer & 1)) {
-        for (int i = 0; i < 4; ++i) {
-            int x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
-            int y                      = self->position.y - 0x800000;
+        for (int32 i = 0; i < 4; ++i) {
+            int32 x                      = self->position.x + RSDK.Rand(-0x1C00000, 0x1C00000);
+            int32 y                      = self->position.y - 0x800000;
             EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_RAIN), x, y);
             child->angle               = self->angle;
             child->rotation            = -2 * self->angle;
@@ -709,43 +717,44 @@ void WeatherMobile_State4_Unknown(void)
         CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_CLOUD), RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x,
                       WeatherMobile->boundsB - 0x480000);
     }
+
     if (self->timer == 360)
         destroyEntity(self);
 }
 
-void WeatherMobile_State5_Unknown1(void)
+void WeatherMobile_State_RainDrop(void)
 {
     RSDK_THIS(WeatherMobile);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->mainAnimator);
 
     self->position.x += self->groundVel * RSDK.Sin256(self->angle);
     self->position.y += self->groundVel * RSDK.Cos256(self->angle);
     self->groundVel += 0x80;
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true)) {
-        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 20, &self->animator1, true, 0);
-        self->state = WeatherMobile_State5_Unknown2;
+        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 20, &self->mainAnimator, true, 0);
+        self->state = WeatherMobile_State_RainDropSplash;
     }
     else if (++self->timer > 180) {
         destroyEntity(self);
     }
 }
 
-void WeatherMobile_State5_Unknown2(void)
+void WeatherMobile_State_RainDropSplash(void)
 {
     RSDK_THIS(WeatherMobile);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->mainAnimator);
 
-    if (self->animator1.frameID == self->animator1.frameCount - 1)
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1)
         destroyEntity(self);
 }
 
-void WeatherMobile_State6_Unknown1(void)
+void WeatherMobile_StateCloud_Idle(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 2, 9);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 9);
 
     if (self->alpha < 0x100)
         self->alpha += 0x10;
@@ -755,34 +764,34 @@ void WeatherMobile_State6_Unknown1(void)
 
     if (++self->timer == 60) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 16, &self->animator1, true, 0);
-        self->state = WeatherMobile_State6_Unknown2;
+        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 16, &self->mainAnimator, true, 0);
+        self->state = WeatherMobile_StateCloud_ShowTell;
     }
 }
 
-void WeatherMobile_State6_Unknown2(void)
+void WeatherMobile_StateCloud_ShowTell(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 2, 9);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 9);
 
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         RSDK.PlaySfx(WeatherMobile->sfxLightning, false, 255);
-        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 17, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 18, &self->animator5, true, 0);
-        self->stateDraw = WeatherMobile_StateDraw6_Unknown1;
-        self->state     = WeatherMobile_State6_Unknown3;
+        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 17, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 18, &self->decorAnimator, true, 0);
+        self->stateDraw = WeatherMobile_Draw_Lightning;
+        self->state     = WeatherMobile_StateCloud_Strike;
     }
 }
 
-void WeatherMobile_State6_Unknown3(void)
+void WeatherMobile_StateCloud_Strike(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator5);
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 2, 9);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->decorAnimator);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 9);
 
     if (++self->timer == 4) {
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
@@ -793,26 +802,25 @@ void WeatherMobile_State6_Unknown3(void)
     if (self->timer > 2 && self->timer < 5) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) 
                 Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
-            }
         }
     }
 
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 15, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 15, &self->mainAnimator, true, 0);
         self->stateDraw = 0;
-        self->state     = WeatherMobile_State6_Unknown4;
+        self->state     = WeatherMobile_StateCloud_FadeAway;
     }
 }
 
-void WeatherMobile_State6_Unknown4(void)
+void WeatherMobile_StateCloud_FadeAway(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 2, 9);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 2, 9);
 
     if (self->alpha <= 0)
         destroyEntity(self);
@@ -824,7 +832,7 @@ void WeatherMobile_State_Defeated(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(WeatherMobile->sfxExplosion, false, 255);
@@ -840,7 +848,7 @@ void WeatherMobile_State_Defeated(void)
     switch (self->timer) {
         case 48:
             debris                = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
-            debris->animator      = self->animator6;
+            debris->animator      = self->radarDishLAnimator;
             debris->velocity.x    = -0x20000;
             debris->velocity.y    = -0x10000;
             debris->gravity       = 0x3800;
@@ -849,34 +857,36 @@ void WeatherMobile_State_Defeated(void)
             debris->updateRange.y = 0x800000;
 
             debris                = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
-            debris->animator      = self->animator7;
+            debris->animator      = self->radarDishRAnimator;
             debris->velocity.x    = 0x20000;
             debris->velocity.y    = -0x10000;
             debris->gravity       = 0x3800;
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator6, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator7, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->radarDishLAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->radarDishRAnimator, true, 0);
             break;
+
         case 96:
             Debris_FallFlickerAnimSetup(WeatherMobile->aniFrames, WeatherMobile->debrisInfo, 24);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->decorAnimator, true, 0);
             break;
+
         case 144:
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
             self->timer = 0;
-            self->state = WeatherMobile_State_Unknown6;
+            self->state = WeatherMobile_State_DefeatFall;
             WeatherTV_ShutdownTV();
             break;
     }
 }
 
-void WeatherMobile_State_Unknown6(void)
+void WeatherMobile_State_DefeatFall(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
@@ -884,23 +894,23 @@ void WeatherMobile_State_Unknown6(void)
     if (++self->timer == 38) {
         self->timer      = 0;
         self->velocity.y = 0;
-        self->state      = WeatherMobile_State_Unknown7;
+        self->state      = WeatherMobile_State_FleeRise;
     }
 }
 
-void WeatherMobile_State_Unknown7(void)
+void WeatherMobile_State_FleeRise(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (self->timer >= 48) {
-        self->drawPos.x  = self->position.x;
-        self->drawPos.y  = self->position.y;
+        self->origin.x  = self->position.x;
+        self->origin.y  = self->position.y;
         self->timer      = 0;
         self->velocity.y = 0;
         self->angle      = 0;
-        self->state      = WeatherMobile_State_Unknown8;
+        self->state      = WeatherMobile_State_FleeAdjust;
     }
     else {
         self->position.y += self->velocity.y;
@@ -909,30 +919,31 @@ void WeatherMobile_State_Unknown7(void)
     }
 }
 
-void WeatherMobile_State_Unknown8(void)
+void WeatherMobile_State_FleeAdjust(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 3, 11);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 3, 11);
+
     if (++self->timer == 8) {
         self->timer         = 0;
         self->velocity.y    = 0;
         self->direction     = FLIP_X;
         self->updateRange.x = 0x1000000;
-        self->state         = WeatherMobile_State_Unknown9;
+        self->state         = WeatherMobile_State_Flee;
     }
 }
 
-void WeatherMobile_State_Unknown9(void)
+void WeatherMobile_State_Flee(void)
 {
     RSDK_THIS(WeatherMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
-    self->position.y = BadnikHelpers_Oscillate(self->drawPos.y, 3, 11);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 3, 11);
 
     self->position.x += 0x40000;
-    self->drawPos.y -= 0x4000;
+    self->origin.y -= 0x4000;
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         RSDK.ResetEntityPtr(self, EggPrison->objectID, intToVoid(EGGPRISON_FLYING));
@@ -947,13 +958,13 @@ void WeatherMobile_EditorDraw(void)
     RSDK_THIS(WeatherMobile);
 
     self->drawFX = FX_FLIP;
-    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 4, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 0, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 6, &self->animator4, true, 0);
-    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 23, &self->animator5, true, 0);
-    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 21, &self->animator6, true, 0);
-    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 22, &self->animator7, true, 0);
-    WeatherMobile_StateDraw_Unknown1();
+    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 4, &self->seatAnimator, true, 0);
+    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 0, &self->eggmanAnimator, true, 0);
+    RSDK.SetSpriteAnimation(WeatherMobile->eggmanFrames, 6, &self->eggMobileAnimator, true, 0);
+    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 23, &self->decorAnimator, true, 0);
+    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 21, &self->radarDishLAnimator, true, 0);
+    RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 22, &self->radarDishRAnimator, true, 0);
+    WeatherMobile_Draw_Eggman();
 
     if (showGizmos()) {
         DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0);

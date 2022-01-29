@@ -9,7 +9,7 @@
 
 ObjectShutterbug *Shutterbug;
 
-//cleanup note: look in Unused/Wisp
+// cleanup note: look in Unused/Wisp
 
 void Shutterbug_Update(void)
 {
@@ -28,7 +28,7 @@ void Shutterbug_Draw(void)
     if (self->flickerTimer & 2) {
         self->inkEffect = INK_ADD;
         self->alpha     = 0x100;
-        RSDK.DrawSprite(&self->overlayAnim, NULL, false);
+        RSDK.DrawSprite(&self->overlayAnimator, NULL, false);
         self->inkEffect = INK_NONE;
     }
 }
@@ -38,6 +38,7 @@ void Shutterbug_Create(void *data)
     RSDK_THIS(Shutterbug);
     self->visible   = true;
     self->drawOrder = Zone->drawOrderHigh;
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -47,23 +48,23 @@ void Shutterbug_Create(void *data)
             self->range.y = 0x7FFF0000;
         }
         self->drawFX |= FX_FLIP;
-        self->focusBox.left   = (-self->range.x) >> 16;
-        self->focusBox.top    = (-self->range.y) >> 16;
-        self->focusBox.bottom = self->range.y >> 16;
-        self->focusBox.right  = self->range.x >> 16;
-        self->direction       = FLIP_X;
-        self->moveDir         = FLIP_X;
+        self->hitboxRange.left   = (-self->range.x) >> 16;
+        self->hitboxRange.top    = (-self->range.y) >> 16;
+        self->hitboxRange.bottom = self->range.y >> 16;
+        self->hitboxRange.right  = self->range.x >> 16;
+        self->direction          = FLIP_X;
+        self->moveDir            = FLIP_X;
         if (!self->snaps)
             self->numSnaps = 0xFF;
         else
             self->numSnaps = self->snaps;
-        self->focus     = NULL;
-        self->alpha     = 0xC0;
-        self->snapTimer = 16;
+        self->focusTarget = NULL;
+        self->alpha       = 0xC0;
+        self->snapTimer   = 16;
 
         RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &self->animator, true, 0);
-        RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &self->overlayAnim, true, 0);
-        self->state = Shutterbug_State_Create;
+        RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &self->overlayAnimator, true, 0);
+        self->state = Shutterbug_State_Setup;
     }
 }
 
@@ -73,16 +74,21 @@ void Shutterbug_StageLoad(void)
         Shutterbug->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Shutterbug.bin", SCOPE_STAGE);
     else
         Shutterbug->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Shutterbug.bin", SCOPE_STAGE);
-    Shutterbug->hitbox.left     = -15;
-    Shutterbug->hitbox.top      = -12;
-    Shutterbug->hitbox.right    = 15;
-    Shutterbug->hitbox.bottom   = 12;
-    Shutterbug->checkbox.left   = -160;
-    Shutterbug->checkbox.top    = -160;
-    Shutterbug->checkbox.right  = 160;
-    Shutterbug->checkbox.bottom = 160;
-    Shutterbug->pictureCount    = 0;
+
+    Shutterbug->hitboxBadnik.left   = -15;
+    Shutterbug->hitboxBadnik.top    = -12;
+    Shutterbug->hitboxBadnik.right  = 15;
+    Shutterbug->hitboxBadnik.bottom = 12;
+
+    Shutterbug->hitboxAchievement.left   = -160;
+    Shutterbug->hitboxAchievement.top    = -160;
+    Shutterbug->hitboxAchievement.right  = 160;
+    Shutterbug->hitboxAchievement.bottom = 160;
+
+    Shutterbug->pictureCount = 0;
+
     DEBUGMODE_ADD_OBJ(Shutterbug);
+
     Shutterbug->snapSfx = RSDK.GetSfx("SPZ/ShBugSnap.wav");
 }
 
@@ -110,48 +116,52 @@ void Shutterbug_CheckOnScreen(void)
     }
 }
 
-void Shutterbug_State_Create(void)
+void Shutterbug_State_Setup(void)
 {
     RSDK_THIS(Shutterbug);
 
-    self->active     = ACTIVE_NORMAL;
-    self->velocity.x = 0;
-    self->velocity.y = 0;
-    self->offset.x   = 0;
-    self->focus      = 0;
-    self->turnTimer  = 0;
-    self->state      = Shutterbug_State_FlyAround;
+    self->active      = ACTIVE_NORMAL;
+    self->velocity.x  = 0;
+    self->velocity.y  = 0;
+    self->offset.x    = 0;
+    self->focusTarget = NULL;
+    self->turnTimer   = 0;
+    self->state       = Shutterbug_State_FlyAround;
     Shutterbug_State_FlyAround();
 }
 
 void Shutterbug_State_FlyAround(void)
 {
     RSDK_THIS(Shutterbug);
-    if (self->snapTimer == 20 && self->focus) {
+
+    if (self->snapTimer == 20 && self->focusTarget) {
         self->flickerTimer = 8;
         RSDK.PlaySfx(Shutterbug->snapSfx, false, 255);
-        Shutterbug_IncrementPicCount();
+        Shutterbug_TakePicture();
     }
+
     if (!self->snapTimer--) {
-        if (self->focus)
+        if (self->focusTarget)
             --self->numSnaps;
+
         if (self->numSnaps < 0) {
-            if (self->focus && self->position.x >= self->focus->position.x)
+            if (self->focusTarget && self->position.x >= self->focusTarget->position.x)
                 self->velocity.x = 0x20000;
             else
                 self->velocity.x = -0x20000;
             self->velocity.y = -0x20000;
-            self->state      = Shutterbug_State_BasicMove;
+            self->state      = Shutterbug_State_FlyAway;
         }
         else {
             self->offset.x = 0;
             self->offset.y = 0;
-            if (self->focus)
+            if (self->focusTarget)
                 self->velocity.y = -0x10000;
             self->snapTimer = 96;
             self->state     = Shutterbug_State_ShakeFly;
         }
     }
+
     Shutterbug_HandleBodyAnim();
     Shutterbug_CheckFocus();
     Shutterbug_CheckOnScreen();
@@ -160,11 +170,13 @@ void Shutterbug_State_FlyAround(void)
 void Shutterbug_State_ShakeFly()
 {
     RSDK_THIS(Shutterbug);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    if (self->focus) {
-        self->offset.x = self->focus->position.x;
-        self->offset.y = self->focus->position.y;
+
+    if (self->focusTarget) {
+        self->offset.x = self->focusTarget->position.x;
+        self->offset.y = self->focusTarget->position.y;
     }
     else if (!self->offset.x) {
         self->offset.x = 0;
@@ -175,7 +187,7 @@ void Shutterbug_State_ShakeFly()
         self->offset.x = self->position.x + (self->offset.x << 17);
         self->offset.y = self->position.y + (self->offset.y << 17);
     }
-    // TODO: rmg-code this?
+
     if (self->offset.x >= self->position.x) {
         self->velocity.x += 0x1000;
         if (self->velocity.x > 0x20000)
@@ -188,6 +200,7 @@ void Shutterbug_State_ShakeFly()
             self->velocity.x = -0x20000;
         self->moveDir = FLIP_X;
     }
+
     if (self->offset.y >= self->position.y) {
         self->velocity.y += 0x1000;
         if (self->velocity.y > 0x20000)
@@ -198,12 +211,14 @@ void Shutterbug_State_ShakeFly()
         if (self->velocity.y < -0x20000)
             self->velocity.y = -0x20000;
     }
+
     if (!self->snapTimer--) {
         self->state      = Shutterbug_State_FlyAround;
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->snapTimer  = RSDK.Rand(0, 32) + 20;
     }
+
     if (!self->passThrough) {
         if (abs(self->velocity.x) <= abs(self->velocity.y)) {
             if (!Shutterbug_BounceY())
@@ -213,14 +228,16 @@ void Shutterbug_State_ShakeFly()
             Shutterbug_BounceY();
         }
     }
+
     Shutterbug_HandleBodyAnim();
     Shutterbug_CheckFocus();
     Shutterbug_CheckOnScreen();
 }
 
-void Shutterbug_State_BasicMove(void)
+void Shutterbug_State_FlyAway(void)
 {
     RSDK_THIS(Shutterbug);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     Shutterbug_HandleBodyAnim();
@@ -235,24 +252,24 @@ int Shutterbug_BounceX(void)
     // hi rmg here you may be wondering why the hell CMODE_FLOOR is used
     // oh lemme tell ya buddy i have no fuckin idea
 
-    int x   = (self->velocity.x <= 0) ? -0x90000 : 0x90000;
-    int res = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, x, 0x80000, false)
-              | RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, x, -0x80000, false);
-    if (res == 1)
+    int32 x         = (self->velocity.x <= 0) ? -0x90000 : 0x90000;
+    bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, x, 0x80000, false)
+                      || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, x, -0x80000, false);
+    if (collided)
         self->velocity.x = -self->velocity.x;
-    return res;
+    return collided;
 }
 int Shutterbug_BounceY(void)
 {
     RSDK_THIS(Shutterbug);
 
     // makes sense here though!
-    int y   = (self->velocity.y <= 0) ? -0x90000 : 0x90000;
-    int res = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, y, false)
-              | RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, y, false);
-    if (res == 1)
+    int32 y         = (self->velocity.y <= 0) ? -0x90000 : 0x90000;
+    bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, y, false)
+                      || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, y, false);
+    if (collided)
         self->velocity.y = -self->velocity.y;
-    return res;
+    return collided;
 }
 
 void Shutterbug_CheckFocus(void)
@@ -260,38 +277,40 @@ void Shutterbug_CheckFocus(void)
     RSDK_THIS(Shutterbug);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &self->focusBox)) {
-            if (!self->focus)
-                self->focus = player;
+        if (Player_CheckCollisionTouch(player, self, &self->hitboxRange)) {
+            if (!self->focusTarget) {
+                self->focusTarget = player;
+            }
             else {
                 // pick closest
-                if (abs(self->position.x - player->position.x) < abs(self->position.x - self->focus->position.x))
-                    self->focus = player;
+                if (abs(self->position.x - player->position.x) < abs(self->position.x - self->focusTarget->position.x))
+                    self->focusTarget = player;
             }
-            if (Player_CheckBadnikTouch(player, self, &Shutterbug->hitbox))
+
+            if (Player_CheckBadnikTouch(player, self, &Shutterbug->hitboxBadnik))
                 Player_CheckBadnikBreak(self, player, true);
         }
     }
 }
 
-void Shutterbug_IncrementPicCount(void)
+void Shutterbug_TakePicture(void)
 {
     RSDK_THIS(Shutterbug);
+
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Shutterbug->checkbox) && ++Shutterbug->pictureCount == 10)
+        if (Player_CheckCollisionTouch(player, self, &Shutterbug->hitboxAchievement) && ++Shutterbug->pictureCount == 10)
             API_UnlockAchievement("ACH_SPZ");
     }
 }
 
 void Shutterbug_HandleBodyAnim(void)
 {
-
     RSDK_THIS(Shutterbug);
 
     ++self->animator.timer;
     self->animator.timer &= 3;
-    int animTimer = self->animator.timer;
+
     if (!self->flickerTimer || self->turnTimer) {
         if (self->direction == self->moveDir) {
             if (self->turnTimer)
@@ -299,10 +318,10 @@ void Shutterbug_HandleBodyAnim(void)
         }
         else if (++self->turnTimer >= 9)
             self->direction = self->moveDir;
-        self->animator.frameID = (animTimer >> 1) + (self->turnTimer & ~1);
+        self->animator.frameID = (self->animator.timer >> 1) + (self->turnTimer & ~1);
     }
     else {
-        self->animator.frameID = (animTimer >> 1) + (((28 - self->flickerTimer--) >> 1) & ~1);
+        self->animator.frameID = (self->animator.timer >> 1) + (((28 - self->flickerTimer--) >> 1) & ~1);
     }
 }
 
@@ -311,7 +330,7 @@ void Shutterbug_EditorDraw(void)
 {
     RSDK_THIS(Shutterbug);
     RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &self->animator, true, 0);
-    RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &self->overlayAnim, true, 0);
+    RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &self->overlayAnimator, true, 0);
     self->drawFX = FX_FLIP;
 
     Shutterbug_Draw();

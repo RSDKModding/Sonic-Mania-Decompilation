@@ -21,9 +21,9 @@ struct ObjectHeavyGunner {
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-    bool32 field_14;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    bool32 stageWrapActive;
+    Hitbox hitboxMissileF;
+    Hitbox hitboxMissile;
     uint16 aniFrames;
     uint16 sfxFire;
     uint16 sfxJet;
@@ -38,10 +38,10 @@ struct ObjectHeavyGunner {
     uint16 sfxWooshOut;
     uint16 sfxFlip;
     uint16 sfxRumble;
-    int32 field_44;
-    int32 field_48;
-    int32 field_4C;
-    int32 field_50;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
 };
 
 // Entity Class
@@ -49,26 +49,26 @@ struct EntityHeavyGunner {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Entity *parent;
+    EntityHeavyGunner *parent;
     int32 timer;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
+    int32 flyInTimer;
+    int32 parentOffset;
+    int32 targetScale;
+    int32 nextRoboID;
     int32 type;
-    int32 field_7C;
-    int32 field_80;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
-    Animator animator8;
-    Animator animator9;
-    Animator animator10;
-    Animator animator11;
+    int32 missileID;
+    bool32 defeated; // prolly unused, this is set only after the entity is destroyed so...
+    Animator mainAnimator;
+    Animator pilotAnimator;
+    Animator frontAnimator;
+    Animator tBladeAnimator;
+    Animator rBladeAnimator;
+    Animator beaconAnimator;
+    Animator feetAnimator;
+    Animator feet2Animator;
+    Animator gunnerAnimator;
+    Animator armAnimator;
+    Animator exhaustAnimator;
 };
 
 // Object Struct
@@ -93,52 +93,52 @@ bool32 HeavyGunner_SurpriseCheckCB(void);
 bool32 HeavyGunner_BurnCheckCB(void);
 
 void HeavyGunner_HandleBGWrap(int multiplier);
-void HeavyGunner_Unknown5(void);
+void HeavyGunner_DestroyAllMissiles(void);
 
-void HeavyGunner_StateDraw_Unknown2(void);
-void HeavyGunner_StateDraw3_Unknown(void);
-void HeavyGunner_StateDraw6_Unknown(void);
-void HeavyGunner_StateDraw4_Unknown1(void);
-void HeavyGunner_StateDraw4_Unknown2(void);
+void HeavyGunner_Draw_Heli(void);
+void HeavyGunner_Draw_EggRobo(void);
+void HeavyGunner_Draw_Missile(void);
+void HeavyGunner_Draw_Simple(void);
+void HeavyGunner_Draw_FadeOut(void);
 
-void HeavyGunner_State_SetupArena(void);
-void HeavyGunner_State_Unknown3(void);
-void HeavyGunner_State_Unknown2(void);
+void HeavyGunner_StateManager_SetupArena(void);
+void HeavyGunner_StateManager_HandleStageWrap(void);
+void HeavyGunner_StateManager_HandlePathChange(void);
 
-void HeavyGunner_InputState_LockedP1(void);
-void HeavyGunner_InputState_LockedP2(void);
-void HeavyGunner_InputState_LockedP2_AI(void);
+void HeavyGunner_Input_LockedP1(void);
+void HeavyGunner_Input_LockedP2(void);
+void HeavyGunner_Input_LockedP2_AI(void);
 
-void HeavyGunner_State3_Unknown1(void);
-void HeavyGunner_State3_Unknown2(void);
-void HeavyGunner_State3_Unknown3(void);
-void HeavyGunner_State3_Unknown4(void);
+void HeavyGunner_StateEggRobo_Patrolling(void);
+void HeavyGunner_StateEggRobo_FlyIn(void);
+void HeavyGunner_StateEggRobo_ThrowGun(void);
+void HeavyGunner_StateEggRobo_ThrownGun(void);
 
-void HeavyGunner_State4_Unknown1(void);
-void HeavyGunner_State4_Unknown2(void);
+void HeavyGunner_StateGun_Thrown(void);
+void HeavyGunner_StateGun_Grabbed(void);
 
-void HeavyGunner_State6_Unknown1(void);
-void HeavyGunner_State6_Unknown2(void);
-void HeavyGunner_State6_Unknown3(void);
-void HeavyGunner_State6_Unknown4(void);
-void HeavyGunner_State6_Unknown5(void);
-void HeavyGunner_State6_Unknown6(void);
-void HeavyGunner_State6_Unknown7(void);
-void HeavyGunner_State6_Unknown8(void);
+void HeavyGunner_StateMissile_Launched(void);
+void HeavyGunner_StateMissile_BlastOff(void);
+void HeavyGunner_StateMissile_FindFloor(void);
+void HeavyGunner_StateMissile_AttackPlayer(void);
+void HeavyGunner_StateMissile_Malfunction(void);
+void HeavyGunner_StateMissile_ReturnToSender(void);
+void HeavyGunner_StateMissile_AttackRobo(void);
+void HeavyGunner_StateMissile_AttackGunner(void);
 
-void HeavyGunner_State2_Unknown1(void);
-void HeavyGunner_State2_Unknown2(void);
-void HeavyGunner_State2_Unknown3(void);
-void HeavyGunner_State2_Unknown4(void);
-void HeavyGunner_State2_Unknown5(void);
-void HeavyGunner_State2_Unknown6(void);
-void HeavyGunner_State2_Unknown7(void);
-void HeavyGunner_State2_Unknown8(void);
-void HeavyGunner_State2_Unknown9(void);
+void HeavyGunner_StateHeli_WaitForPlayer(void);
+void HeavyGunner_StateHeli_WooshIn(void);
+void HeavyGunner_StateHeli_FindFloor(void);
+void HeavyGunner_StateHeli_HandleAttacks(void);
+void HeavyGunner_StateHeli_ShotsFired(void);
+void HeavyGunner_StateHeli_EscapeMissile(void);
+void HeavyGunner_StateHeli_IncomingMissile(void);
+void HeavyGunner_StateHeli_Exploding(void);
+void HeavyGunner_StateHeli_ExplodeAndFall(void);
 
-void HeavyGunner_State7_Unknown1(void);
-void HeavyGunner_State7_Unknown2(void);
+void HeavyGunner_StateEscapeHBH_Hover(void);
+void HeavyGunner_StateEscapeHBH_FlyAway(void);
 
-void HeavyGunner_State2_Unknown10(void);
+void HeavyGunner_StateHeli_FadeOutDestroy(void);
 
 #endif //!OBJ_HEAVYGUNNER_H

@@ -16,14 +16,14 @@ typedef enum {
 // Object Class
 struct ObjectWeatherMobile {
     RSDK_OBJECT
-    TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0,
-                            0x28000, -0x20000, 4, 0,        -0x10000, -0x10000, 5, 0,        0x10000,  -0x10000, 6, 0,       -0x8000,  -0x10000 });
+    TABLE(int32 debrisInfo[29], { 4,        0, 0, -0x20000, -0x28000, 1, 0, -0x20000, -0x28000, 2, 0, 0x20000, -0x20000, 3, 0, 0x28000,
+                                  -0x20000, 4, 0, -0x10000, -0x10000, 5, 0, 0x10000,  -0x10000, 6, 0, -0x8000, -0x10000 });
     int32 boundsL;
     int32 boundsR;
     int32 boundsM;
     int32 boundsT;
     int32 boundsB;
-    int32 field_8C;
+    int32 currentAttack;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxCloud;
@@ -48,17 +48,17 @@ struct EntityWeatherMobile {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 timer2;
-    Vector2 drawPos;
+    int32 lightsTimer;
+    Vector2 origin;
     Entity *parent;
-    Entity *weatherTV;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
+    EntityWeatherTV *weatherTV;
+    Animator mainAnimator;
+    Animator seatAnimator;
+    Animator eggmanAnimator;
+    Animator eggMobileAnimator;
+    Animator decorAnimator;
+    Animator radarDishLAnimator;
+    Animator radarDishRAnimator;
     Hitbox hitbox;
 };
 
@@ -83,41 +83,41 @@ void WeatherMobile_HandleAnimations(void);
 void WeatherMobile_CheckPlayerCollisions(void);
 void WeatherMobile_HandleDefeat(void);
 
-void WeatherMobile_StateDraw_Unknown1(void);
-void WeatherMobile_StateDraw1_Unknown(void);
-void WeatherMobile_StateDraw6_Unknown1(void);
+void WeatherMobile_Draw_Eggman(void);
+void WeatherMobile_Draw_Lights(void);
+void WeatherMobile_Draw_Lightning(void);
 
 void WeatherMobile_State_SetupArena(void);
 void WeatherMobile_State_StartBoss(void);
-void WeatherMobile_State_Unknown2(void);
-void WeatherMobile_State_Unknown3(void);
-void WeatherMobile_State_Unknown4(void);
-void WeatherMobile_State_Unknown5(void);
+void WeatherMobile_State_EnterEggman(void);
+void WeatherMobile_State_HandleMovement(void);
+void WeatherMobile_State_WindAttack(void);
+void WeatherMobile_State_SunAttack(void);
 
-void WeatherMobile_State1_Unknown1(void);
-void WeatherMobile_State1_Unknown2(void);
-void WeatherMobile_State1_Unknown3(void);
+void WeatherMobile_StateLights_EnterLights(void);
+void WeatherMobile_StateLights_Shine(void);
+void WeatherMobile_StateLights_DimAndDissapear(void);
 
-void WeatherMobile_State2_Unknown1(void);
-void WeatherMobile_State2_Unknown2(void);
-void WeatherMobile_State2_Unknown3(void);
+void WeatherMobile_StateWindManager_SetupWind(void);
+void WeatherMobile_StateWindManager_StrongWind(void);
+void WeatherMobile_StateWindManager_FinishWind(void);
 
-void WeatherMobile_State3_Unknown(void);
+void WeatherMobile_State_Wind(void);
 
-void WeatherMobile_State4_Unknown(void);
+void WeatherMobile_State_RainManager(void);
 
-void WeatherMobile_State5_Unknown1(void);
-void WeatherMobile_State5_Unknown2(void);
+void WeatherMobile_State_RainDrop(void);
+void WeatherMobile_State_RainDropSplash(void);
 
-void WeatherMobile_State6_Unknown1(void);
-void WeatherMobile_State6_Unknown2(void);
-void WeatherMobile_State6_Unknown3(void);
-void WeatherMobile_State6_Unknown4(void);
+void WeatherMobile_StateCloud_Idle(void);
+void WeatherMobile_StateCloud_ShowTell(void);
+void WeatherMobile_StateCloud_Strike(void);
+void WeatherMobile_StateCloud_FadeAway(void);
 
 void WeatherMobile_State_Defeated(void);
-void WeatherMobile_State_Unknown6(void);
-void WeatherMobile_State_Unknown7(void);
-void WeatherMobile_State_Unknown8(void);
-void WeatherMobile_State_Unknown9(void);
+void WeatherMobile_State_DefeatFall(void);
+void WeatherMobile_State_FleeRise(void);
+void WeatherMobile_State_FleeAdjust(void);
+void WeatherMobile_State_Flee(void);
 
 #endif //!OBJ_WEATHERMOBILE_H

@@ -10,21 +10,21 @@ struct ObjectTVFlyingBattery {
     uint16 sfxFlyover;
     bool32 isPlayingFlyover;
     int32 flyoverChannel;
-    Entity *weatherTV;
+    EntityWeatherTV *weatherTV;
 };
 
 // Entity Class
 struct EntityTVFlyingBattery {
     RSDK_ENTITY
-    int32 field_58;
-    Vector2 field_5C;
-    int32 field_64;
+    StateMachine(state);
+    Vector2 startPos;
+    int32 unused1;
     int32 oscillation;
-    int32 field_6C;
-    int32 field_70;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 unused2;
+    int32 unused3;
+    Animator shipAnimator;
+    Animator bladeLAnimator;
+    Animator bladeRAnimator;
 };
 
 // Object Struct

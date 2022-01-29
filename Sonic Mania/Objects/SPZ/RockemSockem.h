@@ -22,10 +22,10 @@ struct EntityRockemSockem {
     Vector2 drawPos;
     Vector2 startPos;
     Vector2 jointPositions[RockemSockem_coilCount];
-    Vector2 unknownPositions[RockemSockem_coilCount];
+    Vector2 unused1[RockemSockem_coilCount];
     int32 jointRotations[RockemSockem_coilCount];
     int32 angleVel;
-    int32 unused;
+    int32 unused2;
     Animator baseAnimator;
     Animator jointAnimator;
     Animator ballAnimator;

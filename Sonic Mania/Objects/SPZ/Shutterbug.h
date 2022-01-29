@@ -5,9 +5,9 @@
 
 // Object Class
 struct ObjectShutterbug {
-	RSDK_OBJECT
-	Hitbox hitbox;
-	Hitbox checkbox;
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitboxAchievement;
 	uint32 pictureCount;
 	uint16 aniFrames;
 	uint16 snapSfx;
@@ -15,22 +15,22 @@ struct ObjectShutterbug {
 
 // Entity Class
 struct EntityShutterbug {
-	RSDK_ENTITY
-	StateMachine(state);
-	uint8 snaps;
-	bool32 passThrough;
-	int32 snapTimer;
-	uint32 numSnaps;
-	EntityPlayer *focus;
-	Vector2 spawnPos;
-	Vector2 range;
-	Vector2 offset;
-	uint8 turnTimer;
-	uint8 moveDir;
-	uint8 flickerTimer;
-	Hitbox focusBox;
-	Animator animator;
-	Animator overlayAnim;
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 snaps;
+    bool32 passThrough;
+    int32 snapTimer;
+    uint32 numSnaps;
+    EntityPlayer *focusTarget;
+    Vector2 spawnPos;
+    Vector2 range;
+    Vector2 offset;
+    uint8 turnTimer;
+    uint8 moveDir;
+    uint8 flickerTimer;
+    Hitbox hitboxRange;
+    Animator animator;
+    Animator overlayAnimator;
 };
 
 // Object Struct
@@ -54,18 +54,18 @@ void Shutterbug_DebugDraw(void);
 
 void Shutterbug_CheckOnScreen(void);
 
-void Shutterbug_State_Create(void);
+void Shutterbug_State_Setup(void);
 
 void Shutterbug_State_FlyAround(void);
 void Shutterbug_State_ShakeFly(void);
-void Shutterbug_State_BasicMove(void);
+void Shutterbug_State_FlyAway(void);
 
 int Shutterbug_BounceX(void);
 int Shutterbug_BounceY(void);
 
 void Shutterbug_CheckFocus(void);
 
-void Shutterbug_IncrementPicCount(void);
+void Shutterbug_TakePicture(void);
 void Shutterbug_HandleBodyAnim(void);
 
 // Extra Entity Functions

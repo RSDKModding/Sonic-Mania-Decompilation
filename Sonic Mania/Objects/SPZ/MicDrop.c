@@ -23,16 +23,16 @@ void MicDrop_Draw(void)
 {
     RSDK_THIS(MicDrop);
 
-    SpriteFrame *frame      = RSDK.GetFrame(MicDrop->aniFrames, 1, self->animator2.frameID);
-    SpriteFrame *otherFrame = RSDK.GetFrame(MicDrop->aniFrames, 1, self->animator2.frameID + 4);
+    SpriteFrame *frame      = RSDK.GetFrame(MicDrop->aniFrames, 1, self->wireAnimator.frameID);
+    SpriteFrame *otherFrame = RSDK.GetFrame(MicDrop->aniFrames, 1, self->wireAnimator.frameID + 4);
 
-    if (self->animator2.frameID == 3) {
+    if (self->wireAnimator.frameID == 3) {
         RSDK.DrawLine(self->startPos.x, self->startPos.y, self->position.x, self->position.y, 0x081828, 0, INK_NONE, false);
         RSDK.DrawLine(self->startPos.x - 0x10000, self->startPos.y, self->position.x - 0x10000, self->position.y, 0x204078, 0, INK_NONE,
                       false);
     }
     else {
-        int distance = (self->position.y - self->startPos.y) >> 16;
+        int32 distance = (self->position.y - self->startPos.y) >> 16;
         if (distance > 58) {
             frame->height = otherFrame->height;
             frame->pivotY = otherFrame->pivotY;
@@ -48,8 +48,8 @@ void MicDrop_Draw(void)
         }
     }
 
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->wireAnimator, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 }
 
 void MicDrop_Create(void *data)
@@ -64,8 +64,8 @@ void MicDrop_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->drawFX        = FX_ROTATE | FX_FLIP;
-    RSDK.SetSpriteAnimation(MicDrop->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(MicDrop->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(MicDrop->aniFrames, 0, &self->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(MicDrop->aniFrames, 1, &self->wireAnimator, true, 0);
     self->state = MicDrop_State_Setup;
 }
 
@@ -75,15 +75,19 @@ void MicDrop_StageLoad(void)
         MicDrop->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/MicDrop.bin", SCOPE_STAGE);
     else
         MicDrop->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/MicDrop.bin", SCOPE_STAGE);
-    MicDrop->hitbox1.left   = -12;
-    MicDrop->hitbox1.top    = -15;
-    MicDrop->hitbox1.right  = 12;
-    MicDrop->hitbox1.bottom = 15;
-    MicDrop->hitbox2.left   = -128;
-    MicDrop->hitbox2.top    = 0;
-    MicDrop->hitbox2.right  = 128;
-    MicDrop->hitbox2.bottom = 256;
+
+    MicDrop->hitboxBadnik.left   = -12;
+    MicDrop->hitboxBadnik.top    = -15;
+    MicDrop->hitboxBadnik.right  = 12;
+    MicDrop->hitboxBadnik.bottom = 15;
+
+    MicDrop->hitboxRange.left   = -128;
+    MicDrop->hitboxRange.top    = 0;
+    MicDrop->hitboxRange.right  = 128;
+    MicDrop->hitboxRange.bottom = 256;
+
     DEBUGMODE_ADD_OBJ(MicDrop);
+
     MicDrop->sfxElectrify = RSDK.GetSfx("Stage/Electrify.wav");
 }
 
@@ -105,21 +109,22 @@ void MicDrop_CheckPlayerCollisions(void)
 {
     RSDK_THIS(MicDrop);
 
-    int storeX = self->position.x;
-    int storeY = self->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
     self->position.x = (((self->radius + 25) * RSDK.Cos512(self->angle + 128)) << 7) + self->startPos.x;
     self->position.y = (((self->radius + 25) * RSDK.Sin512(self->angle + 128)) << 7) + self->startPos.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &MicDrop->hitbox1)) {
-            if (self->animator1.animationID != 3 || player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) 
+        if (Player_CheckBadnikTouch(player, self, &MicDrop->hitboxBadnik)) {
+            if (self->bodyAnimator.animationID != 3 || player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) 
                 Player_CheckBadnikBreak(self, player, true);
             else 
                 Player_CheckHit(player, self);
         }
     }
+
     self->position.x = storeX;
     self->position.y = storeY;
 }
@@ -144,26 +149,26 @@ void MicDrop_State_Setup(void)
     self->velocity.y = 0;
     self->direction  = FLIP_NONE;
     self->timer      = 0;
-    self->field_A8   = 0;
+    self->swingPos   = 0;
     self->angle      = 0;
     self->rotation   = 0;
-    self->state      = MicDrop_State_Unknown1;
-    MicDrop_State_Unknown1();
+    self->state      = MicDrop_State_CheckForPlayer;
+    MicDrop_State_CheckForPlayer();
 }
 
-void MicDrop_State_Unknown1(void)
+void MicDrop_State_CheckForPlayer(void)
 {
     RSDK_THIS(MicDrop);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MicDrop->hitbox2))
-            self->state = MicDrop_State_Unknown2;
+        if (Player_CheckCollisionTouch(player, self, &MicDrop->hitboxRange))
+            self->state = MicDrop_State_DropDown;
     }
     MicDrop_CheckPlayerCollisions();
 }
 
-void MicDrop_State_Unknown2(void)
+void MicDrop_State_DropDown(void)
 {
     RSDK_THIS(MicDrop);
 
@@ -172,70 +177,73 @@ void MicDrop_State_Unknown2(void)
     self->radius = (self->position.y - self->startPos.y) >> 16;
 
     if (self->radius >= 0x20000)
-        self->animator1.frameID = 3;
+        self->bodyAnimator.frameID = 3;
 
     if (self->radius >= self->distance) {
         self->radius            = self->distance;
         self->position.y        = self->startPos.y + (self->distance << 16);
-        self->animator1.frameID = 4;
-        self->state             = MicDrop_State_Unknown3;
+        self->bodyAnimator.frameID = 4;
+        self->state             = MicDrop_State_DropRecoil;
     }
     MicDrop_CheckPlayerCollisions();
 }
 
-void MicDrop_State_Unknown3(void)
+void MicDrop_State_DropRecoil(void)
 {
     RSDK_THIS(MicDrop);
 
     switch (++self->timer) {
         case 2:
-            self->animator2.frameID = 1;
-            self->animator1.frameID = 5;
+            self->wireAnimator.frameID = 1;
+            self->bodyAnimator.frameID = 5;
             break;
+
         case 4:
-            self->animator2.frameID = 2;
-            self->animator1.frameID = 1;
+            self->wireAnimator.frameID = 2;
+            self->bodyAnimator.frameID = 1;
             break;
+
         case 6:
-            self->animator2.frameID = 3;
-            self->animator1.frameID = 0;
+            self->wireAnimator.frameID = 3;
+            self->bodyAnimator.frameID = 0;
+
             self->timer             = 0;
-            self->state             = MicDrop_State_Unknown4;
+            self->state             = MicDrop_State_Idle;
             break;
     }
     MicDrop_CheckPlayerCollisions();
     MicDrop_CheckOnScreen();
 }
 
-void MicDrop_State_Unknown4(void)
+void MicDrop_State_Idle(void)
 {
     RSDK_THIS(MicDrop);
 
     if (++self->timer >= 30) {
-        self->field_9C = 64;
-        self->field_A0 = 4;
-        self->state    = MicDrop_State_Unknown5;
+        self->swingSpeed = 64;
+        self->swingVel = 4;
+        self->state    = MicDrop_State_Swinging;
     }
     MicDrop_CheckPlayerCollisions();
     MicDrop_CheckOnScreen();
 }
 
-void MicDrop_State_Unknown5(void)
+void MicDrop_State_Swinging(void)
 {
     RSDK_THIS(MicDrop);
 
-    self->field_A8 += self->field_9C;
-    if (self->field_A8 < 0) {
-        self->field_A0 = 1;
-        self->field_A8 -= self->field_9C;
-        self->field_9C = self->field_9C >> 1;
-        self->state    = MicDrop_State_Unknown6;
-        MicDrop_State_Unknown6();
+    self->swingPos += self->swingSpeed;
+    if (self->swingPos < 0) {
+        self->swingVel = 1;
+        self->swingPos -= self->swingSpeed;
+        self->swingSpeed = self->swingSpeed >> 1;
+        self->state    = MicDrop_State_Electrify;
+        MicDrop_State_Electrify();
     }
     else {
-        self->rotation   = self->field_A8 >> 4;
+        self->rotation   = self->swingPos >> 4;
         self->angle      = self->rotation >> 2;
-        self->field_9C   = self->field_9C - self->field_A0;
+        self->swingSpeed   = self->swingSpeed - self->swingVel;
         self->position.x = (self->radius << 7) * RSDK.Cos512(self->angle + 128) + self->startPos.x;
         self->position.y = (self->radius << 7) * RSDK.Sin512(self->angle + 128) + self->startPos.y;
         MicDrop_CheckPlayerCollisions();
@@ -243,34 +251,37 @@ void MicDrop_State_Unknown5(void)
     }
 }
 
-void MicDrop_State_Unknown6(void)
+void MicDrop_State_Electrify(void)
 {
     RSDK_THIS(MicDrop);
 
-    self->field_A8 += self->field_9C;
-    self->angle    = self->field_A8 >> 4;
+    self->swingPos += self->swingSpeed;
+    self->angle    = self->swingPos >> 4;
     self->rotation = self->angle;
     if (self->angle >= 0)
-        self->field_9C -= self->field_A0;
+        self->swingSpeed -= self->swingVel;
     else
-        self->field_9C += self->field_A0;
+        self->swingSpeed += self->swingVel;
     self->position.x = (self->radius << 7) * RSDK.Cos512(self->angle + 128) + self->startPos.x;
     self->position.y = (self->radius << 7) * RSDK.Sin512(self->angle + 128) + self->startPos.y;
 
     switch (++self->timer) {
-        case 60: RSDK.SetSpriteAnimation(MicDrop->aniFrames, 2, &self->animator1, true, 0); break;
+        case 60: RSDK.SetSpriteAnimation(MicDrop->aniFrames, 2, &self->bodyAnimator, true, 0); break;
+
         case 90:
-            RSDK.PlaySfx(MicDrop->sfxElectrify, false, 255);
-            RSDK.SetSpriteAnimation(MicDrop->aniFrames, 3, &self->animator1, true, 0);
+            RSDK.PlaySfx(MicDrop->sfxElectrify, false, 0xFF);
+            RSDK.SetSpriteAnimation(MicDrop->aniFrames, 3, &self->bodyAnimator, true, 0);
             break;
+
         case 120:
             self->timer = 0;
-            RSDK.SetSpriteAnimation(MicDrop->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(MicDrop->aniFrames, 0, &self->bodyAnimator, true, 0);
             break;
     }
 
     if (self->timer >= 60)
-        RSDK.ProcessAnimation(&self->animator1);
+        RSDK.ProcessAnimation(&self->bodyAnimator);
+
     MicDrop_CheckPlayerCollisions();
     MicDrop_CheckOnScreen();
 }

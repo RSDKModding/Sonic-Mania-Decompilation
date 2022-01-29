@@ -296,7 +296,7 @@ void PopcornMachine_State_Shaking(void)
     if (self->timer == 160) {
         foreach_active(PopcornKernel, kernel)
         {
-            kernel->state      = PopcornKernel_Unknown2;
+            kernel->state      = PopcornKernel_State_RiseUp;
             kernel->velocity.x = 0;
             kernel->velocity.y = RSDK.Rand(-0xA0000, -0x60000);
             kernel->maxY       = self->position.y - (0xA00000 * self->height) - 0xD00000;
