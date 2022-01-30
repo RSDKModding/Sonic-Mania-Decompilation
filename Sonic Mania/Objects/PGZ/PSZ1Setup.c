@@ -155,7 +155,7 @@ void PSZ1Setup_StaticUpdate(void)
                     isLowLayer = false;
                 }
 
-                if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
+                if (RSDK.GetTileFlags(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
                         RSDK_THIS_GEN();
                         EntityPetalPile *pile = CREATE_ENTITY(PetalPile, self, player->position.x, player->position.y + (playerHitbox->bottom << 16));

@@ -6,6 +6,8 @@
 typedef enum { OOZ_WARPDOOR_EFFECT_TO_SUB = 1, OOZ_WARPDOOR_EFFECT_FROM_SUB = 2 } OOZWarpDoorEffects;
 typedef enum { OOZSETUP_FLAMES, OOZSETUP_FADE } OOZSetupTypes;
 
+typedef enum { OOZ_TFLAGS_NORMAL, OOZ_TFLAGS_OILPOOL, OOZ_TFLAGS_OILSTRIP, OOZ_TFLAGS_OILSLIDE, OOZ_TFLAGS_OILFALL } TileFlagsOOZ;
+
 // Object Class
 struct ObjectOOZSetup {
     RSDK_OBJECT
@@ -19,8 +21,8 @@ struct ObjectOOZSetup {
     STATIC(int32 aniTilesDelay, 60);
     TABLE(int32 aniTileDelays[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
     int32 swimmingPlayerCount;
-    int32 fadeTimer;
-    int32 flags;
+    int32 smogTimer;
+    int32 useSmogEffect;
     uint8 flameTimers[0x20000];
     uint8 *flameTimerPtrs[400];
     Vector2 flamePositions[400];
@@ -68,7 +70,7 @@ bool32 OOZSetup_CheckCB_Swim(void);
 
 void OOZSetup_Draw_Flames(void);
 void OOZSetup_HandleActiveFlames(void);
-bool32 OOZSetup_StartFire(int32 posY, int32 posX, int32 angle);
+bool32 OOZSetup_StartFire(int32 posX, int32 posY, int32 angle);
 
 void OOZSetup_GenericTriggerCB(void);
 

@@ -7,9 +7,9 @@
 struct ObjectMeterDroid {
     RSDK_OBJECT
     TABLE(int32 debrisSpeeds[21], { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxBoss;
+    Hitbox hitboxPropellor;
+    Hitbox hitboxWrench;
     int32 boundsL;
     int32 boundsR;
     int32 startX;
@@ -33,21 +33,19 @@ struct EntityMeterDroid {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 field_6C;
-    Vector2 field_70;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    Vector2 field_88;
-    Vector2 field_90;
-    Vector2 field_98;
-    int32 field_A0;
-    Entity *valvePtr;
-    Animator animator1;
-    Animator animator2;
-    Animator animator4;
-    Animator animator3;
+    int32 bgFadeAmount;
+    Vector2 origin;
+    Vector2 targetPos;
+    Vector2 moveVel;
+    Vector2 wrenchPos;
+    Vector2 wrenchMoveVel;
+    Vector2 wrenchMoveInc;
+    int32 moveRadius;
+    EntityValve *targetValve;
+    Animator mainAnimator;
+    Animator propellorAnimator;
+    Animator armAnimator;
+    Animator wrenchAnimator;
 };
 
 // Object Struct
@@ -67,32 +65,32 @@ void MeterDroid_EditorLoad(void);
 void MeterDroid_Serialize(void);
 
 // Extra Entity Functions
-void MeterDroid_CheckPlayerCollisions(void);
-void MeterDroid_CheckPlayerCollisions2(void);
-void MeterDroid_CheckPlayerCollisions3(void);
+void MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip(void);
+void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void);
+void MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip(void);
 void MeterDroid_Hit(void);
-void MeterDroid_Unknown5(void);
+void MeterDroid_GetTargetValve(void);
 void MeterDroid_PopPlatforms(void);
 
-void MeterDroid_StateDraw_Unknown1(void);
-void MeterDroid_StateDraw_Unknown3(void);
-void MeterDroid_StateDraw_Unknown2(void);
+void MeterDroid_Draw_Normal(void);
+void MeterDroid_Draw_SpinningValve(void);
+void MeterDroid_Draw_ThrownWrench(void);
 
 void MeterDroid_State_Setup(void);
-void MeterDroid_State_Unknown1(void);
-void MeterDroid_State_Unknown2(void);
-void MeterDroid_State_Unknown3(void);
-void MeterDroid_State_Unknown4(void);
-void MeterDroid_State_Unknown5(void);
-void MeterDroid_State_Unknown6(void);
-void MeterDroid_State_Unknown7(void);
-void MeterDroid_State_Unknown8(void);
-void MeterDroid_State_Unknown9(void);
-void MeterDroid_State_Unknown10(void);
-void MeterDroid_State_Unknown11(void);
-void MeterDroid_State_Unknown12(void);
-void MeterDroid_State_Unknown13(void);
-void MeterDroid_State_Die(void);
+void MeterDroid_State_StartFight(void);
+void MeterDroid_State_Idle(void);
+void MeterDroid_State_PickMoveDir(void);
+void MeterDroid_State_MoveRight(void);
+void MeterDroid_State_MoveLeft(void);
+void MeterDroid_State_ThrowWrench(void);
+void MeterDroid_State_ThrownWrench(void);
+void MeterDroid_State_CaughtWrench(void);
+void MeterDroid_State_MoveToValve(void);
+void MeterDroid_State_MoveIntoBG(void);
+void MeterDroid_State_TurningValve(void);
+void MeterDroid_State_StopTurningValve(void);
+void MeterDroid_State_WatchPlatformsPopUp(void);
+void MeterDroid_State_Destroyed(void);
 void MeterDroid_State_FinishAct(void);
 
 #endif //!OBJ_METERDROID_H

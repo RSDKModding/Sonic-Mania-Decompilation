@@ -13,12 +13,12 @@ void Smog_Update(void)
 {
     RSDK_THIS(Smog);
     if (Smog->forceEnabled) {
-        OOZSetup->fadeTimer = 0;
+        OOZSetup->smogTimer = 0;
         self->alpha         = 128;
         RSDK.SetLimitedFade(0, 1, 2, 224, 0, 255);
     }
     else {
-        if (OOZSetup->fadeTimer <= 600) {
+        if (OOZSetup->smogTimer <= 600) {
             if (self->alpha > 0) {
                 RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
                 self->alpha -= 8;
@@ -26,13 +26,13 @@ void Smog_Update(void)
             self->timer = 0;
         }
         else {
-            RSDK.SetLimitedFade(0, 1, 2, (OOZSetup->fadeTimer - 600) >> 2, 0, 255);
+            RSDK.SetLimitedFade(0, 1, 2, (OOZSetup->smogTimer - 600) >> 2, 0, 255);
             if (self->alpha < 0x80)
                 self->alpha++;
         }
     }
 
-    if (OOZSetup->fadeTimer > 1800) {
+    if (OOZSetup->smogTimer > 1800) {
         ++self->timer;
         foreach_active(Player, player)
         {
@@ -56,10 +56,10 @@ void Smog_LateUpdate(void) {}
 
 void Smog_StaticUpdate(void)
 {
-    globals->tempFlags = OOZSetup->flags;
+    globals->tempFlags = OOZSetup->useSmogEffect;
     if (Smog->starPostID != StarPost->postIDs[0]) {
         Smog->starPostID      = StarPost->postIDs[0];
-        globals->restartFlags = OOZSetup->flags;
+        globals->restartFlags = OOZSetup->useSmogEffect;
     }
 }
 
@@ -93,36 +93,29 @@ void Smog_Draw(void)
 void Smog_Create(void *data)
 {
     RSDK_THIS(Smog);
+
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->inkEffect = INK_ALPHA;
         self->drawOrder = Zone->hudDrawOrder - 1;
-        OOZSetup->fadeTimer = 0;
-        if (!(SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes)) {
-            Smog->starPostID      = 0;
-            globals->restartFlags = 1;
-            globals->tempFlags    = 1;
-            OOZSetup->flags       = 1;
+        OOZSetup->smogTimer = 0;
+
+        if (!(SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes)
+            || isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()) {
+            Smog->starPostID        = 0;
+            OOZSetup->useSmogEffect = true;
+            globals->restartFlags   = OOZSetup->useSmogEffect;
+            globals->tempFlags      = OOZSetup->useSmogEffect;
         }
         else {
-            if (isMainGameMode() && globals->enableIntro) {
-                if (!PlayerHelpers_CheckStageReload()) {
-                    Smog->starPostID      = 0;
-                    globals->restartFlags = 1;
-                    globals->tempFlags    = 1;
-                    OOZSetup->flags       = 1;
-                    return;
-                }
-            }
-
             if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
                 || SceneInfo->milliseconds != globals->tempMilliseconds) {
-                OOZSetup->flags = globals->restartFlags;
+                OOZSetup->useSmogEffect = globals->restartFlags;
                 Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
             else {
-                OOZSetup->flags = globals->tempFlags;
+                OOZSetup->useSmogEffect = globals->tempFlags;
                 Zone_StartFadeOut_MusicFade(10, 0x000000);
             }
         }

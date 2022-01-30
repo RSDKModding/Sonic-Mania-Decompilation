@@ -23,7 +23,7 @@ void SSZ2Setup_StaticUpdate(void)
             if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
-            if (RSDK.GetTileBehaviour(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
+            if (RSDK.GetTileFlags(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
                 EntityDebris *debris =
                     CREATE_ENTITY(Debris, Debris_State_Move, player->position.x, player->position.y + (hitbox->bottom << 16));
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);

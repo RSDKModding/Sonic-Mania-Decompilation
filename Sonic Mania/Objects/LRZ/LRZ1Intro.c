@@ -84,8 +84,8 @@ void LRZ1Intro_HandleShipExplosions(void)
     RSDK_THIS(LRZ1Intro);
 
     if (!(Zone->timer & 3)) {
-        int x                                                                = self->position.x + 0xE00000;
-        int y                                                                = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
+        int32 x                                                              = self->position.x + 0xE00000;
+        int32 y                                                              = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
     }
 
@@ -95,10 +95,10 @@ void LRZ1Intro_HandleShipExplosions(void)
             geyser->visible          = true;
             geyser->active           = ACTIVE_NORMAL;
             geyser->velocity.y       = 0x40000;
-            RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &geyser->animator1, true, 0);
-            RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &geyser->animator2, true, 0);
-            RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &geyser->animator3, true, 16);
-            geyser->state = LavaGeyser_State_Unknown3;
+            RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &geyser->plumeAnimator, true, 0);
+            RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &geyser->flowAnimator, true, 0);
+            RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &geyser->plumeLoopAnimator, true, 16);
+            geyser->state = LavaGeyser_State_Erupting;
         }
     }
 }
@@ -108,8 +108,8 @@ void LRZ1Intro_HandleExplosions(void)
     RSDK_THIS(LRZ1Intro);
 
     if (!(Zone->timer & 3)) {
-        int x = self->position.x + RSDK.Rand(-0xE00000, 0xE00000);
-        int y = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
+        int32 x = self->position.x + RSDK.Rand(-0xE00000, 0xE00000);
+        int32 y = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
     }
 }

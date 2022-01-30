@@ -15,7 +15,7 @@ struct EntitySwitchDoor {
     RSDK_ENTITY
     int32 go;
     bool32 reversible;
-    bool32 field_60;
+    bool32 activated;
     Animator animator;
 };
 

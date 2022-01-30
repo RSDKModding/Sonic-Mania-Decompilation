@@ -8,7 +8,7 @@ struct ObjectLavaFall {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    uint8 shouldPlayLavaSfx;
+    uint8 lavaSfxTimer;
     bool32 playingLavaSfx;
     uint16 sfxLava;
 };

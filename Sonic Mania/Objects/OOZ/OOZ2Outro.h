@@ -20,12 +20,7 @@ struct EntityOOZ2Outro {
     Vector2 moveOffset;
     Vector2 scrollOffset;
     int32 timer;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
+    Animator animator; // unused
     TileLayer *moveLayer;
     EntityEggPrison *prisonPtr;
     Vector2 prisonPos;
@@ -47,11 +42,11 @@ void OOZ2Outro_Serialize(void);
 
 // Extra Entity Functions
 void OOZ2Outro_StageFinishCB_Act2(void);
-void OOZ2Outro_Unknown2(void);
+void OOZ2Outro_State_SubFloat(void);
 void OOZ2Outro_CheckSkip(void);
-void OOZ2Outro_Unknown3(void);
-void OOZ2Outro_Unknown4(void);
-void OOZ2Outro_Unknown5(void);
+void OOZ2Outro_State_BoardSub(void);
+void OOZ2Outro_State_SubActivate(void);
+void OOZ2Outro_State_SubLaunch(void);
 
 #endif
 

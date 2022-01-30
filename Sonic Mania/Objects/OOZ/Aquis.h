@@ -6,9 +6,9 @@
 // Object Class
 struct ObjectAquis {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxShot;
 };
@@ -18,12 +18,12 @@ struct EntityAquis {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    uint8 field_60;
-    int32 timer2;
+    uint8 playerInRange;
+    int32 remainingTurns;
     Vector2 startPos;
     uint8 startDir;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator wingAnimator;
 };
 
 // Object Struct
@@ -50,11 +50,11 @@ void Aquis_CheckPlayerCollisions(void);
 void Aquis_CheckOnScreen(void);
 
 void Aquis_State_Setup(void);
-void Aquis_Unknown5(void);
-void Aquis_Unknown6(void);
-void Aquis_Unknown7(void);
-void Aquis_Unknown8(void);
-void Aquis_Unknown9(void);
+void Aquis_State_Idle(void);
+void Aquis_State_Moving(void);
+void Aquis_State_Shoot(void);
+void Aquis_State_Turning(void);
+void Aquis_State_Flee(void);
 
 void Aquis_State_Shot(void);
 

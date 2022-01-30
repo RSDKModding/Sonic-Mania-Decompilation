@@ -3,10 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    GASPLATFORM_INTERVAL,
+    GASPLATFORM_CONTACT,
+    GASPLATFORM_BOSS,
+}GasPlatformTypes;
+
 // Object Class
 struct ObjectGasPlatform {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxGas;
     Vector2 range;
     uint16 sfxGasPop;
     uint16 sfxSpring;
@@ -17,7 +23,7 @@ struct EntityGasPlatform {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
-    Animator animator2;
+    Animator gasAnimator;
 };
 
 // Object Struct
@@ -37,10 +43,10 @@ void GasPlatform_EditorLoad(void);
 void GasPlatform_Serialize(void);
 
 // Extra Entity Functions
-void GasPlatform_Unknown1(void);
-void GasPlatform_Unknown2(void);
-void GasPlatform_Unknown3(void);
-void GasPlatform_Unknown4(void);
+void GasPlatform_PopPlatform(void);
+void GasPlatform_State_Popped(void);
+void GasPlatform_State_SpringCooldown(void);
+void GasPlatform_State_Shaking(void);
 
 
 #endif //!OBJ_GASPLATFORM_H

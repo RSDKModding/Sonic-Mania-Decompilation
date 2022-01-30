@@ -6,9 +6,9 @@
 // Object Class
 struct ObjectOctus {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxProjectile;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxShot;
 };
@@ -18,10 +18,10 @@ struct EntityOctus {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    uint8 field_60;
+    uint8 unused1;
     Vector2 startPos;
     uint8 startDir;
-    int32 field_70;
+    int32 unused2;
     Animator animator;
 };
 
@@ -49,11 +49,11 @@ void Octus_CheckPlayerCollisions(void);
 void Octus_CheckOnScreen(void);
 
 void Octus_State_Setup(void);
-void Octus_Unknown5(void);
-void Octus_Unknown6(void);
-void Octus_Unknown7(void);
-void Octus_Unknown8(void);
-void Octus_Unknown9(void);
+void Octus_State_CheckPlayerInRange(void);
+void Octus_State_JumpDelay(void);
+void Octus_State_Jump(void);
+void Octus_State_Shoot(void);
+void Octus_State_Fall(void);
 void Octus_State_Shot(void);
 
 #endif //!OBJ_OCTUS_H

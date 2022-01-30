@@ -303,7 +303,7 @@ void RockDrill_State_Unknown3(void)
         self->position.y += self->velocity.y;
         uint16 tileLow  = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
         uint16 tileHigh = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
-        if (RSDK.GetTileBehaviour(tileLow, 0) == 1 || RSDK.GetTileBehaviour(tileHigh, 0) == 1) {
+        if (RSDK.GetTileFlags(tileLow, 0) == LRZ2_TFLAGS_LAVA || RSDK.GetTileFlags(tileHigh, 0) == LRZ2_TFLAGS_LAVA) {
             self->timer      = 0;
             self->velocity.y = 0x8000;
             self->drawOrder  = Zone->drawOrderLow - 1;

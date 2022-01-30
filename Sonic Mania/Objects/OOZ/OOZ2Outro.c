@@ -14,7 +14,7 @@ void OOZ2Outro_Update(void)
 {
     RSDK_THIS(OOZ2Outro);
 
-    Entity *boss = MegaOctus->bossPtr;
+    EntityMegaOctus *boss = MegaOctus->bossPtr;
     if (globals->gameMode < MODE_TIMEATTACK && boss && !boss->objectID) {
         self->scrollOffset.x = self->moveOffset.x & 0xFFFF0000;
         self->scrollOffset.y = self->moveOffset.y & 0xFFFF0000;
@@ -54,9 +54,9 @@ void OOZ2Outro_Create(void *data)
             self->active  = ACTIVE_BOUNDS;
             self->visible = false;
             if (!self->size.x)
-                self->size.x = 0x1A80000;
+                self->size.x = WIDE_SCR_XSIZE << 16;
             if (!self->size.y)
-                self->size.y = 0xF00000;
+                self->size.y = SCREEN_YSIZE << 16;
             self->moveLayer   = RSDK.GetSceneLayer(Zone->moveLayer);
             self->updateRange = self->size;
             foreach_all(EggPrison, prison)
@@ -65,7 +65,7 @@ void OOZ2Outro_Create(void *data)
                 self->prisonPos = prison->position;
             }
 
-            self->state = OOZ2Outro_Unknown2;
+            self->state = OOZ2Outro_State_SubFloat;
         }
         else {
             destroyEntity(self);
@@ -94,12 +94,12 @@ void OOZ2Outro_StageFinishCB_Act2(void)
         player->jumpHold   = false;
     }
 
-    foreach_active(OOZ2Outro, outro) { outro->state = OOZ2Outro_Unknown3; }
+    foreach_active(OOZ2Outro, outro) { outro->state = OOZ2Outro_State_BoardSub; }
 
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
 }
 
-void OOZ2Outro_Unknown2(void)
+void OOZ2Outro_State_SubFloat(void)
 {
     RSDK_THIS(OOZ2Outro);
     self->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
@@ -107,7 +107,7 @@ void OOZ2Outro_Unknown2(void)
 
 void OOZ2Outro_CheckSkip(void)
 {
-    if (ControllerInfo->keyStart.press && !(SceneInfo->state & 1)) {
+    if (ControllerInfo->keyStart.press && !(SceneInfo->state & ENGINESTATE_REGULAR)) {
         globals->suppressTitlecard = false;
         globals->suppressAutoMusic = false;
         globals->enableIntro       = false;
@@ -117,13 +117,13 @@ void OOZ2Outro_CheckSkip(void)
     }
 }
 
-void OOZ2Outro_Unknown3(void)
+void OOZ2Outro_State_BoardSub(void)
 {
     RSDK_THIS(OOZ2Outro);
     OOZ2Outro_CheckSkip();
     self->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
 
-    bool32 flag = false;
+    bool32 keepMoving = false;
     foreach_active(Player, player)
     {
         player->jumpPress = false;
@@ -134,16 +134,18 @@ void OOZ2Outro_Unknown3(void)
         else if (player->velocity.y > -0x20000) {
             player->jumpHold = false;
         }
+
         if (player->position.x > self->position.x - 0x100000 && player->velocity.x > 0x20000)
             player->right = false;
+
         if (player->position.x < self->position.x + 0x400000) {
-            if (player->right == false) {
+            if (!player->right) {
                 if (player->groundVel < 0x20000)
                     player->groundVel = 0x20000;
                 if (player->velocity.x < 0x20000)
                     player->velocity.x = 0x20000;
             }
-            flag |= true;
+            keepMoving |= true;
         }
         else {
             player->groundVel  = 0;
@@ -152,11 +154,12 @@ void OOZ2Outro_Unknown3(void)
         }
     }
 
-    if (!flag)
+    if (!keepMoving)
         ++self->timer;
+
     if (self->timer > 60) {
         self->timer = 0;
-        self->state = OOZ2Outro_Unknown4;
+        self->state = OOZ2Outro_State_SubActivate;
         foreach_active(Player, player)
         {
             player->groundVel  = 0;
@@ -172,7 +175,7 @@ void OOZ2Outro_Unknown3(void)
     }
 }
 
-void OOZ2Outro_Unknown4(void)
+void OOZ2Outro_State_SubActivate(void)
 {
     RSDK_THIS(OOZ2Outro);
     OOZ2Outro_CheckSkip();
@@ -189,12 +192,12 @@ void OOZ2Outro_Unknown4(void)
     if (self->timer > 180) {
         self->timer      = 0;
         self->velocity.y = -0x30000;
-        self->state      = OOZ2Outro_Unknown5;
+        self->state      = OOZ2Outro_State_SubLaunch;
         foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->animator, false, 0); }
     }
 }
 
-void OOZ2Outro_Unknown5(void)
+void OOZ2Outro_State_SubLaunch(void)
 {
     RSDK_THIS(OOZ2Outro);
 

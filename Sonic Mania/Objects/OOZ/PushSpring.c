@@ -12,9 +12,11 @@ ObjectPushSpring *PushSpring;
 void PushSpring_Update(void)
 {
     RSDK_THIS(PushSpring);
+
     StateMachine_Run(self->state);
-    self->field_78 = false;
-    StateMachine_Run(self->stateLate);
+
+    self->beingPushed = false;
+    StateMachine_Run(self->stateCollide);
 }
 
 void PushSpring_LateUpdate(void) {}
@@ -44,38 +46,41 @@ void PushSpring_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(PushSpring->aniFrames, self->type, &self->animator, true, 0);
-        if (self->type) {
+
+        if (self->type != PUSHSPRING_V) {
             if (self->direction) {
-                self->stateDraw = PushSpring_StateDraw_Left;
-                self->stateLate = PushSpring_HandlePlayerCollisions_Left;
+                self->stateDraw = PushSpring_Draw_Left;
+                self->stateCollide = PushSpring_Collide_Left;
             }
             else {
-                self->stateDraw = PushSpring_StateDraw_Right;
-                self->stateLate = PushSpring_HandlePlayerCollisions_Right;
+                self->stateDraw = PushSpring_Draw_Right;
+                self->stateCollide = PushSpring_Collide_Right;
             }
+
             self->groundVel     = 0x4000;
             self->hitbox.left   = -20;
             self->hitbox.top    = -16;
             self->hitbox.right  = 20;
             self->hitbox.bottom = 16;
-            self->state         = PushSpring_Unknown9;
+            self->state         = PushSpring_State_WaitForPushed;
         }
         else {
             if (self->direction) {
                 self->direction = FLIP_Y;
-                self->stateDraw = PushSpring_StateDraw_Bottom;
-                self->stateLate = PushSpring_HandlePlayerCollisions_Bottom;
+                self->stateDraw = PushSpring_Draw_Bottom;
+                self->stateCollide = PushSpring_Collide_Bottom;
             }
             else {
-                self->stateDraw = PushSpring_StateDraw_Top;
-                self->stateLate = PushSpring_HandlePlayerCollisions_Top;
+                self->stateDraw = PushSpring_Draw_Top;
+                self->stateCollide = PushSpring_Collide_Top;
             }
+
             self->groundVel     = 0x20000;
             self->hitbox.left   = -16;
             self->hitbox.top    = -20;
             self->hitbox.right  = 16;
             self->hitbox.bottom = 20;
-            self->state         = PushSpring_Unknown9;
+            self->state         = PushSpring_State_WaitForPushed;
         }
     }
 }
@@ -84,11 +89,12 @@ void PushSpring_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         PushSpring->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PushSpring.bin", SCOPE_STAGE);
+
     PushSpring->sfxPush   = RSDK.GetSfx("Stage/Push.wav");
     PushSpring->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
 }
 
-void PushSpring_HandlePlayerCollisions_Top(void)
+void PushSpring_Collide_Top(void)
 {
     RSDK_THIS(PushSpring);
     self->hitbox.top = (self->pushOffset >> 16) - 22;
@@ -97,7 +103,7 @@ void PushSpring_HandlePlayerCollisions_Top(void)
     {
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
             player->position.y += 0x20000;
-            self->field_78 |= 1;
+            self->beingPushed |= true;
             if (self->pushOffset >= 0x120000) {
                 player->collisionMode = 0;
                 player->onGround      = false;
@@ -110,13 +116,13 @@ void PushSpring_HandlePlayerCollisions_Top(void)
                     player->storedAnim = ANI_WALK;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                 RSDK.PlaySfx(PushSpring->sfxSpring, false, 255);
-                self->state = PushSpring_Unknown11;
+                self->state = PushSpring_State_PushRecoil;
             }
         }
     }
 }
 
-void PushSpring_HandlePlayerCollisions_Bottom(void)
+void PushSpring_Collide_Bottom(void)
 {
     RSDK_THIS(PushSpring);
     self->hitbox.top = (self->pushOffset >> 16) - 22;
@@ -128,7 +134,7 @@ void PushSpring_HandlePlayerCollisions_Bottom(void)
             if (yvel < 0) {
                 player->velocity.y = yvel + 0x3800;
                 player->position.y -= 0x20000;
-                self->field_78 |= 1;
+                self->beingPushed |= true;
             }
             if (self->pushOffset >= 0x120000) {
                 player->collisionMode = 0;
@@ -136,13 +142,13 @@ void PushSpring_HandlePlayerCollisions_Bottom(void)
                 player->state         = Player_State_Air;
                 player->velocity.y    = 0xA0000;
                 RSDK.PlaySfx(PushSpring->sfxSpring, false, 255);
-                self->state = PushSpring_Unknown11;
+                self->state = PushSpring_State_PushRecoil;
             }
         }
     }
 }
 
-void PushSpring_HandlePlayerCollisions_Left(void)
+void PushSpring_Collide_Left(void)
 {
     RSDK_THIS(PushSpring);
     self->hitbox.right = 22 - (self->pushOffset >> 16);
@@ -152,9 +158,11 @@ void PushSpring_HandlePlayerCollisions_Left(void)
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_LEFT) {
             if (player->direction == FLIP_NONE)
                 player->position.x += 0x20000;
-            if (player->right == true)
-                self->field_78 |= 1u;
-            if (self->state == PushSpring_Unknown11) {
+
+            if (player->right)
+                self->beingPushed |= true;
+
+            if (self->state == PushSpring_State_PushRecoil) {
                 if (self->pushOffset > 0x10000) {
                     player->groundVel     = -12 * self->pushOffset / 18;
                     player->velocity.x    = player->groundVel;
@@ -170,7 +178,7 @@ void PushSpring_HandlePlayerCollisions_Left(void)
     }
 }
 
-void PushSpring_HandlePlayerCollisions_Right(void)
+void PushSpring_Collide_Right(void)
 {
     RSDK_THIS(PushSpring);
     self->hitbox.right = 22 - (self->pushOffset >> 16);
@@ -180,9 +188,11 @@ void PushSpring_HandlePlayerCollisions_Right(void)
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_RIGHT) {
             if (player->direction == FLIP_X)
                 player->position.x -= 0x20000;
-            if (player->left == true)
-                self->field_78 |= 1;
-            if (self->state == PushSpring_Unknown11) {
+
+            if (player->left)
+                self->beingPushed |= true;
+
+            if (self->state == PushSpring_State_PushRecoil) {
                 if (self->pushOffset > 0x10000) {
                     player->groundVel     = 12 * self->pushOffset / 18;
                     player->velocity.x    = player->groundVel;
@@ -198,7 +208,7 @@ void PushSpring_HandlePlayerCollisions_Right(void)
     }
 }
 
-void PushSpring_StateDraw_Top(void)
+void PushSpring_Draw_Top(void)
 {
     RSDK_THIS(PushSpring);
 
@@ -221,7 +231,7 @@ void PushSpring_StateDraw_Top(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void PushSpring_StateDraw_Bottom(void)
+void PushSpring_Draw_Bottom(void)
 {
     RSDK_THIS(PushSpring);
 
@@ -241,7 +251,7 @@ void PushSpring_StateDraw_Bottom(void)
     RSDK.DrawSprite(&self->animator, 0, false);
 }
 
-void PushSpring_StateDraw_Left(void)
+void PushSpring_Draw_Left(void)
 {
     RSDK_THIS(PushSpring);
 
@@ -264,7 +274,7 @@ void PushSpring_StateDraw_Left(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void PushSpring_StateDraw_Right(void)
+void PushSpring_Draw_Right(void)
 {
     RSDK_THIS(PushSpring);
 
@@ -287,23 +297,23 @@ void PushSpring_StateDraw_Right(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void PushSpring_Unknown9(void)
+void PushSpring_State_WaitForPushed(void)
 {
     RSDK_THIS(PushSpring);
-    if (self->field_78) {
+    if (self->beingPushed) {
         self->pushTimer = 0;
-        self->state     = PushSpring_Unknown10;
+        self->state     = PushSpring_State_BeingPushed;
     }
 }
 
-void PushSpring_Unknown10(void)
+void PushSpring_State_BeingPushed(void)
 {
     RSDK_THIS(PushSpring);
-    if (self->field_78) {
+    if (self->beingPushed) {
         self->pushOffset += self->groundVel;
         if (self->pushOffset < 0x120000) {
             if (!(self->pushTimer % 10))
-                RSDK.PlaySfx(PushSpring->sfxPush, false, 255);
+                RSDK.PlaySfx(PushSpring->sfxPush, false, 0xFF);
             ++self->pushTimer;
         }
         else {
@@ -312,22 +322,22 @@ void PushSpring_Unknown10(void)
         }
     }
     else {
-        self->state = PushSpring_Unknown11;
+        self->state = PushSpring_State_PushRecoil;
     }
 }
 
-void PushSpring_Unknown11(void)
+void PushSpring_State_PushRecoil(void)
 {
     RSDK_THIS(PushSpring);
-    if (self->field_78) {
+    if (self->beingPushed) {
         self->pushTimer = 0;
-        self->state     = PushSpring_Unknown10;
+        self->state     = PushSpring_State_BeingPushed;
     }
     else {
         self->pushOffset -= 0x20000;
         if (self->pushOffset <= 0) {
             self->pushOffset = 0;
-            self->state      = PushSpring_Unknown9;
+            self->state      = PushSpring_State_WaitForPushed;
         }
     }
 }
@@ -337,19 +347,30 @@ void PushSpring_EditorDraw(void)
 {
     RSDK_THIS(PushSpring);
 
-    int dir = self->direction;
+    int32 dir = self->direction;
 
     RSDK.SetSpriteAnimation(PushSpring->aniFrames, self->type, &self->animator, false, 0);
-    if (!self->type  &&self->direction) {
-        self->direction = FLIP_Y;
-    }
+
+    if (self->type == PUSHSPRING_V)
+        self->direction *= FLIP_Y;
 
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     self->direction = dir;
 }
 
-void PushSpring_EditorLoad(void) { PushSpring->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PushSpring.bin", SCOPE_STAGE); }
+void PushSpring_EditorLoad(void)
+{
+    PushSpring->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PushSpring.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PushSpring, type);
+    RSDK_ENUM_VAR("Vertical", PUSHSPRING_V);
+    RSDK_ENUM_VAR("Horizontal", PUSHSPRING_H);
+
+    RSDK_ACTIVE_VAR(PushSpring, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flipped", FLIP_X);
+}
 #endif
 
 void PushSpring_Serialize(void)

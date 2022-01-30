@@ -7,7 +7,7 @@
 struct ObjectPullSwitch {
     RSDK_OBJECT
     Hitbox hitbox;
-    int32 field_C;
+    int32 unused;
     uint16 aniFrames;
     uint16 sfxButton;
     uint16 sfxSmogClear;
@@ -16,17 +16,17 @@ struct ObjectPullSwitch {
 // Entity Class
 struct EntityPullSwitch {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
+    StateMachine(state);
+    int32 pullPos;
     int32 sprY;
     int32 sprHeight;
     bool32 activated;
-    uint8 playerTimers[4];
+    uint8 playerTimers[PLAYER_MAX];
     uint8 activePlayers;
-    Vector2 drawPos;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Vector2 handlePos;
+    Animator handleAnimator;
+    Animator dispenserAnimator;
+    Animator chainAnimator;
 };
 
 // Object Struct

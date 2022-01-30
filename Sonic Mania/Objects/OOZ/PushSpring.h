@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { PUSHSPRING_V, PUSHSPRING_H } PushSpringTypes;
+
 // Object Class
 struct ObjectPushSpring {
     RSDK_OBJECT
@@ -16,12 +18,12 @@ struct EntityPushSpring {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    StateMachine(stateLate);
+    StateMachine(stateCollide);
     uint8 type;
     int32 pushOffset;
     int32 pushTimer;
     Hitbox hitbox;
-    bool32 field_78;
+    bool32 beingPushed;
     Animator animator;
 };
 
@@ -42,19 +44,19 @@ void PushSpring_EditorLoad(void);
 void PushSpring_Serialize(void);
 
 // Extra Entity Functions
-void PushSpring_HandlePlayerCollisions_Top(void);
-void PushSpring_HandlePlayerCollisions_Bottom(void);
-void PushSpring_HandlePlayerCollisions_Left(void);
-void PushSpring_HandlePlayerCollisions_Right(void);
+void PushSpring_Collide_Top(void);
+void PushSpring_Collide_Bottom(void);
+void PushSpring_Collide_Left(void);
+void PushSpring_Collide_Right(void);
 
-void PushSpring_StateDraw_Top(void);
-void PushSpring_StateDraw_Bottom(void);
-void PushSpring_StateDraw_Left(void);
-void PushSpring_StateDraw_Right(void);
+void PushSpring_Draw_Top(void);
+void PushSpring_Draw_Bottom(void);
+void PushSpring_Draw_Left(void);
+void PushSpring_Draw_Right(void);
 
-void PushSpring_Unknown9(void);
-void PushSpring_Unknown10(void);
-void PushSpring_Unknown11(void);
+void PushSpring_State_WaitForPushed(void);
+void PushSpring_State_BeingPushed(void);
+void PushSpring_State_PushRecoil(void);
 
 
 #endif //!OBJ_PUSHSPRING_H

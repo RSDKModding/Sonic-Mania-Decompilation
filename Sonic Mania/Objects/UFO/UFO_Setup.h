@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UFO_TFLAGS_NORMAL,
+    UFO_TFLAGS_BUMPER,
+    UFO_TFLAGS_GRITTYGROUND,
+} TileFlagsUFO;
+
 // Object Class
 struct ObjectUFO_Setup {
     RSDK_OBJECT

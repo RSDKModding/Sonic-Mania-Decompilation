@@ -332,8 +332,8 @@ typedef struct {
     void (*ProcessTileCollisions)(void *entity, Hitbox *outer, Hitbox *inner);
     int32 (*GetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode);
     void (*SetTileAngle)(uint16 tileID, uint8 cPlane, uint8 cMode, uint8 angle);
-    uint8 (*GetTileBehaviour)(uint16 tileID, uint8 cPlane);
-    void (*SetTileBehaviour)(uint16 tileID, uint8 cPlane, uint8 behaviour);
+    uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);
+    void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flags);
     int32 (*GetSfx)(const char *path);
     int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 priority);
     void (*StopSfx)(uint16 sfx);

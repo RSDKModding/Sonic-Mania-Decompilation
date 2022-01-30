@@ -108,7 +108,7 @@ void WarpDoor_Update(void)
                             }
                             else if (RSDK.CheckStageFolder("OOZ2")) {
                                 if (self->effect == OOZ_WARPDOOR_EFFECT_TO_SUB || self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB) {
-                                    OOZSetup->flags = self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB ? 1 : 0;
+                                    OOZSetup->useSmogEffect = self->effect == OOZ_WARPDOOR_EFFECT_FROM_SUB ? 1 : 0;
                                     destroyEntity(self);
                                     foreach_return;
                                 }

@@ -72,21 +72,19 @@ void Letterboard_State_Controller(void)
 
     self->active = ACTIVE_BOUNDS;
 
-    bool32 flag = true;
-    int32 count = 0;
-    int32 slot  = SceneInfo->entitySlot + 1;
+    bool32 revealedAll = true;
+    int32 slot         = SceneInfo->entitySlot + 1;
 
     for (int32 i = 0; i < self->letterID; ++i) {
         EntityLetterboard *letterboard = RSDK_GET_ENTITY(slot + i, Letterboard);
         if (letterboard->state)
-            flag = false;
+            revealedAll = false;
 
         if (letterboard->state == Letterboard_State_Spun)
             self->active = ACTIVE_NORMAL;
     }
-    flag = count == self->letterID;
 
-    if (flag) {
+    if (revealedAll) {
         RSDK.PlaySfx(Letterboard->sfxWin, false, 0xFF);
         self->active = ACTIVE_BOUNDS;
         self->state  = StateMachine_None;

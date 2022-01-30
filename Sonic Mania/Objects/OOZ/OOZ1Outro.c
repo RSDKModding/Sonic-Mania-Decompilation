@@ -15,7 +15,8 @@ void OOZ1Outro_Update(void)
 
     if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()) {
         self->activated = true;
-        CutsceneSeq_StartSequence(self, OOZ1Outro_Cutscene_FadeIn, OOZ1Outro_Cutscene_PostActClearSetup, OOZ1Outro_Cutscene_FallIntoAct2, OOZ1Outro_Cutscene_BeginAct, StateMachine_None);
+        CutsceneSeq_StartSequence(self, OOZ1Outro_Cutscene_FadeIn, OOZ1Outro_Cutscene_PostActClearSetup, OOZ1Outro_Cutscene_FallIntoAct2,
+                                  OOZ1Outro_Cutscene_BeginAct, StateMachine_None);
     }
     self->active = ACTIVE_NEVER;
 }
@@ -32,17 +33,14 @@ void OOZ1Outro_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active  = ACTIVE_NORMAL;
         self->visible = false;
-        if (!self->size.x)
-            self->size.x = 0x1A80000;
-        if (!self->size.y)
-            self->size.y = 0xF00000;
-        self->updateRange.x += self->size.x;
-        self->updateRange.y += self->size.y;
+        int32 rangeX  = self->updateRange.x + self->size.x;
+        int32 rangeY  = self->updateRange.y + self->size.y;
 
-        self->hitbox.left   = -self->size.x >> 17;
-        self->hitbox.right  = self->size.x >> 17;
-        self->hitbox.top    = -self->size.y >> 17;
-        self->hitbox.bottom = self->size.y >> 17;
+        CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+
+        // This one's slightly weird, it doesn't set updateRange the same way for some reason, so lets keep that behaviour
+        self->updateRange.x = rangeX;
+        self->updateRange.y = rangeY;
     }
 }
 
@@ -68,19 +66,19 @@ bool32 OOZ1Outro_Cutscene_FadeIn(EntityCutsceneSeq *host)
             player->position.y += (self->size.y >> 1) - 0x400000;
         }
 
-        self->boundsR         = Zone->cameraBoundsR[0];
-        self->boundsT         = Zone->cameraBoundsT[0];
-        self->boundsB         = Zone->cameraBoundsB[0];
+        self->boundsR          = Zone->cameraBoundsR[0];
+        self->boundsT          = Zone->cameraBoundsT[0];
+        self->boundsB          = Zone->cameraBoundsB[0];
         Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
         Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->centerY;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + ScreenInfo->centerY;
-        EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL         = Zone->cameraBoundsL[0];
-        camera->boundsR         = Zone->cameraBoundsR[0];
-        camera->boundsT         = Zone->cameraBoundsT[0];
-        camera->boundsB         = Zone->cameraBoundsB[0];
-        Smog->forceEnabled      = true;
+        EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+        camera->boundsL        = Zone->cameraBoundsL[0];
+        camera->boundsR        = Zone->cameraBoundsR[0];
+        camera->boundsT        = Zone->cameraBoundsT[0];
+        camera->boundsB        = Zone->cameraBoundsB[0];
+        Smog->forceEnabled     = true;
     }
 
     if (host->timer == 30) {

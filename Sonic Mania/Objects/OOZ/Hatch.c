@@ -13,11 +13,12 @@ void Hatch_Update(void)
 {
     RSDK_THIS(Hatch);
 
-    int32 posX           = self->position.x;
-    int32 posY           = self->position.y;
+    int32 posX       = self->position.x;
+    int32 posY       = self->position.y;
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
-    if (self->flag) {
+
+    if (self->useMoveLayer) {
         foreach_all(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
@@ -32,6 +33,7 @@ void Hatch_Update(void)
             }
         }
     }
+
     self->position.x = posX;
     self->position.y = posY;
 
@@ -49,12 +51,13 @@ void Hatch_Draw(void)
 {
     RSDK_THIS(Hatch);
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->hatchAnimator, NULL, false);
     }
     else {
-        if (self->animator2.animationID == 2 && self->animator2.frameID >= 3)
-            RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        if (self->hatchAnimator.animationID == 2 && self->hatchAnimator.frameID >= 3)
+            RSDK.DrawSprite(&self->hatchAnimator, NULL, false);
+
+        RSDK.DrawSprite(&self->baseAnimator, NULL, false);
     }
 }
 
@@ -70,8 +73,8 @@ void Hatch_Create(void *data)
         self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
         self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));
 
-        RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->animator2, true, 4);
+        RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &self->baseAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, true, 4);
 
         self->hitbox.left   = (self->subOff1.x >> 12) - ((self->position.x >> 16) & 0xF) + 16;
         self->hitbox.top    = (self->subOff1.y >> 12) - ((self->position.y >> 16) & 0xF) + 16;
@@ -81,7 +84,7 @@ void Hatch_Create(void *data)
 
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
         if (warpDoor->objectID == WarpDoor->objectID) {
-            self->warpHitbox        = warpDoor->hitbox;
+            self->hitboxWarpDoor    = warpDoor->hitbox;
             warpDoor->hitbox.left   = 0;
             warpDoor->hitbox.top    = 0x7FFF;
             warpDoor->hitbox.right  = 0;
@@ -89,41 +92,39 @@ void Hatch_Create(void *data)
         }
 
         switch (self->go) {
-            case 0:
-                self->visible = true;
-                self->state   = Hatch_Unknown1;
-                self->flag    = true;
-                break;
-            case 1:
-                RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4, 2);
-                RSDK.CopyTileLayer(Zone->fgHigh, (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6, 2);
-                self->visible = false;
-                self->flag    = false;
-                self->state   = Hatch_Unknown11;
-                break;
-            case 2:
-                if (OOZSetup->flags == true) {
-                    self->visible = true;
-                    self->state   = Hatch_Unknown1;
-                    self->flag    = true;
+            case HATCH_GO_SUBENTRYHATCH:
+            case HATCH_GO_SUBENTRYHATCH_SMOGONLY:
+                if (self->go == HATCH_GO_SUBENTRYHATCH || OOZSetup->useSmogEffect) {
+                    self->visible      = true;
+                    self->useMoveLayer = true;
+                    self->state        = Hatch_State_SubEntryHatch;
                 }
                 else {
                     self->vScrollPos += self->depth << 16;
                     self->position.y += self->depth << 16;
                     destroyEntity(RSDK.GetEntityByID(SceneInfo->entitySlot - 1));
-                    self->flag = true;
+                    self->useMoveLayer = true;
                 }
                 break;
-            case 3:
-                self->visible = false;
-                self->state   = Hatch_Unknown9;
-                self->flag    = true;
+
+            case HATCH_GO_SUBEXITHATCH_NOCOPY:
+            case HATCH_GO_SUBEXITHATCH_COPYTILES:
+                // Copies the Hatch Tiles from the move layer
+                if (self->go == HATCH_GO_SUBEXITHATCH_COPYTILES) {
+                    RSDK.CopyTileLayer(Zone->moveLayer, (self->position.x >> 20) - 2, (self->position.y >> 20) - 1, Zone->moveLayer, 1, 7, 4, 2); // Copy Hatch Tiles
+                    RSDK.CopyTileLayer(Zone->fgHigh, (self->position.x >> 20) - 3, (self->position.y >> 20) + 1, Zone->moveLayer, 16, 1, 6, 2); // Copy [???] Tiles (There's nothing there in the scene)
+                }
+                self->visible      = false;
+                self->useMoveLayer = false;
+                self->state        = Hatch_State_SubExitHatch;
                 break;
-            case 4:
-                self->visible = false;
-                self->flag    = false;
-                self->state   = Hatch_Unknown11;
+
+            case HATCH_GO_SUBEXIT:
+                self->visible      = false;
+                self->state        = Hatch_State_SubExit;
+                self->useMoveLayer = true;
                 break;
+
             default: break;
         }
     }
@@ -131,29 +132,37 @@ void Hatch_Create(void *data)
 
 void Hatch_StageLoad(void)
 {
+    // OOZ1 Check...? why? its never used in OOZ1...
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         Hatch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Hatch.bin", SCOPE_STAGE);
-    Hatch->hitbox1.left   = -16;
-    Hatch->hitbox1.top    = -16;
-    Hatch->hitbox1.right  = 16;
-    Hatch->hitbox1.bottom = 16;
-    Hatch->hitbox2.left   = -128;
-    Hatch->hitbox2.top    = -128;
-    Hatch->hitbox2.right  = 128;
-    Hatch->hitbox2.bottom = 128;
-    Hatch->hitbox3.left   = -24;
-    Hatch->hitbox3.top    = 0;
-    Hatch->hitbox3.right  = -12;
-    Hatch->hitbox3.bottom = 8;
-    Hatch->hitbox4.left   = 12;
-    Hatch->hitbox4.top    = 0;
-    Hatch->hitbox4.right  = 24;
-    Hatch->hitbox4.bottom = 8;
-    Hatch->hitbox5.left   = -12;
-    Hatch->hitbox5.top    = 8;
-    Hatch->hitbox5.right  = 12;
-    Hatch->hitbox5.bottom = 24;
+
+    Hatch->hitboxSubExit.left   = -16;
+    Hatch->hitboxSubExit.top    = -16;
+    Hatch->hitboxSubExit.right  = 16;
+    Hatch->hitboxSubExit.bottom = 16;
+
+    Hatch->hitboxRange.left   = -128;
+    Hatch->hitboxRange.top    = -128;
+    Hatch->hitboxRange.right  = 128;
+    Hatch->hitboxRange.bottom = 128;
+
+    Hatch->hitboxL.left   = -24;
+    Hatch->hitboxL.top    = 0;
+    Hatch->hitboxL.right  = -12;
+    Hatch->hitboxL.bottom = 8;
+
+    Hatch->hitboxR.left   = 12;
+    Hatch->hitboxR.top    = 0;
+    Hatch->hitboxR.right  = 24;
+    Hatch->hitboxR.bottom = 8;
+
+    Hatch->hitboxEntry.left   = -12;
+    Hatch->hitboxEntry.top    = 8;
+    Hatch->hitboxEntry.right  = 12;
+    Hatch->hitboxEntry.bottom = 24;
+
     Hatch->active         = ACTIVE_ALWAYS;
+
     Hatch->sfxHatchOpen   = RSDK.GetSfx("OOZ/SubHatchOpen.wav");
     Hatch->sfxHatchClose  = RSDK.GetSfx("OOZ/SubHatchClose.wav");
     Hatch->sfxDescend     = RSDK.GetSfx("OOZ/SubDescend.wav");
@@ -161,10 +170,10 @@ void Hatch_StageLoad(void)
     Hatch->sfxGasPop      = RSDK.GetSfx("OOZ/GasPop.wav");
 }
 
-void Hatch_Unknown1(void)
+void Hatch_State_SubEntryHatch(void)
 {
     RSDK_THIS(Hatch);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->hatchAnimator);
 
     int32 flag = 0;
     foreach_all(Player, player)
@@ -175,21 +184,22 @@ void Hatch_Unknown1(void)
         // Fix:
         // this entire block of code should have a Player_CheckValidState call to make sure the player isn't dead or some other "invalid" state
 
-        // Extra notes: if you manage to die and fall into the hatch, you'll be brough back sorta (this is because it changes your state from Player_State_Death to Player_State_None)
-        // though the death state stuff will still be applied so you'll be on the highest layer (until its changed) and the player->active var will be set to ACTIVE_ALWAYS
-        // this means you can do really weird stuff such as move during the pause menu
+        // Extra notes: if you manage to die and fall into the hatch, you'll be brough back sorta (this is because it changes your state from
+        // Player_State_Death to Player_State_None) though the death state stuff will still be applied so you'll be on the highest layer (until its
+        // changed) and the player->active var will be set to ACTIVE_ALWAYS this means you can do really weird stuff such as move during the pause
+        // menu
 
-        if (Player_CheckCollisionBox(player, self, &Hatch->hitbox3) == C_TOP) {
+        if (Player_CheckCollisionBox(player, self, &Hatch->hitboxL) == C_TOP) {
             flag = 1;
         }
-        else if (Player_CheckCollisionBox(player, self, &Hatch->hitbox4) == C_TOP) {
+        else if (Player_CheckCollisionBox(player, self, &Hatch->hitboxR) == C_TOP) {
             flag = 1;
         }
-        else if (Player_CheckCollisionBox(player, self, &Hatch->hitbox5) == C_TOP) {
+        else if (Player_CheckCollisionBox(player, self, &Hatch->hitboxEntry) == C_TOP) {
             if (player->onGround) {
                 if (!player->sidekick) {
                     self->active            = ACTIVE_NORMAL;
-                    self->playerPtr         = (Entity *)player;
+                    self->playerPtr         = player;
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
@@ -202,8 +212,8 @@ void Hatch_Unknown1(void)
 
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_None;
-                    RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->animator2, false, 0);
-                    self->state = Hatch_Unknown2;
+                    RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 0);
+                    self->state = Hatch_State_PlayerEntered;
                     flag        = 2;
                     foreach_break;
                 }
@@ -213,31 +223,31 @@ void Hatch_Unknown1(void)
             }
         }
         else {
-            if (Player_CheckCollisionTouch(player, self, &Hatch->hitbox2))
+            if (Player_CheckCollisionTouch(player, self, &Hatch->hitboxRange))
                 flag = 1;
         }
     }
 
     if (flag == 1) {
-        if (self->animator2.animationID == 2)
+        if (self->hatchAnimator.animationID == 2)
             RSDK.PlaySfx(Hatch->sfxHatchOpen, false, 255);
-        RSDK.SetSpriteAnimation(Hatch->aniFrames, 1, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(Hatch->aniFrames, 1, &self->hatchAnimator, false, 0);
     }
     else if (!flag) {
-        if (self->animator2.animationID == 1)
+        if (self->hatchAnimator.animationID == 1)
             RSDK.PlaySfx(Hatch->sfxHatchClose, false, 255);
-        RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 0);
     }
 }
 
-void Hatch_Unknown2(void)
+void Hatch_State_PlayerEntered(void)
 {
     RSDK_THIS(Hatch);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->hatchAnimator);
 
-    if (self->animator2.frameID == 4) {
+    if (self->hatchAnimator.frameID == 4) {
         EntityPlayer *player   = (EntityPlayer *)self->playerPtr;
-        self->visible        = false;
+        self->visible          = false;
         player->visible        = false;
         player->blinkTimer     = 0;
         player->tileCollisions = false;
@@ -248,7 +258,7 @@ void Hatch_Unknown2(void)
         Zone->deathBoundary[2] = 0x7FFF0000;
         Zone->deathBoundary[3] = 0x7FFF0000;
         RSDK.PlaySfx(Hatch->sfxDescend, false, 255);
-        self->state    = Hatch_Unknown3;
+        self->state      = Hatch_State_Descend;
         EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
         zone->fadeColour = 0;
         zone->timer      = 0;
@@ -258,10 +268,10 @@ void Hatch_Unknown2(void)
     }
 }
 
-void Hatch_Unknown3(void)
+void Hatch_State_Descend(void)
 {
     RSDK_THIS(Hatch);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
     EntityZone *zone     = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
 
     ++self->timer;
@@ -272,35 +282,35 @@ void Hatch_Unknown3(void)
     zone->timer += 2;
 
     if (self->timer >= self->depth) {
-        if (self->dest) {
+        if (self->dest) { // XOffset of where to surface
             self->timer = 0;
-            self->state = Hatch_Unknown4;
+            self->state = Hatch_State_MoveToDestPos;
         }
-        else {
+        else { // Uses the WarpDoor obj for transport
             player->state            = Player_State_Air;
             EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (warpDoor->objectID == WarpDoor->objectID) {
                 Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
-                warpDoor->hitbox                               = self->warpHitbox;
-                warpDoor->position.y                           = self->position.y;
-                player->tileCollisions                         = true;
-                player->interaction                            = true;
-                player->visible                                = 1;
+                warpDoor->hitbox                              = self->hitboxWarpDoor;
+                warpDoor->position.y                          = self->position.y;
+                player->tileCollisions                        = true;
+                player->interaction                           = true;
+                player->visible                               = true;
             }
             RSDK.GetSceneLayer(Zone->moveLayer)->scrollPos = 0;
-            self->position.x                             = self->startPos.x;
-            self->position.y                             = self->startPos.y;
-            if (self->go != 2)
-                self->flag = false;
-            self->state = Hatch_Unknown8;
+            self->position.x                               = self->startPos.x;
+            self->position.y                               = self->startPos.y;
+            if (self->go != HATCH_GO_SUBENTRYHATCH_SMOGONLY)
+                self->useMoveLayer = false;
+            self->state = Hatch_State_FadeIn;
         }
     }
 }
 
-void Hatch_Unknown4(void)
+void Hatch_State_MoveToDestPos(void)
 {
     RSDK_THIS(Hatch);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     self->hScrollPos += self->dest << 16;
     self->position.x += self->dest << 16;
@@ -308,11 +318,11 @@ void Hatch_Unknown4(void)
     player->camera->position.x += self->dest << 16;
     ScreenInfo[player->camera->screenID].position.x += self->dest;
     self->timer = 0;
-    RSDK.PlaySfx(Hatch->sfxSurface, false, 255);
-    self->state = Hatch_Unknown5;
+    RSDK.PlaySfx(Hatch->sfxSurface, false, 0xFF);
+    self->state = Hatch_State_Surfacing;
 }
 
-void Hatch_Unknown5(void)
+void Hatch_State_Surfacing(void)
 {
     RSDK_THIS(Hatch);
     EntityPlayer *player = (EntityPlayer *)self->playerPtr;
@@ -330,18 +340,18 @@ void Hatch_Unknown5(void)
         self->position.x = player->position.x;
         self->position.y = player->position.y;
         self->position.y += 0x80000;
-        RSDK.SetSpriteAnimation(Hatch->aniFrames, 1, &self->animator2, false, 0);
-        self->state = Hatch_Unknown6;
+        RSDK.SetSpriteAnimation(Hatch->aniFrames, 1, &self->hatchAnimator, false, 0);
+        self->state = Hatch_State_OpenHatchReleasePlayer;
     }
 }
 
-void Hatch_Unknown6(void)
+void Hatch_State_OpenHatchReleasePlayer(void)
 {
     RSDK_THIS(Hatch);
     EntityPlayer *player = (EntityPlayer *)self->playerPtr;
     EntityZone *zone     = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
 
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->hatchAnimator);
     zone->timer -= 2;
 
     ++self->timer;
@@ -356,25 +366,25 @@ void Hatch_Unknown6(void)
         RSDK.PlaySfx(Hatch->sfxGasPop, false, 255);
     }
     else if (self->timer == 38) {
-        RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->animator2, false, 0);
-        self->state = Hatch_Unknown7;
+        RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 0);
+        self->state = Hatch_State_CloseHatch;
     }
 }
 
-void Hatch_Unknown7(void)
+void Hatch_State_CloseHatch(void)
 {
     RSDK_THIS(Hatch);
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
 
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->hatchAnimator);
     zone->timer -= 2;
-    if (self->animator2.frameID >= self->animator2.frameCount - 1) {
+    if (self->hatchAnimator.frameID >= self->hatchAnimator.frameCount - 1) {
         self->visible = false;
-        self->state   = Hatch_Unknown8;
+        self->state   = Hatch_State_FadeIn;
     }
 }
 
-void Hatch_Unknown8(void)
+void Hatch_State_FadeIn(void)
 {
     RSDK_THIS(Hatch);
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
@@ -383,36 +393,36 @@ void Hatch_Unknown8(void)
     if (zone->timer <= 0) {
         self->active = ACTIVE_BOUNDS;
         self->state  = StateMachine_None;
-        zone->timer    = 0;
+        zone->timer  = 0;
     }
 }
 
-void Hatch_Unknown9(void)
+void Hatch_State_SubExit(void)
 {
     RSDK_THIS(Hatch);
 
     foreach_all(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Hatch->hitbox1) && !player->sidekick) {
-            self->active           = ACTIVE_NORMAL;
-            self->playerPtr        = (Entity *)player;
-            self->stateStore       = player->state;
-            self->interactionStore = player->interaction;
-            self->tileColStore     = player->tileCollisions;
-            player->velocity.x       = 0;
-            player->groundVel        = 0;
-            player->nextAirState     = StateMachine_None;
-            player->nextGroundState  = StateMachine_None;
-            player->interaction      = false;
-            player->tileCollisions   = false;
-            player->state            = Player_State_None;
-            self->state            = Hatch_Unknown10;
+        if (Player_CheckCollisionTouch(player, self, &Hatch->hitboxSubExit) && !player->sidekick) {
+            self->active            = ACTIVE_NORMAL;
+            self->playerPtr         = player;
+            self->stateStore        = player->state;
+            self->interactionStore  = player->interaction;
+            self->tileColStore      = player->tileCollisions;
+            player->velocity.x      = 0;
+            player->groundVel       = 0;
+            player->nextAirState    = StateMachine_None;
+            player->nextGroundState = StateMachine_None;
+            player->interaction     = false;
+            player->tileCollisions  = false;
+            player->state           = Player_State_None;
+            self->state             = Hatch_State_FadeOut;
             foreach_break;
         }
     }
 }
 
-void Hatch_Unknown10(void)
+void Hatch_State_FadeOut(void)
 {
     RSDK_THIS(Hatch);
     EntityZone *zone     = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
@@ -424,15 +434,15 @@ void Hatch_Unknown10(void)
 
         if (warpDoor->objectID == WarpDoor->objectID) {
             Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
-            warpDoor->hitbox                               = self->warpHitbox;
-            warpDoor->position.y                           = player->position.y;
-            player->state                                  = self->stateStore;
-            player->tileCollisions                         = self->tileColStore;
-            player->interaction                            = self->interactionStore;
-            player->visible                                = true;
+            warpDoor->hitbox                              = self->hitboxWarpDoor;
+            warpDoor->position.y                          = player->position.y;
+            player->state                                 = self->stateStore;
+            player->tileCollisions                        = self->tileColStore;
+            player->interaction                           = self->interactionStore;
+            player->visible                               = true;
         }
         if (self->depth) {
-            self->state = Hatch_Unknown8;
+            self->state = Hatch_State_FadeIn;
         }
         else {
             self->active = ACTIVE_BOUNDS;
@@ -441,7 +451,7 @@ void Hatch_Unknown10(void)
     }
 }
 
-void Hatch_Unknown11(void)
+void Hatch_State_SubExitHatch(void)
 {
     RSDK_THIS(Hatch);
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
@@ -449,15 +459,15 @@ void Hatch_Unknown11(void)
     if (zone->timer) {
         foreach_all(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &Hatch->hitbox1) && !player->sidekick) {
+            if (Player_CheckCollisionTouch(player, self, &Hatch->hitboxSubExit) && !player->sidekick) {
                 self->hScrollPos += self->dest << 16;
                 self->vScrollPos += self->depth << 16;
-                self->flag = true;
-                if (self->go == 4) {
+                self->useMoveLayer = true;
+                if (self->go == HATCH_GO_SUBEXITHATCH_NOCOPY) {
                     self->state = StateMachine_None;
                 }
                 else {
-                    self->playerPtr        = (Entity *)player;
+                    self->playerPtr        = player;
                     self->active           = ACTIVE_NORMAL;
                     self->stateStore       = player->state;
                     self->interactionStore = player->interaction;
@@ -473,10 +483,10 @@ void Hatch_Unknown11(void)
                     player->nextGroundState = StateMachine_None;
                     player->interaction     = false;
                     player->tileCollisions  = false;
+                    player->visible         = false;
                     player->state           = Player_State_None;
-                    player->visible         = 0;
                     RSDK.PlaySfx(Hatch->sfxSurface, false, 255);
-                    self->state = Hatch_Unknown5;
+                    self->state = Hatch_State_Surfacing;
                 }
                 foreach_break;
             }
@@ -494,14 +504,35 @@ void Hatch_EditorDraw(void)
     self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
     self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));
 
-    RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->animator2, false, 4);
+    RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &self->baseAnimator, false, 0);
+    RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 4);
 
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->hatchAnimator, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
+
+    if (showGizmos()) {
+        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->position.x, self->position.y + (self->depth << 16));
+
+        self->hitbox.left   = (self->subOff1.x >> 12) - ((self->position.x >> 16) & 0xF) + 16;
+        self->hitbox.top    = (self->subOff1.y >> 12) - ((self->position.y >> 16) & 0xF) + 16;
+        self->hitbox.right  = (self->subOff2.x >> 12) - ((self->position.x >> 16) & 0xF) + 16;
+        self->hitbox.bottom = (self->subOff2.y >> 12) - ((self->position.y >> 16) & 0xF) + 16;
+
+        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitbox);
+    }
 }
 
-void Hatch_EditorLoad(void) { Hatch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Hatch.bin", SCOPE_STAGE); }
+void Hatch_EditorLoad(void)
+{
+    Hatch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Hatch.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Hatch, go);
+    RSDK_ENUM_VAR("Hatch Entry", HATCH_GO_SUBENTRYHATCH);
+    RSDK_ENUM_VAR("Hatch Exit (Copy hatch tiles)", HATCH_GO_SUBEXITHATCH_COPYTILES);
+    RSDK_ENUM_VAR("Hatch Entry (Only When Smog is active)", HATCH_GO_SUBENTRYHATCH_SMOGONLY);
+    RSDK_ENUM_VAR("Submarine Exit", HATCH_GO_SUBEXIT);
+    RSDK_ENUM_VAR("Hatch Exit (Don't copy hatch tiles)", HATCH_GO_SUBEXITHATCH_NOCOPY);
+}
 #endif
 
 void Hatch_Serialize(void)

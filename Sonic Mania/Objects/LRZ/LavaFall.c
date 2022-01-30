@@ -19,12 +19,12 @@ void LavaFall_LateUpdate(void) {}
 
 void LavaFall_StaticUpdate(void)
 {
-    if (LavaFall->shouldPlayLavaSfx) {
+    if (LavaFall->lavaSfxTimer) {
         if (!LavaFall->playingLavaSfx) {
-            RSDK.PlaySfx(LavaFall->sfxLava, 81870, 255);
+            RSDK.PlaySfx(LavaFall->sfxLava, 81870, 0xFF);
             LavaFall->playingLavaSfx = true;
         }
-        LavaFall->shouldPlayLavaSfx = 0;
+        LavaFall->lavaSfxTimer = 0;
     }
     else if (LavaFall->playingLavaSfx) {
         RSDK.StopSfx(LavaFall->sfxLava);
@@ -47,6 +47,7 @@ void LavaFall_Create(void *data)
     self->drawOrder     = Zone->drawOrderLow;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x1000000;
+
     if (data) {
         self->active = ACTIVE_NORMAL;
         RSDK.SetSpriteAnimation(LavaFall->aniFrames, 0, &self->animator, true, 0);
@@ -61,14 +62,18 @@ void LavaFall_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("LRZ1"))
         LavaFall->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LavaFall.bin", SCOPE_STAGE);
-    LavaFall->hitbox.left       = -32;
-    LavaFall->hitbox.top        = -32;
-    LavaFall->hitbox.right      = 32;
-    LavaFall->hitbox.bottom     = 32;
-    LavaFall->active            = ACTIVE_ALWAYS;
-    LavaFall->shouldPlayLavaSfx = 0;
-    LavaFall->playingLavaSfx    = false;
-    LavaFall->sfxLava           = RSDK.GetSfx("Stage/Lava.wav");
+
+    LavaFall->hitbox.left   = -32;
+    LavaFall->hitbox.top    = -32;
+    LavaFall->hitbox.right  = 32;
+    LavaFall->hitbox.bottom = 32;
+
+    LavaFall->active = ACTIVE_ALWAYS;
+
+    LavaFall->lavaSfxTimer   = 0;
+    LavaFall->playingLavaSfx = false;
+
+    LavaFall->sfxLava = RSDK.GetSfx("Stage/Lava.wav");
 }
 
 void LavaFall_State_Idle(void)
@@ -96,10 +101,10 @@ void LavaFall_State_LavaFall(void)
         }
     }
 
-    ++LavaFall->shouldPlayLavaSfx;
+    ++LavaFall->lavaSfxTimer;
     if (++self->animator.timer == 8) {
         self->animator.timer = 0;
-        CREATE_ENTITY(LavaFall, intToVoid(1), self->position.x, self->position.y);
+        CREATE_ENTITY(LavaFall, intToVoid(true), self->position.x, self->position.y);
     }
 }
 
@@ -111,13 +116,12 @@ void LavaFall_State_Lava(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &LavaFall->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &LavaFall->hitbox))
             Player_CheckElementalHit(player, self, SHIELD_FIRE);
-        }
     }
 
     if (self->activeScreens)
-        ++LavaFall->shouldPlayLavaSfx;
+        ++LavaFall->lavaSfxTimer;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);

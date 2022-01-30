@@ -21,11 +21,11 @@ struct EntitySol {
     uint8 startDir;
     uint8 activeOrbs;
     Vector2 positions[Sol_MaxFlameOrbs];
-    int32 field_88;
+    int32 xOffset;
     bool32 isFlameFX;
     bool32 fireOrbs;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator ballAnimator;
 };
 
 // Object Struct
@@ -54,14 +54,15 @@ void Sol_HandleRotation(void);
 void Sol_CheckOnScreen(void);
 
 void Sol_State_Setup(void);
-void Sol_Unknown5(void);
-void Sol_Unknown6(void);
-void Sol_Unknown7(void);
-void Sol_Unknown8(void);
-void Sol_Unknown9(void);
+void Sol_State_Moving(void);
+void Sol_State_ShootingOrbs(void);
+void Sol_State_NoOrbs(void);
 
-void Sol_Unknown10(void);
-void Sol_Unknown11(void);
-void Sol_Unknown12(void);
+void Sol_State_SmallFireball(void);
+void Sol_State_ActiveFireball(void);
+
+void Sol_State_FlameDissipate(void);
+void Sol_State_FireballOilFlame(void);
+void Sol_State_OilFlame(void);
 
 #endif //!OBJ_SOL_H

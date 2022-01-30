@@ -38,7 +38,7 @@ void TurretSwitch_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    if (voidToInt(data) == 1) {
+    if (voidToInt(data) == true) {
         RSDK.SetSpriteAnimation(TurretSwitch->aniFrames, 1, &self->animator, true, 0);
         self->state     = TurretSwitch_State_Projectile;
         self->drawOrder = Zone->drawOrderLow;
@@ -48,10 +48,12 @@ void TurretSwitch_Create(void *data)
         self->hitbox.top         = -12;
         self->hitbox.right       = 12;
         self->hitbox.bottom      = 12;
+
         self->hitboxRange.left   = -12;
         self->hitboxRange.top    = -140;
         self->hitboxRange.right  = 140;
         self->hitboxRange.bottom = 140;
+
         self->state              = TurretSwitch_State_Setup;
         self->drawOrder          = Zone->drawOrderHigh;
     }
@@ -60,10 +62,12 @@ void TurretSwitch_Create(void *data)
 void TurretSwitch_StageLoad(void)
 {
     TurretSwitch->aniFrames               = RSDK.LoadSpriteAnimation("LRZ1/TurretSwitch.bin", SCOPE_STAGE);
+
     TurretSwitch->hitboxProjectile.left   = -3;
     TurretSwitch->hitboxProjectile.top    = -3;
     TurretSwitch->hitboxProjectile.right  = 3;
     TurretSwitch->hitboxProjectile.bottom = 3;
+
     TurretSwitch->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
 }
 
@@ -89,18 +93,18 @@ void TurretSwitch_CheckPlayerCollisions(void)
     }
 }
 
-void TurretSwitch_Break(EntityTurretSwitch *self, EntityPlayer *player)
+void TurretSwitch_Break(EntityTurretSwitch *turret, EntityPlayer *player)
 {
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
-    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), turret->position.x, turret->position.y)->drawOrder = Zone->drawOrderHigh;
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
-    self->visible         = 0;
-    self->state           = 0;
-    self->currentlyActive = true;
-    self->wasActivated    = true;
-    self->down            = true;
-    self->toggled         = true;
-    self->activated       = true;
+    turret->visible         = false;
+    turret->state           = StateMachine_None;
+    turret->currentlyActive = true;
+    turret->wasActivated    = true;
+    turret->down            = true;
+    turret->toggled         = true;
+    turret->activated       = true;
 }
 
 void TurretSwitch_State_Setup(void)
@@ -119,7 +123,7 @@ void TurretSwitch_State_Turret(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitboxRange)) {
             if (!self->timer) {
-                EntityTurretSwitch *projectile = CREATE_ENTITY(TurretSwitch, intToVoid(1), self->position.x, self->position.y);
+                EntityTurretSwitch *projectile = CREATE_ENTITY(TurretSwitch, intToVoid(true), self->position.x, self->position.y);
                 projectile->velocity.y         = 0x20000;
                 if (self->direction == FLIP_NONE) {
                     projectile->position.x += 0x80000;

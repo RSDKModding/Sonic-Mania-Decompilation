@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LAVAGEYSER_INTERVAL,
+    LAVAGEYSER_REPEAT,
+}LavaGeyserTypes;
+
 // Object Class
 struct ObjectLavaGeyser {
     RSDK_OBJECT
@@ -18,13 +23,13 @@ struct EntityLavaGeyser {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    int32 field_A8;
+    Animator plumeAnimator;
+    Animator flowAnimator;
+    Animator plumeLoopAnimator;
+    int32 startingHeight;
     int32 height;
     int32 timer;
-    uint16 field_B4;
+    uint16 unused;
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
@@ -50,13 +55,13 @@ void LavaGeyser_Serialize(void);
 // Extra Entity Functions
 void LavaGeyser_CheckPlayerCollisions(void);
 void LavaGeyser_HandleSetup(void);
-void LavaGeyser_HandleIntervals(void);
+void LavaGeyser_State_Intervals(void);
 
-void LavaGeyser_State_Unknown1(void);
-void LavaGeyser_State_Unknown2(void);
-void LavaGeyser_State_Unknown3(void);
-void LavaGeyser_State_Unknown4(void);
-void LavaGeyser_State_Unknown5(void);
-void LavaGeyser_State_Unknown6(void);
+void LavaGeyser_State_Setup(void);
+void LavaGeyser_State_ShowPlume(void);
+void LavaGeyser_State_Erupting(void);
+void LavaGeyser_State_Erupted(void);
+void LavaGeyser_State_Recede(void);
+void LavaGeyser_State_HandleFinish(void);
 
 #endif //!OBJ_LAVAGEYSER_H

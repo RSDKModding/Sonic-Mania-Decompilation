@@ -12,17 +12,17 @@ ObjectValve *Valve;
 void Valve_Update(void)
 {
     RSDK_THIS(Valve);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->valveAnimator);
+    RSDK.ProcessAnimation(&self->wheelAnimator);
 
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &Valve->hitbox))
-            OOZSetup->fadeTimer = 0;
+            OOZSetup->smogTimer = 0;
     }
 
-    if (self->animator2.animationID == 2 && self->animator2.frameID == 5 && self->animator2.timer == 1)
-        RSDK.PlaySfx(Valve->sfxClick, 0, 255);
+    if (self->wheelAnimator.animationID == 2 && self->wheelAnimator.frameID == 5 && self->wheelAnimator.timer == 1)
+        RSDK.PlaySfx(Valve->sfxClick, false, 0xFF);
 }
 
 void Valve_LateUpdate(void) {}
@@ -32,8 +32,8 @@ void Valve_StaticUpdate(void) {}
 void Valve_Draw(void)
 {
     RSDK_THIS(Valve);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->wheelAnimator, NULL, false);
+    RSDK.DrawSprite(&self->valveAnimator, NULL, false);
 }
 
 void Valve_Create(void *data)
@@ -46,8 +46,8 @@ void Valve_Create(void *data)
         self->drawOrder     = Zone->drawOrderLow - 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->animator1, true, 3);
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &self->animator2, true, 3);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->valveAnimator, true, 3);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &self->wheelAnimator, true, 3);
     }
 }
 
@@ -55,10 +55,12 @@ void Valve_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         Valve->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Valve.bin", SCOPE_STAGE);
+
     Valve->hitbox.left   = -16;
     Valve->hitbox.top    = -16;
     Valve->hitbox.right  = 16;
     Valve->hitbox.bottom = 16;
+
     Valve->sfxClick      = RSDK.GetSfx("Stage/Click.wav");
 }
 
@@ -66,8 +68,8 @@ void Valve_StageLoad(void)
 void Valve_EditorDraw(void)
 {
     RSDK_THIS(Valve);
-    RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->animator1, false, 3);
-    RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &self->animator2, false, 3);
+    RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->valveAnimator, false, 3);
+    RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &self->wheelAnimator, false, 3);
 
     Valve_Draw();
 }

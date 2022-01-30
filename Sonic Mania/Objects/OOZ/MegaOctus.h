@@ -19,7 +19,7 @@ typedef enum {
 // Object Class
 struct ObjectMegaOctus {
     RSDK_OBJECT
-    Entity *bossPtr;
+    EntityMegaOctus *bossPtr;
     Animator noseAnimator;
     Animator boltsAnimator;
     Animator eggmanAnimator;
@@ -94,56 +94,56 @@ void MegaOctus_HandleDirectionChange(void);
 
 void MegaOctus_State_SetupBounds(void);
 void MegaOctus_State_SetupArena(void);
-void MegaOctus_State_Unknown1(void);
-void MegaOctus_State_Unknown2(void);
-void MegaOctus_State_Unknown3(void);
-void MegaOctus_State_Unknown4(void);
-void MegaOctus_State_Unknown5(void);
+void MegaOctus_State_None(void);
+void MegaOctus_State_EnterMegaOctus(void);
+void MegaOctus_State_OpenHatchAndLaugh(void);
+void MegaOctus_State_CloseHatch(void);
+void MegaOctus_State_DiveIntoOil(void);
 void MegaOctus_State_SpawnWeapons(void);
 void MegaOctus_State_GunThenSpawnOrbs(void);
 void MegaOctus_State_Destroyed(void);
 void MegaOctus_State_Finish(void);
-void MegaOctus_StateDraw_Body(void);
+void MegaOctus_Draw_Body(void);
 
-void MegaOctus_CheckPlayerCollisions_Unknown(void);
+void MegaOctus_CheckPlayerCollisions_Harpoon(void);
 void MegaOctus_State_HarpoonLeft(void);
 void MegaOctus_State_HarpoonRight(void);
-void MegaOctus_StateDraw_HarpoonLeft(void);
-void MegaOctus_StateDraw_HarpoonRight(void);
+void MegaOctus_Draw_HarpoonLeft(void);
+void MegaOctus_Draw_HarpoonRight(void);
 
 void MegaOctus_CheckPlayerCollisions_Gun(void);
 void MegaOctus_StateGun_RiseUp(void);
 void MegaOctus_StateGun_Idle(void);
 void MegaOctus_StateGun_FireLaser(void);
-void MegaOctus_StateGun_Unknown4(void);
-void MegaOctus_StateDraw_Gun(void);
+void MegaOctus_StateGun_SinkDown(void);
+void MegaOctus_Draw_Gun(void);
 
 void MegaOctus_CheckPlayerCollisions_Orb(void);
 void MegaOctus_StateOrb_Wait(void);
 void MegaOctus_StateOrb_FireShot(void);
 void MegaOctus_StateOrb_Idle(void);
 void MegaOctus_StateOrb_Destroyed(void);
-void MegaOctus_StateDraw_Orb(void);
+void MegaOctus_Draw_Orb(void);
 
-void MegaOctus_StateArm_Unknown1(void);
-void MegaOctus_StateArm_Unknown2(void);
-void MegaOctus_StateArm_Unknown3(void);
-void MegaOctus_StateArm_Unknown4(void);
-void MegaOctus_StateDraw_Arm_Unknown1(void);
+void MegaOctus_StateArm_WrapAroundPlatform(void);
+void MegaOctus_StateArm_GrabbedPlatform(void);
+void MegaOctus_StateArm_PullPlatformDown(void);
+void MegaOctus_StateArm_RisePlatformUp(void);
+void MegaOctus_Draw_Arm_WrapAroundPlatformBase(void);
 
-void MegaOctus_StateArm_Unknown5(void);
-void MegaOctus_StateDraw_Arm_Unknown2(void);
+void MegaOctus_StateArm_GrabPlatform(void);
+void MegaOctus_Draw_Arm_WrapAroundPlatformTop(void);
 
 void MegaOctus_State_Laser(void);
 
 void MegaOctus_State_LaserFire(void);
-void MegaOctus_StateDraw_Laser(void);
+void MegaOctus_Draw_Laser(void);
 
 void MegaOctus_State_Shot(void);
-void MegaOctus_StateDraw_OrbShot(void);
+void MegaOctus_Draw_OrbShot(void);
 
 #if RETRO_USE_PLUS
-void MegaOctus_TilePlatformState_Unknown(void);
+void MegaOctus_TilePlatformState_RiseOuttaOil(void);
 #endif
 
 #endif //! OBJ_MEGAOCTUS_H

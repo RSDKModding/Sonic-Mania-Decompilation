@@ -30,6 +30,7 @@ void BallCannon_Create(void *data)
     RSDK_THIS(BallCannon);
     self->drawOrder = Zone->playerDrawLow;
     self->visible   = true;
+
     if (!SceneInfo->inEditor) {
         if (data) {
             self->visible       = true;
@@ -37,7 +38,7 @@ void BallCannon_Create(void *data)
             self->active        = ACTIVE_NORMAL;
             self->rotationSpeed = RSDK.Rand(-8, 8);
             RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, voidToInt(data));
-            self->state = BallCannon_Unknown8;
+            self->state = BallCannon_State_CorkDebris;
         }
         else {
             self->drawFX        = FX_ROTATE | FX_FLIP;
@@ -46,33 +47,48 @@ void BallCannon_Create(void *data)
             self->updateRange.y = 0x400000;
 
             switch (self->type) {
-                case 0:
+                case BALLCANNON_CANNON:
                     if (self->angle >= 4)
                         self->direction = FLIP_X;
+
                     self->rotation = (self->angle + self->direction + 1) << 7;
                     switch (self->angle) {
-                        case 0:
-                        case 5: self->velocity.y = 0x100000; break;
-                        case 1:
-                        case 6: self->velocity.x = -0x100000; break;
-                        case 2:
-                        case 7: self->velocity.y = -0x100000; break;
-                        case 3:
-                        case 4: self->velocity.x = 0x100000; break;
+                        case BALLCANNON_DIR_RIGHT_CW: // Right -> Down
+                        case BALLCANNON_DIR_LEFT_CCW: // Left -> Down
+                            self->velocity.y = 0x100000;
+                            break;
+
+                        case BALLCANNON_DIR_DOWN_CW: // Down -> Left
+                        case BALLCANNON_DIR_UP_CCW:  // Up -> Left
+                            self->velocity.x = -0x100000;
+                            break;
+
+                        case BALLCANNON_DIR_LEFT_CW:   // Left -> Up
+                        case BALLCANNON_DIR_RIGHT_CCW: // Right -> Up
+                            self->velocity.y = -0x100000;
+                            break;
+
+                        case BALLCANNON_DIR_UP_CW:    // Up -> Right
+                        case BALLCANNON_DIR_DOWN_CCW: // Down -> Right
+                            self->velocity.x = 0x100000;
+                            break;
+
                         default: break;
                     }
                     RSDK.SetSpriteAnimation(BallCannon->aniFrames, 0, &self->animator, true, 0);
-                    self->state = BallCannon_Unknown2;
+                    self->state = BallCannon_State_Idle;
                     break;
-                case 1:
+
+                case BALLCANNON_CORKV:
                     RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, 0);
                     self->velocity.y = -0x80000;
-                    self->state      = BallCannon_StateCheckPlayerCollisions;
+                    self->state      = BallCannon_State_CorkBlocked;
                     break;
-                case 2:
+
+                case BALLCANNON_CORKH:
                     RSDK.SetSpriteAnimation(BallCannon->aniFrames, 4, &self->animator, true, 0);
                     self->velocity.x = 0x80000;
-                    self->state      = BallCannon_StateCheckPlayerCollisions;
+                    self->state      = BallCannon_State_CorkBlocked;
                     break;
             }
         }
@@ -81,26 +97,31 @@ void BallCannon_Create(void *data)
 
 void BallCannon_StageLoad(void)
 {
-    BallCannon->aniFrames      = RSDK.LoadSpriteAnimation("OOZ/BallCannon.bin", SCOPE_STAGE);
-    BallCannon->hitbox1.top    = -4;
-    BallCannon->hitbox1.left   = -4;
-    BallCannon->hitbox1.right  = 4;
-    BallCannon->hitbox1.bottom = 4;
-    BallCannon->hitbox2.top    = -16;
-    BallCannon->hitbox2.left   = -16;
-    BallCannon->hitbox2.right  = 16;
-    BallCannon->hitbox2.bottom = 16;
-    BallCannon->hitbox3.top    = -4;
-    BallCannon->hitbox3.left   = -8;
-    BallCannon->hitbox3.right  = 8;
-    BallCannon->hitbox3.bottom = 4;
-    BallCannon->sfxLedgeBreak  = RSDK.GetSfx("Stage/LedgeBreak.wav");
-    BallCannon->sfxFire        = RSDK.GetSfx("Stage/CannonFire.wav");
+    BallCannon->aniFrames = RSDK.LoadSpriteAnimation("OOZ/BallCannon.bin", SCOPE_STAGE);
+
+    BallCannon->hitboxCannon.top    = -4;
+    BallCannon->hitboxCannon.left   = -4;
+    BallCannon->hitboxCannon.right  = 4;
+    BallCannon->hitboxCannon.bottom = 4;
+
+    BallCannon->hitboxCorkBlock.top    = -16;
+    BallCannon->hitboxCorkBlock.left   = -16;
+    BallCannon->hitboxCorkBlock.right  = 16;
+    BallCannon->hitboxCorkBlock.bottom = 16;
+
+    BallCannon->hitboxCorkEntry.top    = -4;
+    BallCannon->hitboxCorkEntry.left   = -8;
+    BallCannon->hitboxCorkEntry.right  = 8;
+    BallCannon->hitboxCorkEntry.bottom = 4;
+
+    BallCannon->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
+    BallCannon->sfxFire       = RSDK.GetSfx("Stage/CannonFire.wav");
 }
 
-void BallCannon_Unknown1(void)
+void BallCannon_CheckPlayerEntry(void)
 {
     RSDK_THIS(BallCannon);
+
     if (RSDK.CheckOnScreen(self, NULL)) {
         foreach_all(Player, player)
         {
@@ -116,7 +137,7 @@ void BallCannon_Unknown1(void)
                             self->activePlayers &= ~(1 << playerID);
                     }
                     else {
-                        if (Player_CheckCollisionTouch(player, self, &BallCannon->hitbox1)) {
+                        if (Player_CheckCollisionTouch(player, self, &BallCannon->hitboxCannon)) {
                             RSDK.PlaySfx(Player->sfxRoll, false, 255);
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             player->position.x     = self->position.x;
@@ -130,10 +151,10 @@ void BallCannon_Unknown1(void)
                             player->state          = Player_State_None;
                             self->activePlayers |= 1 << playerID;
                             self->active   = ACTIVE_NORMAL;
-                            self->rotation = (self->direction + 1 + self->angle) << 7;
+                            self->rotation = (self->angle + self->direction + 1) << 7;
                             self->drawFX   = FX_ROTATE;
                             RSDK.SetSpriteAnimation(BallCannon->aniFrames, 0, &self->animator, true, 0);
-                            self->state = BallCannon_Unknown3;
+                            self->state = BallCannon_State_Inserted;
                         }
                     }
                 }
@@ -142,43 +163,43 @@ void BallCannon_Unknown1(void)
     }
     else {
         self->active   = ACTIVE_BOUNDS;
-        self->rotation = (self->direction + self->angle + 1) << 7;
+        self->rotation = (self->angle + self->direction + 1) << 7;
     }
 }
 
-void BallCannon_Unknown2(void) { BallCannon_Unknown1(); }
+void BallCannon_State_Idle(void) { BallCannon_CheckPlayerEntry(); }
 
-void BallCannon_Unknown3(void)
+void BallCannon_State_Inserted(void)
 {
     RSDK_THIS(BallCannon);
-    BallCannon_Unknown1();
+    BallCannon_CheckPlayerEntry();
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(BallCannon->aniFrames, 1, &self->animator, true, 0);
         self->drawFX = FX_FLIP;
-        self->state  = BallCannon_Unknown4;
+        self->state  = BallCannon_State_Turning;
     }
 }
 
-void BallCannon_Unknown4(void)
+void BallCannon_State_Turning(void)
 {
     RSDK_THIS(BallCannon);
-    BallCannon_Unknown1();
+    BallCannon_CheckPlayerEntry();
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(BallCannon->aniFrames, 2, &self->animator, true, 0);
         self->drawFX   = FX_ROTATE;
-        self->state    = BallCannon_Unknown5;
+        self->state    = BallCannon_State_EjectPlayer;
         self->rotation = (self->angle - self->direction + 2) << 7;
     }
 }
 
-void BallCannon_Unknown5(void)
+void BallCannon_State_EjectPlayer(void)
 {
     RSDK_THIS(BallCannon);
-    BallCannon_Unknown1();
+    BallCannon_CheckPlayerEntry();
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
@@ -188,7 +209,7 @@ void BallCannon_Unknown5(void)
                 int32 playerID = RSDK.GetEntityID(player);
 
                 if (((1 << playerID) & self->activePlayers)) {
-                    RSDK.PlaySfx(BallCannon->sfxFire, false, 255);
+                    RSDK.PlaySfx(BallCannon->sfxFire, false, 0xFF);
                     player->velocity = self->velocity;
                     player->visible  = true;
                     if (self->exit) {
@@ -203,47 +224,48 @@ void BallCannon_Unknown5(void)
                 }
             }
         }
-        self->state = BallCannon_Unknown2;
+        self->state = BallCannon_State_Idle;
     }
 }
 
-void BallCannon_StateCheckPlayerCollisions(void)
+void BallCannon_State_CorkBlocked(void)
 {
     RSDK_THIS(BallCannon);
 
     foreach_active(Player, player)
     {
-        Animator *animator = &player->animator;
-        int32 storeVelY      = player->velocity.y;
-        int32 storeVelX      = player->velocity.x;
-        int32 storeX         = player->position.x;
-        int32 storeY         = player->position.y;
+        Animator animator;
+        memcpy(&animator, &player->animator, sizeof(Animator));
+        int32 storeX    = player->position.x;
+        int32 storeY    = player->position.y;
+        int32 storeVelX = player->velocity.x;
+        int32 storeVelY = player->velocity.y;
 
-        if (Player_CheckCollisionBox(player, self, &BallCannon->hitbox2) == 1) {
+        if (Player_CheckCollisionBox(player, self, &BallCannon->hitboxCorkBlock) == C_TOP) {
             if (player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash
 #if RETRO_USE_PLUS
                 || player->state == Player_State_MightyHammerDrop
 #endif
-                ) {
+            ) {
                 if (storeVelY >= 0 && !player->groundedStore) {
                     for (int32 i = 0; i < 16; ++i) {
                         EntityBallCannon *debris =
-                            CREATE_ENTITY(BallCannon, intToVoid((i & 3) + 1), self->position.x + BallCannon->array1[(i * 2) + 0],
-                                          self->position.y + BallCannon->array2[(i * 2) + 1]);
-                        debris->velocity.x = BallCannon->array2[(i * 2) + 0];
-                        debris->velocity.y = BallCannon->array2[(i * 2) + 1];
+                            CREATE_ENTITY(BallCannon, intToVoid((i & 3) + 1), self->position.x + BallCannon->corkDebrisOffset[(i * 2) + 0],
+                                          self->position.y + BallCannon->corkDebrisVelocity[(i * 2) + 1]);
+                        debris->velocity.x = BallCannon->corkDebrisVelocity[(i * 2) + 0];
+                        debris->velocity.y = BallCannon->corkDebrisVelocity[(i * 2) + 1];
                     }
 
-                    RSDK.PlaySfx(BallCannon->sfxLedgeBreak, false, 255);
-                    memcpy(&player->animator, animator, sizeof(Animator));
+                    RSDK.PlaySfx(BallCannon->sfxLedgeBreak, false, 0xFF);
+                    memcpy(&player->animator, &animator, sizeof(Animator));
                     player->velocity.x = storeVelX;
                     player->velocity.y = storeVelY;
                     player->position.x = storeX;
                     player->position.y = storeY;
                     player->onGround   = false;
-                    self->active     = ACTIVE_NORMAL;
-                    self->visible    = false;
-                    self->state      = BallCannon_Unknown7;
+                    self->active       = ACTIVE_NORMAL;
+                    self->visible      = false;
+                    self->state        = BallCannon_State_CorkOpened;
                     foreach_break;
                 }
             }
@@ -251,7 +273,7 @@ void BallCannon_StateCheckPlayerCollisions(void)
     }
 }
 
-void BallCannon_Unknown7(void)
+void BallCannon_State_CorkOpened(void)
 {
     RSDK_THIS(BallCannon);
 
@@ -264,18 +286,17 @@ void BallCannon_Unknown7(void)
                 self->playerTimers[playerID]--;
             }
             else {
-                if (Player_CheckCollisionTouch(player, self, &BallCannon->hitbox3)) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->animator, false, 0);
-                    RSDK.PlaySfx(BallCannon->sfxFire, false, 255);
-                    player->state                  = Player_State_None;
-                    player->nextGroundState        = 0;
-                    player->nextAirState           = 0;
-                    player->position.x             = self->position.x;
-                    player->position.y             = self->position.y;
-                    player->velocity               = self->velocity;
-                    player->tileCollisions         = false;
-                    player->interaction            = false;
-                    player->onGround               = false;
+                if (Player_CheckCollisionTouch(player, self, &BallCannon->hitboxCorkEntry)) {
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+                    RSDK.PlaySfx(BallCannon->sfxFire, false, 0xFF);
+                    player->state                = Player_State_None;
+                    player->nextGroundState      = StateMachine_None;
+                    player->nextAirState         = StateMachine_None;
+                    player->position             = self->position;
+                    player->velocity             = self->velocity;
+                    player->tileCollisions       = false;
+                    player->interaction          = false;
+                    player->onGround             = false;
                     self->playerTimers[playerID] = 15;
                 }
             }
@@ -283,14 +304,12 @@ void BallCannon_Unknown7(void)
     }
     else {
         self->visible = true;
-        for (int32 i = 0; i < Player->playerCount; ++i) {
-            self->playerTimers[i] = 0;
-        }
-        self->state = BallCannon_StateCheckPlayerCollisions;
+        for (int32 i = 0; i < Player->playerCount; ++i) self->playerTimers[i] = 0;
+        self->state = BallCannon_State_CorkBlocked;
     }
 }
 
-void BallCannon_Unknown8(void)
+void BallCannon_State_CorkDebris(void)
 {
     RSDK_THIS(BallCannon);
     self->position.x += self->velocity.x;
@@ -308,40 +327,88 @@ void BallCannon_EditorDraw(void)
     RSDK_THIS(BallCannon);
 
     self->drawFX        = FX_ROTATE | FX_FLIP;
+    self->rotation      = 0;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
+    self->velocity.x    = 0;
+    self->velocity.y    = 0;
 
     switch (self->type) {
-        case 0:
+        default: break;
+
+        case BALLCANNON_CANNON:
             if (self->angle >= 4)
                 self->direction = FLIP_X;
             self->rotation = (self->angle + self->direction + 1) << 7;
+
             switch (self->angle) {
-                case 0:
-                case 5: self->velocity.y = 0x100000; break;
-                case 1:
-                case 6: self->velocity.x = -0x100000; break;
-                case 2:
-                case 7: self->velocity.y = -0x100000; break;
-                case 3:
-                case 4: self->velocity.x = 0x100000; break;
+                case BALLCANNON_DIR_RIGHT_CW: // Right -> Down
+                case BALLCANNON_DIR_LEFT_CCW: // Left -> Down
+                    self->velocity.y = 0x200000;
+                    break;
+
+                case BALLCANNON_DIR_DOWN_CW: // Down -> Left
+                case BALLCANNON_DIR_UP_CCW:  // Up -> Left
+                    self->velocity.x = -0x200000;
+                    break;
+
+                case BALLCANNON_DIR_LEFT_CW:   // Left -> Up
+                case BALLCANNON_DIR_RIGHT_CCW: // Right -> Up
+                    self->velocity.y = -0x200000;
+                    break;
+
+                case BALLCANNON_DIR_UP_CW:    // Up -> Right
+                case BALLCANNON_DIR_DOWN_CCW: // Down -> Right
+                    self->velocity.x = 0x200000;
+                    break;
+
                 default: break;
             }
+
             RSDK.SetSpriteAnimation(BallCannon->aniFrames, 0, &self->animator, true, 0);
             break;
-        case 1:
-            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, 0);
-            break;
-        case 2:
-            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 4, &self->animator, true, 0);
-            break;
+
+        case BALLCANNON_CORKV: RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &self->animator, true, 0); break;
+
+        case BALLCANNON_CORKH: RSDK.SetSpriteAnimation(BallCannon->aniFrames, 4, &self->animator, true, 0); break;
     }
 
     BallCannon_Draw();
+
+    if (showGizmos() && self->type == BALLCANNON_CANNON) {
+        self->rotation = (self->angle - self->direction + 2) << 7;
+
+        self->inkEffect = INK_BLEND;
+
+        BallCannon_Draw();
+
+        self->inkEffect = INK_NONE;
+
+        // Draw the direction the player will be shot from (the names are a little confusing on their own)
+        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->position.x + self->velocity.x, self->position.y + self->velocity.y);
+    }
 }
 
-void BallCannon_EditorLoad(void) { BallCannon->aniFrames = RSDK.LoadSpriteAnimation("OOZ/BallCannon.bin", SCOPE_STAGE); }
+void BallCannon_EditorLoad(void)
+{
+    BallCannon->aniFrames = RSDK.LoadSpriteAnimation("OOZ/BallCannon.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(BallCannon, type);
+    RSDK_ENUM_VAR("Cannon", BALLCANNON_CANNON);
+    RSDK_ENUM_VAR("Cork V", BALLCANNON_CORKV);
+    RSDK_ENUM_VAR("Cork H", BALLCANNON_CORKH);
+
+    RSDK_ACTIVE_VAR(BallCannon, angle);
+    RSDK_ENUM_VAR("Right (Rotates Clockwise)", BALLCANNON_DIR_RIGHT_CW);
+    RSDK_ENUM_VAR("Down (Rotates Clockwise)", BALLCANNON_DIR_DOWN_CW);
+    RSDK_ENUM_VAR("Left (Rotates Clockwise)", BALLCANNON_DIR_LEFT_CW);
+    RSDK_ENUM_VAR("Up (Rotates Clockwise)", BALLCANNON_DIR_UP_CW);
+    RSDK_ENUM_VAR("Down (Rotates Anti-Clockwise)", BALLCANNON_DIR_DOWN_CCW);
+    RSDK_ENUM_VAR("Left (Rotates Anti-Clockwise)", BALLCANNON_DIR_LEFT_CCW);
+    RSDK_ENUM_VAR("Up (Rotates Anti-Clockwise)", BALLCANNON_DIR_UP_CCW);
+    RSDK_ENUM_VAR("Right (Rotates Anti-Clockwise)", BALLCANNON_DIR_RIGHT_CCW);
+}
 #endif
 
 void BallCannon_Serialize(void)

@@ -14,7 +14,7 @@ struct EntityOOZFlames {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
+    int32 flamePos;
     Animator animator;
 };
 
@@ -35,8 +35,8 @@ void OOZFlames_EditorLoad(void);
 void OOZFlames_Serialize(void);
 
 // Extra Entity Functions
-void OOZFlames_Unknown1(void);
-void OOZFlames_Unknown2(void);
+void OOZFlames_State_Rise(void);
+void OOZFlames_State_ScaleIn(void);
 
 
 #endif //!OBJ_OOZFLAMES_H

@@ -59,15 +59,15 @@ void LRZ2Setup_StaticUpdate(void)
     {
         if (player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            uint8 behaviour      = LRZ2_TBEHAVE_NORMAL;
+            uint8 behaviour      = LRZ2_TFLAGS_NORMAL;
             int32 tileInfo       = 0;
 
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
                                   player->moveOffset.x, player->moveOffset.y, &behaviour);
-            if (behaviour == LRZ2_TBEHAVE_NORMAL) {
+            if (behaviour == LRZ2_TFLAGS_NORMAL) {
                 LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->right << 16) + player->position.x,
                                       (playerHitbox->bottom << 16) + player->position.y, player->moveOffset.x, player->moveOffset.y, &behaviour);
-                if (behaviour == LRZ2_TBEHAVE_NORMAL) {
+                if (behaviour == LRZ2_TFLAGS_NORMAL) {
                     LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->left << 16) + player->position.x,
                                           (playerHitbox->bottom << 16) + player->position.y, player->moveOffset.x, player->moveOffset.y, &behaviour);
                 }
@@ -77,7 +77,7 @@ void LRZ2Setup_StaticUpdate(void)
             uint8 conveyorDir       = 0;
             switch (behaviour) {
                 default: break;
-                case LRZ2_TBEHAVE_LAVA: {
+                case LRZ2_TFLAGS_LAVA: {
                     int32 solid = 1 << 14;
                     if (player->collisionPlane)
                         solid = 1 << 12;
@@ -85,11 +85,11 @@ void LRZ2Setup_StaticUpdate(void)
                         Player_CheckHitFlip(player);
                     break;
                 }
-                case LRZ2_TBEHAVE_CONVEYOR_L:
+                case LRZ2_TFLAGS_CONVEYOR_L:
                     conveyorCollided = true;
                     conveyorDir      = 0;
                     break;
-                case LRZ2_TBEHAVE_CONVEYOR_R:
+                case LRZ2_TFLAGS_CONVEYOR_R:
                     conveyorCollided = true;
                     conveyorDir      = 1;
                     break;
@@ -249,14 +249,14 @@ void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int3
 {
     int32 tileInfoLow   = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
     int32 tileInfoHigh  = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
-    int32 behaviourLow  = RSDK.GetTileBehaviour(tileInfoLow, cPlane);
-    int32 behaviourHigh = RSDK.GetTileBehaviour(tileInfoHigh, cPlane);
+    int32 behaviourLow  = RSDK.GetTileFlags(tileInfoLow, cPlane);
+    int32 behaviourHigh = RSDK.GetTileFlags(tileInfoHigh, cPlane);
 
     int32 tileInfoMove  = 0;
     int32 behaviourMove = 0;
     if (Zone->moveLayer) {
         tileInfoMove  = RSDK.GetTileInfo(Zone->moveLayer, (offsetX + x) >> 20, (offsetY + y) >> 20);
-        behaviourMove = RSDK.GetTileBehaviour(tileInfoMove, cPlane);
+        behaviourMove = RSDK.GetTileFlags(tileInfoMove, cPlane);
     }
 
     int32 tileSolidLow  = 0;
@@ -274,7 +274,7 @@ void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int3
         tileSolidMove = tileInfoMove >> 12;
 
     *tileInfo  = 0;
-    *behaviour = LRZ2_TBEHAVE_NORMAL;
+    *behaviour = LRZ2_TFLAGS_NORMAL;
     if (behaviourMove && (tileSolidMove & 3)) {
         *tileInfo  = tileInfoMove;
         *behaviour = behaviourMove;

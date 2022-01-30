@@ -3,17 +3,35 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BALLCANNON_CANNON,
+    BALLCANNON_CORKV,
+    BALLCANNON_CORKH,
+} GasPlatformTypes;
+
+typedef enum {
+    // Clockwise by default
+    BALLCANNON_DIR_RIGHT_CW,
+    BALLCANNON_DIR_DOWN_CW,
+    BALLCANNON_DIR_LEFT_CW,
+    BALLCANNON_DIR_UP_CW,
+    BALLCANNON_DIR_DOWN_CCW,
+    BALLCANNON_DIR_LEFT_CCW,
+    BALLCANNON_DIR_UP_CCW,
+    BALLCANNON_DIR_RIGHT_CCW,
+} GasPlatformAngles;
+
 // Object Class
 struct ObjectBallCannon {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxCannon;
+    Hitbox hitboxCorkBlock;
+    Hitbox hitboxCorkEntry;
     uint16 aniFrames;
-    TABLE(int32 array1[32], { -0xC0000, -0xC0000, -0x40000, -0xC0000, 0x40000,  -0xC0000, 0xC0000, -0xC0000, -0xC0000, -0x40000, -0x40000,
+    TABLE(int32 corkDebrisOffset[32], { -0xC0000, -0xC0000, -0x40000, -0xC0000, 0x40000,  -0xC0000, 0xC0000, -0xC0000, -0xC0000, -0x40000, -0x40000,
                             -0x40000, 0x40000,  -0x40000, 0xC0000,  -0x40000, -0xC0000, 0x40000, -0x40000, 0x40000,  0x40000,  0x40000,
                             0xC0000,  0x40000,  -0xC0000, 0xC0000,  -0x40000, 0xC0000,  0x40000, 0xC0000,  0xC0000,  0xC0000 });
-    TABLE(int32 array2[32], { -0x40000, -0x40000, -0x20000, -0x40000, 0x20000,  -0x40000, 0x40000, -0x40000, -0x3C000, -0x20000, -0x1C000,
+    TABLE(int32 corkDebrisVelocity[32], { -0x40000, -0x40000, -0x20000, -0x40000, 0x20000,  -0x40000, 0x40000, -0x40000, -0x3C000, -0x20000, -0x1C000,
                             -0x20000, 0x1C000,  -0x20000, 0x3C000,  -0x20000, -0x38000, 0x20000, -0x18000, 0x20000,  0x18000,  0x20000,
                             0x38000,  0x20000,  -0x34000, 0x40000,  -0x14000, 0x40000,  0x14000, 0x40000,  0x34000,  0x40000 });
     uint16 sfxLedgeBreak;
@@ -26,10 +44,10 @@ struct EntityBallCannon {
     StateMachine(state);
     uint8 type;
     bool32 exit;
-    uint8 field_64;
+    uint8 unused1;
     uint8 activePlayers;
     uint8 playerTimers[4];
-    int32 field_6C;
+    int32 unused2;
     int32 rotationSpeed;
     Animator animator;
 };
@@ -51,13 +69,13 @@ void BallCannon_EditorLoad(void);
 void BallCannon_Serialize(void);
 
 // Extra Entity Functions
-void BallCannon_Unknown1(void);
-void BallCannon_Unknown2(void);
-void BallCannon_Unknown3(void);
-void BallCannon_Unknown4(void);
-void BallCannon_Unknown5(void);
-void BallCannon_StateCheckPlayerCollisions(void);
-void BallCannon_Unknown7(void);
-void BallCannon_Unknown8(void);
+void BallCannon_CheckPlayerEntry(void);
+void BallCannon_State_Idle(void);
+void BallCannon_State_Inserted(void);
+void BallCannon_State_Turning(void);
+void BallCannon_State_EjectPlayer(void);
+void BallCannon_State_CorkBlocked(void);
+void BallCannon_State_CorkOpened(void);
+void BallCannon_State_CorkDebris(void);
 
 #endif //!OBJ_BALLCANNON_H

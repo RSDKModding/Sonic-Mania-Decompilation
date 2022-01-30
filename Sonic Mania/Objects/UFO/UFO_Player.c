@@ -311,53 +311,60 @@ void UFO_Player_HandleBumperTiles(void)
     int32 flags = 0;
 
     uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
-    if (RSDK.GetTileBehaviour(tile, 0) == 1)
-        flags = 1;
+    if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
+        flags = 0b0001;
 
     tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
-    if (RSDK.GetTileBehaviour(tile, 0) == 1)
-        flags |= 2;
+    if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
+        flags |= 0b0010;
 
     tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
-    if (RSDK.GetTileBehaviour(tile, 0) == 1)
-        flags |= 4;
+    if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
+        flags |= 0b0100;
 
     tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
-    if (RSDK.GetTileBehaviour(tile, 0) == 1)
-        flags |= 8;
+    if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
+        flags |= 0b1000;
 
     if (flags) {
         if (!self->bumperTimer)
             RSDK.PlaySfx(UFO_Player->sfxBumper, false, 255);
         self->bumperTimer = 16;
         switch (flags) {
-            case 1:
-            case 6:
-            case 7:
+            case 0b0001:
+            case 0b0110:
+            case 0b0111:
                 self->velocity.y = 0x40000;
                 self->velocity.x = 0x40000;
                 break;
-            case 2:
-            case 9:
-            case 11:
+
+            case 0b0010:
+            case 0b1001:
+            case 0b1011:
                 self->velocity.x = -0x40000;
                 self->velocity.y = 0x40000;
                 break;
-            case 3: self->velocity.y = 0x40000; break;
-            case 4:
-            case 13:
+
+            case 0b0011: self->velocity.y = 0x40000; break;
+            case 0b0100:
+            case 0b1101:
                 self->velocity.y = -0x40000;
                 self->velocity.x = 0x40000;
                 break;
-            case 5: self->velocity.x = 0x40000; break;
-            case 8:
-            case 14:
-            case 15:
+
+            case 0b0101: self->velocity.x = 0x40000; break;
+
+            case 0b1000:
+            case 0b1110:
+            case 0b1111:
                 self->velocity.x = -0x40000;
                 self->velocity.y = -0x40000;
                 break;
-            case 10: self->velocity.x = -0x40000; break;
-            case 12: self->velocity.y = -0x40000; break;
+
+            case 0b1010: self->velocity.x = -0x40000; break;
+            case 0b1100: self->velocity.y = -0x40000; break;
+
+            case 0b0000:
             default: break;
         }
     }
@@ -385,7 +392,7 @@ void UFO_Player_HandleSpeedUp(void)
     }
 
     if (self->bumperTimer <= 0) {
-        if (RSDK.GetTileBehaviour(tile, 0) == 2) {
+        if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_GRITTYGROUND) {
             if (self->groundVel > UFO_Player->maxSpeed - (UFO_Player->maxSpeed >> 2))
                 self->groundVel = self->groundVel - (self->groundVel >> 5);
 

@@ -25,36 +25,20 @@ void MeterDroid_Draw(void)
 {
     RSDK_THIS(MeterDroid);
 
-    if (self->field_6C > 0) {
-        RSDK.SetLimitedFade(0, 1, 3, self->field_6C, 32, 47);
-
-        if (self->stateDraw) {
-            StateMachine_Run(self->stateDraw);
-        }
-        else {
-            RSDK.DrawSprite(&self->animator1, NULL, false);
-        }
-        RSDK.CopyPalette(1, 32, 0, 32, 16);
-    }
-    else if (self->invincibilityTimer & 1) {
+    if (self->bgFadeAmount > 0)
+        RSDK.SetLimitedFade(0, 1, 3, self->bgFadeAmount, 32, 47);
+    else if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(2, 32, 0, 32, 16);
 
-        if (self->stateDraw) {
-            StateMachine_Run(self->stateDraw);
-            RSDK.CopyPalette(1, 32, 0, 32, 16);
-        }
-        else {
-            RSDK.DrawSprite(&self->animator1, NULL, false);
-        }
+    if (self->stateDraw) {
+        StateMachine_Run(self->stateDraw);
     }
     else {
-        if (self->stateDraw) {
-            StateMachine_Run(self->stateDraw);
-        }
-        else {
-            RSDK.DrawSprite(&self->animator1, NULL, false);
-        }
+        RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     }
+
+    if (self->bgFadeAmount > 0 || (self->invincibilityTimer & 1))
+        RSDK.CopyPalette(1, 32, 0, 32, 16);
 }
 
 void MeterDroid_Create(void *data)
@@ -65,55 +49,60 @@ void MeterDroid_Create(void *data)
             destroyEntity(self);
         }
         else {
-            self->field_70      = self->position;
+            self->origin        = self->position;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             self->health        = 6;
             self->drawOrder     = Zone->drawOrderLow;
             self->state         = MeterDroid_State_Setup;
-            RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &self->propellorAnimator, true, 0);
         }
     }
 }
 
 void MeterDroid_StageLoad(void)
 {
-    MeterDroid->aniFrames      = RSDK.LoadSpriteAnimation("OOZ/MeterDroid.bin", SCOPE_STAGE);
-    MeterDroid->hitbox1.left   = -14;
-    MeterDroid->hitbox1.top    = -14;
-    MeterDroid->hitbox1.right  = 14;
-    MeterDroid->hitbox1.bottom = 14;
-    MeterDroid->hitbox2.left   = 14;
-    MeterDroid->hitbox2.top    = -12;
-    MeterDroid->hitbox2.right  = 32;
-    MeterDroid->hitbox2.bottom = 12;
-    MeterDroid->hitbox3.left   = -14;
-    MeterDroid->hitbox3.top    = -14;
-    MeterDroid->hitbox3.right  = 14;
-    MeterDroid->hitbox3.bottom = 14;
-    MeterDroid->sfxHit         = RSDK.GetSfx("Stage/BossHit.wav");
-    MeterDroid->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
-    MeterDroid->sfxDestroy     = RSDK.GetSfx("Global/Destroy.wav");
-    MeterDroid->sfxToss        = RSDK.GetSfx("OOZ/Toss.wav");
-    MeterDroid->sfxGrab        = RSDK.GetSfx("Global/Grab.wav");
-    MeterDroid->sfxValve       = RSDK.GetSfx("OOZ/Valve.wav");
-    MeterDroid->sfxWrench      = RSDK.GetSfx("OOZ/Wrench.wav");
+    MeterDroid->aniFrames = RSDK.LoadSpriteAnimation("OOZ/MeterDroid.bin", SCOPE_STAGE);
+
+    MeterDroid->hitboxBoss.left   = -14;
+    MeterDroid->hitboxBoss.top    = -14;
+    MeterDroid->hitboxBoss.right  = 14;
+    MeterDroid->hitboxBoss.bottom = 14;
+
+    MeterDroid->hitboxPropellor.left   = 14;
+    MeterDroid->hitboxPropellor.top    = -12;
+    MeterDroid->hitboxPropellor.right  = 32;
+    MeterDroid->hitboxPropellor.bottom = 12;
+
+    MeterDroid->hitboxWrench.left   = -14;
+    MeterDroid->hitboxWrench.top    = -14;
+    MeterDroid->hitboxWrench.right  = 14;
+    MeterDroid->hitboxWrench.bottom = 14;
+
+    MeterDroid->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    MeterDroid->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    MeterDroid->sfxDestroy   = RSDK.GetSfx("Global/Destroy.wav");
+    MeterDroid->sfxToss      = RSDK.GetSfx("OOZ/Toss.wav");
+    MeterDroid->sfxGrab      = RSDK.GetSfx("Global/Grab.wav");
+    MeterDroid->sfxValve     = RSDK.GetSfx("OOZ/Valve.wav");
+    MeterDroid->sfxWrench    = RSDK.GetSfx("OOZ/Wrench.wav");
 }
 
-void MeterDroid_CheckPlayerCollisions(void)
+void MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip(void)
 {
     RSDK_THIS(MeterDroid);
 
     foreach_active(Player, player)
     {
         if (!self->invincibilityTimer) {
-            if (Player_CheckBadnikTouch(player, self, &MeterDroid->hitbox1) && Player_CheckBossHit(player, self)) {
+            if (Player_CheckBadnikTouch(player, self, &MeterDroid->hitboxBoss) && Player_CheckBossHit(player, self)) {
                 MeterDroid_Hit();
             }
+
             if (!self->invincibilityTimer) {
-                if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitbox2)) {
+                if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxPropellor)) {
 #if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
 #endif
@@ -124,10 +113,10 @@ void MeterDroid_CheckPlayerCollisions(void)
     }
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    self->direction     = player1->position.x >= self->position.x;
+    self->direction       = player1->position.x >= self->position.x;
 }
 
-void MeterDroid_CheckPlayerCollisions2(void)
+void MeterDroid_CheckPlayerCollisions_Wrench_NoFlip(void)
 {
     RSDK_THIS(MeterDroid);
 
@@ -136,11 +125,12 @@ void MeterDroid_CheckPlayerCollisions2(void)
         int32 storeX = self->position.x;
         int32 storeY = self->position.y;
         if (!self->invincibilityTimer) {
-            if (Player_CheckBadnikTouch(player, self, &MeterDroid->hitbox1) && Player_CheckBossHit(player, self)) {
+            if (Player_CheckBadnikTouch(player, self, &MeterDroid->hitboxBoss) && Player_CheckBossHit(player, self)) {
                 MeterDroid_Hit();
             }
+
             if (!self->invincibilityTimer) {
-                if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitbox2)) {
+                if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxPropellor)) {
 #if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
 #endif
@@ -148,9 +138,9 @@ void MeterDroid_CheckPlayerCollisions2(void)
                 }
             }
         }
-        self->position.x = self->field_88.x;
-        self->position.y = self->field_88.y;
-        if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitbox3)) {
+        self->position.x = self->wrenchPos.x;
+        self->position.y = self->wrenchPos.y;
+        if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxWrench)) {
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x600, player, false, &player->uncurlTimer))
 #endif
@@ -162,18 +152,19 @@ void MeterDroid_CheckPlayerCollisions2(void)
     }
 }
 
-void MeterDroid_CheckPlayerCollisions3(void)
+void MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip(void)
 {
     RSDK_THIS(MeterDroid);
 
     foreach_active(Player, player)
     {
         if (!self->invincibilityTimer) {
-            if (Player_CheckBadnikTouch(player, self, &MeterDroid->hitbox1) && Player_CheckBossHit(player, self)) {
+            if (Player_CheckBadnikTouch(player, self, &MeterDroid->hitboxBoss) && Player_CheckBossHit(player, self)) {
                 MeterDroid_Hit();
             }
+
             if (!self->invincibilityTimer) {
-                if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitbox2)) {
+                if (Player_CheckCollisionTouch(player, self, &MeterDroid->hitboxPropellor)) {
 #if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
 #endif
@@ -189,46 +180,46 @@ void MeterDroid_Hit(void)
     RSDK_THIS(MeterDroid);
 
     if (--self->health <= 0) {
-        self->state = MeterDroid_State_Die;
+        self->state = MeterDroid_State_Destroyed;
         self->timer = 0;
-        if (self->stateDraw == MeterDroid_StateDraw_Unknown2) {
-            int32 x = RSDK.Rand(MeterDroid->hitbox1.left, MeterDroid->hitbox1.right) << 16;
-            int32 y = RSDK.Rand(MeterDroid->hitbox1.top, MeterDroid->hitbox1.bottom) << 16;
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->field_88.x, y + self->field_88.y)->drawOrder = Zone->drawOrderHigh;
-            self->stateDraw                                                                                 = MeterDroid_StateDraw_Unknown1;
+        if (self->stateDraw == MeterDroid_Draw_ThrownWrench) {
+            int32 x = RSDK.Rand(MeterDroid->hitboxBoss.left, MeterDroid->hitboxBoss.right) << 16;
+            int32 y = RSDK.Rand(MeterDroid->hitboxBoss.top, MeterDroid->hitboxBoss.bottom) << 16;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawOrder = Zone->drawOrderHigh;
+            self->stateDraw                                                                                              = MeterDroid_Draw_Normal;
         }
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
         self->invincibilityTimer = 48;
-        RSDK.PlaySfx(MeterDroid->sfxHit, false, 255);
+        RSDK.PlaySfx(MeterDroid->sfxHit, false, 0xFF);
     }
 }
 
-void MeterDroid_Unknown5(void)
+void MeterDroid_FindTargetValve(void)
 {
-    EntityValve *valves[5];
-
     RSDK_THIS(MeterDroid);
 
-    valves[0] = NULL;
-    int32 id   = 0;
-    foreach_active(Valve, valve) { valves[id++ + 1] = valve; }
+    EntityValve *valves[5];
+    for (int i = 0; i < 5; ++i) valves[i] = NULL;
 
-    valves[0]         = valves[RSDK.Rand(0, id) + 1];
-    self->valvePtr  = (Entity*)valves[0];
+    int32 id  = 1;
+    foreach_active(Valve, valve) { valves[id++] = valve; }
+
+    valves[0]       = valves[RSDK.Rand(1, id)];
+    self->targetValve  = valves[0];
     self->direction = valves[0]->direction ^ 1;
-    self->field_78  = valves[0]->position.x;
-    self->field_7C  = valves[0]->position.y;
+    self->targetPos.x = valves[0]->position.x;
+    self->targetPos.y = valves[0]->position.y;
     if (valves[0]->direction)
-        self->field_78 -= 0x2E0000;
+        self->targetPos.x -= 0x2E0000;
     else
-        self->field_78 += 0x2E0000;
-    self->field_7C -= 0xC0000;
+        self->targetPos.x += 0x2E0000;
+    self->targetPos.y -= 0xC0000;
 
-    self->field_80   = (self->field_78 - self->position.x) >> 11;
-    self->field_84   = (self->field_7C - self->position.y) >> 11;
+    self->moveVel.x  = (self->targetPos.x - self->position.x) >> 11;
+    self->moveVel.y  = (self->targetPos.y - self->position.y) >> 11;
     self->velocity.x = 0;
     self->velocity.y = 0;
 }
@@ -238,61 +229,61 @@ void MeterDroid_PopPlatforms(void)
     int32 delay = 30;
     foreach_active(GasPlatform, platform)
     {
-        platform->type          = 2;
+        platform->type  = GASPLATFORM_BOSS;
         platform->timer = delay;
+        platform->state = GasPlatform_State_Shaking;
         delay += 16;
-        platform->state = GasPlatform_Unknown4;
     }
 }
 
-void MeterDroid_StateDraw_Unknown1(void)
+void MeterDroid_Draw_Normal(void)
 {
     RSDK_THIS(MeterDroid);
 
     self->drawFX = FX_FLIP;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     self->drawFX = FX_NONE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->propellorAnimator, NULL, false);
 }
 
-void MeterDroid_StateDraw_Unknown3(void)
+void MeterDroid_Draw_SpinningValve(void)
 {
     RSDK_THIS(MeterDroid);
 
     self->drawFX = FX_FLIP;
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->armAnimator, NULL, false);
 
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     self->drawFX = FX_NONE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->propellorAnimator, NULL, false);
 }
 
-void MeterDroid_StateDraw_Unknown2(void)
+void MeterDroid_Draw_ThrownWrench(void)
 {
     RSDK_THIS(MeterDroid);
 
     self->drawFX = FX_FLIP;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     self->drawFX = FX_NONE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->propellorAnimator, NULL, false);
 
     self->drawFX = FX_FLIP;
-    RSDK.DrawSprite(&self->animator3, &self->field_88, false);
+    RSDK.DrawSprite(&self->wrenchAnimator, &self->wrenchPos, false);
 }
 
 void MeterDroid_State_Setup(void)
 {
     RSDK_THIS(MeterDroid);
     if (++self->timer >= 8) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - ScreenInfo->height - 64;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height - 64;
         MeterDroid->boundsL         = (Zone->cameraBoundsL[0] + 64) << 16;
         MeterDroid->boundsR         = (Zone->cameraBoundsR[0] - 64) << 16;
         MeterDroid->startX          = self->position.x;
@@ -300,23 +291,22 @@ void MeterDroid_State_Setup(void)
         MeterDroid->boundsB         = (Zone->cameraBoundsB[0] - 8) << 16;
         self->position.x += 0x800000;
         self->visible   = true;
-        self->stateDraw = MeterDroid_StateDraw_Unknown1;
-        self->state     = MeterDroid_State_Unknown1;
+        self->stateDraw = MeterDroid_Draw_Normal;
+        self->state     = MeterDroid_State_StartFight;
     }
 }
 
-void MeterDroid_State_Unknown1(void)
+void MeterDroid_State_StartFight(void)
 {
     RSDK_THIS(MeterDroid);
-    self->position.y = BadnikHelpers_Oscillate(self->field_70.y, 4, 10);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 4, 10);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
     if (self->timer) {
-        self->timer++;
-        if (self->timer == 120) {
+        if (++self->timer == 120) {
             self->timer = 0;
-            self->state = MeterDroid_State_Unknown2;
+            self->state = MeterDroid_State_Idle;
         }
     }
     else {
@@ -328,297 +318,299 @@ void MeterDroid_State_Unknown1(void)
     }
 }
 
-void MeterDroid_State_Unknown2(void)
+void MeterDroid_State_Idle(void)
 {
     RSDK_THIS(MeterDroid);
-    self->position.y = BadnikHelpers_Oscillate(self->field_70.y, 4, 10);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 4, 10);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
     if (++self->timer == 90) {
         self->timer = 0;
-        self->state = MeterDroid_State_Unknown3;
+        self->state = MeterDroid_State_PickMoveDir;
     }
-    MeterDroid_CheckPlayerCollisions();
+    MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
 }
 
-void MeterDroid_State_Unknown3(void)
+void MeterDroid_State_PickMoveDir(void)
 {
     RSDK_THIS(MeterDroid);
-    self->position.y = BadnikHelpers_Oscillate(self->field_70.y, 4, 10);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 4, 10);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
+
     if (++self->timer == 60) {
-        self->timer    = 0;
-        self->field_A0 = 0;
-        self->angle    = 64;
+        self->timer      = 0;
+        self->moveRadius = 0;
+        self->angle      = 64;
         if (self->position.x < MeterDroid->startX) {
             self->direction = FLIP_X;
-            self->state     = MeterDroid_State_Unknown5;
+            self->state     = MeterDroid_State_MoveLeft;
         }
         else {
             self->direction = FLIP_NONE;
-            self->state     = MeterDroid_State_Unknown4;
+            self->state     = MeterDroid_State_MoveRight;
         }
     }
-    MeterDroid_CheckPlayerCollisions();
+    MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
 }
 
-void MeterDroid_State_Unknown4(void)
+void MeterDroid_State_MoveRight(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
-    self->position.x += (self->field_A0 * RSDK.Cos256(self->angle)) >> 8;
-    self->position.y += (self->field_A0 * RSDK.Sin256(self->angle)) >> 8;
-    if (self->angle > 128) {
-        self->field_A0 -= 0x1400;
-        if (self->position.y < self->field_70.y)
-            self->position.y = self->field_70.y;
+    self->position.x += (self->moveRadius * RSDK.Cos256(self->angle)) >> 8;
+    self->position.y += (self->moveRadius * RSDK.Sin256(self->angle)) >> 8;
+    if (self->angle > 0x80) {
+        self->moveRadius -= 0x1400;
+        if (self->position.y < self->origin.y)
+            self->position.y = self->origin.y;
     }
     else {
-        self->field_A0 += 0x1400;
+        self->moveRadius += 0x1400;
     }
 
-    self->angle++;
-    if (self->angle == 192) {
-        self->field_70.x = self->position.x;
-        self->field_70.y = self->position.y;
-        self->angle      = 0;
-        self->state      = MeterDroid_State_Unknown6;
+    if (++self->angle == 0xC0) {
+        self->origin.x = self->position.x;
+        self->origin.y = self->position.y;
+        self->angle    = 0;
+        self->state    = MeterDroid_State_ThrowWrench;
     }
-    MeterDroid_CheckPlayerCollisions();
+    MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
 }
 
-void MeterDroid_State_Unknown5(void)
+void MeterDroid_State_MoveLeft(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
-    self->position.x += (self->field_A0 * RSDK.Cos256(self->angle)) >> 8;
-    self->position.y += (self->field_A0 * RSDK.Sin256(self->angle)) >> 8;
+    self->position.x += (self->moveRadius * RSDK.Cos256(self->angle)) >> 8;
+    self->position.y += (self->moveRadius * RSDK.Sin256(self->angle)) >> 8;
     if (self->angle < 0) {
-        self->field_A0 -= 0x1400;
-        if (self->position.y < self->field_70.y)
-            self->position.y = self->field_70.y;
+        self->moveRadius -= 0x1400;
+        if (self->position.y < self->origin.y)
+            self->position.y = self->origin.y;
     }
     else {
-        self->field_A0 += 0x1400;
+        self->moveRadius += 0x1400;
     }
 
-    self->angle--;
-    if (self->angle == -64) {
-        self->field_70.x = self->position.x;
-        self->field_70.y = self->position.y;
-        self->angle      = 0;
-        self->state      = MeterDroid_State_Unknown6;
+    if (--self->angle == -0x40) {
+        self->origin.x = self->position.x;
+        self->origin.y = self->position.y;
+        self->angle    = 0;
+        self->state    = MeterDroid_State_ThrowWrench;
     }
-    MeterDroid_CheckPlayerCollisions();
+    MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
 }
 
-void MeterDroid_State_Unknown6(void)
+void MeterDroid_State_ThrowWrench(void)
 {
     RSDK_THIS(MeterDroid);
-    self->position.y = BadnikHelpers_Oscillate(self->field_70.y, 4, 10);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 4, 10);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
+    RSDK.ProcessAnimation(&self->wrenchAnimator);
 
-    ++self->timer;
-    if (self->timer >= 18) {
-        if (self->animator1.animationID == 2 && self->animator1.frameID == self->animator1.frameCount - 1)
-            RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 0, &self->animator1, true, 0);
+    if (++self->timer >= 18) {
+        if (self->mainAnimator.animationID == 2 && self->mainAnimator.frameID == self->mainAnimator.frameCount - 1)
+            RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 0, &self->mainAnimator, true, 0);
     }
     else if (self->timer == 16) {
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 2, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 2, &self->mainAnimator, true, 0);
     }
+
     if (self->timer == 36) {
-        self->field_88.x = self->position.x;
-        self->field_88.y = self->position.y;
+        self->wrenchPos.x = self->position.x;
+        self->wrenchPos.y = self->position.y;
         if (self->direction == FLIP_NONE)
-            self->field_88.x -= 0x300000;
+            self->wrenchPos.x -= 0x300000;
         else
-            self->field_88.x += 0x300000;
-        self->field_88.y -= 0x100000;
-        self->field_78 = self->field_88.x;
-        self->field_7C = self->field_88.y;
+            self->wrenchPos.x += 0x300000;
+        self->wrenchPos.y -= 0x100000;
+        self->targetPos.x = self->wrenchPos.x;
+        self->targetPos.y = self->wrenchPos.y;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        self->field_90.x    = (player1->position.x + 16 * player1->velocity.x - self->field_88.x) >> 5;
-        self->field_90.y    = (player1->position.y + 16 * player1->velocity.y - self->field_88.y) >> 5;
-        self->field_98.x    = -(self->field_90.x >> 6);
-        self->field_98.y    = -(self->field_90.y >> 6);
+        self->wrenchMoveVel.x = (player1->position.x + 16 * player1->velocity.x - self->wrenchPos.x) >> 5;
+        self->wrenchMoveVel.y = (player1->position.y + 16 * player1->velocity.y - self->wrenchPos.y) >> 5;
+        self->wrenchMoveInc.x = -(self->wrenchMoveVel.x >> 6);
+        self->wrenchMoveInc.y = -(self->wrenchMoveVel.y >> 6);
         RSDK.PlaySfx(MeterDroid->sfxToss, false, 255);
         RSDK.PlaySfx(MeterDroid->sfxWrench, false, 255);
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 9, &self->animator3, true, 0);
-        self->stateDraw = MeterDroid_StateDraw_Unknown2;
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 9, &self->wrenchAnimator, true, 0);
+        self->stateDraw = MeterDroid_Draw_ThrownWrench;
     }
 
-    if (self->stateDraw == MeterDroid_StateDraw_Unknown2) {
-        int32 x = self->field_90.x + self->field_98.x;
-        int32 y = self->field_90.y + self->field_98.y;
-        self->field_88.x += x;
-        self->field_88.y += y;
-        self->field_90.x = x;
-        self->field_90.y = y;
+    if (self->stateDraw == MeterDroid_Draw_ThrownWrench) {
+        self->wrenchMoveVel.x += self->wrenchMoveInc.x;
+        self->wrenchMoveVel.y += self->wrenchMoveInc.y;
+        self->wrenchPos.x += self->wrenchMoveVel.x;
+        self->wrenchPos.y += self->wrenchMoveVel.y;
         if (self->timer == 60)
-            self->state = MeterDroid_State_Unknown7;
-        MeterDroid_CheckPlayerCollisions2();
+            self->state = MeterDroid_State_ThrownWrench;
+
+        MeterDroid_CheckPlayerCollisions_Wrench_NoFlip();
     }
     else {
-        MeterDroid_CheckPlayerCollisions();
+        MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
     }
 }
 
-void MeterDroid_State_Unknown7(void)
+void MeterDroid_State_ThrownWrench(void)
 {
     RSDK_THIS(MeterDroid);
-    self->position.y = BadnikHelpers_Oscillate(self->field_70.y, 4, 10);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    self->field_90.x += self->field_98.x;
-    self->field_90.y += self->field_98.y;
-    self->field_88.x += self->field_90.x;
-    self->field_88.y += self->field_90.y;
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 4, 10);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
+    RSDK.ProcessAnimation(&self->wrenchAnimator);
+    self->wrenchMoveVel.x += self->wrenchMoveInc.x;
+    self->wrenchMoveVel.y += self->wrenchMoveInc.y;
+    self->wrenchPos.x += self->wrenchMoveVel.x;
+    self->wrenchPos.y += self->wrenchMoveVel.y;
 
-    int32 rx = abs(self->field_78 - self->field_88.x) >> 16;
-    int32 ry = abs(self->field_7C - self->field_88.y) >> 16;
+    int32 rx = abs(self->targetPos.x - self->wrenchPos.x) >> 16;
+    int32 ry = abs(self->targetPos.y - self->wrenchPos.y) >> 16;
 
-    if (rx * rx + ry * ry < 512) {
-        RSDK.PlaySfx(MeterDroid->sfxGrab, false, 255);
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 3, &self->animator1, true, 0);
-        self->stateDraw = MeterDroid_StateDraw_Unknown1;
-        self->state     = MeterDroid_State_Unknown8;
+    if (rx * rx + ry * ry < 0x200) {
+        RSDK.PlaySfx(MeterDroid->sfxGrab, false, 0xFF);
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 3, &self->mainAnimator, true, 0);
+        self->stateDraw = MeterDroid_Draw_Normal;
+        self->state     = MeterDroid_State_CaughtWrench;
     }
-    MeterDroid_CheckPlayerCollisions2();
+    MeterDroid_CheckPlayerCollisions_Wrench_NoFlip();
 }
 
-void MeterDroid_State_Unknown8(void)
+void MeterDroid_State_CaughtWrench(void)
 {
     RSDK_THIS(MeterDroid);
-    self->position.y = BadnikHelpers_Oscillate(self->field_70.y, 4, 10);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    MeterDroid_CheckPlayerCollisions();
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+    self->position.y = BadnikHelpers_Oscillate(self->origin.y, 4, 10);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
+
+    MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
+
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->animator1, true, 0);
-        MeterDroid_Unknown5();
-        self->state = MeterDroid_State_Unknown9;
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
+        MeterDroid_FindTargetValve();
+        self->state = MeterDroid_State_MoveToValve;
     }
-    MeterDroid_CheckPlayerCollisions();
+
+    MeterDroid_CheckPlayerCollisions_NoWrench_UseFlip();
 }
 
-void MeterDroid_State_Unknown9(void)
+void MeterDroid_State_MoveToValve(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
     if (abs(self->velocity.x) < 0x40000) {
         if (abs(self->velocity.x) < 0x40000)
-            self->velocity.x += self->field_80;
+            self->velocity.x += self->moveVel.x;
     }
-    self->velocity.y += self->field_84;
+    self->velocity.y += self->moveVel.y;
     self->position.y += self->velocity.y;
     self->position.x += self->velocity.x;
 
-    int32 rx = abs(self->field_78 - self->position.x) >> 16;
-    int32 ry = abs(self->field_7C - self->position.y) >> 16;
+    int32 rx = abs(self->targetPos.x - self->position.x) >> 16;
+    int32 ry = abs(self->targetPos.y - self->position.y) >> 16;
 
     if (rx * rx + ry * ry < 96) {
-        self->direction = self->valvePtr->direction;
+        self->direction = self->targetValve->direction;
         self->drawOrder = Zone->drawOrderLow - 1;
-        self->state     = MeterDroid_State_Unknown10;
+        self->state     = MeterDroid_State_MoveIntoBG;
     }
-    MeterDroid_CheckPlayerCollisions3();
+    MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip();
 }
 
-void MeterDroid_State_Unknown10(void)
+void MeterDroid_State_MoveIntoBG(void)
 {
     RSDK_THIS(MeterDroid);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    self->field_6C += 10;
-    ++self->timer;
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
+    self->bgFadeAmount += 10;
 
     self->velocity.x = self->velocity.x - (self->velocity.x >> 3);
     self->velocity.y = self->velocity.y - (self->velocity.y >> 3);
-    self->position.x += ((self->field_78 - self->position.x) >> 3) + self->velocity.x;
-    self->position.y += ((self->field_7C - self->position.y) >> 3) + self->velocity.y;
-    if (self->timer == 24) {
-        self->position.x = self->field_78;
-        self->position.y = self->field_7C;
+    self->position.x += ((self->targetPos.x - self->position.x) >> 3) + self->velocity.x;
+    self->position.y += ((self->targetPos.y - self->position.y) >> 3) + self->velocity.y;
+
+    if (++self->timer == 24) {
+        self->position.x = self->targetPos.x;
+        self->position.y = self->targetPos.y;
         self->timer      = 0;
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 4, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 6, &self->animator4, true, 0);
-        EntityValve *valve = (EntityValve *)self->valvePtr;
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 0, &valve->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 2, &valve->animator2, true, 0);
+        EntityValve *valve = self->targetValve;
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 4, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 6, &self->armAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 0, &valve->valveAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 2, &valve->wheelAnimator, true, 0);
         RSDK.PlaySfx(MeterDroid->sfxValve, false, 255);
-        self->state     = MeterDroid_State_Unknown11;
-        self->stateDraw = MeterDroid_StateDraw_Unknown3;
+        self->state     = MeterDroid_State_TurningValve;
+        self->stateDraw = MeterDroid_Draw_SpinningValve;
     }
-    MeterDroid_CheckPlayerCollisions3();
+    MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip();
 }
 
-void MeterDroid_State_Unknown11(void)
+void MeterDroid_State_TurningValve(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator4);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
     if (++self->timer == 60)
         MeterDroid_PopPlatforms();
+
     if (self->timer == 90) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 5, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 7, &self->animator4, true, 0);
-        EntityValve *valve = (EntityValve *)self->valvePtr;
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &valve->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &valve->animator2, true, 0);
-        self->state = MeterDroid_State_Unknown12;
+        EntityValve *valve = self->targetValve;
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 5, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 7, &self->armAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &valve->valveAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &valve->wheelAnimator, true, 0);
+        self->state = MeterDroid_State_StopTurningValve;
     }
 }
 
-void MeterDroid_State_Unknown12(void)
+void MeterDroid_State_StopTurningValve(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator4);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
-    if (self->animator1.frameID == self->animator1.frameCount - 1)
-        self->state = MeterDroid_State_Unknown13;
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1)
+        self->state = MeterDroid_State_WatchPlatformsPopUp;
 }
 
-void MeterDroid_State_Unknown13(void)
+void MeterDroid_State_WatchPlatformsPopUp(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->propellorAnimator);
 
     ++self->timer;
     if (self->timer > 30) {
-        if (self->field_6C > 0) {
-            self->field_6C -= 16;
-        }
+        if (self->bgFadeAmount > 0)
+            self->bgFadeAmount -= 16;
     }
+
     if (self->timer == 60) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->animator1, true, 0);
-        self->field_70.x = self->position.x;
-        self->field_70.y = self->position.y;
-        self->drawOrder  = Zone->drawOrderLow;
-        self->state      = MeterDroid_State_Unknown3;
-        self->stateDraw  = MeterDroid_StateDraw_Unknown1;
+        RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
+        self->origin.x  = self->position.x;
+        self->origin.y  = self->position.y;
+        self->drawOrder = Zone->drawOrderLow;
+        self->state     = MeterDroid_State_PickMoveDir;
+        self->stateDraw = MeterDroid_Draw_Normal;
     }
 }
 
-void MeterDroid_State_Die(void)
+void MeterDroid_State_Destroyed(void)
 {
     RSDK_THIS(MeterDroid);
 
@@ -626,15 +618,14 @@ void MeterDroid_State_Die(void)
         RSDK.PlaySfx(MeterDroid->sfxExplosion, false, 255);
 
         if (Zone->timer & 4) {
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS),
-                                                       (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16,
-                                                       (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16);
+            int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16;
+            int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16;
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawOrder       = Zone->drawOrderHigh;
         }
     }
 
-    ++self->timer;
-    if (self->timer == 60) {
+    if (++self->timer == 60) {
         MeterDroid->debrisSpeeds[2]  = self->direction;
         MeterDroid->debrisSpeeds[6]  = self->direction;
         MeterDroid->debrisSpeeds[10] = self->direction;
@@ -675,10 +666,9 @@ void MeterDroid_State_FinishAct(void)
             explosion->drawOrder       = Zone->drawOrderHigh;
         }
     }
+
     if (++self->timer == 180) {
-        for (int32 p = 0; p < Player->playerCount; ++p) {
-            StarPost->postIDs[p] = 0;
-        }
+        for (int32 p = 0; p < Player->playerCount; ++p) StarPost->postIDs[p] = 0;
 
         SaveGame_SavePlayerState();
         globals->enableIntro = true;
@@ -687,6 +677,7 @@ void MeterDroid_State_FinishAct(void)
             RSDK.SetScene("Presentation", "Title Screen");
         Zone_StartFadeOut(10, 0xF0F0F0);
     }
+
     if (self->timer == 240)
         destroyEntity(self);
 }
@@ -695,10 +686,10 @@ void MeterDroid_State_FinishAct(void)
 void MeterDroid_EditorDraw(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &self->animator2, false, 0);
+    RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &self->propellorAnimator, false, 0);
 
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void MeterDroid_EditorLoad(void) { MeterDroid->aniFrames = RSDK.LoadSpriteAnimation("OOZ/MeterDroid.bin", SCOPE_STAGE); }

@@ -3,14 +3,22 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    HATCH_GO_SUBENTRYHATCH,
+    HATCH_GO_SUBEXITHATCH_COPYTILES,
+    HATCH_GO_SUBENTRYHATCH_SMOGONLY,
+    HATCH_GO_SUBEXIT,
+    HATCH_GO_SUBEXITHATCH_NOCOPY,
+}HatchGoTypes;
+
 // Object Class
 struct ObjectHatch {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    Hitbox hitbox5;
+    Hitbox hitboxSubExit;
+    Hitbox hitboxRange;
+    Hitbox hitboxL;
+    Hitbox hitboxR;
+    Hitbox hitboxEntry;
     uint16 aniFrames;
     uint16 sfxHatchOpen;
     uint16 sfxHatchClose;
@@ -32,15 +40,15 @@ struct EntityHatch {
     int32 hScrollPos;
     int32 vScrollPos;
     int32 timer;
-    bool32 flag;
-    Entity *playerPtr;
+    bool32 useMoveLayer;
+    EntityPlayer *playerPtr;
     StateMachine(stateStore);
     bool32 interactionStore;
     bool32 tileColStore;
-    Animator animator1;
-    Animator animator2;
+    Animator baseAnimator;
+    Animator hatchAnimator;
     Hitbox hitbox;
-    Hitbox warpHitbox;
+    Hitbox hitboxWarpDoor;
 };
 
 // Object Struct
@@ -60,16 +68,16 @@ void Hatch_EditorLoad(void);
 void Hatch_Serialize(void);
 
 // Extra Entity Functions
-void Hatch_Unknown1(void);
-void Hatch_Unknown2(void);
-void Hatch_Unknown3(void);
-void Hatch_Unknown4(void);
-void Hatch_Unknown5(void);
-void Hatch_Unknown6(void);
-void Hatch_Unknown7(void);
-void Hatch_Unknown8(void);
-void Hatch_Unknown9(void);
-void Hatch_Unknown10(void);
-void Hatch_Unknown11(void);
+void Hatch_State_SubEntryHatch(void);
+void Hatch_State_PlayerEntered(void);
+void Hatch_State_Descend(void);
+void Hatch_State_MoveToDestPos(void);
+void Hatch_State_Surfacing(void);
+void Hatch_State_OpenHatchReleasePlayer(void);
+void Hatch_State_CloseHatch(void);
+void Hatch_State_FadeIn(void);
+void Hatch_State_SubExit(void);
+void Hatch_State_FadeOut(void);
+void Hatch_State_SubExitHatch(void);
 
 #endif //!OBJ_HATCH_H

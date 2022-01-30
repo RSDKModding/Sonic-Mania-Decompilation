@@ -14,8 +14,8 @@ struct ObjectValve {
 // Entity Class
 struct EntityValve {
     RSDK_ENTITY
-    Animator animator1;
-    Animator animator2;
+    Animator valveAnimator;
+    Animator wheelAnimator;
 };
 
 // Object Struct

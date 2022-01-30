@@ -311,8 +311,9 @@ void WalkerLegs_CheckTileCollisions(void)
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
-        uint8 behaviour = RSDK.GetTileBehaviour(tile, self->collisionPlane);
-        if (behaviour == 1 || behaviour == 2) {
+        uint8 flags = RSDK.GetTileFlags(tile, self->collisionPlane);
+        // whats up here? why is it lava & conveyor??
+        if (flags == LRZ2_TFLAGS_LAVA || flags == LRZ2_TFLAGS_CONVEYOR_L) {
             RSDK.PlaySfx(WalkerLegs->sfxWalkerLegs2, false, 255);
             WalkerLegs_CreateDebris(self->field_AC == 0, true);
         }
@@ -335,10 +336,10 @@ void WalkerLegs_CheckStoodLava(void)
     posPtrs[0] = &self->field_68[1];
     posPtrs[1] = &self->field_68[2];
 
-    for (int l = 0; l < 2; ++l) {
-        int x = posPtrs[l]->x;
-        int y = posPtrs[l]->y;
-        int y2 = posPtrs[1 - l]->y;
+    for (int32 l = 0; l < 2; ++l) {
+        int32 x = posPtrs[l]->x;
+        int32 y = posPtrs[l]->y;
+        int32 y2 = posPtrs[1 - l]->y;
 
         self->position.x = x;
         self->position.y = y;
@@ -346,8 +347,9 @@ void WalkerLegs_CheckStoodLava(void)
 
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
-        uint8 behaviour = RSDK.GetTileBehaviour(tile, self->collisionPlane);
-        if ((behaviour == 1 || behaviour == 2) && y - y2 < 0x500000) {
+        uint8 flags = RSDK.GetTileFlags(tile, self->collisionPlane);
+        // whats up here? why is it lava & conveyor??
+        if ((flags == LRZ2_TFLAGS_LAVA || flags == LRZ2_TFLAGS_CONVEYOR_L) && y - y2 < 0x500000) {
             self->flag = true;
             y += 0x2800;
             WalkerLegs_CreateSmoke(l == 1);

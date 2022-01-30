@@ -6,22 +6,13 @@
 // Object Class
 struct ObjectOOZ1Outro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     uint16 sfxDrop;
 };
 
 // Entity Class
 struct EntityOOZ1Outro {
-    RSDK_ENTITY
-    Vector2 size;
-    bool32 activated;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    Hitbox hitbox;
+    MANIA_CUTSCENE_BASE
     int32 boundsL;
     int32 boundsR;
     int32 boundsT;

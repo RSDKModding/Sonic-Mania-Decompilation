@@ -25,9 +25,9 @@ void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox)
 {
     EntityCutsceneRules *entity = (EntityCutsceneRules *)e;
     if (!size->x)
-        size->x = 0x1A80000;
+        size->x = WIDE_SCR_XSIZE << 16;
     if (!size->y)
-        size->y = 0xF00000;
+        size->y = SCREEN_YSIZE << 16;
     entity->updateRange.x = 0x800000 + size->x;
     entity->updateRange.y = 0x800000 + size->y;
     hitbox->left   = -size->x >> 17;

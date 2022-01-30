@@ -147,14 +147,14 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
         bool32 lavaCollided = false;
         bool32 tileConveyorCollided = false;
         switch (behaviour) {
-            case LRZ2_TBEHAVE_NORMAL: break;
-            case LRZ2_TBEHAVE_LAVA:
+            case LRZ2_TFLAGS_NORMAL: break;
+            case LRZ2_TFLAGS_LAVA:
                 entity->active = ACTIVE_NORMAL;
                 if (prevY > entity->position.y)
                     entity->position.y = prevY;
                 lavaCollided = true;
                 break;
-            case LRZ2_TBEHAVE_CONVEYOR_L:
+            case LRZ2_TFLAGS_CONVEYOR_L:
                 tileConveyorCollided = true;
                 entity->active = ACTIVE_NORMAL;
                 if (entity->onGround) {
@@ -164,7 +164,7 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
                         entity->velocity.x = (2 * ((((tileInfo & 0x400) != 0) ^ LRZ2Setup->conveyorDir) != 0) - 1) << 17;
                 }
                 break;
-            case LRZ2_TBEHAVE_CONVEYOR_R:
+            case LRZ2_TFLAGS_CONVEYOR_R:
                 tileConveyorCollided       = true;
                 entity->active = ACTIVE_NORMAL;
                 if (entity->onGround) {
