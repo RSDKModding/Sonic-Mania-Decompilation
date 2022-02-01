@@ -35,10 +35,10 @@ struct EntityMatryoshkaBom {
     Vector2 startPos;
     uint8 startDir;
     int32 timer;
-    int32 field_84;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 fusePos;
+    Animator bodyAnimator;
+    Animator fuseAnimator;
+    Animator legsAnimator;
 };
 
 // Object Struct
@@ -65,12 +65,12 @@ void MatryoshkaBom_CheckPlayerCollisions(void);
 void MatryoshkaBom_CheckOnScreen(void);
 
 void MatryoshkaBom_State_Setup(void);
-void MatryoshkaBom_Unknown5(void);
-void MatryoshkaBom_Unknown6(void);
-void MatryoshkaBom_Unknown7(void);
-void MatryoshkaBom_Unknown8(void);
-void MatryoshkaBom_State_Exploding(void);
+void MatryoshkaBom_State_Walk(void);
+void MatryoshkaBom_State_Stopped(void);
+void MatryoshkaBom_State_Turn(void);
+void MatryoshkaBom_State_FuseLit(void);
+void MatryoshkaBom_State_ReleaseSmallerBuddy(void);
 void MatryoshkaBom_Unknown10(void);
-void MatryoshkaBom_Unknown11(void);
+void MatryoshkaBom_State_Shrapnel(void);
 
 #endif //!OBJ_MATRYOSHKABOM_H

@@ -30,7 +30,7 @@ void BuzzSaw_Create(void *data)
     RSDK_THIS(BuzzSaw);
 
     self->drawFX = FX_ROTATE;
-    if (!self->type)
+    if (self->type == BUZZSAW_ATTACHED)
         self->rotation = self->angle;
     else
         self->inkEffect = INK_ADD;
@@ -46,18 +46,20 @@ void BuzzSaw_Create(void *data)
         self->drawOrder = Zone->drawOrderLow;
         self->startPos  = self->position;
 
-        if (self->type == 0)
-            self->state = BuzzSaw_State_OnArm;
+        if (self->type == BUZZSAW_ATTACHED)
+            self->state = BuzzSaw_State_Attatched;
         else
-            self->state = BuzzSaw_State_FreeMove_Waiting;
+            self->state = BuzzSaw_State_Stray_Waiting;
     }
 }
 
 void BuzzSaw_StageLoad(void)
 {
-    BuzzSaw->aniFrames     = RSDK.LoadSpriteAnimation("MMZ/BuzzSaw.bin", SCOPE_STAGE);
-    BuzzSaw->field_10      = 0x200000;
-    BuzzSaw->field_14      = 0x200000;
+    BuzzSaw->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BuzzSaw.bin", SCOPE_STAGE);
+
+    BuzzSaw->unused1.x = 0x200000;
+    BuzzSaw->unused1.y = 0x200000;
+
     BuzzSaw->hitbox.left   = -24;
     BuzzSaw->hitbox.top    = -24;
     BuzzSaw->hitbox.right  = 24;
@@ -95,7 +97,7 @@ void BuzzSaw_UpdateCB(int32 sfx)
     {
         int32 x = abs(worldX - saw->position.x);
         int32 y = abs(worldY - saw->position.y);
-        dist  = minVal(MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16, dist);
+        dist    = minVal(MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16, dist);
     }
 
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (minVal(dist >> 16, 640) / 640.0), 0.0, 1.0);
@@ -113,14 +115,14 @@ void BuzzSaw_CheckPlayerCollisions(void)
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x600, player, false, &player->uncurlTimer))
 #endif
-            Player_CheckHit(player, self);
+                Player_CheckHit(player, self);
         }
     }
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
 }
 
-void BuzzSaw_State_OnArm(void)
+void BuzzSaw_State_Attatched(void)
 {
     RSDK_THIS(BuzzSaw);
     self->drawPos.x = self->amplitude.x * RSDK.Sin1024(self->speed * Zone->timer) + self->startPos.x;
@@ -129,7 +131,7 @@ void BuzzSaw_State_OnArm(void)
     BuzzSaw_CheckPlayerCollisions();
 }
 
-void BuzzSaw_State_FreeMove_Waiting(void)
+void BuzzSaw_State_Stray_Waiting(void)
 {
     RSDK_THIS(BuzzSaw);
 
@@ -146,17 +148,17 @@ void BuzzSaw_State_FreeMove_Waiting(void)
             self->active     = ACTIVE_NORMAL;
             self->velocity.x = 0x600 * RSDK.Cos256(self->angle);
             self->velocity.y = 0x600 * RSDK.Sin256(self->angle);
-            self->state      = BuzzSaw_State_FreeMove_Released;
+            self->state      = BuzzSaw_State_Stray_Released;
         }
     }
 }
 
-void BuzzSaw_State_FreeMove_Released(void)
+void BuzzSaw_State_Stray_Released(void)
 {
     RSDK_THIS(BuzzSaw);
 
-    if (self->alpha < 256)
-        self->alpha += 16;
+    if (self->alpha < 0x100)
+        self->alpha += 0x10;
     self->drawPos.x += self->velocity.x;
     self->drawPos.y += self->velocity.y;
     RSDK.ProcessAnimation(&self->animator);
@@ -168,7 +170,7 @@ void BuzzSaw_State_FreeMove_Released(void)
         self->position.y = self->startPos.y;
         self->drawPos.x  = self->startPos.x;
         self->drawPos.y  = self->startPos.y;
-        self->alpha      = 0;
+        self->alpha      = 0x00;
         self->state      = BuzzSaw_State_FreeMove_Reset;
     }
     self->position.x = self->startPos.x;
@@ -179,7 +181,7 @@ void BuzzSaw_State_FreeMove_Reset(void)
 {
     RSDK_THIS(BuzzSaw);
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
-        self->state = BuzzSaw_State_FreeMove_Waiting;
+        self->state = BuzzSaw_State_Stray_Waiting;
         BuzzSaw_Create(NULL);
     }
 }
@@ -206,7 +208,14 @@ void BuzzSaw_EditorDraw(void)
     BuzzSaw_Draw();
 }
 
-void BuzzSaw_EditorLoad(void) { BuzzSaw->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BuzzSaw.bin", SCOPE_STAGE); }
+void BuzzSaw_EditorLoad(void)
+{
+    BuzzSaw->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BuzzSaw.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(BuzzSaw, type);
+    RSDK_ENUM_VAR("Attatched", BUZZSAW_ATTACHED);
+    RSDK_ENUM_VAR("Stray", BUZZSAW_STRAY);
+}
 #endif
 
 void BuzzSaw_Serialize(void)

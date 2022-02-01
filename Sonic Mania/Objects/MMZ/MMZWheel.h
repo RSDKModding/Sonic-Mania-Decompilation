@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    MMZWHEEL_MOTION_STIFF,
+    MMZWHEEL_MOTION_SMOOTH,
+}MMZWheelMotionTypes;
+
 // Object Class
 struct ObjectMMZWheel {
     RSDK_OBJECT
@@ -18,7 +23,7 @@ struct EntityMMZWheel {
     uint8 motionType;
     Vector2 center;
     Vector2 offset;
-    int32 field_78;
+    int32 unused;
     Animator animator;
 };
 

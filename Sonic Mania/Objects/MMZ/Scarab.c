@@ -12,23 +12,23 @@ ObjectScarab *Scarab;
 void Scarab_Update(void)
 {
     RSDK_THIS(Scarab);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->bodyAnimator);
+    RSDK.ProcessAnimation(&self->backLegAnimator);
+    RSDK.ProcessAnimation(&self->frontLegAnimator);
+
     self->moveOffset.x = -self->position.x;
     self->moveOffset.y = -self->position.y;
-
     StateMachine_Run(self->state);
-
     self->moveOffset.x += self->position.x;
     self->moveOffset.y += self->position.y;
+
     Scarab_CheckPlayerCollisions();
     Scarab_HandleChildMove();
     Scarab_HandlePlayerGrab();
     if (self->state != Scarab_State_Setup) {
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-            int32 x                = -self->position.x;
-            int32 y                = -self->position.y;
+            int32 x            = -self->position.x;
+            int32 y            = -self->position.y;
             self->direction    = self->startDir;
             self->position     = self->startPos;
             self->moveOffset.x = self->position.x + x;
@@ -50,11 +50,11 @@ void Scarab_Draw(void)
 {
     RSDK_THIS(Scarab);
     if (SceneInfo->currentDrawGroup == self->drawOrderHigh) {
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->frontLegAnimator, NULL, false);
     }
     else {
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->backLegAnimator, NULL, false);
+        RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
     }
 }
 
@@ -92,15 +92,19 @@ void Scarab_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         Scarab->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Scarab.bin", SCOPE_STAGE);
+
     Scarab->hitboxBadnik.left   = -16;
     Scarab->hitboxBadnik.top    = -14;
     Scarab->hitboxBadnik.right  = 14;
     Scarab->hitboxBadnik.bottom = 6;
-    Scarab->hitboxGrab.left     = -48;
-    Scarab->hitboxGrab.top      = -14;
-    Scarab->hitboxGrab.right    = -17;
-    Scarab->hitboxGrab.bottom   = 6;
-    Scarab->active              = ACTIVE_ALWAYS;
+
+    Scarab->hitboxGrab.left   = -48;
+    Scarab->hitboxGrab.top    = -14;
+    Scarab->hitboxGrab.right  = -17;
+    Scarab->hitboxGrab.bottom = 6;
+
+    Scarab->active = ACTIVE_ALWAYS;
+
     DEBUGMODE_ADD_OBJ(Scarab);
 }
 
@@ -148,7 +152,7 @@ void Scarab_CheckPlayerCollisions(void)
                         player->state           = Player_State_None;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
-                        self->isPermanent     = true;
+                        self->isPermanent       = true;
                     }
                 }
             }
@@ -182,7 +186,7 @@ void Scarab_HandlePlayerGrab(void)
                 player->position.x = self->position.x + ((2 * (self->direction != FLIP_NONE) - 1) << 21);
                 player->position.y = self->position.y - 0xA0000;
                 if (self->state == Scarab_State_Move)
-                    player->velocity.x = 0x6000 * self->field_DB;
+                    player->velocity.x = 0x6000 * self->moveDir;
                 else
                     player->velocity.x = 0;
                 player->velocity.y = 0;
@@ -233,44 +237,42 @@ void Scarab_State_Setup(void)
 {
     RSDK_THIS(Scarab);
 
-    self->active   = ACTIVE_NORMAL;
-    self->state    = Scarab_State_Move;
-    self->timer2   = 0;
-    self->timer    = 0;
-    self->field_DB = 2 * (self->direction != FLIP_NONE) - 1;
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 1, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 5, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 3, &self->animator3, true, 0);
+    self->active    = ACTIVE_NORMAL;
+    self->state     = Scarab_State_Move;
+    self->pullCount = 0;
+    self->timer     = 0;
+    self->moveDir   = 2 * (self->direction != FLIP_NONE) - 1;
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 1, &self->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 5, &self->backLegAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 3, &self->frontLegAnimator, true, 0);
     Scarab_State_Move();
 }
 
 void Scarab_State_Move(void)
 {
     RSDK_THIS(Scarab);
-    if (self->animator3.frameID == self->animator3.frameCount - 1)
-        ++self->timer2;
-    if (self->timer2 == 9) {
-        RSDK.SetSpriteAnimation(Scarab->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Scarab->aniFrames, 4, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Scarab->aniFrames, 2, &self->animator3, true, 0);
+    if (self->frontLegAnimator.frameID == self->frontLegAnimator.frameCount - 1)
+        ++self->pullCount;
+
+    if (self->pullCount == 9) {
+        RSDK.SetSpriteAnimation(Scarab->aniFrames, 0, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Scarab->aniFrames, 4, &self->backLegAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Scarab->aniFrames, 2, &self->frontLegAnimator, true, 0);
         self->timer = 45;
         self->state = Scarab_State_Wait;
     }
 
-    int32 mult      = self->field_DB;
-    int32 amplitude = self->amplitude << 16;
-    int32 x         = self->position.x + 0x6000 * mult;
-    int32 y         = self->position.y;
+    int32 x = self->position.x + 0x6000 * self->moveDir;
+    int32 y = self->position.y;
 
     self->position.x = x;
-    if (abs(x - self->startPos.x) < amplitude && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, 2)) {
+    if (abs(x - self->startPos.x) < (self->amplitude << 16) && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, 2)) {
         self->position.x = x;
-        //self->position.y = y;
     }
     else {
         self->position.y = y;
-        self->position.x = self->startPos.x + amplitude * mult;
-        self->field_DB   = -self->field_DB;
+        self->position.x = self->startPos.x + (self->amplitude << 16) * self->moveDir;
+        self->moveDir    = -self->moveDir;
     }
     RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, 4);
 }
@@ -280,28 +282,30 @@ void Scarab_State_Wait(void)
     RSDK_THIS(Scarab);
 
     if (self->timer <= 0) {
-        RSDK.SetSpriteAnimation(Scarab->aniFrames, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Scarab->aniFrames, 5, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Scarab->aniFrames, 3, &self->animator3, true, 0);
-        self->timer2 = 0;
-        self->state  = Scarab_State_Move;
+        RSDK.SetSpriteAnimation(Scarab->aniFrames, 1, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Scarab->aniFrames, 5, &self->backLegAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Scarab->aniFrames, 3, &self->frontLegAnimator, true, 0);
+        self->pullCount = 0;
+        self->state     = Scarab_State_Move;
     }
     else {
         self->timer--;
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Scarab_EditorDraw(void)
 {
     RSDK_THIS(Scarab);
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 4, &self->animator1, true, 0);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 0, &self->animator2, true, 0);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 4, &self->backLegAnimator, true, 0);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
-    RSDK.SetSpriteAnimation(Scarab->aniFrames, 2, &self->animator3, true, 0);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 0, &self->bodyAnimator, true, 0);
+    RSDK.DrawSprite(&self->backLegAnimator, NULL, false);
+
+    RSDK.SetSpriteAnimation(Scarab->aniFrames, 2, &self->frontLegAnimator, true, 0);
+    RSDK.DrawSprite(&self->frontLegAnimator, NULL, false);
 }
 
 void Scarab_EditorLoad(void)
@@ -312,7 +316,12 @@ void Scarab_EditorLoad(void)
     RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
     RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
     RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+
+    RSDK_ACTIVE_VAR(Scarab, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
+#endif
 
 void Scarab_Serialize(void)
 {

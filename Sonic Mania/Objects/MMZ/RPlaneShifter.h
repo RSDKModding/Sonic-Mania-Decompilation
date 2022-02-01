@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectRPlaneShifter {
     RSDK_OBJECT
-    Animator animator;
+    Animator barAnimator;
     uint16 aniFrames;
     uint16 sfxTicTock;
 };
@@ -25,7 +25,7 @@ struct EntityRPlaneShifter {
     int32 field_70;
     int32 field_74;
     int32 field_78;
-    Animator animator;
+    Animator baseAnimator;
     Hitbox hitbox;
 };
 

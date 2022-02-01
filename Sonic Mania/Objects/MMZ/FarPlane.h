@@ -6,11 +6,11 @@
 // Object Class
 struct ObjectFarPlane {
     RSDK_OBJECT
-    int32 field_4;
-    Vector2 field_8;
-    Vector2 field_10;
-    Vector2 field_18;
-    Vector2 field_20;
+    uint32 aniFrames;
+    Vector2 screenPos;
+    Vector2 worldPos;
+    Vector2 originPos;
+    Vector2 position;
     Vector2 positionList[0x200];
     int32 field_1028;
     int32 field_102C;

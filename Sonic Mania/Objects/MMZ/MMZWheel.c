@@ -18,16 +18,18 @@ void MMZWheel_Update(void)
 
     switch (self->motionType) {
         default: break;
-        case 0: {
-            int32 val = 2 * (self->direction != FLIP_NONE) - 1;
-            self->position.x += val * (self->speed << 14);
+
+        case MMZWHEEL_MOTION_STIFF: {
+            int32 direction = 2 * (self->direction != FLIP_NONE) - 1;
+            self->position.x += direction * (self->speed << 14);
             if (abs(self->position.x - self->center.x) >= self->amplitude << 16) {
                 self->direction  = self->direction == FLIP_NONE;
-                self->position.x = self->center.x + (self->amplitude << 16) * val;
+                self->position.x = self->center.x + (self->amplitude << 16) * direction;
             }
             break;
         }
-        case 1: self->position.x = (self->amplitude << 6) * RSDK.Sin1024(self->speed * Zone->timer) + self->center.x; break;
+
+        case MMZWHEEL_MOTION_SMOOTH: self->position.x = self->center.x + (self->amplitude << 6) * RSDK.Sin1024(self->speed * Zone->timer); break;
     }
 
     RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, CMODE_FLOOR, 0, 0x180000, 8);
@@ -56,7 +58,7 @@ void MMZWheel_Create(void *data)
 {
     RSDK_THIS(MMZWheel);
     self->active    = ACTIVE_BOUNDS;
-    self->visible   = 1;
+    self->visible   = true;
     self->drawOrder = Zone->drawOrderLow;
     if (SceneInfo->inEditor && !self->speed)
         self->speed = 1;
@@ -72,7 +74,14 @@ void MMZWheel_StageLoad(void) { MMZWheel->aniFrames = RSDK.LoadSpriteAnimation("
 #if RETRO_INCLUDE_EDITOR
 void MMZWheel_EditorDraw(void) { MMZWheel_Draw(); }
 
-void MMZWheel_EditorLoad(void) { MMZWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MMZWheel.bin", SCOPE_STAGE); }
+void MMZWheel_EditorLoad(void)
+{
+    MMZWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MMZWheel.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(MMZWheel, motionType);
+    RSDK_ENUM_VAR("Stiff", MMZWHEEL_MOTION_STIFF);
+    RSDK_ENUM_VAR("Smooth", MMZWHEEL_MOTION_SMOOTH);
+}
 #endif
 
 void MMZWheel_Serialize(void)

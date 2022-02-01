@@ -43,6 +43,7 @@ void MMZ2Outro_StartCutscene(void)
 
     CutsceneSeq_StartSequence(self, MMZ2Outro_Cutscene_PowerDown, MMZ2Outro_Cutscene_Rumble, MMZ2Outro_Cutscene_CameraMoveToWindow,
                               MMZ2Outro_Cutscene_PlayerMoveToWindow, MMZ2Outro_Cutscene_EnterMonarchEyes, MMZ2Outro_Cutscene_ViewMonarch, StateMachine_None);
+
     RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
     for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0x000000);
     for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
@@ -183,11 +184,13 @@ bool32 MMZ2Outro_Cutscene_EnterMonarchEyes(EntityCutsceneSeq *host)
     if (self->timer == 512) {
         foreach_active(Player, player) { player->up = true; }
     }
+    
     if (self->timer == 768) {
         self->timer      = 0;
         self->flashTimer = 0;
         return true;
     }
+
     return false;
 }
 
@@ -211,6 +214,7 @@ bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host)
             }
         }
     }
+
     if ((self->timer & 7) == 4 && self->flashTimer < 48)
         CREATE_ENTITY(MMZLightning, MMZLightning_State_SetupLightningSmall, 0, 0);
 
@@ -218,16 +222,20 @@ bool32 MMZ2Outro_Cutscene_ViewMonarch(EntityCutsceneSeq *host)
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         Camera_SetupLerp(3, 0, camera->position.x, camera->position.y - 0x1000000, 1);
     }
+
     if (self->timer == 600) {
         Zone_StartFadeOut(10, 0x000000);
         return true;
     }
+
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MMZ2Outro_EditorDraw(void) {}
 
 void MMZ2Outro_EditorLoad(void) {}
+#endif
 
 void MMZ2Outro_Serialize(void) {}
 #endif

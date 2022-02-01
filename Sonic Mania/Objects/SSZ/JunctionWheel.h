@@ -6,21 +6,21 @@
 // Object Class
 struct ObjectJunctionWheel {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    Hitbox hitbox5;
-    Hitbox hitbox6;
+    Hitbox hitboxEnteredWheel;
+    Hitbox hitboxSolid2;
+    Hitbox hitboxSolid;
+    Hitbox hitboxSolid3;
+    Hitbox hitboxEntry1;
+    Hitbox hitboxEntry5;
     uint16 aniFrames;
 };
 
 // Entity Class
 struct EntityJunctionWheel {
     RSDK_ENTITY
-    Animator animator1;
-    Animator animator2;
-    uint8 field_88;
+    Animator slotAnimator;
+    Animator maskAnimator;
+    uint8 spinDir;
 };
 
 // Object Struct

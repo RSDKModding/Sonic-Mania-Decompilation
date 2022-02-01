@@ -3,6 +3,17 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SIZELASER_SHRINK,
+    SIZELASER_GROW,
+} SizeLaserTypes;
+
+typedef enum {
+    SIZELASER_ORIENTATION_DOWN,
+    SIZELASER_ORIENTATION_RIGHT,
+    SIZELASER_ORIENTATION_LEFT,
+} SizeLaserOrientations;
+
 // Object Class
 struct ObjectSizeLaser {
     RSDK_OBJECT
@@ -30,10 +41,10 @@ struct EntitySizeLaser {
     uint8 type;
     uint8 orientation;
     int32 timer;
-    Vector2 storedPos;
+    Vector2 impactPos;
     int32 extend;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator impactAnimator;
 };
 
 // Object Struct
@@ -53,7 +64,7 @@ void SizeLaser_EditorLoad(void);
 void SizeLaser_Serialize(void);
 
 // Extra Entity Functions
-bool32 SizeLaser_SizeChangeSFXCheck(void);
+bool32 SizeLaser_LaserSfxCheck(void);
 
 void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag);
 void SizeLaser_P2JumpInResize(void);
@@ -61,9 +72,10 @@ void SizeLaser_P2JumpInGrow(void);
 void SizeLaser_P2JumpInShrink(void);
 void SizeLaser_PlayerState_Grow(void);
 
-void SizeLaser_Unknown3(void);
-void SizeLaser_Unknown8(void);
-void SizeLaser_Unknown9(void);
-void SizeLaser_Unknown10(void);
+void SizeLaser_CheckPlayerCollisions(void);
+
+void SizeLaser_State_Emitter(void);
+void SizeLaser_State_Laser(void);
+void SizeLaser_State_Impact(void);
 
 #endif //!OBJ_SIZELASER_H

@@ -18,6 +18,7 @@ void ConveyorWheel_Update(void)
         if (Player_CheckCollisionTouch(player, self, &ConveyorWheel->hitbox)) {
             if (player->state == Player_State_KnuxGlideDrop || player->state == Player_State_GlideSlide)
                 player->state = Player_State_Ground;
+
             if (self->direction) {
                 if (player->groundVel > -0x40000)
                     player->groundVel = -0x40000;
@@ -58,18 +59,28 @@ void ConveyorWheel_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         ConveyorWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE);
+
     ConveyorWheel->hitbox.left   = -49;
     ConveyorWheel->hitbox.top    = -49;
     ConveyorWheel->hitbox.right  = 49;
     ConveyorWheel->hitbox.bottom = 49;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ConveyorWheel_EditorDraw(void)
 {
     RSDK_THIS(ConveyorWheel);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void ConveyorWheel_EditorLoad(void) { ConveyorWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE); }
+void ConveyorWheel_EditorLoad(void)
+{
+    ConveyorWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(ConveyorWheel, direction);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
+}
+#endif
 
 void ConveyorWheel_Serialize(void) { RSDK_EDITABLE_VAR(ConveyorWheel, VAR_UINT8, direction); }

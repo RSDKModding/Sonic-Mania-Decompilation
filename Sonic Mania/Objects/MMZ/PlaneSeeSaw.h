@@ -15,11 +15,11 @@ struct ObjectPlaneSeeSaw {
 struct EntityPlaneSeeSaw {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused;
     int32 seeSawPos;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator platformAnimator;
+    Animator swingAnimator;
+    Animator weightAnimator;
 };
 
 // Object Struct
@@ -42,6 +42,7 @@ void PlaneSeeSaw_Serialize(void);
 void PlaneSeeSaw_State_WaitForPlayer(void);
 void PlaneSeeSaw_State_PlayerPushDown(void);
 void PlaneSeeSaw_State_Launch(void);
+
 void PlaneSeeSaw_PlayerState_ToBG(void);
 void PlaneSeeSaw_PlayerState_ToFG(void);
 

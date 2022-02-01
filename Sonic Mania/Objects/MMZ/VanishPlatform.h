@@ -33,7 +33,7 @@ void VanishPlatform_EditorLoad(void);
 void VanishPlatform_Serialize(void);
 
 // Extra Entity Functions
-void VanishPlatform_Unknown1(void);
-void VanishPlatform_Unknown2(void);
+void VanishPlatform_State_Appear(void);
+void VanishPlatform_State_Disappear(void);
 
 #endif //!OBJ_VANISHPLATFORM_H

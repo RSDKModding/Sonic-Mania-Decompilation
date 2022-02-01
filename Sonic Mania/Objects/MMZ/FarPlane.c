@@ -18,18 +18,18 @@ void FarPlane_LateUpdate(void)
         FarPlane_SetupEntities();
     }
     else if (self->active == ACTIVE_BOUNDS) {
-        self->active                                      = ACTIVE_NORMAL;
+        self->active                                        = ACTIVE_NORMAL;
         RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = 0;
-        FarPlane->field_18.x                                = self->origin.x;
-        FarPlane->field_18.y                                = self->origin.y;
-        FarPlane->field_20.x                                = self->position.x;
-        FarPlane->field_20.y                                = self->position.y;
+        FarPlane->originPos.x                                = self->origin.x;
+        FarPlane->originPos.y                                = self->origin.y;
+        FarPlane->position.x                                = self->position.x;
+        FarPlane->position.y                                = self->position.y;
         RSDK.SetDrawLayerProperties(1, false, FarPlane_DrawLayerCB_Low);
         RSDK.SetDrawLayerProperties(3, false, FarPlane_DrawLayerCB_High);
         FarPlane_SetEntityActivities(ACTIVE_NORMAL);
     }
     else if (!RSDK.CheckOnScreen(self, NULL)) {
-        self->active                                      = ACTIVE_BOUNDS;
+        self->active                                        = ACTIVE_BOUNDS;
         RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = DRAWLAYER_COUNT;
         RSDK.SetDrawLayerProperties(1, false, NULL);
         RSDK.SetDrawLayerProperties(3, false, NULL);
@@ -48,10 +48,10 @@ void FarPlane_Draw(void)
     else {
         int32 x                = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         int32 y                = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-        FarPlane->field_8.x  = (x + self->origin.x - self->position.x) & 0xFFFE0000;
-        FarPlane->field_8.y  = (y + self->origin.y - self->position.y) & 0xFFFE0000;
-        FarPlane->field_10.x = self->position.x - ((self->position.x - x) >> 1) + 0x8000;
-        FarPlane->field_10.y = self->position.y - ((self->position.y - y) >> 1) + 0x8000;
+        FarPlane->screenPos.x  = (x + self->origin.x - self->position.x) & 0xFFFE0000;
+        FarPlane->screenPos.y  = (y + self->origin.y - self->position.y) & 0xFFFE0000;
+        FarPlane->worldPos.x = self->position.x - ((self->position.x - x) >> 1) + 0x8000;
+        FarPlane->worldPos.y = self->position.y - ((self->position.y - y) >> 1) + 0x8000;
         if (!SceneInfo->currentScreenID)
             RSDK.AddDrawListRef(1, SceneInfo->entitySlot);
     }
@@ -73,6 +73,7 @@ void FarPlane_Create(void *data)
 void FarPlane_StageLoad(void)
 {
     FarPlane->layerID = RSDK.GetSceneLayerID("Far Plane");
+
     if (FarPlane->layerID != (uint16)-1) {
         TileLayer *layer                               = RSDK.GetSceneLayer(FarPlane->layerID);
         layer->drawLayer[0]                            = DRAWLAYER_COUNT;
@@ -89,14 +90,10 @@ void FarPlane_StageLoad(void)
 #endif
             RSDK.SetLimitedFade(4, 0, 3, 96, 128, 143);
         RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLow, 0, 192, 1024, 208);
-        Zone->cameraBoundsB[0] -= 0x800;
-        Zone->deathBoundary[0] -= 0x8000000;
-        Zone->cameraBoundsB[1] -= 0x800;
-        Zone->deathBoundary[1] -= 0x8000000;
-        Zone->cameraBoundsB[2] -= 0x800;
-        Zone->deathBoundary[2] -= 0x8000000;
-        Zone->cameraBoundsB[3] -= 0x800;
-        Zone->deathBoundary[3] -= 0x8000000;
+        for (int s = 0; s < PLAYER_MAX; ++s) {
+            Zone->cameraBoundsB[s] -= 0x800;
+            Zone->deathBoundary[s] -= 0x8000000;
+        }
 
         ++Zone->drawOrderLow;
         ++Zone->playerDrawLow;
@@ -119,8 +116,8 @@ void FarPlane_SetupEntities(void)
         if (abs(self->origin.x - entPtr->position.x) < self->size.x) {
             if (abs(self->origin.y - entPtr->position.y) < self->size.y) {
                 self->entityIDs[self->entityCount++] = i;
-                entPtr->active                           = ACTIVE_NEVER;
-                entPtr->drawOrder                        = 1;
+                entPtr->active                       = ACTIVE_NEVER;
+                entPtr->drawOrder                    = 1;
             }
         }
     }
@@ -144,16 +141,16 @@ void FarPlane_DrawLayerCB_Low(void)
             break;
         FarPlane->positionList[id].x = ent->position.x;
         FarPlane->positionList[id].y = ent->position.y;
-        id++;
-        ent->position.x -= FarPlane->field_18.x;
-        ent->position.y -= FarPlane->field_18.y;
+        ent->position.x -= FarPlane->originPos.x;
+        ent->position.y -= FarPlane->originPos.y;
         ent->position.x >>= 1;
         ent->position.y >>= 1;
-        ent->position.x += FarPlane->field_10.x;
-        ent->position.y += FarPlane->field_10.y;
+        ent->position.x += FarPlane->worldPos.x;
+        ent->position.y += FarPlane->worldPos.y;
         ent->drawFX |= FX_SCALE;
         ent->scale.x = 0x100;
         ent->scale.y = 0x100;
+        id++;
     }
 
     for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
@@ -162,16 +159,16 @@ void FarPlane_DrawLayerCB_Low(void)
             break;
         FarPlane->positionList[id].x = ent->position.x;
         FarPlane->positionList[id].y = ent->position.y;
-        id++;
-        ent->position.x -= FarPlane->field_18.x;
-        ent->position.y -= FarPlane->field_18.y;
+        ent->position.x -= FarPlane->originPos.x;
+        ent->position.y -= FarPlane->originPos.y;
         ent->position.x >>= 1;
         ent->position.y >>= 1;
-        ent->position.x += FarPlane->field_10.x;
-        ent->position.y += FarPlane->field_10.y;
+        ent->position.x += FarPlane->worldPos.x;
+        ent->position.y += FarPlane->worldPos.y;
         ent->drawFX |= FX_SCALE;
         ent->scale.x = 0x100;
         ent->scale.y = 0x100;
+        id++;
     }
 
     foreach_active(InvincibleStars, invincibleStars)
@@ -185,13 +182,13 @@ void FarPlane_DrawLayerCB_Low(void)
             for (int32 s = 0; s < 8; ++s) {
                 FarPlane->positionList[id].x = invincibleStars->starPos[s].x;
                 FarPlane->positionList[id].y = invincibleStars->starPos[s].y;
-                id++;
-                invincibleStars->starPos[s].x -= FarPlane->field_18.x;
-                invincibleStars->starPos[s].y -= FarPlane->field_18.y;
+                invincibleStars->starPos[s].x -= FarPlane->originPos.x;
+                invincibleStars->starPos[s].y -= FarPlane->originPos.y;
                 invincibleStars->starPos[s].x >>= 1;
                 invincibleStars->starPos[s].y >>= 1;
-                invincibleStars->starPos[s].x += FarPlane->field_10.x;
-                invincibleStars->starPos[s].y += FarPlane->field_10.y;
+                invincibleStars->starPos[s].x += FarPlane->worldPos.x;
+                invincibleStars->starPos[s].y += FarPlane->worldPos.y;
+                id++;
             }
         }
     }
@@ -204,24 +201,23 @@ void FarPlane_DrawLayerCB_Low(void)
 
             FarPlane->positionList[id].x = imageTrail->currentPos.x;
             FarPlane->positionList[id].y = imageTrail->currentPos.y;
-            id++;
-            imageTrail->currentPos.x -= FarPlane->field_18.x;
-            imageTrail->currentPos.y -= FarPlane->field_18.y;
+            imageTrail->currentPos.x -= FarPlane->originPos.x;
+            imageTrail->currentPos.y -= FarPlane->originPos.y;
             imageTrail->currentPos.x >>= 1;
             imageTrail->currentPos.y >>= 1;
-            imageTrail->currentPos.x += FarPlane->field_10.x;
-            imageTrail->currentPos.y += FarPlane->field_10.y;
-
+            imageTrail->currentPos.x += FarPlane->worldPos.x;
+            imageTrail->currentPos.y += FarPlane->worldPos.y;
+            id++;
             for (int32 s = 0; s < 7; ++s) {
                 FarPlane->positionList[id].x = imageTrail->statePos[s].x;
                 FarPlane->positionList[id].y = imageTrail->statePos[s].y;
                 id++;
-                imageTrail->statePos[s].x -= FarPlane->field_18.x;
-                imageTrail->statePos[s].y -= FarPlane->field_18.y;
+                imageTrail->statePos[s].x -= FarPlane->originPos.x;
+                imageTrail->statePos[s].y -= FarPlane->originPos.y;
                 imageTrail->statePos[s].x >>= 1;
                 imageTrail->statePos[s].y >>= 1;
-                imageTrail->statePos[s].x += FarPlane->field_10.x;
-                imageTrail->statePos[s].y += FarPlane->field_10.y;
+                imageTrail->statePos[s].x += FarPlane->worldPos.x;
+                imageTrail->statePos[s].y += FarPlane->worldPos.y;
             }
         }
     }
@@ -276,8 +272,8 @@ void FarPlane_DrawLayerCB_High(void)
 
 void FarPlane_ScanlineCB(ScanlineInfo *scanline)
 {
-    int32 x = FarPlane->field_8.x - (ScreenInfo->centerX << 17);
-    int32 y = FarPlane->field_8.y - (ScreenInfo->centerY << 17);
+    int32 x = FarPlane->screenPos.x - (ScreenInfo->centerX << 17);
+    int32 y = FarPlane->screenPos.y - (ScreenInfo->centerY << 17);
     for (int32 h = 0; h < ScreenInfo->height; ++h) {
         scanline->position.x = x;
         scanline->position.y = y;

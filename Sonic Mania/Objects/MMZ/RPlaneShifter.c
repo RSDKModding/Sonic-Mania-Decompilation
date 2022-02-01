@@ -14,8 +14,8 @@ void RPlaneShifter_Update(void)
     RSDK_THIS(RPlaneShifter);
 
     self->prevActivePlayers1 = self->activePlayers1;
-    if (self->animator.animationID == 1)
-        RSDK.ProcessAnimation(&self->animator);
+    if (self->baseAnimator.animationID == 1)
+        RSDK.ProcessAnimation(&self->baseAnimator);
     StateMachine_Run(self->state);
 }
 
@@ -39,8 +39,8 @@ void RPlaneShifter_Create(void *data)
         self->height = 10;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 1, &self->animator, true, 0);
-    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 2, &RPlaneShifter->animator, true, 0);
+    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 1, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 2, &RPlaneShifter->barAnimator, true, 0);
     self->state = RPlaneShifter_State_Setup;
 }
 
@@ -60,7 +60,7 @@ void RPlaneShifter_DrawSprites(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        RSDK.DrawSprite(&self->baseAnimator, &drawPos, false);
 
     drawPos.y -= 0x80000;
     poleAngles[0] = self->angle + 21;
@@ -72,17 +72,17 @@ void RPlaneShifter_DrawSprites(void)
             drawPos.x = self->position.x;
             if (SceneInfo->inEditor) {
                 drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
-                RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
+                RSDK.DrawSprite(&RPlaneShifter->barAnimator, &drawPos, false);
             }
             else if (SceneInfo->currentDrawGroup != Zone->playerDrawHigh + 1) {
                 if ((poleAngles[p] >= 0 && poleAngles[p] < 0x80) || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1) {
                     drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
-                    RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
+                    RSDK.DrawSprite(&RPlaneShifter->barAnimator, &drawPos, false);
                 }
             }
             else if (poleAngles[p] >= 0x80) {
                 drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
-                RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
+                RSDK.DrawSprite(&RPlaneShifter->barAnimator, &drawPos, false);
             }
         }
     }
@@ -90,7 +90,7 @@ void RPlaneShifter_DrawSprites(void)
     drawPos.x = self->position.x;
     drawPos.y -= 0x80000;
     if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        RSDK.DrawSprite(&self->baseAnimator, &drawPos, false);
 }
 
 void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
@@ -141,7 +141,7 @@ void RPlaneShifter_State_Setup(void)
     self->hitbox.right  = 2;
     self->hitbox.bottom = -8;
     self->hitbox.top    = -8 - (16 * self->height);
-    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 0, &self->baseAnimator, true, 0);
     self->state = RPlaneShifter_Unknown3;
     RPlaneShifter_Unknown3();
 }
@@ -171,7 +171,7 @@ void RPlaneShifter_Unknown3(void)
                 if (!player->sidekick) {
                     self->field_74 = self->angle << 16;
                     self->field_78 = 0;
-                    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 1, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 1, &self->baseAnimator, true, 0);
                     RSDK.PlaySfx(RPlaneShifter->sfxTicTock, false, 255);
                     self->state = RPlaneShifter_Unknown4;
                 }
@@ -216,16 +216,11 @@ void RPlaneShifter_Unknown4(void)
     RSDK_THIS(RPlaneShifter);
 
     if (abs(self->field_78 >> 16) < 128) {
-        bool32 flag = false;
-        if (self->field_64 && self->field_78 >> 16 > -65) {
+        bool32 flag = true;
+        if (self->field_64 && self->field_78 >> 16 > -65)
             flag = false;
-        }
-        else if (!self->field_64 && self->field_78 >> 16 < 65) {
+        else if (!self->field_64 && self->field_78 >> 16 < 65)
             flag = false;
-        }
-        else {
-            flag = true;
-        }
 
         int32 speed = 0;
         if (!self->field_64)
@@ -237,11 +232,11 @@ void RPlaneShifter_Unknown4(void)
             self->field_70 -= speed;
             if (self->field_64 && self->field_70 > -0x3800) {
                 self->field_70 = speed;
-                flag             = 2;
+                flag           = 2;
             }
             else if (!self->field_64 && self->field_70 < 0x3800) {
                 self->field_70 = speed;
-                flag             = 2;
+                flag           = 2;
             }
         }
         else {
@@ -269,7 +264,7 @@ void RPlaneShifter_Unknown4(void)
         if (self->angle < 0)
             self->angle += 0x100;
         self->angle &= 0xFF;
-        RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 0, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 0, &self->baseAnimator, true, 0);
         self->state = RPlaneShifter_Unknown5;
     }
 
@@ -286,8 +281,8 @@ void RPlaneShifter_Unknown4(void)
             player->position.x = self->position.x;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
             player->state           = Player_State_None;
-            player->nextGroundState = 0;
-            player->nextAirState    = 0;
+            player->nextGroundState = StateMachine_None;
+            player->nextAirState    = StateMachine_None;
             player->onGround        = true;
         }
 
@@ -307,8 +302,8 @@ void RPlaneShifter_Unknown4(void)
                 case 3: frame = 16 * (val - 128) / 128 + 9; break;
                 default: break;
             }
-            player->animator.frameID        = frame % 24;
-            player->animator.speed = 0;
+            player->animator.frameID = frame % 24;
+            player->animator.speed   = 0;
         }
 
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
@@ -345,9 +340,11 @@ void RPlaneShifter_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RPlaneShifter_EditorDraw(void) { RPlaneShifter_DrawSprites(); }
 
 void RPlaneShifter_EditorLoad(void) { RPlaneShifter->aniFrames = RSDK.LoadSpriteAnimation("MMZ/RPlaneShifter.bin", SCOPE_STAGE); }
+#endif
 
 void RPlaneShifter_Serialize(void)
 {

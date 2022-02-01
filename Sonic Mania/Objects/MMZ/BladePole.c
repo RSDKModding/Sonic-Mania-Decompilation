@@ -12,8 +12,8 @@ ObjectBladePole *BladePole;
 void BladePole_Update(void)
 {
     RSDK_THIS(BladePole);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->bladeTopAnimator);
+    RSDK.ProcessAnimation(&self->bladeBottomAnimator);
     StateMachine_Run(self->state);
 }
 
@@ -32,18 +32,22 @@ void BladePole_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(BladePole->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->animator3, true, 0);
-    BladePole->hitbox2.top    = 20;
-    BladePole->hitbox2.bottom = BladePole->hitbox2.top + 24;
-    BladePole->hitbox2.left   = -24;
-    BladePole->hitbox2.right  = 24;
-    BladePole->hitbox1.top    = -32;
-    BladePole->hitbox1.bottom = BladePole->hitbox1.top + 24;
-    BladePole->hitbox1.left   = -24;
-    BladePole->hitbox1.right  = 24;
-    self->state             = BladePole_Unknown4;
+    RSDK.SetSpriteAnimation(BladePole->aniFrames, 0, &self->poleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->bladeTopAnimator, true, 0);
+    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->bladeBottomAnimator, true, 0);
+
+    // WHy is this initialized here?? wouldn't StageLoad be better?
+    BladePole->hitboxBottom.left   = -24;
+    BladePole->hitboxBottom.top    = 20;
+    BladePole->hitboxBottom.right  = 24;
+    BladePole->hitboxBottom.bottom = BladePole->hitboxBottom.top + 24;
+
+    BladePole->hitboxTop.left   = -24;
+    BladePole->hitboxTop.top    = -32;
+    BladePole->hitboxTop.right  = 24;
+    BladePole->hitboxTop.bottom = BladePole->hitboxTop.top + 24;
+
+    self->state             = BladePole_State_TopBladeActive;
 }
 
 void BladePole_StageLoad(void) { BladePole->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BladePole.bin", SCOPE_STAGE); }
@@ -56,14 +60,18 @@ void BladePole_DrawSprites(void)
     self->direction = FLIP_NONE;
     drawPos.x         = self->position.x;
     drawPos.y         = self->position.y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->poleAnimator, &drawPos, false);
+
     drawPos.y -= 0xC0000;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->poleAnimator, &drawPos, false);
+
     drawPos.y -= 0xC0000;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->poleAnimator, &drawPos, false);
+
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 0x180000;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->bladeTopAnimator, &drawPos, false);
+
     if (SceneInfo->inEditor) {
         drawPos.y += 0x180000;
     }
@@ -72,7 +80,7 @@ void BladePole_DrawSprites(void)
         drawPos.y += 0x3C0000;
     }
 
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->bladeBottomAnimator, &drawPos, false);
     self->direction = FLIP_NONE;
 }
 
@@ -86,16 +94,19 @@ bool32 BladePole_SetAnimation(Animator *animator)
             if (animator->frameID == animator->frameCount - 1)
                 RSDK.SetSpriteAnimation(BladePole->aniFrames, 3, animator, true, 0);
             break;
+
         case 3:
             if (self->timer >= 74 && !animator->frameID)
                 RSDK.SetSpriteAnimation(BladePole->aniFrames, 4, animator, true, 0);
             break;
+
         case 4:
             if (animator->frameID == animator->frameCount - 1) {
                 RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, animator, true, 0);
                 return true;
             }
             break;
+
         default: break;
     }
     return false;
@@ -110,7 +121,7 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
         if (Player_CheckCollisionTouch(player, self, hitbox)) {
             int32 storeX         = self->position.x;
             int32 storeY         = self->position.y;
-            self->position.y = ((BladePole->hitbox2.bottom - BladePole->hitbox2.top) << 15) + storeY;
+            self->position.y = ((BladePole->hitboxBottom.bottom - BladePole->hitboxBottom.top) << 15) + storeY;
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer))
 #endif
@@ -121,29 +132,33 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
     }
 }
 
-void BladePole_Unknown4(void)
+void BladePole_State_TopBladeActive(void)
 {
     RSDK_THIS(BladePole);
 
-    if (BladePole_SetAnimation(&self->animator2)) {
-        self->state = BladePole_Unknown5;
+    if (BladePole_SetAnimation(&self->bladeTopAnimator)) {
+        self->state = BladePole_State_BottomBladeActive;
         self->timer = 0;
     }
-    if (self->animator2.animationID == 3)
-        BladePole_CheckPlayerCollisions(&BladePole->hitbox1);
+
+    if (self->bladeTopAnimator.animationID == 3)
+        BladePole_CheckPlayerCollisions(&BladePole->hitboxTop);
+
     ++self->timer;
 }
 
-void BladePole_Unknown5(void)
+void BladePole_State_BottomBladeActive(void)
 {
     RSDK_THIS(BladePole);
 
-    if (BladePole_SetAnimation(&self->animator3)) {
-        self->state = BladePole_Unknown4;
+    if (BladePole_SetAnimation(&self->bladeBottomAnimator)) {
+        self->state = BladePole_State_TopBladeActive;
         self->timer = 0;
     }
-    if (self->animator3.animationID == 3)
-        BladePole_CheckPlayerCollisions(&BladePole->hitbox2);
+
+    if (self->bladeBottomAnimator.animationID == 3)
+        BladePole_CheckPlayerCollisions(&BladePole->hitboxBottom);
+
     ++self->timer;
 }
 

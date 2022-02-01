@@ -60,39 +60,39 @@ void SpikeCorridor_SetupHitboxes(void)
 
     self->hitboxes[0].left   = size;
     self->hitboxes[0].top    = 0;
-    self->hitboxes[0].right  = size + 8 * self->field_77;
+    self->hitboxes[0].right  = size + 8 * self->size;
     self->hitboxes[0].bottom = 24;
 
-    self->hitboxes[1].left   = size + 8 * (self->field_77 + 6);
+    self->hitboxes[1].left   = size + 8 * (self->size + 6);
     self->hitboxes[1].top    = 0;
     self->hitboxes[1].bottom = 24;
     self->hitboxes[1].right  = size + 8 * self->colWidth;
 }
 
-void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 a3, bool32 animFlag)
+void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, bool32 animFlag)
 {
     RSDK_THIS(SpikeCorridor);
     Vector2 drawPos;
 
     int32 startX = self->position.x - (self->colWidth << 18);
-    drawPos.x  = 0;
-    drawPos.y  = self->position.y + offsetY;
+    drawPos.x    = 0;
+    drawPos.y    = self->position.y + offsetY;
 
     int32 anim = animFlag ? 5 : 0;
 
     for (int32 x = 0; x < self->colWidth;) {
         drawPos.x = startX;
 
-        int32 w       = 0;
+        int32 w     = 0;
         bool32 flag = false;
-        if (x >= a3) {
-            if (x < a3 + 6)
+        if (x >= size) {
+            if (x < size + 6)
                 flag = true;
             else
                 w = self->colWidth;
         }
         else {
-            w = a3;
+            w = size;
         }
 
         if (!flag) {
@@ -139,18 +139,18 @@ void SpikeCorridor_Unknown3(void)
 
     int32 max  = (int8)(self->colWidth - 9);
     int32 rand = RSDK.Rand(3, max);
-    if (self->field_75 <= -1) {
-        self->field_77 = rand;
-        self->field_75 = rand;
+    if (self->lastSize <= -1) {
+        self->size     = rand;
+        self->lastSize = rand;
     }
     else {
         while (true) {
-            if (abs(rand - self->field_75) >= 6 || abs(rand - self->field_75) == 3)
+            if (abs(rand - self->lastSize) >= 6 || abs(rand - self->lastSize) == 3)
                 break;
             rand = RSDK.Rand(3, max);
         }
-        self->field_77 = rand;
-        self->field_75 = rand;
+        self->size     = rand;
+        self->lastSize = rand;
     }
 }
 
@@ -187,7 +187,7 @@ void SpikeCorridor_StateDropper_Setup(void)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->rowID         = 0;
-    self->field_75      = -1;
+    self->lastSize      = -1;
     self->timer         = 0;
 
     SpikeCorridor_StateDropper_CheckForPlayer();
@@ -249,13 +249,13 @@ void SpikeCorridor_StateDropper_SpawnSpikes(void)
     child->state               = SpikeCorridor_StateSpikes_Setup;
     child->active              = ACTIVE_NORMAL;
     child->storedRowID         = self->rowID;
-    child->field_77            = self->field_77;
+    child->size                = self->size;
     child->parent              = (Entity *)self;
     child->drawOrder           = self->drawOrder;
     child->colWidth            = self->colWidth;
     child->yOffset             = 0;
     child->fallOffset          = (self->yOffset + 24 * (self->rowHeight - self->rowID++ - 1)) << 16;
-    self->timer              = 0;
+    self->timer                = 0;
 
     if (self->rowID >= self->rowHeight) {
         self->interaction = false;
@@ -324,7 +324,7 @@ void SpikeCorridor_StateDraw_DropWarn(void)
     int32 yOff = 0;
     if ((ScreenInfo->position.y << 16) - self->startPos.y > 0)
         yOff = (ScreenInfo->position.y << 16) - self->startPos.y;
-    SpikeCorridor_HandleDrawing(&animator, yOff, self->field_77, true);
+    SpikeCorridor_HandleDrawing(&animator, yOff, self->size, true);
 }
 
 void SpikeCorridor_StateDraw_Spikes(void)
@@ -333,7 +333,7 @@ void SpikeCorridor_StateDraw_Spikes(void)
     memset(&animator, 0, sizeof(Animator));
     RSDK_THIS(SpikeCorridor);
 
-    SpikeCorridor_HandleDrawing(&animator, 0, self->field_77, false);
+    SpikeCorridor_HandleDrawing(&animator, 0, self->size, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -346,9 +346,9 @@ void SpikeCorridor_EditorDraw(void)
     memset(&animator, 0, sizeof(Animator));
     SpikeCorridor_HandleDrawing(&animator, 0, self->colWidth, true);
 
-    int yOffset        = 0;
+    int yOffset      = 0;
     self->fallOffset = (self->yOffset + 24 * (self->rowHeight - 1)) << 16;
-    
+
     while (yOffset < self->fallOffset) {
         self->velocity.y += 0x3800;
         yOffset += self->velocity.y;

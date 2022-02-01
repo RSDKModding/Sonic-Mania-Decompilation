@@ -19,10 +19,10 @@ struct ObjectEggPistonsMKII {
     int32 health;
     int32 alarmAngle;
     int32 alarmTimer;
-    Entity *ControllerInfo;
-    Entity *pistons[5];
+    EntityEggPistonsMKII *controller;
+    EntityEggPistonsMKII *pistons[5];
     uint8 pistonCount;
-    uint8 field_2D;
+    uint8 isPhase2;
     uint8 pistonID;
     uint16 aniFrames;
     uint16 eggmanFrames;
@@ -42,8 +42,8 @@ struct EntityEggPistonsMKII {
     int32 timer;
     int32 pistonID;
     Entity *parent;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator altAnimator;
     Hitbox hitbox;
 };
 
@@ -65,9 +65,12 @@ void EggPistonsMKII_Serialize(void);
 
 // Extra Entity Functions
 void EggPistonsMKII_CheckPlayerCollisions_Piston(void);
-void EggPistonsMKII_CheckPlayerCollisions(void);
+void EggPistonsMKII_CheckPlayerCollisions_EggPiston(void);
 void EggPistonsMKII_CheckPlayerCollisions_Ball(void);
-void EggPistonsMKII_HandlePlayerCollisions(void);
+void EggPistonsMKII_CheckPlayerCollisions_Solid(void);
+
+void EggPistonsMKII_Hit(void);
+void EggPistonsMKII_Explode(void);
 
 EntityEggPistonsMKII *EggPistonsMKII_GetNextPiston(void);
 void EggPistonsMKII_SpawnElecBall(void);
@@ -82,24 +85,24 @@ void EggPistonsMKII_State_PinchMode(void);
 void EggPistonsMKII_State_Destroyed(void);
 void EggPistonsMKII_State_Finish(void);
 
-void EggPistonsMKII_StatePiston_Unknown1(void);
-void EggPistonsMKII_StatePiston_Unknown2(void);
-void EggPistonsMKII_StatePiston_Unknown3(void);
-void EggPistonsMKII_StatePiston_Unknown4(void);
-void EggPistonsMKII_StatePiston_Unknown5(void);
+void EggPistonsMKII_StatePiston_Idle(void);
+void EggPistonsMKII_StatePiston_Shaking(void);
+void EggPistonsMKII_StatePiston_BeginCrushing(void);
+void EggPistonsMKII_StatePiston_CrushExtend(void);
+void EggPistonsMKII_StatePiston_Retract(void);
 void EggPistonsMKII_StatePiston_Explode(void);
 
 void EggPistonsMKII_StateOrbGenerator_Idle(void);
 void EggPistonsMKII_StateOrbGenerator_Warning(void);
 
-void EggPistonsMKII_StateOrb_Unknown1(void);
-void EggPistonsMKII_StateOrb_Unknown2(void);
-void EggPistonsMKII_StateOrb_Unknown3(void);
+void EggPistonsMKII_StateOrb_MoveToTargetPos(void);
+void EggPistonsMKII_StateOrb_Charging(void);
+void EggPistonsMKII_StateOrb_Attacking(void);
 
 void EggPistonsMKII_StateAlarm_Active(void);
 void EggPistonsMKII_StateAlarm_Destroyed(void);
 
-void EggPistonsMKII_State_Explode(void);
-void EggPistonsMKII_State_Unknown1(void);
+void EggPistonsMKII_StateBarrier_Solid(void);
+void EggPistonsMKII_StateBarrier_Explode(void);
 
 #endif //!OBJ_EGGPISTONSMKII_H

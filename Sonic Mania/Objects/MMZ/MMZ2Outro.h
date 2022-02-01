@@ -29,8 +29,10 @@ void MMZ2Outro_StaticUpdate(void);
 void MMZ2Outro_Draw(void);
 void MMZ2Outro_Create(void* data);
 void MMZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MMZ2Outro_EditorDraw(void);
 void MMZ2Outro_EditorLoad(void);
+#endif
 void MMZ2Outro_Serialize(void);
 
 // Extra Entity Functions

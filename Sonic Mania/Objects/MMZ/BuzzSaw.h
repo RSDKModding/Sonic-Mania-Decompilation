@@ -3,14 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BUZZSAW_ATTACHED,
+    BUZZSAW_STRAY,
+}BuzzsawTypes;
+
 // Object Class
 struct ObjectBuzzSaw {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
+    Vector2 unused1;
+    int32 unused2;
 };
 
 // Entity Class
@@ -47,10 +51,10 @@ void BuzzSaw_UpdateCB(int32 sfx);
 
 void BuzzSaw_CheckPlayerCollisions(void);
 
-void BuzzSaw_State_OnArm(void);
+void BuzzSaw_State_Attatched(void);
 
-void BuzzSaw_State_FreeMove_Waiting(void);
-void BuzzSaw_State_FreeMove_Released(void);
+void BuzzSaw_State_Stray_Waiting(void);
+void BuzzSaw_State_Stray_Released(void);
 void BuzzSaw_State_FreeMove_Reset(void);
 
 #endif //!OBJ_BUZZSAW_H

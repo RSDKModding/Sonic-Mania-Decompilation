@@ -3,42 +3,58 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PISTON_MOVE_VERTICAL,
+    PISTON_UP,
+    PISTON_MOVE_DOWN,
+    PISTON_MOVE_DOWN_REVERSE,
+    PISTON_MOVE_RIGHT,
+    PISTON_MOVE_LEFT,
+    PISTON_MOVE_HORIZONTAL,
+} PistonTypes;
+
+typedef enum {
+    PISTON_SIZE_1,
+    PISTON_SIZE_2,
+    PISTON_SIZE_3,
+}PistonSizes;
+
 // Object Class
 struct ObjectPiston {
     RSDK_OBJECT
-	uint16 landSFX;
-	uint16 launchSFX;
+	uint16 sfxLand;
+	uint16 sfxLaunch;
 };
 
 // Entity Class
-struct EntityPiston {
+struct EntityPiston {                                                                                                
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
-    uint32 type;
+    int32 type;
     Vector2 amplitude;
     int32 speed;
     bool32 reverse;
-    uint8 size;
-    uint8 collisionType;
-    Vector2 targetPos;
+    int8 size;
+    uint8 collision;
+    Vector2 tileOrigin;
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;
     int32 stood;
-    int32 moveTimer;
+    int32 timer;
     int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;
     uint8 pushPlayersR;
-    uint8 field_A7;
     Hitbox hitbox;
     Animator animator;
-    uint32 childCount;
+    int32 childCount;
+
     uint16 interval;
     uint16 intervalOffset;
     int32 distance;
-    int32 spawnType;
+    int32 pistonType;
 };
 
 // Object Struct
@@ -59,26 +75,24 @@ void Piston_Serialize(void);
 
 // Extra Entity Functions
 
-void Piston_WaitForInterval(void);
+void Piston_Collide_Solid(void);
 
-void Piston_Down(void);
-void Piston_Up(void);
-void Piston_DownOrUp(void);
-void Piston_UpOrDown(void);
+void Piston_State_WaitForInterval(void);
 
-void Piston_Launch(void);
-void Piston_Pullback(void);
+void Piston_StateMove_Down(void);
+void Piston_StateMove_Down_Reverse(void);
+void Piston_StateMove_Vertical(void);
+void Piston_StateMove_Vertical_Reverse(void);
+void Piston_StateMove_Up(void);
+void Piston_StateMove_Up_Reverse(void);
+void Piston_StateMove_Right(void);
+void Piston_StateMove_Left(void);
+void Piston_StateMove_Horizontal(void);
+void Piston_StateMove_Horizontal_Reverse(void);
 
-void Piston_StateCollide_Solid(void);
-
-void Piston_WaitForPlayers(void);
-void Piston_PrepareLaunch(void);
-void Piston_PullbackOrLaunch(void);
-void Piston_LaunchAndWait(void);
-
-void Piston_Right(void);
-void Piston_Left(void);
-void Piston_RightOrLeft(void);
-void Piston_LeftOrRight(void);
+void Piston_StateActive_WaitForStood(void);
+void Piston_StateActive_PreparingLaunch(void);
+void Piston_StateActive_LaunchPlayers(void);
+void Piston_StateActive_ReturnToStartPos(void);
 
 #endif //! OBJ_PISTON_H

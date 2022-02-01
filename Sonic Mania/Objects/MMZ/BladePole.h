@@ -7,8 +7,8 @@
 struct ObjectBladePole {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxTop;
+    Hitbox hitboxBottom;
 };
 
 // Entity Class
@@ -16,9 +16,9 @@ struct EntityBladePole {
     RSDK_ENTITY
     StateMachine(state);
     uint16 timer;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator poleAnimator;
+    Animator bladeTopAnimator;
+    Animator bladeBottomAnimator;
 };
 
 // Object Struct
@@ -43,7 +43,7 @@ void BladePole_DrawSprites(void);
 bool32 BladePole_SetAnimation(Animator *animator);
 void BladePole_CheckPlayerCollision(Hitbox *hitbox);
 
-void BladePole_Unknown4(void);
-void BladePole_Unknown5(void);
+void BladePole_State_TopBladeActive(void);
+void BladePole_State_BottomBladeActive(void);
 
 #endif //!OBJ_BLADEPOLE_H

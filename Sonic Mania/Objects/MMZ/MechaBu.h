@@ -8,7 +8,7 @@ struct ObjectMechaBu {
     RSDK_OBJECT
     TABLE(int32 sawOffsets[10], { -0x150000, -0xF0000, -0x170000, -0xE0000, -0x190000, -0xA0000, -0x1A0000, -0x50000, -0x1A0000, -0x40000 });
     Hitbox hitboxSaw;
-    Hitbox hitbox2;
+    Hitbox hitboxUnused;
     uint16 aniFrames;
     uint16 sfxSawUp;
     uint16 sfxSawDown;
@@ -20,13 +20,13 @@ struct EntityMechaBu {
     StateMachine(state);
     PlaneFilterTypes planeFilter;
     uint8 timer;
-    uint8 timer2;
+    uint8 sawTimer;
     Vector2 startPos;
     uint8 startDir;
     Vector2 sawPos;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator badnikAnimator;
+    Animator hornAnimator;
+    Animator sawAnimator;
 };
 
 // Object Struct
@@ -54,8 +54,8 @@ void MechaBu_CheckOnScreen(void);
 Vector2 MechaBu_GetSawOffset(void);
 
 void MechaBu_State_Setup(void);
-void MechaBu_Unknown6(void);
-void MechaBu_Unknown7(void);
-void MechaBu_Unknown8(void);
+void MechaBu_State_Moving(void);
+void MechaBu_State_Stopped(void);
+void MechaBu_State_Falling(void);
 
 #endif //!OBJ_MECHABU_H

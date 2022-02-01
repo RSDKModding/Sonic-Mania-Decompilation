@@ -19,17 +19,17 @@ struct EntityScarab {
     Vector2 moveOffset;
     uint8 startDir;
     int32 timer;
-    int32 playerTimers[4];
-    Animator animator1;
-    Animator animator3;
-    Animator animator2;
+    int32 playerTimers[PLAYER_MAX];
+    Animator bodyAnimator;
+    Animator frontLegAnimator;
+    Animator backLegAnimator;
     int32 amplitude;
     uint8 childCount;
     PlaneFilterTypes planeFilter;
     uint8 drawOrderLow;
     uint8 drawOrderHigh;
-    uint8 timer2;
-    int8 field_DB;
+    uint8 pullCount;
+    int8 moveDir;
     uint8 grabbedPlayers;
 };
 

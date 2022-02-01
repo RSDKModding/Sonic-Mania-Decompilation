@@ -15,8 +15,9 @@ void VanishPlatform_Update(void)
     if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Platform_State_Fixed) {
         self->active        = ACTIVE_NORMAL;
         self->timer = self->duration;
-        self->state         = VanishPlatform_Unknown1;
+        self->state         = VanishPlatform_State_Appear;
     }
+
     if (self->scale.x <= 336) {
         self->stateCollide = Platform_CollisionState_None;
         self->collision    = PLATFORM_C_SOLID_NONE;
@@ -52,7 +53,7 @@ void VanishPlatform_Create(void *data)
 
 void VanishPlatform_StageLoad(void) {}
 
-void VanishPlatform_Unknown1(void)
+void VanishPlatform_State_Appear(void)
 {
     RSDK_THIS(VanishPlatform);
 
@@ -60,10 +61,10 @@ void VanishPlatform_Unknown1(void)
         self->scale.x += 22;
 
     if (--self->timer <= 0)
-        self->state = VanishPlatform_Unknown2;
+        self->state = VanishPlatform_State_Disappear;
 }
 
-void VanishPlatform_Unknown2(void)
+void VanishPlatform_State_Disappear(void)
 {
     RSDK_THIS(VanishPlatform);
 

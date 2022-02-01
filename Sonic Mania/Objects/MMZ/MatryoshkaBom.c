@@ -22,14 +22,14 @@ void MatryoshkaBom_StaticUpdate(void) {}
 void MatryoshkaBom_Draw(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    if (self->state == MatryoshkaBom_Unknown8) {
+    if (self->state == MatryoshkaBom_State_FuseLit) {
         Vector2 drawPos;
         drawPos.x = self->position.x;
-        drawPos.y = self->field_84 + self->position.y;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        drawPos.y = self->position.y + self->fusePos;
+        RSDK.DrawSprite(&self->fuseAnimator, &drawPos, false);
     }
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
+    RSDK.DrawSprite(&self->legsAnimator, NULL, false);
 }
 
 void MatryoshkaBom_Create(void *data)
@@ -62,36 +62,38 @@ void MatryoshkaBom_Create(void *data)
         switch (self->size) {
             default: break;
             case MATRYOSHKA_SIZE_BIG:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &self->animator2, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &self->fuseAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->legsAnimator, true, 0);
                 self->offsetY    = 0x1B0000;
                 self->offsetX    = 0x140000;
                 self->canExplode = true;
                 break;
+
             case MATRYOSHKA_SIZE_MED:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &self->animator2, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &self->fuseAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->legsAnimator, true, 0);
                 self->offsetY    = 0x140000;
                 self->offsetX    = 0xD0000;
                 self->canExplode = true;
                 break;
+
             case MATRYOSHKA_SIZE_SMALL:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &self->animator2, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->animator3, true, 0);
-                self->canExplode = false;
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &self->fuseAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->legsAnimator, true, 0);
                 self->offsetY    = 0xE0000;
                 self->offsetX    = 0x90000;
+                self->canExplode = false;
                 break;
         }
         self->state = MatryoshkaBom_State_Setup;
     }
     else {
         self->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 16, &self->animator1, true, 0);
-        self->state = MatryoshkaBom_Unknown11;
+        RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 16, &self->bodyAnimator, true, 0);
+        self->state = MatryoshkaBom_State_Shrapnel;
     }
 }
 
@@ -99,6 +101,7 @@ void MatryoshkaBom_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         MatryoshkaBom->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MatryoshkaBom.bin", SCOPE_STAGE);
+
     MatryoshkaBom->hitboxHurt.left   = -12;
     MatryoshkaBom->hitboxHurt.top    = -18;
     MatryoshkaBom->hitboxHurt.right  = 12;
@@ -142,26 +145,26 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
             if (self->state != MatryoshkaBom_Unknown10) {
                 if (self->canExplode) {
-                    if (self->state != MatryoshkaBom_State_Exploding) {
+                    if (self->state != MatryoshkaBom_State_ReleaseSmallerBuddy) {
                         if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxExplode)) {
                             RSDK.PlaySfx(MatryoshkaBom->sfxButton, false, 255);
 
                             switch (self->size) {
                                 default: break;
-                                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 1, &self->animator1, true, 0); break;
-                                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 5, &self->animator1, true, 0); break;
-                                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0); break;
+                                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 1, &self->bodyAnimator, true, 0); break;
+                                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 5, &self->bodyAnimator, true, 0); break;
+                                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->bodyAnimator, true, 0); break;
                             }
 
                             self->timer = 21;
-                            self->state = MatryoshkaBom_State_Exploding;
+                            self->state = MatryoshkaBom_State_ReleaseSmallerBuddy;
                         }
                     }
                 }
-                else if (self->state != MatryoshkaBom_Unknown8) {
+                else if (self->state != MatryoshkaBom_State_FuseLit) {
                     if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxExplode)) {
                         self->timer = 144;
-                        self->state = MatryoshkaBom_Unknown8;
+                        self->state = MatryoshkaBom_State_FuseLit;
                     }
                 }
             }
@@ -195,18 +198,19 @@ void MatryoshkaBom_State_Setup(void)
 {
     RSDK_THIS(MatryoshkaBom);
     self->active = ACTIVE_NORMAL;
-    self->state  = MatryoshkaBom_Unknown5;
-    MatryoshkaBom_Unknown5();
+    self->state  = MatryoshkaBom_State_Walk;
+    MatryoshkaBom_State_Walk();
 }
 
-void MatryoshkaBom_Unknown5(void)
+void MatryoshkaBom_State_Walk(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
     self->position.x += self->velocity.x;
+
     if (!--self->timer) {
         self->timer = 60;
-        self->state = MatryoshkaBom_Unknown6;
+        self->state = MatryoshkaBom_State_Stopped;
     }
     else {
         bool32 collided = false;
@@ -224,64 +228,68 @@ void MatryoshkaBom_Unknown5(void)
 
         if (!collided) {
             self->timer = 60;
-            self->state = MatryoshkaBom_Unknown6;
+            self->state = MatryoshkaBom_State_Stopped;
             switch (self->size) {
                 default: break;
-                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, true, 0); break;
-                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, true, 0); break;
-                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0); break;
+                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->bodyAnimator, true, 0); break;
+                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->bodyAnimator, true, 0); break;
+                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->bodyAnimator, true, 0); break;
             }
         }
     }
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->bodyAnimator);
+    RSDK.ProcessAnimation(&self->legsAnimator);
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
 
-void MatryoshkaBom_Unknown6(void)
+void MatryoshkaBom_State_Stopped(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
     if (!--self->timer) {
         switch (self->size) {
             default: break;
-            case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 3, &self->animator1, true, 0); break;
-            case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &self->animator1, true, 0); break;
-            case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &self->animator1, true, 0); break;
+            case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 3, &self->bodyAnimator, true, 0); break;
+            case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &self->bodyAnimator, true, 0); break;
+            case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &self->bodyAnimator, true, 0); break;
         }
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
-        self->state = MatryoshkaBom_Unknown7;
+        RSDK.SetSpriteAnimation(-1, 0, &self->legsAnimator, true, 0);
+        self->state = MatryoshkaBom_State_Turn;
     }
-    RSDK.ProcessAnimation(&self->animator1);
+
+    RSDK.ProcessAnimation(&self->bodyAnimator);
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
 
-void MatryoshkaBom_Unknown7(void)
+void MatryoshkaBom_State_Turn(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+    RSDK.ProcessAnimation(&self->bodyAnimator);
+    if (self->bodyAnimator.frameID == self->bodyAnimator.frameCount - 1) {
         self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
         self->timer      = 0x600;
-        self->state      = MatryoshkaBom_Unknown5;
+        self->state      = MatryoshkaBom_State_Walk;
+
         switch (self->size) {
             default: break;
             case MATRYOSHKA_SIZE_BIG:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->legsAnimator, true, 0);
                 break;
+
             case MATRYOSHKA_SIZE_MED:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->legsAnimator, true, 0);
                 break;
+
             case MATRYOSHKA_SIZE_SMALL:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->legsAnimator, true, 0);
                 break;
         }
     }
@@ -289,49 +297,49 @@ void MatryoshkaBom_Unknown7(void)
     MatryoshkaBom_CheckOnScreen();
 }
 
-void MatryoshkaBom_Unknown8(void)
+void MatryoshkaBom_State_FuseLit(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
     if (self->direction & FLIP_Y)
-        self->field_84 -= 0x1000;
+        self->fusePos -= 0x1000;
     else
-        self->field_84 += 0x1000;
+        self->fusePos += 0x1000;
 
     if (--self->timer > 0) {
-        RSDK.ProcessAnimation(&self->animator1);
-        RSDK.ProcessAnimation(&self->animator2);
+        RSDK.ProcessAnimation(&self->bodyAnimator);
+        RSDK.ProcessAnimation(&self->fuseAnimator);
         MatryoshkaBom_CheckPlayerCollisions();
         MatryoshkaBom_CheckOnScreen();
     }
     else {
         RSDK.PlaySfx(MatryoshkaBom->sfxExplosion, false, 255);
 
-        EntityMatryoshkaBom *shrapnel = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
+        EntityMatryoshkaBom *shrapnel = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x          = -0x20000;
         shrapnel->velocity.y          = -0x30000;
         shrapnel->planeFilter         = self->planeFilter;
         shrapnel->drawOrder           = self->drawOrder;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = -0x10000;
         shrapnel->velocity.y  = -0x20000;
         shrapnel->planeFilter = self->planeFilter;
         shrapnel->drawOrder   = self->drawOrder;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x20000;
         shrapnel->velocity.y  = -0x30000;
         shrapnel->planeFilter = self->planeFilter;
         shrapnel->drawOrder   = self->drawOrder;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(MATRYOSHKA_SIZE_SHRAPNEL), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x10000;
         shrapnel->velocity.y  = -0x20000;
         shrapnel->planeFilter = self->planeFilter;
         shrapnel->drawOrder   = self->drawOrder;
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
         explosion->drawOrder       = self->drawOrder + 1;
         explosion->planeFilter     = self->planeFilter;
 
@@ -339,11 +347,11 @@ void MatryoshkaBom_Unknown8(void)
     }
 }
 
-void MatryoshkaBom_State_Exploding(void)
+void MatryoshkaBom_State_ReleaseSmallerBuddy(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->bodyAnimator);
     if (!--self->timer) {
         RSDK.PlaySfx(MatryoshkaBom->sfxPon, false, 255);
 
@@ -364,8 +372,9 @@ void MatryoshkaBom_State_Exploding(void)
         self->canExplode      = false;
     }
 
-    if (self->animator1.frameID >= self->animator1.frameDuration - 1)
-        self->state = MatryoshkaBom_Unknown5;
+    if (self->bodyAnimator.frameID >= self->bodyAnimator.frameDuration - 1)
+        self->state = MatryoshkaBom_State_Walk;
+
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
@@ -393,28 +402,29 @@ void MatryoshkaBom_Unknown10(void)
         collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -self->offsetY, true);
     else
         collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->offsetY, true);
+
     if (collided) {
         self->timer = 0x600;
         if (self->direction == FLIP_NONE)
             self->velocity.x = -0xC000;
         else
             self->velocity.x = 0xC000;
-        self->state = MatryoshkaBom_Unknown5;
+        self->state = MatryoshkaBom_State_Walk;
     }
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->bodyAnimator);
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
 
-void MatryoshkaBom_Unknown11(void)
+void MatryoshkaBom_State_Shrapnel(void)
 {
     RSDK_THIS(MatryoshkaBom);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        RSDK.ProcessAnimation(&self->animator1);
+        RSDK.ProcessAnimation(&self->bodyAnimator);
 
         foreach_active(Player, player)
         {
@@ -438,19 +448,19 @@ void MatryoshkaBom_EditorDraw(void)
     switch (self->size) {
         default: break;
         case MATRYOSHKA_SIZE_BIG:
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &self->animator2, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->animator3, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->bodyAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &self->fuseAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->legsAnimator, false, 0);
             break;
         case MATRYOSHKA_SIZE_MED:
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &self->animator2, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->animator3, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->bodyAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &self->fuseAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->legsAnimator, false, 0);
             break;
         case MATRYOSHKA_SIZE_SMALL:
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &self->animator2, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->animator3, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->bodyAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &self->fuseAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->legsAnimator, false, 0);
             break;
     }
 
