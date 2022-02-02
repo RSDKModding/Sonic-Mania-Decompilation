@@ -9,5 +9,8 @@
             <PreprocessorDefinitions>USING_VCPKG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <AdditionalIncludeDirectories>$(SolutionDir)dependencies/all/tinyxml2/;C:/vcpkg/installed/x64-windows/include/;C:/$(SolutionDir)dependencies/all/;$(SolutionDir)RSDKv5/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         </ClCompile>
+        <PostBuildEvent>
+            <Command>copy /Y "C:/vcpkg/installed/x64-windows/bin/SDL2.dll" "$(OutDir)" </Command>
+        </PostBuildEvent>
     </ItemDefinitionGroup>
 </Project>
