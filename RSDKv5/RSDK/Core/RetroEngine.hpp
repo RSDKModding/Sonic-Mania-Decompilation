@@ -147,12 +147,15 @@ enum GameRegions {
 #define RETRO_USING_DIRECTX9 (1)
 
 #if RETRO_USING_SDL2
+#ifdef USING_VCPKG
+#include <SDL2/SDL.h>
+#else 
 #include <SDL.h>
-#endif
+#endif // ! USING_VCPKG
 #include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
 #include <theoraPlay/theoraplay.h>
-#endif
+#endif // ! RETRO_WIN
 
 #if RETRO_PLATFORM == RETRO_XB1
 #undef RETRO_USING_DIRECTX11
