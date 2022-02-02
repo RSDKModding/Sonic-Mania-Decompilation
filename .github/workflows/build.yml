@@ -20,7 +20,8 @@ jobs:
           vcpkg integrate install
       - name: Copy SDL2
         run: |
-          copy "C:/vcpkg/installed/x86-windows/bin/SDL2.dll" "./build/x64/Release/SDL2.dll" 
+          mkdir dependencies/windows/SDL2/lib/x86/Release/
+          copy "C:/vcpkg/installed/x64-windows/bin/SDL2.dll" "./dependencies/windows/SDL2/lib/x86/Release/SDL2.dll" 
       - name: Build RSDKv5
         run: |
           msbuild RSDKv5.sln /p:Configuration=Release /p:Platform=x86 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" "-target:RSDKv5;Sonic Mania_All"
@@ -49,7 +50,8 @@ jobs:
           vcpkg integrate install
       - name: Copy SDL2
         run: |
-          copy "C:/vcpkg/installed/x64-windows/bin/SDL2.dll" "./build/x64/Release/SDL2.dll" 
+          mkdir dependencies/windows/SDL2/lib/x64/Release/
+          copy "C:/vcpkg/installed/x64-windows/bin/SDL2.dll" "./dependencies/windows/SDL2/lib/x64/Release/SDL2.dll" 
       - name: Build RSDKv5
         run: |
           msbuild RSDKv5.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions_x64.props" "-target:RSDKv5;Sonic Mania_All"
@@ -88,9 +90,9 @@ jobs:
           Rename-Item ./dependencies/android/SDL2-2.0.16 SDL
       - name: Move & Copy stuff
         run: |
-          Copy-Item -Path ./dependencies/android/app/jni/src/dependencies/android\* -Destination ./dependencies/
-          Copy-Item -Path ./dependencies/android/app/jni/src/dependencies/android/libogg/ -Destination ./dependencies/android/ -recurse
-          Copy-Item -Path ./dependencies/android/config_types.h -Destination ./dependencies/android/libogg/include/ogg/
+          Copy-Item -Path ./android/app/jni/src/dependencies/android\* -Destination ./dependencies/
+          Copy-Item -Path ./android/app/jni/src/dependencies/android/libogg/ -Destination ./dependencies/android/ -recurse
+          Copy-Item -Path ./android/config_types.h -Destination ./dependencies/android/libogg/include/ogg/
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
@@ -113,7 +115,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install libogg-dev libvorbis-dev libsdl2-dev
+          sudo apt-get install libogg-dev libvorbis-dev libsdl2-dev libtheora-dev
           ls ./dependencies/all
       - name: Build RSDKv5
         run: make -j4
