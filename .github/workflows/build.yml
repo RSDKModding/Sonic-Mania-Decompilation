@@ -1,17 +1,17 @@
-name: Build RSDKv4
+name: Build RSDKv5
 on:
   push:
     branches:
       - master
+
+# TODO: readd with: submodules: recursive once we can
 
 jobs:
   v5-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          submodules: recursive
+        uses: actions/checkout@v2
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Run vcpkg
@@ -35,9 +35,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          submodules: recursive
+        uses: actions/checkout@v2
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Setup MSBuild
@@ -59,13 +57,11 @@ jobs:
         with:
           name: v5-windows
           path: artifacts
-  v4-android:
+  v5-android:
     runs-on: windows-latest
     steps:
       - name: Checkout repository Android
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Download libogg, libvorbis, and libtheora
@@ -103,13 +99,11 @@ jobs:
         with:
           name: v5-android
           path: ./android/app/build/outputs/apk
-  v4-linux:
+  v5-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - name: Install dependencies
         run: |
           sudo apt-get update
