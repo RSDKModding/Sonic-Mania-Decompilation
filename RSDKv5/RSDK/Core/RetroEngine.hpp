@@ -152,6 +152,7 @@ enum GameRegions {
 #else 
 #include <SDL.h>
 #endif // ! USING_VCPKG
+#endif // ! RETRO_USING_SDL2
 #include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
 #include <theoraPlay/theoraplay.h>
