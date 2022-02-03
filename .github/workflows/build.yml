@@ -22,10 +22,6 @@ jobs:
         run: |
           vcpkg install libogg:x86-windows-static libvorbis:x86-windows-static libtheora:x86-windows-static sdl2:x86-windows
           vcpkg integrate install
-      - name: Copy SDL2
-        run: |
-          mkdir dependencies/windows/SDL2/lib/x86/Release/
-          copy "C:/vcpkg/installed/x64-windows/bin/SDL2.dll" "./dependencies/windows/SDL2/lib/x86/Release/SDL2.dll" 
       - name: Build RSDKv5
         run: |
           msbuild RSDKv5.sln /p:Configuration=Release /p:Platform=x86 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" "-target:RSDKv5;Sonic Mania_All"
@@ -54,10 +50,6 @@ jobs:
         run: |
           vcpkg install libogg:x64-windows-static libvorbis:x64-windows-static libtheora:x64-windows-static sdl2:x64-windows
           vcpkg integrate install
-      - name: Copy SDL2
-        run: |
-          mkdir dependencies/windows/SDL2/lib/x64/Release/
-          copy "C:/vcpkg/installed/x64-windows/bin/SDL2.dll" "./dependencies/windows/SDL2/lib/x64/Release/SDL2.dll" 
       - name: Build RSDKv5
         run: |
           msbuild RSDKv5.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions_x64.props" "-target:RSDKv5;Sonic Mania_All"
