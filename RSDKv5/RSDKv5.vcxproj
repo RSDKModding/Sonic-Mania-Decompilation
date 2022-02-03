@@ -261,12 +261,14 @@
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/$(Configuration)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;Shell32.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-    </PostBuildEvent>
+    <When Condition=" '$(VCPKG)'!='Y' ">
+      <PostBuildEvent>
+        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
+      </PostBuildEvent>
+      <PostBuildEvent>
+        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
+      </PostBuildEvent>
+    </When>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -286,12 +288,14 @@
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/$(Configuration)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;Shell32.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-    </PostBuildEvent>
+    <When Condition=" '$(VCPKG)'!='Y' ">
+      <PostBuildEvent>
+        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
+      </PostBuildEvent>
+      <PostBuildEvent>
+        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
+      </PostBuildEvent>
+    </When>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -315,12 +319,14 @@
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/$(Configuration)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;Shell32.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-    </PostBuildEvent>
+    <When Condition=" '$(VCPKG)'!='Y' ">
+      <PostBuildEvent>
+        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
+      </PostBuildEvent>
+      <PostBuildEvent>
+        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
+      </PostBuildEvent>
+    </When>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -344,12 +350,14 @@
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/$(Configuration)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;Shell32.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
-    </PostBuildEvent>
+    <When Condition=" '$(VCPKG)'!='Y' ">
+      <PostBuildEvent>
+        <Command>copy /Y "$(SolutionDir)dependencies\windows\SDL2\lib\$(PlatformTargetAsMSBuildArchitecture)\$(Configuration)\SDL2.dll" "$(OutDir)" </Command>
+      </PostBuildEvent>
+      <PostBuildEvent>
+        <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
+      </PostBuildEvent>
+    </When>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

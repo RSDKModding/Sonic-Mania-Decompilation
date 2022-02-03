@@ -9,4 +9,7 @@
             <PreprocessorDefinitions>USING_VCPKG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
         </ClCompile>
     </ItemDefinitionGroup>
+    <PropertyGroup>
+        <VCPKG>Y</VCPKG>
+    </PropertyGroup>
 </Project>

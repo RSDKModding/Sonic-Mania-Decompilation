@@ -7,7 +7,7 @@ typedef enum {
     BALLCANNON_CANNON,
     BALLCANNON_CORKV,
     BALLCANNON_CORKH,
-} GasPlatformTypes;
+} BallCannonTypes;
 
 typedef enum {
     // Clockwise by default
@@ -19,7 +19,7 @@ typedef enum {
     BALLCANNON_DIR_LEFT_CCW,
     BALLCANNON_DIR_UP_CCW,
     BALLCANNON_DIR_RIGHT_CCW,
-} GasPlatformAngles;
+} BallCannonAngles;
 
 // Object Class
 struct ObjectBallCannon {
