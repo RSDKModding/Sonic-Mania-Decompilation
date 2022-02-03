@@ -24,7 +24,7 @@ jobs:
           vcpkg integrate install
       - name: Build RSDKv5
         run: |
-          msbuild RSDKv5.sln /p:Configuration=Release /p:Platform=x86 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" "-target:RSDKv5;Sonic Mania_All"
+          msbuild SonicMania.sln /m:2 /p:Configuration=Release /p:Platform=x86 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" "-target:RSDKv5;Sonic Mania_All"
       - name: Move artifacts
         run: |
           mkdir artifacts
@@ -52,7 +52,7 @@ jobs:
           vcpkg integrate install
       - name: Build RSDKv5
         run: |
-          msbuild RSDKv5.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions_x64.props" "-target:RSDKv5;Sonic Mania_All"
+          msbuild SonicMania.sln /m:2 /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions_x64.props" "-target:RSDKv5;Sonic Mania_All"
       - name: Move artifacts
         run: |
           mkdir artifacts
@@ -124,7 +124,7 @@ jobs:
           sudo apt-get install libogg-dev libvorbis-dev libsdl2-dev libtheora-dev
           ls ./dependencies/all
       - name: Build RSDKv5
-        run: make -j4
+        run: make -j8
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
