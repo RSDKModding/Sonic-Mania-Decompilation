@@ -20,13 +20,14 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: pkg-config make git mingw-w64-i636-gcc mingw-w64-i636-SDL2 mingw-w64-i636-libogg mingw-w64-i636-libvorbis mingw-w64-i636-libtheora
+          install: pkg-config make git mingw-w64-i686-gcc mingw-w64-i686-SDL2 mingw-w64-i686-libogg mingw-w64-i686-libvorbis mingw-w64-i686-libtheora
       - name: Clone theoraplay & tinyxml2
         run: |
           git clone https://github.com/icculus/theoraplay dependencies/all/theoraplay
           git clone https://github.com/leethomason/tinyxml2 dependencies/all/tinyxml2
       - name: Build RSDKv5
         run: |
+          windres RSDKv5/RSDKv5.rc -O coff -o RSDKv5/RSDKv5.res 
           make -j8 
       - name: Move artifacts
         run: |
@@ -58,12 +59,13 @@ jobs:
           git clone https://github.com/leethomason/tinyxml2 dependencies/all/tinyxml2
       - name: Build RSDKv5
         run: |
+          windres RSDKv5/RSDKv5.rc -O coff -o RSDKv5/RSDKv5.res 
           make -j8 
       - name: Move artifacts
         run: |
           mkdir artifacts
-          move ./bin/Windows/*.dll ./artifacts 
-          move ./bin/Windows/*.exe ./artifacts
+          mv ./bin/Windows/*.dll ./artifacts 
+          mv ./bin/Windows/*.exe ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v1.0.0
         with:
