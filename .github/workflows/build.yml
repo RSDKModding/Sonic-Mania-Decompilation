@@ -18,7 +18,7 @@ jobs:
       - name: Setup MSYS2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: MINGW32
           update: true
           install: pkg-config make git mingw-w64-i686-gcc mingw-w64-i686-SDL2 mingw-w64-i686-libogg mingw-w64-i686-libvorbis mingw-w64-i686-libtheora
       - name: Clone theoraplay & tinyxml2
