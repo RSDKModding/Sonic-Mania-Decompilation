@@ -32,8 +32,8 @@ jobs:
       - name: Move artifacts
         run: |
           mkdir artifacts
-          move ./bin/Windows/*.dll ./artifacts 
-          move ./bin/Windows/*.exe ./artifacts
+          mv ./bin/Windows/*.dll ./artifacts 
+          mv ./bin/Windows/*.exe ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v1.0.0
         with:
