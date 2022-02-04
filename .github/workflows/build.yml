@@ -8,56 +8,62 @@ on:
 
 jobs:
   v5-windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-      - name: Checkout
+      - name: Checkout 
         uses: actions/checkout@v2
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: pkg-config make git mingw-w64-i636-gcc mingw-w64-i636-SDL2 mingw-w64-i636-libogg mingw-w64-i636-libvorbis mingw-w64-i636-libtheora
       - name: Clone theoraplay & tinyxml2
         run: |
           git clone https://github.com/icculus/theoraplay dependencies/all/theoraplay
           git clone https://github.com/leethomason/tinyxml2 dependencies/all/tinyxml2
-      - name: Run vcpkg
-        run: |
-          vcpkg install libogg:x86-windows-static libvorbis:x86-windows-static libtheora:x86-windows-static sdl2:x86-windows
-          vcpkg integrate install
       - name: Build RSDKv5
         run: |
-          msbuild SonicMania.sln /m:2 /p:Configuration=Release /p:Platform=x86 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" "-target:RSDKv5;Sonic Mania_All"
+          make -j8 
       - name: Move artifacts
         run: |
           mkdir artifacts
-          move ./build/Win32/Release/*.dll ./artifacts 
-          move ./build/Win32/Release/*.exe ./artifacts
+          move ./bin/Windows/*.dll ./artifacts 
+          move ./bin/Windows/*.exe ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v1.0.0
         with:
           name: v5-windows
           path: artifacts
   v5-windows-x64:
-    runs-on: windows-latest
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-      - name: Checkout
+      - name: Checkout 
         uses: actions/checkout@v2
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: pkg-config make git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libogg mingw-w64-x86_64-libvorbis mingw-w64-x86_64-libtheora
       - name: Clone theoraplay & tinyxml2
         run: |
           git clone https://github.com/icculus/theoraplay dependencies/all/theoraplay
           git clone https://github.com/leethomason/tinyxml2 dependencies/all/tinyxml2
-      - name: Run vcpkg
-        run: |
-          vcpkg install libogg:x64-windows-static libvorbis:x64-windows-static libtheora:x64-windows-static sdl2:x64-windows
-          vcpkg integrate install
       - name: Build RSDKv5
         run: |
-          msbuild SonicMania.sln /m:2 /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions_x64.props" "-target:RSDKv5;Sonic Mania_All"
+          make -j8 
       - name: Move artifacts
         run: |
           mkdir artifacts
-          move ./build/x64/Release/*.dll ./artifacts 
-          move ./build/x64/Release/*.exe ./artifacts
+          move ./bin/Windows/*.dll ./artifacts 
+          move ./bin/Windows/*.exe ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v1.0.0
         with:

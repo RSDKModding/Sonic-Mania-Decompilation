@@ -1,21 +1,31 @@
 .DEFAULT_GOAL := all
 
-NAME		=  RSDKv5
-SUFFIX		= 
 PKGCONFIG	=  pkg-config
-DEBUG		?= 0
+STRIP		?= strip
+
 STATIC		?= 1
+DEBUG		?= 1
 VERBOSE		?= 0
 PROFILE		?= 0
-STRIP		?= strip
-DEFINES     =
 
-STATICGAME 	?= 0
-GAMENAME    ?= Game
-GAMESUFFIX  ?= .so
+RSDK_NAME    = RSDKv5
+RSDK_SUFFIX  = 
 USERTYPE    ?= Dummy
 
-USE_ALLC    ?= 0
+GAME_NAME   ?= Game
+GAME_SUFFIX ?= .so
+GAME_ALLC   ?= 1
+STATICGAME 	?= 0
+
+RSDK_CFLAGS  =
+RSDK_LDFLAGS =
+RSDK_LIBS    =
+
+GAME_CFLAGS  =
+GAME_LDFLAGS = -shared
+GAME_LIBS    =
+
+DEFINES      =
 
 # =============================================================================
 # Detect default platform if not explicitly specified
@@ -47,7 +57,9 @@ GAME_OBJDIR = Game/obj/$(PLATFORM)
 include makefiles/$(PLATFORM).cfg
 
 # =============================================================================
+
 CFLAGS ?= $(CXXFLAGS)
+DEFINES += -DBASE_PATH='"$(BASE_PATH)"'
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS += -g
@@ -61,7 +73,6 @@ endif
 ifeq ($(STATIC),1)
 	CXXFLAGS += -static
 	CFLAGS += -static
-	STATICGAME = 1
 endif
 
 ifeq ($(PROFILE),1)
@@ -75,30 +86,23 @@ ifeq ($(VERBOSE),0)
 endif
 
 ifeq ($(STATICGAME),0)
-	CXXFLAGS += -DRETRO_STANDALONE=1
-	CFLAGS += -DRETRO_STANDALONE=1
+	DEFINES += -DRETRO_STANDALONE=1
 else
-	CXXFLAGS += -DRETRO_STANDALONE=0
-	CFLAGS += -DRETRO_STANDALONE=0
+	DEFINES += -DRETRO_STANDALONE=0
 endif
 
-CFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
-CXXFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
-LIBS += `$(PKGCONFIG) --libs --static sdl2 vorbisfile vorbis theora theoradec zlib`
+RSDK_CFLAGS += `$(PKGCONFIG) --cflags --static sdl2 vorbisfile vorbis theora theoradec zlib`
+RSDK_LIBS += `$(PKGCONFIG) --libs --static sdl2 vorbisfile vorbis theora theoradec zlib`
 
 CFLAGS_ALL += $(CFLAGS) \
-			   -DBASE_PATH='"$(BASE_PATH)"' \
                -fsigned-char 
 		
 CXXFLAGS_ALL += $(CXXFLAGS) \
-               -DBASE_PATH='"$(BASE_PATH)"' \
                -std=c++17 \
                -fsigned-char \
-			   -fpermissive
+			   -fpermissive 
 
 LDFLAGS_ALL = $(LDFLAGS)
-LIBS_ALL += -pthread $(LIBS)
-
 
 RSDK_INCLUDES  += \
     -I./RSDKv5/ 					\
@@ -106,8 +110,6 @@ RSDK_INCLUDES  += \
     -I./dependencies/all/tinyxml2/ 	\
 	-I./dependencies/all/iniparser/ \
 	-I./dependencies/all/theoraplay/ 
-
-RSDK_INCLUDES += $(LIBS)
 
 # Main Sources
 RSDK_SOURCES = \
@@ -162,18 +164,19 @@ GAME_SOURCES = \
 	Game/GameObjects	\
 	Game/GameVariables 
 
-ifeq ($(USE_ALLC),1)
+ifeq ($(GAME_ALLC),1)
 GAME_SOURCES += Game/Objects/All
 else
 # execute Game/objectmake.py?
 include Game/Objects.cfg
 endif
 
-RSDKPATH = $(OUTDIR)/$(NAME)$(SUFFIX)
-GAMEPATH = $(OUTDIR)/$(GAMENAME)$(GAMESUFFIX)
+RSDK_PATH = $(OUTDIR)/$(RSDK_NAME)$(RSDK_SUFFIX)
+GAME_PATH = $(OUTDIR)/$(GAME_NAME)$(GAME_SUFFIX)
 
-PKGSUFFIX ?= $(SUFFIX)
-PKGPATH = $(OUTDIR)/$(NAME)$(PKGSUFFIX)
+PKG_NAME 	?= $(RSDK_NAME)
+PKG_SUFFIX 	?= $(RSDK_SUFFIX)
+PKG_PATH 	 = $(OUTDIR)/$(PKG_NAME)$(PKG_SUFFIX)
 
 RSDK_OBJECTS += $(addprefix $(RSDK_OBJDIR)/, $(addsuffix .o, $(RSDK_SOURCES)))
 GAME_OBJECTS += $(addprefix $(GAME_OBJDIR)/, $(addsuffix .o, $(GAME_SOURCES)))
@@ -185,51 +188,58 @@ $(shell mkdir -p $(GAME_OBJDIR))
 $(GAME_OBJDIR)/%.o: %.c
 	@mkdir -p $(@D)
 	@echo compiling $<...
-	$(CC) -c -fPIC $(CFLAGS_ALL) $(GAME_INCLUDES) $(DEFINES) $< -o $@
+	$(CC) -c -fPIC $(CFLAGS_ALL) $(GAME_FLAGS) $(GAME_INCLUDES) $(DEFINES) $< -o $@
 	@echo done $<
 
 $(RSDK_OBJDIR)/%.o: %.c
 	@mkdir -p $(@D)
 	@echo compiling $<...
-	$(CC) -c $(CFLAGS_ALL) $(RSDK_INCLUDES) $(DEFINES) $< -o $@
+	$(CC) -c $(CFLAGS_ALL) $(RSDK_CFLAGS) $(RSDK_INCLUDES) $(DEFINES) $< -o $@
 	@echo done $<
 
 $(RSDK_OBJDIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	@echo compiling $<...
-	$(CXX) -c $(CXXFLAGS_ALL) $(RSDK_INCLUDES) $(DEFINES) $< -o $@
+	$(CXX) -c $(CXXFLAGS_ALL) $(RSDK_CFLAGS) $(RSDK_INCLUDES) $(DEFINES) $< -o $@
 	@echo done $<
 
 ifeq ($(STATICGAME),1)
-$(RSDKPATH): $(RSDK_OBJECTS) $(GAME_OBJECTS)
+$(RSDK_PATH): $(RSDK_OBJECTS) $(GAME_OBJECTS)
 	@echo -n linking...
-	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_OBJECTS) $(GAME_OBJECTS) -o $@ $(LIBS_ALL)
+	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_LDFLAGS) $(RSDK_OBJECTS) $(GAME_OBJECTS) -o $@ 
 	@echo done
 	$(STRIP) $@
 else
-$(RSDKPATH): $(RSDK_OBJECTS) $(GAME_OBJECTS)
-	@echo -n linking RSDK...
-	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_OBJECTS) -o $@ $(LIBS_ALL)
-	@echo done
-	@echo -n linking game...
-	$(CXX) -shared $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(GAME_OBJECTS) -o $(GAMEPATH) $(LIBS_ALL)
-	@echo done
+$(RSDK_PATH): $(RSDK_OBJECTS)
+	@echo linking RSDK...
+	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(RSDK_LDFLAGS) $(RSDK_OBJECTS) $(RSDK_LIBS) -o $@ 
 	$(STRIP) $@
-	$(STRIP) $(GAMEPATH)
+	@echo done linking RSDK
+$(GAME_PATH): $(GAME_OBJECTS)
+	@echo linking game...
+	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $(GAME_LDFLAGS) $(GAME_OBJECTS) $(GAME_LIBS) -o $@ 
+ 	$(STRIP) $@
+	@echo done linking game
 endif
 
 
-ifeq ($(RSDKPATH),$(PKGPATH))
-all: $(RSDKPATH)
+ifeq ($(RSDK_PATH),$(PKG_PATH))
+
+ifeq ($(STATICGAME),1)
+all: $(RSDK_PATH) 
 else
-all: $(PKGPATH)
+all: $(RSDK_PATH) $(GAME_PATH)
+endif # STATICGAME
+
+else
+all: $(PKG_PATH)
 endif
 
 clean:
-	rm -rf $(RSDK_OBJDIR) && rm -rf $(GAME_OBJDIR) && rm -rf $(RSDKPATH)
+	rm -rf $(RSDK_OBJDIR) && rm -rf $(GAME_OBJDIR) && rm -rf $(RSDK_PATH)
 
 clean-rsdk:
-	rm -rf $(RSDK_OBJDIR) && rm -rf $(RSDKPATH)
+	rm -rf $(RSDK_OBJDIR) && rm -rf $(RSDK_PATH)
 
 clean-game:
-	rm -rf $(GAME_OBJDIR) && rm -rf $(RSDKPATH)
+	rm -rf $(GAME_OBJDIR) && rm -rf $(RSDK_PATH)
