@@ -107,7 +107,7 @@ void IceSpring_Update(void)
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
                 if (IceSpring->animators[i].animationID == ANI_JUMP) 
                     memcpy(&player->animator, &IceSpring->animators[i], sizeof(Animator));
-                player->jumpAbility = 0;
+                player->applyJumpCap = false;
                 if (player->sidekick && self->playerBits == 0b10) {
                     RSDK.SetSpriteAnimation(IceSpring->aniFrames, self->type, &self->animator, true, 0);
                     self->animator.speed = 0;

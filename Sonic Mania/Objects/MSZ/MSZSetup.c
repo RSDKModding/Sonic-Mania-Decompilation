@@ -668,7 +668,7 @@ void MSZSetup_Player_State_Pilot(void)
     self->stateInput  = StateMachine_None;
     self->position.x  = ScreenInfo->position.x << 16;
     self->position.y  = ScreenInfo->position.y << 16;
-    Player->jumpInDelay = 0;
+    Player->jumpInTimer = 0;
 }
 
 void MSZSetup_Player_State_PostCrashJumpIn(void)
@@ -677,7 +677,7 @@ void MSZSetup_Player_State_PostCrashJumpIn(void)
     self->active      = ACTIVE_NORMAL;
     self->visible     = true;
     self->stateInput  = Player_ProcessP2Input_AI;
-    Player->jumpInDelay = 240;
+    Player->jumpInTimer = 240;
     Player_P2JumpBackIn();
 }
 

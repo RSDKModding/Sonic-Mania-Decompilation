@@ -30,9 +30,9 @@ void Springboard_Update(void)
                 if (self->animator.frameID == 2) {
                     int32 anim = playerPtr->animator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                        playerPtr->storedAnim = playerPtr->animator.animationID;
+                        playerPtr->animationReserve = playerPtr->animator.animationID;
                     else
-                        playerPtr->storedAnim = ANI_WALK;
+                        playerPtr->animationReserve = ANI_WALK;
                     playerPtr->state          = Player_State_Air;
                     playerPtr->onGround       = false;
                     playerPtr->tileCollisions = true;
@@ -40,7 +40,7 @@ void Springboard_Update(void)
                     playerPtr->groundVel   = playerPtr->velocity.x;
                     int32 springPos        = minVal(2 * pos - 16, 39);
                     playerPtr->velocity.y  = Springboard->springPower[springPos] - playerPtr->gravityStrength - self->force;
-                    playerPtr->jumpAbility = 0;
+                    playerPtr->applyJumpCap = false;
                     RSDK.PlaySfx(Springboard->sfxSpring, false, 0xFF);
                 }
             }

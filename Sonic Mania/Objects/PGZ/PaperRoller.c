@@ -328,8 +328,8 @@ void PaperRoller_HandleRollerCollisions(void)
                 player->onGround            = false;
                 player->groundVel           = 0;
                 player->tileCollisions      = true;
-                player->jumpAbility         = 0;
-                player->jumpAbilityTimer    = 0;
+                player->applyJumpCap        = false;
+                player->jumpAbilityState    = 0;
                 self->playerTimer[playerID] = 10;
             }
         }
@@ -405,8 +405,8 @@ void PaperRoller_HandlePrintCollisions(void)
                     player->onGround         = false;
                     player->groundVel        = 0;
                     player->tileCollisions   = true;
-                    player->jumpAbility      = 0;
-                    player->jumpAbilityTimer = 0;
+                    player->applyJumpCap     = false;
+                    player->jumpAbilityState = 0;
                     RSDK.PlaySfx(PaperRoller->sfxPaper, false, 0xFF);
                     deformY = 0x100000;
                 }
@@ -460,8 +460,8 @@ void PaperRoller_HandlePrintCollisions(void)
                     player->onGround         = false;
                     player->groundVel        = 0;
                     player->tileCollisions   = true;
-                    player->jumpAbility      = 0;
-                    player->jumpAbilityTimer = 0;
+                    player->applyJumpCap     = false;
+                    player->jumpAbilityState = 0;
                     RSDK.PlaySfx(PaperRoller->sfxPaper, false, 0xFF);
                     deformY = -0x100000;
                 }

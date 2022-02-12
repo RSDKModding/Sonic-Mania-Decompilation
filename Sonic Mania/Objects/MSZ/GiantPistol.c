@@ -275,8 +275,8 @@ void GiantPistol_State_Aiming(void)
             if (flags == 1) {
                 player->state            = Player_State_Air;
                 player->onGround         = false;
-                player->jumpAbilityTimer = 0;
-                player->jumpAbility      = 0;
+                player->jumpAbilityState = 0;
+                player->applyJumpCap     = false;
                 player->jumpPress        = false;
                 player->jumpHold         = false;
 
@@ -298,7 +298,7 @@ void GiantPistol_State_Aiming(void)
                 else
 #endif
                     if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
-                    player->jumpAbilityTimer = 0;
+                    player->jumpAbilityState = 0;
                 }
                 self->activePlayers &= ~(1 << player->playerID);
                 self->timer2 = 16;

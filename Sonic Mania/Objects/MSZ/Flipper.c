@@ -37,7 +37,7 @@ void Flipper_Update(void)
                             int vel                                  = (playerPtr->position.x - self->position.x) - 0x40000;
                             playerPtr->animator.speed = 120;
                             playerPtr->state                         = Player_State_Air;
-                            playerPtr->jumpAbilityTimer              = 1;
+                            playerPtr->jumpAbilityState              = 1;
                             playerPtr->onGround                      = false;
                             playerPtr->velocity.x                    = vel / 7;
                             playerPtr->velocity.y                    = -0x68000 - (vel >> 3);
@@ -85,7 +85,7 @@ void Flipper_Update(void)
                             int vel                                  = (self->position.x - player->position.x) - 0x40000;
                             playerPtr->animator.speed = 120;
                             playerPtr->state                         = Player_State_Air;
-                            playerPtr->jumpAbilityTimer              = 1;
+                            playerPtr->jumpAbilityState              = 1;
                             playerPtr->onGround                      = false;
                             playerPtr->velocity.x                    = -(vel / 7);
                             playerPtr->velocity.y                    = -0x68000 - (vel >> 3);

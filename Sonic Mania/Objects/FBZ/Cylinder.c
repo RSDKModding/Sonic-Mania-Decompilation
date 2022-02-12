@@ -737,7 +737,7 @@ void Cylinder_Player_State_InkRoller_Stand(void)
     self->skidding = 0;
     if (self->camera)
         self->camera->offsetYFlag = false;
-    self->jumpAbilityTimer = 0;
+    self->jumpAbilityState = 0;
 
     if (self->jumpPress) {
         Player_StartJump(self);
@@ -750,9 +750,10 @@ void Cylinder_Player_State_InkRoller_Stand(void)
     else {
         if (abs(self->groundVel) >= 0x8800 && !self->left && !self->right && self->down) {
             if (self->abilityValue == 128)
-                self->position.y -= self->cameraOffset;
+                self->position.y -= self->jumpOffset;
             else
-                self->position.y += self->cameraOffset;
+                self->position.y += self->jumpOffset;
+
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
             self->direction ^= FLIP_X;
             self->state = Cylinder_Player_State_InkRoller_Roll;
@@ -783,7 +784,7 @@ void Cylinder_Player_State_InkRoller_Roll(void)
 
     if (self->camera)
         self->camera->offsetYFlag = false;
-    self->jumpAbilityTimer = 0;
+    self->jumpAbilityState = 0;
     self->angle            = angle;
     if (self->jumpPress) {
         Player_StartJump(self);

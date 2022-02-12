@@ -223,13 +223,14 @@ void Ice_Create(void *data)
                     }
                     else if (globals->gameMode != MODE_TIMEATTACK) {
                         switch (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->characterID) {
+                            default:
+                            case ID_SONIC: break;
                             case ID_TAILS: ++self->contentsAltAnimator.frameID; break;
                             case ID_KNUCKLES: self->contentsAltAnimator.frameID += 2; break;
 #if RETRO_USE_PLUS
                             case ID_MIGHTY: self->contentsAltAnimator.frameID += 8; break;
                             case ID_RAY: self->contentsAltAnimator.frameID += 9; break;
 #endif
-                            default: break;
                         }
 
                         if (globals->gameMode == MODE_COMPETITION) {
@@ -504,7 +505,7 @@ void Ice_State_FrozenPlayer(void)
                     self->groundVel += (5000 * RSDK.Sin256(self->angle)) >> 8;
                 if (self->camera)
                     self->camera->offsetYFlag = false;
-                self->jumpAbilityTimer = 0;
+                self->jumpAbilityState = 0;
                 self->rollingFriction  = rollFric;
                 if (self->state == Player_State_Ground)
                     self->state = Ice_State_FrozenPlayer;
@@ -1395,13 +1396,14 @@ void Ice_EditorDraw(void)
             }
             else if (globals->gameMode != MODE_TIMEATTACK) {
                 switch (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->characterID) {
+                    default:
+                    case ID_SONIC: break;
                     case ID_TAILS: ++self->contentsAltAnimator.frameID; break;
                     case ID_KNUCKLES: self->contentsAltAnimator.frameID += 2; break;
 #if RETRO_USE_PLUS
                     case ID_MIGHTY: self->contentsAltAnimator.frameID += 8; break;
                     case ID_RAY: self->contentsAltAnimator.frameID += 9; break;
 #endif
-                    default: break;
                 }
 
                 if (globals->gameMode == MODE_COMPETITION) {

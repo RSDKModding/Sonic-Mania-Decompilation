@@ -47,7 +47,7 @@ void SwingRope_Update(void)
         if (player->state == Player_State_None) {
             if (Player_CheckCollisionTouch(player, self, &SwingRope->hitbox2)) {
                 if (player->jumpPress) {
-                    player->jumpAbilityTimer = 1;
+                    player->jumpAbilityState = 1;
                     player->state            = Player_State_Air;
                     player->drawOrder        = self->playerLayers[player->playerID];
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
@@ -60,7 +60,7 @@ void SwingRope_Update(void)
                     }
                     player->velocity.y    = (self->velocity.y >> 1) - 0x38000;
                     player->onGround      = false;
-                    player->jumpAbility   = 0;
+                    player->applyJumpCap  = false;
                     self->ropeGrabDelay = 30;
                 }
                 else {

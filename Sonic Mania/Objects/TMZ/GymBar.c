@@ -156,7 +156,7 @@ void GymBar_HandlePlayerInteractions(void)
                         player->velocity.x      = 0;
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
-                        player->jumpAbility     = 0;
+                        player->applyJumpCap    = false;
                     }
                 }
             }
@@ -181,8 +181,8 @@ void GymBar_HandleSwingJump(void)
     }
     if (self->animator.speed > 0xF0)
         self->animator.speed = 0xF0;
-    self->jumpAbility      = 1;
-    self->jumpAbilityTimer = 1;
+    self->applyJumpCap     = true;
+    self->jumpAbilityState = 1;
     self->abilityPtrs[0]   = NULL;
     self->abilityValues[0] = 0;
     self->abilityValues[1] = 0;

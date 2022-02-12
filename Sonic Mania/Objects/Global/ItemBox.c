@@ -372,7 +372,7 @@ void ItemBox_CheckHit(void)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
 #if RETRO_USE_PLUS
-            if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1 && !self->parent) {
+            if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1 && !self->parent) {
                 if (RSDK.CheckObjectCollisionTouchCircle(player, 0x1000000, self, 0x100000)) {
                     if (self->position.y - 0x800000 < player->position.y && self->state != ItemBox_State_Falling) {
                         self->active = ACTIVE_NORMAL;
@@ -423,7 +423,7 @@ void ItemBox_CheckHit(void)
                     case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
                     case ID_KNUCKLES: flag |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
 #if RETRO_USE_PLUS
-                    case ID_MIGHTY: flag |= anim == ANI_DROPDASH || player->jumpAbilityTimer > 1; break;
+                    case ID_MIGHTY: flag |= anim == ANI_DROPDASH || player->jumpAbilityState > 1; break;
 #endif
                 }
                 if (!flag) {
@@ -471,29 +471,34 @@ void ItemBox_GivePowerup(void)
     EntityPlayer *player = (EntityPlayer *)self->storedEntity;
 
     switch (self->type) {
-        case ITEMBOX_RING: Player_GiveRings(10, player, true); return;
+        case ITEMBOX_RING: Player_GiveRings(10, player, true); break;
+
         case ITEMBOX_BLUESHIELD:
             player->shield = SHIELD_BLUE;
             Player_ApplyShieldEffect(player);
             RSDK.PlaySfx(Shield->sfxBlueShield, false, 255);
             break;
+
         case ITEMBOX_BUBBLESHIELD:
             player->shield = SHIELD_BUBBLE;
             Player_ApplyShieldEffect(player);
             RSDK.PlaySfx(Shield->sfxBubbleShield, false, 255);
-            player->airTimer = 0;
+            player->drownTimer = 0;
             Music_EndQueuedTrack(TRACK_DROWNING, false);
             break;
+
         case ITEMBOX_FIRESHIELD:
             player->shield = SHIELD_FIRE;
             Player_ApplyShieldEffect(player);
             RSDK.PlaySfx(Shield->sfxFireShield, false, 255);
             break;
+
         case ITEMBOX_LIGHTNINGSHIELD:
             player->shield = SHIELD_LIGHTNING;
             Player_ApplyShieldEffect(player);
             RSDK.PlaySfx(Shield->sfxLightningShield, false, 255);
             break;
+
         case ITEMBOX_INVINCIBLE:
             if (player->superState == SUPERSTATE_NONE) {
                 EntityInvincibleStars *invincibleStars = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), InvincibleStars);
@@ -502,6 +507,7 @@ void ItemBox_GivePowerup(void)
                 Music_PlayQueuedTrack(TRACK_INVINCIBLE);
             }
             break;
+
         case ITEMBOX_SNEAKERS:
             player->speedShoesTimer = 1320;
             Player_ChangePhysicsState(player);
@@ -511,6 +517,7 @@ void ItemBox_GivePowerup(void)
                 RSDK.ResetEntityPtr(powerup, ImageTrail->objectID, player);
             }
             break;
+
         case ITEMBOX_1UP_SONIC:
         case ITEMBOX_1UP_TAILS:
         case ITEMBOX_1UP_KNUX:
@@ -520,11 +527,13 @@ void ItemBox_GivePowerup(void)
 #endif
             Player_GiveLife(player);
             break;
+
         case ITEMBOX_EGGMAN: Player_CheckHit(player, self); return;
         case ITEMBOX_HYPERRING:
             RSDK.PlaySfx(ItemBox->sfxHyperRing, false, 255);
             player->hyperRing = true;
             break;
+
         case ITEMBOX_SWAP:
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE) {
@@ -558,6 +567,7 @@ void ItemBox_GivePowerup(void)
             }
 #endif
             break;
+
 #if RETRO_USE_PLUS
         case ITEMBOX_RANDOM: {
             uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -660,10 +670,12 @@ void ItemBox_GivePowerup(void)
             break;
         }
 #endif
+
         case ITEMBOX_SUPER:
             Player_GiveRings(50, player, false);
             Player_CheckGoSuper(player, 0x7F);
             break;
+
 #if RETRO_USE_PLUS
         case ITEMBOX_STOCK: {
             if (self->contentsAnimator.animationID == 7) {
@@ -680,7 +692,7 @@ void ItemBox_GivePowerup(void)
                         }
                         else {
                             player2->objectID   = Player->objectID;
-                            Player->jumpInDelay = 0;
+                            Player->jumpInTimer = 0;
                             EntityDust *dust    = CREATE_ENTITY(Dust, intToVoid(1), player2->position.x, player2->position.y);
 
                             dust->visible         = 0;
@@ -733,7 +745,7 @@ void ItemBox_GivePowerup(void)
                                 player2->tileCollisions   = false;
                                 player2->interaction      = false;
                                 player2->drawOrder        = Zone->playerDrawHigh;
-                                player2->airTimer         = 0;
+                                player2->drownTimer       = 0;
                                 player2->active           = ACTIVE_NORMAL;
                                 player2->collisionPlane   = 0;
                                 player2->collisionMode    = CMODE_FLOOR;
@@ -779,6 +791,7 @@ void ItemBox_GivePowerup(void)
             }
             break;
         }
+
 #endif
         default: break;
     }

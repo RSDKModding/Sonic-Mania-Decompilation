@@ -23,7 +23,7 @@ void CollapsingPlatform_Update(void)
         if (Player) {
             foreach_active(Player, player)
             {
-                if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
                     runState = true;
                     foreach_break;
                 }
@@ -45,7 +45,7 @@ void CollapsingPlatform_Update(void)
                     && !player->sidekick && player->onGround && !player->collisionMode && !self->eventOnly && self->delay < 0xFFFF) {
                     self->stoodPos.x = player->position.x;
 #if RETRO_USE_PLUS
-                    if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
+                    if (player->characterID == ID_MIGHTY && player->jumpAbilityState > 1) {
                         runState = true;
                         foreach_break;
                     }

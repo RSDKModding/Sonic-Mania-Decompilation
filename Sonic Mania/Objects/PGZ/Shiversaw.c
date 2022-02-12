@@ -197,8 +197,8 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         player->state      = Player_State_Hit;
         RSDK.StopSfx(Player->sfxMightyDrill);
         player->onGround         = false;
-        player->jumpAbility      = 0;
-        player->jumpAbilityTimer = 0;
+        player->applyJumpCap     = false;
+        player->jumpAbilityState = 0;
         if (player->state == Player_State_Hit) {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             RSDK.PlaySfx(Spikes->sfxSpike, false, 255);

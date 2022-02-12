@@ -192,8 +192,8 @@ void HangPoint_Update(void)
                             player->velocity.y = -0x40000;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             player->animator.speed = 48;
-                            player->jumpAbility             = 0;
-                            player->jumpAbilityTimer        = 1;
+                            player->applyJumpCap            = false;
+                            player->jumpAbilityState        = 1;
                             player->state                   = Player_State_Air;
                             player->tileCollisions          = true;
                             self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
@@ -409,9 +409,9 @@ void HangPoint_HandlePlayerMovement(EntityHangPoint *self, void *p, int32 player
         if (player->jumpPress) {
             player->velocity.y = -0x40000;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-            player->jumpAbility             = 0;
+            player->applyJumpCap            = false;
             player->animator.speed = 48;
-            player->jumpAbilityTimer        = 1;
+            player->jumpAbilityState        = 1;
             player->state                   = Player_State_Air;
             player->tileCollisions          = true;
             self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));

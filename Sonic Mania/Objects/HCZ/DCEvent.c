@@ -113,8 +113,8 @@ void DCEvent_State_Collapse(void)
     foreach_active(Player, player)
     {
         player->collisionLayers |= Zone->moveID;
-        player->moveOffset.x = move->scrollInfo[0].scrollPos;
-        player->moveOffset.y = move->scrollPos;
+        player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
+        player->moveLayerPosition.y = move->scrollPos;
     }
 
     int slot = SceneInfo->entitySlot + 1;
@@ -187,7 +187,7 @@ void DCEvent_StateInput_Unknown2(void)
     RSDK_THIS(Player);
 
     Player_ProcessP1Input();
-    self->airTimer  = 0;
+    self->drownTimer = 0;
     self->up        = false;
     self->down      = true;
     self->left      = false;

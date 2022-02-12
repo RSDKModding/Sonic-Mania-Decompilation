@@ -214,7 +214,7 @@ void BallCannon_State_EjectPlayer(void)
                     player->visible  = true;
                     if (self->exit) {
                         player->onGround       = false;
-                        player->jumpAbility    = 0;
+                        player->applyJumpCap   = false;
                         player->state          = Player_State_Air;
                         player->tileCollisions = true;
                         player->interaction    = true;

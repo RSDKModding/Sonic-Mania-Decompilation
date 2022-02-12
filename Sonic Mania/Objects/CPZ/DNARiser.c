@@ -163,7 +163,7 @@ void DNARiser_State_HandleInteractions(void)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->groundVel        = 0;
                 player->drawOrder        = 1;
-                player->jumpAbilityTimer = 1;
+                player->jumpAbilityState = 1;
                 player->onGround         = false;
                 player->tileCollisions   = false;
                 player->state            = Player_State_None;
@@ -301,7 +301,7 @@ void DNARiser_State_HelixRise(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->groundVel        = 0;
                     player->drawOrder        = 1;
-                    player->jumpAbilityTimer = 1;
+                    player->jumpAbilityState = 1;
                     player->onGround         = false;
                     player->tileCollisions   = false;
                     player->state            = Player_State_None;

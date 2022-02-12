@@ -55,7 +55,7 @@ void ZipLine_Update(void)
                     if (abs(prevX - self->position.x) <= 0x100000) {
                         if (!self->grabDelay[pid] && player->jumpPress) {
                             player->velocity.y       = -0x40000;
-                            player->jumpAbilityTimer = 1;
+                            player->jumpAbilityState = 1;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             player->animator.speed = 48;
                             player->state          = Player_State_Air;

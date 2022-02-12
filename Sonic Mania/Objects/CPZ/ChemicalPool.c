@@ -338,7 +338,7 @@ void ChemicalPool_State_Green(void)
             if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                 player->animator.animationID = ANI_WALK;
             player->onGround    = false;
-            player->jumpAbility = 0;
+            player->applyJumpCap = false;
             player->velocity.y  = -0x140000;
             RSDK.PlaySfx(ChemicalPool->sfxChemRed, false, 255);
         }
@@ -367,7 +367,7 @@ void ChemicalPool_State_Cyan(void)
                 else
                     player->velocity.y = -0x80000;
                 player->onGround    = false;
-                player->jumpAbility = 0;
+                player->applyJumpCap = false;
                 RSDK.PlaySfx(ChemicalPool->sfxChemYellow, false, 255);
             }
         }

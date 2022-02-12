@@ -187,7 +187,7 @@ void AIZTornadoPath_JumpOffTornado(void)
             player->camera         = camera;
             player->collisionPlane = 0;
             player->interaction    = true;
-            player->jumpAbility    = 0;
+            player->applyJumpCap   = false;
             player->drawOrder      = Zone->playerDrawLow;
             AIZTornadoPath->camera = NULL;
         }

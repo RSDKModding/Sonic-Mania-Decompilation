@@ -91,7 +91,7 @@ void Pinata_State_CheckPlayerCollisions(void)
                     }
                 }
                 if (player->animator.animationID != ANI_FLY)
-                    player->jumpAbility = 0;
+                    player->applyJumpCap = false;
                 if (player->velocity.y > -0x80000)
                     player->velocity.y = -0x80000;
                 player->onGround       = false;

@@ -111,8 +111,8 @@ void MagnetSphere_CheckPlayerCollision(void)
                 int32 ang = 12 * RSDK.Sin256(MagnetSphere->angleList[MagnetSphere->sphereAngle[pid] >> 4] | (MagnetSphere->sphereAngle[pid] & 0xF));
                 player->velocity.x        = ang * RSDK.Sin256(MagnetSphere->playerAngles[pid]);
                 player->velocity.y        = -(ang * RSDK.Cos256(MagnetSphere->playerAngles[pid]));
-                player->jumpAbility       = 0;
-                player->jumpAbilityTimer  = 1;
+                player->applyJumpCap      = false;
+                player->jumpAbilityState  = 1;
                 player->tileCollisions    = true;
                 player->state             = Player_State_Air;
                 self->playerTimers[pid] = 30;

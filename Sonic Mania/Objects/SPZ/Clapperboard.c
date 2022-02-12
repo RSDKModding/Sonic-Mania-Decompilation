@@ -162,9 +162,9 @@ void Clapperboard_Collide_Left(void)
                     player->velocity.y = -0x40000 - 0x60000 * standPos / clapStartPos;
                     if (player->animator.animationID == ANI_WALK
                         || (player->animator.animationID > ANI_AIRWALK && player->animator.animationID <= ANI_DASH))
-                        player->storedAnim = player->animator.animationID;
+                        player->animationReserve = player->animator.animationID;
                     else
-                        player->storedAnim = ANI_WALK;
+                        player->animationReserve = ANI_WALK;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 255);
                     clapFlag = true;
@@ -231,9 +231,9 @@ void Clapperboard_Collide_Right(void)
                     player->velocity.y = -0x40000 - 0x60000 * standPos / clapStartPos;
                     if (player->animator.animationID == ANI_WALK
                         || (player->animator.animationID > ANI_AIRWALK && player->animator.animationID <= ANI_DASH))
-                        player->storedAnim = player->animator.animationID;
+                        player->animationReserve = player->animator.animationID;
                     else
-                        player->storedAnim = ANI_WALK;
+                        player->animationReserve = ANI_WALK;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 0xFF);
                     clapFlag = true;

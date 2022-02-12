@@ -131,7 +131,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                 Player_CheckBadnikBreak(self, player, true);
             }
             else {
-                flag = player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || player->jumpAbilityTimer > 1);
+                flag = player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || player->jumpAbilityState > 1);
 #endif
                 if (Player_CheckAttacking(player, self) || flag) {
                     RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
@@ -149,11 +149,11 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                     }
 
 #if RETRO_USE_PLUS
-                    if (player->characterID != ID_MIGHTY || player->jumpAbilityTimer <= 1) {
+                    if (player->characterID != ID_MIGHTY || player->jumpAbilityState <= 1) {
 #endif
                         player->velocity.x  = velX;
                         player->groundVel   = velX;
-                        player->jumpAbility = 0;
+                        player->applyJumpCap = false;
                         if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
                             player->state = Player_State_KnuxGlideDrop;

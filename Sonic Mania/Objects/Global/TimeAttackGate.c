@@ -24,7 +24,7 @@ void TimeAttackGate_StaticUpdate(void)
     if (globals->gameMode == MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (TimeAttackGate->isFinished || !TimeAttackGate->started) {
-            player->airTimer = 0;
+            player->drownTimer = 0;
         }
 
         if (TimeAttackGate->suppressedTitlecard) {

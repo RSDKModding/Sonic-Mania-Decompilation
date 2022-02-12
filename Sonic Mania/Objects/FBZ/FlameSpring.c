@@ -101,9 +101,9 @@ void FlameSpring_State_Spring(void)
                     if (Player_CheckCollisionBox(player, self, &FlameSpring->hitboxSpring) == C_TOP) {
                         int32 anim = player->animator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                            player->storedAnim = player->animator.animationID;
+                            player->animationReserve = player->animator.animationID;
                         else
-                            player->storedAnim = ANI_WALK;
+                            player->animationReserve = ANI_WALK;
                         if (self->playerAni)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                         else

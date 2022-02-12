@@ -103,8 +103,8 @@ void SpecialRing_StageLoad(void)
                                 player2->position.x -= 0x100000;
 
                             for (int32 f = 0; f < 0x10; ++f) {
-                                Player->flyCarryPositions[f].x = player->position.x;
-                                Player->flyCarryPositions[f].y = player->position.y;
+                                Player->leaderPositionBuffer[f].x = player->position.x;
+                                Player->leaderPositionBuffer[f].y = player->position.y;
                             }
                         }
                     }

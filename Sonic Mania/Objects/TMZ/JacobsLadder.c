@@ -47,7 +47,7 @@ void JacobsLadder_Update(void)
                     if (player->jumpPress) {
                         self->playerTimers[playerID] = 15;
                         self->activePlayers &= ~(1 << playerID);
-                        player->jumpAbilityTimer = 1;
+                        player->jumpAbilityState = 1;
                         player->state            = Player_State_Air;
                         SceneInfo->entity   = (Entity *)player;
                         player->stateAbility();
@@ -105,7 +105,7 @@ void JacobsLadder_Update(void)
                     player->velocity.x       = 0;
                     player->velocity.y       = 0;
                     player->groundVel        = 0;
-                    player->jumpAbilityTimer = 1;
+                    player->jumpAbilityState = 1;
                     player->state            = Player_State_Air;
                 }
             }

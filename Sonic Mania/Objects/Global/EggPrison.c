@@ -70,9 +70,9 @@ void EggPrison_Update(void)
                     if (self->type == EGGPRISON_SPRING) {
                         int32 anim = player->animator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                            player->storedAnim = player->animator.animationID;
+                            player->animationReserve = player->animator.animationID;
                         else
-                            player->storedAnim = ANI_WALK;
+                            player->animationReserve = ANI_WALK;
                         player->state      = Player_State_Air;
                         player->onGround   = false;
                         player->velocity.y = -0xA0000;

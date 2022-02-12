@@ -503,7 +503,7 @@ void OOZSetup_PlayerState_OilSlide(void)
     else {
         if (self->camera)
             self->camera->offsetYFlag = false;
-        self->jumpAbilityTimer = 0;
+        self->jumpAbilityState = 0;
         if (self->angle) {
             if (self->angle <= 128) {
                 if (self->groundVel < 0x80000) {
@@ -572,11 +572,11 @@ void OOZSetup_PlayerState_OilFall(void)
 
     if (self->camera)
         self->camera->offsetYFlag = false;
-    self->jumpAbilityTimer = 0;
+    self->jumpAbilityState = 0;
     self->nextAirState     = Player_State_Air;
     if (self->jumpPress) {
         Player_StartJump(self);
-        self->jumpAbilityTimer = 0;
+        self->jumpAbilityState = 0;
         self->timer            = 0;
     }
     self->topSpeed     = top;

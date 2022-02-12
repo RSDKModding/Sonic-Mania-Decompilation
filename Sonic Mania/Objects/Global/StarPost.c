@@ -124,8 +124,8 @@ void StarPost_StageLoad(void)
                             sidekick->position.x -= 0x100000;
 
                         for (int32 p = 0; p < 0x10; ++p) {
-                            Player->flyCarryPositions[p].x = player->position.x;
-                            Player->flyCarryPositions[p].y = player->position.y;
+                            Player->leaderPositionBuffer[p].x = player->position.x;
+                            Player->leaderPositionBuffer[p].y = player->position.y;
                         }
                     }
                 }

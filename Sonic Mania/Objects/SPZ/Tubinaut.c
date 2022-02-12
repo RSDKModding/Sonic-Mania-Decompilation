@@ -254,7 +254,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int orbID)
             if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = velX;
                 player->groundVel   = velX;
-                player->jumpAbility = 0;
+                player->applyJumpCap = false;
             }
             player->velocity.y     = velY;
             player->onGround       = false;
@@ -309,7 +309,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
             if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = velX;
                 player->groundVel   = velX;
-                player->jumpAbility = 0;
+                player->applyJumpCap = false;
             }
             player->velocity.y           = velY;
             player->onGround             = false;

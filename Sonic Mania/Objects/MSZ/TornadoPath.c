@@ -207,7 +207,7 @@ void TornadoPath_Unknown6(void)
     player1->camera         = TornadoPath->cameraPtr;
     player1->collisionPlane = 0;
     player1->interaction    = true;
-    player1->jumpAbility    = 0;
+    player1->applyJumpCap   = false;
     player1->drawOrder      = Zone->playerDrawLow;
     if (player1->groundedStore)
         Player_StartJump(player1);

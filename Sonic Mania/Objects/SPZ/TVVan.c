@@ -679,14 +679,14 @@ void TVVan_StateRadio_HandleMovement(void)
                             RSDK.SetSpriteAnimation(TVVan->aniFrames, 14, &self->radioAnimator, true, 0);
                             RSDK.SetSpriteAnimation(TVVan->aniFrames, 16, &van->tvAnimator, true, 0);
                             switch (player->characterID) {
+                                default:
+                                case ID_SONIC: RSDK.SetSpriteAnimation(TVVan->aniFrames, 19, &van->playerAnimator, true, 0); break;
                                 case ID_TAILS: RSDK.SetSpriteAnimation(TVVan->aniFrames, 20, &van->playerAnimator, true, 0); break;
                                 case ID_KNUCKLES: RSDK.SetSpriteAnimation(TVVan->aniFrames, 21, &van->playerAnimator, true, 0); break;
 #if RETRO_USE_PLUS
                                 case ID_MIGHTY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 22, &van->playerAnimator, true, 0); break;
                                 case ID_RAY: RSDK.SetSpriteAnimation(TVVan->aniFrames, 23, &van->playerAnimator, true, 0); break;
 #endif
-                                case ID_SONIC:
-                                default: RSDK.SetSpriteAnimation(TVVan->aniFrames, 19, &van->playerAnimator, true, 0); break;
                             }
                             van->scale.x                       = 0x000;
                             van->scale.y                       = 0x000;
@@ -896,7 +896,7 @@ void TVVan_StateRadio_EnterTV(void)
         player->tileCollisions = true;
         player->interaction    = true;
         player->visible        = true;
-        player->jumpAbility    = 0;
+        player->applyJumpCap   = false;
     }
     RSDK.PlaySfx(TVVan->sfxExplosion, false, 255);
 

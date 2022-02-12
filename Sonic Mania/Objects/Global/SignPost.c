@@ -323,6 +323,10 @@ void SignPost_CheckTouch(void)
                         self->active = ACTIVE_NORMAL;
                         if (!self->activePlayers) {
                             switch (player->characterID) {
+                                default:
+                                case ID_SONIC:
+                                    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0);
+                                    break;
                                 case ID_TAILS:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0);
                                     break;
@@ -335,7 +339,6 @@ void SignPost_CheckTouch(void)
                                     break;
                                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
 #endif
-                                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0); break;
                             }
                             RSDK.PlaySfx(SignPost->sfxSignPost2P, false, 255);
                         }

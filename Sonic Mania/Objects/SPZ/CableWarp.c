@@ -334,7 +334,7 @@ void CableWarp_StateTransport_Exit(void)
         player->visible        = true;
         player->tileCollisions = true;
         player->interaction    = true;
-        player->jumpAbility    = 0;
+        player->applyJumpCap   = false;
         player->velocity.y     = -0xA0000;
         player->position.y     = self->position.y - 0x180000;
         destroyEntity(self);

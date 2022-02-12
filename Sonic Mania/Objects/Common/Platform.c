@@ -1539,8 +1539,8 @@ void Platform_CollisionState_Tiles(void)
 
         if (Player_CheckCollisionTouch(player, self, &hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = self->tileOrigin.x - self->drawPos.x;
-            player->moveOffset.y = self->tileOrigin.y - self->drawPos.y;
+            player->moveLayerPosition.x = self->tileOrigin.x - self->drawPos.x;
+            player->moveLayerPosition.y = self->tileOrigin.y - self->drawPos.y;
             if (player->animator.animationID == ANI_PUSH && player->onGround) {
                 if (player->right)
                     self->pushPlayersL |= 1 << playerID;

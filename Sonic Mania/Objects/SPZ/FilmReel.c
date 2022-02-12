@@ -261,8 +261,8 @@ void FilmReel_SpinLeft(void)
     {
         if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = FilmReel->offsetPos.x - self->lastPos.x;
-            player->moveOffset.y = FilmReel->offsetPos.y - self->lastPos.y;
+            player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
+            player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
             if (!player->sidekick) {
                 if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 
@@ -337,8 +337,8 @@ void FilmReel_SpinRight(void)
     {
         if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = FilmReel->offsetPos.x - self->lastPos.x;
-            player->moveOffset.y = FilmReel->offsetPos.y - self->lastPos.y;
+            player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
+            player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
             if (!player->sidekick) {
                 if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 

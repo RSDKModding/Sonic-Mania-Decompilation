@@ -825,7 +825,7 @@ void DERobot_State_SetupBoss(void)
             self->visible = true;
             self->state   = DERobot_State_SurpriseFall;
             if (player1->characterID == ID_TAILS)
-                player1->stateAbility = Player_TailsJumpAbility;
+                player1->stateAbility = Player_JumpAbility_Tails;
             EntityDERobot *kneeBack = self->legs[0];
             kneeBack->active        = ACTIVE_NORMAL;
             kneeBack->visible       = true;

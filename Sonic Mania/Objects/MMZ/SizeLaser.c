@@ -174,6 +174,13 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
 {
     if (isChibi) {
         switch (player->characterID) {
+            default:
+            case ID_SONIC:
+                player->aniFrames  = SizeLaser->sonicFrames;
+                player->tailFrames = -1;
+                player->isChibi    = isChibi;
+                break;
+
             case ID_TAILS:
                 player->aniFrames  = SizeLaser->tailsFrames;
                 player->tailFrames = SizeLaser->tailFrames;
@@ -198,18 +205,18 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
                 player->tailFrames = -1;
                 player->isChibi    = isChibi;
                 break;
-
 #endif
-            default:
-            case ID_SONIC:
-                player->aniFrames  = SizeLaser->sonicFrames;
-                player->tailFrames = -1;
-                player->isChibi    = isChibi;
-                break;
         }
     }
     else {
         switch (player->characterID) {
+            default:
+            case ID_SONIC:
+                player->aniFrames  = Player->sonicFrames;
+                player->tailFrames = -1;
+                player->isChibi    = isChibi;
+                break;
+
             case ID_TAILS:
                 player->aniFrames  = Player->tailsFrames;
                 player->tailFrames = Player->tailsTailsFrames;
@@ -234,14 +241,7 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 isChibi)
                 player->tailFrames = -1;
                 player->isChibi    = isChibi;
                 break;
-
 #endif
-            default:
-            case ID_SONIC:
-                player->aniFrames  = Player->sonicFrames;
-                player->tailFrames = -1;
-                player->isChibi    = isChibi;
-                break;
         }
     }
 }
@@ -309,9 +309,9 @@ void SizeLaser_P2JumpInGrow(void)
         self->state       = Player_State_Air;
         Player_ChangePhysicsState(self);
         if (self->characterID == ID_TAILS)
-            self->cameraOffset = 0;
+            self->jumpOffset = 0;
         else
-            self->cameraOffset = 0x50000;
+            self->jumpOffset = 0x50000;
     }
     else {
         self->state = SizeLaser_P2JumpInGrow;
@@ -328,6 +328,12 @@ void SizeLaser_P2JumpInShrink(void)
 
     if (self->scale.x <= 0x140) {
         switch (self->characterID) {
+            default:
+            case ID_SONIC:
+                self->aniFrames  = SizeLaser->sonicFrames;
+                self->tailFrames = -1;
+                break;
+
             case ID_TAILS:
                 self->aniFrames  = SizeLaser->tailsFrames;
                 self->tailFrames = SizeLaser->tailFrames;
@@ -348,15 +354,9 @@ void SizeLaser_P2JumpInShrink(void)
                 self->aniFrames  = SizeLaser->rayFrames;
                 self->tailFrames = -1;
                 break;
-
 #endif
-            default:
-            case ID_SONIC:
-                self->aniFrames  = SizeLaser->sonicFrames;
-                self->tailFrames = -1;
-                break;
         }
-        self->cameraOffset = 0x40000;
+        self->jumpOffset = 0x40000;
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->animator, false, 0);
         self->isChibi = true;
         self->drawFX &= ~FX_SCALE;
@@ -492,6 +492,15 @@ void SizeLaser_CheckPlayerCollisions(void)
                     player->scale.x = 0x140;
                     player->scale.y = 0x140;
                     switch (player->characterID) {
+                        default:
+                        case ID_SONIC:
+                            if (player->superState == SUPERSTATE_SUPER)
+                                player->aniFrames = Player->superFrames;
+                            else
+                                player->aniFrames = Player->sonicFrames;
+                            player->tailFrames = -1;
+                            break;
+
                         case ID_TAILS:
                             player->aniFrames  = Player->tailsFrames;
                             player->tailFrames = Player->tailsTailsFrames;
@@ -512,16 +521,7 @@ void SizeLaser_CheckPlayerCollisions(void)
                             player->aniFrames  = Player->rayFrames;
                             player->tailFrames = -1;
                             break;
-
 #endif
-                        default:
-                        case ID_SONIC:
-                            if (player->superState == SUPERSTATE_SUPER)
-                                player->aniFrames = Player->superFrames;
-                            else
-                                player->aniFrames = Player->sonicFrames;
-                            player->tailFrames = -1;
-                            break;
                     }
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);

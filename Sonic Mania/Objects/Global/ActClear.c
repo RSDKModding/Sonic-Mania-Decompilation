@@ -525,7 +525,7 @@ void ActClear_SetupForceOnScreenP2(void)
             if (player2->state != Player_State_FlyIn && player2->state != Player_State_JumpIn) {
                 if (player2->position.x <= (ScreenInfo->width + ScreenInfo->position.x) << 16
                     || abs(player2->position.y - player1->position.y) > 0x100000) {
-                    Player->jumpInDelay    = 240;
+                    Player->jumpInTimer = 240;
                     Entity *entStore       = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)player2;
                     Player_P2JumpBackIn();
@@ -536,7 +536,7 @@ void ActClear_SetupForceOnScreenP2(void)
                     }
                 }
                 else {
-                    Player->jumpInDelay = -3600;
+                    Player->jumpInTimer = -3600;
                 }
             }
         }
@@ -973,7 +973,7 @@ void ActClear_State_ForcePlayerOnScreen(void)
     ++self->stageFinishTimer;
     if ((finishedP1 && finishedP2) || self->stageFinishTimer >= 900) {
         if (self->timer >= 10) {
-            Player->jumpInDelay = 0;
+            Player->jumpInTimer = 0;
             StateMachine_Run(Zone->stageFinishCallback);
             Zone->stageFinishCallback = StateMachine_None;
             destroyEntity(self);

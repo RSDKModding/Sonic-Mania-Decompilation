@@ -284,7 +284,7 @@ void HeavyRider_CheckObjectCollisions(void)
                         player->groundVel = player->velocity.x;
                     else
                         player->onGround = false;
-                    player->jumpAbility                = 0;
+                    player->applyJumpCap               = false;
                     HeavyRider->playerTimers[playerID] = 15;
                 }
             }

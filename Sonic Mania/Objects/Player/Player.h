@@ -171,13 +171,13 @@ struct ObjectPlayer {
     uint16 rightState;
     uint16 jumpPressState;
     uint16 jumpHoldState;
-    int32 flyCarryPosA;
-    int32 flyCarryPosB;
-    Vector2 flyCarryPositions[0x10];
-    Vector2 curFlyCarryPos;
-    int32 P2JumpActionDelay;
-    int32 jumpInDelay;
-    int32 p2InputDelay;
+    int32 nextLeaderPosID;
+    int32 lastLeaderPosID;
+    Vector2 leaderPositionBuffer[16];
+    Vector2 targetLeaderPosition;
+    int32 autoJumpTimer;
+    int32 jumpInTimer;
+    int32 aiInputSwapTimer;
     bool32 disableP2KeyCheck;
     int32 rings;
     STATIC(int32 ringExtraLife, 100);
@@ -250,13 +250,13 @@ struct ObjectPlayer {
     uint16 rightState;
     uint16 jumpPressState;
     uint16 jumpHoldState;
-    int32 flyCarryPosA;
-    int32 flyCarryPosB;
-    Vector2 flyCarryPositions[16];
-    Vector2 curFlyCarryPos;
-    int32 P2JumpActionDelay;
-    int32 jumpInDelay;
-    int32 p2InputDelay;
+    int32 nextLeaderPosID;
+    int32 lastLeaderPosID;
+    Vector2 leaderPositionBuffer[16];
+    Vector2 targetLeaderPosition;
+    int32 autoJumpTimer;
+    int32 jumpInTimer;
+    int32 aiInputSwapTimer;
     bool32 disableP2KeyCheck;
     int32 rings;
     STATIC(int32 ringExtraLife, 100);
@@ -323,12 +323,12 @@ struct EntityPlayer {
     int32 maxWalkSpeed;
     int32 maxJogSpeed;
     int32 maxRunSpeed;
-    int32 unused; //the only used variable in the player struct, I cant find a ref to it anywhere so
+    int32 unused; //the only used variable in the player struct, I cant find a ref to it anywhere so...
     int32 tailRotation;
     int32 tailDirection;
     uint16 aniFrames;
     uint16 tailFrames;
-    uint16 storedAnim;
+    uint16 animationReserve; // what anim to return to after SpringTwirl/SpringDiagonal has finished and the player is falling downwards
     uint16 playerID;
     Hitbox *outerbox;
     Hitbox *innerbox;
@@ -345,7 +345,7 @@ struct EntityPlayer {
     int32 abilityTimer;
     int32 spindashCharge;
     int32 abilityValue;
-    int32 airTimer;
+    int32 drownTimer;
     int32 invincibleTimer;
     int32 speedShoesTimer;
     int32 blinkTimer;
@@ -353,17 +353,17 @@ struct EntityPlayer {
     int32 skidding;
     int32 pushing;
     int32 underwater;      // 0 = not in water, 1 = in palette water, else water entityID
-    bool32 groundedStore;  // prev onGround flag
+    bool32 groundedStore;  // prev frame's onGround value
     bool32 invertGravity; 
     bool32 isChibi;       
-    bool32 forceTransform;
+    bool32 isTransforming;
     int32 superState;
     int32 superRingLossTimer;
     int32 superBlendAmount;
     int32 superBlendState;
     bool32 sidekick;
     int32 scoreBonus;
-    int32 cameraOffset;
+    int32 jumpOffset;
     int32 collisionFlagH;
     int32 collisionFlagV;
     int32 topSpeed;
@@ -381,7 +381,7 @@ struct EntityPlayer {
     int32 flailing;
     int32 sensorX[5];
     int32 sensorY;
-    Vector2 moveOffset;
+    Vector2 moveLayerPosition;
     StateMachine(stateInputReplay);
     StateMachine(stateInput);
     int32 controllerID;
@@ -392,13 +392,13 @@ struct EntityPlayer {
     bool32 right;
     bool32 jumpPress;
     bool32 jumpHold;
-    int32 jumpAbility;
-    int32 jumpAbilityTimer;
+    bool32 applyJumpCap;
+    int32 jumpAbilityState;
     StateMachine(stateAbility);
     StateMachine(statePeelout);
     int32 flyCarryTimer;
-    Vector2 sidekickPos;
-    Vector2 leaderPos;
+    Vector2 flyCarrySidekickPos;
+    Vector2 flyCarryLeaderPos;
     uint8 deathType;
     bool32 forceJumpIn;
 #if RETRO_USE_PLUS
@@ -554,12 +554,12 @@ void Player_State_Bubble(void);
 void Player_State_WaterSlide(void);
 void Player_State_TransportTube(void);
 
-void Player_SonicJumpAbility(void);
-void Player_TailsJumpAbility(void);
-void Player_KnuxJumpAbility(void);
+void Player_JumpAbility_Sonic(void);
+void Player_JumpAbility_Tails(void);
+void Player_JumpAbility_Knux(void);
 #if RETRO_USE_PLUS
-void Player_MightyJumpAbility(void);
-void Player_RayJumpAbility(void);
+void Player_JumpAbility_Mighty(void);
+void Player_JumpAbility_Ray(void);
 
 bool32 Player_CheckRayDiving(void);
 bool32 Player_CheckRaySwooping(void);

@@ -75,7 +75,7 @@ void DoorTrigger_Update(void)
 #if RETRO_USE_PLUS
                         }
 #endif
-                        player->jumpAbility = 0;
+                        player->applyJumpCap = false;
                         player->onGround    = false;
                     }
                     RSDK.PlaySfx(DoorTrigger->sfxShatter, false, 255);

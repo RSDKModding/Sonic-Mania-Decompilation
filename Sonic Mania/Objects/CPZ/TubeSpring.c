@@ -99,7 +99,7 @@ bool32 TubeSpring_Spring(bool32 interact)
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;
                 player->interaction    = true;
-                player->jumpAbility    = 0;
+                player->applyJumpCap   = false;
                 player->state          = Player_State_Air;
                 if (player->velocity.y < -0x80000)
                     player->velocity.y = -0x80000;

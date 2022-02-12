@@ -494,7 +494,7 @@ void CPZBoss_State_PlayerExit(void)
             player->state           = Player_State_Air;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
-            player->jumpAbility     = 0;
+            player->applyJumpCap    = false;
             player->onGround        = false;
             player->position.x      = self->position.x;
             player->position.y      = self->position.y;

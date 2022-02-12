@@ -191,7 +191,7 @@ void Funnel_Update(void)
                             }
                             player->velocity.y  = y;
                             player->onGround    = false;
-                            player->jumpAbility = 0;
+                            player->applyJumpCap = false;
                             RSDK.PlaySfx(Funnel->sfxPimPom, false, 0xFF);
                         }
                     }
@@ -242,7 +242,7 @@ void Funnel_Update(void)
                             }
                             player->velocity.y  = y;
                             player->onGround    = false;
-                            player->jumpAbility = 0;
+                            player->applyJumpCap = false;
                             RSDK.PlaySfx(Funnel->sfxPimPom, false, 0xFF);
                         }
                     }

@@ -598,25 +598,28 @@ void HeavyKing_State_CutsceneUnknown6(void)
 #endif
                 RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 4, &player1->animator, false, 0);
             break;
+
         case 90:
             RSDK.PlaySfx(Player->sfxJump, false, 255);
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
             player1->velocity.x  = 0x2C000;
             player1->velocity.y  = -0x50000;
-            player1->jumpAbility = 0;
+            player1->applyJumpCap = false;
             player1->onGround    = false;
             player1->state       = Player_State_Air;
             break;
+
         case 124:
             RSDK.PlaySfx(Player->sfxJump, false, 255);
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
             player1->velocity.x  = -0x1C000;
             player1->velocity.y  = -0x66000;
-            player1->jumpAbility = 0;
+            player1->applyJumpCap = false;
             player1->onGround    = false;
             player1->state       = Player_State_Air;
             Camera_SetupLerp(3, 0, camera->startLerpPos.x, camera->startLerpPos.y + 0x200000, 4);
             break;
+
         default:
             if (self->timer > 144 && player1->onGround) {
 #if RETRO_USE_PLUS
@@ -627,7 +630,7 @@ void HeavyKing_State_CutsceneUnknown6(void)
                 else
                     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
 #endif
-                player1->position.y -= player1->cameraOffset;
+                player1->position.y -= player1->jumpOffset;
                 player1->state           = Player_State_None;
                 player1->nextGroundState = StateMachine_None;
                 self->timer            = 0;

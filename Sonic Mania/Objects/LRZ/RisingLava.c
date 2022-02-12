@@ -66,8 +66,8 @@ void RisingLava_State_RiseShake(void)
     foreach_active(Player, player)
     {
         player->collisionLayers |= Zone->moveID;
-        player->moveOffset.x = move->scrollInfo[0].scrollPos;
-        player->moveOffset.y = move->scrollPos;
+        player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
+        player->moveLayerPosition.y = move->scrollPos;
     }
 
     if (!(Zone->timer & 3))
@@ -87,8 +87,8 @@ void RisingLava_State_StoppedRising(void)
     foreach_active(Player, player)
     {
         player->collisionLayers |= Zone->moveID;
-        player->moveOffset.x = move->scrollInfo[0].scrollPos;
-        player->moveOffset.y = move->scrollPos;
+        player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
+        player->moveLayerPosition.y = move->scrollPos;
     }
 }
 

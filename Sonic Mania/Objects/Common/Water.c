@@ -459,8 +459,8 @@ void Water_State_Palette(void)
                         }
                     }
                 }
-                if (!player->sidekick && player->airTimer >= 1080) {
-                    player->airTimer = 0;
+                if (!player->sidekick && player->drownTimer >= 1080) {
+                    player->drownTimer = 0;
                     Music_EndQueuedTrack(TRACK_DROWNING, false);
                 }
             }
@@ -487,7 +487,7 @@ void Water_State_Palette(void)
                     player->velocity.x >>= 1;
                     if (!player->collisionMode)
                         player->groundVel >>= 1;
-                    player->airTimer           = 0;
+                    player->drownTimer           = 0;
                     Water->constBubbleTimer[p] = 52;
                     Water->unused1[p]          = 0;
                 }
@@ -503,11 +503,11 @@ void Water_State_Palette(void)
                         }
                     }
                     if (player->shield != SHIELD_BUBBLE) {
-                        ++player->airTimer;
+                        ++player->drownTimer;
                         Water_SpawnBubble(player, p);
 
                         bool32 alertFlag = true;
-                        switch (player->airTimer) {
+                        switch (player->drownTimer) {
                             default: alertFlag = false; break;
                             case 960:
                             case 660:
@@ -771,7 +771,7 @@ void Water_State_Bubble(void)
                                     }
 #endif
                                 }
-                                player->airTimer = 0;
+                                player->drownTimer = 0;
                                 if (!player->sidekick)
                                     Music_EndQueuedTrack(TRACK_DROWNING, false);
                                 RSDK.PlaySfx(Water->sfxBreathe, false, 255);
@@ -871,7 +871,7 @@ void Water_State_HCZBubble(void)
                     if (shield)
                         shield->visible = false;
 
-                    player->airTimer = 0;
+                    player->drownTimer = 0;
                     if (!player->sidekick)
                         Music_EndQueuedTrack(TRACK_DROWNING, false);
 
@@ -900,7 +900,7 @@ void Water_State_HCZBubble(void)
                     player->state = Player_State_None;
                 }
 
-                player->airTimer   = 0;
+                player->drownTimer   = 0;
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
                 player->velocity.x = self->velocity.x;

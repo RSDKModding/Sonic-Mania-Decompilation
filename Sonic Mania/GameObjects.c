@@ -818,12 +818,12 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_State_WaterSlide);
         ADD_PUBLIC_FUNC(Player_State_TransportTube);
 
-        ADD_PUBLIC_FUNC(Player_SonicJumpAbility);
-        ADD_PUBLIC_FUNC(Player_TailsJumpAbility);
-        ADD_PUBLIC_FUNC(Player_KnuxJumpAbility);
+        ADD_PUBLIC_FUNC(Player_JumpAbility_Sonic);
+        ADD_PUBLIC_FUNC(Player_JumpAbility_Tails);
+        ADD_PUBLIC_FUNC(Player_JumpAbility_Knux);
 #if RETRO_USE_PLUS
-        ADD_PUBLIC_FUNC(Player_MightyJumpAbility);
-        ADD_PUBLIC_FUNC(Player_RayJumpAbility);
+        ADD_PUBLIC_FUNC(Player_JumpAbility_Mighty);
+        ADD_PUBLIC_FUNC(Player_JumpAbility_Ray);
 
         ADD_PUBLIC_FUNC(Player_CheckRayDiving);
         ADD_PUBLIC_FUNC(Player_CheckRaySwooping);

@@ -521,8 +521,8 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
             }
 
             player->onGround         = false;
-            player->jumpAbility      = 0;
-            player->jumpAbilityTimer = 0;
+            player->applyJumpCap     = false;
+            player->jumpAbilityState = 0;
             if (player->state == Player_State_Hit) {
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
@@ -548,8 +548,8 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                 player->state = Player_State_Air;
                 player->velocity.x -= player->velocity.x >> 2;
                 player->onGround         = false;
-                player->jumpAbility      = 0;
-                player->jumpAbilityTimer = 0;
+                player->applyJumpCap     = false;
+                player->jumpAbilityState = 0;
                 if (player->state == Player_State_Hit) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
@@ -570,8 +570,8 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                     player->velocity.y       = -0x20000;
                     player->state            = Player_State_Air;
                     player->onGround         = false;
-                    player->jumpAbility      = 0;
-                    player->jumpAbilityTimer = 0;
+                    player->applyJumpCap     = false;
+                    player->jumpAbilityState = 0;
                     RSDK.PlaySfx(Player->sfxPimPom, false, 255);
                 }
 

@@ -148,7 +148,7 @@ void CircleBumper_CheckPlayerCollisions(void)
             if (player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = xVel;
                 player->groundVel   = xVel;
-                player->jumpAbility = 0;
+                player->applyJumpCap = false;
             }
             player->velocity.y     = yVel;
             player->onGround       = false;

@@ -63,7 +63,7 @@ void LRZ1Setup_StaticUpdate(void)
             uint8 behaviour = 0;
             int32 tileInfo   = 0;
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (hitbox->bottom << 16) + player->position.y,
-                                  player->moveOffset.x, player->moveOffset.y, &behaviour);
+                                  player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
             if (behaviour == 1 && player->shield != SHIELD_FIRE && !LRZ1Setup->fadeTimer) {
                 Player_CheckHitFlip(player);
             }

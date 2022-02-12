@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    POPOUT_CHILD_SPRING_YELLOW,
+    POPOUT_CHILD_SPRING_RED,
+    POPOUT_CHILD_SPIKES,
+}PopOutChildTypes;
+
 // Object Class
 struct ObjectPopOut {
     RSDK_OBJECT
@@ -17,18 +23,17 @@ struct EntityPopOut {
     uint8 tag;
     bool32 manualTrigger;
     int32 delay;
-    Vector2 field_64;
-    int32 field_6C;
+    Vector2 startPos;
+    int32 unused;
     int32 childType;
-    bool32 flag;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    Hitbox hitbox2;
-    Hitbox hitbox;
-    Animator animator;
-    Animator animator2;
+    bool32 shouldAppear;
+    int32 appearTimer;
+    int32 timer;
+    Vector2 appearVelocity;
+    Hitbox hitboxSolid;
+    Hitbox hitboxRange;
+    Animator mountAnimator;
+    Animator childAnimator;
 };
 
 // Object Struct

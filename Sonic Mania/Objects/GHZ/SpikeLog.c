@@ -73,12 +73,13 @@ void SpikeLog_State_Main(void)
                         if (!player->invincibleTimer && player->blinkTimer <= 0) {
                             if (abs(player->velocity.x) < 0x10000 || !player->groundedStore) {
                                 player->velocity.y       = -0x48000;
-                                player->onGround         = 0;
-                                player->jumpAbility      = 0;
-                                player->jumpAbilityTimer = 0;
+                                player->onGround         = false;
+                                player->applyJumpCap     = false;
+                                player->jumpAbilityState = 0;
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
                                 RSDK.PlaySfx(Player->sfxMightyUnspin, false, 255);
                             }
+
                             if (!player->uncurlTimer) {
                                 player->uncurlTimer = 15;
                                 RSDK.PlaySfx(Player->sfxPimPom, false, 255);

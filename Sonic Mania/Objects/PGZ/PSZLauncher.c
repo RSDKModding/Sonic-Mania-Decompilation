@@ -122,8 +122,8 @@ void PSZLauncher_HandlePlayerInteractions(void)
                     player->position.x = self->position.x - 0x100000;
                 else
                     player->position.x = self->position.x + 0x100000;
-                player->jumpAbility      = 0;
-                player->jumpAbilityTimer = 0;
+                player->applyJumpCap     = false;
+                player->jumpAbilityState = 0;
                 player->collisionMode    = 0;
                 player->groundVel        = 0;
                 player->state            = Player_State_Air;

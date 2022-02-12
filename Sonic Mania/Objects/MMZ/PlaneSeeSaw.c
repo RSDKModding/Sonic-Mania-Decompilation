@@ -161,9 +161,9 @@ void PlaneSeeSaw_State_Launch(void)
                 player->nextGroundState  = StateMachine_None;
                 player->interaction      = false;
                 player->tileCollisions   = false;
-                player->jumpAbilityTimer = 0;
+                player->jumpAbilityState = 0;
                 player->drawFX |= FX_SCALE;
-                player->jumpAbility  = 0;
+                player->applyJumpCap = false;
                 player->onGround     = false;
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                 if (shield && shield->objectID) {

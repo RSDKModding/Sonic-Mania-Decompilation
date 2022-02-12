@@ -63,13 +63,13 @@ void LRZ2Setup_StaticUpdate(void)
             int32 tileInfo       = 0;
 
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
-                                  player->moveOffset.x, player->moveOffset.y, &behaviour);
+                                  player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
             if (behaviour == LRZ2_TFLAGS_NORMAL) {
                 LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->right << 16) + player->position.x,
-                                      (playerHitbox->bottom << 16) + player->position.y, player->moveOffset.x, player->moveOffset.y, &behaviour);
+                                      (playerHitbox->bottom << 16) + player->position.y, player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
                 if (behaviour == LRZ2_TFLAGS_NORMAL) {
                     LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->left << 16) + player->position.x,
-                                          (playerHitbox->bottom << 16) + player->position.y, player->moveOffset.x, player->moveOffset.y, &behaviour);
+                                          (playerHitbox->bottom << 16) + player->position.y, player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
                 }
             }
 

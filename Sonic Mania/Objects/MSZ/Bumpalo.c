@@ -129,7 +129,7 @@ void Bumpalo_BumpPlayer(void *p)
     if (player->animator.animationID != ANI_FLY) {
         player->velocity.x  = velX;
         player->groundVel   = velX;
-        player->jumpAbility = 0;
+        player->applyJumpCap = false;
     }
     player->velocity.y     = velY;
     player->onGround       = false;

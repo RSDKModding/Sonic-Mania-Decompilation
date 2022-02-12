@@ -207,7 +207,7 @@ void BreakBar_State_Main(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if ((player->sidekick && Player->jumpInDelay >= 239) || !Player_CheckValidState(player)) {
+        if ((player->sidekick && Player->jumpInTimer >= 239) || !Player_CheckValidState(player)) {
             self->activePlayersReleased &= ~(1 << playerID);
             self->activePlayersGrabbed &= ~(1 << playerID);
             self->playerTimers[playerID] = 8;

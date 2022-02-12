@@ -830,6 +830,8 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
             if (flag) {
                 if (RSDK.CheckStageFolder("MMZ")) {
                     switch (player->characterID) {
+                        default:
+                        case ID_SONIC: player->aniFrames = SizeLaser->sonicFrames; break;
                         case ID_TAILS:
                             player->aniFrames  = SizeLaser->tailsFrames;
                             player->tailFrames = SizeLaser->tailFrames;
@@ -837,7 +839,6 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
                         case ID_KNUCKLES: player->aniFrames = SizeLaser->knuxFrames; break;
                         case ID_MIGHTY: player->aniFrames = SizeLaser->mightyFrames; break;
                         case ID_RAY: player->aniFrames = SizeLaser->rayFrames; break;
-                        default: player->aniFrames = SizeLaser->sonicFrames; break;
                     }
                 }
                 else if (RSDK.CheckStageFolder("PSZ2")) {
@@ -846,6 +847,8 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
             }
             else {
                 switch (player->characterID) {
+                    default:
+                    case ID_SONIC: player->aniFrames = Player->sonicFrames; break;
                     case ID_TAILS:
                         player->aniFrames  = Player->tailsFrames;
                         player->tailFrames = Player->tailsTailsFrames;
@@ -853,7 +856,6 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
                     case ID_KNUCKLES: player->aniFrames = Player->knuxFrames; break;
                     case ID_MIGHTY: player->aniFrames = Player->mightyFrames; break;
                     case ID_RAY: player->aniFrames = Player->rayFrames; break;
-                    default: player->aniFrames = Player->sonicFrames; break;
                 }
             }
         }

@@ -242,7 +242,7 @@ void AIZSetup_PlayerState_P2Enter(void)
     self->active        = ACTIVE_NORMAL;
     self->visible       = true;
     self->stateInput    = Player_ProcessP2Input_AI;
-    Player->jumpInDelay = 240;
+    Player->jumpInTimer = 240;
     Player_P2JumpBackIn();
 }
 
@@ -395,8 +395,8 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
             if (player2->objectID == Player->objectID) {
                 player2->stateInput = StateMachine_None;
             }
-            Player->curFlyCarryPos.x = player1->position.x - 0x200000;
-            Player->curFlyCarryPos.y = player1->position.y;
+            Player->targetLeaderPosition.x = player1->position.x - 0x200000;
+            Player->targetLeaderPosition.y = player1->position.y;
             player1->state           = Player_State_Ground;
             player1->right           = false;
             player1->left            = true;
@@ -434,10 +434,10 @@ bool32 AIZSetup_CutsceneSonic_P2FlyIn(EntityCutsceneSeq *host)
             return true;
         }
         else {
-            Player->curFlyCarryPos.x = player1->position.x - 0x200000;
-            Player->curFlyCarryPos.y = player1->position.y + 0x80000;
-            player2->position.x      = Player->curFlyCarryPos.x;
-            player2->direction       = FLIP_NONE;
+            Player->targetLeaderPosition.x = player1->position.x - 0x200000;
+            Player->targetLeaderPosition.y = player1->position.y + 0x80000;
+            player2->position.x            = Player->targetLeaderPosition.x;
+            player2->direction             = FLIP_NONE;
         }
     }
     else {

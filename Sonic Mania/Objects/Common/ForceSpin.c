@@ -109,7 +109,7 @@ void ForceSpin_SetPlayerState(void *plr)
             RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             if (!player->collisionMode && player->onGround)
-                player->position.y += player->cameraOffset;
+                player->position.y += player->jumpOffset;
             player->pushing = 0;
         }
 

@@ -265,8 +265,8 @@ void SP500_State_PrintFailed(void)
                 player->visible          = true;
                 player->interaction      = true;
                 player->tileCollisions   = true;
-                player->jumpAbility      = 0;
-                player->jumpAbilityTimer = 0;
+                player->applyJumpCap     = false;
+                player->jumpAbilityState = 0;
                 player->onGround         = false;
                 player->state            = Player_State_Air;
                 if (self->printDir == 0)
@@ -416,8 +416,8 @@ void SP500_State_PrintFinished(void)
                     player->visible          = true;
                     player->interaction      = true;
                     player->tileCollisions   = true;
-                    player->jumpAbility      = 0;
-                    player->jumpAbilityTimer = 0;
+                    player->applyJumpCap     = false;
+                    player->jumpAbilityState = 0;
                     player->onGround         = false;
                     player->state            = Player_State_Air;
                     if (self->printDir == 0)

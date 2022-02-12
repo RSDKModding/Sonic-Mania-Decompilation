@@ -53,6 +53,7 @@ void WallBumper_Create(void *data)
     self->updateRange.y = 0x400000;
     if (!self->type) {
         self->updateRange.y = (self->size + 4) << 20;
+
         self->hitbox.left   = 0;
         self->hitbox.top    = -16 - (16 * self->size);
         self->hitbox.right  = 8;
@@ -61,6 +62,7 @@ void WallBumper_Create(void *data)
     else {
         self->direction *= FLIP_Y;
         self->updateRange.x = (self->size + 4) << 20;
+
         self->hitbox.left   = -16 - (16 * self->size);
         self->hitbox.top    = 0;
         self->hitbox.right  = (16 * self->size) - 16;
@@ -73,6 +75,7 @@ void WallBumper_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
         WallBumper->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/WallBumper.bin", SCOPE_STAGE);
+
     WallBumper->sfxBouncer = RSDK.GetSfx("TMZ1/Bouncer.wav");
 
     DEBUGMODE_ADD_OBJ(WallBumper);
@@ -142,7 +145,7 @@ void WallBumper_HandleInteractions(void)
             if (player->state == Player_State_FlyCarried) {
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
             }
-            player->jumpAbility    = 0;
+            player->applyJumpCap   = false;
             player->onGround       = false;
             player->tileCollisions = true;
             player->onGround       = false;
@@ -160,7 +163,7 @@ void WallBumper_EditorDraw(void)
 {
     RSDK_THIS(WallBumper);
 
-    int dir = self->direction;
+    int32 dir = self->direction;
 
     if (!self->type) {
         self->updateRange.y = (self->size + 4) << 20;

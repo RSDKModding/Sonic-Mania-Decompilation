@@ -233,7 +233,7 @@ void HUD_Draw(void)
         if (Player->canSuperCB)
             flag = Player->canSuperCB(true);
 #endif
-        if (player->state == Player_State_Air && player->jumpAbilityTimer == 1 && flag) {
+        if (player->state == Player_State_Air && player->jumpAbilityState == 1 && flag) {
             RSDK.DrawSprite(&self->superButtonAnimator2, &lifePos, true);
         }
         else {

@@ -244,16 +244,15 @@ void PhantomRider_State_RacePlayer(void)
         Zone->autoScrollSpeed = 0;
         PhantomEgg_SetupScanlineCB();
         self->state = PhantomRider_State_ExitRider;
-        foreach_active(PopOut, popOut) { popOut->flag = false; }
+        foreach_active(PopOut, popOut) { popOut->shouldAppear = false; }
         foreach_active(Player, player) { Player_ChangePhysicsState(player); }
     }
 
     foreach_active(Spikes, spikes)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, spikes, &spikes->hitbox) == true) {
-            int slot             = RSDK.GetEntityID(spikes);
-            EntityPopOut *popOut = RSDK_GET_ENTITY(slot - 1, PopOut);
-            popOut->flag         = false;
+        if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, spikes, &spikes->hitbox) == C_TOP) {
+            EntityPopOut *popOut = RSDK_GET_ENTITY(RSDK.GetEntityID(spikes) - 1, PopOut);
+            popOut->shouldAppear = false;
             foreach_active(Button, button)
             {
                 if (button->tag == popOut->tag)

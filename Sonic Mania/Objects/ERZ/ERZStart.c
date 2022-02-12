@@ -840,7 +840,7 @@ void ERZStart_Player_StartSuperFly(void)
 {
     RSDK_THIS(Player);
 
-    if (self->jumpAbilityTimer == 1 && self->jumpPress) {
+    if (self->jumpAbilityState == 1 && self->jumpPress) {
         if (self->characterID == ID_KNUCKLES) {
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->animator, false, 6);
             self->animator.rotationFlag = 1;

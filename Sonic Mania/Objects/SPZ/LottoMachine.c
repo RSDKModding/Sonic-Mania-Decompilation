@@ -219,7 +219,7 @@ void LottoMachine_CheckPlayerCollisions(void)
                     else {
                         player->velocity.x           = 0;
                         player->velocity.y           = -0xA0000;
-                        player->jumpAbility          = 0;
+                        player->applyJumpCap         = false;
                         self->playerAngles[playerID] = 16;
                         RSDK.PlaySfx(Player->sfxRelease, false, 255);
                         RSDK.PlaySfx(LottoMachine->sfxFail, false, 255);
@@ -249,7 +249,7 @@ void LottoMachine_CheckPlayerCollisions(void)
                 player->groundVel            = velX;
                 player->velocity.y           = velY;
                 player->onGround             = false;
-                player->jumpAbility          = 0;
+                player->applyJumpCap         = false;
                 self->playerAngles[playerID] = 8;
                 RSDK.PlaySfx(LottoMachine->sfxPimPom, false, 255);
             }
@@ -309,7 +309,7 @@ void LottoMachine_HandleMotor(void)
                 player->position.x = self->position.x;
                 Player_CheckCollisionPlatform(player, self, &LottoMachine->hitboxMotor);
                 player->direction        = self->playerDir;
-                player->jumpAbilityTimer = 0;
+                player->jumpAbilityState = 0;
                 if (player->onGround) {
                     vel += player->groundVel;
                     if (self->playerDir) {
@@ -473,7 +473,7 @@ void LottoMachine_State_Startup(void)
                             player->state                = Player_State_Air;
                             player->velocity.x           = 0;
                             player->velocity.y           = -0x98000;
-                            player->jumpAbility          = 0;
+                            player->applyJumpCap         = false;
                             self->playerAngles[playerID] = 32;
                         }
 
@@ -656,7 +656,7 @@ void LottoMachine_State_DropPlayers(void)
                         player->velocity.y   = 0;
                         player->groundVel    = 0;
                         player->onGround     = false;
-                        player->jumpAbility  = 0;
+                        player->applyJumpCap = false;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         int32 playerID                = RSDK.GetEntityID(player);
                         Zone->cameraBoundsB[playerID] = self->playerTimers[playerID];

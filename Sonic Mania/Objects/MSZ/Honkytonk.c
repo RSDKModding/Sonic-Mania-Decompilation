@@ -45,7 +45,7 @@ void Honkytonk_Update(void)
         if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitbox2) && player->tileCollisions) {
             player->state       = Player_State_Air;
             player->onGround    = false;
-            player->jumpAbility = 0;
+            player->applyJumpCap = false;
             player->velocity.y  = -0x80000;
             if (player->animator.animationID != ANI_JUMP)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);

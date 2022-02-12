@@ -123,6 +123,7 @@ void EncoreGoodEnd_StatePlayer_MoveToPos(void)
                 self->groundVel  = 0;
                 self->state      = EncoreGoodEnd_StatePlayer_EndingSonic;
                 break;
+
             case ID_TAILS:
             case ID_KNUCKLES:
             case ID_MIGHTY:
@@ -134,6 +135,7 @@ void EncoreGoodEnd_StatePlayer_MoveToPos(void)
                 self->nextAirState    = EncoreGoodEnd_StatePlayer_EndingIdle;
                 self->nextGroundState = Player_State_None;
                 break;
+
             default: break;
         }
     }
@@ -157,8 +159,8 @@ void EncoreGoodEnd_StatePlayer_EndingIdle(void)
             self->visible                                               = false;
             EncoreGoodEnd->decorations[playerID + E_END_SONIC]->visible = true;
             switch (self->characterID) {
-                case ID_SONIC:
-                default: self->state = Player_State_None; break;
+                default:
+                case ID_SONIC: self->state = Player_State_None; break;
 
                 case ID_TAILS:
                     RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_TAILSSPIN,

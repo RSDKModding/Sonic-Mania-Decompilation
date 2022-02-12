@@ -91,8 +91,8 @@ void MSZCutsceneK_SetupP2(int posX, int posY)
     player2->position.y   = posY;
     player2->aniFrames    = Player->sonicFrames;
     player2->tailFrames   = -1;
-    player2->cameraOffset = 0x50000;
-    player2->stateAbility = Player_SonicJumpAbility;
+    player2->jumpOffset   = 0x50000;
+    player2->stateAbility = Player_JumpAbility_Sonic;
     player2->sensorY      = 0x140000;
     player2->stateInput   = StateMachine_None;
     player2->state        = Player_State_None;

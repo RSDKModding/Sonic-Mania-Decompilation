@@ -130,7 +130,7 @@ void PhantomShield_Unknown2(void)
                 player->velocity.x     = velX;
                 player->groundVel      = velX;
                 player->velocity.y     = velY;
-                player->jumpAbility    = 0;
+                player->applyJumpCap   = false;
                 player->onGround       = false;
                 player->tileCollisions = true;
             }

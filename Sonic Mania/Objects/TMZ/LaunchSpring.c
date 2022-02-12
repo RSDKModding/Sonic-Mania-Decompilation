@@ -182,8 +182,8 @@ void LaunchSpring_Unknown3(void)
             player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
             player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
         }
-        player->jumpAbility      = 0;
-        player->jumpAbilityTimer = 0;
+        player->applyJumpCap     = false;
+        player->jumpAbilityState = 0;
         player->velocity.x       = RSDK.Cos512(self->rotation - 128) << 11;
         player->velocity.y       = RSDK.Sin512(self->rotation - 128) << 11;
         player->state            = Player_State_Air;

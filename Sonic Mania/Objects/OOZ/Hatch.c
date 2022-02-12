@@ -28,8 +28,8 @@ void Hatch_Update(void)
                     moveLayer->scrollInfo[0].scrollPos = -self->hScrollPos;
                 }
                 player->collisionLayers |= Zone->moveID;
-                player->moveOffset.x = moveLayer->scrollInfo[0].scrollPos;
-                player->moveOffset.y = moveLayer->scrollPos;
+                player->moveLayerPosition.x = moveLayer->scrollInfo[0].scrollPos;
+                player->moveLayerPosition.y = moveLayer->scrollPos;
             }
         }
     }
@@ -361,7 +361,7 @@ void Hatch_State_OpenHatchReleasePlayer(void)
         player->onGround       = false;
         player->tileCollisions = true;
         player->interaction    = true;
-        player->jumpAbility    = 0;
+        player->applyJumpCap   = false;
         player->visible        = true;
         RSDK.PlaySfx(Hatch->sfxGasPop, false, 255);
     }
