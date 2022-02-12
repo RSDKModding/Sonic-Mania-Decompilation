@@ -133,7 +133,7 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
     }
 }
 
-void SpikeCorridor_Unknown3(void)
+void SpikeCorridor_SetupNextSpikeRow(void)
 {
     RSDK_THIS(SpikeCorridor);
 
@@ -209,13 +209,13 @@ void SpikeCorridor_StateDropper_CheckForPlayer(void)
 
             if (player->position.x <= self->position.x) {
                 if (player->position.x + (playerHitbox->left << 16) >= self->position.x + (self->hitbox.left << 16)) {
-                    SpikeCorridor_Unknown3();
+                    SpikeCorridor_SetupNextSpikeRow();
                     self->state     = SpikeCorridor_StateDropper_DropWarn;
                     self->stateDraw = SpikeCorridor_StateDraw_DropWarn;
                 }
             }
             else if (player->position.x + (playerHitbox->right << 16) <= self->position.x + (self->hitbox.right << 16)) {
-                SpikeCorridor_Unknown3();
+                SpikeCorridor_SetupNextSpikeRow();
                 self->state     = SpikeCorridor_StateDropper_DropWarn;
                 self->stateDraw = SpikeCorridor_StateDraw_DropWarn;
             }
@@ -271,7 +271,7 @@ void SpikeCorridor_StateDropper_DropWait(void)
     RSDK_THIS(SpikeCorridor);
 
     if (self->timer >= 60) {
-        SpikeCorridor_Unknown3();
+        SpikeCorridor_SetupNextSpikeRow();
         self->timer     = 0;
         self->state     = SpikeCorridor_StateDropper_DropWarn;
         self->stateDraw = SpikeCorridor_StateDraw_DropWarn;

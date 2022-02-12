@@ -23,7 +23,7 @@ struct EntitySpringboard {
     RSDK_ENTITY
     int32 force;
     int32 bounceDelay; // bounceDelay goes unused here, though it was used in S2 '13
-    uint8 playerBits;
+    uint8 activePlayers;
     Animator animator;
 };
 

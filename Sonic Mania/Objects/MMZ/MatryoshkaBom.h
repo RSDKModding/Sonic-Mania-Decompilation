@@ -70,7 +70,7 @@ void MatryoshkaBom_State_Stopped(void);
 void MatryoshkaBom_State_Turn(void);
 void MatryoshkaBom_State_FuseLit(void);
 void MatryoshkaBom_State_ReleaseSmallerBuddy(void);
-void MatryoshkaBom_Unknown10(void);
+void MatryoshkaBom_State_Hatched(void);
 void MatryoshkaBom_State_Shrapnel(void);
 
 #endif //!OBJ_MATRYOSHKABOM_H

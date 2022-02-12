@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectTMZ1Outro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
 };
 
 // Entity Class
@@ -24,8 +24,10 @@ void TMZ1Outro_StaticUpdate(void);
 void TMZ1Outro_Draw(void);
 void TMZ1Outro_Create(void* data);
 void TMZ1Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TMZ1Outro_EditorDraw(void);
 void TMZ1Outro_EditorLoad(void);
+#endif
 void TMZ1Outro_Serialize(void);
 
 // Extra Entity Functions

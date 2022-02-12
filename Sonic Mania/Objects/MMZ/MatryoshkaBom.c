@@ -143,7 +143,7 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
-            if (self->state != MatryoshkaBom_Unknown10) {
+            if (self->state != MatryoshkaBom_State_Hatched) {
                 if (self->canExplode) {
                     if (self->state != MatryoshkaBom_State_ReleaseSmallerBuddy) {
                         if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxExplode)) {
@@ -368,8 +368,8 @@ void MatryoshkaBom_State_ReleaseSmallerBuddy(void)
         child->active           = ACTIVE_NORMAL;
         child->direction        = self->direction;
         child->destroyOffscreen = true;
-        child->state            = MatryoshkaBom_Unknown10;
-        self->canExplode      = false;
+        child->state            = MatryoshkaBom_State_Hatched;
+        self->canExplode        = false;
     }
 
     if (self->bodyAnimator.frameID >= self->bodyAnimator.frameDuration - 1)
@@ -379,17 +379,17 @@ void MatryoshkaBom_State_ReleaseSmallerBuddy(void)
     MatryoshkaBom_CheckOnScreen();
 }
 
-void MatryoshkaBom_Unknown10(void)
+void MatryoshkaBom_State_Hatched(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    self->position.y += self->velocity.y;
     self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     if (self->velocity.x) {
         bool32 collided = false;
         if (self->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, -self->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
         else
             collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
 

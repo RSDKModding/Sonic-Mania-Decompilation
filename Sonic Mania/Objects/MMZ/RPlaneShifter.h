@@ -17,14 +17,14 @@ struct EntityRPlaneShifter {
     StateMachine(state);
     uint32 height;
     uint8 flags;
-    int32 field_64;
-    uint8 activePlayers1;
-    uint8 prevActivePlayers1;
-    uint8 activePlayers2;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    int32 rotateDir;
+    uint8 activePlayers; // if you're in the hitbox and it's spinning
+    uint8 prevActivePlayers;
+    uint8 stoodPlayers; // if you're in the hitbox at all
+    int32 unused;
+    int32 spinSpeed;
+    int32 startAngle;
+    int32 spinAngle;
     Animator baseAnimator;
     Hitbox hitbox;
 };
@@ -51,8 +51,8 @@ void RPlaneShifter_DrawSprites(void);
 void RPlaneShifter_HandlePlaneShift(EntityPlayer *player);
 
 void RPlaneShifter_State_Setup(void);
-void RPlaneShifter_Unknown3(void);
-void RPlaneShifter_Unknown4(void);
-void RPlaneShifter_Unknown5(void);
+void RPlaneShifter_State_AwaitPlayer(void);
+void RPlaneShifter_State_Spinning(void);
+void RPlaneShifter_State_FinishSpin(void);
 
 #endif //!OBJ_RPLANESHIFTER_H

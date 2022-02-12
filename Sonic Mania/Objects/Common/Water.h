@@ -65,7 +65,7 @@ struct EntityWater {
     void *childPtr;
     int32 bubbleX;
     int8 bubbleType1;
-    uint8 lastDuds;
+    uint8 dudsRemaining;
     uint8 bubbleFlags;
     int8 bubbleType2;
     int32 numDuds;

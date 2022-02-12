@@ -12,11 +12,11 @@ struct ObjectFarPlane {
     Vector2 originPos;
     Vector2 position;
     Vector2 positionList[0x200];
-    int32 field_1028;
-    int32 field_102C;
-    int32 field_1030;
-    int32 field_1034;
-    int32 field_1038;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
     uint16 layerID;
 };
 

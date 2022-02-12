@@ -1064,8 +1064,8 @@ void SpiderMobile_StateBody_MovePlatformToEnd(void)
 
     foreach_active(Spikes, spikes)
     {
-        if (spikes->stateMove < 5) {
-            spikes->stateMove = 5;
+        if (spikes->stateMove < SPIKES_MOVE_DISAPPEAR_FOREVER) {
+            spikes->stateMove = SPIKES_MOVE_DISAPPEAR_FOREVER;
             spikes->drawOrder = 1;
         }
     }

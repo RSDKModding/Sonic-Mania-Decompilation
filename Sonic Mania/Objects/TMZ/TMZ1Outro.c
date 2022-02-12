@@ -90,11 +90,7 @@ bool32 TMZ1Outro_CutsceneAct1_ElevatorRide(EntityCutsceneSeq *host)
         }
     }
 
-    foreach_active(ItemBox, itembox) 
-    {
-        LogHelpers_Print("ItemBox: %d", RSDK.GetEntityID(itembox));
-        itembox->position.y -= CrimsonEye->scrollLimit; 
-    }
+    foreach_active(ItemBox, itembox) { itembox->position.y -= CrimsonEye->scrollLimit; }
     foreach_active(SignPost, signPost) { signPost->position.y -= CrimsonEye->scrollLimit; }
 
     return false;
@@ -178,6 +174,7 @@ bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(TMZ1Outro);
@@ -185,5 +182,6 @@ void TMZ1Outro_EditorDraw(void)
 }
 
 void TMZ1Outro_EditorLoad(void) {}
+#endif
 
 void TMZ1Outro_Serialize(void) { RSDK_EDITABLE_VAR(TMZ1Outro, VAR_VECTOR2, size); }

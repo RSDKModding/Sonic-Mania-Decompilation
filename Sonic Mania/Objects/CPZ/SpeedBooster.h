@@ -8,8 +8,8 @@ struct ObjectSpeedBooster {
     RSDK_OBJECT
     StateMachine(defaultState);
 	Hitbox hitbox;
-    uint16 animID;
-	uint16 sfxID;
+    uint16 aniFrames;
+	uint16 sfxSpeedBooster;
 };
 
 // Entity Class
@@ -19,8 +19,8 @@ struct EntitySpeedBooster {
     uint8 speed;
     int32 playerPos[PLAYER_MAX];
     Vector2 drawPos;
-    uint8 cooldown;
-    uint8 playerCooldown[PLAYER_MAX];
+    uint8 timer;
+    uint8 playerTimer[PLAYER_MAX];
     Animator animator;
 };
 

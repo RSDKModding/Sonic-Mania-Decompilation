@@ -1173,7 +1173,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
     }
     player->superBlendAmount = 0;
     player->superBlendState  = 0;
-    player->superSecondTimer = 60;
+    player->superRingLossTimer = 60;
     player->timer            = 0;
     return true;
 }
@@ -1543,8 +1543,8 @@ void Player_HandleSuperForm(void)
 
         if (!flag) {
             self->invincibleTimer = 60;
-            if (--self->superSecondTimer <= 0) {
-                self->superSecondTimer = 60;
+            if (--self->superRingLossTimer <= 0) {
+                self->superRingLossTimer = 60;
                 if (--self->rings <= 0) {
                     self->rings      = 0;
                     self->superState = SUPERSTATE_FADEOUT;
@@ -6437,6 +6437,7 @@ void Player_ProcessP2Input_JumpIn(void)
     self->right     = false;
     self->jumpPress = false;
     self->jumpHold  = false;
+
     if (!self->controlLock && self->onGround && self->groundVel < 0x4000) {
         self->groundVel           = 0;
         self->stateInput          = Player_ProcessP2Input_JumpDelay;
@@ -6446,8 +6447,10 @@ void Player_ProcessP2Input_JumpIn(void)
             self->direction = self->position.x >= Player->curFlyCarryPos.x;
         }
     }
+
     if (Player_CheckP2KeyPress())
         self->stateInput = Player_ProcessP2Input_Player;
+
     Player_P2JumpBackIn();
 }
 void Player_ProcessP2Input_JumpDelay(void)
@@ -6464,8 +6467,10 @@ void Player_ProcessP2Input_JumpDelay(void)
         self->jumpPress = !(Player->P2JumpActionDelay & 0xF);
         ++Player->P2JumpActionDelay;
     }
+
     if (Player_CheckP2KeyPress())
         self->stateInput = Player_ProcessP2Input_Player;
+
     Player_P2JumpBackIn();
 }
 void Player_ProcessP2Input_Player(void)

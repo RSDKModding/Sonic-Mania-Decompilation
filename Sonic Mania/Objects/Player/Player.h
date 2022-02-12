@@ -358,7 +358,7 @@ struct EntityPlayer {
     bool32 isChibi;       
     bool32 forceTransform;
     int32 superState;
-    int32 superSecondTimer;
+    int32 superRingLossTimer;
     int32 superBlendAmount;
     int32 superBlendState;
     bool32 sidekick;

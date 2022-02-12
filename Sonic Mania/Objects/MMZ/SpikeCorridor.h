@@ -51,7 +51,7 @@ void SpikeCorridor_Serialize(void);
 // Extra Entity Functions
 void SpikeCorridor_SetupHitboxes(void);
 void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, bool32 animFlag);
-void SpikeCorridor_Unknown3(void);
+void SpikeCorridor_SetupNextSpikeRow(void);
 void SpikeCorridor_CheckPlayerCollisions(void);
 
 void SpikeCorridor_StateDropper_Setup(void);

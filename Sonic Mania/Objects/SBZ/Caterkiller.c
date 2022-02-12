@@ -73,10 +73,12 @@ void Caterkiller_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         Caterkiller->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Caterkiller.bin", SCOPE_STAGE);
+
     Caterkiller->hitbox.left   = -8;
     Caterkiller->hitbox.top    = -8;
     Caterkiller->hitbox.right  = 8;
     Caterkiller->hitbox.bottom = 8;
+
     DEBUGMODE_ADD_OBJ(Caterkiller);
 }
 

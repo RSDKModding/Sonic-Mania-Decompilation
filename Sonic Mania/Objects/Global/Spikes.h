@@ -8,7 +8,17 @@ typedef enum {
     SPIKES_DOWN,
     SPIKES_LEFT,
     SPIKES_RIGHT,
-}SpikeTypes;
+} SpikeTypes;
+
+typedef enum {
+    SPIKES_MOVE_STATIC,
+    SPIKES_MOVE_HIDDEN,
+    SPIKES_MOVE_APPEAR,
+    SPIKES_MOVE_SHOWN,
+    SPIKES_MOVE_DISAPPEAR,
+    SPIKES_MOVE_DISAPPEAR_FOREVER,
+    SPIKES_MOVE_HIDDEN_FOREVER,
+} SpikeMoveTypes;
 
 // Object Class
 struct ObjectSpikes {

@@ -1227,7 +1227,7 @@ void MetalSonic_State_Unknown15(void)
         self->state        = MetalSonic_State_Unknown2;
         foreach_active(Player, player)
         {
-            RSDK.PlaySfx(SpeedBooster->sfxID, false, 255);
+            RSDK.PlaySfx(SpeedBooster->sfxSpeedBooster, false, 255);
             player->velocity.x  = 0xE0000;
             player->groundVel   = 0xE0000;
             player->controlLock = 60;

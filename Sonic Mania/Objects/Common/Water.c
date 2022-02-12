@@ -966,15 +966,15 @@ void Water_State_HCZBubble(void)
         if (self->timer > 0)
             self->timer--;
 
-        Hitbox thisHitbox;
-        thisHitbox.left   = -0x14;
-        thisHitbox.top    = -0x13;
-        thisHitbox.right  = 0x14;
-        thisHitbox.bottom = 0x14;
+        Hitbox spikeHitbox;
+        spikeHitbox.left   = -0x14;
+        spikeHitbox.top    = -0x14;
+        spikeHitbox.right  = 0x14;
+        spikeHitbox.bottom = 0x14;
 
         foreach_active(Spikes, spikes)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(self, &thisHitbox, spikes, &spikes->hitbox)) {
+            if (RSDK.CheckObjectCollisionTouchBox(self, &spikeHitbox, spikes, &spikes->hitbox)) {
                 Water_HCZBubbleBurst(self, false);
                 foreach_return;
             }
@@ -1050,10 +1050,10 @@ void Water_State_Bubbler(void)
                 self->bubbleFlags = 1;
                 int32 rand        = RSDK.Rand(0, 0x10000);
                 self->bubbleType1 = rand % 6;
-                self->bubbleType2 = rand & 0xC;
-                if (!self->lastDuds) {
+                self->bubbleType2 = rand & 12;
+                if (!--self->dudsRemaining) {
                     self->bubbleFlags |= 2;
-                    self->lastDuds = self->numDuds;
+                    self->dudsRemaining = self->numDuds;
                 }
             }
             self->countdownID           = RSDK.Rand(0, 32);

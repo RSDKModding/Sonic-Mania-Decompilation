@@ -13,7 +13,7 @@ void RPlaneShifter_Update(void)
 {
     RSDK_THIS(RPlaneShifter);
 
-    self->prevActivePlayers1 = self->activePlayers1;
+    self->prevActivePlayers = self->activePlayers;
     if (self->baseAnimator.animationID == 1)
         RSDK.ProcessAnimation(&self->baseAnimator);
     StateMachine_Run(self->state);
@@ -105,14 +105,14 @@ void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player->sidekick && (!player->sidekick || (self->prevActivePlayers1 & 1))) {
+    if (player->sidekick && (!player->sidekick || (self->prevActivePlayers & 1))) {
         player->collisionPlane = player1->collisionPlane;
         player->drawOrder      = player1->drawOrder - 1;
         player->direction      = player->direction == FLIP_NONE;
     }
     else {
         if (self->flags) {
-            player->drawOrder = player->collisionPlane ? Zone->playerDrawLow : Zone->playerDrawHigh;
+            player->drawOrder = !player->collisionPlane ? Zone->playerDrawHigh : Zone->playerDrawLow;
             if (!player->collisionPlane)
                 player->collisionPlane = 1;
             else
@@ -120,10 +120,10 @@ void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
         }
         else {
             player->drawOrder = !player->collisionPlane ? Zone->playerDrawLow : Zone->playerDrawHigh;
-            if (player->collisionPlane)
-                player->collisionPlane = 0;
-            else
+            if (!player->collisionPlane)
                 player->collisionPlane = 1;
+            else
+                player->collisionPlane = 0;
         }
 
         player->direction = player->direction == FLIP_NONE;
@@ -137,16 +137,16 @@ void RPlaneShifter_State_Setup(void)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->hitbox.left   = -2;
-    self->field_6C      = 0;
+    self->hitbox.top    = -8 - (16 * self->height);
     self->hitbox.right  = 2;
     self->hitbox.bottom = -8;
-    self->hitbox.top    = -8 - (16 * self->height);
+    self->unused        = 0;
     RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 0, &self->baseAnimator, true, 0);
-    self->state = RPlaneShifter_Unknown3;
-    RPlaneShifter_Unknown3();
+    self->state = RPlaneShifter_State_AwaitPlayer;
+    RPlaneShifter_State_AwaitPlayer();
 }
 
-void RPlaneShifter_Unknown3(void)
+void RPlaneShifter_State_AwaitPlayer(void)
 {
     RSDK_THIS(RPlaneShifter);
 
@@ -154,10 +154,10 @@ void RPlaneShifter_Unknown3(void)
     {
         int32 playerID = RSDK.GetEntityID(player);
 
-        if (!((1 << playerID) & self->activePlayers1) && !((1 << playerID) & self->activePlayers2)) {
+        if (!((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->onGround && !player->isChibi) {
-                self->activePlayers1 |= 1 << playerID;
-                self->activePlayers2 |= 1 << playerID;
+                self->activePlayers |= 1 << playerID;
+                self->stoodPlayers |= 1 << playerID;
 
                 player->groundVel  = 0;
                 player->velocity.x = 0;
@@ -169,11 +169,11 @@ void RPlaneShifter_Unknown3(void)
                 player->nextAirState    = StateMachine_None;
                 player->onGround        = true;
                 if (!player->sidekick) {
-                    self->field_74 = self->angle << 16;
-                    self->field_78 = 0;
+                    self->startAngle = self->angle << 16;
+                    self->spinAngle  = 0;
                     RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 1, &self->baseAnimator, true, 0);
                     RSDK.PlaySfx(RPlaneShifter->sfxTicTock, false, 255);
-                    self->state = RPlaneShifter_Unknown4;
+                    self->state = RPlaneShifter_State_Spinning;
                 }
                 else {
                     player->abilityValues[0] = player->left;
@@ -183,20 +183,20 @@ void RPlaneShifter_Unknown3(void)
         }
 
         if (player->sidekick) {
-            if (self->activePlayers1 & (1 << playerID)) {
+            if (self->activePlayers & (1 << playerID)) {
                 if (player->jumpPress) {
-                    self->activePlayers1 &= ~(1 << playerID);
-                    self->activePlayers2 &= ~(1 << playerID);
+                    self->activePlayers &= ~(1 << playerID);
+                    self->stoodPlayers &= ~(1 << playerID);
                     Player_StartJump(player);
                 }
                 if (!player->abilityValues[0] && player->left) {
-                    self->activePlayers1 &= ~(1 << playerID);
-                    self->activePlayers2 &= ~(1 << playerID);
+                    self->activePlayers &= ~(1 << playerID);
+                    self->stoodPlayers &= ~(1 << playerID);
                     player->state = Player_State_Ground;
                 }
                 if (!player->abilityValues[1] && player->right) {
-                    self->activePlayers1 &= ~(1 << playerID);
-                    self->activePlayers2 &= ~(1 << playerID);
+                    self->activePlayers &= ~(1 << playerID);
+                    self->stoodPlayers &= ~(1 << playerID);
                     player->state = Player_State_Ground;
                 }
                 player->abilityValues[0] = player->left;
@@ -205,76 +205,76 @@ void RPlaneShifter_Unknown3(void)
         }
 
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-            self->activePlayers2 |= (1 << playerID);
+            self->stoodPlayers |= (1 << playerID);
         else
-            self->activePlayers2 &= ~(1 << playerID);
+            self->stoodPlayers &= ~(1 << playerID);
     }
 }
 
-void RPlaneShifter_Unknown4(void)
+void RPlaneShifter_State_Spinning(void)
 {
     RSDK_THIS(RPlaneShifter);
 
-    if (abs(self->field_78 >> 16) < 128) {
+    if (abs(self->spinAngle >> 16) < 128) {
         bool32 flag = true;
-        if (self->field_64 && self->field_78 >> 16 > -65)
+        if (self->rotateDir && self->spinAngle >> 16 > -65)
             flag = false;
-        else if (!self->field_64 && self->field_78 >> 16 < 65)
+        else if (!self->rotateDir && self->spinAngle >> 16 < 65)
             flag = false;
 
         int32 speed = 0;
-        if (!self->field_64)
+        if (!self->rotateDir)
             speed = 0x3800;
         else
             speed = -0x3800;
 
         if (flag) {
-            self->field_70 -= speed;
-            if (self->field_64 && self->field_70 > -0x3800) {
-                self->field_70 = speed;
-                flag           = 2;
+            self->spinSpeed -= speed;
+            if (self->rotateDir && self->spinSpeed > -0x3800) {
+                self->spinSpeed = speed;
+                flag            = 2;
             }
-            else if (!self->field_64 && self->field_70 < 0x3800) {
-                self->field_70 = speed;
-                flag           = 2;
+            else if (!self->rotateDir && self->spinSpeed < 0x3800) {
+                self->spinSpeed = speed;
+                flag            = 2;
             }
         }
         else {
-            self->field_70 += speed;
+            self->spinSpeed += speed;
         }
-        if (self->field_64 && self->field_70 > -0x3800 && flag != 2) {
-            self->field_70 = speed;
+        if (self->rotateDir && self->spinSpeed > -0x3800 && flag != 2) {
+            self->spinSpeed = speed;
         }
 
-        self->field_78 += self->field_70;
-        self->angle = (self->field_74 + self->field_78) >> 16;
+        self->spinAngle += self->spinSpeed;
+        self->angle = (self->startAngle + self->spinAngle) >> 16;
 
         if (self->angle < 0)
             self->angle += 0x100;
         self->angle &= 0xFF;
     }
 
-    if (abs(self->field_78 >> 16) >= 128) {
-        self->field_70 = 0;
-        self->field_78 = 128 << 16;
-        if (!self->field_64)
-            self->field_78 = -self->field_78;
+    if (abs(self->spinAngle >> 16) >= 128) {
+        self->spinSpeed = 0;
+        self->spinAngle = 128 << 16;
+        if (!self->rotateDir)
+            self->spinAngle = -self->spinAngle;
 
-        self->angle = (self->field_74 + self->field_78) >> 16;
+        self->angle = (self->startAngle + self->spinAngle) >> 16;
         if (self->angle < 0)
             self->angle += 0x100;
         self->angle &= 0xFF;
         RSDK.SetSpriteAnimation(RPlaneShifter->aniFrames, 0, &self->baseAnimator, true, 0);
-        self->state = RPlaneShifter_Unknown5;
+        self->state = RPlaneShifter_State_FinishSpin;
     }
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
 
-        if (!((1 << playerID) & self->activePlayers1) && !((1 << playerID) & self->activePlayers2)
+        if (!((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers)
             && Player_CheckCollisionTouch(player, self, &self->hitbox) && player->onGround && !player->isChibi) {
-            self->activePlayers1 |= 1 << playerID;
+            self->activePlayers |= 1 << playerID;
             player->groundVel  = 0;
             player->velocity.x = 0;
             player->velocity.y = 0;
@@ -286,20 +286,20 @@ void RPlaneShifter_Unknown4(void)
             player->onGround        = true;
         }
 
-        if ((1 << playerID) & self->activePlayers1) {
+        if ((1 << playerID) & self->activePlayers) {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, false, 0);
 
-            int32 rot = (self->field_78 >> 16) & 0xFF;
-            int32 val = 0xFF - rot;
+            int32 angle    = (self->spinAngle >> 16) & 0xFF;
+            int32 negAngle = 0xFF - angle;
             if (player->direction)
-                val = rot;
+                negAngle = angle;
 
             int32 frame = 0;
-            switch (val >> 6) {
+            switch (negAngle >> 6) {
                 case 0:
-                case 1: frame = 9 * val / 128; break;
+                case 1: frame = 9 * negAngle / 128; break;
                 case 2:
-                case 3: frame = 16 * (val - 128) / 128 + 9; break;
+                case 3: frame = 16 * (negAngle - 128) / 128 + 9; break;
                 default: break;
             }
             player->animator.frameID = frame % 24;
@@ -307,35 +307,36 @@ void RPlaneShifter_Unknown4(void)
         }
 
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-            self->activePlayers2 |= (1 << playerID);
+            self->stoodPlayers |= (1 << playerID);
         else
-            self->activePlayers2 &= ~(1 << playerID);
+            self->stoodPlayers &= ~(1 << playerID);
     }
 }
 
-void RPlaneShifter_Unknown5(void)
+void RPlaneShifter_State_FinishSpin(void)
 {
     RSDK_THIS(RPlaneShifter);
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
 
-        if ((1 << playerID) & self->activePlayers1) {
-            self->activePlayers1 &= ~(1 << playerID);
+        if ((1 << playerID) & self->activePlayers) {
+            self->activePlayers &= ~(1 << playerID);
             RPlaneShifter_HandlePlaneShift(player);
         }
 
         if (Player_CheckCollisionTouch(player, self, &self->hitbox))
-            self->activePlayers2 |= (1 << playerID);
+            self->stoodPlayers |= (1 << playerID);
         else
-            self->activePlayers2 &= ~(1 << playerID);
+            self->stoodPlayers &= ~(1 << playerID);
 
-        if (!player->sidekick && !((1 << playerID) & self->activePlayers1) && !((1 << playerID) & self->activePlayers2)) {
-            self->activePlayers1 = 0;
-            self->field_78       = 0;
-            self->field_74       = 0;
-            self->field_64       = self->field_64 == 0;
-            self->state          = RPlaneShifter_Unknown3;
+        // wait for P1 to get out of the spinner
+        if (!player->sidekick && !((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers)) {
+            self->activePlayers = 0;
+            self->spinAngle     = 0;
+            self->startAngle    = 0;
+            self->rotateDir     = !self->rotateDir;
+            self->state         = RPlaneShifter_State_AwaitPlayer;
         }
     }
 }
@@ -343,7 +344,14 @@ void RPlaneShifter_Unknown5(void)
 #if RETRO_INCLUDE_EDITOR
 void RPlaneShifter_EditorDraw(void) { RPlaneShifter_DrawSprites(); }
 
-void RPlaneShifter_EditorLoad(void) { RPlaneShifter->aniFrames = RSDK.LoadSpriteAnimation("MMZ/RPlaneShifter.bin", SCOPE_STAGE); }
+void RPlaneShifter_EditorLoad(void)
+{
+    RPlaneShifter->aniFrames = RSDK.LoadSpriteAnimation("MMZ/RPlaneShifter.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(RPlaneShifter, flags);
+    RSDK_ENUM_VAR("Plane A -> Low Draw Order, Plane B -> High Draw Order", 0);
+    RSDK_ENUM_VAR("Plane A -> High Draw Order, Plane B -> Low Draw Order", 1);
+}
 #endif
 
 void RPlaneShifter_Serialize(void)

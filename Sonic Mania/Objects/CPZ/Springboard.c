@@ -17,16 +17,16 @@ void Springboard_Update(void)
     //bounceDelay is unused, but if it was used, it'd prolly be "if (!--self->bounceDelay) {" around this foreach loop. source: it was exactly like that in S2 '13
     foreach_active(Player, playerPtr)
     {
-        if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntityID(playerPtr)) & self->playerBits)) {
-            int32 val  = minVal((playerPtr->position.x - self->position.x + 0x1C0000) >> 17, 28);
-            int32 val2 = maxVal(val, 0);
+        if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntityID(playerPtr)) & self->activePlayers)) {
+            int32 pos = clampVal((playerPtr->position.x - self->position.x + 0x1C0000) >> 17, 0, 28);
 
-            int32 val3 = val2;
-            if ((self->direction & 1))
-                val3 = 28 - val2;
-            if (val3 >= 8) {
+            if ((self->direction & FLIP_X))
+                pos = 28 - pos;
+
+            if (pos >= 8) {
                 if (self->animator.frameID == 3)
                     RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &self->animator, true, 0);
+
                 if (self->animator.frameID == 2) {
                     int32 anim = playerPtr->animator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
@@ -38,10 +38,10 @@ void Springboard_Update(void)
                     playerPtr->tileCollisions = true;
                     RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRINGCS, &playerPtr->animator, true, 1);
                     playerPtr->groundVel   = playerPtr->velocity.x;
-                    int32 pos                = minVal(2 * val3 - 16, 39);
-                    playerPtr->velocity.y  = Springboard->springPower[pos] - playerPtr->gravityStrength - self->force;
+                    int32 springPos        = minVal(2 * pos - 16, 39);
+                    playerPtr->velocity.y  = Springboard->springPower[springPos] - playerPtr->gravityStrength - self->force;
                     playerPtr->jumpAbility = 0;
-                    RSDK.PlaySfx(Springboard->sfxSpring, false, 255);
+                    RSDK.PlaySfx(Springboard->sfxSpring, false, 0xFF);
                 }
             }
         }
@@ -52,18 +52,16 @@ void Springboard_Update(void)
         int32 playerID   = RSDK.GetEntityID(player);
         int32 playerVel  = player->groundVel;
         int32 playerVelX = player->velocity.x;
-        bool32 bounced    = false;
-        int32 val        = clampVal((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
+        bool32 bounced   = false;
+        int32 springPos  = clampVal((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
 
         if (!self->direction) {
             int32 hitboxTop = 0;
 
-            if (self->animator.frameID <= 2) {
-                hitboxTop = Springboard->heightsFlat[val];
-            }
-            else if (self->animator.frameID == 3) {
-                hitboxTop = Springboard->heightsReady[val];
-            }
+            if (self->animator.frameID <= 2)
+                hitboxTop = Springboard->heightsFlat[springPos];
+            else if (self->animator.frameID == 3)
+                hitboxTop = Springboard->heightsReady[springPos];
 
             Hitbox hitbox;
             hitbox.left   = -28;
@@ -72,7 +70,7 @@ void Springboard_Update(void)
             hitbox.bottom = 8;
 
             uint8 collision = 0;
-            if (!((1 << playerID) & self->playerBits))
+            if (!((1 << playerID) & self->activePlayers))
                 bounced = collision = Player_CheckCollisionBox(player, self, &hitbox);
             else
                 bounced = collision = Player_CheckCollisionPlatform(player, self, &hitbox);
@@ -83,7 +81,7 @@ void Springboard_Update(void)
                 case 0:
                 case 3:
                 case 4:
-                    if (player->velocity.y >= 0 && ((1 << playerID) & self->playerBits)) {
+                    if (player->velocity.y >= 0 && ((1 << playerID) & self->activePlayers)) {
                         Hitbox *playerHitbox = Player_GetHitbox(player);
                         player->position.y   = self->position.y - (playerHitbox->bottom << 16) - (hitboxTop << 16);
                         if (!bounced)
@@ -101,7 +99,7 @@ void Springboard_Update(void)
             player->flailing = false;
         }
         else if (self->direction == FLIP_X) {
-            int32 pos       = abs(val - 27);
+            int32 pos       = abs(springPos - 27);
             int32 hitboxTop = 0;
 
             if (self->animator.frameID <= 2) {
@@ -118,7 +116,7 @@ void Springboard_Update(void)
             hitbox.bottom = 8;
 
             uint8 collision = 0;
-            if (!((1 << playerID) & self->playerBits))
+            if (!((1 << playerID) & self->activePlayers))
                 collision = Player_CheckCollisionBox(player, self, &hitbox);
             else
                  collision = Player_CheckCollisionPlatform(player, self, &hitbox);
@@ -141,7 +139,7 @@ void Springboard_Update(void)
                 default: break;
             }
 
-            if (player->velocity.y >= 0 && ((1 << playerID) & self->playerBits)) {
+            if (player->velocity.y >= 0 && ((1 << playerID) & self->activePlayers)) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
                 player->position.y   = self->position.y - (playerHitbox->bottom << 16) - (hitboxTop << 16);
                 if (!bounced)
@@ -151,12 +149,12 @@ void Springboard_Update(void)
         }
 
         if (bounced) {
-            self->playerBits |= (1 << playerID);
-            if (val >= 8 && !self->bounceDelay)
+            self->activePlayers |= (1 << playerID);
+            if (springPos >= 8 && !self->bounceDelay)
                 self->bounceDelay = 6;
         }
         else {
-            self->playerBits &= ~(1 << playerID);
+            self->activePlayers &= ~(1 << playerID);
         }
     }
 }

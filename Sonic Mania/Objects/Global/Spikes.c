@@ -13,7 +13,11 @@ void Spikes_Update(void)
 {
     RSDK_THIS(Spikes);
     switch (self->stateMove) {
-        case 1:
+        default: 
+        case SPIKES_MOVE_STATIC:
+            break;
+
+        case SPIKES_MOVE_HIDDEN:
             if (self->stagger << 6 == (Zone->timer & 0x40)) {
                 if ((Zone->timer & 0x3F) == self->timer) {
                     self->stateMove++;
@@ -22,7 +26,8 @@ void Spikes_Update(void)
                 }
             }
             break;
-        case 2:
+
+        case SPIKES_MOVE_APPEAR:
             if (self->moveOffset >= 0x200000) {
                 self->stateMove++;
             }
@@ -32,16 +37,18 @@ void Spikes_Update(void)
                 self->position.y += self->velocity.y;
             }
             break;
-        case 3:
+
+        case SPIKES_MOVE_SHOWN:
             if ((Zone->timer & 0x3F) == self->timer) {
                 self->stateMove++;
                 if (self->activeScreens == 1)
                     RSDK.PlaySfx(Spikes->sfxMove, false, 255);
             }
             break;
-        case 4:
+
+        case SPIKES_MOVE_DISAPPEAR:
             if (self->moveOffset <= 0) {
-                self->stateMove = 1;
+                self->stateMove = SPIKES_MOVE_HIDDEN;
             }
             else {
                 self->moveOffset -= 0x80000;
@@ -49,9 +56,11 @@ void Spikes_Update(void)
                 self->position.y -= self->velocity.y;
             }
             break;
-        case 5:
+
+        // Used by SpiderMobile to hide the spikes on the arena
+        case SPIKES_MOVE_DISAPPEAR_FOREVER:
             if (self->moveOffset >= 0x280000) {
-                self->stateMove = 6;
+                self->stateMove = SPIKES_MOVE_HIDDEN_FOREVER;
             }
             else {
                 self->moveOffset += 0x80000;
@@ -59,12 +68,13 @@ void Spikes_Update(void)
                 self->position.y -= self->velocity.y;
             }
             break;
-        default: break;
+
+        case SPIKES_MOVE_HIDDEN_FOREVER: break;
     }
 
     self->position.x -= self->offset.x;
     self->position.y -= self->offset.y;
-    if (self->stateMove != 1) {
+    if (self->stateMove != SPIKES_MOVE_HIDDEN) {
         foreach_active(Player, player)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
@@ -111,7 +121,7 @@ void Spikes_Update(void)
                         switch (side) {
                             case C_TOP:
                                 player->collisionFlagV |= 1;
-                                if (player->velocity.y >= 0 || self->stateMove == 2) {
+                                if (player->velocity.y >= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
                                     player->position.x += self->offset.x;
                                     player->position.y += self->offset.y;
                                     if (side == self->type)
@@ -120,21 +130,21 @@ void Spikes_Update(void)
                                 break;
                             case C_LEFT:
                                 player->collisionFlagH |= 1;
-                                if (player->velocity.x >= 0 || self->stateMove == 2) {
+                                if (player->velocity.x >= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
                                     if (side == self->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case C_RIGHT:
                                 player->collisionFlagH |= 2;
-                                if (player->velocity.x <= 0 || self->stateMove == 2) {
+                                if (player->velocity.x <= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
                                     if (side == self->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
                             case C_BOTTOM:
                                 player->collisionFlagV |= 2;
-                                if (player->velocity.y <= 0 || self->stateMove == 2) {
+                                if (player->velocity.y <= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
                                     if (side == self->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
@@ -343,7 +353,7 @@ void Spikes_Create(void *data)
         if (self->moving) {
             self->position.x -= 4 * self->velocity.x;
             self->position.y -= 4 * self->velocity.y;
-            self->stateMove = 1;
+            self->stateMove = SPIKES_MOVE_HIDDEN;
         }
     }
 }
