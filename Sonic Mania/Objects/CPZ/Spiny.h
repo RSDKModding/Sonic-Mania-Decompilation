@@ -27,9 +27,9 @@ struct EntitySpiny {
     uint8 type;
     Vector2 startPos;
     uint8 startDir;
-    int32 shotSpeed;
-    int32 timer2;
-    int32 timer;
+    int32 shotVelocity;
+    int32 dirChangeTimer;
+    int32 moveTimer;
 };
 
 // Object Struct

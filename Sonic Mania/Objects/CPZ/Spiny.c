@@ -107,10 +107,10 @@ void Spiny_CheckOnScreen(void)
 {
     RSDK_THIS(Spiny);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position  = self->startPos;
-        self->timer2    = 0;
-        self->timer     = 128;
-        self->direction = self->startDir;
+        self->position       = self->startPos;
+        self->dirChangeTimer = 0;
+        self->moveTimer      = 128;
+        self->direction      = self->startDir;
         Spiny_Create(NULL);
     }
 }
@@ -134,34 +134,34 @@ void Spiny_State_Floor(void)
 {
     RSDK_THIS(Spiny);
     RSDK.ProcessAnimation(&self->animator);
-    if (++self->timer2 >= 256) {
-        self->timer2 = 0;
+    if (++self->dirChangeTimer >= 256) {
+        self->dirChangeTimer = 0;
         self->direction ^= FLIP_X;
-        self->timer      = 128;
+        self->moveTimer  = 128;
         self->velocity.x = -self->velocity.x;
     }
 
     int32 distance = 0x7FFFFFFF;
     self->position.x += self->velocity.x;
-    if (self->timer) {
-        self->timer--;
-    }
-    else {
+    if (!self->moveTimer) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Spiny->hitboxRange)) {
-                self->timer = 40;
-                self->state = Spiny_State_Shoot_Floor;
+                self->moveTimer = 40;
+                self->state     = Spiny_State_Shoot_Floor;
                 RSDK.SetSpriteAnimation(Spiny->aniFrames, 1, &self->animator, true, 0);
                 if (abs(player->position.x - self->position.x) < distance) {
                     distance = abs(player->position.x - self->position.x);
                     if (player->position.x > self->position.x)
-                        self->shotSpeed = 0x10000;
+                        self->shotVelocity = 0x10000;
                     else
-                        self->shotSpeed = -0x10000;
+                        self->shotVelocity = -0x10000;
                 }
             }
         }
+    }
+    else {
+        self->moveTimer--;
     }
     Spiny_CheckPlayerCollisions();
     Spiny_CheckOnScreen();
@@ -171,10 +171,10 @@ void Spiny_State_Shoot_Floor(void)
 {
     RSDK_THIS(Spiny);
     RSDK.ProcessAnimation(&self->animator);
-    if (--self->timer == 20) {
+    if (--self->moveTimer == 20) {
         RSDK.PlaySfx(Spiny->sfxShot, 0, 255);
         EntitySpiny *shot = CREATE_ENTITY(Spiny, intToVoid(true), self->position.x, self->position.y);
-        shot->velocity.x  = self->shotSpeed;
+        shot->velocity.x  = self->shotVelocity;
         if (!(self->direction & 2))
             shot->velocity.y = -0x30000;
         else
@@ -182,10 +182,10 @@ void Spiny_State_Shoot_Floor(void)
         Spiny_CheckPlayerCollisions();
     }
     else {
-        if (self->timer < 0) {
+        if (self->moveTimer < 0) {
             RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &self->animator, true, 0);
-            self->timer = 64;
-            self->state = Spiny_State_Floor;
+            self->moveTimer = 64;
+            self->state     = Spiny_State_Floor;
         }
         Spiny_CheckPlayerCollisions();
     }
@@ -196,32 +196,33 @@ void Spiny_State_Wall(void)
 {
     RSDK_THIS(Spiny);
     RSDK.ProcessAnimation(&self->animator);
-    if (++self->timer2 >= 256) {
-        self->timer2 = 0;
-        self->direction ^= 2u;
-        self->timer      = 128;
+    if (++self->dirChangeTimer >= 256) {
+        self->dirChangeTimer = 0;
+        self->direction ^= FLIP_Y;
+        self->moveTimer  = 128;
         self->velocity.y = -self->velocity.y;
     }
 
     self->position.y += self->velocity.y;
-    if (self->timer) {
-        self->timer--;
-    }
-    else {
+    if (!self->moveTimer) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Spiny->hitboxRange)) {
-                self->timer = 40;
-                self->state = Spiny_State_Shoot_Wall;
+                self->moveTimer = 40;
+                self->state     = Spiny_State_Shoot_Wall;
                 RSDK.SetSpriteAnimation(Spiny->aniFrames, 3, &self->animator, true, 0);
 
                 if (!(self->direction & 1))
-                    self->shotSpeed = -0x30000;
+                    self->shotVelocity = -0x30000;
                 else
-                    self->shotSpeed = 0x30000;
+                    self->shotVelocity = 0x30000;
             }
         }
     }
+    else {
+        self->moveTimer--;
+    }
+
     Spiny_CheckPlayerCollisions();
     Spiny_CheckOnScreen();
 }
@@ -231,16 +232,16 @@ void Spiny_State_Shoot_Wall(void)
     RSDK_THIS(Spiny);
 
     RSDK.ProcessAnimation(&self->animator);
-    if (--self->timer == 20) {
+    if (--self->moveTimer == 20) {
         RSDK.PlaySfx(Spiny->sfxShot, 0, 255);
-        CREATE_ENTITY(Spiny, intToVoid(true), self->position.x, self->position.y)->velocity.x = self->shotSpeed;
+        CREATE_ENTITY(Spiny, intToVoid(true), self->position.x, self->position.y)->velocity.x = self->shotVelocity;
         Spiny_CheckPlayerCollisions();
     }
     else {
-        if (self->timer < 0) {
+        if (self->moveTimer < 0) {
             RSDK.SetSpriteAnimation(Spiny->aniFrames, 2, &self->animator, true, 0);
-            self->timer = 64;
-            self->state = Spiny_State_Wall;
+            self->moveTimer = 64;
+            self->state     = Spiny_State_Wall;
         }
         Spiny_CheckPlayerCollisions();
     }
@@ -290,9 +291,9 @@ void Spiny_EditorDraw(void)
     RSDK_THIS(Spiny);
     self->drawFX = FX_FLIP;
 
-    if (self->type == SPINY_FLOOR) 
+    if (self->type == SPINY_FLOOR)
         RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &self->animator, false, 0);
-    else 
+    else
         RSDK.SetSpriteAnimation(Spiny->aniFrames, 2, &self->animator, false, 0);
 
     Spiny_Draw();

@@ -20,17 +20,12 @@ struct EntityMagnetSphere {
     RSDK_ENTITY
     uint8 activePlayers;
     uint8 playerTimers[4];
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    Animator unusedAnimator;
+    Animator glassInnerAnimator;
+    Animator glassOuterAnimator;
+    Animator plasma1Animator;
+    Animator plasma2Animator;
+    Animator centerBallAnimator;
 };
 
 // Object Struct
@@ -54,6 +49,6 @@ void MagnetSphere_DebugSpawn(void);
 void MagnetSphere_DebugDraw(void);
 
 void MagnetSphere_CheckPlayerCollision(void);
-void MagnetSphere_MovePlayer(void *p, int32 playerID);
+void MagnetSphere_MovePlayer(EntityPlayer *player, int32 playerID);
 
 #endif //!OBJ_MAGNETSPHERE_H

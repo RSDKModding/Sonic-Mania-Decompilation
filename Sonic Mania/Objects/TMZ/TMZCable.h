@@ -17,10 +17,10 @@ struct EntityTMZCable {
     StateMachine(state);
     int32 timer;
     int32 cableID;
-    Vector2 field_64;
+    Vector2 offset;
     Vector2 drawPos[TMZCable_JointCount];
     bool32 drawFlags[TMZCable_JointCount];
-    Vector2 *posPtr;
+    Vector2 *parentPos;
     Animator animator;
 };
 
@@ -41,11 +41,11 @@ void TMZCable_EditorLoad(void);
 void TMZCable_Serialize(void);
 
 // Extra Entity Functions
-void TMZCable_Unknown1(void);
-void TMZCable_Unknown2(void);
-void TMZCable_Unknown3(void);
-void TMZCable_Unknown4(void);
-void TMZCable_Unknown5(void);
-void TMZCable_Unknown6(void);
+void TMZCable_HandleDrawPositions(void);
+void TMZCable_State_Idle(void);
+void TMZCable_State_Charge(void);
+void TMZCable_State_Live(void);
+void TMZCable_State_Fade(void);
+void TMZCable_State_Destroyed(void);
 
 #endif //!OBJ_TMZCABLE_H

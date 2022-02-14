@@ -21,17 +21,17 @@ struct EntityMetalArm {
     int32 durationB;
     int32 holdDuration;
     Vector2 armAngle;
-    uint8 activePlayers;
+    uint8 stoodPlayers;
     Vector2 startPos;
-    int32 timer;
-    int32 timer2;
-    Vector2 posUnknown;
-    Vector2 offset;
+    int32 moveTimer;
+    int32 holdTimer;
+    Vector2 armPosition;
+    Vector2 moveOffset;
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Animator baseAnimator;
+    Animator armAAnimator;
+    Animator armBAnimator;
+    Animator platformAnimator;
 };
 
 // Object Struct
@@ -51,12 +51,12 @@ void MetalArm_EditorLoad(void);
 void MetalArm_Serialize(void);
 
 // Extra Entity Functions
-bool32 MetalArm_Unknown1(void);
-Vector2 MetalArm_Unknown2(void);
-void MetalArm_Unknown3(void);
-void MetalArm_Unknown4(void);
-void MetalArm_Unknown5(void);
-void MetalArm_Unknown6(void);
-void MetalArm_Unknown7(void);
+bool32 MetalArm_SfxCheckCB(void);
+Vector2 MetalArm_GetArmPosition(void);
+void MetalArm_CheckPlayerCollisions(void);
+void MetalArm_State_Idle(void);
+void MetalArm_State_MoveToHold(void);
+void MetalArm_State_Holding(void);
+void MetalArm_State_MoveToStart(void);
 
 #endif //!OBJ_METALARM_H

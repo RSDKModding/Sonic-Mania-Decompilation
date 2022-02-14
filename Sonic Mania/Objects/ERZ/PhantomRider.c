@@ -245,7 +245,7 @@ void PhantomRider_State_RacePlayer(void)
         PhantomEgg_SetupScanlineCB();
         self->state = PhantomRider_State_ExitRider;
         foreach_active(PopOut, popOut) { popOut->shouldAppear = false; }
-        foreach_active(Player, player) { Player_ChangePhysicsState(player); }
+        foreach_active(Player, player) { Player_UpdatePhysicsState(player); }
     }
 
     foreach_active(Spikes, spikes)

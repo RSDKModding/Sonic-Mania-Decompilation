@@ -495,7 +495,7 @@ bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int v
 bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 hitIfNotAttacking);
 
 // State helpers
-void Player_ChangePhysicsState(EntityPlayer *entity);
+void Player_UpdatePhysicsState(EntityPlayer *entity);
 void Player_HandleGroundMovement(void);
 void Player_HandleGroundRotation(void);
 void Player_HandleAirMovement(void);

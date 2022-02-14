@@ -130,9 +130,6 @@ void PopOut_Create(void *data)
     RSDK_THIS(PopOut);
     self->drawFX = FX_ROTATE | FX_FLIP;
 
-    self->direction = 0;
-    self->orientation = 3;
-
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->drawOrder     = Zone->drawOrderLow;

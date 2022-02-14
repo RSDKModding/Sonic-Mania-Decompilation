@@ -510,7 +510,7 @@ void ItemBox_GivePowerup(void)
 
         case ITEMBOX_SNEAKERS:
             player->speedShoesTimer = 1320;
-            Player_ChangePhysicsState(player);
+            Player_UpdatePhysicsState(player);
             if (player->superState == SUPERSTATE_NONE) {
                 Music_PlayQueuedTrack(TRACK_SNEAKERS);
                 EntityImageTrail *powerup = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(player), ImageTrail);

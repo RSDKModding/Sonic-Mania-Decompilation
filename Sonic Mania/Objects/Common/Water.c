@@ -423,7 +423,7 @@ void Water_State_Palette(void)
                     if (player->underwater > 1)
                         childPtr = RSDK_GET_ENTITY(player->underwater, Water);
                     player->underwater = false;
-                    Player_ChangePhysicsState(player);
+                    Player_UpdatePhysicsState(player);
                     if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))
                         && (Player_CheckValidState(player) || player->state == Player_State_FlyIn)) {
                         if (!Water->ignoreChild) {
@@ -468,7 +468,7 @@ void Water_State_Palette(void)
                 bool32 notUnderwater = player->underwater == 0;
                 player->underwater   = waterID;
                 if (notUnderwater) {
-                    Player_ChangePhysicsState(player);
+                    Player_UpdatePhysicsState(player);
                     if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))) {
                         if (!Water->ignoreChild) {
                             if (childPtr) {

@@ -14,8 +14,8 @@ struct EntityTMZAlert {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    Animator animator;
-    Animator animator2;
+    Animator screenAnimator;
+    Animator messageAnimator;
 };
 
 // Object Struct
@@ -35,9 +35,9 @@ void TMZAlert_EditorLoad(void);
 void TMZAlert_Serialize(void);
 
 // Extra Entity Functions
-void TMZAlert_Unknown1(void);
-void TMZAlert_Unknown2(void);
-void TMZAlert_Unknown3(void);
+void TMZAlert_State_Activating(void);
+void TMZAlert_State_Alerting(void);
+void TMZAlert_State_ShuttingDown(void);
 
 
 #endif //!OBJ_TMZALERT_H

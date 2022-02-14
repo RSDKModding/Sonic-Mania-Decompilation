@@ -307,7 +307,7 @@ void SizeLaser_P2JumpInGrow(void)
         self->scale.y     = 0x200;
         self->interaction = true;
         self->state       = Player_State_Air;
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
         if (self->characterID == ID_TAILS)
             self->jumpOffset = 0;
         else
@@ -364,7 +364,7 @@ void SizeLaser_P2JumpInShrink(void)
         self->scale.y     = 0x200;
         self->interaction = true;
         self->state       = Player_State_Air;
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
     }
     else {
         self->state = SizeLaser_P2JumpInShrink;
@@ -385,7 +385,7 @@ void SizeLaser_PlayerState_Grow(void)
         self->scale.y     = 0x300;
         self->interaction = true;
         self->state       = Player_State_Air;
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
     }
     else {
         self->state = SizeLaser_PlayerState_Grow;

@@ -21,9 +21,8 @@ void LargeGear_Update(void)
         int32 playerID = RSDK.GetEntityID(player);
 
         int32 id      = 0;
-        int32 storeID = -1;
-
-        bool32 flag = false;
+        int32 storedID = -1;
+        bool32 collided = false;
 
         for (int32 angle = 0x180; angle < 0x380; angle += 0x40) {
             int32 ang = angle + self->angle;
@@ -38,9 +37,9 @@ void LargeGear_Update(void)
             self->position.x = x;
             self->position.y = y;
 
-            if (Player_CheckCollisionBox(player, self, &LargeGear->hitbox1) == C_TOP) {
-                flag    = true;
-                storeID = id;
+            if (Player_CheckCollisionBox(player, self, &LargeGear->hitboxTooth) == C_TOP) {
+                collided    = true;
+                storedID = id;
             }
             self->positions[id].x   = x;
             self->positions[id++].y = y;
@@ -48,20 +47,20 @@ void LargeGear_Update(void)
         self->position.x = storeX;
         self->position.y = storeY;
 
-        if (Player_CheckCollisionBox(player, self, &LargeGear->hitbox2) == C_TOP) {
-            flag    = true;
-            storeID = -1;
+        if (Player_CheckCollisionBox(player, self, &LargeGear->hitboxBase) == C_TOP) {
+            collided    = true;
+            storedID = -1;
             self->activePlayers |= (1 << playerID);
         }
         else {
-            if (flag)
+            if (collided)
                 self->activePlayers |= (1 << playerID);
             else
                 self->activePlayers &= ~(1 << playerID);
         }
 
-        self->playerIDs[playerID] = storeID;
-        if (flag) {
+        self->playerIDs[playerID] = storedID;
+        if (collided) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
 
             RSDK.ObjectTileCollision(player, player->collisionLayers, CMODE_RWALL, self->collisionPlane, playerHitbox->left << 16, 0, true);
@@ -72,7 +71,7 @@ void LargeGear_Update(void)
 
     self->position.x = storeX;
     self->position.y = storeY;
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->baseAnimator);
 }
 
 void LargeGear_LateUpdate(void) {}
@@ -87,22 +86,22 @@ void LargeGear_Draw(void)
     for (int32 i = 0; i < 0x200; i += 0x40) {
         self->rotation = i + self->angle;
 
-        RSDK.SetSpriteAnimation(LargeGear->aniFrames, 1, &self->animator2, true, 7 - abs(RSDK.Sin512(self->rotation) / 73));
+        RSDK.SetSpriteAnimation(LargeGear->aniFrames, 1, &self->toothAnimator, true, 7 - abs(RSDK.Sin512(self->rotation) / 73));
 
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->toothAnimator, NULL, false);
         RSDK.Cos512(self->rotation + 0x180);
         RSDK.Sin512(self->rotation + 0x180);
         self->rotation = 0;
     }
 
     self->rotation = 0;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
     self->rotation = self->angle;
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->centerAnimator, NULL, false);
 
     self->rotation = 0;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->axleAnimator, NULL, false);
 
     for (int32 i = 0; i < 0x200; i += 0x80) {
         int32 angle = i + self->angle;
@@ -110,7 +109,7 @@ void LargeGear_Draw(void)
 
         drawPos.x += 0x1300 * RSDK.Cos512(angle);
         drawPos.y += 0x1300 * RSDK.Sin512(angle);
-        RSDK.DrawSprite(&self->animator5, &drawPos, false);
+        RSDK.DrawSprite(&self->rivetAnimator, &drawPos, false);
     }
 }
 
@@ -124,11 +123,11 @@ void LargeGear_Create(void *data)
     self->drawFX        = FX_ROTATE | FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 1, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 2, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 3, &self->animator4, true, 0);
-    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 4, &self->animator5, true, 0);
+    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 0, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 1, &self->toothAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 2, &self->axleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 3, &self->centerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LargeGear->aniFrames, 4, &self->rivetAnimator, true, 0);
     self->angle = self->rotOffset;
 }
 
@@ -136,15 +135,15 @@ void LargeGear_StageLoad(void)
 {
     LargeGear->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/LargeGear.bin", SCOPE_STAGE);
 
-    LargeGear->hitbox1.left   = -10;
-    LargeGear->hitbox1.top    = -10;
-    LargeGear->hitbox1.right  = 10;
-    LargeGear->hitbox1.bottom = 10;
+    LargeGear->hitboxTooth.left   = -10;
+    LargeGear->hitboxTooth.top    = -10;
+    LargeGear->hitboxTooth.right  = 10;
+    LargeGear->hitboxTooth.bottom = 10;
 
-    LargeGear->hitbox2.left   = -8;
-    LargeGear->hitbox2.top    = -64;
-    LargeGear->hitbox2.right  = 8;
-    LargeGear->hitbox2.bottom = 64;
+    LargeGear->hitboxBase.left   = -8;
+    LargeGear->hitboxBase.top    = -64;
+    LargeGear->hitboxBase.right  = 8;
+    LargeGear->hitboxBase.bottom = 64;
 }
 
 #if RETRO_INCLUDE_EDITOR

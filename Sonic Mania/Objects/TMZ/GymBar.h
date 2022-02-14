@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { GYMBAR_HORIZONTAL, GYMBAR_VERTICAL } GymBarTypes;
+
 // Object Class
 struct ObjectGymBar {
     RSDK_OBJECT
@@ -17,7 +19,8 @@ struct EntityGymBar {
     int32 size;
     bool32 noSwing;
     uint8 playerTimers[4];
-    Vector2 field_68;
+    int32 maxX;
+    int32 minX;
     Animator animator;
     Hitbox hitbox;
 };

@@ -12,29 +12,29 @@ ObjectMetalArm *MetalArm;
 void MetalArm_Update(void)
 {
     RSDK_THIS(MetalArm);
-    self->offset.x = -self->posUnknown.x;
-    self->offset.y = -self->posUnknown.y;
+    self->moveOffset.x = -self->armPosition.x;
+    self->moveOffset.y = -self->armPosition.y;
 
-    int32 valA = self->timer;
-    if (self->durationA < self->timer)
-        valA = self->durationA;
-    int32 difA           = ((self->endAngleA - self->startAngleA) << 16) / self->durationA;
-    self->armAngle.x = (self->startAngleA << 16) + difA * valA;
+    int32 timerA = self->moveTimer;
+    if (self->durationA < self->moveTimer)
+        timerA = self->durationA;
+    int32 interpolateA = ((self->endAngleA - self->startAngleA) << 16) / self->durationA;
+    self->armAngle.x   = (self->startAngleA << 16) + interpolateA * timerA;
 
-    int32 valB = self->timer;
-    if (self->durationB < self->timer)
-        valB = self->durationB;
-    int32 difB           = ((self->endAngleB - self->startAngleB) << 16) / self->durationB;
-    self->armAngle.y = (self->startAngleB << 16) + difB * valB;
+    int32 timerB = self->moveTimer;
+    if (self->durationB < self->moveTimer)
+        timerB = self->durationB;
+    int32 interpolateB = ((self->endAngleB - self->startAngleB) << 16) / self->durationB;
+    self->armAngle.y   = (self->startAngleB << 16) + interpolateB * timerB;
 
-    self->posUnknown = MetalArm_Unknown2();
-    self->posUnknown.x &= 0xFFFF0000;
-    self->posUnknown.y &= 0xFFFF0000;
-    self->position.x = self->posUnknown.x;
-    self->position.y = self->posUnknown.y;
-    self->offset.x += self->position.x;
-    self->offset.y += self->position.y;
-    MetalArm_Unknown3();
+    self->armPosition = MetalArm_GetArmPosition();
+    self->armPosition.x &= 0xFFFF0000;
+    self->armPosition.y &= 0xFFFF0000;
+    self->position.x = self->armPosition.x;
+    self->position.y = self->armPosition.y;
+    self->moveOffset.x += self->position.x;
+    self->moveOffset.y += self->position.y;
+    MetalArm_CheckPlayerCollisions();
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
     StateMachine_Run(self->state);
@@ -48,32 +48,32 @@ void MetalArm_Draw(void)
 {
     RSDK_THIS(MetalArm);
     self->rotation = 0;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
     int32 x = 0x2400 * RSDK.Cos512((self->armAngle.x >> 16)) + self->position.x;
     int32 y = 0x2400 * RSDK.Sin512((self->armAngle.x >> 16)) + self->position.y;
 
     Vector2 drawPos;
-    drawPos            = MetalArm_Unknown2();
+    drawPos            = MetalArm_GetArmPosition();
     self->position.x = x;
     self->position.y = y;
     self->position.x &= 0xFFFF0000;
     self->position.y &= 0xFFFF0000;
     self->rotation = (self->armAngle.x + self->armAngle.y) >> 16;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->armBAnimator, NULL, false);
 
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
     self->position.x &= 0xFFFF0000;
     self->position.y &= 0xFFFF0000;
     self->rotation = (self->armAngle.x >> 16);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->armAAnimator, NULL, false);
 
     self->rotation = 0;
     self->position = drawPos;
     self->position.x &= 0xFFFF0000;
     self->position.y &= 0xFFFF0000;
-    RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    RSDK.DrawSprite(&self->platformAnimator, &drawPos, false);
 
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
@@ -90,128 +90,132 @@ void MetalArm_Create(void *data)
     self->drawFX        = FX_ROTATE | FX_FLIP;
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
+
     if (!self->durationA)
         self->durationA = 60;
+
     if (!self->durationB)
         self->durationB = 40;
+
     if (!self->holdDuration)
         self->holdDuration = 60;
+
     self->hitbox.left   = -56;
     self->hitbox.top    = -27;
     self->hitbox.right  = 35;
     self->hitbox.bottom = -7;
-    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 1, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 2, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 3, &self->animator4, true, 0);
+    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 0, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 1, &self->armAAnimator, true, 0);
+    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 2, &self->armBAnimator, true, 0);
+    RSDK.SetSpriteAnimation(MetalArm->aniFrames, 3, &self->platformAnimator, true, 0);
     self->armAngle.x = self->startAngleA << 16;
     self->armAngle.y = self->startAngleB << 16;
-    self->timer      = 0;
-    self->posUnknown = MetalArm_Unknown2();
-    self->state      = MetalArm_Unknown4;
+    self->moveTimer      = 0;
+    self->armPosition = MetalArm_GetArmPosition();
+    self->state      = MetalArm_State_Idle;
 }
 
 void MetalArm_StageLoad(void)
 {
     MetalArm->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MetalArm.bin", SCOPE_STAGE);
-    Soundboard_LoadSFX("TMZ1/MetalArm.wav", true, MetalArm_Unknown1, NULL);
+    Soundboard_LoadSFX("TMZ1/MetalArm.wav", true, MetalArm_SfxCheckCB, NULL);
 }
 
-bool32 MetalArm_Unknown1(void)
+bool32 MetalArm_SfxCheckCB(void)
 {
-    int32 count = 0;
+    int32 activeCount = 0;
     foreach_active(MetalArm, arm)
     {
-        if (arm->state == MetalArm_Unknown5 || arm->state == MetalArm_Unknown7)
-            ++count;
+        if (arm->state == MetalArm_State_MoveToHold || arm->state == MetalArm_State_MoveToStart)
+            ++activeCount;
     }
-    return count > 0;
+    return activeCount > 0;
 }
 
-Vector2 MetalArm_Unknown2(void)
+Vector2 MetalArm_GetArmPosition(void)
 {
     RSDK_THIS(MetalArm);
-    Vector2 result;
+    Vector2 armPos;
 
     int32 x    = 0x2400 * RSDK.Cos512((self->armAngle.x >> 16)) + self->position.x;
     int32 y    = 0x2400 * RSDK.Sin512((self->armAngle.x >> 16)) + self->position.y;
-    result.x = x + 0x3800 * RSDK.Cos512((self->armAngle.x + self->armAngle.y) >> 16);
-    result.y = y + 0x3800 * RSDK.Sin512((self->armAngle.x + self->armAngle.y) >> 16);
-    return result;
+    armPos.x = x + 0x3800 * RSDK.Cos512((self->armAngle.x + self->armAngle.y) >> 16);
+    armPos.y = y + 0x3800 * RSDK.Sin512((self->armAngle.x + self->armAngle.y) >> 16);
+    return armPos;
 }
 
-void MetalArm_Unknown3(void)
+void MetalArm_CheckPlayerCollisions(void)
 {
     RSDK_THIS(MetalArm);
 
     foreach_active(Player, player)
     {
         int32 id = RSDK.GetEntityID(player);
-        if ((1 << id) & self->activePlayers) {
-            player->position.x += self->offset.x;
-            player->position.y += self->offset.y;
+        if ((1 << id) & self->stoodPlayers) {
+            player->position.x += self->moveOffset.x;
+            player->position.y += self->moveOffset.y;
             player->position.y += 0x10000;
         }
 
         if (!Player_CheckCollisionPlatform(player, self, &self->hitbox))
-            self->activePlayers &= ~(1 << id);
+            self->stoodPlayers &= ~(1 << id);
         else
-            self->activePlayers |= (1 << id);
+            self->stoodPlayers |= (1 << id);
     }
 }
 
-void MetalArm_Unknown4(void)
+void MetalArm_State_Idle(void)
 {
     RSDK_THIS(MetalArm);
-    if ((self->activePlayers & 1)) {
-        self->timer  = 0;
-        self->timer2 = 0;
+    if ((self->stoodPlayers & 1)) {
+        self->moveTimer  = 0;
+        self->holdTimer = 0;
         self->active = ACTIVE_NORMAL;
-        self->state  = MetalArm_Unknown5;
+        self->state  = MetalArm_State_MoveToHold;
     }
 }
 
-void MetalArm_Unknown5(void)
+void MetalArm_State_MoveToHold(void)
 {
     RSDK_THIS(MetalArm);
 
     int32 duration = self->durationB;
     if (self->durationA > self->durationB)
         duration = self->durationA;
-    if (self->timer >= duration) {
-        self->timer2 = 0;
-        self->state  = MetalArm_Unknown6;
+    if (self->moveTimer >= duration) {
+        self->holdTimer = 0;
+        self->state  = MetalArm_State_Holding;
     }
     else {
-        self->timer++;
+        self->moveTimer++;
     }
 }
 
-void MetalArm_Unknown6(void)
+void MetalArm_State_Holding(void)
 {
     RSDK_THIS(MetalArm);
-    if (self->activePlayers & 1) {
-        self->timer2 = 0;
+    if (self->stoodPlayers & 1) {
+        self->holdTimer = 0;
     }
     else {
-        if (self->timer2 >= self->holdDuration) {
-            self->state = MetalArm_Unknown7;
+        if (self->holdTimer >= self->holdDuration) {
+            self->state = MetalArm_State_MoveToStart;
         }
         else {
-            self->timer2++;
+            self->holdTimer++;
         }
     }
 }
 
-void MetalArm_Unknown7(void)
+void MetalArm_State_MoveToStart(void)
 {
     RSDK_THIS(MetalArm);
-    if (self->timer <= 0) {
-        self->state  = MetalArm_Unknown4;
+    if (self->moveTimer <= 0) {
+        self->state  = MetalArm_State_Idle;
         self->active = ACTIVE_BOUNDS;
     }
     else {
-        self->timer--;
+        self->moveTimer--;
     }
 }
 
@@ -223,7 +227,7 @@ void MetalArm_EditorDraw(void)
     self->startPos.y    = self->position.y;
     self->armAngle.x = self->startAngleA << 16;
     self->armAngle.y = self->startAngleB << 16;
-    self->posUnknown = MetalArm_Unknown2();
+    self->armPosition = MetalArm_GetArmPosition();
 
     MetalArm_Draw();
 }

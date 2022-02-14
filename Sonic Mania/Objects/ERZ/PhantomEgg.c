@@ -67,7 +67,9 @@ void PhantomEgg_Create(void *data)
 void PhantomEgg_StageLoad(void)
 {
     PhantomEgg->aniFrames         = RSDK.LoadSpriteAnimation("Phantom/PhantomEgg.bin", SCOPE_STAGE);
+
     PhantomEgg->savedGameProgress = false;
+
 #if RETRO_USE_PLUS
     if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreTMZ3.act", 0b0000000011111111);
@@ -80,7 +82,9 @@ void PhantomEgg_StageLoad(void)
     }
     RSDK.CopyPalette(1, 128, 0, 128, 128);
     RSDK.CopyPalette(0, 0, 4, 0, 128);
+
     PhantomEgg->superFlag     = false;
+
     PhantomEgg->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
     PhantomEgg->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
     PhantomEgg->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
@@ -145,7 +149,7 @@ void PhantomEgg_Hit(void)
         {
             if (cable->cableID == id || !self->health) {
                 RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &cable->animator, true, 0);
-                cable->state = TMZCable_Unknown6;
+                cable->state = TMZCable_State_Destroyed;
                 // Bug Details:
                 // uncomment to fix a minor visual bug where the start few cable nodes wont be destroyed properly
                 // cable->timer = 0;
@@ -513,8 +517,8 @@ void PhantomEgg_State_Unknown1(void)
 
             foreach_active(TMZCable, cable)
             {
-                cable->posPtr = &self->position;
-                cable->state  = TMZCable_Unknown2;
+                cable->parentPos = &self->position;
+                cable->state     = TMZCable_State_Idle;
             }
 
             int missileAngles[] = { -24, -10, 10, 24 };
@@ -579,7 +583,7 @@ void PhantomEgg_State_Unknown3(void)
     self->position.y += (self->field_80.y - self->position.y) >> 3;
     if (self->timer == 16) {
         self->timer = 0;
-        foreach_active(TMZAlert, alert) { alert->state = TMZAlert_Unknown1; }
+        foreach_active(TMZAlert, alert) { alert->state = TMZAlert_State_Activating; }
         self->state = PhantomEgg_State_Unknown4;
     }
 }
@@ -789,9 +793,9 @@ void PhantomEgg_State_Unknown10(void)
     if (++self->timer == 30) {
         foreach_active(TMZCable, cable)
         {
-            if (cable->state != TMZCable_Unknown6) {
+            if (cable->state != TMZCable_State_Destroyed) {
                 RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 10, &cable->animator, true, 0);
-                cable->state = TMZCable_Unknown3;
+                cable->state = TMZCable_State_Charge;
             }
         }
 

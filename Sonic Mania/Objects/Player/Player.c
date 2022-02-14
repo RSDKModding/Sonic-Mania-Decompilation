@@ -66,7 +66,7 @@ void Player_Update(void)
         if (self->speedShoesTimer > 0) {
             self->speedShoesTimer--;
             if (!self->speedShoesTimer) {
-                Player_ChangePhysicsState(self);
+                Player_UpdatePhysicsState(self);
                 bool32 stopPlaying = true;
                 foreach_active(Player, player)
                 {
@@ -189,7 +189,7 @@ void Player_LateUpdate(void)
         self->collisionFlagH = 0;
         self->collisionFlagV = 0;
         self->underwater     = false;
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
         destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield));
 
         switch (self->deathType) {
@@ -640,7 +640,7 @@ void Player_Create(void *data)
         self->collisionLayers = Zone->fgLayers;
         self->drawFX          = FX_ROTATE | FX_FLIP;
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->animator, true, 0);
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
         self->maxWalkSpeed = 0x40000;
         self->maxJogSpeed  = 0x60000;
         self->maxRunSpeed  = 0xC0000;
@@ -1101,7 +1101,7 @@ void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
         if (entity->superState == SUPERSTATE_SUPER)
             Player_CheckGoSuper(entity, 0xFF);
     }
-    Player_ChangePhysicsState(entity);
+    Player_UpdatePhysicsState(entity);
 }
 bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
 {
@@ -1171,7 +1171,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
         player->aniFrames = Player->superFrames;
     if (emeraldflags == 0xFF) {
         player->superState = SUPERSTATE_SUPER;
-        Player_ChangePhysicsState(player);
+        Player_UpdatePhysicsState(player);
     }
     else {
         if (player->isChibi)
@@ -1636,7 +1636,7 @@ void Player_HandleSuperForm(void)
         if (self->shield)
             Player_ApplyShieldEffect(self);
         self->superState = SUPERSTATE_DONE;
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
     }
 }
 bool32 Player_CheckP2KeyPress(void)
@@ -2076,7 +2076,7 @@ void Player_ResetState(EntityPlayer *player)
     }
     player->underwater = 0;
 
-    Player_ChangePhysicsState(player);
+    Player_UpdatePhysicsState(player);
     player->drawFX &= ~FX_SCALE;
     player->scale.x = 0x200;
     player->scale.y = 0x200;
@@ -2575,7 +2575,7 @@ bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
 }
 
 // Player State Helpers
-void Player_ChangePhysicsState(EntityPlayer *entity)
+void Player_UpdatePhysicsState(EntityPlayer *entity)
 {
     int32 *tablePtr = NULL;
     switch (entity->characterID) {
@@ -3003,7 +3003,7 @@ bool32 Player_SwapMainPlayer(bool32 forceSwap)
     self->playerID        = sidekick->playerID;
     self->scrollDelay     = 0;
     self->camera->state   = Camera_State_Follow;
-    Player_ChangePhysicsState(self);
+    Player_UpdatePhysicsState(self);
     sidekick->controllerID    = sidekickController;
     sidekick->stateInput      = sidekickInputState;
     sidekick->sidekick        = true;
@@ -3017,7 +3017,7 @@ bool32 Player_SwapMainPlayer(bool32 forceSwap)
     sidekick->camera          = sidekickCam;
     sidekick->hyperRing       = false;
     sidekick->playerID        = RSDK.GetEntityID(sidekick);
-    Player_ChangePhysicsState(sidekick);
+    Player_UpdatePhysicsState(sidekick);
     if (sidekick->superState == SUPERSTATE_SUPER)
         Player_CheckGoSuper(self, 0xFF);
     globals->playerID = self->characterID + (sidekick->characterID << 8);
@@ -3331,7 +3331,7 @@ void Player_ForceSuperTransform(void)
     destroyEntity(RSDK.GetEntityByID(self->playerID + Player->playerCount));
     self->invincibleTimer = 60;
     self->superState      = SUPERSTATE_SUPER;
-    Player_ChangePhysicsState(self);
+    Player_UpdatePhysicsState(self);
     RSDK.ResetEntityPtr(RSDK.GetEntityByID(self->playerID + 2 * Player->playerCount), ImageTrail->objectID, self);
     RSDK.ResetEntityPtr(RSDK.GetEntityByID(self->playerID + Player->playerCount), SuperSparkle->objectID, self);
     self->state = Player_State_Ground;
@@ -4093,7 +4093,7 @@ void Player_State_Transform(void)
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + self->playerID, Shield);
         RSDK.ResetEntityPtr(shield, SuperSparkle->objectID, self);
         self->superState = SUPERSTATE_SUPER;
-        Player_ChangePhysicsState(self);
+        Player_UpdatePhysicsState(self);
 
         if (!self->isChibi) {
             if (self->animator.frameID == self->animator.frameCount - 1) {

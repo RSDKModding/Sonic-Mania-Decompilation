@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    ESCAPECAR_DRIVER_SONIC = 0,
+    ESCAPECAR_DRIVER_KNUX  = 3,
+}EscapeCarDrivers;
+
 // Object Class
 struct ObjectEscapeCar {
     RSDK_OBJECT
@@ -17,12 +22,12 @@ struct EntityEscapeCar {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 type;
-    int32 field_64;
-    int32 field_68;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 driver;
+    int32 unused1;
+    int32 unused2;
+    Animator carAnimator;
+    Animator driverAnimator;
+    Animator thrustAnimator;
 };
 
 // Object Struct
@@ -42,12 +47,12 @@ void EscapeCar_EditorLoad(void);
 void EscapeCar_Serialize(void);
 
 // Extra Entity Functions
-void EscapeCar_StateMania_Unknown1(void);
-void EscapeCar_StateMania_CheckPlayerCollisions(void);
+void EscapeCar_StateMania_AwaitPlayer(void);
+void EscapeCar_StateMania_EnteredCar(void);
 void EscapeCar_StateMania_Ride(void);
 
 #if RETRO_USE_PLUS
-void EscapeCar_StateEncore_Unknown1(void);
+void EscapeCar_StateEncore_Setup(void);
 void EscapeCar_StateEncore_BadEnd(void);
 void EscapeCar_StateEncore_GoodEnd(void);
 #endif

@@ -35,8 +35,8 @@ void TMZFlames_EditorLoad(void);
 void TMZFlames_Serialize(void);
 
 // Extra Entity Functions
-void TMZFlames_Unknown1(void);
-void TMZFlames_Unknown2(void);
-void TMZFlames_Unknown3(void);
+void TMZFlames_State_Delay(void);
+void TMZFlames_State_EnterFlames(void);
+void TMZFlames_State_FlamesEnlarge(void);
 
 #endif //!OBJ_TMZFLAMES_H

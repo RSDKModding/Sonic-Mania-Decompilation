@@ -18,18 +18,18 @@ struct EntityJacobsLadder {
     int32 intervalOffset;
     int32 duration;
     bool32 flip;
-    int32 field_6C;
-    Vector2 field_70;
-    int32 field_78;
-    int32 field_7C;
-    bool32 field_80;
-    int32 field_84;
+    int32 unused1;
+    Vector2 startPos;
+    int32 unused2;
+    int32 electricPos;
+    bool32 showElectricity;
+    bool32 electricFadeOut;
     uint8 activePlayers;
     uint8 playerTimers[4];
     Vector2 playerPositions[4];
     Hitbox hitbox;
-    Animator animator2;
-    Animator animator;
+    Animator sideAnimator;
+    Animator electricAnimator;
 };
 
 // Object Struct

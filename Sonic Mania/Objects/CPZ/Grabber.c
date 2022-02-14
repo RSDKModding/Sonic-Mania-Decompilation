@@ -69,19 +69,24 @@ void Grabber_Create(void *data)
 void Grabber_StageLoad(void)
 {
     Grabber->aniFrames          = RSDK.LoadSpriteAnimation("CPZ/Grabber.bin", SCOPE_STAGE);
+
     Grabber->hitbox1.left       = -8;
     Grabber->hitbox1.top        = -8;
     Grabber->hitbox1.right      = 8;
     Grabber->hitbox1.bottom     = 8;
+
     Grabber->hitboxRange.left   = -64;
     Grabber->hitboxRange.top    = 0;
     Grabber->hitboxRange.right  = 64;
     Grabber->hitboxRange.bottom = 128;
+
     Grabber->hitbox2.left       = -8;
     Grabber->hitbox2.top        = 0;
     Grabber->hitbox2.right      = 8;
     Grabber->hitbox2.bottom     = 16;
+
     DEBUGMODE_ADD_OBJ(Grabber);
+
     Grabber->sfxGrab    = RSDK.GetSfx("Global/Grab.wav");
     Grabber->sfxDestroy = RSDK.GetSfx("Global/Destroy.wav");
 }
@@ -385,7 +390,14 @@ void Grabber_EditorDraw(void)
     RSDK.DrawSprite(&self->clampAnimator, NULL, false);
 }
 
-void Grabber_EditorLoad(void) { Grabber->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Grabber.bin", SCOPE_STAGE); }
+void Grabber_EditorLoad(void)
+{
+    Grabber->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Grabber.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Grabber, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void Grabber_Serialize(void) { RSDK_EDITABLE_VAR(Grabber, VAR_UINT8, direction); }

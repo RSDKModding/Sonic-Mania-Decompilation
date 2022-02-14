@@ -43,28 +43,32 @@ void TMZCable_Create(void *data)
         self->updateRange.y = 0x800000;
         switch (self->cableID) {
             case 0:
-                self->field_64.x = -0x1C0000;
-                self->field_64.y = 0x100000;
-                self->angle      = 0x00;
+                self->offset.x = -0x1C0000;
+                self->offset.y = 0x100000;
+                self->angle    = 0x00;
                 break;
+
             case 1:
-                self->field_64.x = 0x1C0000;
-                self->field_64.y = 0x100000;
-                self->angle      = 0x40;
+                self->offset.x = 0x1C0000;
+                self->offset.y = 0x100000;
+                self->angle    = 0x40;
                 break;
+
             case 2:
-                self->field_64.x = -0x1C0000;
-                self->field_64.y = -0x100000;
-                self->angle      = 0x80;
+                self->offset.x = -0x1C0000;
+                self->offset.y = -0x100000;
+                self->angle    = 0x80;
                 break;
+
             case 3:
-                self->field_64.x = 0x1C0000;
-                self->field_64.y = -0x100000;
-                self->angle      = 0xC0;
+                self->offset.x = 0x1C0000;
+                self->offset.y = -0x100000;
+                self->angle    = 0xC0;
                 break;
+
             default: break;
         }
-        self->posPtr = (Vector2 *)data;
+        self->parentPos = (Vector2 *)data;
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &self->animator, true, 0);
     }
 }
@@ -77,13 +81,13 @@ void TMZCable_StageLoad(void)
     TMZCable->hitbox.bottom = 10;
 }
 
-void TMZCable_Unknown1(void)
+void TMZCable_HandleDrawPositions(void)
 {
     RSDK_THIS(TMZCable);
 
-    if (self->posPtr) {
-        int32 x           = self->posPtr->x + self->field_64.x;
-        int32 y           = self->posPtr->y + self->field_64.y;
+    if (self->parentPos) {
+        int32 x           = self->parentPos->x + self->offset.x;
+        int32 y           = self->parentPos->y + self->offset.y;
         int32 entityAngle = self->angle;
         int32 angle       = RSDK.ATan2((self->position.x - x) >> 16, (self->position.y - y) >> 16) + 64;
 
@@ -102,26 +106,26 @@ void TMZCable_Unknown1(void)
     }
 }
 
-void TMZCable_Unknown2(void)
+void TMZCable_State_Idle(void)
 {
     RSDK_THIS(TMZCable);
 
-    TMZCable_Unknown1();
+    TMZCable_HandleDrawPositions();
     self->angle = (self->angle + 4) & 0xFF;
 }
 
-void TMZCable_Unknown3(void)
+void TMZCable_State_Charge(void)
 {
     RSDK_THIS(TMZCable);
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 11, &self->animator, true, RSDK.Rand(0, 8));
-        self->state = TMZCable_Unknown4;
+        self->state = TMZCable_State_Live;
     }
 }
 
-void TMZCable_Unknown4(void)
+void TMZCable_State_Live(void)
 {
     RSDK_THIS(TMZCable);
 
@@ -145,25 +149,25 @@ void TMZCable_Unknown4(void)
     if (++self->timer == 120) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 12, &self->animator, true, 0);
-        self->state = TMZCable_Unknown5;
+        self->state = TMZCable_State_Fade;
     }
 }
 
-void TMZCable_Unknown5(void)
+void TMZCable_State_Fade(void)
 {
     RSDK_THIS(TMZCable);
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &self->animator, true, 0);
-        self->state = TMZCable_Unknown2;
+        self->state = TMZCable_State_Idle;
     }
 }
 
-void TMZCable_Unknown6(void)
+void TMZCable_State_Destroyed(void)
 {
     RSDK_THIS(TMZCable);
-    TMZCable_Unknown1();
+    TMZCable_HandleDrawPositions();
 
     int32 id = self->timer >> 5;
     if (!(Zone->timer % 3)) {
@@ -201,7 +205,7 @@ void TMZCable_EditorDraw(void)
     RSDK_THIS(TMZCable);
 
     uint8 angles[] = { 0x00, 0x40, 0x80, 0xC0 };
-    self->angle  = angles[self->cableID & 3];
+    self->angle    = angles[self->cableID & 3];
     RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &self->animator, true, 0);
 
     for (int32 i = 0; i < TMZCable_JointCount; ++i) {

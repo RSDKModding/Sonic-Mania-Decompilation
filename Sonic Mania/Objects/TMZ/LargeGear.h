@@ -7,8 +7,8 @@
 struct ObjectLargeGear {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxTooth;
+    Hitbox hitboxBase;
 };
 
 // Entity Class
@@ -17,15 +17,15 @@ struct EntityLargeGear {
     int32 rotSpeed;
     int32 rotOffset;
     uint8 activePlayers;
-    int32 playerIDs[4];
+    int32 playerIDs[PLAYER_MAX];
     Vector2 positions[8];
     Vector2 origin;
-    int32 field_BC;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    int32 unused;
+    Animator baseAnimator;
+    Animator toothAnimator;
+    Animator axleAnimator;
+    Animator centerAnimator;
+    Animator rivetAnimator;
 };
 
 // Object Struct

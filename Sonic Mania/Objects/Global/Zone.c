@@ -1023,7 +1023,7 @@ void Zone_HandlePlayerSwap(void)
         playerPtr->speedShoesTimer = player->speedShoesTimer;
         playerPtr->blinkTimer      = player->blinkTimer;
         playerPtr->visible         = player->visible;
-        Player_ChangePhysicsState(playerPtr);
+        Player_UpdatePhysicsState(playerPtr);
         Zone->cameraBoundsL[Zone->swappedPlayerIDs[p]]     = cameraBoundsL[p];
         Zone->cameraBoundsR[Zone->swappedPlayerIDs[p]]     = cameraBoundsR[p];
         Zone->cameraBoundsT[Zone->swappedPlayerIDs[p]]     = cameraBoundsT[p];
@@ -1168,7 +1168,7 @@ void Zone_HandlePlayerSwap(void)
         playerPtr->speedShoesTimer = player->speedShoesTimer;
         playerPtr->blinkTimer = player->blinkTimer;
         playerPtr->visible = player->visible;
-        Player_ChangePhysicsState(playerPtr);
+        Player_UpdatePhysicsState(playerPtr);
         Zone->cameraBoundsL[swappedPlayerIDs[p]] = cameraBoundsL[p];
         Zone->cameraBoundsR[swappedPlayerIDs[p]] = cameraBoundsR[p];
         Zone->cameraBoundsT[swappedPlayerIDs[p]] = cameraBoundsT[p];

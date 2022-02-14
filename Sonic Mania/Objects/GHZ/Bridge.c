@@ -28,7 +28,7 @@ void Bridge_Update(void)
     }
 
     self->activePlayerCount = 0;
-    self->bridgeDepth          = (self->depression * self->timer) >> 7;
+    self->bridgeDepth       = (self->depression * self->timer) >> 7;
 
     foreach_active(Player, player)
     {
@@ -79,9 +79,9 @@ void Bridge_Update(void)
                         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                         if (player == player1) {
                             if (self->playerPtr != (Entity *)-1 && self->playerPtr != (Entity *)-2) {
-                                int32 distance     = self->endPos - self->startPos;
-                                self->stoodPos = player->position.x - self->startPos;
-                                self->depression = (distance >> 13) * RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16));
+                                int32 distance    = self->endPos - self->startPos;
+                                self->stoodPos    = player->position.x - self->startPos;
+                                self->depression  = (distance >> 13) * RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16));
                                 self->bridgeDepth = (self->depression * self->timer) >> 7;
                             }
                             self->playerPtr = (Entity *)player;
@@ -109,8 +109,8 @@ void Bridge_Update(void)
                 }
             }
             else {
-                self->stoodPos = player->position.x - self->startPos;
-                int32 distance     = (self->endPos - self->startPos);
+                self->stoodPos   = player->position.x - self->startPos;
+                int32 distance   = (self->endPos - self->startPos);
                 self->depression = RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);
 
                 if (player->position.y > self->position.y - 0x300000) {
@@ -152,9 +152,9 @@ void Bridge_Draw(void)
     int32 id = 0;
     Vector2 drawPos;
 
-    int32 size  = self->stoodPos >> 20;
-    int32 ang   = 0x80000;
-    drawPos.x = self->startPos + 0x80000;
+    int32 size = self->stoodPos >> 20;
+    int32 ang  = 0x80000;
+    drawPos.x  = self->startPos + 0x80000;
     for (int32 i = 0; i < size; ++i) {
         drawPos.y = (self->bridgeDepth * RSDK.Sin512((ang << 7) / self->stoodPos) >> 9) + self->position.y;
         RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -168,9 +168,9 @@ void Bridge_Draw(void)
     drawPos.x += 0x100000;
     ++id;
 
-    ang         = 0x80000;
+    ang           = 0x80000;
     int32 divisor = self->endPos - self->startPos - self->stoodPos;
-    drawPos.x   = self->endPos - 0x80000;
+    drawPos.x     = self->endPos - 0x80000;
     for (; id < self->length; ++id) {
         drawPos.y = (self->bridgeDepth * RSDK.Sin512((ang << 7) / divisor) >> 9) + self->position.y;
         RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -187,13 +187,13 @@ void Bridge_Create(void *data)
         ++self->length;
     self->drawOrder     = Zone->drawOrderLow;
     self->active        = ACTIVE_BOUNDS;
-    int32 len               = self->length << 19;
+    int32 len           = self->length << 19;
     self->startPos      = self->position.x - len;
     self->endPos        = len + self->position.x;
     self->updateRange.x = len;
     self->updateRange.y = 0x800000;
     self->playerPtr     = (Entity *)-1;
-    self->burnOffset      = 0xFF;
+    self->burnOffset    = 0xFF;
     RSDK.SetSpriteAnimation(Bridge->aniFrames, 0, &self->animator, true, 0);
 }
 
@@ -225,9 +225,9 @@ void Bridge_Burn(int32 offset)
     int32 id = size;
     CREATE_ENTITY(BurningLog, intToVoid(8 * abs(id++ - offset) + 16), spawnX, self->bridgeDepth + self->position.y);
 
-    spawnX      = self->endPos - 0x80000;
+    spawnX        = self->endPos - 0x80000;
     int32 divisor = self->endPos - self->startPos - self->stoodPos;
-    ang         = 0x80000;
+    ang           = 0x80000;
     if (id < self->length) {
         off = offset - id;
         for (; id < self->length; ++id, --off) {
@@ -244,7 +244,7 @@ void Bridge_Burn(int32 offset)
 void Bridge_EditorDraw(void)
 {
     RSDK_THIS(Bridge);
-    int32 length        = self->length++;
+    int32 length = self->length++;
 
     int32 len           = self->length << 19;
     self->startPos      = self->position.x - len;

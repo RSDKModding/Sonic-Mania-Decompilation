@@ -829,7 +829,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_CheckRaySwooping);
 #endif
 
-        ADD_PUBLIC_FUNC(Player_ChangePhysicsState);
+        ADD_PUBLIC_FUNC(Player_UpdatePhysicsState);
         ADD_PUBLIC_FUNC(Player_HandleGroundMovement);
         ADD_PUBLIC_FUNC(Player_HandleGroundRotation);
         ADD_PUBLIC_FUNC(Player_HandleAirMovement);

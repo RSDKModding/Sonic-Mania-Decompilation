@@ -10,6 +10,7 @@
 ObjectPendulum *Pendulum = NULL;
 
 // idk what this object is/was, there is literally 0 code for it in the game
+// the only clue I can find is that S2 HPZ had a pendulum object in it
 
 void Pendulum_Update(void) {}
 

@@ -24,14 +24,16 @@ void TMZAlert_Draw(void)
     RSDK_THIS(TMZAlert);
     self->drawFX           = FX_NONE;
     self->inkEffect        = INK_NONE;
-    self->animator.frameID = 0;
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    self->screenAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->screenAnimator, NULL, false);
+
     if (self->scale.y != 0x200)
         self->drawFX = FX_SCALE;
     self->inkEffect        = INK_ALPHA;
-    self->animator.frameID = 1;
-    RSDK.DrawSprite(&self->animator, NULL, false);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    self->screenAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->screenAnimator, NULL, false);
+
+    RSDK.DrawSprite(&self->messageAnimator, NULL, false);
 }
 
 void TMZAlert_Create(void *data)
@@ -47,42 +49,46 @@ void TMZAlert_Create(void *data)
         self->updateRange.y = 0x800000;
         self->scale.x       = 0x200;
         self->alpha         = 16 * (RSDK.Rand(-32, -8) - 16);
-        RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &self->screenAnimator, true, 0);
     }
 }
 
 void TMZAlert_StageLoad(void) { TMZAlert->aniFrames = RSDK.LoadSpriteAnimation("Phantom/AlertScreen.bin", SCOPE_STAGE); }
 
-void TMZAlert_Unknown1(void)
+void TMZAlert_State_Activating(void)
 {
     RSDK_THIS(TMZAlert);
 
-    if (self->alpha >= 256) {
+    if (self->alpha >= 0x100) {
         self->drawFX = FX_NONE;
-        self->state  = TMZAlert_Unknown2;
+        self->state  = TMZAlert_State_Alerting;
     }
     else {
-        self->alpha += 32;
-        if (self->alpha > 256)
-            self->alpha = 256;
+        self->alpha += 0x20;
+        if (self->alpha > 0x100)
+            self->alpha = 0x100;
         self->scale.y = 2 * self->alpha;
     }
 }
-void TMZAlert_Unknown2(void)
+void TMZAlert_State_Alerting(void)
 {
     RSDK_THIS(TMZAlert);
-    self->alpha = (RSDK.Cos256(8 * ++self->timer) >> 2) + 224;
-    if (!(self->timer & 0xF)) {
-        RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 1, &self->animator2, true, RSDK.Rand(0, 2));
-    }
+
+    self->alpha = (RSDK.Cos256(8 * ++self->timer) >> 2) + 0xE0;
+
+    if (!(self->timer & 0xF)) 
+        RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 1, &self->messageAnimator, true, RSDK.Rand(0, 2));
+
     if (self->timer == 320) {
         self->timer = 0;
-        self->state = TMZAlert_Unknown3;
+        self->state = TMZAlert_State_ShuttingDown;
     }
 }
-void TMZAlert_Unknown3(void)
+
+void TMZAlert_State_ShuttingDown(void)
 {
     RSDK_THIS(TMZAlert);
+
     if (self->alpha <= 16) {
         self->state = StateMachine_None;
     }
@@ -95,7 +101,7 @@ void TMZAlert_Unknown3(void)
 void TMZAlert_EditorDraw(void)
 {
     RSDK_THIS(TMZAlert);
-    RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &self->screenAnimator, true, 0);
 
     TMZAlert_Draw();
 }

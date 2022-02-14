@@ -186,7 +186,7 @@ bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host)
         foreach_active(TMZAlert, alert)
         {
             alert->alpha = 16 * RSDK.Rand(-32, -8);
-            alert->state = TMZAlert_Unknown1;
+            alert->state = TMZAlert_State_Activating;
         }
 
         return true;
@@ -320,7 +320,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
         foreach_active(TMZAlert, alert)
         {
             alert->alpha = 16 * RSDK.Rand(-32, -8);
-            alert->state = TMZAlert_Unknown1;
+            alert->state = TMZAlert_State_Activating;
         }
 
         for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colours[i]);

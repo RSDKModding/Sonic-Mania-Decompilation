@@ -181,9 +181,12 @@ void Bubbler_State_FoundPlayer(void)
 void Bubbler_State_AttackPlayer(void)
 {
     RSDK_THIS(Bubbler);
+
     RSDK.ProcessAnimation(&self->animator2);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (++self->spawnTimer >= 30) {
         self->spawnTimer = 0;
         int32 spawnX     = self->position.x + 0x60000;
@@ -191,6 +194,7 @@ void Bubbler_State_AttackPlayer(void)
             spawnX = self->position.x - 0x60000;
         CREATE_ENTITY(Bubbler, intToVoid(true), spawnX, self->position.y + 0xA0000)->active = ACTIVE_NORMAL;
     }
+
     Bubbler_HandleInteractions();
     Bubbler_CheckOnScreen();
 }

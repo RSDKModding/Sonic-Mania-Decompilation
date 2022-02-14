@@ -50,23 +50,23 @@ void TMZFlames_Create(void *data)
         self->scale.x       = 0x400;
         self->scale.y       = 0x200;
         self->offset        = -0x800000;
-        self->state         = TMZFlames_Unknown1;
+        self->state         = TMZFlames_State_Delay;
         RSDK.SetSpriteAnimation(TMZFlames->aniFrames, 0, &self->animator, true, 0);
     }
 }
 
 void TMZFlames_StageLoad(void) { TMZFlames->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Flames.bin", SCOPE_STAGE); }
 
-void TMZFlames_Unknown1(void)
+void TMZFlames_State_Delay(void)
 {
     RSDK_THIS(TMZFlames);
     if (++self->timer == 240) {
         self->timer = 0;
-        self->state = TMZFlames_Unknown2;
+        self->state = TMZFlames_State_EnterFlames;
     }
 }
 
-void TMZFlames_Unknown2(void)
+void TMZFlames_State_EnterFlames(void)
 {
     RSDK_THIS(TMZFlames);
 
@@ -75,11 +75,11 @@ void TMZFlames_Unknown2(void)
 
     if (++self->timer == 260) {
         self->timer = 0;
-        self->state = TMZFlames_Unknown3;
+        self->state = TMZFlames_State_FlamesEnlarge;
     }
 }
 
-void TMZFlames_Unknown3(void)
+void TMZFlames_State_FlamesEnlarge(void)
 {
     RSDK_THIS(TMZFlames);
 
