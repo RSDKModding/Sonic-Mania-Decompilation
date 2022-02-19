@@ -164,7 +164,7 @@ void Clucker_HandlePlayerInteractions(void)
     }
 }
 
-void Clucker_CheckOnScreen(void)
+void Clucker_CheckOffScreen(void)
 {
     RSDK_THIS(Clucker);
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
@@ -206,7 +206,7 @@ void Clucker_State_CheckForPlayer(void)
             self->state = Clucker_State_Appear;
         }
     }
-    Clucker_CheckOnScreen();
+    Clucker_CheckOffScreen();
 }
 
 void Clucker_State_Appear(void)
@@ -216,7 +216,7 @@ void Clucker_State_Appear(void)
     if (self->yOffset == -0x180000)
         self->state = Clucker_State_ShootDelay;
     Clucker_HandlePlayerInteractions();
-    Clucker_CheckOnScreen();
+    Clucker_CheckOffScreen();
 }
 
 void Clucker_State_ShootDelay(void)
@@ -229,7 +229,7 @@ void Clucker_State_ShootDelay(void)
         self->state = Clucker_State_Shoot;
     }
     Clucker_HandlePlayerInteractions();
-    Clucker_CheckOnScreen();
+    Clucker_CheckOffScreen();
 }
 
 void Clucker_State_Shoot(void)
@@ -278,7 +278,7 @@ void Clucker_State_Shoot(void)
         }
     }
     Clucker_HandlePlayerInteractions();
-    Clucker_CheckOnScreen();
+    Clucker_CheckOffScreen();
 }
 
 void Clucker_State_Turn(void)
@@ -292,7 +292,7 @@ void Clucker_State_Turn(void)
         self->state = Clucker_State_Shoot;
     }
     Clucker_HandlePlayerInteractions();
-    Clucker_CheckOnScreen();
+    Clucker_CheckOffScreen();
 }
 
 void Clucker_State_Destroyed(void)

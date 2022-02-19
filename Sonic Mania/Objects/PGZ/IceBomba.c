@@ -168,7 +168,7 @@ void IceBomba_State_Setup(void)
     IceBomba_State_Flying();
 }
 
-void IceBomba_CheckOnScreen(void)
+void IceBomba_CheckOffScreen(void)
 {
     RSDK_THIS(IceBomba);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
@@ -204,7 +204,7 @@ void IceBomba_State_Flying(void)
         }
     }
     IceBomba_Fly_Collide();
-    IceBomba_CheckOnScreen();
+    IceBomba_CheckOffScreen();
 }
 
 void IceBomba_State_FlyTurn(void)
@@ -242,7 +242,7 @@ void IceBomba_State_FlyTurn(void)
         }
     }
     IceBomba_Fly_Collide();
-    IceBomba_CheckOnScreen();
+    IceBomba_CheckOffScreen();
 }
 
 void IceBomba_State_FlyAway(void)
@@ -264,7 +264,7 @@ void IceBomba_State_FlyAway(void)
     self->position.x += self->velocity.x;
     self->position.y -= 0x20000;
     IceBomba_Fly_Collide();
-    IceBomba_CheckOnScreen();
+    IceBomba_CheckOffScreen();
 }
 
 void IceBomba_State_Bomb(void)

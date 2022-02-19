@@ -64,7 +64,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int orbID);
 
 void Tubinaut_HandleRepel(EntityPlayer *player, int playerID);
 void Tubinaut_HandleOrbs(void);
-void Tubinaut_CheckOnScreen(void);
+void Tubinaut_CheckOffScreen(void);
 
 void Tubinaut_State_Setup(void);
 void Tubinaut_State_Move(void);

@@ -146,7 +146,7 @@ void Grabber_CheckPlayerCollisions(void)
     }
 }
 
-void Grabber_CheckOnScreen(void)
+void Grabber_CheckOffScreen(void)
 {
     RSDK_THIS(Grabber);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -212,7 +212,7 @@ void Grabber_State_CheckForGrab(void)
     }
 
     Grabber_CheckPlayerCollisions();
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 void Grabber_State_GrabDelay(void)
@@ -223,7 +223,7 @@ void Grabber_State_GrabDelay(void)
         self->state = Grabber_State_TryToGrab;
     }
     Grabber_CheckPlayerCollisions();
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 void Grabber_State_HandleTurn(void)
@@ -246,7 +246,7 @@ void Grabber_State_HandleTurn(void)
     }
     else {
         Grabber_CheckPlayerCollisions();
-        Grabber_CheckOnScreen();
+        Grabber_CheckOffScreen();
     }
 }
 
@@ -257,7 +257,7 @@ void Grabber_State_TryToGrab(void)
         self->state = Grabber_State_RiseUp;
     self->position.y += 0x20000;
     Grabber_CheckPlayerCollisions();
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 void Grabber_State_RiseUp(void)
@@ -269,7 +269,7 @@ void Grabber_State_RiseUp(void)
     }
     self->position.y -= 0x20000;
     Grabber_CheckPlayerCollisions();
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 void Grabber_State_GrabbedPlayer(void)
@@ -303,7 +303,7 @@ void Grabber_State_GrabbedPlayer(void)
         Grabber_CheckPlayerCollisions();
     }
 
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 void Grabber_State_Struggle(void)
@@ -357,7 +357,7 @@ void Grabber_State_Struggle(void)
 
     Grabber_CheckPlayerCollisions();
     Grabber_HandleExplode();
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 void Grabber_State_PlayerEscaped(void)
@@ -367,7 +367,7 @@ void Grabber_State_PlayerEscaped(void)
         self->explodeTimer--;
     Grabber_CheckPlayerCollisions();
     Grabber_HandleExplode();
-    Grabber_CheckOnScreen();
+    Grabber_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

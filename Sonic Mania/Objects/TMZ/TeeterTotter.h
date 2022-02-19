@@ -16,14 +16,14 @@ struct EntityTeeterTotter {
     uint8 color;
     uint32 length;
     Vector2 origin;
-    int32 field_6C;
+    int32 unused1; // never even set
     int32 playerIDs[4];
     int32 inactiveSegments;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90[32];
-    int32 field_110[32];
+    int32 fallPos;
+    int32 fallVelocity;
+    int32 unused2; // set, but never used
+    int32 segmentPosition[32];
+    int32 segmentVelocity[32];
     Hitbox hitbox;
     Animator animator;
 };
@@ -47,10 +47,10 @@ void TeeterTotter_Serialize(void);
 // Extra Entity Functions
 int32 TeeterTotter_CheckPlayerCollisions(void);
 void TeeterTotter_ProcessSegmentGravity(void);
-void TeeterTotter_Unknown3(void);
+void TeeterTotter_HandleSegmentPositions(void);
 
 void TeeterTotter_State_Setup(void);
-void TeeterTotter_State_Unknown1(void);
-void TeeterTotter_State_Unknown2(void);
+void TeeterTotter_State_Teeter(void);
+void TeeterTotter_State_Fall(void);
 
 #endif //!OBJ_TEETERTOTTER_H

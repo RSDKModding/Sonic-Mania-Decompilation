@@ -89,7 +89,7 @@ void Kanabun_CheckPlayerCollisions(void)
     }
 }
 
-void Kanabun_CheckOnScreen(void)
+void Kanabun_CheckOffScreen(void)
 {
     RSDK_THIS(Kanabun);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -151,7 +151,7 @@ void Kanabun_State_Unknown1(void)
     RSDK.ProcessAnimation(&self->animator);
     if (self->drawOrder == Zone->drawOrderHigh)
         Kanabun_CheckPlayerCollisions();
-    Kanabun_CheckOnScreen();
+    Kanabun_CheckOffScreen();
 }
 
 void Kanabun_State_Unknown2(void)
@@ -170,7 +170,7 @@ void Kanabun_State_Unknown2(void)
     else {
         if (self->drawOrder == Zone->drawOrderHigh)
             Kanabun_CheckPlayerCollisions();
-        Kanabun_CheckOnScreen();
+        Kanabun_CheckOffScreen();
     }
 }
 

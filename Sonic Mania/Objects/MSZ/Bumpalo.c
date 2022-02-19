@@ -94,7 +94,7 @@ void Bumpalo_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Bumpalo_CheckOnScreen(void)
+void Bumpalo_CheckOffScreen(void)
 {
     RSDK_THIS(Bumpalo);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -441,7 +441,7 @@ void Bumpalo_State_Unknown1(void)
     }
     RSDK.ProcessAnimation(&self->animator1);
     Bumpalo_CheckPlayerCollisions();
-    Bumpalo_CheckOnScreen();
+    Bumpalo_CheckOffScreen();
 }
 
 void Bumpalo_State_Unknown2(void)
@@ -454,7 +454,7 @@ void Bumpalo_State_Unknown2(void)
         self->state = Bumpalo_State_Unknown4;
     }
     Bumpalo_CheckPlayerCollisions();
-    Bumpalo_CheckOnScreen();
+    Bumpalo_CheckOffScreen();
 }
 
 void Bumpalo_State_Unknown3(void)
@@ -474,7 +474,7 @@ void Bumpalo_State_Unknown3(void)
         self->velocity.x *= 2;
     }
     Bumpalo_CheckPlayerCollisions();
-    Bumpalo_CheckOnScreen();
+    Bumpalo_CheckOffScreen();
 }
 
 void Bumpalo_State_Unknown4(void)
@@ -494,7 +494,7 @@ void Bumpalo_State_Unknown4(void)
     }
     else {
         Bumpalo_CheckPlayerCollisions();
-        Bumpalo_CheckOnScreen();
+        Bumpalo_CheckOffScreen();
     }
 }
 
@@ -539,7 +539,7 @@ void Bumpalo_State_Unknown5(void)
     }
     else {
         Bumpalo_CheckPlayerCollisions();
-        Bumpalo_CheckOnScreen();
+        Bumpalo_CheckOffScreen();
     }
 }
 
@@ -563,7 +563,7 @@ void Bumpalo_State_Unknown6(void)
     }
     else {
         Bumpalo_CheckPlayerCollisions();
-        Bumpalo_CheckOnScreen();
+        Bumpalo_CheckOffScreen();
     }
 }
 

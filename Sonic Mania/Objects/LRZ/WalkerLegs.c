@@ -87,7 +87,7 @@ void WalkerLegs_DrawSprites(void)
     }
 }
 
-void WalkerLegs_CheckOnScreen(void)
+void WalkerLegs_CheckOffScreen(void)
 {
     RSDK_THIS(WalkerLegs);
 
@@ -493,7 +493,7 @@ void WalkerLegs_State_Unknown2(void)
         self->angle = RSDK.ATan2(x, self->field_68[2].y - self->field_68[1].y) << 17;
     }
     WalkerLegs_CheckPlayerStood();
-    WalkerLegs_CheckOnScreen();
+    WalkerLegs_CheckOffScreen();
 }
 
 void WalkerLegs_State_Unknown3(void)
@@ -512,7 +512,7 @@ void WalkerLegs_State_Unknown3(void)
     self->field_80[1].y = self->field_68[2].y - self->field_90[1].y;
     WalkerLegs_CheckPlayerCollisions();
     WalkerLegs_CheckObjectCrush();
-    WalkerLegs_CheckOnScreen();
+    WalkerLegs_CheckOffScreen();
 }
 
 void WalkerLegs_State_Unknown4(void)

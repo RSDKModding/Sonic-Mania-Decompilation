@@ -50,7 +50,7 @@ void PohBee_Serialize(void);
 void PohBee_DebugSpawn(void);
 void PohBee_DebugDraw(void);
 
-void PohBee_CheckOnScreen(void);
+void PohBee_CheckOffScreen(void);
 void PohBee_CheckPlayerCollisions(void);
 
 void PohBee_DrawSprites(void);

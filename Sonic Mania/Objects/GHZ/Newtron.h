@@ -52,7 +52,7 @@ void Newtron_DebugSpawn(void);
 
 //Helpers 
 void Newtron_CheckHit(void);
-void Newtron_CheckOnScreen(void);
+void Newtron_CheckOffScreen(void);
 
 //States
 void Newtron_GetTargetDir(void);

@@ -101,7 +101,7 @@ void Dragonfly_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Dragonfly_CheckOnScreen(void)
+void Dragonfly_CheckOffScreen(void)
 {
     // rdc would probably not shut the fuck up if i didn't add this /hj
     RSDK_THIS(Dragonfly);
@@ -191,7 +191,7 @@ void Dragonfly_State_Move(void)
     RSDK.ProcessAnimation(&self->wingAnimator);
 
     Dragonfly_CheckPlayerCollisions();
-    Dragonfly_CheckOnScreen();
+    Dragonfly_CheckOffScreen();
 }
 
 void Dragonfly_State_Debris(void)

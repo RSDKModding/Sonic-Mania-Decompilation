@@ -179,7 +179,7 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
     }
 }
 
-void MatryoshkaBom_CheckOnScreen(void)
+void MatryoshkaBom_CheckOffScreen(void)
 {
     RSDK_THIS(MatryoshkaBom);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -241,7 +241,7 @@ void MatryoshkaBom_State_Walk(void)
     RSDK.ProcessAnimation(&self->bodyAnimator);
     RSDK.ProcessAnimation(&self->legsAnimator);
     MatryoshkaBom_CheckPlayerCollisions();
-    MatryoshkaBom_CheckOnScreen();
+    MatryoshkaBom_CheckOffScreen();
 }
 
 void MatryoshkaBom_State_Stopped(void)
@@ -261,7 +261,7 @@ void MatryoshkaBom_State_Stopped(void)
 
     RSDK.ProcessAnimation(&self->bodyAnimator);
     MatryoshkaBom_CheckPlayerCollisions();
-    MatryoshkaBom_CheckOnScreen();
+    MatryoshkaBom_CheckOffScreen();
 }
 
 void MatryoshkaBom_State_Turn(void)
@@ -294,7 +294,7 @@ void MatryoshkaBom_State_Turn(void)
         }
     }
     MatryoshkaBom_CheckPlayerCollisions();
-    MatryoshkaBom_CheckOnScreen();
+    MatryoshkaBom_CheckOffScreen();
 }
 
 void MatryoshkaBom_State_FuseLit(void)
@@ -310,7 +310,7 @@ void MatryoshkaBom_State_FuseLit(void)
         RSDK.ProcessAnimation(&self->bodyAnimator);
         RSDK.ProcessAnimation(&self->fuseAnimator);
         MatryoshkaBom_CheckPlayerCollisions();
-        MatryoshkaBom_CheckOnScreen();
+        MatryoshkaBom_CheckOffScreen();
     }
     else {
         RSDK.PlaySfx(MatryoshkaBom->sfxExplosion, false, 255);
@@ -376,7 +376,7 @@ void MatryoshkaBom_State_ReleaseSmallerBuddy(void)
         self->state = MatryoshkaBom_State_Walk;
 
     MatryoshkaBom_CheckPlayerCollisions();
-    MatryoshkaBom_CheckOnScreen();
+    MatryoshkaBom_CheckOffScreen();
 }
 
 void MatryoshkaBom_State_Hatched(void)
@@ -414,7 +414,7 @@ void MatryoshkaBom_State_Hatched(void)
 
     RSDK.ProcessAnimation(&self->bodyAnimator);
     MatryoshkaBom_CheckPlayerCollisions();
-    MatryoshkaBom_CheckOnScreen();
+    MatryoshkaBom_CheckOffScreen();
 }
 
 void MatryoshkaBom_State_Shrapnel(void)

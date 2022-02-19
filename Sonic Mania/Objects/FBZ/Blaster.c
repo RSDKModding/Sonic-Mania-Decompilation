@@ -103,7 +103,7 @@ void Blaster_HandlePlayerInteractions(void)
     }
 }
 
-void Blaster_CheckOnScreen(void)
+void Blaster_CheckOffScreen(void)
 {
     RSDK_THIS(Blaster);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -151,7 +151,7 @@ void Blaster_State_Move(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Blaster_HandlePlayerInteractions();
-    Blaster_CheckOnScreen();
+    Blaster_CheckOffScreen();
 }
 
 void Blaster_State_HandleTurn(void)
@@ -160,7 +160,7 @@ void Blaster_State_HandleTurn(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Blaster_HandlePlayerInteractions();
-    Blaster_CheckOnScreen();
+    Blaster_CheckOffScreen();
 
     switch (--self->timer) {
         case 15: RSDK.SetSpriteAnimation(Blaster->aniFrames, 3, &self->animator, true, 0); break;
@@ -217,7 +217,7 @@ void Blaster_State_AttackPlayer(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Blaster_HandlePlayerInteractions();
-    Blaster_CheckOnScreen();
+    Blaster_CheckOffScreen();
 }
 
 void Blaster_State_MagnetAttract(void)
@@ -234,7 +234,7 @@ void Blaster_State_MagnetAttract(void)
         self->state = Blaster_State_MagnetReleased;
     }
     else {
-        Blaster_CheckOnScreen();
+        Blaster_CheckOffScreen();
         self->state = Blaster_State_MagnetReleased;
     }
 }
@@ -246,7 +246,7 @@ void Blaster_State_MagnetReleased(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     Blaster_HandlePlayerInteractions();
-    Blaster_CheckOnScreen();
+    Blaster_CheckOffScreen();
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
         self->velocity.y = 0;

@@ -43,7 +43,7 @@ void Wisp_DebugSpawn(void);
 void Wisp_DebugDraw(void);
 
 void Wisp_HandlePlayerInteractions(void);
-void Wisp_CheckOnScreen(void);
+void Wisp_CheckOffScreen(void);
 
 void Wisp_State_Setup(void);
 void Wisp_WaitInPlace(void);

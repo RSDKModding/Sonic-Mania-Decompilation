@@ -52,7 +52,7 @@ void Shutterbug_Serialize(void);
 void Shutterbug_DebugSpawn(void);
 void Shutterbug_DebugDraw(void);
 
-void Shutterbug_CheckOnScreen(void);
+void Shutterbug_CheckOffScreen(void);
 
 void Shutterbug_State_Setup(void);
 

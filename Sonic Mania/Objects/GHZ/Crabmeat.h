@@ -42,7 +42,7 @@ void Crabmeat_Serialize(void);
 void Crabmeat_DebugDraw(void);
 void Crabmeat_DebugSpawn(void);
 
-void Crabmeat_CheckOnScreen(void);
+void Crabmeat_CheckOffScreen(void);
 void Crabmeat_CheckPlayerCollisions(void);
 
 void Crabmeat_State_Setup(void);

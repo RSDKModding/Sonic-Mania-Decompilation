@@ -101,7 +101,7 @@ void BallHog_CheckPlayerCollisions(void)
     }
 }
 
-void BallHog_CheckOnScreen(void)
+void BallHog_CheckOffScreen(void)
 {
     RSDK_THIS(BallHog);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -130,7 +130,7 @@ void BallHog_State_Idle(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     BallHog_CheckPlayerCollisions();
-    BallHog_CheckOnScreen();
+    BallHog_CheckOffScreen();
 }
 
 void BallHog_State_Jump(void)
@@ -158,7 +158,7 @@ void BallHog_State_Jump(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     BallHog_CheckPlayerCollisions();
-    BallHog_CheckOnScreen();
+    BallHog_CheckOffScreen();
 }
 
 void BallHog_State_Land(void)
@@ -180,7 +180,7 @@ void BallHog_State_Land(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     BallHog_CheckPlayerCollisions();
-    BallHog_CheckOnScreen();
+    BallHog_CheckOffScreen();
 }
 
 void BallHog_State_DropBomb(void)
@@ -210,7 +210,7 @@ void BallHog_State_DropBomb(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     BallHog_CheckPlayerCollisions();
-    BallHog_CheckOnScreen();
+    BallHog_CheckOffScreen();
 }
 
 void BallHog_State_Bomb(void)

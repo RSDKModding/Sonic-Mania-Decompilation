@@ -142,7 +142,7 @@ Hitbox Flamethrower_GetHitbox(void)
     }
 }
 
-void Flamethrower_CheckOnScreen(void)
+void Flamethrower_CheckOffScreen(void)
 {
     RSDK_THIS(Flamethrower);
 
@@ -351,7 +351,7 @@ void Flamethrower_State_Unknown3(void)
         self->timer  = 0;
         self->state  = Flamethrower_State_Unknown2;
     }
-    Flamethrower_CheckOnScreen();
+    Flamethrower_CheckOffScreen();
     ++self->timer;
     ++self->flameAngle;
     Flamethrower_CheckBaseCollisions();

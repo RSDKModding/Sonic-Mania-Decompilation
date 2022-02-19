@@ -51,7 +51,7 @@ void Ball_DebugSpawn(void);
 void Ball_DebugDraw(void);
 
 void Ball_HandleInteractions(void);
-void Ball_CheckOnScreen(void);
+void Ball_CheckOffScreen(void);
 void Ball_SpawnSplashes(void);
 
 void Ball_State_Setup(void);

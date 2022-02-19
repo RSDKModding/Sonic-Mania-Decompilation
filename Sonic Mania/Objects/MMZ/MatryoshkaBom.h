@@ -62,7 +62,7 @@ void MatryoshkaBom_DebugSpawn(void);
 void MatryoshkaBom_DebugDraw(void);
 
 void MatryoshkaBom_CheckPlayerCollisions(void);
-void MatryoshkaBom_CheckOnScreen(void);
+void MatryoshkaBom_CheckOffScreen(void);
 
 void MatryoshkaBom_State_Setup(void);
 void MatryoshkaBom_State_Walk(void);

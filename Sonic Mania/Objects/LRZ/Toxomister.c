@@ -113,7 +113,7 @@ void Toxomister_CheckPlayerCollisions(void)
     }
 }
 
-void Toxomister_CheckOnScreen(void)
+void Toxomister_CheckOffScreen(void)
 {
     RSDK_THIS(Toxomister);
 
@@ -187,7 +187,7 @@ void Toxomister_State_Unknown1(void)
         self->link      = (Entity *)mist;
     }
     Toxomister_CheckPlayerCollisions();
-    Toxomister_CheckOnScreen();
+    Toxomister_CheckOffScreen();
 }
 
 void Toxomister_State1_Unknown1(void)

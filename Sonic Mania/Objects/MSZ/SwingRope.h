@@ -22,9 +22,9 @@ struct EntitySwingRope {
     int32 angleOffset;
     Vector2 ropePos;
     Vector2 rotatePos;
-    Animator ropeData;
-    Animator handleData;
-    Animator pivotData;
+    Animator ropeAnimator;
+    Animator handleAnimator;
+    Animator pivotAnimator;
 };
 
 // Object Struct

@@ -80,7 +80,7 @@ void Chopper_DebugSpawn(void)
     CREATE_ENTITY(Chopper, NULL, self->position.x, self->position.y);
 }
 
-void Chopper_CheckOnScreen(void)
+void Chopper_CheckOffScreen(void)
 {
     RSDK_THIS(Chopper);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -161,7 +161,7 @@ void Chopper_State_Jump(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions_Jump();
-    Chopper_CheckOnScreen();
+    Chopper_CheckOffScreen();
 }
 
 void Chopper_State_Swim(void)
@@ -209,7 +209,7 @@ void Chopper_State_Swim(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions_Swim();
-    Chopper_CheckOnScreen();
+    Chopper_CheckOffScreen();
 }
 
 void Chopper_State_ChargeDelay(void)
@@ -222,7 +222,7 @@ void Chopper_State_ChargeDelay(void)
         --self->timer;
     RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions_Swim();
-    Chopper_CheckOnScreen();
+    Chopper_CheckOffScreen();
 }
 
 void Chopper_State_Charge(void)
@@ -281,7 +281,7 @@ void Chopper_State_Charge(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions_Swim();
-    Chopper_CheckOnScreen();
+    Chopper_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -113,7 +113,7 @@ void MechaBu_CheckPlayerCollisions(void)
     }
 }
 
-void MechaBu_CheckOnScreen(void)
+void MechaBu_CheckOffScreen(void)
 {
     RSDK_THIS(MechaBu);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -221,7 +221,7 @@ void MechaBu_State_Moving(void)
             self->state = MechaBu_State_Falling;
     }
     MechaBu_CheckPlayerCollisions();
-    MechaBu_CheckOnScreen();
+    MechaBu_CheckOffScreen();
 }
 
 void MechaBu_State_Stopped(void)
@@ -237,7 +237,7 @@ void MechaBu_State_Stopped(void)
         MechaBu_State_Moving();
     }
     MechaBu_CheckPlayerCollisions();
-    MechaBu_CheckOnScreen();
+    MechaBu_CheckOffScreen();
 }
 
 void MechaBu_State_Falling(void)
@@ -268,7 +268,7 @@ void MechaBu_State_Falling(void)
         if (collided)
             self->velocity.x = 0;
         MechaBu_CheckPlayerCollisions();
-        MechaBu_CheckOnScreen();
+        MechaBu_CheckOffScreen();
     }
 }
 

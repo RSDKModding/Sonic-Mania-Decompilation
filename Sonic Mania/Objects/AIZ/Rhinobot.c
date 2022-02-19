@@ -98,7 +98,7 @@ void Rhinobot_CheckHit(void)
     }
 }
 
-void Rhinobot_CheckOnScreen(void)
+void Rhinobot_CheckOffScreen(void)
 {
     RSDK_THIS(Rhinobot);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -228,7 +228,7 @@ void Rhinobot_State_HandleGroundMovement(void)
     RSDK.ProcessAnimation(&self->animatorBot);
     RSDK.ProcessAnimation(&self->animatorDust);
     Rhinobot_CheckHit();
-    Rhinobot_CheckOnScreen();
+    Rhinobot_CheckOffScreen();
 }
 
 void Rhinobot_State_Skidding(void)
@@ -248,7 +248,7 @@ void Rhinobot_State_Skidding(void)
     RSDK.ProcessAnimation(&self->animatorBot);
     RSDK.ProcessAnimation(&self->animatorDust);
     Rhinobot_CheckHit();
-    Rhinobot_CheckOnScreen();
+    Rhinobot_CheckOffScreen();
 }
 
 void Rhinobot_State_Idle(void)
@@ -258,7 +258,7 @@ void Rhinobot_State_Idle(void)
     if (--self->timer <= 0)
         self->stateDelay();
     Rhinobot_CheckHit();
-    Rhinobot_CheckOnScreen();
+    Rhinobot_CheckOffScreen();
 }
 
 void Rhinobot_State_Fall(void)
@@ -279,7 +279,7 @@ void Rhinobot_State_Fall(void)
     }
     else {
         Rhinobot_CheckHit();
-        Rhinobot_CheckOnScreen();
+        Rhinobot_CheckOffScreen();
     }
 }
 

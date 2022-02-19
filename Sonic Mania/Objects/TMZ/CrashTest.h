@@ -24,21 +24,21 @@ struct EntityCrashTest {
     int32 playerTimers[4];
     Vector2 startPos;
     int32 timer;
-    int32 dword84;
-    bool32 field_88;
-    Vector2 field_8C[8];
-    bool32 field_CC;
-    int32 field_D0;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox4;
-    Hitbox hitbox3;
-    Hitbox hitbox5;
-    Hitbox hitbox6;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    int32 travelDistance;
+    bool32 boosterActive;
+    Vector2 debrisOffsets[8];
+    bool32 turningGreen;
+    bool32 prevTurningGreen;
+    Hitbox hitboxSeat;
+    Hitbox hitboxFront;
+    Hitbox hitboxBack;
+    Hitbox hitboxFloor;
+    Hitbox hitboxStopper;
+    Hitbox hitboxBooster;
+    Animator carAnimator;
+    Animator driverAnimator;
+    Animator lightAnimator;
+    Animator stopperAnimator;
 };
 
 // Object Struct
@@ -59,17 +59,17 @@ void CrashTest_Serialize(void);
 
 // Extra Entity Functions
 void CrashTest_SetupHitboxes(void);
-void CrashTest_CheckOnScreen(void);
-void CrashTest_CheckPlayerCrash(void);
-void CrashTest_CheckPlayerCollisions(void);
+void CrashTest_CheckOffScreen(void);
+void CrashTest_HandlePlayerCrash(void);
+void CrashTest_CheckPlayerCollisionsSolid(void);
 void CrashTest_CheckPlayerRide(void);
 void CrashTest_CheckPlayerJump(void);
-void CrashTest_Unknown6(void);
+void CrashTest_HandleLightAnims(void);
 
 void CrashTest_State_Setup(void);
-void CrashTest_State_Unknown1(void);
+void CrashTest_State_AwaitPlayer(void);
 void CrashTest_State_Rev(void);
 void CrashTest_State_Move(void);
-void CrashTest_State_Unknown4(void);
+void CrashTest_State_Crashed(void);
 
 #endif //!OBJ_CRASHTEST_H

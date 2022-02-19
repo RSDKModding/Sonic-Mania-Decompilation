@@ -155,7 +155,7 @@ void Canista_CheckPlayerBadnikCollisions(void)
     }
 }
 
-void Canista_CheckOnScreen(void)
+void Canista_CheckOffScreen(void)
 {
     RSDK_THIS(Canista);
 
@@ -283,7 +283,7 @@ void Canista_State_Moving(void)
         self->cannonAnimator.frameID = (self->cannonAnimator.timer / 3) & 1;
     }
     Canista_CheckPlayerBadnikCollisions();
-    Canista_CheckOnScreen();
+    Canista_CheckOffScreen();
 }
 
 void Canista_State_Stopped(void)
@@ -334,7 +334,7 @@ void Canista_State_Stopped(void)
             RSDK.PlaySfx(Canista->sfxPon, false, 0xFF);
         }
         Canista_CheckPlayerBadnikCollisions();
-        Canista_CheckOnScreen();
+        Canista_CheckOffScreen();
     }
 
     if (self->timer) {
@@ -345,7 +345,7 @@ void Canista_State_Stopped(void)
     else {
         self->cannonAnimator.frameID = (self->cannonAnimator.timer / 3) & 1;
     }
-    Canista_CheckOnScreen();
+    Canista_CheckOffScreen();
 }
 
 void Canista_CheckPlayerProjectileCollisions(void)

@@ -47,7 +47,7 @@ void BuzzBomber_Serialize(void);
 void BuzzBomber_DebugDraw(void);
 void BuzzBomber_DebugSpawn(void);
 
-void BuzzBomber_CheckOnScreen(void);
+void BuzzBomber_CheckOffScreen(void);
 void BuzzBomber_CheckPlayerCollisions(void);
 
 //States

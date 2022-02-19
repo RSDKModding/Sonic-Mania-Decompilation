@@ -142,7 +142,7 @@ void Fireworm_CheckPlayerCollisions(void)
     }
 }
 
-void Fireworm_CheckOnScreen(void)
+void Fireworm_CheckOffScreen(void)
 {
     RSDK_THIS(Fireworm);
 
@@ -201,7 +201,7 @@ void Fireworm_State_Unknown1(void)
     }
 
     if (self->state == Fireworm_State1_Unknown1)
-        Fireworm_CheckOnScreen();
+        Fireworm_CheckOffScreen();
 }
 
 void Fireworm_State_Unknown2(void)
@@ -317,7 +317,7 @@ void Fireworm_State1_Unknown2(void)
         self->angles[i] %= 0xC00;
     }
     Fireworm_CheckPlayerCollisions();
-    Fireworm_CheckOnScreen();
+    Fireworm_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

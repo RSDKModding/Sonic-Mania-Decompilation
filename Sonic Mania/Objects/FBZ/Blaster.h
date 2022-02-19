@@ -51,7 +51,7 @@ void Blaster_DebugSpawn(void);
 void Blaster_DebugDraw(void);
 
 void Blaster_HandlePlayerInteractions(void);
-void Blaster_CheckOnScreen(void);
+void Blaster_CheckOffScreen(void);
 
 void Blaster_State_Setup(void);
 void Blaster_State_Move(void);

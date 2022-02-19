@@ -14,7 +14,7 @@ typedef enum {
 
 typedef enum {
     CE_ARROW_DOWN = 1,
-    CE_ARROW_UP = 4,
+    CE_ARROW_UP   = 4,
     CE_ARROW_OFF  = 0xFF,
 } CrimsonEyeArrowTypes;
 
@@ -29,29 +29,29 @@ struct ObjectCrimsonEye {
             -0x1C000, 20, 0, -0x1A000, -0x1A000, 21, 0, -0xD000,  -0x1A000, 22, 0, 0xD000,   -0x1A000, 23, 0, 0x1A000,  -0x1A000 });
     uint8 health;
     uint8 invincibilityTimer;
-    uint8 value4;
-    uint8 value5;
-    int32 value6;
-    int32 value7;
-    Vector2 value8;
-    Vector2 positions[3];
+    uint8 ballSpinAngleX;
+    uint8 ballSpinAngleY;
+    int32 ballSpinRadius;
+    int32 ballOffsetY;
+    Vector2 containerPos;
+    Vector2 eyePositions[3];
     TABLE(int32 ballDestroyOrder[8], { 1, 5, 2, 6, 3, 7, 4, 8 });
     int32 destroyedBallCount;
-    int32 scrollPos;
-    int32 scrollLimit;
-    int32 value14;
-    int32 value15;
-    int32 value16;
-    uint8 value17;
-    int32 value18;
+    int32 elevatorSpeed;
+    int32 targetElevatorSpeed;
+    int32 nextTargetElevatorSpeed;
+    int32 elevatorGravity; // probably not this, but I really didn't have much to work with here, sorry!
+    int32 shotTimer;
+    uint8 shotsRemaining;
+    int32 unused;
     uint16 aniFrames;
     Hitbox hitboxEye;
-    Hitbox hitbox2;
+    Hitbox hitboxBall;
     Hitbox hitboxOrb;
     Hitbox hitboxBlock;
     Hitbox hitboxElecOrb;
-    Hitbox hitbox6;
-    Hitbox hitbox7;
+    Hitbox hitboxUnused1;
+    Hitbox hitboxUnused2;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxHover;
@@ -62,8 +62,8 @@ struct ObjectCrimsonEye {
     uint16 sfxHullClose;
     uint16 sfxButton;
     uint16 sfxImpact;
-    TileLayer *liftBG;
-    TileLayer *layerBG1;
+    TileLayer *elevatorBG;
+    TileLayer *bg2Layer;
 };
 
 // Entity Class
@@ -74,9 +74,9 @@ struct EntityCrimsonEye {
     StateMachine(stateDraw);
     int32 type;
     int32 timer;
-    int32 timer2;
-    int32 field_70;
-    Vector2 field_74;
+    int32 ballTimer;
+    int32 ballRadiusTimer;
+    Vector2 originPos;
     Animator animator;
 };
 
@@ -99,55 +99,55 @@ void CrimsonEye_Serialize(void);
 // Extra Entity Functions
 void CrimsonEye_Explode(void);
 
-void CrimsonEye_HandleBGMovement(void);
-void CrimsonEye_DrawLayerCB_B(void);
-void CrimsonEye_DrawLayerCB_A(void);
+void CrimsonEye_SetupBG2Layer(void);
+void CrimsonEye_DrawLayerCB_DisableFGSilhouette(void);
+void CrimsonEye_DrawLayerCB_EnableFGSilhouette(void);
 
 void CrimsonEye_SetArrowDir(int type);
 
-void CrimsonEye_StateBody_Unknown1(void);
-void CrimsonEye_StateBody_Unknown2(void);
-void CrimsonEye_StateBody_Unknown3(void);
-void CrimsonEye_StateBody_Unknown4(void);
-void CrimsonEye_StateBody_Unknown5(void);
-void CrimsonEye_StateBody_Explode(void);
-void CrimsonEye_StateBody_Unknown6(void);
-void CrimsonEye_StateDraw_Container(void);
+void CrimsonEye_StateContainer_SetupArena(void);
+void CrimsonEye_StateContainer_AwaitPlayer(void);
+void CrimsonEye_StateContainer_StartFight(void);
+void CrimsonEye_StateContainer_CoreActive(void);
+void CrimsonEye_StateContainer_HandleElevator(void);
+void CrimsonEye_StateContainer_Explode(void);
+void CrimsonEye_StateContainer_MoveElevatorToTMZ2Entry(void);
+void CrimsonEye_Draw_Container(void);
 
-void CrimsonEye_StateEye_Unknown1(void);
-void CrimsonEye_StateEye_Unknown2(void);
-void CrimsonEye_StateEye_Unknown3(void);
-void CrimsonEye_StateEye_Unknown4(void);
-void CrimsonEye_StateEye_Unknown5(void);
-void CrimsonEye_StateEye_Unknown6(void);
-void CrimsonEye_StateEye_Unknown7(void);
+void CrimsonEye_StateEye_EnterBalls(void);
+void CrimsonEye_StateEye_SpinningBalls(void);
+void CrimsonEye_StateEye_LowerBalls(void);
+void CrimsonEye_StateEye_LoweredBalls(void);
+void CrimsonEye_StateEye_ExtendBallAttack(void);
+void CrimsonEye_StateEye_FinishExtendAttack(void);
+void CrimsonEye_StateEye_RaiseBalls(void);
 
 void CrimsonEye_ShootShot(void);
-void CrimsonEye_SetupPositions(void);
+void CrimsonEye_SetupEyePositions(void);
 void CrimsonEye_DestroyBall(void);
 void CrimsonEye_CheckPlayerCollisions(void);
 
-void CrimsonEye_StateCore_Unknown1(void);
+void CrimsonEye_StateCore_ContainerActive(void);
 void CrimsonEye_StateCore_BreakOut(void);
-void CrimsonEye_StateCore_Unknown3(void);
-void CrimsonEye_StateCore_Unknown4(void);
-void CrimsonEye_StateCore_Unknown5(void);
+void CrimsonEye_StateCore_BrokenOut(void);
+void CrimsonEye_StateCore_Hovering(void);
+void CrimsonEye_StateCore_ImpactLift(void);
 void CrimsonEye_StateCore_Explode(void);
 void CrimsonEye_StateCore_SpawnSignPost(void);
-void CrimsonEye_StateDraw_Core(void);
+void CrimsonEye_Draw_Core(void);
 
 void CrimsonEye_CheckPlayerCollisions_Ball(void);
-void CrimsonEye_StateBall_Unknown1(void);
-void CrimsonEye_StateBall_Unknown2(void);
+void CrimsonEye_StateBall_Spinning(void);
+void CrimsonEye_StateBall_Destroyed(void);
 
-void CrimsonEye_StateDraw_Simple(void);
+void CrimsonEye_Draw_Simple(void);
 
-void CrimsonEye_StateSpike_CheckPlayerCollisions(void);
-void CrimsonEye_StateSpike_Move(void);
+void CrimsonEye_StateSpike_Harmful(void);
+void CrimsonEye_StateSpike_Debris(void);
 
-void CrimsonEye_StateShot_CheckPlayerCollisions(void);
+void CrimsonEye_State_Shot(void);
 
-void CrimsonEye_StateArrow(void);
-void CrimsonEye_StateDraw_Arrow(void);
+void CrimsonEye_State_Arrow(void);
+void CrimsonEye_Draw_Arrow(void);
 
 #endif //!OBJ_CRIMSONEYE_H

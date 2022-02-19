@@ -37,7 +37,7 @@ enum BSSCollectableTypes {
 // Object Class
 struct ObjectBSS_Collectable {
     RSDK_OBJECT
-    Animator sphereData[24];
+    Animator sphereAnimator[24];
     uint8 loadedTables;
     TABLE(int32 ringScaleTableX[32],
           { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 32, 32 });

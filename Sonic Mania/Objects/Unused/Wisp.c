@@ -91,7 +91,7 @@ void Wisp_HandlePlayerInteractions(void)
     }
 }
 
-void Wisp_CheckOnScreen(void)
+void Wisp_CheckOffScreen(void)
 {
     RSDK_THIS(Wisp);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -129,7 +129,7 @@ void Wisp_WaitInPlace(void)
     }
     RSDK.ProcessAnimation(&self->wingAnimator);
     Wisp_HandlePlayerInteractions();
-    Wisp_CheckOnScreen();
+    Wisp_CheckOffScreen();
 }
 
 void Wisp_FlyTowardTarget(void)
@@ -176,7 +176,7 @@ void Wisp_FlyTowardTarget(void)
     }
     RSDK.ProcessAnimation(&self->wingAnimator);
     Wisp_HandlePlayerInteractions();
-    Wisp_CheckOnScreen();
+    Wisp_CheckOffScreen();
 }
 
 void Wisp_BasicFly(void)
@@ -186,7 +186,7 @@ void Wisp_BasicFly(void)
     self->position.y += self->velocity.y;
     RSDK.ProcessAnimation(&self->wingAnimator);
     Wisp_HandlePlayerInteractions();
-    Wisp_CheckOnScreen();
+    Wisp_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

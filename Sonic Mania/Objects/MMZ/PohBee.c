@@ -20,7 +20,7 @@ void PohBee_Update(void)
     PohBee_SetupHitboxes();
     PohBee_CheckPlayerCollisions();
     if (self->drawOrder != 1 && self->state != PohBee_State_Setup)
-        PohBee_CheckOnScreen();
+        PohBee_CheckOffScreen();
 }
 
 void PohBee_LateUpdate(void) {}
@@ -78,7 +78,7 @@ void PohBee_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void PohBee_CheckOnScreen(void)
+void PohBee_CheckOffScreen(void)
 {
     RSDK_THIS(PohBee);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {

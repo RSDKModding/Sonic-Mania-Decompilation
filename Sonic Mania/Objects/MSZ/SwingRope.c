@@ -102,10 +102,10 @@ void SwingRope_Draw(void)
 {
     RSDK_THIS(SwingRope);
 
-    self->ropeData.frameID = (self->rotatedAngle >> 10) & 0x1F;
+    self->ropeAnimator.frameID = (self->rotatedAngle >> 10) & 0x1F;
     self->rotation         = (self->rotatedAngle >> 6) & 0xF;
     self->drawFX           = FX_ROTATE;
-    RSDK.DrawSprite(&self->ropeData, NULL, false);
+    RSDK.DrawSprite(&self->ropeAnimator, NULL, false);
 
     self->ropePos.x = self->position.x;
     self->ropePos.y = self->position.y;
@@ -118,16 +118,16 @@ void SwingRope_Draw(void)
         self->ropePos.y += RSDK.Cos512(self->angle) << 11;
         rotAngle += self->rotatedOffset;
         angle                    = rotAngle >> 6;
-        self->ropeData.frameID = (rotAngle >> 10) & 0x1F;
+        self->ropeAnimator.frameID = (rotAngle >> 10) & 0x1F;
         self->rotation         = (rotAngle >> 6) & 0xF;
-        RSDK.DrawSprite(&self->ropeData, &self->ropePos, false);
+        RSDK.DrawSprite(&self->ropeAnimator, &self->ropePos, false);
     }
 
     self->drawFX = FX_NONE;
     self->ropePos.x -= RSDK.Sin512(self->angle) << 11;
     self->ropePos.y += RSDK.Cos512(self->angle) << 11;
-    RSDK.DrawSprite(&self->handleData, &self->ropePos, false);
-    RSDK.DrawSprite(&self->pivotData, NULL, false);
+    RSDK.DrawSprite(&self->handleAnimator, &self->ropePos, false);
+    RSDK.DrawSprite(&self->pivotAnimator, NULL, false);
 }
 
 void SwingRope_Create(void *data)
@@ -139,9 +139,9 @@ void SwingRope_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeData, true, 0);
-        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleData, true, 0);
-        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotData, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotAnimator, true, 0);
     }
 }
 
@@ -179,9 +179,9 @@ void SwingRope_DebugSpawn(void)
 void SwingRope_EditorDraw(void)
 {
     RSDK_THIS(SwingRope);
-    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeData, true, 0);
-    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleData, true, 0);
-    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotAnimator, true, 0);
 
     self->rotatedAngle  = 11 * RSDK.Sin512(self->angleOffset);
     self->rotatedOffset = self->rotatedAngle >> 3;

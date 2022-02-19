@@ -63,7 +63,7 @@ void HotaruMKII_DebugSpawn(void);
 void HotaruMKII_DebugDraw(void);
 
 void HotaruMKII_CheckPlayerCollisions(void);
-void HotaruMKII_CheckOnScreen(void);
+void HotaruMKII_CheckOffScreen(void);
 void HotaruMKII_HandleDistances(void *p);
 
 void HotaruMKII_State_Setup(void);

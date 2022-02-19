@@ -4,12 +4,12 @@
 #include "SonicMania.h"
 
 typedef enum {
-    SPRING_VERT_RED,
     SPRING_VERT_YELLOW,
-    SPRING_HORIZ_RED,
+    SPRING_VERT_RED,
     SPRING_HORIZ_YELLOW,
-    SPRING_DIAG_RED,
+    SPRING_HORIZ_RED,
     SPRING_DIAG_YELLOW,
+    SPRING_DIAG_RED,
 } SpringTypes;
 
 // Object Class

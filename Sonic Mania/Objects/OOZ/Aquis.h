@@ -47,7 +47,7 @@ void Aquis_DebugSpawn(void);
 void Aquis_DebugDraw(void);
 
 void Aquis_CheckPlayerCollisions(void);
-void Aquis_CheckOnScreen(void);
+void Aquis_CheckOffScreen(void);
 
 void Aquis_State_Setup(void);
 void Aquis_State_Idle(void);

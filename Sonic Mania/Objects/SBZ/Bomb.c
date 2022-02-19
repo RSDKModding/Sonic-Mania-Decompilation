@@ -95,7 +95,7 @@ void Bomb_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
-void Bomb_CheckOnScreen(void)
+void Bomb_CheckOffScreen(void)
 {
     RSDK_THIS(Bomb);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -157,7 +157,7 @@ void Bomb_State_Walk(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Bomb_CheckPlayerCollisions();
-    Bomb_CheckOnScreen();
+    Bomb_CheckOffScreen();
 }
 
 void Bomb_State_Idle(void)
@@ -173,7 +173,7 @@ void Bomb_State_Idle(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Bomb_CheckPlayerCollisions();
-    Bomb_CheckOnScreen();
+    Bomb_CheckOffScreen();
 }
 
 void Bomb_State_Explode(void)
@@ -187,7 +187,7 @@ void Bomb_State_Explode(void)
         RSDK.ProcessAnimation(&self->animator);
         RSDK.ProcessAnimation(&self->animator2);
         Bomb_CheckPlayerCollisions();
-        Bomb_CheckOnScreen();
+        Bomb_CheckOffScreen();
     }
     else {
         RSDK.PlaySfx(Bomb->sfxExplosion, false, 255);

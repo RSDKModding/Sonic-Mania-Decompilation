@@ -55,7 +55,7 @@ void Fireworm_DebugSpawn(void);
 void Fireworm_DebugDraw(void);
 
 void Fireworm_CheckPlayerCollisions(void);
-void Fireworm_CheckOnScreen(void);
+void Fireworm_CheckOffScreen(void);
 
 void Fireworm_State_Setup(void);
 void Fireworm_State_Unknown1(void);

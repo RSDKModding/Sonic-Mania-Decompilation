@@ -49,7 +49,7 @@ void BallHog_DebugSpawn(void);
 void BallHog_DebugDraw(void);
 
 void BallHog_CheckPlayerCollisions(void);
-void BallHog_CheckOnScreen(void);
+void BallHog_CheckOffScreen(void);
 
 void BallHog_State_Setup(void);
 void BallHog_State_Idle(void);

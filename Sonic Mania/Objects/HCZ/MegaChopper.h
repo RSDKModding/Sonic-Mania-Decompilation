@@ -47,7 +47,7 @@ void MegaChopper_DebugSpawn(void);
 void MegaChopper_DebugDraw(void);
 
 void MegaChopper_CheckPlayerCollisions(void);
-void MegaChopper_CheckOnScreen(void);
+void MegaChopper_CheckOffScreen(void);
 
 void MegaChopper_PlayerInput_StateP1(void);
 void MegaChopper_PlayerInput_StateP2(void);

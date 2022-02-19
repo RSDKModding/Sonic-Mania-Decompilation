@@ -80,7 +80,7 @@ void Crabmeat_DebugSpawn(void)
     CREATE_ENTITY(Crabmeat, NULL, self->position.x, self->position.y);
 }
 
-void Crabmeat_CheckOnScreen(void)
+void Crabmeat_CheckOffScreen(void)
 {
     RSDK_THIS(Crabmeat);
     if (self->tileCollisions && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -132,7 +132,7 @@ void Crabmeat_State_Main(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Crabmeat_CheckPlayerCollisions();
-    Crabmeat_CheckOnScreen();
+    Crabmeat_CheckOffScreen();
 }
 
 void Crabmeat_State_Shoot(void)
@@ -171,7 +171,7 @@ void Crabmeat_State_Shoot(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Crabmeat_CheckPlayerCollisions();
-    Crabmeat_CheckOnScreen();
+    Crabmeat_CheckOffScreen();
 }
 
 void Crabmeat_State_Projectile(void)

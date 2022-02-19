@@ -50,7 +50,7 @@ void Caterkiller_DebugDraw(void);
 
 void Caterkiller_DebugSpawn(void);
 
-void Caterkiller_CheckOnScreen(void);
+void Caterkiller_CheckOffScreen(void);
 void Caterkiller_CheckTileCollisions(void);
 
 void Caterkiller_Draw_Body(void);

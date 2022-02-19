@@ -64,7 +64,7 @@ void Firework_HandleMoveDir(void);
 void Firework_HandleDebrisSpawn(void);
 void Firework_HandleTileCollisions(void);
 void Firework_HandleRideEnd(bool32 hurt);
-void Firework_CheckOnScreen(void);
+void Firework_CheckOffScreen(void);
 void Firework_HandleAnimations(int a1, int16 angle, Animator *animator1, Animator *animator2, uint8 *direction);
 
 void Firework_State_Setup(void);

@@ -76,7 +76,7 @@ void Batbrain_CheckHit(void)
     }
 }
 
-void Batbrain_CheckOnScreen(void)
+void Batbrain_CheckOffScreen(void)
 {
     RSDK_THIS(Batbrain);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -134,7 +134,7 @@ void Batbrain_State_CheckPlayerInRange(void)
     }
     self->direction = player->position.x >= self->position.x;
     Batbrain_CheckHit();
-    Batbrain_CheckOnScreen();
+    Batbrain_CheckOffScreen();
 }
 
 void Batbrain_State_DropToPlayer(void)
@@ -155,7 +155,7 @@ void Batbrain_State_DropToPlayer(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
-    Batbrain_CheckOnScreen();
+    Batbrain_CheckOffScreen();
 }
 
 void Batbrain_State_Fly(void)
@@ -172,7 +172,7 @@ void Batbrain_State_Fly(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
-    Batbrain_CheckOnScreen();
+    Batbrain_CheckOffScreen();
 }
 
 void Batbrain_State_FlyToCeiling(void)
@@ -193,7 +193,7 @@ void Batbrain_State_FlyToCeiling(void)
 
     RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
-    Batbrain_CheckOnScreen();
+    Batbrain_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -63,7 +63,7 @@ void Flamethrower_Serialize(void);
 // Extra Entity Functions
 void Flamethrower_SetupOrientation(uint8 orientation);
 Hitbox Flamethrower_GetHitbox(void);
-void Flamethrower_CheckOnScreen(void);
+void Flamethrower_CheckOffScreen(void);
 void Flamethrower_Unknown3(void);
 void Flamethrower_HandleAngles(void);
 void Flamethrower_HandleTileCollisions(void);

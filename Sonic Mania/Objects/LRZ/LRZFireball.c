@@ -87,7 +87,7 @@ void LRZFireball_CheckPlayerCollisions(void)
     }
 }
 
-void LRZFireball_CheckOnScreen(void)
+void LRZFireball_CheckOffScreen(void)
 {
     RSDK_THIS(LRZFireball);
 
@@ -173,7 +173,7 @@ void LRZFireball_StateChild_Type0(void)
     if (self->groundVel > 0)
         self->rotation = self->angle + 0x100;
 
-    LRZFireball_CheckOnScreen();
+    LRZFireball_CheckOffScreen();
 }
 
 void LRZFireball_StateChild_Type1(void)
@@ -184,7 +184,7 @@ void LRZFireball_StateChild_Type1(void)
     self->position.y += self->velocity.y;
 
     LRZFireball_CheckTileCollisions();
-    LRZFireball_CheckOnScreen();
+    LRZFireball_CheckOffScreen();
 }
 
 void LRZFireball_StateChild_Type2(void)
@@ -197,7 +197,7 @@ void LRZFireball_StateChild_Type2(void)
     self->velocity.y += 0x3800;
 
     LRZFireball_CheckTileCollisions();
-    LRZFireball_CheckOnScreen();
+    LRZFireball_CheckOffScreen();
 }
 
 void LRZFireball_StateDraw_Visible(void)

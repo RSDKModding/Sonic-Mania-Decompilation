@@ -3,17 +3,24 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TMZ1_STAGESTATE_NONE = -1,
+    TMZ1_STAGESTATE_SKY  = 0,
+    TMZ1_STAGESTATE_CITY = 1,
+    TMZ1_STAGESTATE_LIFT = 2,
+} TMZ1StageStates;
+
 // Object Class
 struct ObjectTMZ1Setup {
     RSDK_OBJECT
     bool32 paletteInit;
     int32 aniTileDelay;
     int32 angle;
-    int32 field_10;
+    int32 unused1;
     int32 aniTileFrame;
     int32 stageState;
-    int32 field_1C;
-    int32 field_20;
+    int32 unused2;
+    int32 unused3;
     bool32 hasAchievement;
     uint16 aniTiles;
     TileLayer* bgPtr;
@@ -41,16 +48,16 @@ void TMZ1Setup_EditorLoad(void);
 void TMZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void TMZ1Setup_BGCallback_A(void);
-void TMZ1Setup_BGCallback_B(void);
+void TMZ1Setup_BGCallback_ShowSky(void);
+void TMZ1Setup_BGCallback_ShowLift(void);
 
 void TMZ1Setup_StageFinishCB(void);
 
-void TMZ1Setup_StateUnknown2(void);
-void TMZ1Setup_StateUnknown3(void);
-void TMZ1Setup_StateUnknown4(void);
-void TMZ1Setup_StateUnknown5(void);
-void TMZ1Setup_StateUnknown6(void);
-void TMZ1Setup_StateUnknown7(void);
+void TMZ1Setup_State_FadeToLift(void);
+void TMZ1Setup_State_ShowOutsideBGs(void);
+void TMZ1Setup_State_FadeOutCurrentBG(void);
+void TMZ1Setup_State_ShowCityBG(void);
+void TMZ1Setup_State_ShowSkyBG(void);
+void TMZ1Setup_State_FadeIntoOutsideBGs(void);
 
 #endif //!OBJ_TMZ1SETUP_H

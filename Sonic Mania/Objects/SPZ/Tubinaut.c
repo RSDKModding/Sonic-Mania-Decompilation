@@ -365,7 +365,7 @@ void Tubinaut_HandleOrbs(void)
     }
 }
 
-void Tubinaut_CheckOnScreen(void)
+void Tubinaut_CheckOffScreen(void)
 {
     RSDK_THIS(Tubinaut);
 
@@ -431,7 +431,7 @@ void Tubinaut_State_Move(void)
     RSDK.ProcessAnimation(&self->fieldAnimator);
     self->orbState();
     Tubinaut_CheckPlayerCollisions();
-    Tubinaut_CheckOnScreen();
+    Tubinaut_CheckOffScreen();
 }
 
 void Tubinaut_Orb_Relax(void)

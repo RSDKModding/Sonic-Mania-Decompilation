@@ -34,7 +34,7 @@ void SpikeCrusher_EditorLoad(void);
 void SpikeCrusher_Serialize(void);
 
 // Extra Entity Functions
-void SpikeCrusher_CheckOnScreen(void);
+void SpikeCrusher_CheckOffScreen(void);
 
 void SpikeCrusher_State_Unknown1(void);
 void SpikeCrusher_State_Unknown2(void);

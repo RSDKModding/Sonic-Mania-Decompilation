@@ -56,7 +56,7 @@ void DashLift_EditorLoad(void);
 void DashLift_Serialize(void);
 
 // Extra Entity Functions
-void DashLift_CheckOnScreen(void);
+void DashLift_CheckOffScreen(void);
 
 void DashLift_State_Setup(void);
 void DashLift_State_HandleDash(void);

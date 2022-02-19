@@ -46,7 +46,7 @@ void Sweep_Serialize(void);
 void Sweep_DebugSpawn(void);
 void Sweep_DebugDraw(void);
 
-void Sweep_CheckOnScreen(void);
+void Sweep_CheckOffScreen(void);
 void Sweep_HandleInteractions(void);
 void Sweep_CheckShoot(void);
 

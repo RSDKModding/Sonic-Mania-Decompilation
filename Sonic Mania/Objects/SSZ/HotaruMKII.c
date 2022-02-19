@@ -137,7 +137,7 @@ void HotaruMKII_CheckPlayerCollisions(void)
     }
 }
 
-void HotaruMKII_CheckOnScreen(void)
+void HotaruMKII_CheckOffScreen(void)
 {
     RSDK_THIS(HotaruMKII);
 
@@ -267,7 +267,7 @@ void HotaruMKII_State_Unknown1(void)
     }
 
     if (!flag)
-        HotaruMKII_CheckOnScreen();
+        HotaruMKII_CheckOffScreen();
 }
 
 void HotaruMKII_State_Unknown6(void)
@@ -275,7 +275,7 @@ void HotaruMKII_State_Unknown6(void)
     RSDK_THIS(HotaruMKII);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    HotaruMKII_CheckOnScreen();
+    HotaruMKII_CheckOffScreen();
 }
 
 void HotaruMKII_State_Unknown2(void)
@@ -345,7 +345,7 @@ void HotaruMKII_State_Unknown2(void)
             self->field_70   = 0x300 * RSDK.Sin256(angle);
             self->velocity.y = 0x300 * RSDK.Sin256(angle) + player->velocity.y;
         }
-        HotaruMKII_CheckOnScreen();
+        HotaruMKII_CheckOffScreen();
     }
 }
 
@@ -362,7 +362,7 @@ void HotaruMKII_State_Unknown3(void)
             RSDK.PlaySfx(HotaruMKII->sfxCharge, false, 255);
             self->state = HotaruMKII_State_Unknown4;
         }
-        HotaruMKII_CheckOnScreen();
+        HotaruMKII_CheckOffScreen();
     }
     else {
         HotaruMKII_HandleDistances(player);
@@ -386,7 +386,7 @@ void HotaruMKII_State_Unknown4(void)
             self->state     = HotaruMKII_State_Unknown5;
         }
         HotaruMKII_CheckPlayerCollisions();
-        HotaruMKII_CheckOnScreen();
+        HotaruMKII_CheckOffScreen();
     }
     else {
         HotaruMKII_HandleDistances(player);
@@ -421,7 +421,7 @@ void HotaruMKII_State_Unknown5(void)
             }
             RSDK.ProcessAnimation(&self->animator2);
             HotaruMKII_CheckPlayerCollisions();
-            HotaruMKII_CheckOnScreen();
+            HotaruMKII_CheckOffScreen();
         }
         else {
             HotaruMKII_HandleDistances(player);

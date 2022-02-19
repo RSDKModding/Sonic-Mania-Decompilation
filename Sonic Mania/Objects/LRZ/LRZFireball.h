@@ -43,7 +43,7 @@ void LRZFireball_Serialize(void);
 
 // Extra Entity Functions
 void LRZFireball_CheckPlayerCollisions(void);
-void LRZFireball_CheckOnScreen(void);
+void LRZFireball_CheckOffScreen(void);
 void LRZFireball_CheckTileCollisions(void);
 
 void LRZFireball_State_Type0(void);

@@ -97,7 +97,7 @@ void Ball_HandleInteractions(void)
     }
 }
 
-void Ball_CheckOnScreen(void)
+void Ball_CheckOffScreen(void)
 {
     RSDK_THIS(Ball);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -159,7 +159,7 @@ void Ball_State_LookForPlayer(void)
         }
     }
     Ball_HandleInteractions();
-    Ball_CheckOnScreen();
+    Ball_CheckOffScreen();
 }
 
 void Ball_State_TargetingPlayer(void)
@@ -200,7 +200,7 @@ void Ball_State_TargetingPlayer(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Ball_HandleInteractions();
-    Ball_CheckOnScreen();
+    Ball_CheckOffScreen();
 }
 
 void Ball_State_Chemical(void)

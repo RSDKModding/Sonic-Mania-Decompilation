@@ -49,7 +49,7 @@ void Rhinobot_Serialize(void);
 // Extra Entity Functions
 bool32 Rhinobot_CheckTileCollisions(void);
 void Rhinobot_CheckHit(void);
-void Rhinobot_CheckOnScreen(void);
+void Rhinobot_CheckOffScreen(void);
 
 void Rhinobot_DebugDraw(void);
 void Rhinobot_DebugSpawn(void);

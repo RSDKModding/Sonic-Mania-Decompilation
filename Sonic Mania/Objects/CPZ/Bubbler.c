@@ -118,7 +118,7 @@ void Bubbler_HandleProjectileInteractions(void)
     }
 }
 
-void Bubbler_CheckOnScreen(void)
+void Bubbler_CheckOffScreen(void)
 {
     RSDK_THIS(Bubbler);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -162,7 +162,7 @@ void Bubbler_State_MotherPatrol(void)
     }
 
     Bubbler_HandleInteractions();
-    Bubbler_CheckOnScreen();
+    Bubbler_CheckOffScreen();
 }
 
 void Bubbler_State_FoundPlayer(void)
@@ -175,7 +175,7 @@ void Bubbler_State_FoundPlayer(void)
         self->state = Bubbler_State_AttackPlayer;
     }
     Bubbler_HandleInteractions();
-    Bubbler_CheckOnScreen();
+    Bubbler_CheckOffScreen();
 }
 
 void Bubbler_State_AttackPlayer(void)
@@ -196,7 +196,7 @@ void Bubbler_State_AttackPlayer(void)
     }
 
     Bubbler_HandleInteractions();
-    Bubbler_CheckOnScreen();
+    Bubbler_CheckOffScreen();
 }
 
 void Bubbler_State_Projectile_Seed(void)

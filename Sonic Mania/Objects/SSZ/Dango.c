@@ -81,7 +81,7 @@ void Dango_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Dango_CheckOnScreen(void)
+void Dango_CheckOffScreen(void)
 {
     RSDK_THIS(Dango);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -106,7 +106,7 @@ void Dango_CheckPlayerCollisions(void)
                 flag |= anim == ANI_CROUCH || player->jumpAbilityState > 1;
             flag &= self->state == Dango_State_Unknown4 && player->state != Player_State_MightyHammerDrop;
 #else
-            flag &= self->state == Dango_State_Unknown4;
+            isTMZ &= self->state == Dango_State_Unknown4;
 #endif
 
             if (flag) {
@@ -220,7 +220,7 @@ void Dango_State_Unknown1(void)
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         RSDK.ProcessAnimation(&self->animator);
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
         if (!Dango_HandleTileCollisions(Dango_State_Unknown6, 5) && self->timer2 <= 0) {
             foreach_active(Player, player)
             {
@@ -252,7 +252,7 @@ void Dango_State_Unknown6(void)
     }
     else {
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
     }
 }
 
@@ -271,7 +271,7 @@ void Dango_State_Unknown2(void)
     }
     else {
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
     }
 }
 
@@ -290,7 +290,7 @@ void Dango_State_Unknown3(void)
     }
     else {
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
     }
 }
 
@@ -301,7 +301,7 @@ void Dango_State_Unknown4(void)
     RSDK.ProcessAnimation(&self->animator);
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
         Dango_HandleTileCollisions(Dango_State_Unknown7, 4);
     }
     else {
@@ -324,7 +324,7 @@ void Dango_State_Unknown5(void)
     }
     else {
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
     }
 }
 
@@ -345,7 +345,7 @@ void Dango_State_Unknown7(void)
     }
     else {
         Dango_CheckPlayerCollisions();
-        Dango_CheckOnScreen();
+        Dango_CheckOffScreen();
     }
 }
 

@@ -47,7 +47,7 @@ void Vultron_DebugSpawn(void);
 void Vultron_DebugDraw(void);
 
 void Vultron_CheckPlayerCollisions(void);
-void Vultron_CheckOnScreen(void);
+void Vultron_CheckOffScreen(void);
 
 void Vultron_State_Setup(void);
 void Vultron_State_Unknown1(void);

@@ -512,12 +512,14 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                             for (int c = 0; c < mdl->faceVertCount; ++c) {
                                 ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                 Scene3DVertex *vertex  = &scn->vertices[vertID++];
+
                                 vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
                                             + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
                                 vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
                                             + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
                                 vertex->z = matWorld->values[2][3] + ((modelVert->x * matWorld->values[2][0]) >> 8)
                                             + ((matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+
                                 vertex->colour = colour;
                             }
                         }
@@ -529,18 +531,21 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
+
                                     vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
                                                 + (modelVert->x * matWorld->values[0][0] >> 8) + (modelVert->y * matWorld->values[0][1] >> 8);
                                     vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
                                                 + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->z * matWorld->values[1][2] >> 8);
                                     vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
                                                 + (matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8);
+
                                     vertex->nx = (modelVert->nz * matNormals->values[0][2] >> 8) + (modelVert->nx * matNormals->values[0][0] >> 8)
                                                  + (matNormals->values[0][1] * modelVert->ny >> 8);
                                     vertex->ny = (modelVert->ny * matNormals->values[1][1] >> 8) + (modelVert->nz * matNormals->values[1][2] >> 8)
                                                  + (modelVert->nx * matNormals->values[1][0] >> 8);
                                     vertex->nz = ((modelVert->ny * matNormals->values[2][1]) >> 8)
                                                  + ((matNormals->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matNormals->values[2][2] >> 8));
+
                                     vertex->colour = colour;
                                 }
                             }
@@ -551,12 +556,14 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
+
                                     vertex->x              = matWorld->values[0][3] + (modelVert->z * matWorld->values[0][2] >> 8)
                                                 + (matWorld->values[0][0] * modelVert->x >> 8) + (matWorld->values[0][1] * modelVert->y >> 8);
                                     vertex->y = matWorld->values[1][3] + (modelVert->y * matWorld->values[1][1] >> 8)
                                                 + (modelVert->z * matWorld->values[1][2] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
                                     vertex->z = matWorld->values[2][3] + ((matWorld->values[2][2] * modelVert->z) >> 8)
                                                 + ((matWorld->values[2][0] * modelVert->x >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
+
                                     vertex->colour = colour;
                                 }
                             }
@@ -570,18 +577,21 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
                                     Colour *modelColour    = &mdl->colours[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
+
                                     vertex->x              = matWorld->values[0][3] + (matWorld->values[0][2] * modelVert->z >> 8)
                                                 + (modelVert->y * matWorld->values[0][1] >> 8) + (matWorld->values[0][0] * modelVert->x >> 8);
                                     vertex->y = matWorld->values[1][3] + (matWorld->values[1][2] * modelVert->z >> 8)
                                                 + (modelVert->y * matWorld->values[1][1] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
                                     vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
                                                 + (modelVert->y * matWorld->values[2][1] >> 8) + (matWorld->values[2][2] * modelVert->z >> 8);
+
                                     vertex->nx = (matNormals->values[0][0] * modelVert->nx >> 8) + (modelVert->ny * matNormals->values[0][1] >> 8)
                                                  + (matNormals->values[0][2] * modelVert->nz >> 8);
                                     vertex->ny = (matNormals->values[1][0] * modelVert->nx >> 8) + (modelVert->ny * matNormals->values[1][1] >> 8)
                                                  + (matNormals->values[1][2] * modelVert->nz >> 8);
                                     vertex->nz = ((matNormals->values[2][2] * modelVert->nz) >> 8)
                                                  + ((modelVert->ny * matNormals->values[2][1] >> 8) + (matNormals->values[2][0] * modelVert->nx >> 8));
+
                                     vertex->colour = modelColour->colour;
                                 }
                             }
@@ -593,12 +603,14 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
                                     Colour *modelColour    = &mdl->colours[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
+
                                     vertex->x              = matWorld->values[0][3] + (matWorld->values[0][0] * modelVert->x >> 8)
                                                 + (modelVert->y * matWorld->values[0][1] >> 8) + (modelVert->z * matWorld->values[0][2] >> 8);
                                     vertex->y = matWorld->values[1][3] + (modelVert->z * matWorld->values[1][2] >> 8)
                                                 + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->y * matWorld->values[1][1] >> 8);
                                     vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * modelVert->z >> 8)
                                                 + (modelVert->y * matWorld->values[2][1] >> 8) + (modelVert->x * matWorld->values[2][0] >> 8);
+
                                     vertex->colour = modelColour->colour;
                                 }
                             }

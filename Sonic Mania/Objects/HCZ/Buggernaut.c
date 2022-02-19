@@ -91,7 +91,7 @@ void Buggernaut_CheckPlayerCollisions(void)
     }
 }
 
-void Buggernaut_CheckOnScreen(void)
+void Buggernaut_CheckOffScreen(void)
 {
     RSDK_THIS(Buggernaut);
 
@@ -189,7 +189,7 @@ void Buggernaut_State_Unknown1(void)
     }
     RSDK.ProcessAnimation(&self->animator2);
     Buggernaut_CheckPlayerCollisions();
-    Buggernaut_CheckOnScreen();
+    Buggernaut_CheckOffScreen();
 }
 
 void Buggernaut_State_Unknown2(void)
@@ -245,7 +245,7 @@ void Buggernaut_State_Unknown2(void)
     }
     RSDK.ProcessAnimation(&self->animator2);
     Buggernaut_CheckPlayerCollisions();
-    Buggernaut_CheckOnScreen();
+    Buggernaut_CheckOffScreen();
 }
 
 void Buggernaut_State_Unknown3(void)
@@ -256,7 +256,7 @@ void Buggernaut_State_Unknown3(void)
     RSDK.ProcessAnimation(&self->animator2);
     if (!self->animator1.animationID)
         Buggernaut_CheckPlayerCollisions();
-    Buggernaut_CheckOnScreen();
+    Buggernaut_CheckOffScreen();
 }
 
 void Buggernaut_State2_Unknown(void)

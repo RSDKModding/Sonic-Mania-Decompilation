@@ -48,7 +48,7 @@ void Iwamodoki_DebugSpawn(void);
 void Iwamodoki_DebugDraw(void);
 
 void Iwamodoki_HandlePlayerCollisions(void);
-void Iwamodoki_CheckOnScreen(void);
+void Iwamodoki_CheckOffScreen(void);
 
 void Iwamodoki_State_Setup(void);
 void Iwamodoki_State_Unknown1(void);

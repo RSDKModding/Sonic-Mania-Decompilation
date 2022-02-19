@@ -57,7 +57,7 @@ void Rexon_Serialize(void);
 void Rexon_DebugSpawn(void);
 void Rexon_DebugDraw(void);
 
-void Rexon_CheckOnScreen(void);
+void Rexon_CheckOffScreen(void);
 void Rexon_CheckPlayerCollisions(void);
 void Rexon_Destroy(EntityRexon *rexon, bool32 crushed);
 

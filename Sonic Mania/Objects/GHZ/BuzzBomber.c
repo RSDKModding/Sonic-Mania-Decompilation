@@ -114,7 +114,7 @@ void BuzzBomber_DebugSpawn(void)
     buzzBomber->startDir  = self->direction;
 }
 
-void BuzzBomber_CheckOnScreen(void)
+void BuzzBomber_CheckOffScreen(void)
 {
     RSDK_THIS(BuzzBomber);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -180,7 +180,7 @@ void BuzzBomber_State_BuzzAround(void)
     RSDK.ProcessAnimation(&self->wingAnimator);
     RSDK.ProcessAnimation(&self->thrustAnimator);
     BuzzBomber_CheckPlayerCollisions();
-    BuzzBomber_CheckOnScreen();
+    BuzzBomber_CheckOffScreen();
 }
 
 void BuzzBomber_State_IdleDelay(void)
@@ -195,7 +195,7 @@ void BuzzBomber_State_IdleDelay(void)
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->wingAnimator);
     BuzzBomber_CheckPlayerCollisions();
-    BuzzBomber_CheckOnScreen();
+    BuzzBomber_CheckOffScreen();
 }
 
 void BuzzBomber_State_DetectedPlayer(void)
@@ -205,7 +205,7 @@ void BuzzBomber_State_DetectedPlayer(void)
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->wingAnimator);
     BuzzBomber_CheckPlayerCollisions();
-    BuzzBomber_CheckOnScreen();
+    BuzzBomber_CheckOffScreen();
 
     self->timer--;
     if (self->timer == 82) {

@@ -42,7 +42,7 @@ void Motobug_Serialize(void);
 void Motobug_DebugDraw(void);
 void Motobug_DebugSpawn(void);
 
-void Motobug_CheckOnScreen(void);
+void Motobug_CheckOffScreen(void);
 void Motobug_CheckPlayerCollisions(void);
 
 //States

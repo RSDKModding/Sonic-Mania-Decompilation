@@ -103,7 +103,7 @@ void Spiny_CheckPlayerCollisions(void)
     }
 }
 
-void Spiny_CheckOnScreen(void)
+void Spiny_CheckOffScreen(void)
 {
     RSDK_THIS(Spiny);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -164,7 +164,7 @@ void Spiny_State_Floor(void)
         self->moveTimer--;
     }
     Spiny_CheckPlayerCollisions();
-    Spiny_CheckOnScreen();
+    Spiny_CheckOffScreen();
 }
 
 void Spiny_State_Shoot_Floor(void)
@@ -189,7 +189,7 @@ void Spiny_State_Shoot_Floor(void)
         }
         Spiny_CheckPlayerCollisions();
     }
-    Spiny_CheckOnScreen();
+    Spiny_CheckOffScreen();
 }
 
 void Spiny_State_Wall(void)
@@ -224,7 +224,7 @@ void Spiny_State_Wall(void)
     }
 
     Spiny_CheckPlayerCollisions();
-    Spiny_CheckOnScreen();
+    Spiny_CheckOffScreen();
 }
 
 void Spiny_State_Shoot_Wall(void)
@@ -245,7 +245,7 @@ void Spiny_State_Shoot_Wall(void)
         }
         Spiny_CheckPlayerCollisions();
     }
-    Spiny_CheckOnScreen();
+    Spiny_CheckOffScreen();
 }
 
 void Spiny_State_Shot(void)

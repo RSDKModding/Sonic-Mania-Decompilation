@@ -105,7 +105,7 @@ void Shutterbug_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Shutterbug_CheckOnScreen(void)
+void Shutterbug_CheckOffScreen(void)
 {
     RSDK_THIS(Shutterbug);
 
@@ -164,7 +164,7 @@ void Shutterbug_State_FlyAround(void)
 
     Shutterbug_HandleBodyAnim();
     Shutterbug_CheckFocus();
-    Shutterbug_CheckOnScreen();
+    Shutterbug_CheckOffScreen();
 }
 
 void Shutterbug_State_ShakeFly()
@@ -231,7 +231,7 @@ void Shutterbug_State_ShakeFly()
 
     Shutterbug_HandleBodyAnim();
     Shutterbug_CheckFocus();
-    Shutterbug_CheckOnScreen();
+    Shutterbug_CheckOffScreen();
 }
 
 void Shutterbug_State_FlyAway(void)
@@ -242,7 +242,7 @@ void Shutterbug_State_FlyAway(void)
     self->position.y += self->velocity.y;
     Shutterbug_HandleBodyAnim();
     Shutterbug_CheckFocus();
-    Shutterbug_CheckOnScreen();
+    Shutterbug_CheckOffScreen();
 }
 
 int Shutterbug_BounceX(void)

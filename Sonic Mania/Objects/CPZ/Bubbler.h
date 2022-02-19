@@ -46,7 +46,7 @@ void Bubbler_DebugDraw(void);
 
 void Bubbler_HandleInteractions(void);
 void Bubbler_HandleProjectileInteractions(void);
-void Bubbler_CheckOnScreen(void);
+void Bubbler_CheckOffScreen(void);
 
 void Bubbler_State_Setup(void);
 void Bubbler_State_MotherPatrol(void);

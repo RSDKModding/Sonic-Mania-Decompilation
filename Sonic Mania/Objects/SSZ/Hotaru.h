@@ -63,7 +63,7 @@ void Hotaru_DebugSpawn(void);
 void Hotaru_DebugDraw(void);
 
 void Hotaru_CheckPlayerCollisions(void);
-void Hotaru_CheckOnScreen(void);
+void Hotaru_CheckOffScreen(void);
 
 void Hotaru_State_Setup(void);
 void Hotaru_State_Unknown1(void);

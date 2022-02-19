@@ -147,7 +147,7 @@ void Splats_CheckPlayerCollisions(void)
     }
 }
 
-void Splats_CheckOnScreen(void)
+void Splats_CheckOffScreen(void)
 {
     RSDK_THIS(Splats);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -188,7 +188,7 @@ void Splats_State_BounceAround(void)
     }
     self->animator1.frameID = self->velocity.y < 0;
     Splats_CheckPlayerCollisions();
-    Splats_CheckOnScreen();
+    Splats_CheckOffScreen();
 }
 
 void Splats_State_SetupInkJar(void)

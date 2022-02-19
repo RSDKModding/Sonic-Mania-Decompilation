@@ -100,7 +100,7 @@ void MegaChopper_CheckPlayerCollisions(void)
     }
 }
 
-void MegaChopper_CheckOnScreen(void)
+void MegaChopper_CheckOffScreen(void)
 {
     RSDK_THIS(MegaChopper);
     if (!RSDK.CheckOnScreen(self, NULL) && RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange) == false) {
@@ -212,7 +212,7 @@ void MegaChopper_State_Unknown1(void)
         bool32 flag = false;
         foreach_active(Water, water)
         {
-            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitbox)) {
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
                 flag = true;
             }
         }
@@ -228,7 +228,7 @@ void MegaChopper_State_Unknown1(void)
         }
     }
     MegaChopper_CheckPlayerCollisions();
-    MegaChopper_CheckOnScreen();
+    MegaChopper_CheckOffScreen();
 }
 
 void MegaChopper_State_Unknown2(void)
@@ -249,13 +249,13 @@ void MegaChopper_State_Unknown2(void)
     else {
         foreach_active(Water, water)
         {
-            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitbox)) {
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
                 self->state = MegaChopper_State_Unknown1;
             }
         }
     }
     MegaChopper_CheckPlayerCollisions();
-    MegaChopper_CheckOnScreen();
+    MegaChopper_CheckOffScreen();
 }
 
 void MegaChopper_State_Unknown3(void)
@@ -398,7 +398,7 @@ void MegaChopper_State_Unknown3(void)
         }
     }
 
-    MegaChopper_CheckOnScreen();
+    MegaChopper_CheckOffScreen();
 }
 
 void MegaChopper_State_Unknown4(void)
@@ -407,7 +407,7 @@ void MegaChopper_State_Unknown4(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    MegaChopper_CheckOnScreen();
+    MegaChopper_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

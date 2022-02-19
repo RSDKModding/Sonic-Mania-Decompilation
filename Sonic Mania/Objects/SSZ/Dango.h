@@ -44,7 +44,7 @@ void Dango_Serialize(void);
 void Dango_DebugSpawn(void);
 void Dango_DebugDraw(void);
 
-void Dango_CheckOnScreen(void);
+void Dango_CheckOffScreen(void);
 void Dango_CheckPlayerCollisions(void);
 bool32 Dango_HandleTileCollisions(StateMachine(nextState), uint8 anim);
 

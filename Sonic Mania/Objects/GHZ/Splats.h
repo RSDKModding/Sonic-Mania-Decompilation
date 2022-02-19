@@ -62,7 +62,7 @@ void Splats_DebugDraw(void);
 void Splats_DebugSpawn(void);
 
 void Splats_CheckPlayerCollisions(void);
-void Splats_CheckOnScreen(void);
+void Splats_CheckOffScreen(void);
 
 void Splats_State_Setup(void);
 void Splats_State_BounceAround(void);

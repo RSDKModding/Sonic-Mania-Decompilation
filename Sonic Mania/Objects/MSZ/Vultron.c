@@ -114,7 +114,7 @@ void Vultron_CheckPlayerCollisions(void)
     }
 }
 
-void Vultron_CheckOnScreen(void)
+void Vultron_CheckOffScreen(void)
 {
     RSDK_THIS(Vultron);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -154,7 +154,7 @@ void Vultron_State_Unknown1(void)
     }
 
     Vultron_CheckPlayerCollisions();
-    Vultron_CheckOnScreen();
+    Vultron_CheckOffScreen();
 }
 
 void Vultron_State_Unknown2(void)
@@ -171,7 +171,7 @@ void Vultron_State_Unknown2(void)
         self->velocity.x *= 8;
     }
     Vultron_CheckPlayerCollisions();
-    Vultron_CheckOnScreen();
+    Vultron_CheckOffScreen();
 }
 
 void Vultron_State_Unknown3(void)
@@ -188,7 +188,7 @@ void Vultron_State_Unknown3(void)
     }
     RSDK.ProcessAnimation(&self->animator2);
     Vultron_CheckPlayerCollisions();
-    Vultron_CheckOnScreen();
+    Vultron_CheckOffScreen();
 }
 
 void Vultron_State_Unknown4(void)
@@ -203,7 +203,7 @@ void Vultron_State_Unknown4(void)
     }
     RSDK.ProcessAnimation(&self->animator2);
     Vultron_CheckPlayerCollisions();
-    Vultron_CheckOnScreen();
+    Vultron_CheckOffScreen();
 }
 
 void Vultron_State_Unknown5(void)
@@ -223,7 +223,7 @@ void Vultron_State_Unknown5(void)
     }
     RSDK.ProcessAnimation(&self->animator1);
     Vultron_CheckPlayerCollisions();
-    Vultron_CheckOnScreen();
+    Vultron_CheckOffScreen();
 }
 
 void Vultron_State_Unknown6(void)
@@ -256,7 +256,7 @@ void Vultron_State_Unknown6(void)
     }
     RSDK.ProcessAnimation(&self->animator1);
     Vultron_CheckPlayerCollisions();
-    Vultron_CheckOnScreen();
+    Vultron_CheckOffScreen();
 }
 
 void Vultron_State2_Unknown(void)

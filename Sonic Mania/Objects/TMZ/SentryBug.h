@@ -6,15 +6,17 @@
 // Object Class
 struct ObjectSentryBug {
     RSDK_OBJECT
-    TABLE(int32 value1[84], { -0x50000, 0x30000, -0x90000, 0xA0000, -0x70000, 0x100000, 0x70000,  0x30000, 0x30000,  0xA0000, -0x30000, 0x100000,
-                            -0x70000, 0x30000, -0xB0000, 0xA0000, -0x80000, 0x100000, 0x90000,  0x30000, 0x60000,  0xA0000, 0,        0x100000,
-                            -0x90000, 0x30000, -0xB0000, 0xA0000, -0x80000, 0x100000, 0x90000,  0x30000, 0x80000,  0xA0000, 0x30000,  0x100000,
-                            -0x90000, 0x30000, -0xB0000, 0xA0000, -0x80000, 0x100000, 0x90000,  0x30000, 0xB0000,  0xA0000, 0x80000,  0x100000,
-                            0x90000,  0x30000, 0xB0000,  0xA0000, 0x80000,  0x100000, -0x90000, 0x30000, -0x80000, 0xA0000, -0x30000, 0x100000,
-                            0x70000,  0x30000, 0xB0000,  0xA0000, 0x80000,  0x100000, -0x90000, 0x30000, -0x60000, 0xA0000, 0,        0x100000,
-                            0x50000,  0x30000, 0x90000,  0xA0000, 0x70000,  0x100000, -0x70000, 0x30000, -0x30000, 0xA0000, 0x30000,  0x100000 });
-    TABLE(int32 value2[12], { -0x10000, -0x10000, -0x20000, -0x8000, -0x10000, 0x8000, 0x10000, -0x10000, 0x20000, -0x8000, 0x10000, 0x8000 });
-    TABLE(int32 value3[12], { 0x10000, -0x10000, 0x20000, -0x8000, 0x10000, 0x8000, -0x10000, -0x10000, -0x20000, -0x8000, -0x10000, 0x8000 });
+    TABLE(int32 orbOffsets_Attatched[84], { -0x50000, 0x30000,  -0x90000, 0xA0000,  -0x70000, 0x100000, 0x70000,  0x30000,  0x30000,  0xA0000,
+                                            -0x30000, 0x100000, -0x70000, 0x30000,  -0xB0000, 0xA0000,  -0x80000, 0x100000, 0x90000,  0x30000,
+                                            0x60000,  0xA0000,  0,        0x100000, -0x90000, 0x30000,  -0xB0000, 0xA0000,  -0x80000, 0x100000,
+                                            0x90000,  0x30000,  0x80000,  0xA0000,  0x30000,  0x100000, -0x90000, 0x30000,  -0xB0000, 0xA0000,
+                                            -0x80000, 0x100000, 0x90000,  0x30000,  0xB0000,  0xA0000,  0x80000,  0x100000, 0x90000,  0x30000,
+                                            0xB0000,  0xA0000,  0x80000,  0x100000, -0x90000, 0x30000,  -0x80000, 0xA0000,  -0x30000, 0x100000,
+                                            0x70000,  0x30000,  0xB0000,  0xA0000,  0x80000,  0x100000, -0x90000, 0x30000,  -0x60000, 0xA0000,
+                                            0,        0x100000, 0x50000,  0x30000,  0x90000,  0xA0000,  0x70000,  0x100000, -0x70000, 0x30000,
+                                            -0x30000, 0xA0000,  0x30000,  0x100000 });
+    TABLE(int32 dropVelR[12], { -0x10000, -0x10000, -0x20000, -0x8000, -0x10000, 0x8000, 0x10000, -0x10000, 0x20000, -0x8000, 0x10000, 0x8000 });
+    TABLE(int32 dropVelL[12], { 0x10000, -0x10000, 0x20000, -0x8000, 0x10000, 0x8000, -0x10000, -0x10000, -0x20000, -0x8000, -0x10000, 0x8000 });
     Hitbox hitbox;
     uint16 meshFrames;
     uint16 sceneIndex;
@@ -27,48 +29,27 @@ struct ObjectSentryBug {
 struct EntitySentryBug {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateLate);
+    StateMachine(stateOrbs);
     uint8 speed;
     Vector2 amplitude;
-    bool32 drawFlag;
-    bool32 drawNet;
+    bool32 orbsDetatched;
+    bool32 showNet;
     int32 timer;
-    Vector2 field_78;
-    Vector2 field_80;
+    Vector2 originPos;
+    Vector2 startPos;
     EntityPlayer *playerPtr;
-    int32 netX;
-    int32 netY;
+    Vector2 netPos;
     int32 netRotation;
     int32 netScale;
     int32 netColour;
-    Vector2 positions[6];
-    Vector2 positions2[6];
-    int32 field_100;
-    int32 field_104;
-    int32 field_108;
-    int32 field_10C;
-    int32 field_110;
-    int32 field_114;
-    int32 field_118;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    int32 field_130;
-    int32 field_134;
-    int32 field_138;
-    int32 field_13C;
-    int32 field_140;
-    int32 field_144;
-    int32 field_148;
-    int32 field_14C;
-    int32 field_150;
-    int32 field_154;
-    Matrix matrix1;
-    Matrix matrix2;
-    Animator animator2;
-    Animator animator1;
+    Vector2 orbPositions[6];
+    Vector2 orbVelocities[6];
+    Animator unusedAnimator;
+    Matrix matUnused;
+    Matrix matTransform;
+    Matrix matWorld;
+    Animator bugAnimator;
+    Animator orbAnimator;
 };
 
 // Object Struct
@@ -93,18 +74,18 @@ void SentryBug_DebugDraw(void);
 
 void SentryBug_CheckPlayerCollisions(void);
 
-void SentryBug_StateLate_Unknown1(void);
-void SentryBug_SetupPositions2(void);
-void SentryBug_StateLate_Unknown2(void);
-void SentryBug_StateLate_Unknown3(void);
-void SentryBug_StateLate_Unknown4(void);
-void SentryBug_StateLate_Unknown5(void);
+void SentryBug_SetupOrbDropVelocity(void);
+void SentryBug_StateOrbs_Attached(void);
+void SentryBug_StateOrbs_Dropped(void);
+void SentryBug_StateOrbs_BeginNetRotation(void);
+void SentryBug_State_RotateAroundNet(void);
+void SentryBug_StateOrbs_ReturnToSlots(void);
 
-void SentryBug_State_Unknown1(void);
-void SentryBug_State_Unknown2(void);
-void SentryBug_State_Unknown3(void);
-void SentryBug_State_Unknown4(void);
-void SentryBug_State_Unknown5(void);
-void SentryBug_State_Unknown6(void);
+void SentryBug_State_AwaitPlayer(void);
+void SentryBug_State_DropOrbs(void);
+void SentryBug_State_NetAppear(void);
+void SentryBug_State_NetShrink(void);
+void SentryBug_State_NetFlash(void);
+void SentryBug_State_ReturnToSlots(void);
 
 #endif //!OBJ_SENTRYBUG_H

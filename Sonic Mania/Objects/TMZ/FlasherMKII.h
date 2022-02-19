@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FLASHERMKII_ORIENTATION_UP,
+    FLASHERMKII_ORIENTATION_DOWN,
+    FLASHERMKII_ORIENTATION_RIGHT,
+    FLASHERMKII_ORIENTATION_LEFT,
+}FlasherMKIIOrientations;
+
 // Object Class
 struct ObjectFlasherMKII {
     RSDK_OBJECT
@@ -42,15 +49,15 @@ void FlasherMKII_Serialize(void);
 void FlasherMKII_DebugSpawn(void);
 void FlasherMKII_DebugDraw(void);
 
-void FlasherMKII_CheckOnScreen(void);
+void FlasherMKII_CheckOffScreen(void);
 
 void FlasherMKII_HandlePlayerCollisions(void);
 void FlasherMKII_HandleHarmPlayerCollisions(void);
 
-void FlasherMKII_State_Unknown1(void);
-void FlasherMKII_State_Unknown2(void);
-void FlasherMKII_State_Unknown3(void);
-void FlasherMKII_State_Unknown4(void);
-void FlasherMKII_State_Unknown5(void);
+void FlasherMKII_State_Idle(void);
+void FlasherMKII_State_Moving(void);
+void FlasherMKII_State_WeakFlash(void);
+void FlasherMKII_State_StrongFlash(void);
+void FlasherMKII_State_FinishedFlashing(void);
 
 #endif //!OBJ_FLASHERMKII_H

@@ -345,7 +345,7 @@ void Firework_HandleRideEnd(bool32 hurt)
     }
 }
 
-void Firework_CheckOnScreen(void)
+void Firework_CheckOffScreen(void)
 {
     RSDK_THIS(Firework);
 
@@ -496,7 +496,7 @@ void Firework_State_Unknown3(void)
     if (self->field_8C > self->distance)
         Firework_HandleRideEnd(false);
     Firework_HandleTileCollisions();
-    Firework_CheckOnScreen();
+    Firework_CheckOffScreen();
     ++self->timer;
 }
 
@@ -506,7 +506,7 @@ void Firework_State_Unknown4(void)
 
     if (self->timer <= 0) {
         self->activePlayers = 0;
-        Firework_CheckOnScreen();
+        Firework_CheckOffScreen();
         self->visible = false;
     }
     else {

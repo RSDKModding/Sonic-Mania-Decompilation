@@ -52,7 +52,7 @@ void RollerMKII_Serialize(void);
 void RollerMKII_DebugSpawn(void);
 void RollerMKII_DebugDraw(void);
 
-void RollerMKII_CheckOnScreen(void);
+void RollerMKII_CheckOffScreen(void);
 
 void RollerMKII_CheckPlayerCollisions(void);
 void RollerMKII_CheckPlayerCollisions_Rolling(void);

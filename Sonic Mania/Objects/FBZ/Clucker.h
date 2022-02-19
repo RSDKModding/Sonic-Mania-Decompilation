@@ -47,7 +47,7 @@ void Clucker_DebugSpawn(void);
 void Clucker_DebugDraw(void);
 
 void Clucker_HandlePlayerInteractions(void);
-void Clucker_CheckOnScreen(void);
+void Clucker_CheckOffScreen(void);
 
 void Clucker_State_Setup(void);
 void Clucker_State_CheckForPlayer(void);

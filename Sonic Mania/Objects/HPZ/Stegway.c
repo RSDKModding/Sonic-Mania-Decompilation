@@ -21,7 +21,7 @@ void Stegway_Update(void)
 
     Stegway_HandlePlayerInteractions();
     if (self->state != Stegway_State_Setup)
-        Stegway_CheckOnScreen();
+        Stegway_CheckOffScreen();
 }
 
 void Stegway_LateUpdate(void) {}
@@ -87,7 +87,7 @@ void Stegway_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
-void Stegway_CheckOnScreen(void)
+void Stegway_CheckOffScreen(void)
 {
     RSDK_THIS(Stegway);
     if (!RSDK.CheckOnScreen(self, 0) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -183,7 +183,7 @@ void Stegway_State_Moving(void)
         self->showDust = false;
         self->noFloor  = false;
     }
-    Stegway_CheckOnScreen();
+    Stegway_CheckOffScreen();
 }
 
 void Stegway_State_Turn(void)

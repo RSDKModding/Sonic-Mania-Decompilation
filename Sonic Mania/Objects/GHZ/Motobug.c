@@ -75,7 +75,7 @@ void Motobug_DebugSpawn(void)
 
     CREATE_ENTITY(Motobug, NULL, self->position.x, self->position.y);
 }
-void Motobug_CheckOnScreen(void)
+void Motobug_CheckOffScreen(void)
 {
     RSDK_THIS(Motobug);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -111,7 +111,7 @@ void Motobug_State_Fall(void)
     }
     else {
         Motobug_CheckPlayerCollisions();
-        Motobug_CheckOnScreen();
+        Motobug_CheckOffScreen();
     }
 }
 void Motobug_State_Move(void)
@@ -145,7 +145,7 @@ void Motobug_State_Move(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Motobug_CheckPlayerCollisions();
-    Motobug_CheckOnScreen();
+    Motobug_CheckOffScreen();
 }
 void Motobug_State_Idle(void)
 {
@@ -172,7 +172,7 @@ void Motobug_State_Idle(void)
         self->velocity.x = -self->velocity.x;
     }
     Motobug_CheckPlayerCollisions();
-    Motobug_CheckOnScreen();
+    Motobug_CheckOffScreen();
 }
 void Motobug_State_Setup(void)
 {
@@ -211,7 +211,7 @@ void Motobug_State_Turn(void)
         }
         else {
             Motobug_CheckPlayerCollisions();
-            Motobug_CheckOnScreen();
+            Motobug_CheckOffScreen();
         }
     }
     else {

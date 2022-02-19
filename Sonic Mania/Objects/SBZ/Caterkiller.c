@@ -94,7 +94,7 @@ void Caterkiller_DebugSpawn(void)
     CREATE_ENTITY(Caterkiller, NULL, self->position.x, self->position.y);
 }
 
-void Caterkiller_CheckOnScreen(void)
+void Caterkiller_CheckOffScreen(void)
 {
     RSDK_THIS(Caterkiller);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -260,7 +260,7 @@ void Caterkiller_State_Contract(void)
     if (self->timer) {
         self->timer--;
         Caterkiller_HandlePlayerInteractions();
-        Caterkiller_CheckOnScreen();
+        Caterkiller_CheckOffScreen();
     }
     else {
         self->timer                = 15;
@@ -290,7 +290,7 @@ void Caterkiller_State_LiftHead(void)
     }
     Caterkiller_CheckTileCollisions();
     Caterkiller_HandlePlayerInteractions();
-    Caterkiller_CheckOnScreen();
+    Caterkiller_CheckOffScreen();
 }
 
 void Caterkiller_State_Uncontract(void)
@@ -299,7 +299,7 @@ void Caterkiller_State_Uncontract(void)
     if (self->timer) {
         self->timer--;
         Caterkiller_HandlePlayerInteractions();
-        Caterkiller_CheckOnScreen();
+        Caterkiller_CheckOffScreen();
     }
     else {
         self->timer            = 15;
@@ -338,7 +338,7 @@ void Caterkiller_State_LowerHead(void)
     }
     Caterkiller_CheckTileCollisions();
     Caterkiller_HandlePlayerInteractions();
-    Caterkiller_CheckOnScreen();
+    Caterkiller_CheckOffScreen();
 }
 
 void Caterkiller_StateSplit_Head(void)

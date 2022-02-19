@@ -150,7 +150,7 @@ void Woodrow_CheckPlayerCollisions(void)
     }
 }
 
-void Woodrow_CheckOnScreen(void)
+void Woodrow_CheckOffScreen(void)
 {
     RSDK_THIS(Woodrow);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -248,7 +248,7 @@ void Woodrow_State_Idle(void)
         }
     }
     Woodrow_CheckPlayerCollisions();
-    Woodrow_CheckOnScreen();
+    Woodrow_CheckOffScreen();
 }
 
 void Woodrow_State_MoveUp(void)
@@ -265,7 +265,7 @@ void Woodrow_State_MoveUp(void)
         self->state = Woodrow_State_Idle;
     }
     Woodrow_CheckPlayerCollisions();
-    Woodrow_CheckOnScreen();
+    Woodrow_CheckOffScreen();
 }
 
 void Woodrow_State_MoveDown(void)
@@ -287,7 +287,7 @@ void Woodrow_State_MoveDown(void)
         self->state = Woodrow_State_Idle;
     }
     Woodrow_CheckPlayerCollisions();
-    Woodrow_CheckOnScreen();
+    Woodrow_CheckOffScreen();
 }
 
 void Woodrow_State_Bomb(void)

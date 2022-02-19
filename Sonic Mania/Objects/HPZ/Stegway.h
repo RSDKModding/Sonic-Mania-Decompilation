@@ -49,7 +49,7 @@ void Stegway_Serialize(void);
 void Stegway_DebugSpawn(void);
 void Stegway_DebugDraw(void);
 
-void Stegway_CheckOnScreen(void);
+void Stegway_CheckOffScreen(void);
 void Stegway_HandlePlayerInteractions(void);
 void Stegway_SetupAnims(char type, bool32 force);
 

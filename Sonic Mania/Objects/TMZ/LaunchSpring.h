@@ -3,11 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LAUNCHSPRING_0,
+    LAUNCHSPRING_CANNON,
+    LAUNCHSPRING_ROTATE_45DEG,
+    LAUNCHSPRING_ROTATE_90DEG,
+    LAUNCHSPRING_ROTATE_135DEG,
+    LAUNCHSPRING_ROTATE_180DEG,
+} LaunchSpringTypes;
+
 // Object Class
 struct ObjectLaunchSpring {
     RSDK_OBJECT
     Hitbox hitbox;
-    bool32 flag;
+    bool32 isTMZ;
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxClack;
@@ -18,20 +27,20 @@ struct ObjectLaunchSpring {
 struct EntityLaunchSpring {
     RSDK_ENTITY
     StateMachine(state);
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator mainAnimator;
+    Animator jointAnimator;
+    Animator springAnimator;
     uint8 type;
     uint8 rotDir;
     uint8 rotSpeed;
     bool32 manual;
     bool32 strict;
     uint8 timer;
-    uint8 field_B1;
-    uint8 timer2;
-    int16 field_B4;
-    int16 field_B6;
-    Entity *playerPtr;
+    uint8 springPivot;
+    uint8 autoFireTimer;
+    int16 minAngle;
+    int16 maxAngle;
+    EntityPlayer *playerPtr;
 };
 
 // Object Struct
@@ -51,22 +60,22 @@ void LaunchSpring_EditorLoad(void);
 void LaunchSpring_Serialize(void);
 
 // Extra Entity Functions
-bool32 LaunchSpring_Unknown1(void *p);
+bool32 LaunchSpring_CheckFireworkActive(EntityPlayer *player);
 void LaunchSpring_CheckPlayerCollisions(void *nextState);
 
-void LaunchSpring_Unknown3(void);
-void LaunchSpring_Unknown4(void);
-void LaunchSpring_Unknown5(void);
-void LaunchSpring_Unknown6(void);
-void LaunchSpring_Unknown7(void);
-void LaunchSpring_Unknown8(void);
-void LaunchSpring_Unknown9(void);
-void LaunchSpring_Unknown10(void);
-void LaunchSpring_Unknown11(void);
-void LaunchSpring_Unknown12(void);
-void LaunchSpring_Unknown13(void);
-void LaunchSpring_Unknown14(void);
-void LaunchSpring_Unknown15(void);
-void LaunchSpring_Unknown16(void);
+void LaunchSpring_LaunchPlayer(void);
+void LaunchSpring_State_Spinning(void);
+void LaunchSpring_State_Spinning_GrabbedPlayer(void);
+void LaunchSpring_State_Spinning_ReadyToFire(void);
+void LaunchSpring_State_Spinning_FiredPlayer(void);
+void LaunchSpring_State_Spinning_ReadyUp(void);
+void LaunchSpring_State_Cannon(void);
+void LaunchSpring_State_Cannon_Fire_Automatic(void);
+void LaunchSpring_State_Cannon_Fire_Manual(void);
+void LaunchSpring_State_Cannon_FiredPlayer(void);
+void LaunchSpring_State_Rotating(void);
+void LaunchSpring_State_Rotate_Fire_Automatic(void);
+void LaunchSpring_State_Rotate_Fire_Manual(void);
+void LaunchSpring_State_Rotating_FiredPlayer(void);
 
 #endif //!OBJ_LAUNCHSPRING_H

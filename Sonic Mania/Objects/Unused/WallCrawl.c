@@ -107,7 +107,7 @@ void WallCrawl_HandlePlayerInteractions(void)
     }
 }
 
-void WallCrawl_CheckOnScreen(void)
+void WallCrawl_CheckOffScreen(void)
 {
     RSDK_THIS(WallCrawl);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -197,7 +197,7 @@ void WallCrawl_State_Main(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     WallCrawl_HandlePlayerInteractions();
-    WallCrawl_CheckOnScreen();
+    WallCrawl_CheckOffScreen();
 }
 
 void WallCrawl_State_Idle(void)
@@ -212,7 +212,7 @@ void WallCrawl_State_Idle(void)
     else {
         WallCrawl_HandlePlayerInteractions();
     }
-    WallCrawl_CheckOnScreen();
+    WallCrawl_CheckOffScreen();
 }
 
 void WallCrawl_State_Projectile(void)

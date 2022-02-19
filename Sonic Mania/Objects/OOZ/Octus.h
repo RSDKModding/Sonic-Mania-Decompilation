@@ -46,7 +46,7 @@ void Octus_DebugSpawn(void);
 void Octus_DebugDraw(void);
 
 void Octus_CheckPlayerCollisions(void);
-void Octus_CheckOnScreen(void);
+void Octus_CheckOffScreen(void);
 
 void Octus_State_Setup(void);
 void Octus_State_CheckPlayerInRange(void);

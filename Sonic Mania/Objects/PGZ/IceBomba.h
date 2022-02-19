@@ -49,7 +49,7 @@ void IceBomba_DebugDraw(void);
 void IceBomba_DebugSpawn(void);
 
 // Extra Entity Functions
-void IceBomba_CheckOnScreen(void);
+void IceBomba_CheckOffScreen(void);
 
 void IceBomba_Fly_Collide(void);
 void IceBomba_State_Setup(void);

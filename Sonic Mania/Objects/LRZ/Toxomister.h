@@ -47,7 +47,7 @@ void Toxomister_DebugSpawn(void);
 void Toxomister_DebugDraw(void);
 
 void Toxomister_CheckPlayerCollisions(void);
-void Toxomister_CheckOnScreen(void);
+void Toxomister_CheckOffScreen(void);
 void Toxomister_CheckMistOnScreen(void);
 void Toxomister_CheckPlayerMistCollisions(void);
 

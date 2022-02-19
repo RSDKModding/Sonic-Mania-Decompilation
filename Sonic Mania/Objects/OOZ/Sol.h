@@ -51,7 +51,7 @@ void Sol_DebugDraw(void);
 void Sol_HandlePlayerInteractions(void);
 void Sol_HandlePlayerHurt(void);
 void Sol_HandleRotation(void);
-void Sol_CheckOnScreen(void);
+void Sol_CheckOffScreen(void);
 
 void Sol_State_Setup(void);
 void Sol_State_Moving(void);

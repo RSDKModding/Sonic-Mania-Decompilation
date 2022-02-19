@@ -50,7 +50,7 @@ void TurboSpiker_DebugDraw(void);
 
 // Extra Entity Functions
 void TurboSpiker_Hermit_Collide(void);
-void TurboSpiker_Hermit_CheckOnScreen(void);
+void TurboSpiker_Hermit_CheckOffScreen(void);
 void TurboSpiker_Hermit_NextState(void);
 void TurboSpiker_Hermit_Create(void);
 void TurboSpiker_Hermit_Idle(void);

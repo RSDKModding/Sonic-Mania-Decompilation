@@ -129,7 +129,7 @@ void MicDrop_CheckPlayerCollisions(void)
     self->position.y = storeY;
 }
 
-void MicDrop_CheckOnScreen(void)
+void MicDrop_CheckOffScreen(void)
 {
 
     RSDK_THIS(MicDrop);
@@ -212,7 +212,7 @@ void MicDrop_State_DropRecoil(void)
             break;
     }
     MicDrop_CheckPlayerCollisions();
-    MicDrop_CheckOnScreen();
+    MicDrop_CheckOffScreen();
 }
 
 void MicDrop_State_Idle(void)
@@ -225,7 +225,7 @@ void MicDrop_State_Idle(void)
         self->state    = MicDrop_State_Swinging;
     }
     MicDrop_CheckPlayerCollisions();
-    MicDrop_CheckOnScreen();
+    MicDrop_CheckOffScreen();
 }
 
 void MicDrop_State_Swinging(void)
@@ -247,7 +247,7 @@ void MicDrop_State_Swinging(void)
         self->position.x = (self->radius << 7) * RSDK.Cos512(self->angle + 128) + self->startPos.x;
         self->position.y = (self->radius << 7) * RSDK.Sin512(self->angle + 128) + self->startPos.y;
         MicDrop_CheckPlayerCollisions();
-        MicDrop_CheckOnScreen();
+        MicDrop_CheckOffScreen();
     }
 }
 
@@ -283,7 +283,7 @@ void MicDrop_State_Electrify(void)
         RSDK.ProcessAnimation(&self->bodyAnimator);
 
     MicDrop_CheckPlayerCollisions();
-    MicDrop_CheckOnScreen();
+    MicDrop_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

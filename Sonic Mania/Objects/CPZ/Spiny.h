@@ -53,7 +53,7 @@ void Spiny_DebugSpawn(void);
 void Spiny_DebugDraw(void);
 
 void Spiny_CheckPlayerCollisions(void);
-void Spiny_CheckOnScreen(void);
+void Spiny_CheckOffScreen(void);
 
 void Spiny_State_Setup(void);
 void Spiny_State_Floor(void);

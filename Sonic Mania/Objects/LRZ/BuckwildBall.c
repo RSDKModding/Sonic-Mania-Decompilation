@@ -87,7 +87,7 @@ void BuckwildBall_HandleTimerSfx(void)
     }
 }
 
-void BuckwildBall_CheckOnScreen(void)
+void BuckwildBall_CheckOffScreen(void)
 {
     RSDK_THIS(BuckwildBall);
 
@@ -328,7 +328,7 @@ void BuckwildBall_State_Unknown3(void)
     }
 
     if (self->field_B8 > -1) {
-        BuckwildBall_CheckOnScreen();
+        BuckwildBall_CheckOffScreen();
     }
 }
 
@@ -368,7 +368,7 @@ void BuckwildBall_State_Unknown4(void)
     }
 
     if (self->field_B8 > -1) {
-        BuckwildBall_CheckOnScreen();
+        BuckwildBall_CheckOffScreen();
     }
 }
 
@@ -380,7 +380,7 @@ void BuckwildBall_State_Unknown5(void)
     self->position.y += self->velocity.y;
     self->visible = Zone->timer % 4 < 2;
 
-    BuckwildBall_CheckOnScreen();
+    BuckwildBall_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

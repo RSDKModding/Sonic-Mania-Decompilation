@@ -45,7 +45,7 @@ void Kanabun_DebugSpawn(void);
 void Kanabun_DebugDraw(void);
 
 void Kanabun_CheckPlayerCollisions(void);
-void Kanabun_CheckOnScreen(void);
+void Kanabun_CheckOffScreen(void);
 void Kanabun_HandleMovement(void);
 
 void Kanabun_State_Setup(void);

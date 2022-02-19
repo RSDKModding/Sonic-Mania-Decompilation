@@ -124,7 +124,7 @@ void Crane_HandlePlayerInteractions(void)
     }
 }
 
-void Crane_CheckOnScreen(void)
+void Crane_CheckOffScreen(void)
 {
     RSDK_THIS(Crane);
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
@@ -142,12 +142,12 @@ void Crane_CheckOnScreen(void)
             self->timer         = 0;
             self->direction     = self->startDir;
             self->visible       = false;
-            self->state         = Crane_State_CheckOnScreen;
+            self->state         = Crane_State_CheckOffScreen;
         }
     }
 }
 
-void Crane_State_CheckOnScreen(void)
+void Crane_State_CheckOffScreen(void)
 {
     RSDK_THIS(Crane);
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
@@ -170,7 +170,7 @@ void Crane_State_Setup(void)
         self->timer = -1;
         self->state = Crane_State_CheckGrab;
         Crane_HandlePlayerInteractions();
-        Crane_CheckOnScreen();
+        Crane_CheckOffScreen();
     }
 }
 
@@ -184,14 +184,14 @@ void Crane_State_CheckForPlayers(void)
             self->state = Crane_State_LowerToGrab;
         }
     }
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_LowerToGrab(void)
 {
     RSDK_THIS(Crane);
     Crane_HandlePlayerInteractions();
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
     --self->timer;
     if (self->state == Crane_State_LowerToGrab) {
         if (self->timer >= 0)
@@ -204,7 +204,7 @@ void Crane_State_LowerToGrab(void)
 void Crane_State_CheckGrab(void)
 {
     Crane_HandlePlayerInteractions();
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_RiseUp(void)
@@ -238,7 +238,7 @@ void Crane_State_RiseUp(void)
         self->velocity.x = 0;
         self->state      = Crane_State_ToDest1stHalf;
     }
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_ToDest1stHalf(void)
@@ -276,7 +276,7 @@ void Crane_State_ToDest1stHalf(void)
             self->grabbedPlayer = NULL;
         }
     }
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_ToDest2ndHalf(void)
@@ -321,7 +321,7 @@ void Crane_State_ToDest2ndHalf(void)
             self->grabbedPlayer = NULL;
         }
     }
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_DropDelay(void)
@@ -330,7 +330,7 @@ void Crane_State_DropDelay(void)
     if (--self->timer2 <= 0)
         self->state = Crane_State_ToStart1stHalf;
     Crane_HandlePlayerInteractions();
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_ToStart1stHalf(void)
@@ -348,7 +348,7 @@ void Crane_State_ToStart1stHalf(void)
         if (self->position.x <= self->startPos.x + (self->distance << 15))
             self->state = Crane_State_ToStart2ndHalf;
     }
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 void Crane_State_ToStart2ndHalf(void)
@@ -371,7 +371,7 @@ void Crane_State_ToStart2ndHalf(void)
             self->grabbedPlayer = NULL;
         }
     }
-    Crane_CheckOnScreen();
+    Crane_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

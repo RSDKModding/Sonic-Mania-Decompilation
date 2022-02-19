@@ -139,7 +139,7 @@ void Rexon_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Rexon_CheckOnScreen(void)
+void Rexon_CheckOffScreen(void)
 {
     RSDK_THIS(Rexon);
 
@@ -253,7 +253,7 @@ void Rexon_State_Unknown1(void)
     }
 
     Rexon_CheckPlayerCollisions();
-    Rexon_CheckOnScreen();
+    Rexon_CheckOffScreen();
 }
 
 void Rexon_State_Unknown2(void)
@@ -273,7 +273,7 @@ void Rexon_State_Unknown2(void)
     if (self->segmentID == Rexon_SegmentCount)
         self->state = Rexon_State_Unknown3;
     Rexon_CheckPlayerCollisions();
-    Rexon_CheckOnScreen();
+    Rexon_CheckOffScreen();
 }
 
 void Rexon_State_Unknown3(void)
@@ -314,13 +314,13 @@ void Rexon_State_Unknown3(void)
         RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &self->animator3, true, 0);
     }
     Rexon_CheckPlayerCollisions();
-    Rexon_CheckOnScreen();
+    Rexon_CheckOffScreen();
 }
 
 void Rexon_State_Destroyed(void)
 {
     Rexon_CheckPlayerCollisions();
-    Rexon_CheckOnScreen();
+    Rexon_CheckOffScreen();
 }
 
 void Rexon_State_Explode(void)

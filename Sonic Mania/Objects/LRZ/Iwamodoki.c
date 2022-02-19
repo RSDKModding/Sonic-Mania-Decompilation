@@ -123,7 +123,7 @@ void Iwamodoki_HandlePlayerCollisions(void)
     self->position.y = self->postMovePos.y;
 }
 
-void Iwamodoki_CheckOnScreen(void)
+void Iwamodoki_CheckOffScreen(void)
 {
     RSDK_THIS(Iwamodoki);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -156,7 +156,7 @@ void Iwamodoki_State_Unknown1(void)
     }
 
     Iwamodoki_HandlePlayerCollisions();
-    Iwamodoki_CheckOnScreen();
+    Iwamodoki_CheckOffScreen();
 }
 
 void Iwamodoki_State_Unknown2(void)
@@ -171,7 +171,7 @@ void Iwamodoki_State_Unknown2(void)
         self->state  = Iwamodoki_State_Unknown3;
     }
     Iwamodoki_HandlePlayerCollisions();
-    Iwamodoki_CheckOnScreen();
+    Iwamodoki_CheckOffScreen();
 }
 
 void Iwamodoki_State_Unknown3(void)
@@ -192,7 +192,7 @@ void Iwamodoki_State_Unknown3(void)
         }
     }
     Iwamodoki_HandlePlayerCollisions();
-    Iwamodoki_CheckOnScreen();
+    Iwamodoki_CheckOffScreen();
 }
 
 void Iwamodoki_State_Unknown4(void)
@@ -225,7 +225,7 @@ void Iwamodoki_State_Unknown4(void)
     }
     else {
         Iwamodoki_HandlePlayerCollisions();
-        Iwamodoki_CheckOnScreen();
+        Iwamodoki_CheckOffScreen();
     }
 }
 

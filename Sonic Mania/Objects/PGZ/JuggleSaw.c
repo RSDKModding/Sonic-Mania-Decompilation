@@ -160,7 +160,7 @@ void JuggleSaw_CheckPlayerCollisions(void)
     }
 }
 
-void JuggleSaw_CheckOnScreen(void)
+void JuggleSaw_CheckOffScreen(void)
 {
     RSDK_THIS(JuggleSaw);
     if (self->hasSaw != JSAW_AWAITING_SAW && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
@@ -268,7 +268,7 @@ void JuggleSaw_StateCrab_Handle(void)
         }
     }
     JuggleSaw_CheckPlayerCollisions();
-    JuggleSaw_CheckOnScreen();
+    JuggleSaw_CheckOffScreen();
 }
 
 void JuggleSaw_StateCrab_ThrowSaw(void)
@@ -326,7 +326,7 @@ void JuggleSaw_StateCrab_ThrowSaw(void)
         self->state = JuggleSaw_StateCrab_Handle;
     }
     JuggleSaw_CheckPlayerCollisions();
-    JuggleSaw_CheckOnScreen();
+    JuggleSaw_CheckOffScreen();
 }
 
 void JuggleSaw_StateSaw_Handle(void)

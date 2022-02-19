@@ -100,7 +100,7 @@ void TurboSpiker_Hermit_Collide(void)
     }
 }
 
-void TurboSpiker_Hermit_CheckOnScreen(void)
+void TurboSpiker_Hermit_CheckOffScreen(void)
 {
     RSDK_THIS(TurboSpiker);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
@@ -167,7 +167,7 @@ void TurboSpiker_Hermit_Idle(void)
             self->timer = 1;
             self->state = TurboSpiker_Hermit_Fire;
             TurboSpiker_Hermit_Collide();
-            TurboSpiker_Hermit_CheckOnScreen();
+            TurboSpiker_Hermit_CheckOffScreen();
             foreach_return;
         }
     }
@@ -185,7 +185,7 @@ void TurboSpiker_Hermit_Idle(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     TurboSpiker_Hermit_Collide();
-    TurboSpiker_Hermit_CheckOnScreen();
+    TurboSpiker_Hermit_CheckOffScreen();
 }
 
 void TurboSpiker_Hermit_IdleWater(void)
@@ -214,7 +214,7 @@ void TurboSpiker_Hermit_IdleWater(void)
     }
     RSDK.ProcessAnimation(&self->spikeAnimator);
     TurboSpiker_Hermit_Collide();
-    TurboSpiker_Hermit_CheckOnScreen();
+    TurboSpiker_Hermit_CheckOffScreen();
 }
 
 void TurboSpiker_Hermit_Handle(void)
@@ -227,7 +227,7 @@ void TurboSpiker_Hermit_Handle(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     TurboSpiker_Hermit_Collide();
-    TurboSpiker_Hermit_CheckOnScreen();
+    TurboSpiker_Hermit_CheckOffScreen();
 }
 
 void TurboSpiker_Hermit_Turn(void)
@@ -239,7 +239,7 @@ void TurboSpiker_Hermit_Turn(void)
         self->state = TurboSpiker_Hermit_AfterTurn;
     }
     TurboSpiker_Hermit_Collide();
-    TurboSpiker_Hermit_CheckOnScreen();
+    TurboSpiker_Hermit_CheckOffScreen();
 }
 
 void TurboSpiker_Hermit_AfterTurn(void)
@@ -263,7 +263,7 @@ void TurboSpiker_Hermit_AfterTurn(void)
     }
     else {
         TurboSpiker_Hermit_Collide();
-        TurboSpiker_Hermit_CheckOnScreen();
+        TurboSpiker_Hermit_CheckOffScreen();
     }
 }
 
@@ -286,7 +286,7 @@ void TurboSpiker_Hermit_Move(void)
     }
     else {
         TurboSpiker_Hermit_Collide();
-        TurboSpiker_Hermit_CheckOnScreen();
+        TurboSpiker_Hermit_CheckOffScreen();
     }
 }
 
@@ -313,11 +313,11 @@ void TurboSpiker_Hermit_Fire(void)
         TurboSpiker_Hermit_NextState();
         RSDK.ProcessAnimation(&self->animator);
         TurboSpiker_Hermit_Collide();
-        TurboSpiker_Hermit_CheckOnScreen();
+        TurboSpiker_Hermit_CheckOffScreen();
     }
     RSDK.ProcessAnimation(&self->animator);
     TurboSpiker_Hermit_Collide();
-    TurboSpiker_Hermit_CheckOnScreen();
+    TurboSpiker_Hermit_CheckOffScreen();
 }
 
 void TurboSpiker_Spike_Collide(void)

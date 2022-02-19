@@ -64,7 +64,7 @@ void Pointdexter_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Pointdexter_CheckOnScreen(void)
+void Pointdexter_CheckOffScreen(void)
 {
     RSDK_THIS(Pointdexter);
 
@@ -132,7 +132,7 @@ void Pointdexter_State_Swimming(void)
     self->angle = (self->angle + 2) & 0xFF;
     RSDK.ProcessAnimation(&self->animator);
     Pointdexter_CheckPlayerCollisions();
-    Pointdexter_CheckOnScreen();
+    Pointdexter_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

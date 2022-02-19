@@ -40,7 +40,7 @@ void Pointdexter_Serialize(void);
 void Pointdexter_DebugSpawn(void);
 void Pointdexter_DebugDraw(void);
 
-void Pointdexter_CheckOnScreen(void);
+void Pointdexter_CheckOffScreen(void);
 void Pointdexter_CheckPlayerCollisions(void);
 
 void Pointdexter_State_Setup(void);

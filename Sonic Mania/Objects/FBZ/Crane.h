@@ -62,9 +62,9 @@ void Crane_DebugSpawn(void);
 void Crane_DebugDraw(void);
 
 void Crane_HandlePlayerInteractions(void);
-void Crane_CheckOnScreen(void);
+void Crane_CheckOffScreen(void);
 
-void Crane_State_CheckOnScreen(void);
+void Crane_State_CheckOffScreen(void);
 void Crane_State_Setup(void);
 void Crane_State_CheckForPlayers(void);
 void Crane_State_LowerToGrab(void);

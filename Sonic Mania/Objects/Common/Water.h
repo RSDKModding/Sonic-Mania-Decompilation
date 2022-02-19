@@ -8,7 +8,7 @@ typedef enum {
     WATER_RECT,
     WATER_BUBBLER,
     WATER_ADJUST,
-    WATER_BUBBLER_2,
+    WATER_HCZ_BUBBLER,
     WATER_BUBBLE_SPAWNER,
     WATER_SPLASH,
     WATER_BUBBLE,
@@ -27,10 +27,10 @@ struct ObjectWater {
     int32 unused1[4]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
     TABLE(int32 bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
     uint16 aniFrames;
-    uint16 bigBubbleSprite;
-    uint16 wakeSprite;
-    Hitbox hitbox2;
-    Hitbox hitbox;
+    uint16 bigBubbleFrames;
+    uint16 wakeFrames;
+    Hitbox hitboxPlayerBubble;
+    Hitbox hitboxPoint;
     uint16 sfxSplash;
     uint16 sfxBreathe;
     uint16 sfxWarning;
@@ -51,7 +51,7 @@ struct ObjectWater {
     bool32 ignoreChild; // this is never set except for once and it's used in if ! statements to link the player or not. i'm so sorry for the name
     int32 wakePosX[4];
     uint8 wakeDir[4];
-    Animator wakeData;
+    Animator wakeAnimator;
     int32 unused3;
     bool32 playingSkimSFX;
 };

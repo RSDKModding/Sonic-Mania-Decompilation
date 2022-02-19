@@ -119,7 +119,7 @@ void Sweep_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Sweep_CheckOnScreen(void)
+void Sweep_CheckOffScreen(void)
 {
     RSDK_THIS(Sweep);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -211,7 +211,7 @@ void Sweep_State_Idle(void)
         self->state = Sweep_State_Dash;
     }
     Sweep_HandleInteractions();
-    Sweep_CheckOnScreen();
+    Sweep_CheckOffScreen();
 }
 
 void Sweep_State_Dash(void)
@@ -237,7 +237,7 @@ void Sweep_State_Dash(void)
     }
 
     Sweep_HandleInteractions();
-    Sweep_CheckOnScreen();
+    Sweep_CheckOffScreen();
 }
 
 void Sweep_State_Stop(void)
@@ -270,7 +270,7 @@ void Sweep_State_Stop(void)
     }
 
     Sweep_HandleInteractions();
-    Sweep_CheckOnScreen();
+    Sweep_CheckOffScreen();
 }
 
 void Sweep_State_FiredShot(void)
@@ -285,7 +285,7 @@ void Sweep_State_FiredShot(void)
     }
     else {
         Sweep_HandleInteractions();
-        Sweep_CheckOnScreen();
+        Sweep_CheckOffScreen();
     }
 }
 
@@ -304,7 +304,7 @@ void Sweep_State_Turn(void)
     }
     else {
         Sweep_HandleInteractions();
-        Sweep_CheckOnScreen();
+        Sweep_CheckOffScreen();
     }
 }
 

@@ -58,7 +58,7 @@ void JuggleSaw_DebugSpawn(void);
 
 // Extra Entity Functions
 void JuggleSaw_CheckPlayerCollisions(void);
-void JuggleSaw_CheckOnScreen(void);
+void JuggleSaw_CheckOffScreen(void);
 
 void JuggleSaw_StateCrab_Setup(void);
 void JuggleSaw_StateCrab_Handle(void);

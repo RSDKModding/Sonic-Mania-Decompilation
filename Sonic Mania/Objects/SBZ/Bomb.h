@@ -46,7 +46,7 @@ void Bomb_Serialize(void);
 void Bomb_DebugSpawn(void);
 void Bomb_DebugDraw(void);
 
-void Bomb_CheckOnScreen(void);
+void Bomb_CheckOffScreen(void);
 void Bomb_CheckPlayerCollisions(void);
 
 void Bomb_State_Setup(void);

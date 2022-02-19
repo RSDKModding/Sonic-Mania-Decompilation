@@ -124,7 +124,7 @@ void Newtron_CheckHit(void)
     }
 }
 
-void Newtron_CheckOnScreen(void)
+void Newtron_CheckOffScreen(void)
 {
     RSDK_THIS(Newtron);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -175,7 +175,7 @@ void Newtron_State_CheckPlayerInRange(void)
             self->state = Newtron_State_Appear;
         }
     }
-    Newtron_CheckOnScreen();
+    Newtron_CheckOffScreen();
 }
 
 void Newtron_State_Appear(void)
@@ -197,7 +197,7 @@ void Newtron_State_Appear(void)
         }
     }
     RSDK.ProcessAnimation(&self->animator);
-    Newtron_CheckOnScreen();
+    Newtron_CheckOffScreen();
 }
 
 void Newtron_State_StartFly(void)
@@ -219,7 +219,7 @@ void Newtron_State_StartFly(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Newtron_CheckHit();
-    Newtron_CheckOnScreen();
+    Newtron_CheckOffScreen();
 }
 
 void Newtron_State_Fly(void)
@@ -230,7 +230,7 @@ void Newtron_State_Fly(void)
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->flameAnimator);
     Newtron_CheckHit();
-    Newtron_CheckOnScreen();
+    Newtron_CheckOffScreen();
 }
 
 void Newtron_State_Shoot(void)
@@ -249,14 +249,14 @@ void Newtron_State_Shoot(void)
     }
     RSDK.ProcessAnimation(&self->animator);
     Newtron_CheckHit();
-    Newtron_CheckOnScreen();
+    Newtron_CheckOffScreen();
 }
 
 void Newtron_State_FadeAway(void)
 {
     RSDK_THIS(Newtron);
     RSDK.ProcessAnimation(&self->animator);
-    Newtron_CheckOnScreen();
+    Newtron_CheckOffScreen();
     if (self->alpha <= 0)
         destroyEntity(self);
     else

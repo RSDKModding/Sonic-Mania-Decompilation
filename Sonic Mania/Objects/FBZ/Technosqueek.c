@@ -102,7 +102,7 @@ void Technosqueek_HandlePlayerInteractions(void)
     }
 }
 
-void Technosqueek_CheckOnScreen(void)
+void Technosqueek_CheckOffScreen(void)
 {
     RSDK_THIS(Technosqueek);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -191,7 +191,7 @@ void Technosqueek_State_MoveHorizontal(void)
     if (!self->groundVel)
         self->state = Technosqueek_State_TurnHorizontal;
     Technosqueek_HandlePlayerInteractions();
-    Technosqueek_CheckOnScreen();
+    Technosqueek_CheckOffScreen();
 }
 
 void Technosqueek_State_TurnHorizontal(void)
@@ -206,7 +206,7 @@ void Technosqueek_State_TurnHorizontal(void)
         self->direction ^= FLIP_X;
     }
     Technosqueek_HandlePlayerInteractions();
-    Technosqueek_CheckOnScreen();
+    Technosqueek_CheckOffScreen();
 }
 
 void Technosqueek_State_MoveVertical(void)
@@ -252,7 +252,7 @@ void Technosqueek_State_MoveVertical(void)
     if (!self->groundVel)
         self->state = Technosqueek_State_TurnVertical;
     Technosqueek_HandlePlayerInteractions();
-    Technosqueek_CheckOnScreen();
+    Technosqueek_CheckOffScreen();
 }
 
 void Technosqueek_State_TurnVertical(void)
@@ -267,7 +267,7 @@ void Technosqueek_State_TurnVertical(void)
         self->direction ^= FLIP_Y;
     }
     Technosqueek_HandlePlayerInteractions();
-    Technosqueek_CheckOnScreen();
+    Technosqueek_CheckOffScreen();
 }
 
 void Technosqueek_State_Fall(void)

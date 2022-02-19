@@ -52,7 +52,7 @@ void Bumpalo_Serialize(void);
 void Bumpalo_DebugSpawn(void);
 void Bumpalo_DebugDraw(void);
 
-void Bumpalo_CheckOnScreen(void);
+void Bumpalo_CheckOffScreen(void);
 void Bumpalo_BumpPlayer(void *p);
 void Bumpalo_CheckPlayerCollisions(void);
 void Bumpalo_HandlePlatformCollisions(void *p);

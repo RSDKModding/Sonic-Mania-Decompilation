@@ -105,7 +105,7 @@ void Octus_CheckPlayerCollisions(void)
     }
 }
 
-void Octus_CheckOnScreen(void)
+void Octus_CheckOffScreen(void)
 {
     RSDK_THIS(Octus);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -140,7 +140,7 @@ void Octus_State_CheckPlayerInRange(void)
     }
 
     Octus_CheckPlayerCollisions();
-    Octus_CheckOnScreen();
+    Octus_CheckOffScreen();
 }
 
 void Octus_State_JumpDelay(void)
@@ -152,7 +152,7 @@ void Octus_State_JumpDelay(void)
         self->state      = Octus_State_Jump;
     }
     Octus_CheckPlayerCollisions();
-    Octus_CheckOnScreen();
+    Octus_CheckOffScreen();
 }
 
 void Octus_State_Jump(void)
@@ -168,7 +168,7 @@ void Octus_State_Jump(void)
         self->state = Octus_State_Shoot;
     }
     Octus_CheckPlayerCollisions();
-    Octus_CheckOnScreen();
+    Octus_CheckOffScreen();
 }
 
 void Octus_State_Shoot(void)
@@ -193,7 +193,7 @@ void Octus_State_Shoot(void)
     }
 
     Octus_CheckPlayerCollisions();
-    Octus_CheckOnScreen();
+    Octus_CheckOffScreen();
 }
 
 void Octus_State_Fall(void)
@@ -210,7 +210,7 @@ void Octus_State_Fall(void)
     }
 
     Octus_CheckPlayerCollisions();
-    Octus_CheckOnScreen();
+    Octus_CheckOffScreen();
 }
 
 void Octus_State_Shot(void)

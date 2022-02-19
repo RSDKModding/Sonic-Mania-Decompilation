@@ -111,7 +111,7 @@ void LottoBall_StageLoad(void)
     LottoBall->sfxSpew        = RSDK.GetSfx("Stage/SpewBall.wav");
 }
 
-void LottoBall_CheckOnScreen(void)
+void LottoBall_CheckOffScreen(void)
 {
     RSDK_THIS(LottoBall);
 
@@ -212,7 +212,7 @@ void LottoBall_State_InMachine(void)
                     self->velocity.x -= parent->spinSpeed;
                     if (parent->state == LottoMachine_State_Startup) {
                         self->active = ACTIVE_NORMAL;
-                        self->state  = LottoBall_CheckOnScreen;
+                        self->state  = LottoBall_CheckOffScreen;
                     }
                     break;
 

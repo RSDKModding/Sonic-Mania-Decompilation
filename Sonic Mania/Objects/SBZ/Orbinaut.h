@@ -49,7 +49,7 @@ void Orbinaut_DebugDraw(void);
 
 void Orbinaut_HandlePlayerInteractions(void);
 void Orbinaut_HandleRotation(void);
-void Orbinaut_CheckOnScreen(void);
+void Orbinaut_CheckOffScreen(void);
 
 void Orbinaut_State_Setup(void);
 void Orbinaut_State_Moving(void);

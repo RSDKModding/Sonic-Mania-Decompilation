@@ -53,7 +53,7 @@ void SpikeCrusher_StageLoad(void)
     SpikeCrusher->sfxImpact = RSDK.GetSfx("Stage/Impact4.wav");
 }
 
-void SpikeCrusher_CheckOnScreen(void)
+void SpikeCrusher_CheckOffScreen(void)
 {
     RSDK_THIS(SpikeCrusher);
 
@@ -107,7 +107,7 @@ void SpikeCrusher_State_Unknown2(void)
     self->drawPos.y  = self->position.y;
     self->position.x = storeX;
     self->position.y = storeY;
-    SpikeCrusher_CheckOnScreen();
+    SpikeCrusher_CheckOffScreen();
 }
 
 void SpikeCrusher_State_Unknown3(void)
@@ -122,7 +122,7 @@ void SpikeCrusher_State_Unknown3(void)
         self->drawPos.y     = self->drawPos.y + 0x8000;
         self->state         = SpikeCrusher_State_Unknown4;
     }
-    SpikeCrusher_CheckOnScreen();
+    SpikeCrusher_CheckOffScreen();
 }
 
 void SpikeCrusher_State_Unknown4(void)
@@ -138,7 +138,7 @@ void SpikeCrusher_State_Unknown4(void)
     self->animator2.frameID = frame;
     if (self->timer <= 0)
         self->state = SpikeCrusher_State_Unknown5;
-    SpikeCrusher_CheckOnScreen();
+    SpikeCrusher_CheckOffScreen();
 }
 
 void SpikeCrusher_State_Unknown5(void)
@@ -155,7 +155,7 @@ void SpikeCrusher_State_Unknown5(void)
         self->timer = 0;
         self->state         = SpikeCrusher_State_Unknown6;
     }
-    SpikeCrusher_CheckOnScreen();
+    SpikeCrusher_CheckOffScreen();
 }
 
 void SpikeCrusher_State_Unknown6(void)
@@ -173,7 +173,7 @@ void SpikeCrusher_State_Unknown6(void)
         self->state         = SpikeCrusher_State_Unknown2;
     }
     self->velocity.y = -0x10000;
-    SpikeCrusher_CheckOnScreen();
+    SpikeCrusher_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

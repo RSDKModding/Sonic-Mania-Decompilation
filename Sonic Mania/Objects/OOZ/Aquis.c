@@ -112,7 +112,7 @@ void Aquis_CheckPlayerCollisions(void)
     }
 }
 
-void Aquis_CheckOnScreen(void)
+void Aquis_CheckOffScreen(void)
 {
     RSDK_THIS(Aquis);
 
@@ -163,7 +163,7 @@ void Aquis_State_Idle(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wingAnimator);
     Aquis_CheckPlayerCollisions();
-    Aquis_CheckOnScreen();
+    Aquis_CheckOffScreen();
 }
 
 void Aquis_State_Moving(void)
@@ -242,7 +242,7 @@ void Aquis_State_Moving(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wingAnimator);
     Aquis_CheckPlayerCollisions();
-    Aquis_CheckOnScreen();
+    Aquis_CheckOffScreen();
 }
 
 void Aquis_State_Shoot(void)
@@ -278,7 +278,7 @@ void Aquis_State_Shoot(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wingAnimator);
     Aquis_CheckPlayerCollisions();
-    Aquis_CheckOnScreen();
+    Aquis_CheckOffScreen();
 }
 
 void Aquis_State_Turning(void)
@@ -313,7 +313,7 @@ void Aquis_State_Turning(void)
             self->timer--;
 
         Aquis_CheckPlayerCollisions();
-        Aquis_CheckOnScreen();
+        Aquis_CheckOffScreen();
     }
 }
 
@@ -327,7 +327,7 @@ void Aquis_State_Flee(void)
     RSDK.ProcessAnimation(&self->wingAnimator);
 
     Aquis_CheckPlayerCollisions();
-    Aquis_CheckOnScreen();
+    Aquis_CheckOffScreen();
 }
 
 void Aquis_State_Shot(void)

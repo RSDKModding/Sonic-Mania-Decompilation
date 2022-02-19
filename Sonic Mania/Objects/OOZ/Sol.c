@@ -174,7 +174,7 @@ void Sol_HandleRotation(void)
     }
 }
 
-void Sol_CheckOnScreen(void)
+void Sol_CheckOffScreen(void)
 {
     RSDK_THIS(Sol);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -239,7 +239,7 @@ void Sol_State_Moving(void)
         self->direction = playerPtr->position.x >= self->position.x;
     }
 
-    Sol_CheckOnScreen();
+    Sol_CheckOffScreen();
 }
 
 void Sol_State_ShootingOrbs(void)
@@ -280,7 +280,7 @@ void Sol_State_ShootingOrbs(void)
         self->mainAnimator.frameID = 2;
     else
         self->mainAnimator.timer++;
-    Sol_CheckOnScreen();
+    Sol_CheckOffScreen();
 }
 
 void Sol_State_NoOrbs(void)
@@ -293,7 +293,7 @@ void Sol_State_NoOrbs(void)
 
     Sol_HandleRotation();
     Sol_HandlePlayerInteractions();
-    Sol_CheckOnScreen();
+    Sol_CheckOffScreen();
 }
 
 void Sol_State_SmallFireball(void)

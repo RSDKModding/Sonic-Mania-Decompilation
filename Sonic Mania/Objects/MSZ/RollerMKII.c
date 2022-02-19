@@ -94,7 +94,7 @@ void RollerMKII_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void RollerMKII_CheckOnScreen(void)
+void RollerMKII_CheckOffScreen(void)
 {
     RSDK_THIS(RollerMKII);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -365,7 +365,7 @@ void RollerMKII_State_Unknown1(void)
     }
 
     RollerMKII_CheckPlayerCollisions();
-    RollerMKII_CheckOnScreen();
+    RollerMKII_CheckOffScreen();
 }
 
 void RollerMKII_State_Unknown2(void)
@@ -385,7 +385,7 @@ void RollerMKII_State_Unknown2(void)
         RollerMKII_CheckPlayerCollisions();
     else
         RollerMKII_CheckPlayerCollisions_Rolling();
-    RollerMKII_CheckOnScreen();
+    RollerMKII_CheckOffScreen();
 }
 
 void RollerMKII_State_Unknown3(void)
@@ -395,7 +395,7 @@ void RollerMKII_State_Unknown3(void)
     if (!--self->timer)
         self->state = RollerMKII_State_Unknown4;
     RollerMKII_CheckPlayerCollisions_Rolling();
-    RollerMKII_CheckOnScreen();
+    RollerMKII_CheckOffScreen();
 }
 
 void RollerMKII_State_Unknown4(void)
@@ -464,7 +464,7 @@ void RollerMKII_State_Unknown4(void)
 
     RSDK.ProcessAnimation(&self->animator);
     RollerMKII_CheckPlayerCollisions_Rolling();
-    RollerMKII_CheckOnScreen();
+    RollerMKII_CheckOffScreen();
 }
 
 void RollerMKII_State_Unknown5(void)
@@ -523,7 +523,7 @@ void RollerMKII_State_Unknown5(void)
         self->state = RollerMKII_State_Unknown4;
     RSDK.ProcessAnimation(&self->animator);
     RollerMKII_CheckPlayerCollisions_Rolling();
-    RollerMKII_CheckOnScreen();
+    RollerMKII_CheckOffScreen();
 }
 
 void RollerMKII_State_Unknown6(void)
@@ -540,7 +540,7 @@ void RollerMKII_State_Unknown6(void)
         RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 0);
     }
     RSDK.ProcessAnimation(&self->animator);
-    RollerMKII_CheckOnScreen();
+    RollerMKII_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

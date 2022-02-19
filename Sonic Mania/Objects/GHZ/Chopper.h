@@ -47,7 +47,7 @@ void Chopper_Serialize(void);
 void Chopper_DebugDraw(void);
 void Chopper_DebugSpawn(void);
 
-void Chopper_CheckOnScreen(void);
+void Chopper_CheckOffScreen(void);
 void Chopper_CheckPlayerCollisions_Jump(void);
 void Chopper_CheckPlayerCollisions_Swim(void);
 

@@ -54,7 +54,7 @@ void WalkerLegs_Serialize(void);
 
 // Extra Entity Functions
 void WalkerLegs_DrawSprites(void);
-void WalkerLegs_CheckOnScreen(void);
+void WalkerLegs_CheckOffScreen(void);
 void WalkerLegs_CheckPlayerCollisions(void);
 void WalkerLegs_CheckObjectCrush(void);
 void WalkerLegs_CheckPlayerStood(void);

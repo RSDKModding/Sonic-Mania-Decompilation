@@ -45,7 +45,7 @@ void Buggernaut_DebugSpawn(void);
 void Buggernaut_DebugDraw(void);
 
 void Buggernaut_CheckPlayerCollisions(void);
-void Buggernaut_CheckOnScreen(void);
+void Buggernaut_CheckOffScreen(void);
 bool32 Buggernaut_HandleTileCollisionsX(void);
 bool32 Buggernaut_HandleTileCollisionsY(void);
 

@@ -53,7 +53,7 @@ void Grabber_DebugDraw(void);
 void Grabber_DebugSpawn(void);
 
 void Grabber_CheckPlayerCollisions(void);
-void Grabber_CheckOnScreen(void);
+void Grabber_CheckOffScreen(void);
 void Grabber_HandleExplode(void);
 
 void Grabber_State_Setup(void);

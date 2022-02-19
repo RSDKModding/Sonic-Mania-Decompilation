@@ -23,20 +23,20 @@ void LaunchSpring_Draw(void)
 {
     RSDK_THIS(LaunchSpring);
 
-    RSDK.GetFrame(LaunchSpring->aniFrames, 2, 0)->pivotY = -8 - self->field_B1;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.GetFrame(LaunchSpring->aniFrames, 2, 0)->pivotY = -8 - self->springPivot;
+    RSDK.DrawSprite(&self->springAnimator, NULL, false);
 
-    self->animator1.frameID = 0;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    self->mainAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->jointAnimator, NULL, false);
 
     SpriteFrame *frame = RSDK.GetFrame(LaunchSpring->aniFrames, 0, 0);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-    frame->pivotY     = self->timer - 55;
+    frame->pivotY   = self->timer - 55;
     self->direction = FLIP_X;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-    frame->pivotY     = -55;
+    frame->pivotY   = -55;
     self->direction = FLIP_NONE;
 }
 
@@ -53,55 +53,61 @@ void LaunchSpring_Create(void *data)
         self->visible       = RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2");
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->jointAnimator, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
         self->drawOrder = Zone->drawOrderHigh;
 
         switch (self->type) {
             case 0:
                 self->timer = 47;
-                self->state = LaunchSpring_Unknown4;
+                self->state = LaunchSpring_State_Spinning;
                 break;
+
             case 1:
-                self->state             = LaunchSpring_Unknown9;
-                self->animator3.frameID = 1;
+                self->state                  = LaunchSpring_State_Cannon;
+                self->springAnimator.frameID = 1;
                 break;
+
             case 2:
-                self->field_B4          = self->rotation - 64;
-                self->field_B6          = self->rotation + 64;
-                self->state             = LaunchSpring_Unknown13;
-                self->animator3.frameID = 1;
+                self->minAngle               = self->rotation - 0x40;
+                self->maxAngle               = self->rotation + 0x40;
+                self->state                  = LaunchSpring_State_Rotating;
+                self->springAnimator.frameID = 1;
                 break;
+
             case 3:
-                self->field_B4          = self->rotation - 128;
-                self->field_B6          = self->rotation + 128;
-                self->state             = LaunchSpring_Unknown13;
-                self->animator3.frameID = 1;
+                self->minAngle               = self->rotation - 0x80;
+                self->maxAngle               = self->rotation + 0x80;
+                self->state                  = LaunchSpring_State_Rotating;
+                self->springAnimator.frameID = 1;
                 break;
+
             case 4:
-                self->field_B4          = self->rotation - 192;
-                self->field_B6          = self->rotation + 192;
-                self->state             = LaunchSpring_Unknown13;
-                self->animator3.frameID = 1;
+                self->minAngle               = self->rotation - 0xC0;
+                self->maxAngle               = self->rotation + 0xC0;
+                self->state                  = LaunchSpring_State_Rotating;
+                self->springAnimator.frameID = 1;
                 break;
+
             case 5:
-                self->field_B4          = self->rotation - 256;
-                self->field_B6          = self->rotation + 256;
-                self->state             = LaunchSpring_Unknown13;
-                self->animator3.frameID = 1;
+                self->minAngle               = self->rotation - 0x100;
+                self->maxAngle               = self->rotation + 0x100;
+                self->state                  = LaunchSpring_State_Rotating;
+                self->springAnimator.frameID = 1;
                 break;
+
             default: break;
         }
 
         LaunchSpring->sfxGrab = RSDK.GetSfx("Global/Grab.wav");
         if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
-            LaunchSpring->flag            = false;
+            LaunchSpring->isTMZ           = false;
             LaunchSpring->sfxClack        = RSDK.GetSfx("Stage/Clack.wav");
             LaunchSpring->sfxSpeedBooster = RSDK.GetSfx("Stage/SpeedBooster.wav");
         }
         else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
-            LaunchSpring->flag            = true;
+            LaunchSpring->isTMZ           = true;
             LaunchSpring->sfxSpeedBooster = RSDK.GetSfx("Stage/CannonFire.wav");
         }
     }
@@ -120,22 +126,21 @@ void LaunchSpring_StageLoad(void)
     LaunchSpring->hitbox.bottom = 24;
 }
 
-bool32 LaunchSpring_Unknown1(void *p)
+bool32 LaunchSpring_CheckFireworkActive(EntityPlayer *player)
 {
     if (!Firework)
         return false;
 
-    EntityPlayer *player = (EntityPlayer *)p;
-    int32 playerID = RSDK.GetEntityID(player);
-    bool32 flag  = false;
+    int32 playerID        = RSDK.GetEntityID(player);
+    bool32 fireworkActive = false;
     foreach_active(Firework, firework)
     {
         if ((1 << playerID) & firework->activePlayers) {
-            flag = true;
+            fireworkActive = true;
             foreach_break;
         }
     }
-    return flag;
+    return fireworkActive;
 }
 
 void LaunchSpring_CheckPlayerCollisions(void *nextState)
@@ -144,288 +149,287 @@ void LaunchSpring_CheckPlayerCollisions(void *nextState)
 
     foreach_active(Player, player)
     {
-        if (!player->sidekick && !LaunchSpring_Unknown1(player)) {
+        if (!player->sidekick && !LaunchSpring_CheckFireworkActive(player)) {
             if (Player_CheckCollisionTouch(player, self, &LaunchSpring->hitbox)) {
                 RSDK.PlaySfx(LaunchSpring->sfxGrab, false, 255);
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
-                player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-                player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
-                player->velocity.x        = 0;
-                player->velocity.y        = 0;
-                player->groundVel         = 0;
-                player->onGround          = false;
-                player->state             = Player_State_None;
-                player->nextGroundState   = StateMachine_None;
-                player->nextAirState      = StateMachine_None;
-                self->animator3.frameID = 1;
-                self->playerPtr         = (Entity *)player;
-                self->state             = nextState;
+                player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+                player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
+                player->velocity.x           = 0;
+                player->velocity.y           = 0;
+                player->groundVel            = 0;
+                player->onGround             = false;
+                player->state                = Player_State_None;
+                player->nextGroundState      = StateMachine_None;
+                player->nextAirState         = StateMachine_None;
+                self->springAnimator.frameID = 1;
+                self->playerPtr              = player;
+                self->state                  = nextState;
                 foreach_break;
             }
         }
     }
 }
 
-void LaunchSpring_Unknown3(void)
+void LaunchSpring_LaunchPlayer(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     if (player->state == Player_State_None) {
-        RSDK.PlaySfx(LaunchSpring->sfxSpeedBooster, false, 255);
+        RSDK.PlaySfx(LaunchSpring->sfxSpeedBooster, false, 0xFF);
+
         if (self->strict) {
-            self->rotation   = (self->rotation + 64) & 0x1C0;
+            self->rotation     = (self->rotation + 0x40) & 0x1C0;
             player->position.x = self->position.x;
             player->position.y = self->position.y;
-            player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-            player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
+            player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+            player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
         }
         player->applyJumpCap     = false;
         player->jumpAbilityState = 0;
-        player->velocity.x       = RSDK.Cos512(self->rotation - 128) << 11;
-        player->velocity.y       = RSDK.Sin512(self->rotation - 128) << 11;
+        player->velocity.x       = RSDK.Cos512(self->rotation - 0x80) << 11;
+        player->velocity.y       = RSDK.Sin512(self->rotation - 0x80) << 11;
         player->state            = Player_State_Air;
     }
 }
 
-void LaunchSpring_Unknown4(void)
+void LaunchSpring_State_Spinning(void)
 {
     RSDK_THIS(LaunchSpring);
 
     self->rotation = (self->rotation - self->rotSpeed) & 0x1FF;
-    LaunchSpring_CheckPlayerCollisions(LaunchSpring_Unknown5);
+    LaunchSpring_CheckPlayerCollisions(LaunchSpring_State_Spinning_GrabbedPlayer);
 }
 
-void LaunchSpring_Unknown5(void)
+void LaunchSpring_State_Spinning_GrabbedPlayer(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     player->position.x = self->position.x;
     player->position.y = self->position.y;
-    player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-    player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
+    player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+    player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
     if (!--self->timer) {
-        RSDK.PlaySfx(LaunchSpring->sfxClack, false, 255);
-        self->state = LaunchSpring_Unknown6;
+        RSDK.PlaySfx(LaunchSpring->sfxClack, false, 0xFF);
+        self->state = LaunchSpring_State_Spinning_ReadyToFire;
     }
 }
 
-void LaunchSpring_Unknown6(void)
+void LaunchSpring_State_Spinning_ReadyToFire(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     if (player->state == Player_State_None) {
-        self->rotation   = (self->rotation - self->rotSpeed) & 0x1FF;
+        self->rotation     = (self->rotation - self->rotSpeed) & 0x1FF;
         player->position.x = self->position.x;
         player->position.y = self->position.y;
-        player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-        player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
+        player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+        player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
         if (player->jumpPress) {
-            LaunchSpring_Unknown3();
-            self->state = LaunchSpring_Unknown7;
+            LaunchSpring_LaunchPlayer();
+            self->state = LaunchSpring_State_Spinning_FiredPlayer;
         }
     }
     else {
         self->playerPtr = NULL;
-        self->state     = LaunchSpring_Unknown7;
+        self->state     = LaunchSpring_State_Spinning_FiredPlayer;
     }
 }
 
-void LaunchSpring_Unknown7(void)
+void LaunchSpring_State_Spinning_FiredPlayer(void)
 {
     RSDK_THIS(LaunchSpring);
 
-    RSDK.ProcessAnimation(&self->animator3);
-    if (self->animator3.frameID == self->animator3.frameCount - 1) {
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->animator3, true, 0);
-        self->state = LaunchSpring_Unknown8;
+    RSDK.ProcessAnimation(&self->springAnimator);
+    if (self->springAnimator.frameID == self->springAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
+        self->state = LaunchSpring_State_Spinning_ReadyUp;
     }
 }
 
-void LaunchSpring_Unknown8(void)
+void LaunchSpring_State_Spinning_ReadyUp(void)
 {
     RSDK_THIS(LaunchSpring);
 
     self->timer += 2;
     if (self->timer >= 47) {
         self->timer = 47;
-        self->state = LaunchSpring_Unknown4;
+        self->state = LaunchSpring_State_Spinning;
     }
 }
 
-void LaunchSpring_Unknown9(void)
+void LaunchSpring_State_Cannon(void)
 {
     RSDK_THIS(LaunchSpring);
 
     if (self->manual)
-        LaunchSpring_CheckPlayerCollisions(LaunchSpring_Unknown11);
+        LaunchSpring_CheckPlayerCollisions(LaunchSpring_State_Cannon_Fire_Manual);
     else
-        LaunchSpring_CheckPlayerCollisions(LaunchSpring_Unknown10);
+        LaunchSpring_CheckPlayerCollisions(LaunchSpring_State_Cannon_Fire_Automatic);
 }
 
-void LaunchSpring_Unknown10(void)
+void LaunchSpring_State_Cannon_Fire_Automatic(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     if (player->state == Player_State_None) {
         player->position.x = self->position.x;
         player->position.y = self->position.y;
-        player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-        player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
-        if (++self->timer2 == 60) {
-            self->timer2 = 0;
-            LaunchSpring_Unknown3();
-            self->state = LaunchSpring_Unknown12;
+        player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+        player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
+        if (++self->autoFireTimer == 60) {
+            self->autoFireTimer = 0;
+            LaunchSpring_LaunchPlayer();
+            self->state = LaunchSpring_State_Cannon_FiredPlayer;
         }
     }
     else {
         self->playerPtr = NULL;
-        self->state     = LaunchSpring_Unknown12;
+        self->state     = LaunchSpring_State_Cannon_FiredPlayer;
     }
 }
 
-void LaunchSpring_Unknown11(void)
+void LaunchSpring_State_Cannon_Fire_Manual(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     if (player->state == Player_State_None) {
         player->position.x = self->position.x;
         player->position.y = self->position.y;
-        player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-        player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
+        player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+        player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
         if (player->jumpPress) {
-            LaunchSpring_Unknown3();
-            self->timer2 = 0;
-            self->state  = LaunchSpring_Unknown12;
+            LaunchSpring_LaunchPlayer();
+            self->autoFireTimer = 0;
+            self->state         = LaunchSpring_State_Cannon_FiredPlayer;
         }
     }
     else {
         self->playerPtr = NULL;
-        self->state     = LaunchSpring_Unknown12;
+        self->state     = LaunchSpring_State_Cannon_FiredPlayer;
     }
 }
 
-void LaunchSpring_Unknown12(void)
+void LaunchSpring_State_Cannon_FiredPlayer(void)
 {
     RSDK_THIS(LaunchSpring);
 
-    if (LaunchSpring->flag) {
-        if (self->timer2 >= 30) {
-            self->state = LaunchSpring_Unknown9;
-        }
-        else {
-            self->timer2++;
-        }
+    if (LaunchSpring->isTMZ) {
+        if (self->autoFireTimer >= 30)
+            self->state = LaunchSpring_State_Cannon;
+        else
+            self->autoFireTimer++;
     }
     else {
-        RSDK.ProcessAnimation(&self->animator3);
-        if (self->animator3.frameID == self->animator3.frameCount - 1) {
-            RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->animator3, true, 0);
-            self->animator3.frameID = 1;
-            self->state             = LaunchSpring_Unknown9;
+        RSDK.ProcessAnimation(&self->springAnimator);
+        if (self->springAnimator.frameID == self->springAnimator.frameCount - 1) {
+            RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
+            self->springAnimator.frameID = 1;
+            self->state                  = LaunchSpring_State_Cannon;
         }
     }
 }
 
-void LaunchSpring_Unknown13(void)
+void LaunchSpring_State_Rotating(void)
 {
     RSDK_THIS(LaunchSpring);
 
     if (self->rotDir) {
         self->rotation -= self->rotSpeed;
-        if (self->rotation <= self->field_B4) {
+        if (self->rotation <= self->minAngle) {
             self->rotDir   = 0;
-            self->rotation = self->field_B4;
+            self->rotation = self->minAngle;
         }
     }
     else {
         self->rotation += self->rotSpeed;
-        if (self->rotation >= self->field_B6) {
+        if (self->rotation >= self->maxAngle) {
             self->rotDir   = 1;
-            self->rotation = self->field_B6;
+            self->rotation = self->maxAngle;
         }
     }
 
     if (self->manual)
-        LaunchSpring_CheckPlayerCollisions(LaunchSpring_Unknown15);
+        LaunchSpring_CheckPlayerCollisions(LaunchSpring_State_Rotate_Fire_Manual);
     else
-        LaunchSpring_CheckPlayerCollisions(LaunchSpring_Unknown14);
+        LaunchSpring_CheckPlayerCollisions(LaunchSpring_State_Rotate_Fire_Automatic);
 }
 
-void LaunchSpring_Unknown14(void)
+void LaunchSpring_State_Rotate_Fire_Automatic(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     if (player->state == Player_State_None) {
         if (self->strict)
-            self->rotation = (self->rotation + 32) & 0xC0;
+            self->rotation = (self->rotation + 0x20) & 0xC0;
         player->position.x = self->position.x;
         player->position.y = self->position.y;
-        player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-        player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
-        if (++self->timer2 == 60) {
-            self->timer2 = 0;
-            LaunchSpring_Unknown3();
-            self->state = LaunchSpring_Unknown16;
+        player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+        player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
+        if (++self->autoFireTimer == 60) {
+            self->autoFireTimer = 0;
+            LaunchSpring_LaunchPlayer();
+            self->state = LaunchSpring_State_Rotating_FiredPlayer;
         }
     }
     else {
         self->playerPtr = NULL;
-        self->state     = LaunchSpring_Unknown16;
+        self->state     = LaunchSpring_State_Rotating_FiredPlayer;
     }
 }
 
-void LaunchSpring_Unknown15(void)
+void LaunchSpring_State_Rotate_Fire_Manual(void)
 {
     RSDK_THIS(LaunchSpring);
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    EntityPlayer *player = self->playerPtr;
 
     if (player->state == Player_State_None) {
         if (self->rotDir) {
             self->rotation -= self->rotSpeed;
-            if (self->rotation <= self->field_B4) {
-                self->rotation = self->field_B4;
-                self->rotDir   = 0;
+            if (self->rotation <= self->minAngle) {
+                self->rotation = self->minAngle;
+                self->rotDir   = FLIP_NONE;
             }
         }
         else {
             self->rotation += self->rotSpeed;
-            if (self->rotation >= self->field_B6) {
-                self->rotation = self->field_B6;
-                self->rotDir   = 1;
+            if (self->rotation >= self->maxAngle) {
+                self->rotation = self->maxAngle;
+                self->rotDir   = FLIP_X;
             }
         }
         player->position.x = self->position.x;
         player->position.y = self->position.y;
-        player->position.x += RSDK.Cos512(self->rotation - 128) << 12;
-        player->position.y += RSDK.Sin512(self->rotation - 128) << 12;
+        player->position.x += RSDK.Cos512(self->rotation - 0x80) << 12;
+        player->position.y += RSDK.Sin512(self->rotation - 0x80) << 12;
         if (player->jumpPress) {
-            LaunchSpring_Unknown3();
-            self->state = LaunchSpring_Unknown16;
+            LaunchSpring_LaunchPlayer();
+            self->state = LaunchSpring_State_Rotating_FiredPlayer;
         }
     }
     else {
         self->playerPtr = NULL;
-        self->state     = LaunchSpring_Unknown16;
+        self->state     = LaunchSpring_State_Rotating_FiredPlayer;
     }
 }
 
-void LaunchSpring_Unknown16(void)
+void LaunchSpring_State_Rotating_FiredPlayer(void)
 {
     RSDK_THIS(LaunchSpring);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->springAnimator);
 
-    if (self->animator3.frameID == self->animator3.frameCount - 1) {
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->animator3, true, 0);
-        self->animator3.frameID = 1;
-        self->state             = LaunchSpring_Unknown13;
+    if (self->springAnimator.frameID == self->springAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
+        self->springAnimator.frameID = 1;
+        self->state                  = LaunchSpring_State_Rotating;
     }
 }
 
@@ -434,9 +438,9 @@ void LaunchSpring_EditorDraw(void)
 {
     RSDK_THIS(LaunchSpring);
     if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->jointAnimator, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
 
         LaunchSpring_Draw();
     }
@@ -448,6 +452,24 @@ void LaunchSpring_EditorLoad(void)
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/LaunchSpring.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("SSZ2"))
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/LaunchSpring.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(LaunchSpring, type);
+    RSDK_ENUM_VAR("Type 0", LAUNCHSPRING_0);
+    RSDK_ENUM_VAR("Cannon", LAUNCHSPRING_CANNON);
+    RSDK_ENUM_VAR("Rotating (45 Degrees)", LAUNCHSPRING_ROTATE_45DEG);
+    RSDK_ENUM_VAR("Rotating (90 Degrees)", LAUNCHSPRING_ROTATE_90DEG);
+    RSDK_ENUM_VAR("Rotating (135 Degrees)", LAUNCHSPRING_ROTATE_135DEG);
+    RSDK_ENUM_VAR("Rotating (180 Degrees)", LAUNCHSPRING_ROTATE_180DEG);
+
+    RSDK_ACTIVE_VAR(LaunchSpring, rotDir);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
+
+    RSDK_ACTIVE_VAR(LaunchSpring, angle);
+    RSDK_ENUM_VAR("Up", 0);
+    RSDK_ENUM_VAR("Left", 1);
+    RSDK_ENUM_VAR("Down", 2);
+    RSDK_ENUM_VAR("Right", 3);
 }
 #endif
 

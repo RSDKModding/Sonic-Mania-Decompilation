@@ -50,7 +50,7 @@ void MechaBu_DebugSpawn(void);
 void MechaBu_DebugDraw(void);
 
 void MechaBu_CheckPlayerCollisions(void);
-void MechaBu_CheckOnScreen(void);
+void MechaBu_CheckOffScreen(void);
 Vector2 MechaBu_GetSawOffset(void);
 
 void MechaBu_State_Setup(void);

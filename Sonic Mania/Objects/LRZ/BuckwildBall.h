@@ -51,7 +51,7 @@ void BuckwildBall_Serialize(void);
 
 // Extra Entity Functions
 void BuckwildBall_HandleTimerSfx(void);
-void BuckwildBall_CheckOnScreen(void);
+void BuckwildBall_CheckOffScreen(void);
 void BuckwildBall_SpawnDebris(void);
 void BuckwildBall_CheckPlayerCollisions(void);
 void BuckwildBall_HandleRollCrush(void);

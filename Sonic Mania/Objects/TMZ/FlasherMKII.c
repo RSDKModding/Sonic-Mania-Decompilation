@@ -39,26 +39,30 @@ void FlasherMKII_Create(void *data)
         self->drawOrder     = Zone->drawOrderLow;
         self->startPos      = self->position;
         switch (self->orientation) {
-            case 0:
+            case FLASHERMKII_ORIENTATION_UP:
                 self->type      = 0;
                 self->direction = FLIP_NONE;
                 break;
-            case 1:
+
+            case FLASHERMKII_ORIENTATION_DOWN:
                 self->type      = 0;
                 self->direction = FLIP_Y;
                 break;
-            case 2:
+
+            case FLASHERMKII_ORIENTATION_RIGHT:
                 self->direction = FLIP_NONE;
                 self->type      = 4;
                 break;
-            case 3:
+
+            case FLASHERMKII_ORIENTATION_LEFT:
                 self->direction = FLIP_X;
                 self->type      = 4;
                 break;
+
             default: break;
         }
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type, &self->animator, true, 0);
-        self->state = FlasherMKII_State_Unknown1;
+        self->state = FlasherMKII_State_Idle;
     }
 }
 
@@ -82,10 +86,10 @@ void FlasherMKII_DebugSpawn(void)
 void FlasherMKII_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void FlasherMKII_CheckOnScreen(void)
+void FlasherMKII_CheckOffScreen(void)
 {
     RSDK_THIS(FlasherMKII);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange))
@@ -135,7 +139,7 @@ void FlasherMKII_HandleHarmPlayerCollisions(void)
     }
 }
 
-void FlasherMKII_State_Unknown1(void)
+void FlasherMKII_State_Idle(void)
 {
     RSDK_THIS(FlasherMKII);
 
@@ -145,22 +149,22 @@ void FlasherMKII_State_Unknown1(void)
 
     EntityPlayer *player = Player_GetNearestPlayer();
     if (player) {
-        int rx = (self->position.x - player->position.x) >> 16;
-        int ry = (self->position.y - player->position.y) >> 16;
+        int32 rx = (self->position.x - player->position.x) >> 16;
+        int32 ry = (self->position.y - player->position.y) >> 16;
         if (!self->timer && rx * rx + ry * ry < 0x1000) {
             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 2, &self->animator, false, 0);
             RSDK.PlaySfx(FlasherMKII->sfxZap, false, 255);
-            self->state = FlasherMKII_State_Unknown3;
+            self->state = FlasherMKII_State_WeakFlash;
         }
         else {
             switch (self->orientation) {
-                case 0:
+                case FLASHERMKII_ORIENTATION_UP:
                     if (player->position.x >= self->position.x) {
                         if ((uint32)(rx + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x600000, 0xC0000, 2)) {
                             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                             self->direction  = FLIP_X;
                             self->velocity.x = 0x220000;
-                            self->state      = FlasherMKII_State_Unknown2;
+                            self->state      = FlasherMKII_State_Moving;
                             break;
                         }
                     }
@@ -168,17 +172,18 @@ void FlasherMKII_State_Unknown1(void)
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_NONE;
                         self->velocity.x = -0x220000;
-                        self->state      = FlasherMKII_State_Unknown2;
+                        self->state      = FlasherMKII_State_Moving;
                         break;
                     }
                     break;
-                case 1:
+
+                case FLASHERMKII_ORIENTATION_DOWN:
                     if (player->position.x >= self->position.x) {
                         if ((uint32)(rx + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_ROOF, 0, 0x600000, -0xC0000, 2)) {
                             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                             self->velocity.x = 0x220000;
                             self->direction  = FLIP_XY;
-                            self->state      = FlasherMKII_State_Unknown2;
+                            self->state      = FlasherMKII_State_Moving;
                             break;
                         }
                     }
@@ -186,17 +191,18 @@ void FlasherMKII_State_Unknown1(void)
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_Y;
                         self->velocity.x = -0x220000;
-                        self->state      = FlasherMKII_State_Unknown2;
+                        self->state      = FlasherMKII_State_Moving;
                         break;
                     }
                     break;
-                case 2:
+
+                case FLASHERMKII_ORIENTATION_RIGHT:
                     if (player->position.y >= self->position.y) {
                         if ((uint32)(ry + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xC0000, 0x600000, 2u)) {
                             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                             self->direction  = FLIP_Y;
                             self->velocity.y = 0x220000;
-                            self->state      = FlasherMKII_State_Unknown2;
+                            self->state      = FlasherMKII_State_Moving;
                             break;
                         }
                     }
@@ -204,17 +210,18 @@ void FlasherMKII_State_Unknown1(void)
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_NONE;
                         self->velocity.y = -0x220000;
-                        self->state      = FlasherMKII_State_Unknown2;
+                        self->state      = FlasherMKII_State_Moving;
                         break;
                     }
                     break;
-                case 3:
+
+                case FLASHERMKII_ORIENTATION_LEFT:
                     if (player->position.y >= self->position.y) {
                         if ((uint32)(ry + 0xFF) <= 0xBE && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xC0000, 0x600000, 2u)) {
                             RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                             self->velocity.y = 0x220000;
                             self->direction  = FLIP_XY;
-                            self->state      = FlasherMKII_State_Unknown2;
+                            self->state      = FlasherMKII_State_Moving;
                             break;
                         }
                     }
@@ -222,20 +229,21 @@ void FlasherMKII_State_Unknown1(void)
                         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 1, &self->animator, false, 0);
                         self->direction  = FLIP_X;
                         self->velocity.y = -0x220000;
-                        self->state      = FlasherMKII_State_Unknown2;
+                        self->state      = FlasherMKII_State_Moving;
                         break;
                     }
                     break;
+
                 default: break;
             }
         }
     }
 
     FlasherMKII_HandlePlayerCollisions();
-    FlasherMKII_CheckOnScreen();
+    FlasherMKII_CheckOffScreen();
 }
 
-void FlasherMKII_State_Unknown2(void)
+void FlasherMKII_State_Moving(void)
 {
     RSDK_THIS(FlasherMKII);
 
@@ -247,48 +255,50 @@ void FlasherMKII_State_Unknown2(void)
     }
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type, &self->animator, false, 0);
-        self->state = FlasherMKII_State_Unknown1;
+        self->state = FlasherMKII_State_Idle;
     }
+
     FlasherMKII_HandlePlayerCollisions();
-    FlasherMKII_CheckOnScreen();
+    FlasherMKII_CheckOffScreen();
 }
 
-void FlasherMKII_State_Unknown3(void)
+void FlasherMKII_State_WeakFlash(void)
 {
     RSDK_THIS(FlasherMKII);
 
     if (++self->timer == 60) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 3, &self->animator, false, 0);
-        self->state = FlasherMKII_State_Unknown4;
+        self->state = FlasherMKII_State_StrongFlash;
     }
+
     FlasherMKII_HandlePlayerCollisions();
-    FlasherMKII_CheckOnScreen();
+    FlasherMKII_CheckOffScreen();
 }
 
-void FlasherMKII_State_Unknown4(void)
+void FlasherMKII_State_StrongFlash(void)
 {
     RSDK_THIS(FlasherMKII);
 
     if (++self->timer == 120) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type + 2, &self->animator, false, 0);
-        self->state = FlasherMKII_State_Unknown5;
+        self->state = FlasherMKII_State_FinishedFlashing;
     }
     FlasherMKII_HandleHarmPlayerCollisions();
-    FlasherMKII_CheckOnScreen();
+    FlasherMKII_CheckOffScreen();
 }
 
-void FlasherMKII_State_Unknown5(void)
+void FlasherMKII_State_FinishedFlashing(void)
 {
     RSDK_THIS(FlasherMKII);
 
     if (++self->timer == 30) {
         RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, self->type, &self->animator, false, 0);
-        self->state = FlasherMKII_State_Unknown1;
+        self->state = FlasherMKII_State_Idle;
     }
     FlasherMKII_HandlePlayerCollisions();
-    FlasherMKII_CheckOnScreen();
+    FlasherMKII_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -297,19 +307,22 @@ void FlasherMKII_EditorDraw(void)
     RSDK_THIS(FlasherMKII);
     self->startPos = self->position;
     switch (self->orientation) {
-        case 0:
+        case FLASHERMKII_ORIENTATION_UP:
             self->type      = 0;
             self->direction = FLIP_NONE;
             break;
-        case 1:
+
+        case FLASHERMKII_ORIENTATION_DOWN:
             self->type      = 0;
             self->direction = FLIP_Y;
             break;
-        case 2:
+
+        case FLASHERMKII_ORIENTATION_RIGHT:
             self->direction = FLIP_NONE;
             self->type      = 4;
             break;
-        case 3:
+
+        case FLASHERMKII_ORIENTATION_LEFT:
             self->direction = FLIP_X;
             self->type      = 4;
             break;
@@ -321,7 +334,16 @@ void FlasherMKII_EditorDraw(void)
     FlasherMKII_Draw();
 }
 
-void FlasherMKII_EditorLoad(void) { FlasherMKII->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/FlasherMKII.bin", SCOPE_STAGE); }
+void FlasherMKII_EditorLoad(void)
+{
+    FlasherMKII->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/FlasherMKII.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(FlasherMKII, orientation);
+    RSDK_ENUM_VAR("Up", FLASHERMKII_ORIENTATION_UP);
+    RSDK_ENUM_VAR("Down", FLASHERMKII_ORIENTATION_DOWN);
+    RSDK_ENUM_VAR("Right", FLASHERMKII_ORIENTATION_RIGHT);
+    RSDK_ENUM_VAR("Left", FLASHERMKII_ORIENTATION_LEFT);
+}
 #endif
 
 void FlasherMKII_Serialize(void) { RSDK_EDITABLE_VAR(FlasherMKII, VAR_UINT8, orientation); }

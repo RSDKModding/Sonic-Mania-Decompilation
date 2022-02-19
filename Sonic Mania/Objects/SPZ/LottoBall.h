@@ -57,7 +57,7 @@ void LottoBall_EditorLoad(void);
 void LottoBall_Serialize(void);
 
 // Extra Entity Functions
-void LottoBall_CheckOnScreen(void);
+void LottoBall_CheckOffScreen(void);
 
 void LottoBall_State_FallIntoMachine(void);
 void LottoBall_State_InMachine(void);

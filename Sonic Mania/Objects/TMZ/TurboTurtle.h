@@ -3,10 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TURBOTURTLE_FANDIR_TOP,
+    TURBOTURTLE_FANDIR_RIGHT,
+    TURBOTURTLE_FANDIR_LEFT,
+}TurboTurtleFanDirs;
+
 // Object Class
 struct ObjectTurboTurtle {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxWalk;
     uint16 sfxWalk2;
@@ -22,9 +28,9 @@ struct EntityTurboTurtle {
     Animator animator;
     uint8 currentSide;
     uint16 stepTimer;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxFanT;
+    Hitbox hitboxFanR;
+    Hitbox hitboxFanL;
     bool32 fanActiveTop;
     bool32 rightFanActive;
     bool32 leftFanActive;
@@ -69,12 +75,12 @@ void TurboTurtle_HandleFanDebris(uint8 type, int strength, int length);
 bool32 TurboTurtle_FanCheckCB(void);
 
 void TurboTurtle_State_Setup(void);
-void TurboTurtle_State_Unknown1(void);
-void TurboTurtle_State_Unknown2(void);
-void TurboTurtle_State1_Unknown1(void);
-void TurboTurtle_State2_Unknown1(void);
-void TurboTurtle_State2_Unknown2(void);
-void TurboTurtle_State3_Unknown1(void);
-void TurboTurtle_State3_Unknown2(void);
+void TurboTurtle_State_Walking(void);
+void TurboTurtle_State_TurnFanUp(void);
+void TurboTurtle_State_FanTop(void);
+void TurboTurtle_State_TurnFanRight(void);
+void TurboTurtle_State_FanRight(void);
+void TurboTurtle_State_TurnFanLeft(void);
+void TurboTurtle_State_FanLeft(void);
 
 #endif //!OBJ_TURBOTURTLE_H

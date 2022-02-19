@@ -170,7 +170,7 @@ void Hotaru_CheckPlayerCollisions(void)
     }
 }
 
-void Hotaru_CheckOnScreen(void)
+void Hotaru_CheckOffScreen(void)
 {
     RSDK_THIS(Hotaru);
 
@@ -305,7 +305,7 @@ void Hotaru_State_Unknown3(void)
     }
 
     Hotaru_CheckPlayerCollisions();
-    Hotaru_CheckOnScreen();
+    Hotaru_CheckOffScreen();
 }
 
 void Hotaru_State_Unknown4(void)
@@ -321,7 +321,7 @@ void Hotaru_State_Unknown4(void)
         self->state             = Hotaru_State_Unknown5;
     }
     Hotaru_CheckPlayerCollisions();
-    Hotaru_CheckOnScreen();
+    Hotaru_CheckOffScreen();
 }
 
 void Hotaru_State_Unknown5(void)
@@ -367,7 +367,7 @@ void Hotaru_State_Unknown5(void)
         self->state = Hotaru_State_Unknown6;
     }
     Hotaru_CheckPlayerCollisions();
-    Hotaru_CheckOnScreen();
+    Hotaru_CheckOffScreen();
 }
 
 void Hotaru_State_Unknown6(void)
@@ -401,7 +401,7 @@ void Hotaru_State_Unknown6(void)
             self->position.y = storeY;
         }
     }
-    Hotaru_CheckOnScreen();
+    Hotaru_CheckOffScreen();
 }
 
 void Hotaru_State_Unknown7(void)
@@ -409,7 +409,7 @@ void Hotaru_State_Unknown7(void)
     RSDK_THIS(Hotaru);
     self->position.y -= 0x20000;
     Hotaru_CheckPlayerCollisions();
-    Hotaru_CheckOnScreen();
+    Hotaru_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR

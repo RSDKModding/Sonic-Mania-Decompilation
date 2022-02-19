@@ -161,7 +161,7 @@ void Orbinaut_HandleRotation(void)
     }
 }
 
-void Orbinaut_CheckOnScreen(void)
+void Orbinaut_CheckOffScreen(void)
 {
     RSDK_THIS(Orbinaut);
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
@@ -223,7 +223,7 @@ void Orbinaut_State_Moving(void)
         self->direction = playerPtr->position.x >= self->position.x;
     }
 
-    Orbinaut_CheckOnScreen();
+    Orbinaut_CheckOffScreen();
 }
 
 void Orbinaut_State_ReleasingOrbs(void)
@@ -261,7 +261,7 @@ void Orbinaut_State_ReleasingOrbs(void)
     else
         self->animatorFace.timer++;
 
-    Orbinaut_CheckOnScreen();
+    Orbinaut_CheckOffScreen();
 }
 
 void Orbinaut_State_Orbless(void)
@@ -269,7 +269,7 @@ void Orbinaut_State_Orbless(void)
     RSDK_THIS(Orbinaut);
     self->position.x += self->velocity.x;
     Orbinaut_HandlePlayerInteractions();
-    Orbinaut_CheckOnScreen();
+    Orbinaut_CheckOffScreen();
 }
 
 void Orbinaut_State_Orb(void)

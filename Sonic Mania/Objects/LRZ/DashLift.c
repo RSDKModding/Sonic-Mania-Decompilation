@@ -44,7 +44,7 @@ void DashLift_Create(void *data)
 
 void DashLift_StageLoad(void) { DashLift->sfxPulley = RSDK.GetSfx("Stage/Pulley.wav"); }
 
-void DashLift_CheckOnScreen(void)
+void DashLift_CheckOffScreen(void)
 {
     RSDK_THIS(DashLift);
 
@@ -169,7 +169,7 @@ void DashLift_State_HandleDash(void)
         }
     }
 
-    DashLift_CheckOnScreen();
+    DashLift_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR
