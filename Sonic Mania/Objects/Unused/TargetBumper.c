@@ -43,6 +43,7 @@ void TargetBumper_Create(void *data)
 void TargetBumper_StageLoad(void)
 {
     TargetBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/TargetBumper.bin", SCOPE_STAGE);
+
     DEBUGMODE_ADD_OBJ(TargetBumper);
 }
 
@@ -55,7 +56,7 @@ void TargetBumper_DebugSpawn(void)
 void TargetBumper_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(TargetBumper->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void TargetBumper_Collide(void)
@@ -70,12 +71,14 @@ void TargetBumper_Collide(void)
             hitbox.right  = 14;
             hitbox.bottom = 4;
             break;
+
         case TARGETBUMP_VERTICAL:
             hitbox.left   = -4;
             hitbox.top    = -14;
             hitbox.right  = 4;
             hitbox.bottom = 14;
             break;
+
         case TARGETBUMP_CIRCLE:
             hitbox.left   = -8;
             hitbox.top    = -8;
@@ -88,7 +91,7 @@ void TargetBumper_Collide(void)
     {
         if (Player_CheckCollisionTouch(player, self, &hitbox) && player->animator.animationID != ANI_HURT) {
             self->curPos = self->startPos;
-            self->state  = TargetBumper_Hit;
+            self->state  = TargetBumper_State_Hit;
             self->active = ACTIVE_NORMAL;
 
             switch (self->type) {
@@ -179,13 +182,9 @@ void TargetBumper_Collide(void)
     }
 }
 
-void TargetBumper_State_Collide(void)
-{
-    // eminem ?
-    TargetBumper_Collide();
-}
+void TargetBumper_State_Collide(void) { TargetBumper_Collide(); }
 
-void TargetBumper_Hit(void)
+void TargetBumper_State_Hit(void)
 {
     RSDK_THIS(TargetBumper);
     TargetBumper_Collide();
@@ -199,8 +198,7 @@ void TargetBumper_Hit(void)
         self->position.y = self->curPos.y;
     }
 
-    self->hitTimer++;
-    if (self->hitTimer == 12) {
+    if (++self->hitTimer == 12) {
         if (self->hitCount < 3) {
             self->position.x = self->startPos.x;
             self->position.y = self->startPos.y;

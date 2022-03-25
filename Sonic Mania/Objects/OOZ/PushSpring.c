@@ -49,11 +49,11 @@ void PushSpring_Create(void *data)
 
         if (self->type != PUSHSPRING_V) {
             if (self->direction) {
-                self->stateDraw = PushSpring_Draw_Left;
+                self->stateDraw    = PushSpring_Draw_Left;
                 self->stateCollide = PushSpring_Collide_Left;
             }
             else {
-                self->stateDraw = PushSpring_Draw_Right;
+                self->stateDraw    = PushSpring_Draw_Right;
                 self->stateCollide = PushSpring_Collide_Right;
             }
 
@@ -66,12 +66,12 @@ void PushSpring_Create(void *data)
         }
         else {
             if (self->direction) {
-                self->direction = FLIP_Y;
-                self->stateDraw = PushSpring_Draw_Bottom;
+                self->direction    = FLIP_Y;
+                self->stateDraw    = PushSpring_Draw_Bottom;
                 self->stateCollide = PushSpring_Collide_Bottom;
             }
             else {
-                self->stateDraw = PushSpring_Draw_Top;
+                self->stateDraw    = PushSpring_Draw_Top;
                 self->stateCollide = PushSpring_Collide_Top;
             }
 
@@ -109,7 +109,7 @@ void PushSpring_Collide_Top(void)
                 player->onGround      = false;
                 player->state         = Player_State_Air;
                 player->velocity.y    = -0xA0000;
-                int32 anim              = player->animator.animationID;
+                int32 anim            = player->animator.animationID;
                 if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                     player->animationReserve = player->animator.animationID;
                 else
@@ -136,6 +136,7 @@ void PushSpring_Collide_Bottom(void)
                 player->position.y -= 0x20000;
                 self->beingPushed |= true;
             }
+
             if (self->pushOffset >= 0x120000) {
                 player->collisionMode = 0;
                 player->onGround      = false;
@@ -219,11 +220,11 @@ void PushSpring_Draw_Top(void)
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.y                = self->position.y + 2 * self->pushOffset / 3;
+    drawPos.y              = self->position.y + 2 * self->pushOffset / 3;
     self->animator.frameID = 2;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.y                = self->position.y + self->pushOffset / 3;
+    drawPos.y              = self->position.y + self->pushOffset / 3;
     self->animator.frameID = 3;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
@@ -241,12 +242,15 @@ void PushSpring_Draw_Bottom(void)
     drawPos.y -= self->pushOffset;
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
-    drawPos.y                = self->position.y - 2 * self->pushOffset / 3;
+
+    drawPos.y              = self->position.y - 2 * self->pushOffset / 3;
     self->animator.frameID = 2;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
-    drawPos.y                = self->position.y - self->pushOffset / 3;
+
+    drawPos.y              = self->position.y - self->pushOffset / 3;
     self->animator.frameID = 3;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
+
     self->animator.frameID = 4;
     RSDK.DrawSprite(&self->animator, 0, false);
 }
@@ -262,11 +266,11 @@ void PushSpring_Draw_Left(void)
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.x                = self->position.x + 2 * self->pushOffset / 3;
+    drawPos.x              = self->position.x + 2 * self->pushOffset / 3;
     self->animator.frameID = 2;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.x                = self->position.x + self->pushOffset / 3;
+    drawPos.x              = self->position.x + self->pushOffset / 3;
     self->animator.frameID = 3;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
@@ -285,11 +289,11 @@ void PushSpring_Draw_Right(void)
     self->animator.frameID = 1;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.x                = self->position.x - 2 * self->pushOffset / 3;
+    drawPos.x              = self->position.x - 2 * self->pushOffset / 3;
     self->animator.frameID = 2;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.x                = self->position.x - self->pushOffset / 3;
+    drawPos.x              = self->position.x - self->pushOffset / 3;
     self->animator.frameID = 3;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
@@ -301,8 +305,8 @@ void PushSpring_State_WaitForPushed(void)
 {
     RSDK_THIS(PushSpring);
     if (self->beingPushed) {
-        self->pushTimer = 0;
-        self->state     = PushSpring_State_BeingPushed;
+        self->timer = 0;
+        self->state = PushSpring_State_BeingPushed;
     }
 }
 
@@ -312,14 +316,13 @@ void PushSpring_State_BeingPushed(void)
     if (self->beingPushed) {
         self->pushOffset += self->groundVel;
         if (self->pushOffset < 0x120000) {
-            if (!(self->pushTimer % 10))
+            if (!(self->timer % 10))
                 RSDK.PlaySfx(PushSpring->sfxPush, false, 0xFF);
-            ++self->pushTimer;
         }
         else {
-            ++self->pushTimer;
             self->pushOffset = 0x120000;
         }
+        ++self->timer;
     }
     else {
         self->state = PushSpring_State_PushRecoil;
@@ -330,8 +333,8 @@ void PushSpring_State_PushRecoil(void)
 {
     RSDK_THIS(PushSpring);
     if (self->beingPushed) {
-        self->pushTimer = 0;
-        self->state     = PushSpring_State_BeingPushed;
+        self->timer = 0;
+        self->state = PushSpring_State_BeingPushed;
     }
     else {
         self->pushOffset -= 0x20000;

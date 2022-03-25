@@ -28,7 +28,7 @@ void KleptoMobile_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->basicAnimator, NULL, false);
     }
 }
 
@@ -44,55 +44,59 @@ void KleptoMobile_Create(void *data)
             self->drawOrder       = Zone->drawOrderLow;
             self->drawFX          = FX_FLIP;
             self->explosionVolume = 0x200;
-            self->type            = voidToInt(data);
+
+            self->type = voidToInt(data);
             switch (self->type) {
                 case KLEPTOMOBILE_EGGMAN:
                     self->hitbox.left   = -22;
                     self->hitbox.top    = -22;
-                    self->hitbox.right  = 0x16;
-                    self->hitbox.bottom = 0x16;
+                    self->hitbox.right  = 22;
+                    self->hitbox.bottom = 22;
                     self->active        = ACTIVE_NORMAL;
                     self->health        = 8;
-                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->animator2, true, 1);
-                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->animator3, true, 0);
-                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->animator4, true, 0);
-                    RSDK.SetSpriteAnimation(PhantomKing->aniFrames, 8, &self->animator11, true, 0);
+                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->mobileTopAnimator, true, 1);
+                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->eggmanAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->mobileAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(PhantomKing->aniFrames, 8, &self->rubyAnimator, true, 0);
                     KleptoMobile->defeated = false;
-                    self->stateDraw      = KleptoMobile_Draw_KleptoMobile;
-                    self->state          = KleptoMobile_State_SetupArena;
+                    self->stateDraw        = KleptoMobile_Draw_KleptoMobile;
+                    self->state            = KleptoMobile_State_SetupArena;
                     break;
+
                 case KLEPTOMOBILE_ARM_L:
                 case KLEPTOMOBILE_ARM_R:
                     self->hitbox.left   = -32;
                     self->hitbox.top    = -8;
-                    self->active        = ACTIVE_NORMAL;
-                    self->visible       = true;
                     self->hitbox.right  = 32;
                     self->hitbox.bottom = 8;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
                     if (self->type == KLEPTOMOBILE_ARM_R) {
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 7, &self->animator7, true, 0);
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 8, &self->animator8, true, 0);
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 9, &self->animator9, true, 0);
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 10, &self->animator10, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 7, &self->orbAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 8, &self->handAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 9, &self->finger1Animator, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 10, &self->finger2Animator, true, 0);
                     }
                     else {
                         self->drawOrder = Zone->playerDrawLow;
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 3, &self->animator7, true, 0);
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 4, &self->animator8, true, 0);
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 5, &self->animator9, true, 0);
-                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 6, &self->animator10, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 3, &self->orbAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 4, &self->handAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 5, &self->finger1Animator, true, 0);
+                        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 6, &self->finger2Animator, true, 0);
                     }
                     self->stateDraw = KleptoMobile_Draw_Arm;
-                    self->state     = KleptoMobile_State1_Unknown1;
+                    self->state     = KleptoMobile_StateArm_Cutscene;
                     break;
-                case 3:
+
+                case KLEPTOMOBILE_HAND:
                     self->active  = ACTIVE_NORMAL;
                     self->visible = true;
-                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 12, &self->animator8, true, 5);
-                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 17, &self->animator7, true, 0);
-                    self->stateDraw = KleptoMobile_StateDraw3_Unknown1;
-                    self->state     = KleptoMobile_State3_Unknown1;
+                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 12, &self->handAnimator, true, 5);
+                    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 17, &self->orbAnimator, true, 0);
+                    self->stateDraw = KleptoMobile_Draw_Hand;
+                    self->state     = KleptoMobile_StateHand_Cutscene;
                     break;
+
                 default: break;
             }
         }
@@ -104,7 +108,8 @@ void KleptoMobile_Create(void *data)
 
 void KleptoMobile_StageLoad(void)
 {
-    KleptoMobile->aniFrames    = RSDK.LoadSpriteAnimation("Phantom/KleptoMobile.bin", SCOPE_STAGE);
+    KleptoMobile->aniFrames = RSDK.LoadSpriteAnimation("Phantom/KleptoMobile.bin", SCOPE_STAGE);
+
     KleptoMobile->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
     KleptoMobile->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
     KleptoMobile->sfxFlail     = RSDK.GetSfx("SSZ1/Flail.wav");
@@ -118,37 +123,37 @@ void KleptoMobile_HandleAnimations(void)
     RSDK_THIS(KleptoMobile);
 
     bool32 flag = false;
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
-    if (self->animator3.animationID == 13) {
+    if (self->eggmanAnimator.animationID == 13) {
         foreach_active(Player, player)
         {
             if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == ERZStart_State_PlayerRebound)
                 flag = true;
         }
         if (flag == true)
-            RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 14, &self->animator3, true, 0);
+            RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 14, &self->eggmanAnimator, true, 0);
     }
-    else if (self->animator3.animationID == 14) {
+    else if (self->eggmanAnimator.animationID == 14) {
         foreach_active(Player, player)
         {
             if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == ERZStart_State_PlayerRebound)
                 flag = true;
         }
 
-        if (self->animator3.frameID >= 14) {
+        if (self->eggmanAnimator.frameID >= 14) {
             if (flag)
-                RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 14, &self->animator3, true, 7);
+                RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 14, &self->eggmanAnimator, true, 7);
             else
-                RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->eggmanAnimator, true, 0);
         }
     }
     else {
-        if (self->animator3.animationID == 15 && !self->invincibilityTimer)
-            RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->animator3, true, 0);
+        if (self->eggmanAnimator.animationID == 15 && !self->invincibilityTimer)
+            RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->eggmanAnimator, true, 0);
     }
 }
 
@@ -169,7 +174,7 @@ void KleptoMobile_Hit(void)
     RSDK_THIS(KleptoMobile);
 
     if (--self->health <= 0) {
-        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 16, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 16, &self->eggmanAnimator, true, 0);
         self->state = KleptoMobile_State_Destroyed;
         self->timer = 0;
         if (PhantomKing->defeated)
@@ -179,28 +184,28 @@ void KleptoMobile_Hit(void)
     }
     else {
         self->invincibilityTimer = 48;
-        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 15, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 15, &self->eggmanAnimator, true, 0);
         RSDK.PlaySfx(KleptoMobile->sfxHit, false, 255);
 
         foreach_all(PhantomRuby, ruby)
         {
-            ruby->position.x = self->circlePos.x;
-            ruby->position.y = self->circlePos.y;
+            ruby->position.x = self->rubyPos.x;
+            ruby->position.y = self->rubyPos.y;
             ruby->velocity.x = -0x20000;
             ruby->velocity.y = -0x40000;
             ruby->state      = PhantomRuby_State_FallOffScreen;
 
             EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
             arm1->timer              = 0;
-            arm1->state              = KleptoMobile_State1_Unknown1;
+            arm1->state              = KleptoMobile_StateArm_Cutscene;
 
             EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
             arm2->timer              = 0;
-            arm2->state              = KleptoMobile_State1_Unknown1;
+            arm2->state              = KleptoMobile_StateArm_Cutscene;
         }
 
-        self->field_120 = false;
-        self->state     = KleptoMobile_State_HitFall;
+        self->holdingRuby = false;
+        self->state       = KleptoMobile_State_HitFall;
     }
 }
 
@@ -211,10 +216,10 @@ void KleptoMobile_HandleFrames(void)
     self->rotation = RSDK.Sin512(2 * Zone->timer) >> 6;
     self->angle2   = (self->angle2 + 12) & 0x3FF;
 
-    int moveX = 0x1C00 * RSDK.Sin512(-self->rotation) + self->position.x;
-    int moveY = 0x1C00 * RSDK.Cos512(-self->rotation) + self->position.y;
+    int32 moveX = 0x1C00 * RSDK.Sin512(-self->rotation) + self->position.x;
+    int32 moveY = 0x1C00 * RSDK.Cos512(-self->rotation) + self->position.y;
 
-    int angle = self->angle2;
+    int32 angle = self->angle2;
 
     for (int i = 0; i < 10; i += 2) {
         self->framePositions[i].x = moveX + 2 * RSDK.Cos1024(angle) * RSDK.Cos512(self->rotation);
@@ -245,14 +250,14 @@ void KleptoMobile_SwitchToKing(void)
                 king->position.x = player1->position.x + 0x1000000;
             else
                 king->position.x = player1->position.x - 0x1000000;
-            king->position.y   = player1->position.y + 0x800000;
+            king->position.y  = player1->position.y + 0x800000;
             king->originPos.y = player1->position.y + 0x800000;
-            king->rubyPos      = king->position;
+            king->rubyPos     = king->position;
             king->rubyPos.x -= 0x1400 * RSDK.Sin512(-king->rotation);
             king->rubyPos.y -= 0x1400 * RSDK.Cos512(-king->rotation);
             king->velocity.x = 0;
             king->velocity.y = 0;
-            king->drawRuby  = true;
+            king->drawRuby   = true;
 
             for (int i = 0; i < 0x3FC; i += 0xAA) {
                 EntityPKingAttack *attack = CREATE_ENTITY(PKingAttack, intToVoid(1), king->rubyPos.x, king->rubyPos.y);
@@ -260,7 +265,7 @@ void KleptoMobile_SwitchToKing(void)
                 attack->target            = (Entity *)king;
             }
 
-            king->state = PhantomKing_State_Unknown8;
+            king->state = PhantomKing_State_FlyAround;
             kingPtr     = king;
             foreach_break;
         }
@@ -274,7 +279,7 @@ void KleptoMobile_SwitchToKing(void)
             for (int i = 0; i < 10; ++i) kingArm->framePositions[i] = kingPtr->position;
             kingArm->velocity.x = 0;
             kingArm->velocity.y = 0;
-            kingArm->state      = PhantomKing_StateArm1_Unknown2;
+            kingArm->state      = PhantomKing_StateArm_Idle;
         }
     }
 }
@@ -289,14 +294,14 @@ void KleptoMobile_Draw_KleptoMobile(void)
         RSDK.CopyPalette(2, 121, 0, 25, 1);
         RSDK.CopyPalette(2, 122, 0, 197, 6);
 
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->mobileTopAnimator, NULL, false);
+        RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
 
-        self->animator4.frameID = 2;
-        RSDK.DrawSprite(&self->animator4, NULL, false);
+        self->mobileAnimator.frameID = 2;
+        RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
 
-        self->animator4.frameID = 0;
-        RSDK.DrawSprite(&self->animator4, NULL, false);
+        self->mobileAnimator.frameID = 0;
+        RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
 
         RSDK.CopyPalette(1, 136, 0, 136, 8);
         RSDK.CopyPalette(1, 11, 0, 11, 1);
@@ -304,18 +309,18 @@ void KleptoMobile_Draw_KleptoMobile(void)
         RSDK.CopyPalette(1, 197, 0, 197, 6);
     }
     else {
-        self->animator1.frameID = 1;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        self->basicAnimator.frameID = 1; // this sets basicAnimator to anim 0, frame 1... and then draws it using mobileTopAnimator instead
+        RSDK.DrawSprite(&self->mobileTopAnimator, NULL, false);
+        RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
 
-        self->animator4.frameID = 2;
-        RSDK.DrawSprite(&self->animator4, NULL, false);
+        self->mobileAnimator.frameID = 2;
+        RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
 
-        self->animator4.frameID = 0;
-        RSDK.DrawSprite(&self->animator4, NULL, false);
+        self->mobileAnimator.frameID = 0;
+        RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
     }
 
-    RSDK.DrawCircle(self->circlePos.x, self->circlePos.y, self->circleRadius, 0, 255, INK_LOOKUP, false);
+    RSDK.DrawCircle(self->rubyPos.x, self->rubyPos.y, self->circleRadius, 0, 255, INK_LOOKUP, false);
 }
 
 void KleptoMobile_State_SetupArena(void)
@@ -325,34 +330,34 @@ void KleptoMobile_State_SetupArena(void)
     self->active = ACTIVE_NORMAL;
 
     EntityKleptoMobile *hand = RSDK_GET_ENTITY(SceneInfo->entitySlot - 2, KleptoMobile);
-    RSDK.ResetEntityPtr(hand, KleptoMobile->objectID, intToVoid(3));
+    RSDK.ResetEntityPtr(hand, KleptoMobile->objectID, intToVoid(KLEPTOMOBILE_HAND));
     hand->position.x = self->position.x;
     hand->position.y = self->position.y;
-    hand->parent     = (Entity *)self;
+    hand->parent     = self;
 
     EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
-    RSDK.ResetEntityPtr(arm2, KleptoMobile->objectID, intToVoid(2));
+    RSDK.ResetEntityPtr(arm2, KleptoMobile->objectID, intToVoid(KLEPTOMOBILE_ARM_R));
     arm2->position.x = self->position.x;
     arm2->position.y = self->position.y;
-    arm2->parent     = (Entity *)self;
+    arm2->parent     = self;
 
     EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
-    RSDK.ResetEntityPtr(arm1, KleptoMobile->objectID, intToVoid(1));
+    RSDK.ResetEntityPtr(arm1, KleptoMobile->objectID, intToVoid(KLEPTOMOBILE_ARM_L));
     arm1->position.x = self->position.x;
     arm1->position.y = self->position.y;
-    arm1->parent     = (Entity *)self;
+    arm1->parent     = self;
 
-    self->originPos.x    = self->position.x;
-    self->originPos.y    = self->position.y;
+    self->originPos.x     = self->position.x;
+    self->originPos.y     = self->position.y;
     KleptoMobile->boundsM = self->position.x;
     KleptoMobile->boundsL = KleptoMobile->boundsM - 0x800000;
     KleptoMobile->boundsR = KleptoMobile->boundsM + 0x800000;
     KleptoMobile->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
     KleptoMobile->boundsB = (Zone->cameraBoundsB[0] - 96) << 16;
-    self->state         = StateMachine_None;
+    self->state           = StateMachine_None;
 }
 
-void KleptoMobile_State_Unknown1(void)
+void KleptoMobile_State_CutsceneControlled(void)
 {
     RSDK_THIS(KleptoMobile);
 
@@ -365,17 +370,17 @@ void KleptoMobile_State_Unknown1(void)
     KleptoMobile_HandleFrames();
 }
 
-void KleptoMobile_State_Unknown2(void)
+void KleptoMobile_State_MoveAround(void)
 {
     RSDK_THIS(KleptoMobile);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    self->position.y      = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
     KleptoMobile_CheckPlayerCollisions();
 
-    int angle = RSDK.ATan2(self->position.x - player1->position.x, self->originPos.y - player1->position.y);
-    int x     = (RSDK.Cos256(angle) << 15) + player1->position.x;
-    int y     = (RSDK.Sin256(angle) << 15) + player1->position.y;
+    int32 angle = RSDK.ATan2(self->position.x - player1->position.x, self->originPos.y - player1->position.y);
+    int32 x     = (RSDK.Cos256(angle) << 15) + player1->position.x;
+    int32 y     = (RSDK.Sin256(angle) << 15) + player1->position.y;
 
     if (self->circleRadius > 0)
         self->circleRadius -= 8;
@@ -389,8 +394,8 @@ void KleptoMobile_State_Unknown2(void)
         self->velocity.x += 0x800;
     }
 
-    int bottom   = Zone->cameraBoundsB[0] << 16;
-    int boundary = bottom - 0x800000;
+    int32 bottom   = Zone->cameraBoundsB[0] << 16;
+    int32 boundary = bottom - 0x800000;
     if (y <= bottom - 0x800000) {
         boundary = bottom + 0x800000;
         if (y >= (Zone->cameraBoundsT[0] + 128) << 16)
@@ -409,25 +414,25 @@ void KleptoMobile_State_Unknown2(void)
     self->position.x += self->velocity.x;
     self->originPos.y += self->velocity.y;
     self->direction = player1->position.x > self->position.x;
-    if (--self->field_10C == 1) {
-        self->field_10C = 0;
-        self->timer     = 0;
+    if (--self->bashArmDelay == 1) {
+        self->bashArmDelay = 0;
+        self->timer        = 0;
         RSDK.PlaySfx(KleptoMobile->sfxPowerUp, false, 255);
         EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
         arm2->timer              = 0;
-        arm2->state              = KleptoMobile_State1_Unknown4;
+        arm2->state              = KleptoMobile_StateArm_ChargeAttack;
 
         EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
         arm1->timer              = 0;
-        arm1->state              = KleptoMobile_State1_Unknown4;
-        self->state            = KleptoMobile_State_Unknown3;
+        arm1->state              = KleptoMobile_StateArm_ChargeAttack;
+        self->state              = KleptoMobile_State_Hover;
     }
     else {
-        if (self->field_114) {
-            if (self->field_10C <= 0 && ++self->timer == 15) {
+        if (self->canBashAttack) {
+            if (self->bashArmDelay <= 0 && ++self->timer == 15) {
                 self->timer = 0;
                 RSDK.PlaySfx(KleptoMobile->sfxFlail, false, 0xFF);
-                int armSlot = self->field_110 ? SceneInfo->entitySlot + 1 : SceneInfo->entitySlot - 1;
+                int32 armSlot = self->bashArmID ? SceneInfo->entitySlot + 1 : SceneInfo->entitySlot - 1;
 
                 EntityKleptoMobile *arm = RSDK_GET_ENTITY(armSlot, KleptoMobile);
 
@@ -437,28 +442,28 @@ void KleptoMobile_State_Unknown2(void)
                 }
                 y = self->position.y + 0xD0000;
 
-                angle           = RSDK.ATan2(player1->position.x - x, player1->position.y - y);
-                arm->field_F8.x = x + (RSDK.Cos256(angle) << 15);
-                arm->field_F8.y = y + (RSDK.Sin256(angle) << 15);
-                arm->timer      = 0;
-                arm->state      = KleptoMobile_State1_Unknown3;
-                self->field_110 ^= 1;
-                if (++self->field_108 >= 5) {
-                    self->field_108 = 0;
-                    self->field_10C = 90;
-                    self->field_114 = false;
+                angle                   = RSDK.ATan2(player1->position.x - x, player1->position.y - y);
+                arm->bashArmTargetPos.x = x + (RSDK.Cos256(angle) << 15);
+                arm->bashArmTargetPos.y = y + (RSDK.Sin256(angle) << 15);
+                arm->timer              = 0;
+                arm->state              = KleptoMobile_StateArm_BashAttack;
+                self->bashArmID ^= 1;
+                if (++self->attackCount >= 5) {
+                    self->attackCount   = 0;
+                    self->bashArmDelay  = 90;
+                    self->canBashAttack = false;
                 }
             }
         }
         else {
             if (abs(player1->position.x - self->position.x) < 0x1800000 && abs(player1->position.y - self->position.y) < 0x1800000)
-                self->field_114 = true;
+                self->canBashAttack = true;
         }
         KleptoMobile_HandleFrames();
     }
 }
 
-void KleptoMobile_State_Unknown3(void)
+void KleptoMobile_State_Hover(void)
 {
     RSDK_THIS(KleptoMobile);
 
@@ -469,10 +474,10 @@ void KleptoMobile_State_Unknown3(void)
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (abs(player1->position.x - self->position.x) < 0xC00000 && abs(player1->position.y - self->position.y) < 0xC00000) {
             RSDK.StopSfx(KleptoMobile->sfxPowerUp);
-            self->timer     = 14;
-            self->field_10C = 0;
-            self->field_114 = true;
-            self->state     = KleptoMobile_State_Unknown2;
+            self->timer         = 14;
+            self->bashArmDelay  = 0;
+            self->canBashAttack = true;
+            self->state         = KleptoMobile_State_MoveAround;
         }
     }
     else {
@@ -483,7 +488,7 @@ void KleptoMobile_State_Unknown3(void)
             self->velocity.x = 0xA0000;
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         RSDK.PlaySfx(KleptoMobile->sfxRocketJet, false, 255);
-        self->state = KleptoMobile_State_Unknown5;
+        self->state = KleptoMobile_State_FirstChargeAttack;
     }
     KleptoMobile_HandleFrames();
 }
@@ -493,17 +498,17 @@ void KleptoMobile_HandleArmPositions(void)
     foreach_active(KleptoMobile, eggman)
     {
         if (eggman->type != KLEPTOMOBILE_EGGMAN) {
-            EntityKleptoMobile *parent = (EntityKleptoMobile *)eggman->parent;
+            EntityKleptoMobile *parent = eggman->parent;
             eggman->position.x         = parent->position.x;
             eggman->position.y         = parent->position.y;
-            for (int i = 0; i < 10; ++i) eggman->framePositions[i] = parent->position;
+            for (int32 i = 0; i < 10; ++i) eggman->framePositions[i] = parent->position;
             eggman->velocity.x = 0;
             eggman->velocity.y = 0;
         }
     }
 }
 
-void KleptoMobile_State_Unknown4(void)
+void KleptoMobile_State_HandleChargeFinish(void)
 {
     RSDK_THIS(KleptoMobile);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -516,18 +521,18 @@ void KleptoMobile_State_Unknown4(void)
     else
         self->position.x = player1->position.x + 0x1800000;
 
-      do {
+    do {
         do {
             self->originPos.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
         } while (self->originPos.y > (Zone->cameraBoundsB[0] - 64) << 16);
-      } while (self->originPos.y < (Zone->cameraBoundsT[0] + 64) << 16);
+    } while (self->originPos.y < (Zone->cameraBoundsT[0] + 64) << 16);
 
     self->circleRadius = 128;
-    if (++self->field_108 == 4) {
-        self->field_108  = 0;
-        self->velocity.x = 0;
-        self->velocity.y = 0;
-        self->state      = KleptoMobile_State_Unknown2;
+    if (++self->attackCount == 4) {
+        self->attackCount = 0;
+        self->velocity.x  = 0;
+        self->velocity.y  = 0;
+        self->state       = KleptoMobile_State_MoveAround;
     }
     else if (player1->position.x >= self->position.x) {
         self->velocity.x = 0xA0000;
@@ -540,7 +545,7 @@ void KleptoMobile_State_Unknown4(void)
     KleptoMobile_HandleArmPositions();
 }
 
-void KleptoMobile_State_Unknown5(void)
+void KleptoMobile_State_FirstChargeAttack(void)
 {
     RSDK_THIS(KleptoMobile);
 
@@ -550,15 +555,15 @@ void KleptoMobile_State_Unknown5(void)
         self->circleRadius += 8;
 
     if (++self->timer >= 180) {
-        KleptoMobile_State_Unknown4();
-        self->state = KleptoMobile_State_Unknown6;
+        KleptoMobile_State_HandleChargeFinish();
+        self->state = KleptoMobile_State_NextChargeAttacks;
     }
     self->position.x += self->velocity.x;
     self->originPos.y += self->velocity.y;
     KleptoMobile_HandleFrames();
 }
 
-void KleptoMobile_State_Unknown6(void)
+void KleptoMobile_State_NextChargeAttacks(void)
 {
     RSDK_THIS(KleptoMobile);
 
@@ -569,8 +574,9 @@ void KleptoMobile_State_Unknown6(void)
         if (self->circleRadius > 0)
             self->circleRadius -= 8;
     }
+
     if (++self->timer >= 180)
-        KleptoMobile_State_Unknown4();
+        KleptoMobile_State_HandleChargeFinish();
     self->position.x += self->velocity.x;
     self->originPos.y += self->velocity.y;
     KleptoMobile_HandleFrames();
@@ -594,32 +600,32 @@ void KleptoMobile_State_HitFall(void)
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x3800;
     if (self->position.y < -0x1000000) {
-        self->field_114  = false;
-        self->field_10C  = 0;
-        self->velocity.y = 0;
-        self->timer      = 0;
-        self->state      = KleptoMobile_State_Switch;
+        self->canBashAttack = false;
+        self->bashArmDelay  = 0;
+        self->velocity.y    = 0;
+        self->timer         = 0;
+        self->state         = KleptoMobile_State_Switch;
     }
     KleptoMobile_HandleFrames();
 }
 
-void KleptoMobile_State3_Unknown1(void)
+void KleptoMobile_StateHand_Cutscene(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
-    int parentX = parent->position.x;
-    int parentY = parent->position.y;
+    int32 parentX = parent->position.x;
+    int32 parentY = parent->position.y;
 
-    int moveX = 0;
-    int moveY = -0x200000 - (RSDK.Sin256((((self->type << 7) - 0x80) ^ 0x80) + 2 * Zone->timer) << 12);
+    int32 moveX = 0;
+    int32 moveY = -0x200000 - (RSDK.Sin256((((self->type << 7) - 0x80) ^ 0x80) + 2 * Zone->timer) << 12);
 
     self->direction = parent->direction;
-    int x             = parent->position.x;
-    int y             = parent->position.y - 0x180000;
+    int32 x         = parent->position.x;
+    int32 y         = parent->position.y - 0x180000;
 
-    int x2 = 0;
-    int y2 = 0;
+    int32 x2 = 0;
+    int32 y2 = 0;
     if (self->direction == FLIP_X) {
         moveX = parentX + 0x200000;
         x2    = ((self->position.x + parent->position.x) >> 1) + 0x80000;
@@ -636,65 +642,65 @@ void KleptoMobile_State3_Unknown1(void)
     self->position.y += self->velocity.y;
     self->position.x += self->velocity.x;
 
-    int percent = 0x1800;
+    int32 percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
-    parent->circlePos.x = self->framePositions[6].x;
-    parent->circlePos.y = self->framePositions[6].y;
+    parent->rubyPos.x = self->framePositions[6].x;
+    parent->rubyPos.y = self->framePositions[6].y;
 
     if (self->direction)
-        parent->circlePos.x += 0x80000;
+        parent->rubyPos.x += 0x80000;
     else
-        parent->circlePos.x -= 0x80000;
-    parent->circlePos.y += 0x80000;
+        parent->rubyPos.x -= 0x80000;
+    parent->rubyPos.y += 0x80000;
 }
 
-void KleptoMobile_State3_Unknown2(void)
+void KleptoMobile_StateHand_Boss(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
     self->direction = parent->direction;
-    int parentX       = parent->position.x;
-    int parentY       = parent->position.y - 0x180000;
+    int32 parentX   = parent->position.x;
+    int32 parentY   = parent->position.y - 0x180000;
 
-    int x = 0;
+    int32 x = 0;
     if (self->direction == FLIP_X)
         x = ((parent->position.x + self->position.x) >> 1) + 0x80000;
     else
         x = ((parent->position.x + self->position.x) >> 1) - 0x80000;
-    int y = ((parentY + self->position.y) >> 1) - 0x300000;
+    int32 y = ((parentY + self->position.y) >> 1) - 0x300000;
 
-    int percent = 0x1800;
+    int32 percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, parentX, parentY, x, y, x, y, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
-    parent->circlePos.x = self->framePositions[6].x;
-    parent->circlePos.y = self->framePositions[6].y;
+    parent->rubyPos.x = self->framePositions[6].x;
+    parent->rubyPos.y = self->framePositions[6].y;
 
     if (self->direction)
-        parent->circlePos.x += 0x80000;
+        parent->rubyPos.x += 0x80000;
     else
-        parent->circlePos.x -= 0x80000;
-    parent->circlePos.y += 0x80000;
+        parent->rubyPos.x -= 0x80000;
+    parent->rubyPos.y += 0x80000;
 }
 
-void KleptoMobile_StateDraw3_Unknown1(void)
+void KleptoMobile_Draw_Hand(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
-    if (parent->field_120)
-        RSDK.DrawSprite(&parent->animator11, &parent->circlePos, false);
+    if (parent->holdingRuby)
+        RSDK.DrawSprite(&parent->rubyAnimator, &parent->rubyPos, false);
 
-    for (int i = 0; i < 6; ++i) RSDK.DrawSprite(&self->animator7, &self->framePositions[i], false);
+    for (int32 i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->framePositions[i], false);
 
-    RSDK.DrawSprite(&self->animator8, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
 }
 
 void KleptoMobile_CheckPlayerCollisions_Arm(void)
@@ -708,7 +714,7 @@ void KleptoMobile_CheckPlayerCollisions_Arm(void)
                 if (!player->blinkTimer) {
                     RSDK.PlaySfx(KleptoMobile->sfxWhack, false, 255);
                     player->blinkTimer = 120;
-                    if (self->state == KleptoMobile_State1_Unknown4) {
+                    if (self->state == KleptoMobile_StateArm_ChargeAttack) {
                         player->velocity.x = self->parent->velocity.x >> 2;
                         player->groundVel  = player->velocity.x;
                         if (player->position.y <= self->position.y || player->onGround == true) {
@@ -736,20 +742,20 @@ void KleptoMobile_CheckPlayerCollisions_Arm(void)
     }
 }
 
-void KleptoMobile_State1_Unknown1(void)
+void KleptoMobile_StateArm_Cutscene(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
     int parentX = parent->position.x;
     int parentY = parent->position.y;
 
-    int moveX         = 0;
-    int moveY         = ((RSDK.Sin256((((self->type << 7) - 128) ^ 0x80) + 2 * Zone->timer) + 512) << 12) + parentY;
+    int moveX       = 0;
+    int moveY       = ((RSDK.Sin256((((self->type << 7) - 128) ^ 0x80) + 2 * Zone->timer) + 512) << 12) + parentY;
     self->direction = parent->direction;
 
-    int x = 0, y = 0;
-    int x2 = 0, y2 = 0;
+    int32 x = 0, y = 0;
+    int32 x2 = 0, y2 = 0;
 
     if (self->direction == FLIP_X) {
         moveX = parentX + 0x300000;
@@ -785,14 +791,14 @@ void KleptoMobile_State1_Unknown1(void)
         percent += 0x2000;
     }
 
-    RSDK.ProcessAnimation(&self->animator9);
-    RSDK.ProcessAnimation(&self->animator10);
+    RSDK.ProcessAnimation(&self->finger1Animator);
+    RSDK.ProcessAnimation(&self->finger2Animator);
 }
 
-void KleptoMobile_State1_Unknown2(void)
+void KleptoMobile_StateArm_Idle(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
     self->direction = parent->direction;
 
@@ -811,23 +817,23 @@ void KleptoMobile_State1_Unknown2(void)
 
     int percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
-        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->field_F0.x, self->field_F0.y, self->field_F0.x,
-                                                         self->field_F0.y, self->position.x, self->position.y);
+        self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, self->armBezierPos.x, self->armBezierPos.y, self->armBezierPos.x,
+                                                             self->armBezierPos.y, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
-    RSDK.ProcessAnimation(&self->animator9);
-    RSDK.ProcessAnimation(&self->animator10);
+    RSDK.ProcessAnimation(&self->finger1Animator);
+    RSDK.ProcessAnimation(&self->finger2Animator);
 }
 
-void KleptoMobile_State1_Unknown3(void)
+void KleptoMobile_StateArm_BashAttack(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
     if (!self->timer) {
-        self->field_100.x = self->position.x;
-        self->field_100.y = self->position.y;
+        self->bashArmStartPos.x = self->position.x;
+        self->bashArmStartPos.y = self->position.y;
     }
 
     self->direction = parent->direction;
@@ -850,16 +856,16 @@ void KleptoMobile_State1_Unknown3(void)
     }
 
     if (self->timer >= 4) {
-        x2                 = x;
-        y2                 = y;
-        x3                 = self->position.x;
-        y3                 = self->position.y;
-        self->position.x = self->field_F8.x;
-        self->position.y = self->field_F8.y;
+        x2               = x;
+        y2               = y;
+        x3               = self->position.x;
+        y3               = self->position.y;
+        self->position.x = self->bashArmTargetPos.x;
+        self->position.y = self->bashArmTargetPos.y;
     }
     else {
-        self->velocity.x = (self->field_F8.x - self->field_100.x) / 4;
-        self->velocity.y = (self->field_F8.y - self->field_100.y) / 4;
+        self->velocity.x = (self->bashArmTargetPos.x - self->bashArmStartPos.x) / 4;
+        self->velocity.y = (self->bashArmTargetPos.y - self->bashArmStartPos.y) / 4;
 
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
@@ -881,7 +887,7 @@ void KleptoMobile_State1_Unknown3(void)
         y3           = self->position.y + (((distY >> 1) + distValX - self->position.y) * timerVal / 4);
     }
 
-    int percent = 0x1800;
+    int32 percent = 0x1800;
     for (int i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x3, y3, self->position.x, self->position.y);
         percent += 0x2000;
@@ -889,25 +895,25 @@ void KleptoMobile_State1_Unknown3(void)
 
     if (++self->timer > 15) {
         self->timer = 0;
-        self->state = KleptoMobile_State1_Unknown1;
+        self->state = KleptoMobile_StateArm_Cutscene;
     }
-    RSDK.ProcessAnimation(&self->animator9);
-    RSDK.ProcessAnimation(&self->animator10);
+    RSDK.ProcessAnimation(&self->finger1Animator);
+    RSDK.ProcessAnimation(&self->finger2Animator);
 
     if (parent->health > 0)
         KleptoMobile_CheckPlayerCollisions_Arm();
 }
 
-void KleptoMobile_State1_Unknown4(void)
+void KleptoMobile_StateArm_ChargeAttack(void)
 {
     RSDK_THIS(KleptoMobile);
-    EntityKleptoMobile *parent = (EntityKleptoMobile *)self->parent;
+    EntityKleptoMobile *parent = self->parent;
 
-    int parentX = parent->position.x;
-    int parentY = parent->position.y;
+    int32 parentX = parent->position.x;
+    int32 parentY = parent->position.y;
 
-    int moveX = 0;
-    int moveY = parentY + 0x180000;
+    int32 moveX = 0;
+    int32 moveY = parentY + 0x180000;
     if (self->type == KLEPTOMOBILE_ARM_R)
         moveY = parentY - 0x180000;
 
@@ -915,8 +921,8 @@ void KleptoMobile_State1_Unknown4(void)
     if (self->direction == FLIP_X)
         moveX = parentX + 0x400000;
 
-    int x = 0;
-    int y = parent->position.y + 0xD0000;
+    int32 x = 0;
+    int32 y = parent->position.y + 0xD0000;
     if (self->direction == FLIP_X) {
         moveX += 0x300000;
         x = parent->position.x - 0x30000;
@@ -934,22 +940,22 @@ void KleptoMobile_State1_Unknown4(void)
         }
     }
 
-    int x2 = (x + self->position.x) >> 1;
-    int y2 = (y + self->position.y) >> 1;
+    int32 x2 = (x + self->position.x) >> 1;
+    int32 y2 = (y + self->position.y) >> 1;
 
     self->velocity.x += ((moveX - self->position.x) >> 5) - (self->velocity.x >> 3);
     self->velocity.y += ((moveY - self->position.y) >> 5) - (self->velocity.y >> 3);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    int percent = 0x1800;
-    for (int i = 0; i < 7; ++i) {
+    int32 percent = 0x1800;
+    for (int32 i = 0; i < 7; ++i) {
         self->framePositions[i] = MathHelpers_GetBezierPoint(percent, x, y, x2, y2, x2, y2, self->position.x, self->position.y);
         percent += 0x2000;
     }
 
-    RSDK.ProcessAnimation(&self->animator9);
-    RSDK.ProcessAnimation(&self->animator10);
+    RSDK.ProcessAnimation(&self->finger1Animator);
+    RSDK.ProcessAnimation(&self->finger2Animator);
 
     if (parent->health > 0)
         KleptoMobile_CheckPlayerCollisions_Arm();
@@ -959,33 +965,33 @@ void KleptoMobile_Draw_Arm(void)
 {
     RSDK_THIS(KleptoMobile);
 
-    for (int i = 0; i < 6; ++i) RSDK.DrawSprite(&self->animator7, &self->framePositions[i], false);
+    for (int i = 0; i < 6; ++i) RSDK.DrawSprite(&self->orbAnimator, &self->framePositions[i], false);
 
-    RSDK.DrawSprite(&self->animator8, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
 
     if (self->direction) {
         if (self->type == KLEPTOMOBILE_ARM_R) {
             self->framePositions[6].x += 0x280000;
             self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
 
             self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
 
             self->framePositions[6].x -= 0x40000;
             self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->animator10, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
         }
         else {
             self->framePositions[6].x += 0x280000;
-            RSDK.DrawSprite(&self->animator10, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
 
             self->framePositions[6].x -= 0x40000;
             self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
 
             self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
 
             self->framePositions[6].y -= 0x80000;
         }
@@ -994,23 +1000,23 @@ void KleptoMobile_Draw_Arm(void)
         if (self->type == KLEPTOMOBILE_ARM_R) {
             self->framePositions[6].x -= 0x280000;
             self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
             self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
             self->framePositions[6].x += 0x40000;
             self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->animator10, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
         }
         else {
             self->framePositions[6].x -= 0x280000;
-            RSDK.DrawSprite(&self->animator10, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger2Animator, &self->framePositions[6], false);
 
             self->framePositions[6].x += 0x40000;
             self->framePositions[6].y -= 0x80000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
 
             self->framePositions[6].y += 0x100000;
-            RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
+            RSDK.DrawSprite(&self->finger1Animator, &self->framePositions[6], false);
 
             self->framePositions[6].y -= 0x80000;
         }
@@ -1021,7 +1027,7 @@ void KleptoMobile_State_Destroyed(void)
 {
     RSDK_THIS(KleptoMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(KleptoMobile->sfxExplosion, false, 255);
@@ -1076,7 +1082,7 @@ void KleptoMobile_State_CutsceneExplode(void)
 {
     RSDK_THIS(KleptoMobile);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
     self->originPos.x += self->velocity.x;
     self->originPos.y += self->velocity.y;
     self->position.x = self->originPos.x;
@@ -1087,11 +1093,12 @@ void KleptoMobile_State_CutsceneExplode(void)
             int channel = RSDK.PlaySfx(KleptoMobile->sfxExplosion, false, 255);
             RSDK.SetChannelAttributes(channel, self->explosionVolume * (1 / 512.0f), 0.0, 1.0);
             if ((Zone->timer & 4) != 0) {
-                int x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
-                int y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
+                int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
+                int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
                 CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
             }
         }
+
         if (self->timer >= 60)
             self->explosionVolume -= 2;
         self->timer++;
@@ -1106,9 +1113,9 @@ void KleptoMobile_EditorDraw(void)
     self->updateRange.y = 0x800000;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
-    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->animator2, false, 1);
-    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->animator3, false, 0);
-    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->animator4, false, 0);
+    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->mobileTopAnimator, false, 1);
+    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->eggmanAnimator, false, 0);
+    RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 0, &self->mobileAnimator, false, 0);
 
     KleptoMobile_Draw_KleptoMobile();
 }

@@ -33,19 +33,19 @@ void ERZShinobi_Draw(void)
     for (int32 i = 0; i < 8; ++i) {
         Vector2 drawPos;
 
-        drawPos.x                 = self->spearOffset * RSDK.Sin512(self->rotation) + self->position.x;
-        drawPos.y                 = self->position.y - self->spearOffset * RSDK.Cos512(self->rotation);
-        self->animator3.frameID = ((self->rotation + 16) >> 5) & 0xF;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        drawPos.x                 = self->finRadius * RSDK.Sin512(self->rotation) + self->position.x;
+        drawPos.y                 = self->position.y - self->finRadius * RSDK.Cos512(self->rotation);
+        self->finAnimator.frameID = ((self->rotation + 16) >> 5) & 0xF;
+        RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-        drawPos.x = ((5 * self->spearOffset * RSDK.Sin512(self->rotation)) >> 3) + self->position.x;
-        drawPos.y = self->position.y - ((5 * self->spearOffset * RSDK.Cos512(self->rotation)) >> 3);
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        drawPos.x = ((5 * self->finRadius * RSDK.Sin512(self->rotation)) >> 3) + self->position.x;
+        drawPos.y = self->position.y - ((5 * self->finRadius * RSDK.Cos512(self->rotation)) >> 3);
+        RSDK.DrawSprite(&self->armAnimator, &drawPos, false);
 
         self->rotation += 64;
     }
 
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
     if ((self->invincibilityTimer & 1))
         RSDK.CopyPalette(1, 128, 0, 128, 128);
 }
@@ -62,11 +62,11 @@ void ERZShinobi_Create(void *data)
         self->updateRange.y   = 0x800000;
         self->collisionLayers = Zone->fgLayers;
         self->tileCollisions  = true;
-        self->spearOffset     = 0x1600;
-        self->state           = ERZShinobi_Unknown3;
-        RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->animator2, true, 1);
-        RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &self->animator3, true, 0);
+        self->finRadius       = 0x1600;
+        self->state           = ERZShinobi_State_Moving;
+        RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->armAnimator, true, 1);
+        RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &self->finAnimator, true, 0);
     }
 }
 
@@ -98,8 +98,8 @@ void ERZShinobi_CheckPlayerCollisions(void)
     int32 angle  = self->rotStore;
     foreach_active(Player, player)
     {
-        self->position.x = storeX + self->spearOffset * RSDK.Sin512(angle);
-        self->position.y = storeY - self->spearOffset * RSDK.Cos512(angle);
+        self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
+        self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
         if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
             Player_CheckHit(player, self);
         }
@@ -114,7 +114,7 @@ void ERZShinobi_HandleTileCollisions(void)
 {
     RSDK_THIS(ERZShinobi);
     if (self->onGround) {
-        self->spearOffset += (0x1000 - self->spearOffset) >> 3;
+        self->finRadius += (0x1000 - self->finRadius) >> 3;
         if (!self->prevOnGround) {
             if (self->numBounces > 0) {
                 self->velocity.y = -0x30000;
@@ -127,10 +127,10 @@ void ERZShinobi_HandleTileCollisions(void)
         self->velocity.y += 0x3800;
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
-        self->spearOffset += (0x1600 - self->spearOffset) >> 3;
+        self->finRadius += (0x1600 - self->finRadius) >> 3;
     }
 
-    int32 size               = self->spearOffset / 88;
+    int32 size            = self->finRadius / 88;
     self->outerBox.right  = size;
     self->outerBox.bottom = size;
     self->outerBox.left   = -size;
@@ -144,18 +144,20 @@ void ERZShinobi_HandleTileCollisions(void)
     RSDK.ProcessTileCollisions(self, &self->outerBox, &self->innerBox);
 }
 
-void ERZShinobi_Unknown3(void)
+void ERZShinobi_State_Moving(void)
 {
     RSDK_THIS(ERZShinobi);
     ERZShinobi_HandleTileCollisions();
+
     if (++self->timer == 60) {
         self->timer = 0;
         if (self->onGround) {
-            self->numBounces   = 2;
+            self->numBounces = 2;
             self->velocity.y = -0x80000;
             self->onGround   = false;
         }
     }
+
     ERZShinobi_CheckPlayerCollisions();
 }
 
@@ -164,10 +166,10 @@ void ERZShinobi_EditorDraw(void)
 {
     RSDK_THIS(ERZShinobi);
 
-    self->spearOffset = 0x1600;
-    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->animator2, false, 1);
-    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &self->animator3, false, 0);
+    self->finRadius = 0x1600;
+    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->bodyAnimator, false, 0);
+    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &self->armAnimator, false, 1);
+    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &self->finAnimator, false, 0);
 
     ERZShinobi_Draw();
 }

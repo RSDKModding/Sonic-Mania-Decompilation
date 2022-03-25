@@ -335,14 +335,14 @@ typedef struct {
     uint8 (*GetTileFlags)(uint16 tileID, uint8 cPlane);
     void (*SetTileFlags)(uint16 tileID, uint8 cPlane, uint8 flags);
     int32 (*GetSfx)(const char *path);
-    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 priority);
+    int32 (*PlaySfx)(uint16 sfx, int32 loopPoint, int32 priority);
     void (*StopSfx)(uint16 sfx);
     int32 (*PlayStream)(const char *filename, uint32 channel, uint32 startPos, uint32 loopPoint, bool32 loadASync);
-    int32 (*SetChannelAttributes)(uint8 channel, float volume, float pan, float speed);
+    void (*SetChannelAttributes)(uint8 channel, float volume, float pan, float speed);
     void (*StopChannel)(uint8 channel);
     void (*PauseChannel)(uint8 channel);
     void (*ResumeChannel)(uint8 channel);
-    bool32 (*IsSfxPlaying)(uint8 channel);
+    bool32 (*IsSfxPlaying)(uint16 sfxID);
     bool32 (*ChannelActive)(uint8 channel);
     uint32 (*GetChannelPos)(uint8 channel);
     void (*LoadVideo)(const char *filename, double a2, bool32 (*skipCallback)(void));

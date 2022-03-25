@@ -34,8 +34,10 @@ void PhantomShield_Draw(void)
 
     if (self->blendAmount > 0)
         RSDK.SetLimitedFade(0, 1, 3, self->blendAmount, 136, 143);
+
     self->direction = RSDK.GetFrameID(&self->animator) == 'b' ? FLIP_Y : FLIP_NONE;
     RSDK.DrawSprite(&self->animator, NULL, false);
+
     if (self->blendAmount > 0)
         RSDK.CopyPalette(1, 136, 0, 136, 8);
 }
@@ -56,7 +58,7 @@ void PhantomShield_Create(void *data)
         self->scale.y       = 0x200;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = PhantomShield_Unknown1;
+        self->state         = PhantomShield_State_Appear;
         RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 0, &self->animator, true, 0);
     }
 }
@@ -71,7 +73,7 @@ void PhantomShield_StageLoad(void)
     PhantomShield->hitbox.bottom = 32;
 }
 
-void PhantomShield_Unknown1(void)
+void PhantomShield_State_Appear(void)
 {
     RSDK_THIS(PhantomShield);
 
@@ -84,11 +86,11 @@ void PhantomShield_Unknown1(void)
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 1, &self->animator, true, 0);
         self->shieldActive = false;
-        self->state        = PhantomShield_Unknown2;
+        self->state        = PhantomShield_State_Active;
     }
 }
 
-void PhantomShield_Unknown2(void)
+void PhantomShield_State_Active(void)
 {
     RSDK_THIS(PhantomShield);
 
@@ -107,14 +109,14 @@ void PhantomShield_Unknown2(void)
                     self->playerTimer[player->playerID] = 16;
                 }
 
-                int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                int velX  = 0x500 * RSDK.Cos256(angle);
-                int velY  = 0x500 * RSDK.Sin256(angle);
+                int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
+                int32 velX  = 0x500 * RSDK.Cos256(angle);
+                int32 velY  = 0x500 * RSDK.Sin256(angle);
 
                 if (player->state == Player_State_FlyCarried)
                     RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-                int anim = player->animator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED) {
                     if (player->state != Player_State_TailsFlight) {
                         if (player->state != Player_State_DropDash)
@@ -123,12 +125,14 @@ void PhantomShield_Unknown2(void)
                             player->animator.animationID = ANI_WALK;
                     }
                 }
+
                 if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
                     player->state = Player_State_KnuxGlideDrop;
                 }
-                player->velocity.x     = velX;
+
                 player->groundVel      = velX;
+                player->velocity.x     = velX;
                 player->velocity.y     = velY;
                 player->applyJumpCap   = false;
                 player->onGround       = false;
@@ -141,7 +145,7 @@ void PhantomShield_Unknown2(void)
     }
 }
 
-void PhantomShield_Unknown3(void)
+void PhantomShield_State_Disappear(void)
 {
     RSDK_THIS(PhantomShield);
 
@@ -151,9 +155,16 @@ void PhantomShield_Unknown3(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PhantomShield_EditorDraw(void) {}
+void PhantomShield_EditorDraw(void)
+{
+    RSDK_THIS(PhantomShield);
+    RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 1, &self->animator, true, 0);
 
-void PhantomShield_EditorLoad(void) {}
+    self->direction = RSDK.GetFrameID(&self->animator) == 'b' ? FLIP_Y : FLIP_NONE;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
+
+void PhantomShield_EditorLoad(void) { PhantomShield->aniFrames = RSDK.LoadSpriteAnimation("Phantom/EggShield.bin", SCOPE_STAGE); }
 #endif
 
 void PhantomShield_Serialize(void) {}

@@ -126,7 +126,7 @@ inline void ResumeSound()
         ResumeChannel(c);
 }
 
-inline bool32 SfxPlaying(uint8 sfxID)
+inline bool32 SfxPlaying(uint16 sfxID)
 {
     for (int c = 0; c < CHANNEL_COUNT; ++c) {
         if (channels[c].state == CHANNEL_SFX && channels[c].soundID == sfxID)

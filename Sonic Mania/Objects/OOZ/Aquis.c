@@ -138,9 +138,7 @@ void Aquis_State_Idle(void)
     RSDK_THIS(Aquis);
 
     if (!--self->timer) {
-        int32 timer = self->remainingTurns;
-        self->remainingTurns--;
-        if (timer) {
+        if (self->remainingTurns--) {
             self->velocity.y    = -0x10000;
             self->timer         = 128;
             self->playerInRange = false;
@@ -205,9 +203,7 @@ void Aquis_State_Moving(void)
     }
 
     if (self->state != Aquis_State_Turning) {
-        int32 timer = self->timer;
-        self->timer--;
-        if (!timer) {
+        if (!self->timer--) {
             self->timer      = 32;
             self->state      = Aquis_State_Idle;
             self->velocity.x = 0;

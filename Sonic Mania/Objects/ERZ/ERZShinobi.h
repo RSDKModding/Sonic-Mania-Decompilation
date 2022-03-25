@@ -17,16 +17,16 @@ struct EntityERZShinobi {
     Vector2 startPos;
     int32 timer;
     int32 invincibilityTimer;
-    int32 spearOffset;
+    int32 finRadius;
     int32 rotStore;
-    int32 unused;
+    int32 rotSpeed; // Not used... yet! (See ERZ/PhantomShinobi)
     int32 numBounces;
     bool32 prevOnGround;
     Hitbox outerBox;
     Hitbox innerBox;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator bodyAnimator;
+    Animator armAnimator;
+    Animator finAnimator;
 };
 
 // Object Struct
@@ -48,6 +48,6 @@ void ERZShinobi_Serialize(void);
 // Extra Entity Functions
 void ERZShinobi_CheckPlayerCollisions(void);
 void ERZShinobi_HandleTileCollisions(void);
-void ERZShinobi_Unknown3(void);
+void ERZShinobi_State_Moving(void);
 
 #endif //!OBJ_ERZSHINOBI_H

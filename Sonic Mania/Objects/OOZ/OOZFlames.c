@@ -47,15 +47,15 @@ void OOZFlames_Create(void *data)
         self->alpha     = 0x100;
         self->scale.x   = 0x200;
         self->scale.y   = 0x200;
-        self->flamePos = 0x1400000;
-        self->state     = OOZFlames_State_Rise;
+        self->flamePos  = 0x1400000;
+        self->state     = OOZFlames_State_Appear;
         RSDK.SetSpriteAnimation(OOZFlames->aniFrames, 0, &self->animator, true, 0);
     }
 }
 
 void OOZFlames_StageLoad(void) { OOZFlames->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Flames.bin", SCOPE_STAGE); }
 
-void OOZFlames_State_Rise(void)
+void OOZFlames_State_Appear(void)
 {
     RSDK_THIS(OOZFlames);
 
@@ -64,11 +64,11 @@ void OOZFlames_State_Rise(void)
 
     if (++self->timer == 120) {
         self->timer = 0;
-        self->state = OOZFlames_State_ScaleIn;
+        self->state = OOZFlames_State_Rise;
     }
 }
 
-void OOZFlames_State_ScaleIn(void)
+void OOZFlames_State_Rise(void)
 {
     RSDK_THIS(OOZFlames);
 

@@ -3,15 +3,26 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PHANTOMGUNNER_BOSS,
+    PHANTOMGUNNER_LAUNCHROCKET,
+    PHANTOMGUNNER_MORTAR,
+    PHANTOMGUNNER_NAPALM,
+    PHANTOMGUNNER_DUD,
+    PHANTOMGUNNER_NAPALM_EXPLOSION,
+    PHANTOMGUNNER_MORTAR_EXPLOSION,
+} PhantomGunnerTypes;
+
 // Object Class
 struct ObjectPhantomGunner {
     RSDK_OBJECT
-    TABLE(int32 value1[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
+    // Technically a "Vector2" but since that can't be saved in static objects, it's an int array
+    TABLE(int32 rocketOffsets[0x20], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
                               10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
-    int32 value2;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    int32 launchedRocketID;
+    Hitbox hitboxNapalm;
+    Hitbox hitboxMortar;
+    Hitbox hitboxDud;
     uint16 aniFrames;
     uint16 sfxCannonFire;
 };
@@ -21,23 +32,23 @@ struct EntityPhantomGunner {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Vector2 posUnknown1;
+    Vector2 originPos;
     Vector2 startPos;
     int32 type;
     Entity *parent;
-    int32 timer2;
-    int32 invincibilityTimer;
-    int32 field_80;
-    int32 timer3;
     int32 timer;
-    int32 field_8C;
-    int32 field_90;
-    Vector2 posUnknown2;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    int32 invincibilityTimer;
+    int32 unused;
+    int32 fireAnimTimer;
+    int32 rocketLaunchCount;
+    int32 rocketOffsetID;
+    int32 napalmExplosionPos;
+    Vector2 screenPos;
+    Animator mainAnimator;
+    Animator fxAnimator;
+    Animator tailAnimator;
+    Animator parachuteAnimator;
+    Animator unusedAnimator;
 };
 
 // Object Struct
@@ -57,31 +68,31 @@ void PhantomGunner_EditorLoad(void);
 void PhantomGunner_Serialize(void);
 
 // Extra Entity Functions
-void PhantomGunner_Explode(void);
-void PhantomGunner_Explode2(void);
+void PhantomGunner_HandleDudExhaust(void);
+void PhantomGunner_HandleMalfunctionDudExhaust(void);
 void PhantomGunner_SpawnDust(void);
 void PhantomGunner_HandleRotations(int angle);
 void PhantomGunner_CheckPlayerMissileCollisions(void);
 void PhantomGunner_CheckPlayerExplosionCollisions(void);
 
-void PhantomGunner_StateDraw_Unknown0(void);
-void PhantomGunner_StateDraw_Unknown1(void);
-void PhantomGunner_StateDraw_Unknown2(void);
+void PhantomGunner_Draw_Gunner(void);
+void PhantomGunner_Draw_RocketLaunch(void);
+void PhantomGunner_Draw_Rocket(void);
 
 void PhantomGunner_State_ResetState(void);
-void PhantomGunner_State_Unknown1(void);
-void PhantomGunner_State_Unknown2(void);
+void PhantomGunner_State_Idle(void);
+void PhantomGunner_State_LaunchRockets(void);
 
-void PhantomGunner_State1_Unknown1(void);
-void PhantomGunner_State1_Unknown2(void);
-void PhantomGunner_State1_Unknown3(void);
-void PhantomGunner_State1_Unknown4(void);
-void PhantomGunner_State1_Unknown5(void);
-void PhantomGunner_State1_Unknown6(void);
-void PhantomGunner_State1_Unknown7(void);
+void PhantomGunner_State_LaunchedRocket(void);
+void PhantomGunner_State_Mortar(void);
+void PhantomGunner_State_Napalm(void);
+void PhantomGunner_State_Dud_Active(void);
+void PhantomGunner_State_Dud_HitByPlayer(void);
+void PhantomGunner_State_Dud_Malfunction(void);
+void PhantomGunner_State_Dud_Explode(void);
 
-void PhantomGunner_State2_Unknown(void);
-void PhantomGunner_State3_Unknown(void);
+void PhantomGunner_State_NapalmExplosion(void);
+void PhantomGunner_State_MortarExplosion(void);
 
 
 #endif //!OBJ_PHANTOMGUNNER_H

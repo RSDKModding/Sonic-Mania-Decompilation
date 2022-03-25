@@ -21,7 +21,7 @@ struct EntityRhinobot {
     int32 timer;
     int32 skidDir;
     int32 moveDir;
-    bool32 playedHuff;
+    bool32 drawDust;
     int32 acceleration;
     int32 topSpeed;
     Vector2 startPos;
@@ -54,12 +54,12 @@ void Rhinobot_CheckOffScreen(void);
 void Rhinobot_DebugDraw(void);
 void Rhinobot_DebugSpawn(void);
 
-void Rhinobot_StateDelay_StartMove(void);
+void Rhinobot_StateDelay_Charge(void);
 void Rhinobot_StateDelay_Skidding(void);
 void Rhinobot_StateDelay_SkidFinish(void);
 
 void Rhinobot_State_Setup(void);
-void Rhinobot_State_HandleGroundMovement(void);
+void Rhinobot_State_Moving(void);
 void Rhinobot_State_Skidding(void);
 void Rhinobot_State_Idle(void);
 void Rhinobot_State_Fall(void);

@@ -70,8 +70,8 @@ void EncoreIntro_Create(void *data)
             ruby->alpha             = 0;
             ruby->inkEffect         = INK_ALPHA;
             ruby->state             = EncoreIntro_PhantomRuby_OscillateFX;
-            RSDK.SetSpriteAnimation(-1, -1, &ruby->animator2, true, 0);
-            ruby->animator2.animationID = -1;
+            RSDK.SetSpriteAnimation(-1, -1, &ruby->flashAnimator, true, 0);
+            ruby->flashAnimator.animationID = -1;
         }
         else {
             int32 id = RSDK.GetEntityID(self);

@@ -6,12 +6,12 @@
 // Object Class
 struct ObjectBatbot {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox spinbox;
-    Hitbox attackbox;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxSpinCheck;
+    Hitbox hitboxAttack;
     Hitbox hitboxPlayer;
     uint16 aniFrames;
-    uint8 dirFlag[5];
+    uint8 directionTable[5];
 };
 
 // Entity Class
@@ -22,17 +22,17 @@ struct EntityBatbot {
     uint8 startDir;
     uint16 timer;
     int32 arcAngle;
-    int32 startY;
+    int32 originY;
     Vector2 landPos;
     int32 unused1;
     int32 unused2;
     int32 swoopAngle;
-    Entity *playerPtr;
-    uint8 lastDir;
-    bool32 showWings;
-    uint16 unused3; // set to 0, not used, also happens to be unused in S2
-    Animator animator1;
-    Animator animator2;
+    EntityPlayer *playerPtr;
+    uint8 swoopDir;
+    bool32 showJet;
+    uint16 unused3; // set to 0, not used, value isn't in S2
+    Animator bodyAnimator;
+    Animator jetAnimator;
 };
 
 // Object Entity
@@ -55,12 +55,12 @@ void Batbot_Serialize(void);
 void Batbot_DebugSpawn(void);
 void Batbot_DebugDraw(void);
 
-void Batbot_HandlePlayerInteractions(void);
+void Batbot_CheckPlayerCollisions(void);
 
 void Batbot_State_Setup(void);
 void Batbot_State_Idle(void);
 void Batbot_State_Attack(void);
-void Batbot_State_SwoopRight(void);
 void Batbot_State_SwoopLeft(void);
+void Batbot_State_SwoopRight(void);
 
 #endif //!OBJ_BATBOT_H

@@ -502,8 +502,8 @@ void ActClear_CheckPlayerVictory(void)
         if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn && player->state != Player_State_Victory
             && player->onGround) {
             player->state           = Player_State_Victory;
-            player->nextAirState    = 0;
-            player->nextGroundState = 0;
+            player->nextAirState    = StateMachine_None;
+            player->nextGroundState = StateMachine_None;
             if (Zone->forcePlayerOnScreenFlag)
                 player->stateInput = StateMachine_None;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->animator, true, 0);

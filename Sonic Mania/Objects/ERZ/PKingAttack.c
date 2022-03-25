@@ -23,8 +23,9 @@ void PKingAttack_Draw(void)
 {
     RSDK_THIS(PKingAttack);
 
-    if (self->type == 2)
-        RSDK.DrawCircle(self->position.x, self->position.y, 32, 0, 255, INK_LOOKUP, false);
+    if (self->type == PKINGATTACK_LAUNCHED)
+        RSDK.DrawCircle(self->position.x, self->position.y, 0x20, 0x00, 0xFF, INK_LOOKUP, false);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -41,30 +42,39 @@ void PKingAttack_Create(void *data)
 
         switch (self->type) {
             default: break;
-            case 1:
+            case PKINGATTACK_LASER: break;
+
+            case PKINGATTACK_ORBIT:
                 self->drawFX  = FX_SCALE;
                 self->visible = true;
                 RSDK.SetSpriteAnimation(PKingAttack->aniFrames, 10, &self->animator, true, RSDK.Rand(0, 6));
-                self->state         = PKingAttack_Unknown2;
+                self->state         = PKingAttack_State_OrbitAppear;
+
                 self->hitbox.left   = -10;
                 self->hitbox.top    = -10;
                 self->hitbox.right  = 10;
                 self->hitbox.bottom = 10;
                 break;
-            case 3:
+
+            case PKINGATTACK_TRAIL:
                 self->drawOrder = Zone->drawOrderLow;
                 self->visible   = true;
                 self->inkEffect = INK_ADD;
                 self->alpha     = 0xC0;
                 RSDK.SetSpriteAnimation(PKingAttack->aniFrames, 12, &self->animator, true, 0);
-                self->state = PKingAttack_Unknown5;
+                self->state = PKingAttack_State_Trail;
                 break;
-            case 6:
+
+            case PKINGATTACK_LARGEBULLET: break;
+            case PKINGATTACK_ENERGYLINE: break;
+
+            case PKINGATTACK_SMALLBULLET:
                 self->drawOrder = Zone->drawOrderLow;
                 self->drawFX    = FX_ROTATE;
                 self->visible   = true;
                 RSDK.SetSpriteAnimation(PKingAttack->aniFrames, 11, &self->animator, true, 0);
-                self->state         = PKingAttack_Unknown6;
+                self->state         = PKingAttack_State_SmallBullet;
+
                 self->hitbox.left   = -4;
                 self->hitbox.top    = -4;
                 self->hitbox.right  = 4;
@@ -77,6 +87,7 @@ void PKingAttack_Create(void *data)
 void PKingAttack_StageLoad(void)
 {
     PKingAttack->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
+
     PKingAttack->sfxPulse  = RSDK.GetSfx("Stage/ElecPulse.wav");
 }
 
@@ -90,7 +101,7 @@ void PKingAttack_CheckPlayerCollisions(void)
             if (player->superState == SUPERSTATE_SUPER) {
                 if (!player->blinkTimer) {
                     int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                    if (self->state == PKingAttack_Unknown4) {
+                    if (self->state == PKingAttack_State_OrbitLaunched) {
                         player->blinkTimer = 120;
                         Ring_LoseRings(player, minVal(player->rings, 8), player->collisionPlane);
                         player->rings -= minVal(player->rings, 8);
@@ -114,7 +125,7 @@ void PKingAttack_CheckPlayerCollisions(void)
     }
 }
 
-void PKingAttack_Unknown2(void)
+void PKingAttack_State_OrbitAppear(void)
 {
     RSDK_THIS(PKingAttack);
     RSDK.ProcessAnimation(&self->animator);
@@ -137,11 +148,11 @@ void PKingAttack_Unknown2(void)
         self->timer       = 0;
         self->targetPos.x = self->target->position.x;
         self->targetPos.y = self->target->position.y;
-        self->state       = PKingAttack_Unknown3;
+        self->state       = PKingAttack_State_Orbiting;
     }
 }
 
-void PKingAttack_Unknown3(void)
+void PKingAttack_State_Orbiting(void)
 {
     RSDK_THIS(PKingAttack);
 
@@ -185,22 +196,22 @@ void PKingAttack_Unknown3(void)
         self->drawOrder = Zone->drawOrderLow;
 }
 
-void PKingAttack_Unknown4(void)
+void PKingAttack_State_OrbitLaunched(void)
 {
     RSDK_THIS(PKingAttack);
 
     RSDK.ProcessAnimation(&self->animator);
     ++self->timer;
     if (!(self->timer & 3))
-        CREATE_ENTITY(PKingAttack, intToVoid(3), self->position.x, self->position.y);
+        CREATE_ENTITY(PKingAttack, intToVoid(PKINGATTACK_TRAIL), self->position.x, self->position.y);
 
     if (self->scale.x < 512) {
         self->scale.x += 0x20;
         self->scale.y = self->scale.x;
     }
 
-    self->velocity.x = self->velocity.x + ((self->field_70.x - self->velocity.x) >> 3);
-    self->velocity.y = self->velocity.y + ((self->field_70.y - self->velocity.y) >> 3);
+    self->velocity.x = self->velocity.x + ((self->targetVelocity.x - self->velocity.x) >> 3);
+    self->velocity.y = self->velocity.y + ((self->targetVelocity.y - self->velocity.y) >> 3);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -210,7 +221,7 @@ void PKingAttack_Unknown4(void)
         destroyEntity(self);
 }
 
-void PKingAttack_Unknown5(void)
+void PKingAttack_State_Trail(void)
 {
     RSDK_THIS(PKingAttack);
 
@@ -224,7 +235,7 @@ void PKingAttack_Unknown5(void)
     }
 }
 
-void PKingAttack_Unknown6(void)
+void PKingAttack_State_SmallBullet(void)
 {
     RSDK_THIS(PKingAttack);
 
@@ -247,7 +258,7 @@ void PKingAttack_EditorDraw(void)
 {
     RSDK_THIS(PKingAttack);
 
-    self->type      = 1;
+    self->type      = PKINGATTACK_ORBIT;
     self->inkEffect = INK_ADD;
     self->alpha     = 0xC0;
     RSDK.SetSpriteAnimation(PKingAttack->aniFrames, 12, &self->animator, true, 0);

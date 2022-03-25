@@ -64,7 +64,7 @@ void SeeSaw_Serialize(void);
 void SeeSaw_SetupHitbox(int playerX, int32 flag);
 void SeeSaw_State_OrbIdle(void);
 void SeeSaw_State_None(void);
-void SeeSaw_State_Unused(void);
+void SeeSaw_State_NoOrb(void);
 void SeeSaw_State_OrbLaunched(void);
 
 #endif //!OBJ_SEESAW_H

@@ -16,7 +16,7 @@ void PhantomShinobi_Update(void)
         self->invincibilityTimer--;
     StateMachine_Run(self->state);
 
-    self->rotStore += self->field_78;
+    self->rotStore += self->rotSpeed;
     self->rotStore &= 0xFFFF;
 }
 
@@ -32,24 +32,25 @@ void PhantomShinobi_Draw(void)
 
     if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(6, 128, 4, 128, 128);
+
     self->rotation = self->rotStore >> 7;
 
     for (int32 i = 0; i < 8; ++i) {
         Vector2 drawPos;
 
-        drawPos.x                 = self->spearOffset * RSDK.Sin512(self->rotation) + self->position.x;
-        drawPos.y                 = self->position.y - self->spearOffset * RSDK.Cos512(self->rotation);
-        self->animator3.frameID = ((self->rotation + 16) >> 5) & 0xF;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        drawPos.x                 = self->finRadius * RSDK.Sin512(self->rotation) + self->position.x;
+        drawPos.y                 = self->position.y - self->finRadius * RSDK.Cos512(self->rotation);
+        self->finAnimator.frameID = ((self->rotation + 16) >> 5) & 0xF;
+        RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-        drawPos.x = ((5 * self->spearOffset * RSDK.Sin512(self->rotation)) >> 3) + self->position.x;
-        drawPos.y = self->position.y - ((5 * self->spearOffset * RSDK.Cos512(self->rotation)) >> 3);
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        drawPos.x = ((5 * self->finRadius * RSDK.Sin512(self->rotation)) >> 3) + self->position.x;
+        drawPos.y = self->position.y - ((5 * self->finRadius * RSDK.Cos512(self->rotation)) >> 3);
+        RSDK.DrawSprite(&self->armAnimator, &drawPos, false);
 
         self->rotation += 64;
     }
 
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
     if (self->invincibilityTimer & 1)
         RSDK.CopyPalette(5, 128, 4, 128, 128);
@@ -72,11 +73,11 @@ void PhantomShinobi_Create(void *data)
         self->startPos.x      = self->position.x;
         self->startPos.y      = self->position.y;
         self->tileCollisions  = true;
-        self->spearOffset     = 0x1600;
+        self->finRadius       = 0x1600;
         PhantomShinobi_ResetStates();
-        RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->animator2, true, 1);
-        RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 1, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->armAnimator, true, 1);
+        RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 1, &self->finAnimator, true, 0);
     }
 }
 
@@ -114,8 +115,8 @@ void PhantomShinobi_CheckPlayerCollisions(void)
     int32 angle  = self->rotStore;
     foreach_active(Player, player)
     {
-        self->position.x = storeX + self->spearOffset * RSDK.Sin512(angle);
-        self->position.y = storeY - self->spearOffset * RSDK.Cos512(angle);
+        self->position.x = storeX + self->finRadius * RSDK.Sin512(angle);
+        self->position.y = storeY - self->finRadius * RSDK.Cos512(angle);
         if (RSDK.CheckObjectCollisionTouchCircle(player, 0xC0000, self, 0x80000)) {
             Player_CheckHit(player, self);
         }
@@ -130,11 +131,11 @@ void PhantomShinobi_HandleTileCollisions(void)
 {
     RSDK_THIS(PhantomShinobi);
     if (self->onGround) {
-        self->spearOffset += (4096 - self->spearOffset) >> 3;
+        self->finRadius += (4096 - self->finRadius) >> 3;
         if (!self->prevOnGround) {
-            if (self->field_7C > 0) {
+            if (self->numBounces > 0) {
                 self->velocity.y = -0x30000;
-                self->field_7C--;
+                self->numBounces--;
                 self->onGround = false;
             }
         }
@@ -143,10 +144,10 @@ void PhantomShinobi_HandleTileCollisions(void)
         self->velocity.y += 0x3800;
         if (self->velocity.y > 0xC0000)
             self->velocity.y = 0xC0000;
-        self->spearOffset += (0x1600 - self->spearOffset) >> 3;
+        self->finRadius += (0x1600 - self->finRadius) >> 3;
     }
 
-    int32 size               = self->spearOffset / 88;
+    int32 size            = self->finRadius / 88;
     self->outerBox.right  = size;
     self->outerBox.bottom = size;
     self->outerBox.left   = -size;
@@ -167,13 +168,13 @@ void PhantomShinobi_ResetStates(void)
     self->position.x = self->startPos.x;
     self->position.y = self->startPos.y;
     self->position.y -= 0x400000;
-    self->spearOffset = 0;
-    self->field_80    = 0;
-    self->state       = PhantomShinobi_State_Unknown1;
+    self->finRadius   = 0;
+    self->attackCount = 0;
+    self->state       = PhantomShinobi_State_EnterShinobi;
     self->direction   = RSDK.Rand(0, 2);
 }
 
-void PhantomShinobi_State_Unknown1(void)
+void PhantomShinobi_State_EnterShinobi(void)
 {
     RSDK_THIS(PhantomShinobi);
 
@@ -182,59 +183,58 @@ void PhantomShinobi_State_Unknown1(void)
     }
 
     if (++self->timer >= 128) {
-        self->spearOffset += 0x100;
-        if (self->spearOffset >= 0x1600) {
-            self->timer       = 0;
-            self->spearOffset = 0x1600;
-            self->state       = PhantomShinobi_State_Unknown2;
+        self->finRadius += 0x100;
+        if (self->finRadius >= 0x1600) {
+            self->timer     = 0;
+            self->finRadius = 0x1600;
+            self->state     = PhantomShinobi_State_AttackDelay;
         }
     }
 }
 
-void PhantomShinobi_State_Unknown2(void)
+void PhantomShinobi_State_AttackDelay(void)
 {
     RSDK_THIS(PhantomShinobi);
 
     if (++self->timer == 16) {
         self->timer = 0;
-        self->state = PhantomShinobi_State_Unknown3;
+        self->state = PhantomShinobi_State_SetupAttack;
     }
 }
 
-void PhantomShinobi_State_Unknown3(void)
+void PhantomShinobi_State_SetupAttack(void)
 {
     RSDK_THIS(PhantomShinobi);
 
     if (self->direction) {
-        if (self->field_78 > -0x600) {
-            self->field_78 -= 12;
+        if (self->rotSpeed > -0x600) {
+            self->rotSpeed -= 12;
         }
         else {
             self->velocity.x -= 0x20000;
-            self->field_78   = -0x600;
-            self->state      = PhantomShinobi_State_Unknown4;
+            self->rotSpeed   = -0x600;
+            self->state      = PhantomShinobi_State_Moving;
             self->onGround   = false;
-            self->field_7C   = 1;
+            self->numBounces = 1;
             self->velocity.y = -0x30000;
         }
+    }
+    else if (self->rotSpeed >= 0x600) {
+        self->rotSpeed   = 0x600;
+        self->velocity.x = 0x20000;
+        self->state      = PhantomShinobi_State_Moving;
+        self->onGround   = false;
+        self->numBounces = 1;
+        self->velocity.y = -0x30000;
     }
     else {
-        if (self->field_78 >= 0x600) {
-            self->field_78   = 0x600;
-            self->velocity.x = 0x20000;
-            self->state      = PhantomShinobi_State_Unknown4;
-            self->onGround   = false;
-            self->field_7C   = 1;
-            self->velocity.y = -0x30000;
-        }
-        else {
-            self->field_78 += 12;
-        }
+        self->rotSpeed += 12;
     }
+
     PhantomShinobi_CheckPlayerCollisions();
 }
 
-void PhantomShinobi_State_Unknown4(void)
+void PhantomShinobi_State_Moving(void)
 {
     RSDK_THIS(PhantomShinobi);
 
@@ -245,6 +245,7 @@ void PhantomShinobi_State_Unknown4(void)
         else
             self->groundVel = -0x80000;
     }
+
     if (!self->groundVel) {
         self->onGround   = false;
         self->velocity.y = -0x40000;
@@ -252,14 +253,14 @@ void PhantomShinobi_State_Unknown4(void)
             self->velocity.x = -0x38000;
         else
             self->velocity.x = 0x38000;
-        self->field_7C = 1;
+        self->numBounces = 1;
         self->direction ^= FLIP_X;
-        self->state = PhantomShinobi_State_Unknown5;
+        self->state = PhantomShinobi_State_PrepareFinAttack;
     }
     PhantomShinobi_CheckPlayerCollisions();
 }
 
-void PhantomShinobi_State_Unknown5(void)
+void PhantomShinobi_State_PrepareFinAttack(void)
 {
     RSDK_THIS(PhantomShinobi);
 
@@ -269,35 +270,35 @@ void PhantomShinobi_State_Unknown5(void)
         self->position.y += self->velocity.y;
     }
 
-    if (abs(self->field_78) <= 256) {
+    if (abs(self->rotSpeed) <= 256) {
         if (!(self->rotStore & 0x1C00)) {
-            self->field_78 = 0;
+            self->rotSpeed = 0;
             self->rotStore = 0;
             self->timer    = 0;
-            self->state    = PhantomShinobi_State_Unknown6;
+            self->state    = PhantomShinobi_State_ExtendFins;
         }
     }
     else {
-        self->field_78 -= (self->field_78 >> 5);
+        self->rotSpeed -= (self->rotSpeed >> 5);
     }
     PhantomShinobi_CheckPlayerCollisions();
 }
 
-void PhantomShinobi_State_Unknown6(void)
+void PhantomShinobi_State_ExtendFins(void)
 {
     RSDK_THIS(PhantomShinobi);
 
-    self->spearOffset -= 128;
+    self->finRadius -= 128;
     if (++self->timer == 24) {
         self->timer      = 0;
         self->velocity.x = 0x400;
         RSDK.PlaySfx(PhantomShinobi->sfxHit, false, 255);
-        self->state = PhantomShinobi_State_Unknown7;
+        self->state = PhantomShinobi_State_RetractFins;
     }
     PhantomShinobi_CheckPlayerCollisions();
 }
 
-void PhantomShinobi_State_Unknown7(void)
+void PhantomShinobi_State_RetractFins(void)
 {
     RSDK_THIS(PhantomShinobi);
 
@@ -305,28 +306,27 @@ void PhantomShinobi_State_Unknown7(void)
     if (self->velocity.x < -0xC00)
         self->velocity.x = -0xC00;
 
-    self->spearOffset += self->velocity.x;
-    if (self->velocity.x < 0 && self->spearOffset < 0x1600) {
-        self->spearOffset = 0x1600;
-        if (++self->field_80 == 2) {
+    self->finRadius += self->velocity.x;
+    if (self->velocity.x < 0 && self->finRadius < 0x1600) {
+        self->finRadius = 0x1600;
+        if (++self->attackCount == 2) {
             PhantomEgg_SetupScanlineCB();
             self->timer = 0;
-            self->state = PhantomShinobi_State_Unknown8;
+            self->state = PhantomShinobi_State_FinishedAttack;
         }
         else {
-            self->state = PhantomShinobi_State_Unknown2;
+            self->state = PhantomShinobi_State_AttackDelay;
         }
     }
     PhantomShinobi_CheckPlayerCollisions();
 }
 
-void PhantomShinobi_State_Unknown8(void)
+void PhantomShinobi_State_FinishedAttack(void)
 {
     RSDK_THIS(PhantomShinobi);
 
-    if (self->spearOffset > 0) {
-        self->spearOffset -= (self->spearOffset >> 4);
-    }
+    if (self->finRadius > 0)
+        self->finRadius -= (self->finRadius >> 4);
 
     if (++self->timer == 60) {
         PhantomShinobi_ResetStates();
@@ -338,7 +338,7 @@ bool32 PhantomShinobi_BladeCheckCB(void)
 {
     foreach_active(PhantomShinobi, shinobi)
     {
-        if (shinobi->state == PhantomShinobi_State_Unknown4) {
+        if (shinobi->state == PhantomShinobi_State_Moving) {
             foreach_return true;
         }
     }
@@ -350,10 +350,10 @@ void PhantomShinobi_EditorDraw(void)
 {
     RSDK_THIS(PhantomShinobi);
 
-    self->spearOffset = 0x1600;
-    RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->animator2, false, 1);
-    RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 1, &self->animator3, false, 0);
+    self->finRadius = 0x1600;
+    RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->bodyAnimator, false, 0);
+    RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 0, &self->armAnimator, false, 1);
+    RSDK.SetSpriteAnimation(PhantomShinobi->aniFrames, 1, &self->finAnimator, false, 0);
 
     PhantomShinobi_Draw();
 }

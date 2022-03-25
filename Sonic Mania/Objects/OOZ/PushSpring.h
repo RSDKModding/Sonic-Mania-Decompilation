@@ -21,7 +21,7 @@ struct EntityPushSpring {
     StateMachine(stateCollide);
     uint8 type;
     int32 pushOffset;
-    int32 pushTimer;
+    int32 timer;
     Hitbox hitbox;
     bool32 beingPushed;
     Animator animator;

@@ -141,8 +141,8 @@ void PrintMessage(void *msg, int type)
     if (msg && engine.printConsole) {
         switch (type) {
             case 0: PrintLog(PRINT_NORMAL, "%s", (const char *)msg); break;
-            case 1: PrintLog(PRINT_NORMAL, "%i", *(signed int *)msg); break;
-            case 2: PrintLog(PRINT_NORMAL, "%i", *(int *)msg, 0); break;
+            case 1: PrintLog(PRINT_NORMAL, "%i", *(int32 *)msg); break;
+            case 2: PrintLog(PRINT_NORMAL, "%i", *(uint32 *)msg, 0); break;
             case 3: PrintLog(PRINT_NORMAL, "%f", *(float *)msg); break;
             default: break;
         }

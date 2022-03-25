@@ -17,18 +17,12 @@ void PhantomMystic_Update(void)
         self->invincibilityTimer--;
 
     StateMachine_Run(self->state);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->mysticAnimator);
 }
 
-void PhantomMystic_LateUpdate(void)
-{
+void PhantomMystic_LateUpdate(void) {}
 
-}
-
-void PhantomMystic_StaticUpdate(void)
-{
-
-}
+void PhantomMystic_StaticUpdate(void) {}
 
 void PhantomMystic_Draw(void)
 {
@@ -39,12 +33,12 @@ void PhantomMystic_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->mysticAnimator, NULL, false);
     }
     RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
 }
 
-void PhantomMystic_Create(void* data)
+void PhantomMystic_Create(void *data)
 {
     RSDK_THIS(PhantomMystic);
 
@@ -55,9 +49,9 @@ void PhantomMystic_Create(void* data)
         self->active        = ACTIVE_NEVER;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->field_90      = 0;
-        self->field_94      = 1;
-        self->field_98      = 2;
+        self->unused1[0]    = 0;
+        self->unused1[1]    = 1;
+        self->unused1[2]    = 2;
         self->cupAlpha[0]   = 0x60;
         self->cupAlpha[1]   = 0;
         self->cupAlpha[2]   = 0x60;
@@ -66,18 +60,19 @@ void PhantomMystic_Create(void* data)
         self->hitbox.right  = 0xC;
         self->hitbox.bottom = 0xC;
         self->correctCup    = 1;
-        self->state         = PhantomMystic_State_Unknown1;
-        self->stateDraw     = PhantomMystic_StateDraw_Unknown1;
-        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 2, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->animator3, true, 1);
-        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 1, &self->animator4, true, 0);
+        self->state         = PhantomMystic_State_Setup;
+        self->stateDraw     = PhantomMystic_Draw_CupSetup;
+        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 2, &self->mysticAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->cupAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->cupSilhouetteAnimator, true, 1);
+        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 1, &self->cupSpikeAnimator, true, 0);
     }
 }
 
 void PhantomMystic_StageLoad(void)
 {
-    PhantomMystic->aniFrames   = RSDK.LoadSpriteAnimation("Phantom/PhantomMystic.bin", SCOPE_STAGE);
+    PhantomMystic->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomMystic.bin", SCOPE_STAGE);
+
     PhantomMystic->sfxCupSwap  = RSDK.GetSfx("TMZ3/CupSwap.wav");
     PhantomMystic->sfxBigLaser = RSDK.GetSfx("TMZ3/BigLaser.wav");
     PhantomMystic->sfxImpact   = RSDK.GetSfx("Stage/Impact2.wav");
@@ -87,8 +82,8 @@ void PhantomMystic_CheckPlayerCollisions(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    int storeX         = self->position.x;
-    int storeY         = self->position.y;
+    int32 storeX     = self->position.x;
+    int32 storeY     = self->position.y;
     self->position.x = self->mysticPos.x;
     self->position.y = self->mysticPos.y;
 
@@ -99,8 +94,8 @@ void PhantomMystic_CheckPlayerCollisions(void)
             RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
         }
 
-        if (self->animator5.frameID > 8 && self->animator5.frameID < 26) {
-            for (int i = 0; i < 3; ++i) {
+        if (self->cupBlastAnimator.frameID > 8 && self->cupBlastAnimator.frameID < 26) {
+            for (int32 i = 0; i < 3; ++i) {
                 if (i != self->correctCup) {
                     self->position.x = storeX + self->cupPos[i];
                     if (abs(self->position.x - player->position.x) < 0x400000 && player->position.y > self->position.y)
@@ -116,35 +111,35 @@ void PhantomMystic_CheckPlayerCollisions(void)
     self->position.y = storeY;
 }
 
-void PhantomMystic_HandleCups(void)
+void PhantomMystic_SetupNewCupSwap(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    self->field_B4 = RSDK.Rand(0, 3);
+    self->swapCup1 = RSDK.Rand(0, 3);
 
-    switch (self->field_B4) {
-        case 0: self->field_B8 = (RSDK.Rand(0, 256) > 128) + 1; break;
-        case 1: self->field_B8 = RSDK.Rand(0, 256) <= 128 ? 2 : 0; break;
-        case 2: self->field_B8 = RSDK.Rand(0, 256) <= 128; break;
+    switch (self->swapCup1) {
+        case 0: self->swapCup2 = (RSDK.Rand(0, 256) > 128) + 1; break;
+        case 1: self->swapCup2 = RSDK.Rand(0, 256) <= 128 ? 2 : 0; break;
+        case 2: self->swapCup2 = RSDK.Rand(0, 256) <= 128; break;
     }
 
-    self->field_BC = self->cupPos[self->field_B4];
-    self->field_C4 = self->cupAlpha[self->field_B4];
+    self->swapCup1Pos   = self->cupPos[self->swapCup1];
+    self->swapCup1Alpha = self->cupAlpha[self->swapCup1];
 
-    self->field_C0 = self->cupPos[self->field_B8];
-    self->field_C8 = self->cupAlpha[self->field_B8];
+    self->swapCup2Pos   = self->cupPos[self->swapCup2];
+    self->swapCup2Alpha = self->cupAlpha[self->swapCup2];
 }
 
-void PhantomMystic_StateDraw_Unknown1(void)
+void PhantomMystic_Draw_CupSetup(void)
 {
     RSDK_THIS(PhantomMystic);
     Vector2 drawPos;
 
-    RSDK.DrawSprite(&self->animator1, &self->mysticPos, false);
-    for (int i = 0; i < 3; ++i) {
+    RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
+    for (int32 i = 0; i < 3; ++i) {
         drawPos.x = self->position.x + self->cupPos[i];
         if (i == 1) {
-            drawPos.y      = self->cupY;
+            drawPos.y    = self->middleCupY;
             self->drawFX = FX_ROTATE | FX_FLIP;
         }
         else {
@@ -152,25 +147,25 @@ void PhantomMystic_StateDraw_Unknown1(void)
         }
 
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->cupAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->cupAnimator, &drawPos, false);
 
         self->inkEffect = INK_ALPHA;
         self->drawFX    = FX_FLIP;
         self->alpha     = self->cupAlpha[i];
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->cupSilhouetteAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->cupSilhouetteAnimator, &drawPos, false);
 
         self->inkEffect = INK_NONE;
     }
 }
 
-void PhantomMystic_StateDraw_Unknown2(void)
+void PhantomMystic_Draw_CupSwap(void)
 {
     RSDK_THIS(PhantomMystic);
     Vector2 drawPos;
@@ -179,99 +174,102 @@ void PhantomMystic_StateDraw_Unknown2(void)
     drawPos.y = self->position.y;
     if (self->invincibilityTimer & 1) {
         RSDK.CopyPalette(2, 128, 0, 128, 128);
-        RSDK.DrawSprite(&self->animator1, &self->mysticPos, false);
+        RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
         RSDK.CopyPalette(1, 128, 0, 128, 128);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, &self->mysticPos, false);
+        RSDK.DrawSprite(&self->mysticAnimator, &self->mysticPos, false);
     }
 
     for (int i = 0; i < 3; ++i) {
-        drawPos.x         = self->position.x + self->cupPos[i];
+        drawPos.x       = self->position.x + self->cupPos[i];
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->cupAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->cupAnimator, &drawPos, false);
 
         self->inkEffect = INK_ALPHA;
         self->alpha     = self->cupAlpha[i];
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->cupSilhouetteAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->cupSilhouetteAnimator, &drawPos, false);
 
         self->inkEffect = INK_NONE;
         if (i != self->correctCup)
-            RSDK.DrawSprite(&self->animator5, &drawPos, false);
+            RSDK.DrawSprite(&self->cupBlastAnimator, &drawPos, false);
     }
 }
 
-void PhantomMystic_State_Unknown1(void)
+void PhantomMystic_State_Setup(void)
 {
     RSDK_THIS(PhantomMystic);
 
     self->mysticPos.x = self->position.x;
     self->velocity.y  = 0x40000;
-    self->field_70    = -0x80000;
+    self->mysticVelY  = -0x80000;
     self->mysticPos.y = self->position.y;
-    self->cupY        = self->position.y;
-    self->state       = PhantomMystic_State_Unknown2;
+    self->middleCupY  = self->position.y;
+    self->state       = PhantomMystic_State_SetupInitialCupPos;
 }
 
-void PhantomMystic_State_Unknown2(void)
+void PhantomMystic_State_SetupInitialCupPos(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    self->field_70 += 0x3800;
-    self->mysticPos.y += self->field_70;
+    self->mysticVelY += 0x3800;
+    self->mysticPos.y += self->mysticVelY;
     self->velocity.y -= 0x2800;
-    self->cupY += self->velocity.y;
+    self->middleCupY += self->velocity.y;
 
-    if (self->cupY <= self->position.y) {
+    if (self->middleCupY <= self->position.y) {
         self->velocity.y = 0;
-        self->cupY       = self->position.y;
+        self->middleCupY = self->position.y;
     }
 
     self->cupPos[0] += (-0x800000 - self->cupPos[0]) >> 4;
     self->cupPos[2] += ((0x800000 - self->cupPos[2]) >> 4);
 
-    if (self->rotation < 256) {
-        self->rotation += 16;
+    if (self->rotation < 0x100) {
+        self->rotation += 0x10;
     }
 
     if (++self->timer == 60) {
         self->cupPos[0] = -0x800000;
         self->cupPos[2] = 0x800000;
         self->timer     = 0;
-        self->state     = PhantomMystic_State_Unknown3;
+        self->state     = PhantomMystic_State_MoveCupsDownwards;
     }
 }
 
-void PhantomMystic_State_Unknown3(void)
+void PhantomMystic_State_MoveCupsDownwards(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    self->field_70 += 0x3800;
-    self->mysticPos.y += self->field_70;
+    self->mysticVelY += 0x3800;
+    self->mysticPos.y += self->mysticVelY;
+
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
+
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x380000, true))
         self->velocity.y = 0;
 
     if (self->mysticPos.y >= self->position.y - 0x180000) {
         self->mysticPos.y = 0;
-        self->field_70    = 0;
+        self->mysticVelY  = 0;
         self->onGround    = false;
-        self->state       = PhantomMystic_State_Unknown4;
+        self->state       = PhantomMystic_State_RotateMiddleCup;
     }
 }
 
-void PhantomMystic_State_Unknown4(void)
+void PhantomMystic_State_RotateMiddleCup(void)
 {
     RSDK_THIS(PhantomMystic);
 
+    // This does continue to move the side cups downwards too if they're not on the ground yet
     self->velocity.y += 0x4000;
     self->position.y += self->velocity.y;
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x380000, true)) {
@@ -281,33 +279,33 @@ void PhantomMystic_State_Unknown4(void)
         self->onGround   = true;
     }
 
-    if (self->rotation >= 512) {
+    if (self->rotation >= 0x200) {
         self->rotation = 0;
-        self->state    = PhantomMystic_State_Unknown5;
+        self->state    = PhantomMystic_State_MoveMiddleCupToFloor;
     }
     else {
-        self->rotation += 16;
+        self->rotation += 0x10;
     }
 }
 
-void PhantomMystic_State_Unknown5(void)
+void PhantomMystic_State_MoveMiddleCupToFloor(void)
 {
     RSDK_THIS(PhantomMystic);
 
     self->velocity.y += 0x4000;
-    self->cupY += self->velocity.y;
+    self->middleCupY += self->velocity.y;
 
-    if (self->cupY >= self->position.y) {
+    if (self->middleCupY >= self->position.y) {
         Camera_ShakeScreen(0, 0, 4);
         RSDK.PlaySfx(PhantomMystic->sfxImpact, false, 255);
         self->velocity.y = 0;
-        self->cupY       = self->position.y;
-        self->stateDraw  = PhantomMystic_StateDraw_Unknown2;
-        self->state      = PhantomMystic_State_Unknown6;
+        self->middleCupY = self->position.y;
+        self->stateDraw  = PhantomMystic_Draw_CupSwap;
+        self->state      = PhantomMystic_State_PrepareCupSwap;
     }
 }
 
-void PhantomMystic_State_Unknown6(void)
+void PhantomMystic_State_PrepareCupSwap(void)
 {
     RSDK_THIS(PhantomMystic);
 
@@ -318,129 +316,130 @@ void PhantomMystic_State_Unknown6(void)
     }
 
     if (self->timer == 30) {
-        self->timer  = 0;
-        self->timer2 = 6;
-        PhantomMystic_HandleCups();
+        self->timer        = 0;
+        self->cupSwapCount = 6;
+        PhantomMystic_SetupNewCupSwap();
         RSDK.PlaySfx(PhantomMystic->sfxCupSwap, false, 255);
-        self->state = PhantomMystic_State_Unknown7;
+        self->state = PhantomMystic_State_CupSwapping;
     }
 }
 
-void PhantomMystic_State_Unknown7(void)
+void PhantomMystic_State_CupSwapping(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    if (abs(self->field_C0 - self->field_BC) <= 0x800000)
+    if (abs(self->swapCup2Pos - self->swapCup1Pos) <= 0x800000)
         self->timer += 16;
     else
         self->timer += 8;
 
-    int cup1 = self->field_B4;
-    int cup2 = self->field_B8;
+    int32 cup1 = self->swapCup1;
+    int32 cup2 = self->swapCup2;
 
-    int pos1 = self->field_BC;
+    // Use Lerp Math to move each cup to the other's initial position
+    int32 cup1Pos = self->swapCup1Pos;
     if (self->timer > 0) {
         if (self->timer < 256)
-            pos1 += ((self->field_C0 - pos1) >> 8) * ((RSDK.Sin512(self->timer + 384) >> 2) + 128);
+            cup1Pos += ((self->swapCup2Pos - cup1Pos) >> 8) * ((RSDK.Sin512(self->timer + 0x180) >> 2) + 0x80);
         else
-            pos1 = self->field_C0;
+            cup1Pos = self->swapCup2Pos;
     }
-    self->cupPos[cup1] = pos1;
+    self->cupPos[cup1] = cup1Pos;
 
-    int pos2 = self->field_C0;
+    int32 cup2Pos = self->swapCup2Pos;
     if (self->timer > 0) {
-        if (self->timer < 256) {
-            pos2 += ((self->field_BC - pos2) >> 8) * ((RSDK.Sin512(self->timer + 384) >> 2) + 128);
-        }
-        else {
-            pos2 = self->field_BC;
-        }
+        if (self->timer < 256)
+            cup2Pos += ((self->swapCup1Pos - cup2Pos) >> 8) * ((RSDK.Sin512(self->timer + 0x180) >> 2) + 0x80);
+        else
+            cup2Pos = self->swapCup1Pos;
     }
-    self->cupPos[cup2] = pos2;
+    self->cupPos[cup2] = cup2Pos;
 
     self->cupAlpha[cup1] = abs(self->cupPos[cup1]) / 0xE38E;
     self->cupAlpha[cup2] = abs(self->cupPos[cup2]) / 0xE38E;
+
     if (self->timer == 0x100) {
         self->timer = 0;
-        if (self->timer2 <= 1) {
-            self->cupY -= 0x600000;
+        if (self->cupSwapCount <= 1) {
+            self->middleCupY -= 0x600000;
             self->mysticPos.x = self->position.x + self->cupPos[self->correctCup];
             self->mysticPos.y = self->position.y;
-            self->field_60.x  = self->mysticPos.x;
-            self->field_60.y  = self->mysticPos.y;
+            self->originPos.x = self->mysticPos.x;
+            self->originPos.y = self->mysticPos.y;
             self->velocity.y  = -0x10000;
-            self->state       = PhantomMystic_State_Unknown8;
+            self->state       = PhantomMystic_State_RevealMystic;
         }
         else {
-            self->timer2--;
+            self->cupSwapCount--;
             RSDK.PlaySfx(PhantomMystic->sfxCupSwap, false, 255);
-            PhantomMystic_HandleCups();
+            PhantomMystic_SetupNewCupSwap();
         }
     }
 }
 
-void PhantomMystic_State_Unknown8(void)
+void PhantomMystic_State_RevealMystic(void)
 {
     RSDK_THIS(PhantomMystic);
 
     self->velocity.y -= 0x3800;
     self->position.y += self->velocity.y;
+
     self->cupAlpha[0] -= self->cupAlpha[0] >> 4;
     self->cupAlpha[1] -= self->cupAlpha[1] >> 4;
     self->cupAlpha[2] -= self->cupAlpha[2] >> 4;
-    if (self->position.y <= self->cupY) {
-        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 3, &self->animator5, true, 0);
+    if (self->position.y <= self->middleCupY) {
+        RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 3, &self->cupBlastAnimator, true, 0);
         self->velocity.y = 0;
-        self->position.y = self->cupY;
-        self->state      = PhantomMystic_State_Unknown9;
+        self->position.y = self->middleCupY;
+        self->state      = PhantomMystic_State_CupBlast;
     }
 
-    self->angle       = (self->angle + 4) & 0xFF;
-    self->mysticPos.y = (RSDK.Sin256(self->angle) << 11) + self->field_60.y;
+    self->mysticPos.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 11);
 
-    if (self->position.y - self->cupY < 0x200000)
+    if (self->position.y - self->middleCupY < 0x200000)
         PhantomMystic_CheckPlayerCollisions();
 }
 
-void PhantomMystic_State_Unknown9(void)
+void PhantomMystic_State_CupBlast(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    RSDK.ProcessAnimation(&self->animator5);
+    RSDK.ProcessAnimation(&self->cupBlastAnimator);
     self->cupAlpha[0] -= self->cupAlpha[0] >> 4;
     self->cupAlpha[1] -= self->cupAlpha[1] >> 4;
     self->cupAlpha[2] -= self->cupAlpha[2] >> 4;
-    if (self->animator5.frameID == self->animator5.frameCount - 1) {
-        self->field_70 = 0;
+    if (self->cupBlastAnimator.frameID == self->cupBlastAnimator.frameCount - 1) {
+        self->mysticVelY = 0;
         RSDK.PlaySfx(PhantomMystic->sfxCupSwap, false, 255);
-        self->state    = PhantomMystic_State_Unknown10;
+        self->state = PhantomMystic_State_MoveCupsToMystic;
     }
 
-    self->angle       = (self->angle + 4) & 0xFF;
-    self->mysticPos.y = (RSDK.Sin256(self->angle) << 11) + self->field_60.y;
+    self->mysticPos.y = BadnikHelpers_Oscillate(self->originPos.y, 4, 11);
+
     PhantomMystic_CheckPlayerCollisions();
 }
 
-void PhantomMystic_State_Unknown10(void)
+void PhantomMystic_State_MoveCupsToMystic(void)
 {
     RSDK_THIS(PhantomMystic);
 
     self->cupPos[0] += ((self->cupPos[self->correctCup] - self->cupPos[0]) >> 3);
     self->cupPos[1] += ((self->cupPos[self->correctCup] - self->cupPos[1]) >> 3);
     self->cupPos[2] += ((self->cupPos[self->correctCup] - self->cupPos[2]) >> 3);
-    self->field_70 -= 0x3000;
-    self->mysticPos.y += self->field_70;
+
+    self->mysticVelY -= 0x3000;
+    self->mysticPos.y += self->mysticVelY;
 
     if (self->mysticPos.y < self->position.y)
         self->mysticPos.y = self->position.y;
 
     PhantomMystic_CheckPlayerCollisions();
-    if (++self->timer == 60) 
+    if (++self->timer == 60)
         PhantomEgg_SetupScanlineCB();
 
     if (self->timer == 120) {
-        int x                      = self->position.x;
-        int y                      = self->position.y;
+        int32 x = self->position.x;
+        int32 y = self->position.y;
         RSDK.ResetEntityPtr(self, PhantomMystic->objectID, NULL);
         self->position.x = x;
         self->position.y = y;
@@ -451,24 +450,20 @@ void PhantomMystic_State_Unknown10(void)
 void PhantomMystic_EditorDraw(void)
 {
     RSDK_THIS(PhantomMystic);
-    self->mysticPos     = self->position;
-    self->cupY          = self->position.y;
-    self->cupAlpha[0]   = 0x60;
-    self->cupAlpha[1]   = 0;
-    self->cupAlpha[2]   = 0x60;
-    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 2, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->animator3, true, 1);
-    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 1, &self->animator4, true, 0);
+    self->mysticPos   = self->position;
+    self->middleCupY  = self->position.y;
+    self->cupAlpha[0] = 0x60;
+    self->cupAlpha[1] = 0;
+    self->cupAlpha[2] = 0x60;
+    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 2, &self->mysticAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->cupAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 0, &self->cupSilhouetteAnimator, true, 1);
+    RSDK.SetSpriteAnimation(PhantomMystic->aniFrames, 1, &self->cupSpikeAnimator, true, 0);
 
-    PhantomMystic_StateDraw_Unknown1();
+    PhantomMystic_Draw_CupSetup();
 }
 
 void PhantomMystic_EditorLoad(void) { PhantomMystic->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomMystic.bin", SCOPE_STAGE); }
 #endif
 
-void PhantomMystic_Serialize(void)
-{
-
-}
-
+void PhantomMystic_Serialize(void) {}

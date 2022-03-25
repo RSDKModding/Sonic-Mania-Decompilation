@@ -14,14 +14,14 @@ void PhantomRuby_Update(void)
     RSDK_THIS(PhantomRuby);
     StateMachine_Run(self->state);
 
-    if (self->animator1.animationID == 1 && self->animator1.frameID == self->animator1.frameCount - 1)
-        RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
+    if (self->rubyAnimator.animationID == 1 && self->rubyAnimator.frameID == self->rubyAnimator.frameCount - 1)
+        RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->rubyAnimator, true, 0);
 
-    if (self->animator2.animationID == 2 && self->animator2.frameID == self->animator2.frameCount - 1)
-        RSDK.SetSpriteAnimation(-1, 0xFFFF, &self->animator2, true, 0);
+    if (self->flashAnimator.animationID == 2 && self->flashAnimator.frameID == self->flashAnimator.frameCount - 1)
+        RSDK.SetSpriteAnimation(-1, 0xFFFF, &self->flashAnimator, true, 0);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->rubyAnimator);
+    RSDK.ProcessAnimation(&self->flashAnimator);
 }
 
 void PhantomRuby_LateUpdate(void) {}
@@ -31,11 +31,11 @@ void PhantomRuby_StaticUpdate(void) {}
 void PhantomRuby_Draw(void)
 {
     RSDK_THIS(PhantomRuby);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    if (self->animator2.animationID != -1) {
+    RSDK.DrawSprite(&self->rubyAnimator, NULL, false);
+    if (self->flashAnimator.animationID != -1) {
         self->inkEffect = INK_ADD;
         self->alpha     = 0xFF;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->flashAnimator, NULL, false);
         self->inkEffect = INK_NONE;
     }
 }
@@ -53,12 +53,13 @@ void PhantomRuby_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->state         = PhantomRuby_State_FinishedFlash;
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->rubyAnimator, true, 0);
 }
 
 void PhantomRuby_StageLoad(void)
 {
     PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE);
+
     PhantomRuby->sfxL[0]  = RSDK.GetSfx("Ruby/Attack1_L.wav");
     PhantomRuby->sfxR[0]  = RSDK.GetSfx("Ruby/Attack1_R.wav");
     PhantomRuby->sfxL[1]  = RSDK.GetSfx("Ruby/Attack2_L.wav");
@@ -91,8 +92,8 @@ void PhantomRuby_SetupFlash(EntityPhantomRuby *ruby)
     ruby->flashFinished = false;
     ruby->hasFlashed    = false;
     ruby->timer         = 0;
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->animator1, true, 0);
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->animator2, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->rubyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->flashAnimator, true, 0);
     ruby->state = PhantomRuby_State_PlaySfx;
 }
 
@@ -128,6 +129,7 @@ void PhantomRuby_State_Oscillate(void)
 void PhantomRuby_State_FallOffScreen(void)
 {
     RSDK_THIS(PhantomRuby);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -138,6 +140,7 @@ void PhantomRuby_State_FallOffScreen(void)
 void PhantomRuby_State_MoveRotateGravity(void)
 {
     RSDK_THIS(PhantomRuby);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -167,6 +170,7 @@ void PhantomRuby_State_MoveToPos(void)
     int32 angle = RSDK.ATan2(rx, ry);
     self->velocity.x += RSDK.Cos256(angle) << 3;
     self->velocity.y += RSDK.Sin256(angle) << 3;
+
     int32 r = rx * rx + ry * ry;
     if (r >= 16) {
         if (r < 2304) {
@@ -187,6 +191,7 @@ void PhantomRuby_State_MoveToPos(void)
 void PhantomRuby_State_RotateToOrigin(void)
 {
     RSDK_THIS(PhantomRuby);
+
     self->rotation += 6;
     if (self->rotation > 0x200) {
         self->rotation = 0;
@@ -196,7 +201,13 @@ void PhantomRuby_State_RotateToOrigin(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PhantomRuby_EditorDraw(void) { PhantomRuby_Draw(); }
+void PhantomRuby_EditorDraw(void)
+{
+    RSDK_THIS(PhantomRuby);
+    PhantomRuby_SetupFlash(self);
+
+    PhantomRuby_Draw();
+}
 
 void PhantomRuby_EditorLoad(void) { PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE); }
 #endif

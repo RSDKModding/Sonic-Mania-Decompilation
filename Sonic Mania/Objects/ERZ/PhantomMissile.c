@@ -22,13 +22,13 @@ void PhantomMissile_StaticUpdate(void) {}
 void PhantomMissile_Draw(void)
 {
     RSDK_THIS(PhantomMissile);
-    RSDK.DrawSprite(&self->animator0, NULL, false);
-    RSDK.DrawSprite(&self->animator1, &self->drawPos, false);
+    RSDK.DrawSprite(&self->missileAnimator, NULL, false);
+    RSDK.DrawSprite(&self->targetOutsideAnimator, &self->targetPos, false);
 
     if (Zone->timer & 0x10)
-        RSDK.DrawSprite(&self->animator3, &self->drawPos, false);
+        RSDK.DrawSprite(&self->targetNumbersAnimator, &self->targetPos, false);
     else
-        RSDK.DrawSprite(&self->animator2, &self->drawPos, false);
+        RSDK.DrawSprite(&self->targetInsideAnimator, &self->targetPos, false);
 }
 
 void PhantomMissile_Create(void *data)
@@ -40,8 +40,8 @@ void PhantomMissile_Create(void *data)
         self->drawFX        = FX_ROTATE;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = PhantomMissile_Unknown3;
-        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->animator0, true, 0);
+        self->state         = PhantomMissile_State_Attached;
+        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->missileAnimator, true, 0);
     }
 }
 
@@ -55,48 +55,48 @@ void PhantomMissile_StageLoad(void)
     PhantomMissile->hitbox.bottom = 12;
 }
 
-void PhantomMissile_Unknown1(void)
+void PhantomMissile_GetTargetPos(void)
 {
     RSDK_THIS(PhantomMissile);
 
-    int distance = 0x7FFFFFFF;
-    for (int p = SLOT_PLAYER1; p < Player->playerCount; ++p) {
+    int32 distance = 0x7FFFFFFF;
+    for (int32 p = SLOT_PLAYER1; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (player->sidekick == true && player->stateInput != Player_ProcessP2Input_Player) {
-            int storeX         = self->position.x;
-            int storeY         = self->position.y;
-            self->position.x = self->drawPos.x;
-            self->position.y = self->drawPos.y;
+            int32 storeX     = self->position.x;
+            int32 storeY     = self->position.y;
+            self->position.x = self->targetPos.x;
+            self->position.y = self->targetPos.y;
 
             while (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 16)) {
                 self->position.y += 0x100000;
             }
 
-            int y              = self->position.y;
-            self->position.x = storeX;
-            self->position.y = storeY;
-            self->drawPos.y  = y;
+            int32 y           = self->position.y;
+            self->position.x  = storeX;
+            self->position.y  = storeY;
+            self->targetPos.y = y;
             foreach_break;
         }
 
-        int rx   = (self->position.x - player->position.x) >> 16;
-        int ry   = (self->position.y - player->position.y) >> 16;
-        int dist = rx * rx + ry * ry;
+        int32 rx   = (self->position.x - player->position.x) >> 16;
+        int32 ry   = (self->position.y - player->position.y) >> 16;
+        int32 dist = rx * rx + ry * ry;
         if (dist < distance) {
             distance          = dist;
-            self->drawPos.x = player->position.x;
-            self->drawPos.y = player->position.y;
+            self->targetPos.x = player->position.x;
+            self->targetPos.y = player->position.y;
         }
     }
 }
 
-void PhantomMissile_Unknown2(void)
+void PhantomMissile_HandleExhaust(void)
 {
     RSDK_THIS(PhantomMissile);
 
     if (!(Zone->timer & 3)) {
-        int x            = RSDK.Sin512(self->rotation) << 11;
-        int y            = RSDK.Cos512(self->rotation) << 11;
+        int32 x          = RSDK.Sin512(self->rotation) << 11;
+        int32 y          = RSDK.Cos512(self->rotation) << 11;
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - x, self->position.y + y);
         dust->state      = Dust_State_Move;
         dust->drawOrder  = Zone->drawOrderHigh;
@@ -104,15 +104,15 @@ void PhantomMissile_Unknown2(void)
     }
 }
 
-void PhantomMissile_Unknown3(void)
+void PhantomMissile_State_Attached(void)
 {
     RSDK_THIS(PhantomMissile);
 
     if (self->parent) {
-        self->position.x = self->parent->position.x;
-        self->position.y = self->parent->position.y;
-        self->field_60   = (self->field_60 + 6) & 0xFF;
-        int off            = 8 * RSDK.Sin256(self->field_60) + 0x2000;
+        self->position.x     = self->parent->position.x;
+        self->position.y     = self->parent->position.y;
+        self->oscillateAngle = (self->oscillateAngle + 6) & 0xFF;
+        int32 off            = 8 * RSDK.Sin256(self->oscillateAngle) + 0x2000;
 
         self->position.x += off * RSDK.Sin256(self->angle);
         self->position.y -= off * RSDK.Cos256(self->angle);
@@ -123,13 +123,13 @@ void PhantomMissile_Unknown3(void)
                 self->velocity.x = 0x300 * RSDK.Sin256(self->angle) + self->parent->velocity.x;
                 self->velocity.y = -0x300 * RSDK.Cos256(self->angle) + self->parent->velocity.y;
                 self->timer      = 8;
-                self->state      = PhantomMissile_Unknown4;
+                self->state      = PhantomMissile_State_PrepareLaunch;
             }
         }
     }
 }
 
-void PhantomMissile_Unknown4(void)
+void PhantomMissile_State_PrepareLaunch(void)
 {
     RSDK_THIS(PhantomMissile);
 
@@ -137,94 +137,90 @@ void PhantomMissile_Unknown4(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     if (!--self->timer) {
-        self->field_64 = 0x400;
-        self->state    = PhantomMissile_Unknown5;
+        self->targetRadius = 0x400;
+        self->state        = PhantomMissile_State_Launched;
         RSDK.PlaySfx(PhantomEgg->sfxRocketJet, false, 255);
     }
 }
 
-void PhantomMissile_Unknown5(void)
+void PhantomMissile_State_Launched(void)
 {
     RSDK_THIS(PhantomMissile);
 
-    RSDK.ProcessAnimation(&self->animator0);
-    if (self->field_64 < 0x600)
-        self->field_64 += 4;
+    RSDK.ProcessAnimation(&self->missileAnimator);
+    if (self->targetRadius < 0x600)
+        self->targetRadius += 4;
 
-    self->position.x += self->field_64 * RSDK.Sin256(self->angle);
-    self->position.y -= self->field_64 * RSDK.Cos256(self->angle);
+    self->position.x += self->targetRadius * RSDK.Sin256(self->angle);
+    self->position.y -= self->targetRadius * RSDK.Cos256(self->angle);
 
     if (++self->timer == 24) {
         self->timer = 32;
-        self->field_64 >>= 1;
-        PhantomMissile_Unknown1();
-        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 2, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 3, &self->animator3, true, self->id);
+        self->targetRadius >>= 1;
+        PhantomMissile_GetTargetPos();
+        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 1, &self->targetOutsideAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 2, &self->targetInsideAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 3, &self->targetNumbersAnimator, true, self->id);
         self->drawOrder = Zone->drawOrderHigh;
-        self->state     = PhantomMissile_Unknown6;
+        self->state     = PhantomMissile_State_Attacking;
     }
-    PhantomMissile_Unknown2();
+    PhantomMissile_HandleExhaust();
 }
 
-void PhantomMissile_Unknown6(void)
+void PhantomMissile_State_Attacking(void)
 {
     RSDK_THIS(PhantomMissile);
 
-    RSDK.ProcessAnimation(&self->animator0);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->missileAnimator);
+    RSDK.ProcessAnimation(&self->targetOutsideAnimator);
+    RSDK.ProcessAnimation(&self->targetInsideAnimator);
+    RSDK.ProcessAnimation(&self->targetNumbersAnimator);
 
-    if (self->field_64 < 0x800)
-        self->field_64 += 4;
+    if (self->targetRadius < 0x800)
+        self->targetRadius += 4;
     if (self->timer > 4)
         self->timer--;
 
-    int shift = self->timer >> 2;
-    int rx    = (self->drawPos.x - self->position.x) >> 16;
-    int ry    = (self->drawPos.y - self->position.y) >> 16;
-    int angle = RSDK.ATan2(-ry, rx);
-    int rot   = 2 * angle - self->rotation;
+    int32 shift = self->timer >> 2;
+    int32 rx    = (self->targetPos.x - self->position.x) >> 16;
+    int32 ry    = (self->targetPos.y - self->position.y) >> 16;
+    int32 angle = RSDK.ATan2(-ry, rx);
+    int32 rot   = 2 * angle - self->rotation;
 
     if (abs(rot) >= abs(rot - 0x200)) {
-        if (abs(rot - 0x200) < abs(rot + 0x200)) {
+        if (abs(rot - 0x200) < abs(rot + 0x200))
             self->rotation += ((rot - 0x200) >> shift);
-        }
-        else {
+        else
             self->rotation += ((rot + 0x200) >> shift);
-        }
     }
     else {
-        if (abs(rot) < abs(rot + 0x200)) {
+        if (abs(rot) < abs(rot + 0x200))
             self->rotation += (rot >> shift);
-        }
-        else {
+        else
             self->rotation += ((rot + 0x200) >> shift);
-        }
     }
-
     self->rotation &= 0x1FF;
-    self->position.x += self->field_64 * RSDK.Sin512(self->rotation);
-    self->position.y -= self->field_64 * RSDK.Cos512(self->rotation);
+
+    self->position.x += self->targetRadius * RSDK.Sin512(self->rotation);
+    self->position.y -= self->targetRadius * RSDK.Cos512(self->rotation);
     if (rx * rx + ry * ry < 64) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->drawPos.x, self->drawPos.y - 0x80000)->drawOrder = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->animator0, true, 0);
-        RSDK.SetSpriteAnimation(-1, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
-        self->timer     = 0;
-        self->field_68  = 0;
-        self->drawOrder = Zone->drawOrderLow;
-        self->visible   = 0;
-        self->state     = PhantomMissile_Unknown7;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawOrder = Zone->drawOrderHigh;
+        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->missileAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 1, &self->targetOutsideAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->targetInsideAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->targetNumbersAnimator, true, 0);
+        self->timer          = 0;
+        self->reattachRadius = 0;
+        self->drawOrder      = Zone->drawOrderLow;
+        self->visible        = 0;
+        self->state          = PhantomMissile_State_Explode;
         Camera_ShakeScreen(0, 0, 3);
         RSDK.PlaySfx(PhantomEgg->sfxMissile, false, 255);
     }
-    PhantomMissile_Unknown2();
+    PhantomMissile_HandleExhaust();
 }
 
-void PhantomMissile_Unknown7(void)
+void PhantomMissile_State_Explode(void)
 {
     RSDK_THIS(PhantomMissile);
 
@@ -234,18 +230,17 @@ void PhantomMissile_Unknown7(void)
             Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
     }
-    if (++self->timer >= 16) {
-        if (self->parent) {
-            self->position.x = self->parent->position.x;
-            self->position.y = self->parent->position.y;
-            self->timer      = 0;
-            self->visible    = true;
-            self->state      = PhantomMissile_Unknown8;
-        }
+
+    if (++self->timer >= 16 && self->parent) {
+        self->position.x = self->parent->position.x;
+        self->position.y = self->parent->position.y;
+        self->timer      = 0;
+        self->visible    = true;
+        self->state      = PhantomMissile_State_Reattach;
     }
 }
 
-void PhantomMissile_Unknown8(void)
+void PhantomMissile_State_Reattach(void)
 {
     RSDK_THIS(PhantomMissile);
 
@@ -253,21 +248,21 @@ void PhantomMissile_Unknown8(void)
         self->position.x = self->parent->position.x;
         self->position.y = self->parent->position.y;
 
-        if (self->field_68 >= 0x2000) {
-            self->field_60 = 0;
-            self->state    = PhantomMissile_Unknown3;
+        if (self->reattachRadius >= 0x2000) {
+            self->oscillateAngle = 0;
+            self->state          = PhantomMissile_State_Attached;
         }
         else {
-            self->field_68 += 0x100;
+            self->reattachRadius += 0x100;
         }
 
-        self->position.x += self->field_68 * RSDK.Sin256(self->angle);
-        self->position.y -= self->field_68 * RSDK.Cos256(self->angle);
-        self->rotation = (2 * self->angle);
+        self->position.x += self->reattachRadius * RSDK.Sin256(self->angle);
+        self->position.y -= self->reattachRadius * RSDK.Cos256(self->angle);
+        self->rotation = self->angle << 1;
     }
 }
 
-void PhantomMissile_Unknown9(void)
+void PhantomMissile_State_Destroyed(void)
 {
     RSDK_THIS(PhantomMissile);
 
@@ -284,9 +279,9 @@ void PhantomMissile_Unknown9(void)
 void PhantomMissile_EditorDraw(void)
 {
     RSDK_THIS(PhantomMissile);
-    RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->animator0, false, 0);
+    RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->missileAnimator, false, 0);
 
-    RSDK.DrawSprite(&self->animator0, NULL, false);
+    RSDK.DrawSprite(&self->missileAnimator, NULL, false);
 }
 
 void PhantomMissile_EditorLoad(void) { PhantomMissile->aniFrames = RSDK.LoadSpriteAnimation("Phantom/EggMissile.bin", SCOPE_STAGE); }

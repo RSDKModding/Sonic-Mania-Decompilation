@@ -68,7 +68,7 @@ void MonkeyDude_HandleBodyPart(void);
 void MonkeyDude_HandleStates(void);
 void MonkeyDude_State_Laugh(void);
 void MonkeyDude_State_MoveArm(void);
-void MonkeyDude_State_Body(void);
+void MonkeyDude_State_MoveBody(void);
 void MonkeyDude_StateBody_ArmRaise(void);
 void MonkeyDude_StateBody_Throw(void);
 #if RETRO_USE_PLUS

@@ -15,16 +15,16 @@ struct EntityPhantomMissile {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
+    int32 oscillateAngle;
+    int32 targetRadius;
+    int32 reattachRadius;
     int32 id;
-    Vector2 drawPos;
+    Vector2 targetPos;
     Entity *parent;
-    Animator animator0;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator missileAnimator;
+    Animator targetOutsideAnimator;
+    Animator targetInsideAnimator;
+    Animator targetNumbersAnimator;
 };
 
 // Object Struct
@@ -44,14 +44,14 @@ void PhantomMissile_EditorLoad(void);
 void PhantomMissile_Serialize(void);
 
 // Extra Entity Functions
-void PhantomMissile_Unknown1(void);
-void PhantomMissile_Unknown2(void);
-void PhantomMissile_Unknown3(void);
-void PhantomMissile_Unknown4(void);
-void PhantomMissile_Unknown5(void);
-void PhantomMissile_Unknown6(void);
-void PhantomMissile_Unknown7(void);
-void PhantomMissile_Unknown8(void);
-void PhantomMissile_Unknown9(void);
+void PhantomMissile_GetTargetPos(void);
+void PhantomMissile_HandleExhaust(void);
+void PhantomMissile_State_Attached(void);
+void PhantomMissile_State_PrepareLaunch(void);
+void PhantomMissile_State_Launched(void);
+void PhantomMissile_State_Attacking(void);
+void PhantomMissile_State_Explode(void);
+void PhantomMissile_State_Reattach(void);
+void PhantomMissile_State_Destroyed(void);
 
 #endif //!OBJ_PHANTOMMISSILE_H

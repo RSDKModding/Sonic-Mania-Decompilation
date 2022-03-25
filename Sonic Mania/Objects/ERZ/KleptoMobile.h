@@ -7,6 +7,7 @@ typedef enum {
     KLEPTOMOBILE_EGGMAN,
     KLEPTOMOBILE_ARM_L,
     KLEPTOMOBILE_ARM_R,
+    KLEPTOMOBILE_HAND,
 } KleptoMobileTypes;
 
 // Object Class
@@ -41,30 +42,30 @@ struct EntityKleptoMobile {
     Vector2 originPos;
     int32 frameIDs[10];
     Vector2 framePositions[10];
-    Vector2 field_F0;
-    Vector2 field_F8;
-    Vector2 field_100;
-    int32 field_108;
-    int32 field_10C;
-    int32 field_110;
-    bool32 field_114;
-    Vector2 circlePos;
-    bool32 field_120;
+    Vector2 armBezierPos;
+    Vector2 bashArmTargetPos;
+    Vector2 bashArmStartPos;
+    int32 attackCount;
+    int32 bashArmDelay;
+    int32 bashArmID;
+    bool32 canBashAttack;
+    Vector2 rubyPos;
+    bool32 holdingRuby;
     int32 angle2;
     int32 circleRadius;
     int32 explosionVolume;
-    Entity *parent;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
-    Animator animator8;
-    Animator animator9;
-    Animator animator10;
-    Animator animator11;
+    EntityKleptoMobile *parent;
+    Animator basicAnimator; // not actually used it seems
+    Animator mobileTopAnimator;
+    Animator eggmanAnimator;
+    Animator mobileAnimator;
+    Animator unusedAnimator1;
+    Animator unusedAnimator2;
+    Animator orbAnimator;
+    Animator handAnimator;
+    Animator finger1Animator;
+    Animator finger2Animator;
+    Animator rubyAnimator;
     Hitbox hitbox;
 };
 
@@ -93,26 +94,26 @@ void KleptoMobile_SwitchToKing(void);
 
 void KleptoMobile_Draw_KleptoMobile(void);
 void KleptoMobile_State_SetupArena(void);
-void KleptoMobile_State_Unknown1(void);
-void KleptoMobile_State_Unknown2(void);
-void KleptoMobile_State_Unknown3(void);
+void KleptoMobile_State_CutsceneControlled(void);
+void KleptoMobile_State_MoveAround(void);
+void KleptoMobile_State_Hover(void);
 void KleptoMobile_HandleArmPositions(void);
-void KleptoMobile_State_Unknown4(void);
-void KleptoMobile_State_Unknown5(void);
-void KleptoMobile_State_Unknown6(void);
+void KleptoMobile_State_HandleChargeFinish(void);
+void KleptoMobile_State_FirstChargeAttack(void);
+void KleptoMobile_State_NextChargeAttacks(void);
 void KleptoMobile_State_Switch(void);
 void KleptoMobile_State_HitFall(void);
 
-void KleptoMobile_State3_Unknown1(void);
-void KleptoMobile_State3_Unknown2(void);
-void KleptoMobile_StateDraw3_Unknown1(void);
+void KleptoMobile_StateHand_Cutscene(void);
+void KleptoMobile_StateHand_Boss(void);
+void KleptoMobile_Draw_Hand(void);
 
 void KleptoMobile_CheckPlayerCollisions_Arm(void);
 
-void KleptoMobile_State1_Unknown1(void);
-void KleptoMobile_State1_Unknown2(void);
-void KleptoMobile_State1_Unknown3(void);
-void KleptoMobile_State1_Unknown4(void);
+void KleptoMobile_StateArm_Cutscene(void);
+void KleptoMobile_StateArm_Idle(void);
+void KleptoMobile_StateArm_BashAttack(void);
+void KleptoMobile_StateArm_ChargeAttack(void);
 void KleptoMobile_Draw_Arm(void);
 
 void KleptoMobile_State_Destroyed(void);

@@ -334,7 +334,7 @@ void Cylinder_State_Spiral(void)
 
                 if (player->velocity.y < -0x40000) {
                     self->playerStatuses[player->playerID] = 0;
-                    player->tileCollisions                   = true;
+                    player->tileCollisions                 = true;
                 }
                 else {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame % 24);

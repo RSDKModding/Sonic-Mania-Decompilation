@@ -330,14 +330,14 @@ void MonkeyDude_State_MoveArm(void)
     self->bodyAnimator.frameID = 0;
     if (--self->timer <= 0) {
         self->timer = 8;
-        self->state = MonkeyDude_State_Body;
+        self->state = MonkeyDude_State_MoveBody;
     }
 #if RETRO_USE_PLUS
     MonkeyDude_HandleStates();
 #endif
 }
 
-void MonkeyDude_State_Body(void)
+void MonkeyDude_State_MoveBody(void)
 {
     RSDK_THIS(MonkeyDude);
     self->position.y += self->velocity.y;

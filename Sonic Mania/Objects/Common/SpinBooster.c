@@ -24,12 +24,10 @@ void SpinBooster_Update(void)
         int32 y     = (distY * RSDK.Cos256(negAngle)) - distX * RSDK.Sin256(negAngle) + self->position.y;
 
         if (abs(x - self->position.x) >= 0x180000 || abs(y - self->position.y) >= self->size << 19) {
-            if (x < self->position.x) {
+            if (x < self->position.x) 
                 self->activePlayers &= ~(1 << pid);
-            }
-            else {
+            else 
                 self->activePlayers |= (1 << pid);
-            }
         }
         else {
             if (x < self->position.x) {

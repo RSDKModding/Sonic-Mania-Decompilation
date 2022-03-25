@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    KINGATTACK_LASER,
+    KINGATTACK_LASERBLAST,
+    KINGATTACK_ORBIT,
+    KINGATTACK_TRAIL,
+    KINGATTACK_LARGEBULLET,
+    KINGATTACK_ENERGYLINE,
+    KINGATTACK_SMALLBULLET,
+} KingAttackTypes;
+
 // Object Class
 struct ObjectKingAttack {
     RSDK_OBJECT
@@ -12,7 +22,7 @@ struct ObjectKingAttack {
     uint16 sfxLaserErupt;
     uint16 sfxElecPulse;
     uint16 sfxTwinShot;
-    bool32 flag;
+    bool32 laserEruptActive;
 };
 
 // Entity Class
@@ -22,8 +32,8 @@ struct EntityKingAttack {
     int32 type;
     int32 timer;
     Entity *parent;
-    Vector2 lineEndPos;
-    Vector2 field_70;
+    Vector2 targetPos;
+    Vector2 targetVelocity;
     Vector2 laserVertPostions[8];
     int32 *laserColours;
     Hitbox hitbox;
@@ -51,17 +61,17 @@ bool32 KingAttack_ElecIdleCheckCB(void);
 void KingAttack_CheckPlayerCollisions(void);
 void KingAttack_HandleLaserPositions(void);
 
-void KingAttack_State0_Unknown(void);
-void KingAttack_State1_Unknown1(void);
-void KingAttack_State1_Unknown2(void);
-void KingAttack_State2_Unknown1(void);
-void KingAttack_State2_Unknown2(void);
-void KingAttack_State_Unknown(void);
-void KingAttack_State3_Unknown1(void);
-void KingAttack_State4_Unknown1(void);
-void KingAttack_State5_Unknown(void);
-void KingAttack_State4_Unknown2(void);
-void KingAttack_State6_Unknown1(void);
-void KingAttack_State6_Unknown2(void);
+void KingAttack_State_Laser(void);
+void KingAttack_State_LaserBlast_Delay(void);
+void KingAttack_State_LaserBlast_Erupt(void);
+void KingAttack_State_OrbitAppear(void);
+void KingAttack_State_Orbiting(void);
+void KingAttack_State_OrbitLaunched(void);
+void KingAttack_State_Trail(void);
+void KingAttack_State_LargeBullet_Appear(void);
+void KingAttack_State_EnergyLine(void);
+void KingAttack_State_LargeBullet_TwinShot(void);
+void KingAttack_State_SmallBullet(void);
+void KingAttack_State_SmallBullet_Impact(void);
 
 #endif //!OBJ_KINGATTACK_H

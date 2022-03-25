@@ -7,7 +7,7 @@ typedef enum {
     MEGAOCTUS_BODY,
     MEGAOCTUS_UNUSED1,
     MEGAOCTUS_HARPOON,
-    MEGAOCTUS_GUN,
+    MEGAOCTUS_CANNON,
     MEGAOCTUS_ORB,
     MEGAOCTUS_ARM,
     MEGAOCTUS_LASER,
@@ -30,7 +30,7 @@ struct ObjectMegaOctus {
     bool32 spawnHarpoon;
     int32 turnPos;
     TABLE(int32 turnOffsets[11], { -0x200000, -0x180000, -0x100000, -0xC0000, -0x80000, 0, 0x80000, 0xC0000, 0x100000, 0x180000, 0x200000 });
-    TABLE(int32 gunHeights[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
+    TABLE(int32 cannonHeights[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
     int32 orbHealth[2];
     bool32 defeated;
     uint16 aniFrames;
@@ -100,7 +100,7 @@ void MegaOctus_State_OpenHatchAndLaugh(void);
 void MegaOctus_State_CloseHatch(void);
 void MegaOctus_State_DiveIntoOil(void);
 void MegaOctus_State_SpawnWeapons(void);
-void MegaOctus_State_GunThenSpawnOrbs(void);
+void MegaOctus_State_CannonThenSpawnOrbs(void);
 void MegaOctus_State_Destroyed(void);
 void MegaOctus_State_Finish(void);
 void MegaOctus_Draw_Body(void);
@@ -111,12 +111,12 @@ void MegaOctus_State_HarpoonRight(void);
 void MegaOctus_Draw_HarpoonLeft(void);
 void MegaOctus_Draw_HarpoonRight(void);
 
-void MegaOctus_CheckPlayerCollisions_Gun(void);
-void MegaOctus_StateGun_RiseUp(void);
-void MegaOctus_StateGun_Idle(void);
-void MegaOctus_StateGun_FireLaser(void);
-void MegaOctus_StateGun_SinkDown(void);
-void MegaOctus_Draw_Gun(void);
+void MegaOctus_CheckPlayerCollisions_Cannon(void);
+void MegaOctus_StateCannon_RiseUp(void);
+void MegaOctus_StateCannon_Idle(void);
+void MegaOctus_StateCannon_FireLaser(void);
+void MegaOctus_StateCannon_SinkDown(void);
+void MegaOctus_Draw_Cannon(void);
 
 void MegaOctus_CheckPlayerCollisions_Orb(void);
 void MegaOctus_StateOrb_Wait(void);

@@ -31,7 +31,7 @@ void ERZKing_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->basicAnimator, NULL, false);
     }
 }
 
@@ -54,28 +54,30 @@ void ERZKing_Create(void *data)
                 self->hitbox.top    = -24;
                 self->hitbox.right  = 24;
                 self->hitbox.bottom = 24;
+
                 self->visible       = false;
                 self->direction     = FLIP_X;
                 self->health        = 8;
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 0, &self->animator2, true, 0);
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 1, &self->animator3, true, 0);
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &self->animator4, true, 0);
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &self->animator5, true, 0);
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &self->animatorRuby, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 0, &self->headAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 1, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &self->beltAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &self->particleAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &self->rubyAnimator, true, 0);
                 self->originPos = self->position;
-                self->state      = ERZKing_State_SetupArena;
+                self->state     = ERZKing_State_SetupArena;
                 break;
+
             case ERZKING_ARM_L:
             case ERZKING_ARM_R:
                 self->visible = true;
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 3, &self->animator8, true, 0);
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 4, &self->animator9, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 3, &self->armAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 4, &self->cuffAnimator, true, 0);
                 if (self->type == ERZKING_ARM_L) {
-                    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 6, &self->animator10, true, 0);
+                    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 6, &self->handAnimator, true, 0);
                 }
                 else {
                     self->drawOrder = Zone->playerDrawLow;
-                    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 5, &self->animator10, true, 0);
+                    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 5, &self->handAnimator, true, 0);
                 }
                 self->stateDraw = ERZKing_Draw_Arm;
                 self->state     = ERZKing_State_Arm;
@@ -86,7 +88,8 @@ void ERZKing_Create(void *data)
 
 void ERZKing_StageLoad(void)
 {
-    ERZKing->aniFrames     = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
+    ERZKing->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
+
     ERZKing->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
     ERZKing->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
 }
@@ -99,11 +102,11 @@ void ERZKing_CheckPlayerCollisions(void)
     {
         if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
             if (--self->health <= 0) {
-                self->originPos.x        = self->position.x;
-                self->originPos.y        = self->position.y;
-                self->state               = ERZKing_State_Explode;
-                self->velocity.y          = -0x10000;
-                self->timer               = 0;
+                self->originPos.x      = self->position.x;
+                self->originPos.y      = self->position.y;
+                self->state            = ERZKing_State_Explode;
+                self->velocity.y       = -0x10000;
+                self->timer            = 0;
                 SceneInfo->timeEnabled = false;
             }
             else {
@@ -118,17 +121,17 @@ void ERZKing_HandleFrames(void)
 {
     RSDK_THIS(ERZKing);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->bodyAnimator);
 
     self->rotation = RSDK.Sin512(2 * Zone->timer) >> 6;
-    int negAng       = -self->rotation;
+    int negAng     = -self->rotation;
 
-    self->angle2 = (self->angle2 + 12) & 0x3FF;
+    self->bodyAngle = (self->bodyAngle + 12) & 0x3FF;
 
     int x = 0x1C00 * RSDK.Sin512(negAng) + self->position.x;
     int y = 0x1C00 * RSDK.Cos512(negAng) + self->position.y;
 
-    int angle = self->angle2;
+    int angle = self->bodyAngle;
 
     for (int i = 0; i < 10; i += 2) {
         self->framePositions[i].x = x + 2 * RSDK.Cos512(self->rotation) * RSDK.Cos1024(angle);
@@ -173,28 +176,28 @@ void ERZKing_Draw_Body(void)
         RSDK.SetLimitedFade(0, 1, 4, self->typeChangeTimer, 128, 256);
     }
 
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->headAnimator, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
     for (int i = 0; i < 10; ++i) {
         if (self->frameIDs[i] < 0x200) {
-            self->animator5.frameID = self->frameIDs[i] / 42 % 6;
-            RSDK.DrawSprite(&self->animator5, &self->framePositions[i], false);
+            self->particleAnimator.frameID = self->frameIDs[i] / 42 % 6;
+            RSDK.DrawSprite(&self->particleAnimator, &self->framePositions[i], false);
         }
     }
 
     self->drawFX = self->storeDrawFX | FX_ROTATE;
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->beltAnimator, NULL, false);
     self->drawFX = self->storeDrawFX | FX_ROTATE | FX_FLIP;
 
     for (int i = 0; i < 10; ++i) {
         if (self->frameIDs[i] >= 0x200) {
-            self->animator5.frameID = self->frameIDs[i] / 42 % 6;
-            RSDK.DrawSprite(&self->animator5, &self->framePositions[i], false);
+            self->particleAnimator.frameID = self->frameIDs[i] / 42 % 6;
+            RSDK.DrawSprite(&self->particleAnimator, &self->framePositions[i], false);
         }
     }
 
-    RSDK.DrawSprite(&self->animatorRuby, &self->rubyPos, false);
+    RSDK.DrawSprite(&self->rubyAnimator, &self->rubyPos, false);
 
     if (self->typeChangeTimer <= 0) {
         if (self->invincibilityTimer & 1)
@@ -217,11 +220,11 @@ void ERZKing_Draw_Arm(void)
     }
 
     for (int i = 0; i < 6; ++i) {
-        RSDK.DrawSprite(&self->animator8, &self->framePositions[i], false);
+        RSDK.DrawSprite(&self->armAnimator, &self->framePositions[i], false);
     }
 
-    RSDK.DrawSprite(&self->animator9, &self->framePositions[6], false);
-    RSDK.DrawSprite(&self->animator10, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->cuffAnimator, &self->framePositions[6], false);
+    RSDK.DrawSprite(&self->handAnimator, &self->framePositions[6], false);
 
     if (parent->typeChangeTimer > 0) {
         RSDK.CopyPalette(1, 0, 0, 0, 48);
@@ -286,12 +289,12 @@ void ERZKing_State_EnterKing(void)
 {
     RSDK_THIS(ERZKing);
 
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->beltAnimator);
     self->velocity.y -= 0x1800;
     if (self->position.y <= self->originPos.y - 0x200000) {
         self->originPos.x = self->position.x;
         self->originPos.y = self->position.y;
-        self->state        = ERZKing_State_Unknown4;
+        self->state       = ERZKing_State_FlyAround;
     }
     else {
         self->position.y += self->velocity.y;
@@ -299,11 +302,11 @@ void ERZKing_State_EnterKing(void)
     ERZKing_HandleFrames();
 }
 
-void ERZKing_State_Unknown4(void)
+void ERZKing_State_FlyAround(void)
 {
     RSDK_THIS(ERZKing);
 
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->beltAnimator);
 
     self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 3, 11);
     ERZKing_CheckPlayerCollisions();
@@ -325,11 +328,11 @@ void ERZKing_State_Unknown4(void)
 
     if (self->timer > 240) {
         if (abs(self->position.x - ERZKing->boundsM) < 0x200000) {
-            self->timer                                                                               = 0;
-            self->scale.x                                                                             = 0x200;
-            self->scale.y                                                                             = 0x200;
-            self->storeDrawFX                                                                         = FX_SCALE;
-            self->state                                                                               = ERZKing_State_ChangeHBH;
+            self->timer                                                                                           = 0;
+            self->scale.x                                                                                         = 0x200;
+            self->scale.y                                                                                         = 0x200;
+            self->storeDrawFX                                                                                     = FX_SCALE;
+            self->state                                                                                           = ERZKing_State_ChangeHBH;
             CREATE_ENTITY(FXRuby, FXRuby_State_ShrinkAndDestroy, self->position.x, self->position.y)->radiusSpeed = 0x80000;
         }
     }
@@ -352,17 +355,20 @@ void ERZKing_State_ChangeHBH(void)
                 CREATE_ENTITY(ERZGunner, NULL, self->position.x, self->position.y);
 
                 self->storeDrawFX = FX_NONE;
-                self->state       = ERZKing_State_Unknown4;
+                self->state       = ERZKing_State_FlyAround;
                 self->nextType--;
                 self->nextType &= 1;
                 break;
+
             case ERZKING_HEAVY_MYSTIC:
                 CREATE_ENTITY(ERZMystic, NULL, self->position.x, self->position.y);
                 self->storeDrawFX = FX_NONE;
-                self->state       = ERZKing_State_Unknown4;
+                self->state       = ERZKing_State_FlyAround;
                 self->nextType--;
                 self->nextType &= 1;
                 break;
+
+            // Shinobi & Rider never got completed... RIP
         }
     }
 }
@@ -377,7 +383,7 @@ void ERZKing_State_Arm(void)
     int moveY = ((RSDK.Sin256(2 * (Zone->timer + (self->type << 6)) - 128) + 512) << 12) + parent->position.y;
 
     self->direction = parent->direction;
-    int negAngle      = -parent->rotation;
+    int negAngle    = -parent->rotation;
 
     int x = 0, y = 0;
     int x2 = 0, y2 = 0;
@@ -385,7 +391,7 @@ void ERZKing_State_Arm(void)
         moveX = parent->position.x - 0x300000;
         x     = parent->position.x + 0xD00 * RSDK.Cos512(negAngle) + 0x300 * RSDK.Sin512(negAngle);
         y     = parent->position.y - 0xD00 * RSDK.Sin512(negAngle) + 0x300 * RSDK.Cos512(negAngle);
-        if (self->type == 1) {
+        if (self->type == ERZKING_ARM_L) {
             x += -0x1800 * RSDK.Cos512(parent->rotation);
             y += 0x1800 * RSDK.Sin512(parent->rotation);
             moveX -= 0x300000;
@@ -397,7 +403,7 @@ void ERZKing_State_Arm(void)
         moveX = parent->position.x + 0x300000;
         x     = 0x300 * RSDK.Sin512(negAngle) - 0xD00 * RSDK.Cos512(negAngle) + parent->position.x;
         y     = 0xD00 * RSDK.Sin512(negAngle) + 0x300 * RSDK.Cos512(negAngle) + parent->position.y;
-        if (self->type == 1) {
+        if (self->type == ERZKING_ARM_L) {
             x += 0x1800 * RSDK.Cos512(parent->rotation);
             y += -0x1800 * RSDK.Sin512(parent->rotation);
             moveX += 0x300000;
@@ -417,8 +423,8 @@ void ERZKing_State_Arm(void)
         percent += 0x2000;
     }
 
-    RSDK.ProcessAnimation(&self->animator9);
-    RSDK.ProcessAnimation(&self->animator10);
+    RSDK.ProcessAnimation(&self->cuffAnimator);
+    RSDK.ProcessAnimation(&self->handAnimator);
 }
 
 void ERZKing_State_Explode(void)
@@ -430,10 +436,10 @@ void ERZKing_State_Explode(void)
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(ERZKing->sfxExplosion2, false, 255);
         if (Zone->timer & 4) {
-            int x = RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16;
-            int y = RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16;
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x + self->position.x, y + self->position.y)
-                ->drawOrder = Zone->drawOrderHigh;
+            int32 x = RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16;
+            int32 y = RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x + self->position.x, y + self->position.y)->drawOrder =
+                Zone->drawOrderHigh;
         }
     }
 
@@ -453,14 +459,14 @@ void ERZKing_EditorDraw(void)
     RSDK_THIS(ERZKing);
 
     self->originPos = self->position;
-    self->angle2     = 0;
+    self->bodyAngle    = 0;
     ERZKing_HandleFrames();
 
-    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 0, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 1, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &self->animator4, true, 0);
-    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &self->animator5, true, 0);
-    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &self->animatorRuby, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 0, &self->headAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 1, &self->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &self->beltAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &self->particleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &self->rubyAnimator, true, 0);
 
     ERZKing_Draw_Body();
 }

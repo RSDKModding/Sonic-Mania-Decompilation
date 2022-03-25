@@ -21,11 +21,11 @@ struct EntityGrabber {
     Animator bodyAnimator;
     Animator clampAnimator;
     Animator wheelAnimator;
-    Entity *grabbedPlayer;
+    EntityPlayer *grabbedPlayer;
     uint16 struggleDelay;
     uint16 struggleTimer;
     uint16 struggleFlags;
-    uint16 explodeTimer;
+    uint16 grabDelay;
     Vector2 startPos;
     uint8 startDir;
     int32 turnTimer;

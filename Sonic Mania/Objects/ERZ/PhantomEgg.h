@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+// Names for the values in the attack tables
+// Tables can only have int constants so we cant put these in there directly
+typedef enum {
+    PHANTOMEGG_ATTACK_NONE,
+    PHANTOMEGG_ATTACK_JUMP,
+    PHANTOMEGG_ATTACK_SHOCK,
+    PHANTOMEGG_ATTACK_MISSILES,
+    PHANTOMEGG_ATTACK_WARP,
+}PhantomEggAttackIDs;
+
 // Object Class
 struct ObjectPhantomEgg {
     RSDK_OBJECT
@@ -48,22 +58,21 @@ struct EntityPhantomEgg {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 field_70;
+    int32 remainingJumps;
     int32 attackTimer;
     int32 phantomID;
     int32 palBlendPercent;
-    Vector2 field_80;
-    int32 field_88;
-    int32 field_8C;
+    Vector2 targetPos;
+    Vector2 targetVelocity;
     int32 *attackStateTable;
-    int32 field_94;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
+    int32 unused;
+    Animator crackAnimator;
+    Animator coreAnimator;
+    Animator legAnimator;
+    Animator armLAnimator;
+    Animator armRAnimator;
+    Animator eggmanAnimator;
+    Animator rubyAnimator;
     Hitbox hitbox;
 };
 
@@ -98,27 +107,27 @@ void PhantomEgg_StateDraw_Normal(void);
 void PhantomEgg_StateDraw_Cracked(void);
 
 void PhantomEgg_State_SetupArena(void);
-void PhantomEgg_State_Unknown1(void);
-void PhantomEgg_State_Unknown2(void);
-void PhantomEgg_State_Unknown3(void);
-void PhantomEgg_State_Unknown4(void);
-void PhantomEgg_State_Unknown5(void);
-void PhantomEgg_State_Unknown6(void);
-void PhantomEgg_State_Unknown7(void);
-void PhantomEgg_State_Unknown8(void);
-void PhantomEgg_State_Unknown9(void);
-void PhantomEgg_State_Unknown10(void);
-void PhantomEgg_State_Unknown11(void);
-void PhantomEgg_State_Unknown12(void);
-void PhantomEgg_State_Unknown13(void);
-void PhantomEgg_State_Unknown14(void);
-void PhantomEgg_State_Unknown15(void);
+void PhantomEgg_State_DimArena(void);
+void PhantomEgg_State_EnterEggman(void);
+void PhantomEgg_State_AdjustStartingPos(void);
+void PhantomEgg_State_IntroHover(void);
+void PhantomEgg_State_BeginFight(void);
+void PhantomEgg_State_MoveAround(void);
+void PhantomEgg_State_Attack_Jumped(void);
+void PhantomEgg_State_Attack_JumpLand(void);
+void PhantomEgg_State_Attack_JumpAttack(void);
+void PhantomEgg_State_Attack_CableShock(void);
+void PhantomEgg_State_Attack_PrepareWarp(void);
+void PhantomEgg_State_Attack_GrabPlayers(void);
+void PhantomEgg_State_Attack_HandleWarp(void);
+void PhantomEgg_State_Attack_WarpAway(void);
+void PhantomEgg_State_Attack_WarpReturn(void);
 void PhantomEgg_State_Destroyed(void);
-void PhantomEgg_State_Unknown17(void);
-void PhantomEgg_State_Unknown18(void);
-void PhantomEgg_State_Unknown19(void);
-void PhantomEgg_State_Unknown20(void);
-void PhantomEgg_State_Unknown21(void);
+void PhantomEgg_State_Exploding(void);
+void PhantomEgg_State_StartBadEnd(void);
+void PhantomEgg_State_CrackOpen(void);
+void PhantomEgg_State_CrackedExploding(void);
+void PhantomEgg_State_StartGoodEnd(void);
 
 void PhantomEgg_SaveGameCB(bool32 success);
 

@@ -45,9 +45,9 @@ void SpearBlock_DebugSpawn(void);
 void SpearBlock_CheckPlayerCollisions(void);
 
 void SpearBlock_State_SetupSpears(void);
-void SpearBlock_State_CheckSpearExtend(void);
+void SpearBlock_State_SpearRetracted(void);
 void SpearBlock_State_ExtendSpears(void);
-void SpearBlock_State_CheckSpearRetract(void);
+void SpearBlock_State_SpearExtended(void);
 void SpearBlock_State_RetractSpears(void);
 
 #endif //!OBJ_SPEARBLOCK_H

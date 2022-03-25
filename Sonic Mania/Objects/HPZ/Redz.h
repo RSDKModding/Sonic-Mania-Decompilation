@@ -20,8 +20,8 @@ struct EntityRedz {
     StateMachine(state);
     Vector2 startPos;
     uint8 startDir;
-    uint16 timer2;
     uint16 timer;
+    uint16 attackDelay;
     Animator animator;
 };
 
@@ -45,7 +45,7 @@ void Redz_Serialize(void);
 void Redz_DebugSpawn(void);
 void Redz_DebugDraw(void);
 
-void Redz_HandlePlayerInteractions(void);
+void Redz_CheckPlayerCollisions(void);
 
 void Redz_State_Setup(void);
 void Redz_State_Walk(void);

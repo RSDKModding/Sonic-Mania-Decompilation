@@ -32,8 +32,8 @@ struct EntityPhantomRuby {
     int32 sfx;
     int32 unused1;
     int32 unused2;
-    Animator animator1;
-    Animator animator2;
+    Animator rubyAnimator;
+    Animator flashAnimator;
 };
 
 // Object Struct

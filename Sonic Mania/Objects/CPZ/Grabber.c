@@ -68,22 +68,22 @@ void Grabber_Create(void *data)
 
 void Grabber_StageLoad(void)
 {
-    Grabber->aniFrames          = RSDK.LoadSpriteAnimation("CPZ/Grabber.bin", SCOPE_STAGE);
+    Grabber->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Grabber.bin", SCOPE_STAGE);
 
-    Grabber->hitbox1.left       = -8;
-    Grabber->hitbox1.top        = -8;
-    Grabber->hitbox1.right      = 8;
-    Grabber->hitbox1.bottom     = 8;
+    Grabber->hitbox1.left   = -8;
+    Grabber->hitbox1.top    = -8;
+    Grabber->hitbox1.right  = 8;
+    Grabber->hitbox1.bottom = 8;
 
     Grabber->hitboxRange.left   = -64;
     Grabber->hitboxRange.top    = 0;
     Grabber->hitboxRange.right  = 64;
     Grabber->hitboxRange.bottom = 128;
 
-    Grabber->hitbox2.left       = -8;
-    Grabber->hitbox2.top        = 0;
-    Grabber->hitbox2.right      = 8;
-    Grabber->hitbox2.bottom     = 16;
+    Grabber->hitbox2.left   = -8;
+    Grabber->hitbox2.top    = 0;
+    Grabber->hitbox2.right  = 8;
+    Grabber->hitbox2.bottom = 16;
 
     DEBUGMODE_ADD_OBJ(Grabber);
 
@@ -115,13 +115,13 @@ void Grabber_CheckPlayerCollisions(void)
     RSDK_THIS(Grabber);
     foreach_active(Player, player)
     {
-        if (player != (EntityPlayer *)self->grabbedPlayer) {
+        if (player != self->grabbedPlayer) {
             if (self->state == Grabber_State_TryToGrab) {
                 if (Player_CheckCollisionTouch(player, self, &Grabber->hitbox2)) {
                     RSDK.PlaySfx(Grabber->sfxGrab, false, 255);
                     self->state             = Grabber_State_GrabbedPlayer;
                     self->isPermanent       = true;
-                    self->grabbedPlayer     = (Entity *)player;
+                    self->grabbedPlayer     = player;
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
                     player->groundVel       = 0;
@@ -135,9 +135,9 @@ void Grabber_CheckPlayerCollisions(void)
                     player->direction      = self->direction ^ FLIP_X;
                 }
             }
-            if (player != (EntityPlayer *)self->grabbedPlayer && !self->explodeTimer && Player_CheckBadnikTouch(player, self, &Grabber->hitbox1)
+            if (player != self->grabbedPlayer && !self->grabDelay && Player_CheckBadnikTouch(player, self, &Grabber->hitbox1)
                 && Player_CheckBadnikBreak(self, player, false)) {
-                EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+                EntityPlayer *player = self->grabbedPlayer;
                 if (player)
                     player->state = Player_State_Air;
                 destroyEntity(self);
@@ -169,7 +169,7 @@ void Grabber_HandleExplode(void)
         self->bodyAnimator.frameID ^= 1;
         self->turnTimer = self->timer;
         if (!--self->timer) {
-            EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+            EntityPlayer *player = self->grabbedPlayer;
             if (player && player->state == Player_State_None) {
                 Player_CheckHit(player, self);
                 if (player->state != Player_State_Hit && Player_CheckValidState(player))
@@ -280,7 +280,7 @@ void Grabber_State_GrabbedPlayer(void)
     RSDK.ProcessAnimation(&self->clampAnimator);
     if (++self->timer < 32) {
         self->position.y -= 0x20000;
-        EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+        EntityPlayer *player = self->grabbedPlayer;
         if (player) {
             player->animator.speed = 0;
             player->position.x     = self->position.x;
@@ -309,7 +309,7 @@ void Grabber_State_GrabbedPlayer(void)
 void Grabber_State_Struggle(void)
 {
     RSDK_THIS(Grabber);
-    EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
+    EntityPlayer *player = self->grabbedPlayer;
     if (player) {
         player->animator.speed = 0;
         if (self->struggleFlags) {
@@ -328,7 +328,7 @@ void Grabber_State_Struggle(void)
                         if (++self->struggleTimer >= 4) {
                             player->state       = Player_State_Air;
                             self->grabbedPlayer = 0;
-                            self->explodeTimer  = 16;
+                            self->grabDelay     = 16;
                             self->state         = Grabber_State_PlayerEscaped;
                         }
                     }
@@ -363,8 +363,8 @@ void Grabber_State_Struggle(void)
 void Grabber_State_PlayerEscaped(void)
 {
     RSDK_THIS(Grabber);
-    if (self->explodeTimer)
-        self->explodeTimer--;
+    if (self->grabDelay)
+        self->grabDelay--;
     Grabber_CheckPlayerCollisions();
     Grabber_HandleExplode();
     Grabber_CheckOffScreen();

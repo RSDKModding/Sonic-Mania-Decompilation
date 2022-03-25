@@ -14,8 +14,8 @@ void Stegway_Update(void)
     RSDK_THIS(Stegway);
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->wheelAnimator);
-    if (self->showDust)
-        RSDK.ProcessAnimation(&self->dustAnimator);
+    if (self->showJet)
+        RSDK.ProcessAnimation(&self->jetAnimator);
 
     StateMachine_Run(self->state);
 
@@ -33,8 +33,8 @@ void Stegway_Draw(void)
     RSDK_THIS(Stegway);
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     RSDK.DrawSprite(&self->wheelAnimator, NULL, false);
-    if (self->showDust)
-        RSDK.DrawSprite(&self->dustAnimator, NULL, false);
+    if (self->showJet)
+        RSDK.DrawSprite(&self->jetAnimator, NULL, false);
 }
 
 void Stegway_Create(void *data)
@@ -84,13 +84,14 @@ void Stegway_DebugSpawn(void)
 void Stegway_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Stegway->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Stegway_CheckOffScreen(void)
 {
     RSDK_THIS(Stegway);
-    if (!RSDK.CheckOnScreen(self, 0) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->direction = self->startDir;
         self->position  = self->startPos;
         Stegway_Create(NULL);
@@ -117,11 +118,13 @@ void Stegway_SetupAnims(char type, bool32 force)
             self->mainAnimator.speed  = 1;
             self->wheelAnimator.speed = 6;
             break;
+
         case 1:
             if (force || self->mainAnimator.animationID != 1)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 1, &self->mainAnimator, true, 0);
             self->wheelAnimator.speed = 16;
             break;
+
         case 2:
             if (force || self->mainAnimator.animationID)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 0, &self->mainAnimator, true, 0);
@@ -130,6 +133,7 @@ void Stegway_SetupAnims(char type, bool32 force)
             self->mainAnimator.speed  = 0;
             self->wheelAnimator.speed = 24;
             break;
+
         case 3:
             if (force || self->mainAnimator.animationID)
                 RSDK.SetSpriteAnimation(Stegway->aniFrames, 0, &self->mainAnimator, true, 0);
@@ -152,7 +156,7 @@ void Stegway_State_Setup(void)
     else
         self->velocity.x = 0x4000;
     RSDK.SetSpriteAnimation(Stegway->aniFrames, 2, &self->wheelAnimator, true, 0);
-    RSDK.SetSpriteAnimation(Stegway->aniFrames, 3, &self->dustAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Stegway->aniFrames, 3, &self->jetAnimator, true, 0);
     Stegway_SetupAnims(0, true);
     self->state = Stegway_State_Moving;
     Stegway_State_Moving();
@@ -177,10 +181,11 @@ void Stegway_State_Moving(void)
         collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xC0000, 0x100000, 8);
     else
         collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0xC0000, 0x100000, 8);
+
     if (!collided) {
         self->state = Stegway_State_Turn;
         Stegway_SetupAnims(3, false);
-        self->showDust = false;
+        self->showJet = false;
         self->noFloor  = false;
     }
     Stegway_CheckOffScreen();
@@ -227,10 +232,10 @@ void Stegway_State_RevRelease(void)
             CREATE_ENTITY(Dust, self, self->position.x - 0xA0000 * (2 * (self->direction != FLIP_NONE) - 1), self->position.y + 0x100000);
         RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
         dust->state     = Dust_State_Move;
-        dust->direction = 1 - self->direction;
+        dust->direction = FLIP_X - self->direction;
         dust->drawOrder = self->drawOrder;
         Stegway_SetupAnims(1, false);
-        self->showDust = true;
+        self->showJet = true;
         self->velocity.x *= 12;
         RSDK.PlaySfx(Stegway->sfxRelease, false, 255);
     }
@@ -262,7 +267,7 @@ void Stegway_State_Dash(void)
                 self->state      = Stegway_State_Moving;
                 Stegway_SetupAnims(0, false);
                 self->mainAnimator.frameID = 0;
-                self->showDust             = false;
+                self->showJet             = false;
                 self->noFloor              = false;
             }
         }
@@ -271,7 +276,7 @@ void Stegway_State_Dash(void)
     if (!collided) {
         self->state = Stegway_State_Turn;
         Stegway_SetupAnims(3, false);
-        self->showDust = false;
+        self->showJet = false;
         self->noFloor  = false;
     }
 }
@@ -281,7 +286,7 @@ void Stegway_EditorDraw(void)
 {
     RSDK_THIS(Stegway);
     RSDK.SetSpriteAnimation(Stegway->aniFrames, 2, &self->wheelAnimator, true, 0);
-    RSDK.SetSpriteAnimation(Stegway->aniFrames, 3, &self->dustAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Stegway->aniFrames, 3, &self->jetAnimator, true, 0);
     Stegway_SetupAnims(0, true);
 
     Stegway_Draw();

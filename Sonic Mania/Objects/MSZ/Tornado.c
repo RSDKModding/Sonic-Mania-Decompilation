@@ -114,7 +114,7 @@ void Tornado_State_SetupPlayers(void)
     Tornado_HandlePlayerCollisions();
     if (StarPost->postIDs[0]) {
         RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
-        self->state = Tornado_Unknown6;
+        self->state = Tornado_State_PlayerControlled;
     }
     else {
         foreach_all(Player, player)
@@ -152,14 +152,14 @@ void Tornado_Unknown3(void)
 void Tornado_Unknown4(void)
 {
     RSDK_THIS(Tornado);
-    Tornado_Unknown6();
+    Tornado_State_PlayerControlled();
     self->knuxVel.y += 0x3800;
     self->knuxOffset.x += self->knuxVel.x;
     self->knuxOffset.y += self->knuxVel.y;
     if (++self->timer == 120) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
-        self->state = Tornado_Unknown6;
+        self->state = Tornado_State_PlayerControlled;
     }
 }
 
@@ -184,7 +184,7 @@ void Tornado_HandlePlayerCollisions(void)
         if (velY > 0x10000) {
             self->collideTimer = 0;
             self->gravityForce = 0x20000;
-            self->collideMode  = 3;
+            self->mode  = TORNADO_MODE_LAND;
         }
     }
 
@@ -206,7 +206,7 @@ void Tornado_HandlePlayerCollisions(void)
     }
 }
 
-void Tornado_Unknown6(void)
+void Tornado_State_PlayerControlled(void)
 {
     RSDK_THIS(Tornado);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -222,15 +222,15 @@ void Tornado_Unknown6(void)
         player1->velocity.x = player1->groundVel;
     }
 
-    switch (self->collideMode) {
-        case 0:
+    switch (self->mode) {
+        case TORNADO_MODE_IDLE:
             if (player1->velocity.y < 0 && player1->jumpPress) {
                 if (abs(TornadoPath->moveVel.x) > 0x40000) {
                     if (abs(player1->velocity.x) < abs(TornadoPath->moveVel.x) && !TornadoPath->hitboxID)
                         player1->velocity.x = abs(TornadoPath->moveVel.x);
                 }
 
-                ++self->collideMode;
+                ++self->mode;
                 self->gravityForce = 0x20000;
                 self->storeY       = self->position.y;
             }
@@ -249,43 +249,46 @@ void Tornado_Unknown6(void)
                     self->turnAngle -= 4;
             }
             break;
-        case 1:
+
+        case TORNADO_MODE_JUMP_RECOIL: // jump force pushes tornado downwards
             self->gravityForce -= 0x2000;
             self->position.y += self->gravityForce;
             if (self->gravityForce < 0)
-                self->collideMode = 2;
+                self->mode = TORNADO_MODE_JUMP_REBOUND;
             break;
-        case 2:
+
+        case TORNADO_MODE_JUMP_REBOUND: // tornado returns to its original position
             self->gravityForce -= 0x1000;
             self->position.y += self->gravityForce;
             if (self->position.y <= self->storeY) {
                 self->position.y   = self->storeY;
-                self->collideMode  = 0;
+                self->mode  = TORNADO_MODE_IDLE;
                 self->gravityForce = 0;
             }
             break;
-        case 3:
+
+        case TORNADO_MODE_LAND:
             self->gravityForce -= 0x2000;
             self->position.y += self->gravityForce;
             if (++self->collideTimer == 24) {
-                self->collideMode  = 0;
+                self->mode  = TORNADO_MODE_IDLE;
                 self->gravityForce = 0;
             }
             break;
+
         default: break;
     }
 
     if (self->isStood) {
         self->position.x += TornadoPath->moveVel.x;
         self->position.y += TornadoPath->moveVel.y;
+
         if (player1->stateInput) {
             self->velocity.y = 0;
-            if (player1->up) {
+            if (player1->up) 
                 self->velocity.y = -0x10000;
-            }
-            else if (player1->down) {
+            else if (player1->down) 
                 self->velocity.y = 0x10000;
-            }
         }
     }
     else if (TornadoPath->hitboxID == 1) {
@@ -318,7 +321,7 @@ void Tornado_Unknown6(void)
         if (velY > 0x10000) {
             self->collideTimer = 0;
             self->gravityForce = 0x20000;
-            self->collideMode  = 3;
+            self->mode  = TORNADO_MODE_LAND;
         }
     }
     else if (TornadoPath->hitboxID == 1) {
@@ -373,6 +376,7 @@ void Tornado_Unknown7(void)
     RSDK_THIS(Tornado);
     self->position.x += TornadoPath->moveVel.x;
     self->position.y += TornadoPath->moveVel.y;
+
     if (!(Zone->timer % 3)) {
         if (self->onGround) {
             RSDK.PlaySfx(Tornado->sfxExplosion, false, 255);
@@ -403,6 +407,7 @@ void Tornado_Unknown9(void)
     self->active = ACTIVE_BOUNDS;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Tornado_EditorDraw(void)
 {
     RSDK_THIS(Tornado);
@@ -416,5 +421,6 @@ void Tornado_EditorDraw(void)
 }
 
 void Tornado_EditorLoad(void) { Tornado->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Tornado.bin", SCOPE_STAGE); }
+#endif
 
 void Tornado_Serialize(void) {}

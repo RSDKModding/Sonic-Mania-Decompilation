@@ -44,7 +44,7 @@ void Wisp_Create(void *data)
     self->targetPtr     = NULL;
     self->alpha         = 0xC0;
     self->timer         = 16;
-    self->buzzCount        = 4;
+    self->buzzCount     = 4;
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &self->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 1, &self->wingAnimator, true, 0);
     self->state = Wisp_State_Setup;
@@ -53,10 +53,12 @@ void Wisp_Create(void *data)
 void Wisp_StageLoad(void)
 {
     Wisp->aniFrames     = RSDK.LoadSpriteAnimation("Blueprint/Wisp.bin", SCOPE_STAGE);
+
     Wisp->hitbox.left   = -8;
     Wisp->hitbox.top    = -8;
     Wisp->hitbox.right  = 8;
     Wisp->hitbox.bottom = 8;
+
     DEBUGMODE_ADD_OBJ(Wisp);
 }
 
@@ -76,6 +78,7 @@ void Wisp_DebugDraw(void)
 void Wisp_HandlePlayerInteractions(void)
 {
     RSDK_THIS(Wisp);
+
     foreach_active(Player, player)
     {
         EntityPlayer *target = self->targetPtr;
@@ -86,6 +89,7 @@ void Wisp_HandlePlayerInteractions(void)
         else {
             self->targetPtr = player;
         }
+
         if (Player_CheckBadnikTouch(player, self, &Wisp->hitbox))
             Player_CheckBadnikBreak(self, player, true);
     }
@@ -107,11 +111,12 @@ void Wisp_State_Setup(void)
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = 0;
     self->velocity.y = 0;
-    self->state      = Wisp_WaitInPlace;
-    Wisp_WaitInPlace();
+    self->state      = Wisp_State_Buzzing;
+
+    Wisp_State_Buzzing();
 }
 
-void Wisp_WaitInPlace(void)
+void Wisp_State_Buzzing(void)
 {
     RSDK_THIS(Wisp);
 
@@ -119,12 +124,12 @@ void Wisp_WaitInPlace(void)
         if (--self->buzzCount) {
             self->velocity.y = -0x10000;
             self->timer      = 96;
-            self->state      = Wisp_FlyTowardTarget;
+            self->state      = Wisp_State_FlyTowardTarget;
         }
         else {
             self->velocity.x = -0x20000;
             self->velocity.y = -0x20000;
-            self->state      = Wisp_BasicFly;
+            self->state      = Wisp_State_FlyAway;
         }
     }
     RSDK.ProcessAnimation(&self->wingAnimator);
@@ -132,7 +137,7 @@ void Wisp_WaitInPlace(void)
     Wisp_CheckOffScreen();
 }
 
-void Wisp_FlyTowardTarget(void)
+void Wisp_State_FlyTowardTarget(void)
 {
     RSDK_THIS(Wisp);
 
@@ -166,33 +171,42 @@ void Wisp_FlyTowardTarget(void)
         }
     }
 
-    self->timer--;
-    if (!self->timer) {
+    if (!--self->timer) {
         self->timer      = RSDK.Rand(0, 32);
-        self->state      = Wisp_WaitInPlace;
+        self->state      = Wisp_State_Buzzing;
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = FLIP_NONE;
     }
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Wisp_HandlePlayerInteractions();
     Wisp_CheckOffScreen();
 }
 
-void Wisp_BasicFly(void)
+void Wisp_State_FlyAway(void)
 {
     RSDK_THIS(Wisp);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     RSDK.ProcessAnimation(&self->wingAnimator);
+
     Wisp_HandlePlayerInteractions();
     Wisp_CheckOffScreen();
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Wisp_EditorDraw(void) {}
+void Wisp_EditorDraw(void) { Wisp_Draw(); }
 
-void Wisp_EditorLoad(void) {}
+void Wisp_EditorLoad(void)
+{
+    Wisp->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Wisp.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Wisp, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Wisp_Serialize(void) { RSDK_EDITABLE_VAR(Wisp, VAR_UINT8, direction); }

@@ -135,9 +135,9 @@ void GasPlatform_State_Popped(void)
         int32 playerID = 0;
         foreach_active(Player, player)
         {
-            int32 posY = self->centerPos.y - 0x780000;
-            if (self->position.y <= posY) {
-                self->position.y = posY;
+            int32 launchY = self->centerPos.y - 0x780000;
+            if (self->position.y <= launchY) {
+                self->position.y = launchY;
                 if ((1 << playerID) & self->stoodPlayers) {
                     player->velocity.y = -0x100000;
                     player->state      = Player_State_Air;

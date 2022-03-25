@@ -51,14 +51,17 @@ void Bloominator_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("AIZ"))
         Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
+
     Bloominator->hitbox.left             = -12;
     Bloominator->hitbox.top              = -20;
     Bloominator->hitbox.right            = 12;
     Bloominator->hitbox.bottom           = 20;
+
     Bloominator->projectileHitbox.left   = -4;
     Bloominator->projectileHitbox.top    = -4;
     Bloominator->projectileHitbox.right  = 4;
     Bloominator->projectileHitbox.bottom = 4;
+
     Bloominator->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
 
     DEBUGMODE_ADD_OBJ(Bloominator);
@@ -87,6 +90,15 @@ void Bloominator_CheckHit(void)
     }
 }
 
+void Bloominator_State_Setup(void)
+{
+    RSDK_THIS(Bloominator);
+    self->active = ACTIVE_NORMAL;
+    self->timer  = 0;
+    self->state  = Bloominator_Idle;
+    Bloominator_Idle();
+}
+
 void Bloominator_Idle(void)
 {
     RSDK_THIS(Bloominator);
@@ -97,6 +109,7 @@ void Bloominator_Idle(void)
             self->state = Bloominator_State_Firing;
         }
     }
+
     RSDK.ProcessAnimation(&self->animator);
     Bloominator_CheckHit();
     if (!RSDK.CheckOnScreen(self, NULL))
@@ -115,31 +128,25 @@ void Bloominator_State_Firing(void)
             spikeBall->velocity.y = -0x50000;
             RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
+
         case 45:
             spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), self->position.x - 0x10000, self->position.y - 0x160000);
             spikeBall->velocity.x = 0x10000;
             spikeBall->velocity.y = -0x50000;
             RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
+
         case 50:
             self->timer = -60;
             RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &self->animator, true, 0);
             self->state = Bloominator_Idle;
             break;
     }
+
     RSDK.ProcessAnimation(&self->animator);
     Bloominator_CheckHit();
     if (!RSDK.CheckOnScreen(self, NULL))
         Bloominator_Create(NULL);
-}
-
-void Bloominator_State_Setup(void)
-{
-    RSDK_THIS(Bloominator);
-    self->active = ACTIVE_NORMAL;
-    self->timer  = 0;
-    self->state  = Bloominator_Idle;
-    Bloominator_Idle();
 }
 
 void Bloominator_State_Spikeball(void)

@@ -87,21 +87,20 @@ void TitleCard_Create(void *data)
             SceneInfo->minutes         = globals->restartMinutes;
             SceneInfo->timeEnabled     = true;
             EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            RSDK.CopyEntity(player, (Entity *)Zone->entityData, false);
+            RSDK.CopyEntity(player, (Entity *)Zone->entityData[0], false);
             RSDK.SetSpriteAnimation(player->aniFrames, player->animator.animationID, &player->animator, false, player->animator.frameID);
 
             if (player->camera)
                 RSDK.CopyEntity(player->camera, (Entity *)Zone->entityData[8], false);
+
             Player_ApplyShieldEffect(player);
-            if (player->invincibleTimer > 0 && player->superState != SUPERSTATE_SUPER) {
+            if (player->invincibleTimer > 0 && player->superState != SUPERSTATE_SUPER)
                 RSDK.ResetEntityPtr(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)), InvincibleStars->objectID, player);
-            }
 
-            if (player->speedShoesTimer > 0 || player->superState == SUPERSTATE_SUPER) {
+            if (player->speedShoesTimer > 0 || player->superState == SUPERSTATE_SUPER)
                 RSDK.ResetEntityPtr(RSDK.GetEntityByID(2 * Player->playerCount + RSDK.GetEntityID(player)), ImageTrail->objectID, player);
-            }
 
-            memset(Zone->entityData, 0, ENTITY_SIZE);
+            memset(Zone->entityData[0], 0, ENTITY_SIZE);
             memset(Zone->entityData[8], 0, ENTITY_SIZE);
         }
 #endif

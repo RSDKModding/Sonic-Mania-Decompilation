@@ -107,13 +107,15 @@ void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
 void BoundsMarker_EditorDraw(void)
 {
     RSDK_THIS(BoundsMarker);
+
     Animator animator;
     RSDK.SetSpriteAnimation(BoundsMarker->aniFrames, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, false);
 
-    int w = self->width << 16;
+    int32 w = self->width << 16;
     if (!self->width)
         w = 24 << 16;
+    self->updateRange.x = w >> 1;
 
     //Bounds
     RSDK.DrawLine(self->position.x - w, self->position.y, self->position.x + w, self->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
@@ -133,8 +135,8 @@ void BoundsMarker_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(BoundsMarker, type);
     RSDK_ENUM_VAR("Bottom", BOUNDSMARKER_BOTTOM);
-    RSDK_ENUM_VAR("Bottom (Use Offset)", BOUNDSMARKER_BOTTOM);
-    RSDK_ENUM_VAR("Top (Use Offset)", BOUNDSMARKER_TOP);
+    RSDK_ENUM_VAR("Bottom (Use Offset)", BOUNDSMARKER_BOTTOM_OFFSET);
+    RSDK_ENUM_VAR("Top (Use Offset)", BOUNDSMARKER_TOP_OFFSET);
     RSDK_ENUM_VAR("Top", BOUNDSMARKER_TOP);
 }
 #endif

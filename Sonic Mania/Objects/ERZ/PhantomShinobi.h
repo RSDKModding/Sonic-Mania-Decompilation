@@ -19,18 +19,18 @@ struct EntityPhantomShinobi {
     Vector2 startPos;
     int32 timer;
     int32 invincibilityTimer;
-    int32 field_6C;
-    int32 spearOffset;
+    int32 unused;
+    int32 finRadius;
     int32 rotStore;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
+    int32 rotSpeed;
+    int32 numBounces;
+    int32 attackCount;
     bool32 prevOnGround;
     Hitbox outerBox;
     Hitbox innerBox;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator bodyAnimator;
+    Animator armAnimator;
+    Animator finAnimator;
 };
 
 // Object Struct
@@ -54,14 +54,14 @@ void PhantomShinobi_CheckPlayerCollisions(void);
 void PhantomShinobi_HandleTileCollisions(void);
 void PhantomShinobi_ResetStates(void);
 
-void PhantomShinobi_State_Unknown1(void);
-void PhantomShinobi_State_Unknown2(void);
-void PhantomShinobi_State_Unknown3(void);
-void PhantomShinobi_State_Unknown4(void);
-void PhantomShinobi_State_Unknown5(void);
-void PhantomShinobi_State_Unknown6(void);
-void PhantomShinobi_State_Unknown7(void);
-void PhantomShinobi_State_Unknown8(void);
+void PhantomShinobi_State_EnterShinobi(void);
+void PhantomShinobi_State_AttackDelay(void);
+void PhantomShinobi_State_SetupAttack(void);
+void PhantomShinobi_State_Moving(void);
+void PhantomShinobi_State_PrepareFinAttack(void);
+void PhantomShinobi_State_ExtendFins(void);
+void PhantomShinobi_State_RetractFins(void);
+void PhantomShinobi_State_FinishedAttack(void);
 
 bool32 PhantomShinobi_BladeCheckCB(void);
 

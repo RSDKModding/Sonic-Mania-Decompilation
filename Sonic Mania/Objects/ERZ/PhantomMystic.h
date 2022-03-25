@@ -17,33 +17,29 @@ struct EntityPhantomMystic {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Vector2 field_60;
+    Vector2 originPos;
     Vector2 mysticPos;
-    int32 field_70;
-    int32 cupY;
+    int32 mysticVelY;
+    int32 middleCupY;
     int32 timer;
     int32 invincibilityTimer;
     int32 correctCup;
     int32 cupPos[3];
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
+    int32 unused1[3];
+    int32 unused2[3];
     int32 cupAlpha[3];
-    int32 field_B4;
-    int32 field_B8;
-    int32 field_BC;
-    int32 field_C0;
-    int32 field_C4;
-    int32 field_C8;
-    int32 timer2;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    int32 swapCup1;
+    int32 swapCup2;
+    int32 swapCup1Pos;
+    int32 swapCup2Pos;
+    int32 swapCup1Alpha;
+    int32 swapCup2Alpha;
+    int32 cupSwapCount;
+    Animator mysticAnimator;
+    Animator cupAnimator;
+    Animator cupSilhouetteAnimator;
+    Animator cupSpikeAnimator;      // Not actually ever drawn...
+    Animator cupBlastAnimator;
     Hitbox hitbox;
 };
 
@@ -65,21 +61,21 @@ void PhantomMystic_Serialize(void);
 
 // Extra Entity Functions
 void PhantomMystic_CheckPlayerCollisions(void);
-void PhantomMystic_HandleCups(void);
+void PhantomMystic_SetupNewCupSwap(void);
      
-void PhantomMystic_StateDraw_Unknown1(void);
-void PhantomMystic_StateDraw_Unknown2(void);
+void PhantomMystic_Draw_CupSetup(void);
+void PhantomMystic_Draw_CupSwap(void);
      
-void PhantomMystic_State_Unknown1(void);
-void PhantomMystic_State_Unknown2(void);
-void PhantomMystic_State_Unknown3(void);
-void PhantomMystic_State_Unknown4(void);
-void PhantomMystic_State_Unknown5(void);
-void PhantomMystic_State_Unknown6(void);
-void PhantomMystic_State_Unknown7(void);
-void PhantomMystic_State_Unknown8(void);
-void PhantomMystic_State_Unknown9(void);
-void PhantomMystic_State_Unknown10(void);
+void PhantomMystic_State_Setup(void);
+void PhantomMystic_State_SetupInitialCupPos(void);
+void PhantomMystic_State_MoveCupsDownwards(void);
+void PhantomMystic_State_RotateMiddleCup(void);
+void PhantomMystic_State_MoveMiddleCupToFloor(void);
+void PhantomMystic_State_PrepareCupSwap(void);
+void PhantomMystic_State_CupSwapping(void);
+void PhantomMystic_State_RevealMystic(void);
+void PhantomMystic_State_CupBlast(void);
+void PhantomMystic_State_MoveCupsToMystic(void);
 
 
 #endif //!OBJ_PHANTOMMYSTIC_H

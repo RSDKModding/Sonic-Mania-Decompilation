@@ -25,16 +25,16 @@ void PhantomHand_Draw(void)
 
     RSDK.CopyPalette(1, 128, 0, 128, 128);
     self->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->handAnimator, NULL, false);
 
-    if (self->state != PhantomHand_State_Unknown4) {
+    if (self->state != PhantomHand_State_Disappear) {
         self->inkEffect = INK_ALPHA;
         self->alpha     = 0xD0;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->crystalAnimator, NULL, false);
 
         self->inkEffect = INK_ADD;
         self->alpha     = 0x100;
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->shineAnimator, NULL, false);
     }
 }
 
@@ -43,26 +43,27 @@ void PhantomHand_Create(void *data)
     RSDK_THIS(PhantomHand);
 
     if (!SceneInfo->inEditor) {
-        self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
-        self->parent        = (Entity *)data;
-        self->field_6C      = self->position.x;
-        self->field_70      = self->position.y;
-        self->active        = ACTIVE_NORMAL;
-        self->inkEffect     = INK_ADD;
-        self->drawFX        = FX_FLIP | FX_SCALE;
-        self->alpha         = 0x100;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
-        self->field_64      = 64;
-        self->state         = PhantomHand_State_Summon;
-        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 0, &self->animator1, true, 0);
+        self->visible            = true;
+        self->drawOrder          = Zone->drawOrderLow;
+        self->parent             = (Entity *)data;
+        self->targetPos.x        = self->position.x;
+        self->targetPos.y        = self->position.y;
+        self->active             = ACTIVE_NORMAL;
+        self->inkEffect          = INK_ADD;
+        self->drawFX             = FX_FLIP | FX_SCALE;
+        self->alpha              = 0x100;
+        self->updateRange.x      = 0x800000;
+        self->updateRange.y      = 0x800000;
+        self->timerDecreaseSpeed = 64;
+        self->state              = PhantomHand_State_Summon;
+        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 0, &self->handAnimator, true, 0);
     }
 }
 
 void PhantomHand_StageLoad(void)
 {
     PhantomHand->aniFrames     = RSDK.LoadSpriteAnimation("Phantom/PhantomHand.bin", SCOPE_STAGE);
+
     PhantomHand->hitbox.left   = -20;
     PhantomHand->hitbox.top    = -20;
     PhantomHand->hitbox.right  = 20;
@@ -95,19 +96,19 @@ void PhantomHand_CheckPlayerGrab(int playerX, int playerY)
         }
     }
     else {
-        int dist = (playerX - self->position.x) >> 5;
+        int32 dist = (playerX - self->position.x) >> 5;
         if (dist > 0x10000)
             dist = 0x10000;
         self->position.x += dist;
     }
 
-    if (self->field_70 < playerY)
-        self->field_70 += 0x10000;
+    if (self->targetPos.y < playerY)
+        self->targetPos.y += 0x10000;
 
-    if (playerY <= self->field_70)
+    if (playerY <= self->targetPos.y)
         self->position.y += (playerY - self->position.y) >> 3;
     else
-        self->position.y = self->field_70;
+        self->position.y = self->targetPos.y;
 
     foreach_active(Player, player)
     {
@@ -117,7 +118,7 @@ void PhantomHand_CheckPlayerGrab(int playerX, int playerY)
             if (rx * rx + ry * ry < 0x100) {
                 if (!PhantomHand->grabbedPlayers[player->playerID]) {
                     PhantomHand->grabbedPlayers[player->playerID] = true;
-                    self->state                                 = PhantomHand_State_Unknown5;
+                    self->state                                   = PhantomHand_State_GrabbedPlayer;
                 }
             }
         }
@@ -132,74 +133,73 @@ void PhantomHand_State_Summon(void)
         RSDK.PlaySfx(PhantomEgg->sfxSummon, false, 255);
     self->position.x += self->velocity.x;
     if (self->timer > 0)
-        self->field_64 -= 4;
-    self->timer += self->field_64;
+        self->timerDecreaseSpeed -= 4;
 
-    if (self->timer < 0x200 && self->field_64 < 0) {
+    self->timer += self->timerDecreaseSpeed;
+
+    if (self->timer < 0x200 && self->timerDecreaseSpeed < 0) {
         self->timer = 0x200;
-        self->state = PhantomHand_State_Unknown1;
+        self->state = PhantomHand_State_Appear;
     }
-    self->field_68 += 8;
-    self->scale.x = self->timer + ((self->timer * RSDK.Sin256(self->field_68)) >> 11);
-    self->scale.y = self->timer + ((self->timer * RSDK.Cos256(self->field_68)) >> 11);
+    self->scaleAngle += 8;
+    self->scale.x = self->timer + ((self->timer * RSDK.Sin256(self->scaleAngle)) >> 11);
+    self->scale.y = self->timer + ((self->timer * RSDK.Cos256(self->scaleAngle)) >> 11);
 }
 
-void PhantomHand_State_Unknown1(void)
+void PhantomHand_State_Appear(void)
 {
     RSDK_THIS(PhantomHand);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    self->field_68 += 16;
+    RSDK.ProcessAnimation(&self->handAnimator);
+    self->scaleAngle += 16;
     self->position.x += self->velocity.x;
-    self->scale.x = ((self->timer * RSDK.Sin256(self->field_68)) >> 11) + 0x200;
-    self->scale.y = ((self->timer * RSDK.Cos256(self->field_68)) >> 11) + 0x200;
+    self->scale.x = ((self->timer * RSDK.Sin256(self->scaleAngle)) >> 11) + 0x200;
+    self->scale.y = ((self->timer * RSDK.Cos256(self->scaleAngle)) >> 11) + 0x200;
     if (self->timer <= 0) {
         self->drawFX = FX_FLIP;
         if (Player->playerCount < 2)
-            self->state = PhantomHand_State_Unknown2;
+            self->state = PhantomHand_State_TryGrabPlayer;
         else
-            self->state = PhantomHand_State_Unknown3;
+            self->state = PhantomHand_State_TryGrabPlayers;
     }
     else {
         self->timer -= 32;
     }
 }
 
-void PhantomHand_State_Unknown2(void)
+void PhantomHand_State_TryGrabPlayer(void)
 {
     RSDK_THIS(PhantomHand);
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->handAnimator);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (player1->interaction == true && player1->state == Player_State_None) {
-        self->state = PhantomHand_State_Unknown4;
+        self->state = PhantomHand_State_Disappear;
     }
     else {
-        if ((self->direction && player1->position.x <= PhantomEgg->boundsM) || (self->direction && player1->position.x >= PhantomEgg->boundsM)) {
+        if ((self->direction && player1->position.x <= PhantomEgg->boundsM) || (self->direction && player1->position.x >= PhantomEgg->boundsM))
             PhantomHand_CheckPlayerGrab(self->parent->position.x, player1->position.y);
-        }
-        else {
+        else
             PhantomHand_CheckPlayerGrab(player1->position.x, player1->position.y);
-        }
     }
 }
 
-void PhantomHand_State_Unknown3(void)
+void PhantomHand_State_TryGrabPlayers(void)
 {
     RSDK_THIS(PhantomHand);
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->handAnimator);
 
-    bool32 flag = true;
+    bool32 playersActive = true;
     for (int i = SLOT_PLAYER1; i < SLOT_PLAYER1 + 2; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         if (player->objectID == Player->objectID)
-            flag = flag && player->interaction && player->state == Player_State_None;
+            playersActive = playersActive && player->interaction && player->state == Player_State_None;
     }
 
-    if (flag) {
-        self->state = PhantomHand_State_Unknown4;
+    if (playersActive) {
+        self->state = PhantomHand_State_Disappear;
     }
     else {
         int dist = 0x7FFFFFFF;
@@ -213,6 +213,7 @@ void PhantomHand_State_Unknown3(void)
                     playerPtr = player;
                 }
             }
+
             if (playerPtr)
                 PhantomHand_CheckPlayerGrab(playerPtr->position.x, playerPtr->position.y);
         }
@@ -225,12 +226,13 @@ void PhantomHand_State_Unknown3(void)
                 }
             }
         }
+
         if (playerPtr)
             PhantomHand_CheckPlayerGrab(playerPtr->position.x, playerPtr->position.y);
     }
 }
 
-void PhantomHand_State_Unknown5(void)
+void PhantomHand_State_GrabbedPlayer(void)
 {
     RSDK_THIS(PhantomHand);
 
@@ -247,59 +249,60 @@ void PhantomHand_State_Unknown5(void)
             player->onGround        = false;
             player->groundVel       = 0;
             if (!player->playerID)
-                self->field_78 = true;
+                self->doScanlineCB = true;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
     }
 
-    if (++self->timer2 == 8) {
-        self->timer2 = 0;
-        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 1, &self->animator1, true, 0);
-        self->state = PhantomHand_State_Unknown6;
+    if (++self->grabTimer == 8) {
+        self->grabTimer = 0;
+        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 1, &self->handAnimator, true, 0);
+        self->state = PhantomHand_State_Clasp;
     }
 }
 
-void PhantomHand_State_Unknown6(void)
+void PhantomHand_State_Clasp(void)
 {
     RSDK_THIS(PhantomHand);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == 5) {
+    RSDK.ProcessAnimation(&self->handAnimator);
+    if (self->handAnimator.frameID == 5) {
         self->drawOrder = Zone->drawOrderHigh;
     }
-    if (self->animator1.frameID == 10) {
-        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 2, &self->animator2, true, 0);
-        self->state = PhantomHand_State_Unknown7;
+
+    if (self->handAnimator.frameID == 10) {
+        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 2, &self->crystalAnimator, true, 0);
+        self->state = PhantomHand_State_Crystalize;
     }
 }
 
-void PhantomHand_State_Unknown7(void)
+void PhantomHand_State_Crystalize(void)
 {
     RSDK_THIS(PhantomHand);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    if (self->animator2.frameID == self->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 3, &self->animator3, true, 0);
-        self->state = PhantomHand_State_Unknown8;
+    RSDK.ProcessAnimation(&self->handAnimator);
+    RSDK.ProcessAnimation(&self->crystalAnimator);
+    if (self->crystalAnimator.frameID == self->crystalAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(-1, 0, &self->handAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 3, &self->shineAnimator, true, 0);
+        self->state = PhantomHand_State_Shine;
     }
 }
 
-void PhantomHand_State_Unknown8(void)
+void PhantomHand_State_Shine(void)
 {
     RSDK_THIS(PhantomHand);
 
-    RSDK.ProcessAnimation(&self->animator3);
-    if (self->animator3.frameID == self->animator3.frameCount - 1) {
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator3, true, 0);
-        if (self->field_78)
+    RSDK.ProcessAnimation(&self->shineAnimator);
+    if (self->shineAnimator.frameID == self->shineAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(-1, 0, &self->shineAnimator, true, 0);
+        if (self->doScanlineCB)
             PhantomEgg_SetupScanlineCB();
         self->state = StateMachine_None;
     }
 }
 
-void PhantomHand_State_Unknown9(void)
+void PhantomHand_State_BreakApart(void)
 {
     RSDK_THIS(PhantomHand);
     Debris_FallFlickerAnimSetup(PhantomHand->aniFrames, PhantomHand->debrisInfo, 4);
@@ -319,7 +322,7 @@ void PhantomHand_State_Unknown9(void)
     destroyEntity(self);
 }
 
-void PhantomHand_State_Unknown4(void)
+void PhantomHand_State_Disappear(void)
 {
     RSDK_THIS(PhantomHand);
 
@@ -330,9 +333,15 @@ void PhantomHand_State_Unknown4(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PhantomHand_EditorDraw(void) {}
+void PhantomHand_EditorDraw(void)
+{
+    RSDK_THIS(PhantomHand);
+    RSDK.SetSpriteAnimation(PhantomHand->aniFrames, 0, &self->handAnimator, true, 0);
 
-void PhantomHand_EditorLoad(void) {}
+    RSDK.DrawSprite(&self->handAnimator, NULL, false);
+}
+
+void PhantomHand_EditorLoad(void) { PhantomHand->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomHand.bin", SCOPE_STAGE); }
 #endif
 
 void PhantomHand_Serialize(void) {}

@@ -17,7 +17,7 @@ void Redz_Update(void)
     StateMachine_Run(self->state);
 
     if (self->state != Redz_State_Setup && self->state != Redz_Flame_State && self->state != Redz_Flame_Setup) {
-        Redz_HandlePlayerInteractions();
+        Redz_CheckPlayerCollisions();
         if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
             self->direction  = self->startDir;
             self->position.x = self->startPos.x;
@@ -77,6 +77,7 @@ void Redz_StageLoad(void)
     Redz->hitboxRange.bottom = 0;
 
     Redz->sfxFlame = RSDK.GetSfx("Stage/Flame.wav");
+
     DEBUGMODE_ADD_OBJ(Redz);
 }
 
@@ -92,10 +93,10 @@ void Redz_DebugSpawn(void)
 void Redz_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Redz_HandlePlayerInteractions(void)
+void Redz_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Redz);
     foreach_active(Player, player)
@@ -130,20 +131,20 @@ void Redz_State_Walk(void)
         self->animator.speed = 0;
     }
 
-    if (self->timer <= 0) {
+    if (self->attackDelay <= 0) {
         foreach_active(Player, player)
         {
             if (RSDK.CheckObjectCollisionTouchBox(player, &Redz->hitboxRange, self, &Redz->attackbox)) {
                 self->state = Redz_State_PrepareAttack;
                 RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
                 self->animator.frameID        = 0;
-                self->timer                   = 60;
+                self->attackDelay                   = 60;
                 self->animator.speed = 0;
             }
         }
     }
     else {
-        self->timer--;
+        self->attackDelay--;
     }
 }
 
@@ -151,55 +152,55 @@ void Redz_State_Turn(void)
 {
     RSDK_THIS(Redz);
 
-    if (self->timer2 >= 59) {
+    if (self->timer < 59) {
+        self->timer++;
         self->state  = Redz_State_Walk;
-        self->timer2 = 0;
-        RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
-        self->animator.frameID        = 0;
-        self->animator.speed = 1;
-        self->direction               = self->direction == FLIP_NONE;
-        self->velocity.x              = -self->velocity.x;
     }
     else {
-        self->timer2++;
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
+        self->animator.frameID = 0;
+        self->animator.speed   = 1;
+        self->direction        = self->direction == FLIP_NONE;
+        self->velocity.x       = -self->velocity.x;
     }
 }
 
 void Redz_State_PrepareAttack(void)
 {
     RSDK_THIS(Redz);
-    if (self->timer2 >= 30) {
+    if (self->timer >= 30) {
         self->state  = Redz_State_Attack;
-        self->timer2 = 0;
+        self->timer = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 1, &self->animator, true, 0);
         RSDK.PlaySfx(Redz->sfxFlame, false, 255);
     }
     else {
-        self->timer2++;
+        self->timer++;
     }
 }
 
 void Redz_State_Attack(void)
 {
     RSDK_THIS(Redz);
-    if (self->timer2 >= 90) {
-        self->timer2 = 0;
+    if (self->timer >= 90) {
+        self->timer = 0;
         RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID        = 0;
         self->animator.speed = 1;
         self->state                   = Redz_State_Walk;
     }
 
-    if (!(self->timer2 & 3)) {
+    if (!(self->timer & 3)) {
         EntityRedz *flame = CREATE_ENTITY(Redz, self, self->position.x, self->position.y);
         flame->state      = Redz_Flame_Setup;
         flame->position.y -= 0x40000;
         flame->position.x += (2 * (self->direction != FLIP_NONE) - 1) << 19;
         flame->velocity.x =
-            (2 * (self->direction != FLIP_NONE) - 1) * (RSDK.Cos512(((RSDK.Sin512(8 * (self->timer2 & 0x3F)) >> 5) - 48) & 0x1FF) << 8);
-        flame->velocity.y = RSDK.Sin512(((RSDK.Sin512(8 * (self->timer2 & 0x3F)) >> 5) - 48) & 0x1FF) << 8;
+            (2 * (self->direction != FLIP_NONE) - 1) * (RSDK.Cos512(((RSDK.Sin512(8 * (self->timer & 0x3F)) >> 5) - 48) & 0x1FF) << 8);
+        flame->velocity.y = RSDK.Sin512(((RSDK.Sin512(8 * (self->timer & 0x3F)) >> 5) - 48) & 0x1FF) << 8;
     }
-    ++self->timer2;
+    ++self->timer;
 }
 
 void Redz_Flame_Setup(void)
@@ -227,7 +228,7 @@ void Redz_Flame_State(void)
         }
     }
 
-    if (++self->timer2 > 20)
+    if (++self->timer > 20)
         destroyEntity(self);
 }
 

@@ -147,7 +147,7 @@ void SeeSaw_Update(void)
                     if (SeeSaw->launchVelocity) {
                         player->state    = Player_State_Air;
                         player->onGround = false;
-                        if (self->state == SeeSaw_State_Unused || self->orbTimer)
+                        if (self->state == SeeSaw_State_NoOrb || self->orbTimer)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         else
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
@@ -190,7 +190,7 @@ void SeeSaw_Update(void)
         case SEESAW_TILT_R: self->rotation = 32; break;
     }
 
-    if (self->state != SeeSaw_State_Unused) {
+    if (self->state != SeeSaw_State_NoOrb) {
         int32 storeX   = self->position.x;
         int32 storeY   = self->position.y;
         self->position = self->orbPos;
@@ -286,7 +286,7 @@ void SeeSaw_State_OrbIdle(void)
 
 void SeeSaw_State_None(void) {}
 
-void SeeSaw_State_Unused(void) {}
+void SeeSaw_State_NoOrb(void) {}
 
 void SeeSaw_State_OrbLaunched(void)
 {

@@ -33,34 +33,32 @@ struct EntityPhantomKing {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 typeChangeTimer;
-    int32 angle2;
+    int32 typeChangeTimer;  // Leftover from ERZKing, never used but the draw code for it is still there
+    int32 bodyAngle;
     int32 frameIDs[10];
     Vector2 framePositions[10];
-    int32 field_F8;
-    int32 field_FC;
+    Vector2 armBezierPos;
     Vector2 rubyPos;
-    uint8 field_108;
-    int32 field_10C;
+    Vector2 unused;
     bool32 drawRuby;
-    bool32 field_114;
+    bool32 canLaunchAttacks;
     Entity *parent;
-    int32 field_11C;
-    int32 field_120;
-    int32 field_124;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animatorRuby;
-    Animator animator7;
-    Animator animator8;
-    Animator animator9;
-    Animator animator10;
+    int32 armRadius;
+    int32 armAngle;
+    int32 armAngleOffset;
+    Animator basicAnimator;
+    Animator headAnimator;
+    Animator bodyAnimator;
+    Animator beltAnimator;
+    Animator particleAnimator;
+    Animator rubyAnimator;
+    Animator unusedAnimator;
+    Animator armAnimator;
+    Animator cuffAnimator;
+    Animator handAnimator;
     Hitbox hitbox;
     uint8 storeDrawFX;
-    int32 field_224;
+    bool32 finishedMovingRuby;
 };
 
 // Object Struct
@@ -92,20 +90,20 @@ void PhantomKing_Draw_Arm(void);
 
 void PhantomKing_State_Initialize(void);
 void PhantomKing_State_SetupArms(void);
-void PhantomKing_State_Unknown3(void);
-void PhantomKing_State_Unknown4(void);
-void PhantomKing_State_Unknown5(void);
-void PhantomKing_State_Unknown6(void);
-void PhantomKing_State_Unknown7(void);
-void PhantomKing_State_Unknown8(void);
+void PhantomKing_State_EnterKing(void);
+void PhantomKing_State_InitialHover(void);
+void PhantomKing_State_TakeRubyAway(void);
+void PhantomKing_State_RubyHoldHover(void);
+void PhantomKing_State_WrestleEggman(void);
+void PhantomKing_State_FlyAround(void);
 void PhantomKing_State_Switch(void);
 void PhantomKing_State_HitFall(void);
 
-void PhantomKing_StateArm1_Unknown2(void);
-void PhantomKing_StateArm1_Unknown3(void);
-void PhantomKing_Unknown21(void);
-void PhantomKing_StateArm1_Unknown1(void);
-void PhantomKing_StateArm1_Unknown4(void);
+void PhantomKing_StateArm_Idle(void);
+void PhantomKing_StateArm_WrestleEggman(void);
+void PhantomKing_HandleArmMovement(void);
+void PhantomKing_StateArm_PullBack(void);
+void PhantomKing_StateArm_Point(void);
 
 void PhantomKing_DestroyEntity(void);
 

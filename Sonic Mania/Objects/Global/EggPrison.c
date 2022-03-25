@@ -204,6 +204,7 @@ void EggPrison_Create(void *data)
 void EggPrison_StageLoad(void)
 {
     EggPrison->aniFrames = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
+
     EggPrison->sfxDestroy  = RSDK.GetSfx("Global/Destroy.wav");
     EggPrison->sfxSpring   = RSDK.GetSfx("Global/Spring.wav");
 }

@@ -3,10 +3,21 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PKINGATTACK_LASER, // Leftover from LRZ/KingAttack, not used here
+    PKINGATTACK_ORBIT,
+    PKINGATTACK_LAUNCHED,
+    PKINGATTACK_TRAIL,
+    PKINGATTACK_LARGEBULLET, // Leftover from LRZ/KingAttack, not used here
+    PKINGATTACK_ENERGYLINE,  // Leftover from LRZ/KingAttack, not used here
+    PKINGATTACK_SMALLBULLET, // Leftover from LRZ/KingAttack, not used here, though (new) code for it does exist
+}PKingAttackTypes;
+
 // Object Class
 struct ObjectPKingAttack {
     RSDK_OBJECT
-    TABLE(int32 value1[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
+    // Not Used because he doesn't fire lasers... this object was prolly built off LRZ/KingAttack tbh
+    TABLE(int32 laserColours[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 sfxPulse;
     uint16 aniFrames;
 };
@@ -19,24 +30,9 @@ struct EntityPKingAttack {
     int32 timer;
     Entity *target;
     Vector2 targetPos;
-    Vector2 field_70;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
-    int32 field_A8;
-    int32 field_AC;
-    int32 field_B0;
-    int32 field_B4;
-    int32 field_B8;
+    Vector2 targetVelocity;
+    Vector2 laserVertPostions[8]; // Leftover from LRZ/KingAttack, not used here
+    int32 *laserColours;          // Leftover from LRZ/KingAttack, not used here
     Hitbox hitbox;
     Animator animator;
 };
@@ -60,10 +56,10 @@ void PKingAttack_Serialize(void);
 // Extra Entity Functions
 void PKingAttack_CheckPlayerCollisions(void);
 
-void PKingAttack_Unknown2(void);
-void PKingAttack_Unknown3(void);
-void PKingAttack_Unknown4(void);
-void PKingAttack_Unknown5(void);
-void PKingAttack_Unknown6(void);
+void PKingAttack_State_OrbitAppear(void);
+void PKingAttack_State_Orbiting(void);
+void PKingAttack_State_OrbitLaunched(void);
+void PKingAttack_State_Trail(void);
+void PKingAttack_State_SmallBullet(void);
 
 #endif //!OBJ_PKINGATTACK_H

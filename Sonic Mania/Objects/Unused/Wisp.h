@@ -46,8 +46,8 @@ void Wisp_HandlePlayerInteractions(void);
 void Wisp_CheckOffScreen(void);
 
 void Wisp_State_Setup(void);
-void Wisp_WaitInPlace(void);
-void Wisp_FlyTowardTarget(void);
-void Wisp_BasicFly(void);
+void Wisp_State_Buzzing(void);
+void Wisp_State_FlyTowardTarget(void);
+void Wisp_State_FlyAway(void);
 
 #endif //!OBJ_WISP_H

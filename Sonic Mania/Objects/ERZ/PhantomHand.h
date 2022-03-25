@@ -18,17 +18,16 @@ struct ObjectPhantomHand {
 struct EntityPhantomHand {
     RSDK_ENTITY
     StateMachine(state);
-    int32 timer2;
+    int32 grabTimer;
     int32 timer;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
+    int32 timerDecreaseSpeed;
+    int32 scaleAngle;
+    Vector2 targetPos;
     Entity* parent;
-    int32 field_78;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    bool32 doScanlineCB;
+    Animator handAnimator;
+    Animator crystalAnimator;
+    Animator shineAnimator;
 };
 
 // Object Struct
@@ -51,14 +50,14 @@ void PhantomHand_Serialize(void);
 void PhantomHand_CheckPlayerGrab(int playerX, int playerY);
 
 void PhantomHand_State_Summon(void);
-void PhantomHand_State_Unknown1(void);
-void PhantomHand_State_Unknown2(void);
-void PhantomHand_State_Unknown3(void);
-void PhantomHand_State_Unknown5(void);
-void PhantomHand_State_Unknown6(void);
-void PhantomHand_State_Unknown7(void);
-void PhantomHand_State_Unknown8(void);
-void PhantomHand_State_Unknown9(void);
-void PhantomHand_State_Unknown4(void);
+void PhantomHand_State_Appear(void);
+void PhantomHand_State_TryGrabPlayer(void);  // 1P
+void PhantomHand_State_TryGrabPlayers(void); // 2P or more
+void PhantomHand_State_GrabbedPlayer(void);
+void PhantomHand_State_Clasp(void);
+void PhantomHand_State_Crystalize(void);
+void PhantomHand_State_Shine(void);
+void PhantomHand_State_BreakApart(void);
+void PhantomHand_State_Disappear(void);
 
 #endif //!OBJ_PHANTOMHAND_H

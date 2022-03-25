@@ -7,18 +7,18 @@
 struct ObjectERZStart {
     RSDK_OBJECT
     int32 timer;
-    int32 field_8;
+    int32 unused1;
     int32 superDashCooldown;
-    int32 field_10;
+    int32 unused2;
     uint16 sfxClack;
     uint16 sfxFlyIn;
     uint16 sfxHullClose;
     uint16 sfxRumble;
-    Entity *fxRuby;
-    Entity *ruby;
+    EntityFXRuby *fxRuby;
+    EntityPhantomRuby *ruby;
     EntityChaosEmerald *emeralds[7];
-    Entity *king;
-    Entity *eggman;
+    EntityPhantomKing *king;
+    EntityKleptoMobile *eggman;
 };
 
 // Entity Class
@@ -45,19 +45,19 @@ void ERZStart_Serialize(void);
 
 // Extra Entity Functions
 void ERZStart_SetupObjects(void);
-void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, void *p, int posY);
+void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, EntityPlayer *player, int posY);
 
-bool32 ERZStart_Cutscene_Unknown1(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown2(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown3(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown4(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown5(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown6(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown7(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown8(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown9(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown10(EntityCutsceneSeq *host);
-bool32 ERZStart_Cutscene_Unknown11(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_FadeIn(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_ShrinkRubyWarpFX(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_EnterKing(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_KingMovingRuby(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_KingAttatchHornRuby(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_SetupEggmanReveal(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_EnterEggman(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_EggmanKingWrestling(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_PostWrestleFadeIn(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_ReturnCamToSonic(EntityCutsceneSeq *host);
+bool32 ERZStart_Cutscene_PreparePlayerTransform(EntityCutsceneSeq *host);
 bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host);
 bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host);
 bool32 ERZStart_Cutscene_Fight(EntityCutsceneSeq *host);
@@ -65,7 +65,7 @@ bool32 ERZStart_Cutscene_Fight(EntityCutsceneSeq *host);
 void ERZStart_RubyHover(void);
 void ERZStart_RubyMove(void);
 
-void ERZStart_Player_HandleSuperDash(void *p);
+void ERZStart_Player_HandleSuperDash(EntityPlayer *player);
 void ERZStart_State_PlayerSuperFly(void);
 void ERZStart_Player_StartSuperFly(void);
 void ERZStart_State_PlayerRebound(void);

@@ -38,6 +38,7 @@ void OOZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(OOZSetup->aniTiles, 757, 136, OOZSetup->aniTilesTimer, 16, 16);
         RSDK.DrawAniTiles(OOZSetup->aniTiles, 758, 128, OOZSetup->aniTilesTimer, 32, 16);
     }
+
     if (--OOZSetup->aniTilesDelay < 1) {
         ++OOZSetup->aniTilesFrame;
         OOZSetup->aniTilesFrame &= 7;

@@ -547,8 +547,6 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
         return -1;
 
     ChannelInfo *channel = &channels[slot];
-    if (channel->state == CHANNEL_STREAM_LOAD)
-        printf("");
 
     channel->soundID      = 0xFF;
     channel->loop         = loopPoint;
@@ -931,12 +929,10 @@ void SetChannelAttributes(uint8 channel, float volume, float panning, float spee
         panning               = fmaxf(-1.0f, panning);
         channels[channel].pan = panning;
 
-        if (speed > 0.0) {
+        if (speed > 0.0)
             channels[channel].speed = (int)(speed * 65536.0f);
-        }
-        else if (speed == 1.0) {
+        else if (speed == 1.0)
             channels[channel].speed = 0x10000;
-        }
     }
 }
 
@@ -944,10 +940,11 @@ uint GetChannelPos(uint8 channel)
 {
     if (channel >= CHANNEL_COUNT)
         return 0;
+
     if (channels[channel].state == CHANNEL_SFX)
         return channels[channel].bufferPos;
-    if (channels[channel].state == CHANNEL_STREAMING) {
+    if (channels[channel].state == CHANNEL_STREAMING)
         return (uint)ov_pcm_tell(&streamInfo.vorbisFile);
-    }
+
     return 0;
 }

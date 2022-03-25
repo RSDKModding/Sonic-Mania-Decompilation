@@ -6,17 +6,16 @@
 // Object Class
 struct ObjectERZOutro {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
+    int32 unused;           // Might be "ushort aniFrames" and was used inEditor but I do not know
+    Vector2 playerPos;
     Entity *fxRuby;
     Entity *king;
     Entity *eggman;
     Entity *rubyPortal;
     Entity *ruby;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
+    int32 rubyPortalAcceleration;
+    int32 rubyPortalRadius;
+    int32 rubyPortalAngle;
     bool32 savedGame;
 };
 

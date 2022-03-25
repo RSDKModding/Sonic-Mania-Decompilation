@@ -9,13 +9,13 @@
 // Object Class
 struct ObjectBSS_Setup {
     RSDK_OBJECT
-    uint8 flags[4];
+    uint8 randomNumbers[4]; // used to calculate the map (& colours) for Random BSS mode
     int32 sphereCount;
     int32 pinkSphereCount;
     int32 rings;
     int32 ringPan;
     int32 ringCount;
-    int32 ringID; // goes pretty much unused it seems
+    int32 ringID; // updated in BSS_Collected, but aside from that it goes pretty much unused it seems
     uint16 bgLayer;
     uint16 globeLayer;
     uint16 frustum1Layer;
@@ -26,11 +26,12 @@ struct ObjectBSS_Setup {
     TABLE(int32 globeFrameTable[0xF], { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0 });
     TABLE(int32 globeDirTableL[0xF], { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 });
     TABLE(int32 globeDirTableR[0xF], { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 });
-    TABLE(int32 screenYTable[0x70], { 280, 270, 260, 251, 243, 235, 228, 221, 215, 208, 202, 197, 191, 185, 180, 175, 170, 165, 160, 155, 151, 147, 143,
-                                    139, 135, 131, 127, 124, 121, 117, 114, 111, 108, 105, 103, 100, 97,  95,  92,  90,  88,  86,  83,  81,  79,  77,
-                                    76,  74,  72,  70,  69,  67,  66,  64,  63,  62,  60,  59,  58,  57,  56,  55,  54,  53,  52,  51,  50,  49,  48,
-                                    47,  47,  46,  45,  45,  44,  44,  43,  43,  42,  42,  41,  40,  40,  40,  40,  40,  40,  40,  40,  39,  39,  39,
-                                    39,  39,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38 });
+    TABLE(int32 screenYTable[0x70],
+          { 280, 270, 260, 251, 243, 235, 228, 221, 215, 208, 202, 197, 191, 185, 180, 175, 170, 165, 160, 155, 151, 147, 143,
+            139, 135, 131, 127, 124, 121, 117, 114, 111, 108, 105, 103, 100, 97,  95,  92,  90,  88,  86,  83,  81,  79,  77,
+            76,  74,  72,  70,  69,  67,  66,  64,  63,  62,  60,  59,  58,  57,  56,  55,  54,  53,  52,  51,  50,  49,  48,
+            47,  47,  46,  45,  45,  44,  44,  43,  43,  42,  42,  41,  40,  40,  40,  40,  40,  40,  40,  40,  39,  39,  39,
+            39,  39,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38,  38 });
     TABLE(int32 divisorTable[0x70],
           { 4096, 4032, 3968, 3904, 3840, 3776, 3712, 3648, 3584, 3520, 3456, 3392, 3328, 3264, 3200, 3136, 3072, 2995, 2920, 2847, 2775, 2706, 2639,
             2572, 2508, 2446, 2384, 2324, 2266, 2210, 2154, 2100, 2048, 2012, 1976, 1940, 1906, 1872, 1838, 1806, 1774, 1742, 1711, 1680, 1650, 1621,
@@ -52,9 +53,9 @@ struct ObjectBSS_Setup {
     int32 frustumCount[2];
     int32 frustumOffset[2];
     int32 unused1;
-    uint16 playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
-    uint16 playField2[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
-    uint16 playField3[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
+    uint16 playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];            // Active Spheres & Collectables
+    uint16 sphereChainTable[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];     // Currently chained spheres
+    uint16 sphereCollectedTable[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H]; // Spheres to turn into rings
     uint16 sfxBlueSphere;
     uint16 sfxSSExit;
     uint16 sfxBumper;
@@ -95,7 +96,7 @@ struct EntityBSS_Setup {
     Vector2 playerPos;
     Vector2 lastSpherePos;
     int32 unused3;
-    bool32 ringLoopFlag;
+    bool32 completedRingLoop;
     int32 paletteID;
     int32 stopMovement;
     Animator globeSpinAnimator;
@@ -136,7 +137,7 @@ void BSS_Setup_State_SpinRight(void);
 void BSS_Setup_State_PostPinkSphereWarp(void);
 bool32 BSS_Setup_CheckSphereValid(int32 x, int32 y);
 void BSS_Setup_LaunchSpheres(void);
-void BSS_Setup_StageFinishClear(void);
+void BSS_Setup_SetupFinishSequence(void);
 bool32 BSS_Setup_ScanSphereChain_Up(uint8 x, uint8 y);
 bool32 BSS_Setup_ScanSphereChain_Down(uint8 x, uint8 y);
 bool32 BSS_Setup_ScanSphereChain_Left(uint8 x, uint8 y);

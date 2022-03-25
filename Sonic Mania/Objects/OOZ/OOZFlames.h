@@ -35,8 +35,8 @@ void OOZFlames_EditorLoad(void);
 void OOZFlames_Serialize(void);
 
 // Extra Entity Functions
+void OOZFlames_State_Appear(void);
 void OOZFlames_State_Rise(void);
-void OOZFlames_State_ScaleIn(void);
 
 
 #endif //!OBJ_OOZFLAMES_H

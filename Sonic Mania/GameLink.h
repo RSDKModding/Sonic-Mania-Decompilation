@@ -511,12 +511,14 @@ typedef enum {
     ALIGN_CENTER,
 } Alignments;
 
+#if RETRO_USE_PLUS
 typedef enum {
     PRINT_NORMAL,
     PRINT_POPUP,
     PRINT_ERROR,
     PRINT_FATAL,
 } SeverityModes;
+#endif
 
 typedef enum {
     VAR_UINT8,
@@ -533,6 +535,7 @@ typedef enum {
     VAR_COLOUR,
 } VarTypes;
 
+#if RETRO_USE_PLUS
 typedef enum {
     DBVAR_NONE,
     DBVAR_UNKNOWN1,
@@ -562,6 +565,7 @@ typedef enum {
     DTYPE_INT16,
     DTYPE_INT32,
 } DebugVarTypes;
+#endif
 
 typedef enum {
     ACTIVE_NEVER,

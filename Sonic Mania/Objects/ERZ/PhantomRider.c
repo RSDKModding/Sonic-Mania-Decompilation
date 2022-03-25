@@ -59,7 +59,7 @@ void PhantomRider_Create(void *data)
         if (data) {
             if (voidToInt(data) == PHANTOMRIDER_JIMMY) {
                 self->active = ACTIVE_NORMAL;
-                self->state  = PhantomRider_State2_Unknown;
+                self->state  = PhantomRider_State_Jimmy;
             }
         }
         else {
@@ -291,7 +291,7 @@ void PhantomRider_State_ExitRider(void)
     }
 }
 
-void PhantomRider_State2_Unknown(void)
+void PhantomRider_State_Jimmy(void)
 {
     RSDK_THIS(PhantomRider);
 
@@ -307,11 +307,11 @@ void PhantomRider_State2_Unknown(void)
 
     foreach_active(Player, player)
     {
-        int x = self->position.x - (ScreenInfo->centerX << 16) + 0x100000;
+        int32 x = self->position.x - (ScreenInfo->centerX << 16) + 0x100000;
         if (player->position.x < x)
             player->position.x = x;
 
-        int y = ((ScreenInfo->centerX - 16) << 16) + self->position.x;
+        int32 y = ((ScreenInfo->centerX - 16) << 16) + self->position.x;
         if (player->position.x > y)
             player->position.x = y;
     }

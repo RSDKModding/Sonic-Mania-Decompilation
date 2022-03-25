@@ -45,7 +45,7 @@ void BSS_Message_Create(void *data)
         self->drawOrder = 15;
 
         switch (voidToInt(data)) {
-            case BSS_MESSAGE_GETBS:
+            case BSS_MESSAGE_GETSPHERES:
                 self->shouldFade   = true;
                 self->colour = 0xF0F0F0;
                 self->timer  = 512;
@@ -59,7 +59,7 @@ void BSS_Message_Create(void *data)
                 RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->leftAnimator, true, 0);
                 RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->rightAnimator, true, 1);
                 break;
-            case BSS_MESSAGE_2_FINISHED:
+            case BSS_MESSAGE_FINISHED:
                 self->shouldFade   = true;
                 self->colour = 0;
                 self->state  = BSS_Message_State_Finished;
@@ -71,7 +71,7 @@ void BSS_Message_Create(void *data)
 void BSS_Message_StageLoad(void)
 {
     BSS_Message->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
-    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, intToVoid(BSS_MESSAGE_GETBS));
+    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, intToVoid(BSS_MESSAGE_GETSPHERES));
 }
 
 void BSS_Message_State_GetBS(void)
@@ -105,7 +105,7 @@ void BSS_Message_State_GetBSWait(void)
             setup->globeSpeedInc = 2;
             if (player->onGround)
                 RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->animator, 0, 0);
-            self->state = BSS_Message_State_Idle;
+            self->state = BSS_Message_State_PerfectWait;
         }
         if (!setup->globeTimer && setup->state == BSS_Setup_State_HandleStage) {
             if (player->left)
@@ -122,7 +122,7 @@ void BSS_Message_State_GetBSWait(void)
         setup->globeSpeedInc = 2;
         if (player->onGround)
             RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->animator, 0, 0);
-        self->state = BSS_Message_State_Finish;
+        self->state = BSS_Message_State_MsgFinished;
     }
 }
 
@@ -142,19 +142,19 @@ void BSS_Message_State_Perfect(void)
     RSDK_THIS(BSS_Message);
     self->timer2 -= 16;
     if (self->timer2 <= 0)
-        self->state = BSS_Message_State_Idle;
+        self->state = BSS_Message_State_PerfectWait;
 }
 
-void BSS_Message_State_Idle(void)
+void BSS_Message_State_PerfectWait(void)
 {
     RSDK_THIS(BSS_Message);
     if (++self->timer >= 180) {
         self->timer = 0;
-        self->state = BSS_Message_State_Finish;
+        self->state = BSS_Message_State_MsgFinished;
     }
 }
 
-void BSS_Message_State_Finish(void)
+void BSS_Message_State_MsgFinished(void)
 {
     RSDK_THIS(BSS_Message);
     self->timer2 += 16;

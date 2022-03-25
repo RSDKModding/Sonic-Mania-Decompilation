@@ -57,20 +57,25 @@ void TurboSpiker_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HCZ"))
         TurboSpiker->animID = RSDK.LoadSpriteAnimation("HCZ/TurboSpiker.bin", SCOPE_STAGE);
+
     TurboSpiker->hermitHitbox.left   = -14;
     TurboSpiker->hermitHitbox.top    = -14;
     TurboSpiker->hermitHitbox.right  = 14;
     TurboSpiker->hermitHitbox.bottom = 14;
+
     TurboSpiker->spikeHitbox.left    = -5;
     TurboSpiker->spikeHitbox.top     = -31;
     TurboSpiker->spikeHitbox.right   = 9;
     TurboSpiker->spikeHitbox.bottom  = 2;
+
     TurboSpiker->checkbox.left       = -0x80;
     TurboSpiker->checkbox.top        = -0x200;
     TurboSpiker->checkbox.right      = 0x80;
     TurboSpiker->checkbox.bottom     = 0x200;
+
     TurboSpiker->launchSFX           = RSDK.GetSfx("Stage/Launch.wav");
     TurboSpiker->splashSFX           = RSDK.GetSfx("Stage/Splash.wav");
+
     DEBUGMODE_ADD_OBJ(TurboSpiker);
 }
 

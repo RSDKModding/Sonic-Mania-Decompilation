@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TORNADO_MODE_IDLE,
+    TORNADO_MODE_JUMP_RECOIL,
+    TORNADO_MODE_JUMP_REBOUND,
+    TORNADO_MODE_LAND,
+} TornadoCollideModes;
+
 // Object Class
 struct ObjectTornado {
     RSDK_OBJECT
@@ -20,7 +27,7 @@ struct EntityTornado {
     int32 collideTimer;
     int32 timer;
     int32 turnAngle;
-    int32 collideMode;
+    int32 mode;
     bool32 isStood;
     bool32 showFlame;
     int32 storeY;
@@ -60,7 +67,7 @@ void Tornado_State_SetupPlayers(void);
 void Tornado_Unknown3(void);
 void Tornado_Unknown4(void);
 void Tornado_HandlePlayerCollisions(void);
-void Tornado_Unknown6(void);
+void Tornado_State_PlayerControlled(void);
 void Tornado_Unknown7(void);
 void Tornado_Unknown8(void);
 void Tornado_Unknown9(void);

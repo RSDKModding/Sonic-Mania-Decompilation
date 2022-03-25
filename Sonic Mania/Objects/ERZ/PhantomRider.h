@@ -63,6 +63,6 @@ void PhantomRider_State_InitialRace(void);
 void PhantomRider_State_RacePlayer(void);
 void PhantomRider_State_ExitRider(void);
 
-void PhantomRider_State2_Unknown(void);
+void PhantomRider_State_Jimmy(void);
 
 #endif //!OBJ_PHANTOMRIDER_H

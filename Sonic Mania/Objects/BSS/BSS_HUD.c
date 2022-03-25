@@ -38,7 +38,7 @@ void BSS_HUD_Draw(void)
 
     // DEBUG, TODO: REMOVE
     if (false) {
-        uint16 *playFields[3] = { BSS_Setup->playField, BSS_Setup->playField2, BSS_Setup->playField3 };
+        uint16 *playFields[3] = { BSS_Setup->playField, BSS_Setup->sphereChainTable, BSS_Setup->sphereCollectedTable };
 
         uint32 colours[24] = { 0x000000, 0x0000FF, 0xFF0000, 0xFFFFFF, 0xFFFF00, 0x00FF00, 0xFF00FF, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                              0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };

@@ -38,8 +38,8 @@ void PhantomShield_EditorLoad(void);
 void PhantomShield_Serialize(void);
 
 // Extra Entity Functions
-void PhantomShield_Unknown1(void);
-void PhantomShield_Unknown2(void);
-void PhantomShield_Unknown3(void);
+void PhantomShield_State_Appear(void);
+void PhantomShield_State_Active(void);
+void PhantomShield_State_Disappear(void);
 
 #endif //!OBJ_PHANTOMSHIELD_H

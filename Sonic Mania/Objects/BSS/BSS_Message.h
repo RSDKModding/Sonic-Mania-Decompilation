@@ -4,9 +4,9 @@
 #include "SonicMania.h"
 
 typedef enum {
-    BSS_MESSAGE_GETBS,
+    BSS_MESSAGE_GETSPHERES,
     BSS_MESSAGE_PERFECT,
-    BSS_MESSAGE_2_FINISHED,
+    BSS_MESSAGE_FINISHED,
 }BSS_MessageTypes;
 
 // Object Class
@@ -49,8 +49,8 @@ void BSS_Message_State_GetBS(void);
 void BSS_Message_State_GetBSWait(void);
 void BSS_Message_State_Finished(void);
 void BSS_Message_State_Perfect(void);
-void BSS_Message_State_Idle(void);
-void BSS_Message_State_Finish(void);
+void BSS_Message_State_PerfectWait(void);
+void BSS_Message_State_MsgFinished(void);
 void BSS_Message_TrackProgressCB(bool32 success);
 void BSS_Message_LoadPrevScene(void);
 void BSS_Message_LoadGameState(void);

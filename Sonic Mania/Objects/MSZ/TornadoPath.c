@@ -248,7 +248,7 @@ void TornadoPath_State_MoveRightJump(void)
     bool32 flag = false;
     foreach_active(Tornado, tornado)
     {
-        if (tornado->state == Tornado_Unknown6)
+        if (tornado->state == Tornado_State_PlayerControlled)
             flag = true;
     }
 
@@ -284,7 +284,7 @@ void TornadoPath_State_FlyOff(void)
             tornado->position.y = player1->position.y + 0x400000;
             tornado->offsetX   = 0xA0000;
             tornado->showFlame  = true;
-            tornado->state      = Tornado_Unknown6;
+            tornado->state      = Tornado_State_PlayerControlled;
             tornado->active     = ACTIVE_NORMAL;
         }
     }

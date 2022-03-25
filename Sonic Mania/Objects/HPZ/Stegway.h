@@ -23,8 +23,8 @@ struct EntityStegway {
     int32 unused1;
     Animator mainAnimator;
     Animator wheelAnimator;
-    Animator dustAnimator;
-    bool32 showDust;
+    Animator jetAnimator;
+    bool32 showJet;
     int32 unused2;
     bool32 noFloor;
 };

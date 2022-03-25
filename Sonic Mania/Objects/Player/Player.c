@@ -1663,8 +1663,9 @@ bool32 Player_CheckP2KeyPress(void)
 }
 EntityPlayer *Player_GetNearestPlayerX(void)
 {
+    RSDK_THIS_GEN();
+
     int32 distance = 0x7FFFFFFF;
-    RSDK_THIS(Player);
     EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
@@ -1678,8 +1679,9 @@ EntityPlayer *Player_GetNearestPlayerX(void)
 }
 EntityPlayer *Player_GetNearestPlayer(void)
 {
+    RSDK_THIS_GEN();
+
     int32 distance = 0x7FFFFFFF;
-    RSDK_THIS(Player);
     EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {

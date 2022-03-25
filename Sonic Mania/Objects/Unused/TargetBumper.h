@@ -47,6 +47,6 @@ void TargetBumper_DebugDraw(void);
 
 void TargetBumper_Collide(void);
 void TargetBumper_State_Collide(void);
-void TargetBumper_Hit(void);
+void TargetBumper_State_Hit(void);
 
 #endif //! OBJ_TARGETBUMPER_H
