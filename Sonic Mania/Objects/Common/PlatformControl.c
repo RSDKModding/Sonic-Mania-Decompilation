@@ -29,6 +29,7 @@ void PlatformControl_Update(void)
                 if (platform->drawPos.x >= node->position.x)
                     flags = 1;
             }
+
             if (platform->velocity.y <= 0) {
                 if (platform->drawPos.y <= node->position.y)
                     flags |= 2;
@@ -38,16 +39,18 @@ void PlatformControl_Update(void)
                     flags |= 2;
             }
 
-            if (flags == 3) {
+            if (flags == (1 | 2)) {
                 platform->timer = node->nodeFlag;
                 if (platform->direction < 4) {
                     if (++platform->speed - nodeSlot >= self->nodeCount) {
                         switch (self->type) {
                             case 0: platform->speed = nodeSlot; break;
+
                             case 1:
                                 --platform->speed;
                                 platform->direction = platform->direction ^ 4;
                                 break;
+
                             case 2: {
                                 Entity *ent         = RSDK.GetEntityByID(nodeSlot);
                                 platform->drawPos.x = ent->position.x;
@@ -55,6 +58,7 @@ void PlatformControl_Update(void)
                                 platform->speed     = nodeSlot + 1;
                                 break;
                             }
+
                             case 3: self->speed = 0; break;
                         }
                     }
@@ -63,10 +67,12 @@ void PlatformControl_Update(void)
                     if (--platform->speed - nodeSlot < 0) {
                         switch (self->type) {
                             case 0: platform->speed = nodeSlot + (self->nodeCount - 1); break;
+
                             case 1:
                                 platform->direction = platform->direction ^ 4;
                                 platform->speed     = platform->speed + 1;
                                 break;
+
                             case 2: {
                                 Entity *ent         = RSDK.GetEntityByID(nodeSlot + self->nodeCount - 1);
                                 platform->drawPos.x = ent->position.x;
@@ -85,8 +91,10 @@ void PlatformControl_Update(void)
     }
     else {
         EntityButton *button = (EntityButton *)self->taggedButton;
+
         if (button && button->currentlyActive)
             self->setActive = true;
+
         if (self->setActive) {
             for (int32 c = 0; c < self->childCount; ++c) {
                 EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
@@ -144,6 +152,7 @@ void PlatformControl_Create(void *data)
 
         if (!self->speed)
             self->speed = 4;
+
         self->updateRange.x += 0x800000;
         self->updateRange.y += 0x800000;
         id              = RSDK.GetEntityID(self);
