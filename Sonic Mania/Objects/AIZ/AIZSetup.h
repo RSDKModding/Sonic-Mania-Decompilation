@@ -47,7 +47,7 @@ struct ObjectAIZSetup {
     int32 aniTileFrameC;
     int32 aniTilesDelay3;
 #endif  
-    uint16 knuxSpriteIndex;
+    uint16 knuxFrames;
     uint16 sfxDrill;
     uint16 sfxBreak;
     uint16 sfxImpact;

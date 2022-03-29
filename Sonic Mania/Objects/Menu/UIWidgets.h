@@ -17,7 +17,7 @@ struct ObjectUIWidgets {
 #endif
     Animator frameAnimator;
     Animator arrowsAnimator;
-    uint16 uiSpriteIndex;
+    uint16 uiFrames;
 #if RETRO_USE_PLUS
     uint16 saveSelFrames;
 #endif

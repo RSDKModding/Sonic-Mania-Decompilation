@@ -22,7 +22,7 @@ struct EntityDragonfly {
     uint8 speed;
     Vector2 positions[Dragonfly_SpineCount];
     uint8 directions[Dragonfly_SpineCount];
-    Vector2 spawnPos;
+    Vector2 startPos;
     Animator animator;
     Animator wingAnimator;
     Animator bodyAnimator;

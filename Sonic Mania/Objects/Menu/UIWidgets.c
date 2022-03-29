@@ -28,15 +28,15 @@ void UIWidgets_Create(void *data) {}
 
 void UIWidgets_StageLoad(void)
 {
-    UIWidgets->active        = ACTIVE_ALWAYS;
-    UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
+    UIWidgets->active   = ACTIVE_ALWAYS;
+    UIWidgets->uiFrames = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets_ApplyLanguage();
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 1, &UIWidgets->frameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &UIWidgets->arrowsAnimator, true, 0);
     UIWidgets->sfxBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     UIWidgets->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     UIWidgets->sfxWarp   = RSDK.GetSfx("Global/SpecialWarp.wav");
@@ -303,6 +303,7 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
     for (int32 i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
+
         RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 8, &animator, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&animator, &drawPos, false);
         drawPos.x += 0x80000;
@@ -315,14 +316,14 @@ void UIWidgets_EditorDraw(void) {}
 
 void UIWidgets_EditorLoad(void)
 {
-    UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
+    UIWidgets->uiFrames = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->frameAnimator, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->arrowsAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 1, &UIWidgets->frameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &UIWidgets->arrowsAnimator, true, 0);
 #if RETRO_USE_PLUS
     UIWidgets->buttonColour = 0xF0F0F0;
 #endif

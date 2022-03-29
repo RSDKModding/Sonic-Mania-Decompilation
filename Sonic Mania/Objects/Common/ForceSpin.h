@@ -35,6 +35,6 @@ void ForceSpin_Serialize(void);
 
 // Extra Entity Functions
 void ForceSpin_DrawSprites(void);
-void ForceSpin_SetPlayerState(void *plr);
+void ForceSpin_SetPlayerState(EntityPlayer *player);
 
 #endif //!OBJ_FORCESPIN_H

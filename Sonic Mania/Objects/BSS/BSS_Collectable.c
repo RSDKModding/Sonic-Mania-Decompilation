@@ -97,8 +97,8 @@ void BSS_Collectable_Create(void *data)
         // ???
         // this doesn't fit within the struct AT ALL, but no matter what I look at it using its there so...
         // RSDK.SetSpriteAnimation(BSS_Collectable->textFrames, 0, (Animator *)&BSS_Collectable[2].ringScaleTableX[21], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 0, &BSS_Collectable->sphereAnimator[BSS_RING], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 1, &BSS_Collectable->sphereAnimator[BSS_RING_SPARKLE], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->ringFrames, 0, &BSS_Collectable->sphereAnimator[BSS_RING], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->ringFrames, 1, &BSS_Collectable->sphereAnimator[BSS_RING_SPARKLE], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 6, &BSS_Collectable->sphereAnimator[BSS_EMERALD_CHAOS], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 7, &BSS_Collectable->sphereAnimator[BSS_EMERALD_SUPER], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 8, &BSS_Collectable->sphereAnimator[BSS_MEDAL_SILVER], true, 0);
@@ -109,7 +109,7 @@ void BSS_Collectable_Create(void *data)
 void BSS_Collectable_StageLoad(void)
 {
     BSS_Collectable->aniFrames       = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
-    BSS_Collectable->ringSpriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Ring.bin", SCOPE_STAGE);
+    BSS_Collectable->ringFrames = RSDK.LoadSpriteAnimation("SpecialBS/Ring.bin", SCOPE_STAGE);
 
     if (!BSS_Collectable->loadedTables) {
         BSS_Collectable->loadedTables = true;

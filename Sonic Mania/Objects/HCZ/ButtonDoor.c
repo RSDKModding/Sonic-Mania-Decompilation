@@ -187,7 +187,7 @@ void ButtonDoor_DrawSprites(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
 
-    int incX = 0, incY = 0;
+    int32 incX = 0, incY = 0;
     if (!self->orientation || self->orientation == 2) {
         drawPos.y = (self->size2.y >> 1) + self->position.y - (self->size.y >> 1);
         incY      = self->size2.y;
@@ -197,13 +197,14 @@ void ButtonDoor_DrawSprites(void)
         incX      = self->size2.x;
     }
 
-    for (int i = 0; i < self->length; ++i) {
+    for (int32 i = 0; i < self->length; ++i) {
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += incX;
         drawPos.y += incY;
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ButtonDoor_EditorDraw(void)
 {
     ButtonDoor_SetupSize();
@@ -219,6 +220,7 @@ void ButtonDoor_EditorLoad(void)
     else if (RSDK.CheckStageFolder("HCZ"))
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
 }
+#endif
 
 void ButtonDoor_Serialize(void)
 {

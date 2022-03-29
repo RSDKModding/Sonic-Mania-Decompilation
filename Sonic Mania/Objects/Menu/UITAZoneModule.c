@@ -186,8 +186,8 @@ void UITAZoneModule_SetupText(void)
             RSDK.SetText(&self->text1, "", 0);
         if (!self->text2.text)
             RSDK.SetText(&self->text2, "", 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->medLetterAnimator1, false, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->medLetterAnimator2, false, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->medLetterAnimator1, false, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->medLetterAnimator2, false, 0);
         if (self->disabled) {
             RSDK.PrependText(&self->text1, "???");
             RSDK.PrependText(&self->text2, "");
@@ -197,8 +197,8 @@ void UITAZoneModule_SetupText(void)
             RSDK.CopyString(&self->text1, &self->text1Store);
             RSDK.CopyString(&self->text2, &self->text2Store);
         }
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &self->text1);
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &self->text2);
+        RSDK.SetSpriteString(UIWidgets->uiFrames, 3, &self->text1);
+        RSDK.SetSpriteString(UIWidgets->uiFrames, 3, &self->text2);
     }
     RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 10, &self->fuzzAnimator, false, 0);
     RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 11, &self->zoneIconsAnimator, true, self->zoneID);
@@ -1142,8 +1142,8 @@ void UITAZoneModule_EditorDraw(void)
     self->startPos   = self->position;
     self->drawPos    = self->position;
 
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->medLetterAnimator1, false, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->medLetterAnimator2, false, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->medLetterAnimator1, false, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->medLetterAnimator2, false, 0);
     UITAZoneModule_SetupText();
 
     self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;

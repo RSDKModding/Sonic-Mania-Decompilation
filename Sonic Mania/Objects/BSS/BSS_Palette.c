@@ -20,6 +20,7 @@ void BSS_Palette_Draw(void) {}
 void BSS_Palette_Create(void *data)
 {
     RSDK_THIS(BSS_Palette);
+
     if (!SceneInfo->inEditor)
         destroyEntity(self);
 }
@@ -32,18 +33,20 @@ void BSS_Palette_StageLoad(void)
     foreach_all(BSS_Palette, entity)
     {
         if (entity->useStageConfig) {
+            // Used for Randomized modes
             BSS_Palette->startColourID = 16 * entity->paletteID;
         }
         else {
+            // Used for the 32 Bonus Stages
             RSDK.SetPaletteEntry(1, 0, entity->playfieldA);
             RSDK.SetPaletteEntry(1, 1, entity->playfieldB);
             RSDK.SetPaletteEntry(1, 2, entity->bgColor1);
             RSDK.SetPaletteEntry(1, 3, entity->bgColor2);
             RSDK.SetPaletteEntry(1, 4, entity->bgColor3);
         }
+
         BSS_Palette->skyAlpha      = entity->skyAlpha;
         BSS_Palette->globeAlpha    = entity->globeAlpha;
-        BSS_Palette->startColourID = 0;
     }
 }
 

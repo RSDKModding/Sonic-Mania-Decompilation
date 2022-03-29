@@ -145,6 +145,7 @@ void ReplayRecorder_StageLoad(void)
 {
     ReplayRecorder->replayID    = 0;
     ReplayRecorder->replayRowID = -1;
+
     if (globals->gameMode == MODE_TIMEATTACK) {
         ReplayRecorder->active            = ACTIVE_ALWAYS;
         ReplayRecorder->frameCounter      = -1;
@@ -164,6 +165,7 @@ void ReplayRecorder_StageLoad(void)
         ReplayRecorder->frameBuffer_w = ReplayRecorder->writeBuffer->frames;
         ReplayRecorder->readBuffer    = (Replay *)globals->replayReadBuffer;
         ReplayRecorder->frameBuffer_r = ReplayRecorder->readBuffer->frames;
+
         if (Zone) {
             if (!SceneInfo->inEditor)
                 ReplayRecorder_SetupActions();

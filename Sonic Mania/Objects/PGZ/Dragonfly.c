@@ -64,8 +64,8 @@ void Dragonfly_Create(void *data)
         else {
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.y = (self->dist + 0x80) << 16;
-            self->spawnPos.x    = self->position.x;
-            self->spawnPos.y    = self->position.y;
+            self->startPos.x    = self->position.x;
+            self->startPos.y    = self->position.y;
             self->updateRange.x = 0x800000;
             self->alpha         = 0x80;
             RSDK.SetSpriteAnimation(Dragonfly->aniFrames, 2, &self->wingAnimator, true, 0);
@@ -101,14 +101,14 @@ void Dragonfly_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
+// rdc would probably not shut the fuck up if i didn't add this /hj
 void Dragonfly_CheckOffScreen(void)
 {
-    // rdc would probably not shut the fuck up if i didn't add this /hj
     RSDK_THIS(Dragonfly);
 
-    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
-        self->position.x = self->spawnPos.x;
-        self->position.y = self->spawnPos.y;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
         Dragonfly_Create(NULL);
     }
 }
@@ -167,15 +167,15 @@ void Dragonfly_State_Move(void)
 {
     RSDK_THIS(Dragonfly);
     self->angle += self->speed;
-    self->position.x   = 0xC00 * RSDK.Cos256(self->angle + 0x40) + self->spawnPos.x;
-    self->position.y   = (self->dist << 6) * RSDK.Sin1024(self->angle) + self->spawnPos.y;
+    self->position.x   = 0xC00 * RSDK.Cos256(self->angle + 0x40) + self->startPos.x;
+    self->position.y   = (self->dist << 6) * RSDK.Sin1024(self->angle) + self->startPos.y;
     int32 currentAngle = self->angle - (((Dragonfly_SpineCount * 13) + 13) - 1);
 
     for (int32 i = 0; i < Dragonfly_SpineCount; ++i) {
         self->directions[i] = ((currentAngle + 0x100) & 0x3FF) < 0x200 ? 2 : 0;
 
-        self->positions[i].x = 0xC00 * RSDK.Cos256(currentAngle + 0x40) + self->spawnPos.x;
-        self->positions[i].y = (self->dist << 6) * RSDK.Sin1024(currentAngle) + self->spawnPos.y;
+        self->positions[i].x = 0xC00 * RSDK.Cos256(currentAngle + 0x40) + self->startPos.x;
+        self->positions[i].y = (self->dist << 6) * RSDK.Sin1024(currentAngle) + self->startPos.y;
         currentAngle += 13;
     }
 
@@ -214,13 +214,27 @@ void Dragonfly_EditorDraw(void)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = (self->dist + 0x80) << 16;
-    self->spawnPos.x    = self->position.x;
-    self->spawnPos.y    = self->position.y;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
     self->alpha         = 0x80;
     RSDK.SetSpriteAnimation(Dragonfly->aniFrames, 2, &self->wingAnimator, true, 0);
     RSDK.SetSpriteAnimation(Dragonfly->aniFrames, 3, &self->bodyAnimator, true, 0);
 
+    self->position.x   = 0xC00 * RSDK.Cos256(self->angle + 0x40) + self->startPos.x;
+    self->position.y   = (self->dist << 6) * RSDK.Sin1024(self->angle) + self->startPos.y;
+    int32 currentAngle = self->angle - (((Dragonfly_SpineCount * 13) + 13) - 1);
+
+    for (int32 i = 0; i < Dragonfly_SpineCount; ++i) {
+        self->directions[i] = ((currentAngle + 0x100) & 0x3FF) < 0x200 ? 2 : 0;
+
+        self->positions[i].x = 0xC00 * RSDK.Cos256(currentAngle + 0x40) + self->startPos.x;
+        self->positions[i].y = (self->dist << 6) * RSDK.Sin1024(currentAngle) + self->startPos.y;
+        currentAngle += 13;
+    }
+
     Dragonfly_Draw();
+
+    self->position = self->startPos;
 }
 
 void Dragonfly_EditorLoad(void)

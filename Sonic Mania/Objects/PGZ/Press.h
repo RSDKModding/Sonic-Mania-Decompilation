@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectPress {
 	RSDK_OBJECT
-	uint16 animID;
+    uint16 aniFrames;
 	Hitbox hitbox;
-	uint16 impactSFX;
-	uint16 pressSFX;
+	uint16 sfxImpact;
+	uint16 sfxPress;
 #if RETRO_USE_PLUS
 	bool32 canSuper;
 #endif

@@ -573,6 +573,9 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
     return slot;
 }
 
+#define WAV_SIG_HEADER 0x46464952 // RIFF
+#define WAV_SIG_DATA   0x61746164 // data
+
 void LoadSfx(char *filename, byte plays, byte scope)
 {
     if (!audioEnabled)
@@ -625,7 +628,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                     if (LoadFile(&info, fullPath, FMODE_RB)) {
                         uint signature = ReadInt32(&info, false);
 
-                        if (signature == 'FFIR') {
+                        if (signature == WAV_SIG_HEADER) {
                             ReadInt32(&info, false); // chunk size
                             ReadInt32(&info, false); // WAVE
                             ReadInt32(&info, false); // FMT
@@ -642,7 +645,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                             int loop          = 0;
                             while (true) {
                                 signature = ReadInt32(&info, false);
-                                if (signature == 'atad')
+                                if (signature == WAV_SIG_DATA)
                                     break;
 
                                 loop += 4;

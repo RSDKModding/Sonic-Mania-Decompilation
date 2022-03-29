@@ -50,14 +50,14 @@ void Press_Draw(void)
 
     // threads
     Vector2 drawPos  = self->drawPos;
-    SpriteFrame *spr = RSDK.GetFrame(Press->animID, 1, self->threadAnimator.frameID);
-    spr->height      = 56;
-    spr->sprY        = (self->threadSprY >> 8) + 182;
+    SpriteFrame *frame = RSDK.GetFrame(Press->aniFrames, 1, self->threadAnimator.frameID);
+    frame->height      = 56;
+    frame->sprY        = (self->threadSprY >> 8) + 182;
     for (int32 i = 0; i < self->threads; ++i) {
         RSDK.DrawSprite(&self->threadAnimator, &drawPos, false);
         drawPos.y += 0x380000;
     }
-    spr->height = self->height;
+    frame->height = self->height;
     RSDK.DrawSprite(&self->threadAnimator, &drawPos, false);
 
     // crusher platforms
@@ -92,6 +92,7 @@ void Press_Create(void *data)
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
     self->drawOrder = Zone->drawOrderLow;
+
     if (!SceneInfo->inEditor) {
         self->size *= 8;
         int32 size = self->size;
@@ -107,9 +108,9 @@ void Press_Create(void *data)
         self->drawPos.y     = self->position.y - size;
         self->offTop    = (self->offTop << 16) - size;
         self->offBottom = (self->offBottom << 16) - size + 0xFFFF;
-        RSDK.SetSpriteAnimation(Press->animID, 0, &self->crusherAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Press->animID, 1, &self->threadAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Press->animID, 2, &self->bumperAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->aniFrames, 0, &self->crusherAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->aniFrames, 1, &self->threadAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->aniFrames, 2, &self->bumperAnimator, true, 0);
         self->state = Press_State_Crush;
     }
 }
@@ -117,16 +118,19 @@ void Press_Create(void *data)
 void Press_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
-        Press->animID = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE);
+        Press->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE);
+
     Press->hitbox.left   = -112;
     Press->hitbox.top    = -16;
     Press->hitbox.right  = 112;
     Press->hitbox.bottom = 16;
+
 #if RETRO_USE_PLUS
     Player->canSuperCB = Press_SuperCheckCB;
 #endif
-    Press->impactSFX     = RSDK.GetSfx("Stage/Impact2.wav");
-    Press->pressSFX      = RSDK.GetSfx("PSZ/Press.wav");
+
+    Press->sfxImpact     = RSDK.GetSfx("Stage/Impact2.wav");
+    Press->sfxPress      = RSDK.GetSfx("PSZ/Press.wav");
 }
 
 #if RETRO_USE_PLUS
@@ -193,7 +197,7 @@ void Press_Move(void)
         {
             if (self->state == Press_State_Crush && !player->sidekick) {
                 if (abs(self->position.x - player->position.x) <= 0x600000) {
-                    RSDK.PlaySfx(Press->pressSFX, false, 255);
+                    RSDK.PlaySfx(Press->sfxPress, false, 255);
                     self->state  = Press_HandleMovement;
                     self->active = ACTIVE_NORMAL;
                 }
@@ -246,7 +250,7 @@ void Press_HandleMovement(void)
             self->offTop    = newTop - diff;
             self->offBottom = newBottom + diff;
         }
-        RSDK.PlaySfx(Press->impactSFX, false, 255);
+        RSDK.PlaySfx(Press->sfxImpact, false, 255);
         self->active = ACTIVE_BOUNDS;
         Camera_ShakeScreen(0, 0, 5);
         self->state = Press_State_FinalCrush;
@@ -259,12 +263,12 @@ void Press_HandleMovement(void)
     foreach_active(Crate, crate)
     {
         self->position.y += self->offBottom;
-        if (RSDK.CheckObjectCollisionBox(self, &Press->hitbox, crate, &crate->hitbox, false) == 1) {
+        if (RSDK.CheckObjectCollisionBox(self, &Press->hitbox, crate, &crate->hitbox, false) == C_TOP) {
             bottom = true;
             Crate_MoveY(crate, -floorOffset);
         }
         self->position.y += self->offTop - self->offBottom;
-        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, self, &Press->hitbox, false) == 1) {
+        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, self, &Press->hitbox, false) == C_TOP) {
             top       = true;
             int32 frame = crate->frameID;
             if (!frame) // white (segregation)
@@ -281,7 +285,7 @@ void Press_HandleMovement(void)
     }
     self->topOffset -= self->offTop;
     if (bottom && top) {
-        RSDK.PlaySfx(Press->impactSFX, false, 255);
+        RSDK.PlaySfx(Press->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 3);
         self->state      = Press_State_HandleCrates;
         self->timerStart = waitTime;
@@ -359,9 +363,9 @@ void Press_EditorDraw(void)
     self->drawPos.y     = self->position.y - size;
     self->offTop        = (self->offTop << 16) - size;
     self->offBottom     = (self->offBottom << 16) - size + 0xFFFF;
-    RSDK.SetSpriteAnimation(Press->animID, 0, &self->crusherAnimator, true, 0);
-    RSDK.SetSpriteAnimation(Press->animID, 1, &self->threadAnimator, true, 0);
-    RSDK.SetSpriteAnimation(Press->animID, 2, &self->bumperAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Press->aniFrames, 0, &self->crusherAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Press->aniFrames, 1, &self->threadAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Press->aniFrames, 2, &self->bumperAnimator, true, 0);
 
     Press_Draw();
 
@@ -370,7 +374,7 @@ void Press_EditorDraw(void)
     self->offBottom = offB;
 }
 
-void Press_EditorLoad(void) { Press->animID = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE); }
+void Press_EditorLoad(void) { Press->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Press.bin", SCOPE_STAGE); }
 #endif
 
 void Press_Serialize(void)

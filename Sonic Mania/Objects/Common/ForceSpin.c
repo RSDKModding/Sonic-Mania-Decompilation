@@ -100,10 +100,10 @@ void ForceSpin_DrawSprites(void)
         drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
 }
-void ForceSpin_SetPlayerState(void *plr)
+void ForceSpin_SetPlayerState(EntityPlayer *player)
 {
     RSDK_THIS(ForceSpin);
-    EntityPlayer *player = (EntityPlayer *)plr;
+
     if (player->state != Player_State_ForceRoll_Ground && player->state != Player_State_ForceRoll_Air) {
         if (player->animator.animationID != ANI_JUMP) {
             RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
@@ -129,9 +129,11 @@ void ForceSpin_SetPlayerState(void *plr)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ForceSpin_EditorDraw(void) { ForceSpin_DrawSprites(); }
 
 void ForceSpin_EditorLoad(void) { ForceSpin->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+#endif
 
 void ForceSpin_Serialize(void)
 {

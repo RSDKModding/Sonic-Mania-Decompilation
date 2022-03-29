@@ -17,39 +17,37 @@ void SpinBooster_Update(void)
 
     foreach_active(Player, player)
     {
-        int32 pid   = RSDK.GetEntityID(player);
-        int32 distX = (player->position.x - self->position.x) >> 8;
-        int32 distY = (player->position.y - self->position.y) >> 8;
-        int32 x     = (distY * RSDK.Sin256(negAngle)) + distX * RSDK.Cos256(negAngle) + self->position.x;
-        int32 y     = (distY * RSDK.Cos256(negAngle)) - distX * RSDK.Sin256(negAngle) + self->position.y;
+        int32 playerID = RSDK.GetEntityID(player);
+        int32 distX    = (player->position.x - self->position.x) >> 8;
+        int32 distY    = (player->position.y - self->position.y) >> 8;
+        int32 x        = (distY * RSDK.Sin256(negAngle)) + distX * RSDK.Cos256(negAngle) + self->position.x;
+        int32 y        = (distY * RSDK.Cos256(negAngle)) - distX * RSDK.Sin256(negAngle) + self->position.y;
 
         if (abs(x - self->position.x) >= 0x180000 || abs(y - self->position.y) >= self->size << 19) {
-            if (x < self->position.x) 
-                self->activePlayers &= ~(1 << pid);
-            else 
-                self->activePlayers |= (1 << pid);
+            if (x < self->position.x)
+                self->activePlayers &= ~(1 << playerID);
+            else
+                self->activePlayers |= (1 << playerID);
         }
-        else {
-            if (x < self->position.x) {
-                if (((1 << pid) & self->activePlayers) && !self->forwardOnly) {
-                    if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
-                        player->nextAirState    = StateMachine_None;
-                        player->nextGroundState = StateMachine_None;
-                        if (!self->allowTubeInput)
-                            player->controlLock = 0;
-                        player->tileCollisions = true;
-                        if (player->onGround)
-                            player->state = Player_State_Roll;
-                        else
-                            player->state = Player_State_Air;
-                    }
+        else if (x < self->position.x) {
+            // Exit Tube
+            if (((1 << playerID) & self->activePlayers) && !self->forwardOnly) {
+                if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
+                    player->nextAirState    = StateMachine_None;
+                    player->nextGroundState = StateMachine_None;
+
+                    if (!self->allowTubeInput)
+                        player->controlLock = 0;
+
+                    player->tileCollisions = true;
+                    player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
                 }
-                self->activePlayers &= ~(1 << pid);
             }
-            else if (!((1 << pid) & self->activePlayers)) {
-                SpinBooster_HandleForceRoll(player);
-                self->activePlayers |= (1 << pid);
-            }
+            self->activePlayers &= ~(1 << playerID);
+        }
+        else if (!((1 << playerID) & self->activePlayers)) {
+            SpinBooster_HandleForceRoll(player);
+            self->activePlayers |= (1 << playerID);
         }
     }
 
@@ -69,6 +67,7 @@ void SpinBooster_Create(void *data)
     self->drawFX |= FX_FLIP;
     self->animator.frameID = 4;
     self->activePlayers    = 0;
+
     if (SceneInfo->inEditor) {
         if (!self->boostPower)
             self->boostPower = 15;
@@ -279,8 +278,9 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
 void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
+
     if (player->onGround) {
-        int32 entAng = RSDK.Sin256(self->angle) + RSDK.Cos256(self->angle);
+        int32 entAng = RSDK.Cos256(self->angle) + RSDK.Sin256(self->angle);
         int32 plrAng = RSDK.Cos256(player->angle) - RSDK.Sin256(player->angle);
         int32 power  = (self->boostPower << 15) * ((plrAng > 0) - (plrAng < 0)) * ((entAng > 0) - (entAng < 0));
         if (self->boostPower >= 0)
@@ -305,13 +305,12 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
         if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
+
             if (!self->allowTubeInput)
                 player->controlLock = 0;
+
             player->tileCollisions = true;
-            if (player->onGround)
-                player->state = Player_State_Roll;
-            else
-                player->state = Player_State_Air;
+            player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
         }
     }
 }
@@ -432,6 +431,7 @@ void SpinBooster_DrawSprites(void)
 void SpinBooster_HandleForceRoll(EntityPlayer *player)
 {
     RSDK_THIS(SpinBooster);
+
     player->tileCollisions = true;
     SpinBooster_HandleRollDir(player);
 
@@ -441,7 +441,8 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
     }
     else {
         if (self->playSound)
-            RSDK.PlaySfx(Player->sfxRoll, 0, 0xFF);
+            RSDK.PlaySfx(Player->sfxRoll, false, 0xFF);
+
         if (player->animator.animationID != ANI_JUMP) {
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             if (!player->collisionMode && player->onGround)
@@ -450,13 +451,11 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
         }
         player->nextAirState    = StateMachine_None;
         player->nextGroundState = StateMachine_None;
+
         if (!self->allowTubeInput)
             player->controlLock = 0xFFFF;
 
-        if (player->onGround)
-            player->state = Player_State_ForceRoll_Ground;
-        else
-            player->state = Player_State_ForceRoll_Air;
+        player->state = player->onGround ? Player_State_ForceRoll_Ground : Player_State_ForceRoll_Air;
 
         if (abs(player->groundVel) < 0x10000) {
             if (self->direction & FLIP_X)

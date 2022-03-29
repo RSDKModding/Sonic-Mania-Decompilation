@@ -6,19 +6,19 @@
 // Object Class
 struct ObjectHCZSetup {
     RSDK_OBJECT
-    TABLE(int32 aniTilesDelay[14], { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 });
-    int32 field_3C;
-    int32 timerB;
-    int32 timerA;
-    int32 field_48;
-    uint16 aniTiles1;
-    uint16 aniTiles2;
-    uint16 aniTiles3;
-    TileLayer *bg;
+    TABLE(int32 pendulumAniTileDurations[14], { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 });
+    int32 unused1;
+    int32 waterlineAniTileFrame;
+    int32 bgCandlesAniTileFrame;
+    int32 unused2;
+    uint16 bgCandlesAniTiles;
+    uint16 waterlineAniTiles;
+    uint16 pendulumAniTiles;
+    TileLayer *background2Layer;
 #if RETRO_USE_PLUS
-    int32 activePlayerCount;
-    bool32 playingLoopSFX;
-    int32 waterfallSFXTimer;
+    int32 waterslidingPlayerCount;
+    bool32 playingWaterfallLoop;
+    int32 waterfallLoopTimer;
     uint16 sfxWaterfall;
     uint16 sfxWaterfallLoop;
 #endif
@@ -46,7 +46,7 @@ void HCZSetup_EditorLoad(void);
 void HCZSetup_Serialize(void);
 
 // Extra Entity Functions
-void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines);
+void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines);
 void HCZSetup_HandleActTransition(void);
 void HCZSetup_StageFinishCB_Act2(void);
 

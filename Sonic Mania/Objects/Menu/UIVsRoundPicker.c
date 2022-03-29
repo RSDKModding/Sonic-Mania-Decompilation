@@ -103,8 +103,8 @@ void UIVsRoundPicker_Create(void *data)
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
         self->textFrames = UIWidgets->textFrames;
         RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->numbersAnimator, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorL, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorR, true, 1);
         UIVsRoundPicker_SetText();
     }
 }
@@ -331,8 +331,8 @@ void UIVsRoundPicker_EditorDraw(void)
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->textAnimator, true, 4);
     self->textFrames = UIWidgets->textFrames;
     RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->numbersAnimator, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorL, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorR, true, 1);
 
     UIVsRoundPicker_Draw();
 

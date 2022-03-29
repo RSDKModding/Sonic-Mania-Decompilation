@@ -307,9 +307,9 @@ void UIReplayCarousel_SetupVisibleReplayButtons(void)
                 RSDK.SetText(&self->zoneNameText[i], "", 0);
                 Localization_GetZoneName(&self->zoneNameText[i], zoneID);
                 if (zoneID == 5 || zoneID == 10)
-                    RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 5, &self->zoneNameText[i]);
+                    RSDK.SetSpriteString(UIWidgets->uiFrames, 5, &self->zoneNameText[i]);
                 else
-                    RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &self->zoneNameText[i]);
+                    RSDK.SetSpriteString(UIWidgets->uiFrames, 3, &self->zoneNameText[i]);
 
                 RSDK.SetText(&self->createdAtText[i], buffer, 0);
                 RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &self->createdAtText[i]);
@@ -451,10 +451,10 @@ void UIReplayCarousel_DrawReplayInfo(int32 drawX, int32 drawY, uint8 zoneID, uin
         int32 id  = replayID - self->visibleReplayOffset;
         drawPos.x = drawX - 0x390000;
         if (zoneID == 5 || zoneID == 10) {
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &self->zoneNameAnimators[id], true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 5, &self->zoneNameAnimators[id], true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->zoneNameAnimators[id], true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->zoneNameAnimators[id], true, 0);
         }
         RSDK.DrawText(&self->zoneNameAnimators[id], &drawPos, &self->zoneNameText[id], 0, self->zoneNameText[id].length, ALIGN_LEFT, 0, 2, 0, false);
     }

@@ -48,7 +48,7 @@ struct ObjectBSS_Collectable {
     int32 screenYValues[32];
     int32 medalScreenYVals[32];
     uint16 aniFrames;
-    uint16 ringSpriteIndex;
+    uint16 ringFrames;
 };
 
 // Entity Class

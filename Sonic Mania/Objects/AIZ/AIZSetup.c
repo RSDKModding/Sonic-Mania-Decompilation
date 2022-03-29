@@ -124,7 +124,7 @@ void AIZSetup_StageLoad(void)
 
     AIZSetup->cutsceneInit    = false;
     AIZSetup->aniTiles        = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
-    AIZSetup->knuxSpriteIndex = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
+    AIZSetup->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
 
 #if RETRO_USE_PLUS
     if (RSDK.GetSceneLayerID("Background 4") >= DRAWLAYER_COUNT) {
@@ -676,7 +676,7 @@ bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
         player1->stateInput = StateMachine_None;
         player1->direction  = FLIP_X;
         player1->drawFX     = FX_FLIP;
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 1, &player1->animator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 1, &player1->animator, true, 0);
     }
     return host->timer == 180;
 }
@@ -690,7 +690,7 @@ bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
         case 0: RSDK.PlaySfx(AIZKingClaw->sfxClack, false, 0); break;
         case 10:
             RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, false, 0);
-            RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 2, &player1->animator, true, 0);
+            RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 2, &player1->animator, true, 0);
             break;
         case 40: return true;
         default: break;
@@ -719,11 +719,11 @@ bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
     unused(camera);
 
     if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 0, &player1->animator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 0, &player1->animator, true, 0);
     }
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 3, &player1->animator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 3, &player1->animator, true, 0);
         foreach_active(Animals, animal)
         {
             animal->active    = ACTIVE_NORMAL;
@@ -813,7 +813,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         if (player1->velocity.x < 0)
             player1->velocity.x = 0;
         player1->state = Player_State_None;
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 5, &player1->animator, false, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 5, &player1->animator, false, 0);
         return true;
     }
     else {
@@ -822,7 +822,7 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
             player1->velocity.x -= 0x1000;
         if (player1->velocity.x < 0)
             player1->velocity.x = 0;
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 4, &player1->animator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 4, &player1->animator, true, 0);
     }
     return false;
 }

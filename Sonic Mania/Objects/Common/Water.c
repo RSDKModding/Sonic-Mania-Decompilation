@@ -489,6 +489,7 @@ void Water_State_Palette(void)
                         }
                     }
                 }
+
                 if (!player->sidekick && player->drownTimer >= 1080) {
                     player->drownTimer = 0;
                     Music_EndQueuedTrack(TRACK_DROWNING, false);

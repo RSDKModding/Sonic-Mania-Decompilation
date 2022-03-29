@@ -453,6 +453,12 @@ void DecodePNGData(RSDK::ImagePNG *image, byte *dataPtr)
     }
 }
 
+// PNG Chunk Header Signatures
+#define PNG_SIG_HEADER  0x52444849 // IHDR
+#define PNG_SIG_END     0x444E4549 // IEND
+#define PNG_SIG_PALETTE 0x45544C50 // PLTE
+#define PNG_SIG_DATA    0x54414449 // IDAT
+
 bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
 {
     if (fileName) {
@@ -463,7 +469,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                     chunkHeader = ReadInt32(&info, false);
 
                     bool32 endFlag = false;
-                    if (chunkHeader == 'RDHI' && chunkSize == 13) {
+                    if (chunkHeader == PNG_SIG_HEADER && chunkSize == 13) {
                         width       = ReadInt32(&info, true);
                         height      = ReadInt32(&info, true);
                         bitDepth    = ReadInt8(&info);
@@ -479,10 +485,10 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                         if (loadHeader)
                             return true;
                     }
-                    else if (chunkHeader == 'DNEI') {
+                    else if (chunkHeader == PNG_SIG_END) {
                         endFlag = true;
                     }
-                    else if (chunkHeader == 'ETLP') {
+                    else if (chunkHeader == PNG_SIG_PALETTE) {
                         int colourCnt = chunkSize / 3;
                         if (!(chunkSize % 3)) {
                             chunkSize = colourCnt;
@@ -498,7 +504,7 @@ bool32 RSDK::ImagePNG::Load(const char *fileName, bool32 loadHeader)
                             }
                         }
                     }
-                    else if (chunkHeader == 'TADI') {
+                    else if (chunkHeader == PNG_SIG_DATA) {
                         dataSize = sizeof(uint) * height * (width + 1);
                         if (!dataPtr) {
                             AllocateStorage(dataSize, (void **)&dataPtr, DATASET_TMP, false);

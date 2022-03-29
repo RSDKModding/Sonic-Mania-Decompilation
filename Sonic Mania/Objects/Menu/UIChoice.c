@@ -128,8 +128,8 @@ void UIChoice_Create(void *data)
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
         self->aniFrames = UIWidgets->textFrames;
         RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->animator2, true, self->auxFrameID);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator4, true, 1);
     }
 }
 
@@ -315,8 +315,8 @@ void UIChoice_EditorDraw(void)
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
     self->aniFrames = UIWidgets->textFrames;
     RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->animator2, true, self->auxFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator4, true, 1);
 
     UIChoice_Draw();
 

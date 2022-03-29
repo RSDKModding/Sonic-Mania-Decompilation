@@ -356,9 +356,9 @@ void RSDK::setupFunctions()
     GenerateBlendLookupTable();
     InitSystemSurfaces();
 
-    memset(RSDKFunctionTable, NULL, FUNCTABLE_COUNT * sizeof(void *));
+    memset(RSDKFunctionTable, 0, FUNCTABLE_COUNT * sizeof(void *));
 #if RETRO_REV02
-    memset(APIFunctionTable, NULL, APITABLE_COUNT * sizeof(void *));
+    memset(APIFunctionTable, 0, APITABLE_COUNT * sizeof(void *));
 #endif
 
 #if RETRO_REV02

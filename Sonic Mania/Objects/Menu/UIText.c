@@ -16,7 +16,7 @@ void UIText_Update(void)
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteAnimation(UIText->aniFrames, self->highlighted + self->listID, &self->animator, true, 0);
         else
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, self->highlighted + self->listID, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiFrames, self->highlighted + self->listID, &self->animator, true, 0);
     }
 }
 
@@ -35,7 +35,7 @@ void UIText_Draw(void)
     if (!UIWidgets || UIText->aniFrames)
         spr = UIText->aniFrames;
     else
-        spr = UIWidgets->uiSpriteIndex;
+        spr = UIWidgets->uiFrames;
     int32 width = RSDK.GetStringWidth(spr, self->listID, &self->text, 0, self->text.length, 0);
     if (self->align == ALIGN_RIGHT) {
         drawPos.x -= width << 15;
@@ -52,7 +52,7 @@ void UIText_Create(void *data)
     if (!UIWidgets || UIText->aniFrames)
         RSDK.SetSpriteAnimation(UIText->aniFrames, self->listID, &self->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, self->listID, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, self->listID, &self->animator, true, 0);
 
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
@@ -63,7 +63,7 @@ void UIText_Create(void *data)
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteString(UIText->aniFrames, self->listID, &self->text);
         else
-            RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, self->listID, &self->text);
+            RSDK.SetSpriteString(UIWidgets->uiFrames, self->listID, &self->text);
     }
 }
 
@@ -76,7 +76,7 @@ void UIText_EditorDraw(void)
     if (!UIWidgets || UIText->aniFrames)
         RSDK.SetSpriteAnimation(UIText->aniFrames, self->highlighted + self->listID, &self->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, self->listID, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, self->listID, &self->animator, true, 0);
 
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

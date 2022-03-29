@@ -167,14 +167,14 @@ void Summary_SetTextString(uint8 anim, void *text, const char *str)
     if (!UIWidgets || UIText->aniFrames)
         RSDK.SetSpriteAnimation(UIText->aniFrames, anim, &uiText->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, anim, &uiText->animator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, anim, &uiText->animator, true, 0);
 
     RSDK.PrependText(&uiText->text, str);
     uiText->listID = anim;
     if (!UIWidgets || UIText->aniFrames)
         RSDK.SetSpriteString(UIText->aniFrames, uiText->listID, &uiText->text);
     else
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, uiText->listID, &uiText->text);
+        RSDK.SetSpriteString(UIWidgets->uiFrames, uiText->listID, &uiText->text);
 }
 void Summary_SetStageTime(char *buffer, int32 time)
 {

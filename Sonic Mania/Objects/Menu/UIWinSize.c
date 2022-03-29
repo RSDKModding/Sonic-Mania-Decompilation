@@ -104,8 +104,8 @@ void UIWinSize_Create(void *data)
         RSDK.SetText(&self->text, "", 0x100);
         self->processButtonCB = UIWinSize_ProcessButtonCB;
         self->touchCB         = UIWinSize_ProcessTouchCB;
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorL, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorR, true, 1);
         RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
     }
 }
@@ -331,8 +331,8 @@ void UIWinSize_EditorDraw(void)
     self->selection     = winHeight / SCREEN_YSIZE;
     self->bgEdgeSize    = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorL, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->arrowAnimatorR, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorL, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->arrowAnimatorR, true, 1);
     RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
 
     UIWinSize_Draw();

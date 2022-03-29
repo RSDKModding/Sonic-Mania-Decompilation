@@ -129,9 +129,9 @@ void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 play
     RSDK.CopyPalette((zone >> 3) + 1, 32 * zone, 0, 224, 32);
     UILeaderboard_SetupEntrySprites(leaderboard);
     Localization_GetZoneName(&leaderboard->zoneName, zone);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &leaderboard->zoneNameAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &leaderboard->zoneNameAnimator, true, 0);
     if (!SceneInfo->inEditor)
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &leaderboard->zoneName);
+        RSDK.SetSpriteString(UIWidgets->uiFrames, 3, &leaderboard->zoneName);
 }
 
 #endif

@@ -65,9 +65,9 @@ void UITABanner_SetupDetails(uint8 characterID, EntityUITABanner *banner, uint8 
     RSDK.SetText(&banner->zoneName, "", 0);
     Localization_GetZoneName(&banner->zoneName, zoneID);
     if (zoneID == 5 || zoneID == 10)
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 5, &banner->zoneName);
+        RSDK.SetSpriteString(UIWidgets->uiFrames, 5, &banner->zoneName);
     else
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &banner->zoneName);
+        RSDK.SetSpriteString(UIWidgets->uiFrames, 3, &banner->zoneName);
     banner->actID       = actID;
     banner->characterID = characterID;
     banner->zoneID      = zoneID;
@@ -203,10 +203,10 @@ void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, boo
     drawPos.x = drawX - 0x390000;
     if (!SceneInfo->inEditor) {
         if (zoneID == 5 || zoneID == 10) {
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &self->zoneNameAnimator, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 5, &self->zoneNameAnimator, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->zoneNameAnimator, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 3, &self->zoneNameAnimator, true, 0);
         }
         RSDK.DrawText(&self->zoneNameAnimator, &drawPos, &self->zoneName, 0, self->zoneName.length, ALIGN_LEFT, 0, 2, 0, false);
     }

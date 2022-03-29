@@ -40,7 +40,7 @@ void UIHeading_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x300000;
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->headingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 0, &self->headingAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIHeading->textFrames, self->headingID, &self->textAnimator, true, 0);
         self->textFrames = UIHeading->textFrames;
     }
@@ -74,7 +74,7 @@ void UIHeading_EditorDraw(void)
     self->drawOrder     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->headingAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 0, &self->headingAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIHeading->textFrames, self->headingID, &self->textAnimator, true, 0);
     self->textFrames = UIHeading->textFrames;
 

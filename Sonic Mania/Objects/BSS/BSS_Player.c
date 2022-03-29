@@ -46,8 +46,7 @@ void BSS_Player_Update(void)
         }
     }
 
-    int32 grav           = (self->gravityStrength >> 1) - (self->gravityStrength >> 4);
-    self->position.y = grav;
+    self->position.y = (self->gravityStrength >> 1) - (self->gravityStrength >> 4);
     if (SceneInfo->entitySlot)
         self->position.y += 0xBA0000;
     else
@@ -90,11 +89,12 @@ void BSS_Player_Draw(void)
     drawPos.x = ScreenInfo->centerX << 16;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    uint8 charID = globals->playerID & 0xFF;
-    if (charID == ID_TAILS && self->animator.animationID == 1)
+    // if we're tails, draw his tail
+    if (checkPlayerID(ID_TAILS, 1) && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #if RETRO_USE_PLUS
-    else if (charID == ID_RAY && self->animator.animationID == 1)
+    // if we're ray, draw his tail
+    else if (checkPlayerID(ID_RAY, 1) && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #endif
 }
@@ -108,22 +108,28 @@ void BSS_Player_Create(void *data)
         self->drawOrder     = 4;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         switch (globals->playerID & 0xFF) {
             case ID_TAILS:
-                self->aniFrames = BSS_Player->tailsSpriteIndex;
+                self->aniFrames = BSS_Player->tailsFrames;
                 RSDK.SetSpriteAnimation(self->aniFrames, 4, &self->tailAnimator, true, 0);
                 break;
-            case ID_KNUCKLES: self->aniFrames = BSS_Player->knuxSpriteIndex; break;
+
+            case ID_KNUCKLES: self->aniFrames = BSS_Player->knuxFrames; break;
+
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: self->aniFrames = BSS_Player->mightySpriteIndex; break;
+            case ID_MIGHTY: self->aniFrames = BSS_Player->mightyFrames; break;
+
             case ID_RAY:
-                self->aniFrames = BSS_Player->raySpriteIndex;
+                self->aniFrames = BSS_Player->rayFrames;
                 RSDK.SetSpriteAnimation(self->aniFrames, 4, &self->tailAnimator, true, 0);
                 break;
 #endif
-            default: self->aniFrames = BSS_Player->sonicSpriteIndex; break;
+            case ID_SONIC:
+            default: self->aniFrames = BSS_Player->sonicFrames; break;
         }
 
+        // The BSS Player gets reset into P1 slot, no other player entities ever get set, so sidekick BSS player behaviour goes unused...
         if (SceneInfo->entitySlot) {
             self->stateInput = BSS_Player_ProcessP2Input;
             self->sidekick   = true;
@@ -139,14 +145,17 @@ void BSS_Player_Create(void *data)
 
 void BSS_Player_StageLoad(void)
 {
-    BSS_Player->sonicSpriteIndex  = RSDK.LoadSpriteAnimation("SpecialBS/Sonic.bin", SCOPE_STAGE);
-    BSS_Player->tailsSpriteIndex  = RSDK.LoadSpriteAnimation("SpecialBS/Tails.bin", SCOPE_STAGE);
-    BSS_Player->knuxSpriteIndex   = RSDK.LoadSpriteAnimation("SpecialBS/Knuckles.bin", SCOPE_STAGE);
-    BSS_Player->mightySpriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Mighty.bin", SCOPE_STAGE);
-    BSS_Player->raySpriteIndex    = RSDK.LoadSpriteAnimation("SpecialBS/Ray.bin", SCOPE_STAGE);
+    BSS_Player->sonicFrames  = RSDK.LoadSpriteAnimation("SpecialBS/Sonic.bin", SCOPE_STAGE);
+    BSS_Player->tailsFrames  = RSDK.LoadSpriteAnimation("SpecialBS/Tails.bin", SCOPE_STAGE);
+    BSS_Player->knuxFrames   = RSDK.LoadSpriteAnimation("SpecialBS/Knuckles.bin", SCOPE_STAGE);
+    BSS_Player->mightyFrames = RSDK.LoadSpriteAnimation("SpecialBS/Mighty.bin", SCOPE_STAGE);
+    BSS_Player->rayFrames    = RSDK.LoadSpriteAnimation("SpecialBS/Ray.bin", SCOPE_STAGE);
+
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
+
     RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, NULL);
+
     BSS_Player->sfxJump = RSDK.GetSfx("Global/Jump.wav");
 }
 
@@ -171,14 +180,17 @@ void BSS_Player_ProcessP1Input(void)
                             ControllerInfo->keyRight.down |= true;
                             ControllerInfo[self->controllerID].keyRight.down = true;
                             break;
+
                         case 1:
                             ControllerInfo->keyDown.down |= true;
                             ControllerInfo[self->controllerID].keyDown.down = true;
                             break;
+
                         case 2:
                             ControllerInfo->keyLeft.down |= true;
                             ControllerInfo[self->controllerID].keyLeft.down = true;
                             break;
+
                         case 3:
                             ControllerInfo->keyUp.down |= true;
                             ControllerInfo[self->controllerID].keyUp.down = true;
@@ -229,10 +241,10 @@ void BSS_Player_ProcessP1Input(void)
 #endif
 
         RSDKControllerState *controller = &ControllerInfo[self->controllerID];
-        self->up                  = controller->keyUp.down;
-        self->down                = controller->keyDown.down;
-        self->left                = controller->keyLeft.down;
-        self->right               = controller->keyRight.down;
+        self->up                        = controller->keyUp.down;
+        self->down                      = controller->keyDown.down;
+        self->left                      = controller->keyLeft.down;
+        self->right                     = controller->keyRight.down;
 
         self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
         self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
@@ -265,7 +277,7 @@ void BSS_Player_ProcessP1Input(void)
 void BSS_Player_ProcessP2Input(void)
 {
     RSDK_THIS(BSS_Player);
-    //EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
+    // EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     BSS_Player->jumpPressState <<= 1;
     BSS_Player->jumpPressState |= self->jumpPress;
     BSS_Player->jumpPressState &= 0xFFFF;

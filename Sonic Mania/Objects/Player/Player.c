@@ -3759,22 +3759,23 @@ void Player_State_ForceRoll_Ground(void)
     self->left        = left;
     self->right       = right;
     self->applyJumpCap = false;
+
     if (!self->onGround) {
         self->state = Player_State_ForceRoll_Air;
         Player_HandleAirMovement();
     }
     else {
-        if (self->characterID == ID_TAILS) {
+        if (self->characterID == ID_TAILS) 
             self->animator.speed = 120;
-        }
-        else {
+        else 
             self->animator.speed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
-        }
+
         if (self->animator.speed > 0xF0)
             self->animator.speed = 0xF0;
-        if (self->camera) {
+
+        if (self->camera) 
             self->camera->offsetYFlag = false;
-        }
+
         self->jumpAbilityState = 0;
     }
 }

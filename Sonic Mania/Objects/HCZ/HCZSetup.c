@@ -16,69 +16,67 @@ void HCZSetup_LateUpdate(void) {}
 void HCZSetup_StaticUpdate(void)
 {
     if (!(Zone->timer & 3)) {
-        ++HCZSetup->bg->deformationOffsetW;
-        if (!(Zone->timer & 3)) {
-            HCZSetup->timerA += 16;
-            HCZSetup->timerA &= 0x3F;
-            RSDK.DrawAniTiles(HCZSetup->aniTiles1, 386, 0, HCZSetup->timerA, 64, 16);
+        ++HCZSetup->background2Layer->deformationOffsetW;
 
-            HCZSetup->timerB += 32;
-            HCZSetup->timerB &= 0x1FF;
-            RSDK.DrawAniTiles(HCZSetup->aniTiles2, 820, HCZSetup->timerB, 0, 32, 96);
-            RSDK.DrawAniTiles(HCZSetup->aniTiles2, 857, HCZSetup->timerB, 96, 32, 128);
+        // Handle Animating the BG candle & waterline tiles
+        if (!(Zone->timer & 3)) {
+            HCZSetup->bgCandlesAniTileFrame += 0x10;
+            HCZSetup->bgCandlesAniTileFrame &= 0x3F;
+            RSDK.DrawAniTiles(HCZSetup->bgCandlesAniTiles, 386, 0, HCZSetup->bgCandlesAniTileFrame, 64, 16);
+
+            HCZSetup->waterlineAniTileFrame += 0x20;
+            HCZSetup->waterlineAniTileFrame &= 0x1FF;
+            RSDK.DrawAniTiles(HCZSetup->waterlineAniTiles, 820, HCZSetup->waterlineAniTileFrame, 0, 32, 96);
+            RSDK.DrawAniTiles(HCZSetup->waterlineAniTiles, 857, HCZSetup->waterlineAniTileFrame, 96, 32, 128);
             RSDK.RotatePalette(0, 176, 182, true);
         }
     }
 
-    int32 *sizes = HCZSetup->aniTilesDelay;
-    int32 sizeX  = 0;
-    int32 sizeY  = 0;
+    // Handle Animating the pendulum tiles
+    int32 *durations = HCZSetup->pendulumAniTileDurations;
+    int32 duration1  = 0;
+    int32 duration2  = 0;
 
     for (int32 i = 0; i < 7; ++i) {
-        sizeX += sizes[0];
-        sizeY += sizes[1];
-        sizes += 2;
+        duration1 += durations[0];
+        duration2 += durations[1];
+        durations += 2;
     }
 
-    int32 val   = Zone->timer % (sizeY + sizeX);
-    int32 valID = 0;
+    int32 pendulumTimer        = Zone->timer % (duration2 + duration1);
+    int32 pendulumAniTileFrame = 0;
 
-    while (val >= HCZSetup->aniTilesDelay[valID]) {
-        val -= HCZSetup->aniTilesDelay[valID];
-        ++valID;
+    while (pendulumTimer >= HCZSetup->pendulumAniTileDurations[pendulumAniTileFrame]) {
+        pendulumTimer -= HCZSetup->pendulumAniTileDurations[pendulumAniTileFrame++];
     }
 
-    if (!val) {
-        RSDK.DrawAniTiles(HCZSetup->aniTiles3, 874, 0, 16 * valID, 32, 16);
-    }
+    if (!pendulumTimer)
+        RSDK.DrawAniTiles(HCZSetup->pendulumAniTiles, 874, 0, 16 * pendulumAniTileFrame, 32, 16);
 
     if (!(Zone->timer & 1)) {
-        for (int32 id = Zone->fgLow; id <= Zone->fgHigh; ++id) {
-            ++RSDK.GetSceneLayer(id)->deformationOffsetW;
-        }
+        for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) ++RSDK.GetSceneLayer(layerID)->deformationOffsetW;
     }
 
 #if RETRO_USE_PLUS
-    if (HCZSetup->activePlayerCount) {
-        if (HCZSetup->playingLoopSFX) {
-            if (!(HCZSetup->waterfallSFXTimer & 0x1F)) {
+    if (HCZSetup->waterslidingPlayerCount) {
+        if (HCZSetup->playingWaterfallLoop) {
+            if (!(HCZSetup->waterfallLoopTimer & 0x1F)) {
                 RSDK.StopSfx(HCZSetup->sfxWaterfall);
-                RSDK.PlaySfx(HCZSetup->sfxWaterfallLoop, 0, 255);
+                RSDK.PlaySfx(HCZSetup->sfxWaterfallLoop, false, 0xFF);
             }
-            ++HCZSetup->waterfallSFXTimer;
         }
         else {
-            HCZSetup->waterfallSFXTimer = 0;
-            HCZSetup->playingLoopSFX    = true;
-            RSDK.PlaySfx(HCZSetup->sfxWaterfall, 0, 255);
-            ++HCZSetup->waterfallSFXTimer;
+            HCZSetup->waterfallLoopTimer   = 0;
+            HCZSetup->playingWaterfallLoop = true;
+            RSDK.PlaySfx(HCZSetup->sfxWaterfall, false, 0xFF);
         }
+        ++HCZSetup->waterfallLoopTimer;
     }
     else {
-        HCZSetup->playingLoopSFX = false;
+        HCZSetup->playingWaterfallLoop = false;
     }
 
-    HCZSetup->activePlayerCount = 0;
+    HCZSetup->waterslidingPlayerCount = 0;
     foreach_active(Player, player)
     {
         RSDK.GetEntityID(player);
@@ -97,13 +95,11 @@ void HCZSetup_StaticUpdate(void)
                             player->state           = Player_State_WaterSlide;
                         }
 
-                        if (player->onGround) {
-                            ++HCZSetup->activePlayerCount;
-                        }
+                        if (player->onGround)
+                            ++HCZSetup->waterslidingPlayerCount;
                     }
-                    else if (player->animator.animationID == ANI_FLUME) {
-                        ++HCZSetup->activePlayerCount;
-                    }
+                    else if (player->animator.animationID == ANI_FLUME)
+                        ++HCZSetup->waterslidingPlayerCount;
                 }
             }
         }
@@ -117,98 +113,100 @@ void HCZSetup_Create(void *data) {}
 
 void HCZSetup_StageLoad(void)
 {
-    HCZSetup->aniTiles1 = RSDK.LoadSpriteSheet("HCZ/AniTiles.gif", SCOPE_STAGE);
-    HCZSetup->aniTiles2 = RSDK.LoadSpriteSheet("HCZ/AniTiles2.gif", SCOPE_STAGE);
-    HCZSetup->aniTiles3 = RSDK.LoadSpriteSheet("HCZ/AniTiles3.gif", SCOPE_STAGE);
+    HCZSetup->bgCandlesAniTiles = RSDK.LoadSpriteSheet("HCZ/AniTiles.gif", SCOPE_STAGE);
+    HCZSetup->waterlineAniTiles = RSDK.LoadSpriteSheet("HCZ/AniTiles2.gif", SCOPE_STAGE);
+    HCZSetup->pendulumAniTiles  = RSDK.LoadSpriteSheet("HCZ/AniTiles3.gif", SCOPE_STAGE);
 
-    HCZSetup->bg = RSDK.GetSceneLayer(1);
+    HCZSetup->background2Layer = RSDK.GetSceneLayer(1);
+    // Add some deformations to background 2
     for (int32 i = 0; i < 0x200; i += 0x10) {
-        int32 val = RSDK.Rand(0, 4);
+        int32 deformation = RSDK.Rand(0, 4);
 
-        int32 pos = i;
-        pos     = minVal(0x200, pos);
-        pos     = maxVal(0x000, pos);
-
-        int32 *deformData = &HCZSetup->bg->deformationDataW[pos];
+        int32 *deformDataW = &HCZSetup->background2Layer->deformationDataW[clampVal(i, 0, 0x200)];
 
         int32 angle = 0;
         for (int32 d = 0; d < 0x10; ++d) {
-            *deformData = val * RSDK.Sin1024(angle) >> 10;
-            angle += 64;
+            *deformDataW = deformation * RSDK.Sin1024(angle) >> 10;
+            angle += 0x40;
         }
 
-        memcpy(&HCZSetup->bg->deformationDataW[0x200], HCZSetup->bg->deformationDataW, 0x200 * sizeof(int32));
+        memcpy(&HCZSetup->background2Layer->deformationDataW[0x200], &HCZSetup->background2Layer->deformationDataW[0], 0x200 * sizeof(int32));
     }
 
-    if (Zone->actID == 1) {
-        HCZSetup->bg->scanlineCallback = HCZSetup_ScanlineCallback;
-    }
+    // if Act 2, Setup the waterline effect
+    if (Zone->actID == 1)
+        HCZSetup->background2Layer->scanlineCallback = HCZSetup_BGWaterLineScanlineCB;
 
-    int32 id = Zone->fgLow;
-    while (id <= Zone->fgHigh) {
-        TileLayer *layer = RSDK.GetSceneLayer(id);
-        int32 *deformData  = layer->deformationDataW;
+    // All Layers between FG Low & FG High get foreground water deformation applied
+    for (int32 layerID = Zone->fgLow; layerID <= Zone->fgHigh; ++layerID) {
+        TileLayer *layer   = RSDK.GetSceneLayer(layerID);
+        int32 *deformDataW = layer->deformationDataW;
 
+        // HCZ FG underwater deformation values
         for (int32 i = 0; i < 4; ++i) {
-            deformData[0]  = 1;
-            deformData[1]  = 1;
-            deformData[2]  = 2;
-            deformData[3]  = 2;
-            deformData[4]  = 3;
-            deformData[5]  = 3;
-            deformData[6]  = 3;
-            deformData[7]  = 3;
-            deformData[8]  = 2;
-            deformData[9]  = 2;
-            deformData[10] = 1;
-            deformData[11] = 1;
+            deformDataW[0]  = 1;
+            deformDataW[1]  = 1;
+            deformDataW[2]  = 2;
+            deformDataW[3]  = 2;
+            deformDataW[4]  = 3;
+            deformDataW[5]  = 3;
+            deformDataW[6]  = 3;
+            deformDataW[7]  = 3;
+            deformDataW[8]  = 2;
+            deformDataW[9]  = 2;
+            deformDataW[10] = 1;
+            deformDataW[11] = 1;
 
-            deformData[128] = 1;
-            deformData[129] = 1;
-            deformData[130] = 2;
-            deformData[131] = 2;
-            deformData[132] = 3;
-            deformData[133] = 3;
-            deformData[134] = 3;
-            deformData[135] = 3;
-            deformData[136] = 2;
-            deformData[137] = 2;
-            deformData[138] = 1;
-            deformData[139] = 1;
+            deformDataW[128] = 1;
+            deformDataW[129] = 1;
+            deformDataW[130] = 2;
+            deformDataW[131] = 2;
+            deformDataW[132] = 3;
+            deformDataW[133] = 3;
+            deformDataW[134] = 3;
+            deformDataW[135] = 3;
+            deformDataW[136] = 2;
+            deformDataW[137] = 2;
+            deformDataW[138] = 1;
+            deformDataW[139] = 1;
 
-            deformData[160] = -1;
-            deformData[161] = -1;
-            deformData[162] = -2;
-            deformData[163] = -2;
-            deformData[164] = -3;
-            deformData[165] = -3;
-            deformData[166] = -3;
-            deformData[167] = -3;
-            deformData[168] = -2;
-            deformData[169] = -2;
-            deformData[170] = -1;
-            deformData[171] = -1;
+            deformDataW[160] = -1;
+            deformDataW[161] = -1;
+            deformDataW[162] = -2;
+            deformDataW[163] = -2;
+            deformDataW[164] = -3;
+            deformDataW[165] = -3;
+            deformDataW[166] = -3;
+            deformDataW[167] = -3;
+            deformDataW[168] = -2;
+            deformDataW[169] = -2;
+            deformDataW[170] = -1;
+            deformDataW[171] = -1;
 
-            deformData += 0x100;
+            deformDataW += 0x100;
         }
-        id++;
     }
+
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_ROCKY;
+
     RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
     RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
 
     Water->waterPalette = 1;
+
     if (Zone->actID) {
         if (!PlayerHelpers_CheckStageReload())
-            PlayerHelpers_CheckPlayerPos(0x5900000, 0xB00000, 0x2600000, 0x6800000);
+            PlayerHelpers_CheckPlayerPos(1424 << 16, 176 << 16, 608 << 16, 1664 << 16);
+
         Zone->cameraBoundsL[0] = 168;
         Zone->cameraBoundsL[1] = 168;
         Zone->cameraBoundsL[2] = 168;
         Zone->cameraBoundsL[3] = 168;
-        if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
+
+        if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload())
             Zone_ReloadStoredEntities(388 << 16, 1696 << 16, true);
-        }
+
         Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
     }
     else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
@@ -227,42 +225,44 @@ void HCZSetup_StageLoad(void)
 #endif
 }
 
-void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
+void HCZSetup_BGWaterLineScanlineCB(ScanlineInfo *scanlines)
 {
-    RSDK.ProcessParallax(HCZSetup->bg);
+    RSDK.ProcessParallax(HCZSetup->background2Layer);
 
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
-    int32 scrH           = screen->height;
-    int32 scrX           = screen->position.x;
-    int32 scrY           = screen->position.y;
-    int32 height         = 0x210 - (scrY >> 2);
-    int32 waterPos       = (Water->waterLevel >> 0x10) - scrY;
+    int32 screenY          = 0x210 - (screen->position.y >> 2);
+    int32 waterLevel       = (Water->waterLevel >> 0x10) - screen->position.y;
 
-    int32 div = maxVal(1, abs(height - waterPos));
-    int32 val = maxVal(0x10000, 0x640000 / div);
+    int32 distance       = maxVal(1, abs(screenY - waterLevel));
+    int32 scanlineHeight = maxVal(0x10000, 0x640000 / distance);
 
-    height   = clampVal(height, 0, scrH);
-    waterPos = clampVal(waterPos, 0, scrH);
+    screenY    = clampVal(screenY, 0, screen->height);
+    waterLevel = clampVal(waterLevel, 0, screen->height);
 
-    ScanlineInfo *scanlinePtr = &scanlines[height];
-    if (height >= waterPos) {
-        int32 pos = 0x4D00000;
-        if (waterPos < height) {
-            for (int32 i = 0; i < height - waterPos; ++i) {
-                scanlinePtr->position.x = (((0x3540000 - 0xC000 * (pos >> 16)) / 100 + 0x10000) * scrX) & 0x1FFFFFF;
-                scanlinePtr->position.y = pos;
-                pos -= val;
-                --scanlinePtr;
-            }
+    ScanlineInfo *scanlinePtr = &scanlines[screenY];
+
+    // scanlinePtr->position.x handles the horizontal scroll that gives water the parallax effect
+    // scanlinePtr->position.y handles the cool "water line" effect
+
+    // if above OR below, if it's equal, the water covers it all anyways
+    if (screenY > waterLevel) {      // below the waterline
+        int32 scanlineY = 0x4D00000; // y = 1,232 (bottom most tile of the water tiles)
+        for (int32 i = 0; i < screenY - waterLevel; ++i) {
+            // 0x3540000 = 852 (top most tile of the below water tiles)
+            scanlinePtr->position.x = (((0x3540000 - 0xC000 * (scanlineY >> 16)) / 100 + 0x10000) * screen->position.x) & 0x1FFFFFF;
+            scanlinePtr->position.y = scanlineY;
+            scanlineY -= scanlineHeight;
+            --scanlinePtr;
         }
     }
-    else {
-        int32 pos = 0x40C0000;
-        for (int32 i = 0; i < waterPos - height; ++i) {
-            int32 distance            = 0x46C - (pos >> 16);
-            scanlinePtr->position.x = (((-0xC000 * distance) / 100 + 0x10000) * scrX) & 0x1FFFFFF;
-            scanlinePtr->position.y = pos;
-            pos += val;
+    else if (screenY < waterLevel) { // above the waterline
+        int32 scanlineY = 0x40C0000; // y = 1,036 (top most tile of the water tiles)
+        for (int32 i = 0; i < waterLevel - screenY; ++i) {
+            // y = 0x46C = 1,132 (bottom most tile of the above water tiles)
+            int32 distance          = 0x46C - (scanlineY >> 16);
+            scanlinePtr->position.x = (((-0xC000 * distance) / 100 + 0x10000) * screen->position.x) & 0x1FFFFFF;
+            scanlinePtr->position.y = scanlineY;
+            scanlineY += scanlineHeight;
             ++scanlinePtr;
         }
     }
@@ -276,8 +276,9 @@ void HCZSetup_HandleActTransition(void)
 
 void HCZSetup_StageFinishCB_Act2(void)
 {
-    if (globals->gameMode == MODE_MANIA && (globals->playerID & 0xFF) == ID_KNUCKLES)
+    if (globals->gameMode == MODE_MANIA && checkPlayerID(ID_KNUCKLES, 1))
         RSDK.SetScene("Cutscenes", "Mirage Saloon K Intro");
+
     Zone_StartFadeOut(10, 0x000000);
 }
 

@@ -8,11 +8,11 @@ struct ObjectBSS_Player {
     RSDK_OBJECT
     uint16 jumpPressState;
     uint16 unused1;
-    uint16 sonicSpriteIndex;
-    uint16 tailsSpriteIndex;
-    uint16 knuxSpriteIndex;
-    uint16 mightySpriteIndex;
-    uint16 raySpriteIndex;
+    uint16 sonicFrames;
+    uint16 tailsFrames;
+    uint16 knuxFrames;
+    uint16 mightyFrames;
+    uint16 rayFrames;
     uint16 sfxJump;
 };
 
