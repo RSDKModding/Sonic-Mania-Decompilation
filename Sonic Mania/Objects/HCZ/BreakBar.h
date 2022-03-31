@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BREAKBAR_V,
+    BREAKBAR_H,
+}BreakBarOrientations;
+
 // Object Class
 struct ObjectBreakBar {
     RSDK_OBJECT
@@ -21,7 +26,7 @@ struct EntityBreakBar {
     uint8 playerTimers[4];
     Vector2 startPos;
     int32 releaseTimer;
-    bool32 destroyFlag;
+    bool32 isBroken;
     Hitbox hitbox;
     Animator animator;
 };
@@ -46,7 +51,7 @@ void BreakBar_Serialize(void);
 void BreakBar_DrawSprites(void);
 
 void BreakBar_CheckPlayerCollisions(void);
-void BreakBar_HandlePlayerInteractions(void *p);
+void BreakBar_HandlePlayerInteractions(EntityPlayer *player);
 
 void BreakBar_State_Setup(void);
 void BreakBar_State_Main(void);

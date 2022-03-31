@@ -111,12 +111,12 @@ void Wisp_State_Setup(void)
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = 0;
     self->velocity.y = 0;
-    self->state      = Wisp_State_Buzzing;
+    self->state      = Wisp_State_Idle;
 
-    Wisp_State_Buzzing();
+    Wisp_State_Idle();
 }
 
-void Wisp_State_Buzzing(void)
+void Wisp_State_Idle(void)
 {
     RSDK_THIS(Wisp);
 
@@ -173,7 +173,7 @@ void Wisp_State_FlyTowardTarget(void)
 
     if (!--self->timer) {
         self->timer      = RSDK.Rand(0, 32);
-        self->state      = Wisp_State_Buzzing;
+        self->state      = Wisp_State_Idle;
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = FLIP_NONE;
@@ -203,9 +203,11 @@ void Wisp_EditorLoad(void)
 {
     Wisp->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Wisp.bin", SCOPE_STAGE);
 
+    // despite being editable, this variable is set to FLIP_NONE on create, thereby making the editable var's value unused
     RSDK_ACTIVE_VAR(Wisp, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Unused", FLIP_NONE);
+    // RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    // RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 

@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PULLCHAIN_NORMAL,
+}PullChainTypes;
+
 // Object Class
 struct ObjectPullChain {
     RSDK_OBJECT
@@ -23,19 +27,19 @@ struct EntityPullChain {
     bool32 activated;       // 70
     bool32 wasActivated;    // 74
     int32 pressPos;         // 78
-    Animator animator;
+    Animator hookAnimator;
     int32 length;
     int32 decorMode;
-    uint8 activePlayers1;
-    uint8 activePlayers2;
+    uint8 activePlayers;
+    uint8 releasedPlayers;
     Vector2 basePos;
-    int32 field_A8;
+    int32 unused;
     int32 chainOffset;
-    int32 timer[4];
+    int32 grabDelay[PLAYER_MAX];
     uint8 codeInputFlags;
-    int32 field_D0[18];
+    int32 cheatCodeInputs[18];
     Hitbox hitbox;
-    Animator animator2;
+    Animator chainAnimator;
 };
 
 // Object Struct

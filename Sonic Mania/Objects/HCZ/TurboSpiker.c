@@ -27,61 +27,62 @@ void TurboSpiker_StaticUpdate(void) {}
 void TurboSpiker_Draw(void)
 {
     RSDK_THIS(TurboSpiker);
+    RSDK.DrawSprite(&self->shellAnimator, NULL, false);
     RSDK.DrawSprite(&self->animator, NULL, false);
-    RSDK.DrawSprite(&self->spikeAnimator, NULL, false);
 }
 
 void TurboSpiker_Create(void *data)
 {
     RSDK_THIS(TurboSpiker);
-    self->launchPlayed = false;
+    self->playedLaunchSfx = false;
     self->visible      = true;
     self->drawFX |= FX_FLIP;
     self->drawOrder     = Zone->drawOrderLow + 1;
-    self->spawnPos      = self->position;
+    self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->spawnDir      = self->direction;
+    self->startDir      = self->direction;
+
     if (data) {
         self->active = ACTIVE_NORMAL;
     }
     else {
-        self->unused_64 = 0x10;
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &self->animator, true, 0);
-        self->state = TurboSpiker_Hermit_Create;
+        self->unused = 16;
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
+        self->state = TurboSpiker_State_Setup;
     }
 }
 
 void TurboSpiker_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HCZ"))
-        TurboSpiker->animID = RSDK.LoadSpriteAnimation("HCZ/TurboSpiker.bin", SCOPE_STAGE);
+        TurboSpiker->aniFrames = RSDK.LoadSpriteAnimation("HCZ/TurboSpiker.bin", SCOPE_STAGE);
 
-    TurboSpiker->hermitHitbox.left   = -14;
-    TurboSpiker->hermitHitbox.top    = -14;
-    TurboSpiker->hermitHitbox.right  = 14;
-    TurboSpiker->hermitHitbox.bottom = 14;
+    TurboSpiker->hitboxBadnik.left   = -14;
+    TurboSpiker->hitboxBadnik.top    = -14;
+    TurboSpiker->hitboxBadnik.right  = 14;
+    TurboSpiker->hitboxBadnik.bottom = 14;
 
-    TurboSpiker->spikeHitbox.left    = -5;
-    TurboSpiker->spikeHitbox.top     = -31;
-    TurboSpiker->spikeHitbox.right   = 9;
-    TurboSpiker->spikeHitbox.bottom  = 2;
+    TurboSpiker->hitboxSpike.left    = -5;
+    TurboSpiker->hitboxSpike.top     = -31;
+    TurboSpiker->hitboxSpike.right   = 9;
+    TurboSpiker->hitboxSpike.bottom  = 2;
 
-    TurboSpiker->checkbox.left       = -0x80;
-    TurboSpiker->checkbox.top        = -0x200;
-    TurboSpiker->checkbox.right      = 0x80;
-    TurboSpiker->checkbox.bottom     = 0x200;
+    TurboSpiker->hitboxRange.left       = -128;
+    TurboSpiker->hitboxRange.top        = -512;
+    TurboSpiker->hitboxRange.right      = 128;
+    TurboSpiker->hitboxRange.bottom     = 512;
 
-    TurboSpiker->launchSFX           = RSDK.GetSfx("Stage/Launch.wav");
-    TurboSpiker->splashSFX           = RSDK.GetSfx("Stage/Splash.wav");
+    TurboSpiker->sfxLaunch           = RSDK.GetSfx("Stage/Launch.wav");
+    TurboSpiker->sfxSplash           = RSDK.GetSfx("Stage/Splash.wav");
 
     DEBUGMODE_ADD_OBJ(TurboSpiker);
 }
 
 void TurboSpiker_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
@@ -97,9 +98,10 @@ void TurboSpiker_Hermit_Collide(void)
     RSDK_THIS(TurboSpiker);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &TurboSpiker->hermitHitbox) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &TurboSpiker->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
             if (self->spike)
                 destroyEntity(self->spike);
+
             destroyEntity(self);
         }
     }
@@ -108,162 +110,183 @@ void TurboSpiker_Hermit_Collide(void)
 void TurboSpiker_Hermit_CheckOffScreen(void)
 {
     RSDK_THIS(TurboSpiker);
-    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
-        self->position.x = self->spawnPos.x;
-        self->position.y = self->spawnPos.y;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
         if (self->spike)
             destroyEntity(self->spike);
-        self->direction = self->spawnDir;
+
+        self->direction = self->startDir;
         TurboSpiker_Create(NULL);
     }
 }
 
-void TurboSpiker_Hermit_NextState(void)
+void TurboSpiker_HandleMovement(void)
 {
     RSDK_THIS(TurboSpiker);
+
     self->position.x += self->velocity.x;
+
     if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
         self->timer = 0;
         if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000 * (self->direction ? -1 : 1), 0x80000, 8))
-            self->state = TurboSpiker_Hermit_Turn;
+            self->state = TurboSpiker_State_Turning;
         else
-            self->state = TurboSpiker_Hermit_Move;
+            self->state = TurboSpiker_State_Falling;
     }
 }
 
-void TurboSpiker_Hermit_Create(void)
+void TurboSpiker_State_Setup(void)
 {
     RSDK_THIS(TurboSpiker);
+
     self->active = ACTIVE_NORMAL;
-    if (self->type == 1) {
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &self->spikeAnimator, true, 0);
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 3, &self->animator, true, 0);
+
+    if (self->type == TURBOSPIKER_HIDDEN) {
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 3, &self->shellAnimator, true, 0);
         self->drawOrder = Zone->fgLayerLow + 1;
         if (Player_GetNearestPlayer())
             self->direction = Player_GetNearestPlayer()->position.x >= self->position.x;
     }
-    EntityTurboSpiker *spike = CREATE_ENTITY(TurboSpiker, intToVoid(1), self->position.x, self->position.y);
+
+    EntityTurboSpiker *spike = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
     spike->isPermanent       = true;
     spike->direction         = self->direction;
     spike->drawOrder         = self->drawOrder - 1;
-    RSDK.SetSpriteAnimation(TurboSpiker->animID, 3, &spike->animator, true, 0);
-    spike->state  = TurboSpiker_Spike_Collide;
-    self->spike = (Entity*)spike;
-    if (!self->type) {
+    RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 3, &spike->shellAnimator, true, 0);
+    spike->state = TurboSpiker_HandleSpikeCollisions;
+    self->spike  = spike;
+
+    if (self->type == TURBOSPIKER_VISIBLE) {
         self->timer      = 64;
-        self->state      = TurboSpiker_Hermit_Idle;
+        self->state      = TurboSpiker_State_Idle;
         self->velocity.x = 0x10000 * (self->direction ? 1 : -1);
-        TurboSpiker_Hermit_Idle();
+        TurboSpiker_State_Idle();
         self->velocity.y = 0;
     }
     else {
-        self->state = TurboSpiker_Hermit_IdleWater;
-        TurboSpiker_Hermit_IdleWater();
+        self->state = TurboSpiker_State_Hidden;
+        TurboSpiker_State_Hidden();
         self->velocity.y = 0;
     }
 }
-void TurboSpiker_Hermit_Idle(void)
+void TurboSpiker_State_Idle(void)
 {
     RSDK_THIS(TurboSpiker);
+
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &TurboSpiker->checkbox)) {
+        if (Player_CheckCollisionTouch(player, self, &TurboSpiker->hitboxRange)) {
             self->timer = 1;
-            self->state = TurboSpiker_Hermit_Fire;
+            self->state = TurboSpiker_State_FireShell;
             TurboSpiker_Hermit_Collide();
             TurboSpiker_Hermit_CheckOffScreen();
             foreach_return;
         }
     }
 
-    TurboSpiker_Hermit_NextState();
-    Entity *spike = self->spike;
-    if (spike) {
-        spike->position.x = self->position.x;
-        spike->position.y = self->position.y;
+    TurboSpiker_HandleMovement();
+
+    if (self->spike) {
+        self->spike->position.x = self->position.x;
+        self->spike->position.y = self->position.y;
     }
-    if (self->state == TurboSpiker_Hermit_Idle && !--self->timer) {
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &self->animator, true, 0);
+
+    if (self->state == TurboSpiker_State_Idle && !--self->timer) {
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
         self->timer = 0;
-        self->state = TurboSpiker_Hermit_Turn;
+        self->state = TurboSpiker_State_Turning;
     }
-    RSDK.ProcessAnimation(&self->animator);
+
+    RSDK.ProcessAnimation(&self->shellAnimator);
     TurboSpiker_Hermit_Collide();
     TurboSpiker_Hermit_CheckOffScreen();
 }
 
-void TurboSpiker_Hermit_IdleWater(void)
+void TurboSpiker_State_Hidden(void)
 {
     RSDK_THIS(TurboSpiker);
+
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &TurboSpiker->checkbox)) {
-            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, self->position.y + 0x80000)->childPtr = intToVoid(1);
-            RSDK.PlaySfx(TurboSpiker->splashSFX, false, 0xFF);
-            RSDK.SetSpriteAnimation(-1, 0, &self->spikeAnimator, true, 0);
-            RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &self->animator, true, 0);
+        if (Player_CheckCollisionTouch(player, self, &TurboSpiker->hitboxRange)) {
+            CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, self->position.y + 0x80000)->childPtr = intToVoid(true);
+            RSDK.PlaySfx(TurboSpiker->sfxSplash, false, 0xFF);
+            RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
             self->drawOrder = Zone->drawOrderLow + 1;
             if (self->spike)
                 self->spike->drawOrder = Zone->drawOrderLow;
-            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(1), self->position.x, self->position.y);
+
+            EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
             ember->direction         = self->direction;
             ember->drawOrder         = self->drawOrder + 1;
-            RSDK.SetSpriteAnimation(TurboSpiker->animID, 6, &ember->animator, true, 0);
-            ember->state  = TurboSpiker_Ember_Animate;
+            RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 6, &ember->shellAnimator, true, 0);
+            ember->state  = TurboSpiker_State_Ember;
             self->timer = 60;
-            self->state = TurboSpiker_Hermit_Fire;
-            TurboSpiker_Hermit_Fire();
+            self->state = TurboSpiker_State_FireShell;
+            TurboSpiker_State_FireShell();
             foreach_return;
         }
     }
-    RSDK.ProcessAnimation(&self->spikeAnimator);
+
+    RSDK.ProcessAnimation(&self->animator);
     TurboSpiker_Hermit_Collide();
     TurboSpiker_Hermit_CheckOffScreen();
 }
 
-void TurboSpiker_Hermit_Handle(void)
+void TurboSpiker_State_Moving(void)
 {
     RSDK_THIS(TurboSpiker);
-    TurboSpiker_Hermit_NextState();
+
+    TurboSpiker_HandleMovement();
+
     if (self->spike) {
         self->spike->position.x = self->position.x;
         self->spike->position.y = self->position.y;
     }
-    RSDK.ProcessAnimation(&self->animator);
+
+    RSDK.ProcessAnimation(&self->shellAnimator);
     TurboSpiker_Hermit_Collide();
     TurboSpiker_Hermit_CheckOffScreen();
 }
 
-void TurboSpiker_Hermit_Turn(void)
+void TurboSpiker_State_Turning(void)
 {
     RSDK_THIS(TurboSpiker);
-    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->shellAnimator);
+
     if (++self->timer == 15) {
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 2, &self->animator, true, 0);
-        self->state = TurboSpiker_Hermit_AfterTurn;
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 2, &self->shellAnimator, true, 0);
+        self->state = TurboSpiker_State_FinishTurning;
     }
+
     TurboSpiker_Hermit_Collide();
     TurboSpiker_Hermit_CheckOffScreen();
 }
 
-void TurboSpiker_Hermit_AfterTurn(void)
+void TurboSpiker_State_FinishTurning(void)
 {
     RSDK_THIS(TurboSpiker);
-    RSDK.ProcessAnimation(&self->animator);
-    if (self->animator.frameID == self->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &self->animator, true, 0);
-        self->direction ^= 1;
+
+    RSDK.ProcessAnimation(&self->shellAnimator);
+
+    if (self->shellAnimator.frameID == self->shellAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 0, &self->shellAnimator, true, 0);
+        self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
+
         if (self->spike) {
             self->spike->direction = self->direction;
             self->timer            = 128;
-            self->state            = TurboSpiker_Hermit_Idle;
-            TurboSpiker_Hermit_Idle();
+            self->state            = TurboSpiker_State_Idle;
+            TurboSpiker_State_Idle();
         }
         else {
-            self->state = TurboSpiker_Hermit_Handle;
-            TurboSpiker_Hermit_Handle();
+            self->state = TurboSpiker_State_Moving;
+            TurboSpiker_State_Moving();
         }
     }
     else {
@@ -272,22 +295,26 @@ void TurboSpiker_Hermit_AfterTurn(void)
     }
 }
 
-void TurboSpiker_Hermit_Move(void)
+void TurboSpiker_State_Falling(void)
 {
     RSDK_THIS(TurboSpiker);
-    RSDK.ProcessAnimation(&self->animator);
+
+    RSDK.ProcessAnimation(&self->shellAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (self->spike) {
         self->spike->position.x = self->position.x;
         self->spike->position.y = self->position.y;
     }
+
     if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
         self->velocity.y = 0;
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &self->animator, true, 0);
-        self->state = TurboSpiker_Hermit_Handle;
-        TurboSpiker_Hermit_Handle();
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 0, &self->shellAnimator, true, 0);
+        self->state = TurboSpiker_State_Moving;
+        TurboSpiker_State_Moving();
     }
     else {
         TurboSpiker_Hermit_Collide();
@@ -295,42 +322,40 @@ void TurboSpiker_Hermit_Move(void)
     }
 }
 
-void TurboSpiker_Hermit_Fire(void)
+void TurboSpiker_State_FireShell(void)
 {
     RSDK_THIS(TurboSpiker);
     if (!--self->timer) {
         if (Player_GetNearestPlayer())
             self->direction = Player_GetNearestPlayer()->position.x < self->position.x;
-        EntityTurboSpiker *spike = (EntityTurboSpiker *)self->spike;
-        if (spike) {
-            RSDK.PlaySfx(TurboSpiker->launchSFX, 0, 255);
-            RSDK.SetSpriteAnimation(TurboSpiker->animID, 4, &spike->spikeAnimator, true, 0);
-            spike->direction  = self->direction;
-            spike->velocity.x = 0x14000 * (self->direction ? -1 : 1);
-            spike->velocity.y = -0x30000;
-            spike->state      = TurboSpiker_Spike_Fly;
-            self->spike     = NULL;
+
+        if (self->spike) {
+            RSDK.PlaySfx(TurboSpiker->sfxLaunch, false, 0xFF);
+            RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 4, &self->spike->animator, true, 0);
+            self->spike->direction  = self->direction;
+            self->spike->velocity.x = 0x14000 * (self->direction ? -1 : 1);
+            self->spike->velocity.y = -0x30000;
+            self->spike->state      = TurboSpiker_State_Spike;
+            self->spike             = NULL;
         }
+
         self->velocity.x = 0x20000 * (self->direction ? 1 : -1);
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 0, &self->animator, true, 0);
-        self->state                   = TurboSpiker_Hermit_Handle;
-        self->animator.speed = 2;
-        TurboSpiker_Hermit_NextState();
-        RSDK.ProcessAnimation(&self->animator);
-        TurboSpiker_Hermit_Collide();
-        TurboSpiker_Hermit_CheckOffScreen();
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 0, &self->shellAnimator, true, 0);
+        self->state          = TurboSpiker_State_Moving;
+        self->shellAnimator.speed = 2;
+        TurboSpiker_HandleMovement();
     }
-    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->shellAnimator);
     TurboSpiker_Hermit_Collide();
     TurboSpiker_Hermit_CheckOffScreen();
 }
 
-void TurboSpiker_Spike_Collide(void)
+void TurboSpiker_HandleSpikeCollisions(void)
 {
     RSDK_THIS(TurboSpiker);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &TurboSpiker->spikeHitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &TurboSpiker->hitboxSpike)) {
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer))
 #endif
@@ -339,45 +364,72 @@ void TurboSpiker_Spike_Collide(void)
     }
 }
 
-void TurboSpiker_Spike_Fly(void)
+void TurboSpiker_State_Spike(void)
 {
     RSDK_THIS(TurboSpiker);
-    if (!self->launchPlayed) {
-        RSDK.PlaySfx(TurboSpiker->launchSFX, 0, 255);
-        self->launchPlayed = true;
+    if (!self->playedLaunchSfx) {
+        RSDK.PlaySfx(TurboSpiker->sfxLaunch, false, 0xFF);
+        self->playedLaunchSfx = true;
     }
+
     if (!self->activeScreens) {
-        RSDK.StopSfx(TurboSpiker->launchSFX);
-        self->launchPlayed = false;
+        RSDK.StopSfx(TurboSpiker->sfxLaunch);
+        self->playedLaunchSfx = false;
     }
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    TurboSpiker_Spike_Collide();
+    TurboSpiker_HandleSpikeCollisions();
 
     if (!(Zone->timer & 3)) {
-        EntityTurboSpiker *ember =
-            CREATE_ENTITY(TurboSpiker, intToVoid(1), (RSDK.Rand(-4, 4) << 16) + self->position.x, (RSDK.Rand(-2, 3) << 16) + self->position.y);
+        int32 x                  = self->position.x + (RSDK.Rand(-4, 4) << 16);
+        int32 y                  = self->position.y + (RSDK.Rand(-2, 3) << 16);
+        EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), x, y);
         ember->direction         = self->direction;
         ember->drawOrder         = self->drawOrder - 1;
-        RSDK.SetSpriteAnimation(TurboSpiker->animID, 5, &ember->animator, true, 0);
-        ember->state = TurboSpiker_Ember_Animate;
+        RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 5, &ember->shellAnimator, true, 0);
+        ember->state = TurboSpiker_State_Ember;
     }
-    RSDK.ProcessAnimation(&self->spikeAnimator);
+
+    RSDK.ProcessAnimation(&self->animator);
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }
 
-void TurboSpiker_Ember_Animate(void)
+void TurboSpiker_State_Ember(void)
 {
     RSDK_THIS(TurboSpiker);
-    RSDK.ProcessAnimation(&self->animator);
-    if (self->animator.frameID == self->animator.frameCount - 1)
+
+    RSDK.ProcessAnimation(&self->shellAnimator);
+    if (self->shellAnimator.frameID == self->shellAnimator.frameCount - 1)
         destroyEntity(self);
 }
 
-void TurboSpiker_EditorDraw(void) { TurboSpiker_DebugDraw(); }
+#if RETRO_INCLUDE_EDITOR
+void TurboSpiker_EditorDraw(void)
+{
+    RSDK_THIS(TurboSpiker);
 
-void TurboSpiker_EditorLoad(void) { TurboSpiker_StageLoad(); }
+    RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(self->type == TURBOSPIKER_VISIBLE ? TurboSpiker->aniFrames : -1, 3, &self->shellAnimator, true, 0);
+
+    RSDK.DrawSprite(&self->shellAnimator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
+
+void TurboSpiker_EditorLoad(void)
+{
+    TurboSpiker->aniFrames = RSDK.LoadSpriteAnimation("HCZ/TurboSpiker.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TurboSpiker, type);
+    RSDK_ENUM_VAR("Always Visible", TURBOSPIKER_VISIBLE);
+    RSDK_ENUM_VAR("Hidden Behind Waterfall", TURBOSPIKER_HIDDEN);
+
+    RSDK_ACTIVE_VAR(TurboSpiker, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
+#endif
 
 void TurboSpiker_Serialize(void)
 {

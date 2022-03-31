@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    WATERGUSH_UP,
+    WATERGUSH_RIGHT,
+    WATERGUSH_LEFT,
+}WaterGushOrientations;
+
 // Object Class
 struct ObjectWaterGush {
     RSDK_OBJECT
@@ -19,15 +25,15 @@ struct EntityWaterGush {
     int32 speed;
     uint8 activePlayers;
     Vector2 posUnknown1;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    bool32 flag;
-    int32 field_84;
+    int32 unused;
+    int32 gushPos;
+    int32 gravityStrength;
+    bool32 activated;
+    bool32 finishedExtending;
     Hitbox hitbox1;
     Hitbox hitbox2;
-    Animator animator1;
-    Animator animator2;
+    Animator plumeAnimator;
+    Animator topAnimator;
 };
 
 // Object Struct
@@ -49,6 +55,6 @@ void WaterGush_Serialize(void);
 // Extra Entity Functions
 void WaterGush_SetupHitboxes(void);
 void WaterGush_DrawSprites(void);
-void WaterGush_Unknown3(void);
+void WaterGush_SpawnBrickDebris(void);
 
 #endif //!OBJ_WATERGUSH_H

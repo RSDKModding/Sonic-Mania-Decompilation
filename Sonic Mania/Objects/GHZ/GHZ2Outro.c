@@ -264,7 +264,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
             if (mystic)
                 mystic->state = CutsceneHBH_State_MysticExit;
             Camera_SetupLerp(0, 0, self->position.x, self->position.y - 0x400000, 1);
-            RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
+            RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, false, 0xFF);
             break;
         }
         case 288: {
@@ -296,7 +296,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
                 king->direction ^= FLIP_X;
                 king->state = CutsceneHBH_State_KingExit;
             }
-            RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
+            RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, false, 0xFF);
             foreach_active(Player, player) { player->down = false; }
             EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
             ruby->startPos.x        = ruby->position.x;

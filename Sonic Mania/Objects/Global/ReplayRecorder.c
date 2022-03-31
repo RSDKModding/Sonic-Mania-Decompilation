@@ -321,7 +321,7 @@ void ReplayRecorder_SaveReplay(void)
         LogHelpers_Print("Saving replay...");
         foreach_all(HUD, hud) { foreach_break; }
         RSDK.SetSpriteAnimation(HUD->aniFrames, 11, &hud->taAnimator2, true, 0);
-        RSDK.PlaySfx(HUD->sfxClick, 0, 255);
+        RSDK.PlaySfx(HUD->sfxClick, false, 0xFF);
         EntityDialogRunner *runner = CREATE_ENTITY(DialogRunner, DialogRunner_HandleCallback, 0, 0);
         runner->callback           = ReplayRecorder_SaveReplayDLG_CB;
         runner->timer              = 45;

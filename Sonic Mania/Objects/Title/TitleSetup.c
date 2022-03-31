@@ -292,7 +292,7 @@ void TitleSetup_State_WaitForEnter(void)
     bool32 anyClick = (!TouchInfo->count && self->touched) || Unknown_anyPress;
     self->touched = TouchInfo->count > 0;
     if (anyClick || anyButton) {
-        RSDK.PlaySfx(TitleSetup->sfxMenuAccept, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfxMenuAccept, false, 0xFF);
         self->timer = 0;
         const char *nextScene = "Menu";
 #if RETRO_GAMEVER == VER_100

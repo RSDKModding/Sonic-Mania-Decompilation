@@ -20,11 +20,11 @@ struct EntityWhirlpool {
     int32 yVel;
     Vector2 size;
     uint8 activePlayers;
-    Vector2 posUnknown2;
-    int32 field_74;
-    int32 field_78[128];
-    int32 field_278[4];
-    int32 field_288[4];
+    Vector2 startPos;
+    int32 unused;
+    int32 bubbleAngles[128];
+    int32 playerAngle[PLAYER_MAX];
+    int32 playerAmplitude[PLAYER_MAX];
     Hitbox hitbox;
     Animator animator;
 };

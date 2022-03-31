@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TWISTINGSLIDE_START,
+    TWISTINGSLIDE_STRIP,
+    TWISTINGSLIDE_TWIST,
+    TWISTINGSLIDE_END,
+}TwistingSlideTypes;
+
 // Object Class
 struct ObjectTwistingSlide {
     RSDK_OBJECT
@@ -16,12 +23,12 @@ struct EntityTwistingSlide {
     uint8 type;
     int32 endLen;
     int32 activePlayers;
-    int32 field_64[4];
-    int32 field_74;
-    int32 field_78;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox1;
+    int32 playerAngles[PLAYER_MAX];
+    int32 minY;
+    int32 maxY;
+    Hitbox hitboxSlideStart;
+    Hitbox hitboxSlideEnd;
+    Hitbox hitboxSlide;
     Animator animator;
 };
 
@@ -42,7 +49,7 @@ void TwistingSlide_EditorLoad(void);
 void TwistingSlide_Serialize(void);
 
 // Extra Entity Functions
-void TwistingSlide_Unknown1(void);
+void TwistingSlide_SetupHitboxes(void);
 
 
 #endif //!OBJ_TWISTINGSLIDE_H

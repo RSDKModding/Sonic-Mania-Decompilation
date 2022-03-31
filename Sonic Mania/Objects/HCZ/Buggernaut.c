@@ -5,6 +5,10 @@
 // Decompiled by: Rubberduckycooly & RMGRich
 // ---------------------------------------------------------------------
 
+// NOTE:
+// This object was prolly based on Unused/Wisp
+// it looks like it has the same structure, and even has "buzzCount", even though its set to -1
+
 #include "SonicMania.h"
 
 ObjectBuggernaut *Buggernaut;
@@ -22,10 +26,10 @@ void Buggernaut_StaticUpdate(void) {}
 void Buggernaut_Draw(void)
 {
     RSDK_THIS(Buggernaut);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
 
     self->inkEffect = INK_ALPHA;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->wingAnimator, NULL, false);
 
     self->inkEffect = INK_NONE;
 }
@@ -36,6 +40,7 @@ void Buggernaut_Create(void *data)
 
     self->visible   = true;
     self->drawOrder = Zone->drawOrderLow + 1;
+
     if (!SceneInfo->inEditor) {
         self->drawFX |= FX_FLIP;
         self->startPos.x    = self->position.x;
@@ -46,24 +51,26 @@ void Buggernaut_Create(void *data)
         self->direction     = FLIP_NONE;
         self->alpha         = 128;
         self->timer         = 16;
-        self->timer2        = -1;
-        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->animator2, true, 0);
+        self->buzzCount     = -1;
+        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->wingAnimator, true, 0);
         self->state = Buggernaut_State_Setup;
     }
 }
 
 void Buggernaut_StageLoad(void)
 {
-    Buggernaut->aniFrames           = RSDK.LoadSpriteAnimation("HCZ/Buggernaut.bin", SCOPE_STAGE);
+    Buggernaut->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Buggernaut.bin", SCOPE_STAGE);
+
     Buggernaut->hitboxBadnik.left   = -8;
     Buggernaut->hitboxBadnik.top    = -8;
     Buggernaut->hitboxBadnik.right  = 8;
     Buggernaut->hitboxBadnik.bottom = 8;
-    Buggernaut->hitbox2.left        = -64;
-    Buggernaut->hitbox2.top         = -64;
-    Buggernaut->hitbox2.right       = 64;
-    Buggernaut->hitbox2.bottom      = 64;
+
+    Buggernaut->hitboxParentRange.left   = -64;
+    Buggernaut->hitboxParentRange.top    = -64;
+    Buggernaut->hitboxParentRange.right  = 64;
+    Buggernaut->hitboxParentRange.bottom = 64;
 
     DEBUGMODE_ADD_OBJ(Buggernaut);
 }
@@ -96,7 +103,7 @@ void Buggernaut_CheckOffScreen(void)
     RSDK_THIS(Buggernaut);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        if (self->animator1.animationID) {
+        if (self->bodyAnimator.animationID) {
             destroyEntity(self);
         }
         else {
@@ -141,6 +148,7 @@ bool32 Buggernaut_HandleTileCollisionsY(void)
 
     if (collided)
         self->velocity.y = -self->velocity.y;
+
     return collided;
 }
 
@@ -149,50 +157,51 @@ void Buggernaut_State_Setup(void)
     RSDK_THIS(Buggernaut);
 
     self->active     = ACTIVE_NORMAL;
-    int y              = self->position.y;
-    int x              = self->position.x;
+    int32 x          = self->position.x;
+    int32 y          = self->position.y;
     self->velocity.x = 0;
     self->velocity.y = 0;
 
     EntityBuggernaut *child = CREATE_ENTITY(Buggernaut, intToVoid(true), x, y);
-    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 1, &child->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 3, &child->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 1, &child->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 3, &child->wingAnimator, true, 0);
     child->active      = ACTIVE_NORMAL;
     child->drawOrder   = self->drawOrder - 1;
-    child->parent      = (Entity *)self;
+    child->parent      = self;
     child->passThrough = self->passThrough;
     child->isPermanent = true;
-    child->state       = Buggernaut_State2_Unknown;
-    self->state      = Buggernaut_State_Unknown1;
-    Buggernaut_State_Unknown1();
+    child->state       = Buggernaut_State_Child;
+    self->state        = Buggernaut_State_Idle;
+    Buggernaut_State_Idle();
 }
 
-void Buggernaut_State_Unknown1(void)
+void Buggernaut_State_Idle(void)
 {
     RSDK_THIS(Buggernaut);
     self->timer--;
     if (--self->timer <= 0) {
-        if (--self->timer2) {
+        if (--self->buzzCount) {
             self->velocity.y = -0x10000;
             self->timer      = 96;
-            self->state      = Buggernaut_State_Unknown2;
+            self->state      = Buggernaut_State_FlyTowardTarget;
         }
         else {
             self->velocity.x = RSDK.Rand(-2, 3) << 16;
             self->velocity.y = RSDK.Rand(-2, 3) << 16;
 
-            if (self->velocity.y == 0 || self->velocity.x == 0)
+            if (!self->velocity.x || !self->velocity.y)
                 self->velocity.x = -0x20000;
+
             self->velocity.y = -0x20000;
-            self->state      = Buggernaut_State_Unknown3;
+            self->state      = Buggernaut_State_FlyAway;
         }
     }
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->wingAnimator);
     Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOffScreen();
 }
 
-void Buggernaut_State_Unknown2(void)
+void Buggernaut_State_FlyTowardTarget(void)
 {
     RSDK_THIS(Buggernaut);
     self->position.x += self->velocity.x;
@@ -212,6 +221,7 @@ void Buggernaut_State_Unknown2(void)
                 self->velocity.x = -0x20000;
             self->direction = FLIP_NONE;
         }
+
         if (player->position.y >= self->position.y) {
             self->velocity.y += 0x1000;
             if (self->velocity.y > 0x20000)
@@ -226,6 +236,7 @@ void Buggernaut_State_Unknown2(void)
 
     if (self->velocity.y > 0 && self->position.y > Water->waterLevel - 0x80000)
         self->velocity.y = -self->velocity.y;
+
     if (!self->passThrough) {
         if (abs(self->velocity.x) <= abs(self->velocity.y)) {
             if (!Buggernaut_HandleTileCollisionsY())
@@ -238,41 +249,46 @@ void Buggernaut_State_Unknown2(void)
 
     if (!--self->timer) {
         self->timer      = RSDK.Rand(0, 32);
-        self->state      = Buggernaut_State_Unknown1;
+        self->state      = Buggernaut_State_Idle;
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = FLIP_NONE;
     }
-    RSDK.ProcessAnimation(&self->animator2);
+
+    RSDK.ProcessAnimation(&self->wingAnimator);
+
     Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOffScreen();
 }
 
-void Buggernaut_State_Unknown3(void)
+void Buggernaut_State_FlyAway(void)
 {
     RSDK_THIS(Buggernaut);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    RSDK.ProcessAnimation(&self->animator2);
-    if (!self->animator1.animationID)
+
+    RSDK.ProcessAnimation(&self->wingAnimator);
+
+    if (!self->bodyAnimator.animationID)
         Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOffScreen();
 }
 
-void Buggernaut_State2_Unknown(void)
+void Buggernaut_State_Child(void)
 {
     RSDK_THIS(Buggernaut);
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    EntityBuggernaut *buggernaut = (EntityBuggernaut *)self->parent;
-    if (!buggernaut || buggernaut->objectID != Buggernaut->objectID) {
+
+    EntityBuggernaut *parent = self->parent;
+    if (!parent || parent->objectID != Buggernaut->objectID) {
         self->parent = NULL;
         foreach_active(Buggernaut, buggernaut)
         {
-            if (buggernaut->animator1.animationID == 0
-                && RSDK.CheckObjectCollisionTouchBox(buggernaut, &Buggernaut->hitboxBadnik, self, &Buggernaut->hitbox2)) {
-                self->parent = (Entity *)buggernaut;
+            if (buggernaut->bodyAnimator.animationID == 0
+                && RSDK.CheckObjectCollisionTouchBox(buggernaut, &Buggernaut->hitboxBadnik, self, &Buggernaut->hitboxParentRange)) {
+                self->parent = buggernaut;
                 foreach_break;
             }
         }
@@ -284,12 +300,12 @@ void Buggernaut_State2_Unknown(void)
             if (!self->velocity.y || !self->velocity.x)
                 self->velocity.x = -0x20000;
             self->velocity.y = -0x20000;
-            self->state      = Buggernaut_State_Unknown3;
+            self->state      = Buggernaut_State_FlyAway;
         }
     }
 
     if (self->parent) {
-        if (buggernaut->position.x >= self->position.x) {
+        if (parent->position.x >= self->position.x) {
             self->velocity.x += 0x2000;
             if (self->velocity.x > 0x20000)
                 self->velocity.x = 0x20000;
@@ -302,7 +318,7 @@ void Buggernaut_State2_Unknown(void)
             self->direction = FLIP_NONE;
         }
 
-        if (buggernaut->position.y >= self->position.y) {
+        if (parent->position.y >= self->position.y) {
             self->velocity.y += 0x2000;
             if (self->velocity.y > 0x20000)
                 self->velocity.y = 0x20000;
@@ -327,23 +343,35 @@ void Buggernaut_State2_Unknown(void)
         }
     }
 
-    RSDK.ProcessAnimation(&self->animator2);
-    if (buggernaut->state == Buggernaut_State_Setup)
+    RSDK.ProcessAnimation(&self->wingAnimator);
+
+    if (parent->state == Buggernaut_State_Setup)
         destroyEntity(self);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Buggernaut_EditorDraw(void)
 {
     RSDK_THIS(Buggernaut);
     self->drawFX = FX_FLIP;
     self->alpha  = 0x80;
-    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->wingAnimator, true, 0);
 
     Buggernaut_Draw();
 }
 
-void Buggernaut_EditorLoad(void) { Buggernaut->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Buggernaut.bin", SCOPE_STAGE); }
+void Buggernaut_EditorLoad(void)
+{
+    Buggernaut->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Buggernaut.bin", SCOPE_STAGE);
+
+    // despite being editable, this variable is set to FLIP_NONE on create, thereby making the editable var's value unused
+    RSDK_ACTIVE_VAR(Buggernaut, direction);
+    RSDK_ENUM_VAR("Unused", FLIP_NONE);
+    // RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    // RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
+#endif
 
 void Buggernaut_Serialize(void)
 {

@@ -26,7 +26,7 @@ void SeltzerBottle_Update(void)
             for (int32 p = 0; p < Player->playerCount; ++p) {
                 RSDK_GET_ENTITY(p, Player)->collisionLayers |= SeltzerBottle->layerBitFlags;
             }
-            RSDK.PlaySfx(SeltzerBottle->sfxSpray, 0, 255);
+            RSDK.PlaySfx(SeltzerBottle->sfxSpray, false, 0xFF);
         }
     }
     StateMachine_Run(self->state);

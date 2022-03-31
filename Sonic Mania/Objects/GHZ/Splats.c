@@ -282,7 +282,7 @@ void Splats_State_HandleBouncing(void)
         self->animator1.loopIndex  = 4;
         self->animator1.frameCount = 5;
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x120000, true)) {
-            RSDK.PlaySfx(Splats->sfxSplatsLand, 0, 0xFF);
+            RSDK.PlaySfx(Splats->sfxSplatsLand, false, 0xFF);
             if (self->bounceCount) {
                 if (++self->activeCount < self->bounceCount) {
                     self->delay = 4;

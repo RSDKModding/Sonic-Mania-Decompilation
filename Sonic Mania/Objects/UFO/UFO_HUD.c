@@ -119,7 +119,7 @@ void UFO_HUD_CheckLevelUp(void)
         UFO_Player_ChangeMachState();
         hud->scale.x = 768;
         hud->scale.y = 768;
-        RSDK.PlaySfx(UFO_Sphere->sfxMachSpeed, 0, 255);
+        RSDK.PlaySfx(UFO_Sphere->sfxMachSpeed, false, 0xFF);
     }
 
     if (hud->scale.x == 512) {

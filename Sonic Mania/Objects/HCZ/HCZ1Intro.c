@@ -42,7 +42,7 @@ void HCZ1Intro_Create(void *data)
 void HCZ1Intro_StageLoad(void)
 {
     if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload() && !Zone->actID) {
-        Water->ignoreChild = 1;
+        Water->disableWaterSplash = true;
     }
 }
 
@@ -89,7 +89,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
             camera->state       = Camera_State_Follow;
             player1->stateInput = Player_ProcessP1Input;
             player1->camera     = camera;
-            Water->ignoreChild     = 0;
+            Water->disableWaterSplash     = 0;
         }
     }
     else {
@@ -108,13 +108,14 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
             return false;
     }
     else if (!host->values[0]) {
-        host->values[0] = 1;
-        host->storedTimer    = host->timer;
+        host->values[0]   = true;
+        host->storedTimer = host->timer;
     }
 
     if (host->timer >= 8) {
         if (player2->objectID != Player->objectID)
             return true;
+
         if (player2->underwater) {
             player2->stateInput = Player_ProcessP2Input_AI;
             return true;
@@ -123,6 +124,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HCZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(HCZ1Intro);
@@ -130,5 +132,6 @@ void HCZ1Intro_EditorDraw(void)
 }
 
 void HCZ1Intro_EditorLoad(void) {}
+#endif
 
 void HCZ1Intro_Serialize(void) { RSDK_EDITABLE_VAR(HCZ1Intro, VAR_VECTOR2, size); }

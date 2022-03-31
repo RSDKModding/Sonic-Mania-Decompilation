@@ -35,7 +35,8 @@ void BreakBar_Create(void *data)
     self->hitbox.top    = 24;
     self->hitbox.right  = 32;
     self->hitbox.bottom = 32;
-    if (!self->orientation) {
+
+    if (self->orientation == BREAKBAR_V) {
         self->hitbox.top    = -8 - ((8 * self->length) >> 1);
         self->hitbox.bottom = ((8 * self->length) >> 1) + 8;
     }
@@ -43,12 +44,14 @@ void BreakBar_Create(void *data)
         self->hitbox.left  = -8 - ((8 * self->length) >> 1);
         self->hitbox.right = ((8 * self->length) >> 1) + 8;
     }
+
     self->state = BreakBar_State_Setup;
 }
 
 void BreakBar_StageLoad(void)
 {
     BreakBar->aniFrames = RSDK.LoadSpriteAnimation("HCZ/BreakBar.bin", SCOPE_STAGE);
+
     BreakBar->sfxBreak  = RSDK.GetSfx("Stage/LedgeBreak.wav");
 }
 
@@ -59,7 +62,7 @@ void BreakBar_DrawSprites(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (self->orientation) {
+    if (self->orientation != BREAKBAR_V) {
         drawPos.x += -0x40000 - (((8 * self->length) >> 1) << 16);
         RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &self->animator, true, 0);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -103,26 +106,26 @@ void BreakBar_CheckPlayerCollisions(void)
             }
             else {
                 player->direction = FLIP_NONE;
-                if (self->orientation) {
+                if (self->orientation != BREAKBAR_V) {
                     player->position.y = self->startPos.y;
                     if (player->velocity.y <= 0) {
                         player->position.y -= 0x140000;
-                        player->rotation = 384;
+                        player->rotation = 0x180;
                     }
                     else {
                         player->position.y += 0x140000;
-                        player->rotation = 128;
+                        player->rotation = 0x080;
                     }
                 }
                 else {
                     player->position.x = self->startPos.x;
                     if (player->velocity.x <= 0) {
                         player->position.x -= 0x140000;
-                        player->rotation = 256;
+                        player->rotation = 0x100;
                     }
                     else {
                         player->position.x += 0x140000;
-                        player->rotation = 0;
+                        player->rotation = 0x000;
                     }
                 }
             }
@@ -130,16 +133,15 @@ void BreakBar_CheckPlayerCollisions(void)
     }
 }
 
-void BreakBar_HandlePlayerInteractions(void *p)
+void BreakBar_HandlePlayerInteractions(EntityPlayer *player)
 {
     RSDK_THIS(BreakBar);
-    EntityPlayer *player = (EntityPlayer *)p;
 
-    if (!self->destroyFlag) {
+    if (!self->isBroken) {
         int32 spawnX = self->position.x;
         int32 spawnY = self->position.y;
 
-        if (self->orientation)
+        if (self->orientation != BREAKBAR_V)
             spawnX += -0x40000 - ((8 * self->length) >> 1 << 16);
         else
             spawnY += -0x40000 - ((8 * self->length) >> 1 << 16);
@@ -161,7 +163,7 @@ void BreakBar_HandlePlayerInteractions(void *p)
                 debris->velocity.x = player->velocity.x >> 3;
                 debris->velocity.y = player->velocity.y >> 3;
 
-                if (self->orientation) {
+                if (self->orientation != BREAKBAR_V) {
                     RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &debris->animator, true, frame);
                     debris->velocity.x = abs(debris->position.x - player->position.x) >> 6;
                     if (debris->position.x < player->position.x)
@@ -187,8 +189,9 @@ void BreakBar_HandlePlayerInteractions(void *p)
                 }
             }
         }
+
         RSDK.PlaySfx(BreakBar->sfxBreak, false, 255);
-        self->destroyFlag = true;
+        self->isBroken = true;
     }
 }
 
@@ -230,7 +233,7 @@ void BreakBar_State_Main(void)
 
             if (((1 << playerID) & self->activePlayersGrabbed)) {
                 if (!((1 << playerID) & self->activePlayersReleased)) {
-                    if (player->jumpPress || self->releaseTimer >= 240 || self->destroyFlag) {
+                    if (player->jumpPress || self->releaseTimer >= 240 || self->isBroken) {
                         self->activePlayersReleased |= (1 << playerID);
                     }
                     else {
@@ -240,6 +243,7 @@ void BreakBar_State_Main(void)
                         player->nextAirState    = StateMachine_None;
                         player->state           = Player_State_None;
                     }
+
                     if (!player->sidekick && globals->gameMode != MODE_COMPETITION)
                         ++self->releaseTimer;
                 }
@@ -251,7 +255,7 @@ void BreakBar_State_Main(void)
                     self->activePlayersGrabbed &= ~(1 << playerID);
                     self->playerTimers[playerID] = 8;
                 }
-                else if (!player->sidekick && !self->destroyFlag) {
+                else if (!player->sidekick && !self->isBroken) {
                     BreakBar_HandlePlayerInteractions(player);
                 }
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
@@ -260,14 +264,21 @@ void BreakBar_State_Main(void)
         }
     }
 
-    if (self->destroyFlag)
+    if (self->isBroken)
         destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void BreakBar_EditorDraw(void) { BreakBar_DrawSprites(); }
 
-void BreakBar_EditorLoad(void) { BreakBar->aniFrames = RSDK.LoadSpriteAnimation("HCZ/BreakBar.bin", SCOPE_STAGE); }
+void BreakBar_EditorLoad(void)
+{
+    BreakBar->aniFrames = RSDK.LoadSpriteAnimation("HCZ/BreakBar.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(BreakBar, orientation);
+    RSDK_ENUM_VAR("Vertical", BREAKBAR_V);
+    RSDK_ENUM_VAR("Horizontal", BREAKBAR_H);
+}
 #endif
 
 void BreakBar_Serialize(void)

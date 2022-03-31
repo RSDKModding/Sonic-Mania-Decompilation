@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectOneWayDoor {
     RSDK_OBJECT
-    uint16 animID;
+    uint16 aniFrames;
     Hitbox hitboxTop;
     Hitbox hitboxBottom;
     Hitbox hitboxRange;
@@ -38,7 +38,7 @@ void OneWayDoor_EditorLoad(void);
 void OneWayDoor_Serialize(void);
 
 // Extra Entity Functions
-void OneWayDoor_Interact(void);
+void OneWayDoor_HandlePlayerInteractions(void);
 
 void OneWayDoor_State_MoveDown(void);
 void OneWayDoor_State_MoveUp(void);

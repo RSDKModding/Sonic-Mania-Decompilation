@@ -7,9 +7,9 @@
 // Object Class
 struct ObjectE3MenuSetup {
     RSDK_OBJECT
-    int32 unused1;
+    int32 unused;
     bool32 initialized;
-    int32 unused2;
+    int32 minVelocity;
     Entity *charSelControl;
     Entity *zoneControl;
 };
@@ -24,7 +24,7 @@ struct EntityE3MenuSetup {
     int32 fadeSpeed;
     int32 fadeTimer;
     int32 fadeColour;
-    int32 unused1;
+    int32 unused;
 };
 
 // Object Entity

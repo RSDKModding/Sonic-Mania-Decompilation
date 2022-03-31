@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectMegaChopper {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxChop;
     uint16 aniFrames;
 };
 
@@ -16,10 +16,10 @@ struct EntityMegaChopper {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    Entity *playerPtr;
+    EntityPlayer *playerPtr;
     Vector2 playerPos;
     uint8 playerDir;
-    uint16 field_72;
+    uint16 shakeTimer;
     uint16 shakeCount;
     uint16 lastShakeFlags;
     uint8 nibbleTimer;
@@ -54,9 +54,9 @@ void MegaChopper_PlayerInput_StateP2(void);
 void MegaChopper_PlayerInput_StateP2_AI(void);
 
 void MegaChopper_State_Setup(void);
-void MegaChopper_State_Unknown1(void);
-void MegaChopper_State_Unknown2(void);
-void MegaChopper_State_Unknown3(void);
-void MegaChopper_State_Unknown4(void);
+void MegaChopper_State_InWater(void);
+void MegaChopper_State_OutOfWater(void);
+void MegaChopper_State_Chopping(void);
+void MegaChopper_State_ShakenOff(void);
 
 #endif //!OBJ_MEGACHOPPER_H

@@ -483,7 +483,7 @@ void UFO_Player_State_Run(void)
         self->onGround        = 0;
         self->state           = UFO_Player_State_Jump;
         RSDK.SetModelAnimation(UFO_Player->jumpModel, &self->animator, 128, 0, true, 0);
-        RSDK.PlaySfx(UFO_Player->sfxJump, 0, 255);
+        RSDK.PlaySfx(UFO_Player->sfxJump, false, 0xFF);
         UFO_Player_HandleBumperTiles();
     }
 }

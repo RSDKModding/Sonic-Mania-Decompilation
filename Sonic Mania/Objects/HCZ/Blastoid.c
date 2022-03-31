@@ -31,6 +31,7 @@ void Blastoid_Create(void *data)
     self->visible   = true;
     self->drawOrder = Zone->drawOrderLow;
     self->drawFX |= FX_FLIP;
+
     if (!SceneInfo->inEditor) {
         if (data) {
             self->active        = ACTIVE_NORMAL;
@@ -53,15 +54,19 @@ void Blastoid_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HCZ"))
         Blastoid->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Blastoid.bin", SCOPE_STAGE);
-    Blastoid->hitboxBody.left         = -12;
-    Blastoid->hitboxBody.top          = -9;
-    Blastoid->hitboxBody.right        = 12;
-    Blastoid->hitboxBody.bottom       = 12;
+
+    Blastoid->hitboxBody.left   = -12;
+    Blastoid->hitboxBody.top    = -9;
+    Blastoid->hitboxBody.right  = 12;
+    Blastoid->hitboxBody.bottom = 12;
+
     Blastoid->hitboxProjectile.left   = -3;
     Blastoid->hitboxProjectile.top    = -3;
     Blastoid->hitboxProjectile.right  = 3;
     Blastoid->hitboxProjectile.bottom = 3;
-    Blastoid->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
+
+    Blastoid->sfxShot = RSDK.GetSfx("Stage/Shot.wav");
+
     DEBUGMODE_ADD_OBJ(Blastoid);
 }
 
@@ -98,10 +103,13 @@ void Blastoid_CheckPlayerCollisions(void)
 void Blastoid_State_Setup(void)
 {
     RSDK_THIS(Blastoid);
-    self->active     = ACTIVE_NORMAL;
+
+    self->active = ACTIVE_NORMAL;
+
     EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
     if (platform->objectID == CollapsingPlatform->objectID)
         platform->active = ACTIVE_NEVER;
+
     self->state = Blastoid_State_Body;
 }
 
@@ -115,7 +123,8 @@ void Blastoid_State_Body(void)
         case 16:
         case 31: {
             EntityBlastoid *projectile = CREATE_ENTITY(Blastoid, intToVoid(true), self->position.x, self->position.y);
-            if ((self->direction & 1)) {
+
+            if (self->direction & FLIP_X) {
                 projectile->position.x += 0x100000;
                 projectile->velocity.x = 0x20000;
             }
@@ -123,7 +132,8 @@ void Blastoid_State_Body(void)
                 projectile->position.x -= 0x100000;
                 projectile->velocity.x = -0x20000;
             }
-            if ((self->direction & 2) != 0) {
+
+            if (self->direction & FLIP_Y) {
                 projectile->position.y += 0x60000;
                 projectile->velocity.y = 0x10000;
             }
@@ -131,13 +141,17 @@ void Blastoid_State_Body(void)
                 projectile->position.y -= 0x60000;
                 projectile->velocity.y = -0x10000;
             }
+
             RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, true, 0);
-            RSDK.PlaySfx(Blastoid->sfxShot, false, 255);
+            RSDK.PlaySfx(Blastoid->sfxShot, false, 0xFF);
             break;
         }
+
         case 121: self->timer = 0; break;
+
         default: break;
     }
+
     Blastoid_CheckPlayerCollisions();
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
@@ -149,31 +163,39 @@ void Blastoid_State_Body(void)
 void Blastoid_State_Projectile(void)
 {
     RSDK_THIS(Blastoid);
-    if (RSDK.CheckOnScreen(self, NULL)) {
+
+    if (!RSDK.CheckOnScreen(self, NULL)) {
+        destroyEntity(self);
+    }
+    else {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
+
         RSDK.ProcessAnimation(&self->animator);
+
+        // Bug(?): setPos value is 4??????
+        // This implies these used to be "ObjectTileGrip" at some point, and were then changed to "ObjectTileCollision" without changing the last
+        // parameter Not that it *really* matters, since 4 will evaluate to true since it's non-zero
 
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, Blastoid->hitboxProjectile.top << 13, 4)
             || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, Blastoid->hitboxProjectile.left << 13, 0, 4)
             || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Blastoid->hitboxProjectile.bottom << 13, 4)
             || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, Blastoid->hitboxProjectile.right << 13, 0, 4)) {
             destroyEntity(self);
-            return;
         }
+        else {
+            foreach_active(Player, player)
+            {
+                int32 shield = player->shield;
+                // HCZBubble overrides active shields for collision
+                if (Water_GetPlayerBubble(player))
+                    player->shield = SHIELD_BUBBLE;
 
-        foreach_active(Player, player)
-        {
-            int32 shield = player->shield;
-            if (Water_GetPlayerBubble(player))
-                player->shield = SHIELD_BUBBLE;
-            if (Player_CheckCollisionTouch(player, self, &Blastoid->hitboxProjectile))
-                Player_CheckProjectileHit(player, self);
-            player->shield = shield;
+                if (Player_CheckCollisionTouch(player, self, &Blastoid->hitboxProjectile))
+                    Player_CheckProjectileHit(player, self);
+                player->shield = shield;
+            }
         }
-    }
-    else {
-        destroyEntity(self);
     }
 }
 
@@ -185,7 +207,16 @@ void Blastoid_EditorDraw(void)
     Blastoid_Draw();
 }
 
-void Blastoid_EditorLoad(void) { Blastoid->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Blastoid.bin", SCOPE_STAGE); }
+void Blastoid_EditorLoad(void)
+{
+    Blastoid->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Blastoid.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Blastoid, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
+}
 #endif
 
 void Blastoid_Serialize(void) { RSDK_EDITABLE_VAR(Blastoid, VAR_UINT8, direction); }

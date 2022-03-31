@@ -273,7 +273,7 @@ void MonkeyDude_HandleStates(void)
                     coconut->velocity.x = 0x20000;
                 coconut->velocity.y = -0x40000;
                 coconut->direction  = self->direction;
-                RSDK.PlaySfx(MonkeyDude->sfxDrop, 0, 255);
+                RSDK.PlaySfx(MonkeyDude->sfxDrop, false, 0xFF);
                 ++self->throwCount;
             }
         }

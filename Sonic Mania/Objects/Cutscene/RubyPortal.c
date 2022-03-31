@@ -250,9 +250,9 @@ void RubyPortal_State_Opened(void)
 #endif
 
                 int32 sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
-                int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], 0, 0);
+                int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0x00);
                 RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-                channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0);
+                channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], false, 0x00);
                 RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
             }
         }

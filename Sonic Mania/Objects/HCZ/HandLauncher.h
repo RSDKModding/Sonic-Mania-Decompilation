@@ -7,9 +7,9 @@
 struct ObjectHandLauncher {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxRange;
+    Hitbox hitboxGrab;
+    Hitbox hitboxUnused;
     bool32 dunkeyMode;
     uint16 sfxDunkey;
 };
@@ -22,11 +22,11 @@ struct EntityHandLauncher {
     uint8 activePlayers;
     Vector2 startPos;
     Vector2 playerPos;
-    Vector2 field_74;
-    int32 field_7C;
-    int32 field_80;
-    Animator animator1;
-    Animator animator2;
+    Vector2 hiddenPos;
+    int32 timer;
+    int32 grabDelay;
+    Animator baseAnimator;
+    Animator handAnimator;
 };
 
 // Object Struct
@@ -47,13 +47,13 @@ void HandLauncher_Serialize(void);
 
 // Extra Entity Functions
 void HandLauncher_CheckPlayerCollisions(void);
-bool32 HandLauncher_Unknown1(void);
+bool32 HandLauncher_CheckPlayerInRange(void);
+void HandLauncher_ReleasePlayers(void);
+void HandLauncher_HandleGrabbedPlayers(void);
 
-void HandLauncher_State_Release(void);
-void HandLauncher_Unknown3(void);
-void HandLauncher_Unknown5(void);
-void HandLauncher_Unknown6(void);
-void HandLauncher_Unknown7(void);
-void HandLauncher_Unknown8(void);
+void HandLauncher_State_Setup(void);
+void HandLauncher_State_AwaitPlayer(void);
+void HandLauncher_State_TryGrabPlayer(void);
+void HandLauncher_State_GrabbedPlayer(void);
 
 #endif //!OBJ_HANDLAUNCHER_H

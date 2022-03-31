@@ -111,8 +111,8 @@ struct EntityAPICallback {
     void *fileBuffer;
     uint32 fileSize;
     void(*fileCallback)(int32);
-    int32 unused1;
-    int32 unused2;
+    int32 unused;
+    int32 minVelocity;
     int32 inputID;
     int32 unused3;
     int32 status;

@@ -43,14 +43,17 @@ void MegaChopper_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HCZ"))
         MegaChopper->aniFrames = RSDK.LoadSpriteAnimation("HCZ/MegaChopper.bin", SCOPE_STAGE);
-    MegaChopper->hitbox1.left   = -8;
-    MegaChopper->hitbox1.top    = -12;
-    MegaChopper->hitbox1.right  = 2;
-    MegaChopper->hitbox1.bottom = 12;
-    MegaChopper->hitbox2.left   = -1;
-    MegaChopper->hitbox2.top    = -1;
-    MegaChopper->hitbox2.right  = 1;
-    MegaChopper->hitbox2.bottom = 1;
+
+    MegaChopper->hitboxBadnik.left   = -8;
+    MegaChopper->hitboxBadnik.top    = -12;
+    MegaChopper->hitboxBadnik.right  = 2;
+    MegaChopper->hitboxBadnik.bottom = 12;
+
+    MegaChopper->hitboxChop.left   = -1;
+    MegaChopper->hitboxChop.top    = -1;
+    MegaChopper->hitboxChop.right  = 1;
+    MegaChopper->hitboxChop.bottom = 1;
+
     DEBUGMODE_ADD_OBJ(MegaChopper);
 }
 
@@ -72,27 +75,25 @@ void MegaChopper_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &MegaChopper->hitbox1)) {
-            int blink          = player->blinkTimer;
+        if (Player_CheckBadnikTouch(player, self, &MegaChopper->hitboxBadnik)) {
+            int32 blink          = player->blinkTimer;
             player->blinkTimer = 1;
-            if (!Player_CheckBadnikBreak(self, player, true) && Player_CheckCollisionTouch(player, self, &MegaChopper->hitbox2)) {
-                self->playerPtr   = (Entity *)player;
+            if (!Player_CheckBadnikBreak(self, player, true) && Player_CheckCollisionTouch(player, self, &MegaChopper->hitboxChop)) {
+                self->playerPtr   = player;
                 self->playerPos.x = (self->position.x - player->position.x) & 0xFFFF0000;
                 self->playerPos.y = (self->position.y - player->position.y) & 0xFFFF0000;
                 self->playerDir   = player->direction;
 
-                if (player->stateInput == Player_ProcessP1Input) {
+                if (player->stateInput == Player_ProcessP1Input)
                     player->stateInput = MegaChopper_PlayerInput_StateP1;
-                }
-                else if (player->stateInput == Player_ProcessP2Input_Player) {
+                else if (player->stateInput == Player_ProcessP2Input_Player)
                     player->stateInput = MegaChopper_PlayerInput_StateP2;
-                }
-                else if (player->stateInput == Player_ProcessP2Input_AI) {
+                else if (player->stateInput == Player_ProcessP2Input_AI)
                     player->stateInput = MegaChopper_PlayerInput_StateP2_AI;
-                }
+
                 self->drawOrder   = player->drawOrder + 1;
                 self->isPermanent = true;
-                self->state       = MegaChopper_State_Unknown3;
+                self->state       = MegaChopper_State_Chopping;
             }
             player->blinkTimer = blink;
             foreach_break;
@@ -106,17 +107,15 @@ void MegaChopper_CheckOffScreen(void)
     if (!RSDK.CheckOnScreen(self, NULL) && RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange) == false) {
         self->position.x   = self->startPos.x;
         self->position.y   = self->startPos.y;
-        EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+
+        EntityPlayer *player = self->playerPtr;
         if (player) {
-            if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
+            if (player->stateInput == MegaChopper_PlayerInput_StateP1) 
                 player->stateInput = Player_ProcessP1Input;
-            }
-            else if (player->stateInput == MegaChopper_PlayerInput_StateP2) {
+            else if (player->stateInput == MegaChopper_PlayerInput_StateP2) 
                 player->stateInput = Player_ProcessP2Input_Player;
-            }
-            else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) {
+            else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) 
                 player->stateInput = Player_ProcessP2Input_AI;
-            }
         }
         self->nibbleTimer = 0;
         self->isPermanent = false;
@@ -166,23 +165,25 @@ void MegaChopper_State_Setup(void)
     if (self->position.y >= Water->waterLevel) {
         self->active     = ACTIVE_NORMAL;
         self->velocity.x = -0x10000;
-        self->state      = MegaChopper_State_Unknown1;
-        MegaChopper_State_Unknown1();
+        self->state      = MegaChopper_State_InWater;
+        MegaChopper_State_InWater();
     }
     else {
         destroyEntity(self);
     }
 }
 
-void MegaChopper_State_Unknown1(void)
+void MegaChopper_State_InWater(void)
 {
     RSDK_THIS(MegaChopper);
+
     if (++self->animator.frameID == 6)
         self->animator.frameID = 0;
+
     if (self->animator.frameID == 12)
         self->animator.frameID = 6;
-    EntityPlayer *player = Player_GetNearestPlayer();
 
+    EntityPlayer *player = Player_GetNearestPlayer();
     if (self->position.x >= player->position.x) {
         self->velocity.x -= 0x800;
         if (self->velocity.x < -0x20000)
@@ -205,37 +206,40 @@ void MegaChopper_State_Unknown1(void)
         if (self->velocity.y < 0)
             self->velocity.y = 0;
     }
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    if (self->position.y < Water->waterLevel) {
 
-        bool32 flag = false;
+    if (self->position.y < Water->waterLevel) {
+        bool32 inWater = false;
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
-                flag = true;
+                inWater = true;
             }
         }
 
-        if (!flag) {
+        if (!inWater) {
             self->velocity.y = -0x40000;
             if (self->direction == FLIP_NONE)
                 self->velocity.x = -0x20000;
             else
                 self->velocity.x = 0x20000;
             self->velocity.x = 0x20000;
-            self->state      = MegaChopper_State_Unknown2;
+            self->state      = MegaChopper_State_OutOfWater;
         }
     }
     MegaChopper_CheckPlayerCollisions();
     MegaChopper_CheckOffScreen();
 }
 
-void MegaChopper_State_Unknown2(void)
+void MegaChopper_State_OutOfWater(void)
 {
     RSDK_THIS(MegaChopper);
+
     if (++self->animator.frameID == 6)
         self->animator.frameID = 0;
+
     if (self->animator.frameID == 12)
         self->animator.frameID = 6;
 
@@ -244,13 +248,13 @@ void MegaChopper_State_Unknown2(void)
     self->velocity.y += 0x1800;
 
     if (self->position.y >= Water->waterLevel) {
-        self->state = MegaChopper_State_Unknown1;
+        self->state = MegaChopper_State_InWater;
     }
     else {
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
-                self->state = MegaChopper_State_Unknown1;
+                self->state = MegaChopper_State_InWater;
             }
         }
     }
@@ -258,14 +262,16 @@ void MegaChopper_State_Unknown2(void)
     MegaChopper_CheckOffScreen();
 }
 
-void MegaChopper_State_Unknown3(void)
+void MegaChopper_State_Chopping(void)
 {
     RSDK_THIS(MegaChopper);
+
     if (++self->animator.timer == 3) {
-        self->animator.timer = 0;
-        self->animator.frameID        = (self->animator.frameID + 6) % 12;
+        self->animator.timer   = 0;
+        self->animator.frameID = (self->animator.frameID + 6) % 12;
     }
-    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+
+    EntityPlayer *player = self->playerPtr;
 
     if (!player) {
         self->velocity.y = -0x40000;
@@ -273,31 +279,30 @@ void MegaChopper_State_Unknown3(void)
             self->velocity.x = 0x20000;
         else
             self->velocity.x = -0x20000;
-        self->state = MegaChopper_State_Unknown4;
+        self->state = MegaChopper_State_ShakenOff;
     }
     else {
         if (player->animator.animationID == ANI_JUMP) {
             self->playerPtr = NULL;
-            if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
+
+            if (player->stateInput == MegaChopper_PlayerInput_StateP1) 
                 player->stateInput = Player_ProcessP1Input;
-            }
-            else if (player->stateInput == MegaChopper_PlayerInput_StateP2) {
+            else if (player->stateInput == MegaChopper_PlayerInput_StateP2) 
                 player->stateInput = Player_ProcessP2Input_Player;
-            }
-            else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) {
+            else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) 
                 player->stateInput = Player_ProcessP2Input_AI;
-            }
 
             self->velocity.y = -0x40000;
             if (self->direction == FLIP_NONE)
                 self->velocity.x = 0x20000;
             else
                 self->velocity.x = -0x20000;
-            self->state = MegaChopper_State_Unknown4;
+            self->state = MegaChopper_State_ShakenOff;
         }
         else {
             if (++self->nibbleTimer >= 60) {
                 self->nibbleTimer = 0;
+
                 if (!player->rings || player->sidekick) {
                     Player_Hit(player);
                     if (player->position.x > self->position.x)
@@ -309,12 +314,12 @@ void MegaChopper_State_Unknown3(void)
                 else {
                     player->rings--;
                     if (Ring->pan) {
-                        int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
+                        int32 channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
                         Ring->pan = 0;
                     }
                     else {
-                        int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
+                        int32 channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                         Ring->pan = 1;
                     }
@@ -331,38 +336,38 @@ void MegaChopper_State_Unknown3(void)
 
                 self->playerDir = player->direction;
                 if (self->lastShakeFlags) {
-                    if (!self->field_72) {
+                    if (!self->shakeTimer) {
                         self->shakeCount     = 0;
                         self->lastShakeFlags = 0;
                     }
                     else {
-                        uint8 flags = 0;
-                        self->field_72--;
+                        self->shakeTimer--;
+
+                        uint8 shakeFlags = 0;
                         if (player->left)
-                            flags = 1;
+                            shakeFlags = 1;
                         if (player->right)
-                            flags |= 2;
-                        if (flags) {
-                            if (flags != 3 && flags != self->lastShakeFlags) {
-                                self->lastShakeFlags = flags;
+                            shakeFlags |= 2;
+
+                        if (shakeFlags) {
+                            if (shakeFlags != 3 && shakeFlags != self->lastShakeFlags) {
+                                self->lastShakeFlags = shakeFlags;
                                 if (++self->shakeCount >= 6) {
                                     self->playerPtr = NULL;
-                                    if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
+
+                                    if (player->stateInput == MegaChopper_PlayerInput_StateP1)
                                         player->stateInput = Player_ProcessP1Input;
-                                    }
-                                    else if (player->stateInput == MegaChopper_PlayerInput_StateP2) {
+                                    else if (player->stateInput == MegaChopper_PlayerInput_StateP2)
                                         player->stateInput = Player_ProcessP2Input_Player;
-                                    }
-                                    else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) {
+                                    else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI)
                                         player->stateInput = Player_ProcessP2Input_AI;
-                                    }
 
                                     self->velocity.y = -0x40000;
                                     if (self->direction == FLIP_NONE)
                                         self->velocity.x = 0x20000;
                                     else
                                         self->velocity.x = -0x20000;
-                                    self->state = MegaChopper_State_Unknown4;
+                                    self->state = MegaChopper_State_ShakenOff;
                                 }
                             }
                         }
@@ -370,30 +375,27 @@ void MegaChopper_State_Unknown3(void)
                 }
                 else if (player->left) {
                     self->lastShakeFlags = 1;
-                    self->field_72       = 64;
+                    self->shakeTimer       = 64;
                 }
                 else if (player->right) {
                     self->lastShakeFlags = 2;
-                    self->field_72       = 64;
+                    self->shakeTimer       = 64;
                 }
             }
             else {
-                if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
+                if (player->stateInput == MegaChopper_PlayerInput_StateP1)
                     player->stateInput = Player_ProcessP1Input;
-                }
-                else if (player->stateInput == MegaChopper_PlayerInput_StateP2) {
+                else if (player->stateInput == MegaChopper_PlayerInput_StateP2)
                     player->stateInput = Player_ProcessP2Input_Player;
-                }
-                else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI) {
+                else if (player->stateInput == MegaChopper_PlayerInput_StateP2_AI)
                     player->stateInput = Player_ProcessP2Input_AI;
-                }
 
                 self->velocity.y = -0x40000;
                 if (self->direction == FLIP_NONE)
                     self->velocity.x = 0x20000;
                 else
                     self->velocity.x = -0x20000;
-                self->state = MegaChopper_State_Unknown4;
+                self->state = MegaChopper_State_ShakenOff;
             }
         }
     }
@@ -401,12 +403,13 @@ void MegaChopper_State_Unknown3(void)
     MegaChopper_CheckOffScreen();
 }
 
-void MegaChopper_State_Unknown4(void)
+void MegaChopper_State_ShakenOff(void)
 {
     RSDK_THIS(MegaChopper);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     MegaChopper_CheckOffScreen();
 }
 

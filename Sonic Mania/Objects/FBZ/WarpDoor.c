@@ -92,7 +92,7 @@ void WarpDoor_Update(void)
                                     int32 sfx     = RSDK.Rand(0, 6);
                                     int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-                                    channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0xFF);
+                                    channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                                     foreach_active(TMZBarrier, barrier)
                                     {

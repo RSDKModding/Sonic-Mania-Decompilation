@@ -548,7 +548,7 @@ void BreakableWall_HandleBottomBreak_All(void)
                         offsetY += 0x100000;
                     }
 
-                    RSDK.PlaySfx(BreakableWall->sfxBreak, 0, 255);
+                    RSDK.PlaySfx(BreakableWall->sfxBreak, false, 0xFF);
                     player->velocity.y = velY;
                     destroyEntity(self);
                 }

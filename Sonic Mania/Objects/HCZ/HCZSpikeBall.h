@@ -13,9 +13,9 @@ struct ObjectHCZSpikeBall {
 struct EntityHCZSpikeBall {
     RSDK_ENTITY
     int32 field_58;
-    Vector2 field_5C;
+    Vector2 startPos;
     int32 field_64;
-    int32 field_68;
+    int32 intervalOffset;
     EntityHangConveyor *conveyor;
     Hitbox hitbox;
     Animator animator;
@@ -39,8 +39,8 @@ void HCZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
 void HCZSpikeBall_HandleConveyorSetup(void);
-void HCZSpikeBall_Unknown2(void);
+void HCZSpikeBall_LinkToConveyor(void);
 void HCZSpikeBall_HandlePlayerInteractions(void);
-void HCZSpikeBall_Unknown4(void);
+void HCZSpikeBall_HandleConveyorMovement(void);
 
 #endif //!OBJ_HCZSPIKEBALL_H

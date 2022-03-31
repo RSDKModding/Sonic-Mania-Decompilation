@@ -37,17 +37,19 @@ void Jawz_Create(void *data)
     self->updateRange.y = 0x800000;
     self->velocity.x    = 0;
     RSDK.SetSpriteAnimation(Jawz->aniFrames, 0, &self->animator, true, 0);
-    self->state = Jawz_CheckPlayerTrigger;
+    self->state = Jawz_State_CheckPlayerTrigger;
 }
 
 void Jawz_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HCZ"))
         Jawz->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jawz.bin", SCOPE_STAGE);
-    Jawz->hitbox.left   = -20;
-    Jawz->hitbox.top    = -5;
-    Jawz->hitbox.right  = 20;
-    Jawz->hitbox.bottom = 5;
+
+    Jawz->hitboxBadnik.left   = -20;
+    Jawz->hitboxBadnik.top    = -5;
+    Jawz->hitboxBadnik.right  = 20;
+    Jawz->hitboxBadnik.bottom = 5;
+
     DEBUGMODE_ADD_OBJ(Jawz);
 }
 
@@ -60,15 +62,15 @@ void Jawz_DebugSpawn(void)
 void Jawz_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Jawz->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Jawz_CheckPlayerInteractions(void)
+void Jawz_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Jawz);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Jawz->hitbox) && !Player_CheckBadnikBreak(self, player, true)) {
+        if (Player_CheckBadnikTouch(player, self, &Jawz->hitboxBadnik) && !Player_CheckBadnikBreak(self, player, true)) {
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(self);
@@ -76,7 +78,7 @@ void Jawz_CheckPlayerInteractions(void)
     }
 }
 
-void Jawz_CheckPlayerTrigger(void)
+void Jawz_State_CheckPlayerTrigger(void)
 {
     RSDK_THIS(Jawz);
 
@@ -91,7 +93,7 @@ void Jawz_CheckPlayerTrigger(void)
 
             int32 playerID = RSDK.GetEntityID(player);
             switch (self->triggerDir) {
-                case 0:
+                case JAWS_TRIGGER_BOTH:
                     if (player->position.x > self->position.x) {
                         self->direction  = FLIP_X;
                         self->velocity.x = 0x20000;
@@ -103,14 +105,16 @@ void Jawz_CheckPlayerTrigger(void)
                         self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
                     }
                     break;
-                case 1:
+
+                case JAWS_TRIGGER_LEFT:
                     if (player->position.x < self->position.x) {
                         self->direction  = FLIP_NONE;
                         self->velocity.x = -0x20000;
                         self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
                     }
                     break;
-                case 2:
+
+                case JAWS_TRIGGER_RIGHT:
                     if (player->position.x > self->position.x) {
                         self->direction  = FLIP_X;
                         self->velocity.x = 0x20000;
@@ -123,22 +127,22 @@ void Jawz_CheckPlayerTrigger(void)
 
     if (self->velocity.x) {
         self->active  = ACTIVE_NORMAL;
-        self->visible = 1;
-        self->state   = Jawz_State_Main;
-        Jawz_State_Main();
+        self->visible = true;
+        self->state   = Jawz_State_Triggered;
+        Jawz_State_Triggered();
     }
     else {
         self->active  = ACTIVE_BOUNDS;
-        self->visible = 0;
+        self->visible = false;
     }
 }
 
-void Jawz_State_Main(void)
+void Jawz_State_Triggered(void)
 {
     RSDK_THIS(Jawz);
     self->position.x += self->velocity.x;
     RSDK.ProcessAnimation(&self->animator);
-    Jawz_CheckPlayerInteractions();
+    Jawz_CheckPlayerCollisions();
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position.x = self->startPos.x;
@@ -148,9 +152,32 @@ void Jawz_State_Main(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Jawz_EditorDraw(void) { Jawz_Draw(); }
+void Jawz_EditorDraw(void)
+{
+    RSDK_THIS(Jawz);
 
-void Jawz_EditorLoad(void) { Jawz->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jawz.bin", SCOPE_STAGE); }
+    self->direction = self->triggerDir == JAWS_TRIGGER_RIGHT;
+
+    Jawz_Draw();
+
+    if (showGizmos()) {
+        if (self->triggerDir < JAWS_TRIGGER_RIGHT)
+            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x - 0x300000, self->position.y);
+
+        if (self->triggerDir != JAWS_TRIGGER_LEFT)
+            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x + 0x300000, self->position.y);
+    }
+}
+
+void Jawz_EditorLoad(void)
+{
+    Jawz->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jawz.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Jawz, triggerDir);
+    RSDK_ENUM_VAR("Both", JAWS_TRIGGER_BOTH);
+    RSDK_ENUM_VAR("Left", JAWS_TRIGGER_LEFT);
+    RSDK_ENUM_VAR("Right", JAWS_TRIGGER_RIGHT);
+}
 #endif
 
 void Jawz_Serialize(void) { RSDK_EDITABLE_VAR(Jawz, VAR_UINT8, triggerDir); }

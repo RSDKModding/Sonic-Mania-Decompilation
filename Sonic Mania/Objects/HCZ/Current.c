@@ -130,7 +130,7 @@ void Current_Create(void *data)
             }
             else {
                 RSDK.SetSpriteAnimation(Water->aniFrames, 5, &self->animator, true, 0);
-                self->alpha = 512;
+                self->alpha = 0x200;
             }
             self->state = Current_State_Child;
         }
@@ -139,10 +139,12 @@ void Current_Create(void *data)
             self->updateRange.x = self->size.x >> 1;
             self->updateRange.y = self->size.y >> 1;
             self->active        = ACTIVE_BOUNDS;
+
             self->hitbox.left   = -(self->size.x >> 17);
             self->hitbox.right  = self->size.x >> 17;
             self->hitbox.top    = -(self->size.y >> 17);
             self->hitbox.bottom = self->size.y >> 17;
+
             Current_GetTaggedButton();
             switch (self->type) {
                 case CURRENT_C_LEFT: self->state = Current_State_WaterLeft; break;
@@ -165,7 +167,9 @@ void Current_StageLoad(void)
         Current->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Current.bin", SCOPE_STAGE);
     else
         Current->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+
     RSDK.SetSpriteAnimation(Current->aniFrames, 0, &Current->animator, true, 0);
+
     Current->sfxRush = RSDK.GetSfx("Stage/Rush.wav");
 }
 
@@ -223,7 +227,7 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
     RSDK_THIS(Current);
     Vector2 result;
 
-    int x = 0;
+    int32 x = 0;
     if (right) {
         x = self->position.x - (self->size.x >> 1) - 0x200000;
         if ((ScreenInfo->position.x - 64) << 16 > x)
@@ -235,29 +239,27 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
             x = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
     }
 
-    int startY = self->size.y >> 1;
+    int32 maxY = self->position.y - (self->size.y >> 1) - 0x200000;
+    if ((ScreenInfo->position.y - 64) << 16 > maxY)
+        maxY = (ScreenInfo->position.y - 64) << 16;
 
-    int finalY = self->position.y - startY - 0x200000;
-    if ((ScreenInfo->position.y - 64) << 16 > finalY)
-        finalY = (ScreenInfo->position.y - 64) << 16;
-
-    int screenY = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
-    int minY    = startY + self->position.y + 0x200000;
+    int32 screenY = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
+    int32 minY    = (self->size.y >> 1) + self->position.y + 0x200000;
     if (screenY < minY)
         minY = screenY;
 
-    int max = (minY - finalY) >> 20;
+    int32 max = (minY - maxY) >> 20;
     if (!max)
         max = 1;
 
     result.x = x;
     if (max <= 0)
-        result.y = finalY;
+        result.y = maxY;
     else
 #if RETRO_USE_PLUS
-        result.y = (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20) + finalY;
+        result.y = maxY + (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20);
 #else
-        result.y = (RSDK.Rand(0, max) << 20) + finalY;
+        result.y = maxY + (RSDK.Rand(0, max) << 20);
 #endif
     return result;
 }
@@ -267,7 +269,7 @@ Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
     RSDK_THIS(Current);
     Vector2 result;
 
-    int y = 0;
+    int32 y = 0;
     if (down) {
         y = self->position.y - (self->size.y >> 1) - 0x200000;
         if ((ScreenInfo->position.y - 64) << 16 > y)
@@ -279,25 +281,25 @@ Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
             y = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
     }
 
-    int startX = self->size.x >> 1;
-    int finalX = self->position.x - startX - 0x200000;
-    if ((ScreenInfo->position.x - 64) << 16 > finalX)
-        finalX = (ScreenInfo->position.x - 64) << 16;
+    int32 maxX = self->position.x - (self->size.x >> 1) - 0x200000;
+    if ((ScreenInfo->position.x - 64) << 16 > maxX)
+        maxX = (ScreenInfo->position.x - 64) << 16;
 
-    int screenX = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
-    int minX    = startX + self->position.x + 0x200000;
+    int32 screenX = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
+    int32 minX    = (self->size.x >> 1) + self->position.x + 0x200000;
     if (screenX < minX)
         minX = screenX;
 
-    int max = (minX - finalX) >> 20;
+    int32 max = (minX - maxX) >> 20;
     if (!max)
         max = 1;
+
     if (max <= 0) {
-        result.x = finalX;
+        result.x = maxX;
         result.y = y;
     }
     else {
-        result.x = finalX + (RSDK.Rand(0, max) << 20);
+        result.x = maxX + (RSDK.Rand(0, max) << 20);
         result.y = y;
     }
     return result;
@@ -309,7 +311,7 @@ void Current_State_WaterLeft(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
 
             if (Player_CheckValidState(player)) {
@@ -318,7 +320,7 @@ void Current_State_WaterLeft(void)
                         if (player->state != Player_State_StartJumpIn)
                             player->state = Player_State_Air;
 
-                        int x = self->position.x + ((self->hitbox.right - 32) << 16);
+                        int32 x = self->position.x + ((self->hitbox.right - 32) << 16);
                         self->activePlayers &= ~(1 << playerID);
                         if (RSDK.CheckStageFolder("FBZ") && !player->sidekick && self->fbzAchievement && self->playerPositions[playerID].x >= x
                             && player->position.x < self->position.x) {
@@ -335,9 +337,9 @@ void Current_State_WaterLeft(void)
                 }
 
                 if ((1 << playerID) & self->activePlayers) {
-                    bool32 flag = false;
+                    bool32 inBubble = false;
                     if (Water)
-                        flag = Water_GetPlayerBubble(player) != NULL;
+                        inBubble = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
                         int anim = player->animator.animationID;
@@ -347,7 +349,7 @@ void Current_State_WaterLeft(void)
                             player->nextAirState    = StateMachine_None;
                             player->velocity.x      = -(self->strength << 15);
                             player->groundVel       = player->velocity.x;
-                            if (!flag) {
+                            if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
@@ -411,7 +413,7 @@ void Current_State_WaterRight(void)
                         inBubble = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->animator.animationID;
+                        int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
@@ -452,7 +454,7 @@ void Current_State_WaterRight(void)
             child->type          = CURRENT_C_RIGHT;
             child->drawOrder     = Zone->playerDrawLow;
             if (child->position.x > (self->position.x - (self->size.x >> 1)))
-                child->alpha = 240;
+                child->alpha = 0xF0;
         }
     }
 }
@@ -478,18 +480,18 @@ void Current_State_WaterUp(void)
                     self->activePlayers |= (1 << playerID);
 
                 if ((1 << playerID) & self->activePlayers) {
-                    bool32 flag = false;
+                    bool32 inBubble = false;
                     if (Water)
-                        flag = Water_GetPlayerBubble(player) != NULL;
+                        inBubble = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->animator.animationID;
+                        int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.y      = -(self->strength << 15);
-                            if (!flag) {
+                            if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
@@ -497,6 +499,7 @@ void Current_State_WaterUp(void)
                                 player->state           = Current_Player_State_CurrentUp;
                             }
                         }
+
                         if (player->left) {
                             player->velocity.x = -0x10000;
                             player->groundVel  = -0x10000;
@@ -527,7 +530,7 @@ void Current_State_WaterUp(void)
             child->type          = CURRENT_C_UP;
             child->drawOrder     = Zone->playerDrawLow;
             if (child->position.y < (self->position.y + (self->size.y >> 1)))
-                child->alpha = 240;
+                child->alpha = 0xF0;
         }
     }
 }
@@ -538,7 +541,7 @@ void Current_State_WaterDown(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
 
             if (Player_CheckValidState(player)) {
@@ -558,7 +561,7 @@ void Current_State_WaterDown(void)
                         flag = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->animator.animationID;
+                        int32 anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
@@ -602,7 +605,7 @@ void Current_State_WaterDown(void)
             child->type          = CURRENT_C_DOWN;
             child->drawOrder     = Zone->playerDrawLow;
             if (child->position.y > (self->position.y - (self->size.y >> 1)))
-                child->alpha = 240;
+                child->alpha = 0xF0;
         }
     }
 }
@@ -615,7 +618,7 @@ void Current_State_PushLeft(void)
     {
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->animator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING)
                     player->position.x += -(self->strength << 15);
             }
@@ -629,7 +632,7 @@ void Current_State_PushLeft(void)
         child->strength      = 4 * self->strength + RSDK.Rand(1 - self->strength, 5);
         child->size.x        = self->position.x - (self->size.x >> 1) + 0x400000;
         if (child->position.x < (self->position.x + (self->size.x >> 1)))
-            child->alpha = 240;
+            child->alpha = 0xF0;
     }
 }
 
@@ -641,7 +644,7 @@ void Current_State_PushRight(void)
     {
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->animator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING)
                     player->position.x += self->strength << 15;
             }
@@ -657,7 +660,7 @@ void Current_State_PushUp(void)
     {
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->animator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING && !player->onGround)
                     player->position.y += -(self->strength << 15);
             }
@@ -673,7 +676,7 @@ void Current_State_PushDown(void)
     {
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->animator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING && !player->onGround)
                     player->position.y += self->strength << 15;
             }
@@ -685,6 +688,7 @@ void Current_State_Child(void)
 {
     RSDK_THIS(Current);
     RSDK.ProcessAnimation(&self->animator);
+
     switch (self->type) {
         case CURRENT_C_LEFT:
             self->position.x -= self->strength << 17;
@@ -692,30 +696,33 @@ void Current_State_Child(void)
                 self->alpha -= 8;
             }
             else {
-                if (self->alpha < 240)
+                if (self->alpha < 0xF0)
                     self->alpha += 8;
             }
             break;
+
         case CURRENT_C_RIGHT:
             self->position.x += self->strength << 17;
             if (self->position.x >= self->size.x) {
-                if (self->alpha < 240)
+                if (self->alpha < 0xF0)
                     self->alpha += 8;
             }
             else {
                 self->alpha -= 8;
             }
             break;
+
         case CURRENT_C_UP:
             self->position.y -= self->strength << 17;
             if (self->position.y >= self->size.y) {
-                if (self->alpha < 240)
+                if (self->alpha < 0xF0)
                     self->alpha += 8;
             }
             else {
                 self->alpha -= 8;
             }
             break;
+
         case CURRENT_C_DOWN:
             self->position.y += self->strength << 17;
             if (self->position.y >= self->size.y) {
@@ -726,6 +733,7 @@ void Current_State_Child(void)
                 self->alpha -= 8;
             }
             break;
+
         default: break;
     }
 

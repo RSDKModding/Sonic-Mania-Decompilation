@@ -13,7 +13,7 @@ ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 void AIZEncoreTutorial_Update(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->bubbleAnimator);
     StateMachine_Run(self->state);
 }
 
@@ -27,28 +27,28 @@ void AIZEncoreTutorial_Draw(void)
     Vector2 drawPos;
 
     self->inkEffect = INK_NONE;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->bubbleAnimator, NULL, false);
 
     self->inkEffect = INK_ALPHA;
     drawPos.x         = (RSDK.Cos256(self->angle) << 12) + self->position.x;
     drawPos.y         = ((RSDK.Sin256(self->angle) + 512) << 11) + self->position.y;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->playerAnimator, &drawPos, false);
 
     drawPos.x = (RSDK.Cos256(self->angle + 128) << 12) + self->position.x;
     drawPos.y = ((RSDK.Sin256(self->angle + 128) + 512) << 11) + self->position.y;
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->buddyAnimator, &drawPos, false);
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 0x100000;
-    RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    RSDK.DrawSprite(&self->buttonPressAnimator, &drawPos, false);
 
-    switch (self->animator4.frameID) {
+    switch (self->buttonPressAnimator.frameID) {
         default: break;
         case 0:
         case 2: drawPos.y -= 0x30000; break;
     }
 
-    RSDK.DrawSprite(&self->animator5, &drawPos, false);
+    RSDK.DrawSprite(&self->buttonAnimator, &drawPos, false);
 }
 
 void AIZEncoreTutorial_Create(void *data)
@@ -61,10 +61,11 @@ void AIZEncoreTutorial_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->state         = AIZEncoreTutorial_State_ShowTutBubble;
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 7, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 4, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, voidToInt(data), &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 8, &self->animator4, true, 0);
+
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 7, &self->bubbleAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 4, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, voidToInt(data), &self->buddyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 8, &self->buttonPressAnimator, true, 0);
     }
 }
 
@@ -77,8 +78,8 @@ void AIZEncoreTutorial_StageLoad(void)
 void AIZEncoreTutorial_State_ShowTutBubble(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    if (self->animator1.frameID == 6) {
-        HUD_GetKeyFrame(&self->animator5, KEY_Y);
+    if (self->bubbleAnimator.frameID == 6) {
+        HUD_GetKeyFrame(&self->buttonAnimator, KEY_Y);
         self->state = AIZEncoreTutorial_State_EnterTutorial;
     }
 }
@@ -97,12 +98,12 @@ void AIZEncoreTutorial_State_EnterTutorial(void)
 void AIZEncoreTutorial_State_ShowSwapTutorial(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    RSDK.ProcessAnimation(&self->animator4);
-    HUD_GetKeyFrame(&self->animator5, KEY_Y);
+    RSDK.ProcessAnimation(&self->buttonPressAnimator);
+    HUD_GetKeyFrame(&self->buttonAnimator, KEY_Y);
 
     if (self->timer >= 60) {
         self->angle += 4;
-        if (self->angle == 128 || self->angle == 256) {
+        if (self->angle == 0x80 || self->angle == 0x100) {
             self->timer = 0;
             if (++self->swapCount == 3)
                 self->state = AIZEncoreTutorial_State_ExitTutorial;
@@ -143,15 +144,14 @@ void AIZEncoreTutorial_State_ReturnToCutscene(void)
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     EntityFXRuby *fxRuby           = CREATE_ENTITY(FXRuby, NULL, 0, 0);
     fxRuby->drawOrder              = Zone->playerDrawHigh + 1;
-    EncoreIntro->fxRuby            = (Entity *)fxRuby;
+    EncoreIntro->fxRuby            = fxRuby;
     PhantomRuby_PlaySFX(RUBYSFX_ATTACK3);
     Music_FadeOut(0.012);
 
     cutsceneSeq->skipType = SKIPTYPE_DISABLED;
     for (int32 i = 0; i < 64; ++i) {
-        if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_Cutscene_SkipAndFadeOut) {
+        if (cutsceneSeq->cutsceneStates[i] == EncoreIntro_Cutscene_SkipAndFadeOut)
             CutsceneSeq_NewState(i, cutsceneSeq);
-        }
     }
 }
 

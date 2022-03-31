@@ -45,10 +45,12 @@ void Pointdexter_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HCZ"))
         Pointdexter->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Pointdexter.bin", SCOPE_STAGE);
+
     Pointdexter->hitbox.left   = -16;
     Pointdexter->hitbox.top    = -6;
     Pointdexter->hitbox.right  = 16;
     Pointdexter->hitbox.bottom = 6;
+
     DEBUGMODE_ADD_OBJ(Pointdexter);
 }
 
@@ -138,7 +140,14 @@ void Pointdexter_State_Swimming(void)
 #if RETRO_INCLUDE_EDITOR
 void Pointdexter_EditorDraw(void) { Pointdexter_Draw(); }
 
-void Pointdexter_EditorLoad(void) { Pointdexter->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Pointdexter.bin", SCOPE_STAGE); }
+void Pointdexter_EditorLoad(void)
+{
+    Pointdexter->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Pointdexter.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Pointdexter, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void Pointdexter_Serialize(void) { RSDK_EDITABLE_VAR(Pointdexter, VAR_UINT8, direction); }

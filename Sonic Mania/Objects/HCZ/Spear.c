@@ -12,22 +12,25 @@ ObjectSpear *Spear;
 void Spear_Update(void)
 {
     RSDK_THIS(Spear);
+
     int32 timer = (self->intervalOffset + Zone->timer) % self->interval;
     if (timer >= self->duration) {
         if (timer - self->duration >= 6)
-            self->field_7C = 0;
+            self->retractPos = 0;
         else
-            self->field_7C = 0x48000 * (6 - (timer - self->duration));
+            self->retractPos = 0x48000 * (6 - (timer - self->duration));
     }
     else {
         if (timer >= 6)
-            self->field_7C = 0x1B0000;
+            self->retractPos = 0x1B0000;
         else
-            self->field_7C = 0x48000 * timer;
-        if (self->field_7C == 0x48000)
-            RSDK.PlaySfx(Spear->sfxSpear, 0, 255);
+            self->retractPos = 0x48000 * timer;
+
+        if (self->retractPos == 0x48000)
+            RSDK.PlaySfx(Spear->sfxSpear, false, 0xFF);
     }
-    Spear_Unknown1();
+
+    Spear_SetupHitboxes();
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
@@ -51,37 +54,44 @@ void Spear_Draw(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     switch (self->orientation) {
-        case 0:
+        case SPEAR_UP:
             drawPos.y = self->position.y + 0x1B0000;
-            drawPos.y = self->position.y + 0x1B0000 - self->field_7C;
+            drawPos.y = self->position.y + 0x1B0000 - self->retractPos;
             break;
-        case 1:
+
+        case SPEAR_RIGHT:
             drawPos.x = self->position.x - 0x1B0000;
-            drawPos.x = self->field_7C + self->position.x - 0x1B0000;
+            drawPos.x = self->position.x - 0x1B0000 + self->retractPos;
             break;
-        case 2:
+
+        case SPEAR_DOWN:
             drawPos.y = self->position.y - 0x1B0000;
-            drawPos.y = self->field_7C + self->position.y - 0x1B0000;
+            drawPos.y = self->position.y - 0x1B0000 + self->retractPos;
             break;
-        case 3:
+
+        case SPEAR_LEFT:
             drawPos.x = self->position.x + 0x1B0000;
-            drawPos.x = self->position.x + 0x1B0000 - self->field_7C;
+            drawPos.x = self->position.x + 0x1B0000 - self->retractPos;
             break;
+
         default: break;
     }
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.DrawSprite(&self->spearAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 }
 
 void Spear_Create(void *data)
 {
     RSDK_THIS(Spear);
+
     if (SceneInfo->inEditor) {
         if (!self->interval)
             self->interval = 120;
+
         if (!self->duration)
             self->duration = 60;
     }
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
     self->startPos.x    = self->position.x;
@@ -93,50 +103,57 @@ void Spear_Create(void *data)
 
     int32 anim = 0;
     switch (self->orientation) {
-        case 0:
+        case SPEAR_UP:
             self->direction = FLIP_NONE;
-            anim              = 0;
+            anim            = 0;
             break;
-        case 1:
+
+        case SPEAR_RIGHT:
             self->direction = FLIP_NONE;
-            anim              = 1;
+            anim            = 1;
             break;
-        case 2:
+
+        case SPEAR_DOWN:
             self->direction = FLIP_Y;
-            anim              = 0;
+            anim            = 0;
             break;
-        case 3:
+
+        case SPEAR_LEFT:
             self->direction = FLIP_X;
-            anim              = 1;
+            anim            = 1;
             break;
+
         default: break;
     }
-    RSDK.SetSpriteAnimation(Spear->aniFrames, anim, &self->animator, true, 0);
-    RSDK.SetSpriteAnimation(Spear->aniFrames, anim, &self->animator2, true, 1);
+
+    RSDK.SetSpriteAnimation(Spear->aniFrames, anim, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Spear->aniFrames, anim, &self->spearAnimator, true, 1);
 }
 
 void Spear_StageLoad(void)
 {
     Spear->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Spear.bin", SCOPE_STAGE);
+
     Spear->sfxSpear  = RSDK.GetSfx("HCZ/Spear.wav");
 }
 
-void Spear_Unknown1(void)
+void Spear_SetupHitboxes(void)
 {
     RSDK_THIS(Spear);
     switch (self->orientation) {
-        case 0:
-        case 2:
+        case SPEAR_UP:
+        case SPEAR_DOWN:
             self->hitbox.right  = 4;
             self->hitbox.bottom = 0;
             self->hitbox.left   = -4;
-            self->hitbox.top    = -15 - (self->field_7C >> 16);
+            self->hitbox.top    = -15 - (self->retractPos >> 16);
             break;
-        case 1:
-        case 3:
+
+        case SPEAR_RIGHT:
+        case SPEAR_LEFT:
             self->hitbox.left   = 0;
             self->hitbox.top    = 64;
-            self->hitbox.right  = (self->field_7C >> 16) + 15;
+            self->hitbox.right  = (self->retractPos >> 16) + 15;
             self->hitbox.bottom = 4;
             break;
         default: break;
@@ -144,9 +161,50 @@ void Spear_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Spear_EditorDraw(void) { Spear_Draw(); }
+void Spear_EditorDraw(void)
+{
+    RSDK_THIS(Spear);
 
-void Spear_EditorLoad(void) { Spear->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Spear.bin", SCOPE_STAGE); }
+    int32 anim = 0;
+    switch (self->orientation) {
+        case SPEAR_UP:
+            self->direction = FLIP_NONE;
+            anim            = 0;
+            break;
+
+        case SPEAR_RIGHT:
+            self->direction = FLIP_NONE;
+            anim            = 1;
+            break;
+
+        case SPEAR_DOWN:
+            self->direction = FLIP_Y;
+            anim            = 0;
+            break;
+
+        case SPEAR_LEFT:
+            self->direction = FLIP_X;
+            anim            = 1;
+            break;
+
+        default: break;
+    }
+    RSDK.SetSpriteAnimation(Spear->aniFrames, anim, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Spear->aniFrames, anim, &self->spearAnimator, true, 1);
+
+    Spear_Draw();
+}
+
+void Spear_EditorLoad(void)
+{
+    Spear->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Spear.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Spear, orientation);
+    RSDK_ENUM_VAR("Up", SPEAR_UP);
+    RSDK_ENUM_VAR("Right", SPEAR_RIGHT);
+    RSDK_ENUM_VAR("Down", SPEAR_DOWN);
+    RSDK_ENUM_VAR("Left", SPEAR_LEFT);
+}
 #endif
 
 void Spear_Serialize(void)

@@ -254,7 +254,7 @@ void Water_StageLoad(void)
     Water->newWaterLevel    = Water->waterLevel;
     Water->targetWaterLevel = Water->waterLevel;
 
-    Water->ignoreChild = false;
+    Water->disableWaterSplash = false;
 
     Water->hitboxPlayerBubble.left   = -2;
     Water->hitboxPlayerBubble.top    = -2;
@@ -456,7 +456,7 @@ void Water_State_Palette(void)
                     Player_UpdatePhysicsState(player);
                     if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))
                         && (Player_CheckValidState(player) || player->state == Player_State_FlyIn)) {
-                        if (!Water->ignoreChild) {
+                        if (!Water->disableWaterSplash) {
                             if (childPtr) {
                                 EntityWater *splash =
                                     CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, childPtr->position.y - (childPtr->size.y >> 1));
@@ -466,7 +466,7 @@ void Water_State_Palette(void)
                             else {
                                 CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
                             }
-                            RSDK.PlaySfx(Water->sfxSplash, 0, 255);
+                            RSDK.PlaySfx(Water->sfxSplash, false, 0xFF);
                         }
 
                         if (player->velocity.y >= -0x40000) {
@@ -501,7 +501,7 @@ void Water_State_Palette(void)
                 if (notUnderwater) {
                     Player_UpdatePhysicsState(player);
                     if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))) {
-                        if (!Water->ignoreChild) {
+                        if (!Water->disableWaterSplash) {
                             if (childPtr) {
                                 EntityWater *splash =
                                     CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, childPtr->position.y - (childPtr->size.x >> 1));
@@ -544,7 +544,7 @@ void Water_State_Palette(void)
                             case 660:
                             case 360:
                                 if (!player->sidekick)
-                                    RSDK.PlaySfx(Water->sfxWarning, 0, 255);
+                                    RSDK.PlaySfx(Water->sfxWarning, false, 0xFF);
                                 break;
                             case 1080: Water_SpawnCountDownBubble(player, p, 5); break;
                             case 1200: Water_SpawnCountDownBubble(player, p, 4); break;
@@ -660,7 +660,7 @@ void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut)
         RSDK.SetSpriteAnimation(Water->aniFrames, 6, &self->animator, true, 0);
         self->velocity.x = 0;
         self->velocity.y = 0;
-        RSDK.PlaySfx(Water->sfxDNABurst, 0, 255);
+        RSDK.PlaySfx(Water->sfxDNABurst, false, 0xFF);
 
         foreach_active(Player, player)
         {

@@ -12,8 +12,9 @@ ObjectFan *Fan;
 void Fan_Update(void)
 {
     RSDK_THIS(Fan);
-    StateMachine_Run(self->state3);
-    StateMachine_Run(self->state2);
+    StateMachine_Run(self->stateActivate);
+    StateMachine_Run(self->stateDeactivate);
+
     RSDK.ProcessAnimation(&self->animator);
     StateMachine_Run(self->state);
 }
@@ -31,31 +32,31 @@ void Fan_StaticUpdate(void)
             if (water->state == Water_State_HCZBubble && water->activePlayers) {
                 foreach_active(Fan, fan)
                 {
-                    Fan->hitbox1.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
+                    Fan->hitboxTop.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                     if (fan->state == Fan_HandlePlayerInteractions_Top) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitbox1, water->position.x,
+                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxTop, water->position.x,
                                                       water->position.y)) {
                             offsetV -= 0x20000;
                         }
                     }
 
-                    Fan->hitbox2.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
+                    Fan->hitboxBottom.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                     if (fan->state == Fan_HandlePlayerInteractions_Bottom) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitbox2, water->position.x,
+                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxBottom, water->position.x,
                                                       water->position.y)) {
                             offsetV += 0x20000;
                         }
                     }
 
-                    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
+                    Fan->hitboxSides.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                     if (fan->state == Fan_HandlePlayerInteractions_Left) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitbox3, water->position.x,
+                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxSides, water->position.x,
                                                       water->position.y)) {
                             offsetH -= 0x20000;
                         }
                     }
                     if (fan->state == Fan_HandlePlayerInteractions_Right) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitbox3, water->position.x,
+                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxSides, water->position.x,
                                                       water->position.y)) {
                             offsetH += 0x20000;
                         }
@@ -95,29 +96,28 @@ void Fan_StaticUpdate(void)
     if (HangConveyor) {
         foreach_active(HangConveyor, conveyor)
         {
-            if (conveyor->activePlayers1) {
+            if (conveyor->movementActivePlayers) {
                 foreach_active(Player, player)
                 {
                     int32 playerID = RSDK.GetEntityID(player);
-                    if (((1 << playerID) & conveyor->activePlayers1)) {
-                        bool32 flag = false;
+                    if (((1 << playerID) & conveyor->movementActivePlayers)) {
+                        bool32 fanning = false;
                         foreach_active(Fan, fan)
                         {
-                            Fan->hitbox1.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
+                            Fan->hitboxTop.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                             if (fan->state == Fan_HandlePlayerInteractions_Top) {
-                                if (Player_CheckCollisionTouch(player, fan, &Fan->hitbox1)) {
-                                    if (conveyor->field_C4[playerID] < 12) {
-                                        conveyor->field_C4[playerID]++;
-                                        flag = true;
+                                if (Player_CheckCollisionTouch(player, fan, &Fan->hitboxTop)) {
+                                    if (conveyor->fanTimer[playerID] < 12) {
+                                        conveyor->fanTimer[playerID]++;
+                                        fanning = true;
                                         foreach_break;
                                     }
                                 }
                             }
                         }
 
-                        if (conveyor->field_C4[playerID] > 0 && !flag) {
-                            conveyor->field_C4[playerID]--;
-                        }
+                        if (conveyor->fanTimer[playerID] > 0 && !fanning)
+                            conveyor->fanTimer[playerID]--;
                     }
                 }
             }
@@ -125,15 +125,15 @@ void Fan_StaticUpdate(void)
     }
 
     if (RSDK.CheckStageFolder("HCZ")) {
-        Vector2 range;
-        range.x = 0x400000;
-        range.y = 0x400000;
+        int32 count = 0;
         if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
-            int32 count = 0;
+            Vector2 range;
+            range.x = 0x400000;
+            range.y = 0x400000;
             foreach_active(Fan, fan)
             {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
-                if (fan->state && fan->state != Fan_ProcessAnimationSpeed_Slow && tile == 0xFFFF && RSDK.CheckOnScreen(fan, &range))
+                if (fan->state && fan->state != Fan_State_Stopped && tile == 0xFFFF && RSDK.CheckOnScreen(fan, &range))
                     ++count;
             }
 
@@ -142,10 +142,10 @@ void Fan_StaticUpdate(void)
                     RSDK.PlaySfx(Fan->sfxFan, 37404, 0xFF);
                     Fan->playingFanSFX = true;
                 }
-                return;
             }
         }
-        if (Fan->playingFanSFX) {
+
+        if (!count && Fan->playingFanSFX) {
             RSDK.StopSfx(Fan->sfxFan);
             Fan->playingFanSFX = false;
         }
@@ -169,30 +169,39 @@ void Fan_Create(void *data)
         self->drawOrder     = Zone->drawOrderLow + 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        if (!self->type)
+
+        if (self->type == FAN_V)
             self->direction *= FLIP_Y;
+
         if (!self->size)
             self->size = 5;
+
         self->size *= 16;
         RSDK.SetSpriteAnimation(Fan->aniFrames, self->type, &self->animator, true, 0);
-        self->state                   = Fan_ProcessAnimationSpeed_Slow;
+        self->state          = Fan_State_Stopped;
         self->animator.speed = 0;
+
         switch (self->activation) {
-            case 0:
-                Fan_Unknown11();
+            case FAN_ACTIVATE_NONE:
+                Fan_Activate();
                 self->animator.speed = 128;
                 break;
-            case 1: self->state3 = Fan_HandleDurationTimer; break;
-            case 2: self->state3 = Fan_Unknown10; break;
-            case 3:
+
+            case FAN_ACTIVATE_INTERVAL: self->stateActivate = Fan_Activate_Interval; break;
+
+            case FAN_ACTIVATE_PLATFORM: self->stateActivate = Fan_Activate_Platform; break;
+
+            case FAN_ACTIVATE_BUTTON:
                 Fan_SetupTagLinks();
-                self->state3 = Fan_Unknown8;
+                self->stateActivate = Fan_Activate_Button;
                 break;
+
             default: break;
         }
-        if (self->deactivation == 1) {
+
+        if (self->deactivation == FAN_DEACTIVATE_BUTTON) {
             Fan_SetupTagLinks();
-            self->state2 = Fan_Unknown9;
+            self->stateDeactivate = Fan_Deactivate_Button;
         }
     }
 }
@@ -200,37 +209,47 @@ void Fan_Create(void *data)
 void Fan_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2")) {
-        Fan->aniFrames      = RSDK.LoadSpriteAnimation("OOZ/Fan.bin", SCOPE_STAGE);
-        Fan->hitbox1.left   = -64;
-        Fan->hitbox1.right  = 64;
-        Fan->field_8        = 5;
-        Fan->field_C        = -0x50000;
-        Fan->hitbox2.left   = -16;
-        Fan->hitbox2.right  = 16;
-        Fan->hitbox2.top    = -160;
-        Fan->hitbox2.bottom = 32;
-        Fan->hitbox3.top    = -160;
-        Fan->hitbox3.bottom = 112;
-        Fan->hitbox3.left   = -112;
-        Fan->hitbox3.right  = 32;
+        Fan->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Fan.bin", SCOPE_STAGE);
+
+        Fan->hitboxTop.left  = -64;
+        Fan->hitboxTop.right = 64;
+
+        Fan->unused      = 5;
+        Fan->minVelocity = -0x50000;
+
+        Fan->hitboxBottom.left   = -16;
+        Fan->hitboxBottom.right  = 16;
+        Fan->hitboxBottom.top    = -160;
+        Fan->hitboxBottom.bottom = 32;
+
+        Fan->hitboxSides.top    = -160;
+        Fan->hitboxSides.bottom = 112;
+        Fan->hitboxSides.left   = -112;
+        Fan->hitboxSides.right  = 32;
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
-        Fan->aniFrames      = RSDK.LoadSpriteAnimation("HCZ/Fan.bin", SCOPE_STAGE);
-        Fan->hitbox1.left   = -16;
-        Fan->hitbox1.right  = 16;
-        Fan->field_8        = 20;
-        Fan->field_C        = -0x20000;
-        Fan->hitbox2.left   = -16;
-        Fan->hitbox2.right  = 16;
-        Fan->hitbox2.top    = -160;
-        Fan->hitbox2.bottom = 32;
-        Fan->hitbox3.top    = -24;
-        Fan->hitbox3.bottom = 24;
-        Fan->hitbox3.left   = -112;
-        Fan->hitbox3.right  = 32;
-        Fan->sfxFan         = RSDK.GetSfx("HCZ/SmallFan.wav");
-        Fan->active         = ACTIVE_ALWAYS;
+        Fan->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Fan.bin", SCOPE_STAGE);
+
+        Fan->hitboxTop.left  = -16;
+        Fan->hitboxTop.right = 16;
+
+        Fan->unused      = 20;
+        Fan->minVelocity = -0x20000;
+
+        Fan->hitboxBottom.left   = -16;
+        Fan->hitboxBottom.right  = 16;
+        Fan->hitboxBottom.top    = -160;
+        Fan->hitboxBottom.bottom = 32;
+
+        Fan->hitboxSides.top    = -24;
+        Fan->hitboxSides.bottom = 24;
+        Fan->hitboxSides.left   = -112;
+        Fan->hitboxSides.right  = 32;
+
+        Fan->sfxFan = RSDK.GetSfx("HCZ/SmallFan.wav");
+        Fan->active = ACTIVE_ALWAYS;
     }
+
     Fan->playerHitbox.left   = -1;
     Fan->playerHitbox.top    = -1;
     Fan->playerHitbox.right  = 1;
@@ -278,16 +297,16 @@ void Fan_SetupTagLinks(void)
 void Fan_HandlePlayerInteractions_Top(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox1.top    = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
-    Fan->hitbox1.bottom = 48;
+    Fan->hitboxTop.top    = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
+    Fan->hitboxTop.bottom = 48;
 
-    int32 id = 1;
+    int32 playerID = 1;
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
             int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
-                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox1, player, &Fan->playerHitbox)) {
+                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitboxTop, player, &Fan->playerHitbox)) {
                 if (Water && player->position.y > Water->waterLevel)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 1);
                 else
@@ -297,25 +316,24 @@ void Fan_HandlePlayerInteractions_Top(void)
                 player->tileCollisions = true;
                 player->onGround       = false;
 
-                int32 vel = maxVal((self->position.y + (Fan->hitbox1.top << 16) - player->position.y) >> 4, Fan->field_C);
-                if (player->velocity.y <= vel) {
-                    player->velocity.y = vel;
+                int32 velocity = maxVal((self->position.y + (Fan->hitboxTop.top << 16) - player->position.y) >> 4, Fan->minVelocity);
+                if (player->velocity.y <= velocity) {
+                    player->velocity.y = velocity;
                 }
                 else {
-                    player->velocity.y = player->velocity.y + (vel >> 2) + (vel >> 1);
-                    if (player->velocity.y < vel)
-                        player->velocity.y = vel;
+                    player->velocity.y = player->velocity.y + (velocity >> 2) + (velocity >> 1);
+                    if (player->velocity.y < velocity)
+                        player->velocity.y = velocity;
                 }
 
-                if (!(id & Fan->activePlayers)) {
-                    if (player->velocity.y > -0x40000 && player->velocity.y < 0) {
+                if (!(playerID & Fan->activePlayers)) {
+                    if (player->velocity.y > -0x40000 && player->velocity.y < 0)
                         player->velocity.x += (32 * player->velocity.x / 31) >> 5;
-                    }
-                    Fan->activePlayers |= id;
+                    Fan->activePlayers |= playerID;
                 }
             }
         }
-        id <<= 1;
+        playerID <<= 1;
     }
 
     if (Water) {
@@ -327,59 +345,58 @@ void Fan_HandlePlayerInteractions_Top(void)
 #else
             water->position.x += RSDK.Rand(-6, 7) << 16;
 #endif
-            water->bubbleX   = water->position.x;
+            water->bubbleX    = water->position.x;
             water->velocity.y = -0x40000;
             water->childPtr   = NULL;
         }
     }
-    Fan_ProcessAnimationSpeed_Fast();
+    Fan_State_Started();
 }
 
 void Fan_HandlePlayerInteractions_Bottom(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox2.bottom = self->size - (RSDK.Sin256(2 * Zone->timer) >> 5);
+    Fan->hitboxBottom.bottom = self->size - (RSDK.Sin256(2 * Zone->timer) >> 5);
 
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
             int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
-                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox2, player, &Fan->playerHitbox)) {
-                int32 vel = player->velocity.y;
+                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitboxBottom, player, &Fan->playerHitbox)) {
                 int32 max = (self->position.y - player->position.y + 0xA00000) >> 4;
-                if (vel < max)
-                    player->velocity.y = vel + ((self->position.y - player->position.y + 0xA00000) >> 9);
+                if (player->velocity.y < max)
+                    player->velocity.y += ((self->position.y - player->position.y + 0xA00000) >> 9);
             }
         }
     }
 
-    Fan_ProcessAnimationSpeed_Fast();
+    Fan_State_Started();
 }
 
 void Fan_HandlePlayerInteractions_Left(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
+    Fan->hitboxSides.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
 
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
             int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN && player->collisionMode != CMODE_LWALL
-                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox3, player, &Fan->playerHitbox)) {
+                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitboxSides, player, &Fan->playerHitbox)) {
                 player->position.x += (self->position.x - player->position.x - 0xA00000) >> 4;
             }
         }
     }
 
-    Fan_ProcessAnimationSpeed_Fast();
+    Fan_State_Started();
 }
 
 void Fan_HandlePlayerInteractions_Right(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
+    Fan->hitboxSides.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
 
     foreach_active(Player, player)
     {
@@ -387,70 +404,71 @@ void Fan_HandlePlayerInteractions_Right(void)
             int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN) {
                 if (player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL
-                    && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox3, player, &Fan->playerHitbox)) {
+                    && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitboxSides, player, &Fan->playerHitbox)) {
                     player->position.x += (self->position.x - player->position.x + 0xA00000) >> 4;
                 }
             }
         }
     }
 
-    Fan_ProcessAnimationSpeed_Fast();
+    Fan_State_Started();
 }
 
-void Fan_ProcessAnimationSpeed_Fast(void)
+void Fan_State_Started(void)
 {
     RSDK_THIS(Fan);
     if (self->animator.speed < 0x80)
         self->animator.speed += 4;
 }
 
-void Fan_ProcessAnimationSpeed_Slow(void)
+void Fan_State_Stopped(void)
 {
     RSDK_THIS(Fan);
     if (self->animator.speed)
         self->animator.speed -= 2;
 }
 
-void Fan_HandleDurationTimer(void)
+void Fan_Activate_Interval(void)
 {
     RSDK_THIS(Fan);
-    if (self->durationStore) {
-        self->durationStore--;
-        if (!self->durationStore)
-            self->state = Fan_ProcessAnimationSpeed_Slow;
+    if (self->delay) {
+        if (!--self->delay)
+            self->state = Fan_State_Stopped;
     }
     else {
-        if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Fan_ProcessAnimationSpeed_Slow) {
+        if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Fan_State_Stopped) {
             self->active = ACTIVE_NORMAL;
-            Fan_Unknown11();
+            Fan_Activate();
         }
     }
 }
 
-void Fan_Unknown8(void)
+void Fan_Activate_Button(void)
 {
     RSDK_THIS(Fan);
+
     EntityButton *button = self->buttonPtr;
-    if ((!button || button->activated) && self->state == Fan_ProcessAnimationSpeed_Slow) {
+    if ((!button || button->activated) && self->state == Fan_State_Stopped) {
         self->active = ACTIVE_NORMAL;
-        Fan_Unknown11();
+        Fan_Activate();
     }
 }
 
-void Fan_Unknown9(void)
+void Fan_Deactivate_Button(void)
 {
     RSDK_THIS(Fan);
     EntityButton *button = self->buttonPtr;
-    if ((!button || button->activated) && self->state != Fan_ProcessAnimationSpeed_Slow) {
+    if ((!button || button->activated) && self->state != Fan_State_Stopped) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = Fan_ProcessAnimationSpeed_Slow;
+        self->state  = Fan_State_Stopped;
     }
 }
 
-void Fan_Unknown10(void)
+void Fan_Activate_Platform(void)
 {
     RSDK_THIS(Fan);
-    int32 slot                 = SceneInfo->entitySlot - 1;
+
+    int32 slot               = SceneInfo->entitySlot - 1;
     EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
     while (platform->objectID == Fan->objectID) {
         --slot;
@@ -458,31 +476,30 @@ void Fan_Unknown10(void)
     }
 
     if (platform->objectID == Platform->objectID) {
-        if (platform->amplitude.y == platform->amplitude.x) {
-            self->state = Fan_ProcessAnimationSpeed_Slow;
-        }
-        else if (self->state == Fan_ProcessAnimationSpeed_Slow) {
-            Fan_Unknown11();
-        }
+        if (platform->amplitude.y == platform->amplitude.x)
+            self->state = Fan_State_Stopped;
+        else if (self->state == Fan_State_Stopped)
+            Fan_Activate();
     }
 }
 
-void Fan_Unknown11(void)
+void Fan_Activate(void)
 {
     RSDK_THIS(Fan);
-    if (self->type) {
+
+    if (self->type != FAN_V) {
         if (self->direction == FLIP_NONE)
             self->state = Fan_HandlePlayerInteractions_Left;
         else
             self->state = Fan_HandlePlayerInteractions_Right;
-        self->durationStore = self->duration;
+        self->delay = self->duration;
     }
     else {
         if (self->direction == FLIP_NONE)
             self->state = Fan_HandlePlayerInteractions_Top;
         else
             self->state = Fan_HandlePlayerInteractions_Bottom;
-        self->durationStore = self->duration;
+        self->delay = self->duration;
     }
 }
 
@@ -492,8 +509,8 @@ void Fan_EditorDraw(void)
     RSDK_THIS(Fan);
     RSDK.SetSpriteAnimation(Fan->aniFrames, self->type, &self->animator, true, 0);
 
-    int dir = self->direction;
-    if (!self->type)
+    int32 dir = self->direction;
+    if (self->type == FAN_V)
         self->direction *= FLIP_Y;
 
     Fan_Draw();
@@ -507,6 +524,24 @@ void Fan_EditorLoad(void)
         Fan->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Fan.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("HCZ"))
         Fan->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Fan.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Fan, type);
+    RSDK_ENUM_VAR("Vertical", FAN_V);
+    RSDK_ENUM_VAR("Horiozontal", FAN_H);
+
+    RSDK_ACTIVE_VAR(Fan, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flipped", FLIP_X);
+
+    RSDK_ACTIVE_VAR(Fan, activation);
+    RSDK_ENUM_VAR("None", FAN_ACTIVATE_NONE);
+    RSDK_ENUM_VAR("On Interval", FAN_ACTIVATE_INTERVAL);
+    RSDK_ENUM_VAR("On Platform Moved", FAN_ACTIVATE_PLATFORM);
+    RSDK_ENUM_VAR("On Button Press", FAN_ACTIVATE_BUTTON);
+
+    RSDK_ACTIVE_VAR(Fan, deactivation);
+    RSDK_ENUM_VAR("None", FAN_DEACTIVATE_NONE);
+    RSDK_ENUM_VAR("On Button Press", FAN_DEACTIVATE_BUTTON);
 }
 #endif
 

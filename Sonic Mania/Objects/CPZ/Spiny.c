@@ -172,7 +172,7 @@ void Spiny_State_Shoot_Floor(void)
     RSDK_THIS(Spiny);
     RSDK.ProcessAnimation(&self->animator);
     if (--self->moveTimer == 20) {
-        RSDK.PlaySfx(Spiny->sfxShot, 0, 255);
+        RSDK.PlaySfx(Spiny->sfxShot, false, 0xFF);
         EntitySpiny *shot = CREATE_ENTITY(Spiny, intToVoid(true), self->position.x, self->position.y);
         shot->velocity.x  = self->shotVelocity;
         if (!(self->direction & 2))
@@ -233,7 +233,7 @@ void Spiny_State_Shoot_Wall(void)
 
     RSDK.ProcessAnimation(&self->animator);
     if (--self->moveTimer == 20) {
-        RSDK.PlaySfx(Spiny->sfxShot, 0, 255);
+        RSDK.PlaySfx(Spiny->sfxShot, false, 0xFF);
         CREATE_ENTITY(Spiny, intToVoid(true), self->position.x, self->position.y)->velocity.x = self->shotVelocity;
         Spiny_CheckPlayerCollisions();
     }

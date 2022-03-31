@@ -296,7 +296,7 @@ struct ObjectPlayer {
     uint16 sfxDropdash;
     uint16 sfxLoseRings;
     uint16 sfxHurt;
-    uint16 unused1; //this matches up perfectly with the position of "sfxPimPom" in plus, and it cant be padding so :eye:
+    uint16 unused; //this matches up perfectly with the position of "sfxPimPom" in plus, and it cant be padding so :eye:
     uint16 sfxSkidding;
     uint16 sfxGrab;
     uint16 sfxFlying;

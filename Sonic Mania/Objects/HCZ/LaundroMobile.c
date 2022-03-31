@@ -282,7 +282,7 @@ void LaundroMobile_CheckPlayerCollisions(void)
                     self->state                = LaundroMobile_State_Destroyed_Phase2;
                     if (whirlpool) {
                         if (whirlpool->objectID == Whirlpool->objectID)
-                            whirlpool->activePlayers = -3;
+                            whirlpool->activePlayers = 0xFD;
                         self->whirlpool = NULL;
                     }
                 }
@@ -1000,7 +1000,7 @@ void LaundroMobile_State_Unknown16(void)
             pos.x                    = 0x1000000;
             pos.y                    = 0x1000000;
             whirlpool                = CREATE_ENTITY(Whirlpool, &pos, self->position.x, self->startPos.y - 0x200000);
-            whirlpool->activePlayers = -1;
+            whirlpool->activePlayers = 0xFF;
             whirlpool->angVel        = 10;
             whirlpool->alpha         = 0;
             whirlpool->drawOrder     = Zone->drawOrderLow + 1;
@@ -1089,7 +1089,7 @@ void LaundroMobile_State_Unknown17(void)
         EntityWhirlpool *whirlpool = (EntityWhirlpool *)self->whirlpool;
         if (whirlpool) {
             if (whirlpool->objectID == Whirlpool->objectID)
-                whirlpool->activePlayers = -3;
+                whirlpool->activePlayers = 0xFD;
             self->whirlpool = NULL;
         }
         self->state = LaundroMobile_State_Unknown18;
@@ -1254,7 +1254,7 @@ void LaundroMobile_State_OutroRumble(void)
         foreach_active(WaterGush, gush)
         {
             if (gush->position.x > self->position.x) {
-                gush->flag      = true;
+                gush->activated      = true;
                 gush->inkEffect = INK_ALPHA;
                 gush->alpha     = 256;
                 gush->drawOrder = Zone->playerDrawLow;
@@ -1301,12 +1301,12 @@ void LaundroMobile_State_OutroWaterGush(void)
             gush->position.y += 0x8000;
             gush->alpha -= 2;
             if (gush->position.x > self->position.x) {
-                if (gush->position.x - gush->field_78 < player1->position.x) {
+                if (gush->position.x - gush->gushPos < player1->position.x) {
                     player1->velocity.x = -0x30000;
                     player1->groundVel  = -0x30000;
                 }
 
-                if (player2->objectID == Player->objectID && gush->position.x - gush->field_78 < player2->position.x) {
+                if (player2->objectID == Player->objectID && gush->position.x - gush->gushPos < player2->position.x) {
                     player2->velocity.x = -0x30000;
                     player2->groundVel  = -0x30000;
                 }

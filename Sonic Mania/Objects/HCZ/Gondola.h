@@ -7,7 +7,7 @@
 struct ObjectGondola {
     RSDK_OBJECT
     uint16 aniFrames;
-    int32 taggedBoatIDs[3];
+    bool32 taggedBoatIDs[3];
     bool32 hasAchievement;
 };
 
@@ -19,18 +19,18 @@ struct EntityGondola {
     int32 maxY;
     uint8 boatID;
     uint8 activePlayers;
-    Vector2 field_68;
-    int32 field_70;
-    int32 field_74;
-    bool32 flag;
-    bool32 flag2;
-    int32 field_80;
-    Vector2 field_84;
-    Vector2 field_8C;
-    Vector2 field_94;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
+    Vector2 startPos;
+    int32 unused;
+    bool32 waterInRange;
+    bool32 stoppedL;
+    bool32 stoppedR;
+    int32 waterDistance;
+    Vector2 centerPos;
+    Vector2 drawPos;
+    Vector2 collisionOffset;
+    int32 stoodAngle;
+    int32 maxStoodAngle;
+    int32 floatAngle;
     Hitbox hitbox;
     Animator animator;
 };
@@ -53,10 +53,10 @@ void Gondola_Serialize(void);
 
 // Extra Entity Functions
 int32 Gondola_GetWaterLevel(void);
-void Gondola_Unknown2(void);
-void Gondola_Unknown3(void);
-void Gondola_Unknown4(void);
-void Gondola_Unknown5(void);
-void Gondola_Unknown6(void);
+void Gondola_HandleWaterFloating(void);
+void Gondola_HandleTilting(void);
+void Gondola_HandleMoveVelocity(void);
+void Gondola_HandleTileCollisions(void);
+void Gondola_HandlePlayerInteractions(void);
 
 #endif //!OBJ_GONDOLA_H

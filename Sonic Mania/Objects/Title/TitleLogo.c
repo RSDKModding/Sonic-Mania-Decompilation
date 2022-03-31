@@ -17,9 +17,9 @@ void TitleLogo_Update(void)
 #else
     switch (self->type) {
         case TITLELOGO_RIBBON:
-            RSDK.ProcessAnimation(&self->animator1);
+            RSDK.ProcessAnimation(&self->bubbleAnimator);
             if (self->flag)
-                RSDK.ProcessAnimation(&self->animator2);
+                RSDK.ProcessAnimation(&self->playerAnimator);
             break;
         case TITLELOGO_PRESSSTART: ++self->timer; break;
     }
@@ -54,7 +54,7 @@ void TitleLogo_Draw(void)
                 RSDK.DrawSprite(&self->animator3, NULL, false);
 #else
             if (self->flag)
-                RSDK.DrawSprite(&self->animator2, NULL, false);
+                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 #endif
             break;
         case TITLELOGO_PRESSSTART:
@@ -84,7 +84,7 @@ void TitleLogo_Create(void *data)
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator3, true, 0);
                 self->state = TitleLogo_State_Ribbon;
 #else
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator2, true, 0);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->playerAnimator, true, 0);
 #endif
                 break;
             case TITLELOGO_PRESSSTART:
@@ -266,7 +266,7 @@ void TitleLogo_EditorDraw(void)
 #if RETRO_USE_PLUS
             RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator3, true, 0);
 #else
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->playerAnimator, true, 0);
 #endif
 
             self->direction = FLIP_X;
@@ -278,7 +278,7 @@ void TitleLogo_EditorDraw(void)
 #if RETRO_USE_PLUS
             RSDK.DrawSprite(&self->animator3, NULL, false);
 #else
-            RSDK.DrawSprite(&self->animator2, NULL, false);
+            RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 #endif
             break;
         case TITLELOGO_PRESSSTART:

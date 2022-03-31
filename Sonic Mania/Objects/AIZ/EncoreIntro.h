@@ -15,9 +15,9 @@ struct ObjectEncoreIntro {
     uint16 sfxMysticHat;
     uint16 sfxMysticTransform;
     uint16 sfxPon;
-    Entity *fxRuby;
-    Entity *phantomRuby;
-    Entity *rubyPortal;
+    EntityFXRuby *fxRuby;
+    EntityPhantomRuby *phantomRuby;
+    EntityRubyPortal *rubyPortal;
     int32 unused3;
     bool32 awaitingSaveFinish;
 };

@@ -7,7 +7,7 @@
 struct ObjectBuggernaut {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
-    Hitbox hitbox2;
+    Hitbox hitboxParentRange;
     uint16 aniFrames;
 };
 
@@ -17,11 +17,11 @@ struct EntityBuggernaut {
     StateMachine(state);
     bool32 passThrough;
     int32 timer;
-    int32 timer2;
+    int32 buzzCount;
     Vector2 startPos;
-    Entity *parent;
-    Animator animator1;
-    Animator animator2;
+    EntityBuggernaut *parent;
+    Animator bodyAnimator;
+    Animator wingAnimator;
 };
 
 // Object Struct
@@ -50,10 +50,10 @@ bool32 Buggernaut_HandleTileCollisionsX(void);
 bool32 Buggernaut_HandleTileCollisionsY(void);
 
 void Buggernaut_State_Setup(void);
-void Buggernaut_State_Unknown1(void);
-void Buggernaut_State_Unknown2(void);
-void Buggernaut_State_Unknown3(void);
+void Buggernaut_State_Idle(void);
+void Buggernaut_State_FlyTowardTarget(void);
+void Buggernaut_State_FlyAway(void);
 
-void Buggernaut_State2_Unknown(void);
+void Buggernaut_State_Child(void);
 
 #endif //!OBJ_BUGGERNAUT_H

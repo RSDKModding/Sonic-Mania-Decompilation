@@ -107,19 +107,19 @@ void Jellygnite_SetupAnimations(uint8 animationID)
     RSDK_THIS(Jellygnite);
 
     switch (animationID) {
-        case 0:
+        case JELLYGNITE_ANI_FLOATING:
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 0, &self->bodyAnimator, true, 0);
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 3, &self->frontTentacleAnimator, true, 0);
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 5, &self->backTentacleAnimator, true, 0);
             break;
 
-        case 1:
+        case JELLYGNITE_ANI_ANGRY:
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 1, &self->bodyAnimator, true, 0);
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 3, &self->frontTentacleAnimator, true, 0);
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 5, &self->backTentacleAnimator, true, 0);
             break;
 
-        case 2:
+        case JELLYGNITE_ANI_FLASHING:
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 2, &self->bodyAnimator, true, 0);
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 4, &self->frontTentacleAnimator, true, 0);
             RSDK.SetSpriteAnimation(Jellygnite->aniFrames, 6, &self->backTentacleAnimator, true, 0);
@@ -139,8 +139,9 @@ void Jellygnite_CheckPlayerCollisions(void)
             if (Player_CheckCollisionTouch(player, self, &Jellygnite->hitbox) && self->state == Jellygnite_State_Swimming
                 && player->position.y >= self->position.y) {
                 self->state = Jellygnite_State_GrabbedPlayer;
-                Jellygnite_SetupAnimations(1);
+                Jellygnite_SetupAnimations(JELLYGNITE_ANI_ANGRY);
                 self->grabbedPlayer = player;
+
                 if (Water) {
                     EntityWater *bubble = Water_GetPlayerBubble(player);
                     if (bubble) {
@@ -148,6 +149,7 @@ void Jellygnite_CheckPlayerCollisions(void)
                         Water_HCZBubbleBurst(bubble, false);
                     }
                 }
+
                 self->isPermanent = true;
                 RSDK.PlaySfx(Jellygnite->sfxGrab, false, 255);
                 player->velocity.x      = 0;
@@ -160,14 +162,14 @@ void Jellygnite_CheckPlayerCollisions(void)
                 player->direction       = self->direction;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
                 player->animator.speed = 0;
-                player->direction      = self->direction ^ 1;
+                player->direction      = self->direction ^ FLIP_X;
             }
 
             if (player != self->grabbedPlayer && player->position.y < self->position.y && Player_CheckBadnikTouch(player, self, &Jellygnite->hitbox)
                 && Player_CheckBadnikBreak(self, player, false)) {
-                EntityPlayer *playerPtr = self->grabbedPlayer;
-                if (playerPtr)
-                    playerPtr->state = Player_State_Air;
+                if (self->grabbedPlayer)
+                    self->grabbedPlayer->state = Player_State_Air;
+
                 destroyEntity(self);
             }
         }
@@ -186,14 +188,14 @@ void Jellygnite_HandlePlayerStruggle(void)
                 self->lastShakeFlags = 0;
             }
 
-            uint8 flags = 0;
+            uint8 shakeFlags = 0;
             if (player->left)
-                flags = 1;
+                shakeFlags = 1;
             if (player->right)
-                flags |= 2;
+                shakeFlags |= 2;
 
-            if (flags && flags != 3 && flags != self->lastShakeFlags) {
-                self->lastShakeFlags = flags;
+            if (shakeFlags && shakeFlags != 3 && shakeFlags != self->lastShakeFlags) {
+                self->lastShakeFlags = shakeFlags;
                 if (++self->shakeCount >= 4) {
                     player->state       = Player_State_Air;
                     self->grabDelay     = 16;
@@ -209,11 +211,13 @@ void Jellygnite_HandlePlayerStruggle(void)
                 self->lastShakeFlags = 1;
                 self->shakeTimer     = 32;
             }
+
             if (player->right) {
                 self->lastShakeFlags |= 2;
                 self->shakeTimer = 32;
             }
         }
+
         player->position.x = self->position.x;
         player->position.y = self->position.y + 0xC0000;
     }
@@ -251,7 +255,7 @@ void Jellygnite_DrawBackTentacle(void)
         drawPos.y = y + (RSDK.Sin512(angle) << 8);
         RSDK.DrawSprite(&self->backTentacleAnimator, &drawPos, false);
 
-        angle = (angle + 32) & 0x1FF;
+        angle = (angle + 0x20) & 0x1FF;
         y += 0x60000;
     }
 }
@@ -294,7 +298,7 @@ void Jellygnite_State_Setup(void)
         self->shakeTimer         = 0;
         self->shakeCount         = 0;
         self->lastShakeFlags     = 0;
-        Jellygnite_SetupAnimations(0);
+        Jellygnite_SetupAnimations(JELLYGNITE_ANI_FLOATING);
         self->state = Jellygnite_State_Swimming;
         Jellygnite_State_Swimming();
     }
@@ -344,7 +348,7 @@ void Jellygnite_State_GrabbedPlayer(void)
     RSDK_THIS(Jellygnite);
     if (self->frontTentacleAngle >= 0x600) {
         self->state = Jellygnite_State_Explode;
-        Jellygnite_SetupAnimations(2);
+        Jellygnite_SetupAnimations(JELLYGNITE_ANI_FLASHING);
         RSDK.PlaySfx(Jellygnite->sfxElectrify, false, 255);
     }
     else {
@@ -378,7 +382,7 @@ void Jellygnite_State_Explode(void)
 #if RETRO_INCLUDE_EDITOR
 void Jellygnite_EditorDraw(void)
 {
-    Jellygnite_SetupAnimations(0);
+    Jellygnite_SetupAnimations(JELLYGNITE_ANI_FLOATING);
 
     Jellygnite_Draw();
 }

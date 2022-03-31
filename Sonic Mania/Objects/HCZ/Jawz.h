@@ -3,10 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    JAWS_TRIGGER_BOTH,
+    JAWS_TRIGGER_LEFT,
+    JAWS_TRIGGER_RIGHT,
+}JawzTriggerDirs;
+
 // Object Class
 struct ObjectJawz {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
 };
 
@@ -38,8 +44,8 @@ void Jawz_Serialize(void);
 // Extra Entity Functions
 void Jawz_DebugSpawn(void);
 void Jawz_DebugDraw(void);
-void Jawz_CheckPlayerInteractions(void);
-void Jawz_CheckPlayerTrigger(void);
-void Jawz_State_Main(void);
+void Jawz_CheckPlayerCollisions(void);
+void Jawz_State_CheckPlayerTrigger(void);
+void Jawz_State_Triggered(void);
 
 #endif //!OBJ_JAWZ_H

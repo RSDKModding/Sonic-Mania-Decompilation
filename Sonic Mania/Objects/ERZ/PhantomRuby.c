@@ -80,9 +80,9 @@ void PhantomRuby_PlaySFX(uint8 sfxID)
 {
     if (sfxID) {
         uint8 sfx    = sfxID - 1;
-        int32 channel = RSDK.PlaySfx(PhantomRuby->sfxL[sfx], 0, 0);
+        int32 channel = RSDK.PlaySfx(PhantomRuby->sfxL[sfx], false, 0x00);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-        channel = RSDK.PlaySfx(PhantomRuby->sfxR[sfx], 0, 0);
+        channel = RSDK.PlaySfx(PhantomRuby->sfxR[sfx], false, 0x00);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
     }
 }

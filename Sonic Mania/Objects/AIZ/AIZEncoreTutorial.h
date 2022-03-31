@@ -17,11 +17,11 @@ struct EntityAIZEncoreTutorial {
     StateMachine(state);
     int32 timer;
     int32 swapCount;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    Animator bubbleAnimator;
+    Animator playerAnimator;
+    Animator buddyAnimator;
+    Animator buttonPressAnimator;
+    Animator buttonAnimator;
 };
 
 // Object Struct

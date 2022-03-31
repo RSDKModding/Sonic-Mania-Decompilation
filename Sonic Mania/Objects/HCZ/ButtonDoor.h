@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BUTTONDOOR_UP,
+    BUTTONDOOR_LEFT,
+    BUTTONDOOR_DOWN,
+    BUTTONDOOR_RIGHT,
+}ButtonDoorOrientations;
+
 // Object Class
 struct ObjectButtonDoor {
     RSDK_OBJECT
@@ -16,7 +23,7 @@ struct EntityButtonDoor {
     StateMachine(state);
     Vector2 startPos;
     Vector2 size;
-    Vector2 size2;
+    Vector2 segmentSize;
     int32 movePos;
     int32 buttonTag;
     int32 length;

@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SPEAR_UP,
+    SPEAR_RIGHT,
+    SPEAR_DOWN,
+    SPEAR_LEFT,
+} SpearOrientations;
+
 // Object Class
 struct ObjectSpear {
     RSDK_OBJECT
@@ -13,18 +20,18 @@ struct ObjectSpear {
 // Entity Class
 struct EntitySpear {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     uint8 orientation;
     int32 interval;
     int32 intervalOffset;
     int32 duration;
-    int32 field_6C;
+    int32 unused1;
     Vector2 startPos;
-    int32 field_78;
-    int32 field_7C;
+    int32 unused2;
+    int32 retractPos;
     Hitbox hitbox;
-    Animator animator;
-    Animator animator2;
+    Animator baseAnimator;
+    Animator spearAnimator;
 };
 
 // Object Struct
@@ -44,7 +51,7 @@ void Spear_EditorLoad(void);
 void Spear_Serialize(void);
 
 // Extra Entity Functions
-void Spear_Unknown1(void);
+void Spear_SetupHitboxes(void);
 
 
 #endif //!OBJ_SPEAR_H

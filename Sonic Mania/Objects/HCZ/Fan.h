@@ -3,15 +3,32 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FAN_V,
+    FAN_H,
+} FanTypes;
+
+typedef enum {
+    FAN_ACTIVATE_NONE,
+    FAN_ACTIVATE_INTERVAL,
+    FAN_ACTIVATE_PLATFORM,
+    FAN_ACTIVATE_BUTTON,
+} FanActivationTypes;
+
+typedef enum {
+    FAN_DEACTIVATE_NONE,
+    FAN_DEACTIVATE_BUTTON,
+} FanDeactivationTypes;
+
 // Object Class
 struct ObjectFan {
     RSDK_OBJECT
     int32 activePlayers;
-    uint8 field_8;
-    int32 field_C;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    uint8 unused;
+    int32 minVelocity;
+    Hitbox hitboxTop;
+    Hitbox hitboxBottom;
+    Hitbox hitboxSides;
     Hitbox playerHitbox;
     uint16 aniFrames;
     uint16 sfxFan;
@@ -22,8 +39,8 @@ struct ObjectFan {
 struct EntityFan {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(state3);
-    StateMachine(state2);
+    StateMachine(stateActivate);
+    StateMachine(stateDeactivate);
     uint8 type;
     uint8 activation;
     uint8 deactivation;
@@ -31,7 +48,7 @@ struct EntityFan {
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
-    uint16 durationStore;
+    uint16 delay;
     int32 buttonTag;
     EntityButton *buttonPtr;
     Animator animator;
@@ -61,13 +78,13 @@ void Fan_HandlePlayerInteractions_Bottom(void);
 void Fan_HandlePlayerInteractions_Left(void);
 void Fan_HandlePlayerInteractions_Right(void);
 
-void Fan_ProcessAnimationSpeed_Fast(void);
-void Fan_ProcessAnimationSpeed_Slow(void);
+void Fan_State_Started(void);
+void Fan_State_Stopped(void);
 
-void Fan_HandleDurationTimer(void);
-void Fan_Unknown8(void);
-void Fan_Unknown9(void);
-void Fan_Unknown10(void);
-void Fan_Unknown11(void);
+void Fan_Activate_Interval(void);
+void Fan_Activate_Button(void);
+void Fan_Deactivate_Button(void);
+void Fan_Activate_Platform(void);
+void Fan_Activate(void);
 
 #endif //!OBJ_FAN_H

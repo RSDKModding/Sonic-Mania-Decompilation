@@ -255,7 +255,7 @@ void SchrodingersCapsule_State_Explode(void)
         RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_HURT, &buddy2->animator, true, 0);
 
         Music_FadeOut(0.025);
-        RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, 0, 255);
+        RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, false, 0xFF);
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->position.x   = self->position.x;

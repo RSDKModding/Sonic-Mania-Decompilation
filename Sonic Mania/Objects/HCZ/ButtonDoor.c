@@ -14,24 +14,25 @@ void ButtonDoor_Update(void)
     RSDK_THIS(ButtonDoor);
     EntityButton *button = self->taggedButton;
     if (button && button->activated) {
+
         if (!self->movePos)
             RSDK.PlaySfx(ButtonDoor->sfxOpen, false, 255);
 
         if (self->movePos < self->duration) {
             switch (self->orientation) {
-                case 0: self->position.y = self->startPos.y - self->movePos * (self->size.y / self->duration); break;
-                case 1: self->position.x = self->startPos.x - self->movePos * (self->size.x / self->duration); break;
-                case 2: self->position.y = self->startPos.y + self->movePos * (self->size.y / self->duration); break;
-                case 3: self->position.x = self->startPos.x + self->movePos * (self->size.x / self->duration); break;
+                case BUTTONDOOR_UP: self->position.y = self->startPos.y - self->movePos * (self->size.y / self->duration); break;
+                case BUTTONDOOR_LEFT: self->position.x = self->startPos.x - self->movePos * (self->size.x / self->duration); break;
+                case BUTTONDOOR_DOWN: self->position.y = self->startPos.y + self->movePos * (self->size.y / self->duration); break;
+                case BUTTONDOOR_RIGHT: self->position.x = self->startPos.x + self->movePos * (self->size.x / self->duration); break;
             }
             self->movePos++;
         }
         else {
             switch (self->orientation) {
-                case 0: self->position.y = self->startPos.y - self->size.y; break;
-                case 1: self->position.x = self->startPos.x - self->size.x; break;
-                case 2: self->position.y = self->startPos.y + self->size.y; break;
-                case 3: self->position.x = self->startPos.x + self->size.x; break;
+                case BUTTONDOOR_UP: self->position.y = self->startPos.y - self->size.y; break;
+                case BUTTONDOOR_LEFT: self->position.x = self->startPos.x - self->size.x; break;
+                case BUTTONDOOR_DOWN: self->position.y = self->startPos.y + self->size.y; break;
+                case BUTTONDOOR_RIGHT: self->position.x = self->startPos.x + self->size.x; break;
             }
         }
     }
@@ -48,10 +49,13 @@ void ButtonDoor_Draw(void) { ButtonDoor_DrawSprites(); }
 void ButtonDoor_Create(void *data)
 {
     RSDK_THIS(ButtonDoor);
+
     if (!self->duration)
         self->duration = 6;
+
     if (!self->length)
-        self->length = 2 - (RSDK.CheckStageFolder("HCZ") != 1);
+        self->length = 2 - (RSDK.CheckStageFolder("HCZ") != true);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
     self->startPos.x    = self->position.x;
@@ -98,14 +102,14 @@ void ButtonDoor_SetupSize(void)
         self->size.x = 0x200000;
     }
 
-    self->size2 = self->size;
+    // Size of one "block"
+    self->segmentSize = self->size;
 
-    if (!self->orientation || self->orientation == 2) {
+    // Total Size
+    if (self->orientation == BUTTONDOOR_UP || self->orientation == BUTTONDOOR_DOWN)
         self->size.y *= self->length;
-    }
-    else if (self->orientation == 1 || self->orientation == 3) {
+    else if (self->orientation == BUTTONDOOR_LEFT || self->orientation == BUTTONDOOR_RIGHT)
         self->size.x *= self->length;
-    }
 
     self->hitbox.left   = -(self->size.x >> 17);
     self->hitbox.top    = -(self->size.y >> 17);
@@ -188,13 +192,13 @@ void ButtonDoor_DrawSprites(void)
     drawPos.y = self->position.y;
 
     int32 incX = 0, incY = 0;
-    if (!self->orientation || self->orientation == 2) {
-        drawPos.y = (self->size2.y >> 1) + self->position.y - (self->size.y >> 1);
-        incY      = self->size2.y;
+    if (self->orientation == BUTTONDOOR_UP || self->orientation == BUTTONDOOR_DOWN) {
+        drawPos.y = (self->segmentSize.y >> 1) + self->position.y - (self->size.y >> 1);
+        incY      = self->segmentSize.y;
     }
-    else if (self->orientation == 1 || self->orientation == 3) {
-        drawPos.x = (self->size2.x >> 1) + self->position.x - (self->size.x >> 1);
-        incX      = self->size2.x;
+    else if (self->orientation == BUTTONDOOR_LEFT || self->orientation == BUTTONDOOR_RIGHT) {
+        drawPos.x = (self->segmentSize.x >> 1) + self->position.x - (self->size.x >> 1);
+        incX      = self->segmentSize.x;
     }
 
     for (int32 i = 0; i < self->length; ++i) {
@@ -219,6 +223,12 @@ void ButtonDoor_EditorLoad(void)
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/ButtonDoor.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("HCZ"))
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(ButtonDoor, orientation);
+    RSDK_ENUM_VAR("Up", BUTTONDOOR_UP);
+    RSDK_ENUM_VAR("Left", BUTTONDOOR_LEFT);
+    RSDK_ENUM_VAR("Down", BUTTONDOOR_DOWN);
+    RSDK_ENUM_VAR("Right", BUTTONDOOR_RIGHT);
 }
 #endif
 

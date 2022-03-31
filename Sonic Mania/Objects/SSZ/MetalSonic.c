@@ -155,7 +155,7 @@ void MetalSonic_HandleStageWrap(void)
         }
 
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, anim, &self->animator, true, 0);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->playerAnimator, false, 0);
         self->state = MetalSonic_State_Unknown16;
     }
 #endif
@@ -329,7 +329,7 @@ void MetalSonic_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (!self->field_94) {
-            Hitbox *hitbox = self->animator.animationID == 5 ? &MetalSonic->hitbox2 : &MetalSonic->hitbox1;
+            Hitbox *hitbox = self->animator.animationID == 5 ? &MetalSonic->hitboxBottom : &MetalSonic->hitboxTop;
             if (Player_CheckBadnikTouch(player, self, hitbox) && Player_CheckBossHit(player, self)) {
                 if (player->velocity.x < 0)
                     player->velocity.x >>= 2;
@@ -355,7 +355,7 @@ void MetalSonic_Hit(void)
         self->velocity.y          = -0x1800;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 10, &self->animator, false, 0);
-        RSDK.SetSpriteAnimation(-1, 13, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 13, &self->playerAnimator, false, 0);
         self->drawFX |= FX_ROTATE;
         self->state = MetalSonic_State_Explode;
     }
@@ -1468,7 +1468,7 @@ void MetalSonic_State_Unknown18(void)
         self->velocity.x = 0;
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &self->animator, false, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->playerAnimator, false, 0);
         self->direction = 0;
         self->state = MetalSonic_State_Unknown19;
     }
@@ -1492,7 +1492,7 @@ void MetalSonic_State_Unknown20(void)
     self->timer++;
     if (self->timer == 60) {
         self->timer = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->playerAnimator, false, 0);
         self->state = MetalSonic_State_Unknown21;
 
         Vector2 size;
@@ -1585,12 +1585,12 @@ void MetalSonic_State_Unknown23(void)
         self->timer2 = 120;
         self->attackType = RSDK.Rand(0, 6);
 
-        while ((1 << self->attackType) & MetalSonic->field_C) {
+        while ((1 << self->attackType) & MetalSonic->minVelocity) {
             self->attackType = RSDK.Rand(0, 6);
         }
-        MetalSonic->field_C |= 1 << self->attackType;
-        if (MetalSonic->field_C == 0x3F)
-            MetalSonic->field_C = 0;
+        MetalSonic->minVelocity |= 1 << self->attackType;
+        if (MetalSonic->minVelocity == 0x3F)
+            MetalSonic->minVelocity = 0;
 
         self->attackType >>= 1;
         switch (self->attackType) {
@@ -1610,7 +1610,7 @@ void MetalSonic_State_Unknown23(void)
             case 0:
                 RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 0xFF);
                 RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 6, &self->animator, false, 0);
-                RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->playerAnimator, false, 0);
                 self->timer2 = 60;
                 self->state = MetalSonic_State_Unknown30;
                 break;
@@ -1650,7 +1650,7 @@ void MetalSonic_State_Unknown27(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxTop)) {
             Player_CheckHit(player, self);
         }
     }
@@ -1688,7 +1688,7 @@ void MetalSonic_State_Unknown28(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxTop)) {
             Player_CheckHit(player, self);
         }
     }
@@ -1738,7 +1738,7 @@ void MetalSonic_State_Unknown29(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxTop)) {
             Player_CheckHit(player, self);
         }
     }
@@ -1776,7 +1776,7 @@ void MetalSonic_State_Unknown24(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxTop)) {
             Player_CheckHit(player, self);
         }
     }
@@ -1808,7 +1808,7 @@ void MetalSonic_State_Unknown25(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxTop)) {
             Player_CheckHit(player, self);
         }
     }
@@ -1840,7 +1840,7 @@ void MetalSonic_State_Unknown30(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitboxTop)) {
             Player_CheckHit(player, self);
         }
     }
@@ -1870,7 +1870,7 @@ void MetalSonic_State_Unknown26(void)
     if (self->position.x < wall->position.x + 0x900000) {
         self->position.x = wall->position.x + 0x900000;
         self->timer2 = 120;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->playerAnimator, false, 0);
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, false, 0);
         self->state = MetalSonic_State_Unknown23;
     }

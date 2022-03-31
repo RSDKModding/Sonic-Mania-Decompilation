@@ -3,11 +3,17 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    JELLYGNITE_ANI_FLOATING,
+    JELLYGNITE_ANI_ANGRY,
+    JELLYGNITE_ANI_FLASHING,
+}JellygniteAnimIDs;
+
 // Object Class
 struct ObjectJellygnite {
     RSDK_OBJECT
     Hitbox hitbox;
-    Hitbox hitbox2;
+    Hitbox hitboxUnused;
     uint16 aniFrames;
     uint16 sfxGrab;
     uint16 sfxElectrify;

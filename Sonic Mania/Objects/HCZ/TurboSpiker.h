@@ -3,30 +3,35 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TURBOSPIKER_VISIBLE,
+    TURBOSPIKER_HIDDEN,
+}TurboSpikerTypes;
+
 // Object Class
 struct ObjectTurboSpiker {
 	RSDK_OBJECT
-	Hitbox hermitHitbox;
-	Hitbox spikeHitbox;
-	Hitbox checkbox;
-	uint16 animID;
-	uint16 launchSFX;
-	uint16 splashSFX;
+	Hitbox hitboxBadnik;
+	Hitbox hitboxSpike;
+	Hitbox hitboxRange;
+	uint16 aniFrames;
+	uint16 sfxLaunch;
+	uint16 sfxSplash;
 };
 
 // Entity Class
 struct EntityTurboSpiker {
-	RSDK_ENTITY
-	StateMachine(state);
-	uint32 type;
-	int32 timer;
-	int32 unused_64;
-	Vector2 spawnPos;
-	uint8 spawnDir;
-	Entity *spike;
-	Animator animator;
-	Animator spikeAnimator;
-	bool32 launchPlayed;
+    RSDK_ENTITY
+    StateMachine(state);
+    uint32 type;
+    int32 timer;
+    int32 unused;
+    Vector2 startPos;
+    uint8 startDir;
+    EntityTurboSpiker *spike;
+    Animator shellAnimator;
+    Animator animator;
+    bool32 playedLaunchSfx;
 };
 
 // Object Struct
@@ -51,19 +56,20 @@ void TurboSpiker_DebugDraw(void);
 // Extra Entity Functions
 void TurboSpiker_Hermit_Collide(void);
 void TurboSpiker_Hermit_CheckOffScreen(void);
-void TurboSpiker_Hermit_NextState(void);
-void TurboSpiker_Hermit_Create(void);
-void TurboSpiker_Hermit_Idle(void);
-void TurboSpiker_Hermit_IdleWater(void);
-void TurboSpiker_Hermit_Handle(void);
-void TurboSpiker_Hermit_Turn(void);
-void TurboSpiker_Hermit_AfterTurn(void);
-void TurboSpiker_Hermit_Move(void);
-void TurboSpiker_Hermit_Fire(void);
+void TurboSpiker_HandleMovement(void);
 
-void TurboSpiker_Spike_Collide(void);
-void TurboSpiker_Spike_Fly(void);
+void TurboSpiker_State_Setup(void);
+void TurboSpiker_State_Idle(void);
+void TurboSpiker_State_Hidden(void);
+void TurboSpiker_State_Moving(void);
+void TurboSpiker_State_Turning(void);
+void TurboSpiker_State_FinishTurning(void);
+void TurboSpiker_State_Falling(void);
+void TurboSpiker_State_FireShell(void);
 
-void TurboSpiker_Ember_Animate(void);
+void TurboSpiker_HandleSpikeCollisions(void);
+void TurboSpiker_State_Spike(void);
+
+void TurboSpiker_State_Ember(void);
 
 #endif //!OBJ_TURBOSPIKER_H
