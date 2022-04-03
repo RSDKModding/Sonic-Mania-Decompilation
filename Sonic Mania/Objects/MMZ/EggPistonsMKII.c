@@ -772,8 +772,6 @@ void EggPistonsMKII_StateBarrier_Solid(void)
 
 void EggPistonsMKII_StateBarrier_Explode(void)
 {
-    RSDK_THIS(EggPistonsMKII);
-
     EggPistonsMKII_CheckPlayerCollisions_Solid();
     if (!EggPistonsMKII->health)
         EggPistonsMKII_Explode();

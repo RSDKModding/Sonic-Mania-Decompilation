@@ -709,7 +709,7 @@ void CheckerBall_HandleObjectCollisions(void)
             bool32 bounced = false;
 
             if (spring->state == Spring_State_Vertical) {
-                if (spring->direction && side == C_BOTTOM || !spring->direction && side == C_TOP)
+                if ((spring->direction && side == C_BOTTOM) || (!spring->direction && side == C_TOP))
                     bounced = true;
 
                 if (bounced) {

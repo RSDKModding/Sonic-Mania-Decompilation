@@ -10,7 +10,7 @@ struct ObjectCheckerBall {
     Hitbox innerBox;
     Hitbox outerBox;
     uint8 heightArray[24];
-    int8 unusedArray[24];
+    uint8 unusedArray[24];
     uint16 aniFrames;
 };
 

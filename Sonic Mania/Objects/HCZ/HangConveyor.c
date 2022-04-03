@@ -170,7 +170,6 @@ void HangConveyor_HandlePlayerInteractions(void)
             self->playerPositions[playerID].x = player->position.x;
             self->playerPositions[playerID].y = playerY;
 
-            bool32 collided1 = true;
             if (abs(player->position.x - prevX) < 0x800000 && abs(playerY - prevY) < 0x800000 && (prevX || prevY)) {
                 bool32 collidedTop = MathHelpers_Unknown12(player->position.x, playerY, prevX, prevY, self->endPosTopLeft.x, self->endPosTopLeft.y,
                                                            self->endPosTopRight.x, self->endPosTopRight.y);
