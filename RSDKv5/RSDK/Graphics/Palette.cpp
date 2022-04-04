@@ -1,8 +1,8 @@
 #include "RSDK/Core/RetroEngine.hpp"
 
-uint16 rIndexes[0x100];
-uint16 gIndexes[0x100];
-uint16 bIndexes[0x100];
+uint16 rgb32To16_R[0x100];
+uint16 rgb32To16_G[0x100];
+uint16 rgb32To16_B[0x100];
 
 uint16 globalPalette[PALETTE_COUNT][PALETTE_SIZE];
 uint16 activeGlobalRows[PALETTE_COUNT];
@@ -35,7 +35,7 @@ void LoadPalette(uint8 paletteID, const char *filename, ushort rowFlags)
                     uint8 red                             = ReadInt8(&info);
                     uint8 green                           = ReadInt8(&info);
                     uint8 blue                            = ReadInt8(&info);
-                    fullPalette[paletteID][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                    fullPalette[paletteID][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                 }
             }
             else {

@@ -214,7 +214,7 @@ void LoadScene()
                         uint8 red                     = ReadInt8(&info);
                         uint8 green                   = ReadInt8(&info);
                         uint8 blue                    = ReadInt8(&info);
-                        stagePalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                        stagePalette[i][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                     }
                 }
                 else {
@@ -813,7 +813,7 @@ void LoadStageGIF(char *filepath)
                     byte red                     = (tileset.palette[(r << 4) + c] >> 0x10);
                     byte green                   = (tileset.palette[(r << 4) + c] >> 0x08);
                     byte blue                    = (tileset.palette[(r << 4) + c] >> 0x00);
-                    fullPalette[0][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                    fullPalette[0][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                 }
             }
         }

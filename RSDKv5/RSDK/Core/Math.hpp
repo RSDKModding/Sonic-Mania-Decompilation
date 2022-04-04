@@ -107,10 +107,11 @@ extern uint32 randSeed;
 inline void SetRandSeed(int32 key) { randSeed = key; }
 inline int32 GetRandomValue(int32 min, int32 max)
 {
-    int32 val = 1103515245 * randSeed + 12345;
-    int32 val2 = 1103515245 * val + 12345;
-    randSeed      = 1103515245 * val2 + 12345;
-    int32 result = (randSeed >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
+    int32 seed1 = 1103515245 * randSeed + 12345;
+    int32 seed2 = 1103515245 * seed1 + 12345;
+    randSeed    = 1103515245 * seed2 + 12345;
+    
+    int32 result = ((randSeed >> 16) & 0x7FF) ^ ((((seed1 >> 6) & 0x1FFC00) ^ ((seed2 >> 16) & 0x7FF)) << 10);
     int32 size   = abs(max - min);
 
     if (min > max)
@@ -125,10 +126,11 @@ inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randSeed)
     if (!randSeed)
         return 0;
 
-    int32 val    = 1103515245 * *randSeed + 12345;
-    int32 val2   = 1103515245 * val + 12345;
-    *randSeed     = 1103515245 * val2 + 12345;
-    int32 result = (*randSeed >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
+    int32 seed1 = 1103515245 * *randSeed + 12345;
+    int32 seed2 = 1103515245 * seed1 + 12345;
+    *randSeed   = 1103515245 * seed2 + 12345;
+    
+    int32 result = ((*randSeed >> 16) & 0x7FF) ^ ((((seed1 >> 6) & 0x1FFC00) ^ ((seed2 >> 16) & 0x7FF)) << 10);
     int32 size   = abs(max - min);
 
     if (min > max)

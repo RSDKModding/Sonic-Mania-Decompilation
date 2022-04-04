@@ -9,9 +9,9 @@ union Colour {
     uint32 colour;
 };
 
-extern uint16 rIndexes[0x100];
-extern uint16 gIndexes[0x100];
-extern uint16 bIndexes[0x100];
+extern uint16 rgb32To16_R[0x100];
+extern uint16 rgb32To16_G[0x100];
+extern uint16 rgb32To16_B[0x100];
 
 extern uint16 globalPalette[PALETTE_COUNT][PALETTE_SIZE];
 extern uint16 activeGlobalRows[PALETTE_COUNT];
@@ -46,21 +46,25 @@ inline void SetActivePalette(uint8 newActivePal, int32 startLine, int32 endLine)
 
 inline uint32 GetPaletteEntry(uint8 paletteID, uint8 index)
 {
-    //0x1F   = 0000 0000 0001 1111
-    //0x7E0  = 0000 0111 1110 0000
-    //0xF800 = 1111 1000 0000 0000
-    uint16 clr = fullPalette[(paletteID & 7)][index];
-    return 8 * (clr & 0x1F | 4 * (clr & 0x7E0 | 8 * (clr & 0xF800)));
+    //0x1F   = 0000 0000 0001 1111 = B
+    //0x7E0  = 0000 0111 1110 0000 = G
+    //0xF800 = 1111 1000 0000 0000 = R
+    uint16 clr = fullPalette[paletteID & 7][index];
+    
+    int32 R = (clr & 0xF800) << 8;
+    int32 G = (clr & 0x7E0) << 5;
+    int32 B = (clr & 0x1F) << 3;
+    return R | G | B;
 }
 
 inline void SetPaletteEntry(uint8 paletteID, uint8 index, uint32 colour)
 {
-    fullPalette[paletteID][index] = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+    fullPalette[paletteID][index] = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
 }
 
 inline void SetPaletteMask(uint32 colour)
 {
-    maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+    maskColour = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
 }
 
 #if RETRO_REV02

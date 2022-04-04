@@ -446,7 +446,7 @@ bool32 RSDK::SKU::CheckDBValueMatch(UserDBValue *valueA, int row, int column)
     UserDB *userDB      = (UserDB *)valueA->parent;
     UserDBValue *valueB = &userDB->rows[row].values[column];
 
-    if (valueA->data && valueB->data) {
+    if (true) {
         switch (userDB->columnTypes[column]) {
             case DBVAR_UNKNOWN1:
             case DBVAR_UINT8:

@@ -147,7 +147,7 @@ void RSDK::loadMods()
                 bool32 loaded = loadMod(&info, modPath.string(), string(keys[m] + 5), active);
                 if (info.language && active) {
                     if (info.language == (const char *)1 && !loaded)
-                        waitList.push_back(modList.size());
+                        waitList.push_back((int)modList.size());
                     else
                         langMap.insert(pair<string, size_t>(info.language, modList.size()));
                 }
@@ -276,14 +276,14 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                         };
                         int32 tokenPos = -1;
                         for (int32 i = 0; i < 4; ++i) {
-                            tokenPos = std::string(modBuf).find(folderTest[i], 0);
+                            tokenPos = (int32)std::string(modBuf).find(folderTest[i], 0);
                             if (tokenPos >= 0)
                                 break;
                         }
 
                         if (tokenPos >= 0) {
                             char buffer[0x80];
-                            for (int32 i = strlen(modBuf); i >= tokenPos; --i) {
+                            for (int32 i = (int32)strlen(modBuf); i >= tokenPos; --i) {
                                 buffer[i - tokenPos] = modBuf[i] == '\\' ? '/' : modBuf[i];
                             }
 
@@ -684,7 +684,7 @@ bool32 RSDK::ForeachModID(TextInfo *id)
         return false;
     }
     string set = modList[foreachStackPtr->id].id;
-    SetText(id, (char *)set.c_str(), set.length());
+    SetText(id, (char *)set.c_str(), (int)set.length());
     return true;
 }
 
@@ -739,7 +739,7 @@ void RSDK::GetModPath(const char *id, TextInfo *result)
 
     char buf[0x200];
     sprintf(buf, "%smods/%s", SKU::userFileDir, id);
-    SetText(result, buf, strlen(buf));
+    SetText(result, buf, (int)strlen(buf));
 }
 
 std::string GetModPath_i(const char *id)
@@ -824,7 +824,7 @@ void RSDK::GetSettingsString(const char *id, const char *key, TextInfo *result, 
 {
     if (!id) {
         if (!currentMod) {
-            SetText(result, (char *)fallback, strlen(fallback));
+            SetText(result, (char *)fallback, (int)strlen(fallback));
             return;
         }
         id = currentMod->id.c_str();
@@ -834,10 +834,10 @@ void RSDK::GetSettingsString(const char *id, const char *key, TextInfo *result, 
     if (!v.length()) {
         if (currentMod->id == id)
             SetSettingsString(key, result);
-        SetText(result, (char *)fallback, strlen(fallback));
+        SetText(result, (char *)fallback, (int)strlen(fallback));
         return;
     }
-    SetText(result, (char *)v.c_str(), v.length());
+    SetText(result, (char *)v.c_str(), (int)v.length());
 }
 
 std::string GetNidConfigValue(const char *key)
@@ -888,10 +888,10 @@ void RSDK::GetConfigString(const char *key, TextInfo *result, const char *fallba
 {
     std::string v = GetNidConfigValue(key);
     if (!v.length()) {
-        SetText(result, (char *)fallback, strlen(fallback));
+        SetText(result, (char *)fallback, (int)strlen(fallback));
         return;
     }
-    SetText(result, (char *)v.c_str(), v.length());
+    SetText(result, (char *)v.c_str(), (int)v.length());
 }
 
 bool32 RSDK::ForeachConfigCategory(TextInfo *textInfo)
@@ -931,7 +931,7 @@ bool32 RSDK::ForeachConfigCategory(TextInfo *textInfo)
         foreachStackPtr--;
         return false;
     }
-    SetText(textInfo, (char *)cat.c_str(), cat.length());
+    SetText(textInfo, (char *)cat.c_str(), (int)cat.length());
     return true;
 }
 
@@ -978,7 +978,7 @@ bool32 RSDK::ForeachConfig(TextInfo *textInfo)
         return false;
     }
     string r = cat + ":" + key;
-    SetText(textInfo, (char *)r.c_str(), r.length());
+    SetText(textInfo, (char *)r.c_str(), (int)r.length());
     return true;
 }
 
@@ -1247,5 +1247,5 @@ int RSDK::GetAchievementIndexByID(const char *id)
     }
     return -1;
 }
-int RSDK::GetAchievementCount() { return SKU::achievementList.size(); }
+int RSDK::GetAchievementCount() { return (int)SKU::achievementList.size(); }
 #endif

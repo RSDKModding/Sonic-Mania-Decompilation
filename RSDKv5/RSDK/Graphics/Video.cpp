@@ -16,7 +16,7 @@ float videoAR       = 0;
 long videoRead(THEORAPLAY_Io *io, void *buf, long buflen)
 {
     FileInfo *file  = (FileInfo *)io->userdata;
-    const size_t br = ReadBytes(file, buf, buflen);
+    const size_t br = (size_t)ReadBytes(file, buf, (int32)buflen);
     if (br == 0)
         return -1;
     return (int)br;

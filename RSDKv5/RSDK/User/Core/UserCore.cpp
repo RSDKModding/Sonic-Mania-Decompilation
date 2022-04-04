@@ -212,9 +212,9 @@ void RSDK::SKU::saveUserData()
     int32 leaderboardsRAM[0x100];
     memset(leaderboardsRAM, 0, 0x100 * sizeof(int32));
     leaderboardsRAM[0] = (int)leaderboardList.size();
-    int pos            = 1;
-    for (int i = 0; i < (int)leaderboardList.size(); ++i) {
-        int len                = strlen(leaderboardList[i].name);
+    int32 pos            = 1;
+    for (int32 i = 0; i < (int)leaderboardList.size(); ++i) {
+        int32 len                = (int32)strlen(leaderboardList[i].name);
         leaderboardsRAM[pos++] = len;
         memcpy(&leaderboardsRAM[pos], leaderboardList[i].name, len);
         int size = (len / 4) + (4 - ((len % 4) ? (len % 4) : 4));

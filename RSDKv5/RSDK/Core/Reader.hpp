@@ -289,15 +289,15 @@ inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
     uLongf destLen      = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    RSDK::AllocateStorage(complen, (void **)&compData, RSDK::DATASET_TMP, false);
-    RSDK::AllocateStorage(destLen, (void **)buffer, RSDK::DATASET_TMP, false);
-    ReadBytes(info, compData, complen);
+    RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
+    RSDK::AllocateStorage((int32)destLen, (void **)buffer, RSDK::DATASET_TMP, false);
+    ReadBytes(info, compData, (int32)complen);
 
     uncompress(*buffer, &destLen, compData, complen);
 
     RSDK::RemoveStorageEntry((void **)&compData);
 
-    return destLen;
+    return (int32)destLen;
 }
 
 inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
@@ -309,12 +309,12 @@ inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
     uLongf destLen  = (uint)((decompLE << 24) | ((decompLE << 8) & 0x00FF0000) | ((decompLE >> 8) & 0x0000FF00) | (decompLE >> 24));
 
     byte *compData = NULL;
-    RSDK::AllocateStorage(complen, (void **)&compData, RSDK::DATASET_TMP, false);
-    ReadBytes(info, compData, complen);
+    RSDK::AllocateStorage((int32)complen, (void **)&compData, RSDK::DATASET_TMP, false);
+    ReadBytes(info, compData, (int32)complen);
 
     uncompress(*buffer, &destLen, compData, complen);
     compData = NULL;
-    return destLen;
+    return (int32)destLen;
 }
 
 inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buffer, int32 size)
@@ -324,11 +324,11 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     uLongf complen = cSize;
     uLongf destLen = size;
 
-    ReadBytes(info, cBuffer, complen);
+    ReadBytes(info, cBuffer, (int32)complen);
 
     uncompress(*buffer, &destLen, *cBuffer, complen);
     *cBuffer = NULL;
-    return destLen;
+    return (int32)destLen;
 }
 
 #endif

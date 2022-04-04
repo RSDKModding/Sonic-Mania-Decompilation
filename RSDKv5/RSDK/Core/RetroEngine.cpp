@@ -322,12 +322,14 @@ void runRetroEngine()
 {
     unsigned long long targetFreq = SDL_GetPerformanceFrequency() / engine.refreshRate;
     unsigned long long curTicks   = 0;
+    unsigned long long prevTicks  = 0;
 
     while (engine.running) {
 #if !RETRO_USE_ORIGINAL_CODE
-        if (SDL_GetPerformanceCounter() < curTicks + targetFreq)
-            continue;
         curTicks = SDL_GetPerformanceCounter();
+        if (curTicks < prevTicks + targetFreq)
+            continue;
+        prevTicks = curTicks;
 #endif
 
         engine.running  = processEvents();
@@ -1018,7 +1020,7 @@ void LoadGameConfig()
                         byte red                       = ReadInt8(&info);
                         byte green                     = ReadInt8(&info);
                         byte blue                      = ReadInt8(&info);
-                        globalPalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
+                        globalPalette[i][(r << 4) + c] = rgb32To16_B[blue] | rgb32To16_G[green] | rgb32To16_R[red];
                     }
                 }
                 else {

@@ -1638,7 +1638,7 @@ void DevMenu_Mods()
     if (controller[CONT_P1].keyUp.press) {
         devMenu.option--;
         if (devMenu.option < 0) {
-            devMenu.option = RSDK::modList.size() - 1;
+            devMenu.option = (int)(RSDK::modList.size() - 1);
         }
 
         if (devMenu.option >= devMenu.scroll) {
@@ -1655,7 +1655,7 @@ void DevMenu_Mods()
         if (!devMenu.timer) {
             devMenu.option--;
             if (devMenu.option < 0) {
-                devMenu.option = RSDK::modList.size() - 1;
+                devMenu.option = (int)(RSDK::modList.size() - 1);
             }
         }
 

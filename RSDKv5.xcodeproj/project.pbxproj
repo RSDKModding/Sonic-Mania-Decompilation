@@ -158,7 +158,7 @@
 		C9CDC73A27F9197B00E4C97E /* Audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Audio.cpp; path = RSDK/Audio/Audio.cpp; sourceTree = "<group>"; };
 		C9CDC73B27F9197C00E4C97E /* Audio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Audio.hpp; path = RSDK/Audio/Audio.hpp; sourceTree = "<group>"; };
 		C9CDC73D27F9198700E4C97E /* RetroEngine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RetroEngine.hpp; path = RSDK/Core/RetroEngine.hpp; sourceTree = "<group>"; };
-		C9CDC73E27F9198700E4C97E /* Math.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Math.hpp; path = RSDK/Core/Math.hpp; sourceTree = "<group>"; };
+		C9CDC73E27F9198700E4C97E /* Math.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Math.hpp; path = RSDK/Core/Math.hpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C9CDC73F27F9198700E4C97E /* Link.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Link.hpp; path = RSDK/Core/Link.hpp; sourceTree = "<group>"; };
 		C9CDC74027F9198700E4C97E /* Reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Reader.hpp; path = RSDK/Core/Reader.hpp; sourceTree = "<group>"; };
 		C9CDC74127F9198700E4C97E /* Math.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Math.cpp; path = RSDK/Core/Math.cpp; sourceTree = "<group>"; };
@@ -171,8 +171,8 @@
 		C9CDC74D27F9199300E4C97E /* DevFont.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DevFont.hpp; path = RSDK/Dev/DevFont.hpp; sourceTree = "<group>"; };
 		C9CDC74E27F9199300E4C97E /* Debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debug.cpp; path = RSDK/Dev/Debug.cpp; sourceTree = "<group>"; };
 		C9CDC75027F9199C00E4C97E /* Sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sprite.cpp; path = RSDK/Graphics/Sprite.cpp; sourceTree = "<group>"; };
-		C9CDC75127F9199C00E4C97E /* Palette.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Palette.hpp; path = RSDK/Graphics/Palette.hpp; sourceTree = "<group>"; };
-		C9CDC75227F9199C00E4C97E /* Drawing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Drawing.cpp; path = RSDK/Graphics/Drawing.cpp; sourceTree = "<group>"; };
+		C9CDC75127F9199C00E4C97E /* Palette.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Palette.hpp; path = RSDK/Graphics/Palette.hpp; sourceTree = "<group>"; wrapsLines = 0; };
+		C9CDC75227F9199C00E4C97E /* Drawing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Drawing.cpp; path = RSDK/Graphics/Drawing.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C9CDC75327F9199C00E4C97E /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shader.cpp; path = RSDK/Graphics/Shader.cpp; sourceTree = "<group>"; };
 		C9CDC75427F9199C00E4C97E /* Video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Video.hpp; path = RSDK/Graphics/Video.hpp; sourceTree = "<group>"; };
 		C9CDC75527F9199C00E4C97E /* Scene3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene3D.cpp; path = RSDK/Graphics/Scene3D.cpp; sourceTree = "<group>"; };

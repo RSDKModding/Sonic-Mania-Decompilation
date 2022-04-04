@@ -93,7 +93,7 @@ bool32 RSDK::SKU::DummyUserStorage::TrySaveUserFile(const char *filename, void *
             uLongf clen = size;
             compress((Bytef *)cbuf, &clen, (Bytef *)buffer, (uLong)size);
 
-            success = SaveUserFile(filename, cbuf, clen);
+            success = SaveUserFile(filename, cbuf, (uint32)clen);
 
             RSDK::RemoveStorageEntry((void **)&cbuf);
         }

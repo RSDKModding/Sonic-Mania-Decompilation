@@ -87,7 +87,7 @@ void RSDK::SKU::DummyLeaderboards::TrackScore(LeaderboardID *leaderboard, int32 
         LeaderboardInfo info;
         sprintf(info.name, "%s", leaderboard->name);
         info.score = 0x7FFFFFFF;
-        id         = leaderboardList.size();
+        id         = (int32)leaderboardList.size();
         leaderboardList.push_back(info);
     }
 
