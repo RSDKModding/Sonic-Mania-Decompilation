@@ -2673,6 +2673,7 @@ void Player_HandleGroundMovement(void)
                         self->direction = FLIP_NONE;
                         self->skidding  = 24;
                     }
+                    
                     int32 skid = self->skidSpeed;
                     if (self->groundVel < skid) {
                         self->groundVel = -abs(skid);
@@ -2764,12 +2765,12 @@ void Player_HandleGroundMovement(void)
     if (!self->invertGravity) {
         if (self->collisionMode && self->collisionMode <= CMODE_RWALL) {
             if (self->angle >= 0x40 && self->angle <= 0xC0) {
-                if (self->groundVel > -0x20000 && self->groundVel < 0x20000) {
+                if (abs(self->groundVel) < 0x20000) {
                     self->velocity.x    = self->groundVel * RSDK.Cos256(self->angle) >> 8;
+                    self->velocity.y    = self->groundVel * RSDK.Sin256(self->angle) >> 8;
                     self->onGround      = false;
                     self->angle         = 0;
                     self->collisionMode = CMODE_FLOOR;
-                    self->velocity.y    = (self->groundVel * RSDK.Sin256(self->angle)) >> 8;
                 }
             }
         }

@@ -190,7 +190,7 @@
 		C9CDC76927F919B800E4C97E /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Object.cpp; path = RSDK/Scene/Object.cpp; sourceTree = "<group>"; };
 		C9CDC76A27F919B800E4C97E /* Object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Object.hpp; path = RSDK/Scene/Object.hpp; sourceTree = "<group>"; };
 		C9CDC76B27F919B800E4C97E /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene.cpp; path = RSDK/Scene/Scene.cpp; sourceTree = "<group>"; };
-		C9CDC76C27F919B800E4C97E /* Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Collision.cpp; path = RSDK/Scene/Collision.cpp; sourceTree = "<group>"; };
+		C9CDC76C27F919B800E4C97E /* Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Collision.cpp; path = RSDK/Scene/Collision.cpp; sourceTree = "<group>"; wrapsLines = 0; };
 		C9CDC76D27F919B800E4C97E /* Scene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Scene.hpp; path = RSDK/Scene/Scene.hpp; sourceTree = "<group>"; };
 		C9CDC77127F919C100E4C97E /* Storage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Storage.cpp; path = RSDK/Storage/Storage.cpp; sourceTree = "<group>"; };
 		C9CDC77227F919C100E4C97E /* Text.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Text.hpp; path = RSDK/Storage/Text.hpp; sourceTree = "<group>"; };
