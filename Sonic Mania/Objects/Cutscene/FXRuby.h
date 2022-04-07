@@ -8,7 +8,7 @@ struct ObjectFXRuby {
     RSDK_OBJECT
     int32 deformData[0x200];
 #if RETRO_USE_PLUS
-    uint16 lookupTable[0x10000];
+    uint16 tintLookupTable[0x10000];
 #endif
     TileLayer *fgLow;
     TileLayer *fgHigh;

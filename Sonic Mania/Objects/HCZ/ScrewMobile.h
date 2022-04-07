@@ -3,13 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SCREWMOBILE_MOBILE,
+    SCREWMOBILE_BOMB,
+} ScrewMobileTypes;
+
 // Object Class
 struct ObjectScrewMobile {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxCockpit;
+    Hitbox hitboxDepthCharge;
     bool32 playingFanSfx;
-    uint8 shouldPlayFanSfx;
+    uint8 fanSfxTimer;
     uint16 aniFrames;
     uint16 sfxButton;
     uint16 sfxEggMobile;
@@ -26,16 +31,16 @@ struct EntityScrewMobile {
     bool32 bombPress;
     uint8 timer;
     int32 whirlPoolTimer;
-    int32 field_74;
+    int32 whirlpoolHeight;
     int32 invincibilityTimer;
-    uint8 field_7C;
-    Entity *whirlpool;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
+    uint8 health;
+    EntityWhirlpool *whirlpool;
+    Animator mobileAnimator;
+    Animator propellerAnimator;
+    Animator rackAnimator;
+    Animator whirlpoolAnimator;
+    Animator whirlpoolTopAnimator;
+    Animator whirlpoolBottomAnimator;
 };
 
 // Object Struct
@@ -59,10 +64,10 @@ void ScrewMobile_State_CheckPlayerEnter(void);
 void ScrewMobile_State_PlayerRiding(void);
 void ScrewMobile_State_BossFinished(void);
 void ScrewMobile_State_Idle(void);
-void ScrewMobile_StateDraw1_Unknown(void);
+void ScrewMobile_Draw_ScrewMobile(void);
 
-void ScrewMobile_State2_Unknown1(void);
-void ScrewMobile_State2_Unknown2(void);
-void ScrewMobile_StateDraw2_Unknown(void);
+void ScrewMobile_StateDepthCharge_Active(void);
+void ScrewMobile_StateDepthCharge_Debris(void);
+void ScrewMobile_Draw_DepthCharge(void);
 
 #endif //!OBJ_SCREWMOBILE_H

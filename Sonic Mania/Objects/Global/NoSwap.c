@@ -97,7 +97,9 @@ void NoSwap_EditorDraw(void)
     self->updateRange.x = TILE_SIZE * self->size.x;
     self->updateRange.y = TILE_SIZE * self->size.y;
 
+    RSDK_DRAWING_OVERLAY(true);
     NoSwap_Draw();
+    RSDK_DRAWING_OVERLAY(false);
 
     RSDK.SetSpriteAnimation(NoSwap->aniFrames, 0, &self->animator1, true, 8);
     RSDK.DrawSprite(&self->animator1, NULL, false);

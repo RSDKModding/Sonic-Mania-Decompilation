@@ -326,10 +326,12 @@ void runRetroEngine()
 
     while (engine.running) {
 #if !RETRO_USE_ORIGINAL_CODE
-        curTicks = SDL_GetPerformanceCounter();
-        if (curTicks < prevTicks + targetFreq)
-            continue;
-        prevTicks = curTicks;
+        if (!engine.vsync) {
+            curTicks = SDL_GetPerformanceCounter();
+            if (curTicks < prevTicks + targetFreq)
+                continue;
+            prevTicks = curTicks;
+        }
 #endif
 
         engine.running  = processEvents();

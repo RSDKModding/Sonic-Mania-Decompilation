@@ -10,10 +10,6 @@
 #endif
 #define CAMERA_MAX (0x4)
 
-#define BLENDTABLE_YSIZE (0x100)
-#define BLENDTABLE_XSIZE (0x20)
-#define BLENDTABLE_SIZE  (BLENDTABLE_XSIZE * BLENDTABLE_YSIZE)
-
 #define LAYER_COUNT     (8)
 #define DRAWLAYER_COUNT (16)
 
@@ -23,7 +19,7 @@ enum InkEffects {
     INK_ALPHA,
     INK_ADD,
     INK_SUB,
-    INK_LOOKUP,
+    INK_TINT,
     INK_MASKED,
     INK_UNMASKED,
 };
@@ -80,8 +76,8 @@ struct DrawList {
 extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];
 
-extern uint16 blendLookupTable[BLENDTABLE_SIZE];
-extern uint16 subtractLookupTable[BLENDTABLE_SIZE];
+extern uint16 blendLookupTable[0x20 * 0x100];
+extern uint16 subtractLookupTable[0x20 * 0x100];
 
 extern GFXSurface gfxSurface[SURFACE_MAX];
 
@@ -212,7 +208,7 @@ inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(v
 
 void SwapDrawListEntries(uint8 layer, uint16 indexA, uint16 indexB, int32 count);
 
-void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha);
+void FillScreen(uint colour, int alphaR, int alphaG, int alphaB);
 
 void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
 void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);

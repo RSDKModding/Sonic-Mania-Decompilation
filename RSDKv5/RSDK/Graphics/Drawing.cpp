@@ -2,8 +2,8 @@
 
 DrawList drawLayers[DRAWLAYER_COUNT];
 
-uint16 blendLookupTable[BLENDTABLE_SIZE];
-uint16 subtractLookupTable[BLENDTABLE_SIZE];
+uint16 blendLookupTable[0x20 * 0x100];
+uint16 subtractLookupTable[0x20 * 0x100];
 
 GFXSurface gfxSurface[SURFACE_MAX];
 
@@ -25,41 +25,41 @@ char drawGroupNames[0x10][0x10] = {
 #include "RSDK/Dev/DevFont.hpp"
 
 // 50% alpha, but way faster
-#define setPixelBlend(colour, frameBufferClr) frameBufferClr = ((colour >> 1) & 0x7BEF) + ((frameBufferClr >> 1) & 0x7BEF)
+#define setPixelBlend(pixel, frameBufferClr) frameBufferClr = ((pixel >> 1) & 0x7BEF) + ((frameBufferClr >> 1) & 0x7BEF)
 
 // Alpha blending
-#define setPixelAlpha(colour, frameBufferClr, alpha)                                                           \
-    int32 R = (fbufferBlend[(frameBufferClr & 0xF800) >> 11] + pixelBlend[(colour & 0xF800) >> 11]) << 11;       \
-    int32 G = (fbufferBlend[(frameBufferClr & 0x7E0) >> 6] + pixelBlend[(colour & 0x7E0) >> 6]) << 6;            \
-    int32 B = fbufferBlend[frameBufferClr & 0x1F] + pixelBlend[colour & 0x1F];                                   \
-                                                                                                               \
+#define setPixelAlpha(pixel, frameBufferClr, alpha)                                                                                                  \
+    int32 R = (fbufferBlend[(frameBufferClr & 0xF800) >> 11] + pixelBlend[(pixel & 0xF800) >> 11]) << 11;                                            \
+    int32 G = (fbufferBlend[(frameBufferClr & 0x7E0) >> 6] + pixelBlend[(pixel & 0x7E0) >> 6]) << 6;                                                 \
+    int32 B = fbufferBlend[frameBufferClr & 0x1F] + pixelBlend[pixel & 0x1F];                                                                        \
+                                                                                                                                                     \
     frameBufferClr = R | G | B;
 
 // Additive Blending
-#define setPixelAdditive(colour, frameBufferClr)                                                                                                \
-    int32 R = minVal((blendTablePtr[(colour & 0xF800) >> 11] << 11) + (frameBufferClr & 0xF800), 0xF800);                                         \
-    int32 G = minVal((blendTablePtr[(colour & 0x7E0) >> 6] << 6) + (frameBufferClr & 0x7E0), 0x7E0);                                              \
-    int32 B = minVal(blendTablePtr[colour & 0x1F] + (frameBufferClr & 0x1F), 0x1F);                                                               \
-                                                                                                                                                \
+#define setPixelAdditive(pixel, frameBufferClr)                                                                                                      \
+    int32 R = minVal((blendTablePtr[(pixel & 0xF800) >> 11] << 11) + (frameBufferClr & 0xF800), 0xF800);                                             \
+    int32 G = minVal((blendTablePtr[(pixel & 0x7E0) >> 6] << 6) + (frameBufferClr & 0x7E0), 0x7E0);                                                  \
+    int32 B = minVal(blendTablePtr[pixel & 0x1F] + (frameBufferClr & 0x1F), 0x1F);                                                                   \
+                                                                                                                                                     \
     frameBufferClr = R | G | B;
 
 // Subtractive Blending
-#define setPixelSubtractive(colour, frameBufferClr)                                                 \
-    int32 R = maxVal((frameBufferClr & 0xF800) - (subBlendTable[(colour & 0xF800) >> 11] << 11), 0);  \
-    int32 G = maxVal((frameBufferClr & 0x7E0) - (subBlendTable[(colour & 0x7E0) >> 6] << 6), 0);      \
-    int32 B = maxVal((frameBufferClr & 0x1F) - subBlendTable[colour & 0x1F], 0);                      \
-                                                                                                    \
+#define setPixelSubtractive(pixel, frameBufferClr)                                                                                                   \
+    int32 R = maxVal((frameBufferClr & 0xF800) - (subBlendTable[(pixel & 0xF800) >> 11] << 11), 0);                                                  \
+    int32 G = maxVal((frameBufferClr & 0x7E0) - (subBlendTable[(pixel & 0x7E0) >> 6] << 6), 0);                                                      \
+    int32 B = maxVal((frameBufferClr & 0x1F) - subBlendTable[pixel & 0x1F], 0);                                                                      \
+                                                                                                                                                     \
     frameBufferClr = R | G | B;
 
 // Only draw if framebuffer clr IS maskColour
-#define setPixelMasked(colour, frameBufferClr)                                                                                                       \
+#define setPixelMasked(pixel, frameBufferClr)                                                                                                        \
     if (frameBufferClr == maskColour)                                                                                                                \
-        frameBufferClr = colour;
+        frameBufferClr = pixel;
 
 // Only draw if framebuffer clr is NOT maskColour
-#define setPixelUnmasked(colour, frameBufferClr)                                                                                                     \
+#define setPixelUnmasked(pixel, frameBufferClr)                                                                                                      \
     if (frameBufferClr != maskColour)                                                                                                                \
-        frameBufferClr = colour;
+        frameBufferClr = pixel;
 
 bool32 InitRenderDevice()
 {
@@ -87,7 +87,7 @@ bool32 InitRenderDevice()
 #endif
 
 #if RETRO_PLATFORM == RETRO_SWITCH
-    engine.windowWidth = 1920;
+    engine.windowWidth  = 1920;
     engine.windowHeight = 1080;
     flags |= SDL_WINDOW_FULLSCREEN;
 #endif
@@ -96,7 +96,7 @@ bool32 InitRenderDevice()
         SetScreenSize(s, pixWidth, SCREEN_YSIZE);
 
         // screens[s].frameBuffer = new ushort[screens[s].size.x * screens[s].size.y];
-        memset(screens[s].frameBuffer, 0, (screens[s].size.x * screens[s].size.y) * sizeof(ushort));
+        memset(screens[s].frameBuffer, 0, (screens[s].size.x * screens[s].size.y) * sizeof(uint16));
     }
 
     int size  = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
@@ -126,8 +126,7 @@ bool32 InitRenderDevice()
     SDL_SetRenderDrawBlendMode(engine.renderer, SDL_BLENDMODE_BLEND);
 
     for (int s = 0; s < SCREEN_MAX; ++s) {
-        engine.screenBuffer[s] =
-            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
+        engine.screenBuffer[s] = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
 
         if (!engine.screenBuffer[s]) {
             PrintLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
@@ -316,6 +315,7 @@ void FlipScreen()
             break;
         }
     }
+
 #if RETRO_USING_SDL2
     SDL_ShowWindow(engine.window);
 #endif
@@ -323,8 +323,6 @@ void FlipScreen()
 void ReleaseRenderDevice()
 {
     for (int s = 0; s < SCREEN_MAX; ++s) {
-        // if (screens[s].frameBuffer)
-        //  delete[] screens[s].frameBuffer;
 #if RETRO_USING_SDL2
         if (engine.screenBuffer[s])
             SDL_DestroyTexture(engine.screenBuffer[s]);
@@ -439,18 +437,17 @@ void SetImageTexture(int width, int height, byte *imagePixels)
 
 void GenerateBlendLookupTable()
 {
-    int blendTableID = 0;
-    for (int y = 0; y < BLENDTABLE_YSIZE; y++) {
-        for (int x = 0; x < BLENDTABLE_XSIZE; x++) {
-            blendLookupTable[blendTableID]      = y * x >> 8;
-            subtractLookupTable[blendTableID++] = y * (0x1F - x) >> 8;
+    for (int y = 0; y < 0x100; y++) {
+        for (int x = 0; x < 0x20; x++) {
+            blendLookupTable[x + (y * 0x20)]    = y * x >> 8;
+            subtractLookupTable[x + (y * 0x20)] = y * (0x1F - x) >> 8;
         }
     }
 
 #if !RETRO_REV02
     for (int i = 0; i < 0x10000; ++i) {
-        int32 brightness = (((uint32)i & 0x1F) + ((i >> 6) & 0x1F) + (((uint16)i >> 11) & 0x1F)) / 3 + 6;
-        lookupTable[i] = 0x841 * minVal(0x1F, brightness);
+        int32 tintValue = (((uint32)i & 0x1F) + ((i >> 6) & 0x1F) + (((uint16)i >> 11) & 0x1F)) / 3 + 6;
+        tintLookupTable[i] = 0x841 * minVal(0x1F, tintValue);
     }
 #endif
 
@@ -464,7 +461,7 @@ void GenerateBlendLookupTable()
 void InitSystemSurfaces()
 {
     GEN_HASH("TileBuffer", gfxSurface[0].hash);
-    gfxSurface[0].scope = SCOPE_GLOBAL;
+    gfxSurface[0].scope    = SCOPE_GLOBAL;
     gfxSurface[0].width    = TILE_SIZE;
     gfxSurface[0].height   = 0x40000;
     gfxSurface[0].lineSize = 4; // 16
@@ -472,7 +469,7 @@ void InitSystemSurfaces()
 
 #if RETRO_REV02
     GEN_HASH("EngineText", gfxSurface[1].hash);
-    gfxSurface[1].scope = SCOPE_GLOBAL;
+    gfxSurface[1].scope    = SCOPE_GLOBAL;
     gfxSurface[1].width    = 8;
     gfxSurface[1].height   = 128 * 8;
     gfxSurface[1].lineSize = 3; // 8
@@ -566,7 +563,7 @@ void SwapDrawListEntries(uint8 layer, uint16 entitySlotA, uint16 entitySlotB, in
 {
     if (layer < DRAWLAYER_COUNT) {
         DrawList *list = &drawLayers[layer];
-        if (count<0 || count> list->entityCount) {
+        if (count < 0 || count > list->entityCount) {
             count = list->entityCount;
         }
 
@@ -591,36 +588,36 @@ void SwapDrawListEntries(uint8 layer, uint16 entitySlotA, uint16 entitySlotB, in
     }
 }
 
-void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
+void FillScreen(uint colour, int alphaR, int alphaG, int alphaB)
 {
-    redAlpha = minVal(0xFF, redAlpha);
-    redAlpha = maxVal(0x00, redAlpha);
+    alphaR = minVal(0xFF, alphaR);
+    alphaR = maxVal(0x00, alphaR);
 
-    greenAlpha = minVal(0xFF, greenAlpha);
-    greenAlpha = maxVal(0x00, greenAlpha);
+    alphaG = minVal(0xFF, alphaG);
+    alphaG = maxVal(0x00, alphaG);
 
-    blueAlpha = minVal(0xFF, blueAlpha);
-    blueAlpha = maxVal(0x00, blueAlpha);
+    alphaB = minVal(0xFF, alphaB);
+    alphaB = maxVal(0x00, alphaB);
 
-    if (redAlpha + greenAlpha + blueAlpha) {
-        validDraw       = true;
-        ushort redVal   = blendLookupTable[BLENDTABLE_XSIZE * redAlpha + rgb32To16_B[(colour >> 0x10) & 0xFF]];
-        ushort greenVal = blendLookupTable[BLENDTABLE_XSIZE * greenAlpha + rgb32To16_B[(colour >> 0x08) & 0xFF]];
-        ushort blueVal  = blendLookupTable[BLENDTABLE_XSIZE * blueAlpha + rgb32To16_B[(colour >> 0x00) & 0xFF]];
+    if (alphaR + alphaG + alphaB) {
+        validDraw        = true;
+        ushort clrBlendR = blendLookupTable[0x20 * alphaR + rgb32To16_B[(colour >> 0x10) & 0xFF]];
+        ushort clrBlendG = blendLookupTable[0x20 * alphaG + rgb32To16_B[(colour >> 0x08) & 0xFF]];
+        ushort clrBlendB = blendLookupTable[0x20 * alphaB + rgb32To16_B[(colour >> 0x00) & 0xFF]];
 
-        ushort *redPtr   = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - redAlpha)];
-        ushort *greenPtr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - greenAlpha)];
-        ushort *bluePtr  = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - blueAlpha)];
+        ushort *fbBlendR = &blendLookupTable[0x20 * (0xFF - alphaR)];
+        ushort *fbBlendG = &blendLookupTable[0x20 * (0xFF - alphaG)];
+        ushort *fbBlendB = &blendLookupTable[0x20 * (0xFF - alphaB)];
 
-        int cnt = currentScreen->size.y * currentScreen->pitch;
+        int32 cnt = currentScreen->size.y * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
             ushort px = currentScreen->frameBuffer[id];
 
-            int r = redPtr[(px & 0xF800) >> 11] + redVal;
-            int g = greenPtr[(px & 0x7E0) >> 6] + greenVal;
-            int b = bluePtr[px & 0x1F] + blueVal;
+            int32 R = fbBlendR[(px & 0xF800) >> 11] + clrBlendR;
+            int32 G = fbBlendG[(px & 0x7E0) >> 6] + clrBlendG;
+            int32 B = fbBlendB[px & 0x1F] + clrBlendB;
 
-            currentScreen->frameBuffer[id] = (b) | (g << 6) | (r << 11);
+            currentScreen->frameBuffer[id] = (B) | (G << 6) | (R << 11);
         }
     }
 }
@@ -644,8 +641,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -900,7 +897,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             if (drawY1 > drawY2) {
                 uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                                 
+
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     setPixelAlpha(colour16, *frameBufferPtr, alpha);
 
@@ -919,7 +916,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             else {
                 uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                
+
                 while (true) {
                     setPixelAlpha(colour16, *frameBufferPtr, alpha);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
@@ -942,7 +939,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             break;
         case INK_ADD:
             if (drawY1 > drawY2) {
-                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     setPixelAdditive(colour16, *frameBufferPtr);
 
@@ -959,7 +956,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 while (true) {
                     setPixelAdditive(colour16, *frameBufferPtr);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
@@ -982,7 +979,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             break;
         case INK_SUB:
             if (drawY1 > drawY2) {
-                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
                     setPixelSubtractive(colour16, *frameBufferPtr);
 
@@ -999,7 +996,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             else {
-                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 while (true) {
                     setPixelSubtractive(colour16, *frameBufferPtr);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
@@ -1020,10 +1017,10 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 }
             }
             break;
-        case INK_LOOKUP:
+        case INK_TINT:
             if (drawY1 > drawY2) {
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    *frameBufferPtr = lookupTable[*frameBufferPtr];
+                    *frameBufferPtr = tintLookupTable[*frameBufferPtr];
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -1039,7 +1036,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 while (true) {
-                    *frameBufferPtr = lookupTable[*frameBufferPtr];
+                    *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -1159,8 +1156,8 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -1222,7 +1219,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
         case INK_ALPHA: {
             uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
             uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                            
+
             int h = height;
             while (h--) {
                 int w = width;
@@ -1235,7 +1232,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             break;
         }
         case INK_ADD: {
-            ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+            ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
             int h                 = height;
             while (h--) {
                 int w = width;
@@ -1248,7 +1245,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             break;
         }
         case INK_SUB: {
-            ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+            ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
             int h                 = height;
             while (h--) {
                 int w = width;
@@ -1260,12 +1257,12 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             }
             break;
         }
-        case INK_LOOKUP: {
+        case INK_TINT: {
             int h = height;
             while (h--) {
                 int w = width;
                 while (w--) {
-                    *frameBufferPtr = lookupTable[*frameBufferPtr];
+                    *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1320,8 +1317,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                 else if (alpha <= 0)
                     return;
                 break;
-            case INK_LOOKUP:
-                if (!lookupTable)
+            case INK_TINT:
+                if (!tintLookupTable)
                     return;
                 break;
         }
@@ -1472,7 +1469,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                     if (top <= bottom) {
                         uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                         uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                        
+
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
@@ -1496,7 +1493,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                     }
                     break;
                 case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                     if (top <= bottom) {
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
@@ -1522,7 +1519,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                     break;
                 }
                 case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                     if (top <= bottom) {
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
@@ -1547,7 +1544,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                     }
                     break;
                 }
-                case INK_LOOKUP:
+                case INK_TINT:
                     if (top <= bottom) {
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
@@ -1564,7 +1561,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
+                                frameBufferPtr[edge->start + x] = tintLookupTable[frameBufferPtr[edge->start + x]];
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1644,8 +1641,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -1687,14 +1684,14 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
             validDraw              = true;
             ushort *frameBufferPtr = &currentScreen->frameBuffer[left + top * currentScreen->pitch];
             ushort colour16        = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
-            int pitch           = (left + currentScreen->pitch - right);
+            int pitch              = (left + currentScreen->pitch - right);
 
             switch (inkEffect) {
                 default: break;
                 case INK_NONE:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1717,8 +1714,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_BLEND:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1743,9 +1740,9 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     if (top < bottom) {
                         uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                         uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                        
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1768,10 +1765,10 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     }
                     break;
                 case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1795,10 +1792,10 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 }
                 case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1821,10 +1818,10 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     }
                     break;
                 }
-                case INK_LOOKUP:
+                case INK_TINT:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1833,7 +1830,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2)
-                                        *frameBufferPtr = lookupTable[*frameBufferPtr];
+                                        *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                                     ++frameBufferPtr;
                                     ++xDif1;
                                     --xDif2;
@@ -1847,8 +1844,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_MASKED:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1871,8 +1868,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_UNMASKED:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -1917,8 +1914,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -2006,7 +2003,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             case INK_ALPHA: {
                 uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                
+
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
@@ -2028,7 +2025,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             }
             case INK_ADD: {
-                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
@@ -2050,7 +2047,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
             }
             case INK_SUB: {
-                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
@@ -2071,7 +2068,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 }
                 break;
             }
-            case INK_LOOKUP:
+            case INK_TINT:
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     if (edge->start < currentScreen->clipBound_X1)
                         edge->start = currentScreen->clipBound_X1;
@@ -2085,7 +2082,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
+                        frameBufferPtr[edge->start + x] = tintLookupTable[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2155,8 +2152,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -2296,7 +2293,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
             case INK_ALPHA: {
                 uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                
+
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
@@ -2344,7 +2341,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             }
             case INK_ADD: {
-                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
@@ -2392,7 +2389,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
             }
             case INK_SUB: {
-                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
@@ -2439,7 +2436,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 }
                 break;
             }
-            case INK_LOOKUP:
+            case INK_TINT:
                 for (int s = topScreen; s <= bottomScreen; ++s) {
                     int start  = edge->start;
                     int count  = edge->end - edge->start;
@@ -2478,7 +2475,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
+                        frameBufferPtr[edge->start + x] = tintLookupTable[frameBufferPtr[edge->start + x]];
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2759,8 +2756,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -2793,14 +2790,14 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
 
     GFXSurface *surface    = &gfxSurface[sheetID];
     validDraw              = true;
-    int pitch                  = currentScreen->pitch - width;
+    int pitch              = currentScreen->pitch - width;
     int gfxPitch           = 0;
     byte *lineBuffer       = NULL;
     byte *gfxData          = NULL;
     ushort *frameBufferPtr = NULL;
     switch (direction) {
         default: break;
-        
+
         case FLIP_NONE:
             gfxPitch       = surface->width - width;
             lineBuffer     = &gfxLineBuffer[y];
@@ -2840,7 +2837,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 case INK_ALPHA: {
                     uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                     uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                    
+
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -2859,7 +2856,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -2878,7 +2875,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -2896,13 +2893,13 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     }
                     break;
                 }
-                case INK_LOOKUP:
+                case INK_TINT:
                     while (height--) {
                         lineBuffer++;
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookupTable[*frameBufferPtr];
+                                *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                             ++gfxData;
                             ++frameBufferPtr;
                         }
@@ -2981,7 +2978,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 case INK_ALPHA: {
                     uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                     uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                    
+
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3000,7 +2997,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3019,7 +3016,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3037,13 +3034,13 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     }
                     break;
                 }
-                case INK_LOOKUP:
+                case INK_TINT:
                     while (height--) {
                         lineBuffer++;
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookupTable[*frameBufferPtr];
+                                *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                             --gfxData;
                             ++frameBufferPtr;
                         }
@@ -3122,7 +3119,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 case INK_ALPHA: {
                     uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                     uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                    
+
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3141,7 +3138,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3160,7 +3157,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3178,13 +3175,13 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     }
                     break;
                 }
-                case INK_LOOKUP:
+                case INK_TINT:
                     while (height--) {
                         lineBuffer++;
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookupTable[*frameBufferPtr];
+                                *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                             ++gfxData;
                             ++frameBufferPtr;
                         }
@@ -3263,7 +3260,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                 case INK_ALPHA: {
                     uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                     uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                    
+
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3282,7 +3279,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3301,7 +3298,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     break;
                 }
                 case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                    ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                     while (height--) {
                         ushort *activePalette = fullPalette[*lineBuffer];
                         lineBuffer++;
@@ -3319,13 +3316,13 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                     }
                     break;
                 }
-                case INK_LOOKUP:
+                case INK_TINT:
                     while (height--) {
                         lineBuffer++;
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0)
-                                *frameBufferPtr = lookupTable[*frameBufferPtr];
+                                *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                             --gfxData;
                             ++frameBufferPtr;
                         }
@@ -3387,8 +3384,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -3494,7 +3491,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
         int fullScaleY         = (float)((512.0 / (float)scaleY) * 512.0);
         int deltaXLen          = fullScaleX * sine >> 2;
         int deltaX             = fullScaleX * cosine >> 2;
-        int pitch            = currentScreen->pitch - xSize;
+        int pitch              = currentScreen->pitch - xSize;
         int deltaYLen          = fullScaleY * cosine >> 2;
         int deltaY             = fullScaleY * sine >> 2;
         int lineSize           = surface->lineSize;
@@ -3562,7 +3559,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             case INK_ALPHA: {
                 uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                                
+
                 for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
@@ -3586,7 +3583,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 break;
             }
             case INK_ADD: {
-                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
@@ -3610,7 +3607,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 break;
             }
             case INK_SUB: {
-                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 for (int y = 0; y < ySize; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
                     int drawXPos       = drawX;
@@ -3633,7 +3630,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 }
                 break;
             }
-            case INK_LOOKUP:
+            case INK_TINT:
                 for (int y = 0; y < ySize; ++y) {
                     int drawXPos = drawX;
                     int drawYPos = drawY;
@@ -3641,7 +3638,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index)
-                                *frameBufferPtr = lookupTable[*frameBufferPtr];
+                                *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                         }
                         ++frameBufferPtr;
                         drawXPos += deltaX;
@@ -3715,8 +3712,8 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
             else if (alpha <= 0)
                 return;
             break;
-        case INK_LOOKUP:
-            if (!lookupTable)
+        case INK_TINT:
+            if (!tintLookupTable)
                 return;
             break;
     }
@@ -3772,7 +3769,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
         case INK_ALPHA: {
             uint16 *fbufferBlend = &blendLookupTable[0x20 * (0xFF - alpha)];
             uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
-                                            
+
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
                 ushort *palettePtr = fullPalette[*lineBuffer++];
                 int lx             = scanlinePtr->position.x;
@@ -3794,7 +3791,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
             break;
         }
         case INK_ADD: {
-            ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+            ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
                 ushort *palettePtr = fullPalette[*lineBuffer++];
                 int lx             = scanlinePtr->position.x;
@@ -3816,7 +3813,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
             break;
         }
         case INK_SUB: {
-            ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+            ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
                 ushort *palettePtr = fullPalette[*lineBuffer++];
                 int lx             = scanlinePtr->position.x;
@@ -3837,7 +3834,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
             }
             break;
         }
-        case INK_LOOKUP:
+        case INK_TINT:
             for (; clipY1 < currentScreen->clipBound_Y2; ++scanlinePtr) {
                 int lx = scanlinePtr->position.x;
                 int ly = scanlinePtr->position.y;
@@ -3846,7 +3843,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex)
-                        *frameBufferPtr = lookupTable[*frameBufferPtr];
+                        *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                     lx += dx;
                     ly += dy;
                     ++frameBufferPtr;

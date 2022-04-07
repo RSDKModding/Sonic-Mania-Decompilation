@@ -3,12 +3,23 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DCEVENT_EGGMAN,
+    DCEVENT_BOMB,
+    DCEVENT_BUBBLE,
+} DCEventTypes;
+
+typedef enum {
+    DCEVENT_EGGMAN_PLACEBOMB,
+    DCEVENT_EGGMAN_SWIMMING,
+} DCEventEggmanTypes;
+
 // Object Class
 struct ObjectDCEvent {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    bool32 finished;
+    Hitbox unusedHitbox1;
+    Hitbox hitboxBomb;
+    bool32 canExplodeBombs;
     uint16 aniFrames;
     uint16 eggmanFrames;
     uint16 sfxExplosion;
@@ -23,8 +34,8 @@ struct EntityDCEvent {
     StateMachine(state);
     uint8 numChildren;
     uint8 type;
-    int32 timer2;
-    int32 field_64;
+    int32 remainingBombs;
+    int32 startY;
     int32 timer;
     Animator animator;
 };
@@ -37,7 +48,7 @@ void DCEvent_Update(void);
 void DCEvent_LateUpdate(void);
 void DCEvent_StaticUpdate(void);
 void DCEvent_Draw(void);
-void DCEvent_Create(void* data);
+void DCEvent_Create(void *data);
 void DCEvent_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DCEvent_EditorDraw(void);
@@ -47,20 +58,20 @@ void DCEvent_Serialize(void);
 
 // Extra Entity Functions
 void DCEvent_State_Collapse(void);
-void DCEvent_State_Unknown1(void);
+void DCEvent_StateEggmanBomber_AwaitPlayer(void);
 
-void DCEvent_StateInput_Unknown1(void);
-void DCEvent_StateInput_Unknown2(void);
+void DCEvent_StateInput_MoveRight(void);
+void DCEvent_StateInput_LookDown(void);
 
-void DCEvent_State_Unknown2(void);
-void DCEvent_State_Unknown3(void);
-void DCEvent_State_Unknown4(void);
-void DCEvent_State_Unknown5(void);
+void DCEvent_StateEggmanBomber_WaitForLookDown(void);
+void DCEvent_StateEggmanBomber_Swimming(void);
+void DCEvent_StateEggmanBomber_PlaceBomb(void);
+void DCEvent_StateEggmanBomber_PlacedAllBombs(void);
 
-void DCEvent_State1_Unknown1(void);
-void DCEvent_State1_Unknown2(void);
+void DCEvent_StateEggmanSwim_AwaitPlayer(void);
+void DCEvent_StateEggmanSwim_Swimming(void);
 
-void DCEvent_State2_Unknown1(void);
-void DCEvent_State2_Unknown2(void);
+void DCEvent_State_Bomb(void);
+void DCEvent_State_BombExplode(void);
 
-#endif //!OBJ_DCEVENT_H
+#endif //! OBJ_DCEVENT_H

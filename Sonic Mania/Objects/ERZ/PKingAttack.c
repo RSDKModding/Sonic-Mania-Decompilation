@@ -24,7 +24,7 @@ void PKingAttack_Draw(void)
     RSDK_THIS(PKingAttack);
 
     if (self->type == PKINGATTACK_LAUNCHED)
-        RSDK.DrawCircle(self->position.x, self->position.y, 0x20, 0x00, 0xFF, INK_LOOKUP, false);
+        RSDK.DrawCircle(self->position.x, self->position.y, 0x20, 0x00, 0xFF, INK_TINT, false);
 
     RSDK.DrawSprite(&self->animator, NULL, false);
 }

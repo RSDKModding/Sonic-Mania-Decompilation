@@ -640,7 +640,7 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
                                     int mask = collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                                     int ty   = cy + mask;
                                     if (mask < 0xFF) {
-                                        if (colY <= ty && abs(colY - ty) <= tolerance) {
+                                        if (abs(colY - ty) <= tolerance) {
                                             collided = true;
                                             colY     = ty;
                                         }
@@ -678,7 +678,7 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
                                     int mask = collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                                     int tx   = cx + mask;
                                     if (mask < 0xFF) {
-                                        if (colX >= tx && abs(colX - tx) <= tolerance) {
+                                        if (abs(colX - tx) <= tolerance) {
                                             collided = true;
                                             colX     = tx;
                                         }

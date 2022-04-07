@@ -24,14 +24,14 @@ struct EntityWaterGush {
     int32 length;
     int32 speed;
     uint8 activePlayers;
-    Vector2 posUnknown1;
+    Vector2 startPos;
     int32 unused;
     int32 gushPos;
     int32 gravityStrength;
     bool32 activated;
     bool32 finishedExtending;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxRange;
+    Hitbox hitboxGush;
     Animator plumeAnimator;
     Animator topAnimator;
 };

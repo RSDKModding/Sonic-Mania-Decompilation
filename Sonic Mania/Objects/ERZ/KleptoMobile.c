@@ -320,7 +320,7 @@ void KleptoMobile_Draw_KleptoMobile(void)
         RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
     }
 
-    RSDK.DrawCircle(self->rubyPos.x, self->rubyPos.y, self->circleRadius, 0, 255, INK_LOOKUP, false);
+    RSDK.DrawCircle(self->rubyPos.x, self->rubyPos.y, self->circleRadius, 0, 255, INK_TINT, false);
 }
 
 void KleptoMobile_State_SetupArena(void)

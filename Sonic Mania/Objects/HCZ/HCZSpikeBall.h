@@ -12,9 +12,9 @@ struct ObjectHCZSpikeBall {
 // Entity Class
 struct EntityHCZSpikeBall {
     RSDK_ENTITY
-    int32 field_58;
+    int32 unused1;
     Vector2 startPos;
-    int32 field_64;
+    int32 unused2;
     int32 intervalOffset;
     EntityHangConveyor *conveyor;
     Hitbox hitbox;

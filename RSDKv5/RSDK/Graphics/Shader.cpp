@@ -14,8 +14,10 @@ bool InitShaders()
     //Engine_Unknown185();
     //if (!Engine_Unknown186())
     //    return false;
+
     if (!ReloadShaders())
         return false;
+
     engine.windowActive = true;
     engine.dimMax       = 1.0;
     engine.dimPercent   = 1.0;

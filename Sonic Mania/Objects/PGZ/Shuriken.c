@@ -274,6 +274,7 @@ void Shuriken_State_ArrowInAir(void)
         collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
         collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+
     if (collided) {
         foreach_active(Shuriken, shuriken)
         {

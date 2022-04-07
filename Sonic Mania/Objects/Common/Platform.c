@@ -2211,6 +2211,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 self->inkEffect = INK_BLEND;
 
                 // start pos
@@ -2233,6 +2235,8 @@ void Platform_EditorDraw(void)
                 DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
 
                 self->inkEffect = INK_NONE;
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
         case PLATFORM_CIRCULAR:
@@ -2249,6 +2253,8 @@ void Platform_EditorDraw(void)
             }
 
             if (showGizmos() && !self->hasTension) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 self->inkEffect = INK_BLEND;
 
                 // start pos
@@ -2257,6 +2263,8 @@ void Platform_EditorDraw(void)
                 Platform_EditorDraw_Normal();
 
                 self->inkEffect = INK_NONE;
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
         case PLATFORM_CONTROLLED:
@@ -2290,6 +2298,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 drawPos         = self->drawPos;
                 self->groundVel = 0;
                 bool32 flag     = false;
@@ -2349,6 +2359,8 @@ void Platform_EditorDraw(void)
                 DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
                 if (type)
                     DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
         case PLATFORM_ACTIVEABOVE:
@@ -2362,6 +2374,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 self->inkEffect = INK_BLEND;
 
                 drawPos     = self->drawPos;
@@ -2391,6 +2405,8 @@ void Platform_EditorDraw(void)
 
                 DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
                 DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+
+                RSDK_DRAWING_OVERLAY(false);
             }
 
             break;
@@ -2419,6 +2435,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Swinging(amplitude);
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 if (self->type == PLATFORM_SWINGING) {
                     self->inkEffect = INK_BLEND;
 
@@ -2438,6 +2456,8 @@ void Platform_EditorDraw(void)
 
                     self->inkEffect = INK_NONE;
                 }
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             self->angle = angle;
             break;
@@ -2458,6 +2478,8 @@ void Platform_EditorDraw(void)
 
             Platform_EditorDraw_Normal();
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 drawPos       = self->drawPos;
                 self->drawPos = self->centerPos;
 
@@ -2469,6 +2491,8 @@ void Platform_EditorDraw(void)
 
                 DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
                 DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
         case PLATFORM_TRACK:
@@ -2480,6 +2504,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 Vector2 storePos = self->drawPos;
                 drawPos          = self->drawPos;
 
@@ -2523,6 +2549,8 @@ void Platform_EditorDraw(void)
 
                 DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
                 DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+
+                RSDK_DRAWING_OVERLAY(false);
             }
 
             break;
@@ -2539,6 +2567,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Swinging(amplitude);
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 self->inkEffect = INK_BLEND;
 
                 // max
@@ -2549,6 +2579,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
                 self->angle     = self->groundVel / 4;
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
         }
@@ -2565,6 +2597,8 @@ void Platform_EditorDraw(void)
             Platform_EditorDraw_Normal();
 
             if (showGizmos()) {
+                RSDK_DRAWING_OVERLAY(true);
+
                 self->inkEffect = INK_BLEND;
 
                 // max
@@ -2574,8 +2608,24 @@ void Platform_EditorDraw(void)
                 DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y);
 
                 self->inkEffect = INK_NONE;
+
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
+    }
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < self->childCount; ++i) {
+            Entity *child = RSDK_GET_ENTITY(s + i, );
+            if (!child)
+                continue;
+
+            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, child->position.x, child->position.y);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

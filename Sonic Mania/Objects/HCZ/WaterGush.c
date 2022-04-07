@@ -12,6 +12,7 @@ ObjectWaterGush *WaterGush;
 void WaterGush_Update(void)
 {
     RSDK_THIS(WaterGush);
+
     WaterGush_SetupHitboxes();
     bool32 wasActivated = self->activated;
     self->direction     = FLIP_NONE;
@@ -20,7 +21,7 @@ void WaterGush_Update(void)
     {
         int32 playerID = RSDK.GetEntityID(player);
         if (!((1 << playerID) & self->activePlayers)) {
-            if (Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitboxGush)) {
                 self->active = ACTIVE_NORMAL;
                 if (!player->sidekick)
                     self->activated = true;
@@ -69,7 +70,7 @@ void WaterGush_Update(void)
             player->position.y += (offsetY - player->position.y) >> 2;
             player->state = Player_State_None;
 
-            if ((!Player_CheckCollisionTouch(player, self, &self->hitbox1) && !Player_CheckCollisionTouch(player, self, &self->hitbox2))
+            if ((!Player_CheckCollisionTouch(player, self, &self->hitboxRange) && !Player_CheckCollisionTouch(player, self, &self->hitboxGush))
                 || self->finishedExtending) {
                 self->activePlayers &= ~(1 << playerID);
                 player->state          = Player_State_Air;
@@ -139,8 +140,8 @@ void WaterGush_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
-    self->posUnknown1.x = self->position.x;
-    self->posUnknown1.y = self->position.y;
+    self->startPos.x = self->position.x;
+    self->startPos.y = self->position.y;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
 
@@ -193,46 +194,46 @@ void WaterGush_SetupHitboxes(void)
         default: break;
 
         case WATERGUSH_UP:
-            self->hitbox1.left   = -32;
-            self->hitbox1.top    = -20 - (self->gushPos >> 16);
-            self->hitbox1.right  = 32;
-            self->hitbox1.bottom = 0;
+            self->hitboxRange.left   = -32;
+            self->hitboxRange.top    = -20 - (self->gushPos >> 16);
+            self->hitboxRange.right  = 32;
+            self->hitboxRange.bottom = 0;
 
-            self->hitbox2.left   = -32;
-            self->hitbox2.top    = 0;
-            self->hitbox2.right  = 32;
-            self->hitbox2.bottom = 16;
+            self->hitboxGush.left   = -32;
+            self->hitboxGush.top    = 0;
+            self->hitboxGush.right  = 32;
+            self->hitboxGush.bottom = 16;
             break;
 
         case WATERGUSH_RIGHT:
-            self->hitbox1.left   = 0;
-            self->hitbox1.top    = -32;
-            self->hitbox1.right  = (self->gushPos >> 16) + 20;
-            self->hitbox1.bottom = 32;
+            self->hitboxRange.left   = 0;
+            self->hitboxRange.top    = -32;
+            self->hitboxRange.right  = (self->gushPos >> 16) + 20;
+            self->hitboxRange.bottom = 32;
 
             if (Music->activeTrack == TRACK_EGGMAN1) {
-                self->hitbox2.left   = -192;
-                self->hitbox2.top    = -16;
-                self->hitbox2.bottom = 16;
+                self->hitboxGush.left   = -192;
+                self->hitboxGush.top    = -16;
+                self->hitboxGush.bottom = 16;
             }
             else {
-                self->hitbox2.left   = -16;
-                self->hitbox2.top    = -32;
-                self->hitbox2.bottom = 32;
+                self->hitboxGush.left   = -16;
+                self->hitboxGush.top    = -32;
+                self->hitboxGush.bottom = 32;
             }
-            self->hitbox2.right = 0;
+            self->hitboxGush.right = 0;
             break;
 
         case WATERGUSH_LEFT:
-            self->hitbox1.left   = -20 - (self->gushPos >> 16);
-            self->hitbox1.top    = -32;
-            self->hitbox1.right  = 0;
-            self->hitbox1.bottom = 32;
+            self->hitboxRange.left   = -20 - (self->gushPos >> 16);
+            self->hitboxRange.top    = -32;
+            self->hitboxRange.right  = 0;
+            self->hitboxRange.bottom = 32;
 
-            self->hitbox2.left   = 0;
-            self->hitbox2.top    = -32;
-            self->hitbox2.right  = 16;
-            self->hitbox2.bottom = 32;
+            self->hitboxGush.left   = 0;
+            self->hitboxGush.top    = -32;
+            self->hitboxGush.right  = 16;
+            self->hitboxGush.bottom = 32;
             break;
     }
 }

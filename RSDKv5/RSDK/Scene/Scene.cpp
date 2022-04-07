@@ -36,7 +36,7 @@ void LoadScene()
     }
 #if RETRO_REV02
     ClearDebugValues();
-    lookupTable = NULL;
+    tintLookupTable = NULL;
 #endif
 
     for (int32 l = 0; l < LAYER_COUNT; ++l) {

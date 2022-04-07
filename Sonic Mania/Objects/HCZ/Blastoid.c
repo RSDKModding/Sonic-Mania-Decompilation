@@ -204,7 +204,18 @@ void Blastoid_EditorDraw(void)
 {
     RSDK_THIS(Blastoid);
     RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, false, 0);
+
     Blastoid_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
+        if (CollapsingPlatform && platform->objectID == CollapsingPlatform->objectID)
+            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, platform->position.x, platform->position.y);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void Blastoid_EditorLoad(void)

@@ -3,13 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DIVEEGGMAN_EGGMAN,
+    DIVEEGGMAN_BOMB,
+}DiveEggmanTypes;
+
 // Object Class
 struct ObjectDiveEggman {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Entity *screwMobile;
+    Hitbox unusedHitbox1;
+    Hitbox hitboxBomb;
+    Hitbox hitboxEggman;
+    EntityScrewMobile *screwMobile;
     uint16 diveFrames;
     uint16 aniFrames;
     uint16 sfxBigFan;
@@ -48,19 +53,20 @@ void DiveEggman_Serialize(void);
 // Extra Entity Functions
 void DiveEggman_Explode(void);
 
-void DiveEggman_State_Unknown1(void);
-void DiveEggman_State_Unknown2(void);
-void DiveEggman_State_Unknown3(void);
-void DiveEggman_State_Unknown4(void);
-void DiveEggman_State_Unknown5(void);
-void DiveEggman_State_Unknown6(void);
-void DiveEggman_State_Destroyed(void);
-void DiveEggman_State_Finish(void);
+void DiveEggman_StateEggman_AwaitPlayer(void);
+void DiveEggman_StateEggman_Swimming(void);
+void DiveEggman_StateEggman_InWhirlpool(void);
+void DiveEggman_StateEggman_WhirlpoolRise(void);
+void DiveEggman_StateEggman_Falling(void);
+void DiveEggman_StateEggman_PlaceBomb(void);
+void DiveEggman_StateEggman_Destroyed(void);
+void DiveEggman_StateEggman_Finish(void);
 
-bool32 DiveEggman_Unknown10(void);
-void DiveEggman_State2_Unknown1(void);
-void DiveEggman_State2_Unknown2(void);
-void DiveEggman_State2_Unknown3(void);
-void DiveEggman_State2_Unknown4(void);
+bool32 DiveEggman_CheckNoBombExplode(void);
+
+void DiveEggman_StateBomb_Idle(void);
+void DiveEggman_StateBomb_InWhirlpool(void);
+void DiveEggman_StateBomb_WhirlpoolRise(void);
+void DiveEggman_StateBomb_Falling(void);
 
 #endif //!OBJ_DIVEEGGMAN_H

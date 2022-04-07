@@ -456,7 +456,7 @@ typedef enum {
     INK_ALPHA,
     INK_ADD,
     INK_SUB,
-    INK_LOOKUP,
+    INK_TINT,
     INK_MASKED,
     INK_UNMASKED,
 } InkEffects;

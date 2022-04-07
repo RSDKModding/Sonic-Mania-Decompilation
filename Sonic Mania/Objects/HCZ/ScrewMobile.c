@@ -19,17 +19,16 @@ void ScrewMobile_LateUpdate(void) {}
 
 void ScrewMobile_StaticUpdate(void)
 {
-
     foreach_active(ScrewMobile, screwMobile)
     {
-        if (screwMobile->state != ScrewMobile_State2_Unknown1) {
+        if (screwMobile->state != ScrewMobile_StateDepthCharge_Active) {
             RSDK.AddDrawListRef(Zone->playerDrawLow - 1, RSDK.GetEntityID(screwMobile));
         }
     }
 
-    if (ScrewMobile->shouldPlayFanSfx) {
+    if (ScrewMobile->fanSfxTimer) {
         if (!ScrewMobile->playingFanSfx) {
-            RSDK.PlaySfx(ScrewMobile->sfxBigFan, 47208, 255);
+            RSDK.PlaySfx(ScrewMobile->sfxBigFan, 47208, 0xFF);
             ScrewMobile->playingFanSfx = true;
         }
     }
@@ -37,7 +36,8 @@ void ScrewMobile_StaticUpdate(void)
         RSDK.StopSfx(ScrewMobile->sfxBigFan);
         ScrewMobile->playingFanSfx = false;
     }
-    ScrewMobile->shouldPlayFanSfx = 0;
+
+    ScrewMobile->fanSfxTimer = 0;
 }
 
 void ScrewMobile_Draw(void)
@@ -58,15 +58,19 @@ void ScrewMobile_Create(void *data)
         if (!SceneInfo->inEditor) {
             self->visible = true;
             if (data) {
-                if (voidToInt(data) == 1) {
-                    self->active        = ACTIVE_NORMAL;
-                    self->drawOrder     = Zone->hudDrawOrder - 2;
-                    self->updateRange.x = 0x800000;
-                    self->updateRange.y = 0x800000;
-                    self->field_74      = 0x3800;
-                    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 6, &self->animator1, true, 0);
-                    self->state     = ScrewMobile_State2_Unknown1;
-                    self->stateDraw = ScrewMobile_StateDraw2_Unknown;
+                switch (voidToInt(data)) {
+                    default: break;
+
+                    case 1:
+                        self->active          = ACTIVE_NORMAL;
+                        self->drawOrder       = Zone->hudDrawOrder - 2;
+                        self->updateRange.x   = 0x800000;
+                        self->updateRange.y   = 0x800000;
+                        self->whirlpoolHeight = 0x3800;
+                        RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 6, &self->mobileAnimator, true, 0);
+                        self->state     = ScrewMobile_StateDepthCharge_Active;
+                        self->stateDraw = ScrewMobile_Draw_DepthCharge;
+                        break;
                 }
             }
             else {
@@ -75,16 +79,16 @@ void ScrewMobile_Create(void *data)
                 self->updateRange.x = 0x800000;
                 self->updateRange.y = 0x800000;
                 self->startPos      = self->position;
-                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 0, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 1, &self->animator2, true, 0);
-                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 7, &self->animator3, true, 6);
-                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 2, &self->animator4, true, 0);
-                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 3, &self->animator5, true, 0);
-                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->animator6, true, 0);
-                self->field_7C                 = 8;
-                self->animator2.speed = 0;
-                self->state                    = ScrewMobile_State_CheckPlayerEnter;
-                self->stateDraw                = ScrewMobile_StateDraw1_Unknown;
+                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 0, &self->mobileAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 1, &self->propellerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 7, &self->rackAnimator, true, 6);
+                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 2, &self->whirlpoolAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 3, &self->whirlpoolTopAnimator, true, 0);
+                RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->whirlpoolBottomAnimator, true, 0);
+                self->health                  = 8;
+                self->propellerAnimator.speed = 0;
+                self->state                   = ScrewMobile_State_CheckPlayerEnter;
+                self->stateDraw               = ScrewMobile_Draw_ScrewMobile;
             }
         }
     }
@@ -95,36 +99,37 @@ void ScrewMobile_StageLoad(void)
     if (RSDK.CheckStageFolder("HCZ"))
         ScrewMobile->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ScrewMobile.bin", SCOPE_STAGE);
 
-    ScrewMobile->hitbox1.left   = -32;
-    ScrewMobile->hitbox1.top    = -20;
-    ScrewMobile->hitbox1.right  = 32;
-    ScrewMobile->hitbox1.bottom = 20;
+    ScrewMobile->hitboxCockpit.left   = -32;
+    ScrewMobile->hitboxCockpit.top    = -20;
+    ScrewMobile->hitboxCockpit.right  = 32;
+    ScrewMobile->hitboxCockpit.bottom = 20;
 
-    ScrewMobile->hitbox2.left   = -8;
-    ScrewMobile->hitbox2.top    = -4;
-    ScrewMobile->hitbox2.right  = 8;
-    ScrewMobile->hitbox2.bottom = 4;
+    ScrewMobile->hitboxDepthCharge.left   = -8;
+    ScrewMobile->hitboxDepthCharge.top    = -4;
+    ScrewMobile->hitboxDepthCharge.right  = 8;
+    ScrewMobile->hitboxDepthCharge.bottom = 4;
 
     ScrewMobile->playingFanSfx    = false;
-    ScrewMobile->shouldPlayFanSfx = 0;
+    ScrewMobile->fanSfxTimer = 0;
     ScrewMobile->active           = ACTIVE_ALWAYS;
-    ScrewMobile->sfxButton        = RSDK.GetSfx("Stage/Button2.wav");
-    ScrewMobile->sfxEggMobile     = RSDK.GetSfx("HCZ/EggMobile.wav");
-    ScrewMobile->sfxBigFan        = RSDK.GetSfx("HCZ/BigFan.wav");
-    ScrewMobile->sfxImpact        = RSDK.GetSfx("Stage/Impact5.wav");
+
+    ScrewMobile->sfxButton    = RSDK.GetSfx("Stage/Button2.wav");
+    ScrewMobile->sfxEggMobile = RSDK.GetSfx("HCZ/EggMobile.wav");
+    ScrewMobile->sfxBigFan    = RSDK.GetSfx("HCZ/BigFan.wav");
+    ScrewMobile->sfxImpact    = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
 void ScrewMobile_State_CheckPlayerEnter(void)
 {
     RSDK_THIS(ScrewMobile);
 
-    Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 32;
-    Zone->playerBoundsR[0]     = Zone->cameraBoundsR[0] << 16;
+    Zone->cameraBoundsR[0]      = (self->position.x >> 16) + 32;
+    Zone->playerBoundsR[0]      = Zone->cameraBoundsR[0] << 16;
     Zone->playerBoundActiveR[0] = true;
 
     if (Player->playerCount > 1) {
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-        if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitbox1)) {
+        if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitboxCockpit)) {
             player2->direction      = FLIP_X;
             player2->state          = Player_State_None;
             player2->velocity.x     = 0;
@@ -138,10 +143,10 @@ void ScrewMobile_State_CheckPlayerEnter(void)
     }
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (Player_CheckCollisionTouch(player1, self, &ScrewMobile->hitbox1)) {
-        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - 40;
-        Zone->playerBoundsR[0]     = 0x7FFF;
-        Zone->cameraBoundsR[0]     = 0x7FFF;
+    if (Player_CheckCollisionTouch(player1, self, &ScrewMobile->hitboxCockpit)) {
+        Zone->cameraBoundsT[0]      = (self->position.y >> 16) - 40;
+        Zone->playerBoundsR[0]      = 0x7FFF;
+        Zone->cameraBoundsR[0]      = 0x7FFF;
         Zone->playerBoundActiveR[0] = false;
         player1->state              = Player_State_None;
         player1->velocity.x         = 0;
@@ -155,8 +160,8 @@ void ScrewMobile_State_CheckPlayerEnter(void)
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.PlaySfx(ScrewMobile->sfxEggMobile, false, 255);
-        DCEvent->finished = true;
-        self->state     = ScrewMobile_State_PlayerRiding;
+        DCEvent->canExplodeBombs = true;
+        self->state              = ScrewMobile_State_PlayerRiding;
     }
 }
 
@@ -164,19 +169,19 @@ void ScrewMobile_State_PlayerRiding(void)
 {
     RSDK_THIS(ScrewMobile);
 
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
-    RSDK.ProcessAnimation(&self->animator5);
-    RSDK.ProcessAnimation(&self->animator6);
+    RSDK.ProcessAnimation(&self->propellerAnimator);
+    RSDK.ProcessAnimation(&self->rackAnimator);
+    RSDK.ProcessAnimation(&self->whirlpoolAnimator);
+    RSDK.ProcessAnimation(&self->whirlpoolTopAnimator);
+    RSDK.ProcessAnimation(&self->whirlpoolBottomAnimator);
 
     self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
     self->position.x += self->velocity.x;
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (Player_CheckValidState(player1)) {
-        player1->position.x = self->position.x;
-        player1->position.y = self->position.y - 0x100000;
+        player1->position.x     = self->position.x;
+        player1->position.y     = self->position.y - 0x100000;
         player1->velocity.x     = 0;
         player1->velocity.y     = 0;
         player1->outtaHereTimer = 0;
@@ -185,6 +190,7 @@ void ScrewMobile_State_PlayerRiding(void)
         if ((player1->left || player1->right) && !player1->jumpHold) {
             if (player1->left) {
                 self->velocity.x -= 0xC00;
+
                 if (self->velocity.x > 0)
                     self->velocity.x -= 0x1200;
                 else if (self->velocity.x < -0x20000)
@@ -192,6 +198,7 @@ void ScrewMobile_State_PlayerRiding(void)
             }
             else if (player1->right) {
                 self->velocity.x += 0xC00;
+
                 if (self->velocity.x < 0)
                     self->velocity.x += 0x1200;
                 else if (self->velocity.x > 0x20000)
@@ -247,7 +254,7 @@ void ScrewMobile_State_PlayerRiding(void)
                 player2->direction      = self->direction ^ FLIP_X;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             }
-            else if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitbox1)) {
+            else if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitboxCockpit)) {
                 player2->state          = Player_State_None;
                 player2->velocity.x     = 0;
                 player2->velocity.y     = 0;
@@ -271,27 +278,27 @@ void ScrewMobile_State_PlayerRiding(void)
                 return;
             }
             if (!self->whirlPoolTimer && ScrewMobile->playingFanSfx == false) {
-                self->animator2.speed = 64;
+                self->propellerAnimator.speed = 64;
                 RSDK.PlaySfx(ScrewMobile->sfxButton, false, 255);
             }
         }
         if (!player1->jumpHold || self->whirlPoolTimer) {
-            EntityWhirlpool *whirlpool = (EntityWhirlpool *)self->whirlpool;
+            EntityWhirlpool *whirlpool = self->whirlpool;
             if (whirlpool) {
                 if (whirlpool->objectID == Whirlpool->objectID)
                     whirlpool->activePlayers = -3;
                 self->whirlpool = NULL;
             }
 
-            if (self->animator2.speed)
-                self->animator2.speed -= 2;
+            if (self->propellerAnimator.speed)
+                self->propellerAnimator.speed -= 2;
 
-            if (self->animator2.speed > 0xC0)
-                ++ScrewMobile->shouldPlayFanSfx;
+            if (self->propellerAnimator.speed > 0xC0)
+                ++ScrewMobile->fanSfxTimer;
         }
         else {
-            if (self->field_74 > 0) {
-                EntityWhirlpool *whirlpool = (EntityWhirlpool *)self->whirlpool;
+            if (self->whirlpoolHeight > 0) {
+                EntityWhirlpool *whirlpool = self->whirlpool;
                 if (whirlpool) {
                     if (whirlpool->objectID == Whirlpool->objectID)
                         whirlpool->position.x = self->position.x;
@@ -307,30 +314,30 @@ void ScrewMobile_State_PlayerRiding(void)
                     whirlpool->angVel        = 10;
                     whirlpool->alpha         = 0;
                     whirlpool->isPermanent   = true;
-                    self->whirlpool        = (Entity *)whirlpool;
+                    self->whirlpool          = whirlpool;
                 }
             }
 
-            if (self->animator2.speed < 0x100)
-                self->animator2.speed += 2;
+            if (self->propellerAnimator.speed < 0x100)
+                self->propellerAnimator.speed += 2;
 
-            if (self->animator2.speed > 0x40)
-                ++ScrewMobile->shouldPlayFanSfx;
+            if (self->propellerAnimator.speed > 0x40)
+                ++ScrewMobile->fanSfxTimer;
         }
     }
 
-    if (self->animator2.speed < 0xF0) {
-        if (self->field_74 > 0) {
-            self->field_74--;
+    if (self->propellerAnimator.speed < 0xF0) {
+        if (self->whirlpoolHeight > 0) {
+            self->whirlpoolHeight--;
         }
     }
-    else if (self->field_74 < 86) {
-        self->field_74++;
+    else if (self->whirlpoolHeight < 86) {
+        self->whirlpoolHeight++;
     }
 
     if (player1->down) {
-        if (!self->bombPress && !self->timer && self->animator3.frameID == 6) {
-            RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 7, &self->animator3, true, 0);
+        if (!self->bombPress && !self->timer && self->rackAnimator.frameID == 6) {
+            RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 7, &self->rackAnimator, true, 0);
             self->bombPress = true;
         }
     }
@@ -338,15 +345,16 @@ void ScrewMobile_State_PlayerRiding(void)
         self->bombPress = false;
     }
 
-    if (self->animator3.frameID == 2 && !self->timer) {
-        self->timer            = 60;
-        EntityScrewMobile *child = CREATE_ENTITY(ScrewMobile, intToVoid(1), self->position.x, self->position.y + 0x130000);
+    if (self->rackAnimator.frameID == 2 && !self->timer) {
+        self->timer = 60;
+
+        EntityScrewMobile *bomb = CREATE_ENTITY(ScrewMobile, intToVoid(SCREWMOBILE_BOMB), self->position.x, self->position.y + 0x130000);
         if (self->direction)
-            child->position.x -= 0x350000;
+            bomb->position.x -= 0x350000;
         else
-            child->position.x += 0x350000;
-        child->direction  = self->direction;
-        child->velocity.y = -0x7000;
+            bomb->position.x += 0x350000;
+        bomb->direction  = self->direction;
+        bomb->velocity.y = -0x7000;
     }
 
     if (self->whirlPoolTimer > (player1->jumpHold == true))
@@ -378,8 +386,8 @@ void ScrewMobile_State_BossFinished(void)
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         Zone->cameraBoundsL[0] += 2;
         ScreenInfo->position.x = Zone->cameraBoundsL[0];
-        Zone->playerBoundsL[0]  = Zone->cameraBoundsL[0] << 16;
-        camera->position.x       = Zone->cameraBoundsL[0] << 16;
+        Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
+        camera->position.x     = Zone->cameraBoundsL[0] << 16;
         if (Zone->cameraBoundsL[0] >= (self->position.x >> 16) - 32)
             self->state = ScrewMobile_State_Idle;
     }
@@ -407,7 +415,7 @@ void ScrewMobile_State_Idle(void)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
         }
     }
-    else if (player1->velocity.y >= 0 && Player_CheckCollisionTouch(player1, self, &ScrewMobile->hitbox1)) {
+    else if (player1->velocity.y >= 0 && Player_CheckCollisionTouch(player1, self, &ScrewMobile->hitboxCockpit)) {
         player1->state      = Player_State_None;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
@@ -440,7 +448,7 @@ void ScrewMobile_State_Idle(void)
             }
         }
         else if (player2->velocity.y >= 0) {
-            if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitbox1)) {
+            if (Player_CheckCollisionTouch(player2, self, &ScrewMobile->hitboxCockpit)) {
                 player2->state      = Player_State_None;
                 player2->velocity.x = 0;
                 player2->velocity.y = 0;
@@ -458,106 +466,106 @@ void ScrewMobile_State_Idle(void)
     }
 }
 
-void ScrewMobile_StateDraw1_Unknown(void)
+void ScrewMobile_Draw_ScrewMobile(void)
 {
     RSDK_THIS(ScrewMobile);
     Vector2 drawPos;
 
     if (SceneInfo->currentDrawGroup == Zone->playerDrawLow - 1) {
-        self->animator1.frameID = 1;
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        self->mobileAnimator.frameID = 1;
+        RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
     }
     else {
         if (self->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
 
-        self->animator1.frameID = 0;
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        self->mobileAnimator.frameID = 0;
+        RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
         RSDK.SetPaletteEntry(0, 128, 0x0000);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->rackAnimator, NULL, false);
 
-        int storeDir = self->direction;
+        int32 storeDir = self->direction;
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->propellerAnimator, NULL, false);
 
-        if (self->animator2.speed >= 0x40) {
-            drawPos.x         = self->position.x;
-            drawPos.y         = self->position.y;
+        if (self->propellerAnimator.speed >= 0x40) {
+            drawPos.x       = self->position.x;
+            drawPos.y       = self->position.y;
             self->inkEffect = INK_ALPHA;
-            if (self->field_74 <= 0) {
-                self->alpha = self->animator2.speed;
+            if (self->whirlpoolHeight <= 0) {
+                self->alpha = self->propellerAnimator.speed;
             }
             else {
                 self->alpha = 0xD0;
-                drawPos.y     = Water->waterLevel - 0x100000;
+                drawPos.y   = Water->waterLevel - 0x100000;
 
-                SpriteFrame *frame = RSDK.GetFrame(ScrewMobile->aniFrames, 2, self->animator4.frameID);
+                SpriteFrame *frame = RSDK.GetFrame(ScrewMobile->aniFrames, 2, self->whirlpoolAnimator.frameID);
 
                 frame->height = 32;
-                frame->sprY   = 33 * self->animator4.frameID + 181;
+                frame->sprY   = 33 * self->whirlpoolAnimator.frameID + 181;
                 frame->pivotY = -16;
 
-                int count = self->field_74 >> 5;
-                for (int i = 0; i < count; ++i) {
-                    RSDK.DrawSprite(&self->animator4, &drawPos, false);
+                int32 count = self->whirlpoolHeight >> 5;
+                for (int32 i = 0; i < count; ++i) {
+                    RSDK.DrawSprite(&self->whirlpoolAnimator, &drawPos, false);
                     drawPos.y -= 0x200000;
                 }
 
-                frame->height = self->field_74 % 32;
+                frame->height = self->whirlpoolHeight % 32;
                 frame->sprY += 31 - frame->height;
                 frame->pivotY = 16 - frame->height;
-                RSDK.DrawSprite(&self->animator4, &drawPos, false);
+                RSDK.DrawSprite(&self->whirlpoolAnimator, &drawPos, false);
                 drawPos.y = Water->waterLevel;
-                RSDK.DrawSprite(&self->animator6, &drawPos, false);
+                RSDK.DrawSprite(&self->whirlpoolBottomAnimator, &drawPos, false);
                 self->alpha = 0x100;
             }
-            drawPos.y = Water->waterLevel - (self->field_74 << 16);
-            RSDK.DrawSprite(&self->animator5, &drawPos, false);
+            drawPos.y = Water->waterLevel - (self->whirlpoolHeight << 16);
+            RSDK.DrawSprite(&self->whirlpoolTopAnimator, &drawPos, false);
             self->inkEffect = INK_NONE;
         }
         self->direction = storeDir;
     }
 }
 
-void ScrewMobile_State2_Unknown1(void)
+void ScrewMobile_StateDepthCharge_Active(void)
 {
     RSDK_THIS(ScrewMobile);
 
     if (RSDK.CheckOnScreen(self, NULL)) {
         self->position.y += self->velocity.y;
-        if (self->field_74 == 0x3800 && self->position.y >= Water->waterLevel) {
-            self->velocity.y = self->velocity.y >> 2;
-            self->field_74   = 0;
+        if (self->whirlpoolHeight == 0x3800 && self->position.y >= Water->waterLevel) {
+            self->velocity.y      = self->velocity.y >> 2;
+            self->whirlpoolHeight = 0;
             CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), self->position.x, Water->waterLevel);
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
-        self->velocity.y += self->field_74;
+        self->velocity.y += self->whirlpoolHeight; // this is "gravityStrength" here
 
         foreach_active(DiveEggman, eggman)
         {
-            if (eggman->state == DiveEggman_State2_Unknown1 || eggman->state == DiveEggman_State2_Unknown2 || eggman->state == DiveEggman_State2_Unknown3
-                || eggman->state == DiveEggman_State2_Unknown4) {
-                if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitbox2, eggman, &DiveEggman->hitbox2)) {
+            if (eggman->state == DiveEggman_StateBomb_Idle || eggman->state == DiveEggman_StateBomb_InWhirlpool
+                || eggman->state == DiveEggman_StateBomb_WhirlpoolRise || eggman->state == DiveEggman_StateBomb_Falling) {
+                if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitboxDepthCharge, eggman, &DiveEggman->hitboxBomb)) {
                     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), eggman->position.x, eggman->position.y)->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
                     EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), eggman->position.x, eggman->position.y);
 
                     water->velocity.y = -0x8800;
                     water->angle      = 2 * RSDK.Rand(0, 256);
-                    water->bubbleX   = water->position.x;
-                    water->childPtr   = 0;
+                    water->bubbleX    = water->position.x;
+                    water->childPtr   = NULL;
                     RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
                     destroyEntity(eggman);
                     destroyEntity(self);
                     foreach_break;
                 }
             }
-            else if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitbox2, eggman, &DiveEggman->hitbox3)) {
+            else if (RSDK.CheckObjectCollisionTouchBox(self, &ScrewMobile->hitboxDepthCharge, eggman, &DiveEggman->hitboxEggman)) {
                 RSDK.PlaySfx(DiveEggman->sfxRockemSockem, false, 255);
                 self->velocity.x = RSDK.Rand(-4, 5) << 15;
                 self->velocity.y = -0x20000;
-                self->state      = ScrewMobile_State2_Unknown2;
+                self->state      = ScrewMobile_StateDepthCharge_Debris;
                 foreach_break;
             }
         }
@@ -567,7 +575,7 @@ void ScrewMobile_State2_Unknown1(void)
     }
 }
 
-void ScrewMobile_State2_Unknown2(void)
+void ScrewMobile_StateDepthCharge_Debris(void)
 {
     RSDK_THIS(ScrewMobile);
 
@@ -579,10 +587,10 @@ void ScrewMobile_State2_Unknown2(void)
         destroyEntity(self);
 }
 
-void ScrewMobile_StateDraw2_Unknown(void)
+void ScrewMobile_Draw_DepthCharge(void)
 {
     RSDK_THIS(ScrewMobile);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -591,16 +599,16 @@ void ScrewMobile_EditorDraw(void)
     RSDK_THIS(ScrewMobile);
 
     self->startPos = self->position;
-    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 1, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 7, &self->animator3, true, 6);
-    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 2, &self->animator4, true, 0);
-    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 3, &self->animator5, true, 0);
-    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->animator6, true, 0);
-    self->field_7C                 = 8;
-    self->animator2.speed = 0;
+    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 0, &self->mobileAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 1, &self->propellerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 7, &self->rackAnimator, true, 6);
+    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 2, &self->whirlpoolAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 3, &self->whirlpoolTopAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ScrewMobile->aniFrames, 5, &self->whirlpoolBottomAnimator, true, 0);
+    self->health                  = 8;
+    self->propellerAnimator.speed = 0;
 
-    ScrewMobile_StateDraw1_Unknown();
+    ScrewMobile_Draw_ScrewMobile();
 }
 
 void ScrewMobile_EditorLoad(void) { ScrewMobile->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ScrewMobile.bin", SCOPE_STAGE); }

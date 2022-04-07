@@ -15,9 +15,9 @@ uint8 gfxLineBuffer[SCREEN_YSIZE];
 
 int32 maskColour = 0;
 #if RETRO_REV02
-uint16 *lookupTable = NULL;
+uint16 *tintLookupTable = NULL;
 #else
-uint16 lookupTable[0x10000];
+uint16 tintLookupTable[0x10000];
 #endif
 
 #if RETRO_REV02
@@ -74,7 +74,7 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, shor
         int32 bA    = (clrA >> 0) & 0xFF;
         int32 bB    = (clrB >> 0) & 0xFF;
         
-        *dst = RGB888_TO_RGB565((byte)((ushort)(rB * blendAmount + blendA * rA) >> 8),
+        *dst = PACK_RGB888((byte)((ushort)(rB * blendAmount + blendA * rA) >> 8),
                                 (byte)((ushort)(gB * blendAmount + blendA * gA) >> 8),
                                 (byte)((ushort)(bB * blendAmount + blendA * bA) >> 8));
 
@@ -102,7 +102,7 @@ void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int32 alpha, i
         int32 b = alpha * coloursB[0] + alpha2 * coloursA[0];
         coloursA += 4;
         coloursB += 4;
-        *palettePtr = RGB888_TO_RGB565((byte)(r >> 8), (byte)(g >> 8), (byte)(b >> 8));
+        *palettePtr = PACK_RGB888((byte)(r >> 8), (byte)(g >> 8), (byte)(b >> 8));
         ++palettePtr;
     }
 }

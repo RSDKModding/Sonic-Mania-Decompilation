@@ -17,7 +17,7 @@ struct ObjectPauseMenu {
 #endif
     bool32 channelFlags[0x10];
 #if RETRO_USE_PLUS
-    uint16 lookupTable[0x10000];
+    uint16 tintLookupTable[0x10000];
 #endif
 };
 

@@ -6,11 +6,11 @@
 typedef enum {
     LAUNDROMOBILE_BOSS,
     LAUNDROMOBILE_BOMB,
-    LAUNDROMOBILE_PHASE2,
+    LAUNDROMOBILE_LAUNDRY,
     LAUNDROMOBILE_LOOPPOINT,
     LAUNDROMOBILE_BLOCK,
     LAUNDROMOBILE_SPIKES,
-    LAUNDROMOBILE_6,
+    LAUNDROMOBILE_DELAYEDSPLASH,
 }LaundroMobileTypes;
 
 // Object Class
@@ -20,24 +20,24 @@ struct ObjectLaundroMobile {
     uint8 invincibilityTimer;
     int32 currentVelocity;
     Entity *loopPoints[6];
-    uint8 loopPointCount;
-    uint8 playingFanSfx;
-    uint8 shouldPlayFanSfx;
+    uint8 nextLoopPoint;
+    uint8 playingLoopSfx;
+    uint8 loopSfxTimer;
     uint8 attackDir;
-    int8 attackDelay;
-    TABLE(int32 attackDelays[8], { 1, 2, 2, 2, 1, 2, 2, 3 });
-    uint8 underwaterFlag;
+    int8 attackCount;
+    TABLE(int32 attackCounts[8], { 1, 2, 2, 2, 1, 2, 2, 3 });
+    uint8 isUnderwater;
     int32 animSpeed;
     uint8 rocketActive;
     int32 rocketAngles[4];
     Vector2 rocketPositions[4];
-    uint8 value16[4];
+    uint8 unused[4]; // no clue, never even touched
     int32 rocketSpeeds[2];
     int32 playerRadius[4];
     int32 playerAngles[4];
     uint8 travelledPaths;
     uint8 useStageWrap;
-    Entity *bossPtr;
+    EntityLaundroMobile *laundroMobile;
     TABLE(int32 debrisInfo[73], { 12,       6,        0, -0x50000, -0x40000, 0, 0,        7,        0, 0x50000,  -0x40000, 0, 0,        10,       0,
                              -0x50000, -0x40000, 0, 0,        11,       0, 0x50000,  -0x40000, 0, 0,        10,       0, -0x50000, -0x40000, 0,
                              0x200000, 11,       0, 0x50000,  -0x40000, 0, 0x200000, 10,       0, -0x50000, -0x40000, 0, 0x400000, 11,       0,
@@ -77,13 +77,13 @@ struct EntityLaundroMobile {
     StateMachine(stateDraw);
     int32 timer;
     int32 startY;
-    Vector2 startPos;
-    Vector2 unknownPos;
-    Entity *whirlpool;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Vector2 originPos;
+    Vector2 unusedPos; //updated in the level wrap, but never used aside from that
+    EntityWhirlpool *whirlpool;
+    Animator mainAnimator;
+    Animator propellerAnimator;
+    Animator eggmanAnimator;
+    Animator flameAnimator;
 };
 
 // Object Struct
@@ -106,58 +106,61 @@ void LaundroMobile_Serialize(void);
 void LaundroMobile_CheckPlayerCollisions(void);
 void LaundroMobile_Explode(void);
 void LaundroMobile_HandleStageWrap(void);
-void LaundroMobile_HandleMissileMovement(void);
+void LaundroMobile_HandleRocketMovement(void);
 void LaundroMobile_HandleEggmanAnimations(void);
 void LaundroMobile_HandleTileCollisions(void);
 
-void LaundroMobile_State_SetupArena(void);
-void LaundroMobile_State_SetupArena2(void);
-void LaundroMobile_State_Unknown1(void);
-void LaundroMobile_State_Unknown2(void);
-void LaundroMobile_State_Unknown3(void);
-void LaundroMobile_State_Destroyed_Phase1(void);
+// Phase 1
+void LaundroMobile_StateBoss_AwaitPlayer_Phase1(void);
+void LaundroMobile_StateBoss_SetupArena_Phase1(void);
+void LaundroMobile_StateBoss_EnterEggman_Phase1(void);
+void LaundroMobile_StateBoss_StartupPropellers(void);
+void LaundroMobile_StateBoss_HandlePhase1(void);
+void LaundroMobile_StateBoss_Destroyed_Phase1(void);
+void LaundroMobile_StateBoss_Explode_Phase1(void);
+void LaundroMobile_StateBoss_WaitForLastStageWrap(void);
 
-void LaundroMobile_State_Unknown4(void);
-void LaundroMobile_State_Unknown5(void);
-void LaundroMobile_State_Unknown6(void);
-void LaundroMobile_State_Unknown7(void);
-void LaundroMobile_State_Unknown8(void);
-void LaundroMobile_State_Unknown9(void);
-void LaundroMobile_State_Unknown11(void);
-void LaundroMobile_State_Unknown12(void);
-void LaundroMobile_State_Unknown13(void);
-void LaundroMobile_State_Unknown14(void);
-void LaundroMobile_State_Unknown15(void);
-void LaundroMobile_State_Unknown16(void);
-void LaundroMobile_State_Unknown17(void);
-void LaundroMobile_State_Unknown18(void);
-void LaundroMobile_State_Destroyed_Phase2(void);
-void LaundroMobile_State_Finish(void);
+// Phase 2
+void LaundroMobile_StateBoss_AwaitPlayer_Phase2(void);
+void LaundroMobile_StateBoss_SetupArena_Phase2(void);
+void LaundroMobile_StateBoss_EnterEggman_Phase2(void);
+void LaundroMobile_StateBoss_StartupRockets(void);
+void LaundroMobile_StateBoss_SpeedUpRockets(void);
+void LaundroMobile_StateBoss_RiseUpToAttack(void);
+void LaundroMobile_StateBoss_Attacking(void);
+void LaundroMobile_StateBoss_ReturnToLaundry(void);
+void LaundroMobile_StateBoss_PrepareWhirlpool(void);
+void LaundroMobile_StateBoss_StartupWhirlpool(void);
+void LaundroMobile_StateBoss_WhirlpoolActive(void);
+void LaundroMobile_StateBoss_PrepareRockets(void);
+void LaundroMobile_StateBoss_Destroyed_Phase2(void);
+void LaundroMobile_StateBoss_Explode_Phase2(void);
 
 #if RETRO_USE_PLUS
 void LaundroMobile_StageFinishCB_Blank(void);
 
-void LaundroMobile_State_StartOutro(void);
-void LaundroMobile_State_OutroRumble(void);
-void LaundroMobile_State_OutroWaterGush(void);
-void LaundroMobile_State_ExitHCZ(void);
+// HCZ2 Outro
+void LaundroMobile_StateOutro_StartCutscene(void);
+void LaundroMobile_StateOutro_Rumble(void);
+void LaundroMobile_StateOutro_WaterGush(void);
+void LaundroMobile_StateOutro_ExitHCZ(void);
 #endif
 
-void LaundroMobile_StateDraw_Unknown1(void);
-void LaundroMobile_StateDraw_Unknown2(void);
+void LaundroMobile_Draw_Boss(void);
+void LaundroMobile_Draw_Boss_Destroyed(void);
 
-void LaundroMobile_State1_Unknown1(void);
-void LaundroMobile_State1_Unknown2(void);
-void LaundroMobile_State1_Unknown3(void);
+void LaundroMobile_StateBomb_Spawner(void);
+void LaundroMobile_StateBomb_Bomb_Idle(void);
+void LaundroMobile_StateBomb_Bomb_Activated(void);
 
-void LaundroMobile_StateDraw4_Unknown1(void);
+void LaundroMobile_Draw_Simple(void);
 
-void LaundroMobile_State3_Unknown1(void);
-void LaundroMobile_State3_Unknown2(void);
+void LaundroMobile_StateBlock_Spawner(void);
+void LaundroMobile_StateBlock_Block(void);
 
-void LaundroMobile_State2_Unknown1(void);
-void LaundroMobile_StateDraw2_Unknown1(void);
+void LaundroMobile_State_Laundry(void);
+void LaundroMobile_Draw_Laundry(void);
 
-void LaundroMobile_State6_Unknown1(void);
+void LaundroMobile_State_DelayedSplash(void);
 
 #endif //! OBJ_LAUNDROMOBILE_H

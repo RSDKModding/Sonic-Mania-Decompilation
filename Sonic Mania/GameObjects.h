@@ -259,9 +259,9 @@ typedef struct {
 #endif
     int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
 #if RETRO_USE_PLUS
-    void (*SetLookupTable)(uint16 *tablePtr);
+    void (*SetTintLookupTable)(uint16 *lookupTable);
 #else
-    uint16 *(*GetLookupTable)(void);
+    uint16 *(*GetTintLookupTable)(void);
 #endif
     void (*SetPaletteMask)(uint32 maskColour);
     void (*SetPaletteEntry)(uint8 paletteID, uint8 index, uint32 colour);
@@ -419,6 +419,8 @@ extern RSDKFunctionTable RSDK;
         RSDK.SetActiveVariable(-1, #var);                                                                                                             \
     }
 #define RSDK_ENUM_VAR(name, var) RSDK.AddVarEnumValue(name)
+
+#define RSDK_DRAWING_OVERLAY(isDrawingOverlay) SceneInfo->debugMode = isDrawingOverlay
 
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \

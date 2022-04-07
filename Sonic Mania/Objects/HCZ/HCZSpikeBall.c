@@ -32,10 +32,10 @@ void HCZSpikeBall_Draw(void)
 void HCZSpikeBall_Create(void *data)
 {
     RSDK_THIS(HCZSpikeBall);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
@@ -59,8 +59,8 @@ void HCZSpikeBall_HandleConveyorSetup(void)
     if (!SceneInfo->inEditor) {
         foreach_all(HangConveyor, conveyor)
         {
-            if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &conveyor->hitboxSpikeBallRange, self->position.x,
-                                          self->position.y)) {
+            if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &conveyor->hitboxSpikeBallRange,
+                                          self->position.x, self->position.y)) {
                 self->conveyor    = conveyor;
                 self->updateRange = conveyor->updateRange;
                 foreach_break;
@@ -172,8 +172,8 @@ void HCZSpikeBall_HandleConveyorMovement(void)
 
         int32 interval = (2 * len + 0x8A3AE6) / 0x15555;
         int32 timer    = (self->intervalOffset + Zone->timer) % interval;
-        int32 conveyX = self->conveyor->position.x;
-        int32 conveyY = self->conveyor->position.y;
+        int32 conveyX  = self->conveyor->position.x;
+        int32 conveyY  = self->conveyor->position.y;
 
         if (timer < len / 0x15555) {
             if (self->conveyor->direction == FLIP_NONE)
@@ -199,7 +199,7 @@ void HCZSpikeBall_HandleConveyorMovement(void)
             self->position.y += 0xB00 * RSDK.Sin512(angle * mult + 0x180);
         }
         else if (timer >= 2 * (len / 0x15555) + 51) {
-            int32 angle        = -51 - 2 * (len / 0x15555) + timer;
+            int32 angle = -51 - 2 * (len / 0x15555) + timer;
             if (self->conveyor->direction == FLIP_NONE)
                 self->position.x = conveyX + (len >> 1);
             else

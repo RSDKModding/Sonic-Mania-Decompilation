@@ -32,7 +32,7 @@ void FXRuby_Draw(void)
 {
     RSDK_THIS(FXRuby);
 #if RETRO_USE_PLUS
-    RSDK.SetLookupTable(FXRuby->lookupTable);
+    RSDK.SetTintLookupTable(FXRuby->tintLookupTable);
 #endif
 
     if (self->fadeWhite >= 512 || self->fadeBlack >= 512 || SceneInfo->currentDrawGroup != self->drawOrder) {
@@ -44,12 +44,12 @@ void FXRuby_Draw(void)
     else {
         if (self->outerRadius <= ScreenInfo->width) {
             if (self->innerRadius)
-                RSDK.DrawCircleOutline(self->position.x, self->position.y, self->innerRadius, self->outerRadius, 0, 0xFF, INK_LOOKUP, false);
+                RSDK.DrawCircleOutline(self->position.x, self->position.y, self->innerRadius, self->outerRadius, 0, 0xFF, INK_TINT, false);
             else
-                RSDK.DrawCircle(self->position.x, self->position.y, self->outerRadius, 0, 0xFF, INK_LOOKUP, false);
+                RSDK.DrawCircle(self->position.x, self->position.y, self->outerRadius, 0, 0xFF, INK_TINT, false);
         }
         else {
-            RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 255, INK_LOOKUP, true);
+            RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 255, INK_TINT, true);
         }
     }
 }
@@ -72,8 +72,8 @@ void FXRuby_Create(void *data)
             self->state = FXRuby_State_ExpandRing;
 
 #if !RETRO_USE_PLUS
-        uint16 *lookupTable = RSDK.GetLookupTable();
-        for (int32 i = 0; i < 0x10000; ++i) lookupTable[0xFFFF - i] = i;
+        uint16 *tintLookupTable = RSDK.GetTintLookupTable();
+        for (int32 i = 0; i < 0x10000; ++i) tintLookupTable[0xFFFF - i] = i;
 #endif
     }
 }
@@ -86,7 +86,7 @@ void FXRuby_StageLoad(void)
     for (int32 i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
 
 #if RETRO_USE_PLUS
-    for (int32 i = 0; i < 0x10000; ++i) FXRuby->lookupTable[0xFFFF - i] = i;
+    for (int32 i = 0; i < 0x10000; ++i) FXRuby->tintLookupTable[0xFFFF - i] = i;
 #endif
 }
 

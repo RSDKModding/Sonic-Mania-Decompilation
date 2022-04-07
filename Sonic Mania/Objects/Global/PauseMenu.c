@@ -192,10 +192,10 @@ void PauseMenu_SetupLookupTable(void)
         int32 brightness =
             ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
         brightness                = minVal(0xFF, brightness);
-        PauseMenu->lookupTable[i] = (brightness >> 3) | ((brightness >> 3) << 11) | 8 * brightness & 0xFFE0;
+        PauseMenu->tintLookupTable[i] = (brightness >> 3) | ((brightness >> 3) << 11) | 8 * brightness & 0xFFE0;
     }
 #else
-    uint16 *lookupTable = RSDK.GetLookupTable();
+    uint16 *tintLookupTable = RSDK.GetTintLookupTable();
     for (int32 i = 0; i < 0x10000; ++i) {
         uint32 r = (527 * (i >> 11) + 23) >> 6;
         uint32 g = (527 * (i & 0x1F) + 23) >> 7;
@@ -210,7 +210,7 @@ void PauseMenu_SetupLookupTable(void)
 
         ColorHelpers_Unknown2(0, rVal, brightness, &r, &g, &b);
 
-        lookupTable[i] = ColorHelpers_PackRGB(r, g, b);
+        tintLookupTable[i] = ColorHelpers_PackRGB(r, g, b);
     }
 #endif
 }
@@ -923,9 +923,9 @@ void PauseMenu_Draw_Default(void)
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
 #if RETRO_USE_PLUS
-        RSDK.SetLookupTable(PauseMenu->lookupTable);
+        RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_LOOKUP, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_TINT, true);
         PauseMenu_DrawPauseQuads();
     }
 }
@@ -935,9 +935,9 @@ void PauseMenu_Draw_JustLookup(void)
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
 #if RETRO_USE_PLUS
-        RSDK.SetLookupTable(PauseMenu->lookupTable);
+        RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_LOOKUP, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_TINT, true);
     }
 }
 

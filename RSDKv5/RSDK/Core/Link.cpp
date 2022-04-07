@@ -172,7 +172,7 @@ enum FunctionTableIDs {
     FunctionTable_SetScreenSplitVerticies,
 #endif
     FunctionTable_LoadSpriteSheet,
-    FunctionTable_SetLookupTable,
+    FunctionTable_SetTintLookupTable,
     FunctionTable_SetPaletteMask,
     FunctionTable_SetPaletteEntry,
     FunctionTable_GetPaletteEntry,
@@ -559,10 +559,10 @@ void RSDK::setupFunctions()
 #endif
     addToRSDKFunctionTable(FunctionTable_LoadSpriteSheet, RSDK::LoadSpriteSheet);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_SetLookupTable, SetLookupTable);
+    addToRSDKFunctionTable(FunctionTable_SetTintLookupTable, SetTintLookupTable);
 #else
     //cant be bothered to change the enum name, but in rev01, this returns a ptr to the lookup table
-    addToRSDKFunctionTable(FunctionTable_SetLookupTable, GetLookupTable);
+    addToRSDKFunctionTable(FunctionTable_SetTintLookupTable, GetTintLookupTable);
 #endif
     addToRSDKFunctionTable(FunctionTable_SetPaletteMask, SetPaletteMask);
     addToRSDKFunctionTable(FunctionTable_SetPaletteEntry, SetPaletteEntry);
