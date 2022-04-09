@@ -13,7 +13,7 @@ void Bungee_Update(void)
 {
     RSDK_THIS(Bungee);
     if (self->hasAttatchedPlayer) {
-        EntityPlayer *player = (EntityPlayer *)self->attatchedPlayer;
+        EntityPlayer *player = self->attatchedPlayer;
         self->timer          = 2;
 #if RETRO_GAMEVER != VER_100
         if (player && !Player_CheckValidState(player)) {
@@ -22,7 +22,7 @@ void Bungee_Update(void)
         }
         if (self->attatchedPlayer) {
 #endif
-            RSDK.GetHitbox(&player->animator, 0);
+            RSDK.GetHitbox(&player->animator, 0); // yeah
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->groundVel  = 0;
@@ -36,7 +36,7 @@ void Bungee_Update(void)
 #endif
 
         if (self->velocity.y <= 0) {
-            self->field_80 -= 2048;
+            self->stretchForce -= 0x800;
             if (self->bungeePos.y <= self->startPos.y) {
                 self->bungeePos.x        = self->startPos.x;
                 self->bungeePos.y        = self->startPos.y;
@@ -45,17 +45,17 @@ void Bungee_Update(void)
                     player->tileCollisions = true;
                     player->velocity       = self->velocity;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
-                    player->rotation                      = 0;
+                    player->rotation       = 0;
                     player->animator.speed = 48;
-                    player->onGround                      = false;
-                    player->state                         = Player_State_Air;
+                    player->onGround       = false;
+                    player->state          = Player_State_Air;
                 }
             }
         }
         else {
-            self->field_80 = -0x2C00;
+            self->stretchForce = -0x2C00;
         }
-        self->velocity.y += self->field_80;
+        self->velocity.y += self->stretchForce;
         self->bungeePos.x += self->velocity.x;
         self->bungeePos.y += self->velocity.y;
     }
@@ -69,9 +69,9 @@ void Bungee_Update(void)
                         && player->position.y >= self->position.y) {
                         if (abs(player->groundVel) > 0x20000 || player->velocity.y > 0x20000) {
                             if (player->state != Player_State_None && self->hasAttatchedPlayer == false && !self->timer) {
-                                self->field_80           = -0x2C00;
+                                self->stretchForce       = -0x2C00;
                                 self->timer              = 2;
-                                self->attatchedPlayer    = (Entity *)player;
+                                self->attatchedPlayer    = player;
                                 self->bungeePos.x        = self->startPos.x;
                                 self->bungeePos.y        = self->startPos.y;
                                 self->hasAttatchedPlayer = true;
@@ -83,7 +83,7 @@ void Bungee_Update(void)
                                 else
                                     velocity = player->velocity.y;
 
-                                self->velocity.y = velocity >> 1;
+                                self->velocity.y   = velocity >> 1;
                                 player->velocity.x = 0;
                                 player->velocity.y = 0;
                                 player->groundVel  = 0;
@@ -98,8 +98,8 @@ void Bungee_Update(void)
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_BUNGEE, &player->animator, true, 0);
                                 player->state = Player_State_None;
                                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                                self->playerDeathBoundary[player->playerID] = Zone->deathBoundary[player->playerID];
-                                Zone->deathBoundary[player->playerID]         = 0x7FFFFFFF;
+                                self->deathBoundary[player->playerID] = Zone->deathBoundary[player->playerID];
+                                Zone->deathBoundary[player->playerID] = 0x7FFFFFFF;
                             }
                         }
                     }
@@ -113,11 +113,11 @@ void Bungee_Update(void)
         self->timer--;
     }
     else {
-        EntityPlayer *player = (EntityPlayer *)self->attatchedPlayer;
+        EntityPlayer *player = self->attatchedPlayer;
         if (player) {
-            Zone->deathBoundary[player->playerID]         = self->playerDeathBoundary[player->playerID];
-            self->playerDeathBoundary[player->playerID] = 0;
-            self->attatchedPlayer                       = NULL;
+            Zone->deathBoundary[player->playerID] = self->deathBoundary[player->playerID];
+            self->deathBoundary[player->playerID] = 0;
+            self->attatchedPlayer                 = NULL;
         }
     }
 }
@@ -130,14 +130,14 @@ void Bungee_Draw(void)
 {
     RSDK_THIS(Bungee);
     if (self->hasAttatchedPlayer) {
-        EntityPlayer *player = (EntityPlayer *)self->attatchedPlayer;
+        EntityPlayer *player = self->attatchedPlayer;
         Vector2 drawPos      = self->startPos;
 
-        int playerY = player->position.y;
-        for (int i = 0; i < 9; ++i) {
-            int offset = i * ((playerY - 0x1A0000 - self->startPos.y) >> 3);
-            drawPos.x  = self->startPos.x & 0xFFFF0000;
-            drawPos.y  = (self->startPos.y + offset) & 0xFFFF0000;
+        int32 playerY = player->position.y;
+        for (int32 i = 0; i < 9; ++i) {
+            int32 offset = i * ((playerY - 0x1A0000 - self->startPos.y) >> 3);
+            drawPos.x    = self->startPos.x & 0xFFFF0000;
+            drawPos.y    = (self->startPos.y + offset) & 0xFFFF0000;
             RSDK.DrawSprite(&Bungee->animator, &drawPos, false);
         }
     }
@@ -165,11 +165,10 @@ void Bungee_StageLoad(void)
     RSDK.SetSpriteAnimation(Bungee->aniFrames, 0, &Bungee->animator, true, 0);
 }
 
-void Bungee_EditorDraw(void)
-{
-    RSDK.DrawSprite(&Bungee->animator, NULL, false);
-}
+#if RETRO_INCLUDE_EDITOR
+void Bungee_EditorDraw(void) { RSDK.DrawSprite(&Bungee->animator, NULL, false); }
 
 void Bungee_EditorLoad(void) { Bungee_StageLoad(); }
+#endif
 
 void Bungee_Serialize(void) {}

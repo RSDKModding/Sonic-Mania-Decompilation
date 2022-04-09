@@ -8,7 +8,7 @@ struct ObjectFlowerPod {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    int32 field_10;
+    int32 unused;
     uint16 sfxExplosion;
     uint16 sfxTwinkle;
 };
@@ -19,8 +19,8 @@ struct EntityFlowerPod {
     StateMachine(state);
     int32 timer;
     Vector2 startPos;
-    Animator animator1;
-    Animator animator2;
+    Animator stemAnimator;
+    Animator podAnimator;
 };
 
 // Object Struct

@@ -59,38 +59,38 @@ void LaunchSpring_Create(void *data)
         self->drawOrder = Zone->drawOrderHigh;
 
         switch (self->type) {
-            case 0:
+            case LAUNCHSPRING_SPINNING:
                 self->timer = 47;
                 self->state = LaunchSpring_State_Spinning;
                 break;
 
-            case 1:
+            case LAUNCHSPRING_CANNON:
                 self->state                  = LaunchSpring_State_Cannon;
                 self->springAnimator.frameID = 1;
                 break;
 
-            case 2:
+            case LAUNCHSPRING_ROTATE_45DEG:
                 self->minAngle               = self->rotation - 0x40;
                 self->maxAngle               = self->rotation + 0x40;
                 self->state                  = LaunchSpring_State_Rotating;
                 self->springAnimator.frameID = 1;
                 break;
 
-            case 3:
+            case LAUNCHSPRING_ROTATE_90DEG:
                 self->minAngle               = self->rotation - 0x80;
                 self->maxAngle               = self->rotation + 0x80;
                 self->state                  = LaunchSpring_State_Rotating;
                 self->springAnimator.frameID = 1;
                 break;
 
-            case 4:
+            case LAUNCHSPRING_ROTATE_135DEG:
                 self->minAngle               = self->rotation - 0xC0;
                 self->maxAngle               = self->rotation + 0xC0;
                 self->state                  = LaunchSpring_State_Rotating;
                 self->springAnimator.frameID = 1;
                 break;
 
-            case 5:
+            case LAUNCHSPRING_ROTATE_180DEG:
                 self->minAngle               = self->rotation - 0x100;
                 self->maxAngle               = self->rotation + 0x100;
                 self->state                  = LaunchSpring_State_Rotating;
@@ -442,6 +442,8 @@ void LaunchSpring_EditorDraw(void)
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->jointAnimator, true, 0);
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
 
+        self->rotation = self->angle << 6;
+
         LaunchSpring_Draw();
     }
 }
@@ -454,7 +456,7 @@ void LaunchSpring_EditorLoad(void)
         LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/LaunchSpring.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(LaunchSpring, type);
-    RSDK_ENUM_VAR("Type 0", LAUNCHSPRING_0);
+    RSDK_ENUM_VAR("Spinning", LAUNCHSPRING_SPINNING);
     RSDK_ENUM_VAR("Cannon", LAUNCHSPRING_CANNON);
     RSDK_ENUM_VAR("Rotating (45 Degrees)", LAUNCHSPRING_ROTATE_45DEG);
     RSDK_ENUM_VAR("Rotating (90 Degrees)", LAUNCHSPRING_ROTATE_90DEG);

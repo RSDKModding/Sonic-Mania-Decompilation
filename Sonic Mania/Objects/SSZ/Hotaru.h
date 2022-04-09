@@ -3,14 +3,19 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    HOTARU_GOOD,
+    HOTARU_BAD,
+}HotaruQualities;
+
 // Object Class
 struct ObjectHotaru {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    int32 field_14;
-    int32 field_18;
-    Hitbox hitbox3;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxTrigger;
+    int32 unused1;
+    int32 unused2;
+    Hitbox hitboxElectricity;
     uint16 aniFrames;
 };
 
@@ -24,22 +29,22 @@ struct EntityHotaru {
     int32 distX2;
     int32 speed;
     uint8 preset;
-    Vector2 offset;
-    Vector2 dist2;
-    uint8 field_88;
-    uint8 flags;
+    Vector2 offset2;
+    Vector2 offset1;
+    uint8 hotaruDir;
+    uint8 destroyedHotarus;
     Vector2 startPos;
     uint8 startDir;
     uint8 screenID;
     int32 timer;
-    Entity *playerPtr;
-    uint8 field_A0;
-    uint8 field_A1;
-    uint8 field_A2;
-    Vector2 offset2;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    EntityPlayer *playerPtr;
+    uint8 unused1;
+    uint8 unused2;
+    uint8 attackState;
+    Vector2 electricityOffset;
+    Animator mainAnimator;
+    Animator bulbAnimator;
+    Animator electricityAnimator;
 };
 
 // Object Struct
@@ -66,12 +71,12 @@ void Hotaru_CheckPlayerCollisions(void);
 void Hotaru_CheckOffScreen(void);
 
 void Hotaru_State_Setup(void);
-void Hotaru_State_Unknown1(void);
-void Hotaru_State_Unknown2(void);
-void Hotaru_State_Unknown3(void);
-void Hotaru_State_Unknown4(void);
-void Hotaru_State_Unknown5(void);
-void Hotaru_State_Unknown6(void);
-void Hotaru_State_Unknown7(void);
+void Hotaru_State_CheckPlayerInRange(void);
+void Hotaru_State_FoundPlayer(void);
+void Hotaru_State_FlyOnScreen(void);
+void Hotaru_State_AttachedToScreen(void);
+void Hotaru_State_Charging(void);
+void Hotaru_State_Attacking(void);
+void Hotaru_State_FinishedAttacking(void);
 
 #endif //!OBJ_HOTARU_H

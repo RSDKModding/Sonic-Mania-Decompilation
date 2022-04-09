@@ -540,6 +540,8 @@ void TimeAttackGate_EditorDraw(void)
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         int32 left   = self->boundsOffset.x - (self->boundsSize.x >> 1);
         int32 top    = self->boundsOffset.y - (self->boundsSize.y >> 1);
         int32 right  = self->boundsOffset.x + (self->boundsSize.x >> 1);
@@ -570,12 +572,16 @@ void TimeAttackGate_EditorDraw(void)
         hitbox.top    = TimeAttackGate->hitbox.top - self->extendTop;
         hitbox.bottom = self->extendBottom + TimeAttackGate->hitbox.bottom;
         DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &hitbox);
+
+        
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 
 void TimeAttackGate_EditorLoad(void)
 {
     TimeAttackGate->aniFrames     = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+
     TimeAttackGate->hitbox.left   = -8;
     TimeAttackGate->hitbox.top    = -44;
     TimeAttackGate->hitbox.right  = 8;

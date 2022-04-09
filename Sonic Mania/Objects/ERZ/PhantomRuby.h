@@ -4,7 +4,8 @@
 #include "SonicMania.h"
 
 typedef enum {
-    RUBYSFX_ATTACK1 = 1,
+    RUBYSFX_NONE,
+    RUBYSFX_ATTACK1,
     RUBYSFX_ATTACK2,
     RUBYSFX_ATTACK3,
     RUBYSFX_ATTACK4,
@@ -58,7 +59,7 @@ void PhantomRuby_SetupFlash(EntityPhantomRuby *ruby);
 void PhantomRuby_State_FinishedFlash(void);
 void PhantomRuby_State_PlaySfx(void);
 void PhantomRuby_State_Oscillate(void);
-void PhantomRuby_State_FallOffScreen(void);
+void PhantomRuby_State_MoveGravity(void);
 void PhantomRuby_State_MoveRotateGravity(void);
 void PhantomRuby_State_MoveRotateGravity_CheckGround(void);
 #if RETRO_USE_PLUS

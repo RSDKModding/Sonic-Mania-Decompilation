@@ -62,17 +62,13 @@ void TilePlatform_EditorDraw(void)
 {
     RSDK_THIS(TilePlatform);
 
-    RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y, self->position.x + self->size.x,
-                  self->position.y - self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(self->position.x - self->size.x, self->position.y + self->size.y, self->position.x + self->size.x,
-                  self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y, self->position.x - self->size.x,
-                  self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(self->position.x + self->size.x, self->position.y - self->size.y, self->position.x + self->size.x,
-                  self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK_DRAWING_OVERLAY(true);
+    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+    RSDK_DRAWING_OVERLAY(false);
 }
 
 void TilePlatform_EditorLoad(void) {
+
     RSDK_ACTIVE_VAR(TilePlatform, type);
     RSDK_ENUM_VAR("Fixed", PLATFORM_FIXED);
     RSDK_ENUM_VAR("Collapsing", PLATFORM_COLLAPSING);

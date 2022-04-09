@@ -17,9 +17,9 @@ void TitleLogo_Update(void)
 #else
     switch (self->type) {
         case TITLELOGO_RIBBON:
-            RSDK.ProcessAnimation(&self->bubbleAnimator);
+            RSDK.ProcessAnimation(&self->animator1);
             if (self->flag)
-                RSDK.ProcessAnimation(&self->playerAnimator);
+                RSDK.ProcessAnimation(&self->animator2);
             break;
         case TITLELOGO_PRESSSTART: ++self->timer; break;
     }
@@ -42,6 +42,7 @@ void TitleLogo_Draw(void)
             self->direction = FLIP_X;
             RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
+
         case TITLELOGO_RIBBON:
             self->direction = FLIP_X;
             RSDK.DrawSprite(&self->animator1, NULL, false);
@@ -54,19 +55,22 @@ void TitleLogo_Draw(void)
                 RSDK.DrawSprite(&self->animator3, NULL, false);
 #else
             if (self->flag)
-                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
+                RSDK.DrawSprite(&self->animator2, NULL, false);
 #endif
             break;
+
         case TITLELOGO_PRESSSTART:
             if (!(self->timer & 0x10))
                 RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
+
 #if RETRO_USE_PLUS
         case TITLELOGO_PLUS:
             RSDK.DrawSprite(&self->animator1, NULL, false);
             RSDK.DrawSprite(&self->animator2, NULL, false);
             break;
 #endif
+
         default: RSDK.DrawSprite(&self->animator1, NULL, false); break;
     }
 }
@@ -84,9 +88,10 @@ void TitleLogo_Create(void *data)
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator3, true, 0);
                 self->state = TitleLogo_State_Ribbon;
 #else
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator2, true, 0);
 #endif
                 break;
+
             case TITLELOGO_PRESSSTART:
 #if RETRO_USE_PLUS
                 self->state = TitleLogo_State_PressStart;
@@ -94,6 +99,7 @@ void TitleLogo_Create(void *data)
                 TitleLogo_SetupPressStart();
 #endif
                 break;
+
 #if RETRO_USE_PLUS
             case TITLELOGO_PLUS:
                 if (API.CheckDLC(DLC_PLUS)) {
@@ -106,6 +112,7 @@ void TitleLogo_Create(void *data)
                 }
                 break;
 #endif
+
             default: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, self->type + 2, &self->animator1, true, 0); break;
         }
 
@@ -123,6 +130,7 @@ void TitleLogo_Create(void *data)
                 self->active    = ACTIVE_NEVER;
                 self->drawOrder = 4;
                 break;
+
             default:
                 self->active    = ACTIVE_NORMAL;
                 self->visible   = true;
@@ -154,19 +162,23 @@ void TitleLogo_SetupPressStart(void)
             else
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 1);
             break;
+
         case LANGUAGE_IT:
             if (sku_platform == PLATFORM_XB1 || sku_platform == PLATFORM_SWITCH)
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 4);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 3);
             break;
+
         case LANGUAGE_GE:
             if (sku_platform == PLATFORM_SWITCH)
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 6);
             else
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 5);
             break;
+
         case LANGUAGE_SP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 7); break;
+
 #if RETRO_GAMEVER != VER_100
         case LANGUAGE_KO: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 8); break;
         case LANGUAGE_SC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 9); break;
@@ -266,7 +278,7 @@ void TitleLogo_EditorDraw(void)
 #if RETRO_USE_PLUS
             RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator3, true, 0);
 #else
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator2, true, 0);
 #endif
 
             self->direction = FLIP_X;
@@ -278,7 +290,7 @@ void TitleLogo_EditorDraw(void)
 #if RETRO_USE_PLUS
             RSDK.DrawSprite(&self->animator3, NULL, false);
 #else
-            RSDK.DrawSprite(&self->playerAnimator, NULL, false);
+            RSDK.DrawSprite(&self->animator2, NULL, false);
 #endif
             break;
         case TITLELOGO_PRESSSTART:

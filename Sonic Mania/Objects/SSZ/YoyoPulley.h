@@ -14,16 +14,16 @@ struct ObjectYoyoPulley {
 struct EntityYoyoPulley {
     RSDK_ENTITY
     uint8 activePlayers;
-    Animator animator1;
-    Animator animator3;
-    Animator animator2;
-    Animator animator4;
+    Animator mainAnimator;
+    Animator knobAnimator;
+    Animator shineAnimator;
+    Animator handleAnimator;
     uint8 pullDir;
     int32 length;
     int32 speed;
-    int32 field_C8;
+    int32 pullVelocity;
     int32 pulleyLength;
-    int32 playerTimers[4];
+    int32 playerTimers[PLAYER_MAX];
     Vector2 handlePos;
 };
 

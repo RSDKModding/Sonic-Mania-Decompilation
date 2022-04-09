@@ -3,31 +3,33 @@
 
 #include "SonicMania.h"
 
+#define UncurlPlant_NodeCount (8)
+
 // Object Class
 struct ObjectUncurlPlant {
     RSDK_OBJECT
     Hitbox hitbox;
-    TABLE(int32 array1[8], { 0, 16, 64, 96, 112, 144, 160, 192 });
-    TABLE(int32 array2[8], { 0, -8, 32, 64, 64, 64, 64, 64 });
-    TABLE(int32 array3[8], { 0, -24, 8, 8, 8, 8, 8, 8 });
+    TABLE(int32 startingNodeAngles[8], { 0x00, 0x10, 0x40, 0x60, 0x70, 0x90, 0xA0, 0xC0 });
+    TABLE(int32 targetNodeAnglesReleased[8], { 0x00, -0x08, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40 });
+    TABLE(int32 targetNodeAnglesStood[8], { 0x00, -0x18, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08 });
     uint16 aniFrames;
 };
 
 // Entity Class
 struct EntityUncurlPlant {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
-    Vector2 drawPositions[8];
-    Vector2 positions[8];
-    int32 segments[8];
-    int32 field_100[8];
-    int32 field_120;
-    int32 field_124;
-    int32 field_128;
-    int32 field_12C;
-    Animator animator;
-    Animator animators[8];
+    StateMachine(state); // unused
+    int32 unused;
+    Vector2 drawPositions[UncurlPlant_NodeCount];
+    Vector2 nodePositions[UncurlPlant_NodeCount];
+    int32 nodeAngles[UncurlPlant_NodeCount];
+    int32 targetNodeAngles[UncurlPlant_NodeCount];
+    int32 stood;
+    int32 uncurlPercent;
+    int32 stoodNodeID;
+    int32 uncurlMode;
+    Animator nodeAnimator;
+    Animator decorAnimators[UncurlPlant_NodeCount];
 };
 
 // Object Struct

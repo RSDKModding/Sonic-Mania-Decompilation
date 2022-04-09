@@ -53,9 +53,9 @@ struct ObjectBSS_Setup {
     int32 frustumCount[2];
     int32 frustumOffset[2];
     int32 unused1;
-    uint16 playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];            // Active Spheres & Collectables
-    uint16 sphereChainTable[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];     // Currently chained spheres
-    uint16 sphereCollectedTable[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H]; // Spheres to turn into rings
+    uint16 playField[0x400];            // Active Spheres & Collectables (0x400 == 0x20 * 0x20 == BSS_PLAYFIELD_W * BSS_PLAYFIELD_H)
+    uint16 sphereChainTable[0x400];     // Currently chained spheres     (0x400 == 0x20 * 0x20 == BSS_PLAYFIELD_W * BSS_PLAYFIELD_H)
+    uint16 sphereCollectedTable[0x400]; // Spheres to turn into rings    (0x400 == 0x20 * 0x20 == BSS_PLAYFIELD_W * BSS_PLAYFIELD_H)
     uint16 sfxBlueSphere;
     uint16 sfxSSExit;
     uint16 sfxBumper;

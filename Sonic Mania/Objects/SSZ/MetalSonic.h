@@ -3,12 +3,29 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    MS_ANI_IDLE,
+    MS_ANI_TAUNT,
+    MS_ANI_READY,
+    MS_ANI_HOVER,
+    MS_ANI_HOVERTURN,
+    MS_ANI_FLY,
+    MS_ANI_DASHATTACK,
+    MS_ANI_ELECTRICATTACK,
+    MS_ANI_BALLATTACK,
+    MS_ANI_ENTERPANEL,
+    MS_ANI_DEFEATED,
+    MS_ANI_BOOSTER_WEAK,
+    MS_ANI_BOOSTER_STRONG,
+    MS_ANI_BOOSTER_INTRO,
+}MetalSonicAniIDs;
+
 // Object Class
 struct ObjectMetalSonic {
     RSDK_OBJECT 
-    int32 field_4;
-    int32 field_8;
-    uint16 field_C;
+    int32 unused;
+    int32 invincibilityTimerPanel;
+    uint16 finishedAttacks;
     uint16 sfxHit;
     uint16 sfxExplosion2;
     uint16 sfxExplosion3;
@@ -27,8 +44,8 @@ struct ObjectMetalSonic {
     uint16 sfxMSTransform;
     uint16 sfxTransform2;
 #endif
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxHover;
+    Hitbox hitboxDash;
     uint16 aniFrames;
 };
 
@@ -38,26 +55,24 @@ struct EntityMetalSonic {
     StateMachine(state);
     Vector2 targetPos;
     int32 timer;
-    int32 field_68;
-    int32 field_6C;
+    int32 unused1;
+    int32 unused2;
     int32 health;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 timer2;
+    int32 unused3;
+    Vector2 hoverVelocity;
+    Vector2 targetVelocity;
+    int32 attackTimer;
     uint8 attackType;
-    int32 field_90;
-    int32 field_94;
-    Entity* panel;
-    Vector2 field_9C;
-    Vector2 field_A4;
-    Vector2 field_AC;
+    int32 unused4;
+    int32 invincibilityTimer;
+    EntityMSPanel* panel;
+    Vector2 unusedVec1;
+    Vector2 unusedVec2;
+    Vector2 unusedVec3;
     Hitbox* outerBox;
     Hitbox* innerBox;
-    Animator animator;
-    Animator animator2;
+    Animator metalSonicAnimator;
+    Animator boosterAnimator;
 };
 
 // Object Struct
@@ -87,55 +102,58 @@ void MetalSonic_Hit(void);
 void MetalSonic_Explode(void);
 #endif
 
+// Phase 1
 void MetalSonic_State_SetupArena(void);
-void MetalSonic_State_WaitForPlayer(void);
+void MetalSonic_State_AwaitPlayer(void);
 void MetalSonic_State_WaitForHologram(void);
 void MetalSonic_State_Appear(void);
 void MetalSonic_State_Land(void);
 void MetalSonic_State_Taunt(void);
 void MetalSonic_State_GetReady(void);
-void MetalSonic_State_SetupBounds(void);
+void MetalSonic_State_Ready(void);
 void MetalSonic_State_Start(void);
-void MetalSonic_State_Unknown1(void);
-void MetalSonic_State_Unknown2(void);
-void MetalSonic_State_Unknown3(void);
+void MetalSonic_State_EnterHoverMode(void);
+void MetalSonic_State_Hovering(void);
+void MetalSonic_State_PrepareAttack(void);
 void MetalSonic_State_StartAttack(void);
-void MetalSonic_State_Unknown5(void);
-void MetalSonic_State_Unknown6(void);
-void MetalSonic_State_Unknown7(void);
-void MetalSonic_State_Unknown8(void);
-void MetalSonic_State_Unknown9(void);
-void MetalSonic_State_Unknown10(void);
-void MetalSonic_State_EnterPanel(void);
-void MetalSonic_State_StartPanelSeq(void);
-void MetalSonic_HandlePanelAttack(void);
-void MetalSonic_State_ShowFactory(void);
-void MetalSonic_State_Unknown13(void);
-void MetalSonic_State_PanelExplosion(void);
-void MetalSonic_State_Unknown14(void);
-void MetalSonic_State_Unknown15(void);
+void MetalSonic_State_SetupBallAttack_Phase1(void);
+void MetalSonic_State_BallAttack_Phase1(void);
+void MetalSonic_State_SetupElectricAttack_Phase1(void);
+void MetalSonic_State_ElectricAttack_Phase1(void);
+void MetalSonic_State_SetupDashAttack_Phase1(void);
+void MetalSonic_State_DashAttack_Phase1(void);
 
-#if RETRO_USE_PLUS //Phase 3 (GigaMetal)
+// Phase 2
+void MetalSonic_State_EnterPanel(void);
+void MetalSonic_State_StartPanelSequence(void);
+void MetalSonic_HandlePanelAttack(void);
+void MetalSonic_State_OpenFactoryDoor(void);
+void MetalSonic_State_HandleSilverSonics(void);
+void MetalSonic_State_PanelExplosion(void);
+void MetalSonic_State_ExitFactory(void);
+void MetalSonic_State_PrepareFinalChase(void);
+
+#if RETRO_USE_PLUS //Phase 3 (VS GigaMetal)
 void MetalSonic_State_WaitForRuby(void);
 void MetalSonic_State_ObtainRuby(void);
 void MetalSonic_State_Transform(void);
 void MetalSonic_State_Defeated(void);
 #else // Phase 3 (VS Metal Sonic)
-void MetalSonic_State_Unknown16(void);
-void MetalSonic_State_Unknown17(void);
-void MetalSonic_State_Unknown18(void);
-void MetalSonic_State_Unknown19(void);
-void MetalSonic_State_Unknown20(void);
-void MetalSonic_State_Unknown21(void);
-void MetalSonic_State_Unknown22(void);
-void MetalSonic_State_Unknown23(void);
-void MetalSonic_State_Unknown24(void);
-void MetalSonic_State_Unknown25(void);
-void MetalSonic_State_Unknown26(void);
-void MetalSonic_State_Unknown27(void);
-void MetalSonic_State_Unknown28(void);
-void MetalSonic_State_Unknown29(void);
-void MetalSonic_State_Unknown30(void);
+void MetalSonic_State_SetupSpikeWall(void);
+void MetalSonic_State_FlyToSpikeWall(void);
+void MetalSonic_State_LandNearSpikeWall(void);
+void MetalSonic_State_Taunt_Phase2(void);
+void MetalSonic_State_Ready_Phase2(void);
+void MetalSonic_State_StartSpikeWallMovement(void);
+void MetalSonic_State_AccelerateSpikeWall(void);
+void MetalSonic_State_Hover_Phase2(void);
+void MetalSonic_State_SetupBallAttack_Phase2(void);
+void MetalSonic_State_BallAttack_Phase2(void);
+void MetalSonic_State_FinishAttack_Phase2(void);
+void MetalSonic_State_SetupElectricAttack_Phase2(void);
+void MetalSonic_State_StartElectricAttack_Phase2(void);
+void MetalSonic_State_ElectricAttack_Phase2(void);
+void MetalSonic_State_DashAttack_Phase2(void);
 void MetalSonic_State_Explode(void);
 void MetalSonic_State_Defeated(void);
 void MetalSonic_State_Finish(void);

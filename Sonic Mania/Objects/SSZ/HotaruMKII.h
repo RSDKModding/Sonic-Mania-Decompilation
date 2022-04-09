@@ -3,11 +3,17 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    HOTARUMKII_MAIN,
+    HOTARUMKII_FLASH,
+    HOTARUMKII_LASER,
+}HotaruMKIITypes;
+
 // Object Class
 struct ObjectHotaruMKII {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxLaser;
     uint16 aniFrames;
     uint16 sfxAppear;
     uint16 sfxLaser;
@@ -22,24 +28,23 @@ struct EntityHotaruMKII {
     Vector2 startPos;
     uint8 startDir;
     int32 timer;
-    int32 field_6C;
-    int32 field_70;
-    uint8 field_74;
-    uint8 field_75;
+    Vector2 moveAcceleration;
+    uint8 unused1;
+    uint8 unused2;
     uint8 childCount;
-    Vector2 distance;
+    Vector2 curOffset;
     uint8 origin;
     Vector2 offset1;
     Vector2 offset2;
     Vector2 offset3;
     int32 offsetID;
-    Entity *playerPtr;
+    EntityPlayer *playerPtr;
     int32 type;
     Vector2 triggerSize;
     Hitbox hitboxTrigger;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator mainAnimator;
+    Animator flashAnimator;
+    Animator unusedAnimator;
 };
 
 // Object Struct
@@ -64,19 +69,19 @@ void HotaruMKII_DebugDraw(void);
 
 void HotaruMKII_CheckPlayerCollisions(void);
 void HotaruMKII_CheckOffScreen(void);
-void HotaruMKII_HandleDistances(void *p);
+void HotaruMKII_HandleDistances(EntityPlayer *player);
 
 void HotaruMKII_State_Setup(void);
-void HotaruMKII_State_Unknown1(void);
-void HotaruMKII_State_Unknown6(void);
-void HotaruMKII_State_Unknown2(void);
-void HotaruMKII_State_Unknown3(void);
-void HotaruMKII_State_Unknown4(void);
-void HotaruMKII_State_Unknown5(void);
+void HotaruMKII_State_CheckPlayerInRange(void);
+void HotaruMKII_State_FlyAway(void);
+void HotaruMKII_State_FlyOnScreen(void);
+void HotaruMKII_State_AttackDelay(void);
+void HotaruMKII_State_Charging(void);
+void HotaruMKII_State_LaserAttack(void);
 
-void HotaruMKII_State1_Unknown(void);
+void HotaruMKII_State_Flash(void);
 
-void HotaruMKII_State2_Unknown1(void);
-void HotaruMKII_State2_Unknown2(void);
+void HotaruMKII_State_Laser(void);
+void HotaruMKII_State_LaserStrike(void);
 
 #endif //!OBJ_HOTARUMKII_H

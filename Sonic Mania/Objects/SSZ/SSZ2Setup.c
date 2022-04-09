@@ -53,40 +53,43 @@ void SSZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
     SSZ2Setup->towerID      = RSDK.GetSceneLayerID("Tower");
-    if (SSZ2Setup->towerID < 8) {
+    if (SSZ2Setup->towerID < LAYER_COUNT) {
         SSZ2Setup->towerLayer                   = RSDK.GetSceneLayer(SSZ2Setup->towerID);
-        SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCallback;
-        RSDK.SetDrawLayerProperties(1, false, SSZ2Setup_TowerDrawLayerCallback);
+        SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCB;
+        RSDK.SetDrawLayerProperties(1, false, SSZ2Setup_TowerDrawLayerCB);
         RSDK.SetLimitedFade(3, 0, 4, 96, 0, 256);
         if (globals->suppressTitlecard >= true) {
             SaveGame_LoadPlayerState();
             Zone_StartFadeIn(10, 0x000000);
         }
         CREATE_ENTITY(SSZ3Cutscene, intToVoid(false), 0, 0);
+
 #if RETRO_USE_PLUS
         Zone->stageFinishCallback = SSZ2Setup_StageFinishCallback;
 #endif
     }
+
 #if RETRO_USE_PLUS
     if ((SceneInfo->filter & FILTER_ENCORE))
         RSDK.LoadPalette(0, "EncoreSSZ2.act", 0b0000000011111111);
 #endif
-    GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCallback1;
-    GenericTrigger->callbacks[1] = SSZ2Setup_GenericTriggerCallback2;
-    GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCallback3;
+
+    GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII;
+    GenericTrigger->callbacks[1] = SSZ2Setup_GenericTriggerCB_CheckSSZAchievement;
+    GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCB_SSZ2BTransition;
 }
 
 #if RETRO_USE_PLUS
 void SSZ2Setup_StageFinishCallback(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
 #endif
 
-void SSZ2Setup_TowerDrawLayerCallback(void)
+void SSZ2Setup_TowerDrawLayerCB(void)
 {
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
-void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
+void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, ScreenInfo->centerX - 144, 0, ScreenInfo->centerX + 144, ScreenInfo->height);
     RSDK.ProcessParallax(SSZ2Setup->towerLayer);
@@ -152,7 +155,7 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
     }
 }
 
-void SSZ2Setup_GenericTriggerCallback1(void)
+void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void)
 {
     foreach_active(HotaruMKII, hotaru)
     {
@@ -170,7 +173,7 @@ void SSZ2Setup_GenericTriggerCallback1(void)
     }
 }
 
-void SSZ2Setup_GenericTriggerCallback2(void)
+void SSZ2Setup_GenericTriggerCB_CheckSSZAchievement(void)
 {
     if (!SSZ2Setup->hasAchievement) {
         if (!SceneInfo->minutes) {
@@ -180,16 +183,16 @@ void SSZ2Setup_GenericTriggerCallback2(void)
     }
 }
 
-void SSZ2Setup_GenericTriggerCallback3(void)
+void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void)
 {
     RSDK_THIS(GenericTrigger);
 
     if (isMainGameMode()) {
-        EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (player->stateInput) {
-            player->stateInput      = 0;
-            player->left            = false;
-            player->right           = true;
+        EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        if (player1->stateInput) {
+            player1->stateInput      = StateMachine_None;
+            player1->left            = false;
+            player1->right           = true;
             Zone->cameraBoundsR[0] = ScreenInfo->centerX + (self->position.x >> 16);
             Zone->cameraBoundsR[1] = ScreenInfo->centerX + (self->position.x >> 16);
 #if RETRO_USE_PLUS
@@ -197,9 +200,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             Zone->cameraBoundsR[3] = ScreenInfo->centerX + (self->position.x >> 16);
 #endif
 
-            for (int32 i = 0; i < Player->playerCount; ++i) {
-                StarPost->postIDs[i] = 0;
-            }
+            for (int32 i = 0; i < Player->playerCount; ++i) StarPost->postIDs[i] = 0;
 
             SaveGame_SavePlayerState();
             globals->suppressAutoMusic = true;
@@ -209,14 +210,25 @@ void SSZ2Setup_GenericTriggerCallback3(void)
                 RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);
         }
-        if (player->superState == SUPERSTATE_SUPER || player->state == Player_State_Transform)
+
+        if (player1->superState == SUPERSTATE_SUPER || player1->state == Player_State_Transform)
             globals->restartPowerups |= 0x80;
+
         globals->restartMusicID = Music->activeTrack;
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SSZ2Setup_EditorDraw(void) {}
 
-void SSZ2Setup_EditorLoad(void) {}
+void SSZ2Setup_EditorLoad(void)
+{
+
+    RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
+    RSDK_ENUM_VAR("Destroy Active HotaruMKIIs", GENERICTRIGGER_SSZ2_DESTROYHOTARUMKII);
+    RSDK_ENUM_VAR("Handle SSZ2 Achievement", GENERICTRIGGER_SSZ2_ACHIEVEMENT);
+    RSDK_ENUM_VAR("Act Transition", GENERICTRIGGER_SSZ2_ACTTRANSITION);
+}
+#endif
 
 void SSZ2Setup_Serialize(void) {}

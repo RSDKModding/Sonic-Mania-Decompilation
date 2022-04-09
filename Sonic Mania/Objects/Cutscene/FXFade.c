@@ -146,7 +146,12 @@ void FXFade_State_FadeOutBlack(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FXFade_EditorDraw(void) {}
+void FXFade_EditorDraw(void)
+{
+    RSDK_THIS(FXFade);
+
+    RSDK.DrawRect(self->position.x - 0x100000, self->position.y - 0x100000, 0x200000, 0x200000, self->color, 0xFF, INK_NONE, false);
+}
 
 void FXFade_EditorLoad(void) {}
 #endif

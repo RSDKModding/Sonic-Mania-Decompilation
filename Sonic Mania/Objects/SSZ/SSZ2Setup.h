@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { GENERICTRIGGER_SSZ2_DESTROYHOTARUMKII, GENERICTRIGGER_SSZ2_ACHIEVEMENT, GENERICTRIGGER_SSZ2_ACTTRANSITION } GenericTriggerTypesSSZ2;
+
 // Object Class
 struct ObjectSSZ2Setup {
     RSDK_OBJECT
@@ -28,8 +30,10 @@ void SSZ2Setup_StaticUpdate(void);
 void SSZ2Setup_Draw(void);
 void SSZ2Setup_Create(void* data);
 void SSZ2Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SSZ2Setup_EditorDraw(void);
 void SSZ2Setup_EditorLoad(void);
+#endif
 void SSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
@@ -37,11 +41,11 @@ void SSZ2Setup_Serialize(void);
 void SSZ2Setup_StageFinishCallback(void);
 #endif
 
-void SSZ2Setup_TowerDrawLayerCallback(void);
-void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines);
+void SSZ2Setup_TowerDrawLayerCB(void);
+void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines);
 
-void SSZ2Setup_GenericTriggerCallback1(void);
-void SSZ2Setup_GenericTriggerCallback2(void);
-void SSZ2Setup_GenericTriggerCallback3(void);
+void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void);
+void SSZ2Setup_GenericTriggerCB_CheckSSZAchievement(void);
+void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void);
 
 #endif //!OBJ_SSZ2SETUP_H

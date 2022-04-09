@@ -15,15 +15,9 @@ void MSOrb_Update(void)
     StateMachine_Run(self->state);
 }
 
-void MSOrb_LateUpdate(void)
-{
+void MSOrb_LateUpdate(void) {}
 
-}
-
-void MSOrb_StaticUpdate(void)
-{
-
-}
+void MSOrb_StaticUpdate(void) {}
 
 void MSOrb_Draw(void)
 {
@@ -31,7 +25,7 @@ void MSOrb_Draw(void)
     StateMachine_Run(self->stateDraw);
 }
 
-void MSOrb_Create(void* data)
+void MSOrb_Create(void *data)
 {
     RSDK_THIS(MSOrb);
 
@@ -45,7 +39,7 @@ void MSOrb_Create(void* data)
         self->drawOrder     = Zone->drawOrderLow;
         RSDK.SetSpriteAnimation(MSOrb->aniFrames, 15, &self->animator, true, 0);
         self->state     = MSOrb_State_Orb;
-        self->stateDraw = MSOrb_StateDraw_Orb;
+        self->stateDraw = MSOrb_Draw_Orb;
     }
 }
 
@@ -53,6 +47,7 @@ void MSOrb_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("SSZ2"))
         MSOrb->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MetalSonic.bin", SCOPE_STAGE);
+
     MSOrb->hitbox.left   = -6;
     MSOrb->hitbox.top    = -6;
     MSOrb->hitbox.right  = 6;
@@ -80,7 +75,7 @@ void MSOrb_State_Orb(void)
     MSOrb_CheckPlayerCollisions();
 }
 
-void MSOrb_StateDraw_Orb(void)
+void MSOrb_Draw_Orb(void)
 {
     RSDK_THIS(MSOrb);
     RSDK.DrawSprite(&self->animator, NULL, false);
@@ -89,17 +84,19 @@ void MSOrb_StateDraw_Orb(void)
 #if RETRO_INCLUDE_EDITOR
 void MSOrb_EditorDraw(void)
 {
+    RSDK_THIS(MSOrb);
+    self->inkEffect     = INK_ALPHA;
+    self->visible       = true;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    self->alpha         = 0xC0;
+    self->drawOrder     = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(MSOrb->aniFrames, 15, &self->animator, true, 0);
 
+    MSOrb_Draw_Orb();
 }
 
-void MSOrb_EditorLoad(void)
-{
-
-}
+void MSOrb_EditorLoad(void) { MSOrb->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MetalSonic.bin", SCOPE_STAGE); }
 #endif
 
-void MSOrb_Serialize(void)
-{
-
-}
-
+void MSOrb_Serialize(void) {}

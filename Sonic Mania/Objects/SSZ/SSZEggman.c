@@ -14,7 +14,7 @@ void SSZEggman_Update(void)
 {
     RSDK_THIS(SSZEggman);
     StateMachine_Run(self->state);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
 }
 
 void SSZEggman_LateUpdate(void) {}
@@ -31,10 +31,10 @@ void SSZEggman_Draw(void)
     drawPos.x += self->offset.x;
     drawPos.y += self->offset.y;
 
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->seatAnimator, NULL, false);
+    RSDK.DrawSprite(&self->eggmanAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->mobileAnimator, NULL, false);
+    RSDK.DrawSprite(&self->panelAnimator, NULL, false);
 }
 
 void SSZEggman_Create(void *data)
@@ -48,37 +48,37 @@ void SSZEggman_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &self->eggmanAnimator, true, 0);
+
         if (data) {
-            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 6, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 6, &self->panelAnimator, true, 0);
         }
         else {
             self->offset.y = -0x100000;
-            self->state    = SSZEggman_Unknown1;
-            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &self->animator3, true, 0);
+            self->state    = SSZEggman_State_Setup;
+            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &self->seatAnimator, true, 0);
+            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &self->mobileAnimator, true, 0);
         }
     }
 }
 
 void SSZEggman_StageLoad(void) { SSZEggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanSSZ.bin", SCOPE_STAGE); }
 
-void SSZEggman_Unknown1(void)
+void SSZEggman_State_Setup(void)
 {
     RSDK_THIS(SSZEggman);
 
     foreach_all(PhantomRuby, ruby) { self->ruby = ruby; }
-    self->rubyPos.x = self->position.x;
-    self->rubyPos.y = self->position.y;
-    self->state     = SSZEggman_Unknown2;
+    self->originPos.x = self->position.x;
+    self->originPos.y = self->position.y;
+    self->state     = SSZEggman_State_HoldingRuby;
 }
 
-void SSZEggman_Unknown2(void)
+void SSZEggman_State_HoldingRuby(void)
 {
     RSDK_THIS(SSZEggman);
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 9) + self->rubyPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
 
     if (self->ruby) {
         self->ruby->position.x = self->position.x - 0xC0000;
@@ -89,10 +89,10 @@ void SSZEggman_Unknown2(void)
     {
         if (metal->state == MetalSonic_State_ObtainRuby) {
             self->speed = -0x28000;
-            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 3, &self->animator1, true, 0);
-            self->state = SSZEggman_Unknown3;
+            RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 3, &self->eggmanAnimator, true, 0);
+            self->state = SSZEggman_State_ThrownRuby;
             if (self->ruby) {
-                self->ruby->state      = PhantomRuby_State_FallOffScreen;
+                self->ruby->state      = PhantomRuby_State_MoveGravity;
                 self->ruby->velocity.x = -0x40000;
                 self->ruby->velocity.y = -0x40000;
             }
@@ -100,7 +100,7 @@ void SSZEggman_Unknown2(void)
     }
 }
 
-void SSZEggman_Unknown3(void)
+void SSZEggman_State_ThrownRuby(void)
 {
     RSDK_THIS(SSZEggman);
 
@@ -110,43 +110,41 @@ void SSZEggman_Unknown3(void)
     if (self->offset.y >= 0) {
         self->offset.y = 0;
         self->speed    = 0;
-        RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 0, &self->animator1, true, 0);
-        self->state = SSZEggman_Unknown4;
+        RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 0, &self->eggmanAnimator, true, 0);
+        self->state = SSZEggman_State_WatchMetalTransform;
     }
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 9) + self->rubyPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
 }
 
-void SSZEggman_Unknown4(void)
+void SSZEggman_State_WatchMetalTransform(void)
 {
     RSDK_THIS(SSZEggman);
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 9) + self->rubyPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
 
     if (++self->timer == 120)
-        RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 1, &self->eggmanAnimator, true, 0);
+
     if (self->timer == 180) {
         self->timer     = 0;
         self->direction = FLIP_X;
         self->active    = ACTIVE_NORMAL;
-        self->state     = SSZEggman_Unknown5;
+        self->state     = SSZEggman_State_FlyAway;
     }
 
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 9) + self->rubyPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
 }
 
-void SSZEggman_Unknown5(void)
+void SSZEggman_State_FlyAway(void)
 {
     RSDK_THIS(SSZEggman);
 
     self->velocity.x += 0x1000;
     self->position.x += self->velocity.x;
-    self->rubyPos.y -= 0x8000;
-    self->angle      = (self->angle + 2) & 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 9) + self->rubyPos.y) & 0xFFFF0000;
+    self->originPos.y -= 0x8000;
+
+    self->position.y = BadnikHelpers_Oscillate(self->originPos.y, 2, 9);
 
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
@@ -156,10 +154,10 @@ void SSZEggman_Unknown5(void)
 void SSZEggman_EditorDraw(void)
 {
     RSDK_THIS(SSZEggman);
-    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &self->eggmanAnimator, true, 0);
     self->offset.y = -0x100000;
-    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &self->seatAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &self->mobileAnimator, true, 0);
 
     SSZEggman_Draw();
 }

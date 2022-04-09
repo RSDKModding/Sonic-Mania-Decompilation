@@ -24,7 +24,7 @@ void GigaMetal_Draw(void)
 {
     RSDK_THIS(GigaMetal);
 
-    if (GigaMetal->field_8 <= 0) {
+    if (GigaMetal->explodeTimer <= 0) {
         if (GigaMetal->invincibleTimer & 1) {
             RSDK.CopyPalette(2, 32, 0, 32, 16);
             RSDK.CopyPalette(2, 160, 0, 160, 10);
@@ -34,7 +34,7 @@ void GigaMetal_Draw(void)
                 StateMachine_Run(self->stateDraw);
             }
             else {
-                RSDK.DrawSprite(&self->animator, NULL, false);
+                RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             }
 
             RSDK.CopyPalette(1, 32, 0, 32, 16);
@@ -46,17 +46,17 @@ void GigaMetal_Draw(void)
                 StateMachine_Run(self->stateDraw);
             }
             else {
-                RSDK.DrawSprite(&self->animator, NULL, false);
+                RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             }
         }
     }
     else {
-        RSDK.SetLimitedFade(0, 4, 5, GigaMetal->field_8, 0, 256);
+        RSDK.SetLimitedFade(0, 4, 5, GigaMetal->explodeTimer, 0, 256);
         if (self->stateDraw) {
             StateMachine_Run(self->stateDraw);
         }
         else {
-            RSDK.DrawSprite(&self->animator, NULL, false);
+            RSDK.DrawSprite(&self->mainAnimator, NULL, false);
         }
         RSDK.CopyPalette(4, 1, 0, 1, 255);
     }
@@ -70,105 +70,108 @@ void GigaMetal_Create(void *data)
             self->drawOrder     = Zone->drawOrderLow - 1;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            int slot              = RSDK.GetEntityID(self);
+            int slot            = RSDK.GetEntityID(self);
             if (data)
                 self->aniID = voidToInt(data);
 
             switch (self->aniID) {
                 case GIGAMETAL_HEAD:
-                    self->body       = RSDK_GET_ENTITY(slot - 1, );
-                    self->stateDraw  = GigaMetal_StateDraw0_Unknown;
-                    self->field_8C.x = 0x140000;
-                    self->field_8C.y = -0x240000;
-                    self->frontArm   = RSDK_GET_ENTITY(slot + 3, );
-                    self->backArm    = RSDK_GET_ENTITY(slot - 2, );
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_HEAD, &self->animator, true, 0);
+                    self->body           = RSDK_GET_ENTITY(slot - 1, GigaMetal);
+                    self->stateDraw      = GigaMetal_Draw_Head;
+                    self->componentPos.x = 0x140000;
+                    self->componentPos.y = -0x240000;
+                    self->frontArm       = RSDK_GET_ENTITY(slot + 3, GigaMetal);
+                    self->backArm        = RSDK_GET_ENTITY(slot - 2, GigaMetal);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_HEAD, &self->mainAnimator, true, 0);
                     break;
+
                 case GIGAMETAL_SHOULDER:
-                    self->body       = RSDK_GET_ENTITY(slot - 5, );
-                    self->frontArm   = RSDK_GET_ENTITY(slot - 1, );
-                    self->stateDraw  = GigaMetal_StateDraw1_Unknown;
-                    self->field_8C.x = -0x240000;
-                    self->field_8C.y = -0x2C0000;
-                    self->drawOrder  = Zone->drawOrderHigh;
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->animator, true, 0);
+                    self->body           = RSDK_GET_ENTITY(slot - 5, GigaMetal);
+                    self->frontArm       = RSDK_GET_ENTITY(slot - 1, GigaMetal);
+                    self->stateDraw      = GigaMetal_Draw_Shoulder;
+                    self->componentPos.x = -0x240000;
+                    self->componentPos.y = -0x2C0000;
+                    self->drawOrder      = Zone->drawOrderHigh;
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->mainAnimator, true, 0);
                     break;
+
                 case GIGAMETAL_BODY: {
                     self->active   = ACTIVE_BOUNDS;
-                    self->head     = RSDK_GET_ENTITY(slot + 1, );
-                    self->ruby     = RSDK_GET_ENTITY(slot + 2, );
-                    self->cover    = RSDK_GET_ENTITY(slot + 3, );
-                    self->frontArm = RSDK_GET_ENTITY(slot + 4, );
-                    self->backArm  = RSDK_GET_ENTITY(slot - 1, );
-                    self->shoulder = RSDK_GET_ENTITY(slot + 5, );
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_BODY, &self->animator, true, 0);
-                    foreach_all(MetalSonic, metal) { self->metalSonic = (Entity *)metal; }
+                    self->head     = RSDK_GET_ENTITY(slot + 1, GigaMetal);
+                    self->ruby     = RSDK_GET_ENTITY(slot + 2, PhantomRuby);
+                    self->cover    = RSDK_GET_ENTITY(slot + 3, GigaMetal);
+                    self->frontArm = RSDK_GET_ENTITY(slot + 4, GigaMetal);
+                    self->backArm  = RSDK_GET_ENTITY(slot - 1, GigaMetal);
+                    self->shoulder = RSDK_GET_ENTITY(slot + 5, GigaMetal);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_BODY, &self->mainAnimator, true, 0);
+                    foreach_all(MetalSonic, metal) { self->metalSonic = metal; }
                     self->health = 8;
-                    self->state  = GigaMetal_State_SetupBounds;
+                    self->state  = GigaMetal_StateBody_SetupArena;
                     break;
                 }
-                case GIGAMETAL_COVER: {
-                    self->body      = RSDK_GET_ENTITY(slot - 3, );
-                    self->stateDraw = GigaMetal_StateDraw3_Unknown;
+
+                case GIGAMETAL_COVER:
+                    self->body      = RSDK_GET_ENTITY(slot - 3, GigaMetal);
+                    self->stateDraw = GigaMetal_Draw_Cover;
                     self->inkEffect = INK_ADD;
                     self->alpha     = 255;
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_COVER, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_COVER, &self->mainAnimator, true, 0);
                     break;
-                }
-                case GIGAMETAL_ARMFRONT: {
-                    self->body       = RSDK_GET_ENTITY(slot - 4, );
-                    self->stateDraw  = GigaMetal_StateDraw6_Unknown;
-                    self->field_8C.x = -0x1C0000;
-                    self->field_8C.y = -0x2C0000;
-                    self->drawOrder  = Zone->drawOrderHigh;
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator, true, 0);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator2, true, 1);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator3, true, 2);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator4, true, 3);
+
+                case GIGAMETAL_ARMFRONT:
+                    self->body           = RSDK_GET_ENTITY(slot - 4, GigaMetal);
+                    self->stateDraw      = GigaMetal_Draw_Arm;
+                    self->componentPos.x = -0x1C0000;
+                    self->componentPos.y = -0x2C0000;
+                    self->drawOrder      = Zone->drawOrderHigh;
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->jointAnimator, true, 1);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->armAnimator, true, 2);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->handAnimator, true, 3);
                     break;
-                }
-                case GIGAMETAL_ARMBACK: {
-                    self->body       = RSDK_GET_ENTITY(slot + 1, );
-                    self->stateDraw  = GigaMetal_StateDraw6_Unknown;
-                    self->field_8C.x = -0xC0000;
-                    self->field_8C.y = -0x2C0000;
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator, true, 0);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator2, true, 1);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator3, true, 2);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator4, true, 3);
+
+                case GIGAMETAL_ARMBACK:
+                    self->body           = RSDK_GET_ENTITY(slot + 1, GigaMetal);
+                    self->stateDraw      = GigaMetal_Draw_Arm;
+                    self->componentPos.x = -0xC0000;
+                    self->componentPos.y = -0x2C0000;
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->jointAnimator, true, 1);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->armAnimator, true, 2);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->handAnimator, true, 3);
                     break;
-                }
-                case GIGAMETAL_LASEREDGE: {
-                    self->stateDraw = GigaMetal_StateDraw8_Unknown;
+
+                case GIGAMETAL_LASEREDGE:
+                    self->stateDraw = GigaMetal_Draw_LaserEdge;
                     self->drawFX    = FX_ROTATE;
-                    self->field_10C = -1;
-                    self->angle     = 64;
+                    self->laserSize = -1;
+                    self->angle     = 0x40;
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->scale.x   = 0x200;
                     self->scale.y   = 0x200;
-                    self->state     = GigaMetal_State8_Unknown;
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->animator, true, 0);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERBEAM, &self->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->animator3, true, 1);
+                    self->state     = GigaMetal_State_Laser;
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERBEAM, &self->jointAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->armAnimator, true, 1);
                     break;
-                }
-                case GIGAMETAL_SHARD: {
-                    self->scale.x    = RSDK.Rand(0x200, 0x400);
-                    self->scale.y    = RSDK.Rand(0x200, 0x400);
-                    self->field_100  = RSDK.Rand(0, 0x400);
-                    self->field_104  = RSDK.Rand(0, 0x400);
-                    self->field_108  = RSDK.Rand(0, 0x400);
-                    self->active     = ACTIVE_NORMAL;
-                    self->visible    = true;
-                    self->drawOrder  = Zone->drawOrderHigh;
-                    self->velocity.x = RSDK.Rand(-0x10000, 0x10000);
-                    self->velocity.y = RSDK.Rand(-0x40000, -0x10000);
-                    self->groundVel  = RSDK.Rand(-16, 16);
-                    self->state      = GigaMetal_State10_Unknown;
-                    self->stateDraw  = GigaMetal_StateDraw10_Unknown;
+
+                case GIGAMETAL_SHARD:
+                    self->scale.x           = RSDK.Rand(0x200, 0x400);
+                    self->scale.y           = RSDK.Rand(0x200, 0x400);
+                    self->rotationAngles[0] = RSDK.Rand(0, 0x400);
+                    self->rotationAngles[1] = RSDK.Rand(0, 0x400);
+                    self->rotationAngles[2] = RSDK.Rand(0, 0x400);
+                    self->active            = ACTIVE_NORMAL;
+                    self->visible           = true;
+                    self->drawOrder         = Zone->drawOrderHigh;
+                    self->velocity.x        = RSDK.Rand(-0x10000, 0x10000);
+                    self->velocity.y        = RSDK.Rand(-0x40000, -0x10000);
+                    self->groundVel         = RSDK.Rand(-16, 16);
+                    self->state             = GigaMetal_State_Shard;
+                    self->stateDraw         = GigaMetal_Draw_Shard;
                     break;
-                }
+
                 default: break;
             }
         }
@@ -182,35 +185,37 @@ void GigaMetal_StageLoad(void)
 {
     GigaMetal->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/GigaMetal.bin", SCOPE_STAGE);
 
-    GigaMetal->hitbox1.left   = -12;
-    GigaMetal->hitbox1.top    = -12;
-    GigaMetal->hitbox1.right  = 12;
-    GigaMetal->hitbox1.bottom = 12;
+    GigaMetal->hitboxLaser.left   = -12;
+    GigaMetal->hitboxLaser.top    = -12;
+    GigaMetal->hitboxLaser.right  = 12;
+    GigaMetal->hitboxLaser.bottom = 12;
 
-    GigaMetal->hitbox2.left   = -12;
-    GigaMetal->hitbox2.top    = -10;
-    GigaMetal->hitbox2.right  = 12;
-    GigaMetal->hitbox2.bottom = 10;
+    GigaMetal->hitboxHand.left   = -12;
+    GigaMetal->hitboxHand.top    = -10;
+    GigaMetal->hitboxHand.right  = 12;
+    GigaMetal->hitboxHand.bottom = 10;
 
-    GigaMetal->hitbox3.left   = -40;
-    GigaMetal->hitbox3.top    = -16;
-    GigaMetal->hitbox3.right  = 40;
-    GigaMetal->hitbox3.bottom = 40;
+    GigaMetal->hitboxCore.left   = -40;
+    GigaMetal->hitboxCore.top    = -16;
+    GigaMetal->hitboxCore.right  = 40;
+    GigaMetal->hitboxCore.bottom = 40;
 
-    GigaMetal->hitbox4.left   = -56;
-    GigaMetal->hitbox4.top    = -124;
-    GigaMetal->hitbox4.right  = 16;
-    GigaMetal->hitbox4.bottom = -64;
+    GigaMetal->hitboxHead.left   = -56;
+    GigaMetal->hitboxHead.top    = -124;
+    GigaMetal->hitboxHead.right  = 16;
+    GigaMetal->hitboxHead.bottom = -64;
 
     GigaMetal->sfxRoar   = RSDK.GetSfx("SSZ2/MSRoar.wav");
     GigaMetal->sfxImpact = RSDK.GetSfx("Stage/Impact6.wav");
     GigaMetal->sfxTarget = RSDK.GetSfx("SSZ2/MSTarget.wav");
     GigaMetal->sfxPimpom = RSDK.GetSfx("Stage/PimPom.wav");
     GigaMetal->sfxCannon = RSDK.GetSfx("SSZ2/MSCannon.wav");
+
     RSDK.CopyPalette(0, 1, 4, 1, 255);
     for (int i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xF00080);
     GigaMetal->invincibleTimer = 0;
-    GigaMetal->field_8         = 0;
+    GigaMetal->explodeTimer    = 0;
+
     if (StarPost->postIDs[0]) {
         foreach_all(Music, music)
         {
@@ -221,76 +226,76 @@ void GigaMetal_StageLoad(void)
     }
 }
 
-void GigaMetal_StateDraw3_Unknown(void)
+void GigaMetal_Draw_Cover(void)
 {
     RSDK_THIS(GigaMetal);
 
-    self->position.x = self->body->position.x + self->field_8C.x;
-    self->position.y = self->body->position.y + self->field_8C.y;
+    self->position.x = self->body->position.x + self->componentPos.x;
+    self->position.y = self->body->position.y + self->componentPos.y;
 
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
-void GigaMetal_StateDraw0_Unknown(void)
+void GigaMetal_Draw_Head(void)
 {
     RSDK_THIS(GigaMetal);
 
-    self->position.x = self->body->position.x + self->field_8C.x;
-    self->position.y = self->body->position.y + self->field_8C.y;
+    self->position.x = self->body->position.x + self->componentPos.x;
+    self->position.y = self->body->position.y + self->componentPos.y;
 
-    RSDK.DrawSprite(&self->animator, NULL, false);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
+    RSDK.DrawSprite(&self->jointAnimator, NULL, false);
+    RSDK.DrawSprite(&self->armAnimator, NULL, false);
 }
 
-void GigaMetal_StateDraw1_Unknown(void)
+void GigaMetal_Draw_Shoulder(void)
 {
     RSDK_THIS(GigaMetal);
 
-    self->position.x = self->body->position.x + self->field_8C.x;
-    self->position.y = self->body->position.y + self->field_8C.y;
+    self->position.x = self->body->position.x + self->componentPos.x;
+    self->position.y = self->body->position.y + self->componentPos.y;
 
     int x = 3 * (self->position.x >> 2) + ((self->frontArm->position.x - 0xC0000) >> 2);
     if (x > self->position.x)
         x = self->position.x;
     self->position.x = x;
 
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
-void GigaMetal_StateDraw6_Unknown(void)
+void GigaMetal_Draw_Arm(void)
 {
     RSDK_THIS(GigaMetal);
     Vector2 drawPos;
 
-    self->position.x = self->body->position.x + self->field_8C.x;
-    self->position.y = self->body->position.y + self->field_8C.y;
+    self->position.x = self->body->position.x + self->componentPos.x;
+    self->position.y = self->body->position.y + self->componentPos.y;
 
-    int angle          = self->field_100 >> 6;
-    drawPos.x          = (RSDK.Sin1024(angle) << 11) + self->position.x;
-    drawPos.y          = (RSDK.Cos1024(angle) << 11) + self->position.y;
+    int angle        = self->rotationAngles[0] >> 6;
+    drawPos.x        = (RSDK.Sin1024(angle) << 11) + self->position.x;
+    drawPos.y        = (RSDK.Cos1024(angle) << 11) + self->position.y;
     self->position.x = drawPos.x;
     self->position.y = drawPos.y;
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    angle += (self->field_104 >> 6);
+    angle += (self->rotationAngles[1] >> 6);
     drawPos.x += 0x600 * RSDK.Sin1024(angle);
     drawPos.y += 0x600 * RSDK.Cos1024(angle);
 
-    if (self->animator.animationID == 5) {
+    if (self->mainAnimator.animationID == GIGAMETAL_ARMFRONT) {
         self->drawFX   = FX_ROTATE;
         self->rotation = -(angle >> 1);
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->armAnimator, &drawPos, false);
 
         self->drawFX = FX_NONE;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->jointAnimator, &drawPos, false);
     }
     else {
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->jointAnimator, &drawPos, false);
 
         self->drawFX   = FX_ROTATE;
         self->rotation = -(angle >> 1);
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->armAnimator, &drawPos, false);
 
         self->drawFX = FX_NONE;
     }
@@ -302,13 +307,13 @@ void GigaMetal_StateDraw6_Unknown(void)
     drawPos.x += 0x1500 * RSDK.Sin1024(angle);
     drawPos.y += 0x1500 * RSDK.Cos1024(angle);
     self->drawFX   = FX_ROTATE;
-    self->rotation = -((angle + ((self->field_108 >> 6) - 256)) >> 1);
-    RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    self->rotation = -((angle + ((self->rotationAngles[2] >> 6) - 256)) >> 1);
+    RSDK.DrawSprite(&self->handAnimator, &drawPos, false);
 
     self->drawFX = FX_NONE;
 }
 
-void GigaMetal_StateDraw8_Unknown(void)
+void GigaMetal_Draw_LaserEdge(void)
 {
     RSDK_THIS(GigaMetal);
     Vector2 drawPos;
@@ -316,39 +321,43 @@ void GigaMetal_StateDraw8_Unknown(void)
     self->position.x = self->body->position.x;
     self->position.y = self->body->position.y;
 
-    int angle        = self->angle - self->body->rotation;
+    // Draw Laser Edge (Bit that emits laser)
+    int32 angle    = self->angle - self->body->rotation;
     self->rotation = self->angle + self->body->rotation;
-    drawPos.x        = (RSDK.Sin512(angle + 8) << 12) + self->position.x;
-    drawPos.y        = (RSDK.Cos512(angle + 8) << 12) + self->position.y;
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
-    int moveX = (RSDK.Sin512(angle) << 12) & 0xFFFF0000;
-    int moveY = ((RSDK.Cos512(angle)) << 12) & 0xFFFF0000;
+    drawPos.x      = (RSDK.Sin512(angle + 8) << 12) + self->position.x;
+    drawPos.y      = (RSDK.Cos512(angle + 8) << 12) + self->position.y;
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    for (int i = 0; i < self->field_10C; ++i) {
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    int32 moveX = (RSDK.Sin512(angle) << 12) & 0xFFFF0000;
+    int32 moveY = (RSDK.Cos512(angle) << 12) & 0xFFFF0000;
+    // Draw Laser
+    for (int i = 0; i < self->laserSize; ++i) {
+        RSDK.DrawSprite(&self->jointAnimator, &drawPos, false);
         drawPos.x += moveX;
         drawPos.y += moveY;
     }
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+
+    // Draw Laser Edge (Bit that hits the ground)
+    RSDK.DrawSprite(&self->armAnimator, &drawPos, false);
 }
 
-void GigaMetal_StateDraw10_Unknown(void)
+void GigaMetal_Draw_Shard(void)
 {
     RSDK_THIS(GigaMetal);
     Vector2 vertices[3];
 
-    int x = ScreenInfo[SceneInfo->currentScreenID].position.x << 16;
-    int y = ScreenInfo[SceneInfo->currentScreenID].position.y << 16;
+    int32 x = ScreenInfo[SceneInfo->currentScreenID].position.x << 16;
+    int32 y = ScreenInfo[SceneInfo->currentScreenID].position.y << 16;
 
-    int angle     = self->angle + self->field_100;
+    int32 angle   = self->angle + self->rotationAngles[0];
     vertices[0].x = self->scale.x * RSDK.Sin1024(angle) - x + self->position.x;
     vertices[0].y = self->scale.y * RSDK.Cos1024(angle) + self->position.y - y;
 
-    angle         = self->angle + self->field_104;
+    angle         = self->angle + self->rotationAngles[1];
     vertices[1].x = self->scale.x * RSDK.Sin1024(angle) - x + self->position.x;
     vertices[1].y = self->scale.y * RSDK.Cos1024(angle) + self->position.y - y;
 
-    angle         = self->angle + self->field_108;
+    angle         = self->angle + self->rotationAngles[2];
     vertices[2].x = self->scale.x * RSDK.Sin1024(angle) - x + self->position.x;
     vertices[2].y = self->scale.y * RSDK.Cos1024(angle) + self->position.y - y;
     RSDK.DrawQuad(vertices, 3, 240, 0, 128, 256, INK_ADD);
@@ -374,15 +383,15 @@ void GigaMetal_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitbox4) && player->velocity.x < 0 && Player_CheckBossHit(player, self)) {
+        if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxHead) && player->velocity.x < 0 && Player_CheckBossHit(player, self)) {
             player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
-            RSDK.PlaySfx(GigaMetal->sfxPimpom, false, 255);
+            RSDK.PlaySfx(GigaMetal->sfxPimpom, false, 0xFF);
         }
     }
 
     foreach_active(Player, playerPtr)
     {
-        if (!GigaMetal->invincibleTimer && Player_CheckBadnikTouch(playerPtr, self, &GigaMetal->hitbox3) && Player_CheckBossHit(playerPtr, self)) {
+        if (!GigaMetal->invincibleTimer && Player_CheckBadnikTouch(playerPtr, self, &GigaMetal->hitboxCore) && Player_CheckBossHit(playerPtr, self)) {
             playerPtr->velocity.x += Zone->autoScrollSpeed;
             GigaMetal_Hit();
         }
@@ -394,15 +403,15 @@ void GigaMetal_Hit(void)
     RSDK_THIS(GigaMetal);
 
     if (--self->health <= 0) {
-        EntityGigaMetal *head     = (EntityGigaMetal *)self->head;
-        EntityGigaMetal *frontArm = (EntityGigaMetal *)self->frontArm;
-        EntityGigaMetal *backArm  = (EntityGigaMetal *)self->backArm;
+        EntityGigaMetal *head     = self->head;
+        EntityGigaMetal *frontArm = self->frontArm;
+        EntityGigaMetal *backArm  = self->backArm;
         head->state               = StateMachine_None;
         frontArm->state           = StateMachine_None;
         backArm->state            = StateMachine_None;
 
-        self->timer               = 0;
-        self->state               = GigaMetal_State_Destroyed;
+        self->timer            = 0;
+        self->state            = GigaMetal_StateBody_Destroyed;
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
@@ -410,12 +419,12 @@ void GigaMetal_Hit(void)
         GigaMetal->invincibleTimer = 40;
         RSDK.PlaySfx(MetalSonic->sfxHit, false, 255);
 
-        EntityGigaMetal *cover = (EntityGigaMetal *)self->cover;
-        ++cover->animator.frameID;
+        EntityGigaMetal *cover = self->cover;
+        ++cover->mainAnimator.frameID;
     }
 }
 
-void GigaMetal_State_SetupBounds(void)
+void GigaMetal_StateBody_SetupArena(void)
 {
     RSDK_THIS(GigaMetal);
 
@@ -423,73 +432,74 @@ void GigaMetal_State_SetupBounds(void)
     if (player1->position.y < self->position.y && !player1->collisionPlane) {
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX + 32;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX + 32;
-        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 16;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX + 32;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX + 32;
+        Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 16;
         Zone->deathBoundary[0]      = (self->position.y >> 16) + 16;
 
-        EntityMetalSonic *metal = (EntityMetalSonic *)self->metalSonic;
+        EntityMetalSonic *metal = self->metalSonic;
         if (metal) {
             if (!metal->activeScreens) {
                 metal->position.x = self->position.x - 0xC00000;
                 metal->position.y = self->position.y + 0x400000;
             }
-            metal->angle        = 0;
+            metal->angle       = 0;
             metal->targetPos.x = self->position.x - 0x400000;
             metal->targetPos.y = self->position.y - 0x500000;
-            metal->timer        = 0;
-            metal->visible      = true;
-            metal->active       = ACTIVE_NORMAL;
-            metal->state        = MetalSonic_State_WaitForRuby;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &metal->animator, false, 0);
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &metal->animator2, false, 0);
+            metal->timer       = 0;
+            metal->visible     = true;
+            metal->active      = ACTIVE_NORMAL;
+            metal->state       = MetalSonic_State_WaitForRuby;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_HOVER, &metal->metalSonicAnimator, false, 0);
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_BOOSTER_WEAK, &metal->boosterAnimator, false, 0);
         }
         self->position.x -= 0x500000;
         self->position.y -= 0x380000;
         self->active = ACTIVE_NORMAL;
-        self->state  = GigaMetal_State_Unknown2;
+        self->state  = GigaMetal_StateBody_SetupComponents;
 
         foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
     }
 }
 
-void GigaMetal_State_Unknown2(void)
+void GigaMetal_StateBody_SetupComponents(void)
 {
     RSDK_THIS(GigaMetal);
 
-    EntityMetalSonic *metal = (EntityMetalSonic *)self->metalSonic;
+    EntityMetalSonic *metal = self->metalSonic;
+    // Wait for metal sonic to become inactive (should happen during the white flash)
     if (metal->active == ACTIVE_NEVER) {
-        EntityGigaMetal *head = (EntityGigaMetal *)self->head;
+        EntityGigaMetal *head = self->head;
         head->visible         = true;
         head->active          = ACTIVE_NORMAL;
 
-        EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->ruby;
+        EntityPhantomRuby *ruby = self->ruby;
         ruby->startPos.x        = self->position.x + 0x200000;
         ruby->startPos.y        = self->position.y + 0x100000;
         ruby->drawOrder         = self->drawOrder;
         ruby->position.x        = ruby->startPos.x;
         ruby->position.y        = ruby->startPos.y;
 
-        EntityGigaMetal *cover = (EntityGigaMetal *)self->cover;
+        EntityGigaMetal *cover = self->cover;
         cover->visible         = true;
         cover->active          = ACTIVE_NORMAL;
 
-        EntityGigaMetal *shoulder = (EntityGigaMetal *)self->shoulder;
+        EntityGigaMetal *shoulder = self->shoulder;
         shoulder->visible         = true;
         shoulder->active          = ACTIVE_NORMAL;
 
-        EntityGigaMetal *frontArm = (EntityGigaMetal *)self->frontArm;
+        EntityGigaMetal *frontArm = self->frontArm;
         frontArm->visible         = true;
         frontArm->active          = ACTIVE_NORMAL;
-        frontArm->state           = GigaMetal_StateArm_Unknown1;
+        frontArm->state           = GigaMetal_StateArm_Idle_Front;
 
-        EntityGigaMetal *backArm = (EntityGigaMetal *)self->backArm;
+        EntityGigaMetal *backArm = self->backArm;
         backArm->visible         = true;
         backArm->active          = ACTIVE_NORMAL;
-        backArm->state           = GigaMetal_StateArm_Unknown1;
+        backArm->state           = GigaMetal_StateArm_Idle_Front;
 
         self->visible = true;
-        self->state   = GigaMetal_State_Unknown3;
+        self->state   = GigaMetal_StateBody_Transformed;
         RSDK.CopyTileLayer(Zone->fgHigh, 0, 34, Zone->fgHigh, 0, 26, 256, 6);
 
         foreach_active(Player, player)
@@ -503,138 +513,140 @@ void GigaMetal_State_Unknown2(void)
     }
 }
 
-void GigaMetal_State_Unknown3(void)
+void GigaMetal_StateBody_Transformed(void)
 {
     RSDK_THIS(GigaMetal);
 
     if (++self->timer == 120) {
-        EntityGigaMetal *head = (EntityGigaMetal *)self->head;
-        head->state           = GigaMetal_StateHead_Unknown1;
+        EntityGigaMetal *head = self->head;
+        head->state           = GigaMetal_StateHead_PrepareRoar;
 
-        EntityGigaMetal *frontArm = (EntityGigaMetal *)self->frontArm;
-        frontArm->state           = GigaMetal_StateArm_Unknown2;
+        EntityGigaMetal *frontArm = self->frontArm;
+        frontArm->state           = GigaMetal_StateArm_Idle_Behind;
 
-        EntityGigaMetal *backArm = (EntityGigaMetal *)self->backArm;
-        backArm->state           = GigaMetal_StateArm_Unknown2;
+        EntityGigaMetal *backArm = self->backArm;
+        backArm->state           = GigaMetal_StateArm_Idle_Behind;
 
-        self->timer            = 0;
-        self->state            = GigaMetal_State_Unknown4;
+        self->timer = 0;
+        self->state = GigaMetal_StateBody_Roar;
     }
 }
 
-void GigaMetal_State_Unknown4(void)
+void GigaMetal_StateBody_Roar(void)
 {
     RSDK_THIS(GigaMetal);
 
     ++self->timer;
     if (!(self->timer & 7))
         Camera_ShakeScreen(0, 0, 4);
+
     if (self->timer == 120) {
-        EntityGigaMetal *head = (EntityGigaMetal *)self->head;
-        head->state           = GigaMetal_StateHead_Unknown7;
+        EntityGigaMetal *head = self->head;
+        head->state           = GigaMetal_StateHead_FinishRoar;
 
-        EntityGigaMetal *frontArm = (EntityGigaMetal *)self->frontArm;
+        EntityGigaMetal *frontArm = self->frontArm;
         frontArm->timer           = 48;
-        frontArm->state           = GigaMetal_StateArm_Unknown3;
+        frontArm->state           = GigaMetal_StateArm_Marching;
 
-        EntityGigaMetal *backArm = (EntityGigaMetal *)self->backArm;
+        EntityGigaMetal *backArm = self->backArm;
         backArm->timer           = 48;
         backArm->angle           = 128;
-        backArm->state           = GigaMetal_StateArm_Unknown3;
+        backArm->state           = GigaMetal_StateArm_Marching;
 
-        self->field_94.x = self->position.x;
-        self->field_94.y = self->position.y;
-        self->field_94.y += 0x80000;
-        self->timer         = 320;
-        self->velocity.x    = 0x20000;
-        self->state         = GigaMetal_State_Unknown5;
+        self->targetPos.x     = self->position.x;
+        self->targetPos.y     = self->position.y + 0x80000;
+        self->timer           = 320;
+        self->velocity.x      = 0x20000;
+        self->state           = GigaMetal_StateBody_Marching;
         Zone->autoScrollSpeed = 0x20000;
     }
 }
 
-void GigaMetal_State_Unknown5(void)
+void GigaMetal_StateBody_Marching(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->position.x += self->velocity.x;
 
     if ((RSDK.Sin256(self->angle) & 0x200000) != 0)
-        self->position.y = self->field_94.y - -(RSDK.Sin256(self->angle) << 10);
+        self->position.y = self->targetPos.y - -(RSDK.Sin256(self->angle) << 10);
     else
-        self->position.y = self->field_94.y - (RSDK.Sin256(self->angle) << 10);
+        self->position.y = self->targetPos.y - (RSDK.Sin256(self->angle) << 10);
     self->angle = (self->angle + 2) & 0xFF;
 
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->ruby;
+    EntityPhantomRuby *ruby = self->ruby;
     ruby->position.x        = self->position.x + 0x200000;
     ruby->startPos.y        = self->position.y + 0x100000;
 
-    EntityGigaMetal *head = (EntityGigaMetal *)self->head;
+    EntityGigaMetal *head = self->head;
     if (!(self->angle & 0x7F)) {
         if (!head->state) {
-            head->field_94.x = head->field_8C.x;
-            head->field_94.y = head->field_8C.y;
-            head->velocity.y = 0x10000;
-            head->state      = GigaMetal_StateHead_Unknown3;
+            head->targetPos.x = head->componentPos.x;
+            head->targetPos.y = head->componentPos.y;
+            head->velocity.y  = 0x10000;
+            head->state       = GigaMetal_StateHead_Impact;
             RSDK.PlaySfx(GigaMetal->sfxImpact, false, 255);
         }
 
-        EntityGigaMetal *shoulder = (EntityGigaMetal *)self->shoulder;
-        shoulder->field_94.x      = shoulder->field_8C.x;
-        shoulder->field_94.y      = shoulder->field_8C.y;
+        EntityGigaMetal *shoulder = self->shoulder;
+        shoulder->targetPos.x     = shoulder->componentPos.x;
+        shoulder->targetPos.y     = shoulder->componentPos.y;
         shoulder->velocity.y      = -0x12000;
-        shoulder->state           = GigaMetal_StateShoulder_Unknown1;
+        shoulder->state           = GigaMetal_StateShoulder_Impact;
         Camera_ShakeScreen(0, 0, 4);
     }
 
-    if (!head->state || head->state == GigaMetal_StateHead_Unknown3)
+    if (!head->state || head->state == GigaMetal_StateHead_Impact)
         --self->timer;
+
     if (self->timer <= 0) {
-        EntityGigaMetal *frontArm = (EntityGigaMetal *)self->frontArm;
-        EntityGigaMetal *backArm  = (EntityGigaMetal *)self->backArm;
+        EntityGigaMetal *frontArm = self->frontArm;
+        EntityGigaMetal *backArm  = self->backArm;
 
         self->timer = RSDK.Rand(240, 480);
-        if (RSDK.Rand(0, 1024) <= 512) {
-            if ((self->field_88 & 0xFFFFFF00) != 0)
-                self->field_88 = 0;
+        if (RSDK.Rand(0, 1024) <= 0x200) {
+            if (self->attackTimer & 0xFFFFFF00)
+                self->attackTimer = 0;
             else
-                self->field_88++;
+                self->attackTimer++;
 
-            if ((self->field_88 & 0xFF) > 2)
-                self->field_88 = 256;
+            if ((self->attackTimer & 0xFF) > 2)
+                self->attackTimer = 0x100;
         }
         else {
-            if ((self->field_88 & 0xFFFFFF00) == 256)
-                ++self->field_88;
+            if ((self->attackTimer & 0xFFFFFF00) == 0x100)
+                ++self->attackTimer;
             else
-                self->field_88 = 256;
+                self->attackTimer = 0x100;
 
-            if ((self->field_88 & 0xFF) > 2)
-                self->field_88 = 0;
+            if ((self->attackTimer & 0xFF) > 2)
+                self->attackTimer = 0;
         }
 
-        if ((self->field_88 & 0xFFFFFF00) == 256)
-            head->state = GigaMetal_StateHead_Unknown8;
+        if ((self->attackTimer & 0xFFFFFF00) == 0x100)
+            head->state = GigaMetal_StateHead_TargetingPlayer;
         else
-            head->state = GigaMetal_StateHead_Unknown4;
+            head->state = GigaMetal_StateHead_PrepareLaser;
 
-        frontArm->state = GigaMetal_StateArm_Unknown2;
-        backArm->state  = GigaMetal_StateArm_Unknown2;
+        frontArm->state = GigaMetal_StateArm_Idle_Behind;
+        backArm->state  = GigaMetal_StateArm_Idle_Behind;
     }
+
     GigaMetal_HandleCameraMovement();
     GigaMetal_CheckPlayerCollisions();
 
     if ((Zone->timer & 7) == 2) {
-        int endX = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 1;
-        int endY = (ScreenInfo->height + ScreenInfo->position.y) >> 4;
+        int32 endX = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 1;
+        int32 endY = (ScreenInfo->height + ScreenInfo->position.y) >> 4;
 
         RSDK.CopyTileLayer(Zone->fgHigh, endX, endY - 5, Zone->fgHigh, endX, endY - 5 + 8, 1, 6);
         if (endX > 224)
             RSDK.CopyTileLayer(Zone->fgHigh, endX - 224, endY - 5, Zone->fgHigh, endX - 224, endY - 5 + 8, 1, 6);
 
-        int tileX  = (ScreenInfo->position.x >> 4) + 8;
-        int spawnY = (endY << 20) + 0x80000;
+        int32 tileX  = (ScreenInfo->position.x >> 4) + 8;
+        int32 spawnY = (endY << 20) + 0x80000;
 
-        for (int delay = 4; delay < 40; delay += 6) {
+        for (int32 delay = 4; delay < 40; delay += 6) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, endY);
 
             if (tile != (uint16)-1) {
@@ -665,35 +677,36 @@ void GigaMetal_State_Unknown5(void)
     }
 }
 
-void GigaMetal_State_Destroyed(void)
+void GigaMetal_StateBody_Destroyed(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->velocity.y += 0x1000;
     self->position.y += self->velocity.y;
-    if (self->position.y >= self->field_94.y) {
-        EntityGigaMetal *head = (EntityGigaMetal *)self->head;
-        self->velocity.y    = -0xC000;
+    if (self->position.y >= self->targetPos.y) {
+        EntityGigaMetal *head = self->head;
+        self->velocity.y      = -0xC000;
         head->velocity.y      = 0x18000;
-        head->field_94        = head->field_8C;
-        head->state           = GigaMetal_StateHead_Unknown3;
+        head->targetPos       = head->componentPos;
+        head->state           = GigaMetal_StateHead_Impact;
 
-        EntityGigaMetal *shoulder = (EntityGigaMetal *)self->shoulder;
+        EntityGigaMetal *shoulder = self->shoulder;
         shoulder->velocity.y      = -0x18000;
-        shoulder->field_94        = shoulder->field_8C;
-        shoulder->state           = GigaMetal_StateShoulder_Unknown1;
+        shoulder->targetPos       = shoulder->componentPos;
+        shoulder->state           = GigaMetal_StateShoulder_Impact;
         Camera_ShakeScreen(0, 0, 4);
     }
 
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->ruby;
+    EntityPhantomRuby *ruby = self->ruby;
     ruby->position.x        = self->position.x + 0x200000;
     ruby->startPos.y        = self->position.y + 0x100000;
 
     if (!(Zone->timer & 7)) {
-        int x = self->position.x + RSDK.Rand(-0x600000, 0x600000);
-        int y = self->position.y + RSDK.Rand(-0x600000, 0x600000);
+        int32 x = self->position.x + RSDK.Rand(-0x600000, 0x600000);
+        int32 y = self->position.y + RSDK.Rand(-0x600000, 0x600000);
         CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
     }
+
     if (!(Zone->timer % 6))
         RSDK.PlaySfx(MetalSonic->sfxExplosion2, false, 255);
 
@@ -712,23 +725,23 @@ void GigaMetal_State_Destroyed(void)
         }
     }
 
-    if (GigaMetal->field_8 >= 240) {
-        GigaMetal->field_8      = 0;
-        EntityMetalSonic *metal = (EntityMetalSonic *)self->metalSonic;
+    if (GigaMetal->explodeTimer >= 240) {
+        GigaMetal->explodeTimer = 0;
+        EntityMetalSonic *metal = self->metalSonic;
 
         metal->position.x = self->position.x - 0x100000;
         metal->position.y = self->position.y - 0x200000;
         metal->active     = ACTIVE_NORMAL;
-        metal->state           = MetalSonic_State_Defeated;
+        metal->state      = MetalSonic_State_Defeated;
         metal->velocity.x = 0;
         metal->velocity.y = -0x40000;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 10, &metal->animator, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, MS_ANI_DEFEATED, &metal->metalSonicAnimator, false, 0);
 
         foreach_active(GigaMetal, part) { destroyEntity(part); }
 
-        for (int i = 0; i < 0x40; ++i) {
-            int x = metal->position.x + RSDK.Rand(-0x600000, 0x400000);
-            int y = metal->position.y + RSDK.Rand(-0x600000, 0x600000);
+        for (int32 i = 0; i < 0x40; ++i) {
+            int32 x = metal->position.x + RSDK.Rand(-0x600000, 0x400000);
+            int32 y = metal->position.y + RSDK.Rand(-0x600000, 0x600000);
             CREATE_ENTITY(GigaMetal, intToVoid(GIGAMETAL_SHARD), x, y);
         }
 
@@ -741,7 +754,7 @@ void GigaMetal_State_Destroyed(void)
         EntityDango *dango = CREATE_ENTITY(Dango, NULL, (ScreenInfo->position.x - 64) << 16, (ScreenInfo->position.y + 200) << 16);
         dango->timer       = 0;
         dango->direction   = FLIP_X;
-        dango->state       = Dango_StateTaunt_Unknown1;
+        dango->state       = Dango_StateTaunt_Setup;
 
         int32 tileX = ScreenInfo->position.x >> 4;
         int32 tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
@@ -773,20 +786,21 @@ void GigaMetal_State_Destroyed(void)
         RSDK.CopyTileLayer(Zone->fgHigh, 0, 26, Zone->fgLow, 0, 0, 256, 6);
     }
     else {
-        GigaMetal->field_8++;
+        GigaMetal->explodeTimer++;
     }
 }
 
-void GigaMetal_StateShoulder_Unknown1(void)
+void GigaMetal_StateShoulder_Impact(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->velocity.y += 0x3800;
-    self->field_8C.y += self->velocity.y;
+    self->componentPos.y += self->velocity.y;
+
     if (self->velocity.y > 0) {
-        if (self->field_8C.y >= self->field_94.y) {
-            self->field_8C.y = self->field_94.y;
-            self->velocity.y = -(self->velocity.y >> 2);
+        if (self->componentPos.y >= self->targetPos.y) {
+            self->componentPos.y = self->targetPos.y;
+            self->velocity.y     = -(self->velocity.y >> 2);
             if (self->velocity.y > -0x800) {
                 self->velocity.y = 0;
                 self->state      = StateMachine_None;
@@ -795,16 +809,16 @@ void GigaMetal_StateShoulder_Unknown1(void)
     }
 }
 
-void GigaMetal_StateHead_Unknown3(void)
+void GigaMetal_StateHead_Impact(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->velocity.y -= 0x3800;
-    self->field_8C.y += self->velocity.y;
+    self->componentPos.y += self->velocity.y;
     if (self->velocity.y < 0) {
-        if (self->field_8C.y <= self->field_94.y) {
-            self->field_8C.y = self->field_94.y;
-            self->velocity.y = -(self->velocity.y >> 2);
+        if (self->componentPos.y <= self->targetPos.y) {
+            self->componentPos.y = self->targetPos.y;
+            self->velocity.y     = -(self->velocity.y >> 2);
             if (self->velocity.y < 0x4000) {
                 self->velocity.y = 0;
                 self->state      = StateMachine_None;
@@ -813,31 +827,31 @@ void GigaMetal_StateHead_Unknown3(void)
     }
 }
 
-void GigaMetal_State8_Unknown(void)
+void GigaMetal_State_Laser(void)
 {
     RSDK_THIS(GigaMetal);
 
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->jointAnimator);
     if (!(Zone->timer & 1)) {
-        if (self->field_10C < 9)
-            self->field_10C++;
+        if (self->laserSize < 9)
+            self->laserSize++;
     }
 
     self->position.x = self->body->position.x;
     self->position.y = self->body->position.y;
-    int angle          = self->angle - self->body->rotation;
-    int x              = (RSDK.Sin512(angle + 8) << 12) + self->position.x;
-    int y              = (RSDK.Cos512(angle + 8) << 12) + self->position.y;
-    int moveX          = (RSDK.Sin512(angle) << 12) & 0xFFFF0000;
-    int moveY          = (RSDK.Cos512(angle) << 12) & 0xFFFF0000;
+    int32 angle      = self->angle - self->body->rotation;
+    int32 x          = (RSDK.Sin512(angle + 8) << 12) + self->position.x;
+    int32 y          = (RSDK.Cos512(angle + 8) << 12) + self->position.y;
+    int32 moveX      = (RSDK.Sin512(angle) << 12) & 0xFFFF0000;
+    int32 moveY      = (RSDK.Cos512(angle) << 12) & 0xFFFF0000;
 
-    for (int c = 0; c < self->field_10C; ++c) {
+    for (int32 c = 0; c < self->laserSize; ++c) {
         self->position.x = x;
         self->position.y = y;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitbox1) && Player_CheckElementalHit(player, self, SHIELD_LIGHTNING)) {
+            if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxLaser) && Player_CheckElementalHit(player, self, SHIELD_LIGHTNING)) {
                 player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
             }
         }
@@ -852,11 +866,11 @@ void GigaMetal_State8_Unknown(void)
     }
 }
 
-void GigaMetal_StateHead_Unknown10(void)
+void GigaMetal_StateLaser_Finish(void)
 {
     RSDK_THIS(GigaMetal);
 
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->jointAnimator);
 
     if (self->scale.y <= 8)
         destroyEntity(self);
@@ -864,7 +878,7 @@ void GigaMetal_StateHead_Unknown10(void)
         self->scale.y -= 8;
 }
 
-void GigaMetal_State10_Unknown(void)
+void GigaMetal_State_Shard(void)
 {
     RSDK_THIS(GigaMetal);
 
@@ -877,13 +891,13 @@ void GigaMetal_State10_Unknown(void)
         destroyEntity(self);
 }
 
-void GigaMetal_StateHead_Unknown1(void)
+void GigaMetal_StateHead_PrepareRoar(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->drawFX = FX_ROTATE;
     if (self->rotation <= -32) {
-        self->state = GigaMetal_StateHead_Unknown2;
+        self->state = GigaMetal_StateHead_Roar;
         RSDK.PlaySfx(GigaMetal->sfxRoar, false, 255);
     }
     else {
@@ -891,14 +905,14 @@ void GigaMetal_StateHead_Unknown1(void)
     }
 }
 
-void GigaMetal_StateHead_Unknown2(void)
+void GigaMetal_StateHead_Roar(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->rotation = RSDK.Rand(-34, -30);
 }
 
-void GigaMetal_StateHead_Unknown7(void)
+void GigaMetal_StateHead_FinishRoar(void)
 {
     RSDK_THIS(GigaMetal);
 
@@ -912,14 +926,14 @@ void GigaMetal_StateHead_Unknown7(void)
     }
 }
 
-void GigaMetal_StateHead_Unknown4(void)
+void GigaMetal_StateHead_PrepareLaser(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->drawFX = FX_ROTATE;
     if (self->rotation <= -64) {
-        RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERCHARGE, &self->animator3, false, 0);
-        self->state = GigaMetal_StateHead_Unknown5;
+        RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERCHARGE, &self->armAnimator, false, 0);
+        self->state = GigaMetal_StateHead_ChargeLaser;
         RSDK.PlaySfx(GigaMetal->sfxRoar, false, 255);
     }
     else {
@@ -927,36 +941,36 @@ void GigaMetal_StateHead_Unknown4(void)
     }
 }
 
-void GigaMetal_StateHead_Unknown5(void)
+void GigaMetal_StateHead_ChargeLaser(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->rotation = RSDK.Rand(-66, -62);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->armAnimator);
     if (++self->timer == 120) {
-        self->timer                                                                                          = 0;
-        self->state                                                                                          = GigaMetal_StateHead_Unknown6;
-        CREATE_ENTITY(GigaMetal, intToVoid(GIGAMETAL_LASEREDGE), self->position.x, self->position.y)->body   = (Entity *)self;
+        self->timer                                                                                        = 0;
+        self->state                                                                                        = GigaMetal_StateHead_FiringLaser;
+        CREATE_ENTITY(GigaMetal, intToVoid(GIGAMETAL_LASEREDGE), self->position.x, self->position.y)->body = self;
         RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
     }
 }
 
-void GigaMetal_StateHead_Unknown6(void)
+void GigaMetal_StateHead_FiringLaser(void)
 {
     RSDK_THIS(GigaMetal);
 
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
     if (self->rotation >= 0) {
         if (++self->timer == 2) {
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator3, false, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->armAnimator, false, 0);
 
-            foreach_active(GigaMetal, arm)
+            foreach_active(GigaMetal, laser)
             {
-                if (arm->state == GigaMetal_State8_Unknown) {
-                    arm->drawFX |= FX_SCALE;
-                    arm->alpha = 0xA0;
-                    arm->state = GigaMetal_StateHead_Unknown10;
+                if (laser->state == GigaMetal_State_Laser) {
+                    laser->drawFX |= FX_SCALE;
+                    laser->alpha = 0xA0;
+                    laser->state = GigaMetal_StateLaser_Finish;
                 }
             }
         }
@@ -964,12 +978,12 @@ void GigaMetal_StateHead_Unknown6(void)
             self->timer = 0;
             foreach_active(GigaMetal, arm)
             {
-                if (arm->state == GigaMetal_StateArm_Unknown2) {
+                if (arm->state == GigaMetal_StateArm_Idle_Behind) {
                     arm->angle = arm->body->angle;
-                    if (arm->animator.animationID == 6)
-                        arm->angle += 128;
+                    if (arm->mainAnimator.animationID == GIGAMETAL_ARMBACK)
+                        arm->angle += 0x80;
                     arm->timer = 48;
-                    arm->state = GigaMetal_StateArm_Unknown3;
+                    arm->state = GigaMetal_StateArm_Marching;
                 }
             }
             self->rotation = 0;
@@ -982,67 +996,68 @@ void GigaMetal_StateHead_Unknown6(void)
     }
 }
 
-void GigaMetal_StateHead_Unknown8(void)
+void GigaMetal_StateHead_TargetingPlayer(void)
 {
     RSDK_THIS(GigaMetal);
 
     ++self->timer;
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->jointAnimator);
 
     if (self->timer == 1) {
-        RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_EYE, &self->animator2, false, 3);
+        RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_EYE, &self->jointAnimator, false, 3);
     }
     else if (self->timer == 88) {
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, false, 0);
-        self->field_94 = self->field_8C;
-        self->timer    = 0;
-        self->state    = GigaMetal_StateHead_Unknown9;
+        RSDK.SetSpriteAnimation(-1, 0, &self->jointAnimator, false, 0);
+        self->targetPos = self->componentPos;
+        self->timer     = 0;
+        self->state     = GigaMetal_StateHead_ReleasingBombs;
     }
 
-    bool32 flag = false;
+    bool32 playSfx = false;
     if (self->timer >= 72)
-        flag = (self->timer & 7) == 1;
+        playSfx = (self->timer & 7) == 1;
     else
-        flag = (self->timer % 20) == 1;
+        playSfx = (self->timer % 20) == 1;
 
-    if (flag)
+    if (playSfx)
         RSDK.PlaySfx(GigaMetal->sfxTarget, false, 255);
 }
 
-void GigaMetal_StateHead_Unknown9(void)
+void GigaMetal_StateHead_ReleasingBombs(void)
 {
     RSDK_THIS(GigaMetal);
 
     self->timer++;
     if ((self->timer % 90) == 1) {
-        self->velocity.x = -0x8000;
+        self->velocity.x   = -0x8000;
         EntityMSBomb *bomb = CREATE_ENTITY(MSBomb, NULL, self->position.x + 0x100000, self->position.y + 0xC0000);
         bomb->velocity.x   = 0x40000;
         bomb->velocity.y   = 0x40000;
         RSDK.PlaySfx(GigaMetal->sfxCannon, false, 255);
     }
 
-    self->field_8C.x += self->velocity.x;
-    self->field_8C.y += self->velocity.x;
+    self->componentPos.x += self->velocity.x;
+    self->componentPos.y += self->velocity.x;
     self->velocity.x += 0x3800;
-    if (self->field_8C.x > self->field_94.x) {
-        self->field_8C.x = self->field_94.x;
-        self->field_8C.y = self->field_94.y;
-        self->velocity.x = 0;
+
+    if (self->componentPos.x > self->targetPos.x) {
+        self->componentPos.x = self->targetPos.x;
+        self->componentPos.y = self->targetPos.y;
+        self->velocity.x     = 0;
     }
 
     if (self->timer == 224) {
-        EntityGigaMetal *frontArm = (EntityGigaMetal *)self->frontArm;
-        self->timer             = 0;
+        EntityGigaMetal *frontArm = self->frontArm;
+        self->timer               = 0;
         frontArm->timer           = 48;
         frontArm->angle           = 0;
-        frontArm->state           = GigaMetal_StateArm_Unknown3;
+        frontArm->state           = GigaMetal_StateArm_Marching;
 
-        EntityGigaMetal *backArm = (EntityGigaMetal *)self->backArm;
+        EntityGigaMetal *backArm = self->backArm;
         backArm->timer           = 48;
         backArm->angle           = 128;
-        backArm->state           = GigaMetal_StateArm_Unknown3;
-        self->state            = 0;
+        backArm->state           = GigaMetal_StateArm_Marching;
+        self->state              = 0;
     }
 }
 
@@ -1050,33 +1065,34 @@ void GigaMetal_HandleArmCollisions(void)
 {
     RSDK_THIS(GigaMetal);
 
-    if (self->animator.animationID != 6) {
-        int angle          = self->field_100 >> 6;
+    if (self->mainAnimator.animationID != GIGAMETAL_ARMBACK) {
+
+        int32 angle      = self->rotationAngles[0] >> 6;
         self->position.x = self->body->position.x;
         self->position.y = self->body->position.y;
-        self->position.x += self->field_8C.x;
-        self->position.y += self->field_8C.y;
+        self->position.x += self->componentPos.x;
+        self->position.y += self->componentPos.y;
         self->position.x += RSDK.Sin1024(angle) << 11;
         self->position.y += RSDK.Cos1024(angle) << 11;
 
-        angle += self->field_104 >> 6;
+        angle += self->rotationAngles[1] >> 6;
         self->position.x += 0x600 * RSDK.Sin1024(angle);
         self->position.y += 0x600 * RSDK.Cos1024(angle);
         self->position.x += RSDK.Sin1024(angle) << 9;
 
-        angle += 256;
+        angle += 0x100;
         self->position.y += RSDK.Cos1024(angle) << 9;
         self->position.x += 0x1500 * RSDK.Sin1024(angle);
         self->position.y += 0x1500 * RSDK.Cos1024(angle);
 
-        angle += self->field_108 >> 6;
+        angle += self->rotationAngles[2] >> 6;
         self->position.x += 0x600 * RSDK.Sin1024(angle);
         self->position.y += 0x600 * RSDK.Cos1024(angle);
 
         foreach_active(Player, player)
         {
             if (!GigaMetal->invincibleTimer) {
-                if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitbox2)
+                if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxHand)
                     && !Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer) && Player_CheckHit(player, self)) {
                     player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
                 }
@@ -1085,50 +1101,51 @@ void GigaMetal_HandleArmCollisions(void)
     }
 }
 
-void GigaMetal_StateArm_Unknown1(void)
+void GigaMetal_StateArm_Idle_Front(void)
 {
     RSDK_THIS(GigaMetal);
 
-    self->field_100 = RSDK.Sin256(self->timer) - 0x800;
-    self->field_104 = RSDK.Sin256(self->timer) - 0x200;
-    self->field_108 = RSDK.Sin256(self->timer) + 0xC00;
-    self->timer     = (self->timer + 2) & 0xFF;
+    self->rotationAngles[0] = RSDK.Sin256(self->timer) - 0x800;
+    self->rotationAngles[1] = RSDK.Sin256(self->timer) - 0x200;
+    self->rotationAngles[2] = RSDK.Sin256(self->timer) + 0xC00;
+    self->timer             = (self->timer + 2) & 0xFF;
     GigaMetal_HandleArmCollisions();
 }
 
-void GigaMetal_StateArm_Unknown2(void)
+void GigaMetal_StateArm_Idle_Behind(void)
 {
     RSDK_THIS(GigaMetal);
 
-    if (self->field_100 >= -0x1F00) {
-        self->field_100 += ((-0x2000 - self->field_100) >> 3);
-        self->field_104 += (-0x1000 - self->field_104) >> 3;
-        self->field_108 += ((0x1000 - self->field_108) >> 3);
+    if (self->rotationAngles[0] >= -0x1F00) {
+        self->rotationAngles[0] += ((-0x2000 - self->rotationAngles[0]) >> 3);
+        self->rotationAngles[1] += (-0x1000 - self->rotationAngles[1]) >> 3;
+        self->rotationAngles[2] += ((0x1000 - self->rotationAngles[2]) >> 3);
     }
     else {
-        self->field_104 = RSDK.Rand(-0x1200, -0xE00);
+        self->rotationAngles[1] = RSDK.Rand(-0x1200, -0xE00);
     }
     GigaMetal_HandleArmCollisions();
 }
 
-void GigaMetal_StateArm_Unknown3(void)
+void GigaMetal_StateArm_Marching(void)
 {
     RSDK_THIS(GigaMetal);
 
-    int val1 = 16 * RSDK.Sin256(self->angle);
-    int val2 = 4 * RSDK.Sin256(self->angle);
-    int val3 = 4 * RSDK.Sin256(self->angle - 64);
+    int32 angle1 = 16 * RSDK.Sin256(self->angle);
+    int32 angle2 = 4 * RSDK.Sin256(self->angle);
+    int32 angle3 = 4 * RSDK.Sin256(self->angle - 0x40);
     if (self->timer > 0) {
-        val2 = self->field_104 + ((val2 - self->field_104) >> 2);
-        val1 = self->field_100 + ((val1 - self->field_100) >> 2);
-        val3 = self->field_108 + ((val3 - self->field_108) >> 2);
+        angle1 = self->rotationAngles[0] + ((angle1 - self->rotationAngles[0]) >> 2);
+        angle2 = self->rotationAngles[1] + ((angle2 - self->rotationAngles[1]) >> 2);
+        angle3 = self->rotationAngles[2] + ((angle3 - self->rotationAngles[2]) >> 2);
         --self->timer;
     }
 
-    self->field_100 = val1;
-    self->field_104 = val2;
-    self->field_108 = val3;
-    self->angle     = (self->angle + 2) & 0xFF;
+    self->rotationAngles[0] = angle1;
+    self->rotationAngles[1] = angle2;
+    self->rotationAngles[2] = angle3;
+    self->angle             = (self->angle + 2) & 0xFF;
+
     GigaMetal_HandleArmCollisions();
 }
 
@@ -1139,79 +1156,86 @@ void GigaMetal_EditorDraw(void)
 
     switch (self->aniID) {
         case GIGAMETAL_HEAD:
-            self->stateDraw  = GigaMetal_StateDraw0_Unknown;
-            self->field_8C.x = 0x140000;
-            self->field_8C.y = -0x240000;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_HEAD, &self->animator, true, 0);
+            self->stateDraw      = GigaMetal_Draw_Head;
+            self->componentPos.x = 0x140000;
+            self->componentPos.y = -0x240000;
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_HEAD, &self->mainAnimator, true, 0);
 
-            RSDK.DrawSprite(&self->animator, NULL, false);
+            RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             break;
+
         case GIGAMETAL_SHOULDER:
-            self->stateDraw  = GigaMetal_StateDraw1_Unknown;
-            self->field_8C.x = -0x240000;
-            self->field_8C.y = -0x2C0000;
-            self->drawOrder  = Zone->drawOrderHigh;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->animator, true, 0);
+            self->stateDraw      = GigaMetal_Draw_Shoulder;
+            self->componentPos.x = -0x240000;
+            self->componentPos.y = -0x2C0000;
+            self->drawOrder      = Zone->drawOrderHigh;
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_SHOULDER, &self->mainAnimator, true, 0);
 
-            RSDK.DrawSprite(&self->animator, NULL, false);
+            RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             break;
+
         case GIGAMETAL_BODY:
-            self->active   = ACTIVE_BOUNDS;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_BODY, &self->animator, true, 0);
+            self->active = ACTIVE_BOUNDS;
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_BODY, &self->mainAnimator, true, 0);
             self->health = 8;
-            self->state  = GigaMetal_State_SetupBounds;
+            self->state  = GigaMetal_StateBody_SetupArena;
 
-            RSDK.DrawSprite(&self->animator, NULL, false);
+            RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             break;
+
         case GIGAMETAL_COVER:
             self->inkEffect = INK_ADD;
             self->alpha     = 255;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_COVER, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_COVER, &self->mainAnimator, true, 0);
 
-            RSDK.DrawSprite(&self->animator, NULL, false);
+            RSDK.DrawSprite(&self->mainAnimator, NULL, false);
             break;
+
         case GIGAMETAL_ARMFRONT:
-            self->stateDraw  = GigaMetal_StateDraw6_Unknown;
-            self->field_8C.x = -0x1C0000;
-            self->field_8C.y = -0x2C0000;
-            self->drawOrder  = Zone->drawOrderHigh;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator2, true, 1);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator3, true, 2);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->animator4, true, 3);
+            self->stateDraw      = GigaMetal_Draw_Arm;
+            self->componentPos.x = -0x1C0000;
+            self->componentPos.y = -0x2C0000;
+            self->drawOrder      = Zone->drawOrderHigh;
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->jointAnimator, true, 1);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->armAnimator, true, 2);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMFRONT, &self->handAnimator, true, 3);
 
-            self->body = (Entity *)self;
+            self->body = self;
             StateMachine_Run(self->stateDraw);
             break;
+
         case GIGAMETAL_ARMBACK:
-            self->stateDraw  = GigaMetal_StateDraw6_Unknown;
-            self->field_8C.x = -0xC0000;
-            self->field_8C.y = -0x2C0000;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator2, true, 1);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator3, true, 2);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->animator4, true, 3);
+            self->stateDraw      = GigaMetal_Draw_Arm;
+            self->componentPos.x = -0xC0000;
+            self->componentPos.y = -0x2C0000;
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->jointAnimator, true, 1);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->armAnimator, true, 2);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_ARMBACK, &self->handAnimator, true, 3);
 
-            self->body = (Entity *)self;
+            self->body = self;
             StateMachine_Run(self->stateDraw);
             break;
+
         case GIGAMETAL_LASEREDGE:
-            self->stateDraw = GigaMetal_StateDraw8_Unknown;
+            self->stateDraw = GigaMetal_Draw_LaserEdge;
             self->drawFX    = FX_ROTATE;
-            self->field_10C = -1;
-            self->angle     = 64;
+            self->laserSize = -1;
+            self->angle     = 0x40;
             self->visible   = true;
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->animator, true, 0);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERBEAM, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->animator3, true, 1);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASERBEAM, &self->jointAnimator, true, 0);
+            RSDK.SetSpriteAnimation(GigaMetal->aniFrames, GIGAMETAL_LASEREDGE, &self->armAnimator, true, 1);
 
-            self->body = (Entity *)self;
+            self->body = self;
             StateMachine_Run(self->stateDraw);
             break;
-        case GIGAMETAL_SHARD:
-            break;
+
+        case GIGAMETAL_SHARD: break;
+
         default: break;
     }
 }

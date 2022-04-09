@@ -45,7 +45,7 @@ void SSZ1Intro_StageLoad(void)
     foreach_all(FXRuby, ruby) { SSZ1Intro->fxRuby = ruby; }
 }
 
-void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPlayer *player2, int32 offset)
+void SSZ1Intro_HandleRubyHover(EntityCutsceneSeq *host, EntityPlayer *player1, EntityPlayer *player2, int32 offset)
 {
     EntityPlayer *players[2];
     players[0] = player1;
@@ -55,6 +55,7 @@ void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPl
         EntityPlayer *playerPtr = players[i];
         if (!playerPtr)
             break;
+
         RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_FAN, &playerPtr->animator, false, 0);
         playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
         playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) - playerPtr->position.y) >> 3;
@@ -72,7 +73,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         player1->camera = 0;
         camera->position.y -= 0x40000;
-        camera->targetPtr   = 0;
+        camera->targetPtr   = NULL;
         player1->stateInput = StateMachine_None;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
@@ -89,21 +90,21 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 
     if (fxRuby->fadeBlack > 0) {
         fxRuby->fadeBlack -= 16;
-        SSZ1Intro_Unknown1(player1, host, player2, cutEntity->position.y - 0x200000);
+        SSZ1Intro_HandleRubyHover(host, player1, player2, cutEntity->position.y - 0x200000);
     }
     else if (fxRuby->fadeWhite > 0) {
         fxRuby->fadeWhite -= 16;
-        SSZ1Intro_Unknown1(player1, host, player2, cutEntity->position.y - 0x200000);
+        SSZ1Intro_HandleRubyHover(host, player1, player2, cutEntity->position.y - 0x200000);
     }
     else {
         if (!host->values[0]) {
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
             host->values[0] = true;
-            fxRuby->state     = FXRuby_State_ShrinkRing;
+            fxRuby->state   = FXRuby_State_ShrinkRing;
         }
 
         if (fxRuby->outerRadius) {
-            SSZ1Intro_Unknown1(player1, host, player2, cutEntity->position.y - 0x200000);
+            SSZ1Intro_HandleRubyHover(host, player1, player2, cutEntity->position.y - 0x200000);
         }
         else {
             player1->state = Player_State_Air;
@@ -124,9 +125,9 @@ bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host)
         if (player1 && player2->onGround)
             return true;
     }
-    else if (player1->onGround) {
+    else if (player1->onGround)
         return true;
-    }
+
     return false;
 }
 bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)

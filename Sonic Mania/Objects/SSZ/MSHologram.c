@@ -12,11 +12,13 @@ ObjectMSHologram *MSHologram;
 void MSHologram_Update(void)
 {
     RSDK_THIS(MSHologram);
+
     self->angle = (self->angle + 4) & 0xFF;
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator4);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator5);
+    RSDK.ProcessAnimation(&self->lightsAnimator);
+    RSDK.ProcessAnimation(&self->metalSonicAnimator);
+    RSDK.ProcessAnimation(&self->rabbitAnimator);
+    RSDK.ProcessAnimation(&self->canaryAnimator);
+
     StateMachine_Run(self->state);
 }
 
@@ -31,22 +33,23 @@ void MSHologram_Draw(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->projectorAnimator, NULL, false);
 
     if (!(Zone->timer & 2)) {
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->lightsAnimator, NULL, false);
 
         self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->rabbitAnimator, NULL, false);
 
         self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator4, NULL, false);
+        RSDK.DrawSprite(&self->metalSonicAnimator, NULL, false);
 
-        if (self->angle < 128)
+        if (self->angle < 0x80)
             self->direction = FLIP_X;
-        drawPos.x += (RSDK.Cos256(self->angle) - 320) << 13;
-        drawPos.y += (RSDK.Sin256(self->angle) - 448) << 12;
-        RSDK.DrawSprite(&self->animator5, &drawPos, false);
+
+        drawPos.x += (RSDK.Cos256(self->angle) - 0x140) << 13;
+        drawPos.y += (RSDK.Sin256(self->angle) - 0x1C0) << 12;
+        RSDK.DrawSprite(&self->canaryAnimator, &drawPos, false);
 
         self->direction = FLIP_NONE;
     }
@@ -67,11 +70,11 @@ void MSHologram_Create(void *data)
             self->drawOrder     = Zone->drawOrderLow;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &self->animator4, true, 0);
-            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 3, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 4, &self->animator5, true, 0);
+            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->projectorAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &self->lightsAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &self->metalSonicAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 3, &self->rabbitAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MSHologram->aniFrames, 4, &self->canaryAnimator, true, 0);
             self->state = MSHologram_State_CheckPlayerCollisions;
         }
     }
@@ -88,6 +91,7 @@ void MSHologram_StageLoad(void)
     MSHologram->hitbox.top    = -10;
     MSHologram->hitbox.right  = 12;
     MSHologram->hitbox.bottom = 10;
+
     MSHologram->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
@@ -114,8 +118,8 @@ void MSHologram_State_Explode(void)
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(MSHologram->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
-            int x                      = RSDK.Rand(-8, 8) << 16;
-            int y                      = RSDK.Rand(-8, 8) << 16;
+            int32 x                      = RSDK.Rand(-8, 8) << 16;
+            int32 y                      = RSDK.Rand(-8, 8) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y);
             explosion->drawOrder       = Zone->drawOrderHigh;
         }
@@ -126,13 +130,13 @@ void MSHologram_State_Explode(void)
         self->destroyed = true;
         self->visible   = false;
         self->state     = MSHologram_State_Destroyed;
-        for (int i = 0; i < 16; ++i) {
-            int x                 = self->position.x + RSDK.Rand(0x800000, 0xE00000);
-            int y                 = self->position.y - RSDK.Rand(0x200000, 0x800000);
+        for (int32 i = 0; i < 16; ++i) {
+            int32 x               = self->position.x + RSDK.Rand(0x800000, 0xE00000);
+            int32 y               = self->position.y - RSDK.Rand(0x200000, 0x800000);
             EntityAnimals *animal = CREATE_ENTITY(Animals, intToVoid(RSDK.Rand(1, 12)), x, y);
             animal->updateRange.x = 0x1000000;
             animal->updateRange.y = 0x1000000;
-            animal->behaviour     = 1;
+            animal->behaviour     = ANIMAL_BEHAVE_FOLLOW;
         }
     }
 }
@@ -144,8 +148,8 @@ void MSHologram_State_Destroyed(void)
     if (++self->timer == 384) {
         foreach_active(Animals, animal)
         {
-            if (animal->behaviour == 1)
-                animal->behaviour = 0;
+            if (animal->behaviour == ANIMAL_BEHAVE_FOLLOW)
+                animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
         }
         destroyEntity(self);
     }
@@ -155,30 +159,30 @@ void MSHologram_State_Destroyed(void)
 void MSHologram_EditorDraw(void)
 {
     RSDK_THIS(MSHologram);
-    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &self->animator2, false, 0);
-    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &self->animator4, false, 0);
-    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 3, &self->animator3, false, 0);
-    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 4, &self->animator5, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->projectorAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &self->lightsAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &self->metalSonicAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 3, &self->rabbitAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 4, &self->canaryAnimator, false, 0);
 
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->projectorAnimator, NULL, false);
 
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->lightsAnimator, NULL, false);
 
     self->direction = FLIP_X;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->rabbitAnimator, NULL, false);
 
     self->direction = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator4, NULL, false);
+    RSDK.DrawSprite(&self->metalSonicAnimator, NULL, false);
 
     if (self->angle < 128)
         self->direction = FLIP_X;
-    drawPos.x += (RSDK.Cos256(self->angle) - 320) << 13;
-    drawPos.y += (RSDK.Sin256(self->angle) - 448) << 12;
-    RSDK.DrawSprite(&self->animator5, &drawPos, false);
+    drawPos.x += (RSDK.Cos256(self->angle) - 0x140) << 13;
+    drawPos.y += (RSDK.Sin256(self->angle) - 0x1C0) << 12;
+    RSDK.DrawSprite(&self->canaryAnimator, &drawPos, false);
 
     self->direction = FLIP_NONE;
 }

@@ -4,13 +4,13 @@
 #include "SonicMania.h"
 
 typedef enum {
-    HHW_0,
-    HHW_1,
-    HHW_2,
-    HHW_3,
-    HHW_4,
-    HHW_5,
-    HHW_6,
+    HHW_BOSS,
+    HHW_SINGLE_HOTARU,
+    HHW_PAIR_HOTARU,
+    HHW_UNUSED1,
+    HHW_SMALL_HOTARU,
+    HHW_FLASH,
+    HHW_UNUSED2,
     HHW_MINILASER,
     HHW_ELECTRICORB,
 }HHWTypes;
@@ -26,8 +26,8 @@ struct ObjectHotaruHiWatt {
     int32 boundsR;
     int32 boundsT;
     int32 boundsB;
-    int32 value7;
-    bool32 value8;
+    int32 startY;
+    bool32 spawnedLaserStrike;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxHHWAppear;
@@ -51,19 +51,19 @@ struct EntityHotaruHiWatt {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    int32 field_74;
-    int32 timer2;
-    int32 field_7C;
-    Vector2 field_80;
-    Vector2 field_88;
-    Vector2 drawPos;
-    Entity *parents[3];
-    int32 field_A4;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    int32 formationCircleRadius;
+    int32 bulbAlpha;
+    int32 unused;
+    Vector2 originPos;
+    Vector2 targetPos;
+    Vector2 laserImpactPos;
+    EntityHotaruHiWatt *parents[3];
+    bool32 playingBossTrack;
+    Animator mainAnimator;
+    Animator headAnimator;
+    Animator bulbAnimator;
+    Animator bulbFlashAnimator;
+    Animator laserImpactAnimator;
     Hitbox hitbox;
 };
 
@@ -88,62 +88,73 @@ bool32 HotaruHiWatt_ZapCheckCB(void);
 bool32 HotaruHiWatt_LaserCheckCB(void);
 void HotaruHiWatt_LaserUpdateCB(int sfx);
 
-void HotaruHiWatt_CheckPlayerCollisions2(void);
-void HotaruHiWatt_CheckPlayerCollisions(void);
-void HotaruHiWatt_CheckPlayerCollisions3(void);
-void HotaruHiWatt_CheckPlayerCollisions4(void);
+void HotaruHiWatt_CheckPlayerCollisions_Hotaru(void);
+void HotaruHiWatt_CheckPlayerCollisions_Boss(void);
+void HotaruHiWatt_CheckPlayerCollisions_MiniLaser(void);
+void HotaruHiWatt_CheckPlayerCollisions_BossLaser(void);
 
-void HotaruHiWatt_StateDraw1_Unknown2(void);
-void HotaruHiWatt_StateDraw1_Unknown1(void);
-void HotaruHiWatt_StateDraw_Destroyed(void);
-void HotaruHiWatt_StateDraw_Unknown1(void);
-void HotaruHiWatt_StateDraw_Unknown2(void);
-void HotaruHiWatt_StateDraw_Unknown3(void);
-void HotaruHiWatt_StateDraw_Unknown4(void);
+// Drawing
+void HotaruHiWatt_Draw_Hotaru(void);
+void HotaruHiWatt_Draw_HotaruAttacking(void);
+void HotaruHiWatt_Draw_Boss(void);
+void HotaruHiWatt_Draw_BossLaserCharging(void);
+void HotaruHiWatt_Draw_BossLaser(void);
+void HotaruHiWatt_Draw_FormingHHW(void);
+void HotaruHiWatt_Draw_FlashAppear(void);
 
-void HotaruHiWatt_SpawnChildHotaru(void);
-void HotaruHiWatt_Unknown16(void);
+// End of attack helpers
+void HotaruHiWatt_SpawnPairHotarus(void);
+void HotaruHiWatt_SetupHHWReappear(void);
 
-void HotaruHiWatt_State_SetupBounds(void);
-void HotaruHiWatt_State_WaitForPlayer(void);
-void HotaruHiWatt_State_Unknown5(void);
-void HotaruHiWatt_State_Unknown6(void);
-void HotaruHiWatt_State1_Unknown2(void);
+// HotaruHiWatt Appear
+void HotaruHiWatt_StateBoss_SetupArena(void);
+void HotaruHiWatt_StateBoss_AwaitPlayer(void);
+void HotaruHiWatt_StateBoss_Appear(void);
+void HotaruHiWatt_StateBoss_FlyUp(void);
 
-void HotaruHiWatt_State5_Unknown1(void);
+// Hotaru Misc
+void HotaruHiWatt_StateHotaru_MoveToTarget(void);
 
-void HotaruHiWatt_StateUnknown_Unknown1(void);
-void HotaruHiWatt_StateUnknown_Unknown2(void);
+void HotaruHiWatt_StateBoss_FlashFadeOut(void);
 
-void HotaruHiWatt_State1_Unknown1(void);
-void HotaruHiWatt_State1_Unknown3(void);
-void HotaruHiWatt_State1_Unknown4(void);
-void HotaruHiWatt_State1_Unknown5(void);
-void HotaruHiWatt_State1_Unknown6(void);
+// Dimming/Undimming the screen
+void HotaruHiWatt_StateBoss_HiddenDimScreen(void);
+void HotaruHiWatt_StateBoss_HiddenUndimScreen(void);
 
-void HotaruHiWatt_State7_Unknown1(void);
-void HotaruHiWatt_State7_Unknown2(void);
+// Single Hotaru
+void HotaruHiWatt_StateHotaru_DimScreen(void);
+void HotaruHiWatt_StateHotaru_Charging(void);
+void HotaruHiWatt_StateHotaru_Attacking(void);
+void HotaruHiWatt_StateHotaru_FinishedAttack(void);
+void HotaruHiWatt_StateHotaru_EndAttackSequence(void);
 
-void HotaruHiWatt_State2_Unknown1(void);
-void HotaruHiWatt_State2_Unknown2(void);
-void HotaruHiWatt_State2_Unknown3(void);
-void HotaruHiWatt_State2_Unknown4(void);
-void HotaruHiWatt_State2_Unknown5(void);
-void HotaruHiWatt_State2_Unknown7(void);
+// Single Hotaru (Laser)
+void HotaruHiWatt_State_MiniLaser(void);
+void HotaruHiWatt_State_MiniLaserStrike(void);
 
-void HotaruHiWatt_State8_Unknown1(void);
-void HotaruHiWatt_State8_Unknown2(void);
+// Pair Hotarus
+void HotaruHiWatt_StateHotaruPair_DimScreen(void);
+void HotaruHiWatt_StateHotaruPair_PrepareAttack(void);
+void HotaruHiWatt_StateHotaruPair_Charging(void);
+void HotaruHiWatt_StateHotaruPair_AttackDelay(void);
+void HotaruHiWatt_StateHotaruPair_AttackMovingDown(void);
+void HotaruHiWatt_StateHotaruPair_AttackMovingUp(void);
 
-void HotaruHiWatt_State_Unknown1(void);
-void HotaruHiWatt_State_Unknown2(void);
-void HotaruHiWatt_State_Unknown3(void);
-void HotaruHiWatt_State_Unknown4(void);
-void HotaruHiWatt_State_Unknown7(void);
-void HotaruHiWatt_State_Unknown8(void);
-void HotaruHiWatt_State_Unknown9(void);
-void HotaruHiWatt_State_Unknown10(void);
-void HotaruHiWatt_State_Unknown11(void);
-void HotaruHiWatt_State_Destroyed(void);
-void HotaruHiWatt_State_Finished(void);
+// Sparky Orb
+void HotaruHiWatt_State_SparkyOrb(void);
+void HotaruHiWatt_State_SparkyOrb_FadeOut(void);
+
+// HotaruHiWatt
+void HotaruHiWatt_StateBoss_DimScreen(void);
+void HotaruHiWatt_StateBoss_CreateSmallHHWs(void);
+void HotaruHiWatt_StateBoss_FormingHHW(void);
+void HotaruHiWatt_StateBoss_FlashAppear(void);
+void HotaruHiWatt_StateBoss_LaserAttackDelay(void);
+void HotaruHiWatt_StateBoss_ChargingLaser(void);
+void HotaruHiWatt_StateBoss_LaserAttack_Right(void);
+void HotaruHiWatt_StateBoss_LaserAttack_Left(void);
+void HotaruHiWatt_StateBoss_FinishedLaserAttack(void);
+void HotaruHiWatt_StateBoss_Destroyed(void);
+void HotaruHiWatt_StateBoss_Finished(void);
 
 #endif //!OBJ_HOTARUHIWATT_H

@@ -15,8 +15,8 @@ struct ObjectMSBomb {
 struct EntityMSBomb {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int timer;
+    int32 unused;
+    int32 timer;
     Hitbox hitbox;
     Animator animator;
 };
@@ -38,10 +38,10 @@ void MSBomb_EditorLoad(void);
 void MSBomb_Serialize(void);
 
 // Extra Entity Functions
-void MSBomb_Unknown1(void);
-void MSBomb_Unknown2(void);
-void MSBomb_Unknown3(void);
-void MSBomb_Unknown4(void);
+void MSBomb_State_EnterBomb(void);
+void MSBomb_State_SilverSonicExplode(void);
+void MSBomb_State_Bouncing(void);
+void MSBomb_State_Projectile(void);
 
 #endif
 

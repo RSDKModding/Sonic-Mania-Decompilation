@@ -26,36 +26,34 @@ void TimePost_Draw(void)
     if (self->state) {
         self->drawFX = FX_SCALE;
 
-        int scaleX2 = abs(RSDK.Cos512(self->rotation));
-        int scaleX1 = abs(RSDK.Sin512(self->rotation));
-
-        Vector2 drawPos, drawPos2;
+        Vector2 sidePos, faceplatePos;
         switch (self->rotation >> 7) {
             case 0:
             case 2:
-                drawPos2.x = self->position.x + (scaleX1 << 9);
-                drawPos2.y = self->position.y;
-                drawPos.x  = -0x500 * scaleX2 - (scaleX1 << 9) + drawPos2.x;
-                drawPos.y  = self->position.y;
+                faceplatePos.x = self->position.x + (abs(RSDK.Sin512(self->rotation)) << 9);
+                faceplatePos.y = self->position.y;
+                sidePos.x      = -0x500 * abs(RSDK.Cos512(self->rotation)) - (abs(RSDK.Sin512(self->rotation)) << 9) + faceplatePos.x;
+                sidePos.y      = self->position.y;
                 break;
+
             case 1:
             case 3:
-                drawPos2.x = self->position.x - (scaleX1 << 9);
-                drawPos2.y = self->position.y;
-                drawPos.x  = ((scaleX1 - 32) << 9) + drawPos2.x + 0x500 * scaleX2;
-                drawPos.y  = self->position.y;
+                faceplatePos.x = self->position.x - (abs(RSDK.Sin512(self->rotation)) << 9);
+                faceplatePos.y = self->position.y;
+                sidePos.x      = ((abs(RSDK.Sin512(self->rotation)) - 32) << 9) + faceplatePos.x + 0x500 * abs(RSDK.Cos512(self->rotation));
+                sidePos.y      = self->position.y;
                 break;
             default: break;
         }
 
-        self->scale.x = scaleX1;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        self->scale.x = abs(RSDK.Sin512(self->rotation));
+        RSDK.DrawSprite(&self->sideAnimator, &sidePos, false);
 
-        self->scale.x = scaleX2;
-        RSDK.DrawSprite(&self->animator1, &drawPos2, false);
+        self->scale.x = abs(RSDK.Cos512(self->rotation));
+        RSDK.DrawSprite(&self->faceplateAnimator, &faceplatePos, false);
 
         self->drawFX = FX_NONE;
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->standAnimator, NULL, false);
     }
 }
 
@@ -64,9 +62,9 @@ void TimePost_Create(void *data)
     RSDK_THIS(TimePost);
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->animator2, true, 1);
-        RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->animator3, true, 2);
+        RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->faceplateAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->sideAnimator, true, 1);
+        RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->standAnimator, true, 2);
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->visible       = true;
@@ -74,7 +72,7 @@ void TimePost_Create(void *data)
         self->spinSpeed     = 0x3000;
         self->spinCount     = 8;
         self->maxAngle      = 0x10000;
-        self->scale.y       = 512;
+        self->scale.y       = 0x200;
         self->active        = ACTIVE_BOUNDS;
         self->state         = TimePost_State_Setup;
     }
@@ -84,14 +82,17 @@ void TimePost_StageLoad(void)
 {
     TimePost->aniFrames      = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE);
     TimePost->sparkleFrames  = RSDK.LoadSpriteAnimation("SSZ1/TTSparkle.bin", SCOPE_STAGE);
-    TimePost->hitbox1.left   = -16;
-    TimePost->hitbox1.top    = -40;
-    TimePost->hitbox1.right  = 16;
-    TimePost->hitbox1.bottom = -24;
-    TimePost->hitbox2.left   = -8;
-    TimePost->hitbox2.top    = -24;
-    TimePost->hitbox2.right  = 8;
-    TimePost->hitbox2.bottom = 24;
+
+    TimePost->hitbox.left   = -16;
+    TimePost->hitbox.top    = -40;
+    TimePost->hitbox.right  = 16;
+    TimePost->hitbox.bottom = -24;
+
+    TimePost->hitboxItemBox.left   = -8;
+    TimePost->hitboxItemBox.top    = -24;
+    TimePost->hitboxItemBox.right  = 8;
+    TimePost->hitboxItemBox.bottom = 24;
+
     TimePost->sfxFuture      = RSDK.GetSfx("SSZ1/Future.wav");
 }
 
@@ -101,10 +102,9 @@ void TimePost_Spin(void)
 
     self->angle += self->spinSpeed;
     if (self->angle >= self->maxAngle) {
-        --self->spinCount;
         self->maxAngle += 0x20000;
-        self->spinSpeed = minVal(0x600 * (self->spinCount + 1), 0x3000);
-        if (!self->spinCount) {
+        self->spinSpeed = minVal(0x600 * self->spinCount, 0x3000);
+        if (!--self->spinCount) {
             self->spinSpeed = 0;
             self->angle     = 0x10000;
         }
@@ -116,23 +116,23 @@ void TimePost_CheckPlayerCollisions(void)
 {
     RSDK_THIS(TimePost);
 
-    int playerID = 0;
+    int32 playerID = 0;
     foreach_active(Player, player)
     {
-        if ((!RSDK.GetEntityID(player) || globals->gameMode == MODE_COMPETITION) && !((1 << playerID) & self->field_78)
+        if ((!RSDK.GetEntityID(player) || globals->gameMode == MODE_COMPETITION) && !((1 << playerID) & self->activePlayers)
             && player->position.x > self->position.x) {
             RSDK.PlaySfx(TimePost->sfxFuture, false, 255);
             self->active = ACTIVE_NORMAL;
             if (player->superState == SUPERSTATE_SUPER)
                 player->superState = SUPERSTATE_FADEOUT;
 
-            int vel = 0;
+            int32 vel = 0;
             if (player->onGround)
                 vel = player->groundVel;
             else
                 vel = player->velocity.x;
             self->velocity.y          = -(vel >> 1);
-            self->field_64            = vel / 96;
+            self->gravityStrength            = vel / 96;
             SceneInfo->timeEnabled = false;
             self->state               = TimePost_State_Spin;
         }
@@ -140,18 +140,18 @@ void TimePost_CheckPlayerCollisions(void)
     }
 }
 
-void TimePost_ParticleCB_TimeSparkles(EntityDebris *entity)
+void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris)
 {
-    RSDK.SetSpriteAnimation(TimePost->sparkleFrames, 0, &entity->animator, true, 0);
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    entity->timer         = 180;
+    RSDK.SetSpriteAnimation(TimePost->sparkleFrames, 0, &debris->animator, true, 0);
+    debris->updateRange.x = 0x800000;
+    debris->updateRange.y = 0x800000;
+    debris->drawOrder     = Zone->drawOrderHigh;
+    debris->timer         = 180;
 }
 
 void TimePost_HandleTimeSparkles(void)
 {
-    bool32 flag = true;
+    bool32 spawnedDebris = true;
     if (!(Zone->timer % 5)) {
         foreach_active(Player, player)
         {
@@ -160,7 +160,7 @@ void TimePost_HandleTimeSparkles(void)
                 range.x = 0;
                 range.y = 0;
                 if (RSDK.CheckOnScreen(player, &range)) {
-                    flag = false;
+                    spawnedDebris = false;
                     ParticleHelpers_SetupParticleFX(Debris_State_Move, TimePost_ParticleCB_TimeSparkles, 0, player->position.x,
                                              player->position.y, 0x200000, 0x200000);
                 }
@@ -193,45 +193,49 @@ void TimePost_State_FinishedSpin(void) { TimePost_HandleTimeSparkles(); }
 void TimePost_EditorDraw(void)
 {
     RSDK_THIS(TimePost);
-    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->animator2, false, 1);
-    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->animator3, false, 2);
+    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->faceplateAnimator, false, 0);
+    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->sideAnimator, false, 1);
+    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &self->standAnimator, false, 2);
 
     self->drawFX = FX_SCALE;
 
-    int scaleX2 = abs(RSDK.Cos512(self->rotation));
-    int scaleX1 = abs(RSDK.Sin512(self->rotation));
-
-    Vector2 drawPos, drawPos2;
+    Vector2 sidePos, faceplatePos;
     switch (self->rotation >> 7) {
         case 0:
         case 2:
-            drawPos2.x = self->position.x + (scaleX1 << 9);
-            drawPos2.y = self->position.y;
-            drawPos.x  = -0x500 * scaleX2 - (scaleX1 << 9) + drawPos2.x;
-            drawPos.y  = self->position.y;
+            faceplatePos.x = self->position.x + (abs(RSDK.Sin512(self->rotation)) << 9);
+            faceplatePos.y = self->position.y;
+            sidePos.x      = -0x500 * abs(RSDK.Cos512(self->rotation)) - (abs(RSDK.Sin512(self->rotation)) << 9) + faceplatePos.x;
+            sidePos.y      = self->position.y;
             break;
+
         case 1:
         case 3:
-            drawPos2.x = self->position.x - (scaleX1 << 9);
-            drawPos2.y = self->position.y;
-            drawPos.x  = ((scaleX1 - 32) << 9) + drawPos2.x + 0x500 * scaleX2;
-            drawPos.y  = self->position.y;
+            faceplatePos.x = self->position.x - (abs(RSDK.Sin512(self->rotation)) << 9);
+            faceplatePos.y = self->position.y;
+            sidePos.x      = ((abs(RSDK.Sin512(self->rotation)) - 32) << 9) + faceplatePos.x + 0x500 * abs(RSDK.Cos512(self->rotation));
+            sidePos.y      = self->position.y;
             break;
         default: break;
     }
 
-    self->scale.x = scaleX1;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    self->scale.x = abs(RSDK.Sin512(self->rotation));
+    RSDK.DrawSprite(&self->sideAnimator, &sidePos, false);
 
-    self->scale.x = scaleX2;
-    RSDK.DrawSprite(&self->animator1, &drawPos2, false);
+    self->scale.x = abs(RSDK.Cos512(self->rotation));
+    RSDK.DrawSprite(&self->faceplateAnimator, &faceplatePos, false);
 
     self->drawFX = FX_NONE;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->standAnimator, NULL, false);
 }
 
-void TimePost_EditorLoad(void) { TimePost->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE); }
+void TimePost_EditorLoad(void)
+{
+    TimePost->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TimePost, type); // might have been "Past"/"Future" at one point?
+    RSDK_ENUM_VAR("Unused", 0);
+}
 #endif
 
 void TimePost_Serialize(void) { RSDK_EDITABLE_VAR(TimePost, VAR_UINT8, type); }

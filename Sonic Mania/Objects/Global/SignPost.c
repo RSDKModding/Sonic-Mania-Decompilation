@@ -168,19 +168,20 @@ void SignPost_StageLoad(void)
     SignPost->hitbox.right         = 24;
     SignPost->hitbox.bottom        = 8;
 
-    SignPost->itemBoxHitbox.left   = -8;
-    SignPost->itemBoxHitbox.top    = 20;
-    SignPost->itemBoxHitbox.right  = 8;
-    SignPost->itemBoxHitbox.bottom = 24;
+    SignPost->hitboxItemBox.left   = -8;
+    SignPost->hitboxItemBox.top    = 20;
+    SignPost->hitboxItemBox.right  = 8;
+    SignPost->hitboxItemBox.bottom = 24;
 
     SignPost->maxPlayerCount       = (1 << Player->playerCount) - 1;
 
-    DEBUGMODE_ADD_OBJ(SignPost);
     SignPost->sfxSignPost     = RSDK.GetSfx("Global/SignPost.wav");
     SignPost->sfxSignPost2P   = RSDK.GetSfx("Global/SignPost2p.wav");
     SignPost->sfxTwinkle      = RSDK.GetSfx("Global/Twinkle.wav");
     SignPost->sfxBubbleBounce = RSDK.GetSfx("Global/BubbleBounce.wav");
     SignPost->sfxSlide        = RSDK.GetSfx("Global/Slide.wav");
+
+    DEBUGMODE_ADD_OBJ(SignPost);
 }
 
 void SignPost_DebugSpawn(void)
@@ -525,7 +526,7 @@ void SignPost_State_Fall(void)
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
         foreach_active(ItemBox, itemBox) {
             if (itemBox->hidden) {
-                if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, self, &SignPost->itemBoxHitbox)) {
+                if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, self, &SignPost->hitboxItemBox)) {
                     RSDK.PlaySfx(SignPost->sfxBubbleBounce, false, 255);
                     itemBox->velocity.y = -0x50000;
                     itemBox->hidden     = 0;
@@ -601,6 +602,8 @@ void SignPost_EditorDraw(void)
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         int32 left   = self->vsBoundsOffset.x - (self->vsBoundsSize.x >> 1);
         int32 top    = self->vsBoundsOffset.y - (self->vsBoundsSize.y >> 1);
         int32 right  = self->vsBoundsOffset.x + (self->vsBoundsSize.x >> 1);
@@ -626,6 +629,8 @@ void SignPost_EditorDraw(void)
             self->updateRange.y = bottom + 0x400000;
 
         DrawHelpers_DrawArenaBounds(0xFFFF00, 1 | 2 | 4 | 8, left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16);
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

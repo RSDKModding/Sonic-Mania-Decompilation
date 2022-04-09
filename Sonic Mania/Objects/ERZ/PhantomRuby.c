@@ -60,20 +60,20 @@ void PhantomRuby_StageLoad(void)
 {
     PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE);
 
-    PhantomRuby->sfxL[0]  = RSDK.GetSfx("Ruby/Attack1_L.wav");
-    PhantomRuby->sfxR[0]  = RSDK.GetSfx("Ruby/Attack1_R.wav");
-    PhantomRuby->sfxL[1]  = RSDK.GetSfx("Ruby/Attack2_L.wav");
-    PhantomRuby->sfxR[1]  = RSDK.GetSfx("Ruby/Attack2_R.wav");
-    PhantomRuby->sfxL[2]  = RSDK.GetSfx("Ruby/Attack3_L.wav");
-    PhantomRuby->sfxR[2]  = RSDK.GetSfx("Ruby/Attack3_R.wav");
-    PhantomRuby->sfxL[3]  = RSDK.GetSfx("Ruby/Attack4_L.wav");
-    PhantomRuby->sfxR[3]  = RSDK.GetSfx("Ruby/Attack4_R.wav");
-    PhantomRuby->sfxL[4]  = RSDK.GetSfx("Ruby/Attack5_L.wav");
-    PhantomRuby->sfxR[4]  = RSDK.GetSfx("Ruby/Attack5_R.wav");
-    PhantomRuby->sfxL[5]  = RSDK.GetSfx("Ruby/Attack6_L.wav");
-    PhantomRuby->sfxR[5]  = RSDK.GetSfx("Ruby/Attack6_R.wav");
-    PhantomRuby->sfxL[6]  = RSDK.GetSfx("Ruby/RedCube_L.wav");
-    PhantomRuby->sfxR[6]  = RSDK.GetSfx("Ruby/RedCube_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_ATTACK1 - 1] = RSDK.GetSfx("Ruby/Attack1_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_ATTACK1 - 1] = RSDK.GetSfx("Ruby/Attack1_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_ATTACK2 - 1] = RSDK.GetSfx("Ruby/Attack2_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_ATTACK2 - 1] = RSDK.GetSfx("Ruby/Attack2_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_ATTACK3 - 1] = RSDK.GetSfx("Ruby/Attack3_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_ATTACK3 - 1] = RSDK.GetSfx("Ruby/Attack3_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_ATTACK4 - 1] = RSDK.GetSfx("Ruby/Attack4_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_ATTACK4 - 1] = RSDK.GetSfx("Ruby/Attack4_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_ATTACK5 - 1] = RSDK.GetSfx("Ruby/Attack5_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_ATTACK5 - 1] = RSDK.GetSfx("Ruby/Attack5_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_ATTACK6 - 1] = RSDK.GetSfx("Ruby/Attack6_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_ATTACK6 - 1] = RSDK.GetSfx("Ruby/Attack6_R.wav");
+    PhantomRuby->sfxL[RUBYSFX_REDCUBE - 1] = RSDK.GetSfx("Ruby/RedCube_L.wav");
+    PhantomRuby->sfxR[RUBYSFX_REDCUBE - 1] = RSDK.GetSfx("Ruby/RedCube_R.wav");
 }
 
 void PhantomRuby_PlaySFX(uint8 sfxID)
@@ -126,13 +126,14 @@ void PhantomRuby_State_Oscillate(void)
     self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 }
 
-void PhantomRuby_State_FallOffScreen(void)
+void PhantomRuby_State_MoveGravity(void)
 {
     RSDK_THIS(PhantomRuby);
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (self->position.y > (Zone->cameraBoundsB[0] + 64) << 16)
         self->state = StateMachine_None;
 }
@@ -144,6 +145,7 @@ void PhantomRuby_State_MoveRotateGravity(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     self->rotation = (self->rotation + 5) & 0x1FF;
 }
 
@@ -209,7 +211,23 @@ void PhantomRuby_EditorDraw(void)
     PhantomRuby_Draw();
 }
 
-void PhantomRuby_EditorLoad(void) { PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE); }
+void PhantomRuby_EditorLoad(void)
+{
+    PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PhantomRuby, sfx);
+    RSDK_ENUM_VAR("None", RUBYSFX_NONE);
+    RSDK_ENUM_VAR("Attack 1", RUBYSFX_ATTACK1);
+    RSDK_ENUM_VAR("Attack 2", RUBYSFX_ATTACK2);
+    RSDK_ENUM_VAR("Attack 3", RUBYSFX_ATTACK3);
+    RSDK_ENUM_VAR("Attack 4", RUBYSFX_ATTACK4);
+    RSDK_ENUM_VAR("Attack 5", RUBYSFX_ATTACK5);
+    RSDK_ENUM_VAR("Attack 6", RUBYSFX_ATTACK6);
+    RSDK_ENUM_VAR("Red Cube", RUBYSFX_REDCUBE);
+}
 #endif
 
-void PhantomRuby_Serialize(void) { RSDK_EDITABLE_VAR(PhantomRuby, VAR_UINT8, sfx); }
+void PhantomRuby_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(PhantomRuby, VAR_UINT8, sfx);
+}

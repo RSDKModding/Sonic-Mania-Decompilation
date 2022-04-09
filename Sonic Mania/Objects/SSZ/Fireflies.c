@@ -35,12 +35,13 @@ void Fireflies_Create(void *data)
         self->drawFX        = FX_FLIP;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         if (data) {
             self->inkEffect = INK_ADD;
-            self->state     = Fireflies_State_Unknown2;
+            self->state     = Fireflies_State_Firefly;
         }
         else {
-            self->state       = Fireflies_State_Unknown1;
+            self->state       = Fireflies_State_Spawner;
             self->screenCount = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT);
         }
     }
@@ -48,70 +49,60 @@ void Fireflies_Create(void *data)
 
 void Fireflies_StageLoad(void) { Fireflies->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Fireflies.bin", SCOPE_STAGE); }
 
-void Fireflies_State_Unknown1(void)
+void Fireflies_State_Spawner(void)
 {
     RSDK_THIS(Fireflies);
 
     if (self->timer <= 0) {
         self->timer = 1;
-        if (Fireflies->field_8 < 48) {
-            Vector2 pos1, pos2;
+        if (Fireflies->activeFireflyCount < 48) {
+            Vector2 startPos, points[1];
 
             RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
-            int x              = ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
-            int y              = ((screen->height & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
+            int32 x                = ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
+            int32 y                = ((screen->height & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
 #if RETRO_USE_PLUS
-            int w = RSDK.RandSeeded(-screen->width, screen->width, &Zone->randSeed);
-            int h = RSDK.RandSeeded(-screen->height, screen->height, &Zone->randSeed);
+            int32 w = RSDK.RandSeeded(-screen->width, screen->width, &Zone->randSeed);
+            int32 h = RSDK.RandSeeded(-screen->height, screen->height, &Zone->randSeed);
 #else
-            int w               = RSDK.Rand(-screen->width, screen->width);
-            int h               = RSDK.Rand(-screen->height, screen->height);
-#endif
-            pos1.y = y + (h << 16);
-            pos1.x = x + (w << 16);
-#if RETRO_USE_PLUS
-            int type = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
-#else
-            int type            = RSDK.Rand(0, 10) > 7;
+            int32 w             = RSDK.Rand(-screen->width, screen->width);
+            int32 h             = RSDK.Rand(-screen->height, screen->height);
 #endif
 
-            EntityFireflies *fireflies = CREATE_ENTITY(Fireflies, intToVoid(true), pos1.x, pos1.y);
-            RSDK.SetSpriteAnimation(Fireflies->aniFrames, type ? 3 : 0, &fireflies->animator, true, 0);
-            if (type)
+            startPos.x = x + (w << 16);
+            startPos.y = y + (h << 16);
+#if RETRO_USE_PLUS
+            bool32 isLarge = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
+#else
+            bool32 isLarge      = RSDK.Rand(0, 10) > 7;
+#endif
+
+            EntityFireflies *fireflies = CREATE_ENTITY(Fireflies, intToVoid(true), startPos.x, startPos.y);
+            RSDK.SetSpriteAnimation(Fireflies->aniFrames, isLarge ? 3 : 0, &fireflies->animator, true, 0);
+            if (isLarge)
                 fireflies->drawOrder = Zone->drawOrderHigh;
             else
                 fireflies->drawOrder = 1;
 
 #if RETRO_USE_PLUS
-            fireflies->field_84 = RSDK.RandSeeded(45, 75, &Zone->randSeed);
+            fireflies->duration = RSDK.RandSeeded(45, 75, &Zone->randSeed);
 #else
-            fireflies->field_84 = RSDK.Rand(45, 75);
+            fireflies->duration = RSDK.Rand(45, 75);
 #endif
             fireflies->updateRange.x = 0x800000;
             fireflies->updateRange.y = 0x800000;
             fireflies->active        = ACTIVE_NORMAL;
-            fireflies->pos1          = pos1;
+            fireflies->points[0]     = startPos;
 
 #if RETRO_USE_PLUS
-            int amplitude = RSDK.RandSeeded(32, 128, &Zone->randSeed);
-            int angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
+            int32 amplitude = RSDK.RandSeeded(32, 128, &Zone->randSeed);
+            int32 angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
 #else
-            int amplitude       = RSDK.Rand(32, 128);
-            int angle           = RSDK.Rand(0, 511);
+            int32 amplitude     = RSDK.Rand(32, 128);
+            int32 angle         = RSDK.Rand(0, 511);
 #endif
-            int x4 = pos1.x + amplitude * (RSDK.Cos512(angle) << 7);
-            int y4 = amplitude * (RSDK.Sin512(angle) << 7) + pos1.y;
-
-#if RETRO_USE_PLUS
-            amplitude = RSDK.RandSeeded(32, 64, &Zone->randSeed);
-            angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
-#else
-            amplitude           = RSDK.Rand(32, 64);
-            angle               = RSDK.Rand(0, 511);
-#endif
-            pos2.x          = pos1.x + amplitude * (RSDK.Cos512(angle) << 7);
-            pos2.y          = amplitude * (RSDK.Sin512(angle) << 7) + pos1.y;
-            fireflies->pos2 = pos2;
+            int midPosX = startPos.x + amplitude * (RSDK.Cos512(angle) << 7);
+            int midPosY = startPos.y + amplitude * (RSDK.Sin512(angle) << 7);
 
 #if RETRO_USE_PLUS
             amplitude = RSDK.RandSeeded(32, 64, &Zone->randSeed);
@@ -120,13 +111,23 @@ void Fireflies_State_Unknown1(void)
             amplitude           = RSDK.Rand(32, 64);
             angle               = RSDK.Rand(0, 511);
 #endif
-            fireflies->pos3.x = x4 + amplitude * (RSDK.Cos512(angle) << 7);
-            fireflies->pos3.y = amplitude * (RSDK.Sin512(angle) << 7) + y4;
+            fireflies->points[1].x = midPosX;
+            fireflies->points[1].y = midPosY;
 
-            fireflies->pos4.x = x4;
-            fireflies->pos4.y = y4;
+#if RETRO_USE_PLUS
+            amplitude = RSDK.RandSeeded(32, 64, &Zone->randSeed);
+            angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
+#else
+            amplitude           = RSDK.Rand(32, 64);
+            angle               = RSDK.Rand(0, 511);
+#endif
+            fireflies->points[2].x = midPosX + amplitude * (RSDK.Cos512(angle) << 7);
+            fireflies->points[2].y = midPosY + amplitude * (RSDK.Sin512(angle) << 7);
 
-            ++Fireflies->field_8;
+            fireflies->points[3].x = midPosX;
+            fireflies->points[3].y = midPosY;
+
+            ++Fireflies->activeFireflyCount;
 
             self->screenID = (self->screenID + 1) % self->screenCount;
         }
@@ -136,49 +137,51 @@ void Fireflies_State_Unknown1(void)
     }
 }
 
-void Fireflies_State_Unknown2(void)
+void Fireflies_State_Firefly(void)
 {
     RSDK_THIS(Fireflies);
 
-    int frame = 0, anim = 0, anim2 = 0;
+    int32 frame = 0, animLow = 0, animHigh = 0;
     if (self->animator.animationID % 3 || self->animator.frameID != self->animator.frameCount - 1) {
-        if (self->timer == self->field_84 - 28) {
-            frame = 0;
-            anim2 = 5;
-            anim  = 2;
+        if (self->timer == self->duration - 28) {
+            frame    = 0;
+            animLow  = 2;
+            animHigh = 5;
             if (self->drawOrder == Zone->drawOrderHigh)
-                anim = anim2;
+                animLow = animHigh;
 
-            RSDK.SetSpriteAnimation(Fireflies->aniFrames, anim, &self->animator, true, frame);
+            RSDK.SetSpriteAnimation(Fireflies->aniFrames, animLow, &self->animator, true, frame);
         }
     }
     else {
-        frame = self->animator.animationID % 3;
-        anim  = 1;
-        anim2 = 4;
+        frame    = self->animator.animationID % 3;
+        animLow  = 1;
+        animHigh = 4;
         if (self->drawOrder == Zone->drawOrderHigh)
-            anim = anim2;
+            animLow = animHigh;
 
-        RSDK.SetSpriteAnimation(Fireflies->aniFrames, anim, &self->animator, true, frame);
+        RSDK.SetSpriteAnimation(Fireflies->aniFrames, animLow, &self->animator, true, frame);
     }
 
-    int percent      = (self->timer << 16) / self->field_84;
-    self->position = MathHelpers_GetBezierPoint(percent, self->pos1.x, self->pos1.y, self->pos2.x, self->pos2.y, self->pos3.x, self->pos3.y,
-                                            self->pos4.x, self->pos4.y);
+    int32 percent  = (self->timer << 16) / self->duration;
+    self->position = MathHelpers_GetBezierPoint(percent, self->points[0].x, self->points[0].y, self->points[1].x, self->points[1].y,
+                                                self->points[2].x, self->points[2].y, self->points[3].x, self->points[3].y);
     if (!percent)
-        self->position = self->pos1;
+        self->position = self->points[0];
 
-    if (self->timer < self->field_84 - 8) {
-        if (self->alpha < 256)
-            self->alpha += 32;
+    if (self->timer < self->duration - 8) {
+        if (self->alpha < 0x100)
+            self->alpha += 0x20;
     }
     else {
-        self->alpha -= 32;
+        self->alpha -= 0x20;
     }
-    if (self->timer >= self->field_84) {
+
+    if (self->timer >= self->duration) {
         destroyEntity(self);
-        --Fireflies->field_8;
+        --Fireflies->activeFireflyCount;
     }
+
     RSDK.ProcessAnimation(&self->animator);
     ++self->timer;
 }

@@ -703,9 +703,8 @@ void ProcessObjectDrawLists()
                             }
 
 #if RETRO_VER_EGS || RETRO_USE_DUMMY_ACHIEVEMENTS
-                            if (i == list->entityCount - 1) {
+                            if (i == list->entityCount - 1)
                                 SKU::DrawAchievements();
-                            }
 #endif
 
                             sceneInfo.entity->activeScreens |= validDraw << sceneInfo.currentScreenID;
@@ -719,6 +718,7 @@ void ProcessObjectDrawLists()
                             layer->scanlineCallback(scanlines);
                         else
                             ProcessParallax(layer);
+
                         switch (layer->type) {
                             case LAYER_HSCROLL: DrawLayerHScroll(layer); break;
                             case LAYER_VSCROLL: DrawLayerVScroll(layer); break;

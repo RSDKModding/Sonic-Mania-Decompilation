@@ -151,12 +151,12 @@ void UITAZoneModule_Setup(void)
     }
 #if !RETRO_USE_PLUS
     else if (self->processButtonCB == UITAZoneModule_ProcessButtonCB_Expanded) {
-        self->touchPosSize[0].x       = 0x9C0000;
-        self->touchPosSize[0].y       = 0x2C0000;
-        self->touchPosSize[1].x       = 0x9C0000;
-        self->touchPosSize[1].y       = 0x2C0000;
-        self->touchPosOffsetM[0].x       = -0x4E0000;
-        self->touchPosOffsetM[1].x       = 0x4E0000;
+        self->touchPosSizeM[0].x   = 0x9C0000;
+        self->touchPosSizeM[0].y   = 0x2C0000;
+        self->touchPosSizeM[1].x   = 0x9C0000;
+        self->touchPosSizeM[1].y   = 0x2C0000;
+        self->touchPosOffsetM[0].x = -0x4E0000;
+        self->touchPosOffsetM[1].x = 0x4E0000;
         self->touchPosCallbacks[0] = UITAZoneModule_TouchCB_Left;
         self->touchPosCallbacks[1] = UITAZoneModule_TouchCB_Right;
         self->touchPosCount        = 2;

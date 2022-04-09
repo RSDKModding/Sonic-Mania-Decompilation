@@ -8,9 +8,9 @@ struct ObjectRTeleporter {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    uint16 field_E;
-    uint16 field_10;
-    uint16 field_12;
+    uint16 unused1;
+    uint16 unused2;
+    uint16 unused3;
     uint16 sfxExplosion;
     uint16 sfxGoodFuture;
 };
@@ -20,10 +20,10 @@ struct EntityRTeleporter {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int32 startY;
+    int32 originY;
     int32 timer;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator electricAnimator;
 };
 
 // Object Struct

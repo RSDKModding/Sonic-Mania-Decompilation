@@ -34,13 +34,14 @@ void MSBomb_Create(void *data)
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->drawOrder = Zone->drawOrderLow;
+
     if (data) {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 1, &self->animator, true, 0);
         self->hitbox.left   = -4;
         self->hitbox.top    = -4;
         self->hitbox.right  = 4;
         self->hitbox.bottom = 4;
-        self->state         = MSBomb_Unknown4;
+        self->state         = MSBomb_State_Projectile;
     }
     else {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 0, &self->animator, true, 0);
@@ -51,17 +52,18 @@ void MSBomb_Create(void *data)
         self->drawFX        = FX_SCALE;
         self->scale.x       = 0xC0;
         self->scale.y       = 0xC0;
-        self->state         = MSBomb_Unknown1;
+        self->state         = MSBomb_State_EnterBomb;
     }
 }
 
 void MSBomb_StageLoad(void)
 {
     MSBomb->aniFrames    = RSDK.LoadSpriteAnimation("SSZ2/MSBomb.bin", SCOPE_STAGE);
+
     MSBomb->sfxExplosion = RSDK.GetSfx("Stage/Explosion4.wav");
 }
 
-void MSBomb_Unknown1(void)
+void MSBomb_State_EnterBomb(void)
 {
     RSDK_THIS(MSBomb);
 
@@ -71,7 +73,7 @@ void MSBomb_Unknown1(void)
 
     if (self->scale.x >= 0x200) {
         self->drawFX = FX_NONE;
-        self->state  = MSBomb_Unknown3;
+        self->state  = MSBomb_State_Bouncing;
     }
     else {
         self->scale.x += 0x40;
@@ -79,17 +81,18 @@ void MSBomb_Unknown1(void)
     }
 }
 
-void MSBomb_Unknown2(void)
+// Not sure why this is part of MSBomb but alright
+void MSBomb_State_SilverSonicExplode(void)
 {
-    RSDK_THIS(MSBomb);
+    RSDK_THIS(SilverSonic);
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
     if (self->scale.x >= 0x200) {
-        int yVel = 0x18000;
-        int xVel = 0x30000;
+        int32 yVel = 0x18000;
+        int32 xVel = 0x30000;
 
         foreach_active(MetalSonic, metal)
         {
@@ -115,7 +118,7 @@ void MSBomb_Unknown2(void)
         bomb->velocity.x   = xVel;
         bomb->velocity.y   = yVel;
 
-        RSDK.PlaySfx(MSBomb->sfxExplosion, false, 255);
+        RSDK.PlaySfx(MSBomb->sfxExplosion, false, 0xFF);
         RSDK.ResetEntityPtr(self, Explosion->objectID, intToVoid(EXPLOSION_BOSS));
         self->position.x = bomb->position.x;
         self->position.y = bomb->position.y;
@@ -126,7 +129,7 @@ void MSBomb_Unknown2(void)
     }
 }
 
-void MSBomb_Unknown3(void)
+void MSBomb_State_Bouncing(void)
 {
     RSDK_THIS(MSBomb);
 
@@ -135,11 +138,12 @@ void MSBomb_Unknown3(void)
     self->velocity.y += 0x3800;
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xA0000, true)) {
+        // Bounce
         self->velocity.y = -0x40000;
         if (self->timer > 0) {
             if (!--self->timer) {
-                int storeX = self->position.x;
-                int storeY = self->position.y;
+                int32 storeX = self->position.x;
+                int32 storeY = self->position.y;
                 RSDK.ResetEntityPtr(self, Explosion->objectID, intToVoid(EXPLOSION_BOSS));
                 self->position.x = storeX;
                 self->position.y = storeY;
@@ -157,6 +161,7 @@ void MSBomb_Unknown3(void)
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 if (Player_CheckHit(player, self))
                     player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
+
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
                 RSDK.PlaySfx(MSBomb->sfxExplosion, false, 255);
                 destroyEntity(self);
@@ -165,7 +170,7 @@ void MSBomb_Unknown3(void)
     }
 }
 
-void MSBomb_Unknown4(void)
+void MSBomb_State_Projectile(void)
 {
     RSDK_THIS(MSBomb);
 
@@ -182,7 +187,7 @@ void MSBomb_Unknown4(void)
     foreach_active(MetalSonic, metal)
     {
         if (RSDK.CheckObjectCollisionTouchBox(metal, metal->outerBox, self, &self->hitbox)) {
-            MetalSonic->field_8 = 16;
+            MetalSonic->invincibilityTimerPanel = 16;
             if (--metal->health <= 0) {
                 metal->timer = 0;
                 metal->state = MetalSonic_State_PanelExplosion;

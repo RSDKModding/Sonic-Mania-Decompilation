@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectDango {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxCurlRange;
     uint16 aniFrames;
     uint16 sfxBumper;
 };
@@ -17,8 +17,8 @@ struct EntityDango {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 timer2;
-    bool32 flag;
+    int32 rollDelay;
+    bool32 preventStateChange;
     Vector2 startPos;
     uint8 startDir;
     Animator animator;
@@ -46,24 +46,24 @@ void Dango_DebugDraw(void);
 
 void Dango_CheckOffScreen(void);
 void Dango_CheckPlayerCollisions(void);
-bool32 Dango_HandleTileCollisions(StateMachine(nextState), uint8 anim);
+bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim);
 
 void Dango_State_Setup(void);
-void Dango_State_Unknown1(void);
-void Dango_State_Unknown6(void);
-void Dango_State_Unknown2(void);
-void Dango_State_Unknown3(void);
-void Dango_State_Unknown4(void);
-void Dango_State_Unknown5(void);
-void Dango_State_Unknown7(void);
+void Dango_State_Walking(void);
+void Dango_State_Turning(void);
+void Dango_State_Falling_Uncurled(void);
+void Dango_State_Curling(void);
+void Dango_State_Rolling(void);
+void Dango_State_Falling_Curled(void);
+void Dango_State_Uncurling(void);
 
 #if RETRO_USE_PLUS
-void Dango_StateTaunt_Unknown1(void);
-void Dango_StateTaunt_Unknown2(void);
-void Dango_StateTaunt_Unknown3(void);
-void Dango_StateTaunt_Unknown4(void);
-void Dango_StateTaunt_Unknown5(void);
-void Dango_StateTaunt_Unknown6(void);
+void Dango_StateTaunt_Setup(void);
+void Dango_StateTaunt_RollIn(void);
+void Dango_StateTaunt_KnockedRuby(void);
+void Dango_StateTaunt_Taunting(void);
+void Dango_StateTaunt_Turning(void);
+void Dango_StateTaunt_RollOut(void);
 #endif
 
 #endif //!OBJ_DANGO_H

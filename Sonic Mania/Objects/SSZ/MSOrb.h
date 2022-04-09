@@ -16,8 +16,8 @@ struct EntityMSOrb {
     StateMachine(state);
     StateMachine(stateDraw);
     Animator animator;
-    int field_78;
-    int field_7C;
+    int32 unused1;
+    int32 unused2;
 };
 
 // Object Struct
@@ -39,6 +39,6 @@ void MSOrb_Serialize(void);
 // Extra Entity Functions
 void MSOrb_CheckPlayerCollisions(void);
 void MSOrb_State_Orb(void);
-void MSOrb_StateDraw_Orb(void);
+void MSOrb_Draw_Orb(void);
 
 #endif //!OBJ_MSORB_H

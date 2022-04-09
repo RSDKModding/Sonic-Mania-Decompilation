@@ -67,14 +67,9 @@ void BGSwitch_EditorDraw(void)
 
     if (showGizmos()) {
         // Bounds
-        RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y, self->position.x + self->size.x,
-                      self->position.y - self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(self->position.x - self->size.x, self->position.y + self->size.y, self->position.x + self->size.x,
-                      self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y, self->position.x - self->size.x,
-                      self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(self->position.x + self->size.x, self->position.y - self->size.y, self->position.x + self->size.x,
-                      self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK_DRAWING_OVERLAY(true);
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

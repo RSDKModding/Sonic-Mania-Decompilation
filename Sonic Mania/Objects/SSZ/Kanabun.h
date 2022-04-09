@@ -14,7 +14,7 @@ struct ObjectKanabun {
 struct EntityKanabun {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused;
     Vector2 startPos;
     uint8 startDir;
     int32 hVel;
@@ -49,7 +49,7 @@ void Kanabun_CheckOffScreen(void);
 void Kanabun_HandleMovement(void);
 
 void Kanabun_State_Setup(void);
-void Kanabun_State_Unknown1(void);
-void Kanabun_State_Unknown2(void);
+void Kanabun_State_Moving(void);
+void Kanabun_State_Turning(void);
 
 #endif //!OBJ_KANABUN_H

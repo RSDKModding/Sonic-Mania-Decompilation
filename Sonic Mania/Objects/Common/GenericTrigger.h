@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    GENERICTRIGGER_NONE,
+}GenericTriggerIDs;
+
 // Object Class
 struct ObjectGenericTrigger {
     RSDK_OBJECT

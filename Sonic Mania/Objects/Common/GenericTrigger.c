@@ -54,8 +54,11 @@ void GenericTrigger_EditorDraw(void)
     RSDK.SetSpriteAnimation(GenericTrigger->aniFrames, 0, &self->animator, true, 7);
     RSDK.DrawSprite(&self->animator, NULL, false);
 
-    if (showGizmos())
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
         DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x << 1, self->size.y << 1);
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void GenericTrigger_EditorLoad(void) { GenericTrigger->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

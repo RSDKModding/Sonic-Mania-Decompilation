@@ -13,8 +13,8 @@ struct ObjectMSPanel {
 struct EntityMSPanel {
     RSDK_ENTITY
     StateMachine(state);
-    Animator animator1;
-    Animator animator2;
+    Animator panelAnimator;
+    Animator cablesAnimator;
 };
 
 // Object Struct
@@ -34,9 +34,9 @@ void MSPanel_EditorLoad(void);
 void MSPanel_Serialize(void);
 
 // Extra Entity Functions
-void MSPanel_Unknown1(void);
-void MSPanel_Unknown2(void);
-void MSPanel_Unknown3(void);
-void MSPanel_Unknown4(void);
+void MSPanel_State_SetupPanel(void);
+void MSPanel_State_Active(void);
+void MSPanel_State_Explode(void);
+void MSPanel_State_Rumbling(void);
 
 #endif //!OBJ_MSPANEL_H

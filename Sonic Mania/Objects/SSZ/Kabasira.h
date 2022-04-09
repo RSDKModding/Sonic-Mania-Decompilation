@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define Kabasira_SegmentCount (4)
+
 // Object Class
 struct ObjectKabasira {
     RSDK_OBJECT
@@ -17,14 +19,14 @@ struct ObjectKabasira {
 struct EntityKabasira {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    int32 field_60;
+    int32 unused1;
+    int32 unused2;
     Vector2 startPos;
     uint8 startDir;
     int32 timer;
-    Animator animator1;
-    Animator animator2;
-    int32 field_A4;
+    Animator bodyAnimator;
+    Animator wingsAnimator;
+    int32 unused3;
 };
 
 // Object Struct
@@ -52,7 +54,7 @@ void Kabasira_DrawSegment(int32 angle, int32 alpha);
 void Kabasira_CheckPlayerCollisions(void);
 
 void Kabasira_State_Setup(void);
-void Kabasira_State_Unknown1(void);
-void Kabasira_State2_Unknown(void);
+void Kabasira_State_Moving(void);
+void Kabasira_State_LaunchedAttack(void);
 
 #endif //!OBJ_KABASIRA_H

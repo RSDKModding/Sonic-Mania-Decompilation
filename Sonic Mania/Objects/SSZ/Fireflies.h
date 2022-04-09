@@ -7,25 +7,22 @@
 struct ObjectFireflies {
     RSDK_OBJECT
     uint16 aniFrames;
-    int32 field_8;
+    int32 activeFireflyCount;
 };
 
 // Entity Class
 struct EntityFireflies {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused1;
     int32 timer;
-    int32 field_64;
-    int32 field_68;
+    int32 unused2;
+    int32 unused3;
     Animator animator;
-    int32 field_84;
+    int32 duration;
     int32 screenCount;
     int32 screenID;
-    Vector2 pos1;
-    Vector2 pos2;
-    Vector2 pos3;
-    Vector2 pos4;
+    Vector2 points[4];
 };
 
 // Object Struct
@@ -45,7 +42,7 @@ void Fireflies_EditorLoad(void);
 void Fireflies_Serialize(void);
 
 // Extra Entity Functions
-void Fireflies_State_Unknown1(void);
-void Fireflies_State_Unknown2(void);
+void Fireflies_State_Spawner(void);
+void Fireflies_State_Firefly(void);
 
 #endif //!OBJ_FIREFLIES_H

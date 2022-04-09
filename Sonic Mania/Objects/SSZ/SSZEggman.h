@@ -14,15 +14,15 @@ struct ObjectSSZEggman {
 struct EntitySSZEggman {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    Vector2 rubyPos;
+    int32 timer;
+    Vector2 originPos;
     Vector2 offset;
-    int speed;
+    int32 speed;
     EntityPhantomRuby *ruby;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Animator eggmanAnimator;
+    Animator seatAnimator;
+    Animator mobileAnimator;
+    Animator panelAnimator;
 };
 
 // Object Struct
@@ -42,11 +42,11 @@ void SSZEggman_EditorLoad(void);
 void SSZEggman_Serialize(void);
 
 // Extra Entity Functions
-void SSZEggman_Unknown1(void);
-void SSZEggman_Unknown2(void);
-void SSZEggman_Unknown3(void);
-void SSZEggman_Unknown4(void);
-void SSZEggman_Unknown5(void);
+void SSZEggman_State_Setup(void);
+void SSZEggman_State_HoldingRuby(void);
+void SSZEggman_State_ThrownRuby(void);
+void SSZEggman_State_WatchMetalTransform(void);
+void SSZEggman_State_FlyAway(void);
 #endif
 
 #endif //!OBJ_SSZEGGMAN_H

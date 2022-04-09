@@ -9,7 +9,7 @@ struct ObjectMonarchPlans {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    uint16 field_10;
+    uint16 unused;
     uint16 meshIndex;
     uint16 sceneIndex;
 };
@@ -17,20 +17,20 @@ struct ObjectMonarchPlans {
 // Entity Class
 struct EntityMonarchPlans {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
+    StateMachine(state); // unused
+    void *unused1;
+    void *unused2;
+    void *unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
+    int32 unused7;
     int32 rotationZ;
     int32 rotationY;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
-    Matrix matrix4;
+    Matrix matNormalTemp;
+    Matrix matWorldTemp;
+    Matrix matWorld;
+    Matrix matNormal;
 };
 
 // Object Struct

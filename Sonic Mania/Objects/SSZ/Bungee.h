@@ -17,9 +17,9 @@ struct EntityBungee {
     Vector2 bungeePos;
     int32 playerY[PLAYER_MAX];
     bool32 hasAttatchedPlayer;
-    Entity *attatchedPlayer;
-    int32 field_80;
-    int32 playerDeathBoundary[PLAYER_MAX];
+    EntityPlayer *attatchedPlayer;
+    int32 stretchForce;
+    int32 deathBoundary[PLAYER_MAX];
     uint8 timer;
 };
 

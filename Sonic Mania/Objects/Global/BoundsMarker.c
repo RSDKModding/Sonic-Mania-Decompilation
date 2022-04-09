@@ -118,6 +118,8 @@ void BoundsMarker_EditorDraw(void)
     self->updateRange.x = w >> 1;
 
     //Bounds
+    RSDK_DRAWING_OVERLAY(true);
+
     RSDK.DrawLine(self->position.x - w, self->position.y, self->position.x + w, self->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
     if (self->type == BOUNDSMARKER_BOTTOM_OFFSET) {
         RSDK.DrawLine(self->position.x + w, self->position.y - (self->offset << 16), self->position.x + w,
@@ -127,6 +129,8 @@ void BoundsMarker_EditorDraw(void)
         RSDK.DrawLine(self->position.x + w, self->position.y + (self->offset << 16), self->position.x + w,
                       self->position.y + (self->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
     }
+
+    RSDK_DRAWING_OVERLAY(false);
 }
 
 void BoundsMarker_EditorLoad(void)

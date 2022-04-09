@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define BouncePlant_NodeCount (8)
+
 // Object Class
 struct ObjectBouncePlant {
     RSDK_OBJECT
@@ -15,17 +17,17 @@ struct ObjectBouncePlant {
 struct EntityBouncePlant {
     RSDK_ENTITY
     StateMachine(state);
-    int32 timer;
-    Vector2 drawPos[8];
-    Vector2 drawPos2[8];
-    int32 unknown[8];
+    int32 recoilDuration;
+    Vector2 drawPos[BouncePlant_NodeCount];
+    Vector2 nodeStartPos[BouncePlant_NodeCount];
+    int32 recoilVelocity[BouncePlant_NodeCount];
     Vector2 stoodPos;
     bool32 stood;
-    bool32 speedFlag;
+    bool32 instantRecoil;
     int32 depression;
     int32 centerX;
-    Animator animator;
-    Animator animators[8];
+    Animator nodeAnimator;
+    Animator decorAnimators[BouncePlant_NodeCount];
 };
 
 // Object Struct
@@ -45,8 +47,8 @@ void BouncePlant_EditorLoad(void);
 void BouncePlant_Serialize(void);
 
 // Extra Entity Functions
-void BoucePlant_Unknown1(void);
-int32 BoucePlant_Unknown2(int32 x);
-int32 BoucePlant_Unknown3(int32 x);
+void BoucePlant_SetupNodePositions(void);
+int32 BoucePlant_GetNodeStandY(int32 x);
+int32 BoucePlant_GetNodeY(int32 x);
 
 #endif //!OBJ_BOUNCEPLANT_H

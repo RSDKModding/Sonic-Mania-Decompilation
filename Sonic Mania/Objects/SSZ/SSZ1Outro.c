@@ -130,12 +130,12 @@ bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host)
     return false;
 }
 
-void SSZ1Outro_DestroyHotaru(Entity *entity)
+void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru)
 {
-    CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), entity->position.x, entity->position.y);
-    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+    CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
+    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->drawOrderHigh;
     RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-    destroyEntity(entity);
+    destroyEntity(hotaru);
 }
 
 void SSZ1Outro_DestroyLeftoverHotarus(void)
@@ -143,7 +143,7 @@ void SSZ1Outro_DestroyLeftoverHotarus(void)
     foreach_active(HotaruMKII, hotaru)
     {
         if (!hotaru->type)
-            SSZ1Outro_DestroyHotaru((Entity *)hotaru);
+            SSZ1Outro_DestroyHotaru(hotaru);
     }
 }
 

@@ -230,6 +230,7 @@ bool32 TTCutscene_Cutscene_NextScene(EntityCutsceneSeq *host)
 void TTCutscene_EditorDraw(void)
 {
     RSDK_THIS(TTCutscene);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

@@ -4,7 +4,11 @@ from pathlib import Path
 
 USE64 = False
 
+for arg in sys.argv:
+    print(f"{arg}")
+
 if len(sys.argv) < 2:
+    print(f"Not enough arguments supplied... Exiting...")
     exit(1)
 
 TYPEMAP = {
@@ -25,7 +29,8 @@ TYPEMAP = {
 
 ALIASES = {
     "color": "int32",
-    "colour": "int32"
+    "colour": "int32",
+    "char": "uint8"
 }
 
 DEFINES = {
@@ -119,7 +124,7 @@ def deduce(delim):
         type = ALIASES[type]
 
     if type not in TYPEMAP:
-        print(f"UNKNOWN TYPE {type} IN {os.path.basename(path)} OBJECT STRUCT")
+        print(f"UNKNOWN TYPE {type} IN {os.path.basename(path)} OBJECT STRUCT, info: {type}")
         errflag = 1
         return
     name = readuntil(delim)
@@ -131,7 +136,7 @@ def deduce(delim):
         sp = curpos
         try: asize = eval(readuntil("]").strip(), DEFINES)
         except: 
-            print(f"INVALID ARRAY SIZE IN {os.path.basename(path)} OBJECT STRUCT")
+            print(f"INVALID ARRAY SIZE IN {os.path.basename(path)} OBJECT STRUCT, info: {name}")
             errflag = 1
             return
 
@@ -140,9 +145,10 @@ def deduce(delim):
     readuntil(delim) #read just to be sure
     t.append((name, tuple(TYPEMAP.keys()).index(type), asize, []))
 
-debugMode = False if len(sys.argv) < 5 else sys.argv[4] == "debug"
-plus = len(sys.argv) < 4 or sys.argv[3] == "plus"
-folder = "" if len(sys.argv) < 3 else sys.argv[2]
+debugMode   = False if len(sys.argv) < 5 else sys.argv[4] == "debug"
+plus        = len(sys.argv) < 4 or sys.argv[3] == "plus"
+folder      = "" if len(sys.argv) < 3 else sys.argv[2]
+staticCount = 0
 
 try: os.mkdir(f"{folder}Static")
 except: pass
@@ -150,7 +156,10 @@ except: pass
 for path in Path(sys.argv[1]).rglob("*.h"):
     mode        = 0
     prevMode    = 0
+    objName     = "[Object]"
     prepare(path)
+    if debugMode:
+        print(f"Scanning '{path}'")
     for l in readlines():
         if errflag:
             break
@@ -174,7 +183,14 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             mode = 5
             continue #ok do care
 
-        if mode < 5 and l.strip() == "typedef struct {":
+        if mode < 5 and l.strip().startswith("struct Object"):
+            backward()
+            readuntil(" ")
+            objName = readuntil(" ")
+            readuntil("{")
+            if debugMode:
+                print(f"Found Object: '{objName}'")
+
             mode = 1
             continue
         if mode == 1 and l.strip() == "RSDK_OBJECT":
@@ -193,21 +209,20 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             if l.strip().startswith("StateMachine"):
                 backward()
                 readuntil("(")
-                name = readuntil(")")
-                t.append((name, tuple(TYPEMAP.keys()).index("ptr"), 1, []))
+                stateName = readuntil(")")
+                t.append((stateName, tuple(TYPEMAP.keys()).index("ptr"), 1, []))
                 readuntil("\n") #hack :LOL:
                 continue
-            if l.strip().startswith("} "):
+            if l.strip().startswith("}"):
                 backward()
-                readuntil(" ")
-                name = readuntil(";")
-                if not name.startswith("Object"):
-                    print(f"{name} NOT AN OBJECT STRUCT BUT HAS RSDK_OBJECT ({os.path.basename(path)})")
+                readuntil(";")
+                if not objName.startswith("Object"):
+                    print(f"{objName} NOT AN OBJECT STRUCT BUT HAS RSDK_OBJECT ({os.path.basename(path)})")
                     break
-                name = name[6:]
+                objName = objName[6:]
                 if debugMode:
-                    print(f"{name} FINISHED")
-                objects[name] = t
+                    print(f"{objName} FINISHED")
+                objects[objName] = t
                 t = []
                 mode = 0
                 continue #I changed this specifically because of "SPZSetup" & "SPZ2Setup" sharing a file :LOL:
@@ -282,11 +297,16 @@ for key in objects:
             print("  ", tuple(TYPEMAP.keys())[type & (~0x80)], name + (f"[{size}]" if arr else ""))
 
     if hasVal:
+        if debugMode:
+            print(f"Building Object: '{key} [{hash}]'")
+
         with open(f"{folder}Static/{hash}.bin", "wb") as file:
             file.write(b)
             file.close()
+            staticCount = staticCount + 1
                 
 
+print(f"Built {staticCount} Static Objects in: {folder}Static/")
 
 
 

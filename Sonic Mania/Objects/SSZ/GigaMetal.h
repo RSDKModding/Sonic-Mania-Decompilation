@@ -17,23 +17,23 @@ typedef enum {
     GIGAMETAL_LASEREDGE,
     GIGAMETAL_LASERBEAM,
     GIGAMETAL_SHARD,
-}GigaMetalAnims;
+}GigaMetalAniIDs;
 
 // Object Class
 struct ObjectGigaMetal {
     RSDK_OBJECT
     int32 invincibleTimer;
-    int32 field_8;
+    int32 explodeTimer;
     uint16 aniFrames;
     uint16 sfxRoar;
     uint16 sfxImpact;
     uint16 sfxTarget;
     uint16 sfxPimpom;
     uint16 sfxCannon;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
+    Hitbox hitboxLaser;
+    Hitbox hitboxHand;
+    Hitbox hitboxCore;
+    Hitbox hitboxHead;
 };
 
 // Entity Class
@@ -41,29 +41,27 @@ struct EntityGigaMetal {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Entity *body;
-    Entity *head;
-    Entity *ruby;
-    Entity *cover;
-    Entity *shoulder;
-    Entity *frontArm;
-    Entity *backArm;
-    Entity *metalSonic;
+    EntityGigaMetal *body;
+    EntityGigaMetal *head;
+    EntityPhantomRuby *ruby;
+    EntityGigaMetal *cover;
+    EntityGigaMetal *shoulder;
+    EntityGigaMetal *frontArm;
+    EntityGigaMetal *backArm;
+    EntityMetalSonic *metalSonic;
     int32 timer;
     int32 health;
-    int32 field_88;
-    Vector2 field_8C;
-    Vector2 field_94;
-    Animator animator;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    int32 attackTimer;
+    Vector2 componentPos;
+    Vector2 targetPos;
+    Animator mainAnimator;
+    Animator jointAnimator;
+    Animator armAnimator;
+    Animator handAnimator;
     uint8 aniID;
     uint8 frameID;
-    int32 field_100;
-    int32 field_104;
-    int32 field_108;
-    int32 field_10C;
+    int32 rotationAngles[3];
+    int32 laserSize;
 };
 
 // Object Struct
@@ -83,48 +81,48 @@ void GigaMetal_EditorLoad(void);
 void GigaMetal_Serialize(void);
 
 // Extra Entity Functions
-void GigaMetal_StateDraw3_Unknown(void);
-void GigaMetal_StateDraw0_Unknown(void);
-void GigaMetal_StateDraw1_Unknown(void);
-void GigaMetal_StateDraw6_Unknown(void);
-void GigaMetal_StateDraw8_Unknown(void);
-void GigaMetal_StateDraw10_Unknown(void);
+void GigaMetal_Draw_Cover(void);
+void GigaMetal_Draw_Head(void);
+void GigaMetal_Draw_Shoulder(void);
+void GigaMetal_Draw_Arm(void);
+void GigaMetal_Draw_LaserEdge(void);
+void GigaMetal_Draw_Shard(void);
 
 void GigaMetal_HandleCameraMovement(void);
 
 void GigaMetal_CheckPlayerCollisions(void);
 void GigaMetal_Hit(void);
 
-void GigaMetal_State_SetupBounds(void);
-void GigaMetal_State_Unknown2(void);
-void GigaMetal_State_Unknown3(void);
-void GigaMetal_State_Unknown4(void);
-void GigaMetal_State_Unknown5(void);
-void GigaMetal_State_Destroyed(void);
+void GigaMetal_StateBody_SetupArena(void);
+void GigaMetal_StateBody_SetupComponents(void);
+void GigaMetal_StateBody_Transformed(void);
+void GigaMetal_StateBody_Roar(void);
+void GigaMetal_StateBody_Marching(void);
+void GigaMetal_StateBody_Destroyed(void);
 
-void GigaMetal_StateShoulder_Unknown1(void);
+void GigaMetal_StateShoulder_Impact(void);
 
-void GigaMetal_StateHead_Unknown3(void);
+void GigaMetal_StateHead_Impact(void);
 
-void GigaMetal_State8_Unknown(void);
+void GigaMetal_State_Laser(void);
 
-void GigaMetal_StateHead_Unknown10(void);
+void GigaMetal_StateLaser_Finish(void);
 
-void GigaMetal_State10_Unknown(void);
+void GigaMetal_State_Shard(void);
 
-void GigaMetal_StateHead_Unknown1(void);
-void GigaMetal_StateHead_Unknown2(void);
-void GigaMetal_StateHead_Unknown7(void);
-void GigaMetal_StateHead_Unknown4(void);
-void GigaMetal_StateHead_Unknown5(void);
-void GigaMetal_StateHead_Unknown6(void);
-void GigaMetal_StateHead_Unknown8(void);
-void GigaMetal_StateHead_Unknown9(void);
+void GigaMetal_StateHead_PrepareRoar(void);
+void GigaMetal_StateHead_Roar(void);
+void GigaMetal_StateHead_FinishRoar(void);
+void GigaMetal_StateHead_PrepareLaser(void);
+void GigaMetal_StateHead_ChargeLaser(void);
+void GigaMetal_StateHead_FiringLaser(void);
+void GigaMetal_StateHead_TargetingPlayer(void);
+void GigaMetal_StateHead_ReleasingBombs(void);
 
 void GigaMetal_HandleArmCollisions(void);
-void GigaMetal_StateArm_Unknown1(void);
-void GigaMetal_StateArm_Unknown2(void);
-void GigaMetal_StateArm_Unknown3(void);
+void GigaMetal_StateArm_Idle_Front(void);
+void GigaMetal_StateArm_Idle_Behind(void);
+void GigaMetal_StateArm_Marching(void);
 
 #endif
 

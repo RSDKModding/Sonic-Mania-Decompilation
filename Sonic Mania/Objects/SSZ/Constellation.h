@@ -3,11 +3,19 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CONSTELLATION_SONIC,
+    CONSTELLATION_VASE,
+    CONSTELLATION_BERRIES,
+    CONSTELLATION_LYRE,
+    CONSTELLATION_HELMET,
+}ConstellationShapes;
+
 // Object Class
 struct ObjectConstellation {
     RSDK_OBJECT
     uint16 aniFrames;
-    TileLayer *bg1;
+    TileLayer *background1;
 };
 
 // Entity Class
@@ -15,7 +23,7 @@ struct EntityConstellation {
     RSDK_ENTITY
     uint8 shape;
     Vector2 startPos;
-    int32 field_64;
+    int32 unused;
     ScrollInfo *scrollInfo;
     Animator animator;
 };

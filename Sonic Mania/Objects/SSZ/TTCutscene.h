@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectTTCutscene {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     EntityFXFade *fxFade;
 };
 

@@ -41,7 +41,7 @@ void MSFactory_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = MSFactory_Unknown1;
+        self->state         = MSFactory_State_SetupFactory;
         RSDK.SetSpriteAnimation(MSFactory->aniFrames, 0, &self->animator, true, 1);
     }
 }
@@ -49,11 +49,12 @@ void MSFactory_Create(void *data)
 void MSFactory_StageLoad(void)
 {
     MSFactory->aniFrames          = RSDK.LoadSpriteAnimation("SSZ2/MSFactory.bin", SCOPE_STAGE);
+
     MSFactory->sfxMachineActivate = RSDK.GetSfx("Stage/MachineActivate.wav");
     MSFactory->sfxHullClose       = RSDK.GetSfx("Stage/HullClose.wav");
 }
 
-void MSFactory_Unknown1(void)
+void MSFactory_State_SetupFactory(void)
 {
     RSDK_THIS(MSFactory);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -66,12 +67,12 @@ void MSFactory_Unknown1(void)
             Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
             Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height + 44;
             Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 44;
-            self->state               = MSFactory_Unknown2;
+            self->state               = MSFactory_State_SetupMetalSonic;
         }
     }
 }
 
-void MSFactory_Unknown2(void)
+void MSFactory_State_SetupMetalSonic(void)
 {
     RSDK_THIS(MSFactory);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -89,21 +90,22 @@ void MSFactory_Unknown2(void)
     }
 }
 
-void MSFactory_Unknown3(void)
+void MSFactory_State_OpeningDoor(void)
 {
     RSDK_THIS(MSFactory);
 
     self->position.y += 0x20000;
+
     if (!self->timer)
         RSDK.PlaySfx(MSFactory->sfxMachineActivate, false, 255);
 
     if (++self->timer == 24) {
         self->timer = 0;
-        self->state = MSFactory_Unknown4;
+        self->state = MSFactory_State_CreateSilverSonic;
     }
 }
 
-void MSFactory_Unknown4(void)
+void MSFactory_State_CreateSilverSonic(void)
 {
     RSDK_THIS(MSFactory);
 
@@ -112,16 +114,18 @@ void MSFactory_Unknown4(void)
         {
             if (metal && metal->state != MetalSonic_State_PanelExplosion)
                 CREATE_ENTITY(SilverSonic, NULL, self->drawPos.x, self->drawPos.y + 0x80000);
+
             foreach_break;
         }
     }
+
     if (self->timer == 60) {
         self->timer = 0;
-        self->state = MSFactory_Unknown5;
+        self->state = MSFactory_State_CloseDoor;
     }
 }
 
-void MSFactory_Unknown5(void)
+void MSFactory_State_CloseDoor(void)
 {
     RSDK_THIS(MSFactory);
 

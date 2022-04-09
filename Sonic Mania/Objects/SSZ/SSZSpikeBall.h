@@ -3,12 +3,23 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SSZSPIKEBALL_LAUNCHER_UP,
+    SSZSPIKEBALL_LAUNCHER_DOWN,
+    SSZSPIKEBALL_LAUNCHER_LEFT,
+    SSZSPIKEBALL_LAUNCHER_RIGHT,
+    SSZSPIKEBALL_MOVEBALL_UP,
+    SSZSPIKEBALL_MOVEBALL_DOWN,
+    SSZSPIKEBALL_MOVEBALL_LEFT,
+    SSZSPIKEBALL_MOVEBALL_RIGHT,
+}SSZSpikeBallTypes;
+
 // Object Class
 struct ObjectSSZSpikeBall {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxPon;
-    Hitbox hitboxBall;
+    Hitbox hitboxSpikeBall;
     Hitbox hitboxBase[4];
 };
 
@@ -23,8 +34,8 @@ struct EntitySSZSpikeBall {
     int32 dist;
     uint8 timer;
     Vector2 spikeBallPos;
-    Animator animator1;
-    Animator animator2;
+    Animator baseAnimator;
+    Animator spikeBallAnimator;
 };
 
 // Object Struct
@@ -45,12 +56,12 @@ void SSZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
 void SSZSpikeBall_State_Setup(void);
-void SSZSpikeBall_Unknown2(void);
-void SSZSpikeBall_Unknown3(void);
-void SSZSpikeBall_Unknown4(void);
-void SSZSpikeBall_Unknown5(void);
-void SSZSpikeBall_Unknown6(void);
-void SSZSpikeBall_Unknown7(void);
-void SSZSpikeBall_Unknown8(void);
+void SSZSpikeBall_State_H(void);
+void SSZSpikeBall_State_V(void);
+void SSZSpikeBall_State_H_Launch(void);
+void SSZSpikeBall_State_V_Launch(void);
+void SSZSpikeBall_State_Ball_MoveOut(void);
+void SSZSpikeBall_State_Ball_Stopped(void);
+void SSZSpikeBall_State_Ball_MoveBack(void);
 
 #endif //!OBJ_SSZSPIKEBALL_H

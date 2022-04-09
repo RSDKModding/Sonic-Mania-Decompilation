@@ -6,23 +6,15 @@
 // Object Class
 struct ObjectSSZ1Outro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     EntityFXFade *fxFade;
     EntityRTeleporter *teleporter;
 };
 
+
 // Entity Class
 struct EntitySSZ1Outro {
-    RSDK_ENTITY
-    Vector2 size;
-    bool32 activated;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    Hitbox hitbox;
+    MANIA_CUTSCENE_BASE
 };
 
 // Object Struct
@@ -43,7 +35,7 @@ void SSZ1Outro_Serialize(void);
 bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host);
 bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host);
 
-void SSZ1Outro_DestroyHotaru(Entity *entity);
+void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru);
 void SSZ1Outro_DestroyLeftoverHotarus(void);
 
 #endif //!OBJ_SSZ1OUTRO_H

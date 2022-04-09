@@ -13,13 +13,13 @@ struct ObjectEggTower {
 // Entity Class
 struct EntityEggTower {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
+    StateMachine(state); // unused
+    int32 unused2;
     int32 rotationX;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
-    Matrix matrix4;
+    Matrix unusedMatrix1;
+    Matrix matWorld;
+    Matrix matTemp;
+    Matrix unusedMatrix2;
 };
 
 // Object Struct

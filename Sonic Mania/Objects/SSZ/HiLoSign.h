@@ -3,11 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    HILOSIGN_H,
+    HILOSIGN_V,
+}HiLoSignTypes;
+
 // Object Class
 struct ObjectHiLoSign {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitboxes[2];
+    Hitbox spinHitbox[2];
     uint16 sfxSignPost;
 };
 
@@ -18,8 +23,8 @@ struct EntityHiLoSign {
     StateMachine(state);
     uint8 type;
     int32 spinSpeed;
-    Animator animator1;
-    Animator animator2;
+    Animator faceAnimator;
+    Animator sidesAnimator;
 };
 
 // Object Struct
@@ -43,7 +48,7 @@ void HiLoSign_DebugSpawn(void);
 void HiLoSign_DebugDraw(void);
 
 void HiLoSign_State_Spinning(void);
-void HiLoSign_State_Spinning2(void);
+void HiLoSign_State_FinishSpinAdjust(void);
 
 void HiLoSign_StateDraw_Horizontal(void);
 void HiLoSign_StateDraw_Vertical(void);

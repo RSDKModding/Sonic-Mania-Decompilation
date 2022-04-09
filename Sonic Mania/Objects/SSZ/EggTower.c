@@ -18,15 +18,17 @@ void EggTower_StaticUpdate(void) {}
 void EggTower_Draw(void)
 {
     RSDK_THIS(EggTower);
+
     int32 y = self->position.y - 160 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
     if (y > (ScreenInfo->position.y + 288) << 16)
         y -= (y - (ScreenInfo->position.y << 16) - 0x1200000) >> 1;
-    RSDK.MatrixScaleXYZ(&self->matrix2, self->scale.x, -self->scale.x, self->scale.x);
-    RSDK.MatrixTranslateXYZ(&self->matrix2, (ScreenInfo->position.x + ScreenInfo->centerX) << 16, y, 0, false);
-    RSDK.MatrixRotateY(&self->matrix3, (self->rotationX + ScreenInfo->position.x) / -6);
-    RSDK.MatrixMultiply(&self->matrix2, &self->matrix3, &self->matrix2);
+
+    RSDK.MatrixScaleXYZ(&self->matWorld, self->scale.x, -self->scale.x, self->scale.x);
+    RSDK.MatrixTranslateXYZ(&self->matWorld, (ScreenInfo->position.x + ScreenInfo->centerX) << 16, y, 0, false);
+    RSDK.MatrixRotateY(&self->matTemp, (self->rotationX + ScreenInfo->position.x) / -6);
+    RSDK.MatrixMultiply(&self->matWorld, &self->matTemp, &self->matWorld);
     RSDK.Prepare3DScene(EggTower->sceneIndex);
-    RSDK.AddModelTo3DScene(EggTower->modelIndex, EggTower->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matrix2, NULL, 0x000000);
+    RSDK.AddModelTo3DScene(EggTower->modelIndex, EggTower->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matWorld, NULL, 0x000000);
     RSDK.Draw3DScene(EggTower->sceneIndex);
 }
 

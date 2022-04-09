@@ -3,11 +3,17 @@
 
 #include "SonicMania.h"
 
+typedef enum { GENERICTRIGGER_SSZ1_DESTROYHOTARUMKII } GenericTriggerTypesSSZ1;
+
+typedef enum {
+    SSZ1_DECOR_GOALPOST,
+} DecorTypesSSZ1;
+
 // Object Class
 struct ObjectSSZ1Setup {
     RSDK_OBJECT
-    int32 field_4;
-    TileLayer *layer1Ptr;
+    int32 unused;
+    TileLayer *background2;
     EntitySSZ1Outro *outroPtr;
 };
 
@@ -26,8 +32,10 @@ void SSZ1Setup_StaticUpdate(void);
 void SSZ1Setup_Draw(void);
 void SSZ1Setup_Create(void* data);
 void SSZ1Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SSZ1Setup_EditorDraw(void);
 void SSZ1Setup_EditorLoad(void);
+#endif
 void SSZ1Setup_Serialize(void);
 
 // Extra Entity Functions

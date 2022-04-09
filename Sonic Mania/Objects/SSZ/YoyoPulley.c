@@ -19,8 +19,8 @@ void YoyoPulley_Update(void)
     else
         self->rotation += speed;
     YoyoPulley_UpdateHandlePos();
-    int32 storeX       = self->position.x;
-    int32 storeY       = self->position.y;
+    int32 storeX   = self->position.x;
+    int32 storeY   = self->position.y;
     self->position = self->handlePos;
 
     foreach_active(Player, player)
@@ -46,11 +46,11 @@ void YoyoPulley_Update(void)
                     player->velocity.x = (2 * (self->direction == FLIP_NONE) - 1) << 17;
                     self->activePlayers &= ~(1 << playerID);
                     self->playerTimers[playerID] = 30;
-                    player->tileCollisions         = true;
+                    player->tileCollisions       = true;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->animator.speed = 48;
-                    player->onGround                      = false;
-                    player->state                         = Player_State_Air;
+                    player->onGround       = false;
+                    player->state          = Player_State_Air;
                 }
             }
             else {
@@ -66,9 +66,10 @@ void YoyoPulley_Update(void)
             hitbox.left   = playerHitbox->left;
             hitbox.right  = playerHitbox->right;
             hitbox.bottom = hitbox.top + 4;
+
             if (RSDK.CheckObjectCollisionTouchBox(self, &YoyoPulley->hitbox, player, &hitbox)) {
                 if (self->pullDir == 1)
-                    self->field_C8 += 0x100;
+                    self->pullVelocity += 0x100;
                 self->activePlayers |= 1 << playerID;
                 player->velocity.x = 0;
                 player->velocity.y = 0;
@@ -105,20 +106,20 @@ void YoyoPulley_Create(void *data)
 {
     RSDK_THIS(YoyoPulley);
     if (!SceneInfo->inEditor) {
-        self->pullDir ^= 1;
+        self->pullDir ^= FLIP_X;
         self->speed <<= 6;
-        self->pulleyLength = 0;
-        self->active       = ACTIVE_BOUNDS;
-        self->visible      = true;
+        self->pulleyLength  = 0;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->updateRange.x = 0x800000 + abs((self->length << 8) * RSDK.Cos512(self->angle));
         self->updateRange.y = 0x800000 + abs((self->length << 8) * RSDK.Sin512(self->angle));
 
-        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->animator4, true, 0);
-        if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
+        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 0, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->shineAnimator, true, 0);
+        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->knobAnimator, true, 0);
+        RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->handleAnimator, true, 0);
+        if (RSDK.GetFrameID(&self->mainAnimator)) // ideally use 'h'
             self->drawOrder = Zone->drawOrderHigh;
         else
             self->drawOrder = Zone->drawOrderLow;
@@ -136,6 +137,7 @@ void YoyoPulley_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("SSZ1"))
         YoyoPulley->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE);
+
     YoyoPulley->hitbox.top    = -12;
     YoyoPulley->hitbox.left   = -8;
     YoyoPulley->hitbox.right  = 8;
@@ -178,9 +180,9 @@ void YoyoPulley_DrawSprites(void)
         RSDK.DrawLine(x1 + 0x150000, y1, x2 + 0x150000, y2, 0xC02000, 0, INK_NONE, false);
         RSDK.DrawLine(x1 + 0x160000, y1, x2 + 0x160000, y2, 0x002000, 0, INK_NONE, false);
     }
-    RSDK.DrawSprite(&self->animator4, &self->handlePos, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->handleAnimator, &self->handlePos, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
+    RSDK.DrawSprite(&self->knobAnimator, NULL, false);
 }
 
 int32 YoyoPulley_GetLength(void)
@@ -192,20 +194,20 @@ int32 YoyoPulley_GetLength(void)
         if (self->pullDir) {
             if (self->pulleyLength >= (self->length << 8)) {
                 self->pulleyLength = self->length << 8;
-                self->field_C8     = 0;
+                self->pullVelocity = 0;
             }
             else {
-                self->field_C8 = self->speed;
+                self->pullVelocity = self->speed;
                 self->pulleyLength += self->speed;
                 return 32;
             }
         }
         else if (self->pulleyLength <= 0) {
-            self->field_C8     = 0;
+            self->pullVelocity = 0;
             self->pulleyLength = 0;
         }
         else {
-            self->field_C8 = -self->speed;
+            self->pullVelocity = -self->speed;
             self->pulleyLength -= self->speed;
         }
     }
@@ -213,46 +215,47 @@ int32 YoyoPulley_GetLength(void)
         if (!self->pullDir) {
             if (self->pulleyLength >= (self->length << 8)) {
                 self->pulleyLength = self->length << 8;
-                self->field_C8     = 0;
+                self->pullVelocity = 0;
             }
             else {
-                self->field_C8 = self->speed;
+                self->pullVelocity = self->speed;
                 self->pulleyLength += self->speed;
                 return 32;
             }
         }
 
         if (self->pulleyLength <= 0) {
-            self->field_C8     = 0;
+            self->pullVelocity = 0;
             self->pulleyLength = 0;
         }
         else {
-            if (self->field_C8 > -self->speed)
-                self->field_C8 -= (self->speed >> 4);
+            if (self->pullVelocity > -self->speed)
+                self->pullVelocity -= (self->speed >> 4);
 
-            if (self->field_C8 < -self->speed)
-                self->field_C8 = -self->speed;
+            if (self->pullVelocity < -self->speed)
+                self->pullVelocity = -self->speed;
 
-            self->pulleyLength += self->field_C8;
-            return (32 * ((self->field_C8 << 6) / self->speed)) >> 6;
+            self->pulleyLength += self->pullVelocity;
+            return (32 * ((self->pullVelocity << 6) / self->speed)) >> 6;
         }
     }
     return self->pulleyLength;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void YoyoPulley_EditorDraw(void)
 {
     RSDK_THIS(YoyoPulley);
-    self->drawFX       = FX_ROTATE | FX_FLIP;
+    self->drawFX = FX_ROTATE | FX_FLIP;
 
     self->updateRange.x = 0x800000 + abs((self->length << 8) * RSDK.Cos512(self->angle));
     self->updateRange.y = 0x800000 + abs((self->length << 8) * RSDK.Sin512(self->angle));
 
-    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 0, &self->animator1, false, 0);
-    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->animator2, false, 0);
-    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->animator3, false, 0);
-    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->animator4, false, 0);
-    if (RSDK.GetFrameID(&self->animator1)) // ideally use 'h'
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 0, &self->mainAnimator, false, 0);
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &self->shineAnimator, false, 0);
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &self->knobAnimator, false, 0);
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &self->handleAnimator, false, 0);
+    if (RSDK.GetFrameID(&self->mainAnimator)) // ideally use 'h'
         self->drawOrder = Zone->drawOrderHigh;
     else
         self->drawOrder = Zone->drawOrderLow;
@@ -270,7 +273,19 @@ void YoyoPulley_EditorDraw(void)
     YoyoPulley_DrawSprites();
 }
 
-void YoyoPulley_EditorLoad(void) { YoyoPulley->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE); }
+void YoyoPulley_EditorLoad(void)
+{
+    YoyoPulley->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(YoyoPulley, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+
+    RSDK_ACTIVE_VAR(YoyoPulley, pullDir);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
+#endif
 
 void YoyoPulley_Serialize(void)
 {

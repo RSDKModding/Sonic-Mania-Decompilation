@@ -12,8 +12,8 @@ struct ObjectFirework {
     uint16 sfxExplosion2;
     uint16 sfxExplosion;
     bool32 playingFlameSfx;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxFireworkGrab;
+    Hitbox hitboxTileCheck;
 };
 
 // Entity Class
@@ -25,16 +25,16 @@ struct EntityFirework {
     StateMachine(state);
     uint8 activePlayers;
     int32 playerTimers[PLAYER_MAX];
-    int32 field_7C;
+    int32 sparkID;
     bool32 activated;
     int32 timer;
-    int32 field_88;
-    int32 field_8C;
+    int32 moveVelocity;
+    int32 ridePos;
     Vector2 startPos;
-    Vector2 field_98;
-    bool32 field_A0;
-    Animator animator1;
-    Animator animator2;
+    Vector2 lastPosition;
+    bool32 rideActive;
+    Animator mainAnimator;
+    Animator sparkAnimator;
 };
 
 // Object Struct
@@ -56,24 +56,25 @@ void Firework_Serialize(void);
 // Extra Entity Functions
 void Firework_CheckPlayerCollisions(void);
 void Firework_HandlePlayerTimers(void);
-void Firework_RemovePlayers(bool32 hurt);
-void Firework_HandlePlayerRemoval(void *p, bool32 hurt);
+void Firework_RemovePlayers(bool32 crashed);
+void Firework_HandlePlayerRemoval(EntityPlayer *player, bool32 crashed);
 void Firework_HandlePlayerJump(void);
 void Firework_HandlePlayerControl(void);
 void Firework_HandleMoveDir(void);
 void Firework_HandleDebrisSpawn(void);
 void Firework_HandleTileCollisions(void);
-void Firework_HandleRideEnd(bool32 hurt);
+void Firework_HandleRideEnd(bool32 crashed);
 void Firework_CheckOffScreen(void);
-void Firework_HandleAnimations(int a1, int16 angle, Animator *animator1, Animator *animator2, uint8 *direction);
+void Firework_HandleSparkAnimations(int sparkID, int16 angle, Animator *fireworkAnimator, Animator *sparkAnimator, uint8 *direction);
 
 void Firework_State_Setup(void);
-void Firework_State_Unknown1(void);
-void Firework_State_Unknown2(void);
-void Firework_State_Unknown3(void);
-void Firework_State_Unknown4(void);
-void Firework_State_ResetOnScreen(void);
-void Firework_State_Unknown5(void);
-void Firework_State_Unknown6(void);
+void Firework_State_AwaitPlayerRide(void);
+void Firework_State_PlayerGrabDelay(void);
+void Firework_State_Riding(void);
+void Firework_State_Explode(void);
+void Firework_State_ResetOffScreen(void);
+
+void Firework_State_SparkSetup(void);
+void Firework_State_Spark(void);
 
 #endif //!OBJ_FIREWORK_H

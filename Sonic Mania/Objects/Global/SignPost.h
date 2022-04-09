@@ -27,7 +27,7 @@ struct ObjectSignPost {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    Hitbox itemBoxHitbox;
+    Hitbox hitboxItemBox;
     uint16 sfxSignPost;
     uint16 sfxSignPost2P;
     uint16 sfxTwinkle;

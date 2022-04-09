@@ -8,8 +8,8 @@ struct ObjectTimePost {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sparkleFrames;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitbox;
+    Hitbox hitboxItemBox;
     uint16 sfxFuture;
 };
 
@@ -18,16 +18,16 @@ struct EntityTimePost {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    int field_60;
-    int field_64;
-    int spinCount;
-    int spinSpeed;
-    int maxAngle;
-    int field_74;
-    int field_78;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 unused1;
+    int32 gravityStrength;
+    int32 spinCount;
+    int32 spinSpeed;
+    int32 maxAngle;
+    int32 unused2;
+    int32 activePlayers;
+    Animator faceplateAnimator;
+    Animator sideAnimator;
+    Animator standAnimator;
 };
 
 // Object Struct
@@ -49,7 +49,7 @@ void TimePost_Serialize(void);
 // Extra Entity Functions
 void TimePost_Spin(void);
 void TimePost_CheckPlayerCollisions(void);
-void TimePost_ParticleCB_TimeSparkles(EntityDebris *entity);
+void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris);
 void TimePost_HandleTimeSparkles(void);
 
 void TimePost_State_Setup(void);

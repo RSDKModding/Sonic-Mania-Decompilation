@@ -6,23 +6,14 @@
 // Object Class
 struct ObjectSSZ1Intro {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
+    int32 unused1;
+    int32 unused2;
     EntityFXRuby *fxRuby;
 };
 
 // Entity Class
 struct EntitySSZ1Intro {
-    RSDK_ENTITY
-    Vector2 size;
-    bool32 activated;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    Hitbox hitbox;
+    MANIA_CUTSCENE_BASE
 };
 
 // Object Struct
@@ -40,7 +31,7 @@ void SSZ1Intro_EditorLoad(void);
 void SSZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPlayer *player2, int32 offset);
+void SSZ1Intro_HandleRubyHover(EntityCutsceneSeq *host, EntityPlayer *player1, EntityPlayer *player2, int32 offset);
 
 bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);
 bool32 SSZ1Intro_Cutscene_HandeLanding(EntityCutsceneSeq *host);

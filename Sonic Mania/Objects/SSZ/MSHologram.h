@@ -15,13 +15,13 @@ struct ObjectMSHologram {
 struct EntityMSHologram {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     bool32 destroyed;
-    Animator animator1;
-    Animator animator2;
-    Animator animator4;
-    Animator animator3;
-    Animator animator5;
+    Animator projectorAnimator;
+    Animator lightsAnimator;
+    Animator metalSonicAnimator;
+    Animator rabbitAnimator;
+    Animator canaryAnimator;
 };
 
 // Object Struct

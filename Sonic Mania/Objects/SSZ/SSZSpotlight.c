@@ -12,18 +12,18 @@ ObjectSSZSpotlight *SSZSpotlight;
 void SSZSpotlight_Update(void)
 {
     RSDK_THIS(SSZSpotlight);
-    self->angle      = (self->angle + self->speed) & 0x1FF;
-    self->rotation   = RSDK.Sin512(self->angle) >> 2;
+    self->angle        = (self->angle + self->speed) & 0x1FF;
+    self->rotation     = RSDK.Sin512(self->angle) >> 2;
     Vector2 *vertStore = self->vertStore;
 
     for (int32 i = 0; i < 8; ++i) {
         self->vertPos[i].x = vertStore[i].x;
         self->vertPos[i].y = vertStore[i].y;
 
-        int32 xOff = (self->vertPos[i].x - self->offsetPos.x) >> 4;
-        int32 yOff = (self->vertPos[i].y - self->offsetPos.y) >> 4;
-        self->vertPos[i].x  = (yOff * RSDK.Sin1024(self->rotation) >> 6) + (xOff * RSDK.Cos1024(self->rotation) >> 6) + self->offsetPos.x;
-        self->vertPos[i].y  = (yOff * RSDK.Cos1024(self->rotation) >> 6) - (xOff * RSDK.Sin1024(self->rotation) >> 6) + self->offsetPos.y;
+        int32 xOff         = (self->vertPos[i].x - self->offsetPos.x) >> 4;
+        int32 yOff         = (self->vertPos[i].y - self->offsetPos.y) >> 4;
+        self->vertPos[i].x = (yOff * RSDK.Sin1024(self->rotation) >> 6) + (xOff * RSDK.Cos1024(self->rotation) >> 6) + self->offsetPos.x;
+        self->vertPos[i].y = (yOff * RSDK.Cos1024(self->rotation) >> 6) - (xOff * RSDK.Sin1024(self->rotation) >> 6) + self->offsetPos.y;
     }
 
     if (self->flashSpeed)
@@ -69,6 +69,7 @@ void SSZSpotlight_Create(void *data)
     RSDK_THIS(SSZSpotlight);
     if (!SceneInfo->inEditor) {
         self->visible = true;
+
         switch (self->drawFlag) {
             default: break;
             case 0: self->drawOrder = Zone->drawOrderLow; break;
@@ -79,15 +80,15 @@ void SSZSpotlight_Create(void *data)
         self->angle = self->offset;
 
         int32 sizes[3];
-        sizes[0]      = 4;
-        sizes[1]      = 8;
-        sizes[2]      = 16;
-        int32 s         = -sizes[self->size];
-        self->alpha = 256;
-        s <<= 16;
+        sizes[0]   = 4;
+        sizes[1]   = 8;
+        sizes[2]   = 16;
+        int32 size = -sizes[self->size];
+        size <<= 16;
+        self->alpha          = 0x100;
         self->offsetPos.y    = 0x1100000;
-        self->vertStore[0].x = s;
-        self->vertStore[1].x = s;
+        self->vertStore[0].x = size;
+        self->vertStore[1].x = size;
 
         self->vertStore[2].x = -0x4000 * sizes[self->size];
         self->vertStore[3].x = -0x4000 * sizes[self->size];
@@ -100,8 +101,8 @@ void SSZSpotlight_Create(void *data)
 
         Vector2 *vertPtr = self->vertStore;
         for (int32 i = 0; i < 4; ++i) {
-            int32 store  = vertPtr->x;
-            vertPtr->x = 720 * (store >> 8);
+            int32 store = vertPtr->x;
+            vertPtr->x  = 720 * (store >> 8);
             vertPtr += 2;
         }
 

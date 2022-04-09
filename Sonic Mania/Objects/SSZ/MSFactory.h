@@ -15,7 +15,7 @@ struct ObjectMSFactory {
 struct EntityMSFactory {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     Vector2 drawPos;
     Animator animator;
 };
@@ -37,10 +37,10 @@ void MSFactory_EditorLoad(void);
 void MSFactory_Serialize(void);
 
 // Extra Entity Functions
-void MSFactory_Unknown1(void);
-void MSFactory_Unknown2(void);
-void MSFactory_Unknown3(void);
-void MSFactory_Unknown4(void);
-void MSFactory_Unknown5(void);
+void MSFactory_State_SetupFactory(void);
+void MSFactory_State_SetupMetalSonic(void);
+void MSFactory_State_OpeningDoor(void);
+void MSFactory_State_CreateSilverSonic(void);
+void MSFactory_State_CloseDoor(void);
 
 #endif //!OBJ_MSFACTORY_H

@@ -25,7 +25,7 @@ void Constellation_Draw(void)
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     Vector2 drawPos;
 
-    drawPos.y = self->startPos.y - ((screen->position.y * Constellation->bg1->parallaxFactor / 256) << 16);
+    drawPos.y = self->startPos.y - ((screen->position.y * Constellation->background1->parallaxFactor / 256) << 16);
     drawPos.x = ((((self->position.x >> 16) - screen->position.x - (screen->width >> 1)) << 7) / (256 - self->scrollInfo->parallaxFactor)) << 16;
     drawPos.x += screen->width << 15;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
@@ -51,24 +51,24 @@ void Constellation_Create(void *data)
 void Constellation_StageLoad(void)
 {
     Constellation->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Constellation.bin", SCOPE_STAGE);
-    Constellation->bg1       = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
+    Constellation->background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
 }
 
 void Constellation_SetupInfo(void)
 {
     RSDK_THIS(Constellation);
-    TileLayer *bgLayer = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
+    TileLayer *background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
 
-    int id = minVal(self->startPos.y >> 3, 20);
-    self->scrollInfo = &bgLayer->scrollInfo[id];
+    int32 id = minVal(self->startPos.y >> 3, 20);
+    self->scrollInfo = &background1->scrollInfo[id];
     if (self->scrollInfo) {
-        int factor = self->scrollInfo->parallaxFactor;
-        if (factor > 0) {
+        int32 factor = self->scrollInfo->parallaxFactor;
+        if (factor > 0)
             self->updateRange.x += ((ScreenInfo->width << 8) / factor) << 16;
-        }
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Constellation_EditorDraw(void)
 {
     RSDK_THIS(Constellation);
@@ -76,7 +76,22 @@ void Constellation_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void Constellation_EditorLoad(void) { Constellation->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Constellation.bin", SCOPE_STAGE); }
+void Constellation_EditorLoad(void)
+{
+    Constellation->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Constellation.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Constellation, shape);
+    RSDK_ENUM_VAR("Sonic", CONSTELLATION_SONIC);
+    RSDK_ENUM_VAR("Vase", CONSTELLATION_VASE);
+    RSDK_ENUM_VAR("Berries", CONSTELLATION_BERRIES);
+    RSDK_ENUM_VAR("Lyre", CONSTELLATION_LYRE);
+    RSDK_ENUM_VAR("Helmet", CONSTELLATION_HELMET);
+
+    RSDK_ACTIVE_VAR(Constellation, direction);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
+}
+#endif
 
 void Constellation_Serialize(void)
 {

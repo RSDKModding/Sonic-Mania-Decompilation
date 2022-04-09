@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    SSONIC_ANI_IDLE,
+    SSONIC_ANI_CROUCH,
+    SSONIC_ANI_BOOSTREADY,
+    SSONIC_ANI_BOOST,
+    SSONIC_ANI_ARMATTACK,
+    SSONIC_ANI_JUMP,
+    SSONIC_ANI_SPINDASH,
+}SilverSonicAniIDs;
+
 // Object Class
 struct ObjectSilverSonic {
     RSDK_OBJECT
@@ -19,8 +29,8 @@ struct EntitySilverSonic {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
-    int32 field_64;
+    int32 attackType;
+    int32 attackRepeatCount;
     int32 invincibilityTimer;
     Hitbox *outerBox;
     Hitbox *innerBox;
@@ -50,18 +60,18 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void);
 void SilverSonic_CheckPlayerCollisions_Ball(void);
 void SilverSonic_CheckPlayerCollisions_Arm(void);
 
-void SilverSonic_State_Unknown1(void);
-void SilverSonic_State2_Unknown5(void);
-void SilverSonic_State_Unknown2(void);
-void SilverSonic_State2_Unknown1(void);
-void SilverSonic_State2_Unknown2(void);
-void SilverSonic_State2_Unknown3(void);
-void SilverSonic_State2_Unknown4(void);
-void SilverSonic_State2_Unknown6(void);
-void SilverSonic_State_Unknown3(void);
-void SilverSonic_State_Unknown4(void);
-void SilverSonic_State_Unknown5(void);
-void SilverSonic_State_Unknown6(void);
-void SilverSonic_State2_Explode(void);
+void SilverSonic_State_Appear(void);
+void SilverSonic_State_FinishedAttack(void);
+void SilverSonic_State_ArmAttack(void);
+void SilverSonic_State_Crouch(void);
+void SilverSonic_State_Spindash(void);
+void SilverSonic_State_Roll(void);
+void SilverSonic_State_RollJump(void);
+void SilverSonic_State_RollRebound(void);
+void SilverSonic_State_BoostReady(void);
+void SilverSonic_State_Boost_Air(void);
+void SilverSonic_State_Boost_Ground(void);
+void SilverSonic_State_FinishedBoost(void);
+void SilverSonic_State_Explode(void);
 
 #endif //!OBJ_SILVERSONIC_H

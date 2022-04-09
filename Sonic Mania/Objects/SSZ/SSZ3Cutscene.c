@@ -14,22 +14,23 @@ void SSZ3Cutscene_Update(void)
     RSDK_THIS(SSZ3Cutscene);
 
 #if RETRO_USE_PLUS
-    if (!self->flag) {
-        CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
+    if (self->playTransformCutscene) {
+        CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneOutro_SetupOutro, SSZ3Cutscene_CutsceneOutro_FollowRuby,
+                                  SSZ3Cutscene_CutsceneOutro_EnterRuby, SSZ3Cutscene_CutsceneOutro_RubyActivate, SSZ3Cutscene_CutsceneOutro_RubyWarp,
+                                  SSZ3Cutscene_CutsceneOutro_LoadHCZ1, StateMachine_None);
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+
+        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
+
         self->active = ACTIVE_NEVER;
     }
     else {
-        CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneOutro_SetupOutro, SSZ3Cutscene_CutsceneOutro_FollowRuby,
-                                  SSZ3Cutscene_CutsceneOutro_EnterRuby, SSZ3Cutscene_CutsceneOutro_RubyActivate, SSZ3Cutscene_CutsceneOutro_RubyWarp, SSZ3Cutscene_CutsceneOutro_LoadHCZ1,
-                                  StateMachine_None);
-        foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
-        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
-            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+#endif
+        CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
         self->active = ACTIVE_NEVER;
+#if RETRO_USE_PLUS
     }
-#else
-    CutsceneSeq_StartSequence(self, SSZ3Cutscene_CutsceneIntro_EnterStageLeft, SSZ3Cutscene_CutsceneIntro_PlayerRunLeft, StateMachine_None);
-    self->active = ACTIVE_NEVER;
 #endif
 }
 
@@ -44,7 +45,7 @@ void SSZ3Cutscene_Create(void *data)
     RSDK_THIS(SSZ3Cutscene);
     self->active = ACTIVE_NORMAL;
 #if RETRO_USE_PLUS
-    self->flag   = voidToInt(data);
+    self->playTransformCutscene   = voidToInt(data);
 #endif
 }
 
@@ -87,6 +88,7 @@ bool32 SSZ3Cutscene_CutsceneIntro_EnterStageLeft(EntityCutsceneSeq *host)
             }
         }
     }
+
     if (host->timer >= 8) {
         globals->suppressAutoMusic = false;
         return true;
@@ -340,8 +342,10 @@ bool32 SSZ3Cutscene_CutsceneOutro_LoadHCZ1(EntityCutsceneSeq *host)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void SSZ3Cutscene_EditorDraw(void) {}
 
 void SSZ3Cutscene_EditorLoad(void) {}
+#endif
 
 void SSZ3Cutscene_Serialize(void) {}

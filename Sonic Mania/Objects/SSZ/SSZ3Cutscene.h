@@ -11,9 +11,9 @@ struct ObjectSSZ3Cutscene {
 // Entity Class
 struct EntitySSZ3Cutscene {
     RSDK_ENTITY
-    int32 field_58;
+    int32 unused;
 #if RETRO_USE_PLUS
-    bool32 flag;
+    bool32 playTransformCutscene;
     EntityPhantomRuby *ruby;
     EntityFXRuby *fxRuby;
 #endif
@@ -29,8 +29,10 @@ void SSZ3Cutscene_StaticUpdate(void);
 void SSZ3Cutscene_Draw(void);
 void SSZ3Cutscene_Create(void* data);
 void SSZ3Cutscene_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SSZ3Cutscene_EditorDraw(void);
 void SSZ3Cutscene_EditorLoad(void);
+#endif
 void SSZ3Cutscene_Serialize(void);
 
 // Extra Entity Functions

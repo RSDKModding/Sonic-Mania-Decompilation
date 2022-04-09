@@ -12,6 +12,7 @@ ObjectSparkRail *SparkRail;
 void SparkRail_Update(void)
 {
     RSDK_THIS(SparkRail);
+
     int32 posY = self->position.y + (self->size.y >> 1);
     foreach_active(Player, player)
     {
@@ -40,18 +41,21 @@ void SparkRail_Draw(void) {}
 void SparkRail_Create(void *data)
 {
     RSDK_THIS(SparkRail);
+
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->visible       = false;
+
     self->hitbox.left   = -(self->size.x >> 17);
     self->hitbox.top    = -(self->size.y >> 17);
     self->hitbox.right  = self->size.x >> 17;
     self->hitbox.bottom = self->size.y >> 17;
+
     if (!self->size.x)
-        self->size.x = 0x800000;
+        self->size.x = 128 << 16;
     if (!self->size.y)
-        self->size.y = 0x200000;
+        self->size.y = 32 << 16;
 }
 
 void SparkRail_StageLoad(void)
@@ -60,13 +64,35 @@ void SparkRail_StageLoad(void)
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Spark.bin", SCOPE_STAGE);
     else
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Spark.bin", SCOPE_STAGE);
+
     SparkRail->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SparkRail_EditorDraw(void) {}
+void SparkRail_EditorDraw(void)
+{
+    RSDK_THIS(SparkRail);
+    Animator animator;
+    RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &animator, true, 0);
 
-void SparkRail_EditorLoad(void) {}
+    RSDK.DrawSprite(&animator, NULL, false);
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawRectOutline(0xFF0000, self->position.x, self->position.y, self->size.x, self->size.y);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+}
+
+void SparkRail_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("SSZ1"))
+        SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Spark.bin", SCOPE_STAGE);
+    else
+        SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Spark.bin", SCOPE_STAGE);
+}
 #endif
 
 void SparkRail_Serialize(void) { RSDK_EDITABLE_VAR(SparkRail, VAR_VECTOR2, size); }

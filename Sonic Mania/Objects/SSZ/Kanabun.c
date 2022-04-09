@@ -31,6 +31,7 @@ void Kanabun_Create(void *data)
 
     if (!self->angleVel)
         self->angleVel = 1;
+
     if (!self->hVel) {
         self->hDist    = 1;
         self->bobDist  = 2;
@@ -63,6 +64,7 @@ void Kanabun_StageLoad(void)
     Kanabun->hitbox.top    = -6;
     Kanabun->hitbox.right  = 6;
     Kanabun->hitbox.bottom = 6;
+
     DEBUGMODE_ADD_OBJ(Kanabun);
 }
 
@@ -125,15 +127,16 @@ void Kanabun_State_Setup(void)
         self->velocity.x = -self->velocity.x;
     self->active = ACTIVE_NORMAL;
 
-    self->state = Kanabun_State_Unknown1;
-    Kanabun_State_Unknown1();
+    self->state = Kanabun_State_Moving;
+    Kanabun_State_Moving();
 }
 
-void Kanabun_State_Unknown1(void)
+void Kanabun_State_Moving(void)
 {
     RSDK_THIS(Kanabun);
 
     Kanabun_HandleMovement();
+
     if (self->position.y >= self->startPos.y) {
         if (self->groundVel == 1)
             self->groundVel = 0;
@@ -142,19 +145,22 @@ void Kanabun_State_Unknown1(void)
         self->groundVel = 1;
     }
 
-    int vel = self->hVel * self->hDist * (0x100 / self->angleVel);
+    int32 vel = self->hVel * self->hDist * (0x100 / self->angleVel);
     if ((self->direction == FLIP_NONE && self->position.x <= (self->startPos.x - vel))
-        || (self->direction == FLIP_X && self->position.x >= (vel + self->startPos.x))) {
+        || (self->direction == FLIP_X && self->position.x >= (self->startPos.x + vel))) {
         RSDK.SetSpriteAnimation(Kanabun->aniFrames, 1, &self->animator, true, 0);
-        self->state = Kanabun_State_Unknown2;
+        self->state = Kanabun_State_Turning;
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->drawOrder == Zone->drawOrderHigh)
         Kanabun_CheckPlayerCollisions();
+
     Kanabun_CheckOffScreen();
 }
 
-void Kanabun_State_Unknown2(void)
+void Kanabun_State_Turning(void)
 {
     RSDK_THIS(Kanabun);
     Kanabun_HandleMovement();
@@ -165,7 +171,7 @@ void Kanabun_State_Unknown2(void)
         self->velocity.x = -self->velocity.x;
         self->groundVel  = 0;
         self->direction ^= FLIP_X;
-        self->state = Kanabun_State_Unknown1;
+        self->state = Kanabun_State_Moving;
     }
     else {
         if (self->drawOrder == Zone->drawOrderHigh)
@@ -191,6 +197,10 @@ void Kanabun_EditorLoad(void)
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Kanabun.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("SSZ2"))
         Kanabun->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Kanabun.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Kanabun, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 
