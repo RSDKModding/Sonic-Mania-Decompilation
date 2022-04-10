@@ -177,7 +177,7 @@ void BSS_Message_LoadPrevScene(void)
     }
     else {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-        if (param->selectionType == 1) {
+        if (param->bssSelection == BSS_SELECTION_EXTRAS) {
             RSDK.SetScene("Presentation", "Menu");
             RSDK.LoadScene();
         }

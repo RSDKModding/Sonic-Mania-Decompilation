@@ -105,11 +105,11 @@ bool32 CPZBoss_CheckMatchReset(void)
         RSDK.SetDrawLayerProperties(Zone->drawOrderHigh, false, NULL);
         RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, NULL);
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        PuyoBean->field_20[0] = 0;
-        PuyoBean->field_28[0] = 0;
-        PuyoBean->field_20[1] = 0;
-        PuyoBean->field_28[1] = 0;
-        for (int i = 0; i < 0x100; ++i) PuyoBean->gameState[i] = NULL;
+        PuyoBean->comboChainCount[0] = 0;
+        PuyoBean->disableBeanLink[0] = 0;
+        PuyoBean->comboChainCount[1] = 0;
+        PuyoBean->disableBeanLink[1] = 0;
+        for (int i = 0; i < 0x100; ++i) PuyoBean->playfield[i] = NULL;
         foreach_all(PuyoBean, bean) { destroyEntity(bean); }
         int32 layerID = RSDK.GetSceneLayerID("FG High");
         RSDK.CopyTileLayer(layerID, 438, 150, layerID, 452, 150, 6, 2);
@@ -234,25 +234,25 @@ void CPZBoss_State_SetupMatch(void)
         int32 key  = (int32)time(NULL);
         int32 rand = RSDK.RandSeeded(0, 512, &key);
 
-        int32 id = 0;
+        int32 matchCount = 0;
         foreach_active(PuyoMatch, match)
         {
-            RSDK.SetSpriteAnimation(-1, 0, &match->animator2, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &match->animator1, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &match->beanRAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &match->beanLAnimator, true, 0);
             match->state    = PuyoMatch_State_HandleMatch;
             match->matchKey = rand;
             PuyoMatch_SetupNextBeans(match);
             if (match->playerID == 1) {
-                match->stateInput                        = PuyoAI_StateInput;
-                PuyoAI->value3[match->playerID]          = false;
-                PuyoAI->value4[match->playerID]          = 14;
-                PuyoAI->targetX[match->playerID]         = 0;
-                PuyoAI->value6[match->playerID]          = 0;
-                PuyoAI->value3[match->playerID]          = true;
+                match->stateInput                        = PuyoAI_Input_AI;
+                PuyoAI->isAI[match->playerID]            = false;
+                PuyoAI->lastBeanY[match->playerID]       = PUYO_PLAYFIELD_H;
+                PuyoAI->desiredColumn[match->playerID]         = 0;
+                PuyoAI->desiredRotation[match->playerID]          = 0;
+                PuyoAI->isAI[match->playerID]            = true;
                 PuyoAI->controlInterval[match->playerID] = 16;
                 PuyoAI->controlChance[match->playerID]   = 50;
             }
-            CPZBoss->managers[id++] = (Entity *)match;
+            CPZBoss->managers[matchCount++] = match;
         }
         self->direction = FLIP_NONE;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->playerAnimator, false, 0);
@@ -267,13 +267,13 @@ void CPZBoss_State_HandleMatch_Player(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
-        EntityPuyoMatch *manager = (EntityPuyoMatch *)CPZBoss->managers[self->type];
+        EntityPuyoMatch *manager = CPZBoss->managers[self->type];
         RSDK.ProcessAnimation(&self->playerAnimator);
         if (self->playerAnimator.animationID == 2) {
             if (manager) {
                 EntityPuyoBean *bean = manager->beanPtr;
                 if (bean) {
-                    if (bean->state == PuyoBean_Unknown19) {
+                    if (bean->state == PuyoBean_State_JunkLand) {
                         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 3, &self->playerAnimator, false, 0);
                     }
                     else {
@@ -283,6 +283,7 @@ void CPZBoss_State_HandleMatch_Player(void)
                             self->playerAnimator.frameID = 1;
                         else if (bean->right)
                             self->playerAnimator.frameID = 2;
+
                         if (bean->rotateRight)
                             self->playerAnimator.frameID = 4;
                         else if (bean->rotateLeft)
@@ -302,13 +303,36 @@ void CPZBoss_State_HandleMatch_Player(void)
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
             }
         }
+
+#if RETRO_USE_TOUCH_CONTROLS
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
+
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                    if (SceneInfo->state == ENGINESTATE_REGULAR) {
+                        EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
+                        if (!pauseMenu->objectID) {
+                            RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                            pauseMenu->triggerPlayer = 1;
+                            RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
+                            RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+#endif
+
         if (manager) {
             if (manager->state == PuyoMatch_State_Lose) {
                 PuyoBean_DestroyPuyoBeans();
                 self->timer       = 0;
                 self->state       = CPZBoss_State_HandleMatchFinish_PlayerLose;
-                PuyoAI->value3[0] = false;
-                PuyoAI->value3[1] = false;
+                PuyoAI->isAI[0] = false;
+                PuyoAI->isAI[1] = false;
                 RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 3, &self->playerAnimator, false, 0);
             }
         }
@@ -320,28 +344,31 @@ void CPZBoss_State_HandleMatch_Eggman(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
-        EntityPuyoMatch *manager = (EntityPuyoMatch *)CPZBoss->managers[self->type];
-        if (manager || true) {
-            RSDK.ProcessAnimation(&self->playerAnimator);
-            if (self->playerAnimator.animationID == 2) {
-                EntityPuyoBean *bean = manager->beanPtr;
-                if (bean && bean->state == PuyoBean_Unknown19)
-                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->playerAnimator, false, 0);
-            }
-            else {
-                if (self->playerAnimator.animationID == 3 || self->playerAnimator.animationID == 4) {
-                    if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1)
-                        RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->playerAnimator, false, 0);
-                }
-            }
+        EntityPuyoMatch *manager = CPZBoss->managers[self->type];
+
+        RSDK.ProcessAnimation(&self->playerAnimator);
+
+        if (self->playerAnimator.animationID == 2) {
             if (manager) {
-                if (manager->state == PuyoMatch_State_Lose) {
-                    PuyoBean_DestroyPuyoBeans();
-                    self->state          = CPZBoss_State_HandleMatchFinish_EggmanLose;
-                    self->explosionPos.x = self->position.x + 0x400000;
-                    self->explosionPos.y = (ScreenInfo->height + ScreenInfo->position.y) << 16;
+                EntityPuyoBean *bean = manager->beanPtr;
+                if (bean && bean->state == PuyoBean_State_JunkLand)
                     RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->playerAnimator, false, 0);
-                }
+            }
+        }
+        else {
+            if (self->playerAnimator.animationID == 3 || self->playerAnimator.animationID == 4) {
+                if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1)
+                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->playerAnimator, false, 0);
+            }
+        }
+
+        if (manager) {
+            if (manager->state == PuyoMatch_State_Lose) {
+                PuyoBean_DestroyPuyoBeans();
+                self->state          = CPZBoss_State_HandleMatchFinish_EggmanLose;
+                self->explosionPos.x = self->position.x + 0x400000;
+                self->explosionPos.y = (ScreenInfo->height + ScreenInfo->position.y) << 16;
+                RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->playerAnimator, false, 0);
             }
         }
     }
@@ -395,6 +422,7 @@ void CPZBoss_State_PlayerWin(void)
                     boss->state = CPZBoss_State_PlayerExit;
                     RSDK.SetSpriteAnimation(-1, 0, &boss->playerAnimator, false, 0);
                     RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &boss->enterAnimator, true, 0);
+
                     foreach_all(Player, player)
                     {
                         player->up         = false;
@@ -404,9 +432,8 @@ void CPZBoss_State_PlayerWin(void)
                         player->velocity.x = 0;
                         player->velocity.y = 0;
                         player->groundVel  = 0;
-                        if (!player->sidekick) {
+                        if (!player->sidekick)
                             player->stateInput = StateMachine_None;
-                        }
                         player->visible    = true;
                         player->active     = ACTIVE_NORMAL;
                         player->position.x = boss->position.x;

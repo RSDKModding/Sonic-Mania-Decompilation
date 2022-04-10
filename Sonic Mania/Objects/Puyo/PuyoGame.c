@@ -24,9 +24,31 @@ void PuyoGame_Update(void)
     if ((ControllerInfo->keyStart.press || Unknown_pausePress) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
-        RSDK.PlaySfx(PauseMenu->sfxAccept, false, 255);
+        RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
         RSDK.SetGameMode(ENGINESTATE_FROZEN);
     }
+
+#if RETRO_USE_TOUCH_CONTROLS
+    for (int32 t = 0; t < TouchInfo->count; ++t) {
+        int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+        int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
+
+        if (TouchInfo->down[t]) {
+            if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                if (SceneInfo->state == ENGINESTATE_REGULAR) {
+                    EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
+                    if (!pauseMenu->objectID) {
+                        RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
+                        pauseMenu->triggerPlayer = 1;
+                        RSDK.PlaySfx(PauseMenu->sfxAccept, false, 0xFF);
+                        RSDK.SetGameMode(ENGINESTATE_FROZEN);
+                    }
+                }
+                break;
+            }
+        }
+    }
+#endif
 }
 
 void PuyoGame_LateUpdate(void) {}
@@ -48,17 +70,19 @@ void PuyoGame_Create(void *data)
     self->updateRange.y = 0x800000;
     if (!SceneInfo->inEditor)
         RSDK.AddCamera(&self->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
-    self->state = PuyoGame_Unknown6;
+
+    self->state = PuyoGame_State_Setup;
 }
 
 void PuyoGame_StageLoad(void)
 {
     PuyoGame->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoBeans.bin", SCOPE_STAGE);
+
     foreach_all(FXFade, fxFade) { PuyoGame->fxFade = fxFade; }
 
-    TextInfo buffer;
-    Localization_GetString(&buffer, STR_RPC_PLAYING);
-    API_SetRichPresence(0, &buffer);
+    TextInfo text;
+    Localization_GetString(&text, STR_RPC_PLAYING);
+    API_SetRichPresence(0, &text);
     RSDK.ResetEntitySlot(SLOT_ZONE, TYPE_BLANK, NULL);
 }
 
@@ -75,54 +99,55 @@ void PuyoGame_SetupStartingEntities(void)
     {
         int32 playerID = score->playerID;
         if (score->counter) {
-            PuyoGame->score2[playerID] = (Entity *)score;
-            if (param->selectionFlag == 3)
+            PuyoGame->score2[playerID] = score;
+            if (param->puyoSelection == PUYO_SELECTION_TIE_BREAKER)
                 score->score = session->wins[playerID];
         }
         else {
-            PuyoGame->score1[playerID] = (Entity *)score;
+            PuyoGame->score1[playerID] = score;
         }
     }
 
-    foreach_all(PuyoLevelSelect, levelSel) { PuyoGame->levelSel[levelSel->playerID] = (Entity *)levelSel; }
+    foreach_all(PuyoLevelSelect, levelSel) { PuyoGame->levelSel[levelSel->playerID] = levelSel; }
 
-    if (param->selectionFlag == 3) {
+    if (param->puyoSelection == PUYO_SELECTION_TIE_BREAKER) {
         self->selectedLevels[0] = 1;
         self->selectedLevels[1] = 1;
-        self->state             = PuyoGame_Unknown9;
+        self->state             = PuyoGame_State_SetupRound;
     }
     else {
-        self->state = PuyoGame_Unknown8;
+        self->state = PuyoGame_State_SelectingLevel;
     }
 }
 
-void PuyoGame_SetupPlayer(uint8 player)
+void PuyoGame_SetLoser(uint8 loser)
 {
     RSDK_THIS(PuyoGame);
-    EntityPuyoMatch *manager           = (EntityPuyoMatch *)PuyoGame->managers[player];
-    EntityCollapsingPlatform *platform = (EntityCollapsingPlatform *)PuyoGame->platforms[player];
+    EntityPuyoMatch *manager           = PuyoGame->managers[loser];
+    EntityCollapsingPlatform *platform = PuyoGame->platforms[loser];
 
-    int32 foe            = player ^ 1;
-    self->field_9C       = 1;
-    self->field_A0       = player ^ 1;
-    platform->stoodPos.x = manager->position.x;
-    manager->timer       = 7;
-    PuyoAI->value3[0]    = false;
-    PuyoAI->value3[1]    = false;
+    int32 winner          = loser ^ 1;
+    self->determinedLoser = true;
+    self->roundWinner     = winner;
+    platform->stoodPos.x  = manager->position.x;
+    manager->timer        = 7;
+    PuyoAI->isAI[0]       = false;
+    PuyoAI->isAI[1]       = false;
 
-    EntityPuyoMatch *foeManager = (EntityPuyoMatch *)PuyoGame->managers[foe];
-    EntityPuyoScore *foeScore   = (EntityPuyoScore *)PuyoGame->score2[foe];
+    EntityPuyoMatch *foeManager = PuyoGame->managers[winner];
+    EntityPuyoScore *foeScore   = PuyoGame->score2[winner];
     ++foeScore->score;
-    foeScore->flag    = true;
-    foeManager->state = StateMachine_None;
+    foeScore->flashing = true;
+    foeManager->state  = StateMachine_None;
 
     PuyoBean_DestroyPuyoBeans();
-    PuyoGame_Unknown5();
+    PuyoGame_CheckMatchFinish();
+
     self->timer = 0;
-    if (!self->field_98)
-        self->state = PuyoGame_Unknown13;
+    if (!self->finishedMatch)
+        self->state = PuyoGame_State_ShowMatchResults;
     else
-        self->state = PuyoGame_Unknown12;
+        self->state = PuyoGame_State_ShowRoundResults;
 }
 
 void PuyoGame_DestroyPuyoBeans(void)
@@ -130,117 +155,113 @@ void PuyoGame_DestroyPuyoBeans(void)
     foreach_all(PuyoBean, bean) { destroyEntity(bean); }
 }
 
-void PuyoGame_Unknown4(void)
+void PuyoGame_SetupGameState(void)
 {
     int32 fgHighRebuild = RSDK.GetSceneLayerID("FG High Rebuild");
     int32 fgHigh        = RSDK.GetSceneLayerID("FG High");
     RSDK.CopyTileLayer(fgHigh, 0, 0, fgHighRebuild, 0, 0, 32, 16);
 
-    EntityPuyoScore *scoreP1 = (EntityPuyoScore *)PuyoGame->score2[0];
-    EntityPuyoScore *scoreP2 = (EntityPuyoScore *)PuyoGame->score2[1];
+    EntityPuyoScore *scoreP1 = PuyoGame->score2[0];
+    EntityPuyoScore *scoreP2 = PuyoGame->score2[1];
 
-    PuyoBean->field_20[0] = 0;
-    PuyoBean->field_28[0] = 0;
-    scoreP1->flag         = false;
-    PuyoBean->field_20[1] = 0;
-    PuyoBean->field_28[1] = 0;
-    scoreP2->flag         = false;
+    PuyoBean->comboChainCount[0] = 0;
+    PuyoBean->disableBeanLink[0] = false;
+    scoreP1->flashing            = false;
 
-    for (int i = 0; i < 0x100; ++i) {
-        PuyoBean->gameState[i] = NULL;
-    }
+    PuyoBean->comboChainCount[1] = 0;
+    PuyoBean->disableBeanLink[1] = false;
+    scoreP2->flashing            = false;
+
+    for (int i = 0; i < 0x100; ++i) PuyoBean->playfield[i] = NULL;
 
     foreach_all(PuyoMatch, match)
     {
-        match->score          = 0;
-        match->comboScore     = 0;
-        match->comboCount     = 0;
-        match->comboBeanCount = 0;
-        match->field_80       = PuyoMatch->value2;
-        match->field_84       = 0;
-        match->field_88       = 0;
-        match->timer          = false;
-        match->field_90       = 0;
-        match->field_94       = 0;
+        match->score           = 0;
+        match->comboScore      = 0;
+        match->comboCount      = 0;
+        match->comboBeanCount  = 0;
+        match->comboBonusTable = PuyoMatch->comboBonus;
+        match->concurrentBonus = 0;
+        match->beanBonus       = 0;
+        match->timer           = false;
+        match->junkDropCount   = 0;
+        match->junkBeanCount   = 0;
 
-        EntityPuyoScore *score = (EntityPuyoScore *)PuyoGame->score1[0];
-        score->score           = match->score;
+        PuyoGame->score1[0]->score = match->score;
     }
 
     foreach_all(CollapsingPlatform, platform) { platform->stoodPos.x = 0; }
 }
 
-void PuyoGame_Unknown5(void)
+void PuyoGame_CheckMatchFinish(void)
 {
     RSDK_THIS(PuyoGame);
 
-    EntityPuyoScore *scoreP1 = (EntityPuyoScore *)PuyoGame->score2[0];
-    EntityPuyoScore *scoreP2 = (EntityPuyoScore *)PuyoGame->score2[1];
+    EntityPuyoScore *scoreP1 = PuyoGame->score2[0];
+    EntityPuyoScore *scoreP2 = PuyoGame->score2[1];
 
-    int score = scoreP1->score;
-    if (score > scoreP2->score)
-        score = scoreP2->score;
+    int32 score = maxVal(scoreP1->score, scoreP2->score);
 
     if (score >= 2) {
-        self->field_A1                                                           = scoreP1->score <= scoreP2->score;
-        self->field_98                                                           = 1;
-        ((EntityPuyoIndicator *)PuyoGame->indicators[self->field_A1])->state     = PuyoIndicator_ShowWinner;
-        ((EntityPuyoIndicator *)PuyoGame->indicators[self->field_A1 ^ 1])->state = PuyoIndicator_ShowLoser;
+        self->matchWinner                                  = scoreP1->score <= scoreP2->score;
+        self->finishedMatch                                = true;
+        PuyoGame->indicators[self->matchWinner]->state     = PuyoIndicator_ShowWinner;
+        PuyoGame->indicators[self->matchWinner ^ 1]->state = PuyoIndicator_ShowLoser;
     }
 }
 
-void PuyoGame_Unknown6(void)
+void PuyoGame_State_Setup(void)
 {
     RSDK_THIS(PuyoGame);
-    self->state = PuyoGame_Unknown7;
+    self->state = PuyoGame_State_None;
 }
 
-void PuyoGame_Unknown7(void) {}
+void PuyoGame_State_None(void) {}
 
-void PuyoGame_Unknown8(void)
+void PuyoGame_State_SelectingLevel(void)
 {
     RSDK_THIS(PuyoGame);
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    EntityPuyoLevelSelect *levelSelP1 = (EntityPuyoLevelSelect *)PuyoGame->levelSel[0];
-    EntityPuyoLevelSelect *levelSelP2 = (EntityPuyoLevelSelect *)PuyoGame->levelSel[1];
+    EntityPuyoLevelSelect *levelSelP1 = PuyoGame->levelSel[0];
+    EntityPuyoLevelSelect *levelSelP2 = PuyoGame->levelSel[1];
 
-    levelSelP1->flag = true;
-    if (param->selectionFlag == 1 || !param->selectionFlag)
+    levelSelP1->canSelectLevels = true;
+    if (param->puyoSelection == PUYO_SELECTION_VS_CPU || param->puyoSelection == PUYO_SELECTION_NONE)
         levelSelP2->ready = true;
-    levelSelP2->flag = true;
 
+    levelSelP2->canSelectLevels = true;
     if (levelSelP1->ready && levelSelP2->ready) {
-        levelSelP1->flag        = false;
-        levelSelP2->flag        = false;
-        self->selectedLevels[0] = levelSelP1->optionID;
-        self->selectedLevels[1] = levelSelP2->optionID;
-        self->state             = PuyoGame_Unknown9;
+        levelSelP1->canSelectLevels = false;
+        levelSelP2->canSelectLevels = false;
+        self->selectedLevels[0]     = levelSelP1->optionID;
+        self->selectedLevels[1]     = levelSelP2->optionID;
+        self->state                 = PuyoGame_State_SetupRound;
     }
 }
 
-void PuyoGame_Unknown9(void)
+void PuyoGame_State_SetupRound(void)
 {
     RSDK_THIS(PuyoGame);
 
     if (self->timer >= 60) {
         self->timer = 0;
-        self->state = PuyoGame_SetupEntities;
+        self->state = PuyoGame_State_SetupEntities;
     }
     else {
         if (!self->timer) {
-            PuyoGame_Unknown4();
+            PuyoGame_SetupGameState();
             foreach_all(PuyoIndicator, indicator) { indicator->state = PuyoIndicator_ShowReady; }
             int32 key      = (int32)time(NULL);
             int32 matchKey = RSDK.RandSeeded(0, 512, &key);
 
             foreach_all(PuyoMatch, match)
             {
-                RSDK.SetSpriteAnimation(-1, 0, &match->animator1, true, 0);
-                RSDK.SetSpriteAnimation(-1, 0, &match->animator2, true, 0);
-                match->active   = ACTIVE_NORMAL;
-                match->matchKey = matchKey;
-                match->field_74 = self->selectedLevels[match->playerID];
+                RSDK.SetSpriteAnimation(-1, 0, &match->beanLAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->beanRAnimator, true, 0);
+                match->active        = ACTIVE_NORMAL;
+                match->matchKey      = matchKey;
+                match->selectedLevel = self->selectedLevels[match->playerID];
                 PuyoMatch_SetupNextBeans(match);
             }
         }
@@ -248,77 +269,81 @@ void PuyoGame_Unknown9(void)
     }
 }
 
-void PuyoGame_SetupEntities(void)
+void PuyoGame_State_SetupEntities(void)
 {
     RSDK_THIS(PuyoGame);
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    self->field_9C = 0;
-    self->field_A0 = 0;
+    self->determinedLoser = false;
+    self->roundWinner     = 0;
 
-    int matchID = 0;
+    int32 matchID = 0;
     foreach_all(PuyoMatch, match)
     {
         match->timer  = true;
         match->active = ACTIVE_NORMAL;
         match->state  = PuyoMatch_State_HandleMatch;
         if (match->playerID) {
-            if (param->selectionFlag == 1 || !param->selectionFlag) {
-                match->stateInput                        = PuyoAI_StateInput;
-                PuyoAI->value4[match->playerID]          = 14;
-                PuyoAI->targetX[match->playerID]         = 0;
-                PuyoAI->value6[match->playerID]          = 0;
-                PuyoAI->value3[match->playerID]          = true;
+            if (param->puyoSelection == PUYO_SELECTION_VS_CPU || param->puyoSelection == PUYO_SELECTION_NONE) {
+                match->stateInput                        = PuyoAI_Input_AI;
+                PuyoAI->lastBeanY[match->playerID]       = PUYO_PLAYFIELD_H;
+                PuyoAI->desiredColumn[match->playerID]   = 0;
+                PuyoAI->desiredRotation[match->playerID] = 0;
+                PuyoAI->isAI[match->playerID]            = true;
                 PuyoAI->controlInterval[match->playerID] = PuyoAI->controlIntervals[self->selectedLevels[0]];
                 PuyoAI->controlChance[match->playerID]   = PuyoAI->controlChances[self->selectedLevels[0]];
             }
         }
-        PuyoGame->managers[matchID++] = (Entity *)match;
+        PuyoGame->managers[matchID++] = match;
     }
 
-    int indicatorID = 0;
+    int32 indicatorID = 0;
     foreach_all(PuyoIndicator, indicator)
     {
         indicator->state                    = StateMachine_None;
-        PuyoGame->indicators[indicatorID++] = (Entity *)indicator;
+        PuyoGame->indicators[indicatorID++] = indicator;
     }
 
-    int platformID = 0;
+    int32 platformID = 0;
     foreach_all(CollapsingPlatform, platform) { PuyoGame->platforms[platformID++] = platform; }
 
-    self->state = PuyoGame_Unknown11;
-    PuyoGame_Unknown11();
+    self->state = PuyoGame_State_HandleRound;
+    PuyoGame_State_HandleRound();
 }
 
-void PuyoGame_Unknown11(void)
+void PuyoGame_State_HandleRound(void)
 {
-    for (int p = 0; p < 2; ++p) {
-        EntityPuyoMatch *match                          = (EntityPuyoMatch *)PuyoGame->managers[p];
-        ((EntityPuyoScore *)PuyoGame->score1[p])->score = match->score;
+    for (int32 p = 0; p < 2; ++p) {
+        EntityPuyoMatch *match     = PuyoGame->managers[p];
+        PuyoGame->score1[p]->score = match->score;
         if (match->state == PuyoMatch_State_Lose)
-            PuyoGame_SetupPlayer(p);
+            PuyoGame_SetLoser(p);
     }
 }
 
-void PuyoGame_Unknown12(void)
+void PuyoGame_State_ShowRoundResults(void)
 {
     RSDK_THIS(PuyoGame);
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     if (self->timer >= 60) {
-        int count    = 2 - (param->selectionFlag < 2);
-        bool32 flags = false;
+        int32 count          = param->puyoSelection >= PUYO_SELECTION_VS_2P ? 2 : 1;
+        bool32 buttonPressed = false;
 
-        RSDKControllerState *controller = &ControllerInfo[1];
-        for (int i = 0; i < count; ++i) {
-            flags |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
-                     || controller[i].keyY.down || controller[i].keyZ.down;
+        RSDKControllerState *controller = &ControllerInfo[CONT_P1];
+        for (int32 i = 0; i < count; ++i) {
+            buttonPressed |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
+                             || controller[i].keyY.down || controller[i].keyZ.down;
         }
 
-        if (flags) {
+#if RETRO_USE_TOUCH_CONTROLS
+        buttonPressed |= TouchInfo->count != 0;
+#endif
+
+        if (buttonPressed) {
             PuyoGame_DestroyPuyoBeans();
             self->timer = 0;
-            self->state = PuyoGame_Unknown9;
+            self->state = PuyoGame_State_SetupRound;
         }
     }
     else {
@@ -326,28 +351,32 @@ void PuyoGame_Unknown12(void)
     }
 }
 
-void PuyoGame_Unknown13(void)
+void PuyoGame_State_ShowMatchResults(void)
 {
     RSDK_THIS(PuyoGame);
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     if (self->timer >= 60) {
-        int count    = 2 - (param->selectionFlag < 2);
-        bool32 flags = false;
+        int32 count          = param->puyoSelection >= PUYO_SELECTION_VS_2P ? 2 : 1;
+        bool32 buttonPressed = false;
 
         RSDKControllerState *controller = &ControllerInfo[CONT_P1];
-        for (int i = 0; i < count; ++i) {
-            flags |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
-                     || controller[i].keyY.down || controller[i].keyZ.down;
+        for (int32 i = 0; i < count; ++i) {
+            buttonPressed |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
+                             || controller[i].keyY.down || controller[i].keyZ.down;
         }
 
-        if (flags) {
+#if RETRO_USE_TOUCH_CONTROLS
+        buttonPressed |= TouchInfo->count != 0;
+#endif
+
+        if (buttonPressed) {
             EntityFXFade *fxFade = PuyoGame->fxFade;
             fxFade->timer        = 0;
             fxFade->speedIn      = 16;
             fxFade->drawOrder    = 15;
             fxFade->state        = FXFade_State_FadeIn;
-            self->state          = PuyoGame_Unknown14;
+            self->state          = PuyoGame_State_FadeToMenu;
         }
     }
     else {
@@ -355,7 +384,7 @@ void PuyoGame_Unknown13(void)
     }
 }
 
-void PuyoGame_Unknown14(void)
+void PuyoGame_State_FadeToMenu(void)
 {
     RSDK_THIS(PuyoGame);
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -363,8 +392,9 @@ void PuyoGame_Unknown14(void)
 
     EntityFXFade *fxFade = PuyoGame->fxFade;
     if (fxFade->timer == 512) {
-        if (param->selectionFlag == 3)
-            session->wins[self->field_A1]++;
+        if (param->puyoSelection == PUYO_SELECTION_TIE_BREAKER)
+            session->wins[self->matchWinner]++;
+
         destroyEntity(self);
         RSDK.SetScene("Presentation", "Menu");
         RSDK.LoadScene();

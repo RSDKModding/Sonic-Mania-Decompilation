@@ -34,7 +34,7 @@
 #define RETRO_STANDALONE (1)
 #endif
 
-// slightly misleading, this controls adding touch controls to players
+// slightly misleading, this controls adding touch controls to the game
 #define RETRO_USE_TOUCH_CONTROLS (1)
 
 #include "GameLink.h"

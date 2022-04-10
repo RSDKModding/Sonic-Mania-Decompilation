@@ -58,9 +58,9 @@ void TimeAttackData_TrackEnemyDefeat(StatInfo *stat, uint8 zoneID, uint8 actID, 
 void TimeAttackData_Clear(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    param->selectionFlag   = 0;
+    param->puyoSelection   = PUYO_SELECTION_NONE;
     memset(param->menuTag, 0, sizeof(param->menuTag));
-    param->selectionID      = 0;
+    param->menuSelection      = 0;
     param->startedTAAttempt = false;
     param->inTimeAttack     = false;
     param->zoneID           = 0;

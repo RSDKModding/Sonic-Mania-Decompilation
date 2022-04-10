@@ -12,10 +12,10 @@ ObjectPuyoScore *PuyoScore;
 void PuyoScore_Update(void)
 {
     RSDK_THIS(PuyoScore);
-    if (self->flag)
+    if (self->flashing)
         self->visible = !(Zone->timer & 4);
     else
-        self->visible = 1;
+        self->visible = true;
 }
 
 void PuyoScore_LateUpdate(void) {}
@@ -54,6 +54,7 @@ void PuyoScore_DrawScore(int score)
     for (int i = 0; i < 6; ++i) {
         if (!buffer[i])
             break;
+
         RSDK.SetSpriteAnimation(PuyoScore->aniFrames, (self->counter != false) + 2, &self->animator, true, (buffer[i] - '0'));
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += 0x80000;

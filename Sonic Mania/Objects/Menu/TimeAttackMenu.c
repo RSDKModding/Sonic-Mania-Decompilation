@@ -249,7 +249,7 @@ void TimeAttackMenu_HandleMenuReturn(void)
         UITABanner_SetupDetails(param->characterID, TimeAttackMenu->detailsBanner, param->zoneID, param->actID, param->isEncoreMode);
         TimeAttackMenu_SetupDetailsView();
         UIButton_SetChoiceSelectionWithCB(detailsControl->buttons[0], param->actID);
-        detailsControl->buttonID = param->selectionID;
+        detailsControl->buttonID = param->menuSelection;
         TimeAttackMenu_Replays_ChoiceChangeCB();
     }
 
@@ -534,7 +534,7 @@ void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
     int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->selectionID  = parent->buttonID;
+        param->menuSelection  = parent->buttonID;
         param->inTimeAttack = true;
         TimeAttackMenu_WatchReplay(uuid, false);
     }
@@ -550,7 +550,7 @@ void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void)
     int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->selectionID  = parent->buttonID;
+        param->menuSelection  = parent->buttonID;
         param->inTimeAttack = true;
         TimeAttackMenu_WatchReplay(uuid, true);
     }
@@ -667,7 +667,7 @@ void TimeAttackMenu_StartTAAttempt(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     sprintf(param->menuTag, "Time Attack Detail");
-    param->selectionID  = 0;
+    param->menuSelection  = 0;
     param->inTimeAttack = true;
     param->isEncoreMode = TimeAttackMenu->encoreMode;
 

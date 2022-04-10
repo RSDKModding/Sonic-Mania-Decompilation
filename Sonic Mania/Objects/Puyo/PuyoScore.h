@@ -15,7 +15,7 @@ struct EntityPuyoScore {
     StateMachine(state);
     int32 playerID;
     bool32 counter;
-    bool32 flag;
+    bool32 flashing;
     int32 score;
     Animator animator;
 };

@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    MAINMENU_MAIN,
+    MAINMENU_TIMEATTACK,
+    MAINMENU_COMPETITION,
+    MAINMENU_SAVESELECT,
+#if RETRO_USE_PLUS
+    MAINMENU_SAVESELECT_ENCORE,
+#endif
+} MainMenuIDs;
+
 // Object Class
 struct ObjectMenuSetup {
     RSDK_OBJECT

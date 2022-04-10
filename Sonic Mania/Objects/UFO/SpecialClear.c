@@ -628,7 +628,7 @@ void SpecialClear_State_ExitFadeOut(void)
     }
     else if (!self->saveInProgress) {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-        if (param->selectionType == 1) {
+        if (param->bssSelection == BSS_SELECTION_EXTRAS) {
             RSDK.SetScene("Presentation", "Menu");
             RSDK.LoadScene();
         }

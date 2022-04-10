@@ -86,7 +86,7 @@ void ExtrasMenu_SetupActions(void)
                     choice->clearParentState = true;
                     break;
                 case 3:
-                    choice->actionCB  = ExtrasMenu_Puyo_vsAI_ActionCB;
+                    choice->actionCB  = ExtrasMenu_Puyo_vs2P_ActionCB;
                     choice->clearParentState = true;
                     break;
                 case 6:
@@ -145,10 +145,11 @@ void ExtrasMenu_ProcessInputs(void)
 void ExtrasMenu_Start_Puyo_vsAI(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->puyoSelection = PUYO_SELECTION_VS_CPU;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 1;
+    param->menuSelection = EXTRAS_SELECTION_PUYO;
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }
@@ -162,22 +163,22 @@ void ExtrasMenu_Start_Puyo_vs2P(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 2;
+    param->puyoSelection = PUYO_SELECTION_VS_2P;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 1;
+    param->menuSelection = EXTRAS_SELECTION_PUYO;
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }
 
-void ExtrasMenu_Callback_Puyo_vs2P(void) { MenuSetup_StartTransition(ExtrasMenu_Start_Puyo_vs2P, 32); }
+void ExtrasMenu_Puyo_vs2P_ActionCB(void) { MenuSetup_StartTransition(ExtrasMenu_Start_Puyo_vs2P, 32); }
 
 void ExtrasMenu_Start_Credits(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->bssSelection = CREDITS_SELECTION_EXTRAS;
     strcpy(param->menuTag, "Extras");
-    param->selectionID         = 3;
+    param->menuSelection         = EXTRAS_SELECTION_CREDITS;
     param->creditsReturnToMenu = true;
     RSDK.SetScene("Presentation", "Credits");
     RSDK.LoadScene();
@@ -193,7 +194,7 @@ void ExtrasMenu_Start_DAGarden(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 2;
+    param->menuSelection = EXTRAS_SELECTION_DAGARDEN;
 #if RETRO_USE_PLUS
     if (API.CheckDLC(DLC_PLUS))
         RSDK.SetScene("Extras", "D.A. Garden Plus");
@@ -209,9 +210,9 @@ void ExtrasMenu_Start_BSS_3K(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->bssSelection = BSS_SELECTION_EXTRAS;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 0;
+    param->menuSelection = EXTRAS_SELECTION_BSS;
     RSDK.SetScene("Blue Spheres", "Random");
     RSDK.LoadScene();
 }
@@ -222,9 +223,9 @@ void ExtrasMenu_Start_BSS_Mania(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->bssSelection = BSS_SELECTION_EXTRAS;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 0;
+    param->menuSelection = EXTRAS_SELECTION_BSS;
     RSDK.SetScene("Blue Spheres", "Random 2");
     RSDK.LoadScene();
 }

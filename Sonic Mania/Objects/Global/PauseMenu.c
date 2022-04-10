@@ -384,7 +384,7 @@ uint8 PauseMenu_GetPlayerCount(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (RSDK.CheckStageFolder("Puyo")) {
-        if (param->selectionFlag != 1 && param->selectionFlag)
+        if (param->puyoSelection >= PUYO_SELECTION_VS_2P)
             return 2;
     }
     else if (globals->gameMode == MODE_COMPETITION) {
@@ -497,7 +497,7 @@ void PauseMenu_ExitFadeCB(void)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
         sprintf(param->menuTag, "Competition Zones");
-        param->selectionID = session->levelIndex;
+        param->menuSelection = session->levelIndex;
     }
     RSDK.SetScene("Presentation", "Menu");
     PauseMenu_StopSound();

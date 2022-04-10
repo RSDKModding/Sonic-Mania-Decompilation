@@ -89,14 +89,14 @@ void PuyoIndicator_ShowReady(void)
 void PuyoIndicator_EditorDraw(void)
 {
     RSDK_THIS(PuyoIndicator);
-    self->drawFX   = FX_FLIP; 
+    self->drawFX   = FX_FLIP;
     self->startPos = self->position;
     if (self->playerID)
         PuyoIndicator_ShowLoser();
     else
         PuyoIndicator_ShowWinner();
-    self->scale.x  = 0x200;
-    self->scale.y  = 0x200;
+    self->scale.x = 0x200;
+    self->scale.y = 0x200;
 
     PuyoIndicator_Draw();
 

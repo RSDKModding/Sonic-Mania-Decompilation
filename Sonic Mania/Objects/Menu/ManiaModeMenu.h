@@ -4,6 +4,7 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
 // Object Class
 struct ObjectManiaModeMenu {
     RSDK_OBJECT

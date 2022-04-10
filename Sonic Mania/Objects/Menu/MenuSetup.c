@@ -781,7 +781,7 @@ void MenuSetup_HandleMenuReturn(void)
             }
             else {
                 UIControl_SetActiveMenu(control);
-                control->buttonID = param->selectionID;
+                control->buttonID = param->menuSelection;
 
                 if (control == MenuSetup->timeAttackZones && param->startedTAAttempt)
                     UITAZoneModule_SetStartupModule(control, param->characterID, param->zoneID, param->actID, param->timeScore);
@@ -794,7 +794,7 @@ void MenuSetup_HandleMenuReturn(void)
             control->buttons[charID]->isSelected = true;
         }
 
-        if (control == MenuSetup->extras && param->selectionType == 2) {
+        if (control == MenuSetup->extras && param->puyoSelection == PUYO_SELECTION_VS_2P) {
             UIButton_SetChoiceSelection(control->buttons[1], 1);
         }
 
@@ -888,31 +888,37 @@ int32 MenuSetup_GetActiveMenu(void)
         || control == MenuSetup->sound || control == MenuSetup->controls_win || control == MenuSetup->controls_KB
         || control == MenuSetup->controls_PS4 || control == MenuSetup->controls_XB1 || control == MenuSetup->controls_NX
         || control == MenuSetup->controls_NX_Grip || control == MenuSetup->controls_NX_JoyCon || control == MenuSetup->controls_NX_Pro) {
-        return 0;
+        return MAINMENU_MAIN;
     }
+
     if (control == MenuSetup->timeAttack || control == MenuSetup->timeAttackZones || control == MenuSetup->leaderboards
         || control == MenuSetup->competition || control == MenuSetup->competitionRules || control == MenuSetup->competitionZones) {
-        return 1;
+        return MAINMENU_TIMEATTACK;
     }
+
     if (control == MenuSetup->competitionRound || control == MenuSetup->competitionTotal)
-        return 2;
+        return MAINMENU_COMPETITION;
+
     if (control == MenuSetup->saveSelect || control == MenuSetup->noSaveMode || control == MenuSetup->secrets)
-        return 3;
-    return 0;
+        return MAINMENU_SAVESELECT;
+
+    return MAINMENU_MAIN;
 }
 
 void MenuSetup_ChangeMenuTrack(void)
 {
     int32 trackID = 0;
     switch (MenuSetup_GetActiveMenu()) {
-        case 1: trackID = 1; break;
-        case 2: trackID = 2; break;
-        case 3: trackID = 3; break;
-        case 4: trackID = 4; break;
-        default: trackID = 0; break;
+        default: 
+        case MAINMENU_MAIN: trackID = 0; break;
+        case MAINMENU_TIMEATTACK: trackID = 1; break;
+        case MAINMENU_COMPETITION: trackID = 2; break;
+        case MAINMENU_SAVESELECT: trackID = 3; break;
     }
+
     if (!RSDK.ChannelActive(Music->channelID))
         Music_PlayTrack(trackID);
+
     if (Music->activeTrack != trackID)
         Music_TransitionTrack(trackID, 0.12);
 }
@@ -920,10 +926,10 @@ void MenuSetup_ChangeMenuTrack(void)
 void MenuSetup_SetBGColours(void)
 {
     switch (MenuSetup_GetActiveMenu()) {
-        case 0: UIBackground->activeColours = UIBackground->bgColours; break;
-        case 1:
-        case 2: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
-        case 3: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
+        case MAINMENU_MAIN: UIBackground->activeColours = UIBackground->bgColours; break;
+        case MAINMENU_TIMEATTACK:
+        case MAINMENU_COMPETITION: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
+        case MAINMENU_SAVESELECT: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
         default: break;
     }
 }
@@ -941,6 +947,7 @@ void MenuSetup_MenuButton_ActionCB(void)
                 UIControl_MatchMenuTag("Save Select");
             }
             break;
+
         case 1: UIControl_MatchMenuTag("Time Attack"); break;
         case 2: UIControl_MatchMenuTag("Competition"); break;
         case 3: UIControl_MatchMenuTag("Options"); break;
@@ -1046,7 +1053,7 @@ void MenuSetup_SaveSlot_ActionCB(void)
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
     TimeAttackData_Clear();
     RSDK.GetCString(param->menuTag, &control->tag);
-    param->selectionID = control->lastButtonID;
+    param->menuSelection = control->lastButtonID;
     param->replayID    = 0;
     globals->gameMode  = MODE_MANIA;
 
@@ -1205,7 +1212,7 @@ void MenuSetup_TA_StartAttempt(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     sprintf(param->menuTag, "Time Attack Zones");
-    param->selectionID      = param->zoneID;
+    param->menuSelection      = param->zoneID;
     param->startedTAAttempt = true;
 
     SaveGame_ResetPlayerState();
@@ -1773,10 +1780,10 @@ void MenuSetup_VS_StartPuyoMatch(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     TimeAttackData_Clear();
-    param->selectionFlag = 3;
+    param->puyoSelection = PUYO_SELECTION_TIE_BREAKER;
     globals->gameMode    = MODE_COMPETITION;
     strcpy(param->menuTag, "Competition Total");
-    param->selectionID = 0;
+    param->menuSelection = 0;
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }
@@ -2100,9 +2107,9 @@ void MenuSetup_Extras_Start_Puyo_vsAI(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->puyoSelection = PUYO_SELECTION_VS_CPU;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 1;
+    param->menuSelection = EXTRAS_SELECTION_PUYO;
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }
@@ -2113,9 +2120,9 @@ void MenuSetup_Extras_Start_Puyo_vs2P(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 2;
+    param->puyoSelection = PUYO_SELECTION_VS_2P;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 1;
+    param->menuSelection = EXTRAS_SELECTION_PUYO;
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }
@@ -2126,10 +2133,10 @@ void MenuSetup_Extras_Start_Credits(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->bssSelection = CREDITS_SELECTION_EXTRAS;
     strcpy(param->menuTag, "Extras");
-    param->selectionID         = 3;
-    param->creditsReturnToMenu = 1;
+    param->menuSelection         = EXTRAS_SELECTION_CREDITS;
+    param->creditsReturnToMenu = true;
     RSDK.SetScene("Presentation", "Credits");
     RSDK.LoadScene();
 }
@@ -2141,7 +2148,7 @@ void MenuSetup_Extras_StartDAGarden(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 2;
+    param->menuSelection = EXTRAS_SELECTION_DAGARDEN;
     RSDK.SetScene("Extras", "D.A. Garden");
     RSDK.LoadScene();
 }
@@ -2152,9 +2159,9 @@ void MenuSetup_Extras_Start_BSS_3K(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->bssSelection = BSS_SELECTION_EXTRAS;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 0;
+    param->menuSelection = EXTRAS_SELECTION_BSS;
     RSDK.SetScene("Blue Spheres", "Random");
     RSDK.LoadScene();
 }
@@ -2165,9 +2172,9 @@ void MenuSetup_Extras_Start_BSS_Mania(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_Clear();
-    param->selectionType = 1;
+    param->bssSelection = BSS_SELECTION_EXTRAS;
     strcpy(param->menuTag, "Extras");
-    param->selectionID = 0;
+    param->menuSelection = EXTRAS_SELECTION_BSS;
     RSDK.SetScene("Blue Spheres", "Random 2");
     RSDK.LoadScene();
 }

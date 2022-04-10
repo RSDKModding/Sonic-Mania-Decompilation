@@ -12,10 +12,11 @@ ObjectPuyoLevelSelect *PuyoLevelSelect;
 void PuyoLevelSelect_Update(void)
 {
     RSDK_THIS(PuyoLevelSelect);
-    if (self->flag) {
+
+    if (self->canSelectLevels) {
         self->visible = !self->ready;
 
-        int32 controllerID  = self->playerID + 1;
+        int32 controllerID = self->playerID + 1;
 
 #if RETRO_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -30,14 +31,15 @@ void PuyoLevelSelect_Update(void)
                     ty -= 192;
 
                     switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
-                        case 0:
-                            break;
+                        case 0: break;
+
                         case 1:
                             ControllerInfo->keyDown.down |= true;
                             ControllerInfo[controllerID].keyDown.down = true;
                             break;
-                        case 2:
-                            break;
+
+                        case 2: break;
+
                         case 3:
                             ControllerInfo->keyUp.down |= true;
                             ControllerInfo[controllerID].keyUp.down = true;
@@ -47,10 +49,12 @@ void PuyoLevelSelect_Update(void)
                 }
             }
         }
+
         if (!getBit(self->touchFlags, 0)) {
             ControllerInfo->keyUp.press |= ControllerInfo->keyUp.down;
             ControllerInfo[controllerID].keyUp.press |= ControllerInfo[controllerID].keyUp.down;
         }
+
         if (!getBit(self->touchFlags, 1)) {
             ControllerInfo->keyDown.press |= ControllerInfo->keyDown.down;
             ControllerInfo[controllerID].keyDown.press |= ControllerInfo[controllerID].keyDown.down;
@@ -89,8 +93,8 @@ void PuyoLevelSelect_Update(void)
         setBit(self->touchFlags, ControllerInfo[controllerID].keyB.down, 3);
 #endif
 
-        self->up      = ControllerInfo[controllerID].keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
-        self->down    = ControllerInfo[controllerID].keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
+        self->up   = ControllerInfo[controllerID].keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
+        self->down = ControllerInfo[controllerID].keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
 
         if (API_GetConfirmButtonFlip()) {
             self->confirmPress = ControllerInfo[controllerID].keyB.press;
@@ -125,7 +129,8 @@ void PuyoLevelSelect_Create(void *data)
 
 void PuyoLevelSelect_StageLoad(void)
 {
-    PuyoLevelSelect->aniFrames     = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE);
+    PuyoLevelSelect->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE);
+
     PuyoLevelSelect->sfxMenuBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     PuyoLevelSelect->sfxMenuAccept = RSDK.GetSfx("Global/MenuAccept.wav");
 }
@@ -135,31 +140,32 @@ void PuyoLevelSelect_DrawSprites(void)
     RSDK_THIS(PuyoLevelSelect);
     Vector2 drawPos;
 
-    drawPos.x         = self->position.x + 0x30000;
-    drawPos.y         = self->position.y + 0x30000;
+    drawPos.x       = self->position.x + 0x30000;
+    drawPos.y       = self->position.y + 0x30000;
     self->inkEffect = INK_BLEND;
     self->alpha     = 0x7F;
-    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &self->animator1, true, 1);
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &self->frameAnimator, true, 1);
+    RSDK.DrawSprite(&self->frameAnimator, &drawPos, false);
 
     drawPos.x -= 0x30000;
     drawPos.y -= 0x30000;
     self->inkEffect = INK_NONE;
-    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &self->frameAnimator, true, 0);
+    RSDK.DrawSprite(&self->frameAnimator, &drawPos, false);
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 0x500000;
-    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 1, &self->animator2, true, 1);
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 1, &self->labelAnimator, true, 1);
+    RSDK.DrawSprite(&self->labelAnimator, &drawPos, false);
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y - 0x310000;
 
-    for (int i = 0; i < 5; ++i) {
+    // Draw Levels
+    for (int32 i = 0; i < 5; ++i) {
         if (i != self->optionID || (!(Zone->timer & 4))) {
-            RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, (i != self->optionID) + 4, &self->animator2, true, i + 1);
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, (i != self->optionID) + 4, &self->labelAnimator, true, i + 1);
+            RSDK.DrawSprite(&self->labelAnimator, &drawPos, false);
         }
         drawPos.y += 0x180000;
     }

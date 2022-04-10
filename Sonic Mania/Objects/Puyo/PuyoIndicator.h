@@ -15,9 +15,9 @@ struct EntityPuyoIndicator {
     StateMachine(state);
     uint8 playerID;
     Vector2 startPos;
-    int field_68;
-    int field_6C;
-    int field_70;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
     Animator animator;
 };
 

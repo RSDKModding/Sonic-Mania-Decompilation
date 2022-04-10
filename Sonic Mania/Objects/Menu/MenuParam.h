@@ -3,6 +3,30 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BSS_SELECTION_NONE,
+    BSS_SELECTION_EXTRAS,
+} BSSSelectionType;
+
+typedef enum {
+    PUYO_SELECTION_NONE,
+    PUYO_SELECTION_VS_CPU,
+    PUYO_SELECTION_VS_2P,
+    PUYO_SELECTION_TIE_BREAKER,
+} PuyoSelectionFlags;
+
+typedef enum {
+    CREDITS_SELECTION_NONE,
+    CREDITS_SELECTION_EXTRAS,
+} CreditsSelectionType;
+
+typedef enum {
+    EXTRAS_SELECTION_BSS,
+    EXTRAS_SELECTION_PUYO,
+    EXTRAS_SELECTION_DAGARDEN,
+    EXTRAS_SELECTION_CREDITS,
+} ExtrasSelectionIDs;
+
 // Object Class
 struct ObjectMenuParam {
 	RSDK_OBJECT
@@ -11,10 +35,10 @@ struct ObjectMenuParam {
 // Entity Class
 struct EntityMenuParam {
     RSDK_ENTITY
-    uint8 selectionFlag;
-    uint8 selectionType;
+    uint8 puyoSelection;
+    uint8 bssSelection;
     char menuTag[0x100];
-    int32 selectionID;
+    int32 menuSelection;
     bool32 startedTAAttempt; // only used in pre-plus, goes unused by the time plus rolled around
     bool32 inTimeAttack;
     int32 replayID;

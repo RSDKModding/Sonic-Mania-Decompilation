@@ -29,7 +29,7 @@ void SkyTeleporter_Draw(void)
     if (SceneInfo->currentDrawGroup == Zone->drawOrderLow)
         RSDK.DrawSprite(&self->animator, NULL, false);
     else
-        SkyTeleporter_Unknown1();
+        SkyTeleporter_DrawTeleportBeam();
 }
 
 void SkyTeleporter_Create(void *data)
@@ -37,31 +37,33 @@ void SkyTeleporter_Create(void *data)
     RSDK_THIS(SkyTeleporter);
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     self->hitbox.left   = -24;
     self->hitbox.top    = -8;
     self->hitbox.right  = 24;
     self->hitbox.bottom = 20;
+
     RSDK.SetSpriteAnimation(SkyTeleporter->aniFrames, 0, &self->animator, true, 0);
 }
 
 void SkyTeleporter_StageLoad(void) { SkyTeleporter->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/SkyTeleporter.bin", SCOPE_STAGE); }
 
-void SkyTeleporter_Unknown1(void)
+void SkyTeleporter_DrawTeleportBeam(void)
 {
     RSDK_THIS(SkyTeleporter);
 
     if (self->timer) {
         int32 x     = self->position.x - (self->timer << 15);
-        int32 alpha = (RSDK.Sin256(16 * Zone->timer) >> 3) + 127;
-        RSDK.DrawRect(x - 0x20000, ScreenInfo->position.y << 16, 0x20000, ScreenInfo->height << 16, 0xF080A0u, alpha, INK_ADD, false);
-        RSDK.DrawRect(x, ScreenInfo->position.y << 16, self->timer << 16, ScreenInfo->height << 16, 0xF0F0F0u, alpha, INK_ADD, false);
-        RSDK.DrawRect(x + (self->timer << 16), ScreenInfo->position.y << 16, 0x20000, ScreenInfo->height << 16, 0xF080A0u, alpha, INK_ADD, false);
+        int32 alpha = 0x7F + (RSDK.Sin256(16 * Zone->timer) >> 3);
+
+        RSDK.DrawRect(x - 0x20000, ScreenInfo->position.y << 16, 0x20000, ScreenInfo->height << 16, 0xF080A0, alpha, INK_ADD, false);
+        RSDK.DrawRect(x, ScreenInfo->position.y << 16, self->timer << 16, ScreenInfo->height << 16, 0xF0F0F0, alpha, INK_ADD, false);
+        RSDK.DrawRect(x + (self->timer << 16), ScreenInfo->position.y << 16, 0x20000, ScreenInfo->height << 16, 0xF080A0, alpha, INK_ADD, false);
     }
 }
 

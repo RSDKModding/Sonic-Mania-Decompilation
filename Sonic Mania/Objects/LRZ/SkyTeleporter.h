@@ -12,10 +12,10 @@ struct ObjectSkyTeleporter {
 // Entity Class
 struct EntitySkyTeleporter {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
+    StateMachine(state); // unused
+    int32 unused1;
     Vector2 startPos;
-    int32 field_68;
+    int32 unused2;
     int32 timer;
     Hitbox hitbox;
     Animator animator;
@@ -38,6 +38,6 @@ void SkyTeleporter_EditorLoad(void);
 void SkyTeleporter_Serialize(void);
 
 // Extra Entity Functions
-void SkyTeleporter_Unknown1(void);
+void SkyTeleporter_DrawTeleportBeam(void);
 
 #endif //!OBJ_SKYTELEPORTER_H

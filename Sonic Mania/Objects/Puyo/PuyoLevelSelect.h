@@ -16,11 +16,11 @@ struct EntityPuyoLevelSelect {
     RSDK_ENTITY
     StateMachine(state);
     int32 playerID;
-    bool32 flag;
+    bool32 canSelectLevels;
     bool32 ready;
     int32 optionID;
-    Animator animator1;
-    Animator animator2;
+    Animator frameAnimator;
+    Animator labelAnimator;
     bool32 up;
     bool32 down;
     bool32 confirmPress;

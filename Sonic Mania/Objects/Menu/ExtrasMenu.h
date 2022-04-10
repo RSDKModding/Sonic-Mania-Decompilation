@@ -44,7 +44,7 @@ void ExtrasMenu_ProcessInputs(void);
 void ExtrasMenu_Start_Puyo_vsAI(void);
 void ExtrasMenu_Puyo_vsAI_ActionCB(void);
 void ExtrasMenu_Start_Puyo_vs2P(void);
-void ExtrasMenu_Callback_Puyo_vs2P(void);
+void ExtrasMenu_Puyo_vs2P_ActionCB(void);
 void ExtrasMenu_Start_Credits(void);
 void ExtrasMenu_CreditsButton_ActionCB(void);
 void ExtrasMenu_Start_DAGarden(void);

@@ -7,12 +7,12 @@
 struct ObjectPuyoGame {
     RSDK_OBJECT
     uint16 aniFrames;
-    Entity *managers[2];
-    Entity *indicators[2];
+    EntityPuyoMatch *managers[2];
+    EntityPuyoIndicator *indicators[2];
     EntityCollapsingPlatform *platforms[2];
-    Entity *score1[2];
-    Entity *score2[2];
-    Entity *levelSel[2];
+    EntityPuyoScore *score1[2];
+    EntityPuyoScore *score2[2];
+    EntityPuyoLevelSelect *levelSel[2];
     EntityFXFade *fxFade;
 };
 
@@ -20,20 +20,18 @@ struct ObjectPuyoGame {
 struct EntityPuyoGame {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused1;
     Vector2 startPos;
     int32 timer;
     int32 selectedLevels[2];
-    int32 field_74;
-    int32 field_78;
+    int32 unused2;
+    int32 unused3;
     Animator animator;
     bool32 started;
-    int32 field_98;
-    int32 field_9C;
-    uint8 field_A0;
-    uint8 field_A1;
-    uint8 field_A2;
-    uint8 field_A3;
+    int32 finishedMatch;
+    bool32 determinedLoser;
+    uint8 roundWinner;
+    uint8 matchWinner;
 };
 
 // Object Struct
@@ -54,18 +52,18 @@ void PuyoGame_Serialize(void);
 
 // Extra Entity Functions
 void PuyoGame_SetupStartingEntities(void);
-void PuyoGame_SetupPlayer(uint8 player);
+void PuyoGame_SetLoser(uint8 loser);
 void PuyoGame_DestroyPuyoBeans(void);
-void PuyoGame_Unknown4(void);
-void PuyoGame_Unknown5(void);
-void PuyoGame_Unknown6(void);
-void PuyoGame_Unknown7(void);
-void PuyoGame_Unknown8(void);
-void PuyoGame_Unknown9(void);
-void PuyoGame_SetupEntities(void);
-void PuyoGame_Unknown11(void);
-void PuyoGame_Unknown12(void);
-void PuyoGame_Unknown13(void);
-void PuyoGame_Unknown14(void);
+void PuyoGame_SetupGameState(void);
+void PuyoGame_CheckMatchFinish(void);
+void PuyoGame_State_Setup(void);
+void PuyoGame_State_None(void);
+void PuyoGame_State_SelectingLevel(void);
+void PuyoGame_State_SetupRound(void);
+void PuyoGame_State_SetupEntities(void);
+void PuyoGame_State_HandleRound(void);
+void PuyoGame_State_ShowRoundResults(void);
+void PuyoGame_State_ShowMatchResults(void);
+void PuyoGame_State_FadeToMenu(void);
 
 #endif //!OBJ_PUYOGAME_H

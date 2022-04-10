@@ -15,9 +15,9 @@ struct EntityPuyoLabel {
     StateMachine(state);
     int32 listID;
     int32 frame;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
     Animator animator;
 };
 

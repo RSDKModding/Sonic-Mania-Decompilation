@@ -16,32 +16,35 @@ void PuyoAttack_Update(void)
     if (self->delay > 0) {
         if (--self->delay)
             return;
+
         self->visible = true;
     }
 
     RSDK.ProcessAnimation(&self->animator);
-    int angle = RSDK.ATan2((self->targetPos.x - self->position.x) >> 16, (self->targetPos.y - self->position.y) >> 16);
-    int rot   = 2 * angle;
-    int val   = rot - self->rotation;
+    int32 angle = RSDK.ATan2((self->targetPos.x - self->position.x) >> 16, (self->targetPos.y - self->position.y) >> 16);
+    int32 rot   = 2 * angle;
+    int32 targetRotation   = rot - self->rotation;
 
-    if (abs(rot - self->rotation) >= abs(val - 0x200)) {
-        if (abs(val - 0x200) < abs(val + 0x200))
-            self->rotation += ((val - 512) >> 3);
+    if (abs(rot - self->rotation) >= abs(targetRotation - 0x200)) {
+        if (abs(targetRotation - 0x200) < abs(targetRotation + 0x200))
+            self->rotation += ((targetRotation - 0x200) >> 3);
         else
-            self->rotation += ((val + 512) >> 3);
+            self->rotation += ((targetRotation + 0x200) >> 3);
     }
-    else if (abs(rot - self->rotation) >= abs(val + 0x200))
-        self->rotation += ((val + 512) >> 3);
+    else if (abs(rot - self->rotation) >= abs(targetRotation + 0x200))
+        self->rotation += ((targetRotation + 0x200) >> 3);
     else
-        self->rotation += (val >> 3);
+        self->rotation += (targetRotation >> 3);
 
     self->rotation &= 0x1FF;
     self->position.x += self->radius * RSDK.Cos512(self->rotation);
     self->position.y += self->radius * RSDK.Sin512(self->rotation);
+
     if (self->radius < 1024)
         self->radius += 8;
+
     if (self->position.y < self->targetPos.y) {
-        PuyoMatch_StartPuyoAttack(self->playerID, self->score);
+        PuyoMatch_AddPuyoCombo(self->playerID, self->score);
         destroyEntity(self);
     }
 }

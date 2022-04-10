@@ -8,10 +8,10 @@ struct ObjectPuyoAI {
     RSDK_OBJECT
     TABLE(int32 controlIntervals[5], { 16, 12, 8, 4, 0 });
     TABLE(int32 controlChances[5], { 40, 30, 20, 10, 0 });
-    uint8 value3[2];
-    int32 value4[2];
-    int32 targetX[2];
-    int32 value6[2];
+    uint8 isAI[2];
+    int32 lastBeanY[2];
+    int32 desiredColumn[2];
+    int32 desiredRotation[2];
     int32 controlInterval[2];
     int32 controlChance[2];
 };
@@ -38,10 +38,10 @@ void PuyoAI_EditorLoad(void);
 void PuyoAI_Serialize(void);
 
 // Extra Entity Functions
-Vector2 PuyoAI_GetBeanPos(int playerID);
-void PuyoAI_Unknown2(int playerID);
-int PuyoAI_Unknown3(void *b1, int playerID, void *b2, int32 x1, int32 y1, int32 x2, int32 y2);
-void PuyoAI_SetupInputs(void *b, bool32 flag);
-void PuyoAI_StateInput(void);
+Vector2 PuyoAI_GetBeanPos(int32 playerID);
+void PuyoAI_PrepareAction(int32 playerID);
+int PuyoAI_GetChainComboSize(int32 playerID, EntityPuyoBean *bean, EntityPuyoBean *partner, int32 beanX, int32 beanY, int32 partnerX, int32 partnerY);
+void PuyoAI_SetupInputs(EntityPuyoBean *bean, bool32 rotationDisabled);
+void PuyoAI_Input_AI(void);
 
 #endif //!OBJ_PUYOAI_H

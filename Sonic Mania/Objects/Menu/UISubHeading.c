@@ -305,7 +305,7 @@ void UISubHeading_SaveButton_ActionCB(void)
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
     TimeAttackData_Clear();
     RSDK.GetCString(param->menuTag, &control->tag);
-    param->selectionID = control->lastButtonID;
+    param->menuSelection = control->lastButtonID;
     param->replayID    = 0;
     globals->gameMode = self->encoreMode != false;
 

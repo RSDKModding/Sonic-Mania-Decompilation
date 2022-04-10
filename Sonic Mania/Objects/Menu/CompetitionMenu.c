@@ -900,10 +900,10 @@ void CompetitionMenu_GotoPuyoVS(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     TimeAttackData_Clear();
-    param->selectionFlag = 3;
+    param->puyoSelection = PUYO_SELECTION_TIE_BREAKER;
     globals->gameMode    = MODE_COMPETITION;
     strcpy(param->menuTag, "Competition Total");
-    param->selectionID = 0;
+    param->menuSelection = 0;
     RSDK.SetScene("Extras", "Puyo Puyo");
     RSDK.LoadScene();
 }

@@ -80,9 +80,11 @@ bool32 ManiaModeMenu_InitAPI(void)
                 && globals->taTableLoaded == STATUS_OK) {
                 if (!checkNoSave && DialogRunner_NotifyAutosave())
                     return false;
+
                 UIWaitSpinner_FinishWait();
                 if (DialogRunner_CheckUnreadNotifs())
                     return false;
+
                 MenuSetup->initializedAPI = true;
                 return true;
             }
@@ -130,37 +132,43 @@ int32 ManiaModeMenu_GetActiveMenu(void)
         || control == OptionsMenu->controlsControl_PS4 || control == OptionsMenu->controlsControl_XB1 || control == OptionsMenu->controlsControl_NX
         || control == OptionsMenu->controlsControl_NXGrip || control == OptionsMenu->controlsControl_NXJoycon
         || control == OptionsMenu->controlsControl_NXPro) {
-        return 0;
+        return MAINMENU_MAIN;
     }
     if (control == TimeAttackMenu->timeAttackControl || control == TimeAttackMenu->timeAttackControl_Legacy
         || control == TimeAttackMenu->taZoneSelControl || control == TimeAttackMenu->taDetailsControl
         || control == TimeAttackMenu->leaderboardsControl || control == TimeAttackMenu->replaysControl
         || control == CompetitionMenu->competitionControl || control == CompetitionMenu->competitionControl_Legacy
         || control == CompetitionMenu->compRulesControl || control == CompetitionMenu->compZoneControl) {
-        return 1;
+        return MAINMENU_TIMEATTACK;
     }
+
     if (control == CompetitionMenu->compRoundControl || control == CompetitionMenu->compTotalControl)
-       return 2;
-    if (control == ManiaModeMenu->saveSelectMenu || control == ManiaModeMenu->noSaveMenu || control == ManiaModeMenu->secretsMenu) {
-        return 3;
-    }
+        return MAINMENU_COMPETITION;
+
+    if (control == ManiaModeMenu->saveSelectMenu || control == ManiaModeMenu->noSaveMenu || control == ManiaModeMenu->secretsMenu)
+        return MAINMENU_SAVESELECT;
+
     if (control == ManiaModeMenu->encoreSaveSelect || control == ManiaModeMenu->noSaveMenuEncore)
-        return 4;
-    return 0;
+        return MAINMENU_SAVESELECT_ENCORE;
+
+    return MAINMENU_MAIN;
 }
 
 void ManiaModeMenu_ChangeMenuTrack(void)
 {
     int32 trackID = 0;
     switch (ManiaModeMenu_GetActiveMenu()) {
-        case 1: trackID = 1; break;
-        case 2: trackID = 2; break;
-        case 3: trackID = 3; break;
-        case 4: trackID = 4; break;
-        default: trackID = 0; break;
+        default: 
+        case MAINMENU_MAIN: trackID = 0; break;
+        case MAINMENU_TIMEATTACK: trackID = 1; break;
+        case MAINMENU_COMPETITION: trackID = 2; break;
+        case MAINMENU_SAVESELECT: trackID = 3; break;
+        case MAINMENU_SAVESELECT_ENCORE: trackID = 4; break;
     }
+
     if (!RSDK.ChannelActive(Music->channelID))
         Music_PlayTrack(trackID);
+
     if (Music->activeTrack != trackID)
         Music_TransitionTrack(trackID, 0.12);
 }
@@ -178,11 +186,11 @@ int32 ManiaModeMenu_StartReturnToTitle(void)
 void ManiaModeMenu_SetBGColours(void)
 {
     switch (ManiaModeMenu_GetActiveMenu()) {
-        case 0: UIBackground->activeColours = UIBackground->bgColours; break;
-        case 1:
-        case 2: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
-        case 3: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
-        case 4: UIBackground->activeColours = &UIBackground->bgColours[15]; break;
+        case MAINMENU_MAIN: UIBackground->activeColours = UIBackground->bgColours; break;
+        case MAINMENU_TIMEATTACK:
+        case MAINMENU_COMPETITION: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
+        case MAINMENU_SAVESELECT: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
+        case MAINMENU_SAVESELECT_ENCORE: UIBackground->activeColours = &UIBackground->bgColours[15]; break;
         default: break;
     }
 }
@@ -197,11 +205,7 @@ void ManiaModeMenu_ReturnToTitle(void)
 void ManiaModeMenu_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
-    self->fadeTimer = self->timer << ((self->fadeShift & 0xFF) - 1);
-    if (self->fadeTimer >= 512)
-        self->fadeTimer = 512;
-    else if (self->fadeTimer < 0)
-        self->fadeTimer = 0;
+    self->fadeTimer = clampVal(self->timer << ((self->fadeShift & 0xFF) - 1), 0, 0x200);
 }
 
 void ManiaModeMenu_HandleUnlocks(void)
@@ -210,7 +214,7 @@ void ManiaModeMenu_HandleUnlocks(void)
     UISubHeading_HandleUnlocks();
     TimeAttackMenu_HandleUnlocks();
     int32 activeCount     = CompetitionMenu_HandleUnlocks();
-    EntityUIControl *compRules = (EntityUIControl *)CompetitionMenu->compRulesControl;
+    EntityUIControl *compRules = CompetitionMenu->compRulesControl;
     EntityUIButton *button     = UIButton_GetChoicePtr(compRules->buttons[1], compRules->buttons[1]->selection);
     if (button) {
         button->choiceCount = activeCount;
@@ -248,10 +252,10 @@ void ManiaModeMenu_HandleMenuReturn(void)
                 UIControl_SetInactiveMenu(control);
             }
             else {
-                control->storedButtonID  = param->selectionID;
+                control->storedButtonID  = param->menuSelection;
                 control->hasStoredButton = true;
                 UIControl_SetActiveMenu(control);
-                control->buttonID = param->selectionID;
+                control->buttonID = param->menuSelection;
             }
         }
     }
@@ -260,8 +264,8 @@ void ManiaModeMenu_HandleMenuReturn(void)
     TimeAttackMenu_HandleMenuReturn();
     CompetitionMenu_HandleMenuReturn();
     OptionsMenu_HandleMenuReturn();
-    if (param->selectionFlag == 2) {
-        EntityUIControl *extras = (EntityUIControl *)ExtrasMenu->extrasControl;
+    if (param->puyoSelection == PUYO_SELECTION_VS_2P) {
+        EntityUIControl *extras = ExtrasMenu->extrasControl;
         UIButton_SetChoiceSelection(extras->buttons[1], 1);
     }
 

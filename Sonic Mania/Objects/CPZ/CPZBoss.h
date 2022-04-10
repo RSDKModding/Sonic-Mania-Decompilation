@@ -12,7 +12,7 @@ typedef enum {
 struct ObjectCPZBoss {
     RSDK_OBJECT
     Hitbox hitbox;
-    Entity* managers[2];
+    EntityPuyoMatch* managers[2];
     uint16 hudSlotID;
     uint16 aniFrames;
     uint16 playerFrames;

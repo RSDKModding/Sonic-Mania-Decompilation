@@ -30,14 +30,14 @@ void PuyoMatch_Draw(void)
     if (SceneInfo->currentDrawGroup != Zone->hudDrawOrder) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y - 0x80000;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->beanLAnimator, &drawPos, false);
 
         drawPos.y += 0x100000;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->beanRAnimator, &drawPos, false);
     }
 
-    if (self->field_94 > 0)
-        PuyoMatch_DrawNumbers();
+    if (self->junkBeanCount > 0)
+        PuyoMatch_DrawJunkBeanPreviews();
 }
 
 void PuyoMatch_Create(void *data)
@@ -45,119 +45,121 @@ void PuyoMatch_Create(void *data)
     RSDK_THIS(PuyoMatch);
 
     if (!SceneInfo->inEditor) {
-        self->active        = ACTIVE_BOUNDS;
-        self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
-        self->stateInput    = PuyoBean_StateInput_HandlePlayerInputs;
-        self->field_80      = PuyoMatch->value2;
-        self->beanDropPos   = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode)->position;
-        self->timer         = 60;
-        RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, 1, &self->animator3, true, 0);
+        self->active          = ACTIVE_BOUNDS;
+        self->visible         = true;
+        self->drawOrder       = Zone->drawOrderLow;
+        self->updateRange.x   = 0x800000;
+        self->updateRange.y   = 0x800000;
+        self->stateInput      = PuyoBean_StateInput_HandlePlayerInputs;
+        self->comboBonusTable = PuyoMatch->comboBonus;
+        self->beanDropPos     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode)->position;
+        self->timer           = 60;
+        RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, 1, &self->lightAnimator, true, 0);
     }
 }
 
 void PuyoMatch_StageLoad(void)
 {
     PuyoMatch->aniFrames = RSDK.LoadSpriteAnimation("Puyo/Combos.bin", SCOPE_STAGE);
-    PuyoMatch->value1    = 120;
+
+    PuyoMatch->comboPower = 120; // the lower this is, the more junk will drop from combos, likewise the higher it is, the less junk will drop
 }
 
-void PuyoMatch_StartPuyoAttack(int playerID, int a2)
+void PuyoMatch_AddPuyoCombo(int playerID, int score)
 {
     foreach_active(PuyoMatch, match)
     {
         if (match->playerID == playerID) {
-            match->field_90 += (a2 << 8) / PuyoMatch->value1;
-            match->field_94 = match->field_90 >> 8;
+            match->junkDropCount += (score << 8) / PuyoMatch->comboPower;
+            match->junkBeanCount = match->junkDropCount >> 8;
         }
     }
 }
 
 void PuyoMatch_SetupNextBeans(EntityPuyoMatch *match)
 {
-    int left  = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
-    int right = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
-    RSDK.SetSpriteAnimation(PuyoBean->aniFrames, left, &match->animator1, true, 0);
-    RSDK.SetSpriteAnimation(PuyoBean->aniFrames, right, &match->animator2, true, 0);
+    int32 left  = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
+    int32 right = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
+    RSDK.SetSpriteAnimation(PuyoBean->aniFrames, left, &match->beanLAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PuyoBean->aniFrames, right, &match->beanRAnimator, true, 0);
 }
 
 void PuyoMatch_DropNextBeans(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    if (!self->animator1.frameDuration)
+    if (!self->beanLAnimator.frameDuration)
         PuyoMatch_SetupNextBeans(self);
 
-    EntityPuyoBean *bean1 = CREATE_ENTITY(PuyoBean, intToVoid(self->animator1.animationID), self->beanDropPos.x, self->beanDropPos.y);
-    EntityPuyoBean *bean2 = CREATE_ENTITY(PuyoBean, intToVoid(self->animator2.animationID), self->beanDropPos.x, self->beanDropPos.y);
+    EntityPuyoBean *bean1 = CREATE_ENTITY(PuyoBean, intToVoid(self->beanLAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
+    EntityPuyoBean *bean2 = CREATE_ENTITY(PuyoBean, intToVoid(self->beanRAnimator.animationID), self->beanDropPos.x, self->beanDropPos.y);
     PuyoMatch_SetupNextBeans(self);
-    bean1->playerID       = self->playerID;
-    bean1->partner        = (Entity *)bean2;
-    bean1->animator.speed = 0;
-    bean1->controllerID   = self->playerID + 1;
-    bean1->state          = PuyoBean_State_Idle;
+    bean1->playerID           = self->playerID;
+    bean1->partner            = bean2;
+    bean1->beanAnimator.speed = 0;
+    bean1->controllerID       = self->playerID + 1;
+    bean1->state              = PuyoBean_State_PartnerControlled;
 
-    bean2->playerID     = self->playerID;
-    bean2->partner      = (Entity *)bean1;
-    bean2->controllerID = self->playerID + 1;
-    bean2->state        = PuyoBean_State_Controlled;
-    bean2->field_A4     = self->field_74;
-    bean2->stateInput   = self->stateInput;
+    bean2->playerID      = self->playerID;
+    bean2->partner       = bean1;
+    bean2->controllerID  = self->playerID + 1;
+    bean2->state         = PuyoBean_State_Controlled;
+    bean2->selectedLevel = self->selectedLevel;
+    bean2->stateInput    = self->stateInput;
     bean2->position.y += 0x100000;
 
-    self->beanPtr                      = bean2;
-    PuyoBean->field_20[self->playerID] = 0;
+    self->beanPtr                             = bean2;
+    PuyoBean->comboChainCount[self->playerID] = 0;
 }
 
-void PuyoMatch_Unknown4(void)
+void PuyoMatch_DropJunkBeans(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    int validSlotCount[6];
-    int count = 0;
+    int32 beanColumnColount[PUYO_PLAYFIELD_W];
+    int32 count = 0;
 
-    for (int x = 0; x < 6; ++x) {
-        validSlotCount[x] = 0;
+    for (int32 x = 0; x < PUYO_PLAYFIELD_W; ++x) {
+        beanColumnColount[x] = 0;
 
-        for (int y = 0; y < 14; ++y) {
+        for (int32 y = 0; y < PUYO_PLAYFIELD_H; ++y) {
             EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, y);
             if (!bean) {
-                ++validSlotCount[x];
+                ++beanColumnColount[x];
                 ++count;
             }
         }
     }
 
     count = minVal(count, 30);
-    if (count > self->field_94)
-        count = self->field_94;
-    self->field_94 -= count;
-    self->field_90 -= count << 8;
+    if (count > self->junkBeanCount)
+        count = self->junkBeanCount;
+    self->junkBeanCount -= count;
+    self->junkDropCount -= count << 8;
 
-    int id     = 6 * RSDK.Rand(0, 4);
-    int spawnY = self->beanDropPos.y + 0x100000;
+    int32 id     = 6 * RSDK.Rand(0, 4);
+    int32 spawnY = self->beanDropPos.y + 0x100000;
 
-    for (int i = 0; i < count; ++i) {
-        int slot = PuyoMatch->value6[id];
-        if (validSlotCount[slot] > 0) {
-            EntityPuyoBean *bean = CREATE_ENTITY(PuyoBean, intToVoid(30), self->beanDropPos.x - 0x200000 + (slot << 20), spawnY);
-            bean->playerID       = self->playerID;
-            bean->origin.x       = self->beanDropPos.x - 0x280000;
-            bean->origin.y       = self->beanDropPos.y - 0x80000;
-            self->beanPtr        = bean;
-            bean->state          = PuyoBean_State_Falling;
+    for (int32 i = 0; i < count; ++i) {
+        int32 column = PuyoMatch->beanDropColumnIDs[id];
+        if (beanColumnColount[column] > 0) {
+            EntityPuyoBean *junkBean = CREATE_ENTITY(PuyoBean, intToVoid(30), self->beanDropPos.x - 0x200000 + (column << 20), spawnY);
+            junkBean->playerID       = self->playerID;
+            junkBean->origin.x       = self->beanDropPos.x - 0x280000;
+            junkBean->origin.y       = self->beanDropPos.y - 0x80000;
+            self->beanPtr            = junkBean;
+            junkBean->state          = PuyoBean_State_Falling;
             --count;
-            validSlotCount[slot]--;
+            beanColumnColount[column]--;
         }
+
         id = (id + 1) % -24;
         if (!(id % 6))
             spawnY -= 0x100000;
     }
 }
 
-void PuyoMatch_DrawNumbers(void)
+void PuyoMatch_DrawJunkBeanPreviews(void)
 {
     RSDK_THIS(PuyoMatch);
     Vector2 drawPos;
@@ -165,25 +167,25 @@ void PuyoMatch_DrawNumbers(void)
     drawPos.x = self->beanDropPos.x - 0x280000;
     drawPos.y = self->beanDropPos.y + 0x140000;
 
-    int count = self->field_94;
+    int32 count = self->junkBeanCount;
 
-    for (int i = 0; i < count / 30; ++i) {
-        RSDK.SetSpriteAnimation(PuyoBean->aniFrames, 35, &self->animator4, true, 0);
-        RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    for (int32 i = 0; i < count / 30; ++i) {
+        RSDK.SetSpriteAnimation(PuyoBean->aniFrames, 35, &self->junkPreviewAnimator, true, 0);
+        RSDK.DrawSprite(&self->junkPreviewAnimator, &drawPos, false);
         drawPos.x += 0x120000;
     }
     count %= 30;
 
-    for (int i = 0; i < count / 6; ++i) {
-        RSDK.SetSpriteAnimation(PuyoBean->aniFrames, 34, &self->animator4, true, 0);
-        RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    for (int32 i = 0; i < count / 6; ++i) {
+        RSDK.SetSpriteAnimation(PuyoBean->aniFrames, 34, &self->junkPreviewAnimator, true, 0);
+        RSDK.DrawSprite(&self->junkPreviewAnimator, &drawPos, false);
         drawPos.x += 0x100000;
     }
     count %= 6;
 
-    for (int i = 0; i < count; ++i) {
-        RSDK.SetSpriteAnimation(PuyoBean->aniFrames, 33, &self->animator4, true, 0);
-        RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    for (int32 i = 0; i < count; ++i) {
+        RSDK.SetSpriteAnimation(PuyoBean->aniFrames, 33, &self->junkPreviewAnimator, true, 0);
+        RSDK.DrawSprite(&self->junkPreviewAnimator, &drawPos, false);
         drawPos.x += 0xE0000;
     }
 }
@@ -192,22 +194,22 @@ void PuyoMatch_State_HandleMatch(void)
 {
     RSDK_THIS(PuyoMatch);
 
-    PuyoBean->field_28[self->playerID] = 0;
+    PuyoBean->disableBeanLink[self->playerID] = false;
 
     foreach_active(PuyoBean, bean)
     {
         if (bean->playerID == self->playerID) {
-            if (bean->state != PuyoBean_State_GameState && bean->state != PuyoBean_Unknown20)
+            if (bean->state != PuyoBean_State_BeanIdle && bean->state != PuyoBean_State_JunkIdle)
                 self->timer = 30;
 
-            if (bean->state == PuyoBean_Unknown23) {
-                PuyoBean->field_28[bean->playerID] = 1;
-                self->state                        = PuyoMatch_State_HandleCombos;
+            if (bean->state == PuyoBean_State_BeanPop) {
+                PuyoBean->disableBeanLink[bean->playerID] = true;
+                self->state                               = PuyoMatch_State_HandleCombos;
                 foreach_break;
             }
 
-            if (bean->state == PuyoBean_State_Falling || bean->state == PuyoBean_Unknown18)
-                PuyoBean->field_28[bean->playerID] = 1;
+            if (bean->state == PuyoBean_State_Falling || bean->state == PuyoBean_State_BeanLand)
+                PuyoBean->disableBeanLink[bean->playerID] = true;
         }
     }
 
@@ -238,18 +240,18 @@ void PuyoMatch_State_HandleMatch(void)
             }
             else {
                 self->comboCount = 0;
-                bool32 flag      = false;
+                bool32 hasCombo  = false;
 
                 foreach_active(PuyoMatch, match)
                 {
                     if (match->comboCount)
-                        flag = true;
+                        hasCombo = true;
                 }
 
-                if (!self->field_94 || flag)
+                if (!self->junkBeanCount || hasCombo)
                     PuyoMatch_DropNextBeans();
                 else
-                    PuyoMatch_Unknown4();
+                    PuyoMatch_DropJunkBeans();
             }
         }
     }
@@ -263,38 +265,42 @@ void PuyoMatch_State_HandleCombos(void)
     if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs)
         API_UnlockAchievement("ACH_CPZ");
 
-    uint8 flags                = 0;
+    uint8 comboColours         = 0;
     EntityPuyoBean *targetBean = NULL;
     foreach_active(PuyoBean, bean)
     {
         if (bean->playerID == self->playerID) {
-            if (bean->state == PuyoBean_Unknown22 || bean->state == PuyoBean_Unknown23) {
+            if (bean->state == PuyoBean_State_BeginBeanPop || bean->state == PuyoBean_State_BeanPop) {
                 if (!self->comboBeanCount++)
                     targetBean = bean;
-                flags |= 1 << (bean->type / 6);
+                comboColours |= 1 << (bean->type / 6);
             }
         }
     }
 
-    int slot = self->comboBeanCount - 4;
+    // Bonus for getting lots of beans in one go
+    int32 slot = self->comboBeanCount - 4;
     if (slot >= 7)
         slot = 7 - slot;
-    self->field_88 = PuyoMatch->value4[slot];
+    self->beanBonus = PuyoMatch->beanBonusTable[slot];
 
-    self->field_84 = 0;
-    for (int b = 0; b < 5; ++b) {
-        if (getBit(flags, b))
-            ++self->field_84;
+    // Bonus for getting multiple combos in one go
+    self->concurrentBonus = 0;
+    for (int32 b = 0; b < 5; ++b) {
+        if (getBit(comboColours, b))
+            ++self->concurrentBonus;
     }
 
-    self->field_84 = PuyoMatch->value5[self->field_84];
+    self->concurrentBonus = PuyoMatch->concurrentBonusTable[self->concurrentBonus];
 
-    int val2         = minVal(PuyoBean->field_20[self->playerID], 23);
-    int val          = clampVal(self->field_88 + self->field_84 + self->field_80[val2], 1, 999);
-    self->comboScore = 10 * val * self->comboBeanCount;
+    // Bonus for chaining multiple combos together
+    int32 chainBonus = self->comboBonusTable[minVal(PuyoBean->comboChainCount[self->playerID], 23)];
 
-    if (PuyoBean->field_20[self->playerID] < 23)
-        PuyoBean->field_20[self->playerID]++;
+    int32 comboBonus = clampVal(self->beanBonus + self->concurrentBonus + chainBonus, 1, 999);
+    self->comboScore = 10 * comboBonus * self->comboBeanCount;
+
+    if (PuyoBean->comboChainCount[self->playerID] < 23)
+        PuyoBean->comboChainCount[self->playerID]++;
 
     slot = -2;
     if (!self->playerID)
@@ -318,7 +324,7 @@ void PuyoMatch_State_HandleComboEnd(void)
     foreach_active(PuyoBean, bean)
     {
         if (bean->playerID == self->playerID) {
-            if (bean->state == PuyoBean_Unknown22 || bean->state == PuyoBean_Unknown23) {
+            if (bean->state == PuyoBean_State_BeginBeanPop || bean->state == PuyoBean_State_BeanPop) {
                 continueCombos = true;
             }
         }
@@ -333,27 +339,27 @@ void PuyoMatch_State_Lose(void)
     RSDK_THIS(PuyoMatch);
 
     if (++self->timer == 8) {
-        int vals[] = { 12, 8, 0, 4, 6, 16 };
+        int32 delays[] = { 12, 8, 0, 4, 6, 16 };
 
-        for (int x = 0; x < 6; ++x) {
-            for (int y = 0; y < 14; ++y) {
+        for (int32 x = 0; x < PUYO_PLAYFIELD_W; ++x) {
+            for (int32 y = 0; y < PUYO_PLAYFIELD_H; ++y) {
                 EntityPuyoBean *bean = PuyoBean_GetPuyoBean(self->playerID, x, y);
                 if (bean) {
                     bean->state = PuyoBean_State_MatchLoseFall;
-                    bean->timer = vals[x];
+                    bean->timer = delays[x];
                 }
             }
         }
 
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->beanLAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->beanRAnimator, true, 0);
         StateMachine_Run(self->matchFinishCB);
 
         foreach_active(PuyoMatch, match)
         {
             if (match->playerID != self->playerID) {
-                RSDK.SetSpriteAnimation(-1, 0, &match->animator1, true, 0);
-                RSDK.SetSpriteAnimation(-1, 0, &match->animator2, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->beanLAnimator, true, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &match->beanRAnimator, true, 0);
                 StateMachine_Run(match->matchLoseCB);
                 if (RSDK.CheckStageFolder("CPZ"))
                     match->state = StateMachine_None;
@@ -367,11 +373,18 @@ void PuyoMatch_State_Lose(void)
 void PuyoMatch_EditorDraw(void)
 {
     RSDK_THIS(PuyoMatch);
-    RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, self->playerID ? 18 : 6, &self->animator5, false, 0);
-    RSDK.DrawSprite(&self->animator5, NULL, false);
+    RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, self->playerID ? 18 : 6, &self->unusedAnimator, false, 0);
+    RSDK.DrawSprite(&self->unusedAnimator, NULL, false);
 }
 
-void PuyoMatch_EditorLoad(void) { PuyoMatch->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoBeans.bin", SCOPE_STAGE); }
+void PuyoMatch_EditorLoad(void)
+{
+    PuyoMatch->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoBeans.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PuyoMatch, playerID);
+    RSDK_ENUM_VAR("Player 1", SLOT_PLAYER1);
+    RSDK_ENUM_VAR("Player 2", SLOT_PLAYER2);
+}
 #endif
 
 void PuyoMatch_Serialize(void) { RSDK_EDITABLE_VAR(PuyoMatch, VAR_ENUM, playerID); }
