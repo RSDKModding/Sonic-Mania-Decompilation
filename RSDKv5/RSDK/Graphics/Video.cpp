@@ -43,7 +43,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
         callbacks.close    = videoClose;
         callbacks.userdata = (void *)&videoFile;
 #if RETRO_USING_SDL2
-        videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 60, THEORAPLAY_VIDFMT_IYUV, 0);
+        videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 60, THEORAPLAY_VIDFMT_IYUV);
 #endif
 
         // TODO: does SDL1.2 support YUV?

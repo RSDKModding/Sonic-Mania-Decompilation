@@ -103,9 +103,9 @@ public:
 #endif
     }
 
-    virtual void setArgs(RenderState *&state){};
+    virtual void setArgs(RenderState *state){};
 
-    virtual void setPalette(RenderState *&state)
+    virtual void setPalette(RenderState *state)
     {
 #if RETRO_USING_OPENGL
         glActiveTexture(GL_TEXTURE0 + 1);
@@ -125,7 +125,7 @@ public:
 #endif
     }
 
-    virtual void setPalLines(RenderState *&state)
+    virtual void setPalLines(RenderState *state)
     {
 #if RETRO_USING_OPENGL
         GLint linesOut[0x100];
@@ -189,7 +189,7 @@ public:
 #endif
     }
 
-    virtual void setArgs(RenderState *&state)
+    virtual void setArgs(RenderState *state)
     {
 #if RETRO_USING_OPENGL
         glUniform1i(glGetUniformLocation(ID, "inkEffect"), state->blendMode);
@@ -204,8 +204,8 @@ public:
             setLookupTable(state);
         }
     }
-    void setPalette(RenderState *&state){};
-    void setPalLines(RenderState *&state){};
+    void setPalette(RenderState *state){};
+    void setPalLines(RenderState *state){};
 };
 
 union PlaceArgs {
@@ -315,7 +315,7 @@ bool32 InitRenderDevice()
 #endif
 
 #if RETRO_PLATFORM == RETRO_SWITCH
-    engine.windowWidth = 1920;
+    engine.windowWidth  = 1920;
     engine.windowHeight = 1080;
     flags |= SDL_WINDOW_FULLSCREEN;
 #endif
@@ -352,8 +352,8 @@ bool32 InitRenderDevice()
 #endif
 #endif
 
-    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | flags);
+    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
+                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
 #if RETRO_SOFTWARE_RENDER
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
@@ -424,12 +424,12 @@ bool32 InitRenderDevice()
     // Should probably add error
     gladLoadGL();
 #elif RETRO_PLATFORM != RETRO_ANDROID && RETRO_PLATFORM != RETRO_OSX
-    // glew Setup
-    GLenum err = glewInit();
-    if (err != GLEW_OK) {
-        PrintLog(PRINT_ERROR, "glew init error:\n%s", glewGetErrorString(err));
-        return false;
-    }
+        // glew Setup
+        GLenum err = glewInit();
+        if (err != GLEW_OK) {
+            PrintLog(PRINT_ERROR, "glew init error:\n%s", glewGetErrorString(err));
+            return false;
+        }
 #endif
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -693,8 +693,8 @@ void UpdateWindow()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | flags);
+    engine.window = SDL_CreateWindow(RSDK::gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth,
+                                     engine.windowHeight, SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
 #if RETRO_SOFTWARE_RENDER
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
@@ -786,7 +786,7 @@ void GenerateBlendLookupTable()
 #if !RETRO_REV02
     for (int i = 0; i < 0x10000; ++i) {
         int32 brightness = (((uint32)i & 0x1F) + ((i >> 6) & 0x1F) + (((uint16)i >> 11) & 0x1F)) / 3 + 6;
-        lookupTable[i] = 0x841 * minVal(0x1F, brightness);
+        lookupTable[i]   = 0x841 * minVal(0x1F, brightness);
     }
 #endif
 
@@ -800,7 +800,7 @@ void GenerateBlendLookupTable()
 void InitSystemSurfaces()
 {
     GEN_HASH("TileBuffer", gfxSurface[0].hash);
-    gfxSurface[0].scope = SCOPE_GLOBAL;
+    gfxSurface[0].scope    = SCOPE_GLOBAL;
     gfxSurface[0].width    = TILE_SIZE;
     gfxSurface[0].height   = TILESET_SIZE;
     gfxSurface[0].lineSize = log2(TILE_SIZE);
@@ -808,7 +808,7 @@ void InitSystemSurfaces()
 
 #if RETRO_REV02
     GEN_HASH("EngineText", gfxSurface[1].hash);
-    gfxSurface[1].scope = SCOPE_GLOBAL;
+    gfxSurface[1].scope    = SCOPE_GLOBAL;
     gfxSurface[1].width    = 8;
     gfxSurface[1].height   = 128 * 8;
     gfxSurface[1].lineSize = 3; // 8
@@ -903,7 +903,7 @@ void SwapDrawListEntries(uint8 layer, uint16 entitySlotA, uint16 entitySlotB, in
 {
     if (layer < DRAWLAYER_COUNT) {
         DrawList *list = &drawLayers[layer];
-        if (count<0 || count> list->entityCount) {
+        if (count < 0 || count > list->entityCount) {
             count = list->entityCount;
         }
 
@@ -962,7 +962,7 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
         }
 #else
         PlaceArgs args;
-        args.texID        = 0;
+        args.texID = 0;
 
         AddRenderState(INK_ADD, 4, 6, &args, redAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
 
@@ -1696,7 +1696,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     Colour c = colour;
 
     PlaceArgs args;
-    args.texID        = 0;
+    args.texID = 0;
     AddRenderState(inkEffect, 4, 6, &args, alpha);
 
     AddPoly(xpos, ypos, 0, 0, c);
@@ -2110,14 +2110,14 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
             validDraw              = true;
             ushort *frameBufferPtr = &currentScreen->frameBuffer[left + top * currentScreen->pitch];
             ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
-            int pitch           = (left + currentScreen->pitch - right);
+            int pitch              = (left + currentScreen->pitch - right);
 
             switch (inkEffect) {
                 default: break;
                 case INK_NONE:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2140,8 +2140,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_BLEND:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2164,8 +2164,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_ALPHA:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2190,8 +2190,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 case INK_ADD: {
                     ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2217,8 +2217,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 case INK_SUB: {
                     ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2243,8 +2243,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 }
                 case INK_LOOKUP:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2267,8 +2267,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_MASKED:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -2291,8 +2291,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                     break;
                 case INK_UNMASKED:
                     if (top < bottom) {
-                        int yDif1    = top - y;
-                        int yDif2    = bottom - top;
+                        int yDif1 = top - y;
+                        int yDif2 = bottom - top;
                         do {
                             int y2 = yDif1 * yDif1;
                             if (left < right) {
@@ -3238,7 +3238,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     }
     GFXSurface *surface = &gfxSurface[sheetID];
     validDraw           = true;
-    
+
 #if RETRO_SOFTWARE_RENDER
     int widthFlip  = width;
     int heightFlip = height;
@@ -3269,7 +3269,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
 
     GFXSurface *surface    = &gfxSurface[sheetID];
     validDraw              = true;
-    int pitch                  = currentScreen->pitch - width;
+    int pitch              = currentScreen->pitch - width;
     int gfxPitch           = 0;
     byte *lineBuffer       = NULL;
     byte *gfxData          = NULL;
@@ -3828,7 +3828,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     float xpos = x;
     float ypos = y;
     PlaceArgs args;
-    args.texID        = surface->id;
+    args.texID = surface->id;
     AddRenderState(inkEffect, 4, 6, &args, alpha);
 
     switch (direction) {
@@ -3989,7 +3989,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
         int fullScaleY         = (float)((512.0 / (float)scaleY) * 512.0);
         int deltaXLen          = fullScaleX * sine >> 2;
         int deltaX             = fullScaleX * cosine >> 2;
-        int pitch            = currentScreen->pitch - xSize;
+        int pitch              = currentScreen->pitch - xSize;
         int deltaYLen          = fullScaleY * cosine >> 2;
         int deltaY             = fullScaleY * sine >> 2;
         int lineSize           = surface->lineSize;
@@ -4191,7 +4191,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     float ypos          = y;
 
     PlaceArgs args;
-    args.texID        = surface->id;
+    args.texID = surface->id;
     AddRenderState(inkEffect, 4, 6, &args, alpha);
 
     float sY  = scaleY / (float)(1 << 9);
@@ -4849,7 +4849,7 @@ ushort tileUVArray[TILEUV_SIZE];
 
 RenderState renderStates[RENDERSTATE_LIMIT];
 
-sbyte renderStateIndex = -1;
+short renderStateIndex = 0;
 ushort renderCount     = 0;
 ushort lastRenderCount = 0;
 
@@ -4923,7 +4923,7 @@ public:
 #endif
     }
 
-    void setArgs(RenderState *&state)
+    void setArgs(RenderState *state)
     {
         PlaceArgs *args = (PlaceArgs *)state->argBuffer;
         setTexture(args->texID);
@@ -4942,7 +4942,7 @@ public:
     CircleShader() : ShaderBase(){};
     CircleShader(const char *v, const char *f) : ShaderBase(v, f){};
 
-    void setArgs(RenderState *&state)
+    void setArgs(RenderState *state)
     {
         CircleArgs *args = (CircleArgs *)state->argBuffer;
 #if RETRO_USING_OPENGL
@@ -4951,8 +4951,8 @@ public:
 #endif
     }
 
-    void setPalette(RenderState *&state){};
-    void setPalLines(RenderState *&state){};
+    void setPalette(RenderState *state){};
+    void setPalLines(RenderState *&tate){};
 };
 
 class DevTextShader : public ShaderBase
@@ -4971,7 +4971,7 @@ public:
 #endif
         stop();
     };
-    void setArgs(RenderState *&state)
+    void setArgs(RenderState *state)
     {
 #if RETRO_USING_OPENGL
         glActiveTexture(GL_TEXTURE0 + 3);
@@ -4993,8 +4993,8 @@ public:
         glActiveTexture(GL_TEXTURE0);
 #endif //! RETRO_USING_OPENGL
     };
-    void setPalette(RenderState *&state){};
-    void setPalLines(RenderState *&state){};
+    void setPalette(RenderState *state){};
+    void setPalLines(RenderState *state){};
 };
 
 class TileShader : public ShaderBase
@@ -5029,7 +5029,7 @@ public:
 #endif
         stop();
     }
-    void setArgs(RenderState *&state){};
+    void setArgs(RenderState *state){};
 };
 
 class TileShaderFB : public FBShaderBase
@@ -5037,7 +5037,7 @@ class TileShaderFB : public FBShaderBase
 public:
     TileShaderFB() : FBShaderBase(){};
     TileShaderFB(const char *v, const char *f) : FBShaderBase(v, f){};
-    void setArgs(RenderState *&state)
+    void setArgs(RenderState *state)
     {
         struct TileArgs {
             ScanlineInfo *scanlines;
@@ -5171,6 +5171,7 @@ void SetupViewport()
 }
 
 ushort baseIndexList[INDEX_LIMIT];
+ushort *currentIndecies;
 
 void SetupShaders()
 {
@@ -5189,6 +5190,7 @@ void SetupShaders()
     glBindVertexArray(VAO);
     glGenBuffers(1, &attribVBO);
     glBindBuffer(GL_ARRAY_BUFFER, attribVBO);
+    glBufferData(GL_ARRAY_BUFFER, VERTEX_LIMIT * sizeof(DrawVertex), NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), 0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), (void *)offsetof(DrawVertex, u));
@@ -5197,6 +5199,7 @@ void SetupShaders()
     glEnableVertexAttribArray(2);
     glGenBuffers(1, &indexVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDEX_LIMIT * sizeof(ushort), NULL, GL_DYNAMIC_DRAW);
 
     glGenVertexArrays(1, &fbpVAO);
     glBindVertexArray(fbpVAO);
@@ -5234,8 +5237,6 @@ void SetupPolygonLists()
         baseIndexList[vID++] = (i << 2) + 1;
         baseIndexList[vID++] = (i << 2) + 3;
         baseIndexList[vID++] = (i << 2) + 2;
-
-        vertexList[i].colour.colour = 0;
     }
 
     for (int i = 0; i < TILE_COUNT; ++i) {
@@ -5272,12 +5273,12 @@ bool32 StatesCompatible(RenderState *one, RenderState *two)
 {
     if (one->blendMode != INK_NONE && one->blendMode != INK_LOOKUP)
         return false; // the rest can't really be merged
+    if (one->maskColor != two->maskColor && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
+        return false;
     if (memcmp(one->argBuffer, two->argBuffer, 0x20) || one->blendMode != two->blendMode || one->shader != two->shader || one->alpha != two->alpha
-        || memcmp(one->lineBuffer, two->lineBuffer, SCREEN_YSIZE * sizeof(byte)) || one->lookupTable != two->lookupTable
+        || one->lookupTable != two->lookupTable
         || one->fbShader != two->fbShader || one->fbShader2 || two->fbShader2 || memcmp(&one->clipRectTL, &two->clipRectTL, sizeof(int32) * 4))
         // if we render inplace (one->fbShader2 || two->fbShader2), we have to buffer it through first
-        return false;
-    if (one->maskColor != two->maskColor && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
         return false;
     if (memcmp(one->palette, two->palette, PALETTE_COUNT * PALETTE_SIZE * sizeof(ushort))) {
         // we need to memcmp differently here and see if we can keep the renderstate
@@ -5305,14 +5306,15 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
         return;
     // set up a new state minimally needed for comparison
     RenderState newState;
-    newState.blendMode  = blendMode;
-    newState.indexCount = indexCount;
-    newState.maskColor  = maskColour;
-    newState.alpha      = alpha;
-    newState.screen     = currentScreen;
-    newState.shader     = (ShaderBase *)shader;
-    newState.fbShader   = (FBShaderBase *)fbShader;
-    newState.fbShader2  = (FBShaderBase *)fbShader2;
+    newState.blendMode   = blendMode;
+    newState.indexCount  = indexCount;
+    newState.vertexCount = vertCount;
+    newState.maskColor   = maskColour;
+    newState.alpha       = alpha;
+    newState.screen      = currentScreen;
+    newState.shader      = (ShaderBase *)shader;
+    newState.fbShader    = (FBShaderBase *)fbShader;
+    newState.fbShader2   = (FBShaderBase *)fbShader2;
     if (blendMode == INK_LOOKUP)
         newState.lookupTable = lookupTable;
     if (args)
@@ -5332,50 +5334,49 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
 
     if (!altIndex)
         altIndex = baseIndexList;
-    if (renderStateIndex + 1 && vertCount + renderCount < VERTEX_LIMIT) {
-        RenderState *last = &renderStates[renderStateIndex];
-        if (last->indexCount + indexCount < INDEX_LIMIT && StatesCompatible(last, &newState)) {
+    if (renderStateIndex && vertCount + renderCount < VERTEX_LIMIT) {
+        RenderState &last = renderStates[renderStateIndex - 1];
+        if (last.indexCount + indexCount < INDEX_LIMIT && StatesCompatible(&last, &newState)) {
             // merge em and we'll be on our way
-            memcpy(&last->indecies[last->indexCount], altIndex, indexCount * sizeof(ushort));
-            for (int i = 0; i < indexCount; ++i) last->indecies[i + last->indexCount] += renderCount;
-            last->indexCount += indexCount;
+            memcpy(&last.indecies[last.indexCount], altIndex, indexCount * sizeof(ushort));
+            std::for_each_n(std::begin(last.indecies) + last.indexCount, indexCount, [&last](auto &i) { i += last.vertexCount; });
+            last.vertexCount += vertCount;
+            last.indexCount += indexCount;
             return;
         }
     }
-    renderStateIndex++;
     if (renderStateIndex >= RENDERSTATE_LIMIT || vertCount + renderCount >= VERTEX_LIMIT) {
         RenderRenderStates(); // you should render NOW!
-        renderStateIndex++;
     }
     memcpy(newState.indecies, altIndex, indexCount * sizeof(ushort));
-    if (renderCount)
-        for (int i = 0; i < indexCount; ++i) newState.indecies[i] += renderCount;
-    renderStates[renderStateIndex] = newState;
+    renderStates[renderStateIndex++] = newState;
 }
 
 void RenderRenderStates()
 {
     if (!renderCount)
         return;
+    int vertoff = 0;
 #if RETRO_USING_OPENGL
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, attribVBO);
-    glBufferData(GL_ARRAY_BUFFER, renderCount * sizeof(DrawVertex), vertexList, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
 #endif
-    for (int i = 0; i <= renderStateIndex && i < 32; ++i) {
-        RenderState *renderState = &renderStates[i];
-        renderState->shader->use();
+    for (int i = 0; i < renderStateIndex; ++i) {
+        RenderState &renderState = renderStates[i];
+        glBufferSubData(GL_ARRAY_BUFFER, 0, renderCount * sizeof(DrawVertex), &vertexList[vertoff]);
+        vertoff += renderState.vertexCount; 
+        renderState.shader->use();
 
-        renderState->shader->setPalette(renderState);
-        renderState->shader->setPalLines(renderState);
+        renderState.shader->setPalette(&renderState);
+        renderState.shader->setPalLines(&renderState);
 
-        renderState->shader->setArgs(renderState);
+        renderState.shader->setArgs(&renderState);
 
 #if RETRO_USING_OPENGL
         glClearColor(0, 0, 0, 0);
         glBlendFunc(GL_ONE, GL_ZERO);
-        if (renderState->fbShader2) {
+        if (renderState.fbShader2) {
             glBindFramebuffer(GL_FRAMEBUFFER, tFB);
             glClear(GL_COLOR_BUFFER_BIT);
         }
@@ -5385,24 +5386,24 @@ void RenderRenderStates()
         }
 
         MatrixF orth;
-        ortho(&orth, 0, renderState->screen->size.x, renderState->screen->size.y, 0.0, 0.0, 16.0);
-        renderState->shader->setProjection(&orth);
-        renderState->shader->setScreen(renderState->screen);
+        ortho(&orth, 0, renderState.screen->size.x, renderState.screen->size.y, 0.0, 0.0, 16.0);
+        renderState.shader->setProjection(&orth);
+        renderState.shader->setScreen(renderState.screen);
         float xScale = engine.windowWidth / (float)pixWidth;
         float yScale = engine.windowHeight / (float)SCREEN_YSIZE;
         glEnable(GL_SCISSOR_TEST);
-        glScissor(renderState->clipRectTL.x * xScale, (SCREEN_YSIZE - renderState->clipRectBR.y) * yScale,
-                  (renderState->clipRectBR.x - renderState->clipRectTL.x) * xScale,
-                  (renderState->clipRectBR.y - renderState->clipRectTL.y) * yScale);
+        glScissor(renderState.clipRectTL.x * xScale, (SCREEN_YSIZE - renderState.clipRectBR.y) * yScale,
+                  (renderState.clipRectBR.x - renderState.clipRectTL.x) * xScale, (renderState.clipRectBR.y - renderState.clipRectTL.y) * yScale);
 
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);
-        glDrawElements(GL_TRIANGLES, renderState->indexCount, GL_UNSIGNED_SHORT, 0);
-		glDisable(GL_SCISSOR_TEST);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, renderState.indexCount * sizeof(ushort), renderState.indecies);
+        glDrawElements(GL_TRIANGLES, renderState.indexCount, GL_UNSIGNED_SHORT, 0);
+        glDisable(GL_SCISSOR_TEST);
         glBindVertexArray(fbpVAO);
         glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fbiVBO);
 
-        switch (renderState->blendMode) {
+        switch (renderState.blendMode) {
+            default:
             case INK_MASKED:
             case INK_UNMASKED:
             case INK_LOOKUP:
@@ -5410,24 +5411,24 @@ void RenderRenderStates()
             case INK_SUB:
             case INK_BLEND:
             case INK_ALPHA: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
-            case INK_ADD: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
+            //case INK_ADD: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
         }
 
-        if (renderState->fbShader) {
-            if (renderState->fbShader2) {
+        if (renderState.fbShader) {
+            if (renderState.fbShader2) {
                 // render inplace, swap shaders
                 glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
-                renderState->fbShader->use();
-                renderState->fbShader->setSourceDest(tTBound, t2Bound);
-                renderState->fbShader->setArgs(renderState);
+                renderState.fbShader->use();
+                renderState.fbShader->setSourceDest(tTBound, t2Bound);
+                renderState.fbShader->setArgs(&renderState);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-                renderState->fbShader = renderState->fbShader2;
+                renderState.fbShader = renderState.fbShader2;
             }
             // render to the out FB, clear t2
             glBindFramebuffer(GL_FRAMEBUFFER, outFB);
-            renderState->fbShader->use();
-            renderState->fbShader->setSourceDest(t2Bound, 10);
-            renderState->fbShader->setArgs(renderState);
+            renderState.fbShader->use();
+            renderState.fbShader->setSourceDest(t2Bound, 10);
+            renderState.fbShader->setArgs(&renderState);
 
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
             glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
@@ -5435,21 +5436,22 @@ void RenderRenderStates()
         }
         else {
             // if fbShader2, render "inplace" to prepare for the next send
-            if (renderState->fbShader2) {
+            if (renderState.fbShader2) {
                 glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
-                renderState->fbShader2->use();
-                renderState->fbShader2->setSourceDest(tTBound, t2Bound);
-                renderState->fbShader2->setArgs(renderState);
+                renderState.fbShader2->use();
+                renderState.fbShader2->setSourceDest(tTBound, t2Bound);
+                renderState.fbShader2->setArgs(&renderState);
                 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
             }
         }
+        //
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, attribVBO); // rebind
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
 #endif
     }
+    renderStateIndex = 0;
     renderCount      = 0;
-    renderStateIndex = -1;
 }
 
 void FlipScreenHW()
@@ -5468,8 +5470,8 @@ void FlipScreenHW()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
         // TODO: TEMP. REMOVE ME WHEN IT MAKES SENSE TO DO SO
-        //glBindFramebuffer(GL_FRAMEBUFFER, outFB);
-        //glClear(GL_COLOR_BUFFER_BIT);
+        // glBindFramebuffer(GL_FRAMEBUFFER, outFB);
+        // glClear(GL_COLOR_BUFFER_BIT);
     }
     SDL_GL_SwapWindow(engine.window);
 }

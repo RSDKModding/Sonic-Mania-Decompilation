@@ -81,12 +81,12 @@ struct DrawList {
 };
 
 #if RETRO_HARDWARE_RENDER
-
-#define VERTEX_LIMIT      (0x800)
-#define RENDERSTATE_LIMIT (0x20)
+#include <algorithm>
+#define VERTEX_LIMIT      (0x4000)
+#define RENDERSTATE_LIMIT (0x80)
 #define INDEX_LIMIT       (VERTEX_LIMIT * 6)
-//                  TILE_COUNT
-#define TILEUV_SIZE (0x400 * 4 * 4)
+#define TILEUV_SIZE       (0x400 * 4 * 4)
+//                         ^ TILE_COUNT
 struct DrawVertex {
     float x;
     float y;
@@ -124,6 +124,7 @@ struct RenderState {
     byte blendMode          = INK_NONE;
     byte alpha              = 0xFF;
 
+    ushort vertexCount = 0;
     ushort indexCount = 0;
     ushort indecies[INDEX_LIMIT];
 
@@ -148,7 +149,7 @@ extern ushort tileUVArray[TILEUV_SIZE];
 
 extern RenderState renderStates[RENDERSTATE_LIMIT];
 
-extern sbyte renderStateIndex;
+extern short renderStateIndex;
 extern ushort renderCount;
 extern ushort lastRenderCount;
 

@@ -24,7 +24,7 @@ void main()
     out_color  = texture(source, ex_UV);
     if (out_color.a == 0 || (alpha == 0 && inkEffect < INK_LOOKUP && inkEffect != INK_NONE))
         discard;
-    float alph = alpha / 255.0;
+    /*float alph = alpha / 255.0;
     ivec3 placed  = ivec3(texture(dest, ex_UV).rgb * 255);
     int truncated = (placed.b >> 3) | ((placed.g >> 2) << 5) | ((placed.r >> 3) << 11);
 
@@ -49,5 +49,5 @@ void main()
                 discard;
             out_color = vec4(out_color.rgb, 1.0);
             break;
-    }
+    }//*/
 }
