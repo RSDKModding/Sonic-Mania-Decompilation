@@ -10,8 +10,8 @@ struct ObjectTurbine {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxTurbine;
-    Hitbox hitbox1;
-    Hitbox hitboxHurt;
+    Hitbox hitboxHandle;
+    Hitbox hitboxSpikes;
     bool32 playingTurbineSfx;
 };
 
@@ -21,8 +21,8 @@ struct EntityTurbine {
     StateMachine(state);
     uint8 type;
     uint8 activePlayers;
-    int32 playerAngles[4];
-    int32 playerTimers[4];
+    int32 playerAngles[PLAYER_MAX];
+    int32 playerTimers[PLAYER_MAX];
     Animator animator;
 };
 

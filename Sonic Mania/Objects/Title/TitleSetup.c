@@ -185,8 +185,8 @@ void TitleSetup_State_FlashIn(void)
                 titleLogo->visible = true;
             }
             if (titleLogo->type == TITLELOGO_RIBBON) {
-                titleLogo->flag = true;
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 2, &titleLogo->animator1, true, 0);
+                titleLogo->showRibbonCenter = true;
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 2, &titleLogo->mainAnimator, true, 0);
             }
         }
 
@@ -232,10 +232,10 @@ void TitleSetup_State_SetupLogo(void)
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type == TITLELOGO_PRESSSTART) {
-                titleLogo->active      = ACTIVE_NORMAL;
+                titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
 #if RETRO_USE_PLUS
-                Entity *store          = SceneInfo->entity;
+                Entity *store     = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)titleLogo;
                 TitleLogo_SetupPressStart();
                 SceneInfo->entity = store;
@@ -287,13 +287,13 @@ void TitleSetup_State_WaitForEnter(void)
 {
     RSDK_THIS(TitleSetup);
     bool32 anyButton = ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyC.press || ControllerInfo->keyX.press
-                     || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
-                     || ControllerInfo->keySelect.press;
+                       || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
+                       || ControllerInfo->keySelect.press;
     bool32 anyClick = (!TouchInfo->count && self->touched) || Unknown_anyPress;
-    self->touched = TouchInfo->count > 0;
+    self->touched   = TouchInfo->count > 0;
     if (anyClick || anyButton) {
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, false, 0xFF);
-        self->timer = 0;
+        self->timer           = 0;
         const char *nextScene = "Menu";
 #if RETRO_GAMEVER == VER_100
         if (ControllerInfo->keyA.down && (ControllerInfo->keyX.down || ControllerInfo->keyC.down))

@@ -18,14 +18,14 @@ struct EntityLRZSpikeBall {
     int32 interval;
     int32 intervalOffset;
     int32 strength;
-    int32 field_68;
+    int32 unused;
     Vector2 startPos;
-    Vector2 offset;
+    Vector2 ballOffset;
     int32 timer;
     Hitbox hitboxBase;
     Hitbox hitboxBall;
-    Animator animator1;
-    Animator animator2;
+    Animator baseAnimator;
+    Animator ballAnimator;
 };
 
 // Object Struct
@@ -45,14 +45,14 @@ void LRZSpikeBall_EditorLoad(void);
 void LRZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
-int LRZSpikeBall_GetFrameID(void);
+int LRZSpikeBall_GetBaseFrameID(void);
 
 void LRZSpikeBall_CheckPlayerBaseCollisions(void);
 void LRZSpikeBall_CheckPlayerBallCollisions(void);
 
 void LRZSpikeBall_State_Setup(void);
-void LRZSpikeBall_State_Unknown1(void);
-void LRZSpikeBall_State_Unknown2(void);
-void LRZSpikeBall_State_Unknown3(void);
+void LRZSpikeBall_State_AwaitInterval(void);
+void LRZSpikeBall_State_ChargeUp(void);
+void LRZSpikeBall_State_LaunchedBall(void);
 
 #endif //!OBJ_LRZSPIKEBALL_H

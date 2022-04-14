@@ -10,13 +10,13 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
     RETRO_HASH(hash);
     GEN_HASH(filename, hash);
 
-    for (int i = 0; i < SPRFILE_COUNT; ++i) {
+    for (int32 i = 0; i < SPRFILE_COUNT; ++i) {
         if (HASH_MATCH(spriteAnimationList[i].hash, hash)) {
             return i;
         }
     }
 
-    ushort id = -1;
+    uint16 id = -1;
     for (id = 0; id < SPRFILE_COUNT; ++id) {
         if (spriteAnimationList[id].scope == SCOPE_NONE)
             break;
@@ -32,7 +32,7 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
     FileInfo info;
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
-        uint sig = ReadInt32(&info, false);
+        uint32 sig = ReadInt32(&info, false);
 
         if (sig != 0x525053) {
             CloseFile(&info);
@@ -41,26 +41,26 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
 
         SpriteAnimation *spr = &spriteAnimationList[id];
         spr->scope           = scope;
-        memcpy(spr->hash, hash, 4 * sizeof(uint));
+        memcpy(spr->hash, hash, 4 * sizeof(uint32));
 
-        uint frameCount = ReadInt32(&info, false);
+        uint32 frameCount = ReadInt32(&info, false);
         AllocateStorage(frameCount * sizeof(SpriteFrame), (void **)&spr->frames, DATASET_STG, false);
 
-        byte sheetCount = ReadInt8(&info);
-        for (int s = 0; s < sheetCount; ++s) {
+        uint8 sheetCount = ReadInt8(&info);
+        for (int32 s = 0; s < sheetCount; ++s) {
             ReadString(&info, buffer);
             sheetIDs[s] = LoadSpriteSheet(buffer, scope);
         }
 
-        byte hitboxCount = ReadInt8(&info);
-        for (int h = 0; h < hitboxCount; ++h) {
+        uint8 hitboxCount = ReadInt8(&info);
+        for (int32 h = 0; h < hitboxCount; ++h) {
             ReadString(&info, nameBuffer[h]);
         }
 
         spr->animCount = ReadInt16(&info);
         AllocateStorage(spr->animCount * sizeof(SpriteAnimationEntry), (void **)&spr->animations, DATASET_STG, false);
-        int frameID = 0;
-        for (int a = 0; a < spr->animCount; ++a) {
+        int32 frameID = 0;
+        for (int32 a = 0; a < spr->animCount; ++a) {
             SpriteAnimationEntry *animation = &spr->animations[a];
             ReadString(&info, textBuffer);
             GEN_HASH(textBuffer, animation->hash);
@@ -71,7 +71,7 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
             animation->loopIndex       = ReadInt8(&info);
             animation->rotationFlag    = ReadInt8(&info);
 
-            for (int f = 0; f < animation->frameCount; ++f) {
+            for (int32 f = 0; f < animation->frameCount; ++f) {
                 SpriteFrame *frame = &spr->frames[frameID++];
                 frame->sheetID     = sheetIDs[ReadInt8(&info)];
                 frame->duration    = ReadInt16(&info);
@@ -84,7 +84,7 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
                 frame->pivotY      = ReadInt16(&info);
 
                 frame->hitboxCnt = hitboxCount;
-                for (int h = 0; h < hitboxCount; ++h) {
+                for (int32 h = 0; h < hitboxCount; ++h) {
                     frame->hitboxes[h].left   = ReadInt16(&info);
                     frame->hitboxes[h].top    = ReadInt16(&info);
                     frame->hitboxes[h].right  = ReadInt16(&info);
@@ -108,13 +108,13 @@ uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint
     RETRO_HASH(hash);
     GEN_HASH(filename, hash);
 
-    for (int i = 0; i < SPRFILE_COUNT; ++i) {
+    for (int32 i = 0; i < SPRFILE_COUNT; ++i) {
         if (HASH_MATCH(spriteAnimationList[i].hash, hash)) {
             return i;
         }
     }
 
-    ushort id = -1;
+    uint16 id = -1;
     for (id = 0; id < SPRFILE_COUNT; ++id) {
         if (spriteAnimationList[id].scope == SCOPE_NONE)
             break;
@@ -125,7 +125,7 @@ uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint
 
     SpriteAnimation *spr = &spriteAnimationList[id];
     spr->scope           = scope;
-    memcpy(spr->hash, hash, 4 * sizeof(uint));
+    memcpy(spr->hash, hash, 4 * sizeof(uint32));
 
     AllocateStorage(sizeof(SpriteFrame) * (frameCount > 0x400 ? 0x400 : frameCount), (void **)&spr->frames, DATASET_STG, true);
     AllocateStorage(sizeof(SpriteAnimationEntry) * (animCount > 0x40 ? 0x40 : animCount), (void **)&spr->animations, DATASET_STG, true);
@@ -136,9 +136,9 @@ uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint
 void RSDK::ProcessAnimation(Animator *animator)
 {
     if (animator) {
-        if (animator->framePtrs) {
+        if (animator->frames) {
             animator->timer += animator->speed;
-            if (animator->framePtrs == (SpriteFrame *)1) {
+            if (animator->frames == (SpriteFrame *)1) {
                 while (animator->timer > animator->frameDuration) {
                     ++animator->frameID;
                     animator->timer -= animator->frameDuration;
@@ -152,14 +152,14 @@ void RSDK::ProcessAnimation(Animator *animator)
                     animator->timer -= animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
-                    animator->frameDuration = animator->framePtrs[animator->frameID].duration;
+                    animator->frameDuration = animator->frames[animator->frameID].duration;
                 }
             }
         }
     }
 }
 
-int RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
+int32 RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return 0;
@@ -188,9 +188,9 @@ int RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 
             length = info->length;
         }
 
-        int w = 0;
-        for (int c = startIndex; c < length; ++c) {
-            int charFrame = info->text[c];
+        int32 w = 0;
+        for (int32 c = startIndex; c < length; ++c) {
+            int32 charFrame = info->text[c];
             if (charFrame < anim->frameCount) {
                 w += spr->frames[charFrame + anim->frameListOffset].width;
                 if (c + 1 >= length)
@@ -214,10 +214,10 @@ void RSDK::SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info)
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
-        for (int c = 0; c < info->length; ++c) {
-            int charVal   = info->text[c];
+        for (int32 c = 0; c < info->length; ++c) {
+            int32 charVal = info->text[c];
             info->text[c] = -1;
-            for (int f = 0; f < anim->frameCount; ++f) {
+            for (int32 f = 0; f < anim->frameCount; ++f) {
                 if (spr->frames[f + anim->frameListOffset].id == charVal) {
                     info->text[c] = f;
                     break;

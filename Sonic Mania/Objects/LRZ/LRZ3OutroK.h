@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectLRZ3OutroK {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused; // possibly aniFrames in the RSDK editor??? who knows...
     uint16 sfxWarp;
     EntityEggPrison *prison;
-    Entity *teleporter;
+    EntitySkyTeleporter *teleporter;
     EntityFXRuby *fxRuby;
 };
 

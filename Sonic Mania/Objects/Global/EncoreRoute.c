@@ -23,6 +23,7 @@ void EncoreRoute_Update(void)
         for (int32 x = 0; x < (self->size.x >> 0x10); ++x) {
             uint8 src = -1;
             uint8 dst = -1;
+
             switch (self->layerSrc) {
                 case 0: src = Zone->fgLow; break;
                 case 1: src = Zone->fgHigh; break;
@@ -30,6 +31,7 @@ void EncoreRoute_Update(void)
                 case 3: src = Zone->scratchLayer; break;
                 default: break;
             }
+
             switch (self->layerDest) {
                 case 0: dst = Zone->fgLow; break;
                 case 1: dst = Zone->fgHigh; break;
@@ -73,8 +75,11 @@ void EncoreRoute_EditorDraw(void)
     size.x = TILE_SIZE * self->size.x;
     size.y = TILE_SIZE * self->size.y;
 
-    int count = showGizmos() ? 2 : 1;
-    for (int i = 0; i < count; ++i) {
+    int32 count = showGizmos() ? 2 : 1;
+    for (int32 i = 0; i < count; ++i) {
+        if (i >= 1)
+            RSDK_DRAWING_OVERLAY(true);
+
         drawPos.x = positions[i]->x + (size.x >> 1);
         drawPos.y = positions[i]->y + (size.y >> 1);
 
@@ -97,11 +102,16 @@ void EncoreRoute_EditorDraw(void)
         drawPos.x -= size.x;
         self->direction = FLIP_Y;
         RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
+
+        if (i >= 1)
+            RSDK_DRAWING_OVERLAY(false);
     }
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
         DrawHelpers_DrawArrow(0xE0E0E0, self->position.x + (size.x >> 1), self->position.y + (size.y >> 1), self->offset.x + (size.x >> 1),
                               self->offset.y + (size.y >> 1));
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

@@ -155,54 +155,53 @@ void PlatformControl_Create(void *data)
 
         self->updateRange.x += 0x800000;
         self->updateRange.y += 0x800000;
-        id              = RSDK.GetEntityID(self);
-        Entity *control = RSDK.GetEntityByID(id - 1);
+
+        self->taggedButton   = NULL;
+        Entity *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+
         if (self->buttonTag > 0) {
-            bool32 flag = false;
             if (Button) {
                 foreach_all(Button, button)
                 {
                     if (button->tag == self->buttonTag) {
-                        flag    = true;
-                        control = (Entity *)button;
+                        taggedButton = (Entity *)button;
                         foreach_break;
                     }
                 }
             }
-            if (SDashWheel && !flag) {
+
+            if (SDashWheel && !taggedButton) {
                 foreach_all(SDashWheel, wheel)
                 {
                     if (wheel->tag == self->buttonTag) {
-                        flag = true;
-                        control = (Entity *)wheel;
+                        taggedButton = (Entity *)wheel;
                         foreach_break;
                     }
                 }
             }
-            if (PullChain && !flag) {
+
+            if (PullChain && !taggedButton) {
                 foreach_all(PullChain, chain)
                 {
                     if (chain->tag == self->buttonTag) {
-                        flag    = true;
-                        control = (Entity *)chain;
+                        taggedButton = (Entity *)chain;
                         foreach_break;
                     }
                 }
             }
         }
 
-        if ((Button && control->objectID == Button->objectID) || (SDashWheel && control->objectID == SDashWheel->objectID)
-            || (PullChain && control->objectID == PullChain->objectID)) {
-            self->taggedButton = control;
-            if (self->updateRange.y < 0x800000 + abs(self->position.x - control->position.x)) {
-                self->updateRange.y = 0x800000 + abs(self->position.x - control->position.x);
+        if (taggedButton) {
+            if ((Button && taggedButton->objectID == Button->objectID) || (SDashWheel && taggedButton->objectID == SDashWheel->objectID)
+                || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+                self->taggedButton = taggedButton;
+                if (self->updateRange.y < 0x800000 + abs(self->position.x - taggedButton->position.x)) {
+                    self->updateRange.y = 0x800000 + abs(self->position.x - taggedButton->position.x);
+                }
+                if (self->updateRange.y < 0x800000 + abs(self->position.y - taggedButton->position.y)) {
+                    self->updateRange.y = 0x800000 + abs(self->position.y - taggedButton->position.y);
+                }
             }
-            if (self->updateRange.y < 0x800000 + abs(self->position.y - control->position.y)) {
-                self->updateRange.y = 0x800000 + abs(self->position.y - control->position.y);
-            }
-        }
-        else {
-            self->taggedButton = NULL;
         }
     }
 }
@@ -236,7 +235,67 @@ void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, Entity *no
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PlatformControl_EditorDraw(void) {}
+void PlatformControl_EditorDraw(void)
+{
+    RSDK_THIS(PlatformControl);
+
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+
+    if (showGizmos()) {
+        self->taggedButton   = NULL;
+        Entity *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+
+        if (self->buttonTag > 0) {
+            if (Button) {
+                foreach_all(Button, button)
+                {
+                    if (button->tag == self->buttonTag) {
+                        taggedButton = (Entity *)button;
+                        foreach_break;
+                    }
+                }
+            }
+            if (SDashWheel && !taggedButton) {
+                foreach_all(SDashWheel, wheel)
+                {
+                    if (wheel->tag == self->buttonTag) {
+                        taggedButton = (Entity *)wheel;
+                        foreach_break;
+                    }
+                }
+            }
+
+            if (PullChain && !taggedButton) {
+                foreach_all(PullChain, chain)
+                {
+                    if (chain->tag == self->buttonTag) {
+                        taggedButton = (Entity *)chain;
+                        foreach_break;
+                    }
+                }
+            }
+        }
+
+        if (taggedButton) {
+            if ((Button && taggedButton->objectID == Button->objectID) || (SDashWheel && taggedButton->objectID == SDashWheel->objectID)
+                || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+                self->taggedButton = taggedButton;
+                if (self->updateRange.y < 0x800000 + abs(self->position.x - taggedButton->position.x)) {
+                    self->updateRange.y = 0x800000 + abs(self->position.x - taggedButton->position.x);
+                }
+                if (self->updateRange.y < 0x800000 + abs(self->position.y - taggedButton->position.y)) {
+                    self->updateRange.y = 0x800000 + abs(self->position.y - taggedButton->position.y);
+                }
+            }
+        }
+
+        RSDK_DRAWING_OVERLAY(true);
+        if (self->taggedButton)
+            DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y);
+        RSDK_DRAWING_OVERLAY(false);
+    }
+}
 
 void PlatformControl_EditorLoad(void) {}
 #endif

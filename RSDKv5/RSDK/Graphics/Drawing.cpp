@@ -2578,8 +2578,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
 
 void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelative)
 {
-    if (animator && animator->framePtrs) {
-        RSDK::SpriteFrame *frame = &animator->framePtrs[animator->frameID];
+    if (animator && animator->frames) {
+        RSDK::SpriteFrame *frame = &animator->frames[animator->frameID];
         Vector2 pos;
         if (!position)
             pos = sceneInfo.entity->position;
@@ -4136,7 +4136,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
               Vector2 *charOffsets, bool32 screenRelative)
 {
-    if (animator && info && animator->framePtrs) {
+    if (animator && info && animator->frames) {
         if (!position)
             position = &sceneInfo.entity->position;
         Entity *entity = sceneInfo.entity;
@@ -4170,7 +4170,7 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
                     for (; startFrame < endFrame; ++startFrame) {
                         ushort curChar = info->text[startFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x + (charOffsets->x >> 0x10), y + frame->pivotY + (charOffsets->y >> 0x10), frame->width, frame->height,
                                               frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -4182,7 +4182,7 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
                     for (; startFrame < endFrame; ++startFrame) {
                         ushort curChar = info->text[startFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x += spacing + frame->width;
@@ -4197,7 +4197,7 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
                     for (Vector2 *charOffset = &charOffsets[endFrame]; endFrame >= startFrame; --endFrame) {
                         ushort curChar = info->text[endFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x - frame->width + (charOffset->x >> 0x10), y + frame->pivotY + (charOffset->y >> 0x10), frame->width,
                                               frame->height, frame->sprX, frame->sprY, FLIP_NONE, (InkEffects)entity->inkEffect, entity->alpha,
                                               frame->sheetID);
@@ -4210,7 +4210,7 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
                     for (; endFrame >= startFrame; --endFrame) {
                         ushort curChar = info->text[endFrame];
                         if (curChar < animator->frameCount) {
-                            RSDK::SpriteFrame *frame = &animator->framePtrs[curChar];
+                            RSDK::SpriteFrame *frame = &animator->frames[curChar];
                             DrawSpriteFlipped(x - frame->width, y + frame->pivotY, frame->width, frame->height, frame->sprX, frame->sprY, FLIP_NONE,
                                               (InkEffects)entity->inkEffect, entity->alpha, frame->sheetID);
                             x = (x - frame->width) - spacing;

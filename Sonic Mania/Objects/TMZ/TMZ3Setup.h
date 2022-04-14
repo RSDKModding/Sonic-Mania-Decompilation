@@ -6,9 +6,9 @@
 // Object Class
 struct ObjectTMZ3Setup {
     RSDK_OBJECT
-    int32 value;
-    int32 dword8;
-    int32 field_C;
+    int32 palDelay;
+    int32 palTimer;
+    int32 unused;
     int32 aniTileFrame;
     uint16 aniTiles;
 };
@@ -28,8 +28,10 @@ void TMZ3Setup_StaticUpdate(void);
 void TMZ3Setup_Draw(void);
 void TMZ3Setup_Create(void* data);
 void TMZ3Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TMZ3Setup_EditorDraw(void);
 void TMZ3Setup_EditorLoad(void);
+#endif
 void TMZ3Setup_Serialize(void);
 
 // Extra Entity Functions

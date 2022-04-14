@@ -6,35 +6,33 @@
 typedef enum {
     DRILLERDROID_MAIN,
     DRILLERDROID_TARGET,
-    DRILLERDROID_UNKNOWN,
+    DRILLERDROID_UNUSED,
 }DrillerdroidTypes;
 
 // Object Class
 struct ObjectDrillerdroid {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    Hitbox hitbox5;
-    int32 field_2C[2];
-    int32 field_34[2];
-    int32 field_3C[2];
-    int32 field_44[2];
-    int32 field_4C[2];
-    int32 field_54[2];
-    uint8 field_5C[5];
-    uint8 field_61;
+    Hitbox hitboxCore;
+    Hitbox hitboxPistonL;
+    Hitbox hitboxPistonR;
+    Hitbox hitboxDrillL;
+    Hitbox hitboxDrillR;
+    int32 pistonPos[2];
+    int32 drillPos[2];
+    int32 pistonDelay[2];
+    int32 drillDelay[2];
+    int32 pistonMoveDir[2];
+    int32 drillMoveDir[2];
+    uint8 platformActive[5];
+    uint8 arenaSegment;
     uint8 playerTimers[4];
-    uint8 shouldPlayDrillSfx;
-    uint8 field_67;
+    uint8 drillSfxTimer;
     bool32 playingDrillSfx;
     uint8 armorHealth;
-    uint8 field_6D;
-    uint8 field_6E;
-    uint8 field_6F;
-    int32 field_70;
-    Entity* boss;
+    uint8 jumpsRemaining;
+    uint8 canBreakSegment;
+    int32 stalatiteOffset;
+    EntityDrillerdroid* boss;
     uint16 aniFrames;
     uint16 ticFrames;
     uint16 sfxHit;
@@ -55,12 +53,11 @@ struct EntityDrillerdroid {
     uint8 type;
     StateMachine(state);
     StateMachine(stateDraw);
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Entity* target;
-    int32 field_B0;
-    int32 field_B4;
+    Animator mainAnimator;
+    Animator armorAnimator;
+    Animator targetLockAnimator;
+    EntityPlayer* target;
+    Vector2 targetEdgeOffset;
     int32 startY;
     int32 timer;
     uint8 invincibilityTimer;
@@ -90,34 +87,34 @@ void Drillerdroid_Explode(void);
 void Drillerdroid_SpawnDebris(int offset);
 
 void Drillerdroid_State_SetupArena(void);
-void Drillerdroid_State_StartBoss(void);
-void Drillerdroid_State_Unknown2(void);
-void Drillerdroid_State_Unknown3(void);
-void Drillerdroid_State_Unknown4(void);
-void Drillerdroid_State_Unknown5(void);
-void Drillerdroid_State_Unknown6(void);
-void Drillerdroid_State_Unknown7(void);
-void Drillerdroid_State_Unknown8(void);
-void Drillerdroid_State_Unknown9(void);
-void Drillerdroid_State_Unknown10(void);
-void Drillerdroid_State_Unknown19(void);
-void Drillerdroid_State_Unknown14(void);
-void Drillerdroid_State_Unknown15(void);
-void Drillerdroid_State_Unknown16(void);
-void Drillerdroid_State_Unknown17(void);
-void Drillerdroid_State_Unknown18(void);
-void Drillerdroid_State_Unknown11(void);
-void Drillerdroid_State_Unknown12(void);
-void Drillerdroid_State_Unknown13(void);
+void Drillerdroid_State_AwaitPlayer(void);
+void Drillerdroid_State_Dropping(void);
+void Drillerdroid_State_Landed(void);
+void Drillerdroid_State_LandRecoil(void);
+void Drillerdroid_State_DecideNextMove(void);
+void Drillerdroid_State_PrepareJump(void);
+void Drillerdroid_State_Jumping(void);
+void Drillerdroid_State_Drilling(void);
+void Drillerdroid_State_FinishDrilling(void);
+void Drillerdroid_State_Overheat(void);
+void Drillerdroid_State_OverheatRecoil(void);
+void Drillerdroid_State_JumpTargetDelay(void);
+void Drillerdroid_State_PrepareJumpTarget(void);
+void Drillerdroid_State_JumpTargeting(void);
+void Drillerdroid_State_DecidingDropPos(void);
+void Drillerdroid_State_DropFailReset(void);
+void Drillerdroid_State_OverheatRecoil_DestroyedSegment(void);
+void Drillerdroid_State_Cooldown(void);
+void Drillerdroid_State_ResetFromCooldown(void);
 void Drillerdroid_State_Destroyed(void);
 void Drillerdroid_State_Finish(void);
 void Drillerdroid_State_DropSignPost(void);
 
-void Drillerdroid_StateDraw_Unknown1(void);
+void Drillerdroid_Draw_Boss(void);
 
-void Drillerdroid_StateDraw_Unknown2(void);
+void Drillerdroid_Draw_Simple(void);
 
-void Drillerdroid_State1_Unknown(void);
-void Drillerdroid_StateDraw1_Unknown(void);
+void Drillerdroid_State_Target(void);
+void Drillerdroid_Draw_Target(void);
 
 #endif //!OBJ_DRILLERDROID_H

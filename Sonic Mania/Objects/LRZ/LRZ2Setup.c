@@ -43,7 +43,7 @@ void LRZ2Setup_StaticUpdate(void)
         RSDK.RotatePalette(0, 228, 231, (LRZ2Setup->conveyorDir & 0xFF));
 
     // Rock Hues
-    int32 blend   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
+    int32 blend = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
 
     RSDK.SetLimitedFade(5, 1, 4, abs(blend >> 3), 224, 227);
     RSDK.RotatePalette(3, 224, 227, true);
@@ -51,6 +51,7 @@ void LRZ2Setup_StaticUpdate(void)
     RSDK.SetLimitedFade(6, 2, 4, abs(blend >> 3), 224, 227);
     RSDK.RotatePalette(3, 224, 227, false);
     RSDK.RotatePalette(4, 224, 227, false);
+
     // Apply Lava Fading
     RSDK.SetLimitedFade(0, 5, 6, LRZ2Setup->lavaPalTimer, 224, 227);
 
@@ -62,15 +63,17 @@ void LRZ2Setup_StaticUpdate(void)
             uint8 behaviour      = LRZ2_TFLAGS_NORMAL;
             int32 tileInfo       = 0;
 
-            LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
-                                  player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
+            LRZ2Setup_GetTileInfo(player->position.x, player->position.y + (playerHitbox->bottom << 16), player->moveLayerPosition.x,
+                                  player->moveLayerPosition.y, player->collisionPlane, &tileInfo, &behaviour);
+
             if (behaviour == LRZ2_TFLAGS_NORMAL) {
-                LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->right << 16) + player->position.x,
-                                      (playerHitbox->bottom << 16) + player->position.y, player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
-                if (behaviour == LRZ2_TFLAGS_NORMAL) {
-                    LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, (playerHitbox->left << 16) + player->position.x,
-                                          (playerHitbox->bottom << 16) + player->position.y, player->moveLayerPosition.x, player->moveLayerPosition.y, &behaviour);
-                }
+                LRZ2Setup_GetTileInfo(player->position.x + (playerHitbox->right << 16), player->position.y + (playerHitbox->bottom << 16),
+                                      player->moveLayerPosition.x, player->moveLayerPosition.y, player->collisionPlane, &tileInfo, &behaviour);
+            }
+
+            if (behaviour == LRZ2_TFLAGS_NORMAL) {
+                LRZ2Setup_GetTileInfo(player->position.x + (playerHitbox->left << 16), player->position.y + (playerHitbox->bottom << 16),
+                                      player->moveLayerPosition.x, player->moveLayerPosition.y, player->collisionPlane, &tileInfo, &behaviour);
             }
 
             bool32 conveyorCollided = false;
@@ -85,10 +88,12 @@ void LRZ2Setup_StaticUpdate(void)
                         Player_CheckHitFlip(player);
                     break;
                 }
+
                 case LRZ2_TFLAGS_CONVEYOR_L:
                     conveyorCollided = true;
                     conveyorDir      = 0;
                     break;
+
                 case LRZ2_TFLAGS_CONVEYOR_R:
                     conveyorCollided = true;
                     conveyorDir      = 1;
@@ -113,6 +118,7 @@ void LRZ2Setup_StageLoad(void)
 {
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_CUCKY;
+
     if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
         for (int32 p = 0; p < Player->playerCount; ++p) {
             Zone->cameraBoundsL[p] += 0x100;
@@ -176,9 +182,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
             player1->left       = false;
             player1->right      = true;
 
-            for (int32 i = 0; i < Player->playerCount; ++i) {
-                StarPost->postIDs[i] = 0;
-            }
+            for (int32 p = 0; p < Player->playerCount; ++p) StarPost->postIDs[p] = 0;
 
             SaveGame_SavePlayerState();
             globals->enableIntro       = true;
@@ -187,65 +191,69 @@ void LRZ2Setup_GenericTrigger_CB(void)
             ++SceneInfo->listPos;
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");
+
             Zone_StartFadeOut(10, 0x000000);
         }
 
         if (player1->superState == SUPERSTATE_SUPER || player1->state == Player_State_Transform) {
             globals->restartPowerups |= 0x80;
         }
+
         globals->restartMusicID = Music->activeTrack;
     }
 }
 
-EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr)
+EntityButton *LRZ2Setup_SetupTagLink(int32 tag, Entity *entity)
 {
-    if (SceneInfo->inEditor)
-        return NULL;
+    // Yes..... :smirk:
+    // if (SceneInfo->inEditor)
+    //     return NULL;
 
-    EntityButton *taggedEntity = NULL;
+    EntityButton *taggedButton = NULL;
     if (tag > 0) {
         if (Button) {
             foreach_all(Button, button)
             {
                 if (button->tag == tag) {
-                    taggedEntity = button;
+                    taggedButton = button;
                     foreach_break;
                 }
             }
         }
 
-        if (TurretSwitch && !taggedEntity) {
+        if (TurretSwitch && !taggedButton) {
             foreach_all(TurretSwitch, turretSwitch)
             {
                 if (turretSwitch->tag == tag) {
-                    taggedEntity = (EntityButton *)turretSwitch;
+                    taggedButton = (EntityButton *)turretSwitch;
                     foreach_break;
                 }
             }
         }
     }
 
-    if (taggedEntity) {
-        if ((Button && taggedEntity->objectID == Button->objectID) || (TurretSwitch && taggedEntity->objectID == TurretSwitch->objectID)) {
-            if (entityPtr) {
-                int32 distX = abs(entityPtr->position.x - taggedEntity->position.x);
-                int32 distY = abs(entityPtr->position.y - taggedEntity->position.y);
+    if (taggedButton) {
+        if ((Button && taggedButton->objectID == Button->objectID) || (TurretSwitch && taggedButton->objectID == TurretSwitch->objectID)) {
+            if (entity) {
+                int32 distX = abs(entity->position.x - taggedButton->position.x);
+                int32 distY = abs(entity->position.y - taggedButton->position.y);
 
-                if (entityPtr->updateRange.x < 0x800000 + distX)
-                    entityPtr->updateRange.x = 0x800000 + distX;
+                if (entity->updateRange.x < 0x800000 + distX)
+                    entity->updateRange.x = 0x800000 + distX;
 
-                if (entityPtr->updateRange.y < 0x800000 + distY)
-                    entityPtr->updateRange.y = 0x800000 + distY;
+                if (entity->updateRange.y < 0x800000 + distY)
+                    entity->updateRange.y = 0x800000 + distY;
             }
         }
         else {
-            taggedEntity = NULL;
+            taggedButton = NULL;
         }
     }
-    return taggedEntity;
+
+    return taggedButton;
 }
 
-void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int32 offsetX, int32 offsetY, uint8 *behaviour)
+void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tileInfo, uint8 *behaviour)
 {
     int32 tileInfoLow   = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
     int32 tileInfoHigh  = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
@@ -255,7 +263,7 @@ void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int3
     int32 tileInfoMove  = 0;
     int32 behaviourMove = 0;
     if (Zone->moveLayer) {
-        tileInfoMove  = RSDK.GetTileInfo(Zone->moveLayer, (offsetX + x) >> 20, (offsetY + y) >> 20);
+        tileInfoMove  = RSDK.GetTileInfo(Zone->moveLayer, (moveOffsetX + x) >> 20, (moveOffsetY + y) >> 20);
         behaviourMove = RSDK.GetTileFlags(tileInfoMove, cPlane);
     }
 
@@ -270,6 +278,7 @@ void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int3
         tileSolidHigh = tileInfoHigh >> 12;
         tileSolidLow  = tileInfoLow >> 12;
     }
+
     if (Zone->moveLayer)
         tileSolidMove = tileInfoMove >> 12;
 

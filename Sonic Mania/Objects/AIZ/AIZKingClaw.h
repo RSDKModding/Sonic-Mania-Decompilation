@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define AIZKingClaw_ChainCount (12)
+
 // Object Class
 struct ObjectAIZKingClaw {
     RSDK_OBJECT
@@ -17,15 +19,15 @@ struct EntityAIZKingClaw {
     StateMachine(state);
     int32 timer;
     int32 startY;
-    Vector2 ballPos[12];
+    Vector2 chainPos[AIZKingClaw_ChainCount];
     Vector2 clawPos;
     Entity *grabbedEntities[8];
     int32 grabCount;
     int32 unused1;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Animator chainAnimator;
+    Animator hingeAnimator;
+    Animator clawBackAnimator;
+    Animator clawFrontAnimator;
 };
 
 // Object Struct

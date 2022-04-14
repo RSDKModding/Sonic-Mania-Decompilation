@@ -6,13 +6,13 @@
 // Object Class
 struct ObjectLRZ3Cutscene {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused; // possibly aniFrames?
 };
 
 // Entity Class
 struct EntityLRZ3Cutscene {
     RSDK_ENTITY
-    int32 field_58;
+    int32 unused;
 };
 
 // Object Struct

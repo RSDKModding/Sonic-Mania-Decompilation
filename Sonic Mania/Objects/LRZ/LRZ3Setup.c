@@ -27,8 +27,10 @@ void LRZ3Setup_StageLoad(void)
         RSDK.CopyPalette(0, 240, 1, 240, 16);
     }
 #endif
+
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_CUCKY;
+
     if (globals->suppressTitlecard) {
         SaveGame_LoadPlayerState();
         Zone_StartFadeIn(10, 0x000000);
@@ -59,24 +61,27 @@ void LRZ3Setup_StageLoad(void)
                 Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
             }
             else {
-                LRZ3Setup->cutscenePtr = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
-                if (LRZ3Setup->cutscenePtr)
+                LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
+                if (LRZ3Setup->cutsceneOutroK)
                     Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
             }
         }
 #else
         if (checkPlayerID(ID_KNUCKLES, 1)) 
-            LRZ3Setup->cutscenePtr = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
-        if (LRZ3Setup->cutscenePtr)
+            LRZ3Setup->cutsceneOutroK = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
+
+        if (LRZ3Setup->cutsceneOutroK)
             Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
 #endif
     }
 }
 
-void LRZ3Setup_StartCutscene(void) { LRZ3Setup->cutscenePtr->active = ACTIVE_NORMAL; }
+void LRZ3Setup_StartCutscene(void) { LRZ3Setup->cutsceneOutroK->active = ACTIVE_NORMAL; }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZ3Setup_EditorDraw(void) {}
 
 void LRZ3Setup_EditorLoad(void) {}
+#endif
 
 void LRZ3Setup_Serialize(void) {}

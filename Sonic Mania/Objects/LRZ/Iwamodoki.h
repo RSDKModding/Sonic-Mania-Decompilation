@@ -6,9 +6,9 @@
 // Object Class
 struct ObjectIwamodoki {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
 };
 
@@ -22,8 +22,8 @@ struct EntityIwamodoki {
     Vector2 preMovePos;
     Vector2 postMovePos;
     uint8 startDir;
-    int32 timer1;
-    int32 timer2;
+    int32 timer;
+    int32 chargeCount;
     Animator animator;
 };
 
@@ -51,10 +51,10 @@ void Iwamodoki_HandlePlayerCollisions(void);
 void Iwamodoki_CheckOffScreen(void);
 
 void Iwamodoki_State_Setup(void);
-void Iwamodoki_State_Unknown1(void);
-void Iwamodoki_State_Unknown2(void);
-void Iwamodoki_State_Unknown3(void);
-void Iwamodoki_State_Unknown4(void);
+void Iwamodoki_State_AwaitPlayer(void);
+void Iwamodoki_State_Appear(void);
+void Iwamodoki_State_Charging(void);
+void Iwamodoki_State_Explode(void);
 void Iwamodoki_State_Debris(void);
 
 #endif //!OBJ_IWAMODOKI_H

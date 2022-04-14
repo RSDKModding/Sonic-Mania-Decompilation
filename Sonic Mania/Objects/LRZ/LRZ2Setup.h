@@ -33,14 +33,16 @@ void LRZ2Setup_StaticUpdate(void);
 void LRZ2Setup_Draw(void);
 void LRZ2Setup_Create(void* data);
 void LRZ2Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ2Setup_EditorDraw(void);
 void LRZ2Setup_EditorLoad(void);
+#endif
 void LRZ2Setup_Serialize(void);
 
 // Extra Entity Functions
 void LRZ2Setup_HandleStageReload(void);
 void LRZ2Setup_GenericTrigger_CB(void);
-EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr);
-void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int32 offsetX, int32 offsetY, uint8 *behaviour);
+EntityButton *LRZ2Setup_SetupTagLink(int32 tag, Entity *entity);
+void LRZ2Setup_GetTileInfo(int32 x, int32 y, int32 moveOffsetX, int32 moveOffsetY, int32 cPlane, int32 *tileInfo, uint8 *behaviour);
 
 #endif //!OBJ_LRZ2SETUP_H

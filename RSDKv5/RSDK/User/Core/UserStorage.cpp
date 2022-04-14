@@ -448,15 +448,18 @@ bool32 RSDK::SKU::CheckDBValueMatch(UserDBValue *valueA, int row, int column)
 
     if (true) {
         switch (userDB->columnTypes[column]) {
-            case DBVAR_UNKNOWN1:
+            case DBVAR_BOOL8:
             case DBVAR_UINT8:
             case DBVAR_INT8: return memcmp(valueA->data, valueB->data, sizeof(int8)) == 0;
+
             case DBVAR_UINT16:
             case DBVAR_INT16: return memcmp(valueA->data, valueB->data, sizeof(int16)) == 0;
+
             case DBVAR_UINT32:
             case DBVAR_INT32:
             case DBVAR_FLOAT:
-            case DBVAR_UNKNOWN2: return memcmp(valueA->data, valueB->data, sizeof(int32)) == 0;
+            case DBVAR_BOOL32: return memcmp(valueA->data, valueB->data, sizeof(int32)) == 0;
+
             case DBVAR_STRING: {
                 char *string1 = (char *)valueA->data;
                 char *string2 = (char *)valueA->data;
@@ -482,7 +485,7 @@ void RSDK::SKU::StoreUserDBValue(UserDBValue *value, int type, void *data)
     memset(value->data, 0, sizeof(value->data));
     if (data) {
         switch (type) {
-            case DBVAR_UNKNOWN1:
+            case DBVAR_BOOL8:
             case DBVAR_UINT8:
             case DBVAR_INT8:
                 value->size = sizeof(int8);
@@ -496,7 +499,7 @@ void RSDK::SKU::StoreUserDBValue(UserDBValue *value, int type, void *data)
             case DBVAR_UINT32:
             case DBVAR_INT32:
             case DBVAR_FLOAT:
-            case DBVAR_UNKNOWN2:
+            case DBVAR_BOOL32:
                 value->size = sizeof(int32);
                 memcpy(value->data, data, sizeof(int32));
                 break;
@@ -521,7 +524,7 @@ void RSDK::SKU::RetrieveUserDBValue(UserDBValue *value, int type, void *data)
 {
     int8 *valData = (int8 *)data;
     switch (type) {
-        case DBVAR_UNKNOWN1:
+        case DBVAR_BOOL8:
         case DBVAR_UINT8:
         case DBVAR_INT8: memcpy(valData, value->data, sizeof(int8)); break;
         case DBVAR_UINT16:
@@ -529,7 +532,7 @@ void RSDK::SKU::RetrieveUserDBValue(UserDBValue *value, int type, void *data)
         case DBVAR_UINT32:
         case DBVAR_INT32:
         case DBVAR_FLOAT:
-        case DBVAR_UNKNOWN2: memcpy(valData, value->data, sizeof(int32)); break;
+        case DBVAR_BOOL32: memcpy(valData, value->data, sizeof(int32)); break;
         case DBVAR_STRING: {
             memset(valData, 0, value->size + 1);
             char *string = (char *)value->data;
@@ -730,7 +733,7 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
     GetUserDBColumn(row1, type, name, &data1);
     GetUserDBColumn(row2, type, name, &data2);
     switch (type) {
-        case DBVAR_UNKNOWN1:
+        case DBVAR_BOOL8:
         case DBVAR_UINT8: {
             uint8 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(uint8));
@@ -742,6 +745,7 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_INT8: {
             int8 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(int8));
@@ -753,6 +757,7 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_UINT16: {
             uint16 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(uint16));
@@ -764,6 +769,7 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_INT16: {
             int16 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(int16));
@@ -775,8 +781,9 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_UINT32:
-        case DBVAR_UNKNOWN2: {
+        case DBVAR_BOOL32: {
             uint32 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(uint32));
             memcpy(&value2, data2, sizeof(uint32));
@@ -787,6 +794,7 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_INT32: {
             int32 value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(int32));
@@ -798,6 +806,7 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_FLOAT: {
             float value1 = 0, value2 = 0;
             memcpy(&value1, data1, sizeof(float));
@@ -809,11 +818,12 @@ bool32 RSDK::SKU::CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int type
                 return value1 < value2;
             break;
         }
+
         case DBVAR_STRING: {
             char *string1 = (char *)data1;
             char *string2 = (char *)data2;
 
-            int result = strcmp(string1, string2);
+            int32 result = strcmp(string1, string2);
             if (flag)
                 return result > 0 ? true : false;
             else

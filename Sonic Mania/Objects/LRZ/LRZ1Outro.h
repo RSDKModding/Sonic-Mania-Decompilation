@@ -25,20 +25,22 @@ void LRZ1Outro_StaticUpdate(void);
 void LRZ1Outro_Draw(void);
 void LRZ1Outro_Create(void* data);
 void LRZ1Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ1Outro_EditorDraw(void);
 void LRZ1Outro_EditorLoad(void);
+#endif
 void LRZ1Outro_Serialize(void);
 
 // Extra Entity Functions
 void LRZ1Outro_StartCutscene(void);
 
-bool32 LRZ1Outro_CutsceneAct1_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneAct2_Unknown1(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneAct1_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneAct1_Unknown3(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneAct1_Unknown4(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_SetupActors(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_SetupActors(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_SetupDashLift(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_GoToDashLift(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct1_UsingDashLift(EntityCutsceneSeq *host);
 
-bool32 LRZ1Outro_CutsceneAct2_Unknown2(EntityCutsceneSeq *host);
-bool32 LRZ1Outro_CutsceneAct2_Unknown3(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_UsingDashLift(EntityCutsceneSeq *host);
+bool32 LRZ1Outro_CutsceneAct2_ExitDashLift(EntityCutsceneSeq *host);
 
 #endif //!OBJ_LRZ1OUTRO_H

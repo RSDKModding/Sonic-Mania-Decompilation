@@ -21,14 +21,15 @@ void Flamethrower_LateUpdate(void) {}
 
 void Flamethrower_StaticUpdate(void)
 {
-    int count = 0;
+    int32 activeFlamethrowerCount = 0;
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
         foreach_active(Flamethrower, flamethrower)
         {
-            if (flamethrower->state == Flamethrower_State_Unknown3)
-                count++;
+            if (flamethrower->state == Flamethrower_State_EmittingFlames)
+                activeFlamethrowerCount++;
         }
-        if (count) {
+
+        if (activeFlamethrowerCount) {
             if (!Flamethrower->playingFlameSfx) {
                 RSDK.PlaySfx(Flamethrower->sfxFlame, true, 255);
                 Flamethrower->playingFlameSfx = true;
@@ -36,7 +37,7 @@ void Flamethrower_StaticUpdate(void)
         }
     }
 
-    if (!count && Flamethrower->playingFlameSfx) {
+    if (!activeFlamethrowerCount && Flamethrower->playingFlameSfx) {
         RSDK.StopSfx(Flamethrower->sfxFlame);
         Flamethrower->playingFlameSfx = false;
     }
@@ -55,9 +56,8 @@ void Flamethrower_Create(void *data)
     self->active = ACTIVE_BOUNDS;
 
     if (!RSDK.CheckStageFolder("LRZ3")) {
-        if (Flamethrower->hitbox1.left) {
+        if (Flamethrower->hitboxMouthH.left)
             self->drawOrder = Zone->playerDrawLow;
-        }
         else
             self->drawOrder = Zone->drawOrderLow;
     }
@@ -70,6 +70,7 @@ void Flamethrower_Create(void *data)
     self->drawFX        = FX_ROTATE | FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (SceneInfo->inEditor) {
         if (!self->maxDist)
             self->maxDist = 96;
@@ -80,44 +81,48 @@ void Flamethrower_Create(void *data)
         if (!self->interval)
             self->interval = 60;
     }
-    self->state = Flamethrower_State_Unknown1;
+
+    self->state = Flamethrower_State_Setup;
 }
 
 void Flamethrower_StageLoad(void)
 {
-    Flamethrower->hitbox1.left   = -4;
-    Flamethrower->hitbox1.top    = -17;
-    Flamethrower->hitbox1.right  = 12;
-    Flamethrower->hitbox1.bottom = 17;
+    Flamethrower->hitboxMouthH.left   = -4;
+    Flamethrower->hitboxMouthH.top    = -17;
+    Flamethrower->hitboxMouthH.right  = 12;
+    Flamethrower->hitboxMouthH.bottom = 17;
 
-    Flamethrower->hitbox2.left   = -16;
-    Flamethrower->hitbox2.top    = 0;
-    Flamethrower->hitbox2.right  = 16;
-    Flamethrower->hitbox2.bottom = 12;
+    Flamethrower->hitboxMouthV.left   = -16;
+    Flamethrower->hitboxMouthV.top    = 0;
+    Flamethrower->hitboxMouthV.right  = 16;
+    Flamethrower->hitboxMouthV.bottom = 12;
 
-    Flamethrower->hitbox3.left   = -4;
-    Flamethrower->hitbox3.top    = -4;
-    Flamethrower->hitbox3.right  = 4;
-    Flamethrower->hitbox3.bottom = 4;
+    Flamethrower->hitboxSmallFireball.left   = -4;
+    Flamethrower->hitboxSmallFireball.top    = -4;
+    Flamethrower->hitboxSmallFireball.right  = 4;
+    Flamethrower->hitboxSmallFireball.bottom = 4;
 
-    Flamethrower->hitbox4.left   = -6;
-    Flamethrower->hitbox4.top    = -6;
-    Flamethrower->hitbox4.right  = 6;
-    Flamethrower->hitbox4.bottom = 6;
+    Flamethrower->hitboxMediumFireball.left   = -6;
+    Flamethrower->hitboxMediumFireball.top    = -6;
+    Flamethrower->hitboxMediumFireball.right  = 6;
+    Flamethrower->hitboxMediumFireball.bottom = 6;
 
-    Flamethrower->hitbox5.left   = -9;
-    Flamethrower->hitbox5.top    = -9;
-    Flamethrower->hitbox5.right  = 9;
-    Flamethrower->hitbox5.bottom = 9;
+    Flamethrower->hitboxLargeFireball.left   = -9;
+    Flamethrower->hitboxLargeFireball.top    = -9;
+    Flamethrower->hitboxLargeFireball.right  = 9;
+    Flamethrower->hitboxLargeFireball.bottom = 9;
 
     Flamethrower->sfxFlame = RSDK.GetSfx("Stage/Flame2.wav");
+
     if (RSDK.CheckStageFolder("LRZ2")) {
         Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Flamethrower.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ3")) {
-        Flamethrower->aniFrames    = RSDK.LoadSpriteAnimation("LRZ3/Flamethrower.bin", SCOPE_STAGE);
-        Flamethrower->hitbox1.left = 0;
+        Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Flamethrower.bin", SCOPE_STAGE);
+
+        Flamethrower->hitboxMouthH.left = 0;
     }
+
     Flamethrower->active = ACTIVE_ALWAYS;
 }
 
@@ -135,10 +140,14 @@ Hitbox Flamethrower_GetHitbox(void)
     RSDK_THIS(Flamethrower);
     switch (self->animator.animationID) {
         case 2:
-        case 5: return Flamethrower->hitbox3;
+        case 5: return Flamethrower->hitboxSmallFireball;
+
         case 3:
-        case 6: return Flamethrower->hitbox4;
-        default: return Flamethrower->hitbox5;
+        case 6: return Flamethrower->hitboxMediumFireball;
+
+        default:
+        case 4:
+        case 7: return Flamethrower->hitboxLargeFireball;
     }
 }
 
@@ -148,17 +157,17 @@ void Flamethrower_CheckOffScreen(void)
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = Flamethrower_State_Unknown2;
+        self->state  = Flamethrower_State_AwaitInterval;
     }
 }
 
-void Flamethrower_Unknown3(void)
+void Flamethrower_HandleAnimations(void)
 {
     RSDK_THIS(Flamethrower);
 
-    int dist = 0;
-    if (self->mode == 1) {
-        dist = self->field_74;
+    int32 dist = 0;
+    if (self->mode == FLAMETHROWER_MODE_SPRINKLER) {
+        dist = self->currentDist;
     }
     else {
         if (self->orientation == FLAMETHROWER_ORIENTATION_DOWN || self->orientation == FLAMETHROWER_ORIENTATION_UP)
@@ -167,24 +176,22 @@ void Flamethrower_Unknown3(void)
             dist = abs(self->position.x - self->origin.x) >> 16;
     }
 
-    int anim = dist > 0x20;
-    if (dist > 0x40)
-        anim = 2;
+    int32 anim = dist > 0x20 ? (dist > 0x40 ? 2 : 1) : 0;
 
     if (self->orientation == FLAMETHROWER_ORIENTATION_DOWN || self->orientation == FLAMETHROWER_ORIENTATION_UP)
-        RSDK.SetSpriteAnimation(Flamethrower->aniFrames, (anim + 5), &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(Flamethrower->aniFrames, anim + 5, &self->animator, false, 0);
     else
-        RSDK.SetSpriteAnimation(Flamethrower->aniFrames, (anim + 2), &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(Flamethrower->aniFrames, anim + 2, &self->animator, false, 0);
 }
 
 void Flamethrower_HandleAngles(void)
 {
     RSDK_THIS(Flamethrower);
 
-    if (self->mode) {
-        if (self->field_84.x || self->field_84.y) {
-            int angle = RSDK.ATan2(self->position.x - self->field_84.x, self->position.y - self->field_84.y);
-            int rot   = 2 * angle;
+    if (self->mode != FLAMETHROWER_MODE_EMITTER) {
+        if (self->lastPos.x || self->lastPos.y) {
+            int32 angle = RSDK.ATan2(self->position.x - self->lastPos.x, self->position.y - self->lastPos.y);
+            int32 rot   = 2 * angle;
 
             switch (self->orientation) {
                 default:
@@ -222,13 +229,13 @@ void Flamethrower_HandleTileCollisions(void)
     }
 }
 
-void Flamethrower_Unknown7(uint8 orientation)
+void Flamethrower_CheckOutOfBounds(uint8 orientation)
 {
     RSDK_THIS(Flamethrower);
 
-    int dist = 0;
-    if (self->mode == 1) {
-        dist = self->field_74;
+    int32 dist = 0;
+    if (self->mode == FLAMETHROWER_MODE_SPRINKLER) {
+        dist = self->currentDist;
     }
     else {
         if (orientation == FLAMETHROWER_ORIENTATION_DOWN || orientation == FLAMETHROWER_ORIENTATION_UP)
@@ -255,22 +262,22 @@ void Flamethrower_CheckFlameCollisions(void)
     }
 }
 
-void Flamethrower_CheckBaseCollisions(void)
+void Flamethrower_CheckMouthCollisions(void)
 {
     RSDK_THIS(Flamethrower);
 
-    if (Flamethrower->hitbox1.left) {
+    if (Flamethrower->hitboxMouthH.left) {
         Hitbox hitbox;
         if (self->orientation == FLAMETHROWER_ORIENTATION_DOWN || self->orientation == FLAMETHROWER_ORIENTATION_UP)
-            hitbox = Flamethrower->hitbox2;
+            hitbox = Flamethrower->hitboxMouthV;
         else
-            hitbox = Flamethrower->hitbox1;
+            hitbox = Flamethrower->hitboxMouthH;
 
         foreach_active(Player, player) { Player_CheckCollisionBox(player, self, &hitbox); }
     }
 }
 
-void Flamethrower_State_Unknown1(void)
+void Flamethrower_State_Setup(void)
 {
     RSDK_THIS(Flamethrower);
 
@@ -287,9 +294,8 @@ void Flamethrower_State_Unknown1(void)
 
     Flamethrower_SetupOrientation(self->orientation);
     if (!RSDK.CheckStageFolder("LRZ3")) {
-        if (Flamethrower->hitbox1.left) {
+        if (Flamethrower->hitboxMouthH.left)
             self->drawOrder = Zone->playerDrawLow;
-        }
         else
             self->drawOrder = Zone->drawOrderLow;
     }
@@ -297,11 +303,11 @@ void Flamethrower_State_Unknown1(void)
         self->drawOrder = Zone->playerDrawLow;
     }
 
-    self->state = Flamethrower_State_Unknown2;
-    Flamethrower_State_Unknown2();
+    self->state = Flamethrower_State_AwaitInterval;
+    Flamethrower_State_AwaitInterval();
 }
 
-void Flamethrower_State_Unknown2(void)
+void Flamethrower_State_AwaitInterval(void)
 {
     RSDK_THIS(Flamethrower);
 
@@ -309,16 +315,17 @@ void Flamethrower_State_Unknown2(void)
     if (!self->interval || !((Zone->timer + self->intervalOffset) % (self->interval + self->duration))) {
         self->active = ACTIVE_NORMAL;
         self->timer  = 0;
-        self->state  = Flamethrower_State_Unknown3;
+        self->state  = Flamethrower_State_EmittingFlames;
     }
-    Flamethrower_CheckBaseCollisions();
+
+    Flamethrower_CheckMouthCollisions();
 }
 
-void Flamethrower_State_Unknown3(void)
+void Flamethrower_State_EmittingFlames(void)
 {
     RSDK_THIS(Flamethrower);
 
-    int angle = 0;
+    int32 angle = 0;
     switch (self->orientation) {
         default:
         case FLAMETHROWER_ORIENTATION_RIGHT: angle = 0x00; break;
@@ -331,40 +338,43 @@ void Flamethrower_State_Unknown3(void)
     if (!(self->timer & 3)) {
         EntityFlamethrower *flame = CREATE_ENTITY(Flamethrower, self, self->position.x, self->position.y);
         flame->active             = ACTIVE_NORMAL;
-        flame->visible            = 1;
+        flame->visible            = true;
         if (RSDK.CheckStageFolder("LRZ3"))
             flame->drawOrder = Zone->drawOrderLow - 1;
         else
             flame->drawOrder = Zone->drawOrderLow;
         flame->maxDist     = self->maxDist;
-        flame->state       = Flamethrower_State1_Unknown1;
+        flame->state       = Flamethrower_State_SetupFireball;
         flame->angle       = self->angle;
         flame->orientation = self->orientation;
         flame->mode        = self->mode;
         flame->direction   = self->direction;
-        flame->parent      = (Entity *)self;
+        flame->parent      = self;
         flame->velocity.x  = RSDK.Cos512(self->angle) << 17 >> 8;
         flame->velocity.y  = RSDK.Sin512(self->angle) << 17 >> 8;
     }
+
     if (self->interval && self->timer >= self->duration) {
         self->active = ACTIVE_BOUNDS;
         self->timer  = 0;
-        self->state  = Flamethrower_State_Unknown2;
+        self->state  = Flamethrower_State_AwaitInterval;
     }
+
     Flamethrower_CheckOffScreen();
+
     ++self->timer;
     ++self->flameAngle;
-    Flamethrower_CheckBaseCollisions();
+    Flamethrower_CheckMouthCollisions();
 }
 
-void Flamethrower_State1_Unknown1(void)
+void Flamethrower_State_SetupFireball(void)
 {
     RSDK_THIS(Flamethrower);
 
     self->timer  = 0;
     self->active = ACTIVE_NORMAL;
     self->drawFX = FX_ROTATE | FX_FLIP;
-    Flamethrower_Unknown3();
+    Flamethrower_HandleAnimations();
 
     switch (self->orientation) {
         default:
@@ -378,50 +388,56 @@ void Flamethrower_State1_Unknown1(void)
         self->drawOrder = Zone->drawOrderLow - 1;
     else
         self->drawOrder = Zone->drawOrderLow;
-    self->state      = Flamethrower_State1_Unknown2;
-    self->field_84.x = 0;
-    self->field_84.y = 0;
-    self->field_70   = 0;
-    Flamethrower_State1_Unknown2();
+
+    self->state      = Flamethrower_State_Fireball;
+    self->lastPos.x = 0;
+    self->lastPos.y = 0;
+    self->lastYVelocity   = 0;
+    Flamethrower_State_Fireball();
 }
 
-void Flamethrower_State1_Unknown2(void)
+void Flamethrower_State_Fireball(void)
 {
     RSDK_THIS(Flamethrower);
 
-    if (self->mode == 1)
+    if (self->mode == FLAMETHROWER_MODE_SPRINKLER)
         self->velocity.y += 0x3800;
 
-    if (self->velocity.y < self->field_70)
-        self->field_70 = self->velocity.y;
-    if (self->field_74 > 12 && self->field_70 < 0 && self->velocity.y > 0 && self->drawOrder == Zone->drawOrderLow)
+    if (self->velocity.y < self->lastYVelocity)
+        self->lastYVelocity = self->velocity.y;
+
+    // Check for flipping downwards after going upwards
+    if (self->currentDist > 12 && self->lastYVelocity < 0 && self->velocity.y > 0 && self->drawOrder == Zone->drawOrderLow)
         self->drawOrder = Zone->drawOrderHigh;
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
     if (HeavyRider && self->velocity.y > 0)
         self->drawOrder = Zone->drawOrderHigh;
 
-    if (self->field_84.x && self->field_84.y) {
-        int rx = (self->position.x - self->field_84.x) >> 8;
-        int ry = (self->position.y - self->field_84.y) >> 8;
-        self->field_74 += MathHelpers_SquareRoot((rx * rx + ry * ry) >> 16);
+    if (self->lastPos.x && self->lastPos.y) {
+        int32 rx = (self->position.x - self->lastPos.x) >> 8;
+        int32 ry = (self->position.y - self->lastPos.y) >> 8;
+        self->currentDist += MathHelpers_SquareRoot((rx * rx + ry * ry) >> 16);
     }
+
     if (self->orientation == FLAMETHROWER_ORIENTATION_UP && self->velocity.y > 0) {
         self->orientation = FLAMETHROWER_ORIENTATION_DOWN;
         self->direction   = FLIP_NONE;
     }
 
-    Flamethrower_Unknown3();
+    Flamethrower_HandleAnimations();
     Flamethrower_HandleTileCollisions();
     Flamethrower_HandleAngles();
-    if (!self->mode)
-        Flamethrower_Unknown7(self->orientation);
+
+    if (self->mode == FLAMETHROWER_MODE_EMITTER)
+        Flamethrower_CheckOutOfBounds(self->orientation);
+
     Flamethrower_CheckFlameCollisions();
 
     ++self->timer;
-    self->field_84.x = self->position.x;
-    self->field_84.y = self->position.y;
+    self->lastPos = self->position;
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -453,6 +469,10 @@ void Flamethrower_EditorLoad(void)
     RSDK_ENUM_VAR("Down", FLAMETHROWER_ORIENTATION_DOWN);
     RSDK_ENUM_VAR("Left", FLAMETHROWER_ORIENTATION_LEFT);
     RSDK_ENUM_VAR("Up", FLAMETHROWER_ORIENTATION_UP);
+
+    RSDK_ACTIVE_VAR(Flamethrower, mode);
+    RSDK_ENUM_VAR("Emitter", FLAMETHROWER_MODE_EMITTER);
+    RSDK_ENUM_VAR("Sprinkler", FLAMETHROWER_MODE_SPRINKLER);
 }
 #endif
 

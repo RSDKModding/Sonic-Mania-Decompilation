@@ -6,11 +6,11 @@
 // Object Class
 struct ObjectRockDrill {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    uint8 shouldPlayDrillSfx;
+    Hitbox hitboxBody;
+    Hitbox hitboxPistonL;
+    Hitbox hitboxPistonR;
+    Hitbox hitboxDrills;
+    uint8 drillSfxTimer;
     bool32 playingDrillSfx;
     uint16 aniFrames;
     uint16 sfxHit;
@@ -29,12 +29,12 @@ struct EntityRockDrill {
     int32 boundsT;
     int32 boundsB;
     int32 timer;
-    int32 field_8C[2];
-    int32 field_94[2];
-    int32 field_9C[2];
-    int32 field_A4[2];
-    int32 field_AC[2];
-    int32 field_B4[2];
+    int32 pistonPos[2];
+    int32 drillPos[2];
+    int32 pistonDelay[2];
+    int32 drillDelay[2];
+    int32 pistonMoveDir[2];
+    int32 drillMoveDir[2];
     uint8 invincibilityTimer;
 };
 
@@ -58,9 +58,9 @@ void RockDrill_Serialize(void);
 void RockDrill_CheckPlayerCollisions(void);
 void RockDrill_SpawnDebris(int offset);
 
-void RockDrill_State_Unknown1(void);
-void RockDrill_State_Unknown2(void);
-void RockDrill_State_Unknown3(void);
-void RockDrill_State_Unknown4(void);
+void RockDrill_State_Setup(void);
+void RockDrill_State_Drilling(void);
+void RockDrill_State_Falling(void);
+void RockDrill_State_Explode(void);
 
 #endif //!OBJ_ROCKDRILL_H

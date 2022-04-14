@@ -65,7 +65,7 @@ void Current_EditorLoad(void);
 void Current_Serialize(void);
 
 // Extra Entity Functions
-void Current_GetTaggedButton(void);
+void Current_SetupTagLink(void);
 Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right);
 Vector2 Current_GetBubbleSpawnPosVertical(uint8 down);
 

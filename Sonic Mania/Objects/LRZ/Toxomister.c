@@ -23,7 +23,7 @@ void Toxomister_Draw(void)
 {
     RSDK_THIS(Toxomister);
 
-    if (self->state == Toxomister_State_Unknown1) {
+    if (self->state == Toxomister_State_CreateClouds) {
         self->animator.frameID = 1;
         RSDK.DrawSprite(&self->animator, NULL, false);
 
@@ -51,7 +51,7 @@ void Toxomister_Create(void *data)
             self->inkEffect = INK_ADD;
             self->alpha     = 0xE0;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 2, &self->animator, true, 0);
-            self->state = Toxomister_State1_Unknown1;
+            self->state = Toxomister_StateCloud_FallDelay;
         }
         else {
             self->drawOrder = Zone->drawOrderLow;
@@ -69,15 +69,16 @@ void Toxomister_StageLoad(void)
     else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
         Toxomister->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Toxomister.bin", SCOPE_STAGE);
 
-    Toxomister->hitbox1.left   = -5;
-    Toxomister->hitbox1.top    = -24;
-    Toxomister->hitbox1.right  = 5;
-    Toxomister->hitbox1.bottom = 16;
+    Toxomister->hitboxBadnik.left   = -5;
+    Toxomister->hitboxBadnik.top    = -24;
+    Toxomister->hitboxBadnik.right  = 5;
+    Toxomister->hitboxBadnik.bottom = 16;
 
-    Toxomister->hitbox2.left   = -8;
-    Toxomister->hitbox2.top    = -8;
-    Toxomister->hitbox2.right  = 8;
-    Toxomister->hitbox2.bottom = 8;
+    Toxomister->hitboxCloud.left   = -8;
+    Toxomister->hitboxCloud.top    = -8;
+    Toxomister->hitboxCloud.right  = 8;
+    Toxomister->hitboxCloud.bottom = 8;
+
     DEBUGMODE_ADD_OBJ(Toxomister);
 }
 
@@ -91,6 +92,7 @@ void Toxomister_DebugSpawn(void)
 void Toxomister_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Toxomister->aniFrames, 0, &DebugMode->animator, true, 0);
+
     DebugMode->animator.frameID = 1;
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 
@@ -104,10 +106,10 @@ void Toxomister_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Toxomister->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, self, &Toxomister->hitboxBadnik)) {
             if (Player_CheckBadnikBreak(self, player, true)) {
-                if (self->link)
-                    destroyEntity(self->link);
+                if (self->parent)
+                    destroyEntity(self->parent);
             }
         }
     }
@@ -118,9 +120,10 @@ void Toxomister_CheckOffScreen(void)
     RSDK_THIS(Toxomister);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        if (self->link)
-            destroyEntity(self->link);
-        self->link       = NULL;
+        if (self->parent)
+            destroyEntity(self->parent);
+
+        self->parent       = NULL;
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         self->direction  = self->startDir;
@@ -128,25 +131,25 @@ void Toxomister_CheckOffScreen(void)
     }
 }
 
-void Toxomister_CheckMistOnScreen(void)
+void Toxomister_CheckCloudOnScreen(void)
 {
     RSDK_THIS(Toxomister);
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        ((EntityToxomister *)self->link)->link = NULL;
+        self->parent->parent = NULL;
         destroyEntity(self);
     }
 }
 
-void Toxomister_CheckPlayerMistCollisions(void)
+void Toxomister_CheckPlayerCloudCollisions(void)
 {
     RSDK_THIS(Toxomister);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Toxomister->hitbox2)) {
+        if (Player_CheckCollisionTouch(player, self, &Toxomister->hitboxCloud)) {
             self->grabbedPlayer = player;
             self->drawOrder     = player->drawOrder + 1;
-            self->state         = Toxomister_State1_Unknown4;
+            self->state         = Toxomister_StateCloud_GrabbedPlayer;
             foreach_break;
         }
     }
@@ -157,11 +160,11 @@ void Toxomister_State_Setup(void)
     RSDK_THIS(Toxomister);
 
     self->active = ACTIVE_NORMAL;
-    self->state  = Toxomister_State_Unknown1;
-    Toxomister_State_Unknown1();
+    self->state  = Toxomister_State_CreateClouds;
+    Toxomister_State_CreateClouds();
 }
 
-void Toxomister_State_Unknown1(void)
+void Toxomister_State_CreateClouds(void)
 {
     RSDK_THIS(Toxomister);
 
@@ -171,37 +174,44 @@ void Toxomister_State_Unknown1(void)
         self->direction |= FLIP_X;
     else
         self->direction &= ~FLIP_X;
-    if (!self->link && self->activeScreens) {
-        EntityToxomister *mist = CREATE_ENTITY(Toxomister, intToVoid(1), self->position.x, self->position.y);
+
+    if (!self->parent && self->activeScreens) {
+        EntityToxomister *cloud = CREATE_ENTITY(Toxomister, intToVoid(true), self->position.x, self->position.y);
+
         if (self->direction & FLIP_X)
-            mist->position.x += 0x120000;
+            cloud->position.x += 0x120000;
         else
-            mist->position.x -= 0x120000;
+            cloud->position.x -= 0x120000;
+
         if (self->direction & FLIP_Y)
-            mist->position.y += 0x100000;
+            cloud->position.y += 0x100000;
         else
-            mist->position.y -= 0x100000;
-        mist->timer       = 32;
-        mist->isPermanent = true;
-        mist->link        = (Entity *)self;
-        self->link      = (Entity *)mist;
+            cloud->position.y -= 0x100000;
+
+        cloud->timer       = 32;
+        cloud->isPermanent = true;
+        cloud->parent      = self;
+        self->parent       = cloud;
     }
+
     Toxomister_CheckPlayerCollisions();
     Toxomister_CheckOffScreen();
 }
 
-void Toxomister_State1_Unknown1(void)
+void Toxomister_StateCloud_FallDelay(void)
 {
     RSDK_THIS(Toxomister);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (--self->timer > 0)
-        self->state = Toxomister_State1_Unknown2;
-    Toxomister_CheckPlayerMistCollisions();
-    Toxomister_CheckMistOnScreen();
+        self->state = Toxomister_StateCloud_FallToFloor;
+
+    Toxomister_CheckPlayerCloudCollisions();
+    Toxomister_CheckCloudOnScreen();
 }
 
-void Toxomister_State1_Unknown2(void)
+void Toxomister_StateCloud_FallToFloor(void)
 {
     RSDK_THIS(Toxomister);
 
@@ -210,21 +220,23 @@ void Toxomister_State1_Unknown2(void)
     self->position.y += self->velocity.y;
     if (self->velocity.y < 0x20000)
         self->velocity.y += 0x80;
+
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, false))
-        self->state = Toxomister_State1_Unknown3;
-    Toxomister_CheckMistOnScreen();
+        self->state = Toxomister_StateCloud_ReachedFloor;
+
+    Toxomister_CheckCloudOnScreen();
 }
 
-void Toxomister_State1_Unknown3(void)
+void Toxomister_StateCloud_ReachedFloor(void)
 {
     RSDK_THIS(Toxomister);
 
     RSDK.ProcessAnimation(&self->animator);
-    Toxomister_CheckPlayerMistCollisions();
-    Toxomister_CheckMistOnScreen();
+    Toxomister_CheckPlayerCloudCollisions();
+    Toxomister_CheckCloudOnScreen();
 }
 
-void Toxomister_State1_Unknown4(void)
+void Toxomister_StateCloud_GrabbedPlayer(void)
 {
     RSDK_THIS(Toxomister);
 
@@ -232,9 +244,9 @@ void Toxomister_State1_Unknown4(void)
 
     EntityPlayer *player = self->grabbedPlayer;
     if (!player) {
-        ((EntityToxomister *)self->link)->link = NULL;
+        self->parent->parent = NULL;
         RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->animator, true, 0);
-        self->state = Toxomister_State1_Unknown5;
+        self->state = Toxomister_StateCloud_Dissipate;
     }
     else {
         if (++self->timer >= 60) {
@@ -247,26 +259,26 @@ void Toxomister_State1_Unknown4(void)
                 else
                     player->velocity.x = -0x20000;
                 self->grabbedPlayer                    = NULL;
-                ((EntityToxomister *)self->link)->link = NULL;
+                self->parent->parent = NULL;
                 RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->animator, true, 0);
-                self->state = Toxomister_State1_Unknown5;
+                self->state = Toxomister_StateCloud_Dissipate;
             }
             else {
                 player->rings--;
                 if (Ring->pan) {
-                    int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
+                    int32 channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
                     Ring->pan = 0;
                 }
                 else {
-                    int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
+                    int32 channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                     RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                     Ring->pan = 1;
                 }
             }
         }
 
-        if (self->state == Toxomister_State1_Unknown4) {
+        if (self->state == Toxomister_StateCloud_GrabbedPlayer) {
             self->position.x = player->position.x;
             self->position.y = player->position.y;
             if (player->onGround) {
@@ -291,19 +303,22 @@ void Toxomister_State1_Unknown4(void)
                 }
                 else {
                     self->shakeTimer--;
+
                     uint8 shakeFlags = 0;
                     if (player->left)
                         shakeFlags = 1;
+
                     if (player->right)
                         shakeFlags |= 2;
+
                     if (shakeFlags) {
                         if (shakeFlags != 3 && shakeFlags != self->prevShakeFlags) {
                             self->prevShakeFlags = shakeFlags;
                             if (++self->shakeCount >= 6) {
                                 self->grabbedPlayer                    = NULL;
-                                ((EntityToxomister *)self->link)->link = NULL;
+                                self->parent->parent = NULL;
                                 RSDK.SetSpriteAnimation(Toxomister->aniFrames, 3, &self->animator, true, 0);
-                                self->state = Toxomister_State1_Unknown5;
+                                self->state = Toxomister_StateCloud_Dissipate;
                             }
                         }
                     }
@@ -321,7 +336,7 @@ void Toxomister_State1_Unknown4(void)
     }
 }
 
-void Toxomister_State1_Unknown5(void)
+void Toxomister_StateCloud_Dissipate(void)
 {
     RSDK_THIS(Toxomister);
 
@@ -334,7 +349,7 @@ void Toxomister_State1_Unknown5(void)
 void Toxomister_EditorDraw(void)
 {
     RSDK_THIS(Toxomister);
-    int dir = self->direction;
+    int32 dir = self->direction;
     self->direction *= FLIP_Y;
 
     RSDK.SetSpriteAnimation(Toxomister->aniFrames, 1, &self->animator, true, 0);
@@ -354,8 +369,8 @@ void Toxomister_EditorLoad(void)
         Toxomister->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Toxomister.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Toxomister, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Rightside Up", FLIP_NONE);
+    RSDK_ENUM_VAR("Upside Down", FLIP_X);
 }
 #endif
 

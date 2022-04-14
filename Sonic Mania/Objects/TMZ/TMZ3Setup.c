@@ -37,15 +37,20 @@ void TMZ3Setup_Create(void *data) {}
 void TMZ3Setup_StageLoad(void)
 {
     TMZ3Setup->aniTiles = RSDK.LoadSpriteSheet("TMZ1/AniTiles.gif", SCOPE_STAGE);
-    TMZ3Setup->value    = RSDK.Rand(2, 60);
-    TMZ3Setup->dword8   = 192;
+
+    TMZ3Setup->palDelay = RSDK.Rand(2, 60);
+    TMZ3Setup->palTimer = 192;
+
     ++Zone->drawOrderLow;
+
     Animals->animalTypes[0] = ANIMAL_TOCKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
+
     if (globals->suppressTitlecard >= true) {
         SaveGame_LoadPlayerState();
         Zone_StartFadeIn(10, 0x000000);
     }
+
     RSDK.SetDrawLayerProperties(0, false, TMZ3Setup_DrawLayerCB_A);
     RSDK.SetDrawLayerProperties(1, false, TMZ3Setup_DrawLayerCB_B);
 }
@@ -53,8 +58,10 @@ void TMZ3Setup_StageLoad(void)
 void TMZ3Setup_DrawLayerCB_A(void) { RSDK.SetActivePalette(1, 0, ScreenInfo->height); }
 void TMZ3Setup_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZ3Setup_EditorDraw(void) {}
 
 void TMZ3Setup_EditorLoad(void) {}
+#endif
 
 void TMZ3Setup_Serialize(void) {}

@@ -20,9 +20,9 @@ enum LayerTypes {
 struct SceneListInfo {
     RETRO_HASH(hash);
     char name[0x20];
-    ushort sceneOffsetStart;
-    ushort sceneOffsetEnd;
-    byte sceneCount;
+    uint16 sceneOffsetStart;
+    uint16 sceneOffsetEnd;
+    uint8 sceneCount;
 };
 
 struct SceneListEntry {
@@ -94,8 +94,8 @@ struct TileLayer {
     void (*scanlineCallback)(ScanlineInfo *);
     uint16 scrollInfoCount;
     ScrollInfo scrollInfo[0x100];
-    uint name[4];
-    ushort *layout;
+    uint32 name[4];
+    uint16 *layout;
     uint8 *lineScroll;
 };
 
@@ -122,7 +122,7 @@ extern bool32 hardResetFlag;
 extern char currentSceneFolder[0x10];
 extern char currentSceneID[0x10];
 #if RETRO_REV02
-extern byte currentSceneFilter;
+extern uint8 currentSceneFilter;
 #endif
 
 extern SceneInfo sceneInfo;
@@ -169,7 +169,7 @@ inline uint16 GetSceneLayerID(const char *name)
     RETRO_HASH(hash);
     GEN_HASH(name, hash);
 
-    for (int i = 0; i < LAYER_COUNT; ++i) {
+    for (int32 i = 0; i < LAYER_COUNT; ++i) {
         if (HASH_MATCH(tileLayers[i].name, hash))
             return i;
     }
@@ -210,7 +210,7 @@ inline uint16 GetTileInfo(uint16 layerID, int32 tileX, int32 tileY)
     return 0xFFFF;
 }
 
-inline void SetTileInfo(uint16 layerID, int tileX, int tileY, uint16 tile)
+inline void SetTileInfo(uint16 layerID, int32 tileX, int32 tileY, uint16 tile)
 {
     if (layerID < LAYER_COUNT) {
         TileLayer* layer = &tileLayers[layerID];
@@ -255,19 +255,19 @@ inline void CopyTile(uint16 dest, uint16 src, uint16 count)
     if (count > TILE_COUNT)
         count = TILE_COUNT - 1;
 
-    byte *destPtr = &tilesetGFXData[TILE_DATASIZE * dest];
-    byte *srcPtr  = &tilesetGFXData[TILE_DATASIZE * src];
+    uint8 *destPtr = &tilesetGFXData[TILE_DATASIZE * dest];
+    uint8 *srcPtr  = &tilesetGFXData[TILE_DATASIZE * src];
 
-    byte *destPtrX = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_X)];
-    byte *srcPtrX  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_X)];
+    uint8 *destPtrX = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_X)];
+    uint8 *srcPtrX  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_X)];
 
-    byte *destPtrY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_Y)];
-    byte *srcPtrY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_Y)];
+    uint8 *destPtrY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_Y)];
+    uint8 *srcPtrY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_Y)];
 
-    byte *destPtrXY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_XY)];
-    byte *srcPtrXY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_XY)];
+    uint8 *destPtrXY = &tilesetGFXData[(TILE_DATASIZE * dest) + (0x40000 * FLIP_XY)];
+    uint8 *srcPtrXY  = &tilesetGFXData[(TILE_DATASIZE * src) + (0x40000 * FLIP_XY)];
     while (count--) {
-        int pxCnt = TILE_DATASIZE;
+        int32 pxCnt = TILE_DATASIZE;
         while (pxCnt--) {
             *destPtr++   = *srcPtr++;
             *destPtrX++  = *srcPtrX++;

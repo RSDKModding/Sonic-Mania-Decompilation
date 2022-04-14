@@ -14,7 +14,7 @@ void AIZKingClaw_Update(void)
     RSDK_THIS(AIZKingClaw);
     StateMachine_Run(self->state);
 
-    for (int32 i = 0; i < (self->grabCount <= 8 ? self->grabCount : 8); ++i) {
+    for (int32 i = 0; i < minVal(self->grabCount, 8); ++i) {
         Entity *grabbed = self->grabbedEntities[i];
         if (grabbed) {
             grabbed->position.x = self->clawPos.x;
@@ -44,14 +44,13 @@ void AIZKingClaw_Draw(void)
 {
     RSDK_THIS(AIZKingClaw);
     if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
-        RSDK.DrawSprite(&self->animator3, &self->clawPos, false);
+        RSDK.DrawSprite(&self->clawBackAnimator, &self->clawPos, false);
     }
     else {
-        for (int32 i = 0; i < 12; ++i) {
-            RSDK.DrawSprite(&self->animator1, &self->ballPos[i], false);
-        }
-        RSDK.DrawSprite(&self->animator2, &self->clawPos, false);
-        RSDK.DrawSprite(&self->animator4, &self->clawPos, false);
+        for (int32 i = 0; i < AIZKingClaw_ChainCount; ++i) RSDK.DrawSprite(&self->chainAnimator, &self->chainPos[i], false);
+
+        RSDK.DrawSprite(&self->hingeAnimator, &self->clawPos, false);
+        RSDK.DrawSprite(&self->clawFrontAnimator, &self->clawPos, false);
     }
 }
 
@@ -68,16 +67,16 @@ void AIZKingClaw_Create(void *data)
         self->startY        = self->position.y - 0x300000;
         if (RSDK.CheckStageFolder("AIZ")) {
             self->position.y -= 0x1000000;
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->animator4, true, 0);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->clawBackAnimator, true, 0);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 0);
         }
         else {
             self->position.y -= 0x40000;
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->animator3, true, 3);
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->animator4, true, 3);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->clawBackAnimator, true, 3);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 3);
         }
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &self->chainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &self->hingeAnimator, true, 0);
     }
 }
 
@@ -104,9 +103,9 @@ void AIZKingClaw_HandleClawPositions(void)
     int32 moveX       = RSDK.Sin256(self->angle) << 12;
     int32 moveY       = RSDK.Cos256(self->angle) << 12;
 
-    for (int32 i = 0; i < 12; ++i) {
-        self->ballPos[i].x = self->clawPos.x;
-        self->ballPos[i].y = self->clawPos.y;
+    for (int32 i = 0; i < AIZKingClaw_ChainCount; ++i) {
+        self->chainPos[i].x = self->clawPos.x;
+        self->chainPos[i].y = self->clawPos.y;
         self->clawPos.x += moveX;
         self->clawPos.y += moveY;
     }
@@ -123,13 +122,13 @@ void AIZKingClaw_State_Grab(void)
 
     ++self->timer;
     if (!(self->timer & 3)) {
-        if (self->animator4.frameID >= 3) {
+        if (self->clawFrontAnimator.frameID >= 3) {
             self->state = StateMachine_None;
         }
         else {
-            self->animator3.frameID++;
-            self->animator4.frameID++;
-            if (self->animator4.frameID == 3)
+            self->clawBackAnimator.frameID++;
+            self->clawFrontAnimator.frameID++;
+            if (self->clawFrontAnimator.frameID == 3)
                 RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, false, 0);
         }
     }
@@ -139,28 +138,28 @@ void AIZKingClaw_State_Grab(void)
 void AIZKingClaw_EditorDraw(void)
 {
     RSDK_THIS(AIZKingClaw);
-    int y = self->position.y;
+    int32 y = self->position.y;
     if (RSDK.CheckStageFolder("AIZ")) {
         self->position.y -= 0x1000000;
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->animator4, true, 0);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->clawBackAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 0);
     }
     else {
         self->position.y -= 0x40000;
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->animator3, true, 3);
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->animator4, true, 3);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &self->clawBackAnimator, true, 3);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 3);
     }
-    RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &self->chainAnimator, true, 0);
+    RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &self->hingeAnimator, true, 0);
 
     AIZKingClaw_HandleClawPositions();
-    for (int32 i = 0; i < 12; ++i) {
-        RSDK.DrawSprite(&self->animator1, &self->ballPos[i], false);
-    }
-    RSDK.DrawSprite(&self->animator2, &self->clawPos, false);
-    RSDK.DrawSprite(&self->animator4, &self->clawPos, false);
 
-    RSDK.DrawSprite(&self->animator3, &self->clawPos, false);
+    for (int32 i = 0; i < AIZKingClaw_ChainCount; ++i) RSDK.DrawSprite(&self->chainAnimator, &self->chainPos[i], false);
+
+    RSDK.DrawSprite(&self->hingeAnimator, &self->clawPos, false);
+    RSDK.DrawSprite(&self->clawFrontAnimator, &self->clawPos, false);
+
+    RSDK.DrawSprite(&self->clawBackAnimator, &self->clawPos, false);
 
     self->position.y = y;
 }

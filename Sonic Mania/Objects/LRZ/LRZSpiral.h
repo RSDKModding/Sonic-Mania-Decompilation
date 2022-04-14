@@ -3,10 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LRZSPIRAL_CYLINDER,
+    LRZSPIRAL_J_CURVE,
+    LRZSPIRAL_C_CURVE,
+}LRZSpiralTypes;
+
 // Object Class
 struct ObjectLRZSpiral {
     RSDK_OBJECT
-    TABLE(int32 array1[128],
+    TABLE(int32 cylinderSpiralYOffsetTable[128],
           { 0,        0x10000,  0x20000,  0x30000,  0x40000,  0x50000,  0x60000,  0x70000,  0x80000,  0x90000,  0xA0000,  0xC0000,  0xD0000,
             0xF0000,  0x100000, 0x120000, 0x130000, 0x130000, 0x140000, 0x140000, 0x160000, 0x170000, 0x170000, 0x170000, 0x170000, 0x170000,
             0x170000, 0x170000, 0x170000, 0x170000, 0x170000, 0x170000, 0x180000, 0x180000, 0x180000, 0x180000, 0x190000, 0x1B0000, 0x1C0000,
@@ -17,7 +23,7 @@ struct ObjectLRZSpiral {
             0x600000, 0x600000, 0x600000, 0x600000, 0x600000, 0x600000, 0x610000, 0x620000, 0x630000, 0x640000, 0x650000, 0x660000, 0x670000,
             0x680000, 0x690000, 0x6A0000, 0x6B0000, 0x6C0000, 0x6D0000, 0x6E0000, 0x6F0000, 0x700000, 0x710000, 0x720000, 0x730000, 0x740000,
             0x750000, 0x760000, 0x770000, 0x780000, 0x790000, 0x7A0000, 0x7B0000, 0x7C0000, 0x7D0000, 0x7E0000, 0x7F0000 });
-    TABLE(int32 array2[64],
+    TABLE(int32 cylinderExitYOffsetTable[64],
           { 0,        0x10000,  0x20000,  0x30000,  0x40000,  0x50000,  0x60000,  0x70000,  0x80000,  0x90000,  0xA0000,  0xC0000,  0xD0000,
             0xF0000,  0x100000, 0x120000, 0x130000, 0x130000, 0x140000, 0x140000, 0x160000, 0x170000, 0x170000, 0x170000, 0x170000, 0x170000,
             0x170000, 0x170000, 0x170000, 0x170000, 0x170000, 0x170000, 0x180000, 0x180000, 0x180000, 0x180000, 0x190000, 0x190000, 0x190000,
@@ -35,8 +41,8 @@ struct EntityLRZSpiral {
     int32 height;
     int32 radius;
     uint8 activePlayers;
-    int32 playerVelocity[4];
-    Hitbox hitbox;
+    int32 playerSpiralPos[4];
+    Hitbox hitboxTrigger;
 };
 
 // Object Struct
@@ -56,10 +62,10 @@ void LRZSpiral_EditorLoad(void);
 void LRZSpiral_Serialize(void);
 
 // Extra Entity Functions
-void LRZSpiral_Unknown1(void *p);
-void LRZSpiral_Unknown2(void);
-void LRZSpiral_Unknown3(void);
-void LRZSpiral_Unknown4(void);
+void LRZSpiral_HandlePlayerExit(EntityPlayer *player);
+void LRZSpiral_State_Cylinder(void);
+void LRZSpiral_State_J_Curve(void);
+void LRZSpiral_State_C_Curve(void);
 
 
 #endif //!OBJ_LRZSPIRAL_H

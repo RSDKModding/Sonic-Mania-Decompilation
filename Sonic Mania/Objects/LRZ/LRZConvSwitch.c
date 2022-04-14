@@ -16,15 +16,15 @@ void LRZConvSwitch_Update(void)
     if ((LRZ2Setup->conveyorDir != self->conveyorDir) != self->calibration)
         LRZConvSwitch_Calibrate();
 
-    int extendX2 = self->position.x;
-    int extendY2 = self->position.y - 0x180000;
+    int32 extendX2 = self->position.x;
+    int32 extendY2 = self->position.y - 0x180000;
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (self->playerPositions[playerID].x || self->playerPositions[playerID].y) {
-            int dir = 0;
+            int32 dir = 0;
             if (player->position.x <= self->playerPositions[playerID].x) {
                 if (player->position.x < self->playerPositions[playerID].x)
                     dir = -1;

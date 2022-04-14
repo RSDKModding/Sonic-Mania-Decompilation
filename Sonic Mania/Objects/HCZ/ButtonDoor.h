@@ -52,7 +52,7 @@ void ButtonDoor_Serialize(void);
 
 // Extra Entity Functions
 void ButtonDoor_SetupSize(void);
-void ButtonDoor_SetupButtonTag(void);
+void ButtonDoor_SetupTagLink(void);
 void ButtonDoor_DrawSprites(void);
 
 #endif //!OBJ_BUTTONDOOR_H

@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectLRZ3Setup {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    Entity *cutscenePtr;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    Entity *cutsceneOutroK;
 };
 
 // Entity Class
@@ -27,8 +27,10 @@ void LRZ3Setup_StaticUpdate(void);
 void LRZ3Setup_Draw(void);
 void LRZ3Setup_Create(void* data);
 void LRZ3Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ3Setup_EditorDraw(void);
 void LRZ3Setup_EditorLoad(void);
+#endif
 void LRZ3Setup_Serialize(void);
 
 // Extra Entity Functions

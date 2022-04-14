@@ -298,11 +298,15 @@ void TransportTube_EditorDraw(void)
     RSDK.SetSpriteAnimation(TransportTube->aniFrames, 0, &self->animator, true, 0);
     RSDK.DrawSprite(&self->animator, NULL, false);
 
+    RSDK_DRAWING_OVERLAY(true);
+
     TransportTube_SetupDirections(self);
     for (int32 v = 0; v < self->directionCount; ++v) {
         DrawHelpers_DrawArrow(0xFF0000, self->position.x, self->position.y, self->position.x + (self->dirVelocity[v].x << 18),
                               self->position.y + (self->dirVelocity[v].y << 18));
     }
+
+    RSDK_DRAWING_OVERLAY(false);
 
     RSDK.SetSpriteAnimation(TransportTube->aniFrames, self->type == TRANSPORTTUBE_JUNCTION ? 2 : 1, &self->animator, true, 0);
     RSDK.DrawSprite(&self->animator, NULL, false);

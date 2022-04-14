@@ -11,8 +11,8 @@ struct ObjectWalkerLegs {
     uint16 particleFrames;
     uint16 sfxWalkerLegs;
     uint16 sfxWalkerLegs2;
-    Animator animator1;
-    Animator animator2;
+    Animator legAnimator;
+    Animator linkAnimator;
     bool32 hasAchievement;
 };
 
@@ -22,17 +22,17 @@ struct EntityWalkerLegs {
     StateMachine(state);
     uint16 steps;
     int32 activePlayers[2];
-    Vector2 field_68[3];
-    Vector2 field_80[2];
-    Vector2 field_90[2];
-    int32 field_A0;
-    int32 field_A4;
+    Vector2 startPos;
+    Vector2 legPos[2];
+    Vector2 legCollisionOffset[2];
+    Vector2 prevLegPos[2];
+    int32 smokeSpawnY[2];
     int32 startAngle;
-    int32 field_AC;
-    bool32 flag;
-    int32 field_B4;
+    int32 activeLeg;
+    bool32 finishedStep;
+    int32 angleVel;
     uint16 stepCount;
-    int32 field_BC[2];
+    int32 smokeSpawnTimer[2];
     int32 timer;
 };
 
@@ -55,17 +55,17 @@ void WalkerLegs_Serialize(void);
 // Extra Entity Functions
 void WalkerLegs_DrawSprites(void);
 void WalkerLegs_CheckOffScreen(void);
-void WalkerLegs_CheckPlayerCollisions(void);
+void WalkerLegs_HandlePlayerMovement(void);
 void WalkerLegs_CheckObjectCrush(void);
-void WalkerLegs_CheckPlayerStood(void);
+void WalkerLegs_CheckStepTrigger(void);
 void WalkerLegs_CheckTileCollisions(void);
 void WalkerLegs_CheckStoodLava(void);
-void WalkerLegs_CreateDebris(bool32 flag1, bool32 flag2);
-void WalkerLegs_CreateSmoke(bool32 flag);
+void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma);
+void WalkerLegs_CreateSmoke(bool32 isRightLeg);
 
-void WalkerLegs_State_Unknown1(void);
-void WalkerLegs_State_Unknown2(void);
-void WalkerLegs_State_Unknown3(void);
-void WalkerLegs_State_Unknown4(void);
+void WalkerLegs_State_Setup(void);
+void WalkerLegs_State_Idle(void);
+void WalkerLegs_State_Stepping(void);
+void WalkerLegs_State_TryToReset(void);
 
 #endif //!OBJ_WALKERLEGS_H

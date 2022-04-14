@@ -33,7 +33,7 @@ struct SpriteFrame {
     int16 height;
     int16 pivotX;
     int16 pivotY;
-    ushort duration;
+    uint16 duration;
     uint16 id;
     uint8 sheetID;
     uint8 hitboxCnt;
@@ -49,7 +49,7 @@ struct SpriteAnimation {
 };
 
 struct Animator {
-    SpriteFrame *framePtrs;
+    SpriteFrame *frames;
     int32 frameID;
     int16 animationID;
     int16 prevAnimationID;
@@ -75,7 +75,7 @@ inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
     RETRO_HASH(hash);
     GEN_HASH(name, hash);
 
-    for (int a = 0; a < spr->animCount; ++a) {
+    for (int32 a = 0; a < spr->animCount; ++a) {
         if (HASH_MATCH(hash, spr->animations[a].hash)) {
             return a;
         }
@@ -83,7 +83,7 @@ inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
     return -1;
 }
 
-inline SpriteFrame *GetFrame(ushort aniFrames, uint16 anim, int32 frame)
+inline SpriteFrame *GetFrame(uint16 aniFrames, uint16 anim, int32 frame)
 {
     if (aniFrames >= SPRFILE_COUNT)
         return NULL;
@@ -95,16 +95,16 @@ inline SpriteFrame *GetFrame(ushort aniFrames, uint16 anim, int32 frame)
 
 inline Hitbox *GetHitbox(Animator *animator, uint8 hitboxID)
 {
-    if (animator && animator->framePtrs)
-        return &animator->framePtrs[animator->frameID].hitboxes[hitboxID & (FRAMEHITBOX_COUNT - 1)];
+    if (animator && animator->frames)
+        return &animator->frames[animator->frameID].hitboxes[hitboxID & (FRAMEHITBOX_COUNT - 1)];
     else
         return NULL;
 }
 
 inline int16 GetFrameID(Animator *animator)
 {
-    if (animator && animator->framePtrs)
-        return animator->framePtrs[animator->frameID].id;
+    if (animator && animator->frames)
+        return animator->frames[animator->frameID].id;
     else
         return 0;
 }
@@ -115,7 +115,7 @@ inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *a
 {
     if (aniFrames >= SPRFILE_COUNT) {
         if (animator)
-            animator->framePtrs = NULL;
+            animator->frames = NULL;
         return;
     }
     if (!animator)
@@ -126,14 +126,14 @@ inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *a
 
     SpriteAnimationEntry *anim = &spr->animations[animationID];
     SpriteFrame *frames        = &spr->frames[anim->frameListOffset];
-    if (animator->framePtrs == frames && !forceApply)
+    if (animator->frames == frames && !forceApply)
         return;
 
-    animator->framePtrs       = frames;
+    animator->frames       = frames;
     animator->timer           = 0;
     animator->frameID         = frameID;
     animator->frameCount      = anim->frameCount;
-    animator->frameDuration   = animator->framePtrs[frameID].duration;
+    animator->frameDuration   = animator->frames[frameID].duration;
     animator->speed           = anim->animationSpeed;
     animator->rotationFlag    = anim->rotationFlag;
     animator->loopIndex       = anim->loopIndex;

@@ -153,9 +153,12 @@ bool32 processEvents()
                         specialKeyStates[0] = true;
 #endif
                         break;
+
 #if !RETRO_REV02
                     case SDLK_RETURN: specialKeyStates[1] = true; break;
 #endif
+
+#if !RETRO_USE_ORIGINAL_CODE
                     case SDLK_F1:
                         sceneInfo.listPos--;
                         if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
@@ -167,6 +170,7 @@ bool32 processEvents()
                         }
                         InitSceneLoad();
                         break;
+
                     case SDLK_F2:
                         sceneInfo.listPos++;
                         if (sceneInfo.listPos > sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
@@ -178,7 +182,10 @@ bool32 processEvents()
                         }
                         InitSceneLoad();
                         break;
+#endif
+
                     case SDLK_F3: engine.shaderID = (engine.shaderID + 1) % (shaderCount - 4); break;
+
                     case SDLK_F4:
                         engine.isWindowed ^= 1;
                         if (!engine.isWindowed) {
@@ -198,19 +205,28 @@ bool32 processEvents()
 #endif
                         }
                         break;
+
 #if !RETRO_USE_ORIGINAL_CODE
                     case SDLK_F5:
+                        // Quick-Reload
+                        InitSceneLoad();
+                        break;
+
+                    case SDLK_F6:
                         if (engine.devMenu && engine.screenCount > 1)
                             engine.screenCount--;
                         break;
-                    case SDLK_F6:
+
+                    case SDLK_F7:
                         if (engine.devMenu && engine.screenCount < SCREEN_MAX)
                             engine.screenCount++;
                         break;
+
                     case SDLK_F9:
                         if (engine.devMenu)
                             showHitboxes ^= 1;
                         break;
+
                     case SDLK_F10:
                         if (engine.devMenu)
                             engine.showPaletteOverlay ^= 1;
@@ -220,11 +236,13 @@ bool32 processEvents()
                         if (engine.devMenu)
                             engine.gameSpeed = engine.fastForwardSpeed;
                         break;
+
                     case SDLK_F11:
                     case SDLK_INSERT:
                         if ((sceneInfo.state & ENGINESTATE_STEPOVER) == ENGINESTATE_STEPOVER)
                             engine.frameStep = true;
                         break;
+
                     case SDLK_F12:
                     case SDLK_PAUSE:
                         if (engine.devMenu) {

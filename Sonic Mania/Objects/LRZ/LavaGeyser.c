@@ -27,6 +27,7 @@ void LavaGeyser_Draw(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     RSDK.DrawSprite(&self->plumeAnimator, NULL, false);
+
     if (self->height > 0) {
         SpriteFrame *frame = RSDK.GetFrame(LavaGeyser->aniFrames, 0, self->flowAnimator.frameID);
         frame->height      = 48;

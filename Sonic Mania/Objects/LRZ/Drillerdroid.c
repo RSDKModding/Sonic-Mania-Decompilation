@@ -19,12 +19,12 @@ void Drillerdroid_LateUpdate(void) {}
 
 void Drillerdroid_StaticUpdate(void)
 {
-    if (Drillerdroid->shouldPlayDrillSfx) {
+    if (Drillerdroid->drillSfxTimer) {
         if (!Drillerdroid->playingDrillSfx) {
-            RSDK.PlaySfx(Drillerdroid->sfxDrill, 43643, 255);
+            RSDK.PlaySfx(Drillerdroid->sfxDrill, 43643, 0xFF);
             Drillerdroid->playingDrillSfx = true;
         }
-        Drillerdroid->shouldPlayDrillSfx = 0;
+        Drillerdroid->drillSfxTimer = 0;
     }
     else if (Drillerdroid->playingDrillSfx) {
         RSDK.StopSfx(Drillerdroid->sfxDrill);
@@ -47,29 +47,32 @@ void Drillerdroid_Create(void *data)
             self->visible = true;
             if (data)
                 self->type = voidToInt(data);
-            if (self->type) {
-                if (self->type == DRILLERDROID_TARGET || self->type == DRILLERDROID_UNKNOWN) {
+
+            switch (self->type) {
+                case DRILLERDROIDO_MAIN:
+                    self->active        = ACTIVE_BOUNDS;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &self->armorAnimator, true, 0);
+                    self->drawOrder    = Zone->drawOrderHigh;
+                    Drillerdroid->boss = self;
+                    self->state        = Drillerdroid_State_SetupArena;
+                    self->stateDraw    = Drillerdroid_Draw_Boss;
+                    break;
+
+                case DRILLERDROID_TARGET:
+                case DRILLERDROID_UNUSED:
                     self->active        = ACTIVE_NORMAL;
                     self->drawFX        = FX_FLIP;
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
-                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &self->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &self->armorAnimator, true, 0);
                     self->drawOrder = Zone->drawOrderHigh;
-                    self->state     = Drillerdroid_State1_Unknown;
-                    self->stateDraw = Drillerdroid_StateDraw1_Unknown;
-                }
-            }
-            else {
-                self->active        = ACTIVE_BOUNDS;
-                self->updateRange.x = 0x800000;
-                self->updateRange.y = 0x800000;
-                RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &self->animator2, true, 0);
-                self->drawOrder  = Zone->drawOrderHigh;
-                Drillerdroid->boss = (Entity *)self;
-                self->state      = Drillerdroid_State_SetupArena;
-                self->stateDraw  = Drillerdroid_StateDraw_Unknown1;
+                    self->state     = Drillerdroid_State_Target;
+                    self->stateDraw = Drillerdroid_Draw_Target;
+                    break;
             }
         }
         else {
@@ -84,63 +87,68 @@ void Drillerdroid_StageLoad(void)
         Drillerdroid->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Drillerdroid.bin", SCOPE_STAGE);
     Drillerdroid->ticFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
 
-    Drillerdroid->hitbox1.left   = -25;
-    Drillerdroid->hitbox1.top    = -16;
-    Drillerdroid->hitbox1.right  = 25;
-    Drillerdroid->hitbox1.bottom = 16;
+    Drillerdroid->hitboxCore.left   = -25;
+    Drillerdroid->hitboxCore.top    = -16;
+    Drillerdroid->hitboxCore.right  = 25;
+    Drillerdroid->hitboxCore.bottom = 16;
 
-    Drillerdroid->hitbox2.left   = -58;
-    Drillerdroid->hitbox2.top    = -74;
-    Drillerdroid->hitbox2.right  = -25;
-    Drillerdroid->hitbox2.bottom = 16;
+    Drillerdroid->hitboxPistonL.left   = -58;
+    Drillerdroid->hitboxPistonL.top    = -74;
+    Drillerdroid->hitboxPistonL.right  = -25;
+    Drillerdroid->hitboxPistonL.bottom = 16;
 
-    Drillerdroid->hitbox3.left   = 25;
-    Drillerdroid->hitbox3.top    = -74;
-    Drillerdroid->hitbox3.right  = 58;
-    Drillerdroid->hitbox3.bottom = 16;
+    Drillerdroid->hitboxPistonR.left   = 25;
+    Drillerdroid->hitboxPistonR.top    = -74;
+    Drillerdroid->hitboxPistonR.right  = 58;
+    Drillerdroid->hitboxPistonR.bottom = 16;
 
-    Drillerdroid->hitbox4.left   = -58;
-    Drillerdroid->hitbox4.top    = 16;
-    Drillerdroid->hitbox4.right  = -25;
-    Drillerdroid->hitbox4.bottom = 53;
+    Drillerdroid->hitboxDrillL.left   = -58;
+    Drillerdroid->hitboxDrillL.top    = 16;
+    Drillerdroid->hitboxDrillL.right  = -25;
+    Drillerdroid->hitboxDrillL.bottom = 53;
 
-    Drillerdroid->hitbox5.left   = 25;
-    Drillerdroid->hitbox5.top    = 16;
-    Drillerdroid->hitbox5.right  = 58;
-    Drillerdroid->hitbox5.bottom = 53;
+    Drillerdroid->hitboxDrillR.left   = 25;
+    Drillerdroid->hitboxDrillR.top    = 16;
+    Drillerdroid->hitboxDrillR.right  = 58;
+    Drillerdroid->hitboxDrillR.bottom = 53;
 
-    Drillerdroid->field_2C[0]        = 0;
-    Drillerdroid->field_2C[1]        = 0;
-    Drillerdroid->field_34[0]        = 0x100000;
-    Drillerdroid->field_34[1]        = 0x100000;
-    Drillerdroid->field_3C[0]        = 4;
-    Drillerdroid->field_3C[1]        = 0;
-    Drillerdroid->field_44[0]        = 4;
-    Drillerdroid->field_44[1]        = 0;
-    Drillerdroid->field_4C[0]        = 0;
-    Drillerdroid->field_4C[1]        = 0;
-    Drillerdroid->field_54[0]        = 0;
-    Drillerdroid->field_54[1]        = 0;
-    Drillerdroid->field_5C[0]        = 1;
-    Drillerdroid->field_5C[1]        = 1;
-    Drillerdroid->field_5C[2]        = 1;
-    Drillerdroid->field_5C[3]        = 1;
-    Drillerdroid->field_5C[4]        = 1;
-    Drillerdroid->active             = ACTIVE_ALWAYS;
-    Drillerdroid->shouldPlayDrillSfx = 0;
-    Drillerdroid->playingDrillSfx    = false;
-    Drillerdroid->armorHealth           = 3;
-    Drillerdroid->field_6D           = 0;
-    Drillerdroid->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
-    Drillerdroid->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
-    Drillerdroid->sfxDrill           = RSDK.GetSfx("LRZ/Drill.wav");
-    Drillerdroid->sfxImpact          = RSDK.GetSfx("Stage/Impact4.wav");
-    Drillerdroid->sfxJump            = RSDK.GetSfx("LRZ/DrillJump.wav");
-    Drillerdroid->sfxTargeting       = RSDK.GetSfx("Stage/Targeting1.wav");
-    Drillerdroid->sfxSizzle          = RSDK.GetSfx("LRZ/Sizzle.wav");
-    Drillerdroid->sfxDrop            = RSDK.GetSfx("Stage/Drop.wav");
-    Drillerdroid->sfxFail            = RSDK.GetSfx("Stage/Fail.wav");
-    Drillerdroid->sfxClang           = RSDK.GetSfx("Stage/Clang2.wav");
+    Drillerdroid->pistonPos[0]     = 0;
+    Drillerdroid->pistonPos[1]     = 0;
+    Drillerdroid->drillPos[0]      = 0x100000;
+    Drillerdroid->drillPos[1]      = 0x100000;
+    Drillerdroid->pistonDelay[0]   = 4;
+    Drillerdroid->pistonDelay[1]   = 0;
+    Drillerdroid->drillDelay[0]    = 4;
+    Drillerdroid->drillDelay[1]    = 0;
+    Drillerdroid->pistonMoveDir[0] = 0;
+    Drillerdroid->pistonMoveDir[1] = 0;
+    Drillerdroid->drillMoveDir[0]  = 0;
+    Drillerdroid->drillMoveDir[1]  = 0;
+
+    Drillerdroid->platformActive[0] = true;
+    Drillerdroid->platformActive[1] = true;
+    Drillerdroid->platformActive[2] = true;
+    Drillerdroid->platformActive[3] = true;
+    Drillerdroid->platformActive[4] = true;
+
+    Drillerdroid->active = ACTIVE_ALWAYS;
+
+    Drillerdroid->drillSfxTimer   = 0;
+    Drillerdroid->playingDrillSfx = false;
+
+    Drillerdroid->armorHealth    = 3;
+    Drillerdroid->jumpsRemaining = 0;
+
+    Drillerdroid->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    Drillerdroid->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    Drillerdroid->sfxDrill     = RSDK.GetSfx("LRZ/Drill.wav");
+    Drillerdroid->sfxImpact    = RSDK.GetSfx("Stage/Impact4.wav");
+    Drillerdroid->sfxJump      = RSDK.GetSfx("LRZ/DrillJump.wav");
+    Drillerdroid->sfxTargeting = RSDK.GetSfx("Stage/Targeting1.wav");
+    Drillerdroid->sfxSizzle    = RSDK.GetSfx("LRZ/Sizzle.wav");
+    Drillerdroid->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
+    Drillerdroid->sfxFail      = RSDK.GetSfx("Stage/Fail.wav");
+    Drillerdroid->sfxClang     = RSDK.GetSfx("Stage/Clang2.wav");
 }
 
 void Drillerdroid_Hit(void)
@@ -170,17 +178,18 @@ void Drillerdroid_CheckPlayerCollisions(void)
         foreach_active(Player, player)
         {
             if (!self->invincibilityTimer) {
-                int playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntityID(player);
                 if (Drillerdroid->playerTimers[playerID]) {
                     Drillerdroid->playerTimers[playerID]--;
                 }
-                else if (Player_CheckBadnikTouch(player, self, &Drillerdroid->hitbox1)) {
+                else if (Player_CheckBadnikTouch(player, self, &Drillerdroid->hitboxCore)) {
                     if (player->position.y < self->position.y) {
                         Player_CheckHit(player, self);
                     }
                     else if (self->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
                         Player_CheckHit(player, self);
                     }
+
                     if (Player_CheckBossHit(player, self)) {
                         if (Drillerdroid->armorHealth <= 1) {
                             Drillerdroid_Hit();
@@ -192,8 +201,8 @@ void Drillerdroid_CheckPlayerCollisions(void)
                     }
                 }
                 else {
-                    if (Player_CheckBadnikTouch(player, self, &Drillerdroid->hitbox2)
-                        || Player_CheckBadnikTouch(player, self, &Drillerdroid->hitbox3)) {
+                    if (Player_CheckBadnikTouch(player, self, &Drillerdroid->hitboxPistonL)
+                        || Player_CheckBadnikTouch(player, self, &Drillerdroid->hitboxPistonR)) {
                         if (self->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
                             Player_CheckHit(player, self);
                         }
@@ -207,8 +216,8 @@ void Drillerdroid_CheckPlayerCollisions(void)
                             }
                         }
                     }
-                    else if (Player_CheckCollisionTouch(player, self, &Drillerdroid->hitbox4)
-                             || Player_CheckCollisionTouch(player, self, &Drillerdroid->hitbox5)) {
+                    else if (Player_CheckCollisionTouch(player, self, &Drillerdroid->hitboxDrillL)
+                             || Player_CheckCollisionTouch(player, self, &Drillerdroid->hitboxDrillR)) {
                         Player_CheckHit(player, self);
                     }
                 }
@@ -224,14 +233,14 @@ void Drillerdroid_Explode(void)
     if (!(Zone->timer & 3)) {
         RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
         if (!(Zone->timer & 3)) {
-            int x = self->position.y + (RSDK.Rand(-19, 20) << 16);
-            int y = self->position.x + (RSDK.Rand(-24, 25) << 16);
+            int32 x = self->position.y + (RSDK.Rand(-19, 20) << 16);
+            int32 y = self->position.x + (RSDK.Rand(-24, 25) << 16);
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh + 2;
         }
     }
 }
 
-void Drillerdroid_SpawnDebris(int offset)
+void Drillerdroid_SpawnDebris(int32 offset)
 {
     RSDK_THIS(Drillerdroid);
 
@@ -259,40 +268,40 @@ void Drillerdroid_State_SetupArena(void)
     RSDK_THIS(Drillerdroid);
 
     if (++self->timer >= 2) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 324;
-        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 96;
-        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - 240;
-        self->startY            = self->position.y;
-        self->active              = ACTIVE_NORMAL;
-        self->position.y          = (ScreenInfo->position.y - 192) << 16;
-        self->visible             = true;
-        self->state               = Drillerdroid_State_StartBoss;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + 324;
+        Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 96;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - 240;
+        self->startY                = self->position.y;
+        self->active                = ACTIVE_NORMAL;
+        self->position.y            = (ScreenInfo->position.y - 192) << 16;
+        self->visible               = true;
+        self->state                 = Drillerdroid_State_AwaitPlayer;
     }
 }
 
-void Drillerdroid_State_StartBoss(void)
+void Drillerdroid_State_AwaitPlayer(void)
 {
     RSDK_THIS(Drillerdroid);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
     if (player1->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 328;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - 328;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
-        self->health                                                                                            = 6;
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), self->position.x, self->startY)->target = (Entity *)player1;
-        self->position.x                                                                                        = 0;
+        self->health                                                                                        = 6;
+        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), self->position.x, self->startY)->target = player1;
+        self->position.x                                                                                    = 0;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
-        self->state = Drillerdroid_State_Unknown17;
+        self->state = Drillerdroid_State_DecidingDropPos;
     }
 }
 
-void Drillerdroid_State_Unknown2(void)
+void Drillerdroid_State_Dropping(void)
 {
     RSDK_THIS(Drillerdroid);
 
@@ -307,106 +316,106 @@ void Drillerdroid_State_Unknown2(void)
         self->velocity.y >>= 1;
         self->startY = self->position.y + 0x100000;
 
-        if (!Drillerdroid->field_6E) {
-            for (int i = 0; i < 4; ++i) {
+        if (!Drillerdroid->canBreakSegment) {
+            for (int32 i = 0; i < 4; ++i) {
                 Drillerdroid_SpawnDebris(-0x300000);
                 Drillerdroid_SpawnDebris(0x300000);
                 Drillerdroid_SpawnDebris(-0x190000);
                 Drillerdroid_SpawnDebris(0x190000);
             }
 
-            Drillerdroid->field_6D = 2;
+            Drillerdroid->jumpsRemaining = 2;
         }
         self->timer = 7;
         self->angle = 0;
-        self->state = Drillerdroid_State_Unknown3;
+        self->state = Drillerdroid_State_Landed;
     }
 }
 
-void Drillerdroid_State_Unknown3(void)
+void Drillerdroid_State_Landed(void)
 {
     RSDK_THIS(Drillerdroid);
 
     self->position.y += self->velocity.y;
-    Drillerdroid->field_34[0] = self->startY - self->position.y;
-    Drillerdroid->field_34[1] = self->startY - self->position.y;
+    Drillerdroid->drillPos[0] = self->startY - self->position.y;
+    Drillerdroid->drillPos[1] = self->startY - self->position.y;
 
     self->velocity.y -= 0xE000;
 
     Drillerdroid_CheckPlayerCollisions();
     if (self->velocity.y < 0) {
         if (self->position.y < self->startY)
-            self->state = Drillerdroid_State_Unknown4;
+            self->state = Drillerdroid_State_LandRecoil;
     }
 }
 
-void Drillerdroid_State_Unknown4(void)
+void Drillerdroid_State_LandRecoil(void)
 {
     RSDK_THIS(Drillerdroid);
 
     self->position.y += self->velocity.y;
-    Drillerdroid->field_34[0] = self->startY - self->position.y;
-    Drillerdroid->field_34[1] = self->startY - self->position.y;
+    Drillerdroid->drillPos[0] = self->startY - self->position.y;
+    Drillerdroid->drillPos[1] = self->startY - self->position.y;
 
     self->velocity.y += 0x14000;
 
     Drillerdroid_CheckPlayerCollisions();
     if (self->velocity.y > 0) {
         if (self->position.y > self->startY) {
-            self->position.y        = self->startY;
-            Drillerdroid->field_34[0] = 0;
-            Drillerdroid->field_34[1] = 0;
-            self->state             = Drillerdroid_State_Unknown5;
+            self->position.y          = self->startY;
+            Drillerdroid->drillPos[0] = 0;
+            Drillerdroid->drillPos[1] = 0;
+            self->state               = Drillerdroid_State_DecideNextMove;
         }
     }
 }
 
-void Drillerdroid_State_Unknown5(void)
+void Drillerdroid_State_DecideNextMove(void)
 {
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_CheckPlayerCollisions();
     if (--self->timer <= 0) {
-        if (Drillerdroid->field_6D) {
+        if (Drillerdroid->jumpsRemaining) {
             self->timer      = 240;
             self->velocity.y = 0x27000;
             RSDK.PlaySfx(Drillerdroid->sfxJump, false, 255);
-            self->state = Drillerdroid_State_Unknown6;
+            self->state = Drillerdroid_State_PrepareJump;
         }
-        else if (Drillerdroid->field_6E) {
-            self->timer          = 180;
-            Drillerdroid->field_70 = 2 * (3 * RSDK.Rand(-2, 3));
-            self->state          = Drillerdroid_State_Unknown8;
+        else if (Drillerdroid->canBreakSegment) {
+            self->timer                   = 180;
+            Drillerdroid->stalatiteOffset = 2 * (3 * RSDK.Rand(-2, 3));
+            self->state                   = Drillerdroid_State_Drilling;
         }
         else {
             self->timer = 60;
-            self->state = Drillerdroid_State_Unknown10;
+            self->state = Drillerdroid_State_Overheat;
         }
     }
 }
 
-void Drillerdroid_State_Unknown6(void)
+void Drillerdroid_State_PrepareJump(void)
 {
     RSDK_THIS(Drillerdroid);
 
     self->position.y += self->velocity.y;
-    Drillerdroid->field_34[0] = self->startY - self->position.y;
-    Drillerdroid->field_34[1] = self->startY - self->position.y;
+    Drillerdroid->drillPos[0] = self->startY - self->position.y;
+    Drillerdroid->drillPos[1] = self->startY - self->position.y;
 
     self->velocity.y -= 0x8000;
     Drillerdroid_CheckPlayerCollisions();
 
     if (self->velocity.y < 0) {
-        if (Drillerdroid->field_34[0] >= 0x40000) {
-            self->timer             = self->velocity.y;
-            Drillerdroid->field_34[0] = 0x40000;
-            Drillerdroid->field_34[1] = 0x40000;
-            self->state             = Drillerdroid_State_Unknown7;
+        if (Drillerdroid->drillPos[0] >= 0x40000) {
+            self->timer               = self->velocity.y;
+            Drillerdroid->drillPos[0] = 0x40000;
+            Drillerdroid->drillPos[1] = 0x40000;
+            self->state               = Drillerdroid_State_Jumping;
         }
     }
 }
 
-void Drillerdroid_State_Unknown7(void)
+void Drillerdroid_State_Jumping(void)
 {
     RSDK_THIS(Drillerdroid);
 
@@ -421,10 +430,10 @@ void Drillerdroid_State_Unknown7(void)
             Camera_ShakeScreen(0, 0, 4);
             self->velocity.y >>= 1;
             self->startY = self->position.y;
-            self->angle    = 0;
-            if (--Drillerdroid->field_6D) {
+            self->angle  = 0;
+            if (--Drillerdroid->jumpsRemaining) {
                 RSDK.PlaySfx(Drillerdroid->sfxJump, false, 255);
-                self->state = Drillerdroid_State_Unknown6;
+                self->state = Drillerdroid_State_PrepareJump;
             }
             else {
                 RSDK.PlaySfx(Drillerdroid->sfxDrop, false, 255);
@@ -433,80 +442,80 @@ void Drillerdroid_State_Unknown7(void)
                 EntityBuckwildBall *ball = CREATE_ENTITY(BuckwildBall, NULL, self->position.x, ScreenInfo->position.y << 16);
                 ball->startPos.x         = 0;
 
-                int value = 0;
-                if (Drillerdroid->field_61) {
-                    if (Drillerdroid->field_61 == 4 || player1->position.x < self->position.x) {
+                int32 ballSlot = 0;
+                if (Drillerdroid->arenaSegment) {
+                    if (Drillerdroid->arenaSegment == 4 || player1->position.x < self->position.x) {
                         ball->position.x -= 0x800000;
                         ball->direction = FLIP_NONE;
-                        value           = Drillerdroid->field_61 - 1;
+                        ballSlot        = Drillerdroid->arenaSegment - 1;
                     }
                     else {
                         ball->position.x += 0x800000;
                         ball->direction = FLIP_X;
-                        value           = Drillerdroid->field_61 + 1;
+                        ballSlot        = Drillerdroid->arenaSegment + 1;
                     }
                 }
                 else {
                     ball->position.x += 0x800000;
                     ball->direction = FLIP_X;
-                    value           = Drillerdroid->field_61 + 1;
+                    ballSlot        = Drillerdroid->arenaSegment + 1;
                 }
-                ball->field_B8  = value;
-                ball->visible   = true;
-                ball->active    = ACTIVE_NORMAL;
-                ball->drawOrder = Zone->drawOrderLow;
-                ball->respawn   = false;
-                ball->timerSfx  = 0;
+                ball->bossBallSlot = ballSlot;
+                ball->visible      = true;
+                ball->active       = ACTIVE_NORMAL;
+                ball->drawOrder    = Zone->drawOrderLow;
+                ball->respawn      = false;
+                ball->timerSfx     = 0;
                 RSDK.SetSpriteAnimation(BuckwildBall->aniFrames, 0, &ball->animator, true, 0);
-                ball->state   = BuckwildBall_State_Unknown3;
-                self->state = Drillerdroid_State_Unknown3;
+                ball->state = BuckwildBall_State_Falling;
+                self->state = Drillerdroid_State_Landed;
             }
         }
     }
 }
 
-void Drillerdroid_State_Unknown8(void)
+void Drillerdroid_State_Drilling(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    ++Drillerdroid->shouldPlayDrillSfx;
-    RSDK.ProcessAnimation(&self->animator1);
+    ++Drillerdroid->drillSfxTimer;
+    RSDK.ProcessAnimation(&self->mainAnimator);
 
-    for (int i = 0; i < 2; ++i) {
-        if (Drillerdroid->field_3C[i]) {
-            Drillerdroid->field_3C[i]--;
+    for (int32 i = 0; i < 2; ++i) {
+        if (Drillerdroid->pistonDelay[i]) {
+            Drillerdroid->pistonDelay[i]--;
         }
-        else if (Drillerdroid->field_4C[i]) {
-            Drillerdroid->field_2C[i] -= 0x20000;
-            if (!Drillerdroid->field_2C[i]) {
-                Drillerdroid->field_4C[i] = 0;
-                Drillerdroid->field_3C[i] = 10;
+        else if (Drillerdroid->pistonMoveDir[i]) {
+            Drillerdroid->pistonPos[i] -= 0x20000;
+            if (!Drillerdroid->pistonPos[i]) {
+                Drillerdroid->pistonMoveDir[i] = FLIP_NONE;
+                Drillerdroid->pistonDelay[i]   = 10;
             }
         }
         else {
-            Drillerdroid->field_2C[i] += 0x40000;
-            if (Drillerdroid->field_2C[i] == 0x100000)
-                Drillerdroid->field_4C[i] = 1;
+            Drillerdroid->pistonPos[i] += 0x40000;
+            if (Drillerdroid->pistonPos[i] == 0x100000)
+                Drillerdroid->pistonMoveDir[i] = FLIP_X;
         }
 
-        if (Drillerdroid->field_44[i]) {
-            Drillerdroid->field_44[i]--;
+        if (Drillerdroid->drillDelay[i]) {
+            Drillerdroid->drillDelay[i]--;
         }
-        else if (Drillerdroid->field_54[i]) {
-            Drillerdroid->field_34[i] -= 0x40000;
-            if (!Drillerdroid->field_34[i]) {
-                Drillerdroid->field_54[i] = 0;
-                Drillerdroid->field_44[i] = 5;
+        else if (Drillerdroid->drillMoveDir[i]) {
+            Drillerdroid->drillPos[i] -= 0x40000;
+            if (!Drillerdroid->drillPos[i]) {
+                Drillerdroid->drillMoveDir[i] = FLIP_NONE;
+                Drillerdroid->drillDelay[i]   = 5;
             }
         }
         else {
-            Drillerdroid->field_34[i] += 0x80000;
-            if (Drillerdroid->field_34[i] == 0x100000)
-                Drillerdroid->field_54[i] = 1;
+            Drillerdroid->drillPos[i] += 0x80000;
+            if (Drillerdroid->drillPos[i] == 0x100000)
+                Drillerdroid->drillMoveDir[i] = FLIP_X;
         }
     }
 
-    if (Drillerdroid->field_6E) {
+    if (Drillerdroid->canBreakSegment) {
         if (self->timer == 120) {
             EntityLavaGeyser *geyser = CREATE_ENTITY(LavaGeyser, NULL, self->position.x, self->position.y + 0x580000);
             geyser->duration         = 60;
@@ -516,15 +525,15 @@ void Drillerdroid_State_Unknown8(void)
             geyser->state            = LavaGeyser_HandleSetup;
         }
         else if (self->timer < 60) {
-            if (self->alpha < 512)
+            if (self->alpha < 0x200)
                 self->alpha += 4;
         }
     }
-    else if (Drillerdroid->field_34[0] == 0x80000) {
+    else if (Drillerdroid->drillPos[0] == 0x80000) {
         Drillerdroid_SpawnDebris(-0x300000);
         Drillerdroid_SpawnDebris(0x300000);
     }
-    else if (Drillerdroid->field_34[1] == 0x80000) {
+    else if (Drillerdroid->drillPos[1] == 0x80000) {
         Drillerdroid_SpawnDebris(-0x190000);
         Drillerdroid_SpawnDebris(0x190000);
     }
@@ -535,7 +544,7 @@ void Drillerdroid_State_Unknown8(void)
 
     if (!(Zone->timer & 7)) {
         if (Zone->timer & 0xF) {
-            int offset = RSDK.Rand(0, ScreenInfo->width >> 5);
+            int32 offset = RSDK.Rand(0, ScreenInfo->width >> 5);
             EntityDebris *debris =
                 CREATE_ENTITY(Debris, Debris_State_Fall, (32 * offset + ScreenInfo->position.x) << 16, (ScreenInfo->position.y + 24) << 16);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 7, &debris->animator, true, RSDK.Rand(0, 4));
@@ -545,9 +554,9 @@ void Drillerdroid_State_Unknown8(void)
             debris->updateRange.y = 0x400000;
         }
         else {
-            int offset = RSDK.Rand(0, ScreenInfo->width / 48);
+            int32 offset = RSDK.Rand(0, ScreenInfo->width / 48);
             EntityStalactite *stalactite =
-                CREATE_ENTITY(Stalactite, Stalactite_State_Unknown4, (48 * offset + Drillerdroid->field_70 + ScreenInfo->position.x) << 16,
+                CREATE_ENTITY(Stalactite, Stalactite_State_Falling_Boss, (48 * offset + Drillerdroid->stalatiteOffset + ScreenInfo->position.x) << 16,
                               (ScreenInfo->position.y + 24) << 16);
             stalactite->updateRange.x = 0x400000;
             stalactite->updateRange.y = 0x400000;
@@ -557,51 +566,49 @@ void Drillerdroid_State_Unknown8(void)
     self->position.y ^= 0x10000;
     Drillerdroid_CheckPlayerCollisions();
     if (--self->timer <= 0)
-        self->state = Drillerdroid_State_Unknown9;
+        self->state = Drillerdroid_State_FinishDrilling;
 }
 
-void Drillerdroid_State_Unknown9(void)
+void Drillerdroid_State_FinishDrilling(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    Drillerdroid->field_2C[0] -= 0x20000;
-    if (Drillerdroid->field_2C[0] < 0)
-        Drillerdroid->field_2C[0] = 0;
+    Drillerdroid->pistonPos[0] -= 0x20000;
+    if (Drillerdroid->pistonPos[0] < 0)
+        Drillerdroid->pistonPos[0] = 0;
 
-    Drillerdroid->field_2C[1] -= 0x20000;
-    if (Drillerdroid->field_2C[1] < 0)
-        Drillerdroid->field_2C[1] = 0;
+    Drillerdroid->pistonPos[1] -= 0x20000;
+    if (Drillerdroid->pistonPos[1] < 0)
+        Drillerdroid->pistonPos[1] = 0;
 
-    Drillerdroid->field_34[0] -= 0x20000;
-    if (Drillerdroid->field_34[0] < 0)
-        Drillerdroid->field_34[0] = 0;
+    Drillerdroid->drillPos[0] -= 0x20000;
+    if (Drillerdroid->drillPos[0] < 0)
+        Drillerdroid->drillPos[0] = 0;
 
-    Drillerdroid->field_34[1] -= 0x20000;
-    if (Drillerdroid->field_34[1] < 0)
-        Drillerdroid->field_34[1] = 0;
+    Drillerdroid->drillPos[1] -= 0x20000;
+    if (Drillerdroid->drillPos[1] < 0)
+        Drillerdroid->drillPos[1] = 0;
 
-    if (!Drillerdroid->field_2C[0] && !Drillerdroid->field_2C[1] && !Drillerdroid->field_34[0] && !Drillerdroid->field_34[1]) {
+    if (!Drillerdroid->pistonPos[0] && !Drillerdroid->pistonPos[1] && !Drillerdroid->drillPos[0] && !Drillerdroid->drillPos[1]) {
         self->timer = 60;
-        self->state = Drillerdroid_State_Unknown10;
+        self->state = Drillerdroid_State_Overheat;
     }
 }
 
-void Drillerdroid_State_Unknown10(void)
+void Drillerdroid_State_Overheat(void)
 {
     RSDK_THIS(Drillerdroid);
 
     if (--self->timer <= 0) {
-        if (Drillerdroid->field_6E == 1) {
-            Drillerdroid->field_6E = 0;
+        if (Drillerdroid->canBreakSegment) {
+            Drillerdroid->canBreakSegment = false;
             RSDK.PlaySfx(Drillerdroid->sfxSizzle, false, 255);
 
             EntityDebris *debris = NULL;
             switch (Drillerdroid->armorHealth) {
                 default: break;
-                case 0:
-                    self->state = Drillerdroid_State_Unknown11;
-                    Drillerdroid_Hit();
-                    break;
+                case 0: Drillerdroid_Hit(); break;
+
                 case 1: {
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 6);
@@ -623,8 +630,8 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
-                    int spawnX = self->position.x - 0x300000;
-                    debris     = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
+                    int32 spawnX = self->position.x - 0x300000;
+                    debris       = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
                     debris->velocity.x    = -0x30000;
                     debris->velocity.y    = -0x40000;
@@ -663,6 +670,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.y = 0x400000;
                     break;
                 }
+
                 case 2:
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 4);
@@ -690,155 +698,159 @@ void Drillerdroid_State_Unknown10(void)
                 --Drillerdroid->armorHealth;
             }
 
-            self->state = Drillerdroid_State_Unknown11;
+            self->state = Drillerdroid_State_OverheatRecoil_DestroyedSegment;
         }
         else {
-            self->state = Drillerdroid_State_Unknown19;
+            self->state = Drillerdroid_State_OverheatRecoil;
         }
     }
 
     Drillerdroid_CheckPlayerCollisions();
 }
 
-void Drillerdroid_State_Unknown19(void)
+void Drillerdroid_State_OverheatRecoil(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    Drillerdroid->field_34[0] += 0x10000;
-    Drillerdroid->field_34[0] += 0x10000;
+    Drillerdroid->drillPos[0] += 0x10000;
+    Drillerdroid->drillPos[0] += 0x10000;
     self->position.y -= 0x10000;
+
     Drillerdroid_CheckPlayerCollisions();
-    if (Drillerdroid->field_34[0] == 0x100000) {
+    if (Drillerdroid->drillPos[0] == 0x100000) {
         self->timer = 15;
-        self->state = Drillerdroid_State_Unknown14;
+        self->state = Drillerdroid_State_JumpTargetDelay;
     }
 }
 
-void Drillerdroid_State_Unknown14(void)
+void Drillerdroid_State_JumpTargetDelay(void)
 {
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_CheckPlayerCollisions();
     if (--self->timer <= 0) {
         self->velocity.y = 0x78000;
-        RSDK.PlaySfx(Drillerdroid->sfxJump, false, 255);
-        self->state = Drillerdroid_State_Unknown15;
+        RSDK.PlaySfx(Drillerdroid->sfxJump, false, 0xFF);
+        self->state = Drillerdroid_State_PrepareJumpTarget;
     }
 }
 
-void Drillerdroid_State_Unknown15(void)
+void Drillerdroid_State_PrepareJumpTarget(void)
 {
     RSDK_THIS(Drillerdroid);
 
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x1C000;
 
-    Drillerdroid->field_34[0] = self->startY - self->position.y;
-    Drillerdroid->field_34[1] = self->startY - self->position.y;
+    Drillerdroid->drillPos[0] = self->startY - self->position.y;
+    Drillerdroid->drillPos[1] = self->startY - self->position.y;
     Drillerdroid_CheckPlayerCollisions();
     if (self->velocity.y < 0) {
-        if (Drillerdroid->field_34[0] >= 0x100000) {
-            Drillerdroid->field_34[0] = 0x100000;
-            Drillerdroid->field_34[1] = 0x100000;
-            self->state             = Drillerdroid_State_Unknown16;
+        if (Drillerdroid->drillPos[0] >= 0x100000) {
+            Drillerdroid->drillPos[0] = 0x100000;
+            Drillerdroid->drillPos[1] = 0x100000;
+            self->state               = Drillerdroid_State_JumpTargeting;
         }
     }
 }
 
-void Drillerdroid_State_Unknown16(void)
+void Drillerdroid_State_JumpTargeting(void)
 {
     RSDK_THIS(Drillerdroid);
 
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (self->velocity.y >= 0) {
-        Drillerdroid->field_2C[0] = 0;
-        Drillerdroid->field_2C[1] = 0;
-        Drillerdroid->field_34[0] = 0x100000;
-        Drillerdroid->field_34[1] = 0x100000;
-        Drillerdroid->field_3C[0] = 4;
-        Drillerdroid->field_3C[1] = 0;
-        Drillerdroid->field_44[0] = 4;
-        Drillerdroid->field_44[0] = 0;
-        Drillerdroid->field_4C[0] = 0;
-        Drillerdroid->field_4C[1] = 0;
-        Drillerdroid->field_54[0] = 0;
-        Drillerdroid->field_54[1] = 0;
-        self->position.x        = 0;
+        Drillerdroid->pistonPos[0]     = 0;
+        Drillerdroid->pistonPos[1]     = 0;
+        Drillerdroid->drillPos[0]      = 0x100000;
+        Drillerdroid->drillPos[1]      = 0x100000;
+        Drillerdroid->pistonDelay[0]   = 4;
+        Drillerdroid->pistonDelay[1]   = 0;
+        Drillerdroid->drillDelay[0]    = 4;
+        Drillerdroid->drillDelay[0]    = 0;
+        Drillerdroid->pistonMoveDir[0] = FLIP_NONE;
+        Drillerdroid->pistonMoveDir[1] = FLIP_NONE;
+        Drillerdroid->drillMoveDir[0]  = FLIP_NONE;
+        Drillerdroid->drillMoveDir[1]  = FLIP_NONE;
+        self->position.x               = 0;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
+        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = player1;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
-        self->state = Drillerdroid_State_Unknown17;
+        self->state = Drillerdroid_State_DecidingDropPos;
     }
 }
 
-void Drillerdroid_State_Unknown17(void)
+void Drillerdroid_State_DecidingDropPos(void)
 {
     RSDK_THIS(Drillerdroid);
 
     if (self->position.x) {
         self->timer      = 240;
         self->velocity.y = -0x40000;
-        self->state      = Drillerdroid_State_Unknown2;
+        self->state      = Drillerdroid_State_Dropping;
         self->position.x = (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x + 0x400000) & 0xFF800000;
 
-        bool32 flag = self->position.x < Zone->cameraBoundsL[0] << 16 || self->position.x > Zone->cameraBoundsR[0] << 16;
-        int id      = 0;
-        if (!flag) {
-            Drillerdroid->field_61 = (((self->position.x >> 16) - Zone->cameraBoundsL[0] + 64) >> 7) - 1;
-            id                     = Drillerdroid->field_5C[Drillerdroid->field_61];
-            flag                   = id == 0xFF;
+        bool32 failed         = self->position.x < Zone->cameraBoundsL[0] << 16 || self->position.x > Zone->cameraBoundsR[0] << 16;
+        bool32 platformActive = false;
+        if (!failed) {
+            Drillerdroid->arenaSegment = (((self->position.x >> 16) - Zone->cameraBoundsL[0] + 64) >> 7) - 1;
+            platformActive             = Drillerdroid->platformActive[Drillerdroid->arenaSegment];
+            failed                     = platformActive == 0xFF;
         }
 
-        if (flag) {
+        if (failed) {
             self->position.x = 0;
             RSDK.PlaySfx(Drillerdroid->sfxFail, false, 255);
             RSDK.StopSfx(Drillerdroid->sfxTargeting);
             self->timer = 60;
-            self->state = Drillerdroid_State_Unknown18;
+            self->state = Drillerdroid_State_DropFailReset;
         }
-        else if (id == 1) {
-            EntityLRZRockPile *rocks                       = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1 + Drillerdroid->field_61, LRZRockPile);
-            rocks->active                                  = ACTIVE_NORMAL;
-            rocks->timer                                   = 120;
-            rocks->flag                                    = true;
-            Drillerdroid->field_6E                         = 1;
-            Drillerdroid->field_5C[Drillerdroid->field_61] = 0;
+        else if (platformActive) {
+            EntityLRZRockPile *rocks      = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1 + Drillerdroid->arenaSegment, LRZRockPile);
+            rocks->active                 = ACTIVE_NORMAL;
+            rocks->timer                  = 120;
+            rocks->canCollapse            = true;
+            Drillerdroid->canBreakSegment = true;
+            Drillerdroid->platformActive[Drillerdroid->arenaSegment] = false;
         }
     }
 }
 
-void Drillerdroid_State_Unknown18(void)
+void Drillerdroid_State_DropFailReset(void)
 {
     RSDK_THIS(Drillerdroid);
 
     if (--self->timer <= 0) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
+        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = player1;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
-        self->state = Drillerdroid_State_Unknown17;
+        self->state = Drillerdroid_State_DecidingDropPos;
     }
 }
 
-void Drillerdroid_State_Unknown11(void)
+void Drillerdroid_State_OverheatRecoil_DestroyedSegment(void)
 {
     RSDK_THIS(Drillerdroid);
 
+    // Leftover from DrillerdroilO
     ++self->rotation;
-    Drillerdroid->field_34[0] += 0x4000;
-    Drillerdroid->field_34[1] += 0x4000;
-    Drillerdroid->field_2C[0] += 0x4000;
-    Drillerdroid->field_2C[1] += 0x4000;
+    Drillerdroid->drillPos[0] += 0x4000;
+    Drillerdroid->drillPos[1] += 0x4000;
+    Drillerdroid->pistonPos[0] += 0x4000;
+    Drillerdroid->pistonPos[1] += 0x4000;
     self->position.y -= 0x4000;
+
     Drillerdroid_CheckPlayerCollisions();
-    if (Drillerdroid->field_34[0] == 0x100000) {
+    if (Drillerdroid->drillPos[0] == 0x100000) {
         self->timer = 90;
-        self->state = Drillerdroid_State_Unknown12;
+        self->state = Drillerdroid_State_Cooldown;
     }
 }
 
-void Drillerdroid_State_Unknown12(void)
+void Drillerdroid_State_Cooldown(void)
 {
     RSDK_THIS(Drillerdroid);
 
@@ -846,22 +858,23 @@ void Drillerdroid_State_Unknown12(void)
     self->alpha -= 8;
     if (self->alpha <= 0) {
         self->alpha = 0;
-        self->state = Drillerdroid_State_Unknown13;
+        self->state = Drillerdroid_State_ResetFromCooldown;
     }
 }
 
-void Drillerdroid_State_Unknown13(void)
+void Drillerdroid_State_ResetFromCooldown(void)
 {
     RSDK_THIS(Drillerdroid);
 
+    // Leftover from DrillerdroilO
     self->rotation -= 4;
-    Drillerdroid->field_2C[0] -= 0x10000;
-    Drillerdroid->field_2C[1] -= 0x10000;
+    Drillerdroid->pistonPos[0] -= 0x10000;
+    Drillerdroid->pistonPos[1] -= 0x10000;
     Drillerdroid_CheckPlayerCollisions();
 
-    if (!Drillerdroid->field_2C[0]) {
+    if (!Drillerdroid->pistonPos[0]) {
         self->timer = 30;
-        self->state = Drillerdroid_State_Unknown14;
+        self->state = Drillerdroid_State_JumpTargetDelay;
     }
 }
 
@@ -870,6 +883,7 @@ void Drillerdroid_State_Destroyed(void)
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_Explode();
+
     if (!--self->invincibilityTimer) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
@@ -982,8 +996,8 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
 
-            int spawnX = self->position.x - 0x300000;
-            debris     = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
+            int32 spawnX = self->position.x - 0x300000;
+            debris       = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -1021,11 +1035,12 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
         }
-        self->velocity.x        = RSDK.Rand(-6, 6) << 15;
-        self->velocity.y        = RSDK.Rand(-10, -6) << 15;
-        self->animator1.frameID = 4;
-        self->stateDraw         = Drillerdroid_StateDraw_Unknown2;
-        self->state             = Drillerdroid_State_Finish;
+
+        self->velocity.x           = RSDK.Rand(-6, 6) << 15;
+        self->velocity.y           = RSDK.Rand(-10, -6) << 15;
+        self->mainAnimator.frameID = 4;
+        self->stateDraw            = Drillerdroid_Draw_Simple;
+        self->state                = Drillerdroid_State_Finish;
 
         foreach_active(SignPost, signPost) { signPost->position.x = self->position.x; }
     }
@@ -1039,6 +1054,7 @@ void Drillerdroid_State_Finish(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     self->visible ^= true;
+
     Drillerdroid_Explode();
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
@@ -1065,7 +1081,7 @@ void Drillerdroid_State_DropSignPost(void)
     }
 }
 
-void Drillerdroid_StateDraw_Unknown1(void)
+void Drillerdroid_Draw_Boss(void)
 {
     RSDK_THIS(Drillerdroid);
     Vector2 drawPos;
@@ -1076,157 +1092,191 @@ void Drillerdroid_StateDraw_Unknown1(void)
         RSDK.SetPaletteEntry(0, 32, 0xE0E0E0);
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
     }
-    self->animator1.frameID = 1;
-    drawPos.x                 = self->position.x - 0x300000;
-    drawPos.y                 = self->position.y - Drillerdroid->field_2C[0];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    self->animator1.frameID = 2;
-    drawPos.y                 = self->position.y + Drillerdroid->field_34[0];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    // Piston (L1)
+    self->mainAnimator.frameID = 1;
+    drawPos.x                  = self->position.x - 0x300000;
+    drawPos.y                  = self->position.y - Drillerdroid->pistonPos[0];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 1;
+    // Drill (L1)
+    self->mainAnimator.frameID = 2;
+    drawPos.y                  = self->position.y + Drillerdroid->drillPos[0];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
+
+    // Piston (L2)
+    self->mainAnimator.frameID = 1;
     drawPos.x += 0xD0000;
-    drawPos.y = self->position.y - Drillerdroid->field_2C[1];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    drawPos.y = self->position.y - Drillerdroid->pistonPos[1];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 2;
-    drawPos.y                 = self->position.y + Drillerdroid->field_34[1];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    // Drill (L2)
+    self->mainAnimator.frameID = 2;
+    drawPos.y                  = self->position.y + Drillerdroid->drillPos[1];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 1;
+    // Piston (R1)
+    self->mainAnimator.frameID = 1;
     drawPos.x += 0x530000;
-    drawPos.y = self->position.y - Drillerdroid->field_2C[0];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    drawPos.y = self->position.y - Drillerdroid->pistonPos[0];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 2;
-    drawPos.y                 = self->position.y + Drillerdroid->field_34[0];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    // Drill (R1)
+    self->mainAnimator.frameID = 2;
+    drawPos.y                  = self->position.y + Drillerdroid->drillPos[0];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 1;
+    // Piston (R2)
+    self->mainAnimator.frameID = 1;
     drawPos.x -= 0xD0000;
-    drawPos.y = self->position.y - Drillerdroid->field_2C[1];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    drawPos.y = self->position.y - Drillerdroid->pistonPos[1];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 2;
-    drawPos.y                 = self->position.y + Drillerdroid->field_34[1];
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    // Drill (R2)
+    self->mainAnimator.frameID = 2;
+    drawPos.y                  = self->position.y + Drillerdroid->drillPos[1];
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 0;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    // Main Body
+    self->mainAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     switch (Drillerdroid->armorHealth) {
-        case 1:
-            drawPos                   = self->position;
-            self->animator2.frameID = 6;
-            RSDK.DrawSprite(&self->animator2, NULL, false);
+        default:
+        case 0: break;
 
+        case 1:
+            // Drill (L) Armor
+            drawPos                     = self->position;
+            self->armorAnimator.frameID = 6;
+            RSDK.DrawSprite(&self->armorAnimator, NULL, false);
+
+            // Drill (R) Armor
             self->drawFX |= FX_FLIP;
             self->direction = FLIP_X;
-            RSDK.DrawSprite(&self->animator2, NULL, false);
+            RSDK.DrawSprite(&self->armorAnimator, NULL, false);
 
-            self->direction         = FLIP_NONE;
-            self->drawFX            = 0;
-            self->animator2.frameID = 7;
+            self->direction             = FLIP_NONE;
+            self->drawFX                = 0;
+            self->armorAnimator.frameID = 7;
+
+            // Piston (L1) Armor
             drawPos.x -= 0x300000;
-            drawPos.y -= Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y -= Drillerdroid->pistonPos[0];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Piston (L2) Armor
             drawPos.x += 0xD0000;
-            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[1];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Piston (R1) Armor
             drawPos.x += 0x530000;
-            drawPos.y = self->position.y - Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[0];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Piston (R2) Armor
             drawPos.x -= 0xD0000;
-            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
-
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[1];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
             break;
-        case 2:
-            drawPos.x                 = self->position.x + 0x10000;
-            drawPos.y                 = self->position.y - 0x140000;
-            self->animator2.frameID = 4;
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-            self->animator2.frameID = 5;
+        case 2:
+            // Core Armor (L)
+            drawPos.x                   = self->position.x + 0x10000;
+            drawPos.y                   = self->position.y - 0x140000;
+            self->armorAnimator.frameID = 4;
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
+
+            self->armorAnimator.frameID = 5;
             //[Fallthrough]
+
         case 3:
             if (Drillerdroid->armorHealth == 3) {
-                drawPos.x                 = self->position.x + 0x10000;
-                drawPos.y                 = self->position.y - 0x140000;
-                self->animator2.frameID = 0;
-                RSDK.DrawSprite(&self->animator2, &drawPos, false);
+                // Core Armor (R)
+                drawPos.x                   = self->position.x + 0x10000;
+                drawPos.y                   = self->position.y - 0x140000;
+                self->armorAnimator.frameID = 0;
+                RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
-                self->animator2.frameID = 1;
+                self->armorAnimator.frameID = 1;
             }
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-            drawPos                   = self->position;
-            self->animator2.frameID = 2;
-            RSDK.DrawSprite(&self->animator2, NULL, false);
+            // Core Armor (R)
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Drill (L) Armor
+            drawPos                     = self->position;
+            self->armorAnimator.frameID = 2;
+            RSDK.DrawSprite(&self->armorAnimator, NULL, false);
+
+            // Drill (R) Armor
             self->drawFX |= FX_FLIP;
             self->direction = FLIP_X;
-            RSDK.DrawSprite(&self->animator2, NULL, false);
+            RSDK.DrawSprite(&self->armorAnimator, NULL, false);
 
-            self->direction         = FLIP_NONE;
-            self->drawFX            = FX_NONE;
-            self->animator2.frameID = 3;
+            self->direction             = FLIP_NONE;
+            self->drawFX                = FX_NONE;
+            self->armorAnimator.frameID = 3;
+
+            // Piston (L1) Armor
             drawPos.x -= 0x300000;
-            drawPos.y -= Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[0];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Piston (L2) Armor
             drawPos.x += 0xD0000;
-            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[1];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Piston (R1) Armor
             drawPos.x += 0x530000;
-            drawPos.y = self->position.y - Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[0];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
 
+            // Piston (R2) Armor
             drawPos.x -= 0xD0000;
-            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->pistonPos[1];
+            RSDK.DrawSprite(&self->armorAnimator, &drawPos, false);
             break;
     }
+
     RSDK.CopyPalette(1, 32, 0, 32, 10);
-    RSDK.SetPaletteEntry(0, 32u, 0x282028);
+    RSDK.SetPaletteEntry(0, 32, 0x282028);
     RSDK.SetPaletteEntry(0, 128, 0x000000);
 }
 
-void Drillerdroid_StateDraw_Unknown2(void)
+void Drillerdroid_Draw_Simple(void)
 {
     RSDK_THIS(Drillerdroid);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
-void Drillerdroid_State1_Unknown(void)
+void Drillerdroid_State_Target(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->armorAnimator);
+    RSDK.ProcessAnimation(&self->targetLockAnimator);
 
     if (self->target) {
         self->position.x = self->target->position.x;
         self->position.y = self->target->position.y;
     }
-    self->alpha += 32;
-    self->field_B0 -= 0x20000;
-    if (self->field_B0 <= 0xC0000) {
-        self->alpha    = 0;
-        self->field_B0 = 0x2C0000;
+
+    self->alpha += 0x20;
+    self->targetEdgeOffset.x -= 0x20000;
+    if (self->targetEdgeOffset.x <= 0xC0000) {
+        self->alpha              = 0;
+        self->targetEdgeOffset.x = 0x2C0000;
     }
 
-    self->field_B4 = self->field_B0;
+    self->targetEdgeOffset.y = self->targetEdgeOffset.x;
     if (++self->timer == 60)
-        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 4, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 4, &self->targetLockAnimator, true, 0);
 
     if (self->timer == 96) {
-        self->target                 = NULL;
+        self->target                   = NULL;
         Drillerdroid->boss->position.x = self->position.x;
 
         if (self->position.x < (Zone->cameraBoundsL[0] + 64) << 16 || self->position.x > (Zone->cameraBoundsR[0] - 64) << 16)
@@ -1234,95 +1284,87 @@ void Drillerdroid_State1_Unknown(void)
         else if (self->position.x > (Zone->cameraBoundsR[0] - 64) << 16)
             Drillerdroid->boss->position.x = (Zone->cameraBoundsR[0] - 64) << 16;
     }
+
     if (self->timer == 128)
         destroyEntity(self);
 }
 
-void Drillerdroid_StateDraw1_Unknown(void)
+void Drillerdroid_Draw_Target(void)
 {
     RSDK_THIS(Drillerdroid);
     Vector2 drawPos;
 
-    int x = ((self->position.x + 0x400000) & 0xFF800000) - 0x400000;
+    int32 x = ((self->position.x + 0x400000) & 0xFF800000) - 0x400000;
     if (!(Zone->timer & 8)) {
         RSDK.DrawLine(x + 0x10000, self->position.y, x + 0x7F0000, self->position.y, 0xE0E0E0, 192, INK_ADD, false);
         RSDK.DrawLine(x, self->position.y - 0x80000, x, self->position.y + 0x80000, 0xE0E0E0, 160, INK_ADD, false);
         RSDK.DrawLine(x + 0x800000, self->position.y - 0x80000, x + 0x800000, self->position.y + 0x80000, 0xE0E0E0, 160, INK_ADD, false);
     }
 
-    self->animator1.frameID = 0;
-    self->inkEffect         = INK_ALPHA;
-    self->direction         = FLIP_NONE;
-    drawPos.x                 = self->position.x;
-    drawPos.y                 = self->position.y;
-    drawPos.x                 = self->position.x - self->field_B0;
-    drawPos.y -= self->field_B4;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    // Top-Left Edge
+    self->mainAnimator.frameID = 0;
+    self->inkEffect            = INK_ALPHA;
+    self->direction            = FLIP_NONE;
+    drawPos.x                  = self->position.x - self->targetEdgeOffset.x;
+    drawPos.y                  = self->position.y - self->targetEdgeOffset.y;
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
+    // Top-Right Edge
     self->direction = FLIP_X;
-    drawPos.x         = self->position.x;
-    drawPos.y         = self->position.y;
-    drawPos.x         = self->field_B0 + self->position.x;
-    drawPos.y -= self->field_B4;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    drawPos.x       = self->position.x + self->targetEdgeOffset.x;
+    drawPos.y       = self->position.y - self->targetEdgeOffset.y;
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 1;
-    self->direction         = FLIP_NONE;
-    drawPos.x                 = self->position.x;
-    drawPos.y                 = self->position.y;
-    drawPos.x                 = self->position.x - self->field_B0;
-    drawPos.y += self->field_B4;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    // Bottom-Left Edge
+    self->mainAnimator.frameID = 1;
+    self->direction            = FLIP_NONE;
+    drawPos.x                  = self->position.x - self->targetEdgeOffset.x;
+    drawPos.y                  = self->position.y + self->targetEdgeOffset.y;
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
+    // Bottom-Right Edge
     self->direction = FLIP_X;
-    drawPos.x         = self->position.x;
-    drawPos.y         = self->position.y;
-    drawPos.x         = self->field_B0 + self->position.x;
-    drawPos.y += self->field_B4;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    drawPos.x       = self->position.x + self->targetEdgeOffset.x;
+    drawPos.y       = self->position.y + self->targetEdgeOffset.y;
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
+    // Target Reticle
     self->inkEffect = INK_NONE;
     self->direction = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->armorAnimator, NULL, false);
+    RSDK.DrawSprite(&self->targetLockAnimator, NULL, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void Drillerdroid_EditorDraw(void)
 {
     RSDK_THIS(Drillerdroid);
-    Drillerdroid->field_2C[0] = 0;
-    Drillerdroid->field_2C[1] = 0;
-    Drillerdroid->field_34[0] = 0x100000;
-    Drillerdroid->field_34[1] = 0x100000;
-    Drillerdroid->field_3C[0] = 4;
-    Drillerdroid->field_3C[1] = 0;
-    Drillerdroid->field_44[0] = 4;
-    Drillerdroid->field_44[1] = 0;
-    Drillerdroid->field_4C[0] = 0;
-    Drillerdroid->field_4C[1] = 0;
-    Drillerdroid->field_54[0] = 0;
-    Drillerdroid->field_54[1] = 0;
-    Drillerdroid->field_5C[0] = 1;
-    Drillerdroid->field_5C[1] = 1;
-    Drillerdroid->field_5C[2] = 1;
-    Drillerdroid->field_5C[3] = 1;
-    Drillerdroid->field_5C[4] = 1;
+    Drillerdroid->pistonPos[0] = 0;
+    Drillerdroid->pistonPos[1] = 0;
+    Drillerdroid->drillPos[0]  = 0x100000;
+    Drillerdroid->drillPos[1]  = 0x100000;
 
-    if (self->type) {
-        if (self->type == DRILLERDROID_TARGET || self->type == DRILLERDROID_UNKNOWN) {
-            RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &self->animator2, true, 0);
-            Drillerdroid_StateDraw1_Unknown();
-        }
-    }
-    else {
-        self->drawFX        = FX_NONE;
-        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &self->animator2, true, 0);
-        Drillerdroid_StateDraw_Unknown1();
+    self->drawFX = FX_NONE;
+    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &self->mainAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &self->armorAnimator, true, 0);
+    Drillerdroid_Draw_Boss();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
 
         DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -328, -SCREEN_YSIZE, 324, 96);
+
+        if (CollapsingPlatform) {
+            int32 slot = SceneInfo->entitySlot + 1;
+            for (int32 s = 0; s < 5; ++s) {
+                EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot++, CollapsingPlatform);
+
+                if (platform && platform->objectID == CollapsingPlatform->objectID)
+                    DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, platform->position.x, platform->position.y);
+            }
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

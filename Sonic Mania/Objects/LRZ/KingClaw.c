@@ -26,25 +26,19 @@ void KingClaw_StaticUpdate(void)
 void KingClaw_Draw(void)
 {
     RSDK_THIS(KingClaw);
-    if (self->flag) {
-        RSDK.DrawSprite(&self->animator3, &self->drawPos, false);
+    if (self->forceHighDrawOrder) {
+        RSDK.DrawSprite(&self->clawBackAnimator, &self->drawPos, false);
 
-        for (int i = 0; i < KingClaw_JointCount; ++i) {
-            RSDK.DrawSprite(&self->animator1, &self->jointPos[i], false);
-        }
+        for (int32 i = 0; i < KingClaw_ChainCount; ++i) RSDK.DrawSprite(&self->chainAnimator, &self->chainPos[i], false);
     }
     else {
-        if (SceneInfo->currentDrawGroup != Zone->drawOrderLow) {
-            RSDK.DrawSprite(&self->animator3, &self->drawPos, false);
-        }
-        else {
-            for (int i = 0; i < KingClaw_JointCount; ++i) {
-                RSDK.DrawSprite(&self->animator1, &self->jointPos[i], false);
-            }
-        }
+        if (SceneInfo->currentDrawGroup != Zone->drawOrderLow) 
+            RSDK.DrawSprite(&self->clawBackAnimator, &self->drawPos, false);
+        else 
+            for (int32 i = 0; i < KingClaw_ChainCount; ++i) RSDK.DrawSprite(&self->chainAnimator, &self->chainPos[i], false);
     }
-    RSDK.DrawSprite(&self->animator2, &self->drawPos, false);
-    RSDK.DrawSprite(&self->animator4, &self->drawPos, false);
+    RSDK.DrawSprite(&self->hingeAnimator, &self->drawPos, false);
+    RSDK.DrawSprite(&self->clawFrontAnimator, &self->drawPos, false);
 }
 
 void KingClaw_Create(void *data)
@@ -60,17 +54,19 @@ void KingClaw_Create(void *data)
         self->active        = ACTIVE_XBOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x1000000;
-        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 3, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 2, &self->animator4, true, 0);
+        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 0, &self->chainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 1, &self->hingeAnimator, true, 0);
+        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 3, &self->clawBackAnimator, true, 0);
+        RSDK.SetSpriteAnimation(KingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 0);
     }
 }
 
 void KingClaw_StageLoad(void)
 {
     KingClaw->aniFrames     = RSDK.LoadSpriteAnimation("LRZ3/Claw.bin", SCOPE_STAGE);
+
     KingClaw->active        = ACTIVE_NORMAL;
+
     KingClaw->sfxClack      = RSDK.GetSfx("Stage/Clack.wav");
     KingClaw->sfxWalkerLegs = RSDK.GetSfx("LRZ/WalkerLegs.wav");
 }
@@ -82,9 +78,9 @@ void KingClaw_HandleJointPositions(void)
     self->drawPos.x = self->position.x;
     self->drawPos.y = self->position.y;
 
-    for (int i = 0; i < KingClaw_JointCount; ++i) {
-        self->jointPos[i].x = self->drawPos.x;
-        self->jointPos[i].y = self->drawPos.y;
+    for (int32 i = 0; i < KingClaw_ChainCount; ++i) {
+        self->chainPos[i].x = self->drawPos.x;
+        self->chainPos[i].y = self->drawPos.y;
         self->drawPos.x += RSDK.Sin256(self->angle) << 12;
         self->drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
@@ -93,7 +89,7 @@ void KingClaw_HandleJointPositions(void)
     self->drawPos.y += 0xC00 * RSDK.Cos256(self->angle);
 }
 
-void KingClaw_Unknown2(void)
+void KingClaw_State_EnterClaw(void)
 {
     RSDK_THIS(KingClaw);
 
@@ -103,20 +99,23 @@ void KingClaw_Unknown2(void)
         self->position.y += 0x8000;
 }
 
-void KingClaw_Unknown3(void)
+void KingClaw_State_Grab(void)
 {
     RSDK_THIS(KingClaw);
+
     if (!self->timer)
         RSDK.PlaySfx(KingClaw->sfxClack, false, 0);
+
     ++self->timer;
     if (!(self->timer & 3)) {
-        if (self->animator4.frameID < 3) {
-            ++self->animator3.frameID;
-            ++self->animator4.frameID;
-            if (self->animator4.frameID == 3)
+        if (self->clawFrontAnimator.frameID < 3) {
+            ++self->clawBackAnimator.frameID;
+            ++self->clawFrontAnimator.frameID;
+            if (self->clawFrontAnimator.frameID == 3)
                 RSDK.PlaySfx(KingClaw->sfxWalkerLegs, false, 0);
         }
     }
+
     if (self->timer == 60) {
         foreach_active(HPZEmerald, emerald)
         {
@@ -125,11 +124,11 @@ void KingClaw_Unknown3(void)
         }
 
         self->timer = 0;
-        self->state = KingClaw_Unknown4;
+        self->state = KingClaw_State_LiftMasterEmerald;
     }
 }
 
-void KingClaw_Unknown4(void)
+void KingClaw_State_LiftMasterEmerald(void)
 {
     RSDK_THIS(KingClaw);
     self->position.y -= 0x2000;
@@ -139,17 +138,17 @@ void KingClaw_Unknown4(void)
 
     if (++self->timer == 480) {
         self->timer = 0;
-        self->state = 0;
+        self->state = StateMachine_None;
     }
 }
 
-void KingClaw_Unknown5(void)
+void KingClaw_State_Swinging(void)
 {
     RSDK_THIS(KingClaw);
 
-    if (self->animator4.frameID > 0) {
-        --self->animator3.frameID;
-        --self->animator4.frameID;
+    if (self->clawFrontAnimator.frameID > 0) {
+        --self->clawBackAnimator.frameID;
+        --self->clawFrontAnimator.frameID;
     }
 
     if (self->velocity.y > -0x8000)
@@ -165,7 +164,7 @@ void KingClaw_Unknown5(void)
     }
 }
 
-void KingClaw_Unknown6(void)
+void KingClaw_State_LowerClaw(void)
 {
     RSDK_THIS(KingClaw);
 
@@ -181,7 +180,7 @@ void KingClaw_Unknown6(void)
     }
 }
 
-void KingClaw_Unknown7(void)
+void KingClaw_State_RaiseClaw(void)
 {
     RSDK_THIS(KingClaw);
     if (self->velocity.y > -0x80000)
@@ -195,11 +194,11 @@ void KingClaw_EditorDraw(void)
     RSDK_THIS(KingClaw);
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x1000000;
-    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 1, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 3, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 2, &self->animator4, true, 0);
-    self->flag = true;
+    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 0, &self->chainAnimator, true, 0);
+    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 1, &self->hingeAnimator, true, 0);
+    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 3, &self->clawBackAnimator, true, 0);
+    RSDK.SetSpriteAnimation(KingClaw->aniFrames, 2, &self->clawFrontAnimator, true, 0);
+    self->forceHighDrawOrder = true;
 
     KingClaw_HandleJointPositions();
     KingClaw_Draw();

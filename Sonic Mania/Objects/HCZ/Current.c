@@ -145,7 +145,7 @@ void Current_Create(void *data)
             self->hitbox.top    = -(self->size.y >> 17);
             self->hitbox.bottom = self->size.y >> 17;
 
-            Current_GetTaggedButton();
+            Current_SetupTagLink();
             switch (self->type) {
                 case CURRENT_C_LEFT: self->state = Current_State_WaterLeft; break;
                 case CURRENT_C_RIGHT: self->state = Current_State_WaterRight; break;
@@ -173,51 +173,50 @@ void Current_StageLoad(void)
     Current->sfxRush = RSDK.GetSfx("Stage/Rush.wav");
 }
 
-void Current_GetTaggedButton(void)
+void Current_SetupTagLink(void)
 {
     RSDK_THIS(Current);
 
     self->taggedButton         = NULL;
-    EntityButton *taggedEntity = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
-    bool32 tagged              = false;
+    EntityButton *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
 
     if (self->buttonTag > 0) {
+        bool32 matchedTag = false;
         if (Button) {
             foreach_all(Button, button)
             {
                 if (button->tag == self->buttonTag) {
-                    taggedEntity = button;
-                    tagged       = true;
+                    taggedButton = button;
+                    matchedTag   = true;
                     foreach_break;
                 }
             }
         }
 
-        if (PullChain && !tagged) {
+        if (PullChain && !matchedTag) {
             foreach_all(PullChain, chain)
             {
                 if (chain->tag == self->buttonTag) {
-                    taggedEntity = (EntityButton *)chain;
-                    tagged       = true;
+                    taggedButton = (EntityButton *)chain;
+                    matchedTag   = true;
                     foreach_break;
                 }
             }
         }
     }
 
-    if (taggedEntity) {
-        if ((Button && taggedEntity->objectID == Button->objectID) || (PullChain && taggedEntity->objectID == PullChain->objectID)) {
-            if (self) {
-                int32 distX = abs(self->position.x - taggedEntity->position.x);
-                int32 distY = abs(self->position.y - taggedEntity->position.y);
+    if (taggedButton) {
+        if ((Button && taggedButton->objectID == Button->objectID) || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+            int32 distX = abs(self->position.x - taggedButton->position.x);
+            int32 distY = abs(self->position.y - taggedButton->position.y);
 
-                if (self->updateRange.x < 0x800000 + distX)
-                    self->updateRange.x = 0x800000 + distX;
+            if (self->updateRange.x < 0x800000 + distX)
+                self->updateRange.x = 0x800000 + distX;
 
-                if (self->updateRange.y < 0x800000 + distY)
-                    self->updateRange.y = 0x800000 + distY;
-            }
-            self->taggedButton = taggedEntity;
+            if (self->updateRange.y < 0x800000 + distY)
+                self->updateRange.y = 0x800000 + distY;
+
+            self->taggedButton = taggedButton;
         }
     }
 }
@@ -225,7 +224,7 @@ void Current_GetTaggedButton(void)
 Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
 {
     RSDK_THIS(Current);
-    Vector2 result;
+    Vector2 bubblePos;
 
     int32 x = 0;
     if (right) {
@@ -252,22 +251,22 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
     if (!max)
         max = 1;
 
-    result.x = x;
+    bubblePos.x = x;
     if (max <= 0)
-        result.y = maxY;
+        bubblePos.y = maxY;
     else
 #if RETRO_USE_PLUS
-        result.y = maxY + (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20);
+        bubblePos.y = maxY + (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20);
 #else
-        result.y = maxY + (RSDK.Rand(0, max) << 20);
+        bubblePos.y = maxY + (RSDK.Rand(0, max) << 20);
 #endif
-    return result;
+    return bubblePos;
 }
 
 Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
 {
     RSDK_THIS(Current);
-    Vector2 result;
+    Vector2 bubblePos;
 
     int32 y = 0;
     if (down) {
@@ -295,14 +294,14 @@ Vector2 Current_GetBubbleSpawnPosVertical(uint8 down)
         max = 1;
 
     if (max <= 0) {
-        result.x = maxX;
-        result.y = y;
+        bubblePos.x = maxX;
+        bubblePos.y = y;
     }
     else {
-        result.x = maxX + (RSDK.Rand(0, max) << 20);
-        result.y = y;
+        bubblePos.x = maxX + (RSDK.Rand(0, max) << 20);
+        bubblePos.y = y;
     }
-    return result;
+    return bubblePos;
 }
 
 void Current_State_WaterLeft(void)
@@ -778,9 +777,18 @@ void Current_EditorDraw(void)
 {
     RSDK_THIS(Current);
 
+    self->updateRange.x = self->size.x >> 1;
+    self->updateRange.y = self->size.y >> 1;
+
+    RSDK.SetSpriteAnimation(Current->aniFrames, 1, &Current->animator, true, 0);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&Current->animator, NULL, false);
+
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
         DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
 
+        RSDK.SetSpriteAnimation(Current->aniFrames, 0, &Current->animator, true, 0);
         Vector2 drawPos;
         drawPos.x = self->position.x;
         drawPos.y = self->position.y;
@@ -801,13 +809,21 @@ void Current_EditorDraw(void)
         drawPos.x -= self->size.x;
         self->direction = FLIP_Y;
         RSDK.DrawSprite(&Current->animator, &drawPos, false);
+        RSDK_DRAWING_OVERLAY(false);
+
+        Current_SetupTagLink();
+
+        RSDK_DRAWING_OVERLAY(true);
+        if (self->taggedButton)
+            DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y);
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 
 void Current_EditorLoad(void)
 {
-    Current->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(Current->aniFrames, 0, &Current->animator, true, 0);
+    Current->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Current.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(Current->aniFrames, 1, &Current->animator, true, 0);
 
     RSDK_ACTIVE_VAR(Current, type);
     RSDK_ENUM_VAR("Current - Left", CURRENT_C_LEFT);

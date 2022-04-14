@@ -40,68 +40,73 @@ void HeavyRider_Create(void *data)
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = false;
                     self->drawOrder = Zone->drawOrderHigh;
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->animator3, true, 0);
-                    RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
-                    self->updateRange.x = 0x800000;
-                    self->updateRange.y = 0x800000;
-                    HeavyRider->field_10  = 0x80;
-                    HeavyRider->field_4   = 1;
-                    HeavyRider->field_1B  = 16;
-                    HeavyRider->field_20  = 0;
-                    HeavyRider->field_24  = self->position.y;
-                    HeavyRider->field_3   = 0;
-                    HeavyRider->field_18  = 0;
-                    HeavyRider->field_14  = 0;
-                    self->state         = HeavyRider_State_SetupArena;
-                    self->stateDraw     = HeavyRider_StateDraw_Unknown;
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->thrustAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->spikeBallAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
+                    self->updateRange.x          = 0x800000;
+                    self->updateRange.y          = 0x800000;
+                    HeavyRider->spikeBallAngle   = 0x80;
+                    HeavyRider->spikeBallState   = HEAVYRIDER_SPIKEBALL_SWINGING;
+                    HeavyRider->spawnDelay       = 16;
+                    HeavyRider->spawnFireballs   = false;
+                    HeavyRider->startY           = self->position.y;
+                    HeavyRider->curAttack        = HEAVYRIDER_ATK_RIDING_SCREENBOUNDS;
+                    HeavyRider->wheelExtendState = HEAVYRIDER_WHEEL_NONE;
+                    HeavyRider->wheelLength      = 0;
+                    self->state                  = HeavyRider_State_SetupArena;
+                    self->stateDraw              = HeavyRider_Draw_Boss;
                     break;
+
                 case HEAVYRIDER_PLANESWITCH:
-                    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->mainAnimator, true, 0);
                     self->active        = ACTIVE_BOUNDS;
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = (self->size + 0x400) << 11;
                     self->visible       = false;
                     self->drawOrder     = Zone->drawOrderLow;
                     self->state         = HeavyRider_State_PlaneSwitch;
-                    self->stateDraw     = HeavyRider_StateDraw1_Unknown;
+                    self->stateDraw     = HeavyRider_Draw_PlaneSwitch;
                     break;
+
                 case HEAVYRIDER_FORCECHARGE_LEFT:
                 case HEAVYRIDER_FORCECHARGE_RIGHT:
-                case HEAVYRIDER_4:
-                case HEAVYRIDER_5:
-                    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator1, true, ((self->type - 2) >> 1) + 4);
+                case HEAVYRIDER_UNUSED1:
+                case HEAVYRIDER_UNUSED2:
+                    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->mainAnimator, true, ((self->type - 2) >> 1) + 4);
                     self->active        = ACTIVE_BOUNDS;
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->visible       = false;
                     self->drawOrder     = Zone->drawOrderLow;
                     self->state         = HeavyRider_State_ChargeTrigger;
-                    self->stateDraw     = HeavyRider_StateDraw_Simple;
+                    self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
+
                 case HEAVYRIDER_PUFF:
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 10, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 10, &self->mainAnimator, true, 0);
                     self->active        = ACTIVE_NORMAL;
                     self->updateRange.x = 0x100000;
                     self->updateRange.y = 0x100000;
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderHigh - 1;
                     self->state         = HeavyRider_State_Puff;
-                    self->stateDraw     = HeavyRider_StateDraw_Simple;
+                    self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
+
                 case HEAVYRIDER_FIREBALL:
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 9, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 9, &self->mainAnimator, true, 0);
                     self->active        = ACTIVE_NORMAL;
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderHigh;
                     self->state         = HeavyRider_State_Fireball;
-                    self->stateDraw     = HeavyRider_StateDraw_Simple;
+                    self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
+
                 case HEAVYRIDER_JIMMY:
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 4, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 4, &self->mainAnimator, true, 0);
                     self->drawOrder     = Zone->drawOrderHigh;
                     self->active        = ACTIVE_NORMAL;
                     self->updateRange.x = 0x1800000;
@@ -109,8 +114,9 @@ void HeavyRider_Create(void *data)
                     self->visible       = true;
                     self->drawOrder     = Zone->drawOrderHigh;
                     self->state         = HeavyRider_StateJimmy_Idle;
-                    self->stateDraw     = HeavyRider_StateDraw_Simple;
+                    self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
+
                 default: break;
             }
         }
@@ -124,15 +130,15 @@ void HeavyRider_StageLoad(void)
 {
     HeavyRider->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyRider.bin", SCOPE_STAGE);
 
-    HeavyRider->hitbox1.left   = -16;
-    HeavyRider->hitbox1.top    = -25;
-    HeavyRider->hitbox1.right  = 16;
-    HeavyRider->hitbox1.bottom = 14;
+    HeavyRider->hitboxRider.left   = -16;
+    HeavyRider->hitboxRider.top    = -25;
+    HeavyRider->hitboxRider.right  = 16;
+    HeavyRider->hitboxRider.bottom = 14;
 
-    HeavyRider->hitbox2.left   = -20;
-    HeavyRider->hitbox2.top    = -20;
-    HeavyRider->hitbox2.right  = 20;
-    HeavyRider->hitbox2.bottom = 20;
+    HeavyRider->hitboxSpikeBall.left   = -20;
+    HeavyRider->hitboxSpikeBall.top    = -20;
+    HeavyRider->hitboxSpikeBall.right  = 20;
+    HeavyRider->hitboxSpikeBall.bottom = 20;
 
     HeavyRider->outerBox.left   = -5;
     HeavyRider->outerBox.top    = 0;
@@ -144,39 +150,40 @@ void HeavyRider_StageLoad(void)
     HeavyRider->innerBox.right  = 4;
     HeavyRider->innerBox.bottom = 48;
 
-    HeavyRider->hitbox5.left   = -4;
-    HeavyRider->hitbox5.top    = 46;
-    HeavyRider->hitbox5.right  = 4;
-    HeavyRider->hitbox5.bottom = 48;
+    HeavyRider->hitboxRiderTrigger.left   = -4;
+    HeavyRider->hitboxRiderTrigger.top    = 46;
+    HeavyRider->hitboxRiderTrigger.right  = 4;
+    HeavyRider->hitboxRiderTrigger.bottom = 48;
 
-    HeavyRider->hitbox6.left   = -8;
-    HeavyRider->hitbox6.top    = -8;
-    HeavyRider->hitbox6.right  = 8;
-    HeavyRider->hitbox6.bottom = 8;
+    HeavyRider->hitboxTrigger.left   = -8;
+    HeavyRider->hitboxTrigger.top    = -8;
+    HeavyRider->hitboxTrigger.right  = 8;
+    HeavyRider->hitboxTrigger.bottom = 8;
 
-    HeavyRider->hitbox7.left   = -10;
-    HeavyRider->hitbox7.top    = 14;
-    HeavyRider->hitbox7.right  = 22;
-    HeavyRider->hitbox7.bottom = 46;
+    HeavyRider->hitboxJimmy.left   = -10;
+    HeavyRider->hitboxJimmy.top    = 14;
+    HeavyRider->hitboxJimmy.right  = 22;
+    HeavyRider->hitboxJimmy.bottom = 46;
 
-    HeavyRider->hitbox8.left   = -2;
-    HeavyRider->hitbox8.top    = 38;
-    HeavyRider->hitbox8.right  = 14;
-    HeavyRider->hitbox8.bottom = 46;
+    HeavyRider->hitboxFireball.left   = -2;
+    HeavyRider->hitboxFireball.top    = 38;
+    HeavyRider->hitboxFireball.right  = 14;
+    HeavyRider->hitboxFireball.bottom = 46;
 
     HeavyRider->health             = 8;
     HeavyRider->invincibilityTimer = 0;
-    HeavyRider->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
-    HeavyRider->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
-    HeavyRider->sfxCharge          = RSDK.GetSfx("LRZ/RiderCharge.wav");
-    HeavyRider->sfxLaunch          = RSDK.GetSfx("LRZ/RiderLaunch.wav");
-    HeavyRider->sfxSkid            = RSDK.GetSfx("LRZ/RiderSkid.wav");
-    HeavyRider->sfxJump            = RSDK.GetSfx("LRZ/RiderJump.wav");
-    HeavyRider->sfxCheer           = RSDK.GetSfx("LRZ/RiderCheer.wav");
-    HeavyRider->sfxBumper          = RSDK.GetSfx("Stage/Bumper3.wav");
+
+    HeavyRider->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyRider->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyRider->sfxCharge    = RSDK.GetSfx("LRZ/RiderCharge.wav");
+    HeavyRider->sfxLaunch    = RSDK.GetSfx("LRZ/RiderLaunch.wav");
+    HeavyRider->sfxSkid      = RSDK.GetSfx("LRZ/RiderSkid.wav");
+    HeavyRider->sfxJump      = RSDK.GetSfx("LRZ/RiderJump.wav");
+    HeavyRider->sfxCheer     = RSDK.GetSfx("LRZ/RiderCheer.wav");
+    HeavyRider->sfxBumper    = RSDK.GetSfx("Stage/Bumper3.wav");
 }
 
-void HeavyRider_SpawnDebris(int frame, uint8 drawOrder, int x, int y)
+void HeavyRider_SpawnDebris(int32 frame, uint8 drawOrder, int32 x, int32 y)
 {
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, x, y);
     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &debris->animator, true, frame);
@@ -196,69 +203,23 @@ void HeavyRider_CheckObjectCollisions(void)
         HeavyRider->invincibilityTimer--;
     }
     else {
-
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
 
-            if (HeavyRider->playerTimers[playerID]) {
+            if (HeavyRider->playerTimers[playerID])
                 HeavyRider->playerTimers[playerID]--;
-            }
 
-            if (Player_CheckBadnikTouch(player, self, &HeavyRider->hitbox1)) {
+            if (Player_CheckBadnikTouch(player, self, &HeavyRider->hitboxRider)) {
                 if (Player_CheckBossHit(player, self)) {
-                    if (HeavyRider->health)
-                        HeavyRider->health--;
-
-                    if (!HeavyRider->health) {
-                        RSDK.PlaySfx(HeavyRider->sfxExplosion, false, 255);
-                        self->timer = 120;
-                        if (HeavyRider->field_4 == 1) {
-                            int spawnX = 0;
-                            if (self->direction) {
-                                if (self->animator1.animationID == 2 && self->animator1.frameID)
-                                    spawnX = self->position.x + 0x160000;
-                                else
-                                    spawnX = self->position.x - 0xE0000;
-                            }
-                            else if (self->animator1.animationID == 2 && self->animator1.frameID)
-                                spawnX = self->position.x - 0x160000;
-                            else
-                                spawnX = self->position.x + 0xE0000;
-
-                            int angle = 0x400;
-                            int cos   = RSDK.Cos256(HeavyRider->field_10);
-                            for (int i = 0; i < 8; ++i) {
-                                HeavyRider_SpawnDebris(1, Zone->drawOrderHigh, spawnX + angle * cos, self->position.y - 0x210000);
-                                angle += 0x800;
-                            }
-
-                            HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, spawnX + angle * cos, self->position.y - 0x210000);
-                            HeavyRider->field_4 = 0;
-
-                            RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
-                            RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
-                            HeavyRider->field_20                                                    = 0;
-                            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
-                        }
-                        else if (HeavyRider->field_4 == 7) {
-                            HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, HeavyRider->debrisPos.x, HeavyRider->debrisPos.y);
-                            HeavyRider->field_4 = 0;
-                        }
-                        SceneInfo->timeEnabled = false;
-                        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
-                        self->state = HeavyRider_State_Destroyed;
-                    }
-                    RSDK.PlaySfx(HeavyRider->sfxHit, false, 255);
-                    self->timer -= 60;
-                    HeavyRider->invincibilityTimer = 30;
+                    HeavyRider_Hit();
                     foreach_break;
                 }
             }
-            else if (Player_CheckBadnikTouch(player, self, &HeavyRider->hitbox7)) {
+            else if (Player_CheckBadnikTouch(player, self, &HeavyRider->hitboxJimmy)) {
                 if (!HeavyRider->playerTimers[playerID] && Player_CheckBossHit(player, self)) {
                     RSDK.PlaySfx(HeavyRider->sfxBumper, false, 255);
-                    int angle = RSDK.ATan2(player->position.x - self->position.x - 0x60000, player->position.y - self->position.y - 0x1E0000);
+                    int32 angle = RSDK.ATan2(player->position.x - self->position.x - 0x60000, player->position.y - self->position.y - 0x1E0000);
                     player->velocity.x = 0x380 * RSDK.Cos256(angle);
 
                     if (player->position.x >= self->position.x) {
@@ -288,13 +249,13 @@ void HeavyRider_CheckObjectCollisions(void)
                     HeavyRider->playerTimers[playerID] = 15;
                 }
             }
-            else if ((uint32)(HeavyRider->field_10 & 0x7F) + 32 < 0x40) {
-                int storeX         = self->position.x;
-                int storeY         = self->position.y;
-                self->position.x = HeavyRider->debrisPos.x;
-                self->position.y = HeavyRider->debrisPos.y;
+            else if ((uint32)(HeavyRider->spikeBallAngle & 0x7F) + 32 < 0x40) {
+                int32 storeX     = self->position.x;
+                int32 storeY     = self->position.y;
+                self->position.x = HeavyRider->spikeBallPos.x;
+                self->position.y = HeavyRider->spikeBallPos.y;
 
-                if (Player_CheckCollisionTouch(player, self, &HeavyRider->hitbox2)) {
+                if (Player_CheckCollisionTouch(player, self, &HeavyRider->hitboxSpikeBall)) {
 #if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(0x800, player, false, &player->uncurlTimer))
 #endif
@@ -307,8 +268,7 @@ void HeavyRider_CheckObjectCollisions(void)
         }
     }
 
-    if (HeavyRider->field_3 == 1 || HeavyRider->field_3 == 2) {
-
+    if (HeavyRider->curAttack == HEAVYRIDER_ATK_RIDING_ARENABOUNDS || HeavyRider->curAttack == HEAVYRIDER_ATK_RIDING_USETRIGGERS) {
         foreach_all(HeavyRider, rider)
         {
             if (rider->type == HEAVYRIDER_PLANESWITCH) {
@@ -319,41 +279,100 @@ void HeavyRider_CheckObjectCollisions(void)
                         self->collisionPlane = (rider->flags >> 1) & 1;
                 }
             }
-            else if (rider->type == HEAVYRIDER_FORCECHARGE_LEFT) {
-                if (HeavyRider->field_3 == 2 && self->onGround
-                    && RSDK.CheckObjectCollisionTouchBox(rider, &HeavyRider->hitbox6, self, &HeavyRider->hitbox5)) {
-                    if (self->direction == FLIP_X) {
-                        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-                        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-                        self->state = HeavyRider_State_Unknown4;
+            else {
+                if (HeavyRider->curAttack == HEAVYRIDER_ATK_RIDING_USETRIGGERS && self->onGround) {
+                    switch (rider->type) {
+                        default: break;
+
+                        case HEAVYRIDER_FORCECHARGE_LEFT:
+                            if (RSDK.CheckObjectCollisionTouchBox(rider, &HeavyRider->hitboxTrigger, self, &HeavyRider->hitboxRiderTrigger)) {
+                                if (self->direction == FLIP_X) {
+                                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+                                    RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+                                    self->state = HeavyRider_State_Turning;
+                                }
+                                else if (self->state != HeavyRider_State_RampJump) {
+                                    self->timer             = 38;
+                                    HeavyRider->chargeTimer = 0;
+                                    self->state             = HeavyRider_State_RampJump;
+                                }
+                            }
+                            break;
+
+                        case HEAVYRIDER_FORCECHARGE_RIGHT:
+                            if (RSDK.CheckObjectCollisionTouchBox(rider, &HeavyRider->hitboxTrigger, self, &HeavyRider->hitboxRiderTrigger)) {
+                                if (self->direction == FLIP_NONE) {
+                                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+                                    RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+                                    self->state = HeavyRider_State_Turning;
+                                }
+                                else if (self->state != HeavyRider_State_RampJump) {
+                                    self->timer             = 38;
+                                    HeavyRider->chargeTimer = 0;
+                                    self->state             = HeavyRider_State_RampJump;
+                                }
+                            }
+                            break;
                     }
-                    else if (self->state != HeavyRider_State_Unknown2) {
-                        self->timer           = 38;
-                        HeavyRider->chargeTimer = 0;
-                        self->state           = HeavyRider_State_Unknown2;
-                    }
-                }
-            }
-            else if (rider->type == HEAVYRIDER_FORCECHARGE_RIGHT && HeavyRider->field_3 == 2 && self->onGround
-                     && RSDK.CheckObjectCollisionTouchBox(rider, &HeavyRider->hitbox6, self, &HeavyRider->hitbox5) == true) {
-                if (self->direction == FLIP_NONE) {
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-                    self->state = HeavyRider_State_Unknown4;
-                }
-                else if (self->state != HeavyRider_State_Unknown2) {
-                    self->timer           = 38;
-                    HeavyRider->chargeTimer = 0;
-                    self->state           = HeavyRider_State_Unknown2;
                 }
             }
         }
 
-        foreach_all(PlaneSwitch, planeSwitch)
-        {
-            PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, false, 0, 0);
-        }
+        foreach_all(PlaneSwitch, planeSwitch) { PlaneSwitch_CheckCollisions(planeSwitch, self, planeSwitch->flags, planeSwitch->size, false, 0, 0); }
     }
+}
+
+void HeavyRider_Hit(void)
+{
+    RSDK_THIS(HeavyRider);
+
+    if (HeavyRider->health)
+        HeavyRider->health--;
+
+    if (!HeavyRider->health) {
+        RSDK.PlaySfx(HeavyRider->sfxExplosion, false, 255);
+        self->timer = 120;
+
+        if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_SWINGING) {
+            int32 spawnX = 0;
+            if (self->direction) {
+                if (self->mainAnimator.animationID == 2 && self->mainAnimator.frameID)
+                    spawnX = self->position.x + 0x160000;
+                else
+                    spawnX = self->position.x - 0xE0000;
+            }
+            else if (self->mainAnimator.animationID == 2 && self->mainAnimator.frameID)
+                spawnX = self->position.x - 0x160000;
+            else
+                spawnX = self->position.x + 0xE0000;
+
+            int32 angle = 0x400;
+            int32 cos   = RSDK.Cos256(HeavyRider->spikeBallAngle);
+            for (int32 i = 0; i < 8; ++i) {
+                HeavyRider_SpawnDebris(1, Zone->drawOrderHigh, spawnX + angle * cos, self->position.y - 0x210000);
+                angle += 0x800;
+            }
+
+            HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, spawnX + angle * cos, self->position.y - 0x210000);
+            HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_NONE;
+
+            RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
+            RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
+            HeavyRider->spawnFireballs                                         = false;
+            RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
+        }
+        else if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_THROWN) {
+            HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, HeavyRider->spikeBallPos.x, HeavyRider->spikeBallPos.y);
+            HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_NONE;
+        }
+        SceneInfo->timeEnabled = false;
+        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
+        self->state = HeavyRider_State_Destroyed;
+    }
+
+    RSDK.PlaySfx(HeavyRider->sfxHit, false, 255);
+    self->timer -= 60;
+    HeavyRider->invincibilityTimer = 30;
 }
 
 void HeavyRider_Explode(void)
@@ -370,92 +389,108 @@ void HeavyRider_Explode(void)
     }
 }
 
-void HeavyRider_Unknown4(void)
+void HeavyRider_HandleTurn_ScreenEdges(void)
 {
     RSDK_THIS(HeavyRider);
 
     if (self->direction == FLIP_X) {
         if (self->position.x < (ScreenInfo->position.x + 48) << 16) {
-            HeavyRider_Unknown6();
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-            self->state = HeavyRider_State_Unknown4;
+            HeavyRider_DecideNextAttack();
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+            self->state = HeavyRider_State_Turning;
         }
     }
     else {
         if (self->position.x > (ScreenInfo->position.x + ScreenInfo->width - 48) << 16) {
-            HeavyRider_Unknown6();
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-            self->state = HeavyRider_State_Unknown4;
+            HeavyRider_DecideNextAttack();
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+            self->state = HeavyRider_State_Turning;
         }
     }
 }
 
-void HeavyRider_Unknown5(void)
+void HeavyRider_HandleTurn_ArenaEdges(void)
 {
     RSDK_THIS(HeavyRider);
 
     if (self->direction == FLIP_X) {
         if (self->position.x < (Zone->cameraBoundsL[0] - 48) << 16) {
-            HeavyRider_Unknown6();
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-            self->state = HeavyRider_State_Unknown4;
+            HeavyRider_DecideNextAttack();
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+            self->state = HeavyRider_State_Turning;
         }
     }
     else {
         if (self->position.x > (Zone->cameraBoundsR[0] + 48) << 16) {
-            HeavyRider_Unknown6();
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-            self->state = HeavyRider_State_Unknown4;
+            HeavyRider_DecideNextAttack();
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+            self->state = HeavyRider_State_Turning;
         }
     }
 }
 
-void HeavyRider_Unknown6(void)
+void HeavyRider_DecideNextAttack(void)
 {
     RSDK_THIS(HeavyRider);
 
-    if (HeavyRider->field_3 != 2) {
-        HeavyRider->field_20 = 0;
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
+    if (HeavyRider->curAttack != HEAVYRIDER_ATK_RIDING_USETRIGGERS) {
+        HeavyRider->spawnFireballs = 0;
+        RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
     }
 
-    int id = RSDK.Rand(0, 10);
-    switch (HeavyRider->field_3) {
-        case 0: {
-            int ids[] = {
-                0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
+    int32 atkID = RSDK.Rand(0, 10);
+    switch (HeavyRider->curAttack) {
+        case HEAVYRIDER_ATK_RIDING_SCREENBOUNDS: {
+            int32 nextAttacks[] = {
+                HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_ARENABOUNDS,
+                HEAVYRIDER_ATK_RIDING_ARENABOUNDS,  HEAVYRIDER_ATK_RIDING_ARENABOUNDS,  HEAVYRIDER_ATK_RIDING_ARENABOUNDS,
+                HEAVYRIDER_ATK_RIDING_USETRIGGERS,  HEAVYRIDER_ATK_RIDING_USETRIGGERS,  HEAVYRIDER_ATK_RIDING_USETRIGGERS,
+                HEAVYRIDER_ATK_RIDING_USETRIGGERS,
             };
-            HeavyRider->field_3 = ids[id];
+            HeavyRider->curAttack = nextAttacks[atkID];
             break;
         }
-        case 1: {
-            int ids[] = {
-                0, 0, 1, 2, 2, 2, 3, 3, 3, 3,
+
+        case HEAVYRIDER_ATK_RIDING_ARENABOUNDS: {
+            int32 nextAttacks[] = {
+                HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_ARENABOUNDS,
+                HEAVYRIDER_ATK_RIDING_USETRIGGERS,  HEAVYRIDER_ATK_RIDING_USETRIGGERS,  HEAVYRIDER_ATK_RIDING_USETRIGGERS,
+                HEAVYRIDER_ATK_PREPCHARGE,          HEAVYRIDER_ATK_PREPCHARGE,          HEAVYRIDER_ATK_PREPCHARGE,
+                HEAVYRIDER_ATK_PREPCHARGE,
             };
-            HeavyRider->field_3 = ids[id];
+            HeavyRider->curAttack = nextAttacks[atkID];
             break;
         }
-        case 2: {
-            int ids[] = {
-                0, 0, 1, 1, 1, 2, 3, 3, 3, 3,
+
+        case HEAVYRIDER_ATK_RIDING_USETRIGGERS: {
+            int32 nextAttacks[] = {
+                HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_ARENABOUNDS,
+                HEAVYRIDER_ATK_RIDING_ARENABOUNDS,  HEAVYRIDER_ATK_RIDING_ARENABOUNDS,  HEAVYRIDER_ATK_RIDING_USETRIGGERS,
+                HEAVYRIDER_ATK_PREPCHARGE,          HEAVYRIDER_ATK_PREPCHARGE,          HEAVYRIDER_ATK_PREPCHARGE,
+                HEAVYRIDER_ATK_PREPCHARGE,
             };
-            HeavyRider->field_3 = ids[id];
-            if (id < 6) {
-                HeavyRider->field_20 = 0;
-                RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
+            HeavyRider->curAttack = nextAttacks[atkID];
+
+            if (HeavyRider->curAttack != HEAVYRIDER_ATK_PREPCHARGE) {
+                HeavyRider->spawnFireballs = false;
+                RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
             }
             break;
         } break;
-        case 3:
-        case 4: {
-            int ids[] = {
-                0, 0, 0, 3, 3, 1, 1, 1, 2, 2,
+
+        case HEAVYRIDER_ATK_PREPCHARGE:
+        case HEAVYRIDER_ATK_CHARGE: {
+            int32 nextAttack[] = {
+                HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_SCREENBOUNDS, HEAVYRIDER_ATK_RIDING_SCREENBOUNDS,
+                HEAVYRIDER_ATK_PREPCHARGE,          HEAVYRIDER_ATK_PREPCHARGE,          HEAVYRIDER_ATK_RIDING_ARENABOUNDS,
+                HEAVYRIDER_ATK_RIDING_ARENABOUNDS,  HEAVYRIDER_ATK_RIDING_ARENABOUNDS,  HEAVYRIDER_ATK_RIDING_USETRIGGERS,
+                HEAVYRIDER_ATK_RIDING_USETRIGGERS,
             };
-            HeavyRider->field_3 = ids[id];
+            HeavyRider->curAttack = nextAttack[atkID];
             break;
         }
         default: break;
@@ -467,28 +502,28 @@ void HeavyRider_State_SetupArena(void)
     RSDK_THIS(HeavyRider);
 
     if (++self->timer >= 2) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->cameraBoundsR[0]      = (self->position.x >> 16) + WIDE_SCR_XSIZE;
-        self->active              = ACTIVE_NORMAL;
+        self->active                = ACTIVE_NORMAL;
 
         foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
-        self->state = HeavyRider_State_StartFight;
+        self->state = HeavyRider_State_AwaitPlayer;
     }
 }
 
-void HeavyRider_State_StartFight(void)
+void HeavyRider_State_AwaitPlayer(void)
 {
     RSDK_THIS(HeavyRider);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]      = ScreenInfo->position.x;
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
         Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XSIZE;
 #if RETRO_USE_PLUS
-        HeavyRider->outro = (Entity *)CREATE_ENTITY(LRZ3Outro, NULL, self->position.x, self->position.y);
+        HeavyRider->outro = CREATE_ENTITY(LRZ3Outro, NULL, self->position.x, self->position.y);
 #endif
         self->state = HeavyRider_State_SetupRider;
     }
@@ -501,8 +536,8 @@ void HeavyRider_State_SetupRider(void)
     Zone->playerBoundActiveL[0] = true;
 
 #if RETRO_USE_PLUS
-    EntityLRZ3Outro *outro = (EntityLRZ3Outro *)HeavyRider->outro;
-    if (outro->state == LRZ3Outro_State_Unknown3) {
+    EntityLRZ3Outro *outro = HeavyRider->outro;
+    if (outro->state == LRZ3Outro_State_EnterLittlePlanet) {
 #else
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > self->position.x) {
@@ -515,19 +550,19 @@ void HeavyRider_State_SetupRider(void)
         self->collisionLayers = (1 << Zone->fgLow) | (1 << Zone->fgHigh);
         Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
         self->visible    = true;
-        self->state      = HeavyRider_State_Unknown1;
+        self->state      = HeavyRider_State_Moving;
         self->velocity.x = 0;
         self->timer      = 0;
     }
 }
 
-void HeavyRider_State_Unknown1(void)
+void HeavyRider_State_Moving(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
+    RSDK.ProcessAnimation(&self->fireballAnimator);
     RSDK.ProcessTileCollisions(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (self->onGround) {
@@ -538,14 +573,14 @@ void HeavyRider_State_Unknown1(void)
             self->velocity.y = (self->velocity.y >> 1) - self->velocity.y;
             if (self->velocity.y > 0) {
                 if (RSDK.Rand(0, 2) == 1) {
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-                    self->state = HeavyRider_State_Unknown4;
+                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &self->mainAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
+                    self->state = HeavyRider_State_Turning;
                 }
                 self->velocity.y = 0;
             }
             else {
-                self->onGround                                                        = false;
+                self->onGround                                                     = false;
                 RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
                 RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
             }
@@ -555,60 +590,53 @@ void HeavyRider_State_Unknown1(void)
         self->velocity.y += 0x3800;
     }
 
-    if (HeavyRider->field_18 == 1) {
-        if (HeavyRider->field_14 < 0x100000)
-            HeavyRider->field_14 += 0x30000;
+    if (HeavyRider->wheelExtendState == HEAVYRIDER_WHEEL_EXTENDING) {
+        if (HeavyRider->wheelLength < 0x100000)
+            HeavyRider->wheelLength += 0x30000;
 
-        if (HeavyRider->field_14 > 0x100000) {
-            HeavyRider->field_14 = 0x100000;
-            HeavyRider->field_18 = 2;
+        if (HeavyRider->wheelLength > 0x100000) {
+            HeavyRider->wheelLength      = 0x100000;
+            HeavyRider->wheelExtendState = HEAVYRIDER_WHEEL_RETRACTING;
         }
     }
-    else if (HeavyRider->field_18 == 2) {
-        if (HeavyRider->field_14 > 0)
-            HeavyRider->field_14 -= 0x30000;
+    else if (HeavyRider->wheelExtendState == HEAVYRIDER_WHEEL_RETRACTING) {
+        if (HeavyRider->wheelLength > 0)
+            HeavyRider->wheelLength -= 0x30000;
 
-        if (HeavyRider->field_14 < 0) {
-            HeavyRider->field_14 = 0;
-            HeavyRider->field_18 = 0;
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator5, true, 0);
+        if (HeavyRider->wheelLength < 0) {
+            HeavyRider->wheelLength      = 0;
+            HeavyRider->wheelExtendState = HEAVYRIDER_WHEEL_NONE;
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->wheelieAnimator, true, 0);
         }
     }
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (self->position.y == HeavyRider->field_24 && HeavyRider->field_3 != 4 && player1->onGround) {
+    if (self->position.y == HeavyRider->startY && HeavyRider->curAttack != HEAVYRIDER_ATK_CHARGE && player1->onGround) {
+        int32 dist = 0x7FFFFFFF;
         if (self->velocity.x <= 0) {
             if (player1->position.x < self->position.x) {
-                int dist = self->position.x - player1->position.x;
+                dist = self->position.x - player1->position.x;
                 if (player1->velocity.x > 0)
                     dist -= 8 * player1->velocity.x;
-                if (dist < 0x480000) {
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 11, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 11, &self->animator5, true, 0);
-                    RSDK.PlaySfx(HeavyRider->sfxJump, false, 255);
-                    self->onGround     = false;
-                    self->velocity.y   = -0x58000;
-                    HeavyRider->field_18 = 1;
-                    HeavyRider->field_14 = 0;
-                }
             }
         }
         else {
             if (player1->position.x > self->position.x) {
-                int dist = player1->position.x - self->position.x;
+                dist = player1->position.x - self->position.x;
                 if (player1->velocity.x < 0)
                     dist += 8 * player1->velocity.x;
-                if (dist < 0x480000) {
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 11, &self->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 11, &self->animator5, true, 0);
-                    RSDK.PlaySfx(HeavyRider->sfxJump, false, 255);
-                    self->onGround     = false;
-                    self->velocity.y   = -0x58000;
-                    HeavyRider->field_18 = 1;
-                    HeavyRider->field_14 = 0;
-                }
             }
+        }
+
+        if (dist < 0x480000) {
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 11, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 11, &self->wheelieAnimator, true, 0);
+            RSDK.PlaySfx(HeavyRider->sfxJump, false, 255);
+            self->onGround               = false;
+            self->velocity.y             = -0x58000;
+            HeavyRider->wheelExtendState = HEAVYRIDER_WHEEL_EXTENDING;
+            HeavyRider->wheelLength      = 0;
         }
     }
 
@@ -621,42 +649,44 @@ void HeavyRider_State_Unknown1(void)
             self->groundVel += 0x4000;
     }
 
-    switch (HeavyRider->field_3) {
-        case 0: HeavyRider_Unknown4(); break;
-        case 1:
-        case 2:
-        case 4: HeavyRider_Unknown5(); break;
-        case 3:
-            HeavyRider_Unknown5();
-            HeavyRider->field_3 = 4;
-            HeavyRider->field_4 = 7;
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 1, &self->animator1, true, 2);
-            self->timer           = 41;
+    switch (HeavyRider->curAttack) {
+        case HEAVYRIDER_ATK_RIDING_SCREENBOUNDS: HeavyRider_HandleTurn_ScreenEdges(); break;
+
+        case HEAVYRIDER_ATK_RIDING_ARENABOUNDS:
+        case HEAVYRIDER_ATK_RIDING_USETRIGGERS:
+        case HEAVYRIDER_ATK_CHARGE: HeavyRider_HandleTurn_ArenaEdges(); break;
+
+        case HEAVYRIDER_ATK_PREPCHARGE:
+            HeavyRider_HandleTurn_ArenaEdges();
+            HeavyRider->curAttack      = HEAVYRIDER_ATK_CHARGE;
+            HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_THROWN;
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 1, &self->mainAnimator, true, 2);
+            self->timer             = 41;
             HeavyRider->chargeTimer = 0;
-            self->state           = HeavyRider_State_Unknown3;
+            self->state             = HeavyRider_State_Charging;
             break;
+
         default: break;
     }
 
-    if (self->animator1.animationID != 2) {
-        if (abs(self->groundVel) > 0x48000 || HeavyRider->field_20 == 1) {
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->animator2, false, 0);
-            if (HeavyRider->field_20 == 1) {
-                if (self->onGround) {
-                    if (!--HeavyRider->field_1B) {
-                        HeavyRider->field_1B = 10;
-                        CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_FIREBALL), self->position.x, self->position.y);
-                    }
+    if (self->mainAnimator.animationID != 2) {
+        if (abs(self->groundVel) > 0x48000 || HeavyRider->spawnFireballs) {
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->thrustAnimator, false, 0);
+            if (HeavyRider->spawnFireballs && self->onGround) {
+                if (!--HeavyRider->spawnDelay) {
+                    HeavyRider->spawnDelay = 10;
+                    CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_FIREBALL), self->position.x, self->position.y);
                 }
             }
         }
         else {
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-            if (HeavyRider->field_1B > 16)
-                HeavyRider->field_1B = 16;
+            RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
 
-            if (!--HeavyRider->field_1B) {
-                HeavyRider->field_1B    = 16;
+            if (HeavyRider->spawnDelay > 16)
+                HeavyRider->spawnDelay = 16;
+
+            if (!--HeavyRider->spawnDelay) {
+                HeavyRider->spawnDelay  = 16;
                 EntityHeavyRider *child = CREATE_ENTITY(HeavyRider, intToVoid(HEAVYRIDER_PUFF), self->position.x, self->position.y + 0x1C0000);
                 if (self->direction == FLIP_X)
                     child->position.x += 0x110000;
@@ -665,27 +695,30 @@ void HeavyRider_State_Unknown1(void)
             }
         }
     }
-    if (HeavyRider->field_4 == 1)
-        HeavyRider->field_10 += 6;
-    if (HeavyRider->field_4 == 7) {
-        HeavyRider->field_10    = 0;
-        HeavyRider->debrisPos.x = self->position.x;
-        HeavyRider->debrisPos.y = self->position.y;
+
+    if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_SWINGING)
+        HeavyRider->spikeBallAngle += 6;
+
+    if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_THROWN) {
+        HeavyRider->spikeBallAngle = 0;
+        HeavyRider->spikeBallPos.x = self->position.x;
+        HeavyRider->spikeBallPos.y = self->position.y;
         if (self->direction)
-            HeavyRider->debrisPos.x -= 0x200000;
+            HeavyRider->spikeBallPos.x -= 0x200000;
         else
-            HeavyRider->debrisPos.x += 0x200000;
-        HeavyRider->debrisPos.y += 0xC0000;
+            HeavyRider->spikeBallPos.x += 0x200000;
+        HeavyRider->spikeBallPos.y += 0xC0000;
     }
     HeavyRider_CheckObjectCollisions();
 }
 
-void HeavyRider_State_Unknown2(void)
+void HeavyRider_State_RampJump(void)
 {
     RSDK_THIS(HeavyRider);
     float chargeSpeeds[] = { 1.0, 1.1926451, 1.4150375, 1.6780719, 2.0 };
 
-    HeavyRider_State_Unknown1();
+    HeavyRider_State_Moving();
+
     if (self->type != HEAVYRIDER_JIMMY && self->timer == 30) {
         RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = 0;
         RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = 0;
@@ -693,7 +726,7 @@ void HeavyRider_State_Unknown2(void)
 
     if (--self->timer > 0) {
         if (!(self->timer & 7)) {
-            int channel = RSDK.PlaySfx(HeavyRider->sfxCharge, false, 255);
+            int32 channel = RSDK.PlaySfx(HeavyRider->sfxCharge, false, 255);
             RSDK.SetChannelAttributes(channel, 1.0, 0.0, chargeSpeeds[HeavyRider->chargeTimer]);
             ++HeavyRider->chargeTimer;
         }
@@ -703,22 +736,22 @@ void HeavyRider_State_Unknown2(void)
         self->timer = 30;
         self->groundVel += (self->groundVel >> 2) + (self->groundVel >> 1);
         if (self->type == HEAVYRIDER_JIMMY)
-            self->state = HeavyRider_State_Unknown1;
+            self->state = HeavyRider_State_Moving;
         else
-            self->state = HeavyRider_State_Charge;
+            self->state = HeavyRider_State_ChargeDash;
     }
 }
 
-void HeavyRider_State_Unknown3(void)
+void HeavyRider_State_Charging(void)
 {
     RSDK_THIS(HeavyRider);
     float chargeSpeeds[] = { 1.0, 1.1926451, 1.4150375, 1.6780719, 2.0 };
 
-    HeavyRider_State_Unknown1();
+    HeavyRider_State_Moving();
 
     if (--self->timer > 0) {
         if (!(self->timer & 7)) {
-            int channel = RSDK.PlaySfx(HeavyRider->sfxCharge, false, 255);
+            int32 channel = RSDK.PlaySfx(HeavyRider->sfxCharge, false, 255);
             RSDK.SetChannelAttributes(channel, 1.0, 0.0, chargeSpeeds[HeavyRider->chargeTimer]);
             ++HeavyRider->chargeTimer;
         }
@@ -727,25 +760,25 @@ void HeavyRider_State_Unknown3(void)
         RSDK.PlaySfx(HeavyRider->sfxLaunch, false, 255);
         self->timer = 30;
         self->groundVel += (self->groundVel >> 2) + (self->groundVel >> 1);
-        self->state = HeavyRider_State_Unknown1;
+        self->state = HeavyRider_State_Moving;
     }
 }
 
-void HeavyRider_State_Charge(void)
+void HeavyRider_State_ChargeDash(void)
 {
     RSDK_THIS(HeavyRider);
 
-    HeavyRider_State_Unknown1();
+    HeavyRider_State_Moving();
 
     if (--self->timer == 16) {
-        HeavyRider->field_1B = 10;
-        HeavyRider->field_20 = 1;
-        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 8, &self->animator4, true, 0);
+        HeavyRider->spawnDelay     = 10;
+        HeavyRider->spawnFireballs = true;
+        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 8, &self->fireballAnimator, true, 0);
     }
     else if (self->timer <= 0) {
-        for (int i = 0; i < 0x60; ++i) {
-            int x                 = RSDK.Rand(-128, 129);
-            int y                 = 2 * RSDK.Rand(4, 16);
+        for (int32 i = 0; i < 0x60; ++i) {
+            int32 x               = RSDK.Rand(-128, 129);
+            int32 y               = 2 * RSDK.Rand(4, 16);
             EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, (x << 16) + self->position.x, (ScreenInfo->position.y - y) << 16);
             debris->updateRange.x = 0x2000000;
             debris->updateRange.y = 0x2000000;
@@ -756,22 +789,23 @@ void HeavyRider_State_Charge(void)
             debris->drawFX        = FX_FLIP;
             debris->direction     = i & 3;
             debris->drawOrder     = Zone->drawOrderHigh;
-            int frame             = RSDK.Rand(0, 4);
-            int anim              = RSDK.Rand(12, 15);
+            int32 frame           = RSDK.Rand(0, 4);
+            int32 anim            = RSDK.Rand(12, 15);
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, anim, &debris->animator, true, frame);
         }
         RSDK.PlaySfx(HeavyRider->sfxCheer, false, 255);
-        self->state = HeavyRider_State_Unknown1;
+        self->state = HeavyRider_State_Moving;
     }
 }
 
-void HeavyRider_State_Unknown4(void)
+void HeavyRider_State_Turning(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->fireballAnimator);
     RSDK.ProcessTileCollisions(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
+
     if (self->onGround) {
         if (self->velocity.y <= 0x20000) {
             if (!(Zone->timer & 3))
@@ -799,13 +833,13 @@ void HeavyRider_State_Unknown4(void)
             self->groundVel += 0x4000;
     }
 
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
-        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
-        self->direction ^= 1u;
-        HeavyRider->field_4 = 1;
-        self->state       = HeavyRider_State_Unknown1;
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->mainAnimator, true, 0);
+        self->direction ^= FLIP_X;
+        HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_SWINGING;
+        self->state                = HeavyRider_State_Moving;
     }
-    HeavyRider->field_10 += 4;
+    HeavyRider->spikeBallAngle += 4;
     HeavyRider_CheckObjectCollisions();
 }
 
@@ -813,8 +847,8 @@ void HeavyRider_State_Destroyed(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
     HeavyRider_Explode();
 
     if (--self->timer <= 0) {
@@ -824,13 +858,13 @@ void HeavyRider_State_Destroyed(void)
         child->tileCollisions   = true;
         child->collisionLayers  = (1 << Zone->fgLow) | (1 << Zone->fgHigh);
         child->collisionPlane   = 0;
-        self->velocity.y      = -0x60000;
+        self->velocity.y        = -0x60000;
         if (self->direction == FLIP_NONE)
             self->velocity.x = -0x20000;
         else
             self->velocity.x = 0x20000;
-        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 3, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 3, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->thrustAnimator, true, 0);
         self->state = HeavyRider_State_Finish;
     }
 }
@@ -841,8 +875,9 @@ void HeavyRider_State_Finish(void)
 
     if (++self->timer < 45)
         HeavyRider_Explode();
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -854,8 +889,8 @@ void HeavyRider_State_Finish(void)
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        self->position.x      = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
-        self->position.y      = (ScreenInfo->position.y - 48) << 16;
+        self->position.x        = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        self->position.y        = (ScreenInfo->position.y - 48) << 16;
         EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), self->position.x, self->position.y);
         prison->isPermanent     = true;
         prison->drawOrder       = Zone->drawOrderHigh;
@@ -863,68 +898,68 @@ void HeavyRider_State_Finish(void)
     }
 }
 
-void HeavyRider_StateDraw_Unknown(void)
+void HeavyRider_Draw_Boss(void)
 {
     RSDK_THIS(HeavyRider);
     Vector2 drawPos;
 
-    if (HeavyRider->field_18) {
+    if (HeavyRider->wheelExtendState != HEAVYRIDER_WHEEL_NONE) {
         drawPos = self->position;
-        drawPos.y += 2 * HeavyRider->field_14;
-        self->animator5.frameID = 3;
-        RSDK.DrawSprite(&self->animator5, &drawPos, false);
+        drawPos.y += 2 * HeavyRider->wheelLength;
+        self->wheelieAnimator.frameID = 3;
+        RSDK.DrawSprite(&self->wheelieAnimator, &drawPos, false);
 
-        self->animator5.frameID = 2;
-        RSDK.DrawSprite(&self->animator5, &drawPos, false);
+        self->wheelieAnimator.frameID = 2;
+        RSDK.DrawSprite(&self->wheelieAnimator, &drawPos, false);
 
-        drawPos.y -= HeavyRider->field_14;
-        self->animator5.frameID = 1;
-        RSDK.DrawSprite(&self->animator5, &drawPos, false);
+        drawPos.y -= HeavyRider->wheelLength;
+        self->wheelieAnimator.frameID = 1;
+        RSDK.DrawSprite(&self->wheelieAnimator, &drawPos, false);
     }
 
-    int drawX = 0;
+    int32 drawX = 0;
     if (self->direction) {
-        if (self->animator1.animationID == 2 && self->animator1.frameID)
+        if (self->mainAnimator.animationID == 2 && self->mainAnimator.frameID)
             drawX = self->position.x + 0x160000;
         else
             drawX = self->position.x - 0xE0000;
     }
-    else if (self->animator1.animationID == 2 && self->animator1.frameID)
+    else if (self->mainAnimator.animationID == 2 && self->mainAnimator.frameID)
         drawX = self->position.x - 0x160000;
     else
         drawX = self->position.x + 0xE0000;
 
-    int drawY = self->position.y - 0x210000;
-    drawPos.x = drawX;
-    drawPos.y = drawY;
+    int32 drawY = self->position.y - 0x210000;
+    drawPos.x   = drawX;
+    drawPos.y   = drawY;
 
-    if (HeavyRider->field_4) {
-        if (HeavyRider->field_4 <= 4) {
-            if (HeavyRider->field_10 >= 0x80) {
-                self->animator3.frameID = 2;
-                drawPos.x                 = drawX + 0x4400 * RSDK.Cos256(HeavyRider->field_10);
-                drawPos.y                 = drawY + 0x880 * RSDK.Sin256(2 * HeavyRider->field_10);
+    if (HeavyRider->spikeBallState != HEAVYRIDER_SPIKEBALL_NONE) {
+        if (HeavyRider->spikeBallState <= HEAVYRIDER_SPIKEBALL_UNUSED3) {
+            if (HeavyRider->spikeBallAngle >= 0x80) {
+                self->spikeBallAnimator.frameID = 2;
+                drawPos.x                       = drawX + 0x4400 * RSDK.Cos256(HeavyRider->spikeBallAngle);
+                drawPos.y                       = drawY + 0x880 * RSDK.Sin256(2 * HeavyRider->spikeBallAngle);
                 self->drawFX |= FX_SCALE;
-                self->scale.x = (RSDK.Sin256(HeavyRider->field_10) >> 2) + 0x200;
-                self->scale.y = (RSDK.Sin256(HeavyRider->field_10) >> 2) + 0x200;
-                RSDK.DrawSprite(&self->animator3, &drawPos, false);
+                self->scale.x = (RSDK.Sin256(HeavyRider->spikeBallAngle) >> 2) + 0x200;
+                self->scale.y = (RSDK.Sin256(HeavyRider->spikeBallAngle) >> 2) + 0x200;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &drawPos, false);
                 self->drawFX &= ~FX_SCALE;
-                HeavyRider->debrisPos     = drawPos;
-                self->animator3.frameID = 1;
+                HeavyRider->spikeBallPos = drawPos;
 
-                int angle = 0x4400;
-                for (int i = 0; i < 8; ++i) {
+                self->spikeBallAnimator.frameID = 1;
+                int32 angle                     = 0x4400;
+                for (int32 i = 0; i < 8; ++i) {
                     angle -= 0x800;
-                    drawPos.x = drawX + angle * RSDK.Cos256(HeavyRider->field_10);
-                    drawPos.y = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->field_10);
-                    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+                    drawPos.x = drawX + angle * RSDK.Cos256(HeavyRider->spikeBallAngle);
+                    drawPos.y = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->spikeBallAngle);
+                    RSDK.DrawSprite(&self->spikeBallAnimator, &drawPos, false);
                 }
             }
         }
         else {
-            if (HeavyRider->field_4 == 7) {
-                self->animator3.frameID = 2;
-                RSDK.DrawSprite(&self->animator3, &HeavyRider->debrisPos, false);
+            if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_THROWN) {
+                self->spikeBallAnimator.frameID = 2;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &HeavyRider->spikeBallPos, false);
             }
         }
     }
@@ -932,50 +967,55 @@ void HeavyRider_StateDraw_Unknown(void)
     if (HeavyRider->invincibilityTimer & 1)
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
 
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     RSDK.SetPaletteEntry(0, 128, 0x000000);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->thrustAnimator, NULL, false);
 
-    switch (HeavyRider->field_4) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            if (HeavyRider->field_10 < 0x80) {
-                self->animator3.frameID = 1;
-                int angle                 = 0x400;
+    switch (HeavyRider->spikeBallState) {
+        default:
+        case HEAVYRIDER_SPIKEBALL_NONE:
+        case HEAVYRIDER_SPIKEBALL_THROWN: RSDK.DrawSprite(&self->fireballAnimator, NULL, false); break;
+
+        case HEAVYRIDER_SPIKEBALL_SWINGING:
+        case HEAVYRIDER_SPIKEBALL_UNUSED1:
+        case HEAVYRIDER_SPIKEBALL_UNUSED2:
+        case HEAVYRIDER_SPIKEBALL_UNUSED3:
+            if (HeavyRider->spikeBallAngle < 0x80) {
+                self->spikeBallAnimator.frameID = 1;
+                int angle                       = 0x400;
                 for (int i = 0; i < 8; ++i) {
                     angle += 0x800;
-                    drawPos.x = drawX + angle * RSDK.Cos256(HeavyRider->field_10);
-                    drawPos.y = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->field_10);
-                    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+                    drawPos.x = drawX + angle * RSDK.Cos256(HeavyRider->spikeBallAngle);
+                    drawPos.y = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->spikeBallAngle);
+                    RSDK.DrawSprite(&self->spikeBallAnimator, &drawPos, false);
                 }
 
-                self->animator3.frameID = 2;
-                drawPos.x                 = drawX + angle * RSDK.Cos256(HeavyRider->field_10);
-                drawPos.y                 = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->field_10);
+                self->spikeBallAnimator.frameID = 2;
+                drawPos.x                       = drawX + angle * RSDK.Cos256(HeavyRider->spikeBallAngle);
+                drawPos.y                       = drawY + (angle >> 3) * RSDK.Sin256(2 * HeavyRider->spikeBallAngle);
                 self->drawFX |= FX_SCALE;
-                self->scale.x = (RSDK.Sin256(HeavyRider->field_10) >> 2) + 0x200;
-                self->scale.y = (RSDK.Sin256(HeavyRider->field_10) >> 2) + 0x200;
-                RSDK.DrawSprite(&self->animator3, &drawPos, false);
+                self->scale.x = (RSDK.Sin256(HeavyRider->spikeBallAngle) >> 2) + 0x200;
+                self->scale.y = (RSDK.Sin256(HeavyRider->spikeBallAngle) >> 2) + 0x200;
+                RSDK.DrawSprite(&self->spikeBallAnimator, &drawPos, false);
                 self->drawFX &= ~FX_SCALE;
-                HeavyRider->debrisPos = drawPos;
+                HeavyRider->spikeBallPos = drawPos;
             }
-            RSDK.DrawSprite(&self->animator4, NULL, false);
+            RSDK.DrawSprite(&self->fireballAnimator, NULL, false);
             break;
-        case 5:
-        case 6:
-            RSDK.DrawSprite(&self->animator3, &HeavyRider->debrisPos, false);
-            RSDK.DrawSprite(&self->animator4, NULL, false);
+
+        case HEAVYRIDER_SPIKEBALL_UNUSED4:
+        case HEAVYRIDER_SPIKEBALL_UNUSED5:
+            RSDK.DrawSprite(&self->spikeBallAnimator, &HeavyRider->spikeBallPos, false);
+            RSDK.DrawSprite(&self->fireballAnimator, NULL, false);
             break;
-        default: RSDK.DrawSprite(&self->animator4, NULL, false);
     }
 }
 
 void HeavyRider_State_PlaneSwitch(void)
 {
     RSDK_THIS(HeavyRider);
+
     if (self->affectPlayer) {
         foreach_active(Player, player)
         {
@@ -1009,7 +1049,7 @@ void HeavyRider_State_PlaneSwitch(void)
     self->visible = DebugMode->debugActive;
 }
 
-void HeavyRider_StateDraw1_Unknown(void)
+void HeavyRider_Draw_PlaneSwitch(void)
 {
     RSDK_THIS(HeavyRider);
     Vector2 drawPos;
@@ -1020,9 +1060,9 @@ void HeavyRider_StateDraw1_Unknown(void)
     drawPos.y -= self->size << 19;
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
-    self->animator1.frameID = self->flags & 3;
+    self->mainAnimator.frameID = self->flags & 3;
     for (int32 i = 0; i < self->size; ++i) {
-        RSDK.DrawSprite(&self->animator1, &drawPos, 0);
+        RSDK.DrawSprite(&self->mainAnimator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(self->angle) << 12;
         drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
@@ -1035,9 +1075,9 @@ void HeavyRider_StateDraw1_Unknown(void)
     drawPos.x = (dy * RSDK.Sin256(self->angle)) + dx * RSDK.Cos256(self->angle) + self->position.x;
     drawPos.y = (dy * RSDK.Cos256(self->angle)) - dx * RSDK.Sin256(self->angle) + self->position.y;
 
-    self->animator1.frameID = (self->flags >> 2) & 3;
+    self->mainAnimator.frameID = (self->flags >> 2) & 3;
     for (int32 i = 0; i < self->size; ++i) {
-        RSDK.DrawSprite(&self->animator1, &drawPos, 0);
+        RSDK.DrawSprite(&self->mainAnimator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(self->angle) << 12;
         drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
@@ -1050,24 +1090,24 @@ void HeavyRider_State_ChargeTrigger(void)
     self->visible = DebugMode->debugActive;
 }
 
-void HeavyRider_StateDraw_Simple(void)
+void HeavyRider_Draw_Simple(void)
 {
     RSDK_THIS(HeavyRider);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void HeavyRider_State_Fireball(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
         destroyEntity(self);
     }
     else {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &HeavyRider->hitbox8)) {
+            if (Player_CheckCollisionTouch(player, self, &HeavyRider->hitboxFireball)) {
                 Player_CheckElementalHit(player, self, SHIELD_FIRE);
             }
         }
@@ -1078,8 +1118,8 @@ void HeavyRider_State_Puff(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1)
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1)
         destroyEntity(self);
 }
 
@@ -1087,11 +1127,11 @@ void HeavyRider_StateJimmy_Idle(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->mainAnimator);
     if (++self->timer >= 45) {
-        self->timer           = 38;
+        self->timer             = 38;
         HeavyRider->chargeTimer = 0;
-        self->state           = HeavyRider_StateJimmy_RevUp;
+        self->state             = HeavyRider_StateJimmy_RevUp;
     }
 }
 
@@ -1099,8 +1139,8 @@ void HeavyRider_StateJimmy_RevRelease(void)
 {
     RSDK_THIS(HeavyRider);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
     RSDK.ProcessTileCollisions(self, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (self->onGround) {
@@ -1127,7 +1167,7 @@ void HeavyRider_StateJimmy_RevUp(void)
     RSDK_THIS(HeavyRider);
     float chargeSpeeds[] = { 1.0, 1.1926451, 1.4150375, 1.6780719, 2.0 };
 
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->mainAnimator);
 
     if (--self->timer > 0) {
         if (!(self->timer & 7)) {
@@ -1154,36 +1194,39 @@ void HeavyRider_EditorDraw(void)
 
     switch (self->type) {
         case HEAVYRIDER_RIDER:
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &self->animator4, true, 0);
-            self->updateRange.x = 0x800000;
-            self->updateRange.y = 0x800000;
-            HeavyRider->field_10  = 0x80;
-            HeavyRider->field_4   = 1;
-            HeavyRider->field_1B  = 16;
-            HeavyRider->field_20  = 0;
-            HeavyRider->field_24  = self->position.y;
-            HeavyRider->field_3   = 0;
-            HeavyRider->field_18  = 0;
-            HeavyRider->field_14  = 0;
-            self->stateDraw     = HeavyRider_StateDraw_Unknown;
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->mainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->thrustAnimator, true, 0);
+            RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->spikeBallAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
+            self->updateRange.x          = 0x800000;
+            self->updateRange.y          = 0x800000;
+            HeavyRider->spikeBallAngle   = 0x80;
+            HeavyRider->spikeBallState   = HEAVYRIDER_SPIKEBALL_SWINGING;
+            HeavyRider->spawnDelay       = 16;
+            HeavyRider->spawnFireballs   = false;
+            HeavyRider->startY           = self->position.y;
+            HeavyRider->curAttack        = HEAVYRIDER_ATK_RIDING_SCREENBOUNDS;
+            HeavyRider->wheelExtendState = HEAVYRIDER_WHEEL_NONE;
+            HeavyRider->wheelLength      = 0;
+            self->stateDraw              = HeavyRider_Draw_Boss;
             break;
+
         case HEAVYRIDER_PLANESWITCH:
-            RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->mainAnimator, true, 0);
             self->updateRange.x = 0x200000;
             self->updateRange.y = (self->size + 0x400) << 11;
-            self->stateDraw     = HeavyRider_StateDraw1_Unknown;
+            self->stateDraw     = HeavyRider_Draw_PlaneSwitch;
             break;
+
         case HEAVYRIDER_FORCECHARGE_LEFT:
         case HEAVYRIDER_FORCECHARGE_RIGHT:
-            RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator1, true, ((self->type - 2) >> 1) + 4);
+            RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->mainAnimator, true, ((self->type - 2) >> 1) + 4);
             self->updateRange.x = 0x200000;
             self->updateRange.y = 0x200000;
             self->state         = HeavyRider_State_ChargeTrigger;
-            self->stateDraw     = HeavyRider_StateDraw_Simple;
+            self->stateDraw     = HeavyRider_Draw_Simple;
             break;
+
         default: break;
     }
 

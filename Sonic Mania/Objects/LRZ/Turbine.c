@@ -28,7 +28,7 @@ void Turbine_StaticUpdate(void)
         foreach_active(Turbine, turbine)
         {
             if (!Turbine->playingTurbineSfx) {
-                RSDK.PlaySfx(Turbine->sfxTurbine, 34161, 255);
+                RSDK.PlaySfx(Turbine->sfxTurbine, 34161, 0xFF);
                 Turbine->playingTurbineSfx = true;
             }
             playingSfx = true;
@@ -76,14 +76,17 @@ void Turbine_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("LRZ2"))
         Turbine->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Turbine.bin", SCOPE_STAGE);
-    Turbine->hitbox1.left      = -16;
-    Turbine->hitbox1.right     = 16;
-    Turbine->hitbox1.top       = -48;
-    Turbine->hitbox1.bottom    = 48;
-    Turbine->hitboxHurt.left   = -6;
-    Turbine->hitboxHurt.right  = 6;
-    Turbine->hitboxHurt.top    = -44;
-    Turbine->hitboxHurt.bottom = 44;
+
+    Turbine->hitboxHandle.left      = -16;
+    Turbine->hitboxHandle.right     = 16;
+    Turbine->hitboxHandle.top       = -48;
+    Turbine->hitboxHandle.bottom    = 48;
+
+    Turbine->hitboxSpikes.left   = -6;
+    Turbine->hitboxSpikes.right  = 6;
+    Turbine->hitboxSpikes.top    = -44;
+    Turbine->hitboxSpikes.bottom = 44;
+
     Turbine->sfxTurbine        = RSDK.GetSfx("LRZ/Turbine.wav");
 }
 
@@ -93,14 +96,15 @@ void Turbine_State_Handles(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;
+
         if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID] && player->animator.animationID != ANI_HURT
             && player->state != Player_State_None) {
             if (player->animator.animationID != ANI_HURT && player->state != Player_State_None) {
-                if (Player_CheckCollisionTouch(player, self, &Turbine->hitbox1)) {
+                if (Player_CheckCollisionTouch(player, self, &Turbine->hitboxHandle)) {
                     self->activePlayers |= 1 << playerID;
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
@@ -117,6 +121,7 @@ void Turbine_State_Handles(void)
                     else
                         self->playerAngles[playerID] = 0x180;
                     self->playerAngles[playerID] += self->angle & 0x3F;
+
                     RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 }
             }
@@ -163,7 +168,7 @@ void Turbine_State_Spikes(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Turbine->hitboxHurt)) {
+        if (Player_CheckCollisionTouch(player, self, &Turbine->hitboxSpikes)) {
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif

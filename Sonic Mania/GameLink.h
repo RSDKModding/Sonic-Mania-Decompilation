@@ -362,7 +362,7 @@ typedef struct {
 } SpriteFrame;
 
 typedef struct {
-    SpriteFrame *framePtrs;
+    SpriteFrame *frames;
     int32 frameID;
     int16 animationID;
     int16 prevAnimationID;
@@ -531,14 +531,14 @@ typedef enum {
     VAR_BOOL,
     VAR_STRING,
     VAR_VECTOR2,
-    VAR_UNKNOWN,
+    VAR_FLOAT,
     VAR_COLOUR,
 } VarTypes;
 
 #if RETRO_USE_PLUS
 typedef enum {
     DBVAR_NONE,
-    DBVAR_UNKNOWN1,
+    DBVAR_BOOL8, // may not actually be "bool8" since I've never seen that type, but I don't have any better ideas so...
     DBVAR_UINT8,
     DBVAR_UINT16,
     DBVAR_UINT32,
@@ -552,7 +552,7 @@ typedef enum {
     DBVAR_UNUSED4,
     DBVAR_UNUSED5,
     DBVAR_UNUSED6,
-    DBVAR_UNKNOWN2,
+    DBVAR_BOOL32, // not 100% sure that this is bool32, but that's what fit the best so that's what it'll be labeled as
     DBVAR_STRING,
 } DBVarTypes;
 

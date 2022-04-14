@@ -17,10 +17,10 @@ struct ObjectLRZ1Intro {
 struct EntityLRZ1Intro {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int originY;
-    int spawnPosY;
-    Vector2 field_68[PLAYER_MAX];
+    int32 timer;
+    int32 originY;
+    int32 spawnPosY;
+    Vector2 playerOffset[PLAYER_MAX];
     Animator animator;
 };
 
@@ -34,22 +34,24 @@ void LRZ1Intro_StaticUpdate(void);
 void LRZ1Intro_Draw(void);
 void LRZ1Intro_Create(void* data);
 void LRZ1Intro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ1Intro_EditorDraw(void);
 void LRZ1Intro_EditorLoad(void);
+#endif
 void LRZ1Intro_Serialize(void);
 
 // Extra Entity Functions
 void LRZ1Intro_HandlePlayerCollisions(void);
 void LRZ1Intro_HandlePlayerMovement(void);
-void LRZ1Intro_HandleShipExplosions(void);
+void LRZ1Intro_HandleExplosions(void);
 void LRZ1Intro_HandleExplosions(void);
 
-void LRZ1Intro_State_Unknown1(void);
-void LRZ1Intro_State_Unknown2(void);
-void LRZ1Intro_State_Unknown3(void);
-void LRZ1Intro_State_Unknown4(void);
-void LRZ1Intro_State_Unknown5(void);
-void LRZ1Intro_State_Unknown6(void);
+void LRZ1Intro_State_SetupActors(void);
+void LRZ1Intro_State_IntroDelay(void);
+void LRZ1Intro_State_EnterSub(void);
+void LRZ1Intro_State_RidingSub(void);
+void LRZ1Intro_State_CrashedSub(void);
+void LRZ1Intro_State_SubSinking(void);
 
 #endif
 

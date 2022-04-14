@@ -102,8 +102,8 @@ void PaperRoller_StageLoad(void)
     PaperRoller->sfxPaper = RSDK.GetSfx("PSZ/Paper.wav");
 }
 
-void PaperRoller_DrawDeformedLine(uint32 colour, int32 len, int32 startX, int32 startY, int32 endX, int32 endY, int32 offsetX, int32 offsetY,
-                                  int32 deformX, int32 deformY)
+void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 deformX, int32 deformY,
+                                  int32 len, uint32 colour)
 {
     RSDK_THIS(PaperRoller);
 
@@ -111,26 +111,26 @@ void PaperRoller_DrawDeformedLine(uint32 colour, int32 len, int32 startX, int32 
     if (count) {
         int32 negAngle = -(uint8)(self->angle);
 
-        int32 posX  = startX;
-        int32 posY  = startY;
+        int32 currentX  = startX;
+        int32 currentY  = startY;
         int32 moveX = (endX - startX) / count;
         int32 moveY = (endY - startY) / count;
 
         for (int32 i = 0; i < count; ++i) {
-            int32 clrOffset = 0;
+            int32 colourID = 0;
             if (self->direction)
-                clrOffset = len % count;
+                colourID = len % count;
             else
-                clrOffset = count - len % count - 1;
-            uint32 lineClr = PaperRoller->colours[(Zone->timer + clrOffset) % count];
+                colourID = count - len % count - 1;
+            uint32 lineClr = PaperRoller->colours[(Zone->timer + colourID) % count];
 
             if (!deformY) {
-                RSDK.DrawLine(offsetX + posX, offsetY + posY, offsetX + (posX + moveX), offsetY + (posY + moveY), colour ? colour : lineClr, 127,
+                RSDK.DrawLine(offsetX + currentX, offsetY + currentY, offsetX + (currentX + moveX), offsetY + (currentY + moveY), colour ? colour : lineClr, 127,
                               INK_NONE, false);
             }
             else {
-                int32 distX = (posX - self->position.x) >> 8;
-                int32 distY = (posY - self->position.y) >> 8;
+                int32 distX = (currentX - self->position.x) >> 8;
+                int32 distY = (currentY - self->position.y) >> 8;
 
                 int32 angValX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle);
 
@@ -161,8 +161,8 @@ void PaperRoller_DrawDeformedLine(uint32 colour, int32 len, int32 startX, int32 
                 int32 offsetX1 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
                 int32 offsetY1 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
 
-                distX = ((posX + moveX) - self->position.x) >> 8;
-                distY = ((posY + moveY) - self->position.y) >> 8;
+                distX = ((currentX + moveX) - self->position.x) >> 8;
+                distY = ((currentY + moveY) - self->position.y) >> 8;
 
                 angValX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle);
                 angValY = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle) - self->position.y;
@@ -191,12 +191,13 @@ void PaperRoller_DrawDeformedLine(uint32 colour, int32 len, int32 startX, int32 
                 distY          = (lenY + angValY) >> 8;
                 int32 offsetX2 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
                 int32 offsetY2 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
-                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, colour ? colour : lineClr, 127,
+                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, colour ? colour : lineClr, 0x7F,
                               INK_NONE, false);
             }
             ++len;
-            posY += moveY;
-            posX += moveX;
+
+            currentX += moveX;
+            currentY += moveY;
         }
     }
 }
@@ -221,8 +222,8 @@ void PaperRoller_DrawPaperLines(void)
     int32 endX2   = x1 + 0x1800 * RSDK.Cos256(self->angle + 64);
     int32 endY2   = y1 + 0x1800 * RSDK.Sin256(self->angle + 64);
 
-    PaperRoller_DrawDeformedLine(0x000000, 0, startX1, startY1, endX1, endY1, 0, 0, self->deformPosTop.x, self->deformPosTop.y);
-    PaperRoller_DrawDeformedLine(0x000000, len, startX2, startY2, endX2, endY2, 0, 0, self->deformPosBottom.x, self->deformPosBottom.y);
+    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, 0, 0, self->deformPosTop.x, self->deformPosTop.y, 0, 0x000000);
+    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, 0, 0, self->deformPosBottom.x, self->deformPosBottom.y, len, 0x000000);
 
     int32 angle = self->angle + 32;
     if (angle < 0)
@@ -247,15 +248,15 @@ void PaperRoller_DrawPaperLines(void)
             offsetX2 = -0x10000;
             break;
     }
-    PaperRoller_DrawDeformedLine(0x000000, 0, startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y);
-    PaperRoller_DrawDeformedLine(0x000000, len, startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y);
+    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y, 0, 0x000000);
+    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y, len, 0x000000);
 
     offsetX1 <<= 1;
     offsetY1 <<= 1;
     offsetX2 <<= 1;
     offsetY2 <<= 1;
-    PaperRoller_DrawDeformedLine(0xD0B898, 0, startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y);
-    PaperRoller_DrawDeformedLine(0xD0B898, len, startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y);
+    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y, 0, 0xD0B898);
+    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y, len, 0xD0B898);
 }
 
 void PaperRoller_DrawRollers(void)

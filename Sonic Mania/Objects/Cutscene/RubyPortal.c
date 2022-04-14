@@ -240,6 +240,7 @@ void RubyPortal_State_Opened(void)
                 else {
                     player1->invincibleTimer = 1;
                 }
+
                 ++SceneInfo->listPos;
                 if (!RSDK.CheckValidScene())
                     RSDK.SetScene("Presentation", "Title Screen");

@@ -43,7 +43,7 @@ void LRZ3OutroK_StageLoad(void)
 
     foreach_all(SkyTeleporter, teleporter)
     {
-        LRZ3OutroK->teleporter = (Entity *)teleporter;
+        LRZ3OutroK->teleporter = teleporter;
         foreach_break;
     }
 
@@ -78,7 +78,7 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    Entity *teleporter = LRZ3OutroK->teleporter;
+    EntitySkyTeleporter *teleporter = LRZ3OutroK->teleporter;
 
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
@@ -101,13 +101,16 @@ bool32 LRZ3OutroK_Cutscene_RunToTeleporter(EntityCutsceneSeq *host)
             player2->groundVel  = 0;
         }
     }
+
     if (player1->jumpPress)
         player1->jumpPress = false;
+
     if (player1->onGround && player1->position.x >= teleporter->position.x - 0x500000 && !host->values[0]) {
         player1->jumpPress = true;
         host->values[0]  = true;
         return true;
     }
+
     return false;
 }
 
@@ -118,19 +121,21 @@ bool32 LRZ3OutroK_Cutscene_LandOnTeleporter(EntityCutsceneSeq *host)
 
     if (player1->jumpPress)
         player1->jumpPress = false;
+
     if (player1->onGround) {
         CutsceneSeq_LockPlayerControl(player1);
         if (player2->objectID == Player->objectID && player2->onGround)
             CutsceneSeq_LockPlayerControl(player2);
         return true;
     }
+
     return false;
 }
 
 bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ3OutroK);
-    EntitySkyTeleporter *teleporter = (EntitySkyTeleporter *)LRZ3OutroK->teleporter;
+    EntitySkyTeleporter *teleporter = LRZ3OutroK->teleporter;
 
     if (host->timer == 30) {
         foreach_active(Player, player)
@@ -149,15 +154,16 @@ bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
 
         RSDK.PlaySfx(LRZ3OutroK->sfxWarp, false, 255);
     }
+
     if (host->timer == 60) {
         foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, false, 3); }
     }
 
-    int x = teleporter->position.x;
-    int y = teleporter->position.y - 0x740000;
+    int32 x = teleporter->position.x;
+    int32 y = teleporter->position.y - 0x740000;
 
     if (host->timer >= 30) {
-        int angle = 255 * (host->timer - 30) / 60;
+        int32 angle = 255 * (host->timer - 30) / 60;
 
         foreach_active(Player, player)
         {
@@ -184,6 +190,7 @@ bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
         if (teleporter->timer < 64)
             teleporter->timer += 2;
     }
+
     if (host->timer == 90) {
         foreach_active(Player, player)
         {
@@ -192,6 +199,7 @@ bool32 LRZ3OutroK_Cutscene_UseTeleporter(EntityCutsceneSeq *host)
         }
         return true;
     }
+
     return false;
 }
 
@@ -221,6 +229,7 @@ bool32 LRZ3OutroK_Cutscene_TeleporterActivated(EntityCutsceneSeq *host)
 void LRZ3OutroK_EditorDraw(void)
 {
     RSDK_THIS(LRZ3OutroK);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

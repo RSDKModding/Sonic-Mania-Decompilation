@@ -43,7 +43,7 @@ struct EntityTwistingDoor {
     int32 childCount;
 
     bool32 close;
-    EntityButton *buttonPtr;
+    EntityButton *taggedButton;
 };
 
 // Object Struct

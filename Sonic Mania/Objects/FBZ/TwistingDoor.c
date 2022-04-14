@@ -111,20 +111,24 @@ void TwistingDoor_Create(void *data)
             self->groundVel = -0x10000;
     }
 
-    EntityButton *button = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+    self->taggedButton         = NULL;
+    EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+
     if (self->buttonTag > 0) {
-        foreach_all(Button, buttonCheck)
+        foreach_all(Button, button)
         {
-            if (buttonCheck->tag == self->buttonTag) {
-                button = buttonCheck;
+            if (button->tag == self->buttonTag) {
+                taggedButton = button;
                 foreach_break;
             }
         }
     }
 
-    self->buttonPtr     = button;
-    self->updateRange.x = abs(self->position.x - button->position.x) + 0x400000;
-    self->updateRange.y = abs(self->position.y - button->position.y) + 0x400000;
+    if (taggedButton) {
+        self->taggedButton  = taggedButton;
+        self->updateRange.x = 0x400000 + abs(self->position.x - taggedButton->position.x);
+        self->updateRange.y = 0x400000 + abs(self->position.y - taggedButton->position.y);
+    }
     self->state         = TwistingDoor_State_CheckOpen;
 }
 
@@ -132,13 +136,14 @@ void TwistingDoor_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("FBZ"))
         TwistingDoor->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TwistingDoor.bin", SCOPE_STAGE);
+
     TwistingDoor->sfxOpen = RSDK.GetSfx("Stage/Open.wav");
 }
 
 void TwistingDoor_State_CheckOpen(void)
 {
     RSDK_THIS(TwistingDoor);
-    EntityButton *button = self->buttonPtr;
+    EntityButton *button = self->taggedButton;
     if (button->currentlyActive) {
         RSDK.PlaySfx(TwistingDoor->sfxOpen, false, 255);
         self->active        = ACTIVE_NORMAL;
@@ -210,6 +215,9 @@ void TwistingDoor_EditorDraw(void)
 {
     RSDK_THIS(TwistingDoor);
 
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+
     if (self->direction > FLIP_X)
         self->direction >>= 1;
 
@@ -219,6 +227,32 @@ void TwistingDoor_EditorDraw(void)
         self->direction *= FLIP_Y;
     TwistingDoor_Draw();
     self->direction = dir;
+
+    if (showGizmos()) {
+        self->taggedButton         = NULL;
+        EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+
+        if (self->buttonTag > 0) {
+            foreach_all(Button, button)
+            {
+                if (button->tag == self->buttonTag) {
+                    taggedButton = button;
+                    foreach_break;
+                }
+            }
+        }
+
+        if (taggedButton) {
+            self->taggedButton  = taggedButton;
+            self->updateRange.x = 0x400000 + abs(self->position.x - taggedButton->position.x);
+            self->updateRange.y = 0x400000 + abs(self->position.y - taggedButton->position.y);
+        }
+
+        RSDK_DRAWING_OVERLAY(true);
+        if (self->taggedButton)
+            DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y);
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void TwistingDoor_EditorLoad(void)

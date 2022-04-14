@@ -24,10 +24,10 @@ bool32 showHitboxes = false;
 int32 debugHitboxCount = 0;
 DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
 
-int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox)
+int32 addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox)
 {
-    int i = 0;
-    int entityID = GetEntityID((EntityBase *)entity);
+    int32 i        = 0;
+    int32 entityID = GetEntityID((EntityBase *)entity);
     for (; i < debugHitboxCount; ++i) {
         if (debugHitboxList[i].hitbox.left == hitbox->left && debugHitboxList[i].hitbox.top == hitbox->top
             && debugHitboxList[i].hitbox.right == hitbox->right && debugHitboxList[i].hitbox.bottom == hitbox->bottom
@@ -49,17 +49,17 @@ int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox)
         debugHitboxList[i].pos.y         = entity->position.y;
 
         if ((dir & FLIP_X) == FLIP_X) {
-            int store                       = -debugHitboxList[i].hitbox.left;
+            int32 store                     = -debugHitboxList[i].hitbox.left;
             debugHitboxList[i].hitbox.left  = -debugHitboxList[i].hitbox.right;
             debugHitboxList[i].hitbox.right = store;
         }
         if ((dir & FLIP_Y) == FLIP_Y) {
-            int store                        = -debugHitboxList[i].hitbox.top;
+            int32 store                      = -debugHitboxList[i].hitbox.top;
             debugHitboxList[i].hitbox.top    = -debugHitboxList[i].hitbox.bottom;
             debugHitboxList[i].hitbox.bottom = store;
         }
 
-        int id = debugHitboxCount;
+        int32 id = debugHitboxCount;
         debugHitboxCount++;
         return id;
     }
@@ -70,7 +70,7 @@ int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox)
 
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox)
 {
-    int store = 0;
+    int32 store = 0;
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
         return false;
     if ((thisEntity->direction & FLIP_X) == FLIP_X) {
@@ -92,10 +92,10 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, E
         otherHitbox->bottom = store;
     }
 
-    int thisIX  = thisEntity->position.x >> 0x10;
-    int thisIY  = thisEntity->position.y >> 0x10;
-    int otherIX = otherEntity->position.x >> 0x10;
-    int otherIY = otherEntity->position.y >> 0x10;
+    int32 thisIX  = thisEntity->position.x >> 0x10;
+    int32 thisIY  = thisEntity->position.y >> 0x10;
+    int32 otherIX = otherEntity->position.x >> 0x10;
+    int32 otherIY = otherEntity->position.y >> 0x10;
 
     bool32 collided = thisIX + thisHitbox->left < otherIX + otherHitbox->right && thisIX + thisHitbox->right > otherIX + otherHitbox->left
                       && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom && thisIY + thisHitbox->bottom > otherIY + otherHitbox->top;
@@ -121,8 +121,8 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, E
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
-        int thisHitboxID  = addDebugHitbox(H_TYPE_TOUCH, thisEntity->direction, thisEntity, thisHitbox);
-        int otherHitboxID = addDebugHitbox(H_TYPE_TOUCH, thisEntity->direction, otherEntity, otherHitbox);
+        int32 thisHitboxID  = addDebugHitbox(H_TYPE_TOUCH, thisEntity->direction, thisEntity, thisHitbox);
+        int32 otherHitboxID = addDebugHitbox(H_TYPE_TOUCH, thisEntity->direction, otherEntity, otherHitbox);
 
         if (thisHitboxID >= 0 && collided)
             debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
@@ -134,17 +134,17 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, E
     return collided;
 }
 
-byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
+uint8 CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
 {
     if (thisEntity && otherEntity && thisHitbox && otherHitbox) {
-        int store            = 0;
-        int collisionResultX = 0;
-        int collisionResultY = 0;
+        int32 store            = 0;
+        int32 collisionResultX = 0;
+        int32 collisionResultY = 0;
 
-        int otherX  = otherEntity->position.x;
-        int otherY  = otherEntity->position.y;
-        int otherX2 = otherEntity->position.x;
-        int otherY2 = otherEntity->position.y;
+        int32 otherX  = otherEntity->position.x;
+        int32 otherY  = otherEntity->position.y;
+        int32 otherX2 = otherEntity->position.x;
+        int32 otherY2 = otherEntity->position.y;
 
         if ((thisEntity->direction & FLIP_X) == FLIP_X) {
             store             = -thisHitbox->left;
@@ -165,10 +165,10 @@ byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entit
             otherHitbox->bottom = store;
         }
 
-        int thisIX  = thisEntity->position.x >> 0x10;
-        int thisIY  = thisEntity->position.y >> 0x10;
-        int otherIX = otherEntity->position.x >> 0x10;
-        int otherIY = otherEntity->position.y >> 0x10;
+        int32 thisIX  = thisEntity->position.x >> 0x10;
+        int32 thisIY  = thisEntity->position.y >> 0x10;
+        int32 otherIX = otherEntity->position.x >> 0x10;
+        int32 otherIY = otherEntity->position.y >> 0x10;
 
         otherHitbox->top++;
         otherHitbox->bottom--;
@@ -226,10 +226,10 @@ byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entit
             otherHitbox->bottom = store;
         }
 
-        int ox  = ((otherX - otherEntity->position.x) >> 0x10);
-        int oy  = ((otherY - otherEntity->position.y) >> 0x10);
-        int ox2 = ((otherX2 - otherEntity->position.x) >> 0x10);
-        int oy2 = ((otherY2 - otherEntity->position.y) >> 0x10);
+        int32 ox  = ((otherX - otherEntity->position.x) >> 0x10);
+        int32 oy  = ((otherY - otherEntity->position.y) >> 0x10);
+        int32 ox2 = ((otherX2 - otherEntity->position.x) >> 0x10);
+        int32 oy2 = ((otherY2 - otherEntity->position.y) >> 0x10);
         if (((ox * ox + oy * oy >= ox2 * ox2 + oy2 * oy2) && (collisionResultY || !collisionResultX)) || (!collisionResultX && collisionResultY)) {
             otherEntity->position.x = otherX2;
             otherEntity->position.y = otherY2;
@@ -250,8 +250,8 @@ byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entit
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (showHitboxes) {
-                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
-                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
+                int32 thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
+                int32 otherHitboxID = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
 
                 if (thisHitboxID >= 0 && collisionResultY)
                     debugHitboxList[thisHitboxID].collision |= 1 << (collisionResultY - 1);
@@ -265,7 +265,7 @@ byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entit
             otherEntity->position.x = otherX;
             otherEntity->position.y = otherY;
             if (setValues) {
-                int vel = 0;
+                int32 vel = 0;
                 if (otherEntity->onGround) {
                     vel = otherEntity->groundVel;
                     if (otherEntity->collisionMode == CMODE_ROOF)
@@ -283,8 +283,8 @@ byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entit
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (showHitboxes) {
-                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
-                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
+                int32 thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
+                int32 otherHitboxID = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
 
                 if (thisHitboxID >= 0 && collisionResultX)
                     debugHitboxList[thisHitboxID].collision |= 1 << (collisionResultX - 1);
@@ -308,7 +308,7 @@ byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entit
 
 bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues)
 {
-    int store       = 0;
+    int32 store     = 0;
     bool32 collided = false;
 
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
@@ -333,10 +333,10 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox
         otherHitbox->bottom = store;
     }
 
-    int thisIX  = (thisEntity->position.x >> 16);
-    int thisIY  = (thisEntity->position.y >> 16);
-    int otherIX = (otherEntity->position.x >> 16);
-    int otherIY = (otherEntity->position.y >> 16);
+    int32 thisIX  = (thisEntity->position.x >> 16);
+    int32 thisIY  = (thisEntity->position.y >> 16);
+    int32 otherIX = (otherEntity->position.x >> 16);
+    int32 otherIY = (otherEntity->position.y >> 16);
 
     if (otherHitbox->bottom + otherIY >= thisIY + thisHitbox->top
         && otherHitbox->bottom + ((otherEntity->position.y - otherEntity->velocity.y) >> 16) <= thisIY + thisHitbox->bottom
@@ -375,8 +375,8 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
-        int thisHitboxID  = addDebugHitbox(H_TYPE_PLAT, thisEntity->direction, thisEntity, thisHitbox);
-        int otherHitboxID = addDebugHitbox(H_TYPE_PLAT, thisEntity->direction, otherEntity, otherHitbox);
+        int32 thisHitboxID  = addDebugHitbox(H_TYPE_PLAT, thisEntity->direction, thisEntity, thisHitbox);
+        int32 otherHitboxID = addDebugHitbox(H_TYPE_PLAT, thisEntity->direction, otherEntity, otherHitbox);
 
         if (thisHitboxID >= 0 && collided)
             debugHitboxList[thisHitboxID].collision |= 1 << 0;
@@ -390,28 +390,28 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox
 
 bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, bool32 setPos)
 {
-    int layerID     = 1;
+    int32 layerID   = 1;
     bool32 collided = false;
-    int posX        = (xOffset + entity->position.x) >> 16;
-    int posY        = (yOffset + entity->position.y) >> 16;
+    int32 posX      = (xOffset + entity->position.x) >> 16;
+    int32 posY      = (yOffset + entity->position.y) >> 16;
     switch (cMode) {
         default: return false;
         case CMODE_FLOOR: {
-            int solid = 1 << 12;
+            int32 solid = 1 << 12;
             if (cPlane)
                 solid = 1 << 14;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cy         = (colY & -TILE_SIZE) - TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
-                                ushort tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int ty = cy + collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
+                                    int32 ty = cy + collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                                     if (colY >= ty && abs(colY - ty) <= 14) {
                                         collided = true;
                                         colY     = ty;
@@ -432,21 +432,21 @@ bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cP
             return collided;
         }
         case CMODE_LWALL: {
-            int solid = 1 << 13;
+            int32 solid = 1 << 13;
             if (cPlane)
                 solid = 1 << 15;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cx         = (colX & -TILE_SIZE) - TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
-                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int tx = cx + collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
+                                    int32 tx = cx + collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
                                     if (colX >= tx && abs(colX - tx) <= 14) {
                                         collided = true;
                                         colX     = tx;
@@ -467,21 +467,21 @@ bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cP
             return collided;
         }
         case CMODE_ROOF: {
-            int solid = 1 << 13;
+            int32 solid = 1 << 13;
             if (cPlane)
                 solid = 1 << 15;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cy         = (colY & -TILE_SIZE) + TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
-                                ushort tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int ty = cy + collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
+                                    int32 ty = cy + collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
                                     if (colY <= ty && abs(colY - ty) <= 14) {
                                         collided = true;
                                         colY     = ty;
@@ -502,21 +502,21 @@ bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cP
             return collided;
         }
         case CMODE_RWALL: {
-            int solid = 1 << 13;
+            int32 solid = 1 << 13;
             if (cPlane)
                 solid = 1 << 15;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cx         = (colX & -TILE_SIZE) + TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
-                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                                    int32 tx = cx + collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
                                     if (colX <= tx && abs(colX - tx) <= 14) {
                                         collided = true;
                                         colX     = tx;
@@ -540,29 +540,29 @@ bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cP
 }
 bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, int32 tolerance)
 {
-    int layerID     = 1;
+    int32 layerID   = 1;
     bool32 collided = false;
-    int posX        = (xOffset + entity->position.x) >> 16;
-    int posY        = (yOffset + entity->position.y) >> 16;
+    int32 posX      = (xOffset + entity->position.x) >> 16;
+    int32 posY      = (yOffset + entity->position.y) >> 16;
     switch (cMode) {
         default: return false;
         case CMODE_FLOOR: {
-            int solid = 1 << 12;
+            int32 solid = 1 << 12;
             if (cPlane)
                 solid = 1 << 14;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cy         = (colY & -TILE_SIZE) - TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
-                                ushort tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int mask = collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
-                                    int ty   = cy + mask;
+                                    int32 mask = collisionMasks[cPlane][tile & 0xFFF].floorMasks[colX & 0xF];
+                                    int32 ty   = cy + mask;
                                     if (mask < 0xFF) {
                                         if (abs(colY - ty) <= tolerance) {
                                             collided = true;
@@ -585,22 +585,22 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
             return collided;
         }
         case CMODE_LWALL: {
-            int solid = 1 << 13;
+            int32 solid = 1 << 13;
             if (cPlane)
                 solid = 1 << 15;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cx         = (colX & -TILE_SIZE) - TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
-                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int mask = collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
-                                    int tx   = cx + mask;
+                                    int32 mask = collisionMasks[cPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
+                                    int32 tx   = cx + mask;
                                     if (mask < 0xFF) {
                                         if (abs(colX - tx) <= tolerance) {
                                             collided = true;
@@ -623,22 +623,22 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
             return collided;
         }
         case CMODE_ROOF: {
-            int solid = 1 << 13;
+            int32 solid = 1 << 13;
             if (cPlane)
                 solid = 1 << 15;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cy         = (colY & -TILE_SIZE) + TILE_SIZE;
                     if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
-                                ushort tile    = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(colX >> 4) + ((cy / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int mask = collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
-                                    int ty   = cy + mask;
+                                    int32 mask = collisionMasks[cPlane][tile & 0xFFF].roofMasks[colX & 0xF];
+                                    int32 ty   = cy + mask;
                                     if (mask < 0xFF) {
                                         if (abs(colY - ty) <= tolerance) {
                                             collided = true;
@@ -661,22 +661,22 @@ bool32 ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane,
             return collided;
         }
         case CMODE_RWALL: {
-            int solid = 1 << 13;
+            int32 solid = 1 << 13;
             if (cPlane)
                 solid = 1 << 15;
-            for (int l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
+            for (int32 l = 0; l < LAYER_COUNT; ++l, layerID <<= 1) {
                 if (cLayers & layerID) {
                     TileLayer *layer = &tileLayers[l];
-                    int colX         = posX - layer->position.x;
-                    int colY         = posY - layer->position.y;
-                    int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
+                    int32 colX       = posX - layer->position.x;
+                    int32 colY       = posY - layer->position.y;
+                    int32 cx         = (colX & -TILE_SIZE) + TILE_SIZE;
                     if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
-                                ushort tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
+                                uint16 tile = layer->layout[(cx >> 4) + ((colY / TILE_SIZE) << layer->widthShift)];
                                 if (tile < 0xFFFF && tile & solid) {
-                                    int mask = collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
-                                    int tx   = cx + mask;
+                                    int32 mask = collisionMasks[cPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                                    int32 tx   = cx + mask;
                                     if (mask < 0xFF) {
                                         if (abs(colX - tx) <= tolerance) {
                                             collided = true;
@@ -706,7 +706,7 @@ void ProcessTileCollisions(Entity *entity, RSDK::Hitbox *outerBox, RSDK::Hitbox 
     if (entity && outerBox && innerBox) {
         if (entity->tileCollisions) {
             entity->angle &= 0xFF;
-            
+
             collisionTolerance = 15;
             if (abs(entity->groundVel) < 0x60000 && entity->angle == 0)
                 collisionTolerance = 8;
@@ -754,10 +754,10 @@ void ProcessTileCollisions(Entity *entity, RSDK::Hitbox *outerBox, RSDK::Hitbox 
 
 void ProcessAirCollision()
 {
-    byte movingDown  = 0;
-    byte movingUp    = 0;
-    byte movingLeft  = 0;
-    byte movingRight = 0;
+    uint8 movingDown  = 0;
+    uint8 movingUp    = 0;
+    uint8 movingLeft  = 0;
+    uint8 movingRight = 0;
 
     if (collisionEntity->velocity.x >= 0) {
         movingRight      = 1;
@@ -774,8 +774,8 @@ void ProcessAirCollision()
     // Bug Details:
     // using collision outer here results in a few slopes having some wonky collision if you jump at the on the wrong angles
     // v4 and prior uses inner box here instead, which works fine as far as I can tell...
-    // Fix (I think, it may break something else?): 
-    // uncomment the 2 lines below and remove the two below that to get v4-like behaviour 
+    // Fix (I think, it may break something else?):
+    // uncomment the 2 lines below and remove the two below that to get v4-like behaviour
     // sensors[2].pos.x = collisionEntity->position.x + (collisionInner_Left << 16);
     // sensors[3].pos.x = collisionEntity->position.x + (collisionInner_Right << 16);
     sensors[2].pos.x = collisionEntity->position.x + (collisionOuter_Left << 16) + (1 << 16);
@@ -801,12 +801,12 @@ void ProcessAirCollision()
         sensors[5].pos.y = (collisionOuter_Top << 16) + collisionEntity->position.y - (1 << 16);
     }
 
-    int cnt   = (abs(collisionEntity->velocity.x) <= abs(collisionEntity->velocity.y) ? ((abs(collisionEntity->velocity.y) >> collisionMaskAir) + 1)
-                                                                                    : (abs(collisionEntity->velocity.x) >> collisionMaskAir) + 1);
-    int velX  = collisionEntity->velocity.x / cnt;
-    int velY  = collisionEntity->velocity.y / cnt;
-    int velX2 = collisionEntity->velocity.x - velX * (cnt - 1);
-    int velY2 = collisionEntity->velocity.y - velY * (cnt - 1);
+    int32 cnt   = (abs(collisionEntity->velocity.x) <= abs(collisionEntity->velocity.y) ? ((abs(collisionEntity->velocity.y) >> collisionMaskAir) + 1)
+                                                                                        : (abs(collisionEntity->velocity.x) >> collisionMaskAir) + 1);
+    int32 velX  = collisionEntity->velocity.x / cnt;
+    int32 velY  = collisionEntity->velocity.y / cnt;
+    int32 velX2 = collisionEntity->velocity.x - velX * (cnt - 1);
+    int32 velY2 = collisionEntity->velocity.y - velY * (cnt - 1);
     while (cnt > 0) {
         if (cnt < 2) {
             velX = velX2;
@@ -873,7 +873,7 @@ void ProcessAirCollision()
         }
 
         if (movingDown == 1) {
-            for (int i = 2; i < 4; i++) {
+            for (int32 i = 2; i < 4; i++) {
                 if (!sensors[i].collided) {
                     sensors[i].pos.x += velX;
                     sensors[i].pos.y += velY;
@@ -887,7 +887,7 @@ void ProcessAirCollision()
         }
 
         if (movingUp == 1) {
-            for (int i = 4; i < 6; i++) {
+            for (int32 i = 4; i < 6; i++) {
                 if (!sensors[i].collided) {
                     sensors[i].pos.x += velX;
                     sensors[i].pos.y += velY;
@@ -939,7 +939,7 @@ void ProcessAirCollision()
             collisionEntity->position.x += 0x40000;
         }
 
-        int speed = 0;
+        int32 speed = 0;
         if (collisionEntity->angle < 0x80) {
             if (collisionEntity->angle < 0x10) {
                 speed = collisionEntity->velocity.x;
@@ -975,7 +975,7 @@ void ProcessAirCollision()
     }
 
     if (movingUp == 2) {
-        int sensorAngle = 0;
+        int32 sensorAngle = 0;
         if (sensors[4].collided && sensors[5].collided) {
             if (sensors[4].pos.y <= sensors[5].pos.y) {
                 collisionEntity->position.y = sensors[5].pos.y - (collisionOuter_Top << 16) + (1 << 16);
@@ -1030,15 +1030,15 @@ void ProcessPathGrip()
 {
     int32 xVel = 0;
     int32 yVel = 0;
-    
+
     sensors[4].pos.x = collisionEntity->position.x;
     sensors[4].pos.y = collisionEntity->position.y;
-    for (int i = 0; i < 6; ++i) {
+    for (int32 i = 0; i < 6; ++i) {
         sensors[i].angle    = collisionEntity->angle;
         sensors[i].collided = false;
     }
     SetPathGripSensors(sensors);
-    
+
     int32 absSpeed  = abs(collisionEntity->groundVel);
     int32 checkDist = absSpeed >> 18;
     absSpeed &= 0x3FFFF;
@@ -1049,9 +1049,9 @@ void ProcessPathGrip()
             checkDist--;
         }
         else {
-            xVel       = absSpeed * cosVal256[collisionEntity->angle] >> 8;
-            yVel       = absSpeed * sinVal256[collisionEntity->angle] >> 8;
-            checkDist  = -1;
+            xVel      = absSpeed * cosVal256[collisionEntity->angle] >> 8;
+            yVel      = absSpeed * sinVal256[collisionEntity->angle] >> 8;
+            checkDist = -1;
         }
 
         if (collisionEntity->groundVel < 0) {
@@ -1086,18 +1086,18 @@ void ProcessPathGrip()
                 }
 
                 if (sensors[3].collided) {
-                    xVel       = 0;
+                    xVel      = 0;
                     checkDist = -1;
                 }
 
-                for (int i = 0; i < 3; i++) {
+                for (int32 i = 0; i < 3; i++) {
                     sensors[i].pos.x += xVel;
                     sensors[i].pos.y += yVel;
                     FindFloorPosition(&sensors[i]);
                 }
 
                 tileDistance = -1;
-                for (int i = 0; i < 3; i++) {
+                for (int32 i = 0; i < 3; i++) {
                     if (tileDistance > -1) {
                         if (sensors[i].collided) {
                             if (sensors[i].pos.y < sensors[tileDistance].pos.y)
@@ -1134,7 +1134,7 @@ void ProcessPathGrip()
                     collisionEntity->collisionMode = CMODE_RWALL;
                 break;
             }
-                
+
             case CMODE_LWALL: {
                 sensors[3].pos.x += xVel;
                 sensors[3].pos.y += yVel;
@@ -1146,18 +1146,18 @@ void ProcessPathGrip()
                     FloorCollision(&sensors[3]);
 
                 if (sensors[3].collided) {
-                    yVel       = 0;
+                    yVel      = 0;
                     checkDist = -1;
                 }
-                
-                for (int i = 0; i < 3; i++) {
+
+                for (int32 i = 0; i < 3; i++) {
                     sensors[i].pos.x += xVel;
                     sensors[i].pos.y += yVel;
                     FindLWallPosition(&sensors[i]);
                 }
 
                 tileDistance = -1;
-                for (int i = 0; i < 3; i++) {
+                for (int32 i = 0; i < 3; i++) {
                     if (tileDistance > -1) {
                         if (sensors[i].pos.x < sensors[tileDistance].pos.x && sensors[i].collided) {
                             tileDistance = i;
@@ -1191,7 +1191,7 @@ void ProcessPathGrip()
                     collisionEntity->collisionMode = CMODE_ROOF;
                 break;
             }
-                
+
             case CMODE_ROOF: {
                 sensors[3].pos.x += xVel;
                 sensors[3].pos.y += yVel;
@@ -1203,18 +1203,18 @@ void ProcessPathGrip()
                     LWallCollision(&sensors[3]);
 
                 if (sensors[3].collided) {
-                    xVel       = 0;
+                    xVel      = 0;
                     checkDist = -1;
                 }
-                
-                for (int i = 0; i < 3; i++) {
+
+                for (int32 i = 0; i < 3; i++) {
                     sensors[i].pos.x += xVel;
                     sensors[i].pos.y += yVel;
                     FindRoofPosition(&sensors[i]);
                 }
 
                 tileDistance = -1;
-                for (int i = 0; i < 3; i++) {
+                for (int32 i = 0; i < 3; i++) {
                     if (tileDistance > -1) {
                         if (sensors[i].pos.y > sensors[tileDistance].pos.y && sensors[i].collided) {
                             tileDistance = i;
@@ -1248,7 +1248,7 @@ void ProcessPathGrip()
                     collisionEntity->collisionMode = CMODE_RWALL;
                 break;
             }
-                
+
             case CMODE_RWALL: {
                 sensors[3].pos.x += xVel;
                 sensors[3].pos.y += yVel;
@@ -1260,18 +1260,18 @@ void ProcessPathGrip()
                     RoofCollision(&sensors[3]);
 
                 if (sensors[3].collided) {
-                    yVel       = 0;
+                    yVel      = 0;
                     checkDist = -1;
                 }
 
-                for (int i = 0; i < 3; i++) {
+                for (int32 i = 0; i < 3; i++) {
                     sensors[i].pos.x += xVel;
                     sensors[i].pos.y += yVel;
                     FindRWallPosition(&sensors[i]);
                 }
 
                 tileDistance = -1;
-                for (int i = 0; i < 3; i++) {
+                for (int32 i = 0; i < 3; i++) {
                     if (tileDistance > -1) {
                         if (sensors[i].pos.x > sensors[tileDistance].pos.x && sensors[i].collided) {
                             tileDistance = i;
@@ -1306,7 +1306,7 @@ void ProcessPathGrip()
                 break;
             }
         }
-        
+
         if (tileDistance != -1)
             collisionEntity->angle = sensors[0].angle;
 
@@ -1320,7 +1320,7 @@ void ProcessPathGrip()
         case CMODE_FLOOR: {
             if (sensors[0].collided || sensors[1].collided || sensors[2].collided) {
                 collisionEntity->angle = sensors[0].angle;
-                
+
                 if (!sensors[3].collided) {
                     collisionEntity->position.x = sensors[4].pos.x;
                 }
@@ -1334,7 +1334,7 @@ void ProcessPathGrip()
                     collisionEntity->groundVel  = 0;
                     collisionEntity->velocity.x = 0;
                 }
-                
+
                 collisionEntity->position.y = sensors[4].pos.y;
             }
             else {
@@ -1362,12 +1362,12 @@ void ProcessPathGrip()
                     collisionEntity->groundVel  = 0;
                     collisionEntity->velocity.x = 0;
                 }
-                
+
                 collisionEntity->position.y += collisionEntity->velocity.y;
             }
             break;
         }
-            
+
         case CMODE_LWALL: {
             if (sensors[0].collided || sensors[1].collided || sensors[2].collided) {
                 collisionEntity->angle = sensors[0].angle;
@@ -1403,11 +1403,11 @@ void ProcessPathGrip()
             }
             break;
         }
-            
+
         case CMODE_ROOF: {
             if (sensors[0].collided || sensors[1].collided || sensors[2].collided) {
-                collisionEntity->angle     = sensors[0].angle;
-                
+                collisionEntity->angle = sensors[0].angle;
+
                 if (!sensors[3].collided) {
                     collisionEntity->position.x = sensors[4].pos.x;
                 }
@@ -1417,7 +1417,7 @@ void ProcessPathGrip()
 
                     if (collisionEntity->groundVel < 0)
                         collisionEntity->position.x = sensors[3].pos.x + (collisionOuter_Left << 16) - (1 << 16);
-                    
+
                     collisionEntity->groundVel = 0;
                 }
             }
@@ -1435,7 +1435,7 @@ void ProcessPathGrip()
 
                 collisionEntity->angle     = 0;
                 collisionEntity->groundVel = collisionEntity->velocity.x;
-                
+
                 if (!sensors[3].collided) {
                     collisionEntity->position.x += collisionEntity->velocity.x;
                 }
@@ -1452,17 +1452,17 @@ void ProcessPathGrip()
             collisionEntity->position.y = sensors[4].pos.y;
             break;
         }
-            
+
         case CMODE_RWALL: {
             if (sensors[0].collided || sensors[1].collided || sensors[2].collided) {
-                collisionEntity->angle         = sensors[0].angle;
+                collisionEntity->angle = sensors[0].angle;
             }
             else {
                 collisionEntity->onGround      = false;
                 collisionEntity->collisionMode = CMODE_FLOOR;
                 collisionEntity->velocity.x    = cosVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
                 collisionEntity->velocity.y    = sinVal256[collisionEntity->angle] * collisionEntity->groundVel >> 8;
-                
+
                 if (collisionEntity->velocity.y < -0x100000)
                     collisionEntity->velocity.y = -0x100000;
 
@@ -1489,7 +1489,7 @@ void ProcessPathGrip()
             }
             break;
         }
-            
+
         default: break;
     }
 }
@@ -1502,7 +1502,7 @@ void SetPathGripSensors(CollisionSensor *sensors)
             sensors[1].pos.y = sensors[4].pos.y + (collisionOuter_Bottom << 16);
             sensors[2].pos.y = sensors[4].pos.y + (collisionOuter_Bottom << 16);
             sensors[3].pos.y = sensors[4].pos.y + collisionOffset;
-            
+
             sensors[0].pos.x = sensors[4].pos.x + (collisionInner_Left << 16) - (1 << 16);
             sensors[1].pos.x = sensors[4].pos.x;
             sensors[2].pos.x = sensors[4].pos.x + (collisionInner_Right << 16);
@@ -1511,13 +1511,13 @@ void SetPathGripSensors(CollisionSensor *sensors)
             else
                 sensors[3].pos.x = sensors[4].pos.x + (collisionOuter_Right << 16);
             break;
-            
+
         case CMODE_LWALL:
             sensors[0].pos.x = sensors[4].pos.x + (collisionOuter_Bottom << 16);
             sensors[1].pos.x = sensors[4].pos.x + (collisionOuter_Bottom << 16);
             sensors[2].pos.x = sensors[4].pos.x + (collisionOuter_Bottom << 16);
             sensors[3].pos.x = sensors[4].pos.x;
-            
+
             sensors[0].pos.y = sensors[4].pos.y + (collisionInner_Left << 16) - (1 << 16);
             sensors[1].pos.y = sensors[4].pos.y;
             sensors[2].pos.y = sensors[4].pos.y + (collisionInner_Right << 16);
@@ -1526,13 +1526,13 @@ void SetPathGripSensors(CollisionSensor *sensors)
             else
                 sensors[3].pos.y = sensors[4].pos.y - (collisionOuter_Right << 16) - (1 << 16);
             break;
-            
+
         case CMODE_ROOF:
             sensors[3].pos.y = sensors[4].pos.y - collisionOffset;
             sensors[0].pos.y = sensors[4].pos.y - (collisionOuter_Bottom << 16) - (1 << 16);
             sensors[1].pos.y = sensors[4].pos.y - (collisionOuter_Bottom << 16) - (1 << 16);
             sensors[2].pos.y = sensors[4].pos.y - (collisionOuter_Bottom << 16) - (1 << 16);
-            
+
             sensors[0].pos.x = sensors[4].pos.x + (collisionInner_Left << 16) - (1 << 16);
             sensors[1].pos.x = sensors[4].pos.x;
             sensors[2].pos.x = sensors[4].pos.x + (collisionInner_Right << 16);
@@ -1541,13 +1541,13 @@ void SetPathGripSensors(CollisionSensor *sensors)
             else
                 sensors[3].pos.x = sensors[4].pos.x - (collisionOuter_Right << 16) - (1 << 16);
             break;
-            
+
         case CMODE_RWALL:
             sensors[0].pos.x = sensors[4].pos.x - (collisionOuter_Bottom << 16) - (1 << 16);
             sensors[1].pos.x = sensors[4].pos.x - (collisionOuter_Bottom << 16) - (1 << 16);
             sensors[2].pos.x = sensors[4].pos.x - (collisionOuter_Bottom << 16) - (1 << 16);
             sensors[3].pos.x = sensors[4].pos.x;
-            
+
             sensors[0].pos.y = sensors[4].pos.y + (collisionInner_Left << 16) - (1 << 16);
             sensors[1].pos.y = sensors[4].pos.y;
             sensors[2].pos.y = sensors[4].pos.y + (collisionInner_Right << 16);
@@ -1556,37 +1556,37 @@ void SetPathGripSensors(CollisionSensor *sensors)
             else
                 sensors[3].pos.y = sensors[4].pos.y + (collisionOuter_Right << 16);
             break;
-            
+
         default: break;
     }
 }
 
 void FindFloorPosition(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = 1 << 12;
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = 1 << 12;
     if (collisionEntity->collisionPlane)
         solid = 1 << 14;
-    int startY = posY;
+    int32 startY = posY;
 
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cy         = (colY & -TILE_SIZE) - TILE_SIZE;
             if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                for (int i = 0; i < 3; ++i) {
+                for (int32 i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
                         uint16 tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
-                            int ty        = cy + mask;
-                            int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorAngle;
-                            
+                            int32 mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
+                            int32 ty        = cy + mask;
+                            int32 tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorAngle;
+
                             if (mask < 0xFF) {
                                 if (!sensor->collided || startY >= ty) {
                                     if (abs(colY - ty) <= collisionTolerance) {
@@ -1613,28 +1613,28 @@ void FindFloorPosition(CollisionSensor *sensor)
 }
 void FindLWallPosition(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    int solid = (1 << 12) | (1 << 13);
+    int32 posX  = (sensor->pos.x >> 0x10);
+    int32 posY  = (sensor->pos.y >> 0x10);
+    int32 solid = (1 << 12) | (1 << 13);
     if (collisionEntity->collisionPlane)
         solid = (1 << 14) | (1 << 15);
-    int startX = posX;
+    int32 startX = posX;
 
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cx         = (colX & -TILE_SIZE) - TILE_SIZE;
             if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                for (int i = 0; i < 3; ++i) {
+                for (int32 i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
                         uint16 tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
-                            int tx        = cx + mask;
-                            int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallAngle;
+                            int32 mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
+                            int32 tx        = cx + mask;
+                            int32 tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallAngle;
                             if (mask < 0xFF) {
                                 if (!sensor->collided || startX >= tx) {
                                     if (abs(colX - tx) <= collisionTolerance) {
@@ -1660,31 +1660,31 @@ void FindLWallPosition(CollisionSensor *sensor)
 }
 void FindRoofPosition(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = 1 << 13;
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = 1 << 13;
     if (collisionEntity->collisionPlane)
         solid = 1 << 15;
-    int startY = posY;
+    int32 startY = posY;
 
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
-            
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cy         = (colY & -TILE_SIZE) + TILE_SIZE;
+
             if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                for (int i = 0; i < 3; ++i) {
+                for (int32 i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
                         uint16 tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
-                            int ty        = cy + mask;
-                            int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofAngle;
-                            
+                            int32 mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
+                            int32 ty        = cy + mask;
+                            int32 tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofAngle;
+
                             if (mask < 0xFF) {
                                 if (!sensor->collided || startY <= ty) {
                                     if (abs(colY - ty) <= collisionTolerance) {
@@ -1710,31 +1710,31 @@ void FindRoofPosition(CollisionSensor *sensor)
 }
 void FindRWallPosition(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = (1 << 12) | (1 << 13);
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = (1 << 12) | (1 << 13);
     if (collisionEntity->collisionPlane)
         solid = (1 << 14) | (1 << 15);
-    int startX = posX;
+    int32 startX = posX;
 
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
-            
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cx         = (colX & -TILE_SIZE) + TILE_SIZE;
+
             if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                for (int i = 0; i < 3; ++i) {
+                for (int32 i = 0; i < 3; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
                         uint16 tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
-                            int tx        = cx + mask;
-                            int tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;
-                            
+                            int32 mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                            int32 tx        = cx + mask;
+                            int32 tileAngle = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;
+
                             if (mask < 0xFF) {
                                 if (!sensor->collided || startX <= tx) {
                                     if (abs(colX - tx) <= collisionTolerance) {
@@ -1761,27 +1761,27 @@ void FindRWallPosition(CollisionSensor *sensor)
 
 void FloorCollision(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = 1 << 12;
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = 1 << 12;
     if (collisionEntity->collisionPlane)
         solid = 1 << 14;
-    
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cy           = (colY & -TILE_SIZE) - TILE_SIZE;
-            
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cy         = (colY & -TILE_SIZE) - TILE_SIZE;
+
             if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int32 i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
                         uint16 tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
-                            int ty   = cy + mask;
+                            int32 mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
+                            int32 ty   = cy + mask;
                             if (colY >= ty && abs(colY - ty) <= 14 && mask < 0xFF) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorAngle;
@@ -1799,28 +1799,28 @@ void FloorCollision(CollisionSensor *sensor)
 }
 void LWallCollision(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = 1 << 13;
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = 1 << 13;
     if (collisionEntity->collisionPlane)
         solid = 1 << 15;
-    
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cx           = (colX & -TILE_SIZE) - TILE_SIZE;
-            
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cx         = (colX & -TILE_SIZE) - TILE_SIZE;
+
             if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int32 i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
                         uint16 tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
-                            int tx   = cx + mask;
+                            int32 mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallMasks[colY & 0xF];
+                            int32 tx   = cx + mask;
                             if (colX >= tx && abs(colX - tx) <= 14 && mask < 0xFF) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].lWallAngle;
@@ -1838,30 +1838,30 @@ void LWallCollision(CollisionSensor *sensor)
 }
 void RoofCollision(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = 1 << 13;
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = 1 << 13;
     if (collisionEntity->collisionPlane)
         solid = 1 << 15;
-    
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cy           = (colY & -TILE_SIZE) + TILE_SIZE;
-            
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cy         = (colY & -TILE_SIZE) + TILE_SIZE;
+
             if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int32 i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
-                        int tileX   = (colX / TILE_SIZE);
-                        int tileY   = (cy / TILE_SIZE);
+                        int32 tileX = (colX / TILE_SIZE);
+                        int32 tileY = (cy / TILE_SIZE);
                         uint16 tile = layer->layout[tileX + (tileY << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
-                            int ty   = cy + mask;
+                            int32 mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofMasks[colX & 0xF];
+                            int32 ty   = cy + mask;
                             if (colY < ty && abs(colY - ty) <= 14 && mask < 0xFF) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].roofAngle;
@@ -1879,28 +1879,28 @@ void RoofCollision(CollisionSensor *sensor)
 }
 void RWallCollision(CollisionSensor *sensor)
 {
-    int posX  = (sensor->pos.x >> 0x10);
-    int posY  = (sensor->pos.y >> 0x10);
-    
-    int solid = 1 << 13;
+    int32 posX = (sensor->pos.x >> 0x10);
+    int32 posY = (sensor->pos.y >> 0x10);
+
+    int32 solid = 1 << 13;
     if (collisionEntity->collisionPlane)
         solid = 1 << 15;
-    
-    for (int l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
+
+    for (int32 l = 0, layerID = 1; l < LAYER_COUNT; ++l, layerID <<= 1) {
         if (collisionEntity->collisionLayers & layerID) {
             TileLayer *layer = &tileLayers[l];
-            int colX         = posX - layer->position.x;
-            int colY         = posY - layer->position.y;
-            int cx           = (colX & -TILE_SIZE) + TILE_SIZE;
-            
+            int32 colX       = posX - layer->position.x;
+            int32 colY       = posY - layer->position.y;
+            int32 cx         = (colX & -TILE_SIZE) + TILE_SIZE;
+
             if (colY >= 0 && colY < TILE_SIZE * layer->ysize) {
-                for (int i = 0; i < 3 && !sensor->collided; ++i) {
+                for (int32 i = 0; i < 3 && !sensor->collided; ++i) {
                     if (cx >= 0 && cx < TILE_SIZE * layer->xsize) {
                         uint16 tile = layer->layout[(cx / TILE_SIZE) + ((colY / TILE_SIZE) << layer->widthShift)];
-                        
+
                         if (tile < 0xFFFF && tile & solid) {
-                            int mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
-                            int tx   = cx + mask;
+                            int32 mask = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallMasks[colY & 0xF];
+                            int32 tx   = cx + mask;
                             if (colX <= tx && abs(colX - tx) <= 14 && mask < 0xFF) {
                                 sensor->collided = true;
                                 sensor->angle    = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].rWallAngle;

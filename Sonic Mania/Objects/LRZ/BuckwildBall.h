@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { BUCKWILDBALL_PATROLLING, BUCKWILDBALL_FALLING } BuckwildBallModes;
+
 // Object Class
 struct ObjectBuckwildBall {
     RSDK_OBJECT
@@ -23,14 +25,14 @@ struct EntityBuckwildBall {
     Vector2 detectOffset;
     Vector2 detectSize;
     bool32 respawn;
-    int32 field_7C;
+    int32 unused;
     Vector2 startPos;
     Vector2 ballPos;
     int32 particleDelay;
     int32 timerSfx;
     Hitbox detectHitbox;
     Animator animator;
-    int32 field_B8;
+    int32 bossBallSlot;
 };
 
 // Object Struct
@@ -57,10 +59,10 @@ void BuckwildBall_CheckPlayerCollisions(void);
 void BuckwildBall_HandleRollCrush(void);
 
 void BuckwildBall_State_Setup(void);
-void BuckwildBall_State_Unknown1(void);
-void BuckwildBall_State_Unknown2(void);
-void BuckwildBall_State_Unknown3(void);
-void BuckwildBall_State_Unknown4(void);
-void BuckwildBall_State_Unknown5(void);
+void BuckwildBall_State_Patrolling(void);
+void BuckwildBall_State_AwaitDetection(void);
+void BuckwildBall_State_Falling(void);
+void BuckwildBall_State_Rolling(void);
+void BuckwildBall_State_Debris(void);
 
 #endif //!OBJ_BUCKWILDBALL_H

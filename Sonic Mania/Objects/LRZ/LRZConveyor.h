@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LRZCONVEYOR_BEHAVIOUR_0,
+    LRZCONVEYOR_BEHAVIOUR_1,
+    LRZCONVEYOR_BEHAVIOUR_2,
+    LRZCONVEYOR_BEHAVIOUR_3,
+} LRZConveyorButtonBehaviours;
+
 // Object Class
 struct ObjectLRZConveyor {
     RSDK_OBJECT
@@ -23,11 +30,11 @@ struct EntityLRZConveyor {
     uint8 isOff;
     uint8 startDir;
     Vector2 startPos;
-    int32 field_80;
+    int32 unused;
     EntityButton *taggedButton;
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
+    Animator wheelAnimator;
+    Animator smallWheelAnimator;
 };
 
 // Object Struct
@@ -50,8 +57,8 @@ void LRZConveyor_Serialize(void);
 void LRZConveyor_HandleBehaviour(void);
 void LRZConveyor_HandlePlayerInteractions(void);
 int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr);
-void LRZConveyor_Unknown4(void);
-void LRZConveyor_Unknown5(colour *colour, int a2, int a3, int a4, int a5, int a6, int a7, int a8);
-void LRZConveyor_Unknown6(void);
+void LRZConveyor_DrawWheels(void);
+void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, colour *colour);
+void LRZConveyor_DrawConveyorLines(void);
 
 #endif //!OBJ_LRZCONVEYOR_H

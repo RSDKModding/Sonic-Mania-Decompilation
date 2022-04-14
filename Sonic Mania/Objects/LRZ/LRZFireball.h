@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LRZFIREBALL_SPAWNER,
+    LRZFIREBALL_LAUNCHER_STATIC,
+    LRZFIREBALL_LAUNCHER_GRAVITY,
+}LRZFireballTypes;
+
 // Object Class
 struct ObjectLRZFireball {
     RSDK_OBJECT
@@ -20,9 +26,9 @@ struct EntityLRZFireball {
     uint8 type;
     uint16 interval;
     uint16 intervalOffset;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
 };
 
 // Object Struct
@@ -46,14 +52,14 @@ void LRZFireball_CheckPlayerCollisions(void);
 void LRZFireball_CheckOffScreen(void);
 void LRZFireball_CheckTileCollisions(void);
 
-void LRZFireball_State_Type0(void);
-void LRZFireball_State_Type1(void);
-void LRZFireball_State_Type2(void);
+void LRZFireball_State_Spawner(void);
+void LRZFireball_State_LauncherStatic(void);
+void LRZFireball_State_LauncherGravity(void);
 
-void LRZFireball_StateChild_Type0(void);
-void LRZFireball_StateChild_Type1(void);
-void LRZFireball_StateChild_Type2(void);
+void LRZFireball_StateChild_Spawner(void);
+void LRZFireball_StateChild_LauncherStatic(void);
+void LRZFireball_StateChild_LauncherGravity(void);
 
-void LRZFireball_StateDraw_Visible(void);
+void LRZFireball_Draw_Simple(void);
 
 #endif //!OBJ_LRZFIREBALL_H

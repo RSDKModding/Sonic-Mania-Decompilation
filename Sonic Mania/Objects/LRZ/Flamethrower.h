@@ -10,17 +10,22 @@ typedef enum {
     FLAMETHROWER_ORIENTATION_UP
 } FlamethrowerOrientations;
 
+typedef enum {
+    FLAMETHROWER_MODE_EMITTER,
+    FLAMETHROWER_MODE_SPRINKLER,
+} FlamethrowerModes;
+
 // Object Class
 struct ObjectFlamethrower {
     RSDK_OBJECT
     uint16 aniFrames;
     uint16 sfxFlame;
     bool32 playingFlameSfx;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    Hitbox hitbox5;
+    Hitbox hitboxMouthH;
+    Hitbox hitboxMouthV;
+    Hitbox hitboxSmallFireball;
+    Hitbox hitboxMediumFireball;
+    Hitbox hitboxLargeFireball;
 };
 
 // Entity Class
@@ -36,11 +41,11 @@ struct EntityFlamethrower {
     uint16 duration;
     uint16 timer;
     uint16 flameAngle;
-    int32 field_70;
-    int32 field_74;
-    Entity *parent;
+    int32 lastYVelocity;
+    int32 currentDist;
+    EntityFlamethrower *parent;
     Vector2 origin;
-    Vector2 field_84;
+    Vector2 lastPos;
     Animator animator;
 };
 
@@ -64,19 +69,19 @@ void Flamethrower_Serialize(void);
 void Flamethrower_SetupOrientation(uint8 orientation);
 Hitbox Flamethrower_GetHitbox(void);
 void Flamethrower_CheckOffScreen(void);
-void Flamethrower_Unknown3(void);
+void Flamethrower_HandleAnimations(void);
 void Flamethrower_HandleAngles(void);
 void Flamethrower_HandleTileCollisions(void);
-void Flamethrower_Unknown7(uint8 orientation);
+void Flamethrower_CheckOutOfBounds(uint8 orientation);
 
 void Flamethrower_CheckFlameCollisions(void);
-void Flamethrower_CheckBaseCollisions(void);
+void Flamethrower_CheckMouthCollisions(void);
 
-void Flamethrower_State_Unknown1(void);
-void Flamethrower_State_Unknown2(void);
-void Flamethrower_State_Unknown3(void);
+void Flamethrower_State_Setup(void);
+void Flamethrower_State_AwaitInterval(void);
+void Flamethrower_State_EmittingFlames(void);
 
-void Flamethrower_State1_Unknown1(void);
-void Flamethrower_State1_Unknown2(void);
+void Flamethrower_State_SetupFireball(void);
+void Flamethrower_State_Fireball(void);
 
 #endif //!OBJ_FLAMETHROWER_H

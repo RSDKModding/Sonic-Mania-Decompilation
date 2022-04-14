@@ -27,7 +27,7 @@ struct EntityLRZConvControl {
     uint8 flipVal;
     EntityButton *taggedButton;
     uint8 activePlayers;
-    uint8 field_75;
+    uint8 wasToggled;
     Hitbox hitbox;
     Animator animator;
 };

@@ -16,9 +16,9 @@ struct EntityLRZ3Outro {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    TileLayer *bg1;
-    TileLayer *bg2;
-    Entity *littlePlanet;
+    TileLayer *background1;
+    TileLayer *background2;
+    EntityParallaxSprite *littlePlanet;
     int32 blastoffChannel;
     float blastoffVolume;
 };
@@ -42,9 +42,9 @@ void LRZ3Outro_Serialize(void);
 // Extra Entity Functions
 void LRZ3Outro_HandleExplosions(void);
 
-void LRZ3Outro_State_Unknown1(void);
-void LRZ3Outro_State_Unknown2(void);
-void LRZ3Outro_State_Unknown3(void);
+void LRZ3Outro_State_BlastOff(void);
+void LRZ3Outro_State_RocketLaunch(void);
+void LRZ3Outro_State_EnterLittlePlanet(void);
 
 void LRZ3Outro_StageFinishCB(void);
 

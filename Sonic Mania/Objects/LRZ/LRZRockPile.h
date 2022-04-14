@@ -3,12 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LRZROCKPILE_WALL,
+    LRZROCKPILE_FLOOR_TOPSOLID,
+    LRZROCKPILE_FLOOR_ALLSOLID,
+} LRZRockPileTypes;
+
 // Object Class
 struct ObjectLRZRockPile {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxWall;
+    Hitbox hitboxFloorTopSolid;
+    Hitbox hitboxFloorAllSolid;
     uint16 sfxLedgeBreak;
     uint16 aniFrames;
     uint16 particleFrames;
@@ -27,13 +33,13 @@ struct EntityLRZRockPile {
 #if RETRO_USE_PLUS
     bool32 onlyMighty;
 #endif
-    int32 debrisInfo[0xC0];
+    int32 rockDebrisInfo[32 * 6];
     uint8 debrisCount;
     int32 timer;
-    int32 timer2;
+    int32 destroyTimer;
     Vector2 startPos;
     Animator animator;
-    bool32 flag;
+    bool32 canCollapse;
     Hitbox hitbox;
 };
 
@@ -55,11 +61,11 @@ void LRZRockPile_Serialize(void);
 
 // Extra Entity Functions
 void LRZRockPile_SetupDebris(void);
-void LRZRockPile_SpawnRockDebris(int x, int y, int velX, int velY);
+void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY);
 
-void LRZRockPile_State_Type0(void);
-void LRZRockPile_State_Type1(void);
-void LRZRockPile_State_Type2(void);
+void LRZRockPile_State_Wall(void);
+void LRZRockPile_State_Floor_TopSolid(void);
+void LRZRockPile_State_Floor_AllSolid(void);
 void LRZRockPile_State_Broken(void);
 
 #endif //!OBJ_LRZROCKPILE_H

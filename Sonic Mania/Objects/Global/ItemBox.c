@@ -226,14 +226,14 @@ void ItemBox_State_Broken(void)
 {
     RSDK_THIS(ItemBox);
     if (LRZConvItem)
-        LRZConvItem_GetMoveOffset(self);
+        LRZConvItem_HandleLRZConvPhys(self);
     ItemBox_HandleFallingCollision();
 }
 void ItemBox_State_ContentsShown(void)
 {
     RSDK_THIS(ItemBox);
     if (LRZConvItem && self->lrzConvPhys) {
-        LRZConvItem_GetMoveOffset(self);
+        LRZConvItem_HandleLRZConvPhys(self);
     }
     else {
         ItemBox_HandleFallingCollision();
@@ -255,7 +255,7 @@ void ItemBox_State_ContentsDisappear(void)
 {
     RSDK_THIS(ItemBox);
     if (LRZConvItem && self->lrzConvPhys) {
-        LRZConvItem_GetMoveOffset(self);
+        LRZConvItem_HandleLRZConvPhys(self);
     }
     else {
         ItemBox_HandleFallingCollision();
@@ -336,7 +336,7 @@ void ItemBox_State_Conveyor(void)
 {
     RSDK_THIS(ItemBox);
 
-    self->moveOffset    = LRZConvItem_GetMoveOffset(self);
+    self->moveOffset    = LRZConvItem_HandleLRZConvPhys(self);
     self->contentsPos.x = self->position.x;
     if (self->direction == FLIP_NONE)
         self->contentsPos.y = self->position.y - 0x30000;

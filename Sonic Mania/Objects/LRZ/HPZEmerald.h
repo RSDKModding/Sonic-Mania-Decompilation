@@ -7,7 +7,7 @@ typedef enum {
     HPZEMERALD_MASTER,
     HPZEMERALD_EMERALD_LOW,
     HPZEMERALD_EMERALD_HIGH,
-}HPZEmeraldTypes;
+} HPZEmeraldTypes;
 
 // Object Class
 struct ObjectHPZEmerald {
@@ -18,13 +18,13 @@ struct ObjectHPZEmerald {
 // Entity Class
 struct EntityHPZEmerald {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     int32 type;
     bool32 solid;
     Vector2 startPos;
     Hitbox *hitbox;
-    Animator animator2;
-    Animator animator;
+    Animator emeraldAnimator;
+    Animator overlayAnimator;
 };
 
 // Object Struct

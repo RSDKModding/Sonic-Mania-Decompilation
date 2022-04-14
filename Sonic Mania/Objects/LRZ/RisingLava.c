@@ -96,10 +96,18 @@ void RisingLava_State_StoppedRising(void)
 void RisingLava_EditorDraw(void)
 {
     RSDK_THIS(RisingLava);
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->offset.x, self->offset.y, self->size.x, self->size.y);
 
-    DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->offset.x, self->offset.y);
+    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->offset.x, self->offset.y, self->size.x, self->size.y);
+
+        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->offset.x, self->offset.y);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void RisingLava_EditorLoad(void) {}

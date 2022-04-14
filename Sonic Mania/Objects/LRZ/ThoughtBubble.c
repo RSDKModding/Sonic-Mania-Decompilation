@@ -12,11 +12,13 @@ ObjectThoughtBubble *ThoughtBubble;
 void ThoughtBubble_Update(void)
 {
     RSDK_THIS(ThoughtBubble);
+
     StateMachine_Run(self->state);
-    self->drawPos1.x = self->position.x + 0x280000;
-    self->drawPos1.y = ((RSDK.Sin256(-4 * Zone->timer) + 0x1A00) << 9) + self->position.y;
-    self->drawPos2.x = self->position.x + 0x180000;
-    self->drawPos2.y = ((RSDK.Sin256(4 * Zone->timer) + 0xB00) << 10) + self->position.y;
+
+    self->bubbleDotPos[0].x = self->position.x + 0x280000;
+    self->bubbleDotPos[0].y = ((RSDK.Sin256(-4 * Zone->timer) + 0x1A00) << 9) + self->position.y;
+    self->bubbleDotPos[1].x = self->position.x + 0x180000;
+    self->bubbleDotPos[1].y = ((RSDK.Sin256(4 * Zone->timer) + 0xB00) << 10) + self->position.y;
 }
 
 void ThoughtBubble_LateUpdate(void) {}
@@ -27,22 +29,26 @@ void ThoughtBubble_Draw(void)
 {
     RSDK_THIS(ThoughtBubble);
     switch (self->type) {
-        case 0: RSDK.DrawSprite(&self->animator3, &self->drawPos1, false); break;
-        case 1:
-            RSDK.DrawSprite(&self->animator3, &self->drawPos1, false);
-            RSDK.DrawSprite(&self->animator4, &self->drawPos2, false);
+        case THOUGHTBUBBLE_1DOT: RSDK.DrawSprite(&self->dotAnimator1, &self->bubbleDotPos[0], false); break;
+
+        case THOUGHTBUBBLE_2DOTS:
+            RSDK.DrawSprite(&self->dotAnimator1, &self->bubbleDotPos[0], false);
+            RSDK.DrawSprite(&self->dotAnimator2, &self->bubbleDotPos[1], false);
             break;
-        case 2:
-            RSDK.DrawSprite(&self->animator3, &self->drawPos1, false);
-            RSDK.DrawSprite(&self->animator4, &self->drawPos2, false);
-            RSDK.DrawSprite(&self->animator1, NULL, false);
+
+        case THOUGHTBUBBLE_BUBBLE:
+            RSDK.DrawSprite(&self->dotAnimator1, &self->bubbleDotPos[0], false);
+            RSDK.DrawSprite(&self->dotAnimator2, &self->bubbleDotPos[1], false);
+            RSDK.DrawSprite(&self->bubbleAnimator, NULL, false);
             break;
-        case 3:
-            RSDK.DrawSprite(&self->animator3, &self->drawPos1, false);
-            RSDK.DrawSprite(&self->animator4, &self->drawPos2, false);
-            RSDK.DrawSprite(&self->animator1, NULL, false);
-            RSDK.DrawSprite(&self->animator2, NULL, false);
+
+        case THOUGHTBUBBLE_THOUGHTS:
+            RSDK.DrawSprite(&self->dotAnimator1, &self->bubbleDotPos[0], false);
+            RSDK.DrawSprite(&self->dotAnimator2, &self->bubbleDotPos[1], false);
+            RSDK.DrawSprite(&self->bubbleAnimator, NULL, false);
+            RSDK.DrawSprite(&self->thoughtAnimator, NULL, false);
             break;
+
         default: break;
     }
 }
@@ -56,11 +62,11 @@ void ThoughtBubble_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->state         = ThoughtBubble_Unknown1;
-        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->animator4, true, 3);
-        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 3, &self->animator2, true, 0);
+        self->state         = ThoughtBubble_BubbleAppear;
+        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->dotAnimator1, true, 0);
+        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->dotAnimator2, true, 3);
+        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 1, &self->bubbleAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 3, &self->thoughtAnimator, true, 0);
     }
 }
 
@@ -70,51 +76,57 @@ void ThoughtBubble_StageLoad(void)
     ThoughtBubble->dustFrames = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE);
 }
 
-void ThoughtBubble_Unknown1(void)
+void ThoughtBubble_BubbleAppear(void)
 {
     RSDK_THIS(ThoughtBubble);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->dotAnimator1);
+    RSDK.ProcessAnimation(&self->dotAnimator2);
+
     if (++self->timer == 8) {
         self->timer = 0;
-        if (++self->type == 2)
-            self->state = ThoughtBubble_Unknown2;
+        if (++self->type == THOUGHTBUBBLE_BUBBLE)
+            self->state = ThoughtBubble_HaveFirstThought;
     }
 }
-void ThoughtBubble_Unknown2(void)
+void ThoughtBubble_HaveFirstThought(void)
 {
     RSDK_THIS(ThoughtBubble);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1) {
-        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 2, &self->animator1, true, 0);
-        self->state = ThoughtBubble_Unknown3;
+
+    RSDK.ProcessAnimation(&self->dotAnimator1);
+    RSDK.ProcessAnimation(&self->dotAnimator2);
+    RSDK.ProcessAnimation(&self->bubbleAnimator);
+
+    if (self->bubbleAnimator.frameID == self->bubbleAnimator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 2, &self->bubbleAnimator, true, 0);
+        self->state = ThoughtBubble_HaveOtherThoughts;
         ++self->type;
     }
 }
-void ThoughtBubble_Unknown3(void)
+void ThoughtBubble_HaveOtherThoughts(void)
 {
     RSDK_THIS(ThoughtBubble);
-    RSDK.ProcessAnimation(&self->animator3);
-    RSDK.ProcessAnimation(&self->animator4);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+
+    RSDK.ProcessAnimation(&self->dotAnimator1);
+    RSDK.ProcessAnimation(&self->dotAnimator2);
+    RSDK.ProcessAnimation(&self->bubbleAnimator);
+    RSDK.ProcessAnimation(&self->thoughtAnimator);
+
     if (++self->timer == 80) {
         self->timer = 0;
-        if (self->animator2.animationID >= 6) {
-            self->state = ThoughtBubble_Unknown4;
+        if (self->thoughtAnimator.animationID >= 6) {
+            self->state = ThoughtBubble_BubbleDisappear;
         }
         else {
-            self->animator2.animationID++;
-            RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, self->animator2.animationID, &self->animator2, true, 0);
+            self->thoughtAnimator.animationID++;
+            RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, self->thoughtAnimator.animationID, &self->thoughtAnimator, true, 0);
         }
     }
 }
-void ThoughtBubble_Unknown4(void)
+void ThoughtBubble_BubbleDisappear(void)
 {
     RSDK_THIS(ThoughtBubble);
-    self->type = 1;
+    self->type = THOUGHTBUBBLE_2DOTS;
+
     for (int32 i = 0; i < 8; ++i) {
         EntityDebris *debris =
             CREATE_ENTITY(Debris, NULL, self->position.x + RSDK.Rand(-0x180000, 0x180000), self->position.y + RSDK.Rand(-0x100000, 0x100000));
@@ -129,14 +141,14 @@ void ThoughtBubble_Unknown4(void)
         debris->drawOrder    = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(ThoughtBubble->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
     }
-    self->state = ThoughtBubble_Unknown5;
+    self->state = ThoughtBubble_DestroyBubble;
 }
-void ThoughtBubble_Unknown5(void)
+void ThoughtBubble_DestroyBubble(void)
 {
     RSDK_THIS(ThoughtBubble);
     if (++self->timer == 8) {
         self->timer = 0;
-        if (--self->type < 0)
+        if (--self->type < THOUGHTBUBBLE_1DOT)
             destroyEntity(self);
     }
 }
@@ -145,17 +157,17 @@ void ThoughtBubble_Unknown5(void)
 void ThoughtBubble_EditorDraw(void)
 {
     RSDK_THIS(ThoughtBubble);
-    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->animator4, true, 3);
-    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 1, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 3, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->dotAnimator1, true, 0);
+    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 0, &self->dotAnimator2, true, 3);
+    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 1, &self->bubbleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(ThoughtBubble->aniFrames, 3, &self->thoughtAnimator, true, 0);
 
-    self->type = 3;
+    self->type = THOUGHTBUBBLE_THOUGHTS;
 
-    self->drawPos1.x = self->position.x + 0x280000;
-    self->drawPos1.y = ((RSDK.Sin256(-4) + 0x1A00) << 9) + self->position.y;
-    self->drawPos2.x = self->position.x + 0x180000;
-    self->drawPos2.y = ((RSDK.Sin256(4) + 0xB00) << 10) + self->position.y;
+    self->bubbleDotPos[0].x = self->position.x + 0x280000;
+    self->bubbleDotPos[0].y = ((RSDK.Sin256(-4) + 0x1A00) << 9) + self->position.y;
+    self->bubbleDotPos[1].x = self->position.x + 0x180000;
+    self->bubbleDotPos[1].y = ((RSDK.Sin256(4) + 0xB00) << 10) + self->position.y;
 
     ThoughtBubble_Draw();
 }

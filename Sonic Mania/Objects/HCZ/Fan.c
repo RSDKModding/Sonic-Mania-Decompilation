@@ -192,7 +192,7 @@ void Fan_Create(void *data)
             case FAN_ACTIVATE_PLATFORM: self->stateActivate = Fan_Activate_Platform; break;
 
             case FAN_ACTIVATE_BUTTON:
-                Fan_SetupTagLinks();
+                Fan_SetupTagLink();
                 self->stateActivate = Fan_Activate_Button;
                 break;
 
@@ -200,7 +200,7 @@ void Fan_Create(void *data)
         }
 
         if (self->deactivation == FAN_DEACTIVATE_BUTTON) {
-            Fan_SetupTagLinks();
+            Fan_SetupTagLink();
             self->stateDeactivate = Fan_Deactivate_Button;
         }
     }
@@ -256,41 +256,49 @@ void Fan_StageLoad(void)
     Fan->playerHitbox.bottom = 1;
 }
 
-void Fan_SetupTagLinks(void)
+void Fan_SetupTagLink(void)
 {
     RSDK_THIS(Fan);
-    EntityButton *buttonPtr = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+
+    self->taggedButton         = NULL;
+    EntityButton *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+
     if (self->buttonTag > 0) {
-        bool32 flag = false;
+        bool32 matchedTag = false;
         if (Button) {
             foreach_all(Button, button)
             {
                 if (button->tag == self->buttonTag) {
-                    buttonPtr = button;
+                    taggedButton = button;
+                    matchedTag   = true;
                 }
             }
         }
 
-        if (PullChain && !flag) {
+        if (PullChain && !matchedTag) {
             foreach_all(PullChain, chain)
             {
                 if (chain->tag == self->buttonTag) {
-                    buttonPtr = (EntityButton *)chain;
+                    taggedButton = (EntityButton *)chain;
+                    matchedTag   = true;
                 }
             }
         }
     }
 
-    if ((Button && buttonPtr->objectID == Button->objectID) || (PullChain && buttonPtr->objectID == PullChain->objectID)) {
-        if (self->updateRange.y < 0x800000 + abs(self->position.y - buttonPtr->position.y))
-            self->updateRange.y = 0x800000 + abs(self->position.y - buttonPtr->position.y);
-        if (self->updateRange.y < 0x800000 + abs(self->position.y - buttonPtr->position.y))
-            self->updateRange.y = 0x800000 + abs(self->position.y - buttonPtr->position.y);
+    if (taggedButton) {
+        if ((Button && taggedButton->objectID == Button->objectID) || (PullChain && taggedButton->objectID == PullChain->objectID)) {
+            int32 distX = abs(self->position.x - taggedButton->position.x);
+            int32 distY = abs(self->position.y - taggedButton->position.y);
 
-        self->buttonPtr = buttonPtr;
-    }
-    else {
-        self->buttonPtr = NULL;
+            if (self->updateRange.x < 0x800000 + distX)
+                self->updateRange.x = 0x800000 + distX;
+
+            if (self->updateRange.y < 0x800000 + distY)
+                self->updateRange.y = 0x800000 + distY;
+
+            self->taggedButton = taggedButton;
+        }
     }
 }
 
@@ -447,7 +455,7 @@ void Fan_Activate_Button(void)
 {
     RSDK_THIS(Fan);
 
-    EntityButton *button = self->buttonPtr;
+    EntityButton *button = self->taggedButton;
     if ((!button || button->activated) && self->state == Fan_State_Stopped) {
         self->active = ACTIVE_NORMAL;
         Fan_Activate();
@@ -457,7 +465,7 @@ void Fan_Activate_Button(void)
 void Fan_Deactivate_Button(void)
 {
     RSDK_THIS(Fan);
-    EntityButton *button = self->buttonPtr;
+    EntityButton *button = self->taggedButton;
     if ((!button || button->activated) && self->state != Fan_State_Stopped) {
         self->active = ACTIVE_BOUNDS;
         self->state  = Fan_State_Stopped;
@@ -509,6 +517,9 @@ void Fan_EditorDraw(void)
     RSDK_THIS(Fan);
     RSDK.SetSpriteAnimation(Fan->aniFrames, self->type, &self->animator, true, 0);
 
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+
     int32 dir = self->direction;
     if (self->type == FAN_V)
         self->direction *= FLIP_Y;
@@ -516,6 +527,17 @@ void Fan_EditorDraw(void)
     Fan_Draw();
 
     self->direction = dir;
+
+    if (showGizmos()) {
+        if (self->activation == FAN_ACTIVATE_BUTTON || self->deactivation == FAN_DEACTIVATE_BUTTON) {
+            Fan_SetupTagLink();
+
+            RSDK_DRAWING_OVERLAY(true);
+            if (self->taggedButton)
+                DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y);
+            RSDK_DRAWING_OVERLAY(false);
+        }
+    }
 }
 
 void Fan_EditorLoad(void)

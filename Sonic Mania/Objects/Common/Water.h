@@ -88,7 +88,7 @@ struct EntityWater {
     uint8 activePlayers2;
     Vector2 bubbleOffset;
     Vector2 bubbleVelocity;
-    EntityButton *taggedObject;
+    EntityButton *taggedButton;
     Animator animator;
 };
 
@@ -115,7 +115,7 @@ void Water_SetWaterLevel(void);
 void Water_RemoveWaterEffect(void);
 
 // Utils
-void Water_CheckButtonTag(void);
+void Water_SetupTagLink(void);
 void Water_SpawnBubble(EntityPlayer *player, int32 id);
 void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID);
 EntityWater *Water_GetPlayerBubble(EntityPlayer *entityPtr);

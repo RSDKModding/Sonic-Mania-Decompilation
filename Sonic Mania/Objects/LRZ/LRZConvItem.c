@@ -32,6 +32,7 @@ void LRZConvItem_Create(void *data)
 
     if (data)
         self->type = voidToInt(data);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
     self->startPos      = self->position;
@@ -69,34 +70,36 @@ void LRZConvItem_SetupHitboxes(void)
     LRZConvItem->hitboxSpikeball.bottom = 10;
 }
 
-Vector2 LRZConvItem_GetMoveOffset(void *e)
+Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
 {
     EntityLRZConvItem *entity = (EntityLRZConvItem *)e;
 
-    Vector2 movePos;
-    movePos.x = 0;
-    movePos.y = 0;
+    Vector2 moveOffset;
+    moveOffset.x = 0;
+    moveOffset.y = 0;
     if (RSDK.CheckStageFolder("LRZ2")) {
-        int storeX = entity->position.x;
-        int storeY = entity->position.y;
+        int32 storeX = entity->position.x;
+        int32 storeY = entity->position.y;
 
         Hitbox hitbox;
         hitbox.left   = 0;
         hitbox.top    = 0;
         hitbox.right  = 0;
         hitbox.bottom = 0;
-        if (entity->objectID == LRZConvItem->objectID) 
-            hitbox = LRZConvItem->hitboxRock;
-        else if (entity->objectID == ItemBox->objectID) 
-            hitbox = ItemBox->hitbox;
-        else if (entity->objectID == Iwamodoki->objectID) 
-            hitbox = Iwamodoki->hitbox1;
 
+        if (entity->objectID == LRZConvItem->objectID)
+            hitbox = LRZConvItem->hitboxRock;
+        else if (entity->objectID == ItemBox->objectID)
+            hitbox = ItemBox->hitbox;
+        else if (entity->objectID == Iwamodoki->objectID)
+            hitbox = Iwamodoki->hitboxBadnik;
+
+        // Handle Object-Based Conveyor interactions
         bool32 conveyorCollided = false;
         if (LRZConveyor) {
             foreach_active(LRZConveyor, conveyor)
             {
-                int moveX = (conveyor->speed << 14) * (2 * (conveyor->direction == FLIP_X) - 1);
+                int32 moveX = (conveyor->speed << 14) * (2 * (conveyor->direction == FLIP_X) - 1);
                 if (LRZConveyor_HandlePlayerCollisions(conveyor, entity, &hitbox) == C_TOP) {
                     conveyorCollided = true;
                     if (conveyor->off) {
@@ -111,7 +114,8 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
             }
         }
 
-        int prevY           = entity->position.y;
+        // Try to collide with the floor
+        int32 prevY         = entity->position.y;
         bool32 tileCollided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 16, 4);
         if (!tileCollided) {
             if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)
@@ -127,36 +131,39 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
         if (tileCollided || conveyorCollided)
             entity->onGround = true;
 
-        int32 tileInfo = 0;
-        uint8 behaviour = 0;
+        int32 tileInfo  = 0;
+        uint8 behaviour = LRZ2_TFLAGS_NORMAL;
 
-        LRZ2Setup_GetTileInfo(&tileInfo, entity->collisionPlane, entity->position.x, (hitbox.bottom << 16) + entity->position.y, 0, 0, &behaviour);
-        if (!behaviour) {
-            LRZ2Setup_GetTileInfo(&tileInfo, entity->collisionPlane, (hitbox.right << 16) + entity->position.x,
-                                  (hitbox.bottom << 16) + entity->position.y, 0, 0, &behaviour);
-            if (!behaviour) {
-                LRZ2Setup_GetTileInfo(&tileInfo, entity->collisionPlane, (hitbox.left << 16) + entity->position.x,
-                                      (hitbox.bottom << 16) + entity->position.y, 0, 0, &behaviour);
-                if (!behaviour) {
-                    LRZ2Setup_GetTileInfo(&tileInfo, entity->collisionPlane, entity->position.x, (hitbox.bottom << 16) + entity->position.y, 0, 0,
-                                          &behaviour);
-                }
-            }
+        // try to grab tile info & behaviour for tile-based conveyor interactions
+        LRZ2Setup_GetTileInfo(entity->position.x, entity->position.y + (hitbox.bottom << 16), 0, 0, entity->collisionPlane, &tileInfo, &behaviour);
+        if (behaviour == LRZ2_TFLAGS_NORMAL) {
+            LRZ2Setup_GetTileInfo(entity->position.x + (hitbox.right << 16), entity->position.y + (hitbox.bottom << 16), 0, 0, entity->collisionPlane,
+                                  &tileInfo, &behaviour);
+        }
+        if (behaviour == LRZ2_TFLAGS_NORMAL) {
+            LRZ2Setup_GetTileInfo(entity->position.x + (hitbox.left << 16), entity->position.y + (hitbox.bottom << 16), 0, 0, entity->collisionPlane,
+                                  &tileInfo, &behaviour);
+        }
+        if (behaviour == LRZ2_TFLAGS_NORMAL) {
+            LRZ2Setup_GetTileInfo(entity->position.x, entity->position.y + (hitbox.bottom << 16), 0, 0, entity->collisionPlane, &tileInfo,
+                                  &behaviour);
         }
 
-        bool32 lavaCollided = false;
+        bool32 lavaCollided         = false;
         bool32 tileConveyorCollided = false;
         switch (behaviour) {
             case LRZ2_TFLAGS_NORMAL: break;
+
             case LRZ2_TFLAGS_LAVA:
                 entity->active = ACTIVE_NORMAL;
                 if (prevY > entity->position.y)
                     entity->position.y = prevY;
                 lavaCollided = true;
                 break;
+
             case LRZ2_TFLAGS_CONVEYOR_L:
                 tileConveyorCollided = true;
-                entity->active = ACTIVE_NORMAL;
+                entity->active       = ACTIVE_NORMAL;
                 if (entity->onGround) {
                     if (LRZ2Setup->conveyorOff)
                         entity->velocity.x = 0;
@@ -164,9 +171,10 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
                         entity->velocity.x = (2 * ((((tileInfo & 0x400) != 0) ^ LRZ2Setup->conveyorDir) != 0) - 1) << 17;
                 }
                 break;
+
             case LRZ2_TFLAGS_CONVEYOR_R:
-                tileConveyorCollided       = true;
-                entity->active = ACTIVE_NORMAL;
+                tileConveyorCollided = true;
+                entity->active       = ACTIVE_NORMAL;
                 if (entity->onGround) {
                     if (LRZ2Setup->conveyorOff)
                         entity->velocity.x = 0;
@@ -181,6 +189,7 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
                 entity->velocity.x = 0;
         }
 
+        // Apply Gravity
         if (entity->onGround)
             entity->velocity.y = 0;
         else
@@ -188,15 +197,17 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
 
         bool32 wallCollided = false;
         if (entity->velocity.x < 0)
-            wallCollided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, hitbox.left << 16, hitbox.bottom << 16, false);
+            wallCollided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, hitbox.left << 16, hitbox.top << 16, false);
         else if (entity->velocity.x > 0)
-            wallCollided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, hitbox.right << 16, hitbox.bottom << 16, false);
+            wallCollided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, hitbox.right << 16, hitbox.top << 16, false);
 
+        // Apply Lava Physics
         if (lavaCollided) {
             if (!prevOnGround && entity->onGround) {
                 RSDK.PlaySfx(LRZConvItem->sfxSizzle, false, 0xFF);
                 entity->velocity.x >>= 1;
             }
+
             if (entity->objectID != LRZConvItem->objectID || entity->type) {
                 entity->velocity.y = 0x4000;
             }
@@ -207,29 +218,31 @@ Vector2 LRZConvItem_GetMoveOffset(void *e)
                     entity->velocity.y = 0;
             }
         }
+
         if (wallCollided)
             entity->velocity.x = 0;
 
         entity->position.x += entity->velocity.x;
         entity->position.y += entity->velocity.y;
-        movePos.x = entity->position.x - storeX;
-        movePos.y = entity->position.y - storeY;
+        moveOffset.x = entity->position.x - storeX;
+        moveOffset.y = entity->position.y - storeY;
+
         if (lavaCollided && !RSDK.CheckOnScreen(entity, &entity->updateRange))
             destroyEntity(entity);
     }
-    return movePos;
+    return moveOffset;
 }
 
 void LRZConvItem_State_Rock(void)
 {
     RSDK_THIS(LRZConvItem);
 
-    int x              = self->position.x;
-    int y              = self->position.y;
-    Vector2 moveOffset = LRZConvItem_GetMoveOffset(self);
+    int32 x            = self->position.x;
+    int32 y            = self->position.y;
+    Vector2 moveOffset = LRZConvItem_HandleLRZConvPhys(self);
 
-    int storeX         = self->position.x;
-    int storeY         = self->position.y;
+    int32 storeX     = self->position.x;
+    int32 storeY     = self->position.y;
     self->position.x = x;
     self->position.y = y;
 
@@ -242,8 +255,10 @@ void LRZConvItem_State_Rock(void)
                 if (moveOffset.y <= 0)
                     player->collisionFlagV |= 1;
                 break;
+
             case C_LEFT: player->collisionFlagH |= 1; break;
             case C_RIGHT: player->collisionFlagH |= 2; break;
+
             case C_BOTTOM:
                 if (moveOffset.y >= 0)
                     player->collisionFlagV |= 2;
@@ -260,7 +275,7 @@ void LRZConvItem_State_SpikeBall(void)
 {
     RSDK_THIS(LRZConvItem);
 
-    LRZConvItem_GetMoveOffset(self);
+    LRZConvItem_HandleLRZConvPhys(self);
 
     foreach_active(Player, player)
     {

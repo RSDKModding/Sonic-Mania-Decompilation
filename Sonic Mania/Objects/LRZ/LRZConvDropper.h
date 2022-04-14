@@ -24,7 +24,7 @@ struct EntityLRZConvDropper {
     uint8 activePlayers;
     uint8 seqPos;
     int32 timerStore;
-    int32 field_84;
+    int32 unused;
     Hitbox hitbox;
     Animator animator;
 };

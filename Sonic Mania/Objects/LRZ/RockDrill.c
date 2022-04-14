@@ -19,12 +19,12 @@ void RockDrill_LateUpdate(void) {}
 
 void RockDrill_StaticUpdate(void)
 {
-    if (RockDrill->shouldPlayDrillSfx) {
+    if (RockDrill->drillSfxTimer) {
         if (!RockDrill->playingDrillSfx) {
-            RSDK.PlaySfx(RockDrill->sfxDrill, 43643, 255);
+            RSDK.PlaySfx(RockDrill->sfxDrill, 43643, 0xFF);
             RockDrill->playingDrillSfx = true;
         }
-        RockDrill->shouldPlayDrillSfx = 0;
+        RockDrill->drillSfxTimer = 0;
     }
     else if (RockDrill->playingDrillSfx) {
         RSDK.StopSfx(RockDrill->sfxDrill);
@@ -37,50 +37,58 @@ void RockDrill_Draw(void)
     RSDK_THIS(RockDrill);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
     if ((self->invincibilityTimer & 1) != 0) {
         RSDK.SetPaletteEntry(0, 32, 0xE0E0E0);
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
     }
+
+    // Piston (L1)
     self->animator.frameID = 1;
-    drawPos.x -= 0x260000;
-    drawPos.y -= self->field_8C[0];
+    drawPos.x              = self->position.x - 0x260000;
+    drawPos.y              = self->position.y - self->pistonPos[0];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Drill (L1)
     self->animator.frameID = 2;
-    drawPos.y                = self->field_94[0] + self->position.y;
+    drawPos.y              = self->position.y + self->drillPos[0];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Piston (L2)
     self->animator.frameID = 1;
     drawPos.x += 0xA0000;
-    drawPos.y = self->position.y - self->field_8C[1];
+    drawPos.y = self->position.y - self->pistonPos[1];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Drill (L2)
     self->animator.frameID = 2;
-    drawPos.y                = self->field_94[1] + self->position.y;
+    drawPos.y              = self->position.y + self->drillPos[1];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Piston (R1)
     self->animator.frameID = 1;
     drawPos.x += 0x420000;
-    drawPos.y = self->position.y - self->field_8C[0];
+    drawPos.y = self->position.y - self->pistonPos[0];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Drill (R1)
     self->animator.frameID = 2;
-    drawPos.y                = self->field_94[0] + self->position.y;
+    drawPos.y              = self->position.y + self->drillPos[0];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Piston (R2)
     self->animator.frameID = 1;
     drawPos.x -= 0xA0000;
-    drawPos.y = self->position.y - self->field_8C[1];
+    drawPos.y = self->position.y - self->pistonPos[1];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Drill (R2)
     self->animator.frameID = 2;
-    drawPos.y                = self->field_94[1] + self->position.y;
+    drawPos.y              = self->position.y + self->drillPos[1];
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
+    // Main Body
     self->animator.frameID = 0;
-    RSDK.DrawSprite(&self->animator, 0, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
     RSDK.SetPaletteEntry(0, 32, 0x282028);
     RSDK.SetPaletteEntry(0, 128, 0x000000);
@@ -91,15 +99,15 @@ void RockDrill_Create(void *data)
     RSDK_THIS(RockDrill);
 
     if (!SceneInfo->inEditor) {
-        self->active        = ACTIVE_BOUNDS;
-        self->visible       = true;
-        self->updateRange.x = 0x800000;
-        self->updateRange.y = 0x800000;
-        self->field_A4[0]   = 4;
-        self->field_9C[0]   = 4;
+        self->active         = ACTIVE_BOUNDS;
+        self->visible        = true;
+        self->updateRange.x  = 0x800000;
+        self->updateRange.y  = 0x800000;
+        self->drillDelay[0]  = 4;
+        self->pistonDelay[0] = 4;
         RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
         self->drawOrder = Zone->drawOrderLow;
-        self->state     = RockDrill_State_Unknown1;
+        self->state     = RockDrill_State_Setup;
     }
 }
 
@@ -108,32 +116,33 @@ void RockDrill_StageLoad(void)
     if (RSDK.CheckStageFolder("LRZ1"))
         RockDrill->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/RockDrill.bin", SCOPE_STAGE);
 
-    RockDrill->hitbox1.left   = -47;
-    RockDrill->hitbox1.top    = -16;
-    RockDrill->hitbox1.right  = 47;
-    RockDrill->hitbox1.bottom = 16;
+    RockDrill->hitboxBody.left   = -47;
+    RockDrill->hitboxBody.top    = -16;
+    RockDrill->hitboxBody.right  = 47;
+    RockDrill->hitboxBody.bottom = 16;
 
-    RockDrill->hitbox2.left   = -47;
-    RockDrill->hitbox2.top    = -56;
-    RockDrill->hitbox2.right  = -16;
-    RockDrill->hitbox2.bottom = -16;
+    RockDrill->hitboxPistonL.left   = -47;
+    RockDrill->hitboxPistonL.top    = -56;
+    RockDrill->hitboxPistonL.right  = -16;
+    RockDrill->hitboxPistonL.bottom = -16;
 
-    RockDrill->hitbox3.left   = 16;
-    RockDrill->hitbox3.top    = -56;
-    RockDrill->hitbox3.right  = 47;
-    RockDrill->hitbox3.bottom = -16;
+    RockDrill->hitboxPistonR.left   = 16;
+    RockDrill->hitboxPistonR.top    = -56;
+    RockDrill->hitboxPistonR.right  = 47;
+    RockDrill->hitboxPistonR.bottom = -16;
 
-    RockDrill->hitbox4.left   = -47;
-    RockDrill->hitbox4.top    = 16;
-    RockDrill->hitbox4.right  = -47;
-    RockDrill->hitbox4.bottom = 37;
+    RockDrill->hitboxDrills.left   = -47;
+    RockDrill->hitboxDrills.top    = 16;
+    RockDrill->hitboxDrills.right  = -47;
+    RockDrill->hitboxDrills.bottom = 37;
 
-    RockDrill->active             = ACTIVE_ALWAYS;
-    RockDrill->shouldPlayDrillSfx = 0;
-    RockDrill->playingDrillSfx    = false;
-    RockDrill->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
-    RockDrill->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
-    RockDrill->sfxDrill           = RSDK.GetSfx("LRZ/Drill.wav");
+    RockDrill->active = ACTIVE_ALWAYS;
+
+    RockDrill->drillSfxTimer   = 0;
+    RockDrill->playingDrillSfx = false;
+    RockDrill->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
+    RockDrill->sfxExplosion    = RSDK.GetSfx("Stage/Explosion2.wav");
+    RockDrill->sfxDrill        = RSDK.GetSfx("LRZ/Drill.wav");
 }
 
 void RockDrill_CheckPlayerCollisions(void)
@@ -143,18 +152,17 @@ void RockDrill_CheckPlayerCollisions(void)
         self->invincibilityTimer--;
     }
     else {
-
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikTouch(player, self, &RockDrill->hitbox1) || Player_CheckBadnikTouch(player, self, &RockDrill->hitbox2)
-                || Player_CheckBadnikTouch(player, self, &RockDrill->hitbox3)) {
+            if (Player_CheckBadnikTouch(player, self, &RockDrill->hitboxBody) || Player_CheckBadnikTouch(player, self, &RockDrill->hitboxPistonL)
+                || Player_CheckBadnikTouch(player, self, &RockDrill->hitboxPistonR)) {
                 if (Player_CheckBossHit(player, self)) {
                     RSDK.PlaySfx(RockDrill->sfxHit, false, 255);
                     self->invincibilityTimer = 30;
                 }
             }
             else {
-                if (Player_CheckCollisionTouch(player, self, &RockDrill->hitbox4))
+                if (Player_CheckCollisionTouch(player, self, &RockDrill->hitboxDrills))
                     Player_CheckHit(player, self);
             }
         }
@@ -184,11 +192,11 @@ void RockDrill_SpawnDebris(int offset)
     debris->updateRange.y = 0x400000;
 }
 
-void RockDrill_State_Unknown1(void)
+void RockDrill_State_Setup(void)
 {
     RSDK_THIS(RockDrill);
 
-    int slot                           = SceneInfo->entitySlot - 1;
+    int32 slot                         = SceneInfo->entitySlot - 1;
     EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
     while (platform->objectID == CollapsingPlatform->objectID) {
         platform->active = ACTIVE_NEVER;
@@ -196,12 +204,12 @@ void RockDrill_State_Unknown1(void)
     }
 
     self->active = ACTIVE_NORMAL;
-    self->state  = RockDrill_State_Unknown2;
+    self->state  = RockDrill_State_Drilling;
     if (self->lockCamera) {
-        self->boundsL         = Zone->cameraBoundsL[0];
-        self->boundsR         = Zone->cameraBoundsR[0];
-        self->boundsT         = Zone->cameraBoundsT[0];
-        self->boundsB         = Zone->cameraBoundsB[0];
+        self->boundsL          = Zone->cameraBoundsL[0];
+        self->boundsR          = Zone->cameraBoundsR[0];
+        self->boundsT          = Zone->cameraBoundsT[0];
+        self->boundsB          = Zone->cameraBoundsB[0];
         Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX - 96;
         Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX - 96;
         Zone->cameraBoundsB[0] = (self->position.y >> 16) + 96;
@@ -209,58 +217,54 @@ void RockDrill_State_Unknown1(void)
     self->timer = 120;
 }
 
-void RockDrill_State_Unknown2(void)
+void RockDrill_State_Drilling(void)
 {
     RSDK_THIS(RockDrill);
 
-    ++RockDrill->shouldPlayDrillSfx;
+    ++RockDrill->drillSfxTimer;
     RSDK.ProcessAnimation(&self->animator);
 
-    for (int i = 0; i < 2; ++i) {
-        if (self->field_9C[i]) {
-            self->field_9C[i]--;
+    for (int32 i = 0; i < 2; ++i) {
+        if (self->pistonDelay[i]) {
+            self->pistonDelay[i]--;
         }
-        else if (self->field_AC[i]) {
-            bool32 flag = self->field_8C[i] == 0x20000;
-            self->field_8C[i] -= 0x20000;
-            if (flag) {
-                self->field_AC[i] = 0;
-                self->field_9C[i] = 10;
+        else if (self->pistonMoveDir[i]) {
+            self->pistonPos[i] -= 0x20000;
+            if (!self->pistonPos[i]) {
+                self->pistonMoveDir[i] = FLIP_NONE;
+                self->pistonDelay[i]   = 10;
             }
         }
         else {
-            self->field_8C[i] += 0x40000;
-            if (self->field_8C[i] == 0x100000)
-                self->field_AC[i] = 1;
+            self->pistonPos[i] += 0x40000;
+            if (self->pistonPos[i] == 0x100000)
+                self->pistonMoveDir[i] = FLIP_X;
         }
 
-        if (self->field_A4[i]) {
-            self->field_A4[i]--;
+        if (self->drillDelay[i]) {
+            self->drillDelay[i]--;
         }
-        else if (self->field_B4[i]) {
-            bool32 flag = self->field_94[i] == 0x40000;
-            self->field_94[i] -= 0x40000;
-            if (flag) {
-                self->field_B4[i] = 0;
-                self->field_A4[i] = 5;
+        else if (self->drillMoveDir[i]) {
+            self->drillPos[i] -= 0x40000;
+            if (!self->drillPos[i]) {
+                self->drillMoveDir[i] = FLIP_NONE;
+                self->drillDelay[i]   = 5;
             }
         }
         else {
-            self->field_94[i] += 0x80000;
-            if (self->field_94[i] == 0x100000)
-                self->field_B4[i] = 1;
+            self->drillPos[i] += 0x80000;
+            if (self->drillPos[i] == 0x100000)
+                self->drillMoveDir[i] = FLIP_X;
         }
     }
 
-    if (self->field_94[0] == 0x80000) {
+    if (self->drillPos[0] == 0x80000) {
         RockDrill_SpawnDebris(-0x260000);
         RockDrill_SpawnDebris(0x260000);
     }
-    else {
-        if (self->field_94[1] == 0x80000) {
-            RockDrill_SpawnDebris(-0x1C0000);
-            RockDrill_SpawnDebris(0x1C0000);
-        }
+    else if (self->drillPos[1] == 0x80000) {
+        RockDrill_SpawnDebris(-0x1C0000);
+        RockDrill_SpawnDebris(0x1C0000);
     }
 
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -271,15 +275,16 @@ void RockDrill_State_Unknown2(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = RockDrill_State_Unknown1;
+        self->state  = RockDrill_State_Setup;
     }
+
     if (--self->timer <= 0) {
         foreach_active(LRZRockPile, pile)
         {
-            pile->flag   = true;
-            pile->active = ACTIVE_NORMAL;
-            pile->timer  = 0;
-            pile->timer2 = 0;
+            pile->canCollapse  = true;
+            pile->active       = ACTIVE_NORMAL;
+            pile->timer        = 0;
+            pile->destroyTimer = 0;
         }
 
         if (self->lockCamera) {
@@ -289,25 +294,26 @@ void RockDrill_State_Unknown2(void)
             Zone->cameraBoundsB[0] = self->boundsB;
         }
         self->timer  = 30;
-        self->state  = RockDrill_State_Unknown3;
+        self->state  = RockDrill_State_Falling;
         self->active = ACTIVE_NORMAL;
     }
 }
 
-void RockDrill_State_Unknown3(void)
+void RockDrill_State_Falling(void)
 {
     RSDK_THIS(RockDrill);
 
     if (self->timer-- <= 0) {
         self->velocity.y += 0x3800;
         self->position.y += self->velocity.y;
+
         uint16 tileLow  = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
         uint16 tileHigh = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x200000) >> 20);
         if (RSDK.GetTileFlags(tileLow, 0) == LRZ2_TFLAGS_LAVA || RSDK.GetTileFlags(tileHigh, 0) == LRZ2_TFLAGS_LAVA) {
             self->timer      = 0;
             self->velocity.y = 0x8000;
             self->drawOrder  = Zone->drawOrderLow - 1;
-            self->state      = RockDrill_State_Unknown4;
+            self->state      = RockDrill_State_Explode;
         }
         else {
             if (!RSDK.CheckOnScreen(self, &self->updateRange))
@@ -316,7 +322,7 @@ void RockDrill_State_Unknown3(void)
     }
 }
 
-void RockDrill_State_Unknown4(void)
+void RockDrill_State_Explode(void)
 {
     RSDK_THIS(RockDrill);
     self->position.y += self->velocity.y;
@@ -324,12 +330,13 @@ void RockDrill_State_Unknown4(void)
     if (!(Zone->timer & 3)) {
         RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
         if (!(Zone->timer & 3)) {
-            int x                      = self->position.x + (RSDK.Rand(-19, 20) << 16);
-            int y                      = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawOrder       = Zone->drawOrderHigh + 2;
         }
     }
+
     if (++self->timer > 120) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
@@ -429,14 +436,34 @@ void RockDrill_State_Unknown4(void)
 void RockDrill_EditorDraw(void)
 {
     RSDK_THIS(RockDrill);
-    self->active        = ACTIVE_BOUNDS;
-    self->updateRange.x = 0x800000;
-    self->updateRange.y = 0x800000;
-    self->field_A4[0]   = 4;
-    self->field_9C[0]   = 4;
+    self->active         = ACTIVE_BOUNDS;
+    self->updateRange.x  = 0x800000;
+    self->updateRange.y  = 0x800000;
+    self->drillDelay[0]  = 4;
+    self->pistonDelay[0] = 4;
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
 
     RockDrill_Draw();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        if (self->lockCamera)
+            DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER - 96, 0, WIDE_SCR_XCENTER - 96, 96);
+
+        // Draw Arrows to all "child" platforms that'll be set to inactive
+        if (CollapsingPlatform) {
+            int32 slot                         = SceneInfo->entitySlot - 1;
+            EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
+            while (platform && platform->objectID == CollapsingPlatform->objectID) {
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, platform->position.x, platform->position.y);
+
+                platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
+            }
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void RockDrill_EditorLoad(void) { RockDrill->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/RockDrill.bin", SCOPE_STAGE); }

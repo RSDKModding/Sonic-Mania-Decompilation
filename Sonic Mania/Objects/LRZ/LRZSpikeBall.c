@@ -12,11 +12,14 @@ ObjectLRZSpikeBall *LRZSpikeBall;
 void LRZSpikeBall_Update(void)
 {
     RSDK_THIS(LRZSpikeBall);
+
     StateMachine_Run(self->state);
+
     LRZSpikeBall_CheckPlayerBaseCollisions();
     LRZSpikeBall_CheckPlayerBallCollisions();
-    self->updateRange.y = abs(self->offset.y) + 0x800000;
-    RSDK.ProcessAnimation(&self->animator2);
+
+    self->updateRange.y = abs(self->ballOffset.y) + 0x800000;
+    RSDK.ProcessAnimation(&self->ballAnimator);
 }
 
 void LRZSpikeBall_LateUpdate(void) {}
@@ -26,13 +29,14 @@ void LRZSpikeBall_StaticUpdate(void) {}
 void LRZSpikeBall_Draw(void)
 {
     RSDK_THIS(LRZSpikeBall);
-    self->position.x += self->offset.x;
-    self->position.y += self->offset.y;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
 
-    self->position.x -= self->offset.x;
-    self->position.y -= self->offset.y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->position.x += self->ballOffset.x;
+    self->position.y += self->ballOffset.y;
+    RSDK.DrawSprite(&self->ballAnimator, NULL, false);
+
+    self->position.x -= self->ballOffset.x;
+    self->position.y -= self->ballOffset.y;
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 }
 
 void LRZSpikeBall_Create(void *data)
@@ -41,8 +45,7 @@ void LRZSpikeBall_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->drawOrderLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
@@ -64,38 +67,35 @@ void LRZSpikeBall_Create(void *data)
 void LRZSpikeBall_StageLoad(void)
 {
     LRZSpikeBall->aniFrames    = RSDK.LoadSpriteAnimation("LRZ2/LRZSpikeBall.bin", SCOPE_STAGE);
+
     LRZSpikeBall->sfxCharge    = RSDK.GetSfx("LRZ/Charge.wav");
     LRZSpikeBall->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
-int LRZSpikeBall_GetFrameID(void)
+int LRZSpikeBall_GetBaseFrameID(void)
 {
     RSDK_THIS(LRZSpikeBall);
 
     if (self->timer <= 0)
         return 0;
 
-    int id = 0, inc = 0, nextInc = 14;
-    bool32 flag = false;
-    for (; id < self->timer; id += inc) {
+    int32 time = 0, inc = 0, nextInc = 14;
+    bool32 useOnFrames = false;
+
+    for (; time < self->timer; time += inc) {
         inc = nextInc;
-        if (flag) {
-            flag = false;
-            if (nextInc - 2 > 1)
-                nextInc -= 2;
-            else
-                nextInc = 1;
+        if (useOnFrames) {
+            useOnFrames = false;
+            nextInc     = maxVal(nextInc - 2, 1);
         }
-        else {
-            flag = true;
-        }
-        id += inc;
+        else
+            useOnFrames = true;
     }
 
-    if (!flag)
+    if (!useOnFrames)
         return 0;
 
-    if (id - self->timer < 2 || id - self->timer > nextInc - 2)
+    if (time - self->timer < 2 || time - self->timer > nextInc - 2)
         return 1;
     else
         return 2;
@@ -112,10 +112,10 @@ void LRZSpikeBall_CheckPlayerBallCollisions(void)
 {
     RSDK_THIS(LRZSpikeBall);
 
-    int storeX = self->position.x;
-    int storeY = self->position.y;
-    self->position.x += self->offset.x;
-    self->position.y += self->offset.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
+    self->position.x += self->ballOffset.x;
+    self->position.y += self->ballOffset.y;
 
     foreach_active(Player, player)
     {
@@ -135,51 +135,51 @@ void LRZSpikeBall_State_Setup(void)
 {
     RSDK_THIS(LRZSpikeBall);
 
-    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->animator2, true, 0);
-    self->offset.x = 0;
-    self->offset.y = 0;
-    self->state    = LRZSpikeBall_State_Unknown1;
+    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 0, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->ballAnimator, true, 0);
+    self->ballOffset.x = 0;
+    self->ballOffset.y = 0;
+    self->state    = LRZSpikeBall_State_AwaitInterval;
 }
 
-void LRZSpikeBall_State_Unknown1(void)
+void LRZSpikeBall_State_AwaitInterval(void)
 {
     RSDK_THIS(LRZSpikeBall);
 
     if (!self->interval || !((self->intervalOffset + Zone->timer) % self->interval)) {
         self->timer  = 0;
         self->active = ACTIVE_NORMAL;
-        self->state  = LRZSpikeBall_State_Unknown2;
+        self->state  = LRZSpikeBall_State_ChargeUp;
         RSDK.PlaySfx(LRZSpikeBall->sfxCharge, false, 255);
     }
 }
 
-void LRZSpikeBall_State_Unknown2(void)
+void LRZSpikeBall_State_ChargeUp(void)
 {
     RSDK_THIS(LRZSpikeBall);
 
-    self->animator1.frameID = LRZSpikeBall_GetFrameID();
+    self->baseAnimator.frameID = LRZSpikeBall_GetBaseFrameID();
 
     if (self->timer++ >= 142) {
         self->velocity.y = -0x8000 * self->strength;
-        self->state      = LRZSpikeBall_State_Unknown3;
-        RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 2, &self->animator2, true, 0);
+        self->state      = LRZSpikeBall_State_LaunchedBall;
+        RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 2, &self->ballAnimator, true, 0);
         RSDK.PlaySfx(LRZSpikeBall->sfxExplosion, false, 255);
     }
 }
 
-void LRZSpikeBall_State_Unknown3(void)
+void LRZSpikeBall_State_LaunchedBall(void)
 {
     RSDK_THIS(LRZSpikeBall);
 
-    self->offset.y += self->velocity.y;
+    self->ballOffset.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (self->velocity.y >= 0 && self->offset.y >= 0) {
-        self->offset.y   = 0;
+    if (self->velocity.y >= 0 && self->ballOffset.y >= 0) {
+        self->ballOffset.y   = 0;
         self->velocity.y = 0;
-        RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->ballAnimator, true, 0);
         self->active = ACTIVE_BOUNDS;
-        self->state  = LRZSpikeBall_State_Unknown1;
+        self->state  = LRZSpikeBall_State_AwaitInterval;
     }
 }
 
@@ -187,29 +187,35 @@ void LRZSpikeBall_State_Unknown3(void)
 void LRZSpikeBall_EditorDraw(void)
 {
     RSDK_THIS(LRZSpikeBall);
-    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->animator2, true, 0);
-    self->offset.x = 0;
-    self->offset.y = 0;
+    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 0, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(LRZSpikeBall->aniFrames, 1, &self->ballAnimator, true, 0);
+    self->ballOffset.x = 0;
+    self->ballOffset.y = 0;
 
     self->inkEffect = INK_NONE;
 
     LRZSpikeBall_Draw();
 
-    self->inkEffect  = INK_BLEND;
-    self->velocity.y = -0x8000 * self->strength;
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
 
-    do {
-        self->offset.y += self->velocity.y;
-        self->velocity.y += 0x3800;
-    } while (self->velocity.y < 0 && self->offset.y < 0);
+        self->inkEffect  = INK_BLEND;
+        self->velocity.y = -0x8000 * self->strength;
 
-    self->position.x += self->offset.x;
-    self->position.y += self->offset.y;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+        do {
+            self->ballOffset.y += self->velocity.y;
+            self->velocity.y += 0x3800;
+        } while (self->velocity.y < 0 && self->ballOffset.y < 0);
 
-    self->position.x -= self->offset.x;
-    self->position.y -= self->offset.y;
+        self->position.x += self->ballOffset.x;
+        self->position.y += self->ballOffset.y;
+        RSDK.DrawSprite(&self->ballAnimator, NULL, false);
+
+        self->position.x -= self->ballOffset.x;
+        self->position.y -= self->ballOffset.y;
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void LRZSpikeBall_EditorLoad(void) { LRZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZSpikeBall.bin", SCOPE_STAGE); }

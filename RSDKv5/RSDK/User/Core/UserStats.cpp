@@ -15,7 +15,7 @@ void GetLeaderboardName(char *buffer, int zoneID, int actID, int characterID)
 
 void RSDK::SKU::TrackActClear(byte zoneID, byte actID, byte characterID, int time, int rings, int score)
 {
-    PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d) -> %s", zoneID, actID, characterID, time, rings, score);
+    PrintLog(PRINT_NORMAL, "DUMMY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, characterID, time, rings, score);
 }
 void RSDK::SKU::TrackTAClear(byte zoneID, byte actID, byte characterID, int score)
 {

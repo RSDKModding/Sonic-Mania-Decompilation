@@ -12,13 +12,15 @@ ObjectLRZConvDropper *LRZConvDropper;
 void LRZConvDropper_Update(void)
 {
     RSDK_THIS(LRZConvDropper);
-    self->visible = DebugMode->debugActive == 1;
+
+    self->visible = DebugMode->debugActive;
 
     switch (self->triggerMode) {
         case LRZCONVDROP_TRIGGER_BUTTON:
             if (!((Zone->timer + self->intervalOffset) % self->interval))
                 LRZConvDropper_HandleButtonDrop(self);
             break;
+
         case LRZCONVDROP_TRIGGER_PLAYER: {
             bool32 shouldDrop    = false;
             bool32 playerEntered = false;
@@ -27,14 +29,14 @@ void LRZConvDropper_Update(void)
             self->position.y += self->detectOffset.y;
             foreach_active(Player, player)
             {
-                int playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntityID(player);
 
-                bool32 flag = false;
+                bool32 triggered = false;
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                    flag = true;
+                    triggered = true;
                 }
 
-                if (!((1 << playerID) & self->activePlayers) && flag) {
+                if (!((1 << playerID) & self->activePlayers) && triggered) {
                     if (!player->sidekick)
                         playerEntered = true;
                     self->activePlayers |= (1 << playerID);
@@ -43,7 +45,8 @@ void LRZConvDropper_Update(void)
                 if ((1 << playerID) & self->activePlayers) {
                     if (!player->sidekick)
                         shouldDrop = true;
-                    if (!flag)
+
+                    if (!triggered)
                         self->activePlayers &= ~(1 << playerID);
                 }
             }
@@ -75,8 +78,8 @@ void LRZConvDropper_Draw(void)
 
     RSDK.DrawSprite(&self->animator, NULL, false);
     if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
-        int x = self->detectOffset.x + self->position.x;
-        int y = self->detectOffset.y + self->position.y;
+        int32 x = self->detectOffset.x + self->position.x;
+        int32 y = self->detectOffset.y + self->position.y;
         RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
         DrawHelpers_DrawHitboxOutline(0xFFFFFF, 0, x, y, &self->hitbox);
     }
@@ -111,8 +114,8 @@ void LRZConvDropper_SetupDropperChildren(void)
 {
     RSDK_THIS(LRZConvDropper);
 
-    int slot = RSDK.GetEntityID(self) - self->seqCount;
-    for (int i = 0; i < self->seqCount; ++i) {
+    int32 slot = RSDK.GetEntityID(self) - self->seqCount;
+    for (int32 i = 0; i < self->seqCount; ++i) {
         EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
         child->active            = ACTIVE_NEVER;
         child->visible           = false;
@@ -122,7 +125,7 @@ void LRZConvDropper_SetupDropperChildren(void)
 void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
 {
     if (entity->seqCount && entity->seqPos < entity->seqCount) {
-        int slot                  = RSDK.GetEntityID(entity);
+        int32 slot                  = RSDK.GetEntityID(entity);
         int32 seqPos              = entity->seqPos - entity->seqCount;
         EntityLRZConvItem *seqEnt = RSDK_GET_ENTITY(slot + seqPos, LRZConvItem);
 
@@ -135,7 +138,7 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
         else if (seqEnt->objectID == Iwamodoki->objectID) {
             EntityIwamodoki *iwamadoki = CREATE_ENTITY(Iwamodoki, NULL, entity->position.x, entity->position.y);
             iwamadoki->active          = ACTIVE_NORMAL;
-            iwamadoki->state           = Iwamodoki_State_Unknown1;
+            iwamadoki->state           = Iwamodoki_State_AwaitPlayer;
             iwamadoki->velocity.x      = 0;
             iwamadoki->velocity.y      = 0;
             iwamadoki->lrzConvPhys     = true;
@@ -160,7 +163,30 @@ void LRZConvDropper_HandleButtonDrop(EntityLRZConvDropper *entity)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void LRZConvDropper_EditorDraw(void) { LRZConvDropper_Draw(); }
+void LRZConvDropper_EditorDraw(void)
+{
+    RSDK_THIS(LRZConvDropper);
+
+    RSDK.DrawSprite(&self->animator, NULL, false);
+    if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER && showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        int32 x = self->detectOffset.x + self->position.x;
+        int32 y = self->detectOffset.y + self->position.y;
+        RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
+        DrawHelpers_DrawHitboxOutline(0xFFFFFF, 0, x, y, &self->hitbox);
+
+        int32 slot = RSDK.GetEntityID(self) - self->seqCount;
+        for (int32 i = 0; i < self->seqCount; ++i) {
+            EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
+
+            if (child)
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, child->position.x, child->position.y);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+}
 
 void LRZConvDropper_EditorLoad(void)
 {

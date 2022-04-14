@@ -31,7 +31,7 @@ extern bool32 showHitboxes;
 extern int32 debugHitboxCount;
 extern DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
 
-int addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox);
+int32 addDebugHitbox(uint8 type, uint8 dir, Entity *entity, RSDK::Hitbox *hitbox);
 #endif
 
 extern int32 collisionTolerance;
@@ -55,20 +55,20 @@ extern CollisionSensor sensors[6];
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox);
 inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, Entity *otherEntity, int32 otherRadius)
 {
-    int x = (thisEntity->position.x - otherEntity->position.x) >> 16;
-    int y = (thisEntity->position.y - otherEntity->position.y) >> 16;
-    int r = (thisRadius + otherRadius) >> 16;
+    int32 x = (thisEntity->position.x - otherEntity->position.x) >> 16;
+    int32 y = (thisEntity->position.y - otherEntity->position.y) >> 16;
+    int32 r = (thisRadius + otherRadius) >> 16;
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
         bool32 collided = x * x + y * y < r * r;
         RSDK::Hitbox thisHitbox;
         RSDK::Hitbox otherHitbox;
-        thisHitbox.left = thisRadius >> 16;
+        thisHitbox.left  = thisRadius >> 16;
         otherHitbox.left = otherRadius >> 16;
 
-        int thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, thisEntity, &thisHitbox);
-        int otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, otherEntity, &otherHitbox);
+        int32 thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, thisEntity, &thisHitbox);
+        int32 otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, otherEntity, &otherHitbox);
 
         if (thisHitboxID >= 0 && collided)
             debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
@@ -78,7 +78,7 @@ inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, E
 #endif
     return x * x + y * y < r * r;
 }
-byte CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues);
+uint8 CheckObjectCollisionBox(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues);
 bool32 CheckObjectCollisionPlatform(Entity *thisEntity, RSDK::Hitbox *thisHitbox, Entity *otherEntity, RSDK::Hitbox *otherHitbox, bool32 setValues);
 
 bool32 ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, bool32 setPos);

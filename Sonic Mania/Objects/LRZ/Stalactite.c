@@ -37,7 +37,7 @@ void Stalactite_Create(void *data)
     RSDK.SetSpriteAnimation(Stalactite->aniFrames, 0, &self->animator, true, 0);
 
     if (!data)
-        self->state = Stalactite_State_Unknown1;
+        self->state = Stalactite_State_AwaitPlayer;
     else
         self->state = data;
 }
@@ -47,32 +47,31 @@ void Stalactite_StageLoad(void)
     if (RSDK.CheckStageFolder("LRZ1"))
         Stalactite->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Stalactite.bin", SCOPE_STAGE);
 
-    Stalactite->hitbox1.left   = -8;
-    Stalactite->hitbox1.top    = -16;
-    Stalactite->hitbox1.right  = 8;
-    Stalactite->hitbox1.bottom = 16;
+    Stalactite->hitboxStalactite.left   = -8;
+    Stalactite->hitboxStalactite.top    = -16;
+    Stalactite->hitboxStalactite.right  = 8;
+    Stalactite->hitboxStalactite.bottom = 16;
 
-    Stalactite->hitbox2.left   = -4;
-    Stalactite->hitbox2.top    = -16;
-    Stalactite->hitbox2.right  = 4;
-    Stalactite->hitbox2.bottom = 256;
+    Stalactite->hitboxRange.left   = -4;
+    Stalactite->hitboxRange.top    = -16;
+    Stalactite->hitboxRange.right  = 4;
+    Stalactite->hitboxRange.bottom = 256;
 
     Stalactite->sfxShoot = RSDK.GetSfx("Stage/Shoot1.wav");
 }
 
-void Stalactite_State_Unknown1(void)
+void Stalactite_State_AwaitPlayer(void)
 {
     RSDK_THIS(Stalactite);
 
     foreach_active(Player, player)
     {
-        if (!player->sidekick && Player_CheckCollisionTouch(player, self, &Stalactite->hitbox2)) {
-            self->state = Stalactite_State_Unknown5;
-        }
+        if (!player->sidekick && Player_CheckCollisionTouch(player, self, &Stalactite->hitboxRange))
+            self->state = Stalactite_State_Falling;
     }
 }
 
-void Stalactite_State_Unknown2(void)
+void Stalactite_State_Falling(void)
 {
     RSDK_THIS(Stalactite);
 
@@ -82,10 +81,10 @@ void Stalactite_State_Unknown2(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Stalactite->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &Stalactite->hitboxStalactite)) {
 #if RETRO_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
-                self->state = Stalactite_State_Unknown5;
+                self->state = Stalactite_State_Debris;
             else
 #endif
                 Player_CheckHit(player, self);
@@ -93,7 +92,7 @@ void Stalactite_State_Unknown2(void)
     }
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
-        self->state = Stalactite_State_Unknown3;
+        self->state = Stalactite_State_Landed;
         RSDK.PlaySfx(Stalactite->sfxShoot, false, 255);
     }
 
@@ -101,14 +100,14 @@ void Stalactite_State_Unknown2(void)
         destroyEntity(self);
 }
 
-void Stalactite_State_Unknown3(void)
+void Stalactite_State_Landed(void)
 {
     RSDK_THIS(Stalactite);
 
-    foreach_active(Player, player) { Player_CheckCollisionBox(player, self, &Stalactite->hitbox1); }
+    foreach_active(Player, player) { Player_CheckCollisionBox(player, self, &Stalactite->hitboxStalactite); }
 }
 
-void Stalactite_State_Unknown4(void)
+void Stalactite_State_Falling_Boss(void)
 {
     RSDK_THIS(Stalactite);
 
@@ -118,10 +117,10 @@ void Stalactite_State_Unknown4(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Stalactite->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &Stalactite->hitboxStalactite)) {
 #if RETRO_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
-                self->state = Stalactite_State_Unknown5;
+                self->state = Stalactite_State_Debris;
             else
 #endif
                 Player_CheckHit(player, self);
@@ -132,12 +131,14 @@ void Stalactite_State_Unknown4(void)
         destroyEntity(self);
 }
 
-void Stalactite_State_Unknown5(void)
+void Stalactite_State_Debris(void)
 {
     RSDK_THIS(Stalactite);
 
     self->visible ^= true;
+
     RSDK.ProcessAnimation(&self->animator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;

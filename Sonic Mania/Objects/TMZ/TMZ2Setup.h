@@ -11,8 +11,8 @@ struct ObjectTMZ2Setup {
     bool32 paletteInit;
     int32 palDelay;
     int32 palTimer;
-    int32 dword10;
-    int32 dword14;
+    int32 unused1;
+    int32 unused2;
     uint16 aniTiles;
     uint16 dynTiles;
 };

@@ -14,7 +14,7 @@ struct ObjectSpikeCrusher {
 struct EntitySpikeCrusher {
     MANIA_PLATFORM_BASE
     int32 startDir;
-    Animator animator2;
+    Animator spikeAnimator;
 };
 
 // Object Struct
@@ -36,11 +36,11 @@ void SpikeCrusher_Serialize(void);
 // Extra Entity Functions
 void SpikeCrusher_CheckOffScreen(void);
 
-void SpikeCrusher_State_Unknown1(void);
-void SpikeCrusher_State_Unknown2(void);
-void SpikeCrusher_State_Unknown3(void);
-void SpikeCrusher_State_Unknown4(void);
-void SpikeCrusher_State_Unknown5(void);
-void SpikeCrusher_State_Unknown6(void);
+void SpikeCrusher_State_Setup(void);
+void SpikeCrusher_State_MovingDown(void);
+void SpikeCrusher_State_Crushing(void);
+void SpikeCrusher_State_CrushBounce(void);
+void SpikeCrusher_State_ActivateFlames(void);
+void SpikeCrusher_State_MovingUp(void);
 
 #endif //!OBJ_SPIKECRUSHER_H

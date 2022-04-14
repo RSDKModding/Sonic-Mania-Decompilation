@@ -14,7 +14,7 @@ typedef enum {
 #if RETRO_USE_PLUS
     TITLELOGO_PLUS,
 #endif
-}TitleLogoTypes;
+} TitleLogoTypes;
 
 // Object Class
 struct ObjectTitleLogo {
@@ -33,14 +33,14 @@ struct EntityTitleLogo {
 #if RETRO_USE_PLUS
     StateMachine(state);
 #endif
-    bool32 flag;
+    bool32 showRibbonCenter;
     int32 timer;
     int32 storeY;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
 #if RETRO_USE_PLUS
-    Animator animator3;
+    Animator plusAnimator;
 #endif
+    Animator ribbonCenterAnimator;
 };
 
 // Object Struct

@@ -3,18 +3,22 @@
 
 #include "SonicMania.h"
 
+typedef enum { LRZ1_TFLAGS_NORMAL, LRZ1_TFLAGS_LAVA } TileFlagsLRZ1;
+
 // Object Class
 struct ObjectLRZ1Setup {
     RSDK_OBJECT
     int32 palTimer;
     int32 fadeTimer;
-    TileLayer* bg1;
-    TileLayer* bg2;
-    TileLayer* fgLow;
+    TileLayer* background1;
+    TileLayer *background2;
+#if RETRO_USE_PLUS
+    TileLayer *fgLow;
     TileLayer *fgHigh;
     TABLE(int32 deformFG[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
     TABLE(int32 deformBG[32],
           { -2, -2, -2, 0, -2, 0, -4, -2, 0, -4, -4, -1, 0, 0, -3, -4, -4, -1, -4, -4, -3, -4, -1, 0, 0, 0, -3, -1, -1, -1, -2, 0 });
+#endif
 };
 
 // Entity Class
@@ -32,8 +36,10 @@ void LRZ1Setup_StaticUpdate(void);
 void LRZ1Setup_Draw(void);
 void LRZ1Setup_Create(void* data);
 void LRZ1Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LRZ1Setup_EditorDraw(void);
 void LRZ1Setup_EditorLoad(void);
+#endif
 void LRZ1Setup_Serialize(void);
 
 // Extra Entity Functions

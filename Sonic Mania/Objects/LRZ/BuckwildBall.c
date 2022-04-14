@@ -13,7 +13,7 @@ void BuckwildBall_Update(void)
 {
     RSDK_THIS(BuckwildBall);
     StateMachine_Run(self->state);
-    if (self->state != BuckwildBall_State_Unknown2 && self->state != BuckwildBall_State_Unknown5 && self->state != BuckwildBall_State_Setup) {
+    if (self->state != BuckwildBall_State_AwaitDetection && self->state != BuckwildBall_State_Debris && self->state != BuckwildBall_State_Setup) {
         if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
             if (self->particleDelay-- <= 0) {
                 BuckwildBall_SpawnDebris();
@@ -47,15 +47,16 @@ void BuckwildBall_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->drawOrder     = Zone->drawOrderLow;
-        self->startPos.x    = self->position.x;
-        self->startPos.y    = self->position.y;
+        self->startPos      = self->position;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->field_B8      = -1;
-        if (self->mode != 1)
-            self->updateRange.x = (self->amplitude + 128) << 16;
+        self->bossBallSlot  = -1;
+
+        if (self->mode != BUCKWILDBALL_FALLING)
+            self->updateRange.x = (self->amplitude + 0x80) << 16;
+
         self->state = BuckwildBall_State_Setup;
         if (!self->speed)
             self->speed = 2;
@@ -67,13 +68,13 @@ void BuckwildBall_StageLoad(void)
     BuckwildBall->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/BuckwildBall.bin", SCOPE_STAGE);
     BuckwildBall->particleFrames = RSDK.LoadSpriteAnimation("LRZ1/Particles.bin", SCOPE_STAGE);
 
-    BuckwildBall->sfxImpact      = RSDK.GetSfx("Stage/Impact2.wav");
-    BuckwildBall->sfxSharp       = RSDK.GetSfx("Stage/Sharp.wav");
+    BuckwildBall->sfxImpact = RSDK.GetSfx("Stage/Impact2.wav");
+    BuckwildBall->sfxSharp  = RSDK.GetSfx("Stage/Sharp.wav");
 
-    BuckwildBall->hitbox.left    = -28;
-    BuckwildBall->hitbox.top     = -28;
-    BuckwildBall->hitbox.right   = 28;
-    BuckwildBall->hitbox.bottom  = 28;
+    BuckwildBall->hitbox.left   = -28;
+    BuckwildBall->hitbox.top    = -28;
+    BuckwildBall->hitbox.right  = 28;
+    BuckwildBall->hitbox.bottom = 28;
 }
 
 void BuckwildBall_HandleTimerSfx(void)
@@ -111,12 +112,12 @@ void BuckwildBall_SpawnDebris(void)
 {
     RSDK_THIS(BuckwildBall);
 
-    int x = self->position.x;
-    int y = self->position.y + 0x1C0000;
+    int32 x = self->position.x;
+    int32 y = self->position.y + 0x1C0000;
 
-    int sizeX  = (BuckwildBall->hitbox.right - BuckwildBall->hitbox.left) >> 1;
-    int spawnX = x + ((RSDK.Rand(0, 64) - 32) << 16);
-    int spawnY = ((RSDK.Rand(0, 8) - 4) << 15) + y;
+    int32 sizeX  = (BuckwildBall->hitbox.right - BuckwildBall->hitbox.left) >> 1;
+    int32 spawnX = x + ((RSDK.Rand(0, 64) - 32) << 16);
+    int32 spawnY = ((RSDK.Rand(0, 8) - 4) << 15) + y;
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 1, &debris->animator, true, 0);
@@ -177,8 +178,7 @@ void BuckwildBall_HandleRollCrush(void)
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), fireworm->position.x,
                           fireworm->position.y);
 #else
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), fireworm->position.x,
-                          fireworm->position.y);
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), fireworm->position.x, fireworm->position.y);
 #endif
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), fireworm->position.x, fireworm->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
@@ -189,7 +189,7 @@ void BuckwildBall_HandleRollCrush(void)
     foreach_active(Toxomister, toxomister)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, toxomister, &crushHitbox)) {
-            if (toxomister->state == Toxomister_State_Unknown1) {
+            if (toxomister->state == Toxomister_State_CreateClouds) {
 #if RETRO_USE_PLUS
                 CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), toxomister->position.x,
                               toxomister->position.y);
@@ -215,10 +215,11 @@ void BuckwildBall_HandleRollCrush(void)
     foreach_active(Spikes, spikes)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, spikes, &spikeHitbox)) {
-            for (int i = 0; i < 2; ++i) {
-                EntityDebris *debris =
-                    CREATE_ENTITY(Debris, Debris_State_Fall, (((2 * (i != 0) - 1) * (spikes->type == 0)) << 19) + spikes->position.x,
-                                  (((2 * (i != 0) - 1) * (spikes->type != 0)) << 19) + spikes->position.y);
+            for (int32 i = 0; i < 2; ++i) {
+                int32 x              = spikes->position.x + (((2 * (i != 0) - 1) * (spikes->type == SPIKES_UP)) << 19);
+                int32 y              = spikes->position.y + (((2 * (i != 0) - 1) * (spikes->type != SPIKES_UP)) << 19);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
+
                 RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 4, &debris->animator, true, spikes->type >> 1);
                 debris->drawOrder = Zone->drawOrderHigh;
                 debris->direction = spikes->direction;
@@ -228,6 +229,7 @@ void BuckwildBall_HandleRollCrush(void)
                 debris->velocity.x = RSDK.Rand(-0x28000, 0x28000);
                 debris->velocity.y = -0x1000 * RSDK.Rand(32, 96);
             }
+
             destroyEntity(spikes);
             RSDK.PlaySfx(BuckwildBall->sfxSharp, false, 255);
             RSDK.PlaySfx(BuckwildBall->sfxImpact, false, 255);
@@ -243,39 +245,36 @@ void BuckwildBall_State_Setup(void)
     RSDK.SetSpriteAnimation(BuckwildBall->aniFrames, 0, &self->animator, true, 0);
 
     self->timerSfx = 0;
-    if (self->mode) {
-        if (!--self->mode) {
-            int sizeX                   = self->detectSize.x;
-            int sizeY                   = self->detectSize.y;
+
+    switch (self->mode) {
+        case BUCKWILDBALL_PATROLLING: self->state = BuckwildBall_State_Patrolling; break;
+
+        case BUCKWILDBALL_FALLING: 
             self->visible             = false;
-            self->state               = BuckwildBall_State_Unknown2;
+            self->state               = BuckwildBall_State_AwaitDetection;
             self->drawOrder           = Zone->drawOrderLow;
-            self->detectHitbox.left   = -(sizeX >> 17);
-            self->detectHitbox.top    = -(sizeY >> 17);
-            self->detectHitbox.right  = sizeX >> 17;
-            self->detectHitbox.bottom = sizeY >> 17;
+            self->detectHitbox.left   = -(self->detectSize.x >> 17);
+            self->detectHitbox.top    = -(self->detectSize.y >> 17);
+            self->detectHitbox.right  = self->detectSize.x >> 17;
+            self->detectHitbox.bottom = self->detectSize.y >> 17;
             self->velocity.x          = 0;
-            self->ballPos             = self->startPos;
-            self->ballPos.x += self->detectOffset.x;
-            self->ballPos.y += self->detectOffset.y;
-            self->velocity.y = 0;
-        }
-    }
-    else {
-        self->state = BuckwildBall_State_Unknown1;
+            self->ballPos.x           = self->startPos.x + self->detectOffset.x;
+            self->ballPos.y           = self->startPos.y + self->detectOffset.y;
+            self->velocity.y          = 0;
+            break;
     }
 }
 
-void BuckwildBall_State_Unknown1(void)
+void BuckwildBall_State_Patrolling(void)
 {
     RSDK_THIS(BuckwildBall);
 
-    int angle          = ((self->speed & 0xFFFF) * (Zone->timer & 0xFFFF)) & 0x3FF;
+    int32 angle      = ((self->speed & 0xFFFF) * (Zone->timer & 0xFFFF)) & 0x3FF;
     self->position.x = (self->amplitude << 6) * RSDK.Sin1024(angle) + self->startPos.x;
     self->direction  = (angle - 0x100) > 0x200;
 }
 
-void BuckwildBall_State_Unknown2(void)
+void BuckwildBall_State_AwaitDetection(void)
 {
     RSDK_THIS(BuckwildBall);
 
@@ -288,7 +287,7 @@ void BuckwildBall_State_Unknown2(void)
             if (Player_CheckCollisionTouch(player, self, &self->detectHitbox)) {
                 self->visible = true;
                 self->active  = ACTIVE_NORMAL;
-                self->state   = BuckwildBall_State_Unknown3;
+                self->state   = BuckwildBall_State_Falling;
             }
         }
     }
@@ -297,7 +296,7 @@ void BuckwildBall_State_Unknown2(void)
     self->position.y = self->startPos.y;
 }
 
-void BuckwildBall_State_Unknown3(void)
+void BuckwildBall_State_Falling(void)
 {
     RSDK_THIS(BuckwildBall);
 
@@ -306,42 +305,43 @@ void BuckwildBall_State_Unknown3(void)
     self->position.y += self->velocity.y;
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1C0000, true)) {
-        if (!RSDK.GetEntityCount(Drillerdroid->objectID, true) || (Drillerdroid->field_5C[self->field_B8] == 1)) {
+        if (!RSDK.GetEntityCount(Drillerdroid->objectID, true) || (Drillerdroid->platformActive[self->bossBallSlot] == true)) {
             self->velocity.y = 0;
-            self->state      = BuckwildBall_State_Unknown4;
+            self->state      = BuckwildBall_State_Rolling;
             self->velocity.x = abs(self->speed << 15) * (2 * (self->direction != FLIP_NONE) - 1);
         }
-        else if (Drillerdroid->field_5C[self->field_B8]) {
-            self->state                   = BuckwildBall_State_Unknown5;
-            self->velocity.x              = 0;
-            self->velocity.y              = -0x40000;
+        else if (Drillerdroid->platformActive[self->bossBallSlot]) {
+            self->state          = BuckwildBall_State_Debris;
+            self->velocity.x     = 0;
+            self->velocity.y     = -0x40000;
             self->animator.speed = 0;
-            self->drawOrder               = Zone->drawOrderHigh;
+            self->drawOrder      = Zone->drawOrderHigh;
         }
         else {
-            int slot                                                                        = RSDK.GetEntityID(Drillerdroid->boss);
-            RSDK_GET_ENTITY(slot + 6 + self->field_B8, CollapsingPlatform)->collapseDelay = 1;
-            Drillerdroid->field_5C[self->field_B8]                                        = -1;
-            self->velocity.y                                                              = -0x40000;
+            int32 slot                                                                        = RSDK.GetEntityID(Drillerdroid->boss);
+            RSDK_GET_ENTITY(slot + 6 + self->bossBallSlot, CollapsingPlatform)->collapseDelay = 1;
+            Drillerdroid->platformActive[self->bossBallSlot]                                  = -1;
+            self->velocity.y                                                                  = -0x40000;
         }
 
         BuckwildBall_HandleTimerSfx();
         Camera_ShakeScreen(0, 0, 5);
     }
 
-    if (self->field_B8 > -1) {
+    if (self->bossBallSlot > -1)
         BuckwildBall_CheckOffScreen();
-    }
 }
 
-void BuckwildBall_State_Unknown4(void)
+void BuckwildBall_State_Rolling(void)
 {
     RSDK_THIS(BuckwildBall);
 
-    self->velocity.y += 0x3800;
-    self->position.y += self->velocity.y;
     self->velocity.x += abs(self->speed << 10) * (2 * !(self->direction == FLIP_NONE) - 1);
+    self->velocity.y += 0x3800;
+
     self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+
     if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
         self->velocity.y = 0;
         if (abs(self->velocity.x) > 0x20000 && RSDK.Rand(0, 100) > 0x50) {
@@ -351,32 +351,30 @@ void BuckwildBall_State_Unknown4(void)
         }
     }
 
-    bool32 collided = false;
-    if (self->direction == FLIP_X) {
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x1C0000, 0, true);
-    }
-    else if (self->direction == FLIP_NONE) {
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x1C0000, 0, true);
-    }
+    bool32 collidedWall = false;
+    if (self->direction == FLIP_X)
+        collidedWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x1C0000, 0, true);
+    else if (self->direction == FLIP_NONE) 
+        collidedWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x1C0000, 0, true);
 
-    if (collided) {
-        self->state = BuckwildBall_State_Unknown5;
+    if (collidedWall) {
+        self->state = BuckwildBall_State_Debris;
         BuckwildBall_HandleTimerSfx();
         Camera_ShakeScreen(0, 0, 5);
-        self->velocity.x              = 0;
-        self->velocity.y              = -0x40000;
+        self->velocity.x     = 0;
+        self->velocity.y     = -0x40000;
         self->animator.speed = 0;
-        self->drawOrder               = Zone->drawOrderHigh;
+        self->drawOrder      = Zone->drawOrderHigh;
     }
 
-    if (self->field_B8 > -1) {
+    if (self->bossBallSlot > -1)
         BuckwildBall_CheckOffScreen();
-    }
 }
 
-void BuckwildBall_State_Unknown5(void)
+void BuckwildBall_State_Debris(void)
 {
     RSDK_THIS(BuckwildBall);
+
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -392,19 +390,50 @@ void BuckwildBall_EditorDraw(void)
 
     RSDK.SetSpriteAnimation(BuckwildBall->aniFrames, 0, &self->animator, true, 0);
 
-    int sizeX                   = self->detectSize.x;
-    int sizeY                   = self->detectSize.y;
-    self->detectHitbox.left   = -(sizeX >> 17);
-    self->detectHitbox.top    = -(sizeY >> 17);
-    self->detectHitbox.right  = sizeX >> 17;
-    self->detectHitbox.bottom = sizeY >> 17;
-    self->ballPos             = self->position;
-    self->ballPos.x += self->detectOffset.x;
-    self->ballPos.y += self->detectOffset.y;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->startPos = self->position;
 
     BuckwildBall_Draw();
 
-    DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->ballPos.x, self->ballPos.y, &self->detectHitbox);
+    if (showGizmos()) {
+
+        RSDK_DRAWING_OVERLAY(true);
+        switch (self->mode) {
+            case BUCKWILDBALL_PATROLLING:
+                self->updateRange.x = (self->amplitude + 0x80) << 16;
+
+                self->inkEffect = INK_BLEND;
+
+                self->position.x = (self->amplitude << 6) * RSDK.Sin1024(0x100) + self->startPos.x;
+                int32 x1         = self->position.x;
+                BuckwildBall_Draw();
+
+                self->position.x = (self->amplitude << 6) * RSDK.Sin1024(0x300) + self->startPos.x;
+                BuckwildBall_Draw();
+
+                RSDK.DrawLine(x1, self->position.y, self->position.x, self->position.y, 0x00FF00, 0xFF, INK_BLEND, false);
+
+                self->inkEffect = INK_NONE;
+                break;
+
+            case BUCKWILDBALL_FALLING:
+                self->detectHitbox.left   = -(self->detectSize.x >> 17);
+                self->detectHitbox.top    = -(self->detectSize.y >> 17);
+                self->detectHitbox.right  = self->detectSize.x >> 17;
+                self->detectHitbox.bottom = self->detectSize.y >> 17;
+                self->ballPos             = self->position;
+                self->ballPos.x           = self->position.x + self->detectOffset.x;
+                self->ballPos.y           = self->position.y + self->detectOffset.y;
+
+                DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->ballPos.x, self->ballPos.y, &self->detectHitbox);
+
+                self->velocity.x = abs(self->speed << 15) * (2 * (self->direction != FLIP_NONE) - 1);
+                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x + (self->velocity.x << 3), self->position.y);
+                break;
+        }
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void BuckwildBall_EditorLoad(void)
@@ -414,6 +443,10 @@ void BuckwildBall_EditorLoad(void)
     RSDK_ACTIVE_VAR(BuckwildBall, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
     RSDK_ENUM_VAR("Flip X", FLIP_X);
+
+    RSDK_ACTIVE_VAR(BuckwildBall, mode);
+    RSDK_ENUM_VAR("Patrolling", BUCKWILDBALL_PATROLLING);
+    RSDK_ENUM_VAR("Rolling", BUCKWILDBALL_FALLING);
 }
 #endif
 

@@ -65,7 +65,7 @@ void ButtonDoor_Create(void *data)
     self->updateRange.x = self->size.x + 0x800000;
     self->updateRange.y = self->size.y + 0x800000;
     ButtonDoor_SetupSize();
-    ButtonDoor_SetupButtonTag();
+    ButtonDoor_SetupTagLink();
     RSDK.SetSpriteAnimation(ButtonDoor->aniFrames, 0, &self->animator, true, 0);
 }
 
@@ -117,16 +117,17 @@ void ButtonDoor_SetupSize(void)
     self->hitbox.bottom = self->size.y >> 17;
 }
 
-void ButtonDoor_SetupButtonTag(void)
+void ButtonDoor_SetupTagLink(void)
 {
     RSDK_THIS(ButtonDoor);
 
     self->taggedButton = NULL;
+
     if (RSDK.CheckStageFolder("LRZ2")) {
-        self->taggedButton = LRZ2Setup_HandleTagSetup(self->buttonTag, (Entity *)self);
+        self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
     }
     else {
-        EntityButton *taggedEntity = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+        EntityButton *taggedButton = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
         bool32 tagged              = false;
 
         if (self->buttonTag > 0) {
@@ -134,7 +135,7 @@ void ButtonDoor_SetupButtonTag(void)
                 foreach_all(Button, button)
                 {
                     if (button->tag == self->buttonTag) {
-                        taggedEntity = button;
+                        taggedButton = button;
                         tagged       = true;
                         foreach_break;
                     }
@@ -145,7 +146,7 @@ void ButtonDoor_SetupButtonTag(void)
                 foreach_all(PullChain, chain)
                 {
                     if (chain->tag == self->buttonTag) {
-                        taggedEntity = (EntityButton *)chain;
+                        taggedButton = (EntityButton *)chain;
                         tagged       = true;
                         foreach_break;
                     }
@@ -156,7 +157,7 @@ void ButtonDoor_SetupButtonTag(void)
                 foreach_all(TurretSwitch, turretSwitch)
                 {
                     if (turretSwitch->tag == self->buttonTag) {
-                        taggedEntity = (EntityButton *)turretSwitch;
+                        taggedButton = (EntityButton *)turretSwitch;
                         tagged = true;
                         foreach_break;
                     }
@@ -164,12 +165,12 @@ void ButtonDoor_SetupButtonTag(void)
             }
         }
 
-        if (taggedEntity) {
-            if ((Button && taggedEntity->objectID == Button->objectID) || (TurretSwitch && taggedEntity->objectID == TurretSwitch->objectID)
-                || (PullChain && taggedEntity->objectID == PullChain->objectID)) {
+        if (taggedButton) {
+            if ((Button && taggedButton->objectID == Button->objectID) || (TurretSwitch && taggedButton->objectID == TurretSwitch->objectID)
+                || (PullChain && taggedButton->objectID == PullChain->objectID)) {
                 if (self) {
-                    int32 distX = abs(self->position.x - taggedEntity->position.x);
-                    int32 distY = abs(self->position.y - taggedEntity->position.y);
+                    int32 distX = abs(self->position.x - taggedButton->position.x);
+                    int32 distY = abs(self->position.y - taggedButton->position.y);
 
                     if (self->updateRange.x < 0x800000 + distX)
                         self->updateRange.x = 0x800000 + distX;
@@ -177,7 +178,7 @@ void ButtonDoor_SetupButtonTag(void)
                     if (self->updateRange.y < 0x800000 + distY)
                         self->updateRange.y = 0x800000 + distY;
                 }
-                self->taggedButton = taggedEntity;
+                self->taggedButton = taggedButton;
             }
         }
     }
@@ -211,8 +212,19 @@ void ButtonDoor_DrawSprites(void)
 #if RETRO_INCLUDE_EDITOR
 void ButtonDoor_EditorDraw(void)
 {
+    RSDK_THIS(ButtonDoor);
+
     ButtonDoor_SetupSize();
     ButtonDoor_DrawSprites();
+
+    if (showGizmos()) {
+        ButtonDoor_SetupTagLink();
+
+        RSDK_DRAWING_OVERLAY(true);
+        if (self->taggedButton) 
+            DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y);
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void ButtonDoor_EditorLoad(void)

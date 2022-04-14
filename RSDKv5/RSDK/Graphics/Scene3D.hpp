@@ -142,7 +142,7 @@ inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed
 {
     if (model >= MODEL_MAX) {
         if (animator)
-            animator->framePtrs = 0;
+            animator->frames = 0;
         return;
     }
     if (!animator)
@@ -150,7 +150,7 @@ inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed
 
     if (animator->animationID == model && !forceApply)
         return;
-    animator->framePtrs          = (RSDK::SpriteFrame *)1;
+    animator->frames          = (RSDK::SpriteFrame *)1;
     animator->timer  = 0;
     animator->frameID         = frameID;
     animator->frameCount      = modelList[model].frameCount;

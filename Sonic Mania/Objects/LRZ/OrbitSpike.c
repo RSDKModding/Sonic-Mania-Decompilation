@@ -12,6 +12,7 @@ ObjectOrbitSpike *OrbitSpike;
 void OrbitSpike_Update(void)
 {
     RSDK_THIS(OrbitSpike);
+
     uint8 angle = 2 * ((self->offset & 0xFF) + (Zone->timer & 0xFF));
     if (self->amplitude.x) {
         if (angle >= 0x80) {
@@ -26,16 +27,16 @@ void OrbitSpike_Update(void)
         }
     }
     else {
-        int32 ang = (angle + 0x40) & 0xFF;
-        if (ang >= 0x80) {
+        int32 newAngle = (angle + 0x40) & 0xFF;
+        if (newAngle >= 0x80) {
             self->drawOrder = Zone->drawOrderLow;
-            self->scale.x   = 386 + (abs(ang - 0xC0) << 1);
-            self->scale.y   = 386 + (abs(ang - 0xC0) << 1);
+            self->scale.x   = 386 + (abs(newAngle - 0xC0) << 1);
+            self->scale.y   = 386 + (abs(newAngle - 0xC0) << 1);
         }
         else {
             self->drawOrder = Zone->drawOrderHigh;
-            self->scale.x   = (319 - abs(ang - 0x40)) << 1;
-            self->scale.y   = (319 - abs(ang - 0x40)) << 1;
+            self->scale.x   = (319 - abs(newAngle - 0x40)) << 1;
+            self->scale.y   = (319 - abs(newAngle - 0x40)) << 1;
         }
     }
 
@@ -110,38 +111,40 @@ void OrbitSpike_EditorDraw(void)
 
     OrbitSpike_Draw();
 
-    //Offset render
-    uint8 angle = 2 * (self->offset & 0xFF);
-    if (self->amplitude.x) {
-        if (angle >= 0x80) {
-            self->scale.x = 386 + (abs(angle - 0xC0) << 1);
-            self->scale.y = 386 + (abs(angle - 0xC0) << 1);
+    if (showGizmos()) {
+        // Offset render
+        uint8 angle = 2 * (self->offset & 0xFF);
+        if (self->amplitude.x) {
+            if (angle >= 0x80) {
+                self->scale.x = 386 + (abs(angle - 0xC0) << 1);
+                self->scale.y = 386 + (abs(angle - 0xC0) << 1);
+            }
+            else {
+                self->scale.x = (319 - abs(angle - 0x40)) << 1;
+                self->scale.y = (319 - abs(angle - 0x40)) << 1;
+            }
         }
         else {
-            self->scale.x = (319 - abs(angle - 0x40)) << 1;
-            self->scale.y = (319 - abs(angle - 0x40)) << 1;
+            int32 newAngle = (angle + 0x40) & 0xFF;
+            if (newAngle >= 0x80) {
+                self->scale.x = 386 + (abs(newAngle - 0xC0) << 1);
+                self->scale.y = 386 + (abs(newAngle - 0xC0) << 1);
+            }
+            else {
+                self->scale.x = (319 - abs(newAngle - 0x40)) << 1;
+                self->scale.y = (319 - abs(newAngle - 0x40)) << 1;
+            }
         }
-    }
-    else {
-        int32 ang = (angle + 0x40) & 0xFF;
-        if (ang >= 0x80) {
-            self->scale.x = 386 + (abs(ang - 0xC0) << 1);
-            self->scale.y = 386 + (abs(ang - 0xC0) << 1);
-        }
-        else {
-            self->scale.x = (319 - abs(ang - 0x40)) << 1;
-            self->scale.y = (319 - abs(ang - 0x40)) << 1;
-        }
-    }
 
-    self->position.x = (self->amplitude.x >> 8) * RSDK.Cos256(angle) + self->center.x;
-    self->position.y = (self->amplitude.y >> 8) * RSDK.Sin256(angle) + self->center.y;
-    
-    self->inkEffect = INK_ALPHA;
-    self->alpha = 0x40;
-    OrbitSpike_Draw();
+        self->position.x = (self->amplitude.x >> 8) * RSDK.Cos256(angle) + self->center.x;
+        self->position.y = (self->amplitude.y >> 8) * RSDK.Sin256(angle) + self->center.y;
 
-    self->position = self->center;
+        self->inkEffect = INK_ALPHA;
+        self->alpha     = 0x40;
+        OrbitSpike_Draw();
+
+        self->position = self->center;
+    }
 }
 
 void OrbitSpike_EditorLoad(void)
@@ -150,6 +153,9 @@ void OrbitSpike_EditorLoad(void)
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/OrbitSpike.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("LRZ2"))
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(OrbitSpike, direction);
+    RSDK_ENUM_VAR("Unused", 0);
 }
 #endif
 

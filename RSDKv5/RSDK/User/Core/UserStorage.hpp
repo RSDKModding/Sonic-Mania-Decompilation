@@ -35,7 +35,7 @@ struct UserStorage {
 
 enum DBVarTypes {
     DBVAR_INVALID,
-    DBVAR_UNKNOWN1,
+    DBVAR_BOOL8, // may not actually be "bool8" since I've never seen that type, but I don't have any better ideas so...
     DBVAR_UINT8,
     DBVAR_UINT16,
     DBVAR_UINT32,
@@ -49,7 +49,7 @@ enum DBVarTypes {
     DBVAR_UNUSED4,
     DBVAR_UNUSED5,
     DBVAR_UNUSED6,
-    DBVAR_UNKNOWN2,
+    DBVAR_BOOL32, // not 100% sure that this is bool32, but that's what fit the best so that's what it'll be labeled as
     DBVAR_STRING,
 };
 

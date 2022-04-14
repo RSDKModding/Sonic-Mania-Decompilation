@@ -18,8 +18,8 @@ struct EntityPaperRoller {
     Vector2 startPos;
     int32 unused;
     int32 divotAngle;
-    int32 playerTimer[4];
-    int32 lastJumpTimer[4]; //not used, is set and updated, idk what it was for
+    int32 playerTimer[PLAYER_MAX];
+    int32 lastJumpTimer[PLAYER_MAX]; //not used, is set and updated, idk what it was for
     Vector2 deformPosTop;
     Vector2 deformPosBottom;
     Hitbox hitbox;
@@ -44,7 +44,8 @@ void PaperRoller_EditorLoad(void);
 void PaperRoller_Serialize(void);
 
 // Extra Entity Functions
-void PaperRoller_DrawDeformedLine(uint32 colour, int32 len, int32 posX1, int32 posY1, int32 posX2, int32 posY2, int32 posX3, int32 posY3, int32 posX4, int32 posY4);
+void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 deformX, int32 deformY,
+                                  int32 len, uint32 colour);
 void PaperRoller_DrawPaperLines(void);
 void PaperRoller_DrawRollers(void);
 void PaperRoller_HandleRollerCollisions(void);

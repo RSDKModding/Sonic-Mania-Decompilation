@@ -17,12 +17,12 @@ struct EntityTurretSwitch {
     int32 type;
     bool32 walkOnto;
     uint8 tag;
-    bool32 down;            // 64
-    bool32 toggled;         // 68
-    bool32 currentlyActive; // 6B
-    bool32 activated;       // 70
-    bool32 wasActivated;    // 74
-    int32 pressPos;         // 78
+    bool32 down;           
+    bool32 toggled;        
+    bool32 currentlyActive;
+    bool32 activated;      
+    bool32 wasActivated;   
+    int32 pressPos;        
     Animator animator;
     StateMachine(state);
     int32 timer;

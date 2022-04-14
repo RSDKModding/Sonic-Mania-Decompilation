@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectToxomister {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxCloud;
     uint16 aniFrames;
 };
 
@@ -17,7 +17,7 @@ struct EntityToxomister {
     StateMachine(state);
     Vector2 startPos;
     uint8 startDir;
-    Entity *link;
+    EntityToxomister *parent;
     EntityPlayer *grabbedPlayer;
     int32 timer;
     uint16 shakeTimer;
@@ -48,16 +48,16 @@ void Toxomister_DebugDraw(void);
 
 void Toxomister_CheckPlayerCollisions(void);
 void Toxomister_CheckOffScreen(void);
-void Toxomister_CheckMistOnScreen(void);
-void Toxomister_CheckPlayerMistCollisions(void);
+void Toxomister_CheckCloudOnScreen(void);
+void Toxomister_CheckPlayerCloudCollisions(void);
 
 void Toxomister_State_Setup(void);
-void Toxomister_State_Unknown1(void);
+void Toxomister_State_CreateClouds(void);
 
-void Toxomister_State1_Unknown1(void);
-void Toxomister_State1_Unknown2(void);
-void Toxomister_State1_Unknown3(void);
-void Toxomister_State1_Unknown4(void);
-void Toxomister_State1_Unknown5(void);
+void Toxomister_StateCloud_FallDelay(void);
+void Toxomister_StateCloud_FallToFloor(void);
+void Toxomister_StateCloud_ReachedFloor(void);
+void Toxomister_StateCloud_GrabbedPlayer(void);
+void Toxomister_StateCloud_Dissipate(void);
 
 #endif //!OBJ_TOXOMISTER_H

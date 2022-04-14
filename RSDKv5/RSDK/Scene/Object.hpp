@@ -7,16 +7,16 @@
 
 #define OBJECT_COUNT (0x400)
 
-//0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
+// 0x800 scene objects, 0x40 reserved ones, and 0x100 spare slots for creation
 #define RESERVE_ENTITY_COUNT (0x40)
 #define TEMPENTITY_COUNT     (0x100)
 #define SCENEENTITY_COUNT    (0x800)
 #define ENTITY_COUNT         (RESERVE_ENTITY_COUNT + SCENEENTITY_COUNT + TEMPENTITY_COUNT)
 #define TEMPENTITY_START     (ENTITY_COUNT - TEMPENTITY_COUNT)
 
-#define TYPE_COUNT (0x100)
+#define TYPE_COUNT        (0x100)
 #define EDITABLEVAR_COUNT (0x100)
-#define TYPEGROUP_COUNT (0x104)
+#define TYPEGROUP_COUNT   (0x104)
 
 #define FOREACH_STACK_COUNT (0x400)
 
@@ -45,18 +45,18 @@ enum TypeGroups {
 };
 
 enum VariableTypes {
-	VAR_UINT8,
-	VAR_UINT16,
-	VAR_UINT32,
-	VAR_INT8,
-	VAR_INT16,
-	VAR_INT32,
-	VAR_ENUM,
-	VAR_BOOL,
-	VAR_STRING,
-	VAR_VECTOR2,
-	VAR_UNKNOWN,
-	VAR_COLOUR,
+    VAR_UINT8,
+    VAR_UINT16,
+    VAR_UINT32,
+    VAR_INT8,
+    VAR_INT16,
+    VAR_INT32,
+    VAR_ENUM,
+    VAR_BOOL,
+    VAR_STRING,
+    VAR_VECTOR2,
+    VAR_FLOAT, // Not actually used in Sonic Mania so it's just an assumption, but this is the only thing that'd fit the 32 bit limit and make sense
+    VAR_COLOUR,
 };
 
 enum ActiveFlags {
@@ -67,7 +67,7 @@ enum ActiveFlags {
     ACTIVE_BOUNDS,  // update if in x & y bounds
     ACTIVE_XBOUNDS, // update only if in x bounds (y bounds dont matter)
     ACTIVE_YBOUNDS, // update only if in y bounds (x bounds dont matter)
-    ACTIVE_RBOUNDS, // update based on radius boundaries (updateRange.x = radius)
+    ACTIVE_RBOUNDS, // update based on radius boundaries (updateRange.x == radius)
 };
 
 enum DefaultObjects {
@@ -75,19 +75,19 @@ enum DefaultObjects {
 #if RETRO_REV02
     TYPE_DEVOUTPUT,
 #endif
-    TYPE_DEFAULTCOUNT, //max
+    TYPE_DEFAULTCOUNT, // max
 };
 
 struct UnknownStruct {
-    int16 v1;
-    int16 v2;
-    int16 v3;
-    int16 v4;
-    int16 v5;
-    int16 v6;
-    int16 v7;
-    int16 v8;
-    int16 v9;
+    int16 unknown1;
+    int16 unknown2;
+    int16 unknown3;
+    int16 unknown4;
+    int16 unknown5;
+    int16 unknown6;
+    int16 unknown7;
+    int16 unknown8;
+    int16 unknown9;
 };
 
 struct Object {
@@ -133,12 +133,12 @@ struct EntityBase : Entity {
 
 struct ObjectInfo {
     RETRO_HASH(hash);
-#if RETRO_USE_MOD_LOADER //using std::function makes it easier to use stuff like lambdas
+#if RETRO_USE_MOD_LOADER // using std::function makes it easier to use stuff like lambdas
     std::function<void(void)> update;
     std::function<void(void)> lateUpdate;
     std::function<void(void)> staticUpdate;
     std::function<void(void)> draw;
-    std::function<void(void*)> create;
+    std::function<void(void *)> create;
     std::function<void(void)> stageLoad;
     std::function<void(void)> editorDraw;
     std::function<void(void)> editorLoad;
@@ -158,9 +158,9 @@ struct ObjectInfo {
     int32 entitySize;
     int32 objectSize;
 #if RETRO_USE_MOD_LOADER
-    ObjectInfo* inherited;
+    ObjectInfo *inherited;
 #endif
-};        
+};
 
 struct EditableVarInfo {
     uint32 hash[4];
@@ -196,25 +196,26 @@ extern TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
 extern bool32 validDraw;
 
-void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
-                  void (*staticUpdate)(void), void (*draw)(void), void(*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
-                  void (*editorLoad)(void), void (*serialize)(void));
+void RegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
+                    void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
+                    void (*editorLoad)(void), void (*serialize)(void));
 
 #if RETRO_USE_MOD_LOADER
-void RegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update, std::function<void(void)> lateUpdate,
-                    std::function<void(void)> staticUpdate, std::function<void(void)> draw, std::function<void(void*)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
-                    std::function<void(void)> editorLoad, std::function<void(void)> serialize);
+void RegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
+                        std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
+                        std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
+                        std::function<void(void)> editorLoad, std::function<void(void)> serialize);
 #endif
 
 #if RETRO_REV02
-void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSize);
+void RegisterObjectContainer(Object **structPtr, const char *name, uint32 objectSize);
 #endif
 
-void LoadStaticObject(byte *obj, uint *hash, int dataPos);
+void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos);
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, object->objectID, offsetof(Entity##object, var))
 
-inline void SetEditableVar(byte type, const char *name, byte object, int offset)
+inline void SetEditableVar(uint8 type, const char *name, uint8 object, int32 offset)
 {
     if (editableVarCount < 255) {
         EditableVarInfo *var = &editableVarList[editableVarCount];
@@ -226,7 +227,7 @@ inline void SetEditableVar(byte type, const char *name, byte object, int offset)
     }
 }
 
-void SetActiveVariable(int objectID, const char *name);
+void SetActiveVariable(int32 objectID, const char *name);
 void AddEnumVariable(const char *name);
 
 void InitObjects();
@@ -235,19 +236,16 @@ void ProcessPausedObjects();
 void ProcessFrozenObjects();
 void ProcessObjectDrawLists();
 
-ushort GetObjectByName(const char *name);
-inline Entity* GetObjectByID(ushort objectID)
-{
-    return &objectEntityList[objectID < ENTITY_COUNT ? objectID : (ENTITY_COUNT - 1)];
-}
+uint16 GetObjectByName(const char *name);
+inline Entity *GetObjectByID(uint16 objectID) { return &objectEntityList[objectID < ENTITY_COUNT ? objectID : (ENTITY_COUNT - 1)]; }
 
-inline int GetEntityID(EntityBase *entityPtr) { return (int)(entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0); }
+inline int32 GetEntityID(EntityBase *entityPtr) { return (int32)(entityPtr - objectEntityList < ENTITY_COUNT ? entityPtr - objectEntityList : 0); }
 
-int GetEntityCount(ushort type, bool32 isActive);
+int32 GetEntityCount(uint16 type, bool32 isActive);
 
-void ResetEntityPtr(Entity *entity, ushort type, void *data);
-void ResetEntitySlot(ushort slotID, ushort type, void *data);
-Entity* CreateEntity(ushort type, void *data, int x, int y);
+void ResetEntityPtr(Entity *entity, uint16 type, void *data);
+void ResetEntitySlot(uint16 slotID, uint16 type, void *data);
+Entity *CreateEntity(uint16 type, void *data, int32 x, int32 y);
 
 inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
 {
@@ -258,8 +256,8 @@ inline void CopyEntity(void *destEntity, void *srcEntity, bool32 clearSrcEntity)
     }
 }
 
-bool32 GetActiveEntities(ushort group, Entity **entity);
-bool32 GetEntities(ushort type, Entity **entity);
+bool32 GetActiveEntities(uint16 group, Entity **entity);
+bool32 GetEntities(uint16 type, Entity **entity);
 
 inline void BreakForeachLoop() { --foreachStackPtr; }
 

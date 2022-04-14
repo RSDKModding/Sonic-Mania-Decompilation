@@ -50,7 +50,7 @@ struct EntityFan {
     uint16 duration;
     uint16 delay;
     int32 buttonTag;
-    EntityButton *buttonPtr;
+    EntityButton *taggedButton;
     Animator animator;
 };
 
@@ -71,7 +71,7 @@ void Fan_EditorLoad(void);
 void Fan_Serialize(void);
 
 // Extra Entity Functions
-void Fan_SetupTagLinks(void);
+void Fan_SetupTagLink(void);
 
 void Fan_HandlePlayerInteractions_Top(void);
 void Fan_HandlePlayerInteractions_Bottom(void);

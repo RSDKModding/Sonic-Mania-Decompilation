@@ -20,11 +20,11 @@ struct EntityLRZConvSwitch {
     uint8 conveyorDir;
     int32 dir;
     Vector2 playerPositions[PLAYER_MAX];
-    int32 field_84;
+    int32 unused1;
     Vector2 startPos;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
     Animator animator;
 };
 

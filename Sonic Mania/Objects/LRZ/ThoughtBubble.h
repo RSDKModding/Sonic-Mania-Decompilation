@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    THOUGHTBUBBLE_1DOT,
+    THOUGHTBUBBLE_2DOTS,
+    THOUGHTBUBBLE_BUBBLE,
+    THOUGHTBUBBLE_THOUGHTS,
+}ThoughtBubbleTypes;
+
 // Object Class
 struct ObjectThoughtBubble {
     RSDK_OBJECT
@@ -16,12 +23,11 @@ struct EntityThoughtBubble {
     StateMachine(state);
     int32 type;
     int32 timer;
-    Vector2 drawPos1;
-    Vector2 drawPos2;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Vector2 bubbleDotPos[2];
+    Animator bubbleAnimator;
+    Animator thoughtAnimator;
+    Animator dotAnimator1;
+    Animator dotAnimator2;
 };
 
 // Object Struct
@@ -41,10 +47,10 @@ void ThoughtBubble_EditorLoad(void);
 void ThoughtBubble_Serialize(void);
 
 // Extra Entity Functions
-void ThoughtBubble_Unknown1(void);
-void ThoughtBubble_Unknown2(void);
-void ThoughtBubble_Unknown3(void);
-void ThoughtBubble_Unknown4(void);
-void ThoughtBubble_Unknown5(void);
+void ThoughtBubble_BubbleAppear(void);
+void ThoughtBubble_HaveFirstThought(void);
+void ThoughtBubble_HaveOtherThoughts(void);
+void ThoughtBubble_BubbleDisappear(void);
+void ThoughtBubble_DestroyBubble(void);
 
 #endif //!OBJ_THOUGHTBUBBLE_H

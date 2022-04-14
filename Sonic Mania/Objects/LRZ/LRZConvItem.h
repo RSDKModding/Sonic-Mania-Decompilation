@@ -45,7 +45,7 @@ void LRZConvItem_Serialize(void);
 
 // Extra Entity Functions
 void LRZConvItem_SetupHitboxes(void);
-Vector2 LRZConvItem_GetMoveOffset(void *e);
+Vector2 LRZConvItem_HandleLRZConvPhys(void *e);
 
 void LRZConvItem_State_Rock(void);
 void LRZConvItem_State_SpikeBall(void);

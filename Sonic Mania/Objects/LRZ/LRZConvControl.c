@@ -61,7 +61,8 @@ void LRZConvControl_Create(void *data)
             self->updateRange.x += self->hitboxSize.x;
             self->updateRange.y += self->hitboxSize.y;
             break;
-        case LRZCONVCTRL_TRIGGER_BUTTON: self->taggedButton = LRZ2Setup_HandleTagSetup(self->buttonTag, (Entity *)self); break;
+
+        case LRZCONVCTRL_TRIGGER_BUTTON: self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self); break;
     }
 }
 
@@ -74,7 +75,7 @@ void LRZConvControl_HandlePlayerTrigger(void)
     bool32 flag = false;
     foreach_active(Player, player)
     {
-        int playerID    = RSDK.GetEntityID(player);
+        int32 playerID    = RSDK.GetEntityID(player);
         bool32 collided = Player_CheckCollisionTouch(player, self, &self->hitbox);
 
         if ((1 << playerID) & self->activePlayers) {
@@ -113,19 +114,22 @@ void LRZConvControl_HandleButtonTrigger(void)
                     if (button->down)
                         LRZ2Setup->conveyorOff = self->flipVal;
                     break;
+
                 case LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP:
-                    if (self->field_75 != button->toggled)
+                    if (self->wasToggled != button->toggled)
                         LRZ2Setup->conveyorOff = !LRZ2Setup->conveyorOff;
-                    self->field_75 = button->toggled;
+                    self->wasToggled = button->toggled;
                     break;
+
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SET:
                     if (button->down)
                         LRZ2Setup->conveyorDir = self->flipVal;
                     break;
+
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP:
-                    if (button->toggled != self->field_75)
+                    if (button->toggled != self->wasToggled)
                         LRZ2Setup->conveyorDir = !LRZ2Setup->conveyorDir;
-                    self->field_75 = button->toggled;
+                    self->wasToggled = button->toggled;
                     break;
                 default: break;
             }
@@ -134,7 +138,49 @@ void LRZConvControl_HandleButtonTrigger(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void LRZConvControl_EditorDraw(void) { LRZConvControl_Draw(); }
+void LRZConvControl_EditorDraw(void)
+{
+    RSDK_THIS(LRZConvControl);
+
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+
+    switch (self->triggerMode) {
+        case LRZCONVCTRL_TRIGGER_PLAYER:
+            self->updateRange.x += self->hitboxSize.x;
+            self->updateRange.y += self->hitboxSize.y;
+            break;
+
+        case LRZCONVCTRL_TRIGGER_BUTTON: break;
+    }
+
+    RSDK.SetSpriteAnimation(LRZConvControl->aniFrames, 0, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    if (showGizmos()) {
+        switch (self->triggerMode) {
+            case LRZCONVCTRL_TRIGGER_PLAYER:
+                RSDK_DRAWING_OVERLAY(true);
+
+                self->hitbox.left   = -self->hitboxSize.x >> 17;
+                self->hitbox.top    = -self->hitboxSize.y >> 17;
+                self->hitbox.right  = self->hitboxSize.x >> 17;
+                self->hitbox.bottom = self->hitboxSize.y >> 17;
+                DrawHelpers_DrawHitboxOutline(0xFFFFFF, self->direction, self->position.x, self->position.y, &self->hitbox);
+                RSDK_DRAWING_OVERLAY(false);
+                break;
+
+            case LRZCONVCTRL_TRIGGER_BUTTON:
+                RSDK_DRAWING_OVERLAY(true);
+                self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
+                if (self->taggedButton)
+                    DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x,
+                                          self->position.y);
+                RSDK_DRAWING_OVERLAY(false);
+                break;
+        }
+    }
+}
 
 void LRZConvControl_EditorLoad(void)
 {

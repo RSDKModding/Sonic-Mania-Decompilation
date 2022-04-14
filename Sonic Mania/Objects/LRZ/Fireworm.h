@@ -3,14 +3,14 @@
 
 #include "SonicMania.h"
 
-#define Fireworm_SegmentCount (5)
+#define Fireworm_SegmentCount (1 + 4) // Head + 4 Segments
 
 // Object Class
 struct ObjectFireworm {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Animator animator;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Animator holeAnimator;
     uint16 aniFrames;
 };
 
@@ -20,18 +20,18 @@ struct EntityFireworm {
     StateMachine(state);
     Vector2 startPos;
     uint8 startDir;
-    Vector2 positions[Fireworm_SegmentCount];
-    Vector2 velocities[Fireworm_SegmentCount];
-    uint8 directions[Fireworm_SegmentCount];
-    uint16 angles[Fireworm_SegmentCount];
-    uint8 timers[Fireworm_SegmentCount];
-    uint8 timers2[Fireworm_SegmentCount];
-    int32 positionsY[Fireworm_SegmentCount];
+    Vector2 bodyPositions[Fireworm_SegmentCount];
+    Vector2 bodyVelocities[Fireworm_SegmentCount];
+    uint8 bodyDirections[Fireworm_SegmentCount];
+    uint16 bodyAngles[Fireworm_SegmentCount];
+    uint8 bodyTimers[Fireworm_SegmentCount];
+    uint8 flameExhaustDelays[Fireworm_SegmentCount];
+    int32 bodyOriginY[Fireworm_SegmentCount];
     int32 timer;
-    int32 field_EC;
-    int32 field_F0;
-    Animator animators1[Fireworm_SegmentCount];
-    Animator animators2[Fireworm_SegmentCount];
+    int32 boundsL;
+    int32 boundsR;
+    Animator bodyAnimators[Fireworm_SegmentCount];
+    Animator flameAnimators[Fireworm_SegmentCount];
 };
 
 // Object Struct
@@ -58,10 +58,10 @@ void Fireworm_CheckPlayerCollisions(void);
 void Fireworm_CheckOffScreen(void);
 
 void Fireworm_State_Setup(void);
-void Fireworm_State_Unknown1(void);
-void Fireworm_State_Unknown2(void);
+void Fireworm_State_AwaitPlayer(void);
+void Fireworm_State_HeadAppear(void);
 
-void Fireworm_State1_Unknown1(void);
-void Fireworm_State1_Unknown2(void);
+void Fireworm_State_BodyAppear(void);
+void Fireworm_State_FlyAround(void);
 
 #endif //!OBJ_FIREWORM_H

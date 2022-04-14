@@ -193,12 +193,12 @@ void KingAttack_HandleLaserPositions(void)
 
     EntityHeavyKing *king = (EntityHeavyKing *)self->parent;
 
-    int x = 0;
+    int32 x = 0;
     if (king->direction)
         x = king->position.x - 0x240000;
     else
         x = king->position.x + 0x240000;
-    int y = king->position.y - 0x300000;
+    int32 y = king->position.y - 0x300000;
 
     self->laserVertPostions[0].x = x - 0x40000;
     self->laserVertPostions[1].x = self->position.x - 0x40000;
@@ -210,13 +210,13 @@ void KingAttack_HandleLaserPositions(void)
     self->laserVertPostions[7].x = self->position.x + 0x40000;
 
     self->laserVertPostions[0].y = y;
-    self->laserVertPostions[1].y = HeavyKing->value9;
+    self->laserVertPostions[1].y = HeavyKing->spinRaySpawnPos;
     self->laserVertPostions[2].y = y;
-    self->laserVertPostions[3].y = HeavyKing->value9;
+    self->laserVertPostions[3].y = HeavyKing->spinRaySpawnPos;
     self->laserVertPostions[4].y = y;
-    self->laserVertPostions[5].y = HeavyKing->value9;
+    self->laserVertPostions[5].y = HeavyKing->spinRaySpawnPos;
     self->laserVertPostions[6].y = y;
-    self->laserVertPostions[7].y = HeavyKing->value9;
+    self->laserVertPostions[7].y = HeavyKing->spinRaySpawnPos;
 }
 
 void KingAttack_State_Laser(void)

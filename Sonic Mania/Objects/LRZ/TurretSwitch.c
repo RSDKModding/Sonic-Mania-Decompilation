@@ -31,8 +31,7 @@ void TurretSwitch_Create(void *data)
 {
     RSDK_THIS(TurretSwitch);
 
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -44,31 +43,31 @@ void TurretSwitch_Create(void *data)
         self->drawOrder = Zone->drawOrderLow;
     }
     else {
-        self->hitbox.left        = -12;
-        self->hitbox.top         = -12;
-        self->hitbox.right       = 12;
-        self->hitbox.bottom      = 12;
+        self->hitbox.left   = -12;
+        self->hitbox.top    = -12;
+        self->hitbox.right  = 12;
+        self->hitbox.bottom = 12;
 
         self->hitboxRange.left   = -12;
         self->hitboxRange.top    = -140;
         self->hitboxRange.right  = 140;
         self->hitboxRange.bottom = 140;
 
-        self->state              = TurretSwitch_State_Setup;
-        self->drawOrder          = Zone->drawOrderHigh;
+        self->state     = TurretSwitch_State_Setup;
+        self->drawOrder = Zone->drawOrderHigh;
     }
 }
 
 void TurretSwitch_StageLoad(void)
 {
-    TurretSwitch->aniFrames               = RSDK.LoadSpriteAnimation("LRZ1/TurretSwitch.bin", SCOPE_STAGE);
+    TurretSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/TurretSwitch.bin", SCOPE_STAGE);
 
     TurretSwitch->hitboxProjectile.left   = -3;
     TurretSwitch->hitboxProjectile.top    = -3;
     TurretSwitch->hitboxProjectile.right  = 3;
     TurretSwitch->hitboxProjectile.bottom = 3;
 
-    TurretSwitch->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
+    TurretSwitch->sfxShot = RSDK.GetSfx("Stage/Shot.wav");
 }
 
 void TurretSwitch_CheckPlayerCollisions(void)
@@ -186,8 +185,8 @@ void TurretSwitch_EditorLoad(void)
     TurretSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/TurretSwitch.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(TurretSwitch, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

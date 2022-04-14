@@ -174,7 +174,7 @@ void Water_Create(void *data)
                 self->visible = false;
                 if (self->buttonTag > 0) {
                     self->active = ACTIVE_NORMAL;
-                    Water_CheckButtonTag();
+                    Water_SetupTagLink();
                 }
 
                 self->updateRange.x = self->size.x >> 1;
@@ -192,7 +192,7 @@ void Water_Create(void *data)
                 self->state     = Water_HCZBubbleSpawner;
                 self->stateDraw = StateMachine_None;
 
-                Water_CheckButtonTag();
+                Water_SetupTagLink();
                 break;
 
             case WATER_SPLASH:
@@ -303,43 +303,40 @@ void Water_SetWaterLevel(void)
 
 void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height); }
 
-void Water_CheckButtonTag(void)
+void Water_SetupTagLink(void)
 {
     RSDK_THIS(Water);
 
-    self->taggedObject = NULL;
+    self->taggedButton = NULL;
+
     if (self->buttonTag > 0) {
         if (Button) {
             foreach_all(Button, button)
             {
                 if (button->tag == self->buttonTag) {
-                    self->taggedObject = button;
-                    if (self->updateRange.x < 0x800000 + abs(self->position.x - button->position.x)) {
-                        self->updateRange.x = 0x800000 + abs(self->position.x - button->position.x);
-                    }
-
-                    if (self->updateRange.y < 0x800000 + abs(self->position.y - button->position.y)) {
-                        self->updateRange.y = 0x800000 + abs(self->position.y - button->position.y);
-                    }
+                    self->taggedButton = button;
                     foreach_break;
                 }
             }
         }
 
-        if (PullChain && !self->taggedObject) {
+        if (PullChain && !self->taggedButton) {
             foreach_all(PullChain, chain)
             {
                 if (chain->tag == self->buttonTag) {
-                    self->taggedObject = (EntityButton *)chain;
-                    if (self->updateRange.x < 0x800000 + abs(self->position.x - chain->position.x)) {
-                        self->updateRange.x = 0x800000 + abs(self->position.x - chain->position.x);
-                    }
-
-                    if (self->updateRange.y < 0x800000 + abs(self->position.y - chain->position.y)) {
-                        self->updateRange.y = 0x800000 + abs(self->position.y - chain->position.y);
-                    }
+                    self->taggedButton = (EntityButton *)chain;
                     foreach_break;
                 }
+            }
+        }
+
+        if (self->taggedButton) {
+            if (self->updateRange.x < 0x800000 + abs(self->position.x - self->taggedButton->position.x)) {
+                self->updateRange.x = 0x800000 + abs(self->position.x - self->taggedButton->position.x);
+            }
+
+            if (self->updateRange.y < 0x800000 + abs(self->position.y - self->taggedButton->position.y)) {
+                self->updateRange.y = 0x800000 + abs(self->position.y - self->taggedButton->position.y);
             }
         }
     }
@@ -1023,7 +1020,7 @@ void Water_HCZBubbleSpawner(void)
 {
     RSDK_THIS(Water);
 
-    if (self->taggedObject) {
+    if (self->taggedButton) {
         if (self->timer <= 0) {
             Hitbox hitbox;
             hitbox.left   = -32;
@@ -1031,7 +1028,7 @@ void Water_HCZBubbleSpawner(void)
             hitbox.right  = 32;
             hitbox.bottom = 32;
 
-            if (self->taggedObject->currentlyActive) {
+            if (self->taggedButton->currentlyActive) {
                 foreach_active(Player, player)
                 {
                     if (Player_CheckCollisionTouch(player, self, &hitbox)) {
@@ -1185,8 +1182,8 @@ void Water_State_Adjustable(void)
     RSDK_THIS(Water);
     bool32 activated = false;
 
-    if (self->taggedObject) {
-        EntityButton *button = self->taggedObject;
+    if (self->taggedButton) {
+        EntityButton *button = self->taggedButton;
         if (button->currentlyActive) {
             Water->moveWaterLevel = true;
             activated             = true;
@@ -1209,7 +1206,7 @@ void Water_State_Adjustable(void)
     }
 
     if (activated) {
-        if (self->taggedObject)
+        if (self->taggedButton)
             Water->targetWaterLevel = self->position.y;
         else if (px <= self->position.x)
             Water->targetWaterLevel = self->height.x;
@@ -1343,11 +1340,17 @@ void Water_EditorDraw(void)
             self->active  = ACTIVE_BOUNDS;
             self->visible = false;
 
-            // TODO: actual sprite???/ lollll
+            RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
+            RSDK.DrawSprite(&self->animator, NULL, false);
 
             if (showGizmos()) {
-                RSDK.DrawLine(self->position.x - 0x100000, self->position.y - 0x100000, self->position.x + 0x100000, self->position.x + 0x100000,
-                              0xFFFF00, 0xFF, INK_NONE, false);
+                Water_SetupTagLink();
+
+                RSDK_DRAWING_OVERLAY(true);
+                if (self->taggedButton)
+                    DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x,
+                                          self->position.y);
+                RSDK_DRAWING_OVERLAY(false);
             }
             break;
 
@@ -1360,6 +1363,16 @@ void Water_EditorDraw(void)
             RSDK.SetSpriteAnimation(Water->bigBubbleFrames, 7, &self->animator, true, 0);
 
             Water_Draw_Bubble();
+
+            if (showGizmos()) {
+                Water_SetupTagLink();
+
+                RSDK_DRAWING_OVERLAY(true);
+                if (self->taggedButton)
+                    DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x,
+                                          self->position.y);
+                RSDK_DRAWING_OVERLAY(false);
+            }
             break;
 
         default: break;
