@@ -1093,7 +1093,7 @@ void GigaMetal_HandleArmCollisions(void)
         {
             if (!GigaMetal->invincibleTimer) {
                 if (Player_CheckCollisionTouch(player, self, &GigaMetal->hitboxHand)
-                    && !Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer) && Player_CheckHit(player, self)) {
+                    && !Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer) && Player_CheckHit(player, self)) {
                     player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
                 }
             }

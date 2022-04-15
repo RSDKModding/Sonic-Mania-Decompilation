@@ -166,7 +166,7 @@ void SpikeFlail_CheckPlayerCollisions(void)
                 self->position.x = self->position.x + (((16 * self->chainLength + 34) * RSDK.Cos512(self->angle)) << 7);
                 self->position.y = self->position.y - 0x80000;
 #if RETRO_USE_PLUS
-                if (!Player_CheckMightyUnspin(0x500, player, 2, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(player, 0x500, 2, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
                 self->position.x = storeX;

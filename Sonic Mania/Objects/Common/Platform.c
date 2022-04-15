@@ -1342,7 +1342,7 @@ void Platform_CollisionState_AllHazard(void)
     {
         if (Player_CheckCollisionBox(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x400, player, self->type == PLATFORM_CIRCULAR, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x400, self->type == PLATFORM_CIRCULAR, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }
@@ -1419,7 +1419,7 @@ void Platform_CollisionState_BottomHazard(void)
                 if (self->velocity.y >= 0)
                     player->collisionFlagV |= 2;
 #if RETRO_USE_PLUS
-                if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(player, 1024, 0, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
                 break;
@@ -1466,7 +1466,7 @@ void Platform_CollisionState_LRHazard(void)
             case C_LEFT:
                 if (
 #if RETRO_USE_PLUS
-                    Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) ||
+                    Player_CheckMightyUnspin(player, 1024, 0, &player->uncurlTimer) ||
 #endif
                     Player_CheckHit(player, self)) {
                     player->velocity.x += self->velocity.x;
@@ -1489,7 +1489,7 @@ void Platform_CollisionState_LRHazard(void)
             case C_RIGHT:
                 if (
 #if RETRO_USE_PLUS
-                    Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer) ||
+                    Player_CheckMightyUnspin(player, 1024, 0, &player->uncurlTimer) ||
 #endif
                     Player_CheckHit(player, self)) {
                     player->velocity.x += self->velocity.x;
@@ -1733,7 +1733,7 @@ void Platform_CollisionState_TopHazard(void)
                 player->position.y &= 0xFFFF0000;
 
 #if RETRO_USE_PLUS
-                if (!Player_CheckMightyUnspin(1024, player, 0, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(player, 1024, 0, &player->uncurlTimer))
 #endif
                     Player_CheckHit(player, self);
                 if (self->velocity.y <= 0)

@@ -241,7 +241,7 @@ void LaundroMobile_CheckPlayerCollisions(void)
                 self->position.y = LaundroMobile->rocketPositions[i].y;
                 if (Player_CheckCollisionTouch(player, self, &LaundroMobile->hitboxMissile)) {
 #if RETRO_USE_PLUS
-                    if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer))
+                    if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);
                     break;

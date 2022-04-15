@@ -292,7 +292,7 @@ void HeavyMystic_CheckPlayerCollisions_Bark(void)
                 if (self->animator.animationID == ANI_SKIDTURN
                     && ((self->direction == FLIP_NONE && player->position.x > self->position.x)
                         || (self->direction == FLIP_X && player->position.x < self->position.x))) {
-                    if (!Player_CheckMightyUnspin(0x600, player, false, &player->uncurlTimer))
+                    if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
                         Player_CheckHit(player, self);
                 }
                 else
@@ -1362,7 +1362,7 @@ void HeavyMystic_State_Bomb(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x300, player, false, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x300, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
@@ -1389,7 +1389,7 @@ void HeavyMystic_State_BarkDebris(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x300, player, false, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x300, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }

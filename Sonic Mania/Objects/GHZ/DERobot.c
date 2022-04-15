@@ -446,7 +446,7 @@ void DERobot_CheckPlayerCollisions_Hand(void)
     {
         if (Player_CheckCollisionTouch(player, self, &DERobot->hitboxHand)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x400, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }

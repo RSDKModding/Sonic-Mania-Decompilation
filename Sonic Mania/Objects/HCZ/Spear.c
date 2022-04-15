@@ -35,7 +35,7 @@ void Spear_Update(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x200, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }

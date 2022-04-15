@@ -47,7 +47,7 @@ void MagSpikeBall_Update(void)
         if (Player_CheckCollisionTouch(player, self, &MagSpikeBall->hitbox)
             && (player->onGround
 #if RETRO_USE_PLUS
-                && (self->velocity.y > 0 || !Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer))
+                && (self->velocity.y > 0 || !Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
                     )) {
             Player_CheckHit(player, self);

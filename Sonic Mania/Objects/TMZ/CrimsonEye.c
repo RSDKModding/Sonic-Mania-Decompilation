@@ -991,7 +991,7 @@ void CrimsonEye_CheckPlayerCollisions_Ball(void)
     {
         if (Player_CheckCollisionTouch(player, self, &CrimsonEye->hitboxBall)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x600, player, 2, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x600, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }
@@ -1058,7 +1058,7 @@ void CrimsonEye_StateSpike_Harmful(void)
     {
         if (Player_CheckCollisionTouch(player, self, &CrimsonEye->hitboxOrb)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x600, player, 2, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x600, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }

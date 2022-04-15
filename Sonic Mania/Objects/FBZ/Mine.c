@@ -52,7 +52,7 @@ void Mine_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, self, &Mine->hitbox)) {
 #if RETRO_USE_PLUS
-                    if (Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer))
+                    if (Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
                         player->onGround = false;
                     else
 #endif

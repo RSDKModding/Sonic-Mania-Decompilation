@@ -139,7 +139,7 @@ void BuckwildBall_CheckPlayerCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &BuckwildBall->hitbox)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x600, player, false, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x600, false, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }

@@ -160,7 +160,7 @@ void DBTower_CheckPlayerCollisions_Head(void)
                         if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment)) {
                             if (angle >= 0x80) {
 #if RETRO_USE_PLUS
-                                if (!Player_CheckMightyUnspin(0x300, player, true, &player->uncurlTimer))
+                                if (!Player_CheckMightyUnspin(player, 0x300, true, &player->uncurlTimer))
 #endif
                                     Player_CheckHit(player, self);
                             }
@@ -423,7 +423,7 @@ void DBTower_CheckPlayerCollisions_Body(void)
             if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment)) {
                 if (angle >= 0x80) {
 #if RETRO_USE_PLUS
-                    if (Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
+                    if (Player_CheckMightyUnspin(player, 0x300, 2, &player->uncurlTimer))
                         self->playerTimers[playerID] = 30;
                     else
 #endif

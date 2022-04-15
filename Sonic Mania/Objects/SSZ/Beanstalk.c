@@ -358,7 +358,7 @@ void Beanstalk_CheckPlayerCollisions_Chomper(void)
                 self->state = Beanstalk_State_Node;
                 RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &self->plantAnimator, true, 0);
             }
-            else if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer)) {
+            else if (!Player_CheckMightyUnspin(player, 0x400, 2, &player->uncurlTimer)) {
 #endif
                 Player_CheckHit(player, self);
 #if RETRO_USE_PLUS

@@ -5102,7 +5102,7 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
         dust->position.y += 0x80000;
     }
 }
-bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer)
+bool32 Player_CheckMightyUnspin(EntityPlayer *player, int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer)
 {
     RSDK_THIS_GEN();
 

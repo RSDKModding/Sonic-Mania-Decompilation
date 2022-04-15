@@ -245,7 +245,7 @@ void BallHog_State_Bomb(void)
         {
             if (Player_CheckCollisionTouch(player, self, &BallHog->hitboxBomb)) {
 #if RETRO_USE_PLUS
-                if (!Player_CheckMightyUnspin(0x100, player, 2, &player->uncurlTimer)) {
+                if (!Player_CheckMightyUnspin(player, 0x100, 2, &player->uncurlTimer)) {
 #endif
                     Player_CheckHit(player, self);
                     flag = true;

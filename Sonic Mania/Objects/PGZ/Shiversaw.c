@@ -186,7 +186,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_DROPDASH)
             return Player_CheckHit(player, &self->sawPos[sawID]);
         if (anim != ANI_DROPDASH)
-            return Player_CheckMightyUnspin(768, player, true, &player->uncurlTimer);
+            return Player_CheckMightyUnspin(player, 768, true, &player->uncurlTimer);
 
         if (!(player->direction & FLIP_X))
             player->velocity.x = -0x18000;

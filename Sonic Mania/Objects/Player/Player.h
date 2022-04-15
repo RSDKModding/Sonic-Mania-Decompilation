@@ -541,7 +541,7 @@ void Player_State_KnuxLedgePullUp(void);
 void Player_State_MightyHammerDrop(void);
 void Player_State_MightyUnspin(void);
 void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox);
-bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer); // USERCALL -> player, bounceDistance, checkHammerDrop, uncurlTimer
+bool32 Player_CheckMightyUnspin(EntityPlayer *player, int32 bounceDistance, bool32 checkHammerDrop, int32 *uncurlTimer);
 void Player_State_RayGlide(void);
 #endif
 void Player_State_FlyIn(void);

@@ -281,7 +281,7 @@ void LRZConvItem_State_SpikeBall(void)
     {
         if (Player_CheckCollisionTouch(player, self, &LRZConvItem->hitboxSpikeball)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(player, 0x400, true, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, self);
         }

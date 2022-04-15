@@ -257,7 +257,7 @@ void HeavyRider_CheckObjectCollisions(void)
 
                 if (Player_CheckCollisionTouch(player, self, &HeavyRider->hitboxSpikeBall)) {
 #if RETRO_USE_PLUS
-                    if (!Player_CheckMightyUnspin(0x800, player, false, &player->uncurlTimer))
+                    if (!Player_CheckMightyUnspin(player, 0x800, false, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, self);
                 }
