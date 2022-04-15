@@ -123,7 +123,7 @@ void RollerMKII_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &RollerMKII->hitboxBadnik))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 
@@ -139,7 +139,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
             bool32 shouldBump = false;
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
             else {
                 shouldBump = player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || player->jumpAbilityState > 1);

@@ -152,7 +152,7 @@ void Hotaru_CheckPlayerCollisions(void)
         if (!(self->destroyedHotarus & 1)) {
             self->position.x += self->offset1.x;
             self->position.y += self->offset1.y;
-            if (Player_CheckBadnikTouch(player, self, &Hotaru->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
+            if (Player_CheckBadnikTouch(player, self, &Hotaru->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
                 self->destroyedHotarus |= 1;
                 self->attackState = 0;
             }
@@ -163,7 +163,7 @@ void Hotaru_CheckPlayerCollisions(void)
         if (!(self->destroyedHotarus & 2)) {
             self->position.x += self->offset2.x;
             self->position.y += self->offset2.y;
-            if (Player_CheckBadnikTouch(player, self, &Hotaru->hitboxBadnik) && Player_CheckBadnikBreak(&self, player, false)) {
+            if (Player_CheckBadnikTouch(player, self, &Hotaru->hitboxBadnik) && Player_CheckBadnikBreak(player, &self, false)) {
                 self->destroyedHotarus |= 2;
                 self->attackState = 0;
             }

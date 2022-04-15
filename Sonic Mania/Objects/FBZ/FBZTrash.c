@@ -243,7 +243,7 @@ void FBZTrash_State_OrbinautMove(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(self, player, true)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(player, self, true)) {
             foreach_all(Animals, animals) { destroyEntity(animals); }
 #if RETRO_USE_PLUS
             if (player->state != Player_State_MightyHammerDrop)

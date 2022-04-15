@@ -91,7 +91,7 @@ void Wisp_HandlePlayerInteractions(void)
         }
 
         if (Player_CheckBadnikTouch(player, self, &Wisp->hitbox))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

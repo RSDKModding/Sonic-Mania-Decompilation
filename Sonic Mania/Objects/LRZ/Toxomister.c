@@ -107,7 +107,7 @@ void Toxomister_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Toxomister->hitboxBadnik)) {
-            if (Player_CheckBadnikBreak(self, player, true)) {
+            if (Player_CheckBadnikBreak(player, self, true)) {
                 if (self->parent)
                     destroyEntity(self->parent);
             }

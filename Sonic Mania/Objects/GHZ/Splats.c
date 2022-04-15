@@ -130,10 +130,10 @@ void Splats_CheckPlayerCollisions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &Splats->hitboxGHZ)) {
             if (Splats->state == Splats_State_BounceAround) {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
             else {
-                if (Player_CheckBadnikBreak(self, player, false)) {
+                if (Player_CheckBadnikBreak(player, self, false)) {
                     EntitySplats *parent = (EntitySplats *)self->parent;
                     if (parent) {
                         if (parent->objectID == Splats->objectID)

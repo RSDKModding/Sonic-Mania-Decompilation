@@ -97,13 +97,13 @@ void PohBee_CheckPlayerCollisions(void)
         if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
             if (Player_CheckBadnikTouch(player, self, &PohBee->hitbox)) {
                 if (self->drawOrder == 1) {
-                    if (Player_CheckBadnikBreak(self, player, false)) {
+                    if (Player_CheckBadnikBreak(player, self, false)) {
                         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = 1;
                         destroyEntity(self);
                     }
                 }
                 else {
-                    Player_CheckBadnikBreak(self, player, true);
+                    Player_CheckBadnikBreak(player, self, true);
                 }
             }
 

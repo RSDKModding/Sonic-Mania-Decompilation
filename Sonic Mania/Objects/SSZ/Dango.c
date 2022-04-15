@@ -148,7 +148,7 @@ void Dango_CheckPlayerCollisions(void)
                 }
             }
             else {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
         }
     }

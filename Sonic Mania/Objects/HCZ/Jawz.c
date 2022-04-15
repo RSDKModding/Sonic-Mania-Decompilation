@@ -70,7 +70,7 @@ void Jawz_CheckPlayerCollisions(void)
     RSDK_THIS(Jawz);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Jawz->hitboxBadnik) && !Player_CheckBadnikBreak(self, player, true)) {
+        if (Player_CheckBadnikTouch(player, self, &Jawz->hitboxBadnik) && !Player_CheckBadnikBreak(player, self, true)) {
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(self);

@@ -481,7 +481,7 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
 //checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate
 bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 //checks if the player is attacking the badnik, returns true if the player attacked the badnik, otherwise the player is hit and returns false
-bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy); // USERCALL -> player, entity, destroy
+bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *entity, bool32 destroy); // USERCALL -> player, entity, destroy
 //similar to checkBadnikTouch, this time for bosses, handles rebounds and stuff properly, does NOT check for hammerdrop/instashield hitboxes. returns true if player hit the boss, otherwise the player is hit and returns false
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 //similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false

@@ -288,7 +288,7 @@ void Shutterbug_CheckFocus(void)
             }
 
             if (Player_CheckBadnikTouch(player, self, &Shutterbug->hitboxBadnik))
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
         }
     }
 }

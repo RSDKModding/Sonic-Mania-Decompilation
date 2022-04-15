@@ -166,7 +166,7 @@ void Jellygnite_CheckPlayerCollisions(void)
             }
 
             if (player != self->grabbedPlayer && player->position.y < self->position.y && Player_CheckBadnikTouch(player, self, &Jellygnite->hitbox)
-                && Player_CheckBadnikBreak(self, player, false)) {
+                && Player_CheckBadnikBreak(player, self, false)) {
                 if (self->grabbedPlayer)
                     self->grabbedPlayer->state = Player_State_Air;
 

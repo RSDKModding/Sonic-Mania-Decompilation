@@ -198,7 +198,7 @@ void HotaruHiWatt_CheckPlayerCollisions_Hotaru(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(player, self, false)) {
             if (self->type == HHW_SINGLE_HOTARU) {
                 HotaruHiWatt_SpawnPairHotarus();
             }

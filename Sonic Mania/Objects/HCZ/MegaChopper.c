@@ -78,7 +78,7 @@ void MegaChopper_CheckPlayerCollisions(void)
         if (Player_CheckBadnikTouch(player, self, &MegaChopper->hitboxBadnik)) {
             int32 blink          = player->blinkTimer;
             player->blinkTimer = 1;
-            if (!Player_CheckBadnikBreak(self, player, true) && Player_CheckCollisionTouch(player, self, &MegaChopper->hitboxChop)) {
+            if (!Player_CheckBadnikBreak(player, self, true) && Player_CheckCollisionTouch(player, self, &MegaChopper->hitboxChop)) {
                 self->playerPtr   = player;
                 self->playerPos.x = (self->position.x - player->position.x) & 0xFFFF0000;
                 self->playerPos.y = (self->position.y - player->position.y) & 0xFFFF0000;

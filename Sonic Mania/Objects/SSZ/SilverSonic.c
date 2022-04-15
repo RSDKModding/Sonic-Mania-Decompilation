@@ -116,7 +116,7 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
     {
         if (Player_CheckBadnikTouch(player, self, self->innerBox)) {
 #if RETRO_USE_PLUS
-            if (Player_CheckBadnikBreak(self, player, false)) {
+            if (Player_CheckBadnikBreak(player, self, false)) {
                 int32 x = self->position.x;
                 int32 y = self->position.y;
                 RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
@@ -127,7 +127,7 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
                 self->state      = MSBomb_State_SilverSonicExplode;
             }
 #else
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
 #endif
         }
     }
@@ -209,7 +209,7 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                 if (player->position.x <= self->position.x) {
                     Player_CheckHit(player, self);
                 }
-                else if (Player_CheckBadnikBreak(self, player, false)) {
+                else if (Player_CheckBadnikBreak(player, self, false)) {
                     int32 x = self->position.x;
                     int32 y = self->position.y;
                     RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
@@ -224,7 +224,7 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                 if (player->position.x >= self->position.x) {
                     Player_CheckHit(player, self);
                 }
-                else if (Player_CheckBadnikBreak(self, player, false)) {
+                else if (Player_CheckBadnikBreak(player, self, false)) {
                     int32 x = self->position.x;
                     int32 y = self->position.y;
                     RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
@@ -240,13 +240,13 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                 if (player->position.x <= self->position.x)
                     Player_CheckHit(player, self);
                 else
-                    Player_CheckBadnikBreak(self, player, true);
+                    Player_CheckBadnikBreak(player, self, true);
             }
             else {
                 if (player->position.x >= self->position.x)
                     Player_CheckHit(player, self);
                 else
-                    Player_CheckBadnikBreak(self, player, true);
+                    Player_CheckBadnikBreak(player, self, true);
             }
 #endif
         }

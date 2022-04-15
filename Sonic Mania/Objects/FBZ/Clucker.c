@@ -153,9 +153,9 @@ void Clucker_HandlePlayerInteractions(void)
             self->position.y += self->yOffset;
         if (Player_CheckBadnikTouch(player, self, &Clucker->hitboxBadnik)) {
             if (self->hasParent) {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
-            else if (Player_CheckBadnikBreak(self, player, false)) {
+            else if (Player_CheckBadnikBreak(player, self, false)) {
                 self->yOffset = -0x7FFFFFFF;
                 self->state   = Clucker_State_Destroyed;
             }

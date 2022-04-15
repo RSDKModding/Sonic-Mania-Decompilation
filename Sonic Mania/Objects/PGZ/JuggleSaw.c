@@ -125,7 +125,7 @@ void JuggleSaw_CheckPlayerCollisions(void)
     RSDK_THIS(JuggleSaw);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &JuggleSaw->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &JuggleSaw->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
             if (self->hasSaw == JSAW_HAS_SAW) {
                 int32 debrisX = self->position.x;
                 int32 debrisY = self->position.y;

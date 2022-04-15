@@ -132,7 +132,7 @@ void BuzzBomber_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &BuzzBomber->hitboxBadnik)) {
-            if (Player_CheckBadnikBreak(self, player, true)) {
+            if (Player_CheckBadnikBreak(player, self, true)) {
                 if (self->projectile)
                     destroyEntity(self->projectile);
             }

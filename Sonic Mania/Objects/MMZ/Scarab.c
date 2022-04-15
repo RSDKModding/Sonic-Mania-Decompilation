@@ -138,7 +138,7 @@ void Scarab_CheckPlayerCollisions(void)
             int32 playerID = RSDK.GetEntityID(player);
             if (Player_CheckBadnikTouch(player, self, &Scarab->hitboxBadnik)) {
                 Scarab_HandlePlayerRelease();
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
 
             if (!self->childCount) {

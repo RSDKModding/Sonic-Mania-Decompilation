@@ -98,7 +98,7 @@ void TurboSpiker_Hermit_Collide(void)
     RSDK_THIS(TurboSpiker);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &TurboSpiker->hitboxBadnik) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &TurboSpiker->hitboxBadnik) && Player_CheckBadnikBreak(player, self, false)) {
             if (self->spike)
                 destroyEntity(self->spike);
 

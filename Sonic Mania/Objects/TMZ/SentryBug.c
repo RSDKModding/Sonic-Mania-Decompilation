@@ -135,7 +135,7 @@ void SentryBug_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &SentryBug->hitbox)) {
-            if (Player_CheckBadnikBreak(self, player, true))
+            if (Player_CheckBadnikBreak(player, self, true))
                 RSDK.StopSfx(SentryBug->sfxSwarm);
         }
     }

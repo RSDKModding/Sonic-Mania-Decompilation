@@ -125,7 +125,7 @@ void Dragonfly_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Dragonfly->hitboxBadnik)) {
-            if (Player_CheckBadnikBreak(self, player, false)) {
+            if (Player_CheckBadnikBreak(player, self, false)) {
                 for (int32 i = 0; i < Dragonfly_SpineCount; ++i) {
                     EntityDragonfly *child  = CREATE_ENTITY(Dragonfly, intToVoid(true), self->positions[i].x, self->positions[i].y);
                     child->animator.frameID = i == 0;

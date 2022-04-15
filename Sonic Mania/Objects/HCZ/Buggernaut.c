@@ -94,7 +94,7 @@ void Buggernaut_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Buggernaut->hitboxBadnik))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

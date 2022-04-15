@@ -126,7 +126,7 @@ void IceBomba_Fly_Collide(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &IceBomba->hitboxBadnik)) {
-            if (Player_CheckBadnikBreak(self, player, false)) {
+            if (Player_CheckBadnikBreak(player, self, false)) {
                 if (self->state != IceBomba_State_FlyAway) {
                     EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(true), self->position.x, self->position.y);
                     if (self->direction)

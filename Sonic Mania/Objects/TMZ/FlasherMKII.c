@@ -106,7 +106,7 @@ void FlasherMKII_HandlePlayerCollisions(void)
         if (Player_CheckBadnikTouch(player, self, hitbox)) {
             if ((self->animator.animationID & 3) == 3) {
                 if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
-                    if (Player_CheckBadnikBreak(self, player, true))
+                    if (Player_CheckBadnikBreak(player, self, true))
                         RSDK.StopSfx(FlasherMKII->sfxZap);
                 }
                 else {
@@ -114,7 +114,7 @@ void FlasherMKII_HandlePlayerCollisions(void)
                 }
             }
             else {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
         }
     }
@@ -128,7 +128,7 @@ void FlasherMKII_HandleHarmPlayerCollisions(void)
     {
         if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
             Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 0);
-            if (Player_CheckBadnikTouch(player, self, hitbox) && Player_CheckBadnikBreak(self, player, true))
+            if (Player_CheckBadnikTouch(player, self, hitbox) && Player_CheckBadnikBreak(player, self, true))
                 RSDK.StopSfx(FlasherMKII->sfxZap);
         }
         else {

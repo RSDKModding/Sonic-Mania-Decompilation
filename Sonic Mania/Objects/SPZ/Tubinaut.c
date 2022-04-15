@@ -180,7 +180,7 @@ void Tubinaut_CheckPlayerCollisions(void)
 
             self->position.x = storeX;
             self->position.y = storeY;
-            if (!flag && Player_CheckBadnikTouch(player, self, &Tubinaut->hitboxFace) && Player_CheckBadnikBreak(self, player, false)) {
+            if (!flag && Player_CheckBadnikTouch(player, self, &Tubinaut->hitboxFace) && Player_CheckBadnikBreak(player, self, false)) {
                 for (int i = 0; i < Tubinaut_OrbCount; ++i) {
                     if (self->ballsVisible[i]) {
                         EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, intToVoid(i + 1), self->orbPositions[i].x, self->orbPositions[i].y);

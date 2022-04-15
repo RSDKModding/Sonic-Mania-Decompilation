@@ -190,7 +190,7 @@ void Rattlekiller_Update(void)
 
         self->position.x = self->bodyPositions[0].x;
         self->position.y = self->bodyPositions[0].y;
-        if (Player_CheckBadnikTouch(player, self, &Rattlekiller->hitboxSegment) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &Rattlekiller->hitboxSegment) && Player_CheckBadnikBreak(player, self, false)) {
             for (int32 i = 1; i < Rattlekiller_SegmentCount; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPositions[i].x, self->bodyPositions[i].y);
 

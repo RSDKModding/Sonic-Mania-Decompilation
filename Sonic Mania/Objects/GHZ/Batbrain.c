@@ -72,7 +72,7 @@ void Batbrain_CheckHit(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Batbrain->hitbox))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

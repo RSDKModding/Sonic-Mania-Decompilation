@@ -203,7 +203,7 @@ void CaterkillerJr_State_Move(void)
     foreach_active(Player, player)
     {
         self->position = self->bodyPosition[0];
-        if (Player_CheckBadnikTouch(player, self, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(self, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(player, self, false)) {
             for (int32 i = 1; i < CaterkillerJr_SegmentCount; ++i) {
                 EntityDebris *debris  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPosition[i].x, self->bodyPosition[i].y);
                 debris->animator      = self->bodyAnimators[i];

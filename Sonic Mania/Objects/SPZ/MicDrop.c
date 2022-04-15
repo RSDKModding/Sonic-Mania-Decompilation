@@ -119,7 +119,7 @@ void MicDrop_CheckPlayerCollisions(void)
     {
         if (Player_CheckBadnikTouch(player, self, &MicDrop->hitboxBadnik)) {
             if (self->bodyAnimator.animationID != 3 || player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) 
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             else 
                 Player_CheckHit(player, self);
         }

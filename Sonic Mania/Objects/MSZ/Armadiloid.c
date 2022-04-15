@@ -204,7 +204,7 @@ void Armadiloid_State_Rider(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(self, player, true)) {
+        if (Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBadnikBreak(player, self, true)) {
             child->parent = NULL;
         }
     }

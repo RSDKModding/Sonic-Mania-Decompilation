@@ -46,7 +46,7 @@ void Hatterkiller_Update(void)
         {
             self->position.x = self->bodyPositions[0].x;
             self->position.y = self->bodyPositions[0].y;
-            if (Player_CheckBadnikTouch(player, self, &Hatterkiller->hitboxSegment) && Player_CheckBadnikBreak(self, player, false)) {
+            if (Player_CheckBadnikTouch(player, self, &Hatterkiller->hitboxSegment) && Player_CheckBadnikBreak(player, self, false)) {
                 for (int32 s = 1; s < Hatterkiller_SegmentCount; ++s) {
                     Vector2 *position    = &self->bodyPositions[s];
                     Animator *animator   = self->bodyAnimators[s];

@@ -109,7 +109,7 @@ void Vultron_CheckPlayerCollisions(void)
         if (Player_CheckBadnikTouch(player, self, hitbox)) {
             self->position.x += left;
             self->position.y += top;
-            if (!Player_CheckBadnikBreak(self, player, true)) {
+            if (!Player_CheckBadnikBreak(player, self, true)) {
                 self->position.x -= left;
                 self->position.y -= top;
             }
@@ -308,7 +308,7 @@ void Vultron_State_Targeting(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &self->hitboxBadnik))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

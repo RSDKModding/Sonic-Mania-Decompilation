@@ -98,7 +98,7 @@ void MechaBu_CheckPlayerCollisions(void)
 #endif
                     Player_CheckHit(player, self);
             }
-            else if (Player_CheckBadnikTouch(player, self, &MechaBu->hitboxSaw) && Player_CheckBadnikBreak(self, player, false)) {
+            else if (Player_CheckBadnikTouch(player, self, &MechaBu->hitboxSaw) && Player_CheckBadnikBreak(player, self, false)) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->sawPos.x, self->sawPos.y);
                 RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &debris->animator, false, 0);
                 debris->velocity.x    = RSDK.Rand(-2, 3) << 16;

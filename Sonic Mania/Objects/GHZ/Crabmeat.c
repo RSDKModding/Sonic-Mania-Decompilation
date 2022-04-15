@@ -98,7 +98,7 @@ void Crabmeat_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Crabmeat->hitboxBadnik))
-            Player_CheckBadnikBreak((Entity *)self, player, true);
+            Player_CheckBadnikBreak(player, (Entity *)self, true);
     }
 }
 

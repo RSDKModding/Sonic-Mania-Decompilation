@@ -90,7 +90,7 @@ void Pointdexter_CheckPlayerCollisions(void)
                 || player->state == Player_State_MightyHammerDrop
 #endif
             ) {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
 #if RETRO_USE_PLUS
             else if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))

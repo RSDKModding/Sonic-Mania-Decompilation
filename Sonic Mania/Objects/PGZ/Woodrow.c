@@ -123,7 +123,7 @@ void Woodrow_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Woodrow->hitboxBadnik)) {
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
         }
         else if (player->state != Ice_State_FrozenPlayer) {
             if (Player_CheckCollisionTouch(player, self, &Woodrow->hitboxBombRange)) {

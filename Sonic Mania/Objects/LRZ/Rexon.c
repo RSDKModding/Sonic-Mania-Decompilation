@@ -173,7 +173,7 @@ void Rexon_CheckPlayerCollisions(void)
                 self->position.x = self->positions[0].x;
                 self->position.y = self->positions[0].y;
                 if (Player_CheckBadnikTouch(player, self, &Rexon->hitboxBadnik)) {
-                    if (Player_CheckBadnikBreak(self, player, false))
+                    if (Player_CheckBadnikBreak(player, self, false))
                         Rexon_Destroy(self, false);
                 }
                 else {

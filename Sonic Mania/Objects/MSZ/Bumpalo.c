@@ -158,14 +158,14 @@ void Bumpalo_CheckPlayerCollisions(void)
             if (abs(self->velocity.x) <= 0x10000) {
                 if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBadnik)) {
                     if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBadnik)) {
-                        Player_CheckBadnikBreak(self, player, true);
+                        Player_CheckBadnikBreak(player, self, true);
                     }
                 }
                 else if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBumper)) {
 #if RETRO_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         RSDK.PlaySfx(Bumpalo->sfxBumper, false, 255);
-                        Player_CheckBadnikBreak(self, player, true);
+                        Player_CheckBadnikBreak(player, self, true);
                     }
                     else
 #endif
@@ -192,7 +192,7 @@ void Bumpalo_CheckPlayerCollisions(void)
 #if RETRO_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop) {
                     RSDK.PlaySfx(Bumpalo->sfxBumper, false, 255);
-                    Player_CheckBadnikBreak(self, player, true);
+                    Player_CheckBadnikBreak(player, self, true);
                 }
                 else
 #endif
@@ -215,13 +215,13 @@ void Bumpalo_CheckPlayerCollisions(void)
                     Player_CheckHit(player, self);
             }
             else if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBadnik)) {
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
             }
         }
         else {
             if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBadnik)) {
                 if (Player_CheckBadnikTouch(player, self, &Bumpalo->hitboxBadnik)) {
-                    Player_CheckBadnikBreak(self, player, true);
+                    Player_CheckBadnikBreak(player, self, true);
                 }
             }
             else {
@@ -229,7 +229,7 @@ void Bumpalo_CheckPlayerCollisions(void)
 #if RETRO_USE_PLUS
                     if (player->state == Player_State_MightyHammerDrop) {
                         RSDK.PlaySfx(Bumpalo->sfxBumper, false, 255);
-                        Player_CheckBadnikBreak(self, player, true);
+                        Player_CheckBadnikBreak(player, self, true);
                     }
                     else
 #endif

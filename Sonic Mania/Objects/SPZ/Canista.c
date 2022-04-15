@@ -151,7 +151,7 @@ void Canista_CheckPlayerBadnikCollisions(void)
         self->position.x = storeX;
         self->position.y = storeY;
         if (Player_CheckBadnikTouch(player, self, &Canista->hitboxBadnik))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

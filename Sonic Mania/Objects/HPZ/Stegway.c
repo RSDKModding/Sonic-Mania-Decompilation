@@ -104,7 +104,7 @@ void Stegway_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Stegway->hitboxBadnik))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

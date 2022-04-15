@@ -98,7 +98,7 @@ void Chopper_CheckPlayerCollisions_Jump(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Chopper->hitboxJump))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 
@@ -109,7 +109,7 @@ void Chopper_CheckPlayerCollisions_Swim(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Chopper->hitboxSwim))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 

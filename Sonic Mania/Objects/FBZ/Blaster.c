@@ -92,7 +92,7 @@ void Blaster_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Blaster->hitboxBadnik))
-            Player_CheckBadnikBreak(self, player, true);
+            Player_CheckBadnikBreak(player, self, true);
         if (self->state != Blaster_State_AttackPlayer && self->state != Blaster_State_Fall && self->animator.animationID != 3) {
             if (Player_CheckCollisionTouch(player, self, &Blaster->hitboxRange)) {
                 self->timer2 = 0;

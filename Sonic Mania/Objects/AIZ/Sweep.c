@@ -154,7 +154,7 @@ void Sweep_HandleInteractions(void)
                 && ((self->direction == FLIP_NONE && side == C_LEFT) || (self->direction == FLIP_X && side == C_RIGHT)))
                 Player_CheckHit(player, self);
             else
-                Player_CheckBadnikBreak(self, player, true);
+                Player_CheckBadnikBreak(player, self, true);
         }
     }
 }
