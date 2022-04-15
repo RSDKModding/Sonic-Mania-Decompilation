@@ -217,7 +217,7 @@ void Whirlpool_EditorDraw(void)
 {
     RSDK_THIS(Whirlpool);
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 }
 
 void Whirlpool_EditorLoad(void) {}

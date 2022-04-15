@@ -338,11 +338,11 @@ void LRZSpiral_EditorDraw(void)
 
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawHitboxOutline(0xFF0000, self->direction, self->position.x, self->position.y, &self->hitboxTrigger);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxTrigger, self->direction, 0xFF0000);
         RSDK_DRAWING_OVERLAY(false);
     }
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->radius << 17, height << 16);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->radius << 17, height << 16, 0xFFFF00);
 }
 
 void LRZSpiral_EditorLoad(void)

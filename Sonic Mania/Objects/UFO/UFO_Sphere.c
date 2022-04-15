@@ -283,8 +283,8 @@ void UFO_Sphere_EditorDraw(void)
         end            = self->position;
         RSDK.DrawSprite(&self->animator, NULL, false);
 
-        DrawHelpers_DrawArrow(0x00FF00, start.x, start.y, end.x, end.y);
-        DrawHelpers_DrawArrow(0x00FF00, end.x, end.y, start.x, start.y);
+        DrawHelpers_DrawArrow(start.x, start.y, end.x, end.y, 0x00FF00);
+        DrawHelpers_DrawArrow(end.x, end.y, start.x, start.y, 0x00FF00);
 
         self->inkEffect = INK_NONE;
     }

@@ -1184,7 +1184,9 @@ void Shiversaw_EditorDraw(void)
     Shiversaw_Draw();
 
     if (showGizmos()) {
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -416, -SCREEN_YSIZE, 416, 128);
+        RSDK_DRAWING_OVERLAY(true);
+        DrawHelpers_DrawArenaBounds(-416, -SCREEN_YSIZE, 416, 128, 1 | 0 | 4 | 8, 0x00C0F0);
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

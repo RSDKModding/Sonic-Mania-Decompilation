@@ -302,8 +302,8 @@ void TransportTube_EditorDraw(void)
 
     TransportTube_SetupDirections(self);
     for (int32 v = 0; v < self->directionCount; ++v) {
-        DrawHelpers_DrawArrow(0xFF0000, self->position.x, self->position.y, self->position.x + (self->dirVelocity[v].x << 18),
-                              self->position.y + (self->dirVelocity[v].y << 18));
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + (self->dirVelocity[v].x << 18),
+                              self->position.y + (self->dirVelocity[v].y << 18), 0xFF0000);
     }
 
     RSDK_DRAWING_OVERLAY(false);

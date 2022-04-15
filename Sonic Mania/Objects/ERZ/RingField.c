@@ -140,7 +140,7 @@ void RingField_EditorDraw(void)
     RSDK_THIS(RingField);
 
     if (showGizmos())
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 }
 
 void RingField_EditorLoad(void) {}

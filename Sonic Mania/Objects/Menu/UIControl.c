@@ -810,7 +810,7 @@ void UIControl_EditorDraw(void)
     self->updateRange.x = self->size.x >> 1;
     self->updateRange.y = self->size.y >> 1;
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 
     RSDK.SetSpriteAnimation(UIControl->aniFrames, 0, &self->animator, false, 7);
     RSDK.DrawSprite(&self->animator, NULL, false);

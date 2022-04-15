@@ -346,9 +346,9 @@ void TwistingSlide_EditorDraw(void)
     TwistingSlide_SetupHitboxes();
 
     if (showGizmos()) {
-        DrawHelpers_DrawHitboxOutline(0xFF0000, self->direction, self->position.x, self->position.y, &self->hitboxSlideStart);
-        DrawHelpers_DrawHitboxOutline(0xFF0000, self->direction, self->position.x, self->position.y, &self->hitboxSlide);
-        DrawHelpers_DrawHitboxOutline(0xFF0000, self->direction, self->position.x, self->position.y, &self->hitboxSlideEnd);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxSlideStart, self->direction, 0xFF0000);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxSlide, self->direction, 0xFF0000);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxSlideEnd, self->direction, 0xFF0000);
     }
 }
 

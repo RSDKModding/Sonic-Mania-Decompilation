@@ -1093,14 +1093,14 @@ void DrillerdroidO_EditorDraw(void)
                 RSDK_DRAWING_OVERLAY(true);
 
                 // Note: its actually centerX offset on left/right but mania is usually always at 424 width anyways so its pretty much the same
-                DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 96);
+                DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 96, 1 | 2 | 4 | 8, 0x00C0F0);
 
                 if (LRZRockPile) {
                     for (int32 i = 0; i < 9; ++i) {
                         EntityLRZRockPile *pile = RSDK_GET_ENTITY(DrillerdroidO->childSlotStart++, LRZRockPile);
 
                         if (pile && pile->objectID == LRZRockPile->objectID)
-                            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, pile->position.x, pile->position.y);
+                            DrawHelpers_DrawArrow(self->position.x, self->position.y, pile->position.x, pile->position.y, 0xFFFF00);
                     }
                 }
 
@@ -1112,7 +1112,7 @@ void DrillerdroidO_EditorDraw(void)
             RSDK.SetSpriteAnimation(DrillerdroidO->ticFrames, 0, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(-1, 3, &self->armorAnimator, true, 0);
 
-            DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y + (0xC0 << 15), 0x40 << 16, 0xC0 << 16);
+            DrawHelpers_DrawRectOutline(self->position.x, self->position.y + (0xC0 << 15), 0x40 << 16, 0xC0 << 16, 0xFFFF00);
             break;
 
         default: break;

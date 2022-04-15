@@ -296,16 +296,16 @@ void Ball_EditorDraw(void)
     if (showGizmos()) {
         switch (self->type) {
             case BALL_SPAWN_LEFT:
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x - 0x200000, self->position.y);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00);
                 break;
             case BALL_SPAWN_UP:
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x, self->position.y - 0x200000);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00);
                 break;
             case BALL_SPAWN_RIGHT:
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x + 0x200000, self->position.y);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00);
                 break;
             case BALL_SPAWN_DOWN:
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x, self->position.y + 0x200000);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00);
                 break;
             default: break;
         }

@@ -395,8 +395,8 @@ void Rattlekiller_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->topBounds.x, self->topBounds.y);
-        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->bottomBounds.x, self->bottomBounds.y);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->topBounds.x, self->topBounds.y, 0xFFFF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->bottomBounds.x, self->bottomBounds.y, 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

@@ -462,11 +462,11 @@ void Canista_EditorDraw(void)
             self->hitboxDetect.right  = self->detectSize.x >> 17;
             self->hitboxDetect.bottom = self->detectSize.y >> 17;
 
-            DrawHelpers_DrawHitboxOutline(0xFF0000, self->direction, self->position.x + self->detectOffset.x, self->position.y + self->detectOffset.y,
-                                          &self->hitboxDetect);
+            DrawHelpers_DrawHitboxOutline(self->position.x + self->detectOffset.x, self->position.y + self->detectOffset.y, &self->hitboxDetect,
+                                          self->direction, 0xFF0000);
         }
         else {
-            DrawHelpers_DrawHitboxOutline(0xFF0000, self->direction, self->position.x, self->position.y, &Canista->hitboxDetect);
+            DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &Canista->hitboxDetect, self->direction, 0xFF0000);
         }
     }
 }

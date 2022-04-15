@@ -566,12 +566,12 @@ void TimeAttackGate_EditorDraw(void)
         else
             self->updateRange.y = bottom + 0x400000;
 
-        DrawHelpers_DrawArenaBounds(0xFFFF00, 1 | 2 | 4 | 8, left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16);
+        DrawHelpers_DrawArenaBounds(left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16, 1 | 2 | 4 | 8, 0xFFFF00);
 
         Hitbox hitbox = TimeAttackGate->hitbox;
         hitbox.top    = TimeAttackGate->hitbox.top - self->extendTop;
         hitbox.bottom = self->extendBottom + TimeAttackGate->hitbox.bottom;
-        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &hitbox);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &hitbox, FLIP_NONE, 0xFF0000);
 
         
         RSDK_DRAWING_OVERLAY(false);

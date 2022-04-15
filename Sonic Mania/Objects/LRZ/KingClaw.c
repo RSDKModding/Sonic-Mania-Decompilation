@@ -204,9 +204,11 @@ void KingClaw_EditorDraw(void)
     KingClaw_Draw();
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
         self->position.y += SCREEN_YSIZE << 15;
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 0, -320, -(SCREEN_YSIZE >> 1), 320, SCREEN_YSIZE >> 1);
+        DrawHelpers_DrawArenaBounds(-320, -(SCREEN_YSIZE >> 1), 320, SCREEN_YSIZE >> 1, 1 | 2 | 4 | 0, 0x00C0F0);
         self->position.y -= SCREEN_YSIZE << 15;
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

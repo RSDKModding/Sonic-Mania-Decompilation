@@ -1233,7 +1233,9 @@ void HeavyRider_EditorDraw(void)
     StateMachine_Run(self->stateDraw);
 
     if (self->type == HEAVYRIDER_RIDER && showGizmos()) {
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 0, -WIDE_SCR_XSIZE, -SCREEN_YSIZE, WIDE_SCR_XSIZE, SCREEN_YSIZE);
+        RSDK_DRAWING_OVERLAY(true);
+        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XSIZE, -SCREEN_YSIZE, WIDE_SCR_XSIZE, SCREEN_YSIZE, 1 | 0 | 4 | 0, 0x00C0F0);
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

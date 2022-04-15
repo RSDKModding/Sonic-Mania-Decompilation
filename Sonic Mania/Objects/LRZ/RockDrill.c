@@ -449,14 +449,14 @@ void RockDrill_EditorDraw(void)
         RSDK_DRAWING_OVERLAY(true);
 
         if (self->lockCamera)
-            DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER - 96, 0, WIDE_SCR_XCENTER - 96, 96);
+            DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER - 96, 0, WIDE_SCR_XCENTER - 96, 96, 1 | 0 | 4 | 8, 0x00C0F0);
 
         // Draw Arrows to all "child" platforms that'll be set to inactive
         if (CollapsingPlatform) {
             int32 slot                         = SceneInfo->entitySlot - 1;
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
             while (platform && platform->objectID == CollapsingPlatform->objectID) {
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, platform->position.x, platform->position.y);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00);
 
                 platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
             }

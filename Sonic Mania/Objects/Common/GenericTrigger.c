@@ -56,7 +56,7 @@ void GenericTrigger_EditorDraw(void)
 
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x << 1, self->size.y << 1);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x << 1, self->size.y << 1, 0xFFFF00);
         RSDK_DRAWING_OVERLAY(false);
     }
 }

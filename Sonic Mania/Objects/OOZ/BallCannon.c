@@ -386,7 +386,7 @@ void BallCannon_EditorDraw(void)
         self->inkEffect = INK_NONE;
 
         // Draw the direction the player will be shot from (the names are a little confusing on their own)
-        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->position.x + self->velocity.x, self->position.y + self->velocity.y);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + self->velocity.x, self->position.y + self->velocity.y, 0x00FF00);
     }
 }
 

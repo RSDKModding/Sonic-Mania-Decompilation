@@ -202,8 +202,8 @@ void ElectroMagnet_EditorDraw(void)
     self->playerHitbox.right  = 64;
     self->playerHitbox.bottom = self->shieldRange;
     if (showGizmos()) {
-        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitbox);
-        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->playerHitbox);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, FLIP_NONE, 0xFF0000);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->playerHitbox, FLIP_NONE, 0xFF0000);
     }
 }
 

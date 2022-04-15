@@ -314,7 +314,7 @@ void FarPlane_EditorDraw(void)
     RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
-    DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->origin.x, self->origin.y);
+    DrawHelpers_DrawArrow(self->position.x, self->position.y, self->origin.x, self->origin.y, 0x00FF00);
 }
 
 void FarPlane_EditorLoad(void) {}

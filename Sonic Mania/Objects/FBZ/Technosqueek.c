@@ -346,7 +346,7 @@ void Technosqueek_EditorDraw(void)
                 if (!self->groundVel)
                     break;
             }
-            DrawHelpers_DrawArrow(0x00FF00, self->startPos.x, self->startPos.y, self->position.x, self->position.y);
+            DrawHelpers_DrawArrow(self->startPos.x, self->startPos.y, self->position.x, self->position.y, 0x00FF00);
 
             self->inkEffect = INK_BLEND;
             Technosqueek_Draw();

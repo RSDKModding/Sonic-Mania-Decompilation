@@ -281,7 +281,7 @@ void BuzzBomber_EditorDraw(void)
         self->rangeHitbox.top    = -256;
         self->rangeHitbox.bottom = 256;
 
-        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->rangeHitbox);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->rangeHitbox, FLIP_NONE, 0xFF0000);
     }
 }
 

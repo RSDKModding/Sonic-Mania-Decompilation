@@ -81,7 +81,7 @@ void LRZConvDropper_Draw(void)
         int32 x = self->detectOffset.x + self->position.x;
         int32 y = self->detectOffset.y + self->position.y;
         RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, 0, x, y, &self->hitbox);
+        DrawHelpers_DrawHitboxOutline(x, y, &self->hitbox, 0, 0xFFFFFF);
     }
 }
 
@@ -174,14 +174,14 @@ void LRZConvDropper_EditorDraw(void)
         int32 x = self->detectOffset.x + self->position.x;
         int32 y = self->detectOffset.y + self->position.y;
         RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, 0, x, y, &self->hitbox);
+        DrawHelpers_DrawHitboxOutline(x, y, &self->hitbox, 0, 0xFFFFFF);
 
         int32 slot = RSDK.GetEntityID(self) - self->seqCount;
         for (int32 i = 0; i < self->seqCount; ++i) {
             EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
 
             if (child)
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, child->position.x, child->position.y);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
         }
 
         RSDK_DRAWING_OVERLAY(false);

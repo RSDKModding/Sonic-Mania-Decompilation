@@ -897,11 +897,11 @@ void Cylinder_EditorDraw(void)
     }
 
     if (showGizmos()) {
-        DrawHelpers_DrawHitboxOutline(0xFFFF00, FLIP_NONE, self->position.x, self->position.y, &self->hitboxRange);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxRange, FLIP_NONE, 0xFFFF00);
 
         if (self->type == CYLINDER_SPIRAL || self->type == CYLINDER_SPIRAL_FLIPPED) {
-            DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitboxL);
-            DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitboxR);
+            DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxL, FLIP_NONE, 0xFF0000);
+            DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxR, FLIP_NONE, 0xFF0000);
         }
     }
 }

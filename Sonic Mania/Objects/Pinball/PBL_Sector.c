@@ -82,7 +82,7 @@ void PBL_Sector_EditorDraw(void)
     RSDK_THIS(PBL_Sector);
 
     if (showGizmos())
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x << 1, self->size.y << 1);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x << 1, self->size.y << 1, 0xFFFF00);
 }
 
 void PBL_Sector_EditorLoad(void) {}

@@ -1006,11 +1006,12 @@ void HeavyShinobi_EditorDraw(void)
     HeavyShinobi_Draw_Shinobi();
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
         int32 boundsL = (self->position.x >> 16) - WIDE_SCR_XCENTER - 80;
         int32 boundsR = (self->position.x >> 16) + WIDE_SCR_XCENTER + 80;
         int32 boundsB = (self->position.y >> 16) + 68;
 
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER - 80, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 80, 68);
+        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER - 80, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 80, 68, 1 | 0 | 4 | 8, 0x00C0F0);
 
         Vector2 startPos = self->position;
 
@@ -1028,6 +1029,7 @@ void HeavyShinobi_EditorDraw(void)
         HeavyShinobi_Draw_Bounds();
 
         self->position = startPos;
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

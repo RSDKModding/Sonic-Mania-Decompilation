@@ -491,14 +491,14 @@ void SP500_EditorDraw(void)
     if (showGizmos()) {
         self->active = ACTIVE_NORMAL;
 
-        DrawHelpers_DrawRectOutline(0x00FFFF, self->srcC.x, self->srcC.y, self->len << 16, self->height << 16);
-        DrawHelpers_DrawArrow(0x00FFFF, self->position.x, self->position.y, self->srcC.x, self->srcC.y);
+        DrawHelpers_DrawRectOutline(self->srcC.x, self->srcC.y, self->len << 16, self->height << 16, 0x00FFFF);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcC.x, self->srcC.y, 0x00FFFF);
 
-        DrawHelpers_DrawRectOutline(0x00FF00, self->srcM.x, self->srcM.y, self->len << 16, self->height << 16);
-        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->srcM.x, self->srcM.y);
+        DrawHelpers_DrawRectOutline(self->srcM.x, self->srcM.y, self->len << 16, self->height << 16, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcM.x, self->srcM.y, 0x00FF00);
 
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->srcY.x, self->srcY.y, self->len << 16, self->height << 16);
-        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->srcY.x, self->srcY.y);
+        DrawHelpers_DrawRectOutline(self->srcY.x, self->srcY.y, self->len << 16, self->height << 16, 0xFFFF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcY.x, self->srcY.y, 0xFFFF00);
     }
 }
 

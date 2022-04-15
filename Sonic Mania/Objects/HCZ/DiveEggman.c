@@ -527,7 +527,7 @@ void DiveEggman_EditorDraw(void)
 
         EntityCollapsingPlatform *screwMobile = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
         if (ScrewMobile && screwMobile->objectID == ScrewMobile->objectID)
-            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, screwMobile->position.x, screwMobile->position.y);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, screwMobile->position.x, screwMobile->position.y, 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

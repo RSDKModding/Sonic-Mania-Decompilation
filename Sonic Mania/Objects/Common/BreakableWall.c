@@ -760,7 +760,7 @@ void BreakableWall_EditorDraw(void)
     drawPos.x -= sizeX;
     drawPos.y -= sizeY;
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, sizeX, sizeY);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, sizeX, sizeY, 0xFFFF00);
 
     drawPos.x += sizeX >> 1;
     drawPos.y += sizeY >> 1;

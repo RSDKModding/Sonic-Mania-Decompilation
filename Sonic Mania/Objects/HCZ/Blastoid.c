@@ -212,7 +212,7 @@ void Blastoid_EditorDraw(void)
 
         EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
         if (CollapsingPlatform && platform->objectID == CollapsingPlatform->objectID)
-            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, platform->position.x, platform->position.y);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

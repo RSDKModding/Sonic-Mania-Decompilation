@@ -1323,7 +1323,7 @@ void Water_EditorDraw(void)
                           self->b + ((self->g + (self->r << 8)) << 8), 0x20, INK_ALPHA, false);
             if (showGizmos()) {
                 self->inkEffect = INK_NONE;
-                DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+                DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
             }
             break;
 
@@ -1348,8 +1348,8 @@ void Water_EditorDraw(void)
 
                 RSDK_DRAWING_OVERLAY(true);
                 if (self->taggedButton)
-                    DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x,
-                                          self->position.y);
+                    DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y,
+                                          0xFFFF00);
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;
@@ -1369,8 +1369,8 @@ void Water_EditorDraw(void)
 
                 RSDK_DRAWING_OVERLAY(true);
                 if (self->taggedButton)
-                    DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x,
-                                          self->position.y);
+                    DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y,
+                                          0xFFFF00);
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;

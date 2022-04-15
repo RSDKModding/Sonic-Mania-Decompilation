@@ -80,7 +80,7 @@ void SparkRail_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawRectOutline(0xFF0000, self->position.x, self->position.y, self->size.x, self->size.y);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFF0000);
 
         RSDK_DRAWING_OVERLAY(false);
     }

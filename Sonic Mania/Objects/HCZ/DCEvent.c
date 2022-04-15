@@ -428,7 +428,7 @@ void DCEvent_EditorDraw(void)
             if (!child)
                 continue;
 
-            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, child->position.x, child->position.y);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
         }
 
         RSDK_DRAWING_OVERLAY(false);

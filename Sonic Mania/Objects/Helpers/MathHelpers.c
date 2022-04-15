@@ -313,7 +313,7 @@ int32 MathHelpers_Unknown13(int32 distance, int32 radius)
         return val;
 }
 
-bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox)
+bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox)
 {
     int32 left   = minVal(hitbox.left, hitbox.right);
     int32 right  = maxVal(hitbox.right, hitbox.left);
@@ -331,12 +331,12 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
     int32 posY = 0;
     if ((x ^ boxPos.x) & 0xFFFF0000) {
         if (!((y ^ boxPos.y) & 0xFFFF0000)) {
-            if (resultPos) {
+            if (pos) {
                 if (x <= boxPos.x)
-                    resultPos->x = posLeft2;
+                    pos->x = posLeft2;
                 else
-                    resultPos->x = posRight2;
-                resultPos->y = y & 0xFFFF0000;
+                    pos->x = posRight2;
+                pos->y = y & 0xFFFF0000;
             }
         }
         else {
@@ -349,9 +349,9 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
             if (x <= boxPos.x) {
                 posY = y + MathHelpers_Unknown13(posLeft2 - x, radius);
                 if (posTop2 <= posY && posY <= posBottom2) {
-                    if (resultPos) {
-                        resultPos->x = posLeft2;
-                        resultPos->y = posY;
+                    if (pos) {
+                        pos->x = posLeft2;
+                        pos->y = posY;
                     }
                     return true;
                 }
@@ -360,9 +360,9 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
             if (x >= boxPos.x) {
                 posY = y + MathHelpers_Unknown13(posRight2 - x, radius);
                 if (posTop2 <= posY && posY <= posBottom2) {
-                    if (resultPos) {
-                        resultPos->x = posRight2;
-                        resultPos->y = posY;
+                    if (pos) {
+                        pos->x = posRight2;
+                        pos->y = posY;
                     }
                     return true;
                 }
@@ -371,9 +371,9 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
             if (y <= boxPos.y) {
                 radius = (((posTop2 - y) * div) / (radius * div)) * -65536.0;
                 if (posLeft2 <= x - radius && x - radius <= posRight2) {
-                    if (resultPos) {
-                        resultPos->x = x - radius;
-                        resultPos->y = posTop2;
+                    if (pos) {
+                        pos->x = x - radius;
+                        pos->y = posTop2;
                     }
                     return true;
                 }
@@ -382,9 +382,9 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
             if (y >= boxPos.y) {
                 radius = x - ((((posBottom2 - y) * div) / (radius * div)) * -65536.0f);
                 if (posLeft2 <= radius && radius <= posRight2) {
-                    if (resultPos) {
-                        resultPos->x = radius;
-                        resultPos->y = posBottom2;
+                    if (pos) {
+                        pos->x = radius;
+                        pos->y = posBottom2;
                     }
                 }
             }
@@ -394,12 +394,12 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *resultPos, int32 x, int32 y, Vector2 
         }
     }
     else {
-        if (resultPos) {
-            resultPos->x = x & 0xFFFF0000;
+        if (pos) {
+            pos->x = x & 0xFFFF0000;
             if (y <= boxPos.y)
-                resultPos->y = posTop2;
+                pos->y = posTop2;
             else
-                resultPos->y = posBottom2;
+                pos->y = posBottom2;
         }
     }
     return true;

@@ -39,7 +39,7 @@ void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox)
 void CutsceneRules_DrawCutsceneBounds(void *e, Vector2 *size)
 {
     EntityCutsceneRules *entity = (EntityCutsceneRules *)e;
-    DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, size->x, size->y);
+    DrawHelpers_DrawRectOutline(entity->position.x, entity->position.y, size->x, size->y, 0xFFFF00);
 }
 
 #if RETRO_INCLUDE_EDITOR

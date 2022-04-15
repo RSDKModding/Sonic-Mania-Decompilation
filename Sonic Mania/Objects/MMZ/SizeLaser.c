@@ -624,7 +624,7 @@ void SizeLaser_EditorDraw(void)
             case SIZELASER_ORIENTATION_LEFT: extendX = -(self->extend << 16); break;
         }
 
-        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->position.x + extendX, self->position.y + extendY);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + extendX, self->position.y + extendY, 0x00FF00);
     }
 }
 

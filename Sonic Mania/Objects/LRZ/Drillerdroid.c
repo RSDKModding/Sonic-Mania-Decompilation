@@ -1352,7 +1352,7 @@ void Drillerdroid_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -328, -SCREEN_YSIZE, 324, 96);
+        DrawHelpers_DrawArenaBounds(-328, -SCREEN_YSIZE, 324, 96, 1 | 2 | 4 | 8, 0x00C0F0);
 
         if (CollapsingPlatform) {
             int32 slot = SceneInfo->entitySlot + 1;
@@ -1360,7 +1360,7 @@ void Drillerdroid_EditorDraw(void)
                 EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot++, CollapsingPlatform);
 
                 if (platform && platform->objectID == CollapsingPlatform->objectID)
-                    DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, platform->position.x, platform->position.y);
+                    DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00);
             }
         }
 

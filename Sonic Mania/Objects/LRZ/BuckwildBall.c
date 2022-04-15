@@ -426,10 +426,10 @@ void BuckwildBall_EditorDraw(void)
                 self->ballPos.x           = self->position.x + self->detectOffset.x;
                 self->ballPos.y           = self->position.y + self->detectOffset.y;
 
-                DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->ballPos.x, self->ballPos.y, &self->detectHitbox);
+                DrawHelpers_DrawHitboxOutline(self->ballPos.x, self->ballPos.y, &self->detectHitbox, FLIP_NONE, 0xFF0000);
 
                 self->velocity.x = abs(self->speed << 15) * (2 * (self->direction != FLIP_NONE) - 1);
-                DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x + (self->velocity.x << 3), self->position.y);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + (self->velocity.x << 3), self->position.y, 0xFFFF00);
                 break;
         }
         RSDK_DRAWING_OVERLAY(false);

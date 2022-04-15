@@ -135,11 +135,11 @@ void PlayerProbe_DrawSprites(void)
         if (!self->direction)
             clr = 0xFFFF;
 
-        PlayerProbe_DrawArrow(clr, x1, y1, x2, y2);
+        PlayerProbe_DrawArrow(x1, y1, x2, y2, clr);
     }
 }
 
-void PlayerProbe_DrawArrow(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2)
+void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 colour)
 {
     int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
     RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, false);

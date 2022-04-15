@@ -118,7 +118,7 @@ void PropellerShaft_EditorDraw(void)
     self->drawOrder = Zone->drawOrderHigh;
 
     if (showGizmos()) {
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, 16 << 16, self->size << 17);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, 16 << 16, self->size << 17, 0xFFFF00);
     }
 }
 

@@ -261,7 +261,7 @@ void FBZSinkTrash_EditorDraw(void)
     FBZSinkTrash_Draw();
 
     if (showGizmos())
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 }
 
 void FBZSinkTrash_EditorLoad(void)

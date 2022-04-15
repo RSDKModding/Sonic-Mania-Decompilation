@@ -290,7 +290,7 @@ void ShopWindow_EditorDraw(void)
         RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x * 2, self->size.y * 2);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x * 2, self->size.y * 2, 0xFFFF00);
 }
 
 void ShopWindow_EditorLoad(void) { ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE); }

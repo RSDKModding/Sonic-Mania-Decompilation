@@ -511,14 +511,14 @@ void Hatch_EditorDraw(void)
     RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
     if (showGizmos()) {
-        DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->position.x, self->position.y + (self->depth << 16));
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + (self->depth << 16), 0x00FF00);
 
         self->hitbox.left   = (self->subOff1.x >> 12) - ((self->position.x >> 16) & 0xF) + 16;
         self->hitbox.top    = (self->subOff1.y >> 12) - ((self->position.y >> 16) & 0xF) + 16;
         self->hitbox.right  = (self->subOff2.x >> 12) - ((self->position.x >> 16) & 0xF) + 16;
         self->hitbox.bottom = (self->subOff2.y >> 12) - ((self->position.y >> 16) & 0xF) + 16;
 
-        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitbox);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, FLIP_NONE, 0xFF0000);
     }
 }
 

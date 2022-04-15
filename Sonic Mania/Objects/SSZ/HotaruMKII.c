@@ -531,7 +531,7 @@ void HotaruMKII_EditorDraw(void)
 
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawRectOutline(0x00FF00, self->position.x, self->position.y, self->triggerSize.x, self->triggerSize.y);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->triggerSize.x, self->triggerSize.y, 0x00FF00);
 
         RSDK_DRAWING_OVERLAY(false);
 

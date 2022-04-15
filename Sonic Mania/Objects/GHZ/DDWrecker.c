@@ -897,7 +897,9 @@ void DDWrecker_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     if (showGizmos()) {
-        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0);
+        RSDK_DRAWING_OVERLAY(true);
+        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0, 1 | 0 | 4 | 8, 0x00C0F0);
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

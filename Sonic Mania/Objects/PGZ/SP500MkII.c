@@ -78,9 +78,9 @@ void SP500MkII_DrawDebugOverlay(void)
         int32 storeY = self->position.y;
         self->position.x += self->printPos.x;
         self->position.y += self->printPos.y;
-        DrawHelpers_DrawHitboxOutline(0xFFFF00, self->direction, self->position.x, self->position.y, &SP500MkII->hitboxBody);
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, self->direction, self->position.x, self->position.y, &SP500MkII->hitboxButton);
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, self->direction, self->position.x, self->position.y, &SP500MkII->hitboxSolid);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &SP500MkII->hitboxBody, self->direction, 0xFFFF00);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &SP500MkII->hitboxButton, self->direction, 0xFFFFFF);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &SP500MkII->hitboxSolid, self->direction, 0xFFFFFF);
         self->position.x = storeX;
         self->position.y = storeY;
     }

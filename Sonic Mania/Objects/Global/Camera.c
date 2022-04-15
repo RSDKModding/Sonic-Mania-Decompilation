@@ -436,7 +436,7 @@ void Camera_EditorDraw(void)
 
     // Camera preview :)
     if (showGizmos()) {
-        DrawHelpers_DrawRectOutline(0xFF0000, self->position.x, self->position.y, WIDE_SCR_XSIZE << 16, SCREEN_YSIZE << 16);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, WIDE_SCR_XSIZE << 16, SCREEN_YSIZE << 16, 0xFF0000);
     }
 }
 

@@ -63,7 +63,7 @@ void TilePlatform_EditorDraw(void)
     RSDK_THIS(TilePlatform);
 
     RSDK_DRAWING_OVERLAY(true);
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
     RSDK_DRAWING_OVERLAY(false);
 }
 

@@ -97,14 +97,14 @@ void RisingLava_EditorDraw(void)
 {
     RSDK_THIS(RisingLava);
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
 
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->offset.x, self->offset.y, self->size.x, self->size.y);
+        DrawHelpers_DrawRectOutline(self->offset.x, self->offset.y, self->size.x, self->size.y, 0xFFFF00);
 
-        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->offset.x, self->offset.y);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->offset.x, self->offset.y, 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

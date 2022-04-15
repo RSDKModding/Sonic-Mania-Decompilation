@@ -83,7 +83,7 @@ void EncoreRoute_EditorDraw(void)
         drawPos.x = positions[i]->x + (size.x >> 1);
         drawPos.y = positions[i]->y + (size.y >> 1);
 
-        DrawHelpers_DrawRectOutline(0xFFFF00, drawPos.x, drawPos.y, size.x, size.y);
+        DrawHelpers_DrawRectOutline(drawPos.x, drawPos.y, size.x, size.y, 0xFFFF00);
 
         drawPos.x = positions[i]->x;
         drawPos.y = positions[i]->y;
@@ -109,8 +109,8 @@ void EncoreRoute_EditorDraw(void)
 
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawArrow(0xE0E0E0, self->position.x + (size.x >> 1), self->position.y + (size.y >> 1), self->offset.x + (size.x >> 1),
-                              self->offset.y + (size.y >> 1));
+        DrawHelpers_DrawArrow(self->position.x + (size.x >> 1), self->position.y + (size.y >> 1), self->offset.x + (size.x >> 1),
+                              self->offset.y + (size.y >> 1), 0xE0E0E0);
         RSDK_DRAWING_OVERLAY(false);
     }
 }

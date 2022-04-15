@@ -570,7 +570,7 @@ void Firework_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->position.x, self->position.y - (self->distance << 16));
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - (self->distance << 16), 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

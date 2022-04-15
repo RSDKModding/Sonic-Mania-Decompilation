@@ -2231,8 +2231,8 @@ void Platform_EditorDraw(void)
                 self->drawPos.y = amplitude.y * RSDK.Sin1024(0x300) + self->centerPos.y;
                 Platform_EditorDraw_Normal();
 
-                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
 
                 self->inkEffect = INK_NONE;
 
@@ -2356,9 +2356,9 @@ void Platform_EditorDraw(void)
                 Platform_EditorDraw_Normal();
 
                 self->inkEffect = INK_NONE;
-                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
                 if (type)
-                    DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+                    DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2403,8 +2403,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
 
-                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2489,8 +2489,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
 
-                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2547,8 +2547,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
 
-                DrawHelpers_DrawArrow(0x00FF00, drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y);
-                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2605,7 +2605,7 @@ void Platform_EditorDraw(void)
                 self->drawPos.y += amplitude.y;
                 Platform_EditorDraw_Normal();
 
-                DrawHelpers_DrawArrow(0x00FF00, self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
 
                 self->inkEffect = INK_NONE;
 
@@ -2622,7 +2622,7 @@ void Platform_EditorDraw(void)
             if (!child)
                 continue;
 
-            DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, child->position.x, child->position.y);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
         }
 
         RSDK_DRAWING_OVERLAY(false);

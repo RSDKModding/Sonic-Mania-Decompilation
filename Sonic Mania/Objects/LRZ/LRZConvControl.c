@@ -37,7 +37,7 @@ void LRZConvControl_Draw(void)
         self->hitbox.top    = -self->hitboxSize.y >> 17;
         self->hitbox.right  = self->hitboxSize.x >> 17;
         self->hitbox.bottom = self->hitboxSize.y >> 17;
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, self->direction, self->position.x, self->position.y, &self->hitbox);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, self->direction, 0xFFFFFF);
     }
 }
 
@@ -166,7 +166,7 @@ void LRZConvControl_EditorDraw(void)
                 self->hitbox.top    = -self->hitboxSize.y >> 17;
                 self->hitbox.right  = self->hitboxSize.x >> 17;
                 self->hitbox.bottom = self->hitboxSize.y >> 17;
-                DrawHelpers_DrawHitboxOutline(0xFFFFFF, self->direction, self->position.x, self->position.y, &self->hitbox);
+                DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, self->direction, 0xFFFFFF);
                 RSDK_DRAWING_OVERLAY(false);
                 break;
 
@@ -174,8 +174,8 @@ void LRZConvControl_EditorDraw(void)
                 RSDK_DRAWING_OVERLAY(true);
                 self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
                 if (self->taggedButton)
-                    DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x,
-                                          self->position.y);
+                    DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y,
+                                          0xFFFF00);
                 RSDK_DRAWING_OVERLAY(false);
                 break;
         }

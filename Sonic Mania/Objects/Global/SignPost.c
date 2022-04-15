@@ -628,7 +628,7 @@ void SignPost_EditorDraw(void)
         else
             self->updateRange.y = bottom + 0x400000;
 
-        DrawHelpers_DrawArenaBounds(0xFFFF00, 1 | 2 | 4 | 8, left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16);
+        DrawHelpers_DrawArenaBounds(left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16, 1 | 2 | 4 | 8, 0xFFFF00);
 
         RSDK_DRAWING_OVERLAY(false);
     }

@@ -338,7 +338,7 @@ void PopOut_EditorDraw(void)
                 break;
         }
 
-        DrawHelpers_DrawHitboxOutline(0xFF0000, FLIP_NONE, self->position.x, self->position.y, &self->hitboxRange);
+        DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitboxRange, FLIP_NONE, 0xFF0000);
 
         int32 storeX = self->position.x;
         int32 storeY = self->position.y;

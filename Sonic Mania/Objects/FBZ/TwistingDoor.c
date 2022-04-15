@@ -250,7 +250,7 @@ void TwistingDoor_EditorDraw(void)
 
         RSDK_DRAWING_OVERLAY(true);
         if (self->taggedButton)
-            DrawHelpers_DrawArrow(0xFFFF00, self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y);
+            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00);
         RSDK_DRAWING_OVERLAY(false);
     }
 }

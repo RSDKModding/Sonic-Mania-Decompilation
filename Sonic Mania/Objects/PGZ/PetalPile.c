@@ -392,7 +392,7 @@ void PetalPile_StateDraw_Leaf(void)
 void PetalPile_EditorDraw(void)
 {
     RSDK_THIS(PetalPile);
-    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->pileSize.x, self->pileSize.y);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->pileSize.x, self->pileSize.y, 0xFFFF00);
 }
 
 void PetalPile_EditorLoad(void)

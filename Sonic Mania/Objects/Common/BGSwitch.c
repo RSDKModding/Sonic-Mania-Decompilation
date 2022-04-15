@@ -68,7 +68,7 @@ void BGSwitch_EditorDraw(void)
     if (showGizmos()) {
         // Bounds
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
         RSDK_DRAWING_OVERLAY(false);
     }
 }
