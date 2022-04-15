@@ -1,8 +1,12 @@
 name: Build RSDKv5
-on:
-  push:
-    branches:
-      - master
+
+on: workflow_dispatch
+
+# each artifact is like 15MB so we'll start by only doing it manually
+# on:
+#   push:
+#     branches:
+#       - master
 
 # TODO: readd with: submodules: recursive once we can
 
