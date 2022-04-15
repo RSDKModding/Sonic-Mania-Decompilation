@@ -73,7 +73,7 @@ void RTeleporter_State_CheckPlayerCollisions(void)
     {
         if (!player->onGround) {
             if (Player_CheckCollisionTouch(player, self, &RTeleporter->hitbox)) {
-                Player_CheckHit2(player, self, false);
+                Player_CheckItemBreak(player, self, false);
                 self->state     = RTeleporter_State_Destroyed;
                 self->stateDraw = RTeleporter_StateDraw_Exploding;
             }

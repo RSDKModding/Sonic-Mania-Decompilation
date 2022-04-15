@@ -25,14 +25,14 @@ void SignPost_Draw(void)
     Vector2 drawPos;
     if (self->state) {
         self->drawFX = FX_SCALE;
-        drawPos.y      = self->position.y;
+        drawPos.y    = self->position.y;
 
         Animator *face = &self->facePlateAnimator;
         if (self->rotation <= 128 || self->rotation >= 384)
             face = &self->eggPlateAnimator;
 
         self->scale.x = abs(RSDK.Cos512(self->rotation));
-        int32 scale = abs(RSDK.Sin512(self->rotation));
+        int32 scale   = abs(RSDK.Sin512(self->rotation));
 
         switch (self->rotation >> 7) {
             case 0:
@@ -122,7 +122,7 @@ void SignPost_Create(void *data)
 
             bool32 destroy = true;
             switch (self->type) {
-                default:  break;
+                default: break;
                 case SIGNPOST_NORMAL: // Normal (Main Game Only)
                     if (globals->gameMode != MODE_COMPETITION) {
                         self->active = ACTIVE_BOUNDS;
@@ -161,19 +161,19 @@ void SignPost_Create(void *data)
 
 void SignPost_StageLoad(void)
 {
-    SignPost->aniFrames          = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
+    SignPost->aniFrames = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
 
-    SignPost->hitbox.left          = -24;
-    SignPost->hitbox.top           = -22;
-    SignPost->hitbox.right         = 24;
-    SignPost->hitbox.bottom        = 8;
+    SignPost->hitboxSignPost.left   = -24;
+    SignPost->hitboxSignPost.top    = -22;
+    SignPost->hitboxSignPost.right  = 24;
+    SignPost->hitboxSignPost.bottom = 8;
 
     SignPost->hitboxItemBox.left   = -8;
     SignPost->hitboxItemBox.top    = 20;
     SignPost->hitboxItemBox.right  = 8;
     SignPost->hitboxItemBox.bottom = 24;
 
-    SignPost->maxPlayerCount       = (1 << Player->playerCount) - 1;
+    SignPost->maxPlayerCount = (1 << Player->playerCount) - 1;
 
     SignPost->sfxSignPost     = RSDK.GetSfx("Global/SignPost.wav");
     SignPost->sfxSignPost2P   = RSDK.GetSfx("Global/SignPost2p.wav");
@@ -212,8 +212,8 @@ void SignPost_HandleSpin(void)
         self->maxAngle += 0x20000;
         self->spinSpeed = minVal(0x600 * self->spinCount, 0x3000);
         if (!--self->spinCount) {
-            self->spinSpeed                    = 0;
-            self->angle                        = 0x10000;
+            self->spinSpeed               = 0;
+            self->angle                   = 0x10000;
             self->facePlateAnimator.speed = 1;
         }
     }
@@ -257,15 +257,15 @@ void SignPost_HandleCamBounds(void)
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (player->objectID == Player->objectID && !player->sidekick) {
             if (globals->gameMode == MODE_COMPETITION) {
-                int32 storeX         = self->position.x;
-                int32 storeY         = self->position.y;
+                int32 storeX     = self->position.x;
+                int32 storeY     = self->position.y;
                 self->position.x = x;
                 self->position.y = y;
                 if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-                    self->position.x       = storeX;
-                    self->position.y       = storeY;
-                    Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                    Zone->cameraBoundsR[p] = ScreenInfo[p].centerX + (self->position.x >> 0x10);
+                    self->position.x            = storeX;
+                    self->position.y            = storeY;
+                    Zone->cameraBoundsL[p]      = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
+                    Zone->cameraBoundsR[p]      = ScreenInfo[p].centerX + (self->position.x >> 0x10);
                     Zone->playerBoundActiveR[p] = true;
                 }
                 else {
@@ -293,21 +293,21 @@ void SignPost_CheckTouch(void)
         }
         else if (!p || globals->gameMode == MODE_COMPETITION) {
             if (!((1 << p) & self->activePlayers)) {
-                bool32 touched = false;
+                bool32 passedSignpost = false;
                 if (globals->gameMode != MODE_COMPETITION) {
-                    touched = player->position.x > self->position.x;
+                    passedSignpost = player->position.x > self->position.x;
                 }
                 else if (self->playerPosStore[p].x && self->playerPosStore[p].y) {
-                    touched = MathHelpers_Unknown12(player->position.x, player->position.y, 
-                                                    self->playerPosStore[p].x, self->playerPosStore[p].y,
-                                                    self->position.x, self->position.y - (self->vsExtendTop << 16), 
-                                                    self->position.x, (self->vsExtendBottom << 16) + self->position.y);
+                    passedSignpost = MathHelpers_CheckPositionOverlap(
+                        player->position.x, player->position.y, self->playerPosStore[p].x, self->playerPosStore[p].y, self->position.x,
+                        self->position.y - (self->vsExtendTop << 16), self->position.x, self->position.y + (self->vsExtendBottom << 16));
                 }
 
-                if (touched) {
+                if (passedSignpost) {
                     if (!((1 << p) & self->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         Announcer_AnnounceGoal(player->camera->screenID);
-                    RSDK.PlaySfx(SignPost->sfxSignPost, false, 255);
+
+                    RSDK.PlaySfx(SignPost->sfxSignPost, false, 0xFF);
                     self->active = ACTIVE_NORMAL;
                     if (player->superState == SUPERSTATE_SUPER)
                         player->superState = SUPERSTATE_FADEOUT;
@@ -347,8 +347,8 @@ void SignPost_CheckTouch(void)
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                         EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
                         if (!manager) {
-                            Competition->activeEntity  = (Entity *)CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
-                            manager = (EntityCompetition *)Competition->activeEntity;
+                            Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
+                            manager                   = (EntityCompetition *)Competition->activeEntity;
                         }
                         manager->playerFlags[player->playerID]       = true;
                         session->rings[player->playerID]             = player->rings;
@@ -397,6 +397,7 @@ void SignPost_CheckTouch(void)
                         }
                     }
                 }
+
                 self->playerPosStore[p].x = player->position.x;
                 self->playerPosStore[p].y = player->position.y;
             }
@@ -465,7 +466,7 @@ void SignPost_State_Launched(void)
 void SignPost_State_Fall(void)
 {
     RSDK_THIS(SignPost);
-    self->active              = ACTIVE_NORMAL;
+    self->active           = ACTIVE_NORMAL;
     SceneInfo->timeEnabled = false;
     if (self->type == SIGNPOST_HIDDEN) {
         self->type = SIGNPOST_NORMAL;
@@ -482,15 +483,16 @@ void SignPost_State_Fall(void)
         }
     }
 
-    foreach_active(Player, player) {
+    foreach_active(Player, player)
+    {
         if (self->velocity.y >= 0) {
             if (player->velocity.y < 0 && player->animator.animationID == ANI_JUMP && !player->onGround) {
-                if (Player_CheckCollisionTouch(player, self, &SignPost->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &SignPost->hitboxSignPost)) {
                     self->velocity.x = (self->position.x - player->position.x) >> 4;
                     self->velocity.y = -0x20000;
                     RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
                     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
-                    scoreBonus->drawOrder    = Zone->drawOrderHigh;
+                    scoreBonus->drawOrder        = Zone->drawOrderHigh;
                     scoreBonus->animator.frameID = 0;
                     Player_GiveScore(player, 100);
                 }
@@ -524,7 +526,8 @@ void SignPost_State_Fall(void)
 
     self->velocity.y += 0xC00;
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
-        foreach_active(ItemBox, itemBox) {
+        foreach_active(ItemBox, itemBox)
+        {
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, self, &SignPost->hitboxItemBox)) {
                     RSDK.PlaySfx(SignPost->sfxBubbleBounce, false, 255);
@@ -572,7 +575,7 @@ void SignPost_EditorDraw(void)
     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &self->standAnimator, true, 2);
 
     self->drawFX = FX_SCALE;
-    drawPos.y      = self->position.y;
+    drawPos.y    = self->position.y;
 
     self->scale.x = abs(RSDK.Cos512(self->rotation));
     int32 scale   = abs(RSDK.Sin512(self->rotation));
@@ -609,7 +612,7 @@ void SignPost_EditorDraw(void)
         int32 right  = self->vsBoundsOffset.x + (self->vsBoundsSize.x >> 1);
         int32 bottom = self->vsBoundsOffset.y + (self->vsBoundsSize.y >> 1);
 
-        int32 extendTop = -(self->vsExtendTop << 16);
+        int32 extendTop    = -(self->vsExtendTop << 16);
         int32 extendBottom = (self->vsExtendBottom << 16);
 
         if (extendTop < top)

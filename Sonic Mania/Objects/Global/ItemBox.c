@@ -400,7 +400,7 @@ void ItemBox_CheckHit(void)
                     if (!self->lrzConvPhys)
                         self->state = ItemBox_State_Falling;
                     self->velocity.y = -0x20000;
-                    if (player->onGround == false)
+                    if (!player->onGround)
                         player->velocity.y = 0x20000;
                 }
                 else if (side == C_TOP) {

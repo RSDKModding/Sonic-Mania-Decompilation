@@ -25,7 +25,7 @@ void HangConveyor_Update(void)
             self->playerPositions[i].x = 0;
             self->playerPositions[i].y = 0;
         }
-        self->active        = ACTIVE_BOUNDS;
+        self->active = ACTIVE_BOUNDS;
     }
 }
 
@@ -67,19 +67,19 @@ void HangConveyor_DrawSprites(void)
 
     for (int32 i = 0; i < self->length; ++i) {
         self->direction = dirStore != FLIP_NONE;
-        drawPos.y         = self->position.y - 0x150000;
+        drawPos.y       = self->position.y - 0x150000;
         RSDK.DrawSprite(&self->middleAnimator, &drawPos, false);
 
         self->direction = dirStore == FLIP_NONE;
-        drawPos.y         = self->position.y + 0x150000;
+        drawPos.y       = self->position.y + 0x150000;
         RSDK.DrawSprite(&self->middleAnimator, &drawPos, false);
 
         drawPos.x += 0x100000;
     }
 
     self->direction = dirStore != FLIP_NONE;
-    drawPos.x         = self->position.x;
-    drawPos.y         = self->position.y;
+    drawPos.x       = self->position.x;
+    drawPos.y       = self->position.y;
 
     if (dirStore) {
         int32 len = self->length + 3;
@@ -96,8 +96,8 @@ void HangConveyor_DrawSprites(void)
     RSDK.DrawSprite(&self->endAnimator, &drawPos, false);
 
     self->direction = dirStore == FLIP_NONE;
-    drawPos.x         = self->position.x;
-    drawPos.y         = self->position.y;
+    drawPos.x       = self->position.x;
+    drawPos.y       = self->position.y;
 
     if (dirStore) {
         int32 len = self->length + 3;
@@ -161,22 +161,23 @@ void HangConveyor_HandlePlayerInteractions(void)
         if (Player_CheckValidState(player)) {
             int32 playerID = RSDK.GetEntityID(player);
 
-            int32 playerY     = player->position.y;
+            int32 playerY = player->position.y;
             if (player->animator.animationID != ANI_POLESWINGH && player->animator.animationID != ANI_SHIMMYMOVE)
                 playerY -= 0x180000;
 
-            int32 prevX                    = self->playerPositions[playerID].x;
-            int32 prevY                    = self->playerPositions[playerID].y;
+            int32 prevX                       = self->playerPositions[playerID].x;
+            int32 prevY                       = self->playerPositions[playerID].y;
             self->playerPositions[playerID].x = player->position.x;
             self->playerPositions[playerID].y = playerY;
 
             if (abs(player->position.x - prevX) < 0x800000 && abs(playerY - prevY) < 0x800000 && (prevX || prevY)) {
-                bool32 collidedTop = MathHelpers_Unknown12(player->position.x, playerY, prevX, prevY, self->endPosTopLeft.x, self->endPosTopLeft.y,
-                                                           self->endPosTopRight.x, self->endPosTopRight.y);
+                bool32 collidedTop = MathHelpers_CheckPositionOverlap(player->position.x, playerY, prevX, prevY, self->endPosTopLeft.x,
+                                                                      self->endPosTopLeft.y, self->endPosTopRight.x, self->endPosTopRight.y);
                 collidedTop        = collidedTop && !self->grabDelayTop[playerID];
 
-                bool32 collidedBottom = MathHelpers_Unknown12(player->position.x, playerY, prevX, prevY, self->endPosBottomLeft.x, self->endPosBottomLeft.y,
-                                                         self->endPosBottomRight.x, self->endPosBottomRight.y);
+                bool32 collidedBottom =
+                    MathHelpers_CheckPositionOverlap(player->position.x, playerY, prevX, prevY, self->endPosBottomLeft.x, self->endPosBottomLeft.y,
+                                                     self->endPosBottomRight.x, self->endPosBottomRight.y);
                 collidedBottom = collidedBottom && !self->grabDelayBottom[playerID];
 
                 if (self->grabDelayTop[playerID] > 0)
@@ -211,13 +212,13 @@ void HangConveyor_HandlePlayerInteractions(void)
                 }
 
                 int32 newPlayerY = player->position.y;
-                if (player->animator.animationID != ANI_POLESWINGH && player->animator.animationID != ANI_SHIMMYMOVE) 
+                if (player->animator.animationID != ANI_POLESWINGH && player->animator.animationID != ANI_SHIMMYMOVE)
                     newPlayerY -= 0x180000;
 
-                collidedTop =
-                    MathHelpers_PointInHitbox(self->position.x, self->position.y, player->position.x, newPlayerY, self->direction, &self->hitboxFallCheckTop);
-                collidedBottom =
-                    MathHelpers_PointInHitbox(self->position.x, self->position.y, player->position.x, newPlayerY, self->direction, &self->hitboxFallCheckBottom);
+                collidedTop    = MathHelpers_PointInHitbox(self->position.x, self->position.y, player->position.x, newPlayerY, self->direction,
+                                                        &self->hitboxFallCheckTop);
+                collidedBottom = MathHelpers_PointInHitbox(self->position.x, self->position.y, player->position.x, newPlayerY, self->direction,
+                                                           &self->hitboxFallCheckBottom);
 
                 if (((1 << playerID) & self->movementActivePlayers)) {
                     if (self->fanTimer[playerID] > 0) {
@@ -292,7 +293,8 @@ void HangConveyor_HandlePlayerInteractions(void)
                         noCollision = true;
 
                     int32 anim = player->animator.animationID;
-                    if (player->jumpPress || (anim != ANI_POLESWINGH && anim != ANI_SHIMMYMOVE) || player->velocity.x || player->velocity.y || noCollision) {
+                    if (player->jumpPress || (anim != ANI_POLESWINGH && anim != ANI_SHIMMYMOVE) || player->velocity.x || player->velocity.y
+                        || noCollision) {
 
                         self->movementActivePlayers &= ~(1 << playerID);
                         player->position.y += 0x180000;

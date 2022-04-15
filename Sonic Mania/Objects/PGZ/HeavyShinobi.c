@@ -783,7 +783,7 @@ void HeavyShinobi_StateAsteron_Explode(void)
                 }
             }
             else if ((player->state != Ice_State_FrozenPlayer || !self->playerPtr) && Player_CheckBadnikTouch(player, self, &HeavyShinobi->hitboxAsteron)
-                     && Player_CheckHit2(player, self, true)) {
+                     && Player_CheckItemBreak(player, self, true)) {
                 RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
                 --HeavyShinobi->activeShurikens;

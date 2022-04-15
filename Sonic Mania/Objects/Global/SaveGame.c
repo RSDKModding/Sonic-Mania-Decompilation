@@ -367,7 +367,7 @@ void SaveGame_LoadFile_CB(int32 status)
     if (SaveGame->loadCallback) {
         Entity *store = SceneInfo->entity;
         if (SaveGame->loadEntityPtr)
-            SceneInfo->entity = (Entity *)SaveGame->loadEntityPtr;
+            SceneInfo->entity = SaveGame->loadEntityPtr;
         SaveGame->loadCallback(success);
         SceneInfo->entity  = store;
         SaveGame->loadCallback  = NULL;

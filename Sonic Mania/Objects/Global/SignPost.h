@@ -26,7 +26,7 @@ typedef enum {
 struct ObjectSignPost {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxSignPost;
     Hitbox hitboxItemBox;
     uint16 sfxSignPost;
     uint16 sfxSignPost2P;

@@ -163,7 +163,7 @@ int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, i
     return length;
 }
 
-bool32 MathHelpers_PointInHitbox(int32 thisX, int32 thisY, int32 otherX, int32 otherY, int32 direction, Hitbox *hitbox)
+bool32 MathHelpers_PointInHitbox(int32 thisX1, int32 thisY1, int32 otherX1, int32 otherY1, int32 direction, Hitbox *hitbox)
 {
     int32 left, top, right, bottom;
 
@@ -197,120 +197,127 @@ bool32 MathHelpers_PointInHitbox(int32 thisX, int32 thisY, int32 otherX, int32 o
         hitboxY2 = top;
     if (bottom > top)
         hitboxY1 = bottom;
-    return otherX >= thisX + (hitboxX2 << 16) && otherX <= thisX + (hitboxX1 << 16) && otherY >= thisY + (hitboxY2 << 16) && otherY <= thisY + (hitboxY1 << 16);
+    return otherX1 >= thisX1 + (hitboxX2 << 16) && otherX1 <= thisX1 + (hitboxX1 << 16) && otherY1 >= thisY1 + (hitboxY2 << 16) && otherY1 <= thisY1 + (hitboxY1 << 16);
 }
 
-bool32 MathHelpers_Unknown9(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX1, int32 extendY1, int32 extendX2, int32 extendY2)
+bool32 MathHelpers_PositionBoxesIntersect(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2, int32 thisY2)
 {
-    int32 left   = x < prevX ? x : prevX;
-    int32 top    = y < prevY ? y : prevY;
-    int32 right  = x > prevX ? x : prevX;
-    int32 bottom = y > prevY ? y : prevY;
+    int32 left_other   = minVal(otherX1, otherX2);
+    int32 top_other    = minVal(otherY1, otherY2);
+    int32 right_other  = maxVal(otherX1, otherX2);
+    int32 bottom_other = maxVal(otherY1, otherY2);
 
-    int32 left2   = extendX1 < extendX2 ? extendX1 : extendX2;
-    int32 top2    = extendY1 < extendY2 ? extendY1 : extendY2;
-    int32 right2  = extendX1 > extendX2 ? extendX1 : extendX2;
-    int32 bottom2 = extendY1 > extendY2 ? extendY1 : extendY2;
+    int32 left_this   = minVal(thisX1, thisX2);
+    int32 top_this    = minVal(thisY1, thisY2);
+    int32 right_this  = maxVal(thisX1, thisX2);
+    int32 bottom_this = maxVal(thisY1, thisY2);
 
-    return left <= right2 && right >= left2 && top <= bottom2 && bottom >= top2;
+    return left_other <= right_this && right_other >= left_this && top_other <= bottom_this && bottom_other >= top_this;
 }
-int32 MathHelpers_GetValueSign(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX, int32 extendY)
+int32 MathHelpers_GetInteractionDir(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX, int32 thisY)
 {
-    int32 value = ((extendY - y) >> 16) * ((prevX - x) >> 16) - ((extendX - x) >> 16) * ((prevY - y) >> 16);
-    return value > 0 ? 1 : value < 0 ? -1 : 0;
+    int32 dir = ((thisY - otherY1) >> 16) * ((otherX2 - otherX1) >> 16) - ((thisX - otherX1) >> 16) * ((otherY2 - otherY1) >> 16);
+    return dir > 0 ? 1 : dir < 0 ? -1 : 0;
 }
-bool32 MathHelpers_Unknown11(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX, int32 extendY)
+bool32 MathHelpers_CheckValidIntersect(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX, int32 thisY)
 {
-    if (prevX <= x) {
-        if (prevX >= x) {
-            if (prevY <= y) {
-                if (prevY >= y) {
-                    if (x > extendX)
-                        return false;
-                    return y <= extendY;
-                }
-                else {
-                    if (prevY > extendY)
-                        return false;
-                    return extendY <= y;
-                }
-            }
-            else {
-                if (y > extendY)
-                    return false;
-                return extendY <= prevY;
-            }
-        }
-        else {
-            if (prevX > extendX)
-                return false;
-            return extendX <= x;
-        }
-    }
-    else {
-        if (x > extendX)
-            return false;
-        return extendX <= prevX;
-    }
-}
-int32 MathHelpers_Unknown12(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX1, int32 extendY1, int32 extendX2, int32 extendY2)
-{
-    if (!MathHelpers_Unknown9(x, y, prevX, prevY, extendX1, extendY1, extendX2, extendY2))
-        return false;
-
-    if (x == prevX && y == prevY) {
-        if (x != extendX1 || y != extendY1) {
-            if (x == extendX2 && y == extendY2)
-                return true;
-            return false;
-        }
-        return true;
-    }
-
-    if (extendX1 != extendX2 || extendY1 != extendY2) {
-        int32 valA = MathHelpers_GetValueSign(x, y, prevX, prevY, extendX1, extendY1);
-        int32 valB = MathHelpers_GetValueSign(x, y, prevX, prevY, extendX2, extendY2);
-        if (valA) {
-            if (valA == valB)
-                return 0;
-        }
-        else if (!valB) {
-            if (MathHelpers_Unknown11(x, y, prevX, prevY, extendX1, extendY1) || MathHelpers_Unknown11(x, y, prevX, prevY, extendX2, extendY2)
-                || MathHelpers_Unknown11(extendX1, extendY1, extendX2, extendY2, x, y)) {
-                return true;
-            }
-            if (!MathHelpers_Unknown11(extendX1, extendY1, extendX2, extendY2, prevX, prevY))
-                return false;
-        }
-
-        int32 res = MathHelpers_GetValueSign(extendX1, extendY1, extendX2, extendY2, x, y);
-        if (!res)
-            return true;
-        if (res == MathHelpers_GetValueSign(extendX1, extendY1, extendX2, extendY2, prevX, prevY))
+    if (otherX2 > otherX1) {
+        if (thisX < otherX1 || thisX > otherX2)
             return false;
         return true;
     }
-    if (extendX1 == x && extendY1 == y)
+
+    if (otherX2 < otherX1) {
+        if (thisX < otherX1 || thisX > otherX1)
+            return false;
         return true;
-    if (extendX1 != prevX || extendY1 != prevY)
+    }
+
+    if (otherY2 > otherY1) {
+        if (thisY < otherY1 || thisY > otherY2)
+            return false;
+        return true;
+    }
+
+    if (otherY2 < otherY1) {
+        if (thisY < otherY2 || thisY > otherY1)
+            return false;
+        return true;
+    }
+
+    if (thisX < otherX1 || thisY < otherY1)
         return false;
     return true;
 }
-int32 MathHelpers_Unknown13(int32 distance, int32 radius)
+int32 MathHelpers_CheckPositionOverlap(int32 otherX1, int32 otherY1, int32 otherX2, int32 otherY2, int32 thisX1, int32 thisY1, int32 thisX2, int32 thisY2)
 {
-    uint32 v1 = abs(distance);
-    uint32 v2 = abs(radius);
+    // Creates "hitboxes" from the positions and does a quick check to see if they overlap
+    if (!MathHelpers_PositionBoxesIntersect(otherX1, otherY1, otherX2, otherY2, thisX1, thisY1, thisX2, thisY2))
+        return false;
 
-    uint32 r1 = (v1 >> 16) * (v2 >> 16) << 16;
-    uint32 r2 = (v1 >> 16) * (v2 & 0xFFFF);
-    uint32 r3 = (v1 & 0xFFFF) * (v2 >> 16);
-    uint32 r4 = (v1 & 0xFFFF) * (v2 & 0xFFFF) >> 16;
+    if (otherX1 == otherX2 && otherY1 == otherY2) {
+        if (otherX1 != thisX1 || otherY1 != thisY1) {
+            if (otherX1 == thisX2 && otherY1 == thisY2)
+                return true;
+            return false;
+        }
+        return true;
+    }
 
-    uint32 val = r1 + r2 + r3 + r4;
-    if ((radius ^ ~distance) >= 0) //if the signs do not match
-        return -(int32)val;
+    if (thisX1 == thisX2 && thisY1 == thisY2) {
+        if (thisX1 == otherX1 && thisY1 == otherY1)
+            return true;
+
+        if (thisX1 == otherX2 && thisY1 == otherY2)
+            return true;
+
+        return false;
+    }
+
+    int32 thisInteractDir1 = MathHelpers_GetInteractionDir(otherX1, otherY1, otherX2, otherY2, thisX1, thisY1);
+    int32 thisInteractDir2 = MathHelpers_GetInteractionDir(otherX1, otherY1, otherX2, otherY2, thisX2, thisY2);
+
+    if (thisInteractDir1) {
+        if (thisInteractDir1 == thisInteractDir2)
+            return false;
+    }
+    else if (!thisInteractDir2) {
+        if (MathHelpers_CheckValidIntersect(otherX1, otherY1, otherX2, otherY2, thisX1, thisY1)
+            || MathHelpers_CheckValidIntersect(otherX1, otherY1, otherX2, otherY2, thisX2, thisY2)
+            || MathHelpers_CheckValidIntersect(thisX1, thisY1, thisX2, thisY2, otherX1, otherY1)
+            || MathHelpers_CheckValidIntersect(thisX1, thisY1, thisX2, thisY2, otherX2, otherY2)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    int32 otherInteractDir1 = MathHelpers_GetInteractionDir(thisX1, thisY1, thisX2, thisY2, otherX1, otherY1);
+    if (!otherInteractDir1)
+        return true;
+
+    int32 otherInteractDir2 = MathHelpers_GetInteractionDir(thisX1, thisY1, thisX2, thisY2, otherX2, otherY2);
+    if (otherInteractDir1 == otherInteractDir2)
+        return false;
+
+    return true;
+}
+
+int32 MathHelpers_GetEdgeDistance(int32 distance, int32 radius)
+{
+    uint32 dist = abs(distance);
+    uint32 rad  = abs(radius);
+
+    uint32 result1 = (dist >> 16) * (rad >> 16) << 16;
+    uint32 result2 = (dist >> 16) * (rad & 0xFFFF);
+    uint32 result3 = (dist & 0xFFFF) * (rad >> 16);
+    uint32 result4 = (dist & 0xFFFF) * (rad & 0xFFFF) >> 16;
+
+    uint32 edgeDistance = result1 + result2 + result3 + result4;
+    if ((radius ^ ~distance) >= 0) // if the signs do not match
+        return -(int32)edgeDistance;
     else
-        return val;
+        return edgeDistance;
 }
 
 bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox)
@@ -320,89 +327,89 @@ bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos
     int32 top    = minVal(hitbox.top, hitbox.bottom);
     int32 bottom = maxVal(hitbox.bottom, hitbox.top);
 
-    int32 posLeft2   = boxPos.x + (left << 16);
-    int32 posTop2    = boxPos.y + (top << 16);
-    int32 posRight2  = boxPos.x + (right << 16);
-    int32 posBottom2 = boxPos.y + (bottom << 16);
+    int32 boxPosLeft   = boxPos.x + (left << 16);
+    int32 boxPosTop    = boxPos.y + (top << 16);
+    int32 boxPosRight  = boxPos.x + (right << 16);
+    int32 boxPosBottom = boxPos.y + (bottom << 16);
 
-    if (x > posLeft2 && x < posRight2 && y > posTop2 && y < posBottom2)
+    if (x > boxPosLeft && x < boxPosRight && y > boxPosTop && y < boxPosBottom)
         return false;
 
-    int32 posY = 0;
-    if ((x ^ boxPos.x) & 0xFFFF0000) {
-        if (!((y ^ boxPos.y) & 0xFFFF0000)) {
-            if (pos) {
-                if (x <= boxPos.x)
-                    pos->x = posLeft2;
-                else
-                    pos->x = posRight2;
-                pos->y = y & 0xFFFF0000;
-            }
-        }
-        else {
-            double div = 1.0f / 65536.0f;
-
-            int32 radius = (((boxPos.y - y) * div) / ((boxPos.x - x) * div)) * 65536.0f;
-            if (!radius)
-                return false;
-
-            if (x <= boxPos.x) {
-                posY = y + MathHelpers_Unknown13(posLeft2 - x, radius);
-                if (posTop2 <= posY && posY <= posBottom2) {
-                    if (pos) {
-                        pos->x = posLeft2;
-                        pos->y = posY;
-                    }
-                    return true;
-                }
-            }
-
-            if (x >= boxPos.x) {
-                posY = y + MathHelpers_Unknown13(posRight2 - x, radius);
-                if (posTop2 <= posY && posY <= posBottom2) {
-                    if (pos) {
-                        pos->x = posRight2;
-                        pos->y = posY;
-                    }
-                    return true;
-                }
-            }
-
-            if (y <= boxPos.y) {
-                radius = (((posTop2 - y) * div) / (radius * div)) * -65536.0;
-                if (posLeft2 <= x - radius && x - radius <= posRight2) {
-                    if (pos) {
-                        pos->x = x - radius;
-                        pos->y = posTop2;
-                    }
-                    return true;
-                }
-            }
-
-            if (y >= boxPos.y) {
-                radius = x - ((((posBottom2 - y) * div) / (radius * div)) * -65536.0f);
-                if (posLeft2 <= radius && radius <= posRight2) {
-                    if (pos) {
-                        pos->x = radius;
-                        pos->y = posBottom2;
-                    }
-                }
-            }
-            else {
-                return false;
-            }
-        }
-    }
-    else {
+    // Check if they're on the same pixel on x axis (ignores subpixel positions)
+    if (!((x ^ boxPos.x) & 0xFFFF0000)) {
         if (pos) {
             pos->x = x & 0xFFFF0000;
             if (y <= boxPos.y)
-                pos->y = posTop2;
+                pos->y = boxPosTop;
             else
-                pos->y = posBottom2;
+                pos->y = boxPosBottom;
+        }
+        return true;
+    }
+
+    // Check if they're on the same pixel on y axis (ignores subpixel positions)
+    if (!((y ^ boxPos.y) & 0xFFFF0000)) {
+        if (pos) {
+            if (x <= boxPos.x)
+                pos->x = boxPosLeft;
+            else
+                pos->x = boxPosRight;
+            pos->y = y & 0xFFFF0000;
+        }
+        return true;
+    }
+
+    double div   = 1.0f / 65536.0f;
+    int32 radius = (((boxPos.y - y) * div) / ((boxPos.x - x) * div)) * 65536.0f;
+    if (!radius)
+        return false;
+
+    int32 posY         = 0;
+    if (x <= boxPos.x) {
+        posY = y + MathHelpers_GetEdgeDistance(boxPosLeft - x, radius);
+        if (boxPosTop <= posY && posY <= boxPosBottom) {
+            if (pos) {
+                pos->x = boxPosLeft;
+                pos->y = posY;
+            }
+            return true;
         }
     }
-    return true;
+
+    if (x >= boxPos.x) {
+        posY = y + MathHelpers_GetEdgeDistance(boxPosRight - x, radius);
+        if (boxPosTop <= posY && posY <= boxPosBottom) {
+            if (pos) {
+                pos->x = boxPosRight;
+                pos->y = posY;
+            }
+            return true;
+        }
+    }
+
+    if (y <= boxPos.y) {
+        radius = (((boxPosTop - y) * div) / (radius * div)) * -65536.0;
+        if (boxPosLeft <= x - radius && x - radius <= boxPosRight) {
+            if (pos) {
+                pos->x = x - radius;
+                pos->y = boxPosTop;
+            }
+            return true;
+        }
+    }
+
+    if (y >= boxPos.y) {
+        radius = x - ((((boxPosBottom - y) * div) / (radius * div)) * -65536.0f);
+        if (boxPosLeft <= radius && radius <= boxPosRight) {
+            if (pos) {
+                pos->x = radius;
+                pos->y = boxPosBottom;
+            }
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #if RETRO_INCLUDE_EDITOR

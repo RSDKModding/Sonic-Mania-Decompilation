@@ -475,7 +475,7 @@ bool32 Player_CheckHit(EntityPlayer *player, void *entity);
 // the same as above, though the knockback dir is gotten from the player dir rather the direction of the distance
 bool32 Player_CheckHitFlip(EntityPlayer *player);
 // Hits the player if not invulnerable and the player's shield doesn't match shield, returns true if player was hit
-bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int shield);
+bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int32 shield);
 //returns true if the player is in an "attacking" state
 bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
 //checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate
@@ -489,10 +489,10 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
 #if RETRO_USE_PLUS
 // similar to checkHit, but for objects that should bounce off mighty's shell, returns true if deflected, otherwise the player is hit and returns
 // false
-bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int velY);
+bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int32 velX, int32 velY);
 #endif
-// idk yet, needs more research
-bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 hitIfNotAttacking);
+// Similar to "Player_CheckBadnikBreak" but omits the score/explosion & animal stuff. Does not destroy 'entity'
+bool32 Player_CheckItemBreak(EntityPlayer *player, void *entity, bool32 hitIfNotAttacking);
 
 // State helpers
 void Player_UpdatePhysicsState(EntityPlayer *entity);

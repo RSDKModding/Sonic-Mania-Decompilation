@@ -33,24 +33,25 @@ void LRZConvSwitch_Update(void)
                 dir = 1;
             }
 
-            bool32 collided = MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPositions[playerID].x,
-                                            self->playerPositions[playerID].y, self->position.x, self->position.y, extendX2, extendY2);
+            bool32 collided =
+                MathHelpers_CheckPositionOverlap(player->position.x, player->position.y, self->playerPositions[playerID].x,
+                                                 self->playerPositions[playerID].y, self->position.x, self->position.y, extendX2, extendY2);
             if (!self->dir && !player->sidekick) {
                 if (dir < 0) {
                     if (collided && !self->conveyorDir) {
                         RSDK.PlaySfx(LRZConvSwitch->sfxClack, false, 255);
                         RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 1, &self->animator, true, 0);
-                        self->conveyorDir    = 1;
+                        self->conveyorDir      = 1;
                         LRZ2Setup->conveyorDir = self->calibration ^ 1;
-                        self->dir            = 1;
+                        self->dir              = 1;
                     }
                 }
                 if (dir > 0 && collided && self->conveyorDir == 1) {
                     RSDK.PlaySfx(LRZConvSwitch->sfxClack, false, 255);
                     RSDK.SetSpriteAnimation(LRZConvSwitch->aniFrames, 3, &self->animator, true, 0);
-                    self->conveyorDir    = 0;
+                    self->conveyorDir      = 0;
                     LRZ2Setup->conveyorDir = self->calibration;
-                    self->dir            = 1;
+                    self->dir              = 1;
                 }
             }
         }

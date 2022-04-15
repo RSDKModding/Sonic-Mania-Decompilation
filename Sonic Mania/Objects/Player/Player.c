@@ -2270,7 +2270,7 @@ bool32 Player_CheckHitFlip(EntityPlayer *player)
     return true;
 }
 // Hits the player if not invulnerable and the player's shield doesn't match shield, returns true if player was hit
-bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int shield)
+bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int32 shield)
 {
     return player->shield != shield ? Player_CheckHit(player, entity) : false;
 }
@@ -2391,15 +2391,13 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
         if (player->velocity.y <= 0) {
             yVel = player->velocity.y + 0x10000;
         }
+        else if (player->position.y >= entity->position.y
 #if RETRO_USE_PLUS
-        else if (player->position.y >= entity->position.y || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
-            yVel = player->velocity.y - 0x10000;
-        }
-#else
-        else if (player->position.y >= entity->position.y) {
-            yVel = player->velocity.y - 0x10000;
-        }
+                 || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
 #endif
+        ) {
+            yVel = player->velocity.y - 0x10000;
+        }
         else {
             yVel = -(player->velocity.y + 2 * player->gravityStrength);
         }
@@ -2517,7 +2515,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *p)
     return false;
 }
 #if RETRO_USE_PLUS
-bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int velY)
+bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int32 velX, int32 velY)
 {
     Entity *entity = (Entity *)e;
     if (player->characterID == ID_MIGHTY
@@ -2527,7 +2525,7 @@ bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int v
             RSDK.PlaySfx(Player->sfxPimPom, false, 255);
             player->uncurlTimer = 30;
         }
-        int angle          = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+        int32 angle          = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
         entity->velocity.x = velX * RSDK.Cos256(angle);
         entity->velocity.y = velY * RSDK.Sin256(angle);
         return true;
@@ -2535,7 +2533,7 @@ bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int v
     return false;
 }
 #endif
-bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
+bool32 Player_CheckItemBreak(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
 {
     Entity *entity  = (Entity *)e;
     int32 anim      = player->animator.animationID;
@@ -2546,17 +2544,14 @@ bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 hitIfNotAttacking)
             player->velocity.y += 0x10000;
             return true;
         }
+        else if (player->position.y >= entity->position.y
 #if RETRO_USE_PLUS
-        else if (player->position.y >= entity->position.y || (checkPlayerID(ID_MIGHTY, 1) && anim == ANI_DROPDASH)) {
-            player->velocity.y -= 0x10000;
-            return true;
-        }
-#else
-        else if (player->position.y >= entity->position.y) {
-            player->velocity.y -= 0x10000;
-            return true;
-        }
+                 || (checkPlayerID(ID_MIGHTY, 1) && anim == ANI_DROPDASH)
 #endif
+        ) {
+            player->velocity.y -= 0x10000;
+            return true;
+        }
         else {
             player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
             return true;

@@ -145,8 +145,8 @@ void TimeAttackGate_HandleSpin(void)
             else
                 vel = player->velocity.x;
             if (vel >> 15
-                && MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
-                                         self->position.x, top)) {
+                && MathHelpers_CheckPositionOverlap(player->position.x, player->position.y, self->playerPos.x, self->playerPos.y, self->position.x,
+                                                    bottom, self->position.x, top)) {
                 int32 val = (vel >> 15) - 2;
                 if ((vel >> 15) >= 0)
                     val = (vel >> 15) + 2;
@@ -158,7 +158,7 @@ void TimeAttackGate_HandleSpin(void)
     }
 
     self->angle += self->spinSpeed;
-    bool32 flag = false;
+    bool32 finishedSpinning = false;
     if (self->spinSpeed <= 0) {
         if (self->angle <= -512) {
             ++self->spinTimer;
@@ -166,7 +166,7 @@ void TimeAttackGate_HandleSpin(void)
             self->spinSpeed += 4;
             if (self->spinSpeed > -2)
                 self->spinSpeed = -2;
-            flag = self->spinSpeed == -2;
+            finishedSpinning = self->spinSpeed == -2;
         }
     }
     else {
@@ -176,11 +176,11 @@ void TimeAttackGate_HandleSpin(void)
             self->spinSpeed -= 4;
             if (self->spinSpeed < 2)
                 self->spinSpeed = 2;
-            flag = self->spinSpeed == 2;
+            finishedSpinning = self->spinSpeed == 2;
         }
     }
 
-    if (flag) {
+    if (finishedSpinning) {
         self->spinSpeed = 0;
         self->angle     = 0;
     }
@@ -193,8 +193,8 @@ void TimeAttackGate_HandleStart(void)
     int32 bottom          = ((TimeAttackGate->hitbox.bottom + self->extendBottom) << 16) + self->position.y;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (MathHelpers_Unknown12(player1->position.x, player1->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
-                              self->position.x, top)) {
+    if (MathHelpers_CheckPositionOverlap(player1->position.x, player1->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
+                                         self->position.x, top)) {
         self->hasFinished = true;
         if (!self->finishLine) {
             if (!TimeAttackGate->started) {
@@ -244,7 +244,7 @@ void TimeAttackGate_AddRecord(void)
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         int32 characterID      = param->characterID;
         int32 zoneID           = param->zoneID;
-        int32 score             = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
+        int32 score            = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
         int32 act              = param->actID;
         bool32 encore          = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
 
@@ -573,14 +573,13 @@ void TimeAttackGate_EditorDraw(void)
         hitbox.bottom = self->extendBottom + TimeAttackGate->hitbox.bottom;
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &hitbox, FLIP_NONE, 0xFF0000);
 
-        
         RSDK_DRAWING_OVERLAY(false);
     }
 }
 
 void TimeAttackGate_EditorLoad(void)
 {
-    TimeAttackGate->aniFrames     = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+    TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
 
     TimeAttackGate->hitbox.left   = -8;
     TimeAttackGate->hitbox.top    = -44;

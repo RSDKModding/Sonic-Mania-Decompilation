@@ -871,7 +871,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
         ADD_PUBLIC_FUNC(Player_CheckBossHit);
         ADD_PUBLIC_FUNC(Player_CheckProjectileHit);
-        ADD_PUBLIC_FUNC(Player_CheckHit2);
+        ADD_PUBLIC_FUNC(Player_CheckItemBreak);
 
         ADD_PUBLIC_FUNC(DebugMode_AddObject);
 
@@ -883,6 +883,18 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(PlayerHelpers_CheckAct1Regular);
         ADD_PUBLIC_FUNC(PlayerHelpers_CheckStageReload);
         ADD_PUBLIC_FUNC(PlayerHelpers_CheckPlayerPos);
+
+        ADD_PUBLIC_FUNC(SaveGame_GetDataPtr);
+        ADD_PUBLIC_FUNC(SaveGame_LoadSaveData);
+        ADD_PUBLIC_FUNC(SaveGame_LoadFile);
+        ADD_PUBLIC_FUNC(SaveGame_SaveFile);
+        ADD_PUBLIC_FUNC(SaveGame_SaveGameState);
+        ADD_PUBLIC_FUNC(SaveGame_SaveProgress);
+        ADD_PUBLIC_FUNC(SaveGame_ClearRestartData);
+        ADD_PUBLIC_FUNC(SaveGame_SavePlayerState);
+        ADD_PUBLIC_FUNC(SaveGame_LoadPlayerState);
+        ADD_PUBLIC_FUNC(SaveGame_ResetPlayerState);
+        ADD_PUBLIC_FUNC(SaveGame_SaveFile_CB);
 
         ADD_PUBLIC_FUNC(GameProgress_GetNotifStringID);
         ADD_PUBLIC_FUNC(GameProgress_ShuffleBSSID);
@@ -909,11 +921,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_SquareRoot);
         ADD_PUBLIC_FUNC(MathHelpers_GetBezierCurveLength);
         ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown9);
-        ADD_PUBLIC_FUNC(MathHelpers_GetValueSign);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown11);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown12);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown13);
+        ADD_PUBLIC_FUNC(MathHelpers_CheckPositionOverlap);
         ADD_PUBLIC_FUNC(MathHelpers_ConstrainToBox);
 
         ADD_PUBLIC_FUNC(Options_Reload);

@@ -452,10 +452,10 @@ void SizeLaser_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (MathHelpers_Unknown12(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
-                                  player->position.y, extendX1[0], extendY1[0], extendX2[0], extendY2[0])
-            || MathHelpers_Unknown12(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
-                                     player->position.y, extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
+        if (MathHelpers_CheckPositionOverlap(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
+                                             player->position.y, extendX1[0], extendY1[0], extendX2[0], extendY2[0])
+            || MathHelpers_CheckPositionOverlap(SizeLaser->playerPositions[playerID].x, SizeLaser->playerPositions[playerID].y, player->position.x,
+                                                player->position.y, extendX1[1], extendY1[1], extendX2[1], extendY2[1])) {
 
             if (self->type) {
                 if (player->state == SizeLaser_P2JumpInShrink || player->state == SizeLaser_P2JumpInGrow || !player->isChibi) {
