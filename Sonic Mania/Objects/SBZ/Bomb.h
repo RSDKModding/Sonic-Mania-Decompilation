@@ -22,8 +22,8 @@ struct EntityBomb {
     uint8 startDir;
     int32 timer;
     int32 fuseOffset;
-    Animator animator;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator fuseAnimator;
 };
 
 // Object Entity

@@ -14,6 +14,7 @@ ObjectGHZCutsceneK *GHZCutsceneK;
 void GHZCutsceneK_Update(void)
 {
     RSDK_THIS(GHZCutsceneK);
+
     if (!self->activated) {
         foreach_active(Player, player)
         {

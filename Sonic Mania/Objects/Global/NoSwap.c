@@ -101,8 +101,8 @@ void NoSwap_EditorDraw(void)
     NoSwap_Draw();
     RSDK_DRAWING_OVERLAY(false);
 
-    RSDK.SetSpriteAnimation(NoSwap->aniFrames, 0, &self->animator1, true, 8);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.SetSpriteAnimation(NoSwap->aniFrames, 0, &self->unusedAnimator1, true, 8);
+    RSDK.DrawSprite(&self->unusedAnimator1, NULL, false);
 }
 
 void NoSwap_EditorLoad(void) { NoSwap->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

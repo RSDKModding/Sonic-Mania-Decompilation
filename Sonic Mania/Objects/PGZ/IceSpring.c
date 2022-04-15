@@ -66,7 +66,7 @@ void IceSpring_Update(void)
                         }
 
                         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                        if (player->state != Ice_State_FrozenPlayer && shield->animator.animationID != 2
+                        if (player->state != Ice_State_FrozenPlayer && shield->shieldAnimator.animationID != 2
 #if RETRO_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop
 #endif

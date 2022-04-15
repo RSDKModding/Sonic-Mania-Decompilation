@@ -15,7 +15,7 @@ struct ObjectMonarchBG {
 struct EntityMonarchBG {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused;
     Animator animatorTop;
     Animator animatorBottom;
     Matrix matrix1;

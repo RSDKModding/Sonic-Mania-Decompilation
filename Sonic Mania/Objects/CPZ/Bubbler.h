@@ -20,8 +20,8 @@ struct EntityBubbler {
     uint16 spawnTimer;
     Vector2 startPos;
     uint8 startDir;
-    Animator animator1;
-    Animator animator2;
+    Animator bodyHitbox;
+    Animator flameAnimator;
 };
 
 // Object Entity

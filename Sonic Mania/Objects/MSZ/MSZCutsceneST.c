@@ -111,8 +111,8 @@ bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host)
     }
 
     mystic->position.x = signPost->position.x - 0x30000;
-    if (signPost->position.y >= MSZCutsceneST->signPostOffsets[mystic->animator.frameID] + mystic->position.y - 0x3D0000) {
-        signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->animator.frameID] + mystic->position.y - 0x3D0000;
+    if (signPost->position.y >= MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID] + mystic->position.y - 0x3D0000) {
+        signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID] + mystic->position.y - 0x3D0000;
         signPost->state      = SignPost_State_Land;
         RSDK.PlaySfx(SignPost->sfxSlide, false, 255);
         signPost->spinCount  = 4;
@@ -131,7 +131,7 @@ bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host)
     EntitySignPost *signPost  = MSZCutsceneST->signPost;
     EntityCutsceneHBH *mystic = MSZCutsceneST->mystic;
 
-    signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->animator.frameID] + mystic->position.y - 0x3D0000;
+    signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID] + mystic->position.y - 0x3D0000;
     if (signPost->state == SignPost_State_Finish) {
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
@@ -194,7 +194,7 @@ bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host)
     mystic->velocity.y -= 0x800;
     mystic->position.y += mystic->velocity.y;
     mystic->drawOrder    = Zone->drawOrderLow;
-    signPost->position.y = mystic->position.y - 0x3D0000 + MSZCutsceneST->signPostOffsets[mystic->animator.frameID];
+    signPost->position.y = mystic->position.y - 0x3D0000 + MSZCutsceneST->signPostOffsets[mystic->mainAnimator.frameID];
 
     Vector2 range;
     range.x = ScreenInfo->width << 16;
@@ -288,11 +288,11 @@ bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host)
     }
 
     if (host->values[0] && !host->values[1]) {
-        if (!rouge->animator.animationID)
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 0);
+        if (!rouge->mainAnimator.animationID)
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->mainAnimator, true, 0);
 
-        if (rouge->animator.animationID == 1 && rouge->animator.frameID == rouge->animator.frameCount - 1 && rouge->animator.timer == 12) {
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 2, &rouge->animator, true, 0);
+        if (rouge->mainAnimator.animationID == 1 && rouge->mainAnimator.frameID == rouge->mainAnimator.frameCount - 1 && rouge->mainAnimator.timer == 12) {
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 2, &rouge->mainAnimator, true, 0);
             rouge->velocity.y = -0x20000;
             RSDK.PlaySfx(HeavyMystic->sfxPon, false, 255);
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rouge->position.x, rouge->position.y - 0x40000);
@@ -306,7 +306,7 @@ bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host)
             MSZCutsceneST->projectile = (Entity *)debris;
         }
 
-        if (rouge->animator.animationID == 2) {
+        if (rouge->mainAnimator.animationID == 2) {
             rouge->position.y += rouge->velocity.y;
             rouge->velocity.y += 0x3800;
         }
@@ -316,9 +316,9 @@ bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host)
     if (rouge->position.y > armadiloid->position.y - 0x200000) {
         rouge->position.y = armadiloid->position.y - 0x200000;
         rouge->velocity.y = 0;
-        if (rouge->animator.animationID == 2) {
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 2);
-            rouge->animator.loopIndex = 3;
+        if (rouge->mainAnimator.animationID == 2) {
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->mainAnimator, true, 2);
+            rouge->mainAnimator.loopIndex = 3;
             host->values[1]           = 1;
         }
     }
@@ -357,12 +357,12 @@ bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host)
     }
 
     if (host->values[0] && !host->values[1]) {
-        if (rouge->animator.animationID == 5) {
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 7, &rouge->animator, true, 0);
+        if (rouge->mainAnimator.animationID == 5) {
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 7, &rouge->mainAnimator, true, 0);
         }
 
-        if (rouge->animator.animationID == 7) {
-            if (rouge->animator.frameID == 2 && !MSZCutsceneST->projectile) {
+        if (rouge->mainAnimator.animationID == 7) {
+            if (rouge->mainAnimator.frameID == 2 && !MSZCutsceneST->projectile) {
                 RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rouge->position.x, rouge->position.y - 0x130000);
                 debris->position.x += 0xB0000;
@@ -375,8 +375,8 @@ bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host)
                 MSZCutsceneST->projectile = (Entity *)debris;
             }
 
-            if (rouge->animator.animationID == 7 && rouge->animator.frameID == 5 && rouge->animator.timer == 2) {
-                RSDK.SetSpriteAnimation(rouge->aniFrames, 5, &rouge->animator, true, 0);
+            if (rouge->mainAnimator.animationID == 7 && rouge->mainAnimator.frameID == 5 && rouge->mainAnimator.timer == 2) {
+                RSDK.SetSpriteAnimation(rouge->aniFrames, 5, &rouge->mainAnimator, true, 0);
                 host->values[1] = 1;
             }
         }
@@ -418,11 +418,11 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
     }
 
     if (host->values[0] && !host->values[1]) {
-        if (rouge->animator.animationID == 12)
-            RSDK.SetSpriteAnimation(rouge->aniFrames, 14, &rouge->animator, true, 0);
+        if (rouge->mainAnimator.animationID == 12)
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 14, &rouge->mainAnimator, true, 0);
 
-        if (rouge->animator.animationID == 14) {
-            if (rouge->animator.frameID == 3 && rouge->animator.timer == 1) {
+        if (rouge->mainAnimator.animationID == 14) {
+            if (rouge->mainAnimator.frameID == 3 && rouge->mainAnimator.timer == 1) {
                 RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
                 Camera_ShakeScreen(0, 0, 2);
                 armadiloid->timer = 0;
@@ -430,8 +430,8 @@ bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 2, &armadiloid->headAnimator, true, 0);
             }
 
-            if (rouge->animator.animationID == 14 && rouge->animator.frameID == 7 && rouge->animator.timer == 2) {
-                RSDK.SetSpriteAnimation(rouge->aniFrames, 12, &rouge->animator, true, 0);
+            if (rouge->mainAnimator.animationID == 14 && rouge->mainAnimator.frameID == 7 && rouge->mainAnimator.timer == 2) {
+                RSDK.SetSpriteAnimation(rouge->aniFrames, 12, &rouge->mainAnimator, true, 0);
                 host->values[1] = true;
             }
         }

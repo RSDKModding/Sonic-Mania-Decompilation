@@ -54,10 +54,10 @@ void Syringe_Draw(void)
     Vector2 drawPos;
 
     drawPos.x = self->position.x;
-    drawPos.y = self->offsetY + self->position.y;
+    drawPos.y = self->position.y + self->offsetY;
     RSDK.DrawRect(drawPos.x - 0x100000, drawPos.y, 0x200000, 0x4E0000 - self->offsetY, self->colour, 0xC0, INK_ALPHA, false);
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->handleAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->containerAnimator, NULL, false);
 }
 
 void Syringe_Create(void *data)
@@ -76,8 +76,8 @@ void Syringe_Create(void *data)
             case CHEMICALPOOL_CYAN: self->colour = 0x0080B0; break;
         }
 
-        RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->animator1, true, 1);
+        RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->handleAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->containerAnimator, true, 1);
     }
 }
 
@@ -108,8 +108,8 @@ void Syringe_EditorDraw(void)
         case CHEMICALPOOL_CYAN: self->colour = 0x0080B0; break;
     }
 
-    RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->animator1, true, 1);
+    RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->handleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->containerAnimator, true, 1);
 
     Syringe_Draw();
 }

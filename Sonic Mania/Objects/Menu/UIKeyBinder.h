@@ -54,8 +54,8 @@ struct EntityUIKeyBinder {
     int32 unused1; // set to 512, never used
     bool32 textVisible;
     int32 unused2;
-    Animator animator1;
-    Animator animator2;
+    Animator labelAnimator;
+    Animator keyAnimator;
     uint16 textFrames;
     int32 lasyKeyMap;
 };

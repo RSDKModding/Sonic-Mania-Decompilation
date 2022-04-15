@@ -26,8 +26,8 @@ struct EntityShield {
     int32 timer;
     int32 frameFlags;
     bool32 forceVisible;
-    Animator animator;
-    Animator animator2;
+    Animator shieldAnimator;
+    Animator fxAnimator;
 };
 
 // Object Struct

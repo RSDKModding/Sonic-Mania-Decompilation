@@ -422,7 +422,7 @@ void PhantomEgg_ScanlineCB(ScanlineInfo *scanlines)
     for (int32 l = line; l < ScreenInfo->height; ++l) scanlines[l].position.y = lineY;
 }
 
-void PhantomEgg_StateDraw_Normal(void)
+void PhantomEgg_Draw_Normal(void)
 {
     RSDK_THIS(PhantomEgg);
 
@@ -468,7 +468,7 @@ void PhantomEgg_StateDraw_Normal(void)
     }
 }
 
-void PhantomEgg_StateDraw_Cracked(void)
+void PhantomEgg_Draw_Cracked(void)
 {
     RSDK_THIS(PhantomEgg);
 
@@ -520,7 +520,7 @@ void PhantomEgg_State_DimArena(void)
         if (self->timer >= 384) {
             self->timer     = 0;
             self->visible   = true;
-            self->stateDraw = PhantomEgg_StateDraw_Normal;
+            self->stateDraw = PhantomEgg_Draw_Normal;
             self->state     = PhantomEgg_State_EnterEggman;
 
             foreach_active(TMZCable, cable)
@@ -1060,7 +1060,7 @@ void PhantomEgg_State_StartBadEnd(void)
     if (++self->timer == 30) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 1, &self->crackAnimator, false, 0);
-        self->stateDraw = PhantomEgg_StateDraw_Cracked;
+        self->stateDraw = PhantomEgg_Draw_Cracked;
         RSDK.PlaySfx(PhantomEgg->sfxRocketJet, false, 255);
 
         EntityPhantomRuby *ruby = CREATE_ENTITY(PhantomRuby, NULL, self->position.x, self->position.y + 0x100000);
@@ -1190,7 +1190,7 @@ void PhantomEgg_EditorDraw(void)
     RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 8, &self->legAnimator, false, 0);
     RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 13, &self->rubyAnimator, false, 0);
 
-    PhantomEgg_StateDraw_Normal();
+    PhantomEgg_Draw_Normal();
 }
 
 void PhantomEgg_EditorLoad(void) { PhantomEgg->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomEgg.bin", SCOPE_STAGE); }

@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectMSZ1KIntro {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     uint16 sfxImpact;
     uint16 playerFrames;
 };

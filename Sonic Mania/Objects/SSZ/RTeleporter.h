@@ -46,8 +46,8 @@ void RTeleporter_Serialize(void);
 void RTeleporter_State_CheckPlayerCollisions(void);
 void RTeleporter_State_Destroyed(void);
 
-void RTeleporter_StateDraw_Active(void);
-void RTeleporter_StateDraw_Exploding(void);
-void RTeleporter_StateDraw_Destroyed(void);
+void RTeleporter_Draw_Active(void);
+void RTeleporter_Draw_Exploding(void);
+void RTeleporter_Draw_Destroyed(void);
 
 #endif //!OBJ_RTELEPORTER_H

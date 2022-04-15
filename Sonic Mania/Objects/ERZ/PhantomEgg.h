@@ -103,8 +103,8 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID);
 void PhantomEgg_HandleReturnWarp(void);
 void PhantomEgg_ScanlineCB(ScanlineInfo *scanlines);
 
-void PhantomEgg_StateDraw_Normal(void);
-void PhantomEgg_StateDraw_Cracked(void);
+void PhantomEgg_Draw_Normal(void);
+void PhantomEgg_Draw_Cracked(void);
 
 void PhantomEgg_State_SetupArena(void);
 void PhantomEgg_State_DimArena(void);

@@ -40,7 +40,7 @@ void RTeleporter_Create(void *data)
         RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 1, &self->electricAnimator, true, 0);
         self->originY    = self->position.y;
         self->state     = RTeleporter_State_CheckPlayerCollisions;
-        self->stateDraw = RTeleporter_StateDraw_Active;
+        self->stateDraw = RTeleporter_Draw_Active;
     }
 }
 
@@ -75,7 +75,7 @@ void RTeleporter_State_CheckPlayerCollisions(void)
             if (Player_CheckCollisionTouch(player, self, &RTeleporter->hitbox)) {
                 Player_CheckItemBreak(player, self, false);
                 self->state     = RTeleporter_State_Destroyed;
-                self->stateDraw = RTeleporter_StateDraw_Exploding;
+                self->stateDraw = RTeleporter_Draw_Exploding;
             }
         }
     }
@@ -101,11 +101,11 @@ void RTeleporter_State_Destroyed(void)
         self->position.y += 0x180000;
         RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
         self->state     = StateMachine_None;
-        self->stateDraw = RTeleporter_StateDraw_Destroyed;
+        self->stateDraw = RTeleporter_Draw_Destroyed;
     }
 }
 
-void RTeleporter_StateDraw_Active(void)
+void RTeleporter_Draw_Active(void)
 {
     RSDK_THIS(RTeleporter);
     Vector2 drawPos;
@@ -128,7 +128,7 @@ void RTeleporter_StateDraw_Active(void)
     RSDK.DrawSprite(&self->electricAnimator, &drawPos, false);
 }
 
-void RTeleporter_StateDraw_Exploding(void)
+void RTeleporter_Draw_Exploding(void)
 {
     RSDK_THIS(RTeleporter);
 
@@ -139,7 +139,7 @@ void RTeleporter_StateDraw_Exploding(void)
     self->direction = FLIP_NONE;
 }
 
-void RTeleporter_StateDraw_Destroyed(void)
+void RTeleporter_Draw_Destroyed(void)
 {
     RSDK_THIS(RTeleporter);
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
@@ -153,7 +153,7 @@ void RTeleporter_EditorDraw(void)
     RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 0, &self->mainAnimator, true, 0);
     RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 1, &self->electricAnimator, true, 0);
 
-    RTeleporter_StateDraw_Active();
+    RTeleporter_Draw_Active();
 }
 
 void RTeleporter_EditorLoad(void)

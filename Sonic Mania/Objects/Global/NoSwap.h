@@ -19,8 +19,8 @@ struct EntityNoSwap {
     bool32 noDeathSwap;
     Hitbox hitbox;
     Vector2 playerPos;
-    Animator animator1; // unused in-game (likely used in-editor)
-    Animator animator2; // unused in-game (likely used in-editor)
+    Animator unusedAnimator1; // unused in-game (likely used in-editor)
+    Animator unusedAnimator2; // unused in-game (likely used in-editor)
 };
 
 // Object Struct

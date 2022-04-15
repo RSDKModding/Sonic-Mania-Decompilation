@@ -36,6 +36,7 @@ void DERobot_Create(void *data)
             int32 slotID        = RSDK.GetEntityID(self);
             if (data)
                 self->aniID = voidToInt(data);
+
             switch (self->aniID) {
                 case DEROBOT_BODY:
                     self->active        = ACTIVE_BOUNDS;
@@ -55,20 +56,22 @@ void DERobot_Create(void *data)
                     self->health        = 8;
                     self->state         = DERobot_State_SetupArena;
                     self->stateDraw     = DERobot_Draw_Basic;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 case DEROBOT_HEAD:
                     self->parent    = RSDK.GetEntityByID(slotID + 1);
                     self->stateDraw = DERobot_Draw_HasParent;
                     self->drawFX    = FX_ROTATE;
                     self->offset.x  = -0x160000;
                     self->offset.y  = -0x240000;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 case DEROBOT_ARM:
                     if (self->frameID == 2) {
-                        RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &self->animator2, true, 0);
-                        RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &self->animator3, true, 0);
+                        RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &self->altAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &self->armAnimator, true, 0);
                         self->stateDraw = DERobot_Draw_Arm;
                         self->drawFX    = FX_ROTATE;
                         self->state     = DERobot_State_ArmIdle;
@@ -82,38 +85,43 @@ void DERobot_Create(void *data)
                         self->offset.x  = -0xC0000;
                         self->offset.y  = -0x100000;
                     }
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 case DEROBOT_LEG:
                     if (self->frameID) {
                         self->stateDraw = DERobot_Draw_Basic;
                     }
                     else {
-                        RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator2, true, 1);
+                        RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->altAnimator, true, 1);
                         self->stateDraw = DERobot_Draw_FrontLeg;
                     }
+
                     if (self->frameID > 1)
                         self->drawFX = FX_ROTATE;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 case DEROBOT_TARGET_EDGE:
                     self->active     = ACTIVE_NORMAL;
                     self->visible    = true;
                     self->drawFX     = FX_FLIP;
                     self->drawOrder  = Zone->drawOrderHigh;
                     self->velocity.x = 0x20000;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &self->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &self->altAnimator, true, 0);
                     self->state     = DERobot_State_Target;
                     self->stateDraw = DERobot_Draw_Target;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 case DEROBOT_BOMB:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->state     = DERobot_State_BombLaunched;
                     self->stateDraw = DERobot_Draw_Basic;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 case DEROBOT_BODY_CUTSCENE:
                     self->active        = ACTIVE_BOUNDS;
                     self->visible       = true;
@@ -121,11 +129,12 @@ void DERobot_Create(void *data)
                     self->shoulderFront = RSDK_GET_ENTITY(slotID + 4, DERobot);
                     self->arms[0]       = RSDK_GET_ENTITY(slotID + 1, DERobot);
                     self->arms[1]       = RSDK_GET_ENTITY(slotID + 2, DERobot);
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
+
                 default:
                     self->stateDraw = DERobot_Draw_Basic;
-                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+                    RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
             }
         }
@@ -505,30 +514,30 @@ void DERobot_Draw_HasParent(void)
     self->position.y = self->parent->position.y;
     self->position.x += self->offset.x;
     self->position.y += self->offset.y;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void DERobot_Draw_Arm(void)
 {
     RSDK_THIS(DERobot);
     self->rotation = self->angle >> 2;
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     if (self->armExtend > 0) {
-        SpriteFrame *frame = RSDK.GetFrame(DERobot->aniFrames, self->animator2.animationID, self->animator2.frameID);
+        SpriteFrame *frame = RSDK.GetFrame(DERobot->aniFrames, self->altAnimator.animationID, self->altAnimator.frameID);
         frame->width       = self->armExtend;
         frame->sprX        = 4 * (Zone->timer & 3);
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->altAnimator, NULL, false);
     }
 
-    RSDK.GetFrame(DERobot->aniFrames, self->animator3.animationID, self->animator3.frameID)->pivotX = self->armExtend + 22;
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.GetFrame(DERobot->aniFrames, self->armAnimator.animationID, self->armAnimator.frameID)->pivotX = self->armExtend + 22;
+    RSDK.DrawSprite(&self->armAnimator, NULL, false);
 }
 
 void DERobot_Draw_Basic(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void DERobot_Draw_FrontLeg(void)
@@ -537,10 +546,10 @@ void DERobot_Draw_FrontLeg(void)
 
     self->drawFX   = FX_NONE;
     self->rotation = -(self->angle >> 1);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
     self->drawFX = FX_ROTATE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->altAnimator, NULL, false);
 }
 
 void DERobot_Draw_Target(void)
@@ -548,71 +557,71 @@ void DERobot_Draw_Target(void)
     RSDK_THIS(DERobot);
     Vector2 drawPos;
 
-    self->animator1.frameID = 0;
+    self->mainAnimator.frameID = 0;
     self->inkEffect         = INK_ALPHA;
     self->direction         = FLIP_NONE;
     drawPos.x               = self->position.x;
     drawPos.y               = self->position.y;
     drawPos.x -= self->offset.x;
     drawPos.y -= self->offset.y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->direction = FLIP_X;
     drawPos.x       = self->position.x;
     drawPos.y       = self->position.y;
     drawPos.x += self->offset.x;
     drawPos.y -= self->offset.y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
-    self->animator1.frameID = 1;
+    self->mainAnimator.frameID = 1;
     self->direction         = FLIP_NONE;
     drawPos.x               = self->position.x;
     drawPos.y               = self->position.y;
     drawPos.x -= self->offset.x;
     drawPos.y += self->offset.y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->direction = FLIP_X;
     drawPos.x       = self->position.x;
     drawPos.y       = self->position.y;
     drawPos.x += self->offset.x;
     drawPos.y += self->offset.y;
-    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->inkEffect = INK_NONE;
     self->direction = FLIP_NONE;
-    RSDK.DrawSprite(&self->animator2, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
+    RSDK.DrawSprite(&self->altAnimator, NULL, false);
+    RSDK.DrawSprite(&self->armAnimator, NULL, false);
 }
 
 void DERobot_State_ArmIdle(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator3);
-    if (self->animator3.speed > 0x40)
-        self->animator3.speed -= 4;
+    RSDK.ProcessAnimation(&self->armAnimator);
+    if (self->armAnimator.speed > 0x40)
+        self->armAnimator.speed -= 4;
     DERobot_CheckPlayerCollisions_Hand();
 }
 
 void DERobot_State_ArmExtendPrepare(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator3);
-    if (self->animator3.speed == 240)
+    RSDK.ProcessAnimation(&self->armAnimator);
+    if (self->armAnimator.speed == 240)
         RSDK.PlaySfx(DERobot->sfxBuzzsaw, false, 255);
 
-    if (self->animator3.speed >= 0x100)
+    if (self->armAnimator.speed >= 0x100)
         self->state = DERobot_State_ArmExtending;
     else
-        self->animator3.speed += 4;
+        self->armAnimator.speed += 4;
     DERobot_CheckPlayerCollisions_Hand();
 }
 
 void DERobot_State_ArmExtending(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->altAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
     if (self->armExtend < 192)
         self->armExtend += 8;
     DERobot_CheckPlayerCollisions_ArmExtend();
@@ -626,8 +635,8 @@ void DERobot_State_ArmExtending(void)
 void DERobot_State_ArmRetracting(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->altAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
     if (self->armExtend <= 0) {
         self->state = DERobot_State_ArmIdle;
     }
@@ -641,8 +650,8 @@ void DERobot_State_ArmRetracting(void)
 void DERobot_State_ArmDestroyed(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->altAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
     if (self->armExtend > 0) 
         self->armExtend -= 8;
@@ -651,13 +660,13 @@ void DERobot_State_ArmDestroyed(void)
 void DERobot_Cutscene_ActivateArm(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
     if (self->angle > -96)
         self->angle -= 4;
 
-    if (self->animator3.speed < 0x80) {
-        self->animator3.speed += 4;
+    if (self->armAnimator.speed < 0x80) {
+        self->armAnimator.speed += 4;
     }
 
     if (self->timer++ == -1)
@@ -673,8 +682,8 @@ void DERobot_Cutscene_ActivateArm(void)
 void DERobot_Cutscene_ReachForRuby(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->altAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
     if (DERobot_CheckRubyGrabbed() || self->armExtend >= 192) 
         self->state = DERobot_Cutscene_GrabbedRuby;
@@ -685,8 +694,8 @@ void DERobot_Cutscene_ReachForRuby(void)
 void DERobot_Cutscene_GrabbedRuby(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->altAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
     if (self->armExtend <= 0) {
         RSDK.StopSfx(DERobot->sfxBuzzsaw);
@@ -701,10 +710,10 @@ void DERobot_Cutscene_GrabbedRuby(void)
 void DERobot_Cutscene_ArmDeactivate(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
-    if (self->animator3.speed)
-        self->animator3.speed--;
+    if (self->armAnimator.speed)
+        self->armAnimator.speed--;
 }
 
 void DERobot_State_CloseHeadHatch(void)
@@ -753,8 +762,8 @@ void DERobot_State_BombLaunched(void)
 void DERobot_State_BombLanded(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.speed >= 0x80) {
+    RSDK.ProcessAnimation(&self->mainAnimator);
+    if (self->mainAnimator.speed >= 0x80) {
         self->visible              = false;
         self->state                = DERobot_State_BombExplode;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x80000);
@@ -762,7 +771,7 @@ void DERobot_State_BombLanded(void)
         RSDK.PlaySfx(DERobot->sfxExplosion, false, 255);
     }
     else {
-        self->animator1.speed++;
+        self->mainAnimator.speed++;
     }
     DERobot_CheckPlayerCollisions_Bomb();
 }
@@ -900,8 +909,8 @@ void DERobot_State_SetupBoss(void)
 void DERobot_State_Target(void)
 {
     RSDK_THIS(DERobot);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->altAnimator);
+    RSDK.ProcessAnimation(&self->armAnimator);
 
     if (self->parent) {
         self->position.x = self->parent->position.x;
@@ -917,7 +926,7 @@ void DERobot_State_Target(void)
 
     self->offset.y = self->offset.x;
     if (++self->timer == 60)
-        RSDK.SetSpriteAnimation(DERobot->aniFrames, 8, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(DERobot->aniFrames, 8, &self->armAnimator, true, 0);
     if (self->timer == 96) {
         self->parent = 0;
         foreach_active(DERobot, robot)
@@ -1305,7 +1314,7 @@ void DERobot_EditorDraw(void)
     switch (self->aniID) {
         case DEROBOT_BODY:
             self->stateDraw = DERobot_Draw_Basic;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
 
             if (showGizmos()) {
                 RSDK_DRAWING_OVERLAY(true);
@@ -1313,17 +1322,19 @@ void DERobot_EditorDraw(void)
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;
+
         case DEROBOT_HEAD:
             self->stateDraw = DERobot_Draw_HasParent;
             self->drawFX    = FX_ROTATE;
             self->offset.x  = -0x160000;
             self->offset.y  = -0x240000;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
             break;
+
         case DEROBOT_ARM:
             if (self->frameID == 2) {
-                RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &self->animator2, true, 0);
-                RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &self->animator3, true, 0);
+                RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &self->altAnimator, true, 0);
+                RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &self->armAnimator, true, 0);
                 self->stateDraw = DERobot_Draw_Arm;
                 self->drawFX    = FX_ROTATE;
                 self->state     = DERobot_State_ArmIdle;
@@ -1336,29 +1347,33 @@ void DERobot_EditorDraw(void)
                 self->offset.x  = -0xC0000;
                 self->offset.y  = -0x100000;
             }
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
             break;
+
         case DEROBOT_LEG:
             if (self->frameID) {
                 self->stateDraw = DERobot_Draw_Basic;
             }
             else {
-                RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator2, true, 1);
+                RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->altAnimator, true, 1);
                 self->stateDraw = DERobot_Draw_FrontLeg;
             }
+
             if (self->frameID > 1)
                 self->drawFX = FX_ROTATE;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
             break;
+
         case DEROBOT_TARGET_EDGE:
             self->drawFX = FX_FLIP;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &self->altAnimator, true, 0);
             self->stateDraw = DERobot_Draw_Target;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
             break;
+
         default:
             self->stateDraw = DERobot_Draw_Basic;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
             break;
     }
 

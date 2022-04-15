@@ -124,19 +124,20 @@ void Announcer_Draw_Countdown(void)
         int32 frame                       = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         switch (session->characterFlags[SceneInfo->currentScreenID]) {
+            default: 
+            case ID_SONIC: frame = 0; break;
             case ID_TAILS: frame = 1; break;
             case ID_KNUCKLES: frame = 2; break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY: frame = 3; break;
             case ID_RAY: frame = 4; break;
 #endif
-            default: frame = 0; break;
         }
-        RSDK.SetSpriteAnimation(Announcer->aniFrames, 2, &self->animator2, true, frame);
+        RSDK.SetSpriteAnimation(Announcer->aniFrames, 2, &self->playerIconAnimator, true, frame);
 
         drawPos.x = ScreenInfo->centerX << 16;
         drawPos.y = (ScreenInfo->centerY + 48) << 16;
-        RSDK.DrawSprite(&self->animator2, &drawPos, true);
+        RSDK.DrawSprite(&self->playerIconAnimator, &drawPos, true);
         self->inkEffect = INK_ALPHA;
     }
 }

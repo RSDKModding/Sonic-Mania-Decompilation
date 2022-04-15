@@ -45,8 +45,8 @@ struct EntityFlameSpring {
     Vector2 flamePosR;
     bool32 spittingFire;
     uint8 timer;
-    Animator animator1;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator nozzleAnimator;
 };
 
 // Object Struct

@@ -18,7 +18,7 @@ void SpiralPlatform_Update(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitbox) == C_BOTTOM) {
+        if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitboxPlatform) == C_BOTTOM) {
             if (player->onGround && !player->collisionMode)
                 player->deathType = PLAYER_DEATH_DIE_USESFX;
         }
@@ -60,10 +60,10 @@ void SpiralPlatform_Create(void *data)
 
 void SpiralPlatform_StageLoad(void)
 {
-    SpiralPlatform->hitbox.left   = -48;
-    SpiralPlatform->hitbox.top    = -7;
-    SpiralPlatform->hitbox.right  = 48;
-    SpiralPlatform->hitbox.bottom = 7;
+    SpiralPlatform->hitboxPlatform.left   = -48;
+    SpiralPlatform->hitboxPlatform.top    = -7;
+    SpiralPlatform->hitboxPlatform.right  = 48;
+    SpiralPlatform->hitboxPlatform.bottom = 7;
 }
 
 void SpiralPlatform_State_Move(void)

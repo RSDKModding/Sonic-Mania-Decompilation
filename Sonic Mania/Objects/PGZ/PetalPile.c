@@ -199,7 +199,7 @@ void PetalPile_State_SetupEmitter(void)
         int32 angle              = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
         EntityPetalPile *petal = CREATE_ENTITY(PetalPile, self, spawnX, spawnY);
         petal->state           = PetalPile_StateLeaf_Setup;
-        petal->stateDraw       = PetalPile_StateDraw_Leaf;
+        petal->stateDraw       = PetalPile_Draw_Leaf;
 
         int32 radius = self->petalRadius >> 1;
         if (self->petalDir) {
@@ -382,7 +382,7 @@ void PetalPile_StateLeaf_Fall(void)
     self->petalOffset++;
 }
 
-void PetalPile_StateDraw_Leaf(void)
+void PetalPile_Draw_Leaf(void)
 {
     RSDK_THIS(PetalPile);
     RSDK.DrawSprite(&self->animator, NULL, false);

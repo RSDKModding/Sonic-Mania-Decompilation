@@ -39,11 +39,11 @@ struct EntityCutsceneHBH {
     int32 angleOffset;
     int32 colourSet;
     colour colours[128];
-    bool32 paletteFlag;
-    bool32 timerFlag;
+    bool32 useCustomPalettes;
+    bool32 noGlobalTimer;
     uint16 aniFrames;
-    Animator animator;
-    Animator animator2;
+    Animator mainAnimator;
+    Animator fxAnimator;
 };
 
 // Object Struct
@@ -68,7 +68,7 @@ void CutsceneHBH_SetupPalettes(void);
 void CutsceneHBH_StorePalette(void);
 void CutsceneHBH_RestorePalette(void);
 void CutsceneHBH_LoadSprites(void);
-EntityCutsceneHBH *CutsceneHBH_GetEntity(char charID);
+EntityCutsceneHBH *CutsceneHBH_GetEntity(uint8 charID);
 
 void CutsceneHBH_ShinobiJumpSetup(void);
 void CutsceneHBH_ShinobiBounceSetup(void);

@@ -24,8 +24,8 @@ struct EntityUIOptionPanel {
     Vector2 drawPosTop;
     Vector2 drawPosBottom;
     Hitbox hitbox;
-    Animator animator;
-    Animator animator2;
+    Animator topAnimator;
+    Animator botAnimator;
     uint16 textFrames;
 };
 

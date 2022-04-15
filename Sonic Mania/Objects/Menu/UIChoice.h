@@ -30,10 +30,10 @@ struct EntityUIChoice {
     bool32 textVisible;
     bool32 clearParentState;
     int32 touchID;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Animator labelAnimator;
+    Animator iconAnimator;
+    Animator leftArrowAnimator;
+    Animator rightArrowAnimator;
     uint16 aniFrames;
 };
 

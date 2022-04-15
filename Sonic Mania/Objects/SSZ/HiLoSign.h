@@ -6,7 +6,7 @@
 typedef enum {
     HILOSIGN_H,
     HILOSIGN_V,
-}HiLoSignTypes;
+} HiLoSignTypes;
 
 // Object Class
 struct ObjectHiLoSign {
@@ -50,7 +50,7 @@ void HiLoSign_DebugDraw(void);
 void HiLoSign_State_Spinning(void);
 void HiLoSign_State_FinishSpinAdjust(void);
 
-void HiLoSign_StateDraw_Horizontal(void);
-void HiLoSign_StateDraw_Vertical(void);
+void HiLoSign_Draw_Horizontal(void);
+void HiLoSign_Draw_Vertical(void);
 
 #endif //!OBJ_HILOSIGN_H

@@ -21,8 +21,8 @@ struct EntitySyringe {
     bool32 activated;
     colour colour;
     uint8 tag;
-    Animator animator1;
-    Animator animator2;
+    Animator containerAnimator;
+    Animator handleAnimator;
 };
 
 // Object Struct

@@ -24,7 +24,17 @@ struct ObjectEncoreIntro {
 
 // Entity Class
 struct EntityEncoreIntro {
-    MANIA_CUTSCENE_BASE
+    RSDK_ENTITY
+    Vector2 size;
+    bool32 activated;
+    int32 skipPart2;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    Hitbox hitbox;
+
     bool32 seenActClear;
 };
 

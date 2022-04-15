@@ -12,9 +12,10 @@ ObjectUIOptionPanel *UIOptionPanel;
 void UIOptionPanel_Update(void)
 {
     RSDK_THIS(UIOptionPanel);
+
     if (self->textFrames != UIWidgets->textFrames) {
-        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->animator, true, self->topFrameID);
-        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->animator2, true, self->botFrameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->topAnimator, true, self->topFrameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->botAnimator, true, self->botFrameID);
         self->textFrames = UIWidgets->textFrames;
     }
 }
@@ -26,10 +27,12 @@ void UIOptionPanel_StaticUpdate(void) {}
 void UIOptionPanel_Draw(void)
 {
     RSDK_THIS(UIOptionPanel);
+
     UIOptionPanel_DrawBG();
-    RSDK.DrawSprite(&self->animator, &self->drawPosTop, false);
+
+    RSDK.DrawSprite(&self->topAnimator, &self->drawPosTop, false);
     if (!self->botHidden)
-        RSDK.DrawSprite(&self->animator2, &self->drawPosBottom, false);
+        RSDK.DrawSprite(&self->botAnimator, &self->drawPosBottom, false);
 }
 
 void UIOptionPanel_Create(void *data)
@@ -43,8 +46,8 @@ void UIOptionPanel_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->animator, true, self->topFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->animator2, true, self->botFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->topAnimator, true, self->topFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->botAnimator, true, self->botFrameID);
     self->textFrames = UIWidgets->textFrames;
     if (self->panelSize < 136)
         self->panelSize = 136;
@@ -99,8 +102,8 @@ void UIOptionPanel_EditorDraw(void)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->animator, true, self->topFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->animator2, true, self->botFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->topListID, &self->topAnimator, true, self->topFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->botListID, &self->botAnimator, true, self->botFrameID);
     self->textFrames = UIWidgets->textFrames;
     if (self->panelSize < 136)
         self->panelSize = 136;

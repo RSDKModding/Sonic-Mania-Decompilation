@@ -164,7 +164,7 @@ bool32 Crate_Collide(void)
                 }
 #endif
                 else if (player->shield == SHIELD_BUBBLE && player->invincibleTimer <= 0) {
-                    if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->animator.animationID == 8
+                    if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->shieldAnimator.animationID == 8
                         && player->velocity.y >= 0x80000) {
                         Crate_Break(self);
                         player->velocity.x = storeXVel;
@@ -185,7 +185,7 @@ bool32 Crate_Collide(void)
             case C_LEFT:
             case C_RIGHT:
                 if (self->frameID != 1 || player->shield != SHIELD_FIRE || player->invincibleTimer > 0
-                    || RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->animator.animationID != 2) {
+                    || RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->shieldAnimator.animationID != 2) {
                     player->velocity.x = storeXVel;
                     player->velocity.y = storeYVel;
                     player->position.x = storeX;

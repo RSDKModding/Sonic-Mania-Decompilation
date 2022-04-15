@@ -4321,8 +4321,8 @@ void Player_State_BubbleBounce(void)
             self->animator.speed = (abs(self->groundVel) >> 12) + 48;
 
             EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
-            RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &shield->animator2, true, 0);
-            RSDK.SetSpriteAnimation(-1, 0, &shield->animator, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &shield->fxAnimator, true, 0);
+            RSDK.SetSpriteAnimation(-1, 0, &shield->shieldAnimator, true, 0);
             shield->state = Shield_State_BubbleAlt;
             if (self->animator.speed > 0xF0)
                 self->animator.speed = 0xF0;
@@ -5850,7 +5850,7 @@ void Player_JumpAbility_Sonic(void)
             ) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
                 if (self->invincibleTimer) {
-                    if (shield->objectID != Shield->objectID || shield->animator.animationID != 10) {
+                    if (shield->objectID != Shield->objectID || shield->shieldAnimator.animationID != 10) {
                         if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
                             ++self->jumpAbilityState;
                     }
@@ -5865,7 +5865,7 @@ void Player_JumpAbility_Sonic(void)
                                 RSDK.ResetEntityPtr(shield, Shield->objectID, self);
                                 shield->inkEffect = INK_ADD;
                                 shield->alpha     = 0x100;
-                                RSDK.SetSpriteAnimation(Shield->aniFrames, 10, &shield->animator, true, 0);
+                                RSDK.SetSpriteAnimation(Shield->aniFrames, 10, &shield->shieldAnimator, true, 0);
                                 shield->state = Shield_State_Insta;
                             }
                         case SHIELD_BLUE:
@@ -5881,8 +5881,8 @@ void Player_JumpAbility_Sonic(void)
                             self->state           = Player_State_BubbleBounce;
                             self->nextGroundState = StateMachine_None;
                             self->nextAirState    = StateMachine_None;
-                            RSDK.SetSpriteAnimation(Shield->aniFrames, 7, &shield->animator2, true, 0);
-                            RSDK.SetSpriteAnimation(Shield->aniFrames, 8, &shield->animator, true, 0);
+                            RSDK.SetSpriteAnimation(Shield->aniFrames, 7, &shield->fxAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(Shield->aniFrames, 8, &shield->shieldAnimator, true, 0);
                             shield->state = Shield_State_Bubble;
                             RSDK.PlaySfx(Shield->sfxBubbleBounce, false, 255);
                             break;
@@ -5893,7 +5893,7 @@ void Player_JumpAbility_Sonic(void)
                             else
                                 self->velocity.x = 0x80000;
                             self->velocity.y = 0;
-                            RSDK.SetSpriteAnimation(Shield->aniFrames, 2, &shield->animator, true, 0);
+                            RSDK.SetSpriteAnimation(Shield->aniFrames, 2, &shield->shieldAnimator, true, 0);
                             shield->state     = Shield_State_Fire;
                             shield->direction = self->direction;
                             if (self->camera && !Zone->autoScrollSpeed) {

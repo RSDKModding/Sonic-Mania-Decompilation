@@ -35,7 +35,7 @@ void AIZRockPile_Update(void)
                             bool32 flag = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
                                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                                flag |= shield->animator.animationID == 2;
+                                flag |= shield->shieldAnimator.animationID == 2;
                             }
 
                             flag |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;

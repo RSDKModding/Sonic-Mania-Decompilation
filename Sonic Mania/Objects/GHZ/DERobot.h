@@ -15,7 +15,7 @@ typedef enum {
     DEROBOT_TARGET_LOCK,
     DEROBOT_BOMB,
     DEROBOT_BODY_CUTSCENE,
-}DERobotAniLists;
+} DERobotAniLists;
 
 // Object Class
 struct ObjectDERobot {
@@ -67,9 +67,9 @@ struct EntityDERobot {
     int32 angleVelStart;
     int32 angleMaxInc;
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator mainAnimator;
+    Animator altAnimator;
+    Animator armAnimator;
     int32 aniID;
     int32 frameID;
 };

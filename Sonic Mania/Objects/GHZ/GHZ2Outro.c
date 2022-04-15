@@ -272,7 +272,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
             if (rider) {
                 if (rider->direction == FLIP_X) {
                     rider->timer = 0;
-                    RSDK.SetSpriteAnimation(rider->aniFrames, 2, &rider->animator, true, 0);
+                    RSDK.SetSpriteAnimation(rider->aniFrames, 2, &rider->mainAnimator, true, 0);
                 }
                 rider->state = CutsceneHBH_State_RiderExit;
             }
@@ -287,7 +287,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
         case 320: {
             EntityCutsceneHBH *gunner = CutsceneHBH_GetEntity(HBH_GUNNER);
             if (gunner) {
-                RSDK.SetSpriteAnimation(gunner->aniFrames, 4, &gunner->animator, true, 0);
+                RSDK.SetSpriteAnimation(gunner->aniFrames, 4, &gunner->mainAnimator, true, 0);
                 gunner->state = CutsceneHBH_State_GunnerExit;
             }
 

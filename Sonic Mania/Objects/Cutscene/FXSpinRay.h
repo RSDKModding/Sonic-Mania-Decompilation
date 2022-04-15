@@ -13,11 +13,11 @@ struct EntityFXSpinRay {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 offset;
+    int32 spinSpeed;
     int32 r;
     int32 g;
     int32 b;
-    int32 field_70;
+    int32 size;
     Entity *parent;
     Vector2 offsetPos;
     Vector2 vertexPos[4];
@@ -43,7 +43,7 @@ void FXSpinRay_Serialize(void);
 
 // Extra Entity Functions
 void FXSpinRay_State_FadeIn(void);
-void FXSpinRay_State_Wait(void);
+void FXSpinRay_State_Spinning(void);
 void FXSpinRay_State_FadeOut(void);
 
 #endif //!OBJ_FXSPINRAY_H

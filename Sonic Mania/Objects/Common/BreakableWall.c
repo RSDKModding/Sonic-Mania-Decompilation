@@ -415,7 +415,7 @@ void BreakableWall_HandleSidesBreak(void)
 
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                    canBreak |= shield->animator.animationID == 2;
+                    canBreak |= shield->shieldAnimator.animationID == 2;
                 }
 
                 switch (player->characterID) {

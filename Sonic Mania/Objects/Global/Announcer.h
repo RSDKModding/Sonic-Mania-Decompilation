@@ -50,7 +50,7 @@ struct EntityAnnouncer {
     int32 screen;
     Vector2 drawOffset;
     Animator animator;
-    Animator animator2;
+    Animator playerIconAnimator;
 };
 
 // Object Struct

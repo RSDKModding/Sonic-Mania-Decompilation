@@ -24,7 +24,7 @@ void TitleEggman_Draw(void)
 {
     RSDK_THIS(TitleEggman);
     if (self->state == TitleEggman_State_Dust) {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->smokeAnimator, NULL, false);
     }
     else {
         Vector2 drawPos;
@@ -34,16 +34,16 @@ void TitleEggman_Draw(void)
         for (int32 i = 1; i < 5; ++i) {
             drawPos.x = (i << 8) * RSDK.Sin1024(angle) + self->position.x;
             drawPos.y = self->position.y + 0x80000 + (i << 8) * RSDK.Cos1024(angle);
-            RSDK.DrawSprite(&self->animator3, &drawPos, false);
+            RSDK.DrawSprite(&self->chainAnimator, &drawPos, false);
         }
         self->drawFX   = FX_ROTATE;
         drawPos.x        = 0x500 * RSDK.Sin1024(angle) + self->position.x;
         drawPos.y        = 0x500 * RSDK.Cos1024(angle) + self->position.y + 0x80000;
         self->rotation = -(angle >> 2);
-        RSDK.DrawSprite(&self->animator4, &drawPos, false);
+        RSDK.DrawSprite(&self->capsuleAnimator, &drawPos, false);
 
         self->drawFX = FX_FLIP;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
     }
 }
 
@@ -54,16 +54,16 @@ void TitleEggman_Create(void *data)
         self->visible   = true;
         self->drawOrder = 3;
         self->active    = ACTIVE_NORMAL;
+
         if (data) {
-            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 5, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 5, &self->smokeAnimator, true, 0);
             self->state = TitleEggman_State_Dust;
         }
         else {
-            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 2, &self->animator2, true, 0);
-            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 3, &self->animator3, true, 0);
-            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 4, &self->animator4, true, 0);
-            self->startPos.x = self->position.x;
-            self->startPos.y = self->position.y;
+            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 2, &self->eggmanAnimator, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 3, &self->chainAnimator, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 4, &self->capsuleAnimator, true, 0);
+            self->originPos  = self->position;
             self->velocity.x = 0x10000;
             self->state      = TitleEggman_State_Wait;
         }
@@ -79,8 +79,8 @@ void TitleEggman_StageLoad(void)
 void TitleEggman_State_Dust(void)
 {
     RSDK_THIS(TitleEggman);
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == self->animator1.frameCount - 1)
+    RSDK.ProcessAnimation(&self->smokeAnimator);
+    if (self->smokeAnimator.frameID == self->smokeAnimator.frameCount - 1)
         destroyEntity(self);
 }
 void TitleEggman_State_Wait(void)
@@ -95,24 +95,26 @@ void TitleEggman_State_Move(void)
 {
     RSDK_THIS(TitleEggman);
     self->position.x += self->velocity.x;
-    self->startPos.y -= 0x6000;
-    self->position.y = self->startPos.y + (RSDK.Sin256(4 * self->timer) << 10);
+    self->originPos.y -= 0x6000;
+
+    self->position.y = self->originPos.y + (RSDK.Sin256(4 * self->timer) << 10);
+
     ++self->timer;
     if (!(self->timer & 0xF))
-        CREATE_ENTITY(TitleEggman, intToVoid(1), self->position.x - 0xE0000, self->position.y + 0x80000);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator4);
+        CREATE_ENTITY(TitleEggman, intToVoid(true), self->position.x - 0xE0000, self->position.y + 0x80000);
+
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
+    RSDK.ProcessAnimation(&self->capsuleAnimator);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void TitleEggman_EditorDraw(void)
 {
     RSDK_THIS(TitleEggman);
-    RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 2, &self->animator2, true, 0);
-    RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 3, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 4, &self->animator4, true, 0);
-    self->startPos.x = self->position.x;
-    self->startPos.y = self->position.y;
+    RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 2, &self->eggmanAnimator, true, 0);
+    RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 3, &self->chainAnimator, true, 0);
+    RSDK.SetSpriteAnimation(TitleEggman->aniFrames, 4, &self->capsuleAnimator, true, 0);
+    self->originPos = self->position;
 
     TitleEggman_Draw();
 }

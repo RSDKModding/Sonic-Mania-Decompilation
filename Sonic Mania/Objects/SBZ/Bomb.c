@@ -27,9 +27,9 @@ void Bomb_Draw(void)
     if (self->state == Bomb_State_Explode) {
         drawPos.x = self->position.x;
         drawPos.y = self->fuseOffset + self->position.y;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->fuseAnimator, &drawPos, false);
     }
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void Bomb_Create(void *data)
@@ -37,7 +37,7 @@ void Bomb_Create(void *data)
     RSDK_THIS(Bomb);
 
     self->visible = true;
-    if (self->planeFilter > 0 && ((self->planeFilter - 1) & 2))
+    if (self->planeFilter > 0 && (((uint8)self->planeFilter - 1) & 2))
         self->drawOrder = Zone->drawOrderHigh;
     else
         self->drawOrder = Zone->drawOrderLow;
@@ -45,7 +45,7 @@ void Bomb_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     if (data) {
-        RSDK.SetSpriteAnimation(Bomb->aniFrames, 4, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(Bomb->aniFrames, 4, &self->mainAnimator, true, 0);
         self->state = Bomb_State_Shrapnel;
     }
     else {
@@ -56,9 +56,9 @@ void Bomb_Create(void *data)
         else
             self->velocity.x = 0x1000;
         self->drawFX |= FX_FLIP;
-        self->timer = 0x600;
-        RSDK.SetSpriteAnimation(Bomb->aniFrames, 1, &self->animator, true, 0);
-        RSDK.SetSpriteAnimation(Bomb->aniFrames, 3, &self->animator2, true, 0);
+        self->timer = 1536;
+        RSDK.SetSpriteAnimation(Bomb->aniFrames, 1, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Bomb->aniFrames, 3, &self->fuseAnimator, true, 0);
         self->state = Bomb_State_Setup;
     }
 }
@@ -67,19 +67,24 @@ void Bomb_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ"))
         Bomb->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Bomb.bin", SCOPE_STAGE);
+
     Bomb->hitboxHurt.left       = -12;
     Bomb->hitboxHurt.top        = -18;
     Bomb->hitboxHurt.right      = 12;
     Bomb->hitboxHurt.bottom     = 18;
+
     Bomb->hitboxRange.left      = -96;
     Bomb->hitboxRange.top       = -96;
     Bomb->hitboxRange.right     = 96;
     Bomb->hitboxRange.bottom    = 96;
+
     Bomb->hitboxShrapnel.left   = -6;
     Bomb->hitboxShrapnel.top    = -6;
     Bomb->hitboxShrapnel.right  = 6;
     Bomb->hitboxShrapnel.bottom = 6;
+
     Bomb->sfxExplosion          = RSDK.GetSfx("Stage/Explosion.wav");
+
     DEBUGMODE_ADD_OBJ(Bomb);
 }
 
@@ -114,7 +119,7 @@ void Bomb_CheckPlayerCollisions(void)
         if (self->planeFilter <= 0 || player->collisionPlane == ((self->planeFilter - 1) & 1)) {
             if (self->state != Bomb_State_Explode) {
                 if (Player_CheckCollisionTouch(player, self, &Bomb->hitboxRange)) {
-                    RSDK.SetSpriteAnimation(Bomb->aniFrames, 2, &self->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Bomb->aniFrames, 2, &self->mainAnimator, true, 0);
                     self->timer = 144;
                     self->state = Bomb_State_Explode;
                 }
@@ -150,12 +155,12 @@ void Bomb_State_Walk(void)
             flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2);
         if (!flag) {
             self->timer = 180;
-            RSDK.SetSpriteAnimation(Bomb->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(Bomb->aniFrames, 0, &self->mainAnimator, true, 0);
             self->state = Bomb_State_Idle;
         }
     }
 
-    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->mainAnimator);
     Bomb_CheckPlayerCollisions();
     Bomb_CheckOffScreen();
 }
@@ -167,11 +172,11 @@ void Bomb_State_Idle(void)
         self->direction ^= 1;
         self->velocity.x = -self->velocity.x;
         self->timer      = 0x600;
-        RSDK.SetSpriteAnimation(Bomb->aniFrames, 1, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(Bomb->aniFrames, 1, &self->mainAnimator, true, 0);
         self->state = Bomb_State_Walk;
     }
 
-    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->mainAnimator);
     Bomb_CheckPlayerCollisions();
     Bomb_CheckOffScreen();
 }
@@ -184,8 +189,8 @@ void Bomb_State_Explode(void)
     else
         self->fuseOffset += 0x1000;
     if (--self->timer > 0) {
-        RSDK.ProcessAnimation(&self->animator);
-        RSDK.ProcessAnimation(&self->animator2);
+        RSDK.ProcessAnimation(&self->mainAnimator);
+        RSDK.ProcessAnimation(&self->fuseAnimator);
         Bomb_CheckPlayerCollisions();
         Bomb_CheckOffScreen();
     }
@@ -230,7 +235,7 @@ void Bomb_State_Shrapnel(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        RSDK.ProcessAnimation(&self->animator);
+        RSDK.ProcessAnimation(&self->mainAnimator);
 
         foreach_active(Player, player)
         {

@@ -64,10 +64,10 @@ void HiLoSign_Create(void *data)
         switch (self->type) {
             case HILOSIGN_H:
                 self->sidesAnimator.frameID = 1;
-                self->stateDraw             = HiLoSign_StateDraw_Horizontal;
+                self->stateDraw             = HiLoSign_Draw_Horizontal;
                 break;
 
-            case HILOSIGN_V: self->stateDraw = HiLoSign_StateDraw_Vertical; break;
+            case HILOSIGN_V: self->stateDraw = HiLoSign_Draw_Vertical; break;
         }
     }
 }
@@ -148,7 +148,7 @@ void HiLoSign_State_FinishSpinAdjust(void)
     self->rotation = (self->angle >> 8) & 0x1FF;
 }
 
-void HiLoSign_StateDraw_Horizontal(void)
+void HiLoSign_Draw_Horizontal(void)
 {
     RSDK_THIS(HiLoSign);
     Vector2 drawPos;
@@ -178,7 +178,7 @@ void HiLoSign_StateDraw_Horizontal(void)
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
 }
 
-void HiLoSign_StateDraw_Vertical(void)
+void HiLoSign_Draw_Vertical(void)
 {
     RSDK_THIS(HiLoSign);
     Vector2 drawPos;

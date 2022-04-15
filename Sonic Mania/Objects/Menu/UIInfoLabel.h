@@ -12,13 +12,13 @@ struct ObjectUIInfoLabel {
 // Entity Class
 struct EntityUIInfoLabel {
     RSDK_ENTITY
-    Animator animator;
+    Animator unusedAnimator;
     int32 unused1;
     int32 unused2;
     Vector2 size;
     TextInfo text;
     int32 width;
-    Animator animator2;
+    Animator textAnimator;
 };
 
 // Object Struct

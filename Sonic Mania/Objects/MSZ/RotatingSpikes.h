@@ -12,8 +12,8 @@ struct ObjectRotatingSpikes {
 // Entity Class
 struct EntityRotatingSpikes {
     RSDK_ENTITY
-    Animator animator1;
-    Animator animator2;
+    Animator pivotAnimator;
+    Animator spikeBallAnimator;
     int32 pivotRadius;
     int32 spikeRadius;
     int32 spikeCount;

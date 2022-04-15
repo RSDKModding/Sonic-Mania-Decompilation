@@ -26,8 +26,8 @@ struct EntityWoodChipper {
     Vector2 shakeOffsets[3];
     int32 height;
     uint8 activePlayers;
-    Animator animator1;
-    Animator animator2;
+    Animator animator;
+    Animator sawAnimator;
 };
 
 // Object Struct

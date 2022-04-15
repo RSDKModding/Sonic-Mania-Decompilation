@@ -410,7 +410,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
 
     if (host->timer == 240) {
         if (self->heavyKing) {
-            RSDK.SetSpriteAnimation(self->heavyKing->aniFrames, 3, &self->heavyKing->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->heavyKing->aniFrames, 3, &self->heavyKing->mainAnimator, false, 0);
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y -= 0x100000;
@@ -433,7 +433,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere_BadEnd(EntityCutsceneSeq *host)
 
     if (host->timer == 408) {
         if (self->heavyKing) {
-            RSDK.SetSpriteAnimation(self->heavyKing->aniFrames, 4, &self->heavyKing->animator, false, 0);
+            RSDK.SetSpriteAnimation(self->heavyKing->aniFrames, 4, &self->heavyKing->mainAnimator, false, 0);
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y += 0x180000;

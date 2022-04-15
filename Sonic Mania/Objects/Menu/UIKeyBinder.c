@@ -12,14 +12,14 @@ ObjectUIKeyBinder *UIKeyBinder;
 void UIKeyBinder_Update(void)
 {
     RSDK_THIS(UIKeyBinder);
-    self->touchPosSizeS.x = self->size.x;
-    self->touchPosOffsetS.x   = 0;
-    self->touchPosOffsetS.y   = 0;
+    self->touchPosSizeS.x   = self->size.x;
+    self->touchPosOffsetS.x = 0;
+    self->touchPosOffsetS.y = 0;
     self->touchPosSizeS.x += 3 * self->size.y;
     self->touchPosSizeS.y = self->size.y + 0x60000;
 
     if (self->textFrames != UIWidgets->textFrames) {
-        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
         self->textFrames = UIWidgets->textFrames;
     }
 
@@ -36,7 +36,7 @@ void UIKeyBinder_Update(void)
         flag = false;
     }
     else if (mappings == -1) {
-        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, 0);
         self->lasyKeyMap = -1;
         flag             = false;
     }
@@ -78,7 +78,7 @@ void UIKeyBinder_Update(void)
 
     if (flag) {
         if (frameID || self->state != UIKeyBinder_State_Selected) {
-            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, frameID);
+            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frameID);
             self->lasyKeyMap = mappings;
             if (self->state == UIKeyBinder_State_Selected) {
                 LogHelpers_Print("bind = %d 0x%02x", mappings, mappings);
@@ -95,7 +95,7 @@ void UIKeyBinder_Update(void)
         else {
             LogHelpers_Print("bind = %d 0x%02x", mappings, mappings);
             int32 frame = UIButtonPrompt_MappingsToFrame(self->lasyKeyMap);
-            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, frame);
+            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frame);
             UIKeyBinder_SetMappings(input, self->type, -1);
             RSDK.PlaySfx(UIKeyBinder->sfxFail, false, 255);
         }
@@ -147,19 +147,20 @@ void UIKeyBinder_Create(void *data)
     self->unused1            = 512;
     self->listID             = 0; // this prolly could've been a constant, I don't think its ever set to anything but 0
     self->frameID            = UIKeyBinder_GetKeyNameFrameID(self->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
     self->textFrames = UIWidgets->textFrames;
     if (!SceneInfo->inEditor) {
         int32 mappings = UIKeyBinder_GetMappings(self->inputID + 1, self->type);
         int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
-        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, frame);
+        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frame);
     }
 }
 
 void UIKeyBinder_StageLoad(void)
 {
     UIKeyBinder->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
-    UIKeyBinder->sfxFail   = RSDK.GetSfx("Stage/Fail.wav");
+
+    UIKeyBinder->sfxFail = RSDK.GetSfx("Stage/Fail.wav");
 }
 
 int32 UIKeyBinder_GetButtonListID(void)
@@ -246,11 +247,11 @@ void UIKeyBinder_DrawSprites(void)
     drawPos.y += self->buttonBounceOffset;
     drawPos.y += self->textBounceOffset;
     drawPos.x += 0xB0000 - (self->size.x >> 1);
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->keyAnimator, &drawPos, false);
 
     if (self->textVisible) {
         drawPos.x += 0x60000;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->labelAnimator, &drawPos, false);
     }
 }
 

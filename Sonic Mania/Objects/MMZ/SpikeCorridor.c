@@ -69,7 +69,7 @@ void SpikeCorridor_SetupHitboxes(void)
     self->hitboxes[1].right  = size + 8 * self->colWidth;
 }
 
-void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, bool32 animFlag)
+void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, bool32 useWarnAnim)
 {
     RSDK_THIS(SpikeCorridor);
     Vector2 drawPos;
@@ -78,7 +78,7 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
     drawPos.x    = 0;
     drawPos.y    = self->position.y + offsetY;
 
-    int32 anim = animFlag ? 5 : 0;
+    int32 anim = useWarnAnim ? 5 : 0;
 
     for (int32 x = 0; x < self->colWidth;) {
         drawPos.x = startX;
@@ -211,13 +211,13 @@ void SpikeCorridor_StateDropper_CheckForPlayer(void)
                 if (player->position.x + (playerHitbox->left << 16) >= self->position.x + (self->hitbox.left << 16)) {
                     SpikeCorridor_SetupNextSpikeRow();
                     self->state     = SpikeCorridor_StateDropper_DropWarn;
-                    self->stateDraw = SpikeCorridor_StateDraw_DropWarn;
+                    self->stateDraw = SpikeCorridor_Draw_DropWarn;
                 }
             }
             else if (player->position.x + (playerHitbox->right << 16) <= self->position.x + (self->hitbox.right << 16)) {
                 SpikeCorridor_SetupNextSpikeRow();
                 self->state     = SpikeCorridor_StateDropper_DropWarn;
-                self->stateDraw = SpikeCorridor_StateDraw_DropWarn;
+                self->stateDraw = SpikeCorridor_Draw_DropWarn;
             }
         }
     }
@@ -274,7 +274,7 @@ void SpikeCorridor_StateDropper_DropWait(void)
         SpikeCorridor_SetupNextSpikeRow();
         self->timer     = 0;
         self->state     = SpikeCorridor_StateDropper_DropWarn;
-        self->stateDraw = SpikeCorridor_StateDraw_DropWarn;
+        self->stateDraw = SpikeCorridor_Draw_DropWarn;
     }
     else {
         self->timer++;
@@ -288,7 +288,7 @@ void SpikeCorridor_StateSpikes_Setup(void)
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->state     = SpikeCorridor_StateSpikes_Fall;
-    self->stateDraw = SpikeCorridor_StateDraw_Spikes;
+    self->stateDraw = SpikeCorridor_Draw_Spikes;
     SpikeCorridor_StateSpikes_Fall();
 }
 
@@ -315,7 +315,7 @@ void SpikeCorridor_StateSpikes_Fall(void)
 
 void SpikeCorridor_StateSpikes_Land(void) { SpikeCorridor_CheckPlayerCollisions(); }
 
-void SpikeCorridor_StateDraw_DropWarn(void)
+void SpikeCorridor_Draw_DropWarn(void)
 {
     Animator animator;
     memset(&animator, 0, sizeof(Animator));
@@ -327,7 +327,7 @@ void SpikeCorridor_StateDraw_DropWarn(void)
     SpikeCorridor_HandleDrawing(&animator, yOff, self->size, true);
 }
 
-void SpikeCorridor_StateDraw_Spikes(void)
+void SpikeCorridor_Draw_Spikes(void)
 {
     Animator animator;
     memset(&animator, 0, sizeof(Animator));

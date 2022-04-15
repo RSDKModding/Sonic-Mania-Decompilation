@@ -25,9 +25,9 @@ void UIChoice_Update(void)
 
     if (self->aniFrames != UIWidgets->textFrames || self->isDisabled != disabled) {
         if (disabled)
-            RSDK.SetSpriteAnimation(UIWidgets->textFrames, 7, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->textFrames, 7, &self->labelAnimator, true, 0);
         else
-            RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+            RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
         self->aniFrames  = UIWidgets->textFrames;
         self->isDisabled = disabled;
     }
@@ -79,7 +79,7 @@ void UIChoice_Draw(void)
         drawPos.x -= self->arrowWidth << 15;
         drawPos.x += self->buttonBounceOffset;
         drawPos.y += self->buttonBounceOffset;
-        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        RSDK.DrawSprite(&self->leftArrowAnimator, &drawPos, false);
 
         drawPos.x = self->position.x;
         drawPos.y = self->position.y;
@@ -87,7 +87,7 @@ void UIChoice_Draw(void)
         drawPos.x += self->arrowWidth << 15;
         drawPos.x += self->buttonBounceOffset;
         drawPos.y += self->buttonBounceOffset;
-        RSDK.DrawSprite(&self->animator4, &drawPos, false);
+        RSDK.DrawSprite(&self->rightArrowAnimator, &drawPos, false);
     }
 
     if (self->textVisible) {
@@ -96,18 +96,21 @@ void UIChoice_Draw(void)
         drawPos.y = self->textBounceOffset + self->position.y;
         drawPos.x = self->buttonBounceOffset + self->position.x;
         drawPos.y += self->buttonBounceOffset;
-        if (self->align) {
-            if (self->align == 2)
-                drawPos.x += (self->size.x >> 1) - 0x60000;
+
+        switch (self->align) {
+            case 0: drawPos.x += -0x60000 - (self->size.x >> 1); break;
+
+            default:
+            case 1: break;
+
+            case 2: drawPos.x += (self->size.x >> 1) - 0x60000; break;
         }
-        else {
-            drawPos.x += -0x60000 - (self->size.x >> 1);
-        }
+
         if (self->auxIcon)
-            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->iconAnimator, &drawPos, false);
 
         if (!self->noText)
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->labelAnimator, &drawPos, false);
     }
 }
 
@@ -124,11 +127,11 @@ void UIChoice_Create(void *data)
         self->size.y        = abs(self->size.y);
         self->textVisible   = true;
         self->touchCB       = UIChoice_CheckTouch;
-        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
         self->aniFrames = UIWidgets->textFrames;
-        RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->animator2, true, self->auxFrameID);
-        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator4, true, 1);
+        RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->iconAnimator, true, self->auxFrameID);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->leftArrowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->rightArrowAnimator, true, 1);
     }
 }
 
@@ -311,11 +314,11 @@ void UIChoice_EditorDraw(void)
     self->bgEdgeSize    = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
     self->textVisible   = true;
-    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator1, true, self->frameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
     self->aniFrames = UIWidgets->textFrames;
-    RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->animator2, true, self->auxFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->animator4, true, 1);
+    RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->iconAnimator, true, self->auxFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->leftArrowAnimator, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->rightArrowAnimator, true, 1);
 
     UIChoice_Draw();
 

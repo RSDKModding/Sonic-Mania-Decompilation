@@ -27,7 +27,7 @@ void EncoreIntro_Update(void)
     }
 
     // skip part 2 flag
-    if (self->field_64) {
+    if (self->skipPart2) {
         EncoreIntro_SetupCutscenePart2();
         CutsceneSeq_StartSequence(self, EncoreIntro_Cutscene_AIZEncore, EncoreIntro_Cutscene_CapsuleFound, EncoreIntro_Cutscene_BuddySelect,
                                   EncoreIntro_Cutscene_ViewEncoreTutorial, EncoreIntro_Cutscene_MysticGetRuby, EncoreIntro_Cutscene_MysticStealRuby,
@@ -36,7 +36,7 @@ void EncoreIntro_Update(void)
                                   EncoreIntro_Cutscene_RubyWarp, EncoreIntro_Cutscene_LoadGHZ, EncoreIntro_Cutscene_AwaitSaveFinish,
                                   EncoreIntro_Cutscene_FadeOutAndReset, EncoreIntro_Cutscene_FadeInAndStart, EncoreIntro_Cutscene_SkipAndFadeOut,
                                   EncoreIntro_Cutscene_AwaitSaveFinish, StateMachine_None);
-        self->field_64 = false;
+        self->skipPart2 = false;
     }
 }
 
@@ -88,7 +88,7 @@ void EncoreIntro_Create(void *data)
             RSDK.ResetEntitySlot(id - 3, TYPE_BLANK, NULL);
             RSDK.ResetEntitySlot(id - 2, TYPE_BLANK, NULL);
             self->activated = true;
-            self->field_64  = true;
+            self->skipPart2 = true;
         }
     }
 }
@@ -503,7 +503,7 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
         if (host->timer != 420) {
             if (host->timer == 480) {
                 EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
-                RSDK.SetSpriteAnimation(mystic->aniFrames, 1, &mystic->animator, true, 0);
+                RSDK.SetSpriteAnimation(mystic->aniFrames, 1, &mystic->mainAnimator, true, 0);
             }
             else {
                 if (host->timer == 496) {
@@ -511,8 +511,8 @@ bool32 EncoreIntro_Cutscene_ViewEncoreTutorial(EntityCutsceneSeq *host)
                 }
                 else if (host->timer < 570) {
                     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
-                    if (mystic->animator.frameID == mystic->animator.frameCount - 1)
-                        RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
+                    if (mystic->mainAnimator.frameID == mystic->mainAnimator.frameCount - 1)
+                        RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->mainAnimator, true, 0);
                 }
                 else {
                     return true;
@@ -608,7 +608,7 @@ bool32 EncoreIntro_Cutscene_MysticGetRuby(EntityCutsceneSeq *host)
             HeavyMystic_HandleParticleFX();
         }
         else {
-            RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->mainAnimator, true, 0);
             return true;
         }
     }
@@ -641,7 +641,7 @@ bool32 EncoreIntro_Cutscene_MysticStealRuby(EntityCutsceneSeq *host)
             ruby->visible = false;
         }
         else if (host->timer == 75) {
-            RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->mainAnimator, true, 0);
             Zone->cameraBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->playerBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->cameraBoundsT[0] = 784;
@@ -765,7 +765,7 @@ bool32 EncoreIntro_Cutscene_CameraPanToHBHPile(EntityCutsceneSeq *host)
         if (buddy->state == Player_State_Ground && buddy->position.x >= player->position.x - 0x200000)
             buddy->velocity.x = player->velocity.x;
         if (self->velocity.x <= -0x2D000) {
-            RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->mainAnimator, true, 0);
             self->velocity.x = 0;
             return true;
         }
@@ -831,7 +831,7 @@ bool32 EncoreIntro_Cutscene_MysticPassRuby(EntityCutsceneSeq *host)
             break;
         case 40: mystic->drawOrder = Zone->playerDrawLow; break;
         case 75:
-            RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->mainAnimator, true, 0);
             player->up = false;
             buddy->up  = false;
             break;
@@ -840,7 +840,7 @@ bool32 EncoreIntro_Cutscene_MysticPassRuby(EntityCutsceneSeq *host)
                 ruby->position.y = king->position.y + 0x60000;
                 ruby->state      = StateMachine_None;
                 RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
-                RSDK.SetSpriteAnimation(king->aniFrames, 3, &king->animator2, true, 0);
+                RSDK.SetSpriteAnimation(king->aniFrames, 3, &king->fxAnimator, true, 0);
                 return true;
             }
             break;
@@ -864,7 +864,7 @@ bool32 EncoreIntro_Cutscene_KingActivate(EntityCutsceneSeq *host)
     switch (host->timer) {
         case 9: ruby->drawOrder = Zone->drawOrderLow; break;
 
-        case 42: RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->animator, true, 0); break;
+        case 42: RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->mainAnimator, true, 0); break;
 
         case 58:
         case 66:

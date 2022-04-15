@@ -84,6 +84,6 @@ void PetalPile_StateLeaf_Delay(void);
 void PetalPile_StateLeaf_HandleVelocity(void);
 void PetalPile_StateLeaf_Fall(void);
 
-void PetalPile_StateDraw_Leaf(void);
+void PetalPile_Draw_Leaf(void);
 
 #endif //! OBJ_PETALPILE_H

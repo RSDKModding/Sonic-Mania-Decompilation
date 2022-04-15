@@ -8,7 +8,7 @@ struct ObjectSpiralPlatform {
     RSDK_OBJECT
     Animator animator;
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxPlatform;
 };
 
 // Entity Class

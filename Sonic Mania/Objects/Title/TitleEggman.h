@@ -15,11 +15,11 @@ struct EntityTitleEggman {
 	RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    Vector2 startPos;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    Vector2 originPos;
+    Animator smokeAnimator;
+    Animator eggmanAnimator;
+    Animator chainAnimator;
+    Animator capsuleAnimator;
 };
 
 // Object Struct

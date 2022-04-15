@@ -59,24 +59,24 @@ void WoodChipper_Draw(void)
 {
     RSDK_THIS(WoodChipper);
     if (self->state == WoodChipper_State_Debris) {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
     else {
         Vector2 drawPos = self->position;
 
         if (self->height < 0) {
-            self->animator1.frameID = 3;
+            self->animator.frameID = 3;
             drawPos.y += self->height + (RSDK.Sin256(self->angle) << 10);
-            RSDK.DrawSprite(&self->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
 
             int32 pos = self->height >> 16;
             if (pos <= -16) {
-                self->animator1.frameID = 4;
+                self->animator.frameID = 4;
                 int32 dist                  = -16 - pos;
                 if (dist >= -79) {
                     int32 size = dist / 80 + 2;
                     for (int32 i = 0; i < size; ++i) {
-                        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+                        RSDK.DrawSprite(&self->animator, &drawPos, false);
                         drawPos.y += 0x500000;
                     }
                 }
@@ -86,34 +86,34 @@ void WoodChipper_Draw(void)
         drawPos.x                 = self->position.x - 0x140000;
         drawPos.y                 = self->position.y - 0x280000;
         self->drawFX            = FX_ROTATE;
-        self->animator2.frameID = 0;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        self->sawAnimator.frameID = 0;
+        RSDK.DrawSprite(&self->sawAnimator, &drawPos, false);
 
         drawPos.x += 0x280000;
-        self->animator2.frameID = 1;
+        self->sawAnimator.frameID = 1;
         self->rotation          = 512 - self->rotation;
-        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->sawAnimator, &drawPos, false);
 
         self->rotation          = 512 - self->rotation;
         self->drawFX            = 0;
-        self->animator1.frameID = 0;
+        self->animator.frameID = 0;
         drawPos.x                 = self->position.x + self->shakeOffsets[0].x;
         drawPos.y                 = self->position.y + self->shakeOffsets[0].y;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         self->drawFX            = FX_FLIP;
-        self->animator1.frameID = 2;
+        self->animator.frameID = 2;
         drawPos.x                 = self->position.x + self->shakeOffsets[1].x;
         drawPos.y                 = self->position.y + self->shakeOffsets[1].y;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        self->animator1.frameID = 6;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        self->animator.frameID = 6;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        self->animator1.frameID = 1;
+        self->animator.frameID = 1;
         drawPos.x                 = self->position.x + self->shakeOffsets[2].x;
         drawPos.y                 = self->position.y + self->shakeOffsets[2].y;
-        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
         self->drawFX = FX_NONE;
     }
 }
@@ -131,7 +131,7 @@ void WoodChipper_Create(void *data)
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             self->drawFX        = FX_FLIP;
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &self->animator, true, 0);
             self->state = WoodChipper_State_Debris;
         }
         else {
@@ -139,8 +139,8 @@ void WoodChipper_Create(void *data)
             self->updateRange.x = 0x1000000;
             self->updateRange.y = (self->size + 256) << 16;
             self->height      = -0x10000 * self->size;
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->sawAnimator, true, 0);
             self->state = WoodChipper_State_Chipper;
         }
     }
@@ -149,19 +149,24 @@ void WoodChipper_Create(void *data)
 void WoodChipper_StageLoad(void)
 {
     WoodChipper->active             = ACTIVE_ALWAYS;
+
     WoodChipper->aniFrames          = RSDK.LoadSpriteAnimation("PSZ2/WoodChipper.bin", SCOPE_STAGE);
+
     WoodChipper->hitboxStump.left   = -46;
     WoodChipper->hitboxStump.top    = -48;
     WoodChipper->hitboxStump.right  = 83;
     WoodChipper->hitboxStump.bottom = 32;
+
     WoodChipper->hitboxWood.left    = -40;
     WoodChipper->hitboxWood.top     = -48;
     WoodChipper->hitboxWood.right   = 40;
     WoodChipper->hitboxWood.bottom  = 0;
+
     WoodChipper->hitboxRazor.left   = -40;
     WoodChipper->hitboxRazor.top    = -58;
     WoodChipper->hitboxRazor.right  = 40;
     WoodChipper->hitboxRazor.bottom = 0;
+
     WoodChipper->sfxChipperWood     = RSDK.GetSfx("PSZ/ChipperWood.wav");
     WoodChipper->sfxChipperChips    = RSDK.GetSfx("PSZ/ChipperChips.wav");
 }
@@ -264,7 +269,7 @@ void WoodChipper_State_Chipper(void)
                         debris->position.x += (RSDK.Rand(-3, 4) + 83) << 16;
                         debris->velocity.x = RSDK.Rand(4, 17) << 15;
                     }
-                    debris->animator1.speed = RSDK.Rand(1, 3);
+                    debris->animator.speed = RSDK.Rand(1, 3);
                     debris->direction                = RSDK.Rand(0, 4);
                 }
             }
@@ -304,7 +309,7 @@ void WoodChipper_State_Chipper(void)
 void WoodChipper_State_Debris(void)
 {
     RSDK_THIS(WoodChipper);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -321,8 +326,8 @@ void WoodChipper_EditorDraw(void)
     self->updateRange.x = 0x1000000;
     self->updateRange.y = (self->size + 256) << 16;
     self->height      = -0x10000 * self->size;
-    RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->sawAnimator, true, 0);
 
     WoodChipper_Draw();
 }
