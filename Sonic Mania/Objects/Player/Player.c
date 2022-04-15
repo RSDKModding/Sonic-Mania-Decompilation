@@ -3328,22 +3328,27 @@ void Player_P2JumpBackIn(void)
 void Player_ForceSuperTransform(void)
 {
     RSDK_THIS(Player);
+
     if (self->characterID == ID_SONIC)
         self->aniFrames = Player->superFrames;
     self->superState = SUPERSTATE_SUPER;
+
     destroyEntity(RSDK.GetEntityByID(self->playerID + Player->playerCount));
     self->invincibleTimer = 60;
     self->superState      = SUPERSTATE_SUPER;
     Player_UpdatePhysicsState(self);
+
     RSDK.ResetEntityPtr(RSDK.GetEntityByID(self->playerID + 2 * Player->playerCount), ImageTrail->objectID, self);
+#if RETRO_USE_PLUS
     RSDK.ResetEntityPtr(RSDK.GetEntityByID(self->playerID + Player->playerCount), SuperSparkle->objectID, self);
+#endif
     self->state = Player_State_Ground;
+#if RETRO_GAMEVER != VER_100
     Player_State_Ground();
+#endif
 }
 
-void Player_State_None(void)
-{ /* oh yeah buddy, NOTHING!*/
-}
+void Player_State_None(void) { /* No code. Do nothing. Just vibe. */ }
 void Player_State_Ground(void)
 {
     RSDK_THIS(Player);
