@@ -313,8 +313,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                  = -(saveControl->size.x >> 17);
         hitbox.bottom                = saveControl->size.y >> 17;
         hitbox.top                   = -(saveControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, saveControl->startPos.x - saveControl->cameraOffset.x,
-                                      saveControl->startPos.y - saveControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(saveControl->startPos.x - saveControl->cameraOffset.x, saveControl->startPos.y - saveControl->cameraOffset.y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 2)
             MenuSetup->delSavePrompt = prompt;
 
@@ -323,9 +322,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                          = -(leaderboardsControl->size.x >> 17);
         hitbox.bottom                        = leaderboardsControl->size.y >> 17;
         hitbox.top                           = -(leaderboardsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x,
-                                      leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y, &hitbox, prompt->position.x,
-                                      prompt->position.y)
+        if (MathHelpers_PointInHitbox(leaderboardsControl->startPos.x - leaderboardsControl->cameraOffset.x, leaderboardsControl->startPos.y - leaderboardsControl->cameraOffset.y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 3)
             MenuSetup->leaderboardPrompt = prompt;
 
@@ -334,8 +331,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                     = -(optionsControl->size.x >> 17);
         hitbox.bottom                   = optionsControl->size.y >> 17;
         hitbox.top                      = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, optionsControl->startPos.x - optionsControl->cameraOffset.x,
-                                      optionsControl->startPos.y - optionsControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(optionsControl->startPos.x - optionsControl->cameraOffset.x, optionsControl->startPos.y - optionsControl->cameraOffset.y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 3)
             MenuSetup->optionsPrompt = prompt;
     }
@@ -349,8 +345,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                   = -(roundControl->size.x >> 17);
         hitbox.bottom                 = roundControl->size.y >> 17;
         hitbox.top                    = -(roundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, roundControl->startPos.x - roundControl->cameraOffset.x,
-                                      roundControl->startPos.y - roundControl->cameraOffset.y, &hitbox, label->position.x, label->position.y))
+        if (MathHelpers_PointInHitbox(roundControl->startPos.x - roundControl->cameraOffset.x, roundControl->startPos.y - roundControl->cameraOffset.y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
             MenuSetup->roundLabel = label;
 
         EntityUIControl *totalControl = MenuSetup->competitionTotal;
@@ -358,8 +353,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                   = -(totalControl->size.x >> 17);
         hitbox.bottom                 = totalControl->size.y >> 17;
         hitbox.top                    = -(totalControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, totalControl->startPos.x - totalControl->cameraOffset.x,
-                                      totalControl->startPos.y - totalControl->cameraOffset.y, &hitbox, label->position.x, label->position.y))
+        if (MathHelpers_PointInHitbox(totalControl->startPos.x - totalControl->cameraOffset.x, totalControl->startPos.y - totalControl->cameraOffset.y, label->position.x, label->position.y, FLIP_NONE, &hitbox))
             MenuSetup->totalLabel = label;
     }
 
@@ -370,9 +364,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                   = -(roundControl->size.x >> 17);
         hitbox.bottom                 = roundControl->size.y >> 17;
         hitbox.top                    = -(roundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, roundControl->startPos.x - roundControl->cameraOffset.x,
-                                      roundControl->startPos.y - roundControl->cameraOffset.y, &hitbox, scoreboard->position.x,
-                                      scoreboard->position.y)) {
+        if (MathHelpers_PointInHitbox(roundControl->startPos.x - roundControl->cameraOffset.x, roundControl->startPos.y - roundControl->cameraOffset.y, scoreboard->position.x, scoreboard->position.y, FLIP_NONE, &hitbox)) {
             MenuSetup->roundScoreboard = scoreboard;
             scoreboard->parent         = roundControl;
         }
@@ -382,9 +374,7 @@ void MenuSetup_Initialize(void)
         hitbox.left                   = -(totalControl->size.x >> 17);
         hitbox.bottom                 = totalControl->size.y >> 17;
         hitbox.top                    = -(totalControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, totalControl->startPos.x - totalControl->cameraOffset.x,
-                                      totalControl->startPos.y - totalControl->cameraOffset.y, &hitbox, scoreboard->position.x,
-                                      scoreboard->position.y)) {
+        if (MathHelpers_PointInHitbox(totalControl->startPos.x - totalControl->cameraOffset.x, totalControl->startPos.y - totalControl->cameraOffset.y, scoreboard->position.x, scoreboard->position.y, FLIP_NONE, &hitbox)) {
             MenuSetup->totalScoreboard = scoreboard;
             scoreboard->parent         = totalControl;
         }
@@ -521,7 +511,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(controls_win->size.x >> 17);
         hitbox.bottom = controls_win->size.y >> 17;
         hitbox.top    = -(controls_win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox))
             button->actionCB = MenuSetup_Options_OpenKBControlsMenu;
 
         posX          = compRules->startPos.x - compRules->cameraOffset.x;
@@ -530,7 +520,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(compRules->size.x >> 17);
         hitbox.bottom = compRules->size.y >> 17;
         hitbox.top    = -(compRules->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 9
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
             && button->frameID == 2)
             button->actionCB = MenuSetup_VS_RulesButton_ActionCB;
 
@@ -540,7 +530,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(secrets->size.x >> 17);
         hitbox.bottom = secrets->size.y >> 17;
         hitbox.top    = -(secrets->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 9
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 9
             && button->frameID == 2)
             button->actionCB = MenuSetup_OpenSaveSelectMenu;
 
@@ -550,7 +540,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(options->size.x >> 17);
         hitbox.bottom = options->size.y >> 17;
         hitbox.top    = -(options->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3) {
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3) {
             switch (button->frameID) {
                 case 0: button->actionCB = MenuSetup_Options_VideoMenuButton_ActionCB; break;
                 case 1: button->actionCB = MenuSetup_Options_SoundMenuButton_ActionCB; break;
@@ -565,7 +555,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(language->size.x >> 17);
         hitbox.bottom = language->size.y >> 17;
         hitbox.top    = -(language->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox))
             button->actionCB = MenuSetup_OptionsLanguage_LanguageButton_ActionCB;
 
         posX          = video->startPos.x - video->cameraOffset.x;
@@ -574,7 +564,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(video->size.x >> 17);
         hitbox.bottom = video->size.y >> 17;
         hitbox.top    = -(video->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
             && button->frameID == 0)
             button->choiceChangeCB = MenuSetup_OptionsVideo_ShaderButton_ActionCB;
 
@@ -584,7 +574,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(video_win->size.x >> 17);
         hitbox.bottom = video_win->size.y >> 17;
         hitbox.top    = -(video->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17) {
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 17) {
             switch (button->frameID) {
                 case 2: button->choiceChangeCB = MenuSetup_OptionsVideo_ShaderButton_ActionCB; break;
                 case 7: button->choiceChangeCB = MenuSetup_OptionsVideo_WindowScaleButton_ActionCB; break;
@@ -643,8 +633,7 @@ void MenuSetup_SetupActions(void)
         hitbox.left   = -(sound->size.x >> 17);
         hitbox.bottom = sound->size.y >> 17;
         hitbox.top    = -(sound->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, sound->startPos.x - sound->cameraOffset.x, sound->startPos.y - sound->cameraOffset.y, &hitbox,
-                                      slider->position.x, slider->position.y)
+        if (MathHelpers_PointInHitbox(sound->startPos.x - sound->cameraOffset.x, sound->startPos.y - sound->cameraOffset.y, slider->position.x, slider->position.y, FLIP_NONE, &hitbox)
             && slider->listID == 5)
             slider->sliderChangedCB = MenuSetup_OptionsVideo_UISlider_ChangedCB;
     }
@@ -1871,8 +1860,7 @@ void MenuSetup_Options_SetupKBControlsMenu(int32 playerID)
         hitbox.bottom = control->size.y >> 17;
         hitbox.top    = -(control->size.y >> 17);
 
-        if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
-                                      &hitbox, subHeading->position.x, subHeading->position.y)) {
+        if (MathHelpers_PointInHitbox(control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y, subHeading->position.x, subHeading->position.y, FLIP_NONE, &hitbox)) {
             subHeading->frameID = playerID + 8;
             foreach_break;
         }

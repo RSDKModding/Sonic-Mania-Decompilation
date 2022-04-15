@@ -565,8 +565,8 @@ void UIReplayCarousel_State_Setup(void)
         hitbox.top    = -(parent->size.y) >> 17;
         hitbox.right  = (parent->size.x) >> 17;
         hitbox.bottom = (parent->size.y) >> 17;
-        if (MathHelpers_PointInHitbox(FLIP_NONE, parent->startPos.x - parent->cameraOffset.x, parent->startPos.y - parent->cameraOffset.y, &hitbox,
-                                      prompt->position.x, prompt->position.y)) {
+        if (MathHelpers_PointInHitbox(parent->startPos.x - parent->cameraOffset.x, parent->startPos.y - parent->cameraOffset.y, prompt->position.x,
+                                      prompt->position.y, FLIP_NONE, &hitbox)) {
             if (prompt->buttonID == 3) {
                 UIReplayCarousel->prompt = prompt;
                 foreach_break;

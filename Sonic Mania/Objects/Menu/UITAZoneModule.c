@@ -451,7 +451,7 @@ void UITAZoneModule_State_Setup(void)
         hitbox.left   = -(parent->size.x >> 17);
         hitbox.bottom = parent->size.y >> 17;
         hitbox.top    = -(parent->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y) && prompt->buttonID == 3)
+        if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && prompt->buttonID == 3)
             UITAZoneModule->leaderboardsPrompt = prompt;
     }
 #endif
@@ -911,7 +911,7 @@ void UITAZoneModule_State_ExpandModule(void)
                 hitbox.right  = (parent->size.x) >> 17;
                 hitbox.bottom = (parent->size.y) >> 17;
 
-                if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
+                if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)) {
                     if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
                         prompt->position.y = (ScreenInfo->position.y << 16) + 0x180000;
                         if (prompt == promptPtr)
@@ -949,7 +949,7 @@ void UITAZoneModule_State_ExpandModule(void)
             hitbox.right  = (parent->size.x) >> 17;
             hitbox.bottom = (parent->size.y) >> 17;
 
-            if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
+            if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)) {
                 if (!prompt->buttonID)
                     prompt->promptID = 4;
                 if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
@@ -1012,7 +1012,7 @@ void UITAZoneModule_State_ContractModule(void)
                 hitbox.right  = (parent->size.x) >> 17;
                 hitbox.bottom = (parent->size.y) >> 17;
 
-                if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
+                if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)) {
                     if (!prompt->buttonID)
                         prompt->promptID = 0;
                     if (prompt->startPos.y >> 16 < ScreenInfo->position.y)
@@ -1059,7 +1059,7 @@ void UITAZoneModule_State_ContractModule(void)
             hitbox.right  = (parent->size.x) >> 17;
             hitbox.bottom = (parent->size.y) >> 17;
 
-            if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
+            if (MathHelpers_PointInHitbox(posX, posY, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)) {
                 if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
                     int32 offset1, offset2;
                     if (prompt == promptPtr)

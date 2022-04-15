@@ -87,8 +87,8 @@ void OptionsMenu_Initialize(void)
         hitbox.left   = -(control->size.x >> 17);
         hitbox.bottom = control->size.y >> 17;
         hitbox.top    = -(control->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
-                                      &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
+                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 3)
             OptionsMenu->prompt = prompt;
     }
@@ -101,8 +101,8 @@ void OptionsMenu_Initialize(void)
         hitbox.left   = -(control->size.x >> 17);
         hitbox.bottom = control->size.y >> 17;
         hitbox.top    = -(control->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
-                                      &hitbox, diorama->position.x, diorama->position.y)) {
+        if (MathHelpers_PointInHitbox(control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
+                                      diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
             OptionsMenu->diorama = diorama;
             diorama->parent      = OptionsMenu->videoControl;
         }
@@ -116,8 +116,8 @@ void OptionsMenu_Initialize(void)
         hitbox.left   = -(control->size.x >> 17);
         hitbox.bottom = control->size.y >> 17;
         hitbox.top    = -(control->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
-                                      &hitbox, label->position.x, label->position.y))
+        if (MathHelpers_PointInHitbox(control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y, label->position.x,
+                                      label->position.y, FLIP_NONE, &hitbox))
             OptionsMenu->label = label;
     }
 }
@@ -163,7 +163,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(controlsControl_Win->size.x >> 17);
         hitbox.bottom = controlsControl_Win->size.y >> 17;
         hitbox.top    = -(controlsControl_Win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox))
             button->actionCB = OptionsMenu_KeyboardIDButton_Win_ActionCB;
 
         posX = optionsControl->startPos.x - optionsControl->cameraOffset.x;
@@ -173,7 +173,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(optionsControl->size.y >> 17);
         hitbox.bottom = optionsControl->size.x >> 17;
         hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
             && button->frameID == 3) {
             button->actionCB = OptionsMenu_LanguageMenuButton_ActionCB;
         }
@@ -184,7 +184,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(optionsControl->size.x >> 17);
         hitbox.bottom = optionsControl->size.y >> 17;
         hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
             && !button->frameID)
             button->actionCB = OptionsMenu_VideoMenuButton_ActionCB;
 
@@ -194,7 +194,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(optionsControl->size.x >> 17);
         hitbox.bottom = optionsControl->size.y >> 17;
         hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
             && button->frameID == 1) {
             button->actionCB = OptionsMenu_SoundMenuButton_ActionCB;
         }
@@ -205,7 +205,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(optionsControl->size.x >> 17);
         hitbox.bottom = optionsControl->size.y >> 17;
         hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y)) {
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox)) {
             if (button->listID == 3 && button->frameID == 2) {
                 button->actionCB = OptionsMenu_ControlsMenuButton_ActionCB;
                 if (sku_platform == PLATFORM_DEV || sku_platform == PLATFORM_PC)
@@ -219,7 +219,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(optionsControl->size.x >> 17);
         hitbox.bottom = optionsControl->size.y >> 17;
         hitbox.top    = -(optionsControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
             && button->frameID == 4) {
             button->actionCB = OptionsMenu_DataOptionsMenuButton_ActionCB;
         }
@@ -230,7 +230,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(languageControl->size.x >> 17);
         hitbox.bottom = languageControl->size.y >> 17;
         hitbox.top    = -(languageControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox))
             button->actionCB = OptionsMenu_LanguageButton_ActionCB;
 
         posX          = languageControl_old->startPos.x - languageControl_old->cameraOffset.x;
@@ -239,7 +239,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(languageControl_old->size.x >> 17);
         hitbox.bottom = languageControl_old->size.y >> 17;
         hitbox.top    = -(languageControl_old->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y))
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox))
             button->actionCB = OptionsMenu_LanguageButton_ActionCB;
 
         posX          = videoControl->startPos.x - videoControl->cameraOffset.x;
@@ -248,7 +248,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(videoControl->size.x >> 17);
         hitbox.bottom = videoControl->size.y >> 17;
         hitbox.top    = -(videoControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 3
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 3
             && !button->frameID)
             button->choiceChangeCB = OptionsMenu_ShaderButton_ActionCB;
 
@@ -258,7 +258,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(controlsControl_Win->size.x >> 17);
         hitbox.bottom = controlsControl_Win->size.y >> 17;
         hitbox.top    = -(controlsControl_Win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 17
             && button->frameID == 1) {
             button->actionCB = OptionsMenu_SetDefaultMappings;
         }
@@ -269,7 +269,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(videoControl_Win->size.x >> 17);
         hitbox.bottom = videoControl_Win->size.y >> 17;
         hitbox.top    = -(videoControl_Win->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 17) {
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 17) {
             switch (button->frameID) {
                 case 2: button->choiceChangeCB = OptionsMenu_ShaderButton_ActionCB; break;
                 case 7: button->choiceChangeCB = OptionsMenu_WindowScaleButton_ActionCB; break;
@@ -286,7 +286,7 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(dataControl->size.x >> 17);
         hitbox.bottom = dataControl->size.y >> 17;
         hitbox.top    = -(dataControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, button->position.x, button->position.y) && button->listID == 18) {
+        if (MathHelpers_PointInHitbox(posX, posY, button->position.x, button->position.y, FLIP_NONE, &hitbox) && button->listID == 18) {
             switch (button->frameID) {
                 case 0: button->actionCB = OptionsMenu_EraseSaveGameButton_ActionCB; break;
                 case 1: button->actionCB = OptionsMenu_EraseMedallionsButton_ActionCB; break;
@@ -303,8 +303,9 @@ void OptionsMenu_SetupActions(void)
         hitbox.left   = -(soundControl->size.x >> 17);
         hitbox.bottom = soundControl->size.y >> 17;
         hitbox.top    = -(soundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, soundControl->startPos.x - soundControl->cameraOffset.x,
-                                      soundControl->startPos.y - soundControl->cameraOffset.y, &hitbox, slider->position.x, slider->position.y)
+        if (MathHelpers_PointInHitbox(soundControl->startPos.x - soundControl->cameraOffset.x,
+                                      soundControl->startPos.y - soundControl->cameraOffset.y, slider->position.x, slider->position.y, FLIP_NONE,
+                                      &hitbox)
             && slider->listID == 5)
             slider->sliderChangedCB = OptionsMenu_UISlider_ChangedCB;
     }
@@ -561,8 +562,8 @@ void OptionsMenu_SetupKBControlsMenu(int32 playerID)
         hitbox.bottom = control->size.y >> 17;
         hitbox.top    = -(control->size.y >> 17);
 
-        if (MathHelpers_PointInHitbox(FLIP_NONE, control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
-                                      &hitbox, subHeading->position.x, subHeading->position.y)) {
+        if (MathHelpers_PointInHitbox(control->startPos.x - control->cameraOffset.x, control->startPos.y - control->cameraOffset.y,
+                                      subHeading->position.x, subHeading->position.y, FLIP_NONE, &hitbox)) {
             subHeading->frameID = playerID + 19;
             foreach_break;
         }
@@ -626,7 +627,7 @@ void OptionsMenu_SaveOptionsCB_Action(bool32 success)
 void OptionsMenu_LanguageButton_ActionCB(void)
 {
     RSDK_THIS(UIButton);
-    EntityUIControl *control = (EntityUIControl*)self->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
     Options_SetLanguage(control->buttonID);
     Localization->language     = control->buttonID;
     control->selectionDisabled = true;

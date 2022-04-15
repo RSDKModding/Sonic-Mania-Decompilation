@@ -34,30 +34,30 @@ void Fan_StaticUpdate(void)
                 {
                     Fan->hitboxTop.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                     if (fan->state == Fan_HandlePlayerInteractions_Top) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxTop, water->position.x,
-                                                      water->position.y)) {
+                        if (MathHelpers_PointInHitbox(fan->position.x, fan->position.y, water->position.x, water->position.y, fan->direction,
+                                                      &Fan->hitboxTop)) {
                             offsetV -= 0x20000;
                         }
                     }
 
                     Fan->hitboxBottom.top = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                     if (fan->state == Fan_HandlePlayerInteractions_Bottom) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxBottom, water->position.x,
-                                                      water->position.y)) {
+                        if (MathHelpers_PointInHitbox(fan->position.x, fan->position.y, water->position.x, water->position.y, fan->direction,
+                                                      &Fan->hitboxBottom)) {
                             offsetV += 0x20000;
                         }
                     }
 
                     Fan->hitboxSides.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - fan->size;
                     if (fan->state == Fan_HandlePlayerInteractions_Left) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxSides, water->position.x,
-                                                      water->position.y)) {
+                        if (MathHelpers_PointInHitbox(fan->position.x, fan->position.y, water->position.x, water->position.y, fan->direction,
+                                                      &Fan->hitboxSides)) {
                             offsetH -= 0x20000;
                         }
                     }
                     if (fan->state == Fan_HandlePlayerInteractions_Right) {
-                        if (MathHelpers_PointInHitbox(fan->direction, fan->position.x, fan->position.y, &Fan->hitboxSides, water->position.x,
-                                                      water->position.y)) {
+                        if (MathHelpers_PointInHitbox(fan->position.x, fan->position.y, water->position.x, water->position.y, fan->direction,
+                                                      &Fan->hitboxSides)) {
                             offsetH += 0x20000;
                         }
                     }

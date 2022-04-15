@@ -52,20 +52,20 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
     if (!host->timer) {
         foreach_all(FXFade, fxFade)
         {
-            if (MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox, fxFade->position.x,
-                                     fxFade->position.y)) {
+            if (MathHelpers_PointInHitbox(self->position.x, self->position.y, fxFade->position.x, fxFade->position.y, self->direction,
+                                          &self->hitbox)) {
                 SSZ1Outro->fxFade = fxFade;
                 foreach_break;
             }
         }
 
-        Zone->cameraBoundsR[0]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[0]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[0] = false;
-        Zone->cameraBoundsR[1]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[1]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[1] = false;
-        Zone->cameraBoundsR[2]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[2]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[2] = false;
-        Zone->cameraBoundsR[3]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[3]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[3] = false;
 
         CutsceneSeq_LockAllPlayerControl();
@@ -114,7 +114,7 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
     else if (player1->position.x >= SSZ1Outro->teleporter->position.x - 0xC80000) {
         player1->jumpPress = true;
         player1->jumpHold  = true;
-        host->values[0]  = 1;
+        host->values[0]    = 1;
     }
     return player1->position.x >= self->position.x + (self->hitbox.right << 16);
 }

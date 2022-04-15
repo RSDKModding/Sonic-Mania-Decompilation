@@ -70,8 +70,7 @@ void MSZ2Cutscene_GetPistolPtr(void)
 
     foreach_all(GiantPistol, pistol)
     {
-        if (MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox, pistol->position.x,
-                                      pistol->position.y)) {
+        if (MathHelpers_PointInHitbox(self->position.x, self->position.y, pistol->position.x, pistol->position.y, self->direction, &self->hitbox)) {
             MSZ2Cutscene->pistol = pistol;
             foreach_break;
         }
@@ -109,9 +108,9 @@ bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host)
 #if RETRO_USE_PLUS
             Player->disableP2KeyCheck = true;
 #endif
-            player2->state            = Player_State_Ground;
-            player2->stateInput       = Player_ProcessP2Input_AI;
-            player2->groundVel        = 0;
+            player2->state      = Player_State_Ground;
+            player2->stateInput = Player_ProcessP2Input_AI;
+            player2->groundVel  = 0;
         }
     }
     EntityGiantPistol *pistol = MSZ2Cutscene->pistol;
@@ -225,11 +224,11 @@ bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host)
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
         player1->drawFX |= FX_SCALE;
         player1->animator.speed = 60;
-        player1->scale.x                       = 0x40;
-        player1->scale.y                       = 0x40;
-        player1->state                         = Player_State_None;
-        player1->position.x                    = camera->position.x;
-        player1->position.y                    = camera->position.y - 0x700000;
+        player1->scale.x        = 0x40;
+        player1->scale.y        = 0x40;
+        player1->state          = Player_State_None;
+        player1->position.x     = camera->position.x;
+        player1->position.y     = camera->position.y - 0x700000;
 
         if (player2->objectID == Player->objectID) {
             player2->drawFX |= FX_SCALE;

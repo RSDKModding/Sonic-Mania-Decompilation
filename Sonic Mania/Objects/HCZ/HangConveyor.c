@@ -215,9 +215,9 @@ void HangConveyor_HandlePlayerInteractions(void)
                     newPlayerY -= 0x180000;
 
                 collidedTop =
-                    MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitboxFallCheckTop, player->position.x, newPlayerY);
+                    MathHelpers_PointInHitbox(self->position.x, self->position.y, player->position.x, newPlayerY, self->direction, &self->hitboxFallCheckTop);
                 collidedBottom =
-                    MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitboxFallCheckBottom, player->position.x, newPlayerY);
+                    MathHelpers_PointInHitbox(self->position.x, self->position.y, player->position.x, newPlayerY, self->direction, &self->hitboxFallCheckBottom);
 
                 if (((1 << playerID) & self->movementActivePlayers)) {
                     if (self->fanTimer[playerID] > 0) {

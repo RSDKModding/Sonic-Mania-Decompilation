@@ -38,7 +38,7 @@ void MathHelpers_LerpSin512(Vector2 *pos, int32 percent, int32 startX, int32 sta
 Vector2 MathHelpers_GetBezierPoint(int32 percent, int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4);
 int32 MathHelpers_SquareRoot(uint32 num);
 int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4);
-bool32 MathHelpers_PointInHitbox(int32 direction, int32 thisX, int32 thisY, Hitbox *hitbox, int32 otherX, int32 otherY); // USERCALL -> thisX, thisY, otherX, otherY, direction, hitbox
+bool32 MathHelpers_PointInHitbox(int32 thisX, int32 thisY, int32 otherX, int32 otherY, int32 direction, Hitbox *hitbox);
 bool32 MathHelpers_Unknown9(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX1, int32 extendY1, int32 extendX2, int32 extendY2);
 int32 MathHelpers_GetValueSign(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX, int32 extendY);
 bool32 MathHelpers_Unknown11(int32 x, int32 y, int32 prevX, int32 prevY, int32 extendX, int32 extendY);

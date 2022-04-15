@@ -70,7 +70,7 @@ void MainMenu_Initialize(void)
         hitbox.left   = -(menuControl->size.x >> 17);
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, prompt->position.x, prompt->position.y) && !prompt->buttonID)
+        if (MathHelpers_PointInHitbox(x, y, prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox) && !prompt->buttonID)
             MainMenu->promptPtr = prompt;
     }
 
@@ -83,7 +83,7 @@ void MainMenu_Initialize(void)
         hitbox.left   = -(menuControl->size.x >> 17);
         hitbox.bottom = (menuControl->size.y >> 17);
         hitbox.top    = -(menuControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &hitbox, diorama->position.x, diorama->position.y)) {
+        if (MathHelpers_PointInHitbox(x, y, diorama->position.x, diorama->position.y, FLIP_NONE, &hitbox)) {
             MainMenu->dioramaPtr = diorama;
             diorama->parent      = MainMenu->menuControlPtr;
         }

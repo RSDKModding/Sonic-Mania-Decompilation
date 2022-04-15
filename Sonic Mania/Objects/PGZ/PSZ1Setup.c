@@ -259,7 +259,7 @@ void PSZ1Setup_TriggerCB_AchievementArea(void)
         int32 count = 0;
         foreach_all(Crate, crate)
         {
-            if (MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox, crate->position.x, crate->position.y)) {
+            if (MathHelpers_PointInHitbox(self->position.x, self->position.y, crate->position.x, crate->position.y, self->direction, &self->hitbox)) {
                 if (crate->frameID == 1)
                     ++count;
             }

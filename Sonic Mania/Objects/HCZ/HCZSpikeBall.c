@@ -59,8 +59,8 @@ void HCZSpikeBall_HandleConveyorSetup(void)
     if (!SceneInfo->inEditor) {
         foreach_all(HangConveyor, conveyor)
         {
-            if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &conveyor->hitboxSpikeBallRange,
-                                          self->position.x, self->position.y)) {
+            if (MathHelpers_PointInHitbox(conveyor->position.x, conveyor->position.y, self->position.x, self->position.y, conveyor->direction,
+                                          &conveyor->hitboxSpikeBallRange)) {
                 self->conveyor    = conveyor;
                 self->updateRange = conveyor->updateRange;
                 foreach_break;
@@ -104,15 +104,15 @@ void HCZSpikeBall_LinkToConveyor(void)
         hitboxRight.right  = conveyor->hitboxSpikeBallRange.right;
         hitboxRight.bottom = hitboxLeft.bottom;
 
-        if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &hitboxTop, self->position.x,
-                                      self->position.y)) {
+        if (MathHelpers_PointInHitbox(conveyor->position.x, conveyor->position.y, self->position.x, self->position.y, conveyor->direction,
+                                      &hitboxTop)) {
             int32 dist = conveyor->position.x - (len >> 1);
             if (conveyor->direction == FLIP_NONE)
                 dist = conveyor->position.x + (len >> 1);
             self->intervalOffset = abs(self->position.x - (self->position.x - dist)) / 0x15555;
         }
-        else if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &hitboxLeft, self->position.x,
-                                           self->position.y)) {
+        else if (MathHelpers_PointInHitbox(conveyor->position.x, conveyor->position.y, self->position.x, self->position.y, conveyor->direction,
+                                           &hitboxLeft)) {
             int32 dist  = len / 0x15555;
             int32 angle = 0x180;
             if (conveyor->direction) {
@@ -123,15 +123,15 @@ void HCZSpikeBall_LinkToConveyor(void)
             int32 atan           = RSDK.ATan2(self->position.x - conveyor->position.x - (len >> 1), self->position.y - conveyor->position.y);
             self->intervalOffset = (abs(angle - 2 * atan) / 5) + dist;
         }
-        else if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &hitboxBottom, self->position.x,
-                                           self->position.y)) {
+        else if (MathHelpers_PointInHitbox(conveyor->position.x, conveyor->position.y, self->position.x, self->position.y, conveyor->direction,
+                                           &hitboxBottom)) {
             int32 dist = (len >> 1) + conveyor->position.x;
             if (conveyor->direction == FLIP_NONE)
                 dist = conveyor->position.x - (len >> 1);
             self->intervalOffset = abs((self->position.x - dist)) / 0x15555 + (len / 0x15555) + 51;
         }
-        else if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &hitboxRight, self->position.x,
-                                           self->position.y)) {
+        else if (MathHelpers_PointInHitbox(conveyor->position.x, conveyor->position.y, self->position.x, self->position.y, conveyor->direction,
+                                           &hitboxRight)) {
             int32 dist  = len / 0x15555;
             int32 angle = 0x180;
             if (!conveyor->direction) {

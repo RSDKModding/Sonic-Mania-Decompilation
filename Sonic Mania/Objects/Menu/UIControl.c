@@ -87,8 +87,8 @@ void UIControl_Create(void *data)
                         hitbox.left   = -(self->size.x >> 17);
                         hitbox.bottom = self->size.y >> 17;
                         hitbox.top    = -(self->size.y >> 17);
-                        if (MathHelpers_PointInHitbox(FLIP_NONE, self->startPos.x - self->cameraOffset.x, self->startPos.y - self->cameraOffset.y,
-                                                      &hitbox, prompt->position.x, prompt->position.y)) {
+                        if (MathHelpers_PointInHitbox(self->startPos.x - self->cameraOffset.x, self->startPos.y - self->cameraOffset.y,
+                                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)) {
                             prompt->parent                     = (Entity *)self;
                             self->prompts[self->promptCount++] = prompt;
                         }
@@ -377,8 +377,8 @@ void UIControl_MenuChangeButtonInit(EntityUIControl *control)
                         EntityUIModeButton *modeButton = (EntityUIModeButton *)SceneInfo->entity;
                         modeButton->touchPosSizeS.x    = 0xB80000;
                         modeButton->touchPosSizeS.y    = 0x3E0000;
-                        modeButton->touchPosOffsetS.x      = 0;
-                        modeButton->touchPosOffsetS.y      = -0x120000;
+                        modeButton->touchPosOffsetS.x  = 0;
+                        modeButton->touchPosOffsetS.y  = -0x120000;
                         if (modeButton->textFrames != UIWidgets->textFrames || modeButton->wasDisabled != modeButton->disabled) {
                             UIModeButton_SetupSprites();
                             modeButton->textFrames  = UIWidgets->textFrames;
@@ -522,7 +522,7 @@ void UIControl_SetupButtons(void)
             bounds.top    = -(self->size.y >> 17);
             bounds.right  = self->size.x >> 17;
             bounds.bottom = self->size.y >> 17;
-            if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, heading->position.x, heading->position.y))
+            if (MathHelpers_PointInHitbox(x, y, heading->position.x, heading->position.y, FLIP_NONE, &bounds))
                 self->heading = (Entity *)heading;
         }
     }
@@ -537,7 +537,7 @@ void UIControl_SetupButtons(void)
             bounds.left   = -(self->size.x >> 17);
             bounds.bottom = (self->size.y >> 17);
             bounds.top    = -(self->size.y >> 17);
-            if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, shifter->position.x, shifter->position.y)) {
+            if (MathHelpers_PointInHitbox(x, y, shifter->position.x, shifter->position.y, FLIP_NONE, &bounds)) {
                 self->shifter   = (Entity *)shifter;
                 shifter->parent = self;
             }
@@ -553,7 +553,7 @@ void UIControl_SetupButtons(void)
             bounds.left   = -(self->size.x >> 17);
             bounds.bottom = self->size.y >> 17;
             bounds.top    = -(self->size.y >> 17);
-            if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, carousel->position.x, carousel->position.y)) {
+            if (MathHelpers_PointInHitbox(x, y, carousel->position.x, carousel->position.y, FLIP_NONE, &bounds)) {
                 self->carousel   = carousel;
                 carousel->parent = (Entity *)self;
             }
@@ -581,7 +581,7 @@ void UIControl_SetupButtons(void)
                 bounds.top    = -(self->size.y >> 17);
                 bounds.right  = self->size.x >> 17;
                 bounds.bottom = self->size.y >> 17;
-                if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, button->position.x, button->position.y)) {
+                if (MathHelpers_PointInHitbox(x, y, button->position.x, button->position.y, FLIP_NONE, &bounds)) {
                     if (self->buttonCount < 64) {
                         if (!button->parent)
                             button->parent = (Entity *)self;
@@ -772,8 +772,8 @@ void UIControl_ProcessButtonInput(void)
 
                 self->buttonID = id;
                 if (activeButton->isSelected) {
-                    Entity *storeEntity = SceneInfo->entity;
-                    SceneInfo->entity   = (Entity *)activeButton;
+                    Entity *storeEntity      = SceneInfo->entity;
+                    SceneInfo->entity        = (Entity *)activeButton;
                     activeButton->isSelected = true;
                     StateMachine_Run(activeButton->buttonEnterCB);
                     SceneInfo->entity = storeEntity;

@@ -33,8 +33,8 @@ void Current_StaticUpdate(void)
                 {
                     if (current->planeFilter <= 0 || water->collisionPlane == ((uint8)(current->planeFilter - 1) & 1)) {
                         int32 strength = current->strength << 15;
-                        if (MathHelpers_PointInHitbox(current->direction, current->position.x, current->position.y, &current->hitbox,
-                                                      water->position.x, water->position.y)) {
+                        if (MathHelpers_PointInHitbox(current->position.x, current->position.y, water->position.x, water->position.y,
+                                                      current->direction, &current->hitbox)) {
                             if (current->state == Current_State_WaterUp)
                                 offsetV -= strength;
                             if (current->state == Current_State_WaterDown)

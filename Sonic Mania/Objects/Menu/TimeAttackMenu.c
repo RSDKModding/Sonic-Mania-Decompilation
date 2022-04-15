@@ -91,8 +91,8 @@ void TimeAttackMenu_Initialize(void)
         hitbox.bottom = zoneControl->size.y >> 17;
         hitbox.top    = -(zoneControl->size.y >> 17);
 
-        if (MathHelpers_PointInHitbox(FLIP_NONE, zoneControl->startPos.x - zoneControl->cameraOffset.x,
-                                      zoneControl->startPos.y - zoneControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(zoneControl->startPos.x - zoneControl->cameraOffset.x, zoneControl->startPos.y - zoneControl->cameraOffset.y,
+                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 3) {
             TimeAttackMenu->switchModePrompt = prompt;
         }
@@ -102,8 +102,8 @@ void TimeAttackMenu_Initialize(void)
         hitbox.bottom = lbControl->size.y >> 17;
         hitbox.top    = -(lbControl->size.y >> 17);
 
-        if (MathHelpers_PointInHitbox(FLIP_NONE, lbControl->startPos.x - lbControl->cameraOffset.x, lbControl->startPos.y - lbControl->cameraOffset.y,
-                                      &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(lbControl->startPos.x - lbControl->cameraOffset.x, lbControl->startPos.y - lbControl->cameraOffset.y,
+                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 3) {
             TimeAttackMenu->topRankPrompt = prompt;
         }
@@ -112,8 +112,9 @@ void TimeAttackMenu_Initialize(void)
         hitbox.left   = -(replayControl->size.x >> 17);
         hitbox.bottom = replayControl->size.y >> 17;
         hitbox.top    = -(replayControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, replayControl->startPos.x - replayControl->cameraOffset.x,
-                                      replayControl->startPos.y - replayControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(replayControl->startPos.x - replayControl->cameraOffset.x,
+                                      replayControl->startPos.y - replayControl->cameraOffset.y, prompt->position.x, prompt->position.y, FLIP_NONE,
+                                      &hitbox)
             && prompt->buttonID == 2)
             TimeAttackMenu->replayPrompt = prompt;
     }
@@ -129,8 +130,9 @@ void TimeAttackMenu_Initialize(void)
         hitbox.bottom = detailsControl->size.y >> 17;
         hitbox.top    = -(detailsControl->size.y >> 17);
 
-        if (MathHelpers_PointInHitbox(FLIP_NONE, detailsControl->startPos.x - detailsControl->cameraOffset.x,
-                                      detailsControl->startPos.y - detailsControl->cameraOffset.y, &hitbox, banner->position.x, banner->position.y)) {
+        if (MathHelpers_PointInHitbox(detailsControl->startPos.x - detailsControl->cameraOffset.x,
+                                      detailsControl->startPos.y - detailsControl->cameraOffset.y, banner->position.x, banner->position.y, FLIP_NONE,
+                                      &hitbox)) {
             TimeAttackMenu->detailsBanner = banner;
             banner->parent                = TimeAttackMenu->taDetailsControl;
         }
@@ -139,8 +141,8 @@ void TimeAttackMenu_Initialize(void)
         hitbox.left   = -(lbControl->size.x >> 17);
         hitbox.bottom = lbControl->size.y >> 17;
         hitbox.top    = -(lbControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, lbControl->startPos.x - lbControl->cameraOffset.x, lbControl->startPos.y - lbControl->cameraOffset.y,
-                                      &hitbox, banner->position.x, banner->position.y)) {
+        if (MathHelpers_PointInHitbox(lbControl->startPos.x - lbControl->cameraOffset.x, lbControl->startPos.y - lbControl->cameraOffset.y,
+                                      banner->position.x, banner->position.y, FLIP_NONE, &hitbox)) {
             TimeAttackMenu->leaderboardsBanner = banner;
             banner->parent                     = TimeAttackMenu->leaderboardsControl;
         }
@@ -534,8 +536,8 @@ void TimeAttackMenu_WatchReplayCB_RanksMenu(void)
     int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->menuSelection  = parent->buttonID;
-        param->inTimeAttack = true;
+        param->menuSelection = parent->buttonID;
+        param->inTimeAttack  = true;
         TimeAttackMenu_WatchReplay(uuid, false);
     }
 }
@@ -550,8 +552,8 @@ void TimeAttackMenu_ChallengeReplayCB_RanksMenu(void)
     int32 uuid = API.GetUserDBRowByID(globals->replayTableID, button->replayID);
     if (uuid != -1) {
         RSDK.GetCString(param->menuTag, &parent->tag);
-        param->menuSelection  = parent->buttonID;
-        param->inTimeAttack = true;
+        param->menuSelection = parent->buttonID;
+        param->inTimeAttack  = true;
         TimeAttackMenu_WatchReplay(uuid, true);
     }
 }
@@ -667,9 +669,9 @@ void TimeAttackMenu_StartTAAttempt(void)
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
     sprintf(param->menuTag, "Time Attack Detail");
-    param->menuSelection  = 0;
-    param->inTimeAttack = true;
-    param->isEncoreMode = TimeAttackMenu->encoreMode;
+    param->menuSelection = 0;
+    param->inTimeAttack  = true;
+    param->isEncoreMode  = TimeAttackMenu->encoreMode;
 
     Replay *replayPtr = (Replay *)globals->replayReadBuffer;
 

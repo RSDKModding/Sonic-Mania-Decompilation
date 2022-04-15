@@ -163,7 +163,7 @@ int32 MathHelpers_GetBezierCurveLength(int32 x1, int32 y1, int32 x2, int32 y2, i
     return length;
 }
 
-bool32 MathHelpers_PointInHitbox(int32 direction, int32 thisX, int32 thisY, Hitbox *hitbox, int32 otherX, int32 otherY)
+bool32 MathHelpers_PointInHitbox(int32 thisX, int32 thisY, int32 otherX, int32 otherY, int32 direction, Hitbox *hitbox)
 {
     int32 left, top, right, bottom;
 

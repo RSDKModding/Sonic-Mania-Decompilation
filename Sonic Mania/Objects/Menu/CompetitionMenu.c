@@ -66,8 +66,9 @@ void CompetitionMenu_Initialize(void)
         hitbox.left                   = -(roundControl->size.x >> 17);
         hitbox.bottom                 = roundControl->size.y >> 17;
         hitbox.top                    = -(roundControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, roundControl->startPos.x - roundControl->cameraOffset.x,
-                                      roundControl->startPos.y - roundControl->cameraOffset.y, &hitbox, label->position.x, label->position.y))
+        if (MathHelpers_PointInHitbox(roundControl->startPos.x - roundControl->cameraOffset.x,
+                                      roundControl->startPos.y - roundControl->cameraOffset.y, label->position.x, label->position.y, FLIP_NONE,
+                                      &hitbox))
             CompetitionMenu->resultsLabel_Round = label;
 
         EntityUIControl *totalControl = (EntityUIControl *)CompetitionMenu->compTotalControl;
@@ -75,8 +76,9 @@ void CompetitionMenu_Initialize(void)
         hitbox.left                   = -(totalControl->size.x >> 17);
         hitbox.bottom                 = totalControl->size.y >> 17;
         hitbox.top                    = -(totalControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, totalControl->startPos.x - totalControl->cameraOffset.x,
-                                      totalControl->startPos.y - totalControl->cameraOffset.y, &hitbox, label->position.x, label->position.y))
+        if (MathHelpers_PointInHitbox(totalControl->startPos.x - totalControl->cameraOffset.x,
+                                      totalControl->startPos.y - totalControl->cameraOffset.y, label->position.x, label->position.y, FLIP_NONE,
+                                      &hitbox))
             CompetitionMenu->resultsLabel_Total = label;
     }
 
@@ -87,8 +89,8 @@ void CompetitionMenu_Initialize(void)
         hitbox.left                  = -(compControl->size.x >> 17);
         hitbox.bottom                = compControl->size.y >> 17;
         hitbox.top                   = -(compControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, compControl->startPos.x - compControl->cameraOffset.x,
-                                      compControl->startPos.y - compControl->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)
+        if (MathHelpers_PointInHitbox(compControl->startPos.x - compControl->cameraOffset.x, compControl->startPos.y - compControl->cameraOffset.y,
+                                      prompt->position.x, prompt->position.y, FLIP_NONE, &hitbox)
             && prompt->buttonID == 5) {
             CompetitionMenu->startCompPrompt = prompt;
         }
@@ -98,9 +100,9 @@ void CompetitionMenu_Initialize(void)
         hitbox.left   = -(compControl_Legacy->size.x >> 17);
         hitbox.bottom = compControl_Legacy->size.y >> 17;
         hitbox.top    = -(compControl_Legacy->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, compControl_Legacy->startPos.x - compControl_Legacy->cameraOffset.x,
-                                      compControl_Legacy->startPos.y - compControl_Legacy->cameraOffset.y, &hitbox, prompt->position.x,
-                                      prompt->position.y)) {
+        if (MathHelpers_PointInHitbox(compControl_Legacy->startPos.x - compControl_Legacy->cameraOffset.x,
+                                      compControl_Legacy->startPos.y - compControl_Legacy->cameraOffset.y, prompt->position.x, prompt->position.y,
+                                      FLIP_NONE, &hitbox)) {
             if (prompt->buttonID == 5)
                 CompetitionMenu->startCompPrompt_Legacy = prompt;
         }
@@ -109,11 +111,11 @@ void CompetitionMenu_Initialize(void)
 
 void CompetitionMenu_SetupActions(void)
 {
-    EntityUIControl *compControl        = (EntityUIControl *)CompetitionMenu->competitionControl;
-    EntityUIControl *compControl_Legacy = (EntityUIControl *)CompetitionMenu->competitionControl_Legacy;
-    EntityUIControl *rulesControl       = (EntityUIControl *)CompetitionMenu->compRulesControl;
-    EntityUIControl *roundControl       = (EntityUIControl *)CompetitionMenu->compRoundControl;
-    EntityUIControl *totalControl       = (EntityUIControl *)CompetitionMenu->compTotalControl;
+    EntityUIControl *compControl        = CompetitionMenu->competitionControl;
+    EntityUIControl *compControl_Legacy = CompetitionMenu->competitionControl_Legacy;
+    EntityUIControl *rulesControl       = CompetitionMenu->compRulesControl;
+    EntityUIControl *roundControl       = CompetitionMenu->compRoundControl;
+    EntityUIControl *totalControl       = CompetitionMenu->compTotalControl;
 
     foreach_all(UIButton, button)
     {
@@ -122,8 +124,9 @@ void CompetitionMenu_SetupActions(void)
         hitbox.left   = -(rulesControl->size.x >> 17);
         hitbox.bottom = rulesControl->size.y >> 17;
         hitbox.top    = -(rulesControl->size.y >> 17);
-        if (MathHelpers_PointInHitbox(FLIP_NONE, rulesControl->startPos.x - rulesControl->cameraOffset.x,
-                                      rulesControl->startPos.y - rulesControl->cameraOffset.y, &hitbox, button->position.x, button->position.y)
+        if (MathHelpers_PointInHitbox(rulesControl->startPos.x - rulesControl->cameraOffset.x,
+                                      rulesControl->startPos.y - rulesControl->cameraOffset.y, button->position.x, button->position.y, FLIP_NONE,
+                                      &hitbox)
             && button->listID == 9 && button->frameID == 2)
             button->actionCB = CompetitionMenu_RulesButton_ActionCB;
     }
