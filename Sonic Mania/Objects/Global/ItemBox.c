@@ -471,7 +471,7 @@ void ItemBox_GivePowerup(void)
     EntityPlayer *player = (EntityPlayer *)self->storedEntity;
 
     switch (self->type) {
-        case ITEMBOX_RING: Player_GiveRings(10, player, true); break;
+        case ITEMBOX_RING: Player_GiveRings(player, 10, true); break;
 
         case ITEMBOX_BLUESHIELD:
             player->shield = SHIELD_BLUE;
@@ -672,7 +672,7 @@ void ItemBox_GivePowerup(void)
 #endif
 
         case ITEMBOX_SUPER:
-            Player_GiveRings(50, player, false);
+            Player_GiveRings(player, 50, false);
             Player_CheckGoSuper(player, 0x7F);
             break;
 

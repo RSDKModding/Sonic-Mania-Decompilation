@@ -44,7 +44,7 @@ void Smog_Update(void)
                     foreach_break;
                 }
                 if (self->timer == 60 && !player->sidekick && player->rings > 0)
-                    Player_GiveRings(-1, player, true);
+                    Player_GiveRings(player, -1, true);
             }
         }
         if (self->timer == 60)

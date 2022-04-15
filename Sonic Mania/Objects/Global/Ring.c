@@ -141,7 +141,7 @@ void Ring_Collect(void)
                     player->ringExtraLife += 100 * (self->ringAmount / 100);
                     ringAmount = self->ringAmount;
                 }
-                Player_GiveRings(ringAmount, player, true);
+                Player_GiveRings(player, ringAmount, true);
                 int32 max = 0x100000;
                 if (self->type != RING_TYPE_BIG)
                     max = 0x80000;

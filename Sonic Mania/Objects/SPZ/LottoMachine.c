@@ -413,7 +413,7 @@ void LottoMachine_GiveRings(void)
             }
 
             int32 ringCount = count - rings * multiplier;
-            Player_GiveRings(ringCount, player, false);
+            Player_GiveRings(player, ringCount, false);
             if (ringCount > 0) {
                 RSDK.PlaySfx(Ring->sfxRing, false, 0xFF);
             }

@@ -588,7 +588,7 @@ bool32 ERZStart_Cutscene_PlayerTransform(EntityCutsceneSeq *host)
 
         if (ERZStart->timer >= 32) {
             if (ERZStart->timer == 32) {
-                Player_GiveRings(50, player1, false);
+                Player_GiveRings(player1, 50, false);
                 Player_CheckGoSuper(player1, 0x7F);
             }
         }

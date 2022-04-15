@@ -231,7 +231,7 @@ void SpecialRing_State_Normal(void)
                         SceneInfo->timeEnabled = false;
                     }
                     else {
-                        Player_GiveRings(50, player, true);
+                        Player_GiveRings(player, 50, true);
                     }
 
                     if (self->id > 0) {

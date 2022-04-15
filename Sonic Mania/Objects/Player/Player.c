@@ -864,7 +864,7 @@ void Player_GiveScore(EntityPlayer *player, int32 score)
         while (player->score1UP <= player->score) player->score1UP += 50000;
     }
 }
-void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSfx)
+void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION)
