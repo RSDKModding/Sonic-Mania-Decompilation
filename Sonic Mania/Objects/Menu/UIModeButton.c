@@ -57,12 +57,12 @@ void UIModeButton_Draw(void)
     drawPos = self->position;
     drawPos.x -= self->buttonBounceOffset;
     drawPos.y -= self->buttonBounceOffset;
-    UIWidgets_DrawParallelogram(24, 128, 24, 240, 240, 240, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 128, 24, 24, 0xF0, 0xF0, 0xF0);
 
     drawPos = self->position;
     drawPos.x += self->buttonBounceOffset;
     drawPos.y += self->buttonBounceOffset;
-    UIWidgets_DrawParallelogram(24, 128, 24, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 128, 24, 24, 0x00, 0x00, 0x00);
 
     if (self->textVisible) {
         drawPos = self->position;

@@ -331,7 +331,7 @@ void UIReplayCarousel_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore, in
     uint32 colour = 0xF0F0F0;
     if (isEncore)
         colour = 0xF26C4F;
-    UIWidgets_DrawParallelogram(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, drawX - 0xA0000, drawY + 0xE0000);
+    UIWidgets_DrawParallelogram(drawX - 0xA0000, drawY + 0xE0000, 128, 16, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
     colour = 0x5FA0B0;
     if (isEncore)
@@ -339,12 +339,12 @@ void UIReplayCarousel_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore, in
     UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x298000, -76, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(91, 312, drawX + 0x30000, drawY + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(drawX + 0x30000, drawY + 0x30000, 312, 91);
 
     if (self->curReplayID == replayID)
-        UIWidgets_DrawRectOutline_Flash(91, 312, drawX, drawY);
+        UIWidgets_DrawRectOutline_Flash(drawX, drawY, 312, 91);
     else
-        UIWidgets_DrawRectOutline_Black(91, 312, drawX, drawY);
+        UIWidgets_DrawRectOutline_Black(drawX, drawY, 312, 91);
 }
 
 void UIReplayCarousel_DrawStageInfo(int32 drawX, int32 drawY, uint8 act, uint8 characterID, int32 score, int32 replayID)
@@ -405,7 +405,7 @@ void UIReplayCarousel_DrawZoneIcon(int32 drawX, int32 drawY, uint8 zoneID, int16
 
     drawPos.x = drawX - 0x690000;
     drawPos.y = drawY - 0x70000;
-    UIWidgets_DrawRectOutline_Black(72, 96, drawX - 0x690000, drawY - 0x70000);
+    UIWidgets_DrawRectOutline_Black(drawX - 0x690000, drawY - 0x70000, 96, 72);
 
     if (SceneInfo->inEditor || self->curReplayID != replayID || self->disabled) {
         self->direction = self->fuzzDirection;
@@ -494,7 +494,7 @@ void UIReplayCarousel_Draw_Loading(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 96, 16, 16, 0x00, 0x00, 0x00);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->loadingText, 0, self->loadingText.length, 0) << 15;
     RSDK.DrawText(&self->createTimeAnimator, &drawPos, &self->loadingText, 0, self->loadingText.length, ALIGN_LEFT, 0, 2, 0, false);
@@ -508,7 +508,7 @@ void UIReplayCarousel_Draw_NoReplays(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 96, 16, 16, 0x00, 0x00, 0x00);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->noReplaysText, 0, self->noReplaysText.length, 0) << 15;
     RSDK.DrawText(&self->createTimeAnimator, &drawPos, &self->noReplaysText, 0, self->noReplaysText.length, ALIGN_LEFT, 0, 2, 0, false);
@@ -629,7 +629,7 @@ void UIReplayCarousel_EditorDraw(void)
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x100000;
-    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 96, 16, 16, 0x00, 0x00, 0x00);
 }
 
 void UIReplayCarousel_EditorLoad(void) { UIReplayCarousel->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }

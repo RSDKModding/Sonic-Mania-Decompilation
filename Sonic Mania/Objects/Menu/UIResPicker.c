@@ -46,16 +46,15 @@ void UIResPicker_Draw(void)
     drawPos.x -= self->buttonBounceOffset;
     drawPos.y -= self->buttonBounceOffset;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF,
-                                (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF);
 #else
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0xF0, 0xF0, 0xF0);
 #endif
 
     drawPos = self->position;
     drawPos.x += self->buttonBounceOffset;
     drawPos.y += self->buttonBounceOffset;
-    UIWidgets_DrawParallelogram((self->size.y >> 16), width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, (self->size.y >> 16), self->bgEdgeSize, 0x00, 0x00, 0x00);
 
     if (self->arrowWidth > 0 && self->isSelected) {
         drawPos = self->position;

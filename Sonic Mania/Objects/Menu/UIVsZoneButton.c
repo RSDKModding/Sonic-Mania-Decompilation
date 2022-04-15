@@ -158,11 +158,11 @@ void UIVsZoneButton_DrawOutline(void)
 {
     RSDK_THIS(UIVsZoneButton);
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(56, 80, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 80, 56);
     if (self->isSelected)
-        UIWidgets_DrawRectOutline_Flash(56, 80, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 80, 56);
     else
-        UIWidgets_DrawRectOutline_Black(56, 80, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(self->position.x, self->position.y, 80, 56);
 }
 
 void UIVsZoneButton_DrawBG(void)
@@ -225,13 +225,14 @@ void UIVsZoneButton_DrawButton(void)
     Vector2 drawPos;
 
     int32 width  = (self->size.y + self->size.x) >> 16;
+    
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x280000;
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0xF0, 0xF0, 0xF0);
 
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
     drawPos.x += self->buttonBounceOffset;
     drawPos.y += self->buttonBounceOffset;
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0x00, 0x00, 0x00);
 
     if (!SceneInfo->inEditor) {
         int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->nameText, 0, self->nameText.length, 0);

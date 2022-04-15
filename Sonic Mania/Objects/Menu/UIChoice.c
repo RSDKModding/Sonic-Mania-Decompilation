@@ -60,17 +60,16 @@ void UIChoice_Draw(void)
     drawPos.y -= self->buttonBounceOffset;
     size >>= 16;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF,
-                                (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF);
 #else
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->bgEdgeSize, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, 0xF0, 0xF0, 0xF0);
 #endif
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     drawPos.x += self->buttonBounceOffset;
     drawPos.y += self->buttonBounceOffset;
-    UIWidgets_DrawParallelogram(self->size.y >> 16, size, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, 0x00, 0x00, 0x00);
 
     EntityUIButton *parent = (EntityUIButton *)self->parent;
     if (self->arrowWidth > 0 && self->isSelected && !(self->disabled || parent->disabled)) {

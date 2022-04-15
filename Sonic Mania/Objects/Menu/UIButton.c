@@ -56,14 +56,15 @@ void UIButton_Draw(void)
     drawPos.y   = self->position.y - self->buttonBounceOffset;
     width >>= 16;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF,
-                                (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColour >> 16) & 0xFF,
+                                (UIWidgets->buttonColour >> 8) & 0xFF, (UIWidgets->buttonColour) & 0xFF);
 #else
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0xF0, 0xF0, 0xF0);
 #endif
+
     drawPos.x = self->position.x + self->buttonBounceOffset;
     drawPos.y = self->position.y + self->buttonBounceOffset;
-    UIWidgets_DrawParallelogram(self->size.y >> 16, width, self->bgEdgeSize, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, width, self->size.y >> 16, self->bgEdgeSize, 0x00, 0x00, 0x00);
     if (self->textVisible) {
         drawPos.x = self->buttonBounceOffset + self->position.x;
         drawPos.y = self->buttonBounceOffset + self->position.y;
@@ -532,8 +533,7 @@ void UIButton_ProcessButtonCB(void)
             else {
                 do {
                     if (--selection < 0) {
-                        do
-                            selection += self->choiceCount;
+                        do selection += self->choiceCount;
                         while (selection < 0);
                     }
                 } while (UIButton_GetChoicePtr(self, selection)->disabled && selection != self->selection);
@@ -550,8 +550,7 @@ void UIButton_ProcessButtonCB(void)
                 movedH = false;
             }
             else {
-                do
-                    selection = (selection + 1) % self->choiceCount;
+                do selection = (selection + 1) % self->choiceCount;
                 while (UIButton_GetChoicePtr(self, selection)->disabled && selection != self->selection);
                 movedH = true;
             }
@@ -684,22 +683,22 @@ void UIButton_ButtonLeaveCB(void)
 
     self->state = UIButton_State_HandleButtonLeave;
     if (UIChoice) {
-        EntityUIButton *entPtr = UIButton_GetChoicePtr(self, self->selection);
-        if (entPtr) {
-            if (entPtr->objectID == UIChoice->objectID) {
-                ((EntityUIChoice *)entPtr)->textBounceOffset   = 0;
-                ((EntityUIChoice *)entPtr)->buttonBounceOffset = 0;
-                entPtr->isSelected                             = false;
-                entPtr->state                                  = UIChoice_State_HandleButtonLeave;
+        EntityUIButton *widget = UIButton_GetChoicePtr(self, self->selection);
+        if (widget) {
+            if (widget->objectID == UIChoice->objectID) {
+                ((EntityUIChoice *)widget)->textBounceOffset   = 0;
+                ((EntityUIChoice *)widget)->buttonBounceOffset = 0;
+                widget->isSelected                             = false;
+                widget->state                                  = UIChoice_State_HandleButtonLeave;
             }
-            else if (entPtr->objectID == UIVsRoundPicker->objectID) {
-                UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)entPtr);
+            else if (widget->objectID == UIVsRoundPicker->objectID) {
+                UIVsRoundPicker_SetChoiceInactive((EntityUIVsRoundPicker *)widget);
             }
-            else if (entPtr->objectID == UIResPicker->objectID) {
-                UIResPicker_SetChoiceInactive((EntityUIResPicker *)entPtr);
+            else if (widget->objectID == UIResPicker->objectID) {
+                UIResPicker_SetChoiceInactive((EntityUIResPicker *)widget);
             }
-            else if (entPtr->objectID == UIWinSize->objectID) {
-                UIWinSize_SetChoiceInactive((EntityUIWinSize *)entPtr);
+            else if (widget->objectID == UIWinSize->objectID) {
+                UIWinSize_SetChoiceInactive((EntityUIWinSize *)widget);
             }
         }
     }

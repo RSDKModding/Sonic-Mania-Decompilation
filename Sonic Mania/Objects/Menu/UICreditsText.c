@@ -29,7 +29,7 @@ void UICreditsText_Draw(void)
     int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, self->listID, &self->text, 0, self->text.length, 0);
     drawPos.y += 0x40000;
     if (self->hasShape)
-        UIWidgets_DrawParallelogram(self->scaleTimer >> 4, (self->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
+        UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, (self->scaleTimer * (width + 16)) >> 8, self->scaleTimer >> 4, 16, 0x00, 0x00, 0x00);
 
     drawPos.x -= width << 15;
     drawPos.y = self->position.y;

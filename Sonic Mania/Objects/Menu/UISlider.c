@@ -93,7 +93,7 @@ void UISlider_DrawBGShapes(void)
     int32 width = self->size.y + self->size.x;
     drawPos.x   = self->position.x;
     drawPos.y   = self->position.y;
-    UIWidgets_DrawParallelogram((self->size.y >> 16), width >> 16, self->bgEdgeSize, 0, 0, 0, self->position.x, self->position.y);
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, width >> 16, (self->size.y >> 16), self->bgEdgeSize, 0x00, 0x00, 0x00);
 
     if (self->textVisible) {
         drawPos = self->position;
@@ -111,23 +111,23 @@ void UISlider_DrawSlider(void)
     int32 drawX     = 0x7A0000 + self->position.x;
     int32 sliderPos = (((34048 * self->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
     int32 drawX2    = drawX - ((0x7A0000 - sliderPos) >> 1);
-    UIWidgets_DrawParallelogram(12, 122, 12, 240, 240, 240, drawX - self->buttonBounceOffset, self->position.y - self->buttonBounceOffset);
-    UIWidgets_DrawParallelogram(12, 122, 12, 0, 0, 0, self->buttonBounceOffset + drawX, self->buttonBounceOffset + self->position.y);
-    UIWidgets_DrawParallelogram(12, sliderPos >> 16, 12, 232, 40, 88, self->buttonBounceOffset + drawX2, self->buttonBounceOffset + self->position.y);
+    UIWidgets_DrawParallelogram(drawX - self->buttonBounceOffset, self->position.y - self->buttonBounceOffset, 122, 12, 12, 0xF0, 0xF0, 0xF0);
+    UIWidgets_DrawParallelogram(drawX + self->buttonBounceOffset, self->buttonBounceOffset + self->position.y, 122, 12, 12, 0x00, 0x00, 0x00);
+    UIWidgets_DrawParallelogram(drawX2 + self->buttonBounceOffset, self->buttonBounceOffset + self->position.y, sliderPos >> 16, 12, 12, 0xE8, 0x28, 0x58);
 
     drawPos.x = drawX2 + (sliderPos >> 1) + self->buttonBounceOffset + 0x60000;
     drawPos.y = self->buttonBounceOffset + self->position.y;
     if (self->isSelected) {
         drawPos.x += 0x30000;
         drawPos.y += 0x30000;
-        UIWidgets_DrawRectOutline_Blended(24, 14, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Blended(drawPos.x, drawPos.y, 14, 24);
         drawPos.x -= 0x30000;
         drawPos.y -= 0x30000;
     }
 
     RSDK.DrawRect(drawPos.x - 0x70000, drawPos.y - 0xC0000, 0xE0000, 0x180000, 0xF0F0F0, 255, INK_NONE, false);
     if (self->isSelected)
-        UIWidgets_DrawRectOutline_Flash(24, 14, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Flash(drawPos.x, drawPos.y, 14, 24);
 }
 
 void UISlider_ButtonPressCB(void)

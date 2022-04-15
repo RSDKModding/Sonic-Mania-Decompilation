@@ -35,7 +35,7 @@ void UISubHeading_Draw(void)
     int32 size = self->size.y + self->size.x;
     drawPos.x  = self->position.x;
     drawPos.y  = self->position.y;
-    UIWidgets_DrawParallelogram(self->size.y, size >> 16, self->shiftedY, 0, 0, 0, self->position.x, self->position.y);
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size >> 16, self->size.y, self->shiftedY, 0x00, 0x00, 0x00);
 
     drawPos = self->position;
     if (!self->align) {

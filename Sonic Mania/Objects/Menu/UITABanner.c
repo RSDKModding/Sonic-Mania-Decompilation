@@ -91,8 +91,8 @@ void UITABanner_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore)
     UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x1D8000, -58, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(67, 312, drawX + 0x30000, drawY + 0x30000);
-    UIWidgets_DrawRectOutline_Black(67, 312, drawX, drawY);
+        UIWidgets_DrawRectOutline_Blended(drawX + 0x30000, drawY + 0x30000, 312, 67);
+    UIWidgets_DrawRectOutline_Black(drawX, drawY, 312, 67);
 }
 
 void UITABanner_DrawStageInfo(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
@@ -190,7 +190,7 @@ void UITABanner_DrawZoneIcon(int32 drawX, int32 drawY, int32 zoneID)
         self->direction = FLIP_NONE;
         self->drawFX    = FX_NONE;
     }
-    UIWidgets_DrawRectOutline_Black(61, 96, drawPos.x, drawPos.y);
+    UIWidgets_DrawRectOutline_Black(drawPos.x, drawPos.y, 96, 61);
 }
 
 void UITABanner_DrawBannerInfo(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)

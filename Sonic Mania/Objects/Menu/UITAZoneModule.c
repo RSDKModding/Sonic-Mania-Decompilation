@@ -225,20 +225,20 @@ void UITAZoneModule_DrawBGShapes(void)
 
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(78, 312, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 312, 78);
 
     if (self->isSelected)
-        UIWidgets_DrawRectOutline_Flash(78, 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 312, 78);
     else
-        UIWidgets_DrawRectOutline_Black(78, 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(self->position.x, self->position.y, 312, 78);
 #else
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(78 + (self->prevExpandAmount >> 16), 312, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 312, 78 + (self->prevExpandAmount >> 16));
 
     if (self->isSelected || self->isExpanding)
-        UIWidgets_DrawRectOutline_Flash(78 + (self->prevExpandAmount >> 16), 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 312, 78 + (self->prevExpandAmount >> 16));
     else
-        UIWidgets_DrawRectOutline_Black(78 + (self->prevExpandAmount >> 16), 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(self->position.x, self->position.y, 312, 78 + (self->prevExpandAmount >> 16));
 #endif
 }
 
@@ -310,7 +310,7 @@ void UITAZoneModule_DrawZonePreview(void)
 
     drawPos.x = self->drawPos.x - 0x690000;
     drawPos.y = self->drawPos.y;
-    UIWidgets_DrawRectOutline_Black(72, 96, drawPos.x, drawPos.y);
+    UIWidgets_DrawRectOutline_Black(drawPos.x, drawPos.y, 96, 72);
     if (SceneInfo->inEditor || !self->isSelected || self->disabled) {
         self->direction = self->fuzzDir;
         self->drawFX    = FX_FLIP;
@@ -670,7 +670,7 @@ void UITAZoneModule_DrawExpandedView(void)
 
     RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 255, INK_NONE, false);
     UITAZoneModule_DrawActInfo_Expanded();
-    UIWidgets_DrawParallelogram(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, self->position.x - 0x40000, drawY + 0x448000);
+    UIWidgets_DrawParallelogram(self->position.x - 0x40000, drawY + 0x448000, 0xE0, 0x17, 0x17, 0xD9, 0xAD, 0x4);
 
     drawPos2.x = drawX - 0x390000;
     drawPos2.y = drawY + 0x450000;
@@ -689,7 +689,7 @@ void UITAZoneModule_DrawExpandedView(void)
     }
     drawY += 0x140000;
 
-    UIWidgets_DrawParallelogram(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, self->position.x + 0x80000, drawY + 0x448000);
+    UIWidgets_DrawParallelogram(self->position.x + 0x80000, drawY + 0x448000, 0xE0, 0x0F, 0x0F, 0x98, 0xC0, 0xC8);
     drawPos2.x = drawX - 0x290000;
     drawPos2.y = drawY + 0x460000;
     if (self->rank != 2 || (UIControl->timer & 4)) {
@@ -706,7 +706,7 @@ void UITAZoneModule_DrawExpandedView(void)
         pos   = UITAZoneModule_DrawTime(pos.x, pos.y, time / 6000, time % 6000 / 100, time % 100);
     }
 
-    UIWidgets_DrawParallelogram(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, self->position.x + 0x140000, drawY + 0x548000);
+    UIWidgets_DrawParallelogram(self->position.x + 0x140000, drawY + 0x548000, 0xE0, 0xF, 0xF, 0xC0, 0x58, 0x01);
     drawPos2.x = drawX - 0x1A0000;
     drawPos2.y = drawY + 0x560000;
     if (self->rank != 3 || (UIControl->timer & 4)) {

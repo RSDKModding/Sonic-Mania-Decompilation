@@ -252,11 +252,8 @@ void UIRankButton_DrawBackgroundShape(int32 x, int32 y, int32 width, int32 heigh
     RSDK_THIS(UIRankButton);
 
     if (self->buttonBounceOffset)
-        UIWidgets_DrawParallelogram(height >> 16, width >> 16, height >> 16, (UIWidgets->buttonColour >> 16) & 0xFF,
-                                    (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF, x - self->buttonBounceOffset,
-                                    y - self->buttonBounceOffset);
-    UIWidgets_DrawParallelogram(height >> 16, width >> 16, height >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF,
-                                self->buttonBounceOffset + x, self->buttonBounceOffset + y);
+        UIWidgets_DrawParallelogram(x - self->buttonBounceOffset, y - self->buttonBounceOffset, width >> 16, height >> 16, height >> 16, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF);
+    UIWidgets_DrawParallelogram(x + self->buttonBounceOffset, y + self->buttonBounceOffset, width >> 16, height >> 16, height >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 }
 
 bool32 UIRankButton_CheckButtonEnterCB(void)

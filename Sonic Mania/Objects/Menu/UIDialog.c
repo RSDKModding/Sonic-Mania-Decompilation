@@ -251,8 +251,7 @@ void UIDialog_DrawBGShapes(void)
     RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (self->size.x >> 1),
                   ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (self->size.y >> 1), self->size.x, self->size.y,
                   self->useAltColour ? 0x282028 : 0x000000, 255, INK_NONE, false);
-    UIWidgets_DrawParallelogram(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
-                       self->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16));
+    UIWidgets_DrawParallelogram(self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16), self->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16), 0xC8, 0x8F, 0x8F, 0x30, 0xA0, 0xF0);
 }
 
 void UIDialog_HandleButtonPositions(void)

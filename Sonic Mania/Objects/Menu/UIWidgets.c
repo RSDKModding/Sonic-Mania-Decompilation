@@ -83,7 +83,7 @@ void UIWidgets_ApplyLanguage(void)
     }
 }
 
-void UIWidgets_DrawRectOutline_Black(int32 height, int32 width, int32 x, int32 y)
+void UIWidgets_DrawRectOutline_Black(int32 x, int32 y, int32 width, int32 height)
 {
     int32 w = width << 16 >> 1;
     int32 h = height << 16 >> 1;
@@ -92,7 +92,7 @@ void UIWidgets_DrawRectOutline_Black(int32 height, int32 width, int32 x, int32 y
     RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, 0x000000, 255, INK_NONE, false);
     RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 255, INK_NONE, false);
 }
-void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32 y)
+void UIWidgets_DrawRectOutline_Blended(int32 x, int32 y, int32 width, int32 height)
 {
     int32 w = width << 16 >> 1;
     int32 h = height << 16 >> 1;
@@ -101,7 +101,7 @@ void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32
     RSDK.DrawRect(x - w + 0x30000, h + y - 0x30000, (width << 16) - 0x60000, 0x30000, 0x000000, 255, INK_BLEND, false);
     RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 255, INK_BLEND, false);
 }
-void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y)
+void UIWidgets_DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height)
 {
     int32 w       = width << 16 >> 1;
     int32 h       = height << 16 >> 1;
@@ -187,7 +187,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag,
         }
     }
 }
-void UIWidgets_DrawParallelogram(int32 height, int32 width, int32 edgeSize, int32 red, int32 green, int32 blue, int32 x, int32 y)
+void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, int32 edgeSize, int32 red, int32 green, int32 blue)
 {
     Vector2 verts[4];
 

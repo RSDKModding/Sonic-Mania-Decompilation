@@ -62,11 +62,12 @@ void UIInfoLabel_DrawSprites(void)
     Vector2 drawPos;
 
     int32 size = (self->size.y + self->size.x) >> 16;
-    UIWidgets_DrawParallelogram(self->size.y >> 0x10, size, self->width, 240, 240, 240, self->position.x, self->position.y);
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 0x10, self->width, 0xF0, 0xF0, 0xF0);
+    
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 0x10, self->width, 0x00, 0x00, 0x00);
+
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    UIWidgets_DrawParallelogram(self->size.y >> 0x10, size, self->width, 0, 0, 0, self->position.x, self->position.y);
-
     if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIInfoLabel->aniFrames, 12, &self->animator2, true, 2);
         drawPos.y -= 0x40000;

@@ -910,11 +910,13 @@ void PauseMenu_DrawPauseQuads(void)
 
     drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->centerX;
     drawPos.y = self->position.y - 0x600000 + self->headerPos.y;
-    UIWidgets_DrawParallelogram(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 200, 68, 68, 0xE8, 0x28, 0x58);
+
     drawPos.y += 0x60000;
     drawPos.x += 0xA0000;
-    UIWidgets_DrawParallelogram(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
-    RSDK.DrawSprite(&self->animator, &drawPos, 0);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 115, 24, 24, 0x00, 0x00, 0x00);
+
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
     UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x, self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
 }
 

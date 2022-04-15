@@ -101,12 +101,12 @@ void UICharButton_DrawOutlines(void)
 {
     RSDK_THIS(UICharButton);
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 96, 96);
 
     if (self->isSelected)
-        UIWidgets_DrawRectOutline_Flash(96, 96, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 96, 96);
     else
-        UIWidgets_DrawRectOutline_Black(96, 96, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(self->position.x, self->position.y, 96, 96);
 }
 
 void UICharButton_DrawBG(void)

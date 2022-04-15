@@ -112,13 +112,13 @@ void UISaveSlot_Draw(void)
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;
-        UIWidgets_DrawRectOutline_Blended(164, 96, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Blended(drawPos.x, drawPos.y, 96, 164);
         RSDK.DrawRect(drawPos.x - 0x2D0000, drawPos.y - 0x130000, 0x5A0000, 0x30000, 0, 255, INK_BLEND, false);
 
         if (self->isSelected)
-            UIWidgets_DrawRectOutline_Flash(164, 96, self->position.x, self->position.y);
+            UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 96, 164);
         else
-            UIWidgets_DrawRectOutline_Black(164, 96, self->position.x, self->position.y);
+            UIWidgets_DrawRectOutline_Black(self->position.x, self->position.y, 96, 164);
 
         self->uiAnimator.frameID = 0;
         drawPos.x                = self->position.x;
@@ -200,7 +200,7 @@ void UISaveSlot_Draw(void)
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;
-        UIWidgets_DrawRectOutline_Blended(68, 96, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Blended(drawPos.x, drawPos.y, 96, 68);
 
         self->uiAnimator.frameID = 1;
         RSDK.DrawSprite(&self->uiAnimator, NULL, false);
@@ -212,7 +212,7 @@ void UISaveSlot_Draw(void)
 
     if (self->isSelected || self->type == UISAVESLOT_REGULAR) {
         if (self->type == UISAVESLOT_NOSAVE)
-            UIWidgets_DrawRectOutline_Flash(68, 96, self->position.x, self->position.y);
+            UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 96, 68);
 
         if (self->isSelected && !(self->zoneIconSprX & 8)) {
             drawPos.x = self->position.x;

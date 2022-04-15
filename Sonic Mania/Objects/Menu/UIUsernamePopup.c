@@ -69,7 +69,7 @@ void UIUsernamePopup_DrawSprites(void)
 
     drawPos.x = self->drawPos.x + self->size.y + (ScreenInfo->position.x << 16) + (self->size.x >> 1);
     drawPos.y = self->drawPos.y + (ScreenInfo->centerY << 16) - (self->size.y >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
-    UIWidgets_DrawParallelogram(self->size.y >> 16, self->size.x >> 16, self->size.y >> 16, 16, 124, 16, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, self->size.x >> 16, self->size.y >> 16, self->size.y >> 16, 0x10, 0x7C, 0x10);
 
     int32 width = RSDK.GetStringWidth(UIWidgets->fontFrames, 0, &self->username, 0, self->username.length, 0);
     drawPos.y -= 0x10000;

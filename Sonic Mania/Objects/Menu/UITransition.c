@@ -99,8 +99,7 @@ void UITransition_DrawShapes(void)
     positions[2].y      = screenCenterY + self->drawPos[2].y;
 
     for (int32 i = 0; i < 3; ++i) {
-        UIWidgets_DrawParallelogram(240, 0, 240, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF, positions[i].x,
-                                    positions[i].y);
+        UIWidgets_DrawParallelogram(positions[i].x, positions[i].y, 0, SCREEN_YSIZE, SCREEN_YSIZE, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF);
     }
 }
 
@@ -117,6 +116,7 @@ void UITransition_State_TransitionIn(void)
 
     if (self->timer < self->delay)
         self->isTransitioning = false;
+    
     if (self->timer > self->delay + 16) {
         self->drawPos[0].y = 0;
         self->drawPos[1].x = 0;

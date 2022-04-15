@@ -115,12 +115,12 @@ void UIVsResults_DrawOutline(void)
 
     int32 y = (self->size.y >> 1) + self->position.y - 0x1D8000;
     if (!SceneInfo->inEditor)
-        UIWidgets_DrawRectOutline_Blended(self->size.y >> 16, 96, self->position.x + 0x30000, y);
+        UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, y, 96, self->size.y >> 16);
 
     if (!self->isWinner)
-        UIWidgets_DrawRectOutline_Black(self->size.y >> 16, 96, self->position.x, y - 0x30000);
+        UIWidgets_DrawRectOutline_Black(self->position.x, y - 0x30000, 96, self->size.y >> 16);
     else
-        UIWidgets_DrawRectOutline_Flash(self->size.y >> 16, 96, self->position.x, y - 0x30000);
+        UIWidgets_DrawRectOutline_Flash(self->position.x, y - 0x30000, 96, self->size.y >> 16);
 }
 
 void UIVsResults_DrawBG(void)
