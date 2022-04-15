@@ -208,7 +208,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         self->position.x = self->sawPos[sawID].x;
         self->position.y = self->sawPos[sawID].y;
         RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-        Ice_ShatterGenerator(24, 24, 32, 0, 0, false);
+        Ice_ShatterGenerator(32, 24, 24, 0, 0, false);
         self->sawAngles[sawID] &= 0x1F0;
         self->sawTargetAngles[sawID]  = 160;
         self->sawTimers[sawID] = 180;
@@ -289,7 +289,7 @@ void Shiversaw_Hit(void)
                 RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
                 self->position.x = self->sawPos[self->sawID].x;
                 self->position.y = self->sawPos[self->sawID].y;
-                Ice_ShatterGenerator(24, 24, 32, 0, 0, false);
+                Ice_ShatterGenerator(32, 24, 24, 0, 0, false);
                 self->sawAngles[self->sawID] &= 0x1F0;
                 self->sawTargetAngles[self->sawID] = 160;
                 RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 2, &self->sawAnimator[self->sawID], true, 0);
@@ -866,7 +866,7 @@ void Shiversaw_CheckCrateCollisions(void)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &Shiversaw->hitbox2, block, &block->hitbox)) {
                 RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-                Ice_ShatterGenerator(24, 24, 32, 0, 0, false);
+                Ice_ShatterGenerator(32, 24, 24, 0, 0, false);
                 self->sawAngles[self->sawID] &= 0x1F0;
                 self->sawTargetAngles[self->sawID]  = 160;
                 self->sawTimers[self->sawID] = 180;
@@ -901,7 +901,7 @@ void Shiversaw_CheckCrateCollisions(void)
                         Crate_Break(crate);
                     }
                     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-                    Ice_ShatterGenerator(24, 24, 32, 0, 0, false);
+                    Ice_ShatterGenerator(32, 24, 24, 0, 0, false);
                     self->sawAngles[self->sawID] &= 0x1F0;
                     self->sawTargetAngles[self->sawID]  = 160;
                     self->sawTimers[self->sawID] = 180;

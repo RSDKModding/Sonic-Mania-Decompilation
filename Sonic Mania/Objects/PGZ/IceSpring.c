@@ -73,7 +73,7 @@ void IceSpring_Update(void)
                         ) {
                             if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->timer) {
                                 self->timer = 15;
-                                Ice_ShatterGenerator(8, 8, 6, 0, 0, false);
+                                Ice_ShatterGenerator(6, 8, 8, 0, 0, false);
                             }
                             ++playerID;
                         }
@@ -212,7 +212,7 @@ void IceSpring_Shatter(int32 velX, int32 velY)
 {
     RSDK_THIS(IceSpring);
     RSDK.PlaySfx(IceSpring->sfxShatter, false, 255);
-    Ice_ShatterGenerator(8, 8, 16, velX, velY, false);
+    Ice_ShatterGenerator(16, 8, 8, velX, velY, false);
     if (self->type < ICESPRING_DIAGONAL)
         destroyEntity(self);
     else

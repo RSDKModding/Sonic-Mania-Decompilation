@@ -455,7 +455,7 @@ void Ice_State_FrozenPlayer(void)
             self->velocity.y = -self->jumpStrength >> 1;
             self->onGround   = false;
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
-            Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
+            Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
             RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
             Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
             self->skidding                            = 0;
@@ -478,7 +478,7 @@ void Ice_State_FrozenPlayer(void)
                     self->velocity.y = -self->jumpStrength >> 1;
                     self->onGround   = false;
                     RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
-                    Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
+                    Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
                     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
                     Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
                     self->skidding                            = 0;
@@ -488,7 +488,7 @@ void Ice_State_FrozenPlayer(void)
                     self->spindashCharge                      = 0;
                 }
                 else {
-                    Ice_ShatterGenerator(24, 20, 8, 0, 0, false);
+                    Ice_ShatterGenerator(8, 24, 20, 0, 0, false);
                     RSDK.PlaySfx(Ice->sfxStruggle, false, 255);
                 }
             }
@@ -517,11 +517,13 @@ void Ice_State_FrozenPlayer(void)
     }
 }
 
-void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 velY, int32 canBreak)
+void Ice_ShatterGenerator(int32 count, int32 xr, int32 yr, int32 velX, int32 velY, int32 canBreak)
 {
     RSDK_THIS(Ice);
+
     if (canBreak > 0)
         count >>= 1;
+
     for (int32 i = 0; i < maxVal(0, count); ++i) {
         int32 randY              = RSDK.Rand(-yr, yr + 1) << 16;
         int32 randX              = RSDK.Rand(-xr, xr + 1) << 16;
@@ -561,7 +563,7 @@ void Ice_BreakPlayerBlock(Entity *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
-    Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
+    Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
     Ice->playerTimers[RSDK.GetEntityID(player)] = 30;
 
     player->skidding       = 0;
@@ -592,13 +594,13 @@ Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
     if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
         self->position.y -= 0x370000;
-        Ice_ShatterGenerator(19, 55, 96, velX, velY, 2);
+        Ice_ShatterGenerator(96, 19, 55, velX, velY, 2);
     }
     else if (self->size == ICE_SIZE_SMALL) {
         Ice_ShatterGenerator(16, 16, 16, velX, velY, 2);
     }
     else {
-        Ice_ShatterGenerator(24, 20, 64, velX, velY, 2);
+        Ice_ShatterGenerator(64, 24, 20, velX, velY, 2);
     }
 
     int32 count = 0;
@@ -832,13 +834,13 @@ void Ice_State_IceBlock(void)
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !self->destroyDelay) {
                     if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
                         self->position.y -= 0x370000;
-                        Ice_ShatterGenerator(19, 55, 36, 0, 0, false);
+                        Ice_ShatterGenerator(36, 19, 55, 0, 0, false);
                     }
                     else if (self->size == ICE_SIZE_SMALL) {
-                        Ice_ShatterGenerator(19, 17, 6, 0, 0, false);
+                        Ice_ShatterGenerator(6, 19, 17, 0, 0, false);
                     }
                     else {
-                        Ice_ShatterGenerator(19, 20, 12, 0, 0, false);
+                        Ice_ShatterGenerator(12, 19, 20, 0, 0, false);
                     }
 
                     self->blockAnimator.frameID += 2;
