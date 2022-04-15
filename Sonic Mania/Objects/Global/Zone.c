@@ -645,12 +645,12 @@ void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour)
     Music_FadeOut(0.025);
 }
 
-void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle)
+void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivot, int32 angle)
 {
-    int32 x = (position->x - pivotPos->x) >> 8;
-    int32 y = (position->y - pivotPos->y) >> 8;
-    position->x  = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + pivotPos->x;
-    position->y  = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + pivotPos->y;
+    int32 x = (position->x - pivot->x) >> 8;
+    int32 y = (position->y - pivot->y) >> 8;
+    position->x  = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + pivot->x;
+    position->y  = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + pivot->y;
 }
 
 void Zone_ReloadScene(int32 screen)

@@ -8,27 +8,27 @@ typedef enum {
     TORNADOPATH_DUD,
     TORNADOPATH_SETSPEED,
     TORNADOPATH_SETCAMERA,
-    TORNADOPATH_4,
-    TORNADOPATH_5,
-    TORNADOPATH_6,
-    TORNADOPATH_7,
-    TORNADOPATH_8,
-    TORNADOPATH_9,
-    TORNADOPATH_10,
-    TORNADOPATH_11,
-    TORNADOPATH_12,
-    TORNADOPATH_13,
+    TORNADOPATH_DISABLEINTERACTIONS,
+    TORNADOPATH_EXITTORNADO_STOPAUTOSCROLL,
+    TORNADOPATH_EXITTORNADO_TRAINSEQ,
+    TORNADOPATH_ENTERTORNADO,
+    TORNADOPATH_ENTERTORNADO_FLYTOBOSS,
+    TORNADOPATH_HANDLEBOSS_MSZ1ST,
+    TORNADOPATH_SETSPEED_HIGH,
+    TORNADOPATH_GOTOSTOP,
+    TORNADOPATH_SETUPMSZ1CUTSCENEST,
+    TORNADOPATH_CRASHFINISH,
 }TornadoPathTypes;
 
 // Object Class
 struct ObjectTornadoPath {
     RSDK_OBJECT
-    EntityCamera *cameraPtr;
+    EntityCamera *camera;
     Vector2 moveVel;
     int32 hitboxID;
     uint16 aniFrames;
     Animator animator;
-    bool32 flag;
+    bool32 crashFinished;
 };
 
 // Entity Class
@@ -69,13 +69,13 @@ void TornadoPath_HandleMoveSpeed(void);
 void TornadoPath_State_SetTornadoSpeed(void);
 void TornadoPath_State_ReturnCamera(void);
 void TornadoPath_State_DisablePlayerInteractions(void);
-void TornadoPath_Unknown6(void);
-void TornadoPath_State_MoveRightJump(void);
-void TornadoPath_State_FlyOff(void);
-void TornadoPath_Unknown9(void);
-void TornadoPath_Unknown10(void);
-void TornadoPath_Unknown11(void);
-void TornadoPath_Unknown12(void);
-void TornadoPath_Unknown13(void);
+void TornadoPath_State_ExitTornadoSequence(void);
+void TornadoPath_State_PrepareCatchPlayer(void);
+void TornadoPath_State_CatchPlayer(void);
+void TornadoPath_State_UberCaterkillerBossNode(void);
+void TornadoPath_State_HandleUberCaterkillerBoss(void);
+void TornadoPath_State_GoToStopNode(void);
+void TornadoPath_State_SetupMSZ1CutsceneST(void);
+void TornadoPath_State_FinishCrash(void);
 
 #endif //!OBJ_TORNADOPATH_H

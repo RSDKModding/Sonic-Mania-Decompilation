@@ -375,7 +375,7 @@ void DCEvent_State_Bomb(void)
             debris->direction  = RSDK.Rand(0, 4);
             debris->drawFX     = FX_FLIP;
             debris->drawOrder  = Zone->drawOrderHigh;
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             RSDK.CopyTileLayer(Zone->moveLayer, 1038, 146, Zone->moveLayer, 1068, 8, 20, 6);
         }
 

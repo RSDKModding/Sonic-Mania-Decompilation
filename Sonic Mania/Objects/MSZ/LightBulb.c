@@ -57,10 +57,12 @@ void LightBulb_Create(void *data)
 void LightBulb_StageLoad(void)
 {
     LightBulb->aniFrames     = RSDK.LoadSpriteAnimation("MSZ/LightBulb.bin", SCOPE_STAGE);
-    LightBulb->hitbox.left   = -12;
-    LightBulb->hitbox.top    = -12;
-    LightBulb->hitbox.right  = 12;
-    LightBulb->hitbox.bottom = 12;
+
+    LightBulb->hitboxLightBulb.left   = -12;
+    LightBulb->hitboxLightBulb.top    = -12;
+    LightBulb->hitboxLightBulb.right  = 12;
+    LightBulb->hitboxLightBulb.bottom = 12;
+
     LightBulb->sfxBulbPop    = RSDK.GetSfx("Stage/BulbPop.wav");
     DEBUGMODE_ADD_OBJ(LightBulb);
 }
@@ -83,7 +85,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (player->animator.animationID != ANI_HURT && Player_CheckCollisionTouch(player, self, &LightBulb->hitbox)) {
+        if (player->animator.animationID != ANI_HURT && Player_CheckCollisionTouch(player, self, &LightBulb->hitboxLightBulb)) {
             RSDK.PlaySfx(LightBulb->sfxBulbPop, false, 255);
 
 #if RETRO_USE_PLUS
@@ -92,7 +94,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
                 if (player->state == Player_State_FlyCarried)
                     RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-                int anim = player->animator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED) {
                     if (player->state != Player_State_TailsFlight) {
                         if (player->state != Player_State_DropDash)
@@ -102,10 +104,13 @@ void LightBulb_State_CheckPlayerCollisions(void)
                             player->animator.animationID = ANI_WALK;
                     }
                 }
+
                 if (player->animator.animationID != ANI_FLY)
                     player->applyJumpCap = false;
+
                 if (player->velocity.y > -0x80000)
                     player->velocity.y = -0x80000;
+
                 player->onGround       = false;
                 player->tileCollisions = true;
 #if RETRO_USE_PLUS
@@ -116,12 +121,12 @@ void LightBulb_State_CheckPlayerCollisions(void)
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawOrder =
                 Zone->drawOrderHigh;
 
-            for (int i = 0; i < 6; ++i) {
-                int x                = self->position.x + RSDK.Rand(-0x80000, 0x80000);
-                int y                = self->position.y + RSDK.Rand(-0x80000, 0x80000);
+            for (int32 i = 0; i < 6; ++i) {
+                int32 x                = self->position.x + RSDK.Rand(-0x80000, 0x80000);
+                int32 y                = self->position.y + RSDK.Rand(-0x80000, 0x80000);
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
                 debris->state        = Debris_State_Fall;
-                debris->gravity      = 0x4000;
+                debris->gravityStrength      = 0x4000;
                 debris->velocity.x   = RSDK.Rand(0, 0x20000);
                 if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
@@ -157,7 +162,14 @@ void LightBulb_State_Destroyed(void)
 #if RETRO_INCLUDE_EDITOR
 void LightBulb_EditorDraw(void) { LightBulb_Draw(); }
 
-void LightBulb_EditorLoad(void) { LightBulb->aniFrames = RSDK.LoadSpriteAnimation("MSZ/LightBulb.bin", SCOPE_STAGE); }
+void LightBulb_EditorLoad(void)
+{
+    LightBulb->aniFrames = RSDK.LoadSpriteAnimation("MSZ/LightBulb.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(LightBulb, priority);
+    RSDK_ENUM_VAR("High", 0);
+    RSDK_ENUM_VAR("Low", 1);
+}
 #endif
 
 void LightBulb_Serialize(void)

@@ -7,11 +7,11 @@
 struct ObjectGiantPistol {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    bool32 flag;
+    bool32 inCutscene;
 #endif
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxFront;
+    Hitbox hitboxEntry;
+    Hitbox hitboxRear;
     uint16 sfxClack;
     uint16 sfxCannonFire;
     uint16 aniFrames;
@@ -21,20 +21,20 @@ struct ObjectGiantPistol {
 struct EntityGiantPistol {
     RSDK_ENTITY
     StateMachine(state);
-    int32 timer2;
-    int32 activePlayers;
-    int32 field_64;
     int32 timer;
+    int32 activePlayers;
+    int32 playerPos;
+    int32 rotationVel;
     Vector2 startPos;
-    Vector2 field_74;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
-    Animator animator6;
-    Animator animator7;
-    Animator animator8;
+    Vector2 pivot;
+    Animator pistolAnimator;
+    Animator pistolEntryAnimator;
+    Animator chamberAnimator;
+    Animator hammerAnimator;
+    Animator handLowAnimator;
+    Animator handHighAnimator;
+    Animator triggerAnimator;
+    Animator triggerFingerAnimator;
 };
 
 // Object Struct
@@ -54,13 +54,15 @@ void GiantPistol_EditorLoad(void);
 void GiantPistol_Serialize(void);
 
 // Extra Entity Functions
-void GiantPistol_State_WaitForPlayer(void);
-void GiantPistol_State_Unknown2(void);
-void GiantPistol_State_Unknown3(void);
+void GiantPistol_State_AwaitPlayerEntry(void);
+void GiantPistol_State_CloseChamber(void);
+void GiantPistol_State_SpinGun(void);
 void GiantPistol_State_Aiming(void);
 void GiantPistol_State_FiredPlayers(void);
 
-void GiantPistol_Player_State_Unknown1(void);
-void GiantPistol_Player_State_Unknown2(void);
+#if RETRO_USE_PLUS
+void GiantPistol_PlayerState_PistolAir(void);
+void GiantPistol_PlayerState_PistolGround(void);
+#endif
 
 #endif //!OBJ_GIANTPISTOL_H

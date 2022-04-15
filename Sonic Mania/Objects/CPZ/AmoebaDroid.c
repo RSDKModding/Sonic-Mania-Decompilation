@@ -501,7 +501,7 @@ void AmoebaDroid_State_BounceAttack(void)
                 RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 5, &debris->animator, false, 0);
                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y    = RSDK.Rand(-0x40000, -0x20000);
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->inkEffect     = INK_BLEND;
                 debris->drawOrder     = Zone->drawOrderLow;
                 debris->updateRange.x = 0x200000;
@@ -618,7 +618,7 @@ void AmoebaDroid_State_SmallBlob(void)
                 RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 5, &debris->animator, false, 0);
                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y    = -0x20000;
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->inkEffect     = INK_BLEND;
                 debris->drawOrder     = Zone->drawOrderLow;
                 debris->updateRange.x = 0x200000;

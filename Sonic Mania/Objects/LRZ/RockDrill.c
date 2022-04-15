@@ -177,7 +177,7 @@ void RockDrill_SpawnDebris(int offset)
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
     debris->velocity.x    = RSDK.Rand(0, 6) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
-    debris->gravity       = 0x3800;
+    debris->gravityStrength       = 0x3800;
     debris->drawOrder     = Zone->drawOrderLow;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
@@ -186,7 +186,7 @@ void RockDrill_SpawnDebris(int offset)
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
     debris->velocity.x    = RSDK.Rand(-6, 0) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
-    debris->gravity       = 0x3800;
+    debris->gravityStrength       = 0x3800;
     debris->drawOrder     = Zone->drawOrderLow;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
@@ -342,7 +342,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -351,7 +351,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -360,7 +360,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -369,7 +369,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -378,7 +378,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -387,7 +387,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -396,7 +396,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -405,7 +405,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -414,7 +414,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 3);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -423,7 +423,7 @@ void RockDrill_State_Explode(void)
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 5);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;

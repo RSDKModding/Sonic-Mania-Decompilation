@@ -383,7 +383,7 @@ void CrashTest_State_Move(void)
             else
                 debris->rotSpeed = 8;
             debris->drawOrder  = Zone->drawOrderHigh;
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->direction  = self->direction;
             debris->velocity.x = (RSDK.Rand(-32, 32) << 12) + (self->velocity.x >> 1) * (2 * (self->direction != FLIP_NONE) - 1);
             debris->velocity.y = -0x1000 * RSDK.Rand(32, 128);

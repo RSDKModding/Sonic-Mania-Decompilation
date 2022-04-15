@@ -1050,7 +1050,7 @@ void MegaOctus_StateOrb_Destroyed(void)
             RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &debris->animator, true, 1);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
-            debris->gravity       = 0x3800;
+            debris->gravityStrength       = 0x3800;
             debris->drawOrder     = Zone->drawOrderLow + 1;
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
@@ -1062,7 +1062,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 0);
         debris->velocity.x    = -0x20000;
         debris->velocity.y    = -0x40000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow + 1;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -1071,7 +1071,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 1);
         debris->velocity.x    = 0x20000;
         debris->velocity.y    = -0x40000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow + 1;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -1080,7 +1080,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 2);
         debris->velocity.x    = -0x10000;
         debris->velocity.y    = -0x20000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow + 1;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -1089,7 +1089,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 3);
         debris->velocity.x    = 0x10000;
         debris->velocity.y    = -0x20000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderLow + 1;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;

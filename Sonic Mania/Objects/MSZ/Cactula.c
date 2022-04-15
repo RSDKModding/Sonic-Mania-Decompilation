@@ -25,11 +25,10 @@ void Cactula_Draw(void)
     Vector2 drawPos;
 
     drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.y += self->offsetY;
-    RSDK.DrawSprite(&self->animator2, &drawPos, false);
-    RSDK.DrawSprite(&self->animator3, &drawPos, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    drawPos.y = self->position.y + self->offsetY;
+    RSDK.DrawSprite(&self->bodyBottomAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->propellerAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->bodyTopAnimator, NULL, false);
 }
 
 void Cactula_Create(void *data)
@@ -42,10 +41,10 @@ void Cactula_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->offsetY       = 0x80000;
-    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->animator2, true, 1);
-    RSDK.SetSpriteAnimation(Cactula->aniFrames, 1, &self->animator3, true, 0);
-    self->state = Cactula_State_Unknown1;
+    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->bodyTopAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->bodyBottomAnimator, true, 1);
+    RSDK.SetSpriteAnimation(Cactula->aniFrames, 1, &self->propellerAnimator, true, 0);
+    self->state = Cactula_State_CheckPlayerInRange;
 }
 
 void Cactula_StageLoad(void)
@@ -53,11 +52,13 @@ void Cactula_StageLoad(void)
     if (RSDK.CheckStageFolder("MSZ"))
         Cactula->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Cactula.bin", SCOPE_STAGE);
 
-    Cactula->hitbox.left   = -12;
-    Cactula->hitbox.top    = -12;
-    Cactula->hitbox.right  = 12;
-    Cactula->hitbox.bottom = 12;
+    Cactula->hitboxBadnik.left   = -12;
+    Cactula->hitboxBadnik.top    = -12;
+    Cactula->hitboxBadnik.right  = 12;
+    Cactula->hitboxBadnik.bottom = 12;
+
     DEBUGMODE_ADD_OBJ(Cactula);
+
     Cactula->sfxCactDrop = RSDK.GetSfx("MSZ/CactDrop.wav");
     Soundboard_LoadSFX("MSZ/CactChopper.wav", true, Cactula_CheckCB, NULL);
 }
@@ -79,23 +80,23 @@ void Cactula_CheckPlayerCollisions(void)
     RSDK_THIS(Cactula);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Cactula->hitbox))
+        if (Player_CheckBadnikTouch(player, self, &Cactula->hitboxBadnik))
             Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 bool32 Cactula_CheckCB(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_active(Cactula, cactula)
     {
-        if (cactula->state == Cactula_State_Unknown2 || cactula->state == Cactula_State_Unknown3)
+        if (cactula->state == Cactula_State_Rising || cactula->state == Cactula_State_DropBomb)
             ++count;
     }
     return count > 0;
 }
 
-void Cactula_State_Unknown1(void)
+void Cactula_State_CheckPlayerInRange(void)
 {
     RSDK_THIS(Cactula);
 
@@ -103,56 +104,58 @@ void Cactula_State_Unknown1(void)
 
     if (abs(self->position.x - player->position.x) < 0x800000) {
         self->velocity.y = -0x20000;
-        self->state      = Cactula_State_Unknown2;
+        self->state      = Cactula_State_Rising;
     }
     Cactula_CheckPlayerCollisions();
 }
 
-void Cactula_State_Unknown2(void)
+void Cactula_State_Rising(void)
 {
     RSDK_THIS(Cactula);
-    RSDK.ProcessAnimation(&self->animator3);
+
+    RSDK.ProcessAnimation(&self->propellerAnimator);
+
     self->offsetY += self->velocity.y;
     self->velocity.y += 0x4000;
     if (self->offsetY >= 0 && self->velocity.y >= 0) {
         self->offsetY    = 0;
         self->velocity.y = -0xA000;
-        self->state      = Cactula_State_Unknown3;
+        self->state      = Cactula_State_DropBomb;
     }
     Cactula_CheckPlayerCollisions();
 }
 
-void Cactula_State_Unknown3(void)
+void Cactula_State_DropBomb(void)
 {
     RSDK_THIS(Cactula);
-    RSDK.ProcessAnimation(&self->animator3);
+
+    RSDK.ProcessAnimation(&self->propellerAnimator);
+
     self->velocity.y += 0x100;
     self->position.y += self->velocity.y;
 
     EntityPlayer *player = Player_GetNearestPlayerX();
-    if (!RSDK.CheckOnScreen(self, NULL) && self->position.y > player->position.y) {
-        destroyEntity(self);
-    }
-    else {
-        if (!self->flag) {
-            if (abs(self->position.x - player->position.x) < 0x100000) {
-                RSDK.PlaySfx(Cactula->sfxCactDrop, false, 255);
-                EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_MoveGravity, self->position.x, self->position.y);
-                projectile->gravityStrength  = 0x3800;
-                projectile->drawOrder        = Zone->drawOrderLow;
-                projectile->hitbox.left      = -6;
-                projectile->hitbox.top       = -6;
-                projectile->hitbox.right     = 6;
-                projectile->hitbox.bottom    = 6;
-                projectile->type             = PROJECTILE_BASIC2;
-                projectile->hurtDelay        = 16;
-                RSDK.SetSpriteAnimation(Cactula->aniFrames, 2, &projectile->animator, true, 0);
-                self->flag = true;
-            }
+    if (RSDK.CheckOnScreen(self, NULL) || self->position.y <= player->position.y) {
+        if (!self->droppedBomb && abs(self->position.x - player->position.x) < 0x100000) {
+            RSDK.PlaySfx(Cactula->sfxCactDrop, false, 255);
+            EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_MoveGravity, self->position.x, self->position.y);
+            projectile->gravityStrength  = 0x3800;
+            projectile->drawOrder        = Zone->drawOrderLow;
+            projectile->hitbox.left      = -6;
+            projectile->hitbox.top       = -6;
+            projectile->hitbox.right     = 6;
+            projectile->hitbox.bottom    = 6;
+            projectile->type             = PROJECTILE_BASIC2;
+            projectile->hurtDelay        = 16;
+            RSDK.SetSpriteAnimation(Cactula->aniFrames, 2, &projectile->animator, true, 0);
+            self->droppedBomb = true;
         }
 
         if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == (uint16)-1)
             Cactula_CheckPlayerCollisions();
+    }
+    else {
+        destroyEntity(self);
     }
 }
 

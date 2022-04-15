@@ -35,7 +35,7 @@ struct EntityTornado {
     int32 prevPosY;
     int32 moveVelocityY;
     Vector2 movePos;
-    Vector2 knuxOffset;
+    Vector2 knuxPos;
     Vector2 knuxVel;
     int32 offsetX;
     Animator animatorTornado;
@@ -63,13 +63,13 @@ void Tornado_Serialize(void);
 
 // Extra Entity Functions
 void Tornado_State_Setup(void);
-void Tornado_State_SetupPlayers(void);
-void Tornado_Unknown3(void);
-void Tornado_Unknown4(void);
+void Tornado_State_SetupMSZ1Intro(void);
+void Tornado_State_MSZ1Intro(void);
+void Tornado_State_KnuxKnockedOff(void);
 void Tornado_HandlePlayerCollisions(void);
 void Tornado_State_PlayerControlled(void);
-void Tornado_Unknown7(void);
-void Tornado_Unknown8(void);
-void Tornado_Unknown9(void);
+void Tornado_State_Mayday(void);
+void Tornado_State_FlyAway_Right(void);
+void Tornado_State_FlyAway_Left(void);
 
 #endif //!OBJ_TORNADO_H

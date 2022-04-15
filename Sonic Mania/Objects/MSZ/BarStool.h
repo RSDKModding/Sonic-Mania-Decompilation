@@ -3,10 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum { BARSTOOL_HEIGHT_SHORT, BARSTOOL_HEIGHT_TALL } BarStoolHeights;
+
 // Object Class
 struct ObjectBarStool {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxStool;
     uint16 sfxSpin;
     uint16 sfxHop;
     uint16 aniFrames;
@@ -17,13 +19,13 @@ struct EntityBarStool {
     RSDK_ENTITY
     StateMachine(state);
     uint8 height;
-    int spinSpeed;
-    int spinAngle;
-    int activePlayers;
-    int playerVal1[PLAYER_MAX];
-    int playerVal2[PLAYER_MAX];
-    Animator animator1;
-    Animator animator2;
+    int32 spinSpeed;
+    int32 spinAngle;
+    int32 activePlayers;
+    int32 playerAngle[PLAYER_MAX];
+    int32 playerPos[PLAYER_MAX];
+    Animator stoolAnimator;
+    Animator poleAnimator;
 };
 
 // Object Struct

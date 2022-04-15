@@ -991,7 +991,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 2, &debris->animator, true, 4);
         debris->velocity.x    = RSDK.Rand(-1, 2) << 16;
         debris->velocity.y    = -0x48000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -1002,7 +1002,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
             ++debris->animator.frameID;
         debris->velocity.x    = RSDK.Rand(-1, 2) << 15;
         debris->velocity.y    = -0x30000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;

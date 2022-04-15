@@ -90,7 +90,7 @@ void Newspaper_HandleInteractions(void)
                 EntityDebris *debris =
                     CREATE_ENTITY(Debris, NULL, self->position.x + RSDK.Rand(-0x80000, 0x80000), self->position.y + RSDK.Rand(-0x80000, 0x80000));
                 debris->state      = Debris_State_Fall;
-                debris->gravity    = 0x400;
+                debris->gravityStrength    = 0x400;
                 debris->velocity.x = RSDK.Rand(0, 0x20000);
                 debris->timer      = 240;
                 self->timer      = 2;

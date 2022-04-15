@@ -13,23 +13,24 @@ void Hatterkiller_Update(void)
 {
     RSDK_THIS(Hatterkiller);
 
-    for (int s = 0; s < Hatterkiller_SegmentCount; ++s) {
-        if (self->delays[s] <= 0) {
-            self->velocities[s].y += 0x3800;
-            self->positions[s].x += self->velocities[s].x + TornadoPath->moveVel.x;
-            self->positions[s].y += self->velocities[s].y + TornadoPath->moveVel.y;
+    for (int32 s = 0; s < Hatterkiller_SegmentCount; ++s) {
+        if (self->bodyDelays[s] <= 0) {
+            self->bodyVelocities[s].y += 0x3800;
+            self->bodyPositions[s].x += self->bodyVelocities[s].x + TornadoPath->moveVel.x;
+            self->bodyPositions[s].y += self->bodyVelocities[s].y + TornadoPath->moveVel.y;
         }
         else {
-            self->delays[s]--;
-            self->positions[s].x += TornadoPath->moveVel.x;
-            self->positions[s].y += TornadoPath->moveVel.y;
+            self->bodyDelays[s]--;
+            self->bodyPositions[s].x += TornadoPath->moveVel.x;
+            self->bodyPositions[s].y += TornadoPath->moveVel.y;
         }
     }
 
     if (HeavyMystic->curtainLinePos) {
         if (!(Zone->timer & 3))
             HeavyMystic_SpawnParticleFX(self->position.x, self->position.y);
-        if (++self->field_58 == 40) {
+
+        if (++self->timer == 40) {
             Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
             RSDK.PlaySfx(Hatterkiller->sfxTransform2, false, 255);
             RSDK.PlaySfx(Hatterkiller->sfxPowerup, false, 255);
@@ -43,18 +44,18 @@ void Hatterkiller_Update(void)
 
         foreach_active(Player, player)
         {
-            self->position.x = self->positions[0].x;
-            self->position.y = self->positions[0].y;
-            if (Player_CheckBadnikTouch(player, self, &Hatterkiller->hitbox) && Player_CheckBadnikBreak(self, player, false)) {
-                for (int s = 1; s < Hatterkiller_SegmentCount; ++s) {
-                    Vector2 *pos       = &self->positions[s];
-                    Animator *animator = self->animators[s];
+            self->position.x = self->bodyPositions[0].x;
+            self->position.y = self->bodyPositions[0].y;
+            if (Player_CheckBadnikTouch(player, self, &Hatterkiller->hitboxSegment) && Player_CheckBadnikBreak(self, player, false)) {
+                for (int32 s = 1; s < Hatterkiller_SegmentCount; ++s) {
+                    Vector2 *position    = &self->bodyPositions[s];
+                    Animator *animator   = self->bodyAnimators[s];
+                    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, position->x, position->y);
 
-                    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, pos->x, pos->y);
                     RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, animator->animationID, &debris->animator, true, animator->frameID);
                     debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                     debris->velocity.y    = RSDK.Rand(-0x20000, -0x10000);
-                    debris->gravity       = 0x4800;
+                    debris->gravityStrength       = 0x4800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -65,11 +66,11 @@ void Hatterkiller_Update(void)
                 foreach_break;
             }
 
-            for (int s = 1; s < Hatterkiller_SegmentCount; ++s) {
-                self->position.x = self->positions[s].x;
-                self->position.y = self->positions[s].y;
+            for (int32 s = 1; s < Hatterkiller_SegmentCount; ++s) {
+                self->position.x = self->bodyPositions[s].x;
+                self->position.y = self->bodyPositions[s].y;
 
-                if (Player_CheckCollisionTouch(player, self, &Hatterkiller->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &Hatterkiller->hitboxSegment)) {
 #if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))
 #endif
@@ -80,13 +81,13 @@ void Hatterkiller_Update(void)
     }
 
     if (HeavyMystic->curtainLinePos) {
-        self->position = self->positions[9];
+        self->position = self->bodyPositions[9];
         if (!RSDK.CheckOnScreen(self, NULL)) {
             if (HeavyMystic->curtainLinePos == 1 && !RSDK.CheckOnScreen(self, NULL)) {
                 foreach_active(ParallaxSprite, sprite) { sprite->visible = false; }
                 ++HeavyMystic->curtainLinePos;
             }
-            CREATE_ENTITY(UberCaterkiller, NULL, self->positions[Hatterkiller_SegmentCount - 1].x,
+            CREATE_ENTITY(UberCaterkiller, NULL, self->bodyPositions[Hatterkiller_SegmentCount - 1].x,
                           (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16);
             destroyEntity(self);
         }
@@ -95,8 +96,8 @@ void Hatterkiller_Update(void)
         destroyEntity(self);
     }
 
-    self->position.x = self->positions[0].x;
-    self->position.y = self->positions[0].y;
+    self->position.x = self->bodyPositions[0].x;
+    self->position.y = self->bodyPositions[0].y;
 }
 
 void Hatterkiller_LateUpdate(void) {}
@@ -107,9 +108,7 @@ void Hatterkiller_Draw(void)
 {
     RSDK_THIS(Hatterkiller);
 
-    for (int s = Hatterkiller_SegmentCount - 1; s >= 0; --s) {
-        RSDK.DrawSprite(self->animators[s], &self->positions[s], false);
-    }
+    for (int32 s = Hatterkiller_SegmentCount - 1; s >= 0; --s) RSDK.DrawSprite(self->bodyAnimators[s], &self->bodyPositions[s], false);
 }
 
 void Hatterkiller_Create(void *data)
@@ -123,37 +122,40 @@ void Hatterkiller_Create(void *data)
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
 
-        int delay = 0;
-        for (int s = 0; s < Hatterkiller_SegmentCount; ++s) {
-            self->velocities[s].x = voidToInt(data);
-            self->velocities[s].y = -0x40000;
-            self->animators[s]    = &self->animator2;
-            self->delays[s]       = delay;
-            self->positions[s].x  = self->position.x;
-            self->positions[s].y  = self->position.y;
+        int32 delay = 0;
+        for (int32 s = 0; s < Hatterkiller_SegmentCount; ++s) {
+            self->bodyVelocities[s].x = voidToInt(data);
+            self->bodyVelocities[s].y = -0x40000;
+            self->bodyAnimators[s]    = &self->bodyAnimator;
+            self->bodyDelays[s]       = delay;
+            self->bodyPositions[s]  = self->position;
             delay += 4;
         }
-        self->animators[0] = &self->animator1;
+        self->bodyAnimators[0] = &self->headAnimator;
 
         if (voidToInt(data) >= 0)
-            RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 3, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 3, &self->headAnimator, true, 0);
         else
-            RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 2, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 1, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 4, &self->animator3, true, 0);
+            RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 2, &self->headAnimator, true, 0);
+
+        RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 1, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 4, &self->tailAnimator, true, 0);
     }
 }
 
 void Hatterkiller_StageLoad(void)
 {
     Hatterkiller->aniFrames     = RSDK.LoadSpriteAnimation("MSZ/RattleKiller.bin", SCOPE_STAGE);
-    Hatterkiller->hitbox.left   = -8;
-    Hatterkiller->hitbox.top    = -8;
-    Hatterkiller->hitbox.right  = 8;
-    Hatterkiller->hitbox.bottom = 8;
+
+    Hatterkiller->hitboxSegment.left   = -8;
+    Hatterkiller->hitboxSegment.top    = -8;
+    Hatterkiller->hitboxSegment.right  = 8;
+    Hatterkiller->hitboxSegment.bottom = 8;
+
     Hatterkiller->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
     Hatterkiller->sfxTransform2 = RSDK.GetSfx("Stage/Transform2.wav");
     Hatterkiller->sfxPowerup    = RSDK.GetSfx("Stage/PowerUp.wav");
+
     DEBUGMODE_ADD_OBJ(Hatterkiller);
 }
 
@@ -170,9 +172,32 @@ void Hatterkiller_DebugSpawn(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Hatterkiller_EditorDraw(void) {}
+void Hatterkiller_EditorDraw(void)
+{
+    RSDK_THIS(Hatterkiller);
 
-void Hatterkiller_EditorLoad(void) {}
+    self->visible       = true;
+    self->active        = ACTIVE_NORMAL;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+
+    int32 delay = 0;
+    for (int32 s = 0; s < Hatterkiller_SegmentCount; ++s) {
+        self->bodyAnimators[s] = &self->bodyAnimator;
+        self->bodyDelays[s]    = delay;
+        self->bodyPositions[s] = self->position;
+        delay += 4;
+    }
+    self->bodyAnimators[0] = &self->headAnimator;
+
+    RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 2, &self->headAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 1, &self->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 4, &self->tailAnimator, true, 0);
+
+    Hatterkiller_Draw();
+}
+
+void Hatterkiller_EditorLoad(void) { Hatterkiller->aniFrames = RSDK.LoadSpriteAnimation("MSZ/RattleKiller.bin", SCOPE_STAGE); }
 #endif
 
 void Hatterkiller_Serialize(void) {}

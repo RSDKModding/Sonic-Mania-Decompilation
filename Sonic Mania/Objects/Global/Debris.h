@@ -13,7 +13,7 @@ struct EntityDebris {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 gravity;
+    int32 gravityStrength;
     int32 rotSpeed;
     Vector2 scaleInc;
     int32 delay;

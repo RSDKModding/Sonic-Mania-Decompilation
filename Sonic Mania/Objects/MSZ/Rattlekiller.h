@@ -5,10 +5,21 @@
 
 #define Rattlekiller_SegmentCount (10)
 
+typedef enum {
+    RATTLEKILLER_IDLE,
+    RATTLEKILLER_TWIST_HORIZONTAL,
+    RATTLEKILLER_TWIST_DOWN,
+    RATTLEKILLER_TWIST_UP,
+    RATTLEKILLER_PLAYERDETECTED,
+    RATTLEKILLER_STRETCHBODY,
+    RATTLEKILLER_EXTEND,
+    RATTLEKILLER_RETRACT,
+} RattlekillerBodyStates;
+
 // Object Class
 struct ObjectRattlekiller {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxSegment;
     uint16 sfxRocketJet;
     uint16 aniFrames;
 };
@@ -16,23 +27,25 @@ struct ObjectRattlekiller {
 // Entity Class
 struct EntityRattlekiller {
     RSDK_ENTITY
-    int32 field_58;
-    int32 field_5C;
+    StateMachine(state);     // Unused
+    StateMachine(stateDraw); // Unused
     int32 timer;
     int32 bodyStates[Rattlekiller_SegmentCount];
     Vector2 bodyPositions[Rattlekiller_SegmentCount];
-    Vector2 field_DC[Rattlekiller_SegmentCount];
-    Vector2 field_12C[Rattlekiller_SegmentCount];
+    Vector2 bodyOriginPos[Rattlekiller_SegmentCount];
+    Vector2 bodyVelocities[Rattlekiller_SegmentCount];
     int32 bodyAngles[Rattlekiller_SegmentCount];
-    int32 field_1A4[Rattlekiller_SegmentCount];
+    int32 bodyDepth[Rattlekiller_SegmentCount];
     int32 bodyDelays[Rattlekiller_SegmentCount];
     int32 bodyIDs[Rattlekiller_SegmentCount];
     Animator *bodyAnimators[Rattlekiller_SegmentCount];
-    Vector2 startPos;
-    Vector2 startPos2;
-    Vector2 playerPos;
+    Vector2 topBounds;
+    Vector2 bottomBounds;
+    Vector2 targetPos;
     int32 length;
-    Animator animators[3];
+    Animator headAnimator;
+    Animator bodyAnimator;
+    Animator tailAnimator;
 };
 
 // Object Struct
@@ -43,7 +56,7 @@ void Rattlekiller_Update(void);
 void Rattlekiller_LateUpdate(void);
 void Rattlekiller_StaticUpdate(void);
 void Rattlekiller_Draw(void);
-void Rattlekiller_Create(void* data);
+void Rattlekiller_Create(void *data);
 void Rattlekiller_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Rattlekiller_EditorDraw(void);
@@ -57,4 +70,4 @@ void Rattlekiller_DebugDraw(void);
 
 void Rattlekiller_HandleSorting(void);
 
-#endif //!OBJ_RATTLEKILLER_H
+#endif //! OBJ_RATTLEKILLER_H

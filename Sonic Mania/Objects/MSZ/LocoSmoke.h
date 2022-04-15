@@ -7,7 +7,7 @@
 struct ObjectLocoSmoke {
     RSDK_OBJECT
     uint16 aniFrames;
-    uint16 field_6;
+    uint16 unused;
 };
 
 // Entity Class

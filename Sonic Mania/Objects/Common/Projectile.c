@@ -46,22 +46,28 @@ void Projectile_CheckPlayerCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             switch (self->type) {
-                case PROJECTILE_NOTHING0: break;
+                case PROJECTILE_NOTHING: break;
+
                 case PROJECTILE_FIRE:
                     if (self->isProjectile)
                         Player_CheckProjectileHit(player, self);
                     else
                         Player_CheckElementalHit(player, self, SHIELD_FIRE);
                     break;
+
                 case PROJECTILE_ELECTRIC:
                     if (self->isProjectile)
                         Player_CheckProjectileHit(player, self);
                     else
                         Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
                     break;
-                case PROJECTILE_NOTHING3: break;
-                case PROJECTILE_NOTHING5: break;
-                case PROJECTILE_NOTHING6: break;
+
+                case PROJECTILE_UNUSED1: break;
+
+                case PROJECTILE_UNUSED2: break;
+
+                case PROJECTILE_UNUSED3: break;
+
                 case PROJECTILE_BASIC:
                 case PROJECTILE_BASIC2: {
                     int32 anim = player->animator.animationID;

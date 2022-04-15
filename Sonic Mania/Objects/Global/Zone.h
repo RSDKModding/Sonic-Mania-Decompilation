@@ -132,7 +132,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour);
-void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle);
+void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivot, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);

@@ -3,10 +3,15 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    VULTRON_DIVE,
+    VULTRON_TARGET,
+} VultronTypes;
+
 // Object Class
 struct ObjectVultron {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxVultron;
 };
@@ -19,11 +24,11 @@ struct EntityVultron {
     Vector2 startPos;
     uint8 startDir;
     uint16 dist;
-    uint16 distance;
+    uint16 distRemain;
     int32 storeY;
-    Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
+    Hitbox hitboxBadnik;
+    Animator bodyAnimator;
+    Animator flameAnimator;
 };
 
 // Object Struct
@@ -50,13 +55,13 @@ void Vultron_CheckPlayerCollisions(void);
 void Vultron_CheckOffScreen(void);
 
 void Vultron_State_Setup(void);
-void Vultron_State_Unknown1(void);
-void Vultron_State_Unknown2(void);
-void Vultron_State_Unknown3(void);
-void Vultron_State_Unknown4(void);
-void Vultron_State_Unknown5(void);
-void Vultron_State_Unknown6(void);
+void Vultron_State_CheckPlayerInRange(void);
+void Vultron_State_Hop(void);
+void Vultron_State_Dive(void);
+void Vultron_State_Flying(void);
+void Vultron_State_Rise(void);
+void Vultron_State_PrepareDive(void);
 
-void Vultron_State2_Unknown(void);
+void Vultron_State_Targeting(void);
 
 #endif //!OBJ_VULTRON_H

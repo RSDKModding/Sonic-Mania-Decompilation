@@ -22,7 +22,7 @@ void MSZSpotlight_StaticUpdate(void) {}
 void MSZSpotlight_Draw(void)
 {
     RSDK_THIS(MSZSpotlight);
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.DrawSprite(&self->animatorSpotlight, NULL, false);
 }
 
 void MSZSpotlight_Create(void *data)
@@ -31,21 +31,20 @@ void MSZSpotlight_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible    = true;
         self->drawOrder  = Zone->drawOrderHigh;
-        self->startPos.x = self->position.x;
-        self->startPos.y = self->position.y;
+        self->startPos   = self->position;
         self->inkEffect  = INK_ADD;
         self->angle      = RSDK.Rand(0, 256);
 
         switch (self->color) {
-            case MSZSPOTLIGHT_RED: self->moveFlag = -4; break;
-            case MSZSPOTLIGHT_GREEN: self->moveFlag = 4; break;
-            case MSZSPOTLIGHT_BLUE: self->moveFlag = 2; break;
+            case MSZSPOTLIGHT_RED: self->angleOffset = -4; break;
+            case MSZSPOTLIGHT_GREEN: self->angleOffset = 4; break;
+            case MSZSPOTLIGHT_BLUE: self->angleOffset = 2; break;
         }
 
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &self->animator, true, self->color);
+        RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &self->animatorSpotlight, true, self->color);
     }
 }
 
@@ -53,40 +52,43 @@ void MSZSpotlight_StageLoad(void)
 {
     MSZSpotlight->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
 
+    // Yeah, this is actually here in the original
+    // This (& the one in FBZSetup) is how I found out about what these funcs do LOL
     RSDK_ACTIVE_VAR(MSZSpotlight, color);
-    RSDK.AddVarEnumValue("Red");
-    RSDK.AddVarEnumValue("Green");
-    RSDK.AddVarEnumValue("Blue");
+    RSDK_ENUM_VAR("Red", MSZSPOTLIGHT_RED);
+    RSDK_ENUM_VAR("Green", MSZSPOTLIGHT_GREEN);
+    RSDK_ENUM_VAR("Blue", MSZSPOTLIGHT_BLUE);
 }
 
-void MSZSpotlight_Unknown1(void)
+void MSZSpotlight_State_Appear(void)
 {
     RSDK_THIS(MSZSpotlight);
-    self->angle      = ((self->angle & 0xFF) + self->moveFlag);
+
+    self->angle      = (self->angle & 0xFF) + self->angleOffset;
     self->position.x = (RSDK.Cos256(self->angle) << 13) + self->startPos.x;
     self->position.y = (RSDK.Sin256(self->angle) << 13) + self->startPos.y;
 
     if (self->alpha >= 0x100)
-        self->state = MSZSpotlight_Unknown2;
+        self->state = MSZSpotlight_State_Circling;
     else
         self->alpha += 8;
 }
 
-void MSZSpotlight_Unknown2(void)
+void MSZSpotlight_State_Circling(void)
 {
     RSDK_THIS(MSZSpotlight);
 
-    self->angle      = ((self->angle & 0xFF) + self->moveFlag);
+    self->angle      = (self->angle & 0xFF) + self->angleOffset;
     self->position.x = (RSDK.Cos256(self->angle) << 13) + self->startPos.x;
     self->position.y = (RSDK.Sin256(self->angle) << 13) + self->startPos.y;
 
     if (++self->timer == 120) {
         self->timer = 0;
-        self->state = MSZSpotlight_Unknown3;
+        self->state = MSZSpotlight_State_Idle;
     }
 }
 
-void MSZSpotlight_Unknown3(void)
+void MSZSpotlight_State_Idle(void)
 {
     RSDK_THIS(MSZSpotlight);
     if (++self->timer == 30) {
@@ -99,23 +101,25 @@ void MSZSpotlight_Unknown3(void)
             }
         }
         self->velocity.x = (self->startPos.x - self->position.x) >> 4;
-        self->velocity.y = ((self->startPos.y - self->position.y) >> 4);
-        self->state      = MSZSpotlight_Unknown4;
+        self->velocity.y = (self->startPos.y - self->position.y) >> 4;
+        self->state      = MSZSpotlight_State_MoveToBox;
     }
 }
 
-void MSZSpotlight_Unknown4(void)
+void MSZSpotlight_State_MoveToBox(void)
 {
     RSDK_THIS(MSZSpotlight);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    int rx = (self->startPos.x - self->position.x) >> 16;
-    int ry = (self->startPos.y - self->position.y) >> 16;
+    int32 rx = (self->startPos.x - self->position.x) >> 16;
+    int32 ry = (self->startPos.y - self->position.y) >> 16;
+
     if (rx * rx + ry * ry < 16) {
         foreach_active(HeavyMystic, mystic)
         {
-            if (mystic->type == MYSTIC_BOX && mystic->state != HeavyMystic_State2_Unknown4) {
-                mystic->state = HeavyMystic_State2_Unknown4;
+            if (mystic->type == MYSTIC_BOX && mystic->state != HeavyMystic_StateBox_CloseDoors) {
+                mystic->state = HeavyMystic_StateBox_CloseDoors;
                 RSDK.PlaySfx(HeavyMystic->sfxClack, false, 255);
             }
         }
@@ -124,30 +128,31 @@ void MSZSpotlight_Unknown4(void)
         self->drawFX     = FX_SCALE;
         self->scale.x    = 0x200;
         self->scale.y    = 0x200;
-        self->state      = MSZSpotlight_Unknown5;
+        self->state      = MSZSpotlight_State_Disappear;
     }
 }
 
-void MSZSpotlight_Unknown5(void)
+void MSZSpotlight_State_Disappear(void)
 {
     RSDK_THIS(MSZSpotlight);
-    self->scale.x += 32;
-    self->scale.y += 32;
+
+    self->scale.x += 0x20;
+    self->scale.y += 0x20;
     if (self->scale.x < 0x300)
         self->alpha = 0x100;
 
     if (self->alpha <= 0)
         destroyEntity(self);
     else
-        self->alpha -= 16;
+        self->alpha -= 0x10;
 }
 
 #if RETRO_INCLUDE_EDITOR
 void MSZSpotlight_EditorDraw(void)
 {
     RSDK_THIS(MSZSpotlight);
-    RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &self->animator, true, self->color);
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &self->animatorSpotlight, true, self->color);
+    RSDK.DrawSprite(&self->animatorSpotlight, NULL, false);
 }
 
 void MSZSpotlight_EditorLoad(void)

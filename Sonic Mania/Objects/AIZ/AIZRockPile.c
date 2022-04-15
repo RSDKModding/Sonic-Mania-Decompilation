@@ -144,7 +144,7 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;
-        debris->gravity       = 0x1800;
+        debris->gravityStrength       = 0x1800;
     }
 
     RSDK.PlaySfx(AIZRockPile->sfxBreak, false, 255);

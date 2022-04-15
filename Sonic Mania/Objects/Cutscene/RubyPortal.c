@@ -371,7 +371,7 @@ void RubyPortal_State_EncoreRampage(void)
         if (rx * rx + ry * ry < 0x900) {
             debris->scale.x -= 12;
             debris->scale.y -= 12;
-            debris->gravity = 0;
+            debris->gravityStrength = 0;
             debris->position.x += self->velocity.x;
             debris->velocity.x = (self->position.x - debris->position.x) >> 3;
             debris->velocity.y = (self->position.y - debris->position.y) >> 3;

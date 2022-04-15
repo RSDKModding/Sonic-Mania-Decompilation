@@ -8,7 +8,7 @@
 // Object Class
 struct ObjectUberCaterkiller {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxSegment;
     bool32 defeated;
     uint16 sfxRocketJet;
     uint16 sfxHit;
@@ -31,16 +31,16 @@ struct EntityUberCaterkiller {
     Vector2 bodyVelocity[UberCaterkiller_SegmentCount];
     int32 bodyTimers[UberCaterkiller_SegmentCount];
     int32 bodyScales[UberCaterkiller_SegmentCount];
-    int32 bodyUnknown[UberCaterkiller_SegmentCount];
+    int32 bodyInAir[UberCaterkiller_SegmentCount];
     int32 bodyAngles[UberCaterkiller_SegmentCount];
     Animator *bodyAnimators[UberCaterkiller_SegmentCount];
     uint8 aniID;
-    uint8 unknownValue;
-    int32 unknownValue2;
-    int32 bodyStartX;
-    uint8 field_1DC[PLAYER_MAX];
-    Animator animator1;
-    Animator animator2;
+    uint8 jumpsRemain;
+    int32 targetScale;
+    int32 targetBodyPos;
+    uint8 playerTimers[PLAYER_MAX];
+    Animator headAnimator;
+    Animator bodyAnimator;
 };
 
 // Object Struct
@@ -65,19 +65,19 @@ void UberCaterkiller_DebugDraw(void);
 
 void UberCaterkiller_CheckPlayerCollisions(void);
 void UberCaterkiller_Explode(void);
-void UberCaterkiller_Unknown5(int id);
-void UberCaterkiller_SetupUnknown(int x, int y);
+void UberCaterkiller_HandleSegmentMoveFX(int32 segmentID);
+void UberCaterkiller_SetupBodySegments(int32 x, int32 y);
 
 void UberCaterkiller_State_SetupArena(void);
-void UberCaterkiller_SetupBodySizes(void);
+void UberCaterkiller_PrepareMoveIntoBG(void);
 
-void UberCaterkiller_State_Unknown1(void);
-void UberCaterkiller_State_Unknown2(void);
-void UberCaterkiller_State_Unknown3(void);
-void UberCaterkiller_State_Unknown4(void);
-void UberCaterkiller_State_Unknown5(void);
-void UberCaterkiller_State_Unknown6(void);
-void UberCaterkiller_State_Unknown7(void);
+void UberCaterkiller_State_MoveIntoBG(void);
+void UberCaterkiller_State_MoveToTargetPos(void);
+void UberCaterkiller_State_PrepareHorizontalJump(void);
+void UberCaterkiller_State_HorizontalJump(void);
+void UberCaterkiller_State_PrepareBGJump(void);
+void UberCaterkiller_State_FirstJump(void);
+void UberCaterkiller_State_RepeatedJumps(void);
 void UberCaterkiller_State_Destroyed(void);
 void UberCaterkiller_State_Finish(void);
 

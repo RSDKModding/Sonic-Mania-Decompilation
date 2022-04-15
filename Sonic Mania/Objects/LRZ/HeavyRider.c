@@ -190,7 +190,7 @@ void HeavyRider_SpawnDebris(int32 frame, uint8 drawOrder, int32 x, int32 y)
     debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
     debris->velocity.y    = RSDK.Rand(-0x20000, -0x10000);
     debris->drawOrder     = drawOrder;
-    debris->gravity       = 0x4800;
+    debris->gravityStrength       = 0x4800;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
 }
@@ -783,7 +783,7 @@ void HeavyRider_State_ChargeDash(void)
             debris->updateRange.x = 0x2000000;
             debris->updateRange.y = 0x2000000;
             debris->state         = Debris_State_Fall;
-            debris->gravity       = 0x1800;
+            debris->gravityStrength       = 0x1800;
             debris->velocity.x    = RSDK.Rand(-2, 3) << 16;
             debris->velocity.y    = RSDK.Rand(-2, 2) << 16;
             debris->drawFX        = FX_FLIP;

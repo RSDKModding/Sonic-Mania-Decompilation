@@ -112,14 +112,14 @@ void CableWarp_State_CablePlug(void)
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x - 0x80000, self->position.y - 0x80000);
                 debris->velocity.x   = -0x20000;
                 debris->velocity.y   = -0x20000;
-                debris->gravity      = 0x3800;
+                debris->gravityStrength      = 0x3800;
                 debris->drawOrder    = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 3);
 
                 debris             = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x + 0x80000, self->position.y - 0x80000);
                 debris->velocity.x = 0x20000;
                 debris->velocity.y = -0x20000;
-                debris->gravity    = 0x3800;
+                debris->gravityStrength    = 0x3800;
                 debris->drawOrder  = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 4);
                 RSDK.PlaySfx(CableWarp->sfxLedgeBreak, false, 0xFF);
@@ -295,14 +295,14 @@ void CableWarp_StateTransport_EndNode(void)
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, nextNode->position.x - 0x80000, nextNode->position.y - 0x80000);
                 debris->velocity.x   = -0x20000;
                 debris->velocity.y   = -0x20000;
-                debris->gravity      = 0x3800;
+                debris->gravityStrength      = 0x3800;
                 debris->drawOrder    = Zone->playerDrawHigh;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 3);
 
                 debris             = CREATE_ENTITY(Debris, Debris_State_Fall, nextNode->position.x + 0x80000, nextNode->position.y - 0x80000);
                 debris->velocity.x = 0x20000;
                 debris->velocity.y = -0x20000;
-                debris->gravity    = 0x3800;
+                debris->gravityStrength    = 0x3800;
                 debris->drawOrder  = Zone->playerDrawHigh;
 
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &debris->animator, true, 4);

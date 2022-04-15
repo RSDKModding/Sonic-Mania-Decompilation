@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectPinata {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxPinata;
     uint16 aniFrames;
     uint16 sfxPinata;
 };
@@ -16,7 +16,7 @@ struct EntityPinata {
     RSDK_ENTITY
     StateMachine(state);
     bool32 respawn;
-    int priority;
+    int32 priority;
     Animator animator;
 };
 

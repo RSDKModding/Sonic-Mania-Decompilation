@@ -9,16 +9,16 @@ typedef enum {
     AIZTORNADOPATH_SETSPEED,
     AIZTORNADOPATH_SETCAMERA,
     AIZTORNADOPATH_DISABLEINTERACTIONS,
-    AIZTORNADOPATH_JUMPOFF,
-    AIZTORNADOPATH_6,
-    AIZTORNADOPATH_SETSPEED_ALT,
+    AIZTORNADOPATH_EXITTORNADO,
+    AIZTORNADOPATH_ENTERTORNADO,
+    AIZTORNADOPATH_TARGETNODE,
 } AIZTornadoPathTypes;
 
 // Object Class
 struct ObjectAIZTornadoPath {
     RSDK_OBJECT
     EntityAIZTornado *tornado;
-    Entity *camera;
+    EntityCamera *camera;
     Vector2 moveVel;
     uint16 aniFrames;
     Animator animator;
@@ -57,8 +57,8 @@ void AIZTornadoPath_HandleMoveSpeed(void);
 void AIZTornadoPath_State_SetTornadoSpeed(void);
 void AIZTornadoPath_State_SetPlayerCamera(void);
 void AIZTornadoPath_State_DisablePlayerInteractions(void);
-void AIZTornadoPath_JumpOffTornado(void);
-void AIZTornadoPath_State_MoveRightJump(void);
-void AIZTornadoPath_State_FlyOff(void);
+void AIZTornadoPath_State_ExitTornadoSequence(void);
+void AIZTornadoPath_State_PrepareCatchPlayer(void);
+void AIZTornadoPath_State_CatchPlayer(void);
 
 #endif //!OBJ_AIZTORNADOPATH_H

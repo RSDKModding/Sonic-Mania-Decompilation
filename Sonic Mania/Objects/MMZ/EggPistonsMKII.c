@@ -733,7 +733,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
             for (int d = 0; d < 4; ++d) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, barrier->position.x, barrier->position.y);
                 RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 5, &debris->animator, true, i + 1);
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->velocity.x    = ((i & 1) << 17 >> (i >> 1)) - 0x10000;
                 debris->velocity.y    = 0x18000 * ((i >> 1) - 2);
                 debris->drawOrder     = Zone->drawOrderHigh;

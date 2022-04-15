@@ -8,7 +8,7 @@
 // Object Class
 struct ObjectDBTower {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxSegment;
     bool32 defeated;
     uint16 sfxRocketJet;
     uint16 sfxHit;
@@ -28,18 +28,21 @@ struct EntityDBTower {
     int32 timer;
     int32 invincibilityTimer;
     int32 health;
-    Vector2 field_68;
+    Vector2 originPos;
     Vector2 bodyPositions[DBTower_SegmentCount];
-    int32 field_90[DBTower_SegmentCount];
-    int32 field_A0[DBTower_SegmentCount];
-    int32 field_B0[DBTower_SegmentCount];
+    int32 segmentUnused1[DBTower_SegmentCount];
+    int32 segmentUnused2[DBTower_SegmentCount];
+    int32 segmentUnused3[DBTower_SegmentCount];
     int32 bodyAngles[DBTower_SegmentCount];
-    int32 field_D0[DBTower_SegmentCount];
-    uint8 segmentCount;
-    Animator *animatorPtrs[DBTower_SegmentCount];
+    int32 wobbleAngle;
+    int32 wobbleAngleVel;
+    int32 segmentOffsetY;
+    int32 xOffsetAngle;
+    uint8 connectedSegmentCount;
+    Animator *segmentAnimators[DBTower_SegmentCount];
     uint8 playerTimers[PLAYER_MAX];
-    Animator animator1;
-    Animator animator2;
+    Animator headAnimator;
+    Animator bodyAnimator;
 };
 
 // Object Struct
@@ -59,7 +62,7 @@ void DBTower_EditorLoad(void);
 void DBTower_Serialize(void);
 
 // Extra Entity Functions
-void DBTower_CheckPlayerCollisions(void);
+void DBTower_CheckPlayerCollisions_Head(void);
 void DBTower_Explode(void);
 
 void DBTower_State_SetupArena(void);
@@ -71,7 +74,7 @@ void DBTower_State_Finish(void);
 void DBTower_State_SpawnSignPost(void);
 #endif
 
-void DBTower_CheckPlayerCollisions2(void);
+void DBTower_CheckPlayerCollisions_Body(void);
 void DBTower_State_BodyBouncing(void);
 void DBTower_State_BodyRolling(void);
 

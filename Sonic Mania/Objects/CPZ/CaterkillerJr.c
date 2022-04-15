@@ -209,7 +209,7 @@ void CaterkillerJr_State_Move(void)
                 debris->animator      = self->bodyAnimators[i];
                 debris->velocity.x    = RSDK.Rand(-16, 16) << 14;
                 debris->velocity.y    = RSDK.Rand(-8, 8) << 14;
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->drawOrder     = Zone->drawOrderLow;
                 debris->updateRange.x = 0x400000;
                 debris->updateRange.y = 0x400000;

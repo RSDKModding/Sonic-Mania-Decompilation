@@ -942,7 +942,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 0);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
             debris->drawFX     = FX_ROTATE | FX_FLIP;
         }
@@ -955,7 +955,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->rotSpeed   = RSDK.Rand(-8, 8);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
             debris->drawFX     = FX_ROTATE | FX_FLIP;
 
@@ -965,7 +965,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->rotSpeed   = RSDK.Rand(-8, 8);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
             debris->drawFX     = FX_ROTATE | FX_FLIP;
         }
@@ -978,7 +978,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->rotSpeed   = RSDK.Rand(-8, 8);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
             debris->drawFX     = FX_ROTATE | FX_FLIP;
 
@@ -988,7 +988,7 @@ void SpiderMobile_StateBody_Destroyed(void)
             debris->rotSpeed   = RSDK.Rand(-8, 8);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
             debris->drawFX     = FX_ROTATE | FX_FLIP;
         }
@@ -999,14 +999,14 @@ void SpiderMobile_StateBody_Destroyed(void)
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 2);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i + 1].x, self->legPositions[i + 1].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 1);
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->drawOrder  = Zone->drawOrderHigh;
         }
 

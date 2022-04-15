@@ -22,18 +22,19 @@ void GiantPistol_StaticUpdate(void) {}
 void GiantPistol_Draw(void)
 {
     RSDK_THIS(GiantPistol);
+
     if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
-        RSDK.DrawSprite(&self->animator2, NULL, false);
-        RSDK.DrawSprite(&self->animator5, NULL, false);
+        RSDK.DrawSprite(&self->pistolEntryAnimator, NULL, false);
+        RSDK.DrawSprite(&self->handLowAnimator, NULL, false);
         RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
     else {
-        RSDK.DrawSprite(&self->animator7, NULL, false);
-        RSDK.DrawSprite(&self->animator4, NULL, false);
-        RSDK.DrawSprite(&self->animator3, NULL, false);
-        RSDK.DrawSprite(&self->animator1, NULL, false);
-        RSDK.DrawSprite(&self->animator6, NULL, false);
-        RSDK.DrawSprite(&self->animator8, NULL, false);
+        RSDK.DrawSprite(&self->triggerAnimator, NULL, false);
+        RSDK.DrawSprite(&self->hammerAnimator, NULL, false);
+        RSDK.DrawSprite(&self->chamberAnimator, NULL, false);
+        RSDK.DrawSprite(&self->pistolAnimator, NULL, false);
+        RSDK.DrawSprite(&self->handHighAnimator, NULL, false);
+        RSDK.DrawSprite(&self->triggerFingerAnimator, NULL, false);
     }
 }
 
@@ -43,14 +44,15 @@ void GiantPistol_Create(void *data)
 
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->animator2, true, 1);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 6, &self->animator4, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 4, &self->animator7, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &self->animator5, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &self->animator6, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 3, &self->animator8, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->pistolAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->pistolEntryAnimator, true, 1);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &self->chamberAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 6, &self->hammerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 4, &self->triggerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &self->handLowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &self->handHighAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 3, &self->triggerFingerAnimator, true, 0);
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -58,41 +60,46 @@ void GiantPistol_Create(void *data)
         self->drawOrder     = Zone->drawOrderLow;
         self->startPos      = self->position;
         if (self->direction == FLIP_NONE)
-            self->field_74.x = self->position.x + 0x300000;
+            self->pivot.x = self->position.x + 0x300000;
         else
-            self->field_74.x = self->position.x - 0x300000;
-        self->field_74.y = self->position.y + 0x180000;
-        self->state      = GiantPistol_State_WaitForPlayer;
+            self->pivot.x = self->position.x - 0x300000;
+        self->pivot.y = self->position.y + 0x180000;
+        self->state   = GiantPistol_State_AwaitPlayerEntry;
     }
 }
 
 void GiantPistol_StageLoad(void)
 {
-    GiantPistol->aniFrames      = RSDK.LoadSpriteAnimation("MSZ/Pistol.bin", SCOPE_STAGE);
-    GiantPistol->hitbox1.left   = -80;
-    GiantPistol->hitbox1.top    = -58;
-    GiantPistol->hitbox1.right  = 4;
-    GiantPistol->hitbox1.bottom = -16;
-    GiantPistol->hitbox2.left   = 4;
-    GiantPistol->hitbox2.top    = -26;
-    GiantPistol->hitbox2.right  = 44;
-    GiantPistol->hitbox2.bottom = -16;
-    GiantPistol->hitbox3.left   = 44;
-    GiantPistol->hitbox3.top    = -58;
-    GiantPistol->hitbox3.right  = 64;
-    GiantPistol->hitbox3.bottom = -16;
-    GiantPistol->sfxClack       = RSDK.GetSfx("Stage/Clack.wav");
-    GiantPistol->sfxCannonFire  = RSDK.GetSfx("Stage/CannonFire.wav");
+    GiantPistol->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pistol.bin", SCOPE_STAGE);
+
+    GiantPistol->hitboxFront.left   = -80;
+    GiantPistol->hitboxFront.top    = -58;
+    GiantPistol->hitboxFront.right  = 4;
+    GiantPistol->hitboxFront.bottom = -16;
+
+    GiantPistol->hitboxEntry.left   = 4;
+    GiantPistol->hitboxEntry.top    = -26;
+    GiantPistol->hitboxEntry.right  = 44;
+    GiantPistol->hitboxEntry.bottom = -16;
+
+    GiantPistol->hitboxRear.left   = 44;
+    GiantPistol->hitboxRear.top    = -58;
+    GiantPistol->hitboxRear.right  = 64;
+    GiantPistol->hitboxRear.bottom = -16;
+
+    GiantPistol->sfxClack      = RSDK.GetSfx("Stage/Clack.wav");
+    GiantPistol->sfxCannonFire = RSDK.GetSfx("Stage/CannonFire.wav");
 }
 
-void GiantPistol_State_WaitForPlayer(void)
+void GiantPistol_State_AwaitPlayerEntry(void)
 {
     RSDK_THIS(GiantPistol);
 
     foreach_active(Player, player)
     {
-        int side = Player_CheckCollisionBox(player, self, &GiantPistol->hitbox2);
-        if (side == C_TOP && (!player->sidekick || self->state == GiantPistol_State_Unknown2)) {
+        int32 side = Player_CheckCollisionBox(player, self, &GiantPistol->hitboxEntry);
+
+        if (side == C_TOP && (!player->sidekick || self->state == GiantPistol_State_CloseChamber)) {
             player->state           = Player_State_None;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
@@ -100,40 +107,41 @@ void GiantPistol_State_WaitForPlayer(void)
             player->velocity.y      = 0;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             self->activePlayers |= (1 << player->playerID);
-            self->state = GiantPistol_State_Unknown2;
+            self->state = GiantPistol_State_CloseChamber;
             if (self->direction == FLIP_NONE)
-                self->field_64 = 0x180000;
+                self->playerPos = 0x180000;
             else
-                self->field_64 = -0x180000;
+                self->playerPos = -0x180000;
             RSDK.PlaySfx(GiantPistol->sfxClack, false, 255);
         }
-        Player_CheckCollisionBox(player, self, &GiantPistol->hitbox1);
-        Player_CheckCollisionBox(player, self, &GiantPistol->hitbox3);
+
+        Player_CheckCollisionBox(player, self, &GiantPistol->hitboxFront);
+        Player_CheckCollisionBox(player, self, &GiantPistol->hitboxRear);
     }
 }
 
-void GiantPistol_State_Unknown2(void)
+void GiantPistol_State_CloseChamber(void)
 {
     RSDK_THIS(GiantPistol);
-    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->chamberAnimator);
 
     foreach_active(Player, player)
     {
         if (((1 << (player->playerID)) & self->activePlayers) > 0) {
-            player->position.x += (self->position.x + self->field_64 - player->position.x) >> 3;
+            player->position.x += (self->position.x + self->playerPos - player->position.x) >> 3;
             player->position.y += (self->position.y - player->position.y - 0x200000) >> 3;
             player->velocity.x = 0;
             player->velocity.y = 0;
         }
     }
 
-    if (self->animator3.frameID >= self->animator3.frameCount - 1) {
-        self->state             = GiantPistol_State_Unknown3;
-        self->drawFX            = FX_ROTATE | FX_FLIP;
-        self->animator5.frameID = 1;
-        self->animator6.frameID = 1;
-        self->velocity.y        = -0x20000;
-        self->timer             = 6;
+    if (self->chamberAnimator.frameID >= self->chamberAnimator.frameCount - 1) {
+        self->state                    = GiantPistol_State_SpinGun;
+        self->drawFX                   = FX_ROTATE | FX_FLIP;
+        self->handLowAnimator.frameID  = 1;
+        self->handHighAnimator.frameID = 1;
+        self->velocity.y               = -0x20000;
+        self->rotationVel              = 6;
 
         foreach_active(Player, player)
         {
@@ -147,7 +155,7 @@ void GiantPistol_State_Unknown2(void)
     }
 }
 
-void GiantPistol_State_Unknown3(void)
+void GiantPistol_State_SpinGun(void)
 {
     RSDK_THIS(GiantPistol);
 
@@ -159,35 +167,35 @@ void GiantPistol_State_Unknown3(void)
         self->velocity.y = 0;
     }
 
-    if (self->timer > -64)
-        self->timer--;
+    if (self->rotationVel > -64)
+        self->rotationVel--;
 
     if (self->direction)
-        self->angle -= self->timer;
+        self->angle -= self->rotationVel;
     else
-        self->angle += self->timer;
+        self->angle += self->rotationVel;
 
     self->rotation = self->angle & 0x1FF;
-    int angle        = 256 - (self->rotation >> 1);
+    int32 angle    = 0x100 - (self->rotation >> 1);
 
     foreach_active(Player, player)
     {
         if (((1 << (player->playerID)) & self->activePlayers) > 0) {
-            player->position.x = self->position.x + self->field_64;
+            player->position.x = self->position.x + self->playerPos;
             player->position.y = self->position.y - 0x200000;
-            int distX          = (player->position.x - self->position.x) >> 8;
-            int distY          = (player->position.y - self->position.y) >> 8;
+            int32 distX        = (player->position.x - self->position.x) >> 8;
+            int32 distY        = (player->position.y - self->position.y) >> 8;
             player->position.x = self->position.x + distY * RSDK.Sin256(angle) + distX * RSDK.Cos256(angle);
             player->position.y = (self->position.y - distX * RSDK.Sin256(angle)) + distY * RSDK.Cos256(angle);
         }
     }
 
     if (self->angle <= -0x1FC || self->angle >= 0x1FC) {
-        self->angle    = 0;
-        self->timer    = -(self->timer >> 1);
-        self->rotation = 0;
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 7, &self->animator5, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 7, &self->animator6, true, 1);
+        self->angle       = 0;
+        self->rotationVel = -(self->rotationVel >> 1);
+        self->rotation    = 0;
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 7, &self->handLowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 7, &self->handHighAnimator, true, 1);
         self->state  = GiantPistol_State_Aiming;
         self->active = ACTIVE_NORMAL;
 
@@ -205,74 +213,74 @@ void GiantPistol_State_Aiming(void)
 {
     RSDK_THIS(GiantPistol);
 
-    if (self->timer2) {
-        self->timer2--;
+    if (self->timer) {
+        self->timer--;
     }
     else {
-        if (self->timer > 4)
-            self->timer--;
+        if (self->rotationVel > 4)
+            self->rotationVel--;
 
         if (self->direction)
-            self->angle -= self->timer;
+            self->angle -= self->rotationVel;
         else
-            self->angle += self->timer;
+            self->angle += self->rotationVel;
         self->angle &= 0x1FF;
     }
 
     self->position = self->startPos;
     self->rotation = (-RSDK.Sin512(self->angle) >> 3) & 0x1FF;
-    int angle        = 256 - (self->rotation >> 1);
-    Zone_RotateOnPivot(&self->position, &self->field_74, angle);
+    int32 angle    = 0x100 - (self->rotation >> 1);
+    Zone_RotateOnPivot(&self->position, &self->pivot, angle);
 
     self->position.x -= RSDK.Sin512(self->rotation) << 10;
     self->position.y -= RSDK.Sin512(self->rotation) << 10;
 
     if (self->direction) {
-        if (self->field_64 <= 0x500000)
-            self->field_64 += 0x40000;
+        if (self->playerPos <= 0x500000)
+            self->playerPos += 0x40000;
     }
     else {
-        if (self->field_64 > -0x500000)
-            self->field_64 -= 0x40000;
+        if (self->playerPos > -0x500000)
+            self->playerPos -= 0x40000;
     }
 
-    uint8 flags = 0;
+    uint8 jumpPressed = 0;
 #if RETRO_USE_PLUS
-    if (GiantPistol->flag) {
-#else 
+    if (GiantPistol->inCutscene) {
+#else
     if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
 #endif
         if (self->angle == 118 && self->activePlayers > 0) {
 #if RETRO_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
-                MSZSetup_Unknown3();
-                MSZSetup_Unknown4(0);
+                MSZSetup_ReloadBGParallax();
+                MSZSetup_ReloadBGParallax_Multiply(0x000);
             }
             else
 #endif
-                MSZSetup_Unknown4(1024);
-            flags = 1;
+                MSZSetup_ReloadBGParallax_Multiply(0x400);
+            jumpPressed = true;
         }
     }
     else {
         foreach_active(Player, player)
         {
             if (((1 << (player->playerID)) & self->activePlayers) > 0)
-                flags |= player->jumpPress;
+                jumpPressed |= player->jumpPress;
         }
     }
 
     foreach_active(Player, player)
     {
         if (((1 << (player->playerID)) & self->activePlayers) > 0) {
-            player->position.x = self->position.x + self->field_64;
+            player->position.x = self->position.x + self->playerPos;
             player->position.y = self->position.y - 0x200000;
-            int distX          = (player->position.x - self->position.x) >> 8;
-            int distY          = (player->position.y - self->position.y) >> 8;
+            int32 distX        = (player->position.x - self->position.x) >> 8;
+            int32 distY        = (player->position.y - self->position.y) >> 8;
 
             player->position.x = self->position.x + distY * RSDK.Sin256(angle) + distX * RSDK.Cos256(angle);
             player->position.y = self->position.y - distX * RSDK.Sin256(angle) + distY * RSDK.Cos256(angle);
-            if (flags == 1) {
+            if (jumpPressed) {
                 player->state            = Player_State_Air;
                 player->onGround         = false;
                 player->jumpAbilityState = 0;
@@ -290,18 +298,21 @@ void GiantPistol_State_Aiming(void)
                 }
 
 #if RETRO_USE_PLUS
-                if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE) && GiantPistol->flag) {
+                if (SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE) && GiantPistol->inCutscene) {
                     player->velocity.x += 0x18000;
-                    player->state           = GiantPistol_Player_State_Unknown1;
-                    player->nextGroundState = GiantPistol_Player_State_Unknown2;
+                    player->state           = GiantPistol_PlayerState_PistolAir;
+                    player->nextGroundState = GiantPistol_PlayerState_PistolGround;
                 }
-                else
-#endif
-                    if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
+                else if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
                     player->jumpAbilityState = 0;
                 }
+#else
+                if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1))
+                    player->jumpAbilityState = 0;
+#endif
+
                 self->activePlayers &= ~(1 << player->playerID);
-                self->timer2 = 16;
+                self->timer = 16;
 
                 player->velocity.x = clampVal(player->velocity.x, -0x120000, 0x120000);
                 player->visible    = true;
@@ -311,7 +322,7 @@ void GiantPistol_State_Aiming(void)
         }
     }
 
-    if (!self->activePlayers && !self->timer2) {
+    if (!self->activePlayers && !self->timer) {
         if (self->rotation > 256)
             self->rotation -= 0x200;
         self->state = GiantPistol_State_FiredPlayers;
@@ -333,26 +344,28 @@ void GiantPistol_State_FiredPlayers(void)
             self->rotation = 0;
     }
 
-    if (self->animator3.frameID > 0)
-        self->animator3.frameID--;
+    if (self->chamberAnimator.frameID > 0)
+        self->chamberAnimator.frameID--;
 
-    ++self->timer2;
+    ++self->timer;
     self->position.x += (self->startPos.x - self->position.x) >> 3;
     self->position.y += (self->startPos.y - self->position.y) >> 3;
-    if (self->timer2 == 60) {
+
+    if (self->timer == 60) {
         self->position = self->startPos;
-        self->timer2   = 0;
+        self->timer    = 0;
         self->angle    = 0;
         self->drawFX   = FX_FLIP;
         self->active   = ACTIVE_BOUNDS;
-        self->state    = GiantPistol_State_WaitForPlayer;
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &self->animator3, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &self->animator5, true, 0);
-        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &self->animator6, true, 0);
+        self->state    = GiantPistol_State_AwaitPlayerEntry;
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &self->chamberAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &self->handLowAnimator, true, 0);
+        RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &self->handHighAnimator, true, 0);
     }
 }
 
-void GiantPistol_Player_State_Unknown1(void)
+#if RETRO_USE_PLUS
+void GiantPistol_PlayerState_PistolAir(void)
 {
     RSDK_THIS(Player);
     self->left      = false;
@@ -362,10 +375,10 @@ void GiantPistol_Player_State_Unknown1(void)
     self->jumpPress = false;
     self->jumpHold  = false;
     Player_State_Air();
-    self->nextGroundState = GiantPistol_Player_State_Unknown2;
+    self->nextGroundState = GiantPistol_PlayerState_PistolGround;
 }
 
-void GiantPistol_Player_State_Unknown2(void)
+void GiantPistol_PlayerState_PistolGround(void)
 {
     RSDK_THIS(Player);
     self->left      = true;
@@ -375,8 +388,9 @@ void GiantPistol_Player_State_Unknown2(void)
     self->jumpPress = false;
     self->jumpHold  = false;
     Player_State_Ground();
-    self->state           = GiantPistol_Player_State_Unknown2;
-    self->nextGroundState = GiantPistol_Player_State_Unknown2;
+    self->state           = GiantPistol_PlayerState_PistolGround;
+    self->nextGroundState = GiantPistol_PlayerState_PistolGround;
+
     if (self->groundVel <= 0) {
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->animator, true, 0);
         self->left            = false;
@@ -388,27 +402,39 @@ void GiantPistol_Player_State_Unknown2(void)
         self->nextGroundState = Player_State_Ground;
     }
 }
+#endif
 
+#if RETRO_INCLUDE_EDITOR
 void GiantPistol_EditorDraw(void)
 {
     RSDK_THIS(GiantPistol);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->animator2, true, 1);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &self->animator3, true, 0);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 6, &self->animator4, true, 0);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 4, &self->animator7, true, 0);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &self->animator5, true, 0);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &self->animator6, true, 0);
-    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 3, &self->animator8, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->pistolAnimator, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &self->pistolEntryAnimator, true, 1);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &self->chamberAnimator, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 6, &self->hammerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 4, &self->triggerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &self->handLowAnimator, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &self->handHighAnimator, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 3, &self->triggerFingerAnimator, true, 0);
 
-    RSDK.DrawSprite(&self->animator7, NULL, false);
-    RSDK.DrawSprite(&self->animator4, NULL, false);
-    RSDK.DrawSprite(&self->animator3, NULL, false);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator6, NULL, false);
-    RSDK.DrawSprite(&self->animator8, NULL, false);
+    RSDK.DrawSprite(&self->pistolEntryAnimator, NULL, false);
+    RSDK.DrawSprite(&self->handLowAnimator, NULL, false);
+    RSDK.DrawSprite(&self->triggerAnimator, NULL, false);
+    RSDK.DrawSprite(&self->hammerAnimator, NULL, false);
+    RSDK.DrawSprite(&self->chamberAnimator, NULL, false);
+    RSDK.DrawSprite(&self->pistolAnimator, NULL, false);
+    RSDK.DrawSprite(&self->handHighAnimator, NULL, false);
+    RSDK.DrawSprite(&self->triggerFingerAnimator, NULL, false);
 }
 
-void GiantPistol_EditorLoad(void) { GiantPistol->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pistol.bin", SCOPE_STAGE); }
+void GiantPistol_EditorLoad(void)
+{
+    GiantPistol->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pistol.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(GiantPistol, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
+#endif
 
 void GiantPistol_Serialize(void) { RSDK_EDITABLE_VAR(GiantPistol, VAR_UINT8, direction); }

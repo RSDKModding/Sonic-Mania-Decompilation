@@ -22,8 +22,8 @@ void Vultron_StaticUpdate(void) {}
 void Vultron_Draw(void)
 {
     RSDK_THIS(Vultron);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->bodyAnimator, NULL, false);
+    RSDK.DrawSprite(&self->flameAnimator, NULL, false);
 }
 
 void Vultron_Create(void *data)
@@ -38,26 +38,27 @@ void Vultron_Create(void *data)
         self->active = ACTIVE_BOUNDS;
 
         switch (self->type) {
-            case 0:
-                self->updateRange.y = 0x800000;
+            case VULTRON_DIVE:
                 self->updateRange.x = (self->dist + 16) << 19;
+                self->updateRange.y = 0x800000;
                 self->startPos      = self->position;
                 self->startDir      = self->direction;
-                RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->bodyAnimator, true, 0);
                 self->state = Vultron_State_Setup;
                 break;
-            case 1:
-                self->updateRange.x  = 0x800000;
-                self->updateRange.y  = 0x800000;
-                self->drawFX         = FX_ROTATE;
-                self->rotation       = 192 * (SceneInfo->createSlot & 1) + 320;
-                self->hitbox.left  = -12;
-                self->hitbox.top  = -8;
-                self->hitbox.right = 12;
-                self->hitbox.bottom = 8;
-                RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &self->animator2, true, 0);
-                self->state = Vultron_State2_Unknown;
+
+            case VULTRON_TARGET:
+                self->updateRange.x       = 0x800000;
+                self->updateRange.y       = 0x800000;
+                self->drawFX              = FX_ROTATE;
+                self->rotation            = 0xC0 * (SceneInfo->createSlot & 1) + 0x140;
+                self->hitboxBadnik.left   = -12;
+                self->hitboxBadnik.top    = -8;
+                self->hitboxBadnik.right  = 12;
+                self->hitboxBadnik.bottom = 8;
+                RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->bodyAnimator, true, 0);
+                RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &self->flameAnimator, true, 0);
+                self->state = Vultron_State_Targeting;
                 break;
         }
     }
@@ -69,10 +70,11 @@ void Vultron_StageLoad(void)
     if (RSDK.CheckStageFolder("MSZ"))
         Vultron->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Vultron.bin", SCOPE_STAGE);
 
-    Vultron->hitbox.left  = 0;
-    Vultron->hitbox.top  = -64;
-    Vultron->hitbox.right = 256;
-    Vultron->hitbox.bottom = 128;
+    Vultron->hitboxRange.left   = 0;
+    Vultron->hitboxRange.top    = -64;
+    Vultron->hitboxRange.right  = 256;
+    Vultron->hitboxRange.bottom = 128;
+
     DEBUGMODE_ADD_OBJ(Vultron);
 }
 
@@ -95,9 +97,10 @@ void Vultron_DebugDraw(void)
 void Vultron_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Vultron);
-    Hitbox *hitbox = RSDK.GetHitbox(&self->animator1, 0);
-    int left       = (hitbox->left << 16) + (((hitbox->right - hitbox->left) << 15) & 0xFFFF0000);
-    int top        = (hitbox->top << 16) + (((hitbox->bottom - hitbox->top) << 15) & 0xFFFF0000);
+
+    Hitbox *hitbox = RSDK.GetHitbox(&self->bodyAnimator, 0);
+    int32 left     = (hitbox->left << 16) + (((hitbox->right - hitbox->left) << 15) & 0xFFFF0000);
+    int32 top      = (hitbox->top << 16) + (((hitbox->bottom - hitbox->top) << 15) & 0xFFFF0000);
     if (self->direction == FLIP_X)
         left = -left;
 
@@ -121,7 +124,7 @@ void Vultron_CheckOffScreen(void)
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
         self->direction  = self->startDir;
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->flameAnimator, true, 0);
         Vultron_Create(NULL);
     }
 }
@@ -131,17 +134,17 @@ void Vultron_State_Setup(void)
     RSDK_THIS(Vultron);
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = 0;
-    self->state      = Vultron_State_Unknown1;
-    Vultron_State_Unknown1();
+    self->state      = Vultron_State_CheckPlayerInRange;
+    Vultron_State_CheckPlayerInRange();
 }
 
-void Vultron_State_Unknown1(void)
+void Vultron_State_CheckPlayerInRange(void)
 {
     RSDK_THIS(Vultron);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Vultron->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &Vultron->hitboxRange)) {
             self->velocity.y = -0xD800;
             if (self->direction == FLIP_NONE)
                 self->velocity.x = 0x8000;
@@ -149,7 +152,7 @@ void Vultron_State_Unknown1(void)
                 self->velocity.x = -0x8000;
             self->storeY = self->position.y;
             RSDK.PlaySfx(Vultron->sfxVultron, false, 255);
-            self->state = Vultron_State_Unknown2;
+            self->state = Vultron_State_Hop;
         }
     }
 
@@ -157,24 +160,27 @@ void Vultron_State_Unknown1(void)
     Vultron_CheckOffScreen();
 }
 
-void Vultron_State_Unknown2(void)
+void Vultron_State_Hop(void)
 {
     RSDK_THIS(Vultron);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
 
-    RSDK.ProcessAnimation(&self->animator1);
-    if (self->animator1.frameID == 5) {
-        RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &self->animator2, true, 0);
-        self->state = Vultron_State_Unknown3;
+    RSDK.ProcessAnimation(&self->bodyAnimator);
+
+    if (self->bodyAnimator.frameID == 5) {
+        RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &self->flameAnimator, true, 0);
+        self->state = Vultron_State_Dive;
         self->velocity.x *= 8;
     }
+
     Vultron_CheckPlayerCollisions();
     Vultron_CheckOffScreen();
 }
 
-void Vultron_State_Unknown3(void)
+void Vultron_State_Dive(void)
 {
     RSDK_THIS(Vultron);
     self->position.x += self->velocity.x;
@@ -182,35 +188,42 @@ void Vultron_State_Unknown3(void)
     self->velocity.y -= 0x1800;
 
     if (self->velocity.y <= 0) {
-        self->distance   = self->dist;
+        self->distRemain = self->dist;
         self->velocity.y = 0;
-        self->state      = Vultron_State_Unknown4;
+        self->state      = Vultron_State_Flying;
     }
-    RSDK.ProcessAnimation(&self->animator2);
+
+    RSDK.ProcessAnimation(&self->flameAnimator);
+
     Vultron_CheckPlayerCollisions();
     Vultron_CheckOffScreen();
 }
 
-void Vultron_State_Unknown4(void)
+void Vultron_State_Flying(void)
 {
     RSDK_THIS(Vultron);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    if (!--self->distance) {
-        RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->animator2, true, 0);
-        self->state = Vultron_State_Unknown5;
+
+    if (!--self->distRemain) {
+        RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->flameAnimator, true, 0);
+        self->state = Vultron_State_Rise;
     }
-    RSDK.ProcessAnimation(&self->animator2);
+
+    RSDK.ProcessAnimation(&self->flameAnimator);
     Vultron_CheckPlayerCollisions();
     Vultron_CheckOffScreen();
 }
 
-void Vultron_State_Unknown5(void)
+void Vultron_State_Rise(void)
 {
     RSDK_THIS(Vultron);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (self->direction)
         self->velocity.x += 0x1800;
     else
@@ -219,19 +232,21 @@ void Vultron_State_Unknown5(void)
     self->velocity.y -= 0x4000;
     if (self->velocity.y < -0x38000) {
         self->velocity.y = -0x38000;
-        self->state      = Vultron_State_Unknown6;
+        self->state      = Vultron_State_PrepareDive;
     }
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->bodyAnimator);
+
     Vultron_CheckPlayerCollisions();
     Vultron_CheckOffScreen();
 }
 
-void Vultron_State_Unknown6(void)
+void Vultron_State_PrepareDive(void)
 {
     RSDK_THIS(Vultron);
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (self->direction) {
         self->velocity.x += 0x1800;
         if (self->velocity.x > 0)
@@ -242,55 +257,57 @@ void Vultron_State_Unknown6(void)
         if (self->velocity.x < 0)
             self->velocity.x = 0;
     }
+
     self->velocity.y += 0x1800;
     if (self->velocity.y > -0xC800) {
-        self->direction  = self->direction ^ 1;
+        self->direction ^= FLIP_X;
         self->position.y = self->storeY;
         if (self->direction == FLIP_NONE)
             self->velocity.x = 0x8000;
         else
             self->velocity.x = -0x8000;
         self->velocity.y = -0xC800;
-        RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->animator1, true, 0);
-        self->state = Vultron_State_Unknown2;
+        RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->bodyAnimator, true, 0);
+        self->state = Vultron_State_Hop;
     }
-    RSDK.ProcessAnimation(&self->animator1);
+
+    RSDK.ProcessAnimation(&self->bodyAnimator);
+
     Vultron_CheckPlayerCollisions();
     Vultron_CheckOffScreen();
 }
 
-void Vultron_State2_Unknown(void)
+void Vultron_State_Targeting(void)
 {
     RSDK_THIS(Vultron);
-    EntityPlayer *playerPtr = Player_GetNearestPlayerX();
-    RSDK.ProcessAnimation(&self->animator2);
-    int angle = RSDK.ATan2((playerPtr->position.x - self->position.x) >> 16, (playerPtr->position.y - self->position.y) >> 16);
 
-    int rot = 2 * angle - self->rotation;
+    EntityPlayer *targetPlayer = Player_GetNearestPlayerX();
+
+    RSDK.ProcessAnimation(&self->flameAnimator);
+
+    int32 angle = RSDK.ATan2((targetPlayer->position.x - self->position.x) >> 16, (targetPlayer->position.y - self->position.y) >> 16);
+    int32 rot   = (angle << 1) - self->rotation;
 
     if (abs(2 * angle - self->rotation) >= abs(rot - 0x200)) {
-        if (abs(rot - 0x200) < abs(rot + 0x200)) {
+        if (abs(rot - 0x200) < abs(rot + 0x200))
             self->rotation += ((rot - 0x200) >> 5);
-        }
-        else {
+        else
             self->rotation += ((rot + 0x200) >> 5);
-        }
     }
     else {
-        if (abs(2 * angle - self->rotation) < abs(rot + 0x200)) {
+        if (abs(2 * angle - self->rotation) < abs(rot + 0x200))
             self->rotation += (rot >> 5);
-        }
-        else {
+        else
             self->rotation += ((rot + 0x200) >> 5);
-        }
     }
 
     self->rotation &= 0x1FF;
     self->position.x += RSDK.Cos512(self->rotation) << 9;
     self->position.y += RSDK.Sin512(self->rotation) << 9;
+
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &self->hitbox))
+        if (Player_CheckBadnikTouch(player, self, &self->hitboxBadnik))
             Player_CheckBadnikBreak(self, player, true);
     }
 }
@@ -299,24 +316,39 @@ void Vultron_State2_Unknown(void)
 void Vultron_EditorDraw(void)
 {
     RSDK_THIS(Vultron);
+
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+
     switch (self->type) {
-        case 0:
+        case VULTRON_DIVE:
             self->drawFX = FX_NONE;
-            RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(-1, 2, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(Vultron->aniFrames, 0, &self->bodyAnimator, false, 0);
+            RSDK.SetSpriteAnimation(-1, 2, &self->flameAnimator, true, 0);
             break;
-        case 1:
-            self->drawFX   = FX_ROTATE;
-            self->rotation = 192 * (SceneInfo->createSlot & 1) + 320;
-            RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->animator1, false, 0);
-            RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &self->animator2, false, 0);
+
+        case VULTRON_TARGET:
+            self->drawFX = FX_ROTATE;
+            RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &self->bodyAnimator, false, 0);
+            RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &self->flameAnimator, false, 0);
             break;
     }
 
     Vultron_Draw();
 }
 
-void Vultron_EditorLoad(void) { Vultron->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Vultron.bin", SCOPE_STAGE); }
+void Vultron_EditorLoad(void)
+{
+    Vultron->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Vultron.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Vultron, type);
+    RSDK_ENUM_VAR("Dive", VULTRON_DIVE);
+    RSDK_ENUM_VAR("Target Player", VULTRON_TARGET);
+
+    RSDK_ACTIVE_VAR(Vultron, direction);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
+}
 #endif
 
 void Vultron_Serialize(void)

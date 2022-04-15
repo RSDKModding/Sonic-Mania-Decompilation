@@ -23,23 +23,24 @@ void DBTower_Draw(void)
 {
     RSDK_THIS(DBTower);
 
-    if (self->segmentCount <= 0) {
-        self->animator2.frameID = self->rotation >> 5;
-        RSDK.DrawSprite(self->animatorPtrs[0], &self->bodyPositions[0], false);
+    if (self->connectedSegmentCount <= 0) {
+        self->bodyAnimator.frameID = self->rotation >> 5;
+        RSDK.DrawSprite(self->segmentAnimators[0], &self->bodyPositions[0], false);
     }
     else {
         self->direction ^= FLIP_X;
-        for (int i = self->segmentCount; i > 0; --i) {
-            self->rotation          = (2 * self->bodyAngles[i] - 15) & 0x1E;
-            self->animator2.frameID = self->bodyAngles[i] >> 4;
-            RSDK.DrawSprite(self->animatorPtrs[i], &self->bodyPositions[i], false);
+        for (int32 i = self->connectedSegmentCount; i > 0; --i) {
+            self->rotation             = (2 * self->bodyAngles[i] - 15) & 0x1E;
+            self->bodyAnimator.frameID = self->bodyAngles[i] >> 4;
+            RSDK.DrawSprite(self->segmentAnimators[i], &self->bodyPositions[i], false);
         }
 
         self->direction ^= FLIP_X;
         self->rotation = 0;
         if (self->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
-        RSDK.DrawSprite(self->animatorPtrs[0], &self->bodyPositions[0], false);
+
+        RSDK.DrawSprite(self->segmentAnimators[0], &self->bodyPositions[0], false);
         RSDK.SetPaletteEntry(0, 160, 0x200000);
     }
 }
@@ -57,11 +58,11 @@ void DBTower_Create(void *data)
             if (data) {
                 self->active    = ACTIVE_NORMAL;
                 self->drawOrder = Zone->drawOrderLow;
-                RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->animator2, true, 0);
-                self->animatorPtrs[0]    = &self->animator2;
-                self->bodyPositions[0].x = self->position.x;
-                self->bodyPositions[0].y = self->position.y;
-                self->state              = (Type_StateMachine)data;
+                RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->bodyAnimator, true, 0);
+                self->segmentAnimators[0] = &self->bodyAnimator;
+                self->bodyPositions[0].x  = self->position.x;
+                self->bodyPositions[0].y  = self->position.y;
+                self->state               = (Type_StateMachine)data;
             }
             else {
                 self->active    = ACTIVE_BOUNDS;
@@ -69,23 +70,22 @@ void DBTower_Create(void *data)
                 self->timer     = 0;
                 self->direction = FLIP_X;
 
-                for (int i = 0; i < DBTower_SegmentCount; ++i) {
-                    self->animatorPtrs[i] = &self->animator2;
-                    self->field_B0[i]     = 0;
-                    self->bodyAngles[i]   = 0xC0;
+                for (int32 i = 0; i < DBTower_SegmentCount; ++i) {
+                    self->segmentAnimators[i] = &self->bodyAnimator;
+                    self->segmentUnused3[i]   = 0;
+                    self->bodyAngles[i]       = 0xC0;
                 }
-                self->animatorPtrs[0]    = &self->animator1;
-                self->bodyPositions[0].x = self->position.x + ((ScreenInfo->centerX - 64) << 16);
-                self->bodyPositions[0].y = self->position.y + 0xA20000;
+                self->segmentAnimators[0] = &self->headAnimator;
+                self->bodyPositions[0].x  = self->position.x + ((ScreenInfo->centerX - 64) << 16);
+                self->bodyPositions[0].y  = self->position.y + 0xA20000;
 
-                self->field_68.x  = self->position.x;
-                self->field_68.y  = self->position.y;
-                self->health      = 6;
-                self->field_D0[1] = 640;
-                self->field_D0[3] = 64;
-                self->segmentCount    = 0;
-                RSDK.SetSpriteAnimation(DBTower->aniFrames, 0, &self->animator1, true, 0);
-                RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->animator2, true, 0);
+                self->originPos             = self->position;
+                self->health                = 6;
+                self->wobbleAngleVel        = 640;
+                self->xOffsetAngle          = 64;
+                self->connectedSegmentCount = 0;
+                RSDK.SetSpriteAnimation(DBTower->aniFrames, 0, &self->headAnimator, true, 0);
+                RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->bodyAnimator, true, 0);
                 self->state = DBTower_State_SetupArena;
             }
         }
@@ -97,13 +97,16 @@ void DBTower_Create(void *data)
 
 void DBTower_StageLoad(void)
 {
-    DBTower->aniFrames       = RSDK.LoadSpriteAnimation("MSZ/Sandworm.bin", SCOPE_STAGE);
-    DBTower->hitbox.left     = -27;
-    DBTower->hitbox.top      = -27;
-    DBTower->hitbox.right    = 27;
-    DBTower->hitbox.bottom   = 27;
-    DBTower->defeated        = false;
-    DBTower->active          = ACTIVE_ALWAYS;
+    DBTower->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Sandworm.bin", SCOPE_STAGE);
+
+    DBTower->hitboxSegment.left   = -27;
+    DBTower->hitboxSegment.top    = -27;
+    DBTower->hitboxSegment.right  = 27;
+    DBTower->hitboxSegment.bottom = 27;
+
+    DBTower->defeated = false;
+    DBTower->active   = ACTIVE_ALWAYS;
+
     DBTower->sfxRocketJet    = RSDK.GetSfx("Stage/RocketJet.wav");
     DBTower->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
     DBTower->sfxExplosion2   = RSDK.GetSfx("Stage/Explosion2.wav");
@@ -114,7 +117,7 @@ void DBTower_StageLoad(void)
     DBTower->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
 }
 
-void DBTower_CheckPlayerCollisions(void)
+void DBTower_CheckPlayerCollisions_Head(void)
 {
     RSDK_THIS(DBTower);
 
@@ -124,16 +127,17 @@ void DBTower_CheckPlayerCollisions(void)
     else {
         foreach_active(Player, player)
         {
-            uint8 *timer = &self->playerTimers[RSDK.GetEntityID(player)];
-            if (*timer) {
-                --*timer;
+            int32 playerID = RSDK.GetEntityID(player);
+
+            if (self->playerTimers[playerID]) {
+                --self->playerTimers[playerID];
             }
             else {
                 self->position.x = self->bodyPositions[0].x;
                 self->position.y = self->bodyPositions[0].y;
 
-                if (Player_CheckBadnikTouch(player, self, &DBTower->hitbox) && Player_CheckBossHit(player, self)) {
-                    self->field_D0[1] = 2048;
+                if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment) && Player_CheckBossHit(player, self)) {
+                    self->wobbleAngleVel = 2048;
                     if (--self->health <= 0) {
                         SceneInfo->timeEnabled = false;
                         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
@@ -148,13 +152,12 @@ void DBTower_CheckPlayerCollisions(void)
                     foreach_break;
                 }
                 else {
-                    for (int i = 1; i < DBTower_SegmentCount; ++i) {
+                    for (int32 i = 1; i < DBTower_SegmentCount; ++i) {
                         self->position.x = self->bodyPositions[i].x;
                         self->position.y = self->bodyPositions[i].y;
 
-                        uint8 angle =
-                            RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y) - self->bodyAngles[i];
-                        if (Player_CheckBadnikTouch(player, self, &DBTower->hitbox)) {
+                        uint8 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y) - self->bodyAngles[i];
+                        if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment)) {
                             if (angle >= 0x80) {
 #if RETRO_USE_PLUS
                                 if (!Player_CheckMightyUnspin(0x300, player, true, &player->uncurlTimer))
@@ -163,7 +166,7 @@ void DBTower_CheckPlayerCollisions(void)
                             }
                             else if (Player_CheckBossHit(player, self)) {
                                 RSDK.PlaySfx(DBTower->sfxBumper3, false, 255);
-                                *timer = 30;
+                                self->playerTimers[playerID] = 30;
                                 break;
                             }
                         }
@@ -184,11 +187,10 @@ void DBTower_Explode(void)
         RSDK.PlaySfx(UberCaterkiller->sfxExplosion2, false, 255);
 
         if (!(Zone->timer & 7)) {
-            int x = RSDK.Rand(-19, 20) << 16;
-            int y = RSDK.Rand(-24, 25) << 16;
-            EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x + self->position.x, y + self->position.y);
-            explosion->drawOrder = Zone->drawOrderHigh + 2;
+            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            explosion->drawOrder       = Zone->drawOrderHigh + 2;
         }
     }
 }
@@ -199,19 +201,20 @@ void DBTower_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        self->active              = ACTIVE_NORMAL;
-        self->timer               = 0;
-        self->field_68.y += 0xA20000;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        self->active                = ACTIVE_NORMAL;
+        self->timer                 = 0;
         self->position.x += (ScreenInfo->centerX - 64) << 16;
 
-        self->field_68.x         = self->position.x;
+        self->originPos.x = self->position.x;
+        self->originPos.y += 0xA20000;
+
         self->bodyPositions[0].x = self->position.x;
-        self->bodyPositions[0].y = self->field_68.y;
-        for (int i = 1; i < DBTower_SegmentCount; ++i) {
-            self->bodyPositions[i].x = self->field_68.x;
+        self->bodyPositions[0].y = self->originPos.y;
+        for (int32 i = 1; i < DBTower_SegmentCount; ++i) {
+            self->bodyPositions[i].x = self->originPos.x;
             self->bodyPositions[i].y = 0x7FFF0000;
         }
 
@@ -225,8 +228,8 @@ void DBTower_State_SetupArena(void)
         else {
 #endif
             RSDK.PlaySfx(DBTower->sfxAssemble, false, 255);
-            self->bodyPositions[++self->segmentCount].y = 0x7FFF0000;
-            self->field_D0[2] += 0x360000;
+            self->bodyPositions[++self->connectedSegmentCount].y = 0x7FFF0000;
+            self->segmentOffsetY += 0x360000;
             self->timer = 0;
             self->state = DBTower_State_HandleBoss;
 #if RETRO_USE_PLUS
@@ -240,8 +243,8 @@ void DBTower_State_Setup_Encore(void)
     RSDK_THIS(DBTower);
     if (--self->timer <= 0) {
         RSDK.PlaySfx(DBTower->sfxAssemble, false, 255);
-        self->bodyPositions[++self->segmentCount].y = 0x7FFF0000;
-        self->field_D0[2] += 0x360000;
+        self->bodyPositions[++self->connectedSegmentCount].y = 0x7FFF0000;
+        self->segmentOffsetY += 0x360000;
         self->timer = 0;
         self->state = DBTower_State_HandleBoss;
     }
@@ -251,79 +254,80 @@ void DBTower_State_HandleBoss(void)
 {
     RSDK_THIS(DBTower);
 
-    ++self->field_D0[3];
-    self->angle = (RSDK.Sin256(self->field_D0[0] >> 8) >> 5) + 0xC0;
-    if (self->animator1.frameID != 0)
-        RSDK.ProcessAnimation(&self->animator1);
+    ++self->xOffsetAngle;
+    self->angle = (RSDK.Sin256(self->wobbleAngle >> 8) >> 5) + 0xC0;
+    if (self->headAnimator.frameID != 0)
+        RSDK.ProcessAnimation(&self->headAnimator);
 
-    int x                                         = 0x3600 * ((DBTower_SegmentCount - 1) - self->segmentCount) * RSDK.Cos256(self->angle);
-    self->bodyPositions[self->segmentCount].x = x + (RSDK.Cos256(self->field_D0[3]) << 12) + self->field_68.x;
-    self->bodyPositions[self->segmentCount].y = self->field_D0[2] + self->field_68.y;
+    int32 x = 0x3600 * ((DBTower_SegmentCount - 1) - self->connectedSegmentCount) * RSDK.Cos256(self->angle);
+    self->bodyPositions[self->connectedSegmentCount].x = self->originPos.x + x + (RSDK.Cos256(self->xOffsetAngle) << 12);
+    self->bodyPositions[self->connectedSegmentCount].y = self->originPos.y + self->segmentOffsetY;
 
-    for (int i = self->segmentCount - 1; i >= 0; --i) {
+    for (int32 i = self->connectedSegmentCount - 1; i >= 0; --i) {
         self->bodyPositions[i].x = 0x3600 * RSDK.Cos256(self->angle) + self->bodyPositions[i + 1].x;
         self->bodyPositions[i].y = 0x3600 * RSDK.Sin256(self->angle) + self->bodyPositions[i + 1].y;
     }
 
-    self->field_D0[0] += self->field_D0[1];
-    if (self->field_D0[1] > 640) {
-        self->field_D0[1] -= 8;
-        RSDK.ProcessAnimation(&self->animator1);
+    self->wobbleAngle += self->wobbleAngleVel;
+
+    if (self->wobbleAngleVel > 640) {
+        self->wobbleAngleVel -= 8;
+        RSDK.ProcessAnimation(&self->headAnimator);
     }
 
-    if (self->field_D0[2] < 0) {
-        self->field_D0[2] += self->velocity.y;
-        if (self->field_D0[2] < 0) {
+    if (self->segmentOffsetY < 0) {
+        self->segmentOffsetY += self->velocity.y;
+        if (self->segmentOffsetY < 0) {
             self->velocity.y += 0x2800;
         }
         else {
-            self->field_D0[2] = 0;
-            self->velocity.y  = 0;
+            self->segmentOffsetY = 0;
+            self->velocity.y     = 0;
         }
     }
-    else if (self->field_D0[2] <= 0) {
-        if (++self->timer >= 120 || !self->segmentCount) {
+    else if (self->segmentOffsetY <= 0) {
+        if (++self->timer >= 120 || !self->connectedSegmentCount) {
             self->timer = 0;
-            if (self->segmentCount > 0) {
+            if (self->connectedSegmentCount > 0) {
                 RSDK.PlaySfx(DBTower->sfxRocketJet2, false, 255);
 
                 EntityDBTower *child = NULL;
-                if (!(self->segmentCount & 1)) {
-                    child = CREATE_ENTITY(DBTower, DBTower_State_BodyRolling, self->bodyPositions[self->segmentCount].x,
-                                          self->bodyPositions[self->segmentCount].y);
+                if (!(self->connectedSegmentCount & 1)) {
+                    child = CREATE_ENTITY(DBTower, DBTower_State_BodyRolling, self->bodyPositions[self->connectedSegmentCount].x,
+                                          self->bodyPositions[self->connectedSegmentCount].y);
                 }
                 else {
-                    child             = CREATE_ENTITY(DBTower, DBTower_State_BodyBouncing, self->bodyPositions[self->segmentCount].x,
-                                          self->bodyPositions[self->segmentCount].y);
+                    child             = CREATE_ENTITY(DBTower, DBTower_State_BodyBouncing, self->bodyPositions[self->connectedSegmentCount].x,
+                                          self->bodyPositions[self->connectedSegmentCount].y);
                     child->velocity.x = -0x20000;
                     child->velocity.y = -0x80000;
                 }
-                child->bodyAngles[0] = self->bodyAngles[self->segmentCount];
-                child->rotation      = 2 * self->bodyAngles[self->segmentCount];
+                child->bodyAngles[0] = self->bodyAngles[self->connectedSegmentCount];
+                child->rotation      = 2 * self->bodyAngles[self->connectedSegmentCount];
             }
 
-            if (!(--self->segmentCount & 0x80)) {
-                self->field_D0[2] -= 0x360000;
+            if (!(--self->connectedSegmentCount & 0x80)) {
+                self->segmentOffsetY -= 0x360000;
             }
             else {
                 RSDK.PlaySfx(DBTower->sfxAssemble, false, 255);
-                self->segmentCount += 2;
-                self->bodyPositions[self->segmentCount].y = 0x7FFF0000;
-                self->field_D0[2] += 0x360000;
+                self->connectedSegmentCount += 2;
+                self->bodyPositions[self->connectedSegmentCount].y = 0x7FFF0000;
+                self->segmentOffsetY += 0x360000;
             }
         }
     }
     else {
-        self->field_D0[2] -= 0x10000;
-        if (self->field_D0[2] <= 0) {
-            if (self->segmentCount < DBTower_SegmentCount - 1) {
-                self->segmentCount++;
-                self->bodyPositions[self->segmentCount].y = 0x7FFF0000;
-                self->field_D0[2] += 0x360000;
+        self->segmentOffsetY -= 0x10000;
+        if (self->segmentOffsetY <= 0) {
+            if (self->connectedSegmentCount < DBTower_SegmentCount - 1) {
+                self->connectedSegmentCount++;
+                self->bodyPositions[self->connectedSegmentCount].y = 0x7FFF0000;
+                self->segmentOffsetY += 0x360000;
             }
         }
     }
-    DBTower_CheckPlayerCollisions();
+    DBTower_CheckPlayerCollisions_Head();
 }
 
 void DBTower_State_Destroyed(void)
@@ -337,16 +341,16 @@ void DBTower_State_Destroyed(void)
         fxFade->speedOut     = 32;
         RSDK.PlaySfx(DBTower->sfxExplosion3, false, 255);
 
-        for (int i = 1; i < DBTower_SegmentCount; ++i) {
+        for (int32 i = 1; i < DBTower_SegmentCount; ++i) {
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPositions[i].x, self->bodyPositions[i].y);
-            RSDK.SetSpriteAnimation(DBTower->aniFrames, self->animatorPtrs[i]->animationID, &debris->animator, true,
-                                    self->animatorPtrs[i]->frameID);
-            debris->velocity.x         = 4 * RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y         = 4 * RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity            = 0x4800;
-            debris->drawOrder          = Zone->drawOrderHigh;
-            debris->updateRange.x      = 0x400000;
-            debris->updateRange.y      = 0x400000;
+            RSDK.SetSpriteAnimation(DBTower->aniFrames, self->segmentAnimators[i]->animationID, &debris->animator, true,
+                                    self->segmentAnimators[i]->frameID);
+            debris->velocity.x       = 4 * RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y       = 4 * RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength  = 0x4800;
+            debris->drawOrder        = Zone->drawOrderHigh;
+            debris->updateRange.x    = 0x400000;
+            debris->updateRange.y    = 0x400000;
             self->bodyPositions[i].x = -0x800000;
             self->bodyPositions[i].y = -0x800000;
         }
@@ -378,7 +382,7 @@ void DBTower_State_Finish(void)
 #endif
             Zone->cameraBoundsR[0] += 848;
             Zone->playerBoundActiveR[0] = false;
-            Zone->cameraBoundsB[0]     = 304;
+            Zone->cameraBoundsB[0]      = 304;
             destroyEntity(self);
 #if RETRO_USE_PLUS
         }
@@ -403,19 +407,20 @@ void DBTower_State_SpawnSignPost(void)
 }
 #endif
 
-void DBTower_CheckPlayerCollisions2(void)
+void DBTower_CheckPlayerCollisions_Body(void)
 {
     RSDK_THIS(DBTower);
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
+
         if (self->playerTimers[playerID]) {
             self->playerTimers[playerID]--;
         }
         else {
             uint8 angle = (RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y) - self->bodyAngles[0]);
-            if (Player_CheckBadnikTouch(player, self, &DBTower->hitbox)) {
+            if (Player_CheckBadnikTouch(player, self, &DBTower->hitboxSegment)) {
                 if (angle >= 0x80) {
 #if RETRO_USE_PLUS
                     if (Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
@@ -445,16 +450,17 @@ void DBTower_State_BodyBouncing(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1B0000, true)) {
         RSDK.PlaySfx(DBTower->sfxRockemSockem, false, 255);
         self->velocity.y = -0x80000;
     }
-    self->bodyPositions[0].x = self->position.x;
-    self->bodyPositions[0].y = self->position.y;
-    self->bodyAngles[0]      = (self->bodyAngles[0] - 8) & 0xFF;
-    self->rotation           = 2 * self->bodyAngles[0];
+
+    self->bodyPositions[0] = self->position;
+    self->bodyAngles[0]    = (self->bodyAngles[0] - 8) & 0xFF;
+    self->rotation         = self->bodyAngles[0] << 1;
     if (RSDK.CheckOnScreen(self, &self->updateRange))
-        DBTower_CheckPlayerCollisions2();
+        DBTower_CheckPlayerCollisions_Body();
     else
         destroyEntity(self);
 }
@@ -465,14 +471,14 @@ void DBTower_State_BodyRolling(void)
 
     self->position.x += self->velocity.x;
     self->velocity.x -= 0x2800;
-    self->bodyPositions[0].x = self->position.x;
-    self->bodyPositions[0].y = self->position.y;
-    self->bodyPositions[0].x = self->position.x;
-    self->bodyPositions[0].y = self->position.y;
-    self->bodyAngles[0]      = (self->bodyAngles[0] - 8) & 0xFF;
-    self->rotation           = 2 * self->bodyAngles[0];
+
+    self->bodyPositions[0] = self->position;
+    self->bodyPositions[0] = self->position;
+    self->bodyAngles[0]    = (self->bodyAngles[0] - 8) & 0xFF;
+    self->rotation         = self->bodyAngles[0] << 1;
+
     if (RSDK.CheckOnScreen(self, &self->updateRange))
-        DBTower_CheckPlayerCollisions2();
+        DBTower_CheckPlayerCollisions_Body();
     else
         destroyEntity(self);
 }
@@ -481,8 +487,8 @@ void DBTower_State_BodyRolling(void)
 void DBTower_EditorDraw(void)
 {
     RSDK_THIS(DBTower);
-    RSDK.SetSpriteAnimation(DBTower->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.SetSpriteAnimation(DBTower->aniFrames, 0, &self->headAnimator, true, 0);
+    RSDK.DrawSprite(&self->headAnimator, NULL, false);
 }
 
 void DBTower_EditorLoad(void) { DBTower->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Sandworm.bin", SCOPE_STAGE); }

@@ -72,7 +72,7 @@ void LRZConvControl_HandlePlayerTrigger(void)
 {
     RSDK_THIS(LRZConvControl);
 
-    bool32 flag = false;
+    bool32 interacted = false;
     foreach_active(Player, player)
     {
         int32 playerID    = RSDK.GetEntityID(player);
@@ -85,13 +85,13 @@ void LRZConvControl_HandlePlayerTrigger(void)
         else {
             if (collided) {
                 if (!player->sidekick)
-                    flag = true;
+                    interacted = true;
                 self->activePlayers |= (1 << playerID);
             }
         }
     }
 
-    if (flag) {
+    if (interacted) {
         switch (self->behavior) {
             case LRZCONVCTRL_BEHAVIOR_ONOFF_SET: LRZ2Setup->conveyorOff = self->flipVal; break;
             case LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP: LRZ2Setup->conveyorOff = !LRZ2Setup->conveyorOff; break;

@@ -8,18 +8,18 @@ typedef enum {
     GHZ_BG_CAVES,
 } BGSwitchIDsGHZ;
 
-typedef enum { GHZ_DECOR_BRIDGEPOST } DecorTypesGHZ;
+typedef enum { GHZ_DECORATION_BRIDGEPOST } DecorationTypesGHZ;
 
 // Object Class
 struct ObjectGHZSetup {
     RSDK_OBJECT
-    int32 waterFadeAmount;
-    STATIC(int32 delayA, 30);
-    int32 frameA;
-    TABLE(int32 delayListA[8], { 30, 2, 2, 2, 30, 2, 2, 2 });
-    STATIC(int32 delayB, 60);
-    int32 frameB;
-    TABLE(int32 delayListB[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
+    int32 paletteTimer;
+    STATIC(int32 sunFlowerTimer, 30);
+    int32 sunFlowerFrame;
+    TABLE(int32 sunFlowerDurationTable[8], { 30, 2, 2, 2, 30, 2, 2, 2 });
+    STATIC(int32 extendFlowerTimer, 60);
+    int32 extendFlowerFrame;
+    TABLE(int32 extendFlowerDurationTable[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
     uint16 aniTiles;
 };
 
@@ -48,10 +48,10 @@ void GHZSetup_Serialize(void);
 void GHZSetup_SetupStartingBG(void);
 void GHZSetup_SetupActTransition(void);
 void GHZSetup_HandleActTransition(void);
-void GHZSetup_BGSwitch_CB_Outside_Act2(void);
-void GHZSetup_BGSwitch_CB_Caves_Act2(void);
-void GHZSetup_BGSwitch_CB_Outside_Act1(void);
-void GHZSetup_BGSwitch_CB_Caves_Act1(void);
+void GHZSetup_BGSwitchCB_Outside_Act2(void);
+void GHZSetup_BGSwitchCB_Caves_Act2(void);
+void GHZSetup_BGSwitchCB_Outside_Act1(void);
+void GHZSetup_BGSwitchCB_Caves_Act1(void);
 void GHZSetup_SpawnGHZ2Outro(void);
 
 #endif //!OBJ_GHZSETUP_H

@@ -248,7 +248,7 @@ void BigSqueeze_SpawnDebris(int32 *debrisData)
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 6, &debris->animator, true, debrisData[0]);
             debris->velocity.x    = debrisData[1];
             debris->velocity.y    = debrisData[2];
-            debris->gravity       = 0x3800;
+            debris->gravityStrength       = 0x3800;
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
@@ -522,7 +522,7 @@ void BigSqueeze_StateManager_HandleBoss(void)
                 RSDK.SetSpriteAnimation(FBZTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y    = -0x20000;
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->drawOrder     = Zone->drawOrderLow;
                 debris->updateRange.x = 0x200000;
                 debris->updateRange.y = 0x200000;

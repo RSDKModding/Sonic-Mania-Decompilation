@@ -21,9 +21,9 @@ struct EntityMSZSpotlight {
     StateMachine(state);
     uint8 color;
     int32 timer;
-    int32 moveFlag;
+    int32 angleOffset;
     Vector2 startPos;
-    Animator animator;
+    Animator animatorSpotlight;
 };
 
 // Object Struct
@@ -43,10 +43,10 @@ void MSZSpotlight_EditorLoad(void);
 void MSZSpotlight_Serialize(void);
 
 // Extra Entity Functions
-void MSZSpotlight_Unknown1(void);
-void MSZSpotlight_Unknown2(void);
-void MSZSpotlight_Unknown3(void);
-void MSZSpotlight_Unknown4(void);
-void MSZSpotlight_Unknown5(void);
+void MSZSpotlight_State_Appear(void);
+void MSZSpotlight_State_Circling(void);
+void MSZSpotlight_State_Idle(void);
+void MSZSpotlight_State_MoveToBox(void);
+void MSZSpotlight_State_Disappear(void);
 
 #endif //!OBJ_MSZSPOTLIGHT_H

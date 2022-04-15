@@ -124,7 +124,7 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
         lid->state        = Debris_State_Fall;
         lid->velocity.y   = -0x60000;
         lid->velocity.x   = -0x18000;
-        lid->gravity      = 0x3800;
+        lid->gravityStrength      = 0x3800;
         lid->scaleInc.x   = 8;
         lid->scaleInc.y   = 8;
         lid->rotSpeed     = -1;

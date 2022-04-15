@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { ARMADILOID_SHOOTER, ARMADILOID_RIDER } ArmadiloidTypes;
+
 // Object Class
 struct ObjectArmadiloid {
     RSDK_OBJECT
@@ -16,13 +18,13 @@ struct EntityArmadiloid {
     StateMachine(state);
     int32 type;
     int32 timer;
-    Entity *child;
-    Entity *parent;
+    EntityArmadiloid *child;
+    EntityArmadiloid *parent;
     Vector2 startPos;
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator bodyAnimator;
+    Animator headAnimator;
+    Animator boosterAnimator;
 };
 
 // Object Struct

@@ -256,9 +256,10 @@ void SeeSaw_StageLoad(void)
     SeeSaw->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
 }
 
-void SeeSaw_SetupHitbox(int playerX, int32 tilt)
+void SeeSaw_SetupHitbox(int32 playerX, int32 tilt)
 {
     RSDK_THIS(SeeSaw);
+
     if (tilt == SEESAW_TILT_M) {
         SeeSaw->hitboxPlank.top   = -8;
         SeeSaw->hitboxPlank.right = 48;

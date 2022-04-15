@@ -323,7 +323,7 @@ void EggPrison_State_Activated(void)
     RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 2);
     debris->velocity.x    = -0x20000;
     debris->velocity.y    = -0x20000;
-    debris->gravity       = 0x3800;
+    debris->gravityStrength       = 0x3800;
     debris->rotSpeed      = -4;
     debris->drawFX        = FX_ROTATE;
     debris->drawOrder     = Zone->drawOrderHigh;
@@ -334,7 +334,7 @@ void EggPrison_State_Activated(void)
     RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 3);
     debris->velocity.x    = 0;
     debris->velocity.y    = -0x30000;
-    debris->gravity       = 0x3800;
+    debris->gravityStrength       = 0x3800;
     debris->rotSpeed      = 8;
     debris->drawFX        = FX_ROTATE;
     debris->drawOrder     = Zone->drawOrderHigh;
@@ -345,7 +345,7 @@ void EggPrison_State_Activated(void)
     RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 4);
     debris->velocity.x    = 0x20000;
     debris->velocity.y    = -0x20000;
-    debris->gravity       = 0x3800;
+    debris->gravityStrength       = 0x3800;
     debris->rotSpeed      = 4;
     debris->drawFX        = FX_ROTATE;
     debris->drawOrder     = Zone->drawOrderHigh;

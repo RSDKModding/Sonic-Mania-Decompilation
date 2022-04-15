@@ -25,24 +25,26 @@ void CollapsingSand_Draw(void)
     RSDK_THIS(CollapsingSand);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xE0E0E0u, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0u, 0, INK_NONE,
-                  false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xE0E0E0u, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xE0E0E0u, 0, INK_NONE,
-                  false);
+    // Draw Outline
+    drawPos.x = self->position.x - (self->size.x >> 1);
+    drawPos.y = self->position.y - (self->size.y >> 1);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xE0E0E0, 0, INK_NONE, false);
+
+    // Draw Corners
     self->direction = FLIP_NONE;
     RSDK.DrawSprite(&CollapsingSand->animator, &drawPos, false);
+
     drawPos.x += self->size.x;
     self->direction = FLIP_X;
     RSDK.DrawSprite(&CollapsingSand->animator, &drawPos, false);
+
     drawPos.y += self->size.y;
     self->direction = FLIP_XY;
     RSDK.DrawSprite(&CollapsingSand->animator, &drawPos, false);
+
     drawPos.x -= self->size.x;
     self->direction = FLIP_Y;
     RSDK.DrawSprite(&CollapsingSand->animator, &drawPos, false);
@@ -57,6 +59,7 @@ void CollapsingSand_Create(void *data)
     self->drawFX |= FX_FLIP;
     self->position.x &= 0xFFF80000;
     self->position.y &= 0xFFF80000;
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
@@ -96,22 +99,22 @@ void CollapsingSand_State_CollapseDelay(void)
     RSDK_THIS(CollapsingSand);
 
     if (self->collapseTimer >= self->delay) {
-        self->field_70      = self->size.x >> 20;
-        self->field_74      = self->size.y >> 20;
-        self->collapseTimer = 0;
+        self->collapseDuration.x = self->size.x >> 20;
+        self->collapseDuration.y = self->size.y >> 20;
+        self->collapseTimer      = 0;
         if (!self->collapseLeft) {
-            self->state = CollapsingSand_State_CollapseRight;
-            self->tileX = ((self->size.x >> 1) + self->position.x - 0x80000) >> 20;
+            self->state     = CollapsingSand_State_CollapseRight;
+            self->tilePos.x = ((self->size.x >> 1) + self->position.x - 0x80000) >> 20;
         }
         else {
-            self->state = CollapsingSand_State_CollapseLeft;
-            self->tileX = (self->position.x - (self->size.x >> 1) + 0x80000) >> 20;
+            self->state     = CollapsingSand_State_CollapseLeft;
+            self->tilePos.x = (self->position.x - (self->size.x >> 1) + 0x80000) >> 20;
         }
         RSDK.PlaySfx(CollapsingSand->sfxSandFall, false, 255);
 
-        self->tileY    = ((self->size.y >> 1) + self->position.y - 0x80000) >> 20;
-        self->tileMaxX = self->tileX;
-        self->tileMaxY = (self->position.y - (self->size.y >> 1) + 0x80000) >> 20;
+        self->tilePos.y    = ((self->size.y >> 1) + self->position.y - 0x80000) >> 20;
+        self->tileEndPos.x = self->tilePos.x;
+        self->tileEndPos.y = (self->position.y - (self->size.y >> 1) + 0x80000) >> 20;
     }
     else {
         self->collapseTimer++;
@@ -126,54 +129,52 @@ void CollapsingSand_State_CollapseLeft(void)
         self->collapseTimer = (self->collapseTimer + 1) & 3;
     }
     else {
-        if (self->field_70 > 0) {
-            int tx = self->tileX;
-            int ty = self->tileY;
-            if (tx >= self->tileMaxX) {
-                int x = (tx << 20) + 0x80000;
-                int y = (ty << 20) + 0x80000;
+        if (self->collapseDuration.x > 0 || self->collapseDuration.y > 0) {
+            int32 tx = self->tilePos.x;
+            int32 ty = self->tilePos.y;
 
-                while (true) {
-                    if (ty < self->tileMaxY)
-                        break;
+            for (int32 x = (tx << 20) + 0x80000, y = (ty << 20) + 0x80000; tx >= self->tileEndPos.x && ty >= self->tileEndPos.y; --tx, --ty) {
+                bool32 spawnSand = false;
 
-                    bool32 flag = false;
-
-                    uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
-                        RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                        debris->drawOrder = Zone->drawOrderHigh;
-                        debris->timer     = 44;
-                        if (ty == self->tileY)
-                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, ((self->field_70 & 1) + 168) | 0b1111000000000000);
-                    }
-
-                    y -= 0x100000;
-                    tx--;
-                    ty--;
-                    x -= 0x100000;
-                    if (tx < self->tileMaxX)
-                        break;
+                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+                if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
+                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+                    spawnSand = true;
                 }
+
+                tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+                if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
+                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                    spawnSand = true;
+                }
+
+                if (spawnSand) {
+                    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
+                    RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
+                    debris->drawOrder = Zone->drawOrderHigh;
+                    debris->timer     = 44;
+                    if (self->collapseDuration.x > 0) {
+                        // Replace ground tile with a flat one
+                        if (ty == self->tilePos.y)
+                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (168 + (self->collapseDuration.x & 1)) | 0b1111000000000000);
+                    }
+                }
+
+                x -= 0x100000;
+                y -= 0x100000;
             }
 
-            ++self->tileX;
-            --self->field_70;
+            if (self->collapseDuration.x > 0) {
+                ++self->tilePos.x;
+                --self->collapseDuration.x;
+            }
+            else {
+                --self->tilePos.y;
+                --self->collapseDuration.y;
+            }
             self->collapseTimer = (self->collapseTimer + 1) & 3;
         }
-        else if (self->field_74 <= 0) {
+        else {
             foreach_all(ItemBox, itembox)
             {
                 if (abs(itembox->position.x - self->position.x) < self->size.x >> 1) {
@@ -182,52 +183,6 @@ void CollapsingSand_State_CollapseLeft(void)
                 }
             }
             destroyEntity(self);
-        }
-        else {
-            int tx = self->tileX;
-            int ty = self->tileY;
-
-            if (tx >= self->tileMaxX) {
-                int x = (tx << 20) + 0x80000;
-                int y = ((ty << 20) + 0x80000);
-
-                while (true) {
-                    if (ty < self->tileMaxY)
-                        break;
-
-                    bool32 flag = false;
-
-                    uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
-                        RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                        debris->drawOrder = Zone->drawOrderHigh;
-                        debris->timer     = 44;
-                    }
-
-                    x -= 0x100000;
-                    y -= 0x100000;
-                    tx--;
-                    ty--;
-                    if (tx < self->tileMaxX)
-                        break;
-                }
-            }
-
-            --self->tileY;
-            --self->field_74;
-            self->collapseTimer = (self->collapseTimer + 1) & 3;
         }
     }
 }
@@ -240,54 +195,52 @@ void CollapsingSand_State_CollapseRight(void)
         self->collapseTimer = (self->collapseTimer + 1) & 3;
     }
     else {
-        if (self->field_70 > 0) {
-            int tx = self->tileX;
-            int ty = self->tileY;
+        if (self->collapseDuration.x > 0 || self->collapseDuration.y > 0) {
+            int32 tx = self->tilePos.x;
+            int32 ty = self->tilePos.y;
 
-            if (tx <= self->tileMaxX) {
-                int x = (tx << 20) + 0x80000;
-                int y = ((ty << 20) + 0x80000);
-                while (true) {
-                    if (ty < self->tileMaxY)
-                        break;
+            for (int32 x = (tx << 20) + 0x80000, y = (ty << 20) + 0x80000; tx <= self->tileEndPos.x && ty >= self->tileEndPos.y; ++tx, --ty) {
+                bool32 spawnSand = false;
 
-                    bool32 flag = false;
-
-                    uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
-                        RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                        debris->drawOrder = Zone->drawOrderHigh;
-                        debris->timer     = 44;
-                        if (ty == self->tileY)
-                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (169 - (self->field_70 & 1)) | 0b1111000000000000);
-                    }
-
-                    x += 0x100000;
-                    y -= 0x100000;
-                    ++tx;
-                    --ty;
-                    if (tx > self->tileMaxX)
-                        break;
+                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+                if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
+                    RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+                    spawnSand = true;
                 }
+
+                tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+                if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
+                    RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
+                    spawnSand = true;
+                }
+
+                if (spawnSand) {
+                    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
+                    RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
+                    debris->drawOrder = Zone->drawOrderHigh;
+                    debris->timer     = 44;
+                    if (self->collapseDuration.x > 0) {
+                        // Replace ground tile with a flat one
+                        if (ty == self->tilePos.y)
+                            RSDK.SetTileInfo(Zone->fgLow, tx, ty, (169 - (self->collapseDuration.x & 1)) | 0b1111000000000000);
+                    }
+                }
+
+                x += 0x100000;
+                y -= 0x100000;
             }
 
-            --self->tileX;
-            --self->field_70;
+            if (self->collapseDuration.x > 0) {
+                --self->tilePos.x;
+                --self->collapseDuration.x;
+            }
+            else {
+                --self->tilePos.y;
+                --self->collapseDuration.y;
+            }
             self->collapseTimer = (self->collapseTimer + 1) & 3;
         }
-        else if (self->field_74 <= 0) {
+        else {
             foreach_all(ItemBox, itembox)
             {
                 if (abs(itembox->position.x - self->position.x) < self->size.x >> 1) {
@@ -297,55 +250,10 @@ void CollapsingSand_State_CollapseRight(void)
             }
             destroyEntity(self);
         }
-        else {
-            int tx = self->tileX;
-            int ty = self->tileY;
-
-            if (tx <= self->tileMaxX) {
-                int x = ((tx << 20) + 0x80000);
-                int y = (ty << 20) + 0x80000;
-                while (true) {
-                    if (ty < self->tileMaxY)
-                        break;
-
-                    bool32 flag = false;
-
-                    uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
-                        flag = 1;
-                    }
-
-                    tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
-                    if ((tile & 0x3FF) >= 446 && (tile & 0x3FF) <= 554) {
-                        RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
-                        flag = true;
-                    }
-
-                    if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
-                        RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
-                        debris->drawOrder = Zone->drawOrderHigh;
-                        debris->timer     = 44;
-                    }
-
-                    x += 0x100000;
-                    y -= 0x100000;
-                    ++tx;
-                    --ty;
-
-                    if (tx > self->tileMaxX)
-                        break;
-                }
-            }
-
-            --self->tileY;
-            --self->field_74;
-            self->collapseTimer = (self->collapseTimer + 1) & 3;
-        }
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CollapsingSand_EditorDraw(void) { CollapsingSand_Draw(); }
 
 void CollapsingSand_EditorLoad(void)
@@ -353,6 +261,7 @@ void CollapsingSand_EditorLoad(void)
     CollapsingSand->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SandCollapse.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &CollapsingSand->animator, true, 0);
 }
+#endif
 
 void CollapsingSand_Serialize(void)
 {

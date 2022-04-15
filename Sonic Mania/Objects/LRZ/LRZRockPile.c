@@ -338,7 +338,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
             rock->drawOrder     = self->drawOrder;
             rock->delay         = delay;
             rock->direction     = direction;
-            rock->gravity       = 0x3800;
+            rock->gravityStrength       = 0x3800;
             rock->updateRange.x = 0x800000;
             rock->updateRange.y = 0x800000;
 
@@ -360,7 +360,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
         RSDK.SetSpriteAnimation(LRZRockPile->aniFrames, 0, &debris->animator, true, 1);
         debris->drawFX        = FX_ROTATE | FX_FLIP;
         debris->drawOrder     = self->drawOrder;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->direction     = self->direction;
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;
@@ -382,7 +382,7 @@ void LRZRockPile_SpawnRockDebris(int32 x, int32 y, int32 velX, int32 velY)
         RSDK.SetSpriteAnimation(LRZRockPile->aniFrames, 0, &debris->animator, true, 2);
         debris->drawFX        = FX_ROTATE | FX_FLIP;
         debris->drawOrder     = self->drawOrder;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->direction     = self->direction;
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;

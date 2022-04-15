@@ -14,6 +14,7 @@ void Tornado_Update(void)
     RSDK_THIS(Tornado);
     self->prevPosY = self->position.y;
     StateMachine_Run(self->state);
+
     self->animatorTornado.frameID = self->turnAngle >> 4;
     RSDK.ProcessAnimation(&self->animatorPropeller);
     RSDK.ProcessAnimation(&self->animatorPilot);
@@ -40,10 +41,10 @@ void Tornado_Draw(void)
         RSDK.DrawSprite(&self->animatorFlame, &drawPos, false);
     }
 
-    if (!MSZSetup->flag) {
+    if (!MSZSetup->usingRegularPalette) {
         drawPos = self->position;
-        drawPos.x += self->knuxOffset.x;
-        drawPos.y += self->knuxOffset.y;
+        drawPos.x += self->knuxPos.x;
+        drawPos.y += self->knuxPos.y;
         RSDK.DrawSprite(&self->animatorKnux, &drawPos, false);
     }
 }
@@ -63,14 +64,14 @@ void Tornado_Create(void *data)
         self->offsetX       = 0x80000;
         self->active        = ACTIVE_BOUNDS;
         self->state         = Tornado_State_Setup;
-        self->knuxOffset.x  = -0x140000;
-        self->knuxOffset.y  = -0x160000;
+        self->knuxPos.x  = -0x140000;
+        self->knuxPos.y  = -0x160000;
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &self->animatorTornado, true, 0);
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &self->animatorPropeller, true, 0);
         RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &self->animatorFlame, true, 0);
-        if ((globals->playerID & 0xFF) == ID_TAILS
+        if (checkPlayerID(ID_TAILS, 1)
 #if RETRO_USE_PLUS
-            || (globals->playerID & 0xFF) == ID_MIGHTY || (globals->playerID & 0xFF) == ID_RAY
+            || checkPlayerID(ID_MIGHTY, 1) || checkPlayerID(ID_RAY, 1)
 #endif
         ) {
             RSDK.SetSpriteAnimation(Tornado->aniFrames, 3, &self->animatorPilot, true, 0);
@@ -78,11 +79,13 @@ void Tornado_Create(void *data)
         else {
             RSDK.SetSpriteAnimation(Tornado->aniFrames, 6, &self->animatorPilot, true, 0);
         }
+
         if ((globals->playerID & 0xFF) != ID_KNUCKLES && !StarPost->postIDs[0])
             RSDK.SetSpriteAnimation(Tornado->knuxFrames, 6, &self->animatorKnux, false, 0);
+
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (player2->objectID == Player->objectID)
-            player2->state = MSZSetup_Player_State_Pilot;
+            player2->state = MSZSetup_PlayerState_Pilot;
     }
 }
 
@@ -90,9 +93,10 @@ void Tornado_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ") || RSDK.CheckStageFolder("MSZCutscene")) {
         Tornado->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Tornado.bin", SCOPE_STAGE);
-        if ((globals->playerID & 0xFF) != ID_KNUCKLES)
+        if (!checkPlayerID(ID_KNUCKLES, 1))
             Tornado->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
     }
+
     Tornado->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
     Tornado->sfxImpact    = RSDK.GetSfx("Stage/Impact5.wav");
 }
@@ -102,15 +106,17 @@ void Tornado_State_Setup(void)
     RSDK_THIS(Tornado);
     self->active = ACTIVE_NORMAL;
     if (RSDK.CheckStageFolder("MSZ"))
-        self->state = Tornado_State_SetupPlayers;
+        self->state = Tornado_State_SetupMSZ1Intro;
     else
         self->state = Tornado_HandlePlayerCollisions;
+
     StateMachine_Run(self->state);
 }
 
-void Tornado_State_SetupPlayers(void)
+void Tornado_State_SetupMSZ1Intro(void)
 {
     RSDK_THIS(Tornado);
+
     Tornado_HandlePlayerCollisions();
     if (StarPost->postIDs[0]) {
         RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
@@ -130,32 +136,35 @@ void Tornado_State_SetupPlayers(void)
             player->velocity.x = 0;
             player->velocity.y = 0;
         }
-        self->state = Tornado_Unknown3;
+        self->state = Tornado_State_MSZ1Intro;
     }
 }
 
-void Tornado_Unknown3(void)
+void Tornado_State_MSZ1Intro(void)
 {
     RSDK_THIS(Tornado);
     Tornado_HandlePlayerCollisions();
+
     if (++self->timer == 180) {
         self->timer = 0;
         RSDK.PlaySfx(Tornado->sfxImpact, false, 255);
         self->knuxVel.x = -0x20000;
         self->knuxVel.y = -0x40000;
         RSDK.SetSpriteAnimation(Tornado->knuxFrames, 4, &self->animatorKnux, false, 0);
-        self->state = Tornado_Unknown4;
+        self->state = Tornado_State_KnuxKnockedOff;
         foreach_active(Player, player) { player->stateInput = Player_ProcessP1Input; }
     }
 }
 
-void Tornado_Unknown4(void)
+void Tornado_State_KnuxKnockedOff(void)
 {
     RSDK_THIS(Tornado);
     Tornado_State_PlayerControlled();
+
     self->knuxVel.y += 0x3800;
-    self->knuxOffset.x += self->knuxVel.x;
-    self->knuxOffset.y += self->knuxVel.y;
+    self->knuxPos.x += self->knuxVel.x;
+    self->knuxPos.y += self->knuxVel.y;
+
     if (++self->timer == 120) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(-1, 0, &self->animatorKnux, false, 0);
@@ -188,7 +197,7 @@ void Tornado_HandlePlayerCollisions(void)
         }
     }
 
-    EntityCamera *camera = TornadoPath->cameraPtr;
+    EntityCamera *camera = TornadoPath->camera;
     if (camera) {
         int32 screenX = camera->position.x - (ScreenInfo->centerX << 16) + 0xC0000;
         if (player1->position.x < screenX)
@@ -348,7 +357,7 @@ void Tornado_State_PlayerControlled(void)
     self->position.x += offsetX;
     self->position.y = storeY;
 
-    EntityCamera *camera = TornadoPath->cameraPtr;
+    EntityCamera *camera = TornadoPath->camera;
     if (camera) {
         int32 screenX = camera->position.x - (ScreenInfo->centerX << 16) + 0xC0000;
         if (player1->position.x < screenX)
@@ -371,16 +380,17 @@ void Tornado_State_PlayerControlled(void)
     }
 }
 
-void Tornado_Unknown7(void)
+void Tornado_State_Mayday(void)
 {
     RSDK_THIS(Tornado);
+
     self->position.x += TornadoPath->moveVel.x;
     self->position.y += TornadoPath->moveVel.y;
 
     if (!(Zone->timer % 3)) {
-        if (self->onGround) {
+        if (self->onGround) 
             RSDK.PlaySfx(Tornado->sfxExplosion, false, 255);
-        }
+
         if (Zone->timer & 4) {
             EntityExplosion *explosion =
                 CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), (RSDK.Rand(-32, 32) << 16) + self->position.x,
@@ -390,20 +400,24 @@ void Tornado_Unknown7(void)
     }
 }
 
-void Tornado_Unknown8(void)
+void Tornado_State_FlyAway_Right(void)
 {
     RSDK_THIS(Tornado);
+
     self->position.x += 0x30000;
     self->position.y -= 0x30000;
+
     self->active = ACTIVE_BOUNDS;
 }
 
-void Tornado_Unknown9(void)
+void Tornado_State_FlyAway_Left(void)
 {
     RSDK_THIS(Tornado);
+
     self->velocity.x -= 0x1800;
     self->position.x += self->velocity.x;
     self->position.y -= 0x8000;
+
     self->active = ACTIVE_BOUNDS;
 }
 

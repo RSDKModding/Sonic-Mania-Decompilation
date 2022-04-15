@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectCactula {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxCactDrop;
 };
@@ -15,12 +15,12 @@ struct ObjectCactula {
 struct EntityCactula {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused;
     int32 offsetY;
-    bool32 flag;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    bool32 droppedBomb;
+    Animator bodyTopAnimator;
+    Animator bodyBottomAnimator;
+    Animator propellerAnimator;
 };
 
 // Object Struct
@@ -46,8 +46,8 @@ void Cactula_DebugDraw(void);
 void Cactula_CheckPlayerCollisions(void);
 bool32 Cactula_CheckCB(void);
 
-void Cactula_State_Unknown1(void);
-void Cactula_State_Unknown2(void);
-void Cactula_State_Unknown3(void);
+void Cactula_State_CheckPlayerInRange(void);
+void Cactula_State_Rising(void);
+void Cactula_State_DropBomb(void);
 
 #endif //!OBJ_CACTULA_H

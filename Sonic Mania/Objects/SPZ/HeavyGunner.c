@@ -1085,7 +1085,7 @@ void HeavyGunner_StateMissile_AttackRobo(void)
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 28, &debris->animator, true, i >> 1);
             debris->velocity.x = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->scale      = parent->scale;
             debris->rotSpeed   = RSDK.Rand(-24, 24);
             debris->drawOrder  = Zone->drawOrderLow;
@@ -1161,7 +1161,7 @@ void HeavyGunner_StateMissile_AttackGunner(void)
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 28, &debris->animator, true, i >> 1);
             debris->velocity.x = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->rotSpeed   = RSDK.Rand(-24, 24);
             debris->drawOrder  = Zone->drawOrderHigh;
             if (i >> 1 < 3)
@@ -1172,7 +1172,7 @@ void HeavyGunner_StateMissile_AttackGunner(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 13, &debris->animator, true, 0);
         debris->velocity.x = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
         debris->velocity.y = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
-        debris->gravity    = 0x3800;
+        debris->gravityStrength    = 0x3800;
         debris->drawOrder  = Zone->drawOrderHigh;
 
         debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + 0x60000, self->position.y - 0x40000);
@@ -1413,7 +1413,7 @@ void HeavyGunner_StateHeli_IncomingMissile(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 20, &debris->animator, true, 0);
         debris->velocity.y = -0x20000;
         debris->velocity.x = Zone->autoScrollSpeed - 0x20000;
-        debris->gravity    = 0x3800;
+        debris->gravityStrength    = 0x3800;
         debris->drawFX     = FX_ROTATE;
         debris->rotSpeed   = -16;
         debris->drawOrder  = Zone->drawOrderHigh;
@@ -1460,14 +1460,14 @@ void HeavyGunner_StateHeli_Exploding(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &debris->animator, true, self->feetAnimator.frameID);
         debris->velocity.y = -0x10000;
         debris->velocity.x = Zone->autoScrollSpeed - 0x10000;
-        debris->gravity    = 0x3800;
+        debris->gravityStrength    = 0x3800;
         debris->drawOrder  = Zone->drawOrderHigh;
 
         debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x + 0x1B0000, self->position.y);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &debris->animator, true, self->feet2Animator.frameID);
         debris->velocity.y = -0x10000;
         debris->velocity.x = Zone->autoScrollSpeed + 0x10000;
-        debris->gravity    = 0x3800;
+        debris->gravityStrength    = 0x3800;
         debris->drawOrder  = Zone->drawOrderLow - 1;
         RSDK.SetSpriteAnimation(-1, 0, &self->feetAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->feet2Animator, true, 0);

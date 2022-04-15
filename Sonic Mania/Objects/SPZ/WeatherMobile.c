@@ -851,7 +851,7 @@ void WeatherMobile_State_Defeated(void)
             debris->animator      = self->radarDishLAnimator;
             debris->velocity.x    = -0x20000;
             debris->velocity.y    = -0x10000;
-            debris->gravity       = 0x3800;
+            debris->gravityStrength       = 0x3800;
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
@@ -860,7 +860,7 @@ void WeatherMobile_State_Defeated(void)
             debris->animator      = self->radarDishRAnimator;
             debris->velocity.x    = 0x20000;
             debris->velocity.y    = -0x10000;
-            debris->gravity       = 0x3800;
+            debris->gravityStrength       = 0x3800;
             debris->drawOrder     = Zone->drawOrderHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;

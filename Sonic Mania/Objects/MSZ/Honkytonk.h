@@ -6,8 +6,8 @@
 // Object Class
 struct ObjectHonkytonk {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxTrigger;
+    Hitbox hitboxRebound;
     uint16 sfxPiano;
     uint16 aniFrames;
 };

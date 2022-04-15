@@ -61,7 +61,7 @@ void SeeSaw_EditorLoad(void);
 void SeeSaw_Serialize(void);
 
 // Extra Entity Functions
-void SeeSaw_SetupHitbox(int playerX, int32 flag);
+void SeeSaw_SetupHitbox(int32 playerX, int32 tilt);
 void SeeSaw_State_OrbIdle(void);
 void SeeSaw_State_None(void);
 void SeeSaw_State_NoOrb(void);

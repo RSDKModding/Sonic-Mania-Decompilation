@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-typedef enum { GENERICTRIGGER_FBZ_EXTERIOR, GENERICTRIGGER_FBZ_INTERIOR } GenericTriggerTypesFBZ;
+typedef enum { FBZ_GENERICTRIGGER_EXTERIOR, FBZ_GENERICTRIGGER_INTERIOR } GenericTriggerTypesFBZ;
 
 typedef enum {
     FBZ_BG_INSIDE1,
@@ -12,9 +12,9 @@ typedef enum {
 } BGSwitchIDsFBZ;
 
 typedef enum {
-    FBZ_DECOR_BLUEPRINT1,
-    FBZ_DECOR_BLUEPRINT2,
-} DecorTypesFBZ;
+    FBZ_DECORATION_BLUEPRINT1,
+    FBZ_DECORATION_BLUEPRINT2,
+} DecorationTypesFBZ;
 
 // Object Class
 struct ObjectFBZSetup {

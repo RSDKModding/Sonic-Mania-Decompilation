@@ -122,7 +122,7 @@ void BuckwildBall_SpawnDebris(void)
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 1, &debris->animator, true, 0);
     debris->drawOrder  = Zone->drawOrderHigh;
-    debris->gravity    = 0x3800;
+    debris->gravityStrength    = 0x3800;
     debris->velocity.x = 0x180 * (abs(spawnX - x) >> 8) / sizeX;
     if (debris->position.x < self->position.x) {
         debris->direction  = FLIP_X;
@@ -224,7 +224,7 @@ void BuckwildBall_HandleRollCrush(void)
                 debris->drawOrder = Zone->drawOrderHigh;
                 debris->direction = spikes->direction;
                 debris->drawFX |= FX_ROTATE;
-                debris->gravity    = 0x3800;
+                debris->gravityStrength    = 0x3800;
                 debris->rotSpeed   = RSDK.Rand(-32, 32);
                 debris->velocity.x = RSDK.Rand(-0x28000, 0x28000);
                 debris->velocity.y = -0x1000 * RSDK.Rand(32, 96);

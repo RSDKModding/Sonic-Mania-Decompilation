@@ -13,12 +13,8 @@ void Honkytonk_Update(void)
 {
     RSDK_THIS(Honkytonk);
 
-    if (self->depression > 0) {
-        int32 val = self->depression - 0x20000;
-        if (val < 0)
-            val = 0;
-        self->depression = val;
-    }
+    if (self->depression > 0)
+        self->depression = maxVal(self->depression - 0x20000, 0);
 
     foreach_active(Player, player)
     {
@@ -27,44 +23,42 @@ void Honkytonk_Update(void)
         int32 startXVel = player->velocity.x;
         int32 startYVel = player->velocity.y;
 
-        int32 difX = (player->position.x - self->position.x) >> 8;
-        int32 difY = (player->position.y - self->position.y) >> 8;
-        player->position.x = (difY * RSDK.Sin256(self->negAngle)) + (difX * RSDK.Cos256(self->negAngle)) + self->position.x;
-        player->position.y = (difY * RSDK.Cos256(self->negAngle)) - (difX * RSDK.Sin256(self->negAngle)) + self->position.y;
+        int32 distX        = (player->position.x - self->position.x) >> 8;
+        int32 distY        = (player->position.y - self->position.y) >> 8;
+        player->position.x = (distY * RSDK.Sin256(self->negAngle)) + (distX * RSDK.Cos256(self->negAngle)) + self->position.x;
+        player->position.y = (distY * RSDK.Cos256(self->negAngle)) - (distX * RSDK.Sin256(self->negAngle)) + self->position.y;
 
         player->velocity.x = ((player->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + ((player->velocity.x >> 8) * RSDK.Cos256(self->negAngle));
         player->velocity.y = ((player->velocity.y >> 8) * RSDK.Cos256(self->negAngle)) - ((player->velocity.x >> 8) * RSDK.Sin256(self->negAngle));
 
-        if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitbox1)) {
-            Hitbox *playerBox = Player_GetHitbox(player);
-            int32 y             = player->position.y + ((playerBox->bottom + 12) << 16) - self->position.y;
-            if (y > self->depression)
-                self->depression = y;
+        if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxTrigger)) {
+            Hitbox *playerHitbox = Player_GetHitbox(player);
+            self->depression     = maxVal(self->depression, player->position.y + ((playerHitbox->bottom + 12) << 16) - self->position.y);
         }
 
-        if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitbox2) && player->tileCollisions) {
-            player->state       = Player_State_Air;
-            player->onGround    = false;
+        if (Player_CheckCollisionTouch(player, self, &Honkytonk->hitboxRebound) && player->tileCollisions) {
+            player->state        = Player_State_Air;
+            player->onGround     = false;
             player->applyJumpCap = false;
-            player->velocity.y  = -0x80000;
+            player->velocity.y   = -0x80000;
             if (player->animator.animationID != ANI_JUMP)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
 
             player->velocity.y = clampVal(player->velocity.y, -0x80000, -0x20000);
 
-            difX               = (player->position.x - self->position.x) >> 8;
-            difY               = (player->position.y - self->position.y) >> 8;
-            player->position.x = self->position.x + difY * RSDK.Sin256(self->angle) + difX * RSDK.Cos256(self->angle);
-            player->position.y = self->position.y - difX * RSDK.Sin256(self->angle) + difY * RSDK.Cos256(self->angle);
+            distX              = (player->position.x - self->position.x) >> 8;
+            distY              = (player->position.y - self->position.y) >> 8;
+            player->position.x = self->position.x + distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle);
+            player->position.y = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle);
 
-            int velX = player->velocity.x;
-            int velY = player->velocity.y;
+            int32 velX = player->velocity.x;
+            int32 velY = player->velocity.y;
 
             player->velocity.x = (velY >> 8) * RSDK.Sin256(self->angle) + (velX >> 8) * RSDK.Cos256(self->angle);
             player->velocity.y = (velY >> 8) * RSDK.Cos256(self->angle) - (velX >> 8) * RSDK.Sin256(self->angle);
 
             float speeds[] = { 1.0, 1.25, 1.5, 0.75 };
-            int32 channel    = RSDK.PlaySfx(Honkytonk->sfxPiano, false, 0xFF);
+            int32 channel  = RSDK.PlaySfx(Honkytonk->sfxPiano, false, 0xFF);
             RSDK.SetChannelAttributes(channel, 1.0, 0.0, speeds[Zone->timer & 3]);
         }
         else {
@@ -93,16 +87,16 @@ void Honkytonk_Draw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 
     self->animator.frameID = 1;
-    drawPos.x                = self->position.x;
-    drawPos.y                = self->position.y;
+    drawPos.x              = self->position.x;
+    drawPos.y              = self->position.y;
     drawPos.x += -0xC00 * RSDK.Sin256(self->angle);
     drawPos.y += -0xC00 * RSDK.Cos256(self->angle);
     self->scale.y = ((self->depression + 0x20000) >> 7) / 24;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     self->animator.frameID = 3;
-    drawPos.x                = self->position.x;
-    drawPos.y                = self->position.y;
+    drawPos.x              = self->position.x;
+    drawPos.y              = self->position.y;
     drawPos.x -= ((0x80000 - self->depression) >> 8) * RSDK.Sin256(self->angle);
     drawPos.y -= ((0x80000 - self->depression) >> 8) * RSDK.Cos256(self->angle);
     self->scale.y = 0x200 + ((self->depression >> 7) / 24);
@@ -135,25 +129,40 @@ void Honkytonk_Create(void *data)
 
 void Honkytonk_StageLoad(void)
 {
-    Honkytonk->aniFrames      = RSDK.LoadSpriteAnimation("MSZ/HonkyTonk.bin", SCOPE_STAGE);
-    Honkytonk->hitbox1.left   = -24;
-    Honkytonk->hitbox1.top    = -12;
-    Honkytonk->hitbox1.right  = 24;
-    Honkytonk->hitbox1.bottom = 12;
-    Honkytonk->hitbox2.left   = -24;
-    Honkytonk->hitbox2.top    = 6;
-    Honkytonk->hitbox2.right  = 24;
-    Honkytonk->hitbox2.bottom = 12;
-    Honkytonk->sfxPiano       = RSDK.GetSfx("MSZ/Piano00C2.wav");
+    Honkytonk->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HonkyTonk.bin", SCOPE_STAGE);
+
+    Honkytonk->hitboxTrigger.left   = -24;
+    Honkytonk->hitboxTrigger.top    = -12;
+    Honkytonk->hitboxTrigger.right  = 24;
+    Honkytonk->hitboxTrigger.bottom = 12;
+
+    Honkytonk->hitboxRebound.left   = -24;
+    Honkytonk->hitboxRebound.top    = 6;
+    Honkytonk->hitboxRebound.right  = 24;
+    Honkytonk->hitboxRebound.bottom = 12;
+
+    Honkytonk->sfxPiano = RSDK.GetSfx("MSZ/Piano00C2.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Honkytonk_EditorDraw(void)
 {
     RSDK_THIS(Honkytonk);
     RSDK.SetSpriteAnimation(Honkytonk->aniFrames, 0, &self->animator, true, 0);
+
+    int32 angle = self->angle;
+    self->angle &= 0xFF;
+    self->negAngle  = 0x100 - self->angle;
+    self->drawFX    = FX_SCALE | FX_ROTATE;
+    self->scale.x   = 0x200;
+    self->rotation  = self->negAngle << 1;
+
     Honkytonk_Draw();
+
+    self->angle = angle;
 }
 
 void Honkytonk_EditorLoad(void) { Honkytonk->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HonkyTonk.bin", SCOPE_STAGE); }
+#endif
 
 void Honkytonk_Serialize(void) { RSDK_EDITABLE_VAR(Honkytonk, VAR_ENUM, angle); }

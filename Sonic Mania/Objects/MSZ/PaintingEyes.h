@@ -13,11 +13,11 @@ struct ObjectPaintingEyes {
 struct EntityPaintingEyes {
     RSDK_ENTITY
     int32 timer;
-    int32 lookPos;
-    bool32 flag;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 coverPos;
+    bool32 hideEyes;
+    Animator coverAnimator;
+    Animator bgAnimator;
+    Animator eyesAnimator;
 };
 
 // Object Struct

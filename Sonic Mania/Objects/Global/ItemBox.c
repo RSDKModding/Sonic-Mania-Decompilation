@@ -830,7 +830,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
         EntityDebris *debris =
             CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000), itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
         debris->state      = Debris_State_Fall;
-        debris->gravity    = 0x4000;
+        debris->gravityStrength    = 0x4000;
         debris->velocity.x = RSDK.Rand(0, 0x20000);
         if (debris->position.x < itemBox->position.x)
             debris->velocity.x = -debris->velocity.x;

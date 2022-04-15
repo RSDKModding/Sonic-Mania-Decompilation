@@ -3,27 +3,49 @@
 
 #include "SonicMania.h"
 
+typedef enum { MSZ_GENERICTRIGGER_ACHIEVEMENT } GenericTriggerTypesMSZ;
+
+typedef enum {
+    MSZ_DECORATION_MAIN,
+    MSZ_DECORATION_TANKERRAIL,
+    MSZ_DECORATION_TANKERWHEEL,
+    MSZ_DECORATION_CARRIAGEWHEEL,
+    MSZ_DECORATION_CONNECTOR1,
+    MSZ_DECORATION_CONNECTOR2,
+} DecorationTypesMSZ;
+
+typedef enum {
+    MSZ_PARALLAXSPRITE_CACTUS1,
+    MSZ_PARALLAXSPRITE_CACTUS2,
+    MSZ_PARALLAXSPRITE_CACTUS3,
+    MSZ_PARALLAXSPRITE_CACTUS4,
+    MSZ_PARALLAXSPRITE_CACTUS5,
+    MSZ_PARALLAXSPRITE_CACTUS6,
+    MSZ_PARALLAXSPRITE_CACTUS7,
+    MSZ_PARALLAXSPRITE_OOZPEEK,
+} ParallaxSpriteAniIDsMSZ;
+
 // Object Class
 struct ObjectMSZSetup {
     RSDK_OBJECT
     int32 fadeTimer;
     uint16 aniTiles;
-    TileLayer *bg;
+    TileLayer *background1;
     TABLE(int32 deformData[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-    STATIC(int32 aniTilesTimerA, 16);
-    STATIC(int32 aniTilesTimerB, 30);
-    int32 aniTilesFrameA;
-    int32 aniTilesFrameB;
-    int32 aniTilesFrameC;
-    bool32 flag;
-    TABLE(int32 aniTilesSizeA[14], { 0, 1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 1, 6, 7 });
-    TABLE(int32 aniTilesDelayA[14], { 16, 2, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 3 });
-    TABLE(int32 aniTilesDelayB[8], { 16, 2, 4, 5, 16, 2, 4, 5 });
-    int32 field_138[512];
+    STATIC(int32 bladeCactusFlowerAniTimer, 16);
+    STATIC(int32 bobbingCactusFlowerAniTimer, 30);
+    int32 bladeCactusFlowerAniFrame;
+    int32 bobbingCactusFlowerAniFrame;
+    int32 spinningCactusFlowerAniFrame;
+    bool32 usingRegularPalette;
+    TABLE(int32 bladeCactusFlowerAniSprPos[14], { 0, 1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 1, 6, 7 });
+    TABLE(int32 bladeCactusFlowerAniDuration[14], { 16, 2, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 3 });
+    TABLE(int32 bobbingCactusFlowerAniDuration[8], { 16, 2, 4, 5, 16, 2, 4, 5 });
+    int32 storedParallax[512];
     int32 parallaxMult;
     int32 parallaxPos;
     bool32 hasAchievement;
-    Entity *msz2Cutscene;
+    EntityMSZ2Cutscene *msz2Cutscene;
     int32 starPostID;
 #if RETRO_USE_PLUS
     int32 chuggaVolume;
@@ -56,15 +78,15 @@ void MSZSetup_EditorLoad(void);
 void MSZSetup_Serialize(void);
 
 // Extra Entity Functions
-void MSZSetup_Unknown1(int x, int y);
-void MSZSetup_Unknown2(void);
-void MSZSetup_Unknown3(void);
-void MSZSetup_Unknown4(int32 parallaxMult);
+void MSZSetup_SetBGScrollOrigin(int32 x, int32 y);
+void MSZSetup_StoreBGParallax(void);
+void MSZSetup_ReloadBGParallax(void);
+void MSZSetup_ReloadBGParallax_Multiply(int32 parallaxMult);
 
-void MSZSetup_ManageFadeST(void);
-void MSZSetup_ManageFadeK(void);
+void MSZSetup_State_ManageFade_ST(void);
+void MSZSetup_State_ManageFade_K(void);
 #if RETRO_USE_PLUS
-void MSZSetup_ManageFadeE(void);
+void MSZSetup_State_ManageFade_E(void);
 #endif
 
 void MSZSetup_StageFinishCB_ST(void);
@@ -73,26 +95,26 @@ void MSZSetup_StageFinishCB_K(void);
 void MSZSetup_StageFinishCB_E(void);
 #endif
 
-void MSZSetup_ActivateMSZ2Cutscene(void);
-void MSZSetup_GetAchievement(void);
+void MSZSetup_StageFinishCB_MSZ2(void);
+void MSZSetup_GenericTriggerCB_GetAchievement(void);
 void MSZSetup_HandleRestart(void);
-void MSZSetup_SwitchPalettes(void);
+void MSZSetup_State_SwitchPalettes(void);
 
-void MSZSetup_Unknown9(void);
 #if RETRO_USE_PLUS
-void MSZSetup_Unknown10(void);
-void MSZSetup_Unknown11(void);
-void MSZSetup_Unknown12(void);
-void MSZSetup_Unknown13(void);
-void MSZSetup_Unknown14(void);
-void MSZSetup_Unknown16(void);
-void MSZSetup_Unknown17(void);
-void MSZSetup_Unknown18(void);
-void MSZSetup_StoreMSZ1EScrollPos(void);
+void MSZSetup_State_CheckFadeTrigger_E(void);
+void MSZSetup_State_CheckTrainStart(void);
+void MSZSetup_State_TrainStarting(void);
+void MSZSetup_State_TrainSequence_MSZ1E(void);
+void MSZSetup_State_Boss_MSZ1E(void);
+void MSZSetup_State_AwaitActClearStart(void);
+void MSZSetup_State_AwaitActClearFinish(void);
+void MSZSetup_State_MoveToMSZ2Start(void);
+void MSZSetup_State_AwaitPlayerStopped(void);
+void MSZSetup_State_StoreMSZ1ScrollPos_E(void);
 #endif
-void MSZSetup_StoreMSZ1STScrollPos(void);
+void MSZSetup_State_StoreMSZ1ScrollPos_ST(void);
 
-void MSZSetup_Player_State_Pilot(void);
-void MSZSetup_Player_State_PostCrashJumpIn(void);
+void MSZSetup_PlayerState_Pilot(void);
+void MSZSetup_PlayerState_PostCrashJumpIn(void);
 
 #endif //!OBJ_MSZSETUP_H

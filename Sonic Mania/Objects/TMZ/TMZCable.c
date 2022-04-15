@@ -187,7 +187,7 @@ void TMZCable_State_Destroyed(void)
 
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, self->drawPos[id].x, self->drawPos[id].y);
             debris->state        = Debris_State_Fall;
-            debris->gravity      = 0x4000;
+            debris->gravityStrength      = 0x4000;
             debris->velocity.x   = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y   = RSDK.Rand(-0x40000, -0x10000);
             debris->drawOrder    = Zone->drawOrderLow;

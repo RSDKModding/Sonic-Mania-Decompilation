@@ -13,9 +13,9 @@ struct ObjectSeltzerWater {
 struct EntitySeltzerWater {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 offsetAngle;
     int32 gravityStrength;
-    int32 field_64;
+    int32 oscillateRadius;
     uint16 nodeSlot;
     Animator animator;
 };
@@ -37,8 +37,8 @@ void SeltzerWater_EditorLoad(void);
 void SeltzerWater_Serialize(void);
 
 // Extra Entity Functions
-void SeltzerWater_Unknown1(void);
-void SeltzerWater_Unknown2(void);
-void SeltzerWater_Unknown3(void);
+void SeltzerWater_State_Sprayed(void);
+void SeltzerWater_State_Falling(void);
+void SeltzerWater_State_Splash(void);
 
 #endif //!OBJ_SELTZERWATER_H

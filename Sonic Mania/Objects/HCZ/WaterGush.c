@@ -389,7 +389,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->direction  = brickDir[0];
         brick->drawFX     = FX_FLIP;
         brick->drawOrder  = Zone->drawOrderHigh;
-        brick->gravity    = 0x3800;
+        brick->gravityStrength    = 0x3800;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[1].x, brickPos[1].y);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);
@@ -400,7 +400,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->direction  = brickDir[1];
         brick->drawFX     = FX_SCALE | FX_FLIP;
         brick->drawOrder  = Zone->drawOrderHigh;
-        brick->gravity    = 0x3800;
+        brick->gravityStrength    = 0x3800;
         brick->scale.x    = 0x200;
         brick->scale.y    = 0x200;
         brick->scaleInc.x = 8 >> i;
@@ -415,7 +415,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->direction  = brickDir[2];
         brick->drawFX     = FX_SCALE | FX_FLIP;
         brick->drawOrder  = Zone->drawOrderHigh;
-        brick->gravity    = 0x3800;
+        brick->gravityStrength    = 0x3800;
         brick->scale.x    = 512;
         brick->scale.y    = 512;
         brick->scaleInc.x = 8 >> i;
@@ -430,7 +430,7 @@ void WaterGush_SpawnBrickDebris(void)
         brick->direction  = brickDir[3];
         brick->drawFX     = FX_FLIP;
         brick->drawOrder  = Zone->drawOrderHigh;
-        brick->gravity    = 0x3800;
+        brick->gravityStrength    = 0x3800;
     }
 }
 

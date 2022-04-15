@@ -8,7 +8,7 @@
 // Object Class
 struct ObjectHatterkiller {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxSegment;
     uint16 sfxRocketJet;
     uint16 sfxTransform2;
     uint16 sfxPowerup;
@@ -18,14 +18,14 @@ struct ObjectHatterkiller {
 // Entity Class
 struct EntityHatterkiller {
     RSDK_ENTITY
-    int field_58;
-    Vector2 positions[Hatterkiller_SegmentCount];
-    Vector2 velocities[Hatterkiller_SegmentCount];
-    int delays[Hatterkiller_SegmentCount];
-    Animator *animators[Hatterkiller_SegmentCount];
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 timer;
+    Vector2 bodyPositions[Hatterkiller_SegmentCount];
+    Vector2 bodyVelocities[Hatterkiller_SegmentCount];
+    int32 bodyDelays[Hatterkiller_SegmentCount];
+    Animator *bodyAnimators[Hatterkiller_SegmentCount];
+    Animator headAnimator;
+    Animator bodyAnimator;
+    Animator tailAnimator;
 };
 
 // Object Struct

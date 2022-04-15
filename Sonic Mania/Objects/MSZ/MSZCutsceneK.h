@@ -6,15 +6,15 @@
 // Object Class
 struct ObjectMSZCutsceneK {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     uint16 playerFrames;
     uint16 sfxImpact;
     uint16 sfxDrop;
-    Vector2 pos1;
-    Vector2 pos2;
+    Vector2 tornadoDistanceP1;
+    Vector2 tornadoDistanceP2;
     Vector2 pos3;
-    Entity *tornado;
-    Entity *mystic;
+    EntityTornado *tornado;
+    EntityHeavyMystic *mystic;
 };
 
 // Entity Class
@@ -43,7 +43,7 @@ void MSZCutsceneK_Serialize(void);
 void MSZCutsceneK_SkipCB(void);
 #endif
 void MSZCutsceneK_StartCutscene(void);
-void MSZCutsceneK_SetupP2(int posX, int posY);
+void MSZCutsceneK_SetupP2(int32 x, int32 y);
 
 bool32 MSZCutsceneK_Cutscene_RidingTornado(EntityCutsceneSeq *host);
 bool32 MSZCutsceneK_Cutscene_KnockedOffTornado(EntityCutsceneSeq *host);

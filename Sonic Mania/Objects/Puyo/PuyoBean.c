@@ -1128,7 +1128,7 @@ void PuyoBean_State_BeanPop(void)
             int32 y              = RSDK.Sin256(angle) << 10;
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + self->position.x, y + self->position.y);
             debris->state        = Debris_State_Fall;
-            debris->gravity      = 0x4000;
+            debris->gravityStrength      = 0x4000;
             debris->timer        = 14;
             debris->velocity.x   = RSDK.Cos256(angle) << 9;
             debris->velocity.y   = RSDK.Sin256(angle) << 9;

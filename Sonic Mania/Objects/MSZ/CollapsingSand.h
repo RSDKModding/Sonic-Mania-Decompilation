@@ -19,12 +19,9 @@ struct EntityCollapsingSand {
     int32 delay;
     int32 collapseTimer;
     bool32 collapseLeft;
-    int32 field_70;
-    int32 field_74;
-    int32 tileX;
-    int32 tileY;
-    int32 tileMaxX;
-    int32 tileMaxY;
+    Vector2 collapseDuration;
+    Vector2 tilePos;
+    Vector2 tileEndPos;
     Hitbox hitbox;
 };
 

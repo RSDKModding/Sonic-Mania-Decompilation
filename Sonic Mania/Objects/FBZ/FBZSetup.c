@@ -45,24 +45,28 @@ void FBZSetup_Create(void *data) {}
 void FBZSetup_StageLoad(void)
 {
     FBZSetup->aniTiles                           = RSDK.LoadSpriteSheet("FBZ/AniTiles.gif", SCOPE_STAGE);
+
     FBZSetup->bgOutsideLayer                     = RSDK.GetSceneLayerID("Background Outside");
+
     Animals->animalTypes[0]                      = ANIMAL_FLICKY;
     Animals->animalTypes[1]                      = ANIMAL_RICKY;
+
     BGSwitch->switchCallback[FBZ_BG_INSIDE1]     = FBZSetup_BGSwitchCB_ShowInside1;
     BGSwitch->switchCallback[FBZ_BG_INSIDE2]     = FBZSetup_BGSwitchCB_ShowInside2;
     BGSwitch->switchCallback[FBZ_BG_INSIDE1_DUP] = FBZSetup_BGSwitchCB_ShowInside1_Dup;
-    TileLayer *bgLayer                           = RSDK.GetSceneLayer(0);
-    bgLayer->drawLayer[0]                        = 0;
-    bgLayer->drawLayer[1]                        = 0;
-    bgLayer->drawLayer[2]                        = 0;
-    bgLayer->drawLayer[3]                        = 0;
-    if (!Zone->actID)
-        bgLayer->scanlineCallback = FBZSetup_ScanlineCallback;
 
-    int32 val  = -336;
-    int32 val2 = 0;
+    TileLayer *background1    = RSDK.GetSceneLayer(0);
+    background1->drawLayer[0] = 0;
+    background1->drawLayer[1] = 0;
+    background1->drawLayer[2] = 0;
+    background1->drawLayer[3] = 0;
+    if (!Zone->actID)
+        background1->scanlineCallback = FBZSetup_ScanlineCallback;
+
+    int32 ang       = -336;
+    int32 scanlineY = 0;
     for (int32 i = 0; i < 0x400; ++i) {
-        int32 angle = val >> 1;
+        int32 angle = ang >> 1;
         if (RSDK.Sin1024(angle) >= 0)
             FBZSetup->deformX[i] = 32 * (RSDK.Sin1024(angle) + 0x400);
         else
@@ -73,17 +77,20 @@ void FBZSetup_StageLoad(void)
         else
             FBZSetup->positionYMove[i] = 32 * (-RSDK.Cos1024(angle) + 0x800);
 
-        FBZSetup->positionY[i] = val2 & 0x1FF0000;
-        val += 3;
-        val2 += FBZSetup->positionYMove[i];
+        FBZSetup->positionY[i] = scanlineY & 0x1FF0000;
+        ang += 3;
+        scanlineY += FBZSetup->positionYMove[i];
     }
 
+    // Yeah, this is actually here in the original
+    // This (& the one in MSZSpotlight) is how I found out about what these funcs do LOL
     RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
-    RSDK_ENUM_VAR("Show Exterior", GENERICTRIGGER_FBZ_EXTERIOR);
-    RSDK_ENUM_VAR("Show Interior", GENERICTRIGGER_FBZ_INTERIOR);
+    RSDK_ENUM_VAR("Show Exterior", FBZ_GENERICTRIGGER_EXTERIOR);
+    RSDK_ENUM_VAR("Show Interior", FBZ_GENERICTRIGGER_INTERIOR);
 
-    GenericTrigger->callbacks[GENERICTRIGGER_FBZ_EXTERIOR] = FBZSetup_GenericTriggerCB_ShowExterior;
-    GenericTrigger->callbacks[GENERICTRIGGER_FBZ_INTERIOR] = FBZSetup_GenericTriggerCB_ShowInterior;
+    GenericTrigger->callbacks[FBZ_GENERICTRIGGER_EXTERIOR] = FBZSetup_GenericTriggerCB_ShowExterior;
+    GenericTrigger->callbacks[FBZ_GENERICTRIGGER_INTERIOR] = FBZSetup_GenericTriggerCB_ShowInterior;
+
     if (globals->gameMode == MODE_COMPETITION) {
         foreach_all(ParallaxSprite, parallaxSprite) { destroyEntity(parallaxSprite); }
     }
@@ -259,8 +266,8 @@ void FBZSetup_EditorDraw(void) {}
 void FBZSetup_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
-    RSDK_ENUM_VAR("Show Exterior", GENERICTRIGGER_FBZ_EXTERIOR);
-    RSDK_ENUM_VAR("Show Interior", GENERICTRIGGER_FBZ_INTERIOR);
+    RSDK_ENUM_VAR("Show Exterior", FBZ_GENERICTRIGGER_EXTERIOR);
+    RSDK_ENUM_VAR("Show Interior", FBZ_GENERICTRIGGER_INTERIOR);
 
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
     RSDK_ENUM_VAR("Show Inside 1", FBZ_BG_INSIDE1);
@@ -268,8 +275,8 @@ void FBZSetup_EditorLoad(void)
     RSDK_ENUM_VAR("Show Inside 1 (Duplicate)", FBZ_BG_INSIDE1_DUP);
 
     RSDK_ACTIVE_VAR(Decoration, type);
-    RSDK_ENUM_VAR("Blueprint 1", FBZ_DECOR_BLUEPRINT1);
-    RSDK_ENUM_VAR("Blueprint 2", FBZ_DECOR_BLUEPRINT2);
+    RSDK_ENUM_VAR("Blueprint 1", FBZ_DECORATION_BLUEPRINT1);
+    RSDK_ENUM_VAR("Blueprint 2", FBZ_DECORATION_BLUEPRINT2);
 }
 #endif
 

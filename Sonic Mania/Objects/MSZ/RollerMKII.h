@@ -6,12 +6,12 @@
 // Object Class
 struct ObjectRollerMKII {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    Hitbox hitboxInner;
-    Hitbox hitboxOuter;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxObject;
+    Hitbox hitboxInner_Rolling;
+    Hitbox hitboxOuter_Rolling;
+    Hitbox hitboxInner_Idle;
+    Hitbox hitboxOuter_Idle;
     uint16 aniFrames;
     uint16 sfxBumper;
     uint16 sfxJump;
@@ -27,7 +27,7 @@ struct EntityRollerMKII {
     Vector2 startPos;
     uint8 startDir;
     uint8 timer;
-    bool32 field_68;
+    bool32 touchedGround;
     EntityPlayer* playerPtr;
     Animator animator;
 };
@@ -61,11 +61,11 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform);
 void RollerMKII_HandleCollisions(void);
 
 void RollerMKII_State_Setup(void);
-void RollerMKII_State_Unknown1(void);
-void RollerMKII_State_Unknown2(void);
-void RollerMKII_State_Unknown3(void);
-void RollerMKII_State_Unknown4(void);
-void RollerMKII_State_Unknown5(void);
-void RollerMKII_State_Unknown6(void);
+void RollerMKII_State_Idle(void);
+void RollerMKII_State_SpinUp(void);
+void RollerMKII_State_RollDelay(void);
+void RollerMKII_State_Rolling_Air(void);
+void RollerMKII_State_Rolling_Ground(void);
+void RollerMKII_State_Bumped(void);
 
 #endif //!OBJ_ROLLERMKII_H

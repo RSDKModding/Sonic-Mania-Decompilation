@@ -16,8 +16,8 @@ void HeavyMystic_Update(void)
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
 
-    if (self->timer2) {
-        self->timer2--;
+    if (self->particleFXTimer) {
+        self->particleFXTimer--;
         HeavyMystic_HandleParticleFX();
     }
 
@@ -31,10 +31,10 @@ void HeavyMystic_LateUpdate(void) {}
 
 void HeavyMystic_StaticUpdate(void)
 {
-    foreach_active(HeavyMystic, mystic)
+    foreach_active(HeavyMystic, mysticBox)
     {
-        if (mystic->type == MYSTIC_BOX) {
-            RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(mystic));
+        if (mysticBox->type == MYSTIC_BOX) {
+            RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(mysticBox));
         }
     }
 }
@@ -48,6 +48,7 @@ void HeavyMystic_Draw(void)
     else {
         if (self->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 158, 0xE0E0E0);
+
         RSDK.DrawSprite(&self->animator, NULL, false);
         RSDK.SetPaletteEntry(0, 158, 0x000000);
     }
@@ -62,6 +63,7 @@ void HeavyMystic_Create(void *data)
             self->updateRange.y = 0x800000;
             if (data)
                 self->type = voidToInt(data);
+
             switch (self->type) {
                 case MYSTIC_MISCHIEF:
                     self->active    = ACTIVE_BOUNDS;
@@ -70,27 +72,29 @@ void HeavyMystic_Create(void *data)
                     self->drawFX    = FX_FLIP;
                     self->health    = 6;
                     RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-                    self->state = HeavyMystic_State0_Unknown1;
+                    self->state = HeavyMystic_StateMischief_Setup;
                     break;
+
                 case MYSTIC_BOSS:
                     if (globals->gameMode >= MODE_TIMEATTACK) {
                         destroyEntity(self);
                     }
                     else {
-                        self->active              = ACTIVE_BOUNDS;
-                        self->visible             = false;
-                        self->drawOrder           = Zone->drawOrderLow + 1;
-                        self->drawFX              = FX_FLIP;
-                        self->hitbox.left         = -22;
-                        self->hitbox.top          = -22;
-                        self->hitbox.right        = 22;
-                        self->hitbox.bottom       = 22;
-                        self->health              = 8;
+                        self->active                = ACTIVE_BOUNDS;
+                        self->visible               = false;
+                        self->drawOrder             = Zone->drawOrderLow + 1;
+                        self->drawFX                = FX_FLIP;
+                        self->hitbox.left           = -22;
+                        self->hitbox.top            = -22;
+                        self->hitbox.right          = 22;
+                        self->hitbox.bottom         = 22;
+                        self->health                = 8;
                         HeavyMystic->curtainLinePos = 0xD00000;
                         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-                        self->state = HeavyMystic_State1_Unknown1;
+                        self->state = HeavyMystic_StateBoss_SetupArena;
                     }
                     break;
+
                 case MYSTIC_BOX:
                     if (globals->gameMode >= MODE_TIMEATTACK) {
                         destroyEntity(self);
@@ -101,49 +105,53 @@ void HeavyMystic_Create(void *data)
                         self->active    = ACTIVE_BOUNDS;
                         self->visible   = true;
                         self->drawOrder = Zone->drawOrderLow;
-                        self->targetPos  = self->position;
+                        self->targetPos = self->position;
                         self->drawFX    = FX_SCALE | FX_ROTATE | FX_FLIP;
                         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 10, &self->animator, true, 0);
-                        self->state     = HeavyMystic_State2_Unknown1;
-                        self->stateDraw = HeavyMystic_StateDraw2_Unknown1;
+                        self->state     = HeavyMystic_StateBox_AwaitCurtainRise;
+                        self->stateDraw = HeavyMystic_Draw_BoxOpened;
                     }
                     break;
+
                 case MYSTIC_CORK:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderLow;
                     self->drawFX    = FX_FLIP;
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 4, &self->animator, true, 0);
-                    self->state               = HeavyMystic_State3_Unknown1;
-                    self->hitbox.left = -3;
-                    self->hitbox.top = -3;
-                    self->hitbox.right = 3;
+                    self->state         = HeavyMystic_StateCork_Fired;
+                    self->hitbox.left   = -3;
+                    self->hitbox.top    = -3;
+                    self->hitbox.right  = 3;
                     self->hitbox.bottom = 3;
                     break;
+
                 case MYSTIC_BOMB:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderLow;
                     self->drawFX    = FX_FLIP;
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 11, &self->animator, true, 0);
-                    self->state         = HeavyMystic_State4_Unknown1;
+                    self->state         = HeavyMystic_State_Bomb;
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
                     self->hitbox.right  = 8;
                     self->hitbox.bottom = 8;
                     break;
+
                 case MYSTIC_DEBRIS:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->drawOrder = Zone->drawOrderLow;
                     self->drawFX    = FX_FLIP;
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 16, &self->animator, true, 0);
-                    self->state         = HeavyMystic_State5_Unknown1;
+                    self->state         = HeavyMystic_State_BarkDebris;
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
                     self->hitbox.right  = 8;
                     self->hitbox.bottom = 8;
                     break;
+
                 default: break;
             }
         }
@@ -216,7 +224,7 @@ void HeavyMystic_HandleParticleFX(void)
 void HeavyMystic_CheckPlayerCollisions(void)
 {
     RSDK_THIS(HeavyMystic);
-    if (!self->timer2 && !self->invincibilityTimer) {
+    if (!self->particleFXTimer && !self->invincibilityTimer) {
         foreach_active(Player, player)
         {
             if (Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
@@ -234,10 +242,10 @@ void HeavyMystic_Hit(void)
     --self->rougeHealth;
     if (self->health <= 0) {
         RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
-        self->timer               = 120;
+        self->timer            = 120;
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
-        self->state = HeavyMystic_State_Destroyed;
+        self->state = HeavyMystic_StateBoss_Destroyed;
     }
     else {
         self->timer -= 30;
@@ -246,10 +254,10 @@ void HeavyMystic_Hit(void)
     }
 }
 
-void HeavyMystic_CheckPlayerCollisions2(void)
+void HeavyMystic_CheckPlayerCollisions_Fang(void)
 {
     RSDK_THIS(HeavyMystic);
-    if (!self->timer2) {
+    if (!self->particleFXTimer) {
         if (self->invincibilityTimer > 0)
             self->invincibilityTimer--;
 
@@ -263,16 +271,16 @@ void HeavyMystic_CheckPlayerCollisions2(void)
                     self->velocity.x = -0x20000;
                 self->velocity.y = -0x40000;
                 RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 3, &self->animator, true, 0);
-                self->state = HeavyMystic_State_RougeHit;
+                self->state = HeavyMystic_StateBoss_RougeHit;
             }
         }
     }
 }
 
-void HeavyMystic_CheckPlayerCollisions3(void)
+void HeavyMystic_CheckPlayerCollisions_Bark(void)
 {
     RSDK_THIS(HeavyMystic);
-    if (!self->timer2) {
+    if (!self->particleFXTimer) {
         if (self->invincibilityTimer > 0)
             self->invincibilityTimer--;
 
@@ -294,17 +302,17 @@ void HeavyMystic_CheckPlayerCollisions3(void)
                     if (self->invincibilityTimer > 0)
                         self->invincibilityTimer--;
                     RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 15, &self->animator, true, 0);
-                    self->state = HeavyMystic_State_RougeHit;
+                    self->state = HeavyMystic_StateBoss_RougeHit;
                 }
             }
         }
     }
 }
 
-void HeavyMystic_CheckPlayerCollisions4(void)
+void HeavyMystic_CheckPlayerCollisions_Bean(void)
 {
     RSDK_THIS(HeavyMystic);
-    if (!self->timer2) {
+    if (!self->particleFXTimer) {
 
         if (self->invincibilityTimer > 0)
             self->invincibilityTimer--;
@@ -320,7 +328,7 @@ void HeavyMystic_CheckPlayerCollisions4(void)
                     self->velocity.x = -0x20000;
                 self->velocity.y = -0x40000;
                 RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 9, &self->animator, true, 0);
-                self->state = HeavyMystic_State_RougeHit;
+                self->state = HeavyMystic_StateBoss_RougeHit;
             }
         }
     }
@@ -333,69 +341,70 @@ void HeavyMystic_Explode(void)
         RSDK.PlaySfx(UberCaterkiller->sfxExplosion2, false, 255);
 
         if (!(Zone->timer & 7)) {
-            int x = RSDK.Rand(-19, 20) << 16;
-            int y = RSDK.Rand(-24, 25) << 16;
-            EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x + self->position.x, y + self->position.y);
-            explosion->drawOrder = Zone->drawOrderHigh + 2;
+            int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
+            explosion->drawOrder       = Zone->drawOrderHigh + 2;
         }
     }
 }
 
 void HeavyMystic_ScanlineCB(ScanlineInfo *scanlines)
 {
-    int curtainPos = HeavyMystic->curtainLinePos;
-    int move       = (0x1100000 - curtainPos) >> 6;
-    int max        = maxVal(curtainPos - 0x400000, 0x100000);
+    int32 curtainPos = HeavyMystic->curtainLinePos;
+    int32 moveY       = (0x1100000 - curtainPos) >> 6;
+    int32 max        = maxVal(curtainPos - 0x400000, 0x100000);
 
-    int posY = (ScreenInfo->position.y + 207) << 16;
+    int32 posY = (ScreenInfo->position.y + 207) << 16;
     if (curtainPos > max) {
-        int id = HeavyMystic->curtainLinePos >> 16;
+        int32 scanlineID = HeavyMystic->curtainLinePos >> 16;
 
-        for (int i = 0; i < ((curtainPos - max - 1) >> 16) + 1; ++i) {
-            scanlines[id--].position.y = posY;
-            posY -= move;
+        for (int32 i = 0; i < ((curtainPos - max - 1) >> 16) + 1; ++i) {
+            scanlines[scanlineID--].position.y = posY;
+            posY -= moveY;
         }
     }
 
-    for (int i = HeavyMystic->curtainLinePos >> 16; i < 208; ++i) {
+    for (int32 i = HeavyMystic->curtainLinePos >> 16; i < 208; ++i) {
         scanlines[i].position.y = 0x6200000;
     }
 }
 
-void HeavyMystic_State0_Unknown1(void)
+void HeavyMystic_StateMischief_Setup(void)
 {
     RSDK_THIS(HeavyMystic);
+
     RSDK.ProcessAnimation(&self->animator);
+
     if (++self->timer >= 8) {
         self->velocity.x = 0x20000;
-        //I'd prolly put a position check here too, its not hard to go into the special stage, then not hit the starpost, doing so causes a softlock
+        // I'd prolly put a position check here too, its not hard to: go into the special stage, then not hit the starpost, doing so causes a softlock
         if (StarPost->postIDs[0])
             HeavyMystic->curtainLinePos = 1;
         self->targetPos.x = self->position.x;
         self->targetPos.y = self->position.y;
         self->position.y += 0xC00000;
-        self->visible    = true;
-        self->timer      = 120;
-        self->state      = HeavyMystic_State0_Unknown2;
+        self->visible = true;
+        self->timer   = 120;
+        self->state   = HeavyMystic_StateMischief_EnterMystic;
     }
 }
 
-void HeavyMystic_State1_Unknown1(void)
+void HeavyMystic_StateBoss_SetupArena(void)
 {
     RSDK_THIS(HeavyMystic);
     if (++self->timer >= 8) {
-        self->timer        = 0;
+        self->timer          = 0;
         HeavyMystic->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
         HeavyMystic->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;
         HeavyMystic->boundsM = self->position.x;
         HeavyMystic->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
         HeavyMystic->boundsB = (Zone->cameraBoundsB[0] - 8) << 16;
-        self->state        = HeavyMystic_State1_Unknown2;
+        self->state          = HeavyMystic_StateBoss_AwaitPlayer;
     }
 }
 
-void HeavyMystic_State1_Unknown2(void)
+void HeavyMystic_StateBoss_AwaitPlayer(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -403,17 +412,17 @@ void HeavyMystic_State1_Unknown2(void)
         self->timer++;
         if (self->timer == 120) {
             Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
-            MSZSetup_Unknown1(self->position.x + 0x4000000, 0);
+            MSZSetup_SetBGScrollOrigin(self->position.x + 0x4000000, 0);
             self->position.y += 0x500000;
-            self->targetPos.x                                 = self->position.x;
-            self->targetPos.y                                 = self->position.y;
-            self->timer                                      = 0;
-            self->inkEffect                                  = INK_ALPHA;
-            self->visible                                    = true;
-            self->state                                      = HeavyMystic_State1_Unknown3;
+            self->targetPos.x                                  = self->position.x;
+            self->targetPos.y                                  = self->position.y;
+            self->timer                                        = 0;
+            self->inkEffect                                    = INK_ALPHA;
+            self->visible                                      = true;
+            self->state                                        = HeavyMystic_StateBoss_BeginShow;
             RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = HeavyMystic_ScanlineCB;
 
-            foreach_active(MSZSpotlight, spotlight) { spotlight->state = MSZSpotlight_Unknown1; }
+            foreach_active(MSZSpotlight, spotlight) { spotlight->state = MSZSpotlight_State_Appear; }
         }
     }
     else {
@@ -421,16 +430,16 @@ void HeavyMystic_State1_Unknown2(void)
             Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-            Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-            Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 256;
+            Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+            Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+            Zone->cameraBoundsB[0]      = (self->position.y >> 16) + 256;
             ++self->timer;
             self->active = ACTIVE_NORMAL;
         }
     }
 }
 
-void HeavyMystic_State0_Unknown2(void)
+void HeavyMystic_StateMischief_EnterMystic(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -445,19 +454,21 @@ void HeavyMystic_State0_Unknown2(void)
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
     }
+
     if (self->timer == 50)
         RSDK.PlaySfx(HeavyMystic->sfxAppear1, false, 255);
 
     if (self->position.y <= self->targetPos.y)
-        self->state = HeavyMystic_State0_Unknown3;
+        self->state = HeavyMystic_StateMischief_HandleAppearArc;
 }
 
-void HeavyMystic_State0_Unknown3(void)
+void HeavyMystic_StateMischief_HandleAppearArc(void)
 {
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
     HeavyMystic_HandleParticleFX();
+
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -467,11 +478,11 @@ void HeavyMystic_State0_Unknown3(void)
         self->velocity.y = 0;
         self->position.y = self->targetPos.y;
         RSDK.PlaySfx(HeavyMystic->sfxBleeps, false, 255);
-        self->state = HeavyMystic_State0_Unknown4;
+        self->state = HeavyMystic_StateMischief_MoveIntoPlace;
     }
 }
 
-void HeavyMystic_State1_Unknown3(void)
+void HeavyMystic_StateBoss_BeginShow(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -490,14 +501,14 @@ void HeavyMystic_State1_Unknown3(void)
     if (HeavyMystic->curtainLinePos <= 0x100000) {
         self->timer     = 0;
         self->inkEffect = INK_NONE;
-        self->state     = HeavyMystic_State1_Unknown4;
+        self->state     = HeavyMystic_StateBoss_AwaitBoxOpened;
     }
     else {
         HeavyMystic->curtainLinePos -= 0x20000;
     }
 }
 
-void HeavyMystic_State0_Unknown7(void)
+void HeavyMystic_StateMischief_Idle(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -509,7 +520,7 @@ void HeavyMystic_State0_Unknown7(void)
     HeavyMystic_HandleParticleFX();
 }
 
-void HeavyMystic_State0_Unknown4(void)
+void HeavyMystic_StateMischief_MoveIntoPlace(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -525,11 +536,11 @@ void HeavyMystic_State0_Unknown4(void)
         self->timer = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 1, &self->animator, true, 0);
         RSDK.PlaySfx(HeavyMystic->sfxHat, false, 255);
-        self->state = HeavyMystic_State0_Unknown5;
+        self->state = HeavyMystic_StateMischief_GoodDay;
     }
 }
 
-void HeavyMystic_State0_Unknown9(void)
+void HeavyMystic_StateMischief_FinishedMagicTrick(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -543,11 +554,11 @@ void HeavyMystic_State0_Unknown9(void)
         self->timer = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 3, &self->animator, true, 0);
         RSDK.PlaySfx(HeavyMystic->sfxTransform, false, 255);
-        self->state = HeavyMystic_State0_Unknown10;
+        self->state = HeavyMystic_StateMischief_Disappear;
     }
 }
 
-void HeavyMystic_State0_Unknown6(void)
+void HeavyMystic_StateMischief_PrepareMagicTrick(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -559,18 +570,18 @@ void HeavyMystic_State0_Unknown6(void)
 
     if (++self->timer == 60) {
         if (RSDK.CheckStageFolder("MSZCutscene")) {
-            self->state = HeavyMystic_State0_Unknown7;
+            self->state = HeavyMystic_StateMischief_Idle;
         }
         else {
             self->timer = 0;
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 2, &self->animator, true, 0);
             RSDK.PlaySfx(HeavyMystic->sfxHat, false, 255);
-            self->state = HeavyMystic_State0_Unknown8;
+            self->state = HeavyMystic_StateMischief_ConjureHatterkiller;
         }
     }
 }
 
-void HeavyMystic_State0_Unknown5(void)
+void HeavyMystic_StateMischief_GoodDay(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -581,11 +592,11 @@ void HeavyMystic_State0_Unknown5(void)
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-        self->state = HeavyMystic_State0_Unknown6;
+        self->state = HeavyMystic_StateMischief_PrepareMagicTrick;
     }
 }
 
-void HeavyMystic_State0_Unknown8(void)
+void HeavyMystic_StateMischief_ConjureHatterkiller(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -602,11 +613,11 @@ void HeavyMystic_State0_Unknown8(void)
     if (self->animator.frameID == self->animator.frameCount - 1) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-        self->state = HeavyMystic_State0_Unknown9;
+        self->state = HeavyMystic_StateMischief_FinishedMagicTrick;
     }
 }
 
-void HeavyMystic_State0_Unknown10(void)
+void HeavyMystic_StateMischief_Disappear(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -616,8 +627,8 @@ void HeavyMystic_State0_Unknown10(void)
     if (self->animator.frameID == self->animator.frameCount - 1) {
         if (!HeavyMystic->curtainLinePos) {
             HeavyMystic->curtainLinePos = 1;
-            CREATE_ENTITY(Vultron, intToVoid(1), self->position.x, self->position.y);
-            CREATE_ENTITY(Vultron, intToVoid(1), self->position.x, self->position.y);
+            CREATE_ENTITY(Vultron, intToVoid(VULTRON_TARGET), self->position.x, self->position.y);
+            CREATE_ENTITY(Vultron, intToVoid(VULTRON_TARGET), self->position.x, self->position.y);
         }
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
@@ -625,7 +636,7 @@ void HeavyMystic_State0_Unknown10(void)
     }
 }
 
-void HeavyMystic_State_Destroyed(void)
+void HeavyMystic_StateBoss_Destroyed(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -634,11 +645,11 @@ void HeavyMystic_State_Destroyed(void)
     if (--self->timer <= 0) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-        self->state = HeavyMystic_State_Finish;
+        self->state = HeavyMystic_StateBoss_Finish;
     }
 }
 
-void HeavyMystic_State_Finish(void)
+void HeavyMystic_StateBoss_Finish(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -650,11 +661,11 @@ void HeavyMystic_State_Finish(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        self->state = HeavyMystic_State_CloseCurtains;
+        self->state = HeavyMystic_StateBoss_CloseCurtains;
     }
 }
 
-void HeavyMystic_State_CloseCurtains(void)
+void HeavyMystic_StateBoss_CloseCurtains(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -678,9 +689,9 @@ void HeavyMystic_State_CloseCurtains(void)
     }
 }
 
-void HeavyMystic_State1_Unknown4(void) {}
+void HeavyMystic_StateBoss_AwaitBoxOpened(void) {}
 
-void HeavyMystic_State1_Unknown5(void)
+void HeavyMystic_StateBoss_EnterMystic(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -694,11 +705,11 @@ void HeavyMystic_State1_Unknown5(void)
     if (++self->timer == 45) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 1, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown6;
+        self->state = HeavyMystic_StateBoss_GoodDay;
     }
 }
 
-void HeavyMystic_State1_Unknown6(void)
+void HeavyMystic_StateBoss_GoodDay(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -711,11 +722,11 @@ void HeavyMystic_State1_Unknown6(void)
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown7;
+        self->state = HeavyMystic_StateBoss_BoxCloseDelay;
     }
 }
 
-void HeavyMystic_State1_Unknown7(void)
+void HeavyMystic_StateBoss_BoxCloseDelay(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -728,14 +739,14 @@ void HeavyMystic_State1_Unknown7(void)
         foreach_active(HeavyMystic, boss)
         {
             if (boss->type == MYSTIC_BOX)
-                boss->state = HeavyMystic_State2_Unknown4;
+                boss->state = HeavyMystic_StateBox_CloseDoors;
         }
         RSDK.PlaySfx(HeavyMystic->sfxClack, false, 255);
-        self->state = HeavyMystic_State1_Unknown8;
+        self->state = HeavyMystic_StateBoss_AwaitBoxClosing;
     }
 }
 
-void HeavyMystic_State1_Unknown8(void)
+void HeavyMystic_StateBoss_AwaitBoxClosing(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -745,10 +756,10 @@ void HeavyMystic_State1_Unknown8(void)
     self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 4, 11);
 
     if (self->angle == 252)
-        self->state = HeavyMystic_State1_Unknown9;
+        self->state = HeavyMystic_StateBoss_AwaitBoxClosed;
 }
 
-void HeavyMystic_State1_Unknown9(void)
+void HeavyMystic_StateBoss_AwaitBoxClosed(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -759,58 +770,61 @@ void HeavyMystic_State1_Unknown9(void)
         foreach_active(HeavyMystic, boss)
         {
             if (boss->type == MYSTIC_BOX)
-                boss->state = HeavyMystic_State2_Unknown5;
+                boss->state = HeavyMystic_StateBox_Transforming;
         }
-        self->state = HeavyMystic_State1_Unknown10;
+        self->state = HeavyMystic_StateBoss_Transforming;
     }
 }
 
-void HeavyMystic_State1_Unknown10(void)
+void HeavyMystic_StateBoss_Transforming(void)
 {
     RSDK_THIS(HeavyMystic);
 
     foreach_active(HeavyMystic, boss)
     {
-        if (boss->type == MYSTIC_BOX && boss->state == HeavyMystic_State2_Unknown8) {
+        if (boss->type == MYSTIC_BOX && boss->state == HeavyMystic_StateBox_ShowContents) {
             self->position.x = boss->position.x;
             self->position.y = boss->position.y;
-            boss->position     = boss->targetPos;
-            self->visible    = 1;
-            self->state      = HeavyMystic_State1_ShowRouge;
+            boss->position   = boss->targetPos;
+            self->visible    = true;
+            self->state      = HeavyMystic_StateBoss_ShowRouge;
         }
     }
 }
 
-void HeavyMystic_State1_ShowRouge(void)
+void HeavyMystic_StateBoss_ShowRouge(void)
 {
     RSDK_THIS(HeavyMystic);
-    self->velocity.x = 0;
-    self->velocity.y = 0;
-    self->rougeHealth   = 2;
+    self->velocity.x  = 0;
+    self->velocity.y  = 0;
+    self->rougeHealth = 2;
     RSDK.PlaySfx(HeavyMystic->sfxTwinkle, false, 255);
 
-    self->velocity.y = -0x40000;
-    self->timer2     = 75;
+    self->velocity.y      = -0x40000;
+    self->particleFXTimer = 75;
     switch (self->rougeID) {
-        case 0:
-        case 3:
+        case 0: // Fang
+        case 3: // Fang
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 4);
-            self->state    = HeavyMystic_State1_Unknown12;
-            self->field_7C = 8;
+            self->state    = HeavyMystic_StateBoss_FangHop;
+            self->attackID = 8;
             break;
-        case 1:
+
+        case 1: // Bean
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 3);
-            self->state = HeavyMystic_State1_Unknown15;
+            self->state = HeavyMystic_StateBoss_BeanJump;
             break;
-        case 2:
+
+        case 2: // Bark
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 13, &self->animator, true, 3);
-            self->state = HeavyMystic_State1_Unknown19;
+            self->state = HeavyMystic_StateBoss_BarkJump;
             break;
+
         default: break;
     }
 }
 
-void HeavyMystic_State1_MysticReveal(void)
+void HeavyMystic_StateBoss_MysticReveal(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -830,16 +844,16 @@ void HeavyMystic_State1_MysticReveal(void)
 
         if (self->rougeHealth > 0) {
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 3, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown24;
+            self->state = HeavyMystic_StateBoss_TransformBackIntoRouge;
         }
         else {
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown22;
+            self->state = HeavyMystic_StateBoss_MoveToBoxY;
         }
     }
 }
 
-void HeavyMystic_State1_Unknown22(void)
+void HeavyMystic_StateBoss_MoveToBoxY(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -865,13 +879,14 @@ void HeavyMystic_State1_Unknown22(void)
 
     if (self->position.y <= self->targetPos.y) {
         self->position.y = self->targetPos.y;
-        self->angle      = 128;
+        self->angle      = 0x80;
+
         if (self->position.x == self->targetPos.x) {
             ++self->rougeID;
-            self->state = HeavyMystic_State1_Unknown7;
+            self->state = HeavyMystic_StateBoss_BoxCloseDelay;
         }
         else {
-            self->state = HeavyMystic_State1_Unknown23;
+            self->state = HeavyMystic_StateBoss_MoveToBoxX;
         }
     }
     else {
@@ -881,9 +896,10 @@ void HeavyMystic_State1_Unknown22(void)
     }
 }
 
-void HeavyMystic_State1_Unknown23(void)
+void HeavyMystic_StateBoss_MoveToBoxX(void)
 {
     RSDK_THIS(HeavyMystic);
+
     RSDK.ProcessAnimation(&self->animator);
     HeavyMystic_HandleParticleFX();
 
@@ -892,10 +908,11 @@ void HeavyMystic_State1_Unknown23(void)
     if (self->position.x == self->targetPos.x) {
         ++self->rougeID;
         self->position.y = self->targetPos.y;
-        self->state      = HeavyMystic_State1_Unknown7;
+        self->state      = HeavyMystic_StateBoss_BoxCloseDelay;
     }
     else if (self->position.x > self->targetPos.x) {
         self->position.x += self->velocity.x;
+
         if (self->position.x >= self->targetPos.x) {
             if (self->velocity.x > -0x30000)
                 self->velocity.x -= 0x3800;
@@ -905,6 +922,7 @@ void HeavyMystic_State1_Unknown23(void)
     }
     else {
         self->position.x += self->velocity.x;
+
         if (self->position.x > self->targetPos.x)
             self->position.x = self->targetPos.x;
         else if (self->velocity.x < 0x30000)
@@ -912,72 +930,81 @@ void HeavyMystic_State1_Unknown23(void)
     }
 }
 
-void HeavyMystic_State1_Unknown24(void)
+void HeavyMystic_StateBoss_TransformBackIntoRouge(void)
 {
     RSDK_THIS(HeavyMystic);
+
     RSDK.ProcessAnimation(&self->animator);
+
     HeavyMystic_HandleParticleFX();
     if (self->animator.frameID == self->animator.frameCount - 5)
         RSDK.PlaySfx(HeavyMystic->sfxTransform, false, 255);
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
-        self->velocity.x                                                                                     = 0;
-        self->velocity.y                                                                                     = -0x20000;
+        self->velocity.x                                                                                   = 0;
+        self->velocity.y                                                                                   = -0x20000;
         RSDK.PlaySfx(HeavyMystic->sfxPoof, false, 255);
 
-        self->velocity.y = -0x40000;
-        self->timer2     = 75;
+        self->velocity.y      = -0x40000;
+        self->particleFXTimer = 75;
         switch (self->rougeID) {
             case 0:
             case 3:
                 RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 4);
-                self->state    = HeavyMystic_State1_Unknown12;
-                self->field_7C = 8;
+                self->state    = HeavyMystic_StateBoss_FangHop;
+                self->attackID = 8;
                 break;
+
             case 1:
                 RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 3);
-                self->state = HeavyMystic_State1_Unknown15;
+                self->state = HeavyMystic_StateBoss_BeanJump;
                 break;
+
             case 2:
                 RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 13, &self->animator, true, 3);
-                self->state = HeavyMystic_State1_Unknown19;
+                self->state = HeavyMystic_StateBoss_BarkJump;
                 break;
+
             default: break;
         }
     }
 }
 
-void HeavyMystic_State1_Unknown13(void)
+void HeavyMystic_StateBoss_FangIdle(void)
 {
     RSDK_THIS(HeavyMystic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     RSDK.ProcessAnimation(&self->animator);
     self->direction = player1->position.x < self->position.x;
+
     if (!--self->timer) {
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 1, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown14;
+        self->state = HeavyMystic_StateBoss_FangTell;
     }
-    HeavyMystic_CheckPlayerCollisions2();
+
+    HeavyMystic_CheckPlayerCollisions_Fang();
 }
 
-void HeavyMystic_State1_Unknown14(void)
+void HeavyMystic_StateBoss_FangTell(void)
 {
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
-        self->velocity.y = -0x50000;
-        self->field_7C   = 8;
         self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
+        self->velocity.y = -0x50000;
+        self->attackID   = 8;
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown12;
+        self->state = HeavyMystic_StateBoss_FangHop;
     }
-    HeavyMystic_CheckPlayerCollisions2();
+
+    HeavyMystic_CheckPlayerCollisions_Fang();
 }
 
-void HeavyMystic_State1_Unknown12(void)
+void HeavyMystic_StateBoss_FangHop(void)
 {
     RSDK_THIS(HeavyMystic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -996,39 +1023,39 @@ void HeavyMystic_State1_Unknown12(void)
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true)) {
-        if (--self->field_7C > 0) {
+        if (--self->attackID > 0) {
             self->velocity.y = -0x50000;
             self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 2, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown12;
+            self->state = HeavyMystic_StateBoss_FangHop;
         }
         else {
             self->timer      = 15;
             self->velocity.x = 0;
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 0, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown13;
+            self->state = HeavyMystic_StateBoss_FangIdle;
         }
     }
 
-    if (self->field_7C && !(Zone->timer & 0x3F)) {
+    if (self->attackID && !(Zone->timer & 0x3F)) {
         RSDK.PlaySfx(HeavyMystic->sfxPon, false, 255);
-        EntityHeavyMystic *boss = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_CORK), self->position.x, self->position.y - 0x40000);
+        EntityHeavyMystic *cork = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_CORK), self->position.x, self->position.y - 0x40000);
         if (self->direction == FLIP_NONE) {
-            boss->position.x += 0x180000;
-            boss->velocity.x = 0x20000;
-            boss->direction  = self->direction;
+            cork->position.x += 0x180000;
+            cork->velocity.x = 0x20000;
+            cork->direction  = self->direction;
         }
         else {
-            boss->position.x -= 0x180000;
-            boss->velocity.x = -0x20000;
-            boss->direction  = self->direction;
+            cork->position.x -= 0x180000;
+            cork->velocity.x = -0x20000;
+            cork->direction  = self->direction;
         }
     }
-    HeavyMystic_CheckPlayerCollisions2();
+    HeavyMystic_CheckPlayerCollisions_Fang();
 }
 
-void HeavyMystic_State_RougeHit(void)
+void HeavyMystic_StateBoss_RougeHit(void)
 {
     RSDK_THIS(HeavyMystic);
     self->position.x += self->velocity.x;
@@ -1042,88 +1069,95 @@ void HeavyMystic_State_RougeHit(void)
     else if (self->position.x < (ScreenInfo->position.x + 16) << 16)
         self->velocity.x = 0;
 
-    self->visible ^= 1;
+    self->visible ^= true;
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->velocity.y > 0) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x240000, true)) {
             RSDK.PlaySfx(HeavyMystic->sfxPowerDown, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             self->direction ^= FLIP_X;
-            self->timer      = 90;
-            self->field_7C   = 0;
-            self->visible    = true;
+            self->timer       = 90;
+            self->attackID    = 0;
+            self->visible     = true;
             self->targetPos.y = self->position.y;
-            self->velocity.x = 0;
-            self->velocity.y = 0;
+            self->velocity.x  = 0;
+            self->velocity.y  = 0;
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 4, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_MysticReveal;
+            self->state = HeavyMystic_StateBoss_MysticReveal;
         }
     }
 }
 
-void HeavyMystic_State1_Unknown20(void)
+void HeavyMystic_StateBoss_BarkIdle(void)
 {
     RSDK_THIS(HeavyMystic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     RSDK.ProcessAnimation(&self->animator);
     self->direction = player1->position.x < self->position.x;
+
     if (!--self->timer) {
-        self->velocity.y = -0x40000;
         self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
-        if (self->field_7C == 1) {
+        self->velocity.y = -0x40000;
+        if (self->attackID == 1) {
             self->timer = 240;
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 14, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown21;
+            self->state = HeavyMystic_StateBoss_BarkPounding;
         }
         else {
-            self->field_7C = 1;
+            self->attackID = 1;
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 13, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown19;
+            self->state = HeavyMystic_StateBoss_BarkJump;
         }
     }
-    HeavyMystic_CheckPlayerCollisions3();
+    HeavyMystic_CheckPlayerCollisions_Bark();
 }
 
-void HeavyMystic_State1_Unknown21(void)
+void HeavyMystic_StateBoss_BarkPounding(void)
 {
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
 
+    // check when bark's hand hits the grounds
     if (self->animator.frameID == 3 || self->animator.frameID == 10) {
-        if (self->field_7C != self->animator.frameID)
+        if (self->attackID != self->animator.frameID)
             RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
-        self->field_7C = self->animator.frameID;
+        self->attackID = self->animator.frameID;
     }
+
     if (--self->timer <= 0) {
-        self->field_7C   = 0;
+        self->attackID   = 0;
         self->timer      = 15;
         self->velocity.x = 0;
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 12, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown20;
+        self->state = HeavyMystic_StateBoss_BarkIdle;
     }
-    if (self->field_7C != 1) {
+
+    if (self->attackID != 1) {
         if (!(Zone->timer & 3))
             Camera_ShakeScreen(0, 0, 2);
 
         if (!(Zone->timer & 0xF)) {
-            int x = RSDK.Rand(0, ScreenInfo->width >> 5);
-            EntityHeavyMystic *boss = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_DEBRIS), (ScreenInfo->position.x + 16 + 32 * x) << 16,
-                                                    (ScreenInfo->position.y - 16) << 16);
-            boss->animator.frameID = RSDK.Rand(0, 6);
+            int32 x                   = RSDK.Rand(0, ScreenInfo->width >> 5);
+            EntityHeavyMystic *debris = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_DEBRIS), (ScreenInfo->position.x + 16 + 32 * x) << 16,
+                                                      (ScreenInfo->position.y - 16) << 16);
+            debris->animator.frameID  = RSDK.Rand(0, 6);
         }
     }
-    HeavyMystic_CheckPlayerCollisions3();
+
+    HeavyMystic_CheckPlayerCollisions_Bark();
 }
 
-void HeavyMystic_State1_Unknown19(void)
+void HeavyMystic_StateBoss_BarkJump(void)
 {
     RSDK_THIS(HeavyMystic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     self->direction = player1->position.x < self->position.x;
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -1139,12 +1173,13 @@ void HeavyMystic_State1_Unknown19(void)
     if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
         self->timer = 15;
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 12, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown20;
+        self->state = HeavyMystic_StateBoss_BarkIdle;
     }
-    HeavyMystic_CheckPlayerCollisions3();
+
+    HeavyMystic_CheckPlayerCollisions_Bark();
 }
 
-void HeavyMystic_State1_Unknown16(void)
+void HeavyMystic_StateBoss_BeanIdle(void)
 {
     RSDK_THIS(HeavyMystic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -1155,79 +1190,86 @@ void HeavyMystic_State1_Unknown16(void)
     if (!--self->timer) {
         self->velocity.y = -0x68000;
         self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x20000 : 0x20000;
-        if (self->field_7C == 1) {
+        if (self->attackID == 1) {
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 8, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown17;
+            self->state = HeavyMystic_StateBoss_BeanBomb1Throw;
         }
         else {
-            self->field_7C = 1;
+            self->attackID = 1;
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown15;
+            self->state = HeavyMystic_StateBoss_BeanJump;
         }
     }
-    HeavyMystic_CheckPlayerCollisions4();
+
+    HeavyMystic_CheckPlayerCollisions_Bean();
 }
 
-void HeavyMystic_State1_Unknown17(void)
+void HeavyMystic_StateBoss_BeanBomb1Throw(void)
 {
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    if (self->field_7C == 1 && self->animator.frameID == 3) {
-        self->field_7C = 2;
+
+    if (self->attackID == 1 && self->animator.frameID == 3) {
+        self->attackID = 2;
         RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
-        EntityHeavyMystic *boss = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_BOMB), self->position.x, self->position.y + 0x130000);
+        EntityHeavyMystic *bomb = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_BOMB), self->position.x, self->position.y + 0x130000);
         if (self->direction) {
-            boss->position.x += 0xB0000;
-            boss->velocity.x = -0x40000;
+            bomb->position.x += 0xB0000;
+            bomb->velocity.x = -0x40000;
         }
         else {
-            boss->position.x -= 0xB0000;
-            boss->velocity.x = 0x40000;
+            bomb->position.x -= 0xB0000;
+            bomb->velocity.x = 0x40000;
         }
-        boss->velocity.y = -0x40000;
-        boss->direction  = self->direction;
+        bomb->velocity.y = -0x40000;
+        bomb->direction  = self->direction;
     }
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
-        self->field_7C = 1;
+        self->attackID = 1;
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 7, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown18;
+        self->state = HeavyMystic_StateBoss_BeanBomb2Throw;
     }
-    HeavyMystic_CheckPlayerCollisions4();
+
+    HeavyMystic_CheckPlayerCollisions_Bean();
 }
 
-void HeavyMystic_State1_Unknown18(void)
+void HeavyMystic_StateBoss_BeanBomb2Throw(void)
 {
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
-    if (self->field_7C == 1 && self->animator.frameID == 2) {
-        self->field_7C = 2;
+
+    if (self->attackID == 1 && self->animator.frameID == 2) {
+        self->attackID = 2;
         RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
-        EntityHeavyMystic *boss = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_BOMB), self->position.x, self->position.y - 0x130000);
+        EntityHeavyMystic *bomb = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_BOMB), self->position.x, self->position.y - 0x130000);
         if (self->direction) {
-            boss->position.x += 0xB0000;
-            boss->velocity.x = -0x40000;
+            bomb->position.x += 0xB0000;
+            bomb->velocity.x = -0x40000;
         }
         else {
-            boss->position.x -= 0xB0000;
-            boss->velocity.x = 0x40000;
+            bomb->position.x -= 0xB0000;
+            bomb->velocity.x = 0x40000;
         }
-        boss->velocity.y = -0x40000;
-        boss->direction  = self->direction;
+        bomb->velocity.y = -0x40000;
+        bomb->direction  = self->direction;
     }
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
-        self->field_7C   = 0;
+        self->attackID   = 0;
         self->timer      = 5;
         self->velocity.x = 0;
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 5, &self->animator, true, 0);
-        self->state = HeavyMystic_State1_Unknown16;
+        self->state = HeavyMystic_StateBoss_BeanIdle;
     }
-    HeavyMystic_CheckPlayerCollisions4();
+
+    HeavyMystic_CheckPlayerCollisions_Bean();
 }
 
-void HeavyMystic_State1_Unknown15(void)
+void HeavyMystic_StateBoss_BeanJump(void)
 {
     RSDK_THIS(HeavyMystic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -1245,14 +1287,15 @@ void HeavyMystic_State1_Unknown15(void)
         self->velocity.x = -self->velocity.x;
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true) == true) {
-        if (--self->field_7C <= 0) {
-            self->field_7C   = 1;
+        if (--self->attackID <= 0) {
+            self->attackID   = 1;
             self->timer      = 15;
             self->velocity.x = 0;
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 5, &self->animator, true, 0);
-            self->state = HeavyMystic_State1_Unknown16;
+            self->state = HeavyMystic_StateBoss_BeanIdle;
         }
         else {
             self->velocity.y = -0x50000;
@@ -1260,10 +1303,10 @@ void HeavyMystic_State1_Unknown15(void)
             RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 6, &self->animator, true, 0);
         }
     }
-    HeavyMystic_CheckPlayerCollisions4();
+    HeavyMystic_CheckPlayerCollisions_Bean();
 }
 
-void HeavyMystic_State3_Unknown1(void)
+void HeavyMystic_StateCork_Fired(void)
 {
     RSDK_THIS(HeavyMystic);
     RSDK.ProcessAnimation(&self->animator);
@@ -1274,8 +1317,8 @@ void HeavyMystic_State3_Unknown1(void)
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
             if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
-                self->state = HeavyMystic_State3_Unknown2;
-            else 
+                self->state = HeavyMystic_StateCork_MightyRebound;
+            else
 #endif
                 Player_CheckHit(player, self);
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
@@ -1289,11 +1332,12 @@ void HeavyMystic_State3_Unknown1(void)
         destroyEntity(self);
 }
 
-void HeavyMystic_State3_Unknown2(void)
+#if RETRO_USE_PLUS
+void HeavyMystic_StateCork_MightyRebound(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->visible ^= 1;
+    self->visible ^= true;
     RSDK.ProcessAnimation(&self->animator);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -1302,12 +1346,14 @@ void HeavyMystic_State3_Unknown2(void)
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
+#endif
 
-void HeavyMystic_State4_Unknown1(void)
+void HeavyMystic_State_Bomb(void)
 {
     RSDK_THIS(HeavyMystic);
 
     RSDK.ProcessAnimation(&self->animator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -1330,10 +1376,12 @@ void HeavyMystic_State4_Unknown1(void)
         destroyEntity(self);
 }
 
-void HeavyMystic_State5_Unknown1(void)
+void HeavyMystic_State_BarkDebris(void)
 {
     RSDK_THIS(HeavyMystic);
+
     RSDK.ProcessAnimation(&self->animator);
+
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
 
@@ -1351,19 +1399,20 @@ void HeavyMystic_State5_Unknown1(void)
         destroyEntity(self);
 }
 
-void HeavyMystic_State2_Unknown1(void)
+void HeavyMystic_StateBox_AwaitCurtainRise(void)
 {
     RSDK_THIS(HeavyMystic);
+
     self->timer = 2;
     if (HeavyMystic->curtainLinePos <= 0x100000) {
-        self->state     = HeavyMystic_State2_Unknown2;
-        self->stateDraw = HeavyMystic_StateDraw2_Unknown2;
+        self->state     = HeavyMystic_StateBox_Idle;
+        self->stateDraw = HeavyMystic_Draw_BoxTransforming;
     }
 }
 
-void HeavyMystic_State2_Unknown2(void) {}
+void HeavyMystic_StateBox_Idle(void) {}
 
-void HeavyMystic_State2_Unknown4(void)
+void HeavyMystic_StateBox_CloseDoors(void)
 {
     RSDK_THIS(HeavyMystic);
     self->scale.x -= 32;
@@ -1371,66 +1420,66 @@ void HeavyMystic_State2_Unknown4(void)
         if (self->timer == 2) {
             foreach_active(HeavyMystic, boss)
             {
-                if (boss->state == HeavyMystic_State1_Unknown4)
-                    boss->state = HeavyMystic_State1_Unknown5;
+                if (boss->state == HeavyMystic_StateBoss_AwaitBoxOpened)
+                    boss->state = HeavyMystic_StateBoss_EnterMystic;
             }
 
             self->timer     = 1;
-            self->stateDraw = HeavyMystic_StateDraw2_Unknown1;
-            self->state     = HeavyMystic_State2_Unknown3;
+            self->stateDraw = HeavyMystic_Draw_BoxOpened;
+            self->state     = HeavyMystic_StateBox_OpenDoors;
         }
         else {
             self->timer     = 2;
-            self->stateDraw = HeavyMystic_StateDraw2_Unknown2;
-            self->state     = HeavyMystic_State2_Unknown3;
+            self->stateDraw = HeavyMystic_Draw_BoxTransforming;
+            self->state     = HeavyMystic_StateBox_OpenDoors;
         }
     }
 }
 
-void HeavyMystic_State2_Unknown3(void)
+void HeavyMystic_StateBox_OpenDoors(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    self->scale.x += 32;
-    if (self->scale.x >= 512)
-        self->state = HeavyMystic_State2_Unknown2;
+    self->scale.x += 0x20;
+    if (self->scale.x >= 0x200)
+        self->state = HeavyMystic_StateBox_Idle;
 }
 
-void HeavyMystic_State2_Unknown5(void)
+void HeavyMystic_StateBox_Transforming(void)
 {
     RSDK_THIS(HeavyMystic);
     if (!(Zone->timer & 7)) {
         RSDK.PlaySfx(HeavyMystic->sfxMagicBox, false, 255);
-        int x = RSDK.Rand(-24, 25) << 16;
-        int y = RSDK.Rand(-24, 25) << 16;
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
+        int32 x                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
+        int32 y                                                               = self->position.x + (RSDK.Rand(-24, 25) << 16);
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawOrder = Zone->drawOrderHigh + 2;
     }
 
-    self->scale.x = RSDK.Cos256(self->angle + 64) + 0x200;
-    self->scale.y = RSDK.Sin256(self->angle) + 0x200;
-    if (self->angle == 768) {
+    self->scale.x = 0x200 + RSDK.Cos256(self->angle + 0x40);
+    self->scale.y = 0x200 + RSDK.Sin256(self->angle);
+    if (self->angle == 0x300) {
         RSDK.StopSfx(HeavyMystic->sfxMagicBox);
         RSDK.PlaySfx(HeavyMystic->sfxPowerDown, false, 255);
         self->angle     = 0;
         self->timer     = 0;
-        self->state     = HeavyMystic_State2_Unknown6;
-        self->stateDraw = HeavyMystic_StateDraw2_Unknown3;
+        self->state     = HeavyMystic_StateBox_TransformFinish;
+        self->stateDraw = HeavyMystic_Draw_BoxClosed;
     }
     else {
         self->angle += 8;
     }
 }
 
-void HeavyMystic_State2_Unknown6(void)
+void HeavyMystic_StateBox_TransformFinish(void)
 {
     RSDK_THIS(HeavyMystic);
     if (++self->timer > 30) {
         RSDK.PlaySfx(HeavyMystic->sfxDrop, false, 255);
-        self->state = HeavyMystic_State2_Unknown7;
+        self->state = HeavyMystic_StateBox_Dropping;
     }
 }
 
-void HeavyMystic_State2_Unknown7(void)
+void HeavyMystic_StateBox_Dropping(void)
 {
     RSDK_THIS(HeavyMystic);
     self->position.y += self->velocity.y;
@@ -1441,57 +1490,57 @@ void HeavyMystic_State2_Unknown7(void)
         RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
         RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
 
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
-        debris->drawOrder    = Zone->drawOrderLow;
-        debris->drawFX       = FX_FLIP;
-        debris->direction    = FLIP_NONE;
-        debris->velocity.y   = -0x40000;
-        debris->gravity      = 0x2800;
+        EntityDebris *debris    = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
+        debris->drawOrder       = Zone->drawOrderLow;
+        debris->drawFX          = FX_FLIP;
+        debris->direction       = FLIP_NONE;
+        debris->velocity.y      = -0x40000;
+        debris->gravityStrength = 0x2800;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 10, &debris->animator, true, 0);
         debris->animator.frameID = 0;
 
-        debris             = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x280000, self->position.y);
-        debris->drawOrder  = Zone->drawOrderHigh;
-        debris->drawFX     = FX_FLIP;
-        debris->direction  = FLIP_NONE;
-        debris->velocity.x = -0x20000;
-        debris->velocity.y = -0x40000;
-        debris->gravity    = 0x2800;
+        debris                  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x280000, self->position.y);
+        debris->drawOrder       = Zone->drawOrderHigh;
+        debris->drawFX          = FX_FLIP;
+        debris->direction       = FLIP_NONE;
+        debris->velocity.x      = -0x20000;
+        debris->velocity.y      = -0x40000;
+        debris->gravityStrength = 0x2800;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 10, &debris->animator, true, 0);
         debris->animator.frameID = 2;
 
-        debris             = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x280000, self->position.y);
-        debris->drawOrder  = Zone->drawOrderHigh;
-        debris->drawFX     = FX_FLIP;
-        debris->direction  = FLIP_X;
-        debris->velocity.x = 0x20000;
-        debris->velocity.y = -0x40000;
-        debris->gravity    = 0x2800;
+        debris                  = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x280000, self->position.y);
+        debris->drawOrder       = Zone->drawOrderHigh;
+        debris->drawFX          = FX_FLIP;
+        debris->direction       = FLIP_X;
+        debris->velocity.x      = 0x20000;
+        debris->velocity.y      = -0x40000;
+        debris->gravityStrength = 0x2800;
         RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 10, &debris->animator, true, 0);
         debris->animator.frameID = 2;
 
         self->timer      = 0;
-        self->visible    = 0;
+        self->visible    = false;
         self->velocity.y = 0;
-        self->state      = HeavyMystic_State2_Unknown8;
+        self->state      = HeavyMystic_StateBox_ShowContents;
     }
 }
 
-void HeavyMystic_State2_Unknown8(void)
+void HeavyMystic_StateBox_ShowContents(void)
 {
     RSDK_THIS(HeavyMystic);
     if (++self->timer > 96) {
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
-        self->visible                                                                                         = true;
-        self->scale.x                                                                                         = 0;
-        self->scale.y                                                                                         = 0;
+        self->visible                                                                                       = true;
+        self->scale.x                                                                                       = 0;
+        self->scale.y                                                                                       = 0;
         RSDK.PlaySfx(HeavyMystic->sfxAssemble, false, 255);
-        self->stateDraw = HeavyMystic_StateDraw2_Unknown3;
-        self->state     = HeavyMystic_State2_Unknown9;
+        self->stateDraw = HeavyMystic_Draw_BoxClosed;
+        self->state     = HeavyMystic_StateBox_Reappear;
     }
 }
 
-void HeavyMystic_State2_Unknown9(void)
+void HeavyMystic_StateBox_Reappear(void)
 {
     RSDK_THIS(HeavyMystic);
     if (self->scale.x < 512) {
@@ -1506,14 +1555,14 @@ void HeavyMystic_State2_Unknown9(void)
         else {
             RSDK.PlaySfx(HeavyMystic->sfxClack, false, 255);
             self->timer     = 2;
-            self->stateDraw = HeavyMystic_StateDraw2_Unknown2;
-            self->state     = HeavyMystic_State2_Unknown4;
+            self->stateDraw = HeavyMystic_Draw_BoxTransforming;
+            self->state     = HeavyMystic_StateBox_CloseDoors;
         }
         self->rotation &= 0x1FF;
     }
 }
 
-void HeavyMystic_StateDraw2_Unknown1(void)
+void HeavyMystic_Draw_BoxOpened(void)
 {
     RSDK_THIS(HeavyMystic);
     Vector2 drawPos;
@@ -1523,8 +1572,8 @@ void HeavyMystic_StateDraw2_Unknown1(void)
         self->animator.frameID = 0;
         RSDK.DrawSprite(&self->animator, NULL, false);
 
-        drawPos.x                = self->position.x - 0x280000;
-        drawPos.y                = self->position.y;
+        drawPos.x              = self->position.x - 0x280000;
+        drawPos.y              = self->position.y;
         self->animator.frameID = self->timer;
         self->drawFX           = FX_SCALE | FX_ROTATE | FX_FLIP;
         RSDK.DrawSprite(&self->animator, &drawPos, false);
@@ -1537,37 +1586,37 @@ void HeavyMystic_StateDraw2_Unknown1(void)
     }
 }
 
-void HeavyMystic_StateDraw2_Unknown2(void)
+void HeavyMystic_Draw_BoxTransforming(void)
 {
     RSDK_THIS(HeavyMystic);
     Vector2 drawPos;
 
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         self->drawFX = FX_NONE;
-        if (self->state != HeavyMystic_State2_Unknown5) {
+        if (self->state != HeavyMystic_StateBox_Transforming) {
             self->animator.frameID = 0;
             RSDK.DrawSprite(&self->animator, NULL, false);
         }
     }
     else {
-        drawPos.y                = self->position.y;
+        drawPos.y              = self->position.y;
         self->animator.frameID = self->timer;
         self->drawFX           = FX_SCALE | FX_ROTATE | FX_FLIP;
-        drawPos.x                = self->position.x - 0x280000;
-        if (self->state == HeavyMystic_State2_Unknown5)
+        drawPos.x              = self->position.x - 0x280000;
+        if (self->state == HeavyMystic_StateBox_Transforming)
             drawPos.x += 0x1400 * (0x200 - self->scale.x);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         self->direction = FLIP_X;
-        drawPos.x         = self->position.x + 0x280000;
-        if (self->state == HeavyMystic_State2_Unknown5)
+        drawPos.x       = self->position.x + 0x280000;
+        if (self->state == HeavyMystic_StateBox_Transforming)
             drawPos.x += 0x1400 * (self->scale.x - 0x200);
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         self->direction = FLIP_NONE;
     }
 }
 
-void HeavyMystic_StateDraw2_Unknown3(void)
+void HeavyMystic_Draw_BoxClosed(void)
 {
     RSDK_THIS(HeavyMystic);
 
@@ -1588,26 +1637,17 @@ void HeavyMystic_EditorDraw(void)
             self->drawFX = FX_FLIP;
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
             break;
+
         case MYSTIC_BOSS:
             self->drawFX = FX_FLIP;
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 0, &self->animator, true, 0);
             break;
+
         case MYSTIC_BOX:
             self->drawFX = FX_SCALE | FX_ROTATE | FX_FLIP;
             RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, 10, &self->animator, true, 0);
             break;
-        case MYSTIC_CORK:
-            self->drawFX    = FX_FLIP;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 4, &self->animator, true, 0);
-            break;
-        case MYSTIC_BOMB:
-            self->drawFX    = FX_FLIP;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 11, &self->animator, true, 0);
-            break;
-        case MYSTIC_DEBRIS:
-            self->drawFX    = FX_FLIP;
-            RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 16, &self->animator, true, 0);
-            break;
+
         default: break;
     }
 
@@ -1623,9 +1663,9 @@ void HeavyMystic_EditorLoad(void)
     RSDK_ENUM_VAR("Mischief", MYSTIC_MISCHIEF);
     RSDK_ENUM_VAR("Boss", MYSTIC_BOSS);
     RSDK_ENUM_VAR("Box", MYSTIC_BOX);
-    RSDK_ENUM_VAR("Cork", MYSTIC_CORK);
-    RSDK_ENUM_VAR("Bomb", MYSTIC_BOMB);
-    RSDK_ENUM_VAR("Debris", MYSTIC_DEBRIS);
+    // RSDK_ENUM_VAR("Cork", MYSTIC_CORK);
+    // RSDK_ENUM_VAR("Bomb", MYSTIC_BOMB);
+    // RSDK_ENUM_VAR("Debris", MYSTIC_DEBRIS);
 }
 #endif
 

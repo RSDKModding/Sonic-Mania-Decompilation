@@ -52,7 +52,7 @@ void FBZSinkTrash_Update(void)
                             RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &debris->animator, false, RSDK.Rand(0, 20));
                             debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                             debris->velocity.y    = player->velocity.y;
-                            debris->gravity       = 0x3800;
+                            debris->gravityStrength       = 0x3800;
                             debris->updateRange.y = 0x200000;
                             debris->updateRange.x = 0x200000;
                             debris->drawOrder     = Zone->drawOrderLow;
@@ -71,7 +71,7 @@ void FBZSinkTrash_Update(void)
                                 RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                                 debris->velocity.y    = -0x20000;
-                                debris->gravity       = 0x3800;
+                                debris->gravityStrength       = 0x3800;
                                 debris->updateRange.y = 0x200000;
                                 debris->updateRange.x = 0x200000;
                                 debris->drawOrder     = Zone->drawOrderLow;
@@ -91,7 +91,7 @@ void FBZSinkTrash_Update(void)
                                 RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                                 debris->velocity.y    = -0x20000;
-                                debris->gravity       = 0x3800;
+                                debris->gravityStrength       = 0x3800;
                                 debris->updateRange.y = 0x200000;
                                 debris->updateRange.x = 0x200000;
                                 debris->drawOrder     = Zone->drawOrderLow;
@@ -112,7 +112,7 @@ void FBZSinkTrash_Update(void)
                             RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                             debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                             debris->velocity.y    = -0x20000;
-                            debris->gravity       = 0x3800;
+                            debris->gravityStrength       = 0x3800;
                             debris->updateRange.y = 0x200000;
                             debris->updateRange.x = 0x200000;
                             debris->drawOrder     = Zone->drawOrderLow;

@@ -223,7 +223,7 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + RSDK.RandSeeded(-0x80000, 0x80000, &Zone->randSeed),
                                              y + RSDK.RandSeeded(0x40000, 0x140000, &Zone->randSeed));
         debris->state        = Debris_State_Fall;
-        debris->gravity      = 0x3800;
+        debris->gravityStrength      = 0x3800;
         debris->velocity.x   = RSDK.RandSeeded(0, 0x20000, &Zone->randSeed);
         if (debris->position.x < x)
             debris->velocity.x = -debris->velocity.x;
@@ -233,7 +233,7 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
 #else
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + RSDK.Rand(-0x80000, 0x80000), y + RSDK.Rand(0x40000, 0x140000));
         debris->state        = Debris_State_Fall;
-        debris->gravity      = 0x3800;
+        debris->gravityStrength      = 0x3800;
         debris->velocity.x   = RSDK.Rand(0, 0x20000);
         if (debris->position.x < x)
             debris->velocity.x = -debris->velocity.x;

@@ -910,7 +910,7 @@ void TVVan_StateRadio_EnterTV(void)
         int32 y              = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
         debris->state        = Debris_State_Fall;
-        debris->gravity      = 0x4000;
+        debris->gravityStrength      = 0x4000;
         debris->velocity.x   = RSDK.Rand(0, 0x20000);
         if (debris->position.x < self->position.x)
             debris->velocity.x = -debris->velocity.x;

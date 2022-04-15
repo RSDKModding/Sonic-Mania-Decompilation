@@ -8,9 +8,9 @@ struct ObjectBumpalo {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxBumper;
-    Hitbox hitboxClack;
+    Hitbox hitboxRange;
     Hitbox hitboxCharge;
-    Hitbox hitbox5;
+    Hitbox hitboxUnused;
     uint16 aniFrames;
     uint16 sfxBumper;
     uint16 sfxHuff;
@@ -26,10 +26,10 @@ struct EntityBumpalo {
     uint8 startDir;
     int32 timer;
     bool32 ignoreCliffs;
-    bool32 flag;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    bool32 wallCollided;
+    Animator badnikAnimator;
+    Animator huffAnimator;
+    Animator dustAnimator;
 };
 
 // Object Struct
@@ -53,17 +53,17 @@ void Bumpalo_DebugSpawn(void);
 void Bumpalo_DebugDraw(void);
 
 void Bumpalo_CheckOffScreen(void);
-void Bumpalo_BumpPlayer(void *p);
+void Bumpalo_BumpPlayer(EntityPlayer *player);
 void Bumpalo_CheckPlayerCollisions(void);
-void Bumpalo_HandlePlatformCollisions(void *p);
+void Bumpalo_HandlePlatformCollisions(EntityPlatform *platform);
 void Bumpalo_HandleObjectCollisions(void);
 
 void Bumpalo_State_Setup(void);
-void Bumpalo_State_Unknown1(void);
-void Bumpalo_State_Unknown2(void);
-void Bumpalo_State_Unknown3(void);
-void Bumpalo_State_Unknown4(void);
-void Bumpalo_State_Unknown5(void);
-void Bumpalo_State_Unknown6(void);
+void Bumpalo_State_Moving(void);
+void Bumpalo_State_Idle(void);
+void Bumpalo_State_Charging(void);
+void Bumpalo_State_Turning(void);
+void Bumpalo_State_Bumped(void);
+void Bumpalo_State_Falling(void);
 
 #endif //!OBJ_BUMPALO_H

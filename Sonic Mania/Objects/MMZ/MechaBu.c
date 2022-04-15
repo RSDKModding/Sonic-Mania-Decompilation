@@ -103,7 +103,7 @@ void MechaBu_CheckPlayerCollisions(void)
                 RSDK.SetSpriteAnimation(MechaBu->aniFrames, 7, &debris->animator, false, 0);
                 debris->velocity.x    = RSDK.Rand(-2, 3) << 16;
                 debris->velocity.y    = RSDK.Rand(-4, -1) << 16;
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->drawOrder     = self->drawOrder;
                 debris->updateRange.x = 0x200000;
                 debris->updateRange.y = 0x200000;

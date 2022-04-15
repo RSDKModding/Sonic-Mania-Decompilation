@@ -238,7 +238,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
     if (abs(player1->position.x - self->position.x) < 0x100000) {
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
         debris->state        = Debris_State_Fall;
-        debris->gravity      = 0x3800;
+        debris->gravityStrength      = 0x3800;
         debris->velocity.x   = 0x30000;
         debris->velocity.y   = -0x78000;
         debris->drawFX       = FX_SCALE | FX_ROTATE;
@@ -252,7 +252,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
 
         debris                        = CREATE_ENTITY(Debris, NULL, self->position.x, self->position.y);
         debris->state                 = Debris_State_Fall;
-        debris->gravity               = 0x3800;
+        debris->gravityStrength               = 0x3800;
         debris->velocity.x            = 0x40000;
         debris->velocity.y            = -0x48000;
         debris->drawFX                = FX_ROTATE;

@@ -6,9 +6,9 @@
 // Object Class
 struct ObjectMSZ2Cutscene {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused;
     EntityGiantPistol *pistol;
-    Entity *parallaxSprite;
+    EntityParallaxSprite *oozPeek;
     EntityEggPrison *prison;
 };
 
@@ -27,17 +27,19 @@ void MSZ2Cutscene_StaticUpdate(void);
 void MSZ2Cutscene_Draw(void);
 void MSZ2Cutscene_Create(void* data);
 void MSZ2Cutscene_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MSZ2Cutscene_EditorDraw(void);
 void MSZ2Cutscene_EditorLoad(void);
+#endif
 void MSZ2Cutscene_Serialize(void);
 
 // Extra Entity Functions
 void MSZ2Cutscene_SetupCutscene(void);
 void MSZ2Cutscene_GetPistolPtr(void);
 
-bool32 MSZ2Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 MSZ2Cutscene_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 MSZ2Cutscene_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_Cutscene_GoToPistol(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_Cutscene_PistolFired(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_Cutscene_AppearInBG(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZ2CUTSCENE_H

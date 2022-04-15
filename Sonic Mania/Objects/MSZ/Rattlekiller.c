@@ -15,13 +15,12 @@ void Rattlekiller_Update(void)
 
     if (self->timer) {
         self->timer--;
-        if (self->bodyStates[0] == 4) {
+        if (self->bodyStates[0] == RATTLEKILLER_PLAYERDETECTED) {
             foreach_active(Player, player)
             {
                 if (abs(self->bodyPositions[0].x - player->position.x) < 0x600000) {
                     if (abs(self->bodyPositions[0].y - player->position.y) < 0x600000) {
-                        self->playerPos.x = player->position.x;
-                        self->playerPos.y = player->position.y;
+                        self->targetPos = player->position;
                         foreach_break;
                     }
                 }
@@ -31,27 +30,26 @@ void Rattlekiller_Update(void)
     else {
         foreach_active(Player, player)
         {
-            if (self->bodyPositions[0].x <= self->startPos.x) {
-                if (player->position.x >= self->startPos.x || player->position.x - self->startPos.x <= -0x600000)
+            if (self->bodyPositions[0].x <= self->topBounds.x) {
+                if (player->position.x >= self->topBounds.x || player->position.x - self->topBounds.x <= -0x600000)
                     continue;
             }
-            else if (player->position.x <= self->startPos.x || player->position.x - self->startPos.x >= 0x600000) {
+            else if (player->position.x <= self->topBounds.x || player->position.x - self->topBounds.x >= 0x600000) {
                 continue;
             }
 
             if (abs(self->bodyPositions[0].y - player->position.y) < 0x600000) {
-                int delay = 30;
-                for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-                    self->bodyDelays[i] = 30;
-                    self->field_DC[i].x = self->bodyPositions[i].x;
-                    self->field_DC[i].y = self->bodyPositions[0].y;
-                    self->bodyStates[i]   = 4;
+                int32 delay = 30;
+                for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
+                    self->bodyDelays[i]    = 30;
+                    self->bodyOriginPos[i] = self->bodyPositions[i];
+                    self->bodyStates[i]    = RATTLEKILLER_PLAYERDETECTED;
 
                     delay += 2;
                 }
 
-                self->playerPos.x = player->position.x;
-                self->playerPos.y = player->position.y;
+                self->targetPos.x = player->position.x;
+                self->targetPos.y = player->position.y;
                 self->timer       = 480;
                 foreach_break;
             }
@@ -60,75 +58,81 @@ void Rattlekiller_Update(void)
 
     foreach_active(Player, player)
     {
-        for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
+        for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
             switch (self->bodyStates[i]) {
-                case 0:
+                case RATTLEKILLER_IDLE:
                     if (--self->bodyDelays[i] <= 0)
-                        self->bodyStates[i] = (self->field_12C[i].y < 0) + 2;
+                        self->bodyStates[i] = RATTLEKILLER_TWIST_DOWN + (self->bodyVelocities[i].y < 0);
                     break;
-                case 1:
+
+                case RATTLEKILLER_TWIST_HORIZONTAL: // circle pole horizontally (no vertical movement)
                     self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
-                    self->bodyPositions[i].y += self->field_12C[i].y;
-                    self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
-                    self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
+                    self->bodyPositions[i].y += self->bodyVelocities[i].y;
+                    self->bodyPositions[i].x = self->topBounds.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                    self->bodyDepth[i]       = RSDK.Cos256(self->bodyAngles[i]);
                     if (self->timer < 320) {
                         if (--self->bodyDelays[i] <= 0)
-                            self->bodyStates[i] = (self->field_12C[i].y < 0) + 2;
+                            self->bodyStates[i] = RATTLEKILLER_TWIST_DOWN + (self->bodyVelocities[i].y < 0);
                     }
                     break;
-                case 2:
-                    self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
-                    self->field_12C[i].y += 0x400;
-                    if (self->field_12C[i].y > 0x8000)
-                        self->field_12C[i].y = 0x8000;
 
-                    self->bodyPositions[i].y += self->field_12C[i].y;
-                    self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
-                    self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
-                    if (self->bodyPositions[i].y >= self->startPos2.y)
-                        self->bodyStates[i] = 3;
-                    break;
-                case 3:
+                case RATTLEKILLER_TWIST_DOWN: // circle pole (moving downwards)
                     self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
-                    self->field_12C[i].y -= 0x400;
-                    if (self->field_12C[i].y < -0x8000)
-                        self->field_12C[i].y = -0x8000;
+                    self->bodyVelocities[i].y += 0x400;
+                    if (self->bodyVelocities[i].y > 0x8000)
+                        self->bodyVelocities[i].y = 0x8000;
 
-                    self->bodyPositions[i].y += self->field_12C[i].y;
-                    self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
-                    self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
-                    if (self->bodyPositions[i].y <= self->startPos.y)
-                        self->bodyStates[i] = 2;
+                    self->bodyPositions[i].y += self->bodyVelocities[i].y;
+                    self->bodyPositions[i].x = self->topBounds.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                    self->bodyDepth[i]       = RSDK.Cos256(self->bodyAngles[i]);
+
+                    if (self->bodyPositions[i].y >= self->bottomBounds.y)
+                        self->bodyStates[i] = RATTLEKILLER_TWIST_UP;
                     break;
-                case 4:
+
+                case RATTLEKILLER_TWIST_UP: // circle pole (moving upwards)
+                    self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
+                    self->bodyVelocities[i].y -= 0x400;
+                    if (self->bodyVelocities[i].y < -0x8000)
+                        self->bodyVelocities[i].y = -0x8000;
+
+                    self->bodyPositions[i].y += self->bodyVelocities[i].y;
+                    self->bodyPositions[i].x = self->topBounds.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                    self->bodyDepth[i]       = RSDK.Cos256(self->bodyAngles[i]);
+                    if (self->bodyPositions[i].y <= self->topBounds.y)
+                        self->bodyStates[i] = RATTLEKILLER_TWIST_DOWN;
+                    break;
+
+                case RATTLEKILLER_PLAYERDETECTED:
                     if (--self->bodyDelays[i] > 0) {
                         if (self->bodyDelays[i] < 15 && i > 4) {
-                            self->bodyAngles[i]          = (self->bodyAngles[i] + 4) & 0xFF;
-                            self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
-                            self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
+                            self->bodyAngles[i]      = (self->bodyAngles[i] + 4) & 0xFF;
+                            self->bodyPositions[i].x = self->topBounds.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                            self->bodyDepth[i]       = RSDK.Cos256(self->bodyAngles[i]);
                         }
                     }
                     else if (i) {
-                        self->bodyStates[i] = 5;
+                        self->bodyStates[i] = RATTLEKILLER_STRETCHBODY;
                     }
                     else {
-                        self->bodyStates[0] = 6;
-                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, (self->bodyPositions[0].x > self->startPos.x) + 2, self->animators,
+                        self->bodyStates[0] = RATTLEKILLER_EXTEND;
+                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, (self->bodyPositions[0].x > self->topBounds.x) + 2, &self->headAnimator,
                                                 true, 0);
                         RSDK.PlaySfx(Rattlekiller->sfxRocketJet, false, 255);
                     }
                     break;
-                case 5:
-                    if (self->bodyStates[0] < 6) {
+
+                case RATTLEKILLER_STRETCHBODY:
+                    if (self->bodyStates[0] < RATTLEKILLER_EXTEND) {
                         self->bodyPositions[i].y += (self->bodyPositions[0].y - self->bodyPositions[i].y) >> 3;
-                        if (self->bodyStates[i - 1] == 1) {
+                        if (self->bodyStates[i - 1] == RATTLEKILLER_TWIST_HORIZONTAL) {
                             if (abs(self->bodyPositions[0].y - self->bodyPositions[i].y) < 0x20000) {
-                                self->bodyPositions[i].y = self->bodyPositions[0].y;
-                                self->field_12C[i].x     = 0;
-                                self->field_12C[i].y     = 0;
-                                self->bodyStates[i]      = 1;
-                                self->bodyDelays[i]      = 8 * i + self->bodyDelays[0];
-                                self->bodyAngles[i]      = self->bodyAngles[i - 1] - 16;
+                                self->bodyPositions[i].y  = self->bodyPositions[0].y;
+                                self->bodyVelocities[i].x = 0;
+                                self->bodyVelocities[i].y = 0;
+                                self->bodyStates[i]       = RATTLEKILLER_TWIST_HORIZONTAL;
+                                self->bodyDelays[i]       = 8 * i + self->bodyDelays[0];
+                                self->bodyAngles[i]       = self->bodyAngles[i - 1] - 16;
                             }
                         }
                     }
@@ -137,64 +141,67 @@ void Rattlekiller_Update(void)
                         self->bodyPositions[i].y = (self->bodyPositions[i - 1].y >> 1) + (self->bodyPositions[i + 1].y >> 1);
                     }
                     break;
-                case 6: {
-                    int rx = (self->playerPos.x - self->bodyPositions[i].x) >> 16;
-                    int ry = (self->playerPos.y - self->bodyPositions[i].y) >> 16;
+
+                case RATTLEKILLER_EXTEND: {
+                    int32 rx = (self->targetPos.x - self->bodyPositions[i].x) >> 16;
+                    int32 ry = (self->targetPos.y - self->bodyPositions[i].y) >> 16;
                     if (rx * rx + ry * ry >= 64) {
-                        int angle              = RSDK.ATan2(rx, ry);
-                        self->field_12C[i].x = RSDK.Cos256(angle) << 10;
-                        self->bodyPositions[i].x += self->field_12C[i].x;
+                        int32 angle               = RSDK.ATan2(rx, ry);
+                        self->bodyVelocities[i].x = RSDK.Cos256(angle) << 10;
+                        self->bodyPositions[i].x += self->bodyVelocities[i].x;
                         self->bodyPositions[i].y += RSDK.Sin256(angle) << 10;
-                        self->field_12C[i].y = RSDK.Sin256(angle) << 10;
-                        RSDK.ProcessAnimation(self->animators);
+                        self->bodyVelocities[i].y = RSDK.Sin256(angle) << 10;
                     }
                     else {
-                        self->bodyStates[i] = 7;
-                        RSDK.ProcessAnimation(self->animators);
+                        self->bodyStates[i] = RATTLEKILLER_RETRACT;
                     }
+                    RSDK.ProcessAnimation(&self->headAnimator);
                     break;
                 }
-                case 7: {
-                    int rx = (self->field_DC[i].x - self->bodyPositions[i].x) >> 16;
-                    int ry = (self->field_DC[Rattlekiller_SegmentCount - 1].y - self->bodyPositions[i].y) >> 16;
+
+                case RATTLEKILLER_RETRACT: {
+                    int32 rx = (self->bodyOriginPos[i].x - self->bodyPositions[i].x) >> 16;
+                    int32 ry = (self->bodyOriginPos[Rattlekiller_SegmentCount - 1].y - self->bodyPositions[i].y) >> 16;
                     if (rx * rx + ry * ry >= 64) {
-                        int angle              = RSDK.ATan2(rx, ry);
-                        self->field_12C[i].x = RSDK.Cos256(angle) << 10;
-                        self->bodyPositions[i].x += self->field_12C[i].x;
+                        int32 angle               = RSDK.ATan2(rx, ry);
+                        self->bodyVelocities[i].x = RSDK.Cos256(angle) << 10;
+                        self->bodyPositions[i].x += self->bodyVelocities[i].x;
                         self->bodyPositions[i].y += RSDK.Sin256(angle) << 10;
-                        self->field_12C[i].y = RSDK.Sin256(angle) << 10;
-                        RSDK.ProcessAnimation(self->animators);
+                        self->bodyVelocities[i].y = RSDK.Sin256(angle) << 10;
+                        RSDK.ProcessAnimation(&self->headAnimator);
                     }
                     else {
-                        self->bodyStates[i] = 1;
+                        self->bodyStates[i] = RATTLEKILLER_TWIST_HORIZONTAL;
                         if (i > 0)
                             self->bodyAngles[i] = self->bodyAngles[i - 1] - 16;
-                        self->bodyPositions[i].x = self->field_DC[i].x;
-                        self->bodyPositions[i].y = self->field_DC[Rattlekiller_SegmentCount - 1].y;
-                        self->bodyDelays[i]      = 8 * i;
-                        self->field_12C[i].x     = 0;
-                        self->field_12C[i].y     = 0;
-                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, self->animators, true, 0);
+                        self->bodyPositions[i].x  = self->bodyOriginPos[i].x;
+                        self->bodyPositions[i].y  = self->bodyOriginPos[Rattlekiller_SegmentCount - 1].y;
+                        self->bodyDelays[i]       = 8 * i;
+                        self->bodyVelocities[i].x = 0;
+                        self->bodyVelocities[i].y = 0;
+                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->headAnimator, true, 0);
                     }
                     break;
                 }
+
                 default: break;
             }
         }
 
         self->position.x = self->bodyPositions[0].x;
         self->position.y = self->bodyPositions[0].y;
-        if (Player_CheckBadnikTouch(player, self, &Rattlekiller->hitbox) && Player_CheckBadnikBreak(self, player, false)) {
-            for (int i = 1; i < Rattlekiller_SegmentCount; ++i) {
+        if (Player_CheckBadnikTouch(player, self, &Rattlekiller->hitboxSegment) && Player_CheckBadnikBreak(self, player, false)) {
+            for (int32 i = 1; i < Rattlekiller_SegmentCount; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPositions[i].x, self->bodyPositions[i].y);
+
                 RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, self->bodyAnimators[i]->animationID, &debris->animator, true,
                                         self->bodyAnimators[i]->frameID);
-                debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
-                debris->velocity.y    = RSDK.Rand(-0x20000, -0x10000);
-                debris->gravity       = 0x4800;
-                debris->drawOrder     = Zone->drawOrderHigh;
-                debris->updateRange.x = 0x400000;
-                debris->updateRange.y = 0x400000;
+                debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+                debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+                debris->gravityStrength = 0x4800;
+                debris->drawOrder       = Zone->drawOrderHigh;
+                debris->updateRange.x   = 0x400000;
+                debris->updateRange.y   = 0x400000;
             }
 
             destroyEntity(self);
@@ -202,11 +209,11 @@ void Rattlekiller_Update(void)
             foreach_break;
         }
         else {
-            for (int i = 1; i < Rattlekiller_SegmentCount; ++i) {
-                if (self->field_1A4[i] > 0) {
+            for (int32 i = 1; i < Rattlekiller_SegmentCount; ++i) {
+                if (self->bodyDepth[i] > 0) {
                     self->position.x = self->bodyPositions[i].x;
                     self->position.y = self->bodyPositions[i].y;
-                    if (Player_CheckCollisionTouch(player, self, &Rattlekiller->hitbox)) {
+                    if (Player_CheckCollisionTouch(player, self, &Rattlekiller->hitboxSegment)) {
 #if RETRO_USE_PLUS
                         if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))
 #endif
@@ -234,21 +241,25 @@ void Rattlekiller_Draw(void)
     RSDK_THIS(Rattlekiller);
 
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
-        for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-            int id = self->bodyIDs[i];
-            if (self->field_1A4[id] > 0) {
+        for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
+            int32 id = self->bodyIDs[i];
+
+            if (self->bodyDepth[id] > 0) {
                 Animator *animator = self->bodyAnimators[id];
                 if (animator->animationID < 2)
                     animator->frameID = self->bodyAngles[id] >> 4;
+
                 RSDK.DrawSprite(animator, &self->bodyPositions[id], false);
             }
         }
     }
     else {
-        for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-            int id = self->bodyIDs[i];
-            if (self->field_1A4[id] <= 0) {
+        for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
+            int32 id = self->bodyIDs[i];
+
+            if (self->bodyDepth[id] <= 0) {
                 Animator *animator = self->bodyAnimators[id];
+
                 if (animator->animationID < 2)
                     animator->frameID = self->bodyAngles[id] >> 4;
                 RSDK.DrawSprite(animator, &self->bodyPositions[id], false);
@@ -263,44 +274,49 @@ void Rattlekiller_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->drawOrderLow;
-        self->startPos      = self->position;
-        self->startPos2     = self->position;
+        self->topBounds     = self->position;
+        self->bottomBounds  = self->position;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         if (data)
             self->length = voidToInt(data);
         else if (!self->length)
             self->length = 128;
 
-        self->startPos.y -= self->length << 15;
-        self->startPos2.y += self->length << 15;
+        self->topBounds.y -= self->length << 15;
+        self->bottomBounds.y += self->length << 15;
 
-        int delay = 0;
-        for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
+        int32 delay = 0;
+        for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
             self->bodyIDs[i]       = i;
-            self->bodyAnimators[i] = &self->animators[1];
+            self->bodyAnimators[i] = &self->bodyAnimator;
             self->bodyDelays[i]    = delay;
-            self->bodyPositions[i] = self->startPos;
+            self->bodyPositions[i] = self->topBounds;
 
             delay += 8;
         }
+        self->bodyAnimators[0] = &self->headAnimator;
 
-        self->bodyAnimators[0] = &self->animators[0];
-        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->animators[0], true, 0);
-        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &self->animators[1], true, 0);
-        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &self->animators[2], true, 0);
+        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->headAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &self->bodyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &self->tailAnimator, true, 0);
     }
 }
 
 void Rattlekiller_StageLoad(void)
 {
-    Rattlekiller->aniFrames     = RSDK.LoadSpriteAnimation("MSZ/Rattlekiller.bin", SCOPE_STAGE);
-    Rattlekiller->hitbox.left   = -8;
-    Rattlekiller->hitbox.top    = -8;
-    Rattlekiller->hitbox.right  = 8;
-    Rattlekiller->hitbox.bottom = 8;
-    Rattlekiller->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
+    Rattlekiller->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rattlekiller.bin", SCOPE_STAGE);
+
+    Rattlekiller->hitboxSegment.left   = -8;
+    Rattlekiller->hitboxSegment.top    = -8;
+    Rattlekiller->hitboxSegment.right  = 8;
+    Rattlekiller->hitboxSegment.bottom = 8;
+
+    Rattlekiller->sfxRocketJet = RSDK.GetSfx("Stage/RocketJet.wav");
+    // Idk where it would've been used but "MSZ/RKillerRattle.wav" was prolly intended for this object
+
     DEBUGMODE_ADD_OBJ(Rattlekiller);
 }
 
@@ -321,13 +337,13 @@ void Rattlekiller_HandleSorting(void)
 {
     RSDK_THIS(Rattlekiller);
 
-    for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-        for (int i2 = Rattlekiller_SegmentCount - 1; i2 > i; --i2) {
-            int idA = self->bodyIDs[i2 - 1];
-            int idB = self->bodyIDs[i2];
-            if (self->field_1A4[idA] > self->field_1A4[idB]) {
-                self->bodyIDs[i2 - 1] = idB;
-                self->bodyIDs[i2]     = idA;
+    for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
+        for (int32 ii = Rattlekiller_SegmentCount - 1; ii > i; --ii) {
+            int32 id1 = self->bodyIDs[ii - 1];
+            int32 id2 = self->bodyIDs[ii];
+            if (self->bodyDepth[id1] > self->bodyDepth[id2]) {
+                self->bodyIDs[ii - 1] = id2;
+                self->bodyIDs[ii]     = id1;
             }
         }
     }
@@ -337,32 +353,63 @@ void Rattlekiller_HandleSorting(void)
 void Rattlekiller_EditorDraw(void)
 {
     RSDK_THIS(Rattlekiller);
-    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->animators[0], false, 0);
-    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &self->animators[1], false, 0);
-    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &self->animators[2], false, 0);
 
-    self->startPos      = self->position;
-    self->startPos2     = self->position;
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->headAnimator, false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &self->bodyAnimator, false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &self->tailAnimator, false, 0);
 
-    self->startPos.y -= self->length << 15;
-    self->startPos2.y += self->length << 15;
+    self->topBounds    = self->position;
+    self->bottomBounds = self->position;
 
-    int delay = 0;
-    for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
+    int32 length = self->length;
+    if (!length)
+        length = 128;
+
+    self->topBounds.y -= length << 15;
+    self->bottomBounds.y += length << 15;
+
+    int32 delay = 0;
+    for (int32 i = 0; i < Rattlekiller_SegmentCount; ++i) {
         self->bodyIDs[i]       = i;
-        self->bodyAnimators[i] = &self->animators[1];
+        self->bodyAnimators[i] = &self->bodyAnimator;
         self->bodyDelays[i]    = delay;
-        self->bodyPositions[i] = self->startPos;
+        self->bodyPositions[i] = self->position;
 
         delay += 8;
     }
 
-    
     Rattlekiller_HandleSorting();
+
+    int32 drawOrder = self->drawOrder;
+
+    // Draw Lower Depth
+    self->drawOrder = -1;
     Rattlekiller_Draw();
+
+    // Draw Higher Depth
+    self->drawOrder = SceneInfo->currentDrawGroup;
+    Rattlekiller_Draw();
+
+    self->drawOrder = drawOrder;
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->topBounds.x, self->topBounds.y);
+        DrawHelpers_DrawArrow(0xFFFF00, self->position.x, self->position.y, self->bottomBounds.x, self->bottomBounds.y);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
-void Rattlekiller_EditorLoad(void) { Rattlekiller->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rattlekiller.bin", SCOPE_STAGE); }
+void Rattlekiller_EditorLoad(void)
+{
+    Rattlekiller->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rattlekiller.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Rattlekiller, direction);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
+}
 #endif
 
 void Rattlekiller_Serialize(void)

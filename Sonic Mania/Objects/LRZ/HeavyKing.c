@@ -1091,7 +1091,7 @@ void HeavyKing_State_Destroyed(void)
             int spawnX           = centerX + RSDK.Rand(-0x40000, 0x40000);
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, spawnX, spawnY);
             debris->state        = Debris_State_Fall;
-            debris->gravity      = 0x3800;
+            debris->gravityStrength      = 0x3800;
             debris->velocity.x   = RSDK.Rand(0, 0x20000);
             if (debris->position.x < centerX)
                 debris->velocity.x = -debris->velocity.x;

@@ -1933,7 +1933,7 @@ void MetalSonic_State_Explode(void)
             RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &debris->animator, true, 1);
             debris->velocity.x = RSDK.Rand(6, 11) << 16;
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravity = 0x4800;
+            debris->gravityStrength = 0x4800;
             debris->drawOrder = wall->drawOrder;
             debris->updateRange.x = 0x800000;
             debris->updateRange.x = 0x800000;

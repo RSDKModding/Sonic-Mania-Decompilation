@@ -7,18 +7,18 @@
 struct ObjectMSZCutsceneST {
     RSDK_OBJECT
     TABLE(int32 signPostOffsets[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
-    uint16 value2;
-    uint16 value3;
-    Vector2 value4;
+    uint16 unused1;
+    uint16 unused2;
+    Vector2 tornadoStartPos;
     uint8 rougeID;
-    Entity *signPost;
+    EntitySignPost *signPost;
     EntityCutsceneHBH *mystic;
-    Entity *tornado;
-    Entity *nodePtr;
+    EntityTornado *tornado;
+    EntityTornadoPath *tornadoPath;
     Entity *projectile;
     EntityCutsceneHBH *rouges[3];
     EntityArmadiloid *rougePlatforms[3];
-    bool32 actFinishFlag;
+    bool32 finishedAct;
     bool32 isMayday;
     uint16 sfxExplosion3;
     uint16 sfxMayday;
@@ -31,13 +31,13 @@ struct EntityMSZCutsceneST {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
-    Entity* nodePtr;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    EntityTornadoPath* pathNode;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
     Hitbox hitbox;
 };
 
@@ -60,17 +60,17 @@ void MSZCutsceneST_Serialize(void);
 // Extra Entity Functions
 void MSZCutsceneST_SetupCutscene(void);
 
-bool32 MSZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown4(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown5(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown7(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown8(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_CutsceneState_Unknown9(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_PrepareAmbush(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_RougesAmbush(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_Mayday(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_SetPlayerMSZ2SpawnPos(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_PanCameraToPlayer(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_SetupMSZ2(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZCUTSCENEST_H

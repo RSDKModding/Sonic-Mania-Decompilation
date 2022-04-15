@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectSeltzerBottle {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxBottle;
+    Hitbox hitboxButton;
     uint16 layerID;
-    uint16 layerBitFlags;
+    uint16 seltzerPathLayer;
     uint16 aniFrames;
     uint16 sfxSpray;
 };
@@ -19,18 +19,13 @@ struct EntitySeltzerBottle {
     RSDK_ENTITY
     StateMachine(state);
     int32 sprayTime;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    int32 timer;
+    int32 waterLevel;
+    Animator unusedAnimator;
+    Animator bottleAnimator;
+    Animator buttonAnimator;
+    Animator waterAnimator;
+    Animator sprayAnimator;
 };
 
 // Object Struct
@@ -50,7 +45,7 @@ void SeltzerBottle_EditorLoad(void);
 void SeltzerBottle_Serialize(void);
 
 // Extra Entity Functions
-void SeltzerBottle_Unknown1(void);
-void SeltzerBottle_Unknown2(void);
+void SeltzerBottle_State_Spraying(void);
+void SeltzerBottle_State_TryReset(void);
 
 #endif //!OBJ_SELTZERBOTTLE_H

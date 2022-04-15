@@ -206,7 +206,7 @@ void WalkerLegs_CheckObjectCrush(void)
                     debris->drawOrder = Zone->drawOrderHigh;
                     debris->direction = spikes->direction;
                     debris->drawFX |= FX_ROTATE;
-                    debris->gravity    = 0x3800;
+                    debris->gravityStrength    = 0x3800;
                     debris->rotSpeed   = RSDK.Rand(-32, 32);
                     debris->velocity.x = RSDK.Rand(-0x28000, 0x28000);
                     debris->velocity.y = -0x1000 * RSDK.Rand(32, 96);
@@ -378,7 +378,7 @@ void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma)
 
             RSDK.SetSpriteAnimation(WalkerLegs->particleFrames, !isMagma, &debris->animator, true, 0);
             debris->drawOrder  = Zone->drawOrderHigh;
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
             debris->velocity.x = 0x180 * (abs(spawnX - x) >> 8) / size;
             if (debris->position.x < self->position.x) {
                 debris->direction  = FLIP_X;

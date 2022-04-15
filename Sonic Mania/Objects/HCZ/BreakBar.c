@@ -157,9 +157,9 @@ void BreakBar_HandlePlayerInteractions(EntityPlayer *player)
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, spawnX, spawnY);
                 debris->drawOrder    = Zone->drawOrderLow;
                 if (player->underwater)
-                    debris->gravity = 0x2000;
+                    debris->gravityStrength = 0x2000;
                 else
-                    debris->gravity = 0x3800;
+                    debris->gravityStrength = 0x3800;
                 debris->velocity.x = player->velocity.x >> 3;
                 debris->velocity.y = player->velocity.y >> 3;
 

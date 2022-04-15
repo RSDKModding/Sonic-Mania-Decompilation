@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectLightBulb {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxLightBulb;
     uint16 aniFrames;
     uint16 sfxBulbPop;
 };

@@ -15,6 +15,7 @@ void AIZTornado_Update(void)
     self->prevPos.x = self->position.x;
     self->prevPos.y = self->position.y;
     StateMachine_Run(self->state);
+
     self->animatorTornado.frameID = self->turnAngle >> 4;
     RSDK.ProcessAnimation(&self->animatorPropeller);
     RSDK.ProcessAnimation(&self->animatorPilot);

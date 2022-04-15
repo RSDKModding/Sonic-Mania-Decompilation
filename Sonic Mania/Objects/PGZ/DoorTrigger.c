@@ -93,7 +93,7 @@ void DoorTrigger_Update(void)
                         EntityDebris *shard =
                             CREATE_ENTITY(Debris, NULL, spawnX + RSDK.Rand(-0xA0000, 0xA0000), spawnY + RSDK.Rand(-0xA0000, 0xA0000));
                         shard->state      = Debris_State_Fall;
-                        shard->gravity    = 0x4000;
+                        shard->gravityStrength    = 0x4000;
                         shard->velocity.x = RSDK.Rand(0, 0x20000);
                         if (shard->position.x < self->position.x)
                             shard->velocity.x = -shard->velocity.x;

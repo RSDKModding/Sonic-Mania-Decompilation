@@ -10,7 +10,7 @@ typedef enum {
     MYSTIC_CORK,
     MYSTIC_BOMB,
     MYSTIC_DEBRIS,
-}HeavyMysticTypes;
+} HeavyMysticTypes;
 
 // Object Class
 struct ObjectHeavyMystic {
@@ -52,9 +52,9 @@ struct EntityHeavyMystic {
     int32 invincibilityTimer;
     int32 health;
     int32 rougeHealth;
-    int32 timer2;
-    int32 field_78;
-    int32 field_7C;
+    int32 particleFXTimer;
+    int32 unused;
+    int32 attackID;
     int32 rougeID;
     Vector2 targetPos;
     Animator animator;
@@ -69,7 +69,7 @@ void HeavyMystic_Update(void);
 void HeavyMystic_LateUpdate(void);
 void HeavyMystic_StaticUpdate(void);
 void HeavyMystic_Draw(void);
-void HeavyMystic_Create(void* data);
+void HeavyMystic_Create(void *data);
 void HeavyMystic_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HeavyMystic_EditorDraw(void);
@@ -83,73 +83,75 @@ void HeavyMystic_HandleParticleFX(void);
 
 void HeavyMystic_CheckPlayerCollisions(void);
 void HeavyMystic_Hit(void);
-void HeavyMystic_CheckPlayerCollisions2(void);
-void HeavyMystic_CheckPlayerCollisions3(void);
-void HeavyMystic_CheckPlayerCollisions4(void);
+void HeavyMystic_CheckPlayerCollisions_Fang(void);
+void HeavyMystic_CheckPlayerCollisions_Bark(void);
+void HeavyMystic_CheckPlayerCollisions_Bean(void);
 void HeavyMystic_Explode(void);
 
 void HeavyMystic_ScanlineCB(ScanlineInfo *scanlines);
 
-void HeavyMystic_State0_Unknown1(void);
-void HeavyMystic_State1_Unknown1(void);
-void HeavyMystic_State1_Unknown2(void);
-void HeavyMystic_State0_Unknown2(void);
-void HeavyMystic_State0_Unknown3(void);
-void HeavyMystic_State1_Unknown3(void);
-void HeavyMystic_State0_Unknown7(void);
-void HeavyMystic_State0_Unknown4(void);
-void HeavyMystic_State0_Unknown9(void);
-void HeavyMystic_State0_Unknown6(void);
-void HeavyMystic_State0_Unknown5(void);
-void HeavyMystic_State0_Unknown8(void);
-void HeavyMystic_State0_Unknown10(void);
+void HeavyMystic_StateMischief_Setup(void);
+void HeavyMystic_StateBoss_SetupArena(void);
+void HeavyMystic_StateBoss_AwaitPlayer(void);
+void HeavyMystic_StateMischief_EnterMystic(void);
+void HeavyMystic_StateMischief_HandleAppearArc(void);
+void HeavyMystic_StateBoss_BeginShow(void);
+void HeavyMystic_StateMischief_Idle(void);
+void HeavyMystic_StateMischief_MoveIntoPlace(void);
+void HeavyMystic_StateMischief_FinishedMagicTrick(void);
+void HeavyMystic_StateMischief_PrepareMagicTrick(void);
+void HeavyMystic_StateMischief_GoodDay(void);
+void HeavyMystic_StateMischief_ConjureHatterkiller(void);
+void HeavyMystic_StateMischief_Disappear(void);
 
-void HeavyMystic_State_Destroyed(void);
-void HeavyMystic_State_Finish(void);
-void HeavyMystic_State_CloseCurtains(void);
-void HeavyMystic_State1_Unknown4(void);
-void HeavyMystic_State1_Unknown5(void);
-void HeavyMystic_State1_Unknown6(void);
-void HeavyMystic_State1_Unknown7(void);
-void HeavyMystic_State1_Unknown8(void);
-void HeavyMystic_State1_Unknown9(void);
-void HeavyMystic_State1_Unknown10(void);
-void HeavyMystic_State1_ShowRouge(void);
-void HeavyMystic_State1_MysticReveal(void);
-void HeavyMystic_State1_Unknown22(void);
-void HeavyMystic_State1_Unknown23(void);
-void HeavyMystic_State1_Unknown24(void);
-void HeavyMystic_State1_Unknown13(void);
-void HeavyMystic_State1_Unknown14(void);
-void HeavyMystic_State1_Unknown12(void);
-void HeavyMystic_State_RougeHit(void);
-void HeavyMystic_State1_Unknown20(void);
-void HeavyMystic_State1_Unknown21(void);
-void HeavyMystic_State1_Unknown19(void);
-void HeavyMystic_State1_Unknown16(void);
-void HeavyMystic_State1_Unknown17(void);
-void HeavyMystic_State1_Unknown18(void);
-void HeavyMystic_State1_Unknown15(void);
+void HeavyMystic_StateBoss_Destroyed(void);
+void HeavyMystic_StateBoss_Finish(void);
+void HeavyMystic_StateBoss_CloseCurtains(void);
+void HeavyMystic_StateBoss_AwaitBoxOpened(void);
+void HeavyMystic_StateBoss_EnterMystic(void);
+void HeavyMystic_StateBoss_GoodDay(void);
+void HeavyMystic_StateBoss_BoxCloseDelay(void);
+void HeavyMystic_StateBoss_AwaitBoxClosing(void);
+void HeavyMystic_StateBoss_AwaitBoxClosed(void);
+void HeavyMystic_StateBoss_Transforming(void);
+void HeavyMystic_StateBoss_ShowRouge(void);
+void HeavyMystic_StateBoss_MysticReveal(void);
+void HeavyMystic_StateBoss_MoveToBoxY(void);
+void HeavyMystic_StateBoss_MoveToBoxX(void);
+void HeavyMystic_StateBoss_TransformBackIntoRouge(void);
+void HeavyMystic_StateBoss_FangIdle(void);
+void HeavyMystic_StateBoss_FangTell(void);
+void HeavyMystic_StateBoss_FangHop(void);
+void HeavyMystic_StateBoss_RougeHit(void);
+void HeavyMystic_StateBoss_BarkIdle(void);
+void HeavyMystic_StateBoss_BarkPounding(void);
+void HeavyMystic_StateBoss_BarkJump(void);
+void HeavyMystic_StateBoss_BeanIdle(void);
+void HeavyMystic_StateBoss_BeanBomb1Throw(void);
+void HeavyMystic_StateBoss_BeanBomb2Throw(void);
+void HeavyMystic_StateBoss_BeanJump(void);
 
-void HeavyMystic_State3_Unknown1(void);
-void HeavyMystic_State3_Unknown2(void);
+void HeavyMystic_StateCork_Fired(void);
+#if RETRO_USE_PLUS
+void HeavyMystic_StateCork_MightyRebound(void);
+#endif
 
-void HeavyMystic_State4_Unknown1(void);
+void HeavyMystic_State_Bomb(void);
 
-void HeavyMystic_State5_Unknown1(void);
+void HeavyMystic_State_BarkDebris(void);
 
-void HeavyMystic_State2_Unknown1(void);
-void HeavyMystic_State2_Unknown2(void);
-void HeavyMystic_State2_Unknown4(void);
-void HeavyMystic_State2_Unknown3(void);
-void HeavyMystic_State2_Unknown5(void);
-void HeavyMystic_State2_Unknown6(void);
-void HeavyMystic_State2_Unknown7(void);
-void HeavyMystic_State2_Unknown8(void);
-void HeavyMystic_State2_Unknown9(void);
+void HeavyMystic_StateBox_AwaitCurtainRise(void);
+void HeavyMystic_StateBox_Idle(void);
+void HeavyMystic_StateBox_CloseDoors(void);
+void HeavyMystic_StateBox_OpenDoors(void);
+void HeavyMystic_StateBox_Transforming(void);
+void HeavyMystic_StateBox_TransformFinish(void);
+void HeavyMystic_StateBox_Dropping(void);
+void HeavyMystic_StateBox_ShowContents(void);
+void HeavyMystic_StateBox_Reappear(void);
 
-void HeavyMystic_StateDraw2_Unknown1(void);
-void HeavyMystic_StateDraw2_Unknown2(void);
-void HeavyMystic_StateDraw2_Unknown3(void);
+void HeavyMystic_Draw_BoxOpened(void);
+void HeavyMystic_Draw_BoxTransforming(void);
+void HeavyMystic_Draw_BoxClosed(void);
 
-#endif //!OBJ_HEAVYMYSTIC_H
+#endif //! OBJ_HEAVYMYSTIC_H

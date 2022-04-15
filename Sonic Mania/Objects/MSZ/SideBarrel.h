@@ -13,14 +13,14 @@ struct ObjectSideBarrel {
 // Entity Class
 struct EntitySideBarrel {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
-    int activePlayers;
-    int field_64[PLAYER_MAX];
-    int field_74[PLAYER_MAX];
+    int32 unused1;
+    int32 unused2;
+    int32 activePlayers;
+    int32 playerPos[PLAYER_MAX];
+    int32 playerTimer[PLAYER_MAX];
     bool32 timeAttackFreeze;
-    Hitbox hitbox;
-    Animator animator;
+    Hitbox hitboxBarrel;
+    Animator barrelAnimator;
 };
 
 // Object Struct

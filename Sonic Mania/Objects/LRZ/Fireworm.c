@@ -119,7 +119,7 @@ void Fireworm_CheckPlayerCollisions(void)
                 RSDK.SetSpriteAnimation(Fireworm->aniFrames, 3, &debris->animator, true, 0);
                 debris->velocity.x    = RSDK.Rand(-0x40000, 0x40000);
                 debris->velocity.y    = RSDK.Rand(-0x40000, 0x40000);
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->drawOrder     = Zone->drawOrderLow;
                 debris->updateRange.x = 0x400000;
                 debris->updateRange.y = 0x400000;

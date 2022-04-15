@@ -34,7 +34,7 @@ void AIZTornadoPath_Create(void *data)
                         camera->state          = StateMachine_None;
                         camera->position.x     = self->position.x;
                         camera->position.y     = self->position.y;
-                        AIZTornadoPath->camera = (Entity *)camera;
+                        AIZTornadoPath->camera = camera;
                     }
 
                     foreach_all(Player, player) { player->camera = NULL; }
@@ -45,37 +45,45 @@ void AIZTornadoPath_Create(void *data)
                     self->state            = AIZTornadoPath_State_SetTornadoSpeed;
                 }
                 break;
+
             case AIZTORNADOPATH_DUD: self->active = ACTIVE_NEVER; break;
+
             case AIZTORNADOPATH_SETSPEED:
                 self->active = ACTIVE_NEVER;
                 self->timer  = 1;
                 self->state  = AIZTornadoPath_State_SetTornadoSpeed;
                 break;
+
             case AIZTORNADOPATH_SETCAMERA:
                 self->active = ACTIVE_NEVER;
                 self->state  = AIZTornadoPath_State_SetPlayerCamera;
                 break;
+
             case AIZTORNADOPATH_DISABLEINTERACTIONS:
                 self->active = ACTIVE_NEVER;
                 self->state  = AIZTornadoPath_State_DisablePlayerInteractions;
                 break;
-            case AIZTORNADOPATH_JUMPOFF:
+
+            case AIZTORNADOPATH_EXITTORNADO:
                 self->active = ACTIVE_NEVER;
                 self->timer  = 1;
-                self->state  = AIZTornadoPath_JumpOffTornado;
+                self->state  = AIZTornadoPath_State_ExitTornadoSequence;
                 break;
-            case AIZTORNADOPATH_6:
-                self->state  = AIZTornadoPath_State_MoveRightJump;
+
+            case AIZTORNADOPATH_ENTERTORNADO:
+                self->state  = AIZTornadoPath_State_PrepareCatchPlayer;
                 self->active = (StarPost->postIDs[0] > 0) ? ACTIVE_XBOUNDS : ACTIVE_NEVER;
                 self->speed  = self->targetSpeed;
                 break;
-            case AIZTORNADOPATH_SETSPEED_ALT:
+
+            case AIZTORNADOPATH_TARGETNODE:
                 self->active = ACTIVE_NEVER;
                 self->timer  = 1;
                 self->speed  = self->targetSpeed;
                 self->state  = AIZTornadoPath_State_SetTornadoSpeed;
                 break;
-            default: return;
+
+            default: break;
         }
     }
 }
@@ -89,27 +97,28 @@ void AIZTornadoPath_StageLoad(void)
 void AIZTornadoPath_HandleMoveSpeed(void)
 {
     RSDK_THIS(AIZTornadoPath);
-    bool32 flag               = false;
-    EntityCamera *camera      = (EntityCamera *)AIZTornadoPath->camera;
+    bool32 usingCamPos               = false;
+    EntityCamera *camera      = AIZTornadoPath->camera;
     EntityAIZTornado *tornado = AIZTornadoPath->tornado;
 
     int32 x = 0, y = 0;
     if (camera && camera->position.x >= ScreenInfo->width << 16) {
         x    = camera->position.x;
         y    = camera->position.y;
-        flag = true;
+        usingCamPos = true;
     }
     else {
         x = tornado->newPos.x;
         y = tornado->newPos.y;
     }
-    EntityAIZTornadoPath *node = (EntityAIZTornadoPath *)RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
-    int32 xDist                  = (x - node->position.x) >> 16;
-    int32 yDist                  = (y - node->position.y) >> 16;
-    self->angle              = RSDK.ATan2(xDist, yDist);
-    int32 newPosX                = x - self->speed * RSDK.Cos256(self->angle);
-    int32 newPosY                = y - self->speed * RSDK.Sin256(self->angle);
-    if (flag) {
+
+    EntityAIZTornadoPath *node = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, AIZTornadoPath);
+    int32 xDist                = (x - node->position.x) >> 16;
+    int32 yDist                = (y - node->position.y) >> 16;
+    self->angle                = RSDK.ATan2(xDist, yDist);
+    int32 newPosX              = x - self->speed * RSDK.Cos256(self->angle);
+    int32 newPosY              = y - self->speed * RSDK.Sin256(self->angle);
+    if (usingCamPos) {
         camera->position.x = newPosX;
         camera->position.y = newPosY;
     }
@@ -130,6 +139,7 @@ void AIZTornadoPath_HandleMoveSpeed(void)
 void AIZTornadoPath_State_SetTornadoSpeed(void)
 {
     RSDK_THIS(AIZTornadoPath);
+
     if (self->speed >= self->targetSpeed) {
         if (self->speed > self->targetSpeed) {
             self->speed -= 16;
@@ -154,7 +164,8 @@ void AIZTornadoPath_State_SetTornadoSpeed(void)
 void AIZTornadoPath_State_SetPlayerCamera(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera = (EntityCamera *)AIZTornadoPath->camera;
+    EntityCamera *camera = AIZTornadoPath->camera;
+
     if (camera) {
         camera->state          = Camera_State_Follow;
         player->camera         = camera;
@@ -175,13 +186,14 @@ void AIZTornadoPath_State_DisablePlayerInteractions(void)
     self->state = AIZTornadoPath_State_SetTornadoSpeed;
 }
 
-void AIZTornadoPath_JumpOffTornado(void)
+void AIZTornadoPath_State_ExitTornadoSequence(void)
 {
     foreach_active(AIZTornado, tornado) { tornado->drawOrder = Zone->drawOrderLow; }
 
     if (!tornado->disableInteractions) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        EntityCamera *camera = (EntityCamera *)AIZTornadoPath->camera;
+        EntityCamera *camera = AIZTornadoPath->camera;
+
         if (camera) {
             camera->state          = Camera_State_Follow;
             player->camera         = camera;
@@ -200,10 +212,11 @@ void AIZTornadoPath_JumpOffTornado(void)
     AIZTornadoPath_State_SetTornadoSpeed();
 }
 
-void AIZTornadoPath_State_MoveRightJump(void)
+void AIZTornadoPath_State_PrepareCatchPlayer(void)
 {
     RSDK_THIS(AIZTornadoPath);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
     if (player->position.x > self->position.x) {
         player->stateInput = StateMachine_None;
         player->left       = false;
@@ -211,17 +224,18 @@ void AIZTornadoPath_State_MoveRightJump(void)
         if (player->pushing > 0) {
             player->jumpPress         = true;
             player->jumpHold          = true;
-            self->state             = AIZTornadoPath_State_FlyOff;
+            self->state             = AIZTornadoPath_State_CatchPlayer;
             AIZTornadoPath->moveVel.x = 0;
             AIZTornadoPath->moveVel.y = 0;
         }
     }
 }
 
-void AIZTornadoPath_State_FlyOff(void)
+void AIZTornadoPath_State_CatchPlayer(void)
 {
     RSDK_THIS(AIZTornadoPath);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
     ++self->timer;
     if (self->timer == 60) {
         foreach_all(AIZTornado, tornado)
@@ -235,28 +249,28 @@ void AIZTornadoPath_State_FlyOff(void)
     }
 
     if (self->timer == 90) {
-        self->timer      = 0;
+        self->timer        = 0;
         player->stateInput = Player_ProcessP1Input;
-        int32 xOffset        = 0;
+        int32 velX         = 0;
         foreach_all(AIZTornadoPath, node)
         {
-            if (node->type == AIZTORNADOPATH_SETSPEED_ALT) {
-                xOffset      = node->position.x - player->position.x;
+            if (node->type == AIZTORNADOPATH_TARGETNODE) {
+                velX         = node->position.x - player->position.x;
                 node->active = ACTIVE_NORMAL;
             }
         }
 
-        player->position.x += xOffset;
+        player->position.x += velX;
         if (player->camera) {
-            player->camera->position.x += xOffset;
+            player->camera->position.x += velX;
             player->camera->state  = StateMachine_None;
-            AIZTornadoPath->camera = (Entity *)player->camera;
+            AIZTornadoPath->camera = player->camera;
             player->camera         = NULL;
         }
 
         foreach_active(AIZTornado, tornado)
         {
-            tornado->position.x += xOffset;
+            tornado->position.x += velX;
             tornado->offsetX = 0x80000;
         }
     }
@@ -281,9 +295,9 @@ void AIZTornadoPath_EditorLoad(void)
     RSDK_ENUM_VAR("Set Tornado Speed", AIZTORNADOPATH_SETSPEED);
     RSDK_ENUM_VAR("Return Player Camera", AIZTORNADOPATH_SETCAMERA);
     RSDK_ENUM_VAR("Disable Player Interactions", AIZTORNADOPATH_DISABLEINTERACTIONS);
-    RSDK_ENUM_VAR("Jump Off Tornado", AIZTORNADOPATH_JUMPOFF);
-    RSDK_ENUM_VAR("Type 6", AIZTORNADOPATH_6);
-    RSDK_ENUM_VAR("Set Tornado Speed (Alt)", AIZTORNADOPATH_SETSPEED_ALT);
+    RSDK_ENUM_VAR("Exit Tornado Sequence", AIZTORNADOPATH_EXITTORNADO);
+    RSDK_ENUM_VAR("Enter Tornado Sequence (Fly to Target Node)", AIZTORNADOPATH_ENTERTORNADO);
+    RSDK_ENUM_VAR("Set Tornado Speed (Target Node)", AIZTORNADOPATH_TARGETNODE);
 }
 #endif
 

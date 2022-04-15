@@ -746,7 +746,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase1(void)
         RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 4, &debris->animator, true, 0);
         debris->velocity.x    = 0x50000;
         debris->velocity.y    = -0x28000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -1194,7 +1194,7 @@ void LaundroMobile_StateBoss_Destroyed_Phase2(void)
                         debris->velocity.x = 0x40000;
                     debris->velocity.y = -0x20000;
                 }
-                debris->gravity                     = 0x3800;
+                debris->gravityStrength                     = 0x3800;
                 debris->drawOrder                   = Zone->drawOrderHigh;
                 debris->updateRange.x               = 0x400000;
                 debris->updateRange.y               = 0x400000;
@@ -1314,7 +1314,7 @@ void LaundroMobile_StateOutro_Rumble(void)
             debris->direction  = RSDK.Rand(0, 4);
             debris->drawFX     = FX_FLIP;
             debris->drawOrder  = Zone->drawOrderHigh;
-            debris->gravity    = 0x3800;
+            debris->gravityStrength    = 0x3800;
         }
 
         RSDK.CopyTileLayer(Zone->fgHigh, 1763, 172, Zone->fgHigh, 1919, 172, 11, 4);
@@ -1542,7 +1542,7 @@ void LaundroMobile_StateBomb_Bomb_Idle(void)
                 RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 7, &debris->animator, true, 0);
                 debris->velocity.y    = -0x28000;
                 debris->velocity.x    = LaundroMobile->currentVelocity + 0x28000;
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->drawOrder     = Zone->drawOrderHigh;
                 debris->updateRange.x = 0x400000;
                 debris->updateRange.y = 0x400000;
@@ -1674,7 +1674,7 @@ void LaundroMobile_StateBlock_Block(void)
                         debris->drawFX |= FX_ROTATE;
                         debris->velocity.x    = LaundroMobile->currentVelocity + 0x18000;
                         debris->velocity.y    = -0x28000;
-                        debris->gravity       = 0x3800;
+                        debris->gravityStrength       = 0x3800;
                         debris->rotSpeed      = RSDK.Rand(-8, 8);
                         debris->drawOrder     = Zone->drawOrderHigh;
                         debris->updateRange.x = 0x400000;
@@ -1685,7 +1685,7 @@ void LaundroMobile_StateBlock_Block(void)
                         debris->drawFX |= FX_ROTATE;
                         debris->velocity.x    = LaundroMobile->currentVelocity + 0x18000;
                         debris->velocity.y    = -0x20000;
-                        debris->gravity       = 0x3800;
+                        debris->gravityStrength       = 0x3800;
                         debris->rotSpeed      = RSDK.Rand(-8, 8);
                         debris->drawOrder     = Zone->drawOrderHigh;
                         debris->updateRange.x = 0x400000;
@@ -1697,7 +1697,7 @@ void LaundroMobile_StateBlock_Block(void)
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 6);
                     debris->velocity.y    = -0x28000;
                     debris->velocity.x    = LaundroMobile->currentVelocity + 0x20000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -1706,7 +1706,7 @@ void LaundroMobile_StateBlock_Block(void)
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 7);
                     debris->velocity.y    = -0x28000;
                     debris->velocity.x    = LaundroMobile->currentVelocity + 0x28000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -1715,7 +1715,7 @@ void LaundroMobile_StateBlock_Block(void)
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 8);
                     debris->velocity.y    = -0x20000;
                     debris->velocity.x    = LaundroMobile->currentVelocity + 0x20000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -1724,7 +1724,7 @@ void LaundroMobile_StateBlock_Block(void)
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 9, &debris->animator, true, 4 * (self->mainAnimator.frameID % 3) + 9);
                     debris->velocity.y    = -0x20000;
                     debris->velocity.x    = LaundroMobile->currentVelocity + 0x28000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;

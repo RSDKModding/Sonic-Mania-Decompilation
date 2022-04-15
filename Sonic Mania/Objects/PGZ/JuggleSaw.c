@@ -150,7 +150,7 @@ void JuggleSaw_CheckPlayerCollisions(void)
                 }
                 debris->velocity.x    = RSDK.Rand(vx1, vx2) << 16;
                 debris->velocity.y    = RSDK.Rand(vy1, vy2) << 16;
-                debris->gravity       = 0x3800;
+                debris->gravityStrength       = 0x3800;
                 debris->drawOrder     = self->drawOrder;
                 debris->updateRange.x = 0x400000;
                 debris->updateRange.y = 0x400000;

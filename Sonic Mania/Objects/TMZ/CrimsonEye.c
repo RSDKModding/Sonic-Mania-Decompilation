@@ -356,7 +356,7 @@ void CrimsonEye_StateContainer_CoreActive(void)
         RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = -0x20000;
         debris->velocity.y    = -0x20000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -366,7 +366,7 @@ void CrimsonEye_StateContainer_CoreActive(void)
         RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 0, &debris->animator, true, 3);
         debris->velocity.x    = 0x20000;
         debris->velocity.y    = -0x20000;
-        debris->gravity       = 0x3800;
+        debris->gravityStrength       = 0x3800;
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
@@ -677,7 +677,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 14);
                     debris->velocity.x    = -0x30000;
                     debris->velocity.y    = -0x40000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -687,7 +687,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 15);
                     debris->velocity.x    = 0x30000;
                     debris->velocity.y    = -0x40000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -697,7 +697,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 16);
                     debris->velocity.x    = -0x20000;
                     debris->velocity.y    = -0x20000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -707,7 +707,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 17);
                     debris->velocity.x    = 0x20000;
                     debris->velocity.y    = -0x20000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -717,7 +717,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 12);
                     debris->velocity.x    = 0;
                     debris->velocity.y    = -0x30000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -726,7 +726,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 13);
                     debris->velocity.x    = 0;
                     debris->velocity.y    = 0;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -737,7 +737,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->rotation      = self->rotation;
                     debris->velocity.x    = -0x20000;
                     debris->velocity.y    = -0x20000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -748,7 +748,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->rotation      = 0x1FF - self->rotation;
                     debris->velocity.x    = 0x20000;
                     debris->velocity.y    = -0x20000;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -760,7 +760,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 1);
                     debris->velocity.x    = velX;
                     debris->velocity.y    = velY;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -770,7 +770,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 2);
                     debris->velocity.x    = velX;
                     debris->velocity.y    = velY;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
@@ -780,7 +780,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 3);
                     debris->velocity.x    = velX;
                     debris->velocity.y    = velY;
-                    debris->gravity       = 0x3800;
+                    debris->gravityStrength       = 0x3800;
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
