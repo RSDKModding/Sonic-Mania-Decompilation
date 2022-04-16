@@ -325,13 +325,13 @@ void Ice_VSSwapCB(void)
     }
 }
 
-void Ice_FreezePlayer(void *p)
+void Ice_FreezePlayer(EntityPlayer *player)
 {
-    EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
+
     if (!Zone->gotTimeOver && player->state != Ice_State_FrozenPlayer && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
         EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PLAYER), player->position.x, player->position.y);
-        ice->playerPtr = (Entity *)player;
+        ice->playerPtr = player;
 #if RETRO_USE_PLUS
         switch (player->characterID) {
             case ID_SONIC: ice->animationID = 4 * (player->superState == SUPERSTATE_SUPER) + ICEANI_SONICIDLE; break;
@@ -351,7 +351,7 @@ void Ice_FreezePlayer(void *p)
 #endif
         RSDK.SetSpriteAnimation(Ice->aniFrames, ice->animationID, &ice->contentsAnimator, true, 0);
         RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_PLAYERGLINT, &ice->contentsAltAnimator, true, 0);
-        ice->alpha       = 128;
+        ice->alpha       = 0x80;
         ice->isPermanent = true;
         player->velocity.x >>= 1;
         player->groundVel >>= 1;
@@ -388,7 +388,7 @@ bool32 Ice_CheckPlayerBlockSmashH(void)
             else
                 self->velocity.x = -0x18000;
 
-            Ice_BreakPlayerBlock((Entity *)self);
+            Ice_BreakPlayerBlock(self);
             return true;
         }
     }
@@ -403,12 +403,12 @@ bool32 Ice_CheckPlayerBlockSmashV(void)
         if (abs(self->skidding) <= abs(self->pushing)) {
             if (self->pushing > 0) {
                 if ((self->angle & 0xFF) < 0x20) {
-                    Ice_BreakPlayerBlock((Entity *)self);
+                    Ice_BreakPlayerBlock(self);
                     return true;
                 }
             }
             if (self->pushing && (self->angle + 0x80) < 0x20) {
-                Ice_BreakPlayerBlock((Entity *)self);
+                Ice_BreakPlayerBlock(self);
                 return true;
             }
         }
@@ -420,22 +420,23 @@ void Ice_State_FrozenPlayer(void)
 {
     RSDK_THIS(Player);
 
-    bool32 flag       = self->onGround;
-    int32 skid        = self->groundVel;
-    bool32 groundFlag = self->groundedStore;
+    bool32 onGround = self->onGround;
+    int32 xVel      = self->groundVel;
+    int32 yVel      = self->groundedStore;
 
-    if (!flag) {
-        flag |= self->groundedStore || self->velocity.x;
-        skid       = self->velocity.x;
-        groundFlag = self->velocity.y;
-    }
-    if (!flag) {
-        flag |= abs(self->skidding) < 0x50000 || !Ice_CheckPlayerBlockSmashH();
-        skid       = self->velocity.x;
-        groundFlag = self->velocity.y;
+    if (!onGround) {
+        onGround |= self->groundedStore || self->velocity.x;
+        xVel = self->velocity.x;
+        yVel = self->velocity.y;
     }
 
-    if (flag) {
+    if (!onGround) {
+        onGround |= abs(self->skidding) < 0x50000 || !Ice_CheckPlayerBlockSmashH();
+        xVel = self->velocity.x;
+        yVel = self->velocity.y;
+    }
+
+    if (onGround) {
         if (self->onGround) {
             if (!self->groundVel) {
                 if (Ice_CheckPlayerBlockSmashH())
@@ -443,8 +444,8 @@ void Ice_State_FrozenPlayer(void)
             }
         }
 
-        self->skidding = skid;
-        if (!groundFlag) {
+        self->skidding = xVel;
+        if (!yVel) {
             if (Ice_CheckPlayerBlockSmashV())
                 return;
         }
@@ -504,7 +505,7 @@ void Ice_State_FrozenPlayer(void)
                 if (!self->groundVel)
                     self->groundVel += (5000 * RSDK.Sin256(self->angle)) >> 8;
                 if (self->camera)
-                    self->camera->offsetYFlag = false;
+                    self->camera->disableYOffset = false;
                 self->jumpAbilityState = 0;
                 self->rollingFriction  = rollFric;
                 if (self->state == Player_State_Ground)
@@ -543,12 +544,13 @@ void Ice_ShatterGenerator(int32 count, int32 xr, int32 yr, int32 velX, int32 vel
 }
 
 //Like Ice_Shatter, but "shatters" the contents too
-void Ice_FullShatter(Entity *p, int32 velX, int32 velY)
+void Ice_FullShatter(EntityPlayer *player, int32 velX, int32 velY)
 {
-    EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
+
     if (self->type == ICE_SPIKES || (self->type == ICE_SPRING && self->subType < 3))
         self->type = ICE_BLOCK;
+
     EntityItemBox *itemBox = (EntityItemBox *)Ice_Shatter(self, velX, velY);
     if (player && itemBox) {
         if (player->sidekick)
@@ -559,9 +561,8 @@ void Ice_FullShatter(Entity *p, int32 velX, int32 velY)
     }
 }
 
-void Ice_BreakPlayerBlock(Entity *p)
+void Ice_BreakPlayerBlock(EntityPlayer *player)
 {
-    EntityPlayer *player = (EntityPlayer *)p;
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
     Ice_ShatterGenerator(64, 24, 20, 0, 0, 2);
     Ice->playerTimers[RSDK.GetEntityID(player)] = 30;
@@ -661,7 +662,7 @@ void Ice_TimeOverCB(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->state == Ice_State_FrozenPlayer)
-        Ice_BreakPlayerBlock((Entity *)player);
+        Ice_BreakPlayerBlock(player);
 }
 
 void Ice_UpdateBlockGravity(void)
@@ -681,7 +682,7 @@ void Ice_State_IceBlock(void)
 
     foreach_active(Player, player)
     {
-        bool32 flag   = true;
+        bool32 noCollision   = true;
         int32 playerX = player->position.x;
         int32 playerY = player->position.y;
 
@@ -700,14 +701,15 @@ void Ice_State_IceBlock(void)
                         }
                         self->position.x += self->playerMoveOffset.x;
                         self->position.y += self->playerMoveOffset.y;
-                        flag = false;
+                        noCollision = false;
                     }
                     else {
-                        Ice_FullShatter((Entity *)player, 0, 0);
+                        Ice_FullShatter(player, 0, 0);
                         player->velocity.y = -0x20000;
                         foreach_return;
                     }
                     break;
+
                 case C_LEFT:
                     if (player->velocity.x < 0x20000) {
                         player->position.x = playerX;
@@ -720,15 +722,16 @@ void Ice_State_IceBlock(void)
                         }
                         self->position.x += self->playerMoveOffset.x;
                         self->position.y += self->playerMoveOffset.y;
-                        flag = false;
+                        noCollision = false;
                     }
                     else {
-                        Ice_FullShatter((Entity *)player, player->velocity.x >> 1, 0);
+                        Ice_FullShatter(player, player->velocity.x >> 1, 0);
                         player->position.x = playerX;
                         player->position.y = playerY;
                         foreach_return;
                     }
                     break;
+
                 case C_RIGHT:
                     if (player->velocity.x > -0x20000) {
                         player->position.x = playerX;
@@ -741,15 +744,16 @@ void Ice_State_IceBlock(void)
                         }
                         self->position.x += self->playerMoveOffset.x;
                         self->position.y += self->playerMoveOffset.y;
-                        flag = false;
+                        noCollision = false;
                     }
                     else {
-                        Ice_FullShatter((Entity *)player, player->velocity.x >> 1, 0);
+                        Ice_FullShatter(player, player->velocity.x >> 1, 0);
                         player->position.x = playerX;
                         player->position.y = playerY;
                         foreach_return;
                     }
                     break;
+
                 case C_BOTTOM:
                     if (player->velocity.y > -0x40000) {
                         player->position.x = playerX;
@@ -762,15 +766,16 @@ void Ice_State_IceBlock(void)
                         }
                         self->position.x += self->playerMoveOffset.x;
                         self->position.y += self->playerMoveOffset.y;
-                        flag = false;
+                        noCollision = false;
                     }
                     else {
-                        Ice_FullShatter((Entity *)player, 0, player->velocity.y >> 1);
+                        Ice_FullShatter(player, 0, player->velocity.y >> 1);
                         player->position.x = playerX;
                         player->position.y = playerY;
                         foreach_return;
                     }
                     break;
+
                 default:
                     player->position.x = playerX;
                     player->position.y = playerY;
@@ -782,12 +787,12 @@ void Ice_State_IceBlock(void)
                     }
                     self->position.x += self->playerMoveOffset.x;
                     self->position.y += self->playerMoveOffset.y;
-                    flag = false;
+                    noCollision = false;
                     break;
             }
         }
 
-        if (flag) {
+        if (noCollision) {
             int32 side = RSDK.CheckObjectCollisionBox(self, &self->hitboxBlock, player, &Ice->hitboxPlayerBlockOuter, false);
             if (side >= C_LEFT) {
                 if (side <= C_RIGHT) {
@@ -801,14 +806,14 @@ void Ice_State_IceBlock(void)
                         if (RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield)->shieldAnimator.animationID == 2) {
                             if (player->position.x >= self->position.x) {
                                 if (player->velocity.x <= -0x78000) {
-                                    Ice_FullShatter((Entity *)player, player->velocity.x, 0);
+                                    Ice_FullShatter(player, player->velocity.x, 0);
                                     player->position.x = playerX;
                                     player->position.y = playerY;
                                     foreach_return;
                                 }
                             }
                             else if (player->velocity.x >= 0x78000) {
-                                Ice_FullShatter((Entity *)player, player->velocity.x, 0);
+                                Ice_FullShatter(player, player->velocity.x, 0);
                                 player->position.x = playerX;
                                 player->position.y = playerY;
                                 foreach_return;
@@ -872,7 +877,7 @@ void Ice_State_IceBlock(void)
                         }
 #if RETRO_USE_PLUS
                         else if (player->state == Player_State_MightyHammerDrop && !player->sidekick) {
-                            Ice_FullShatter((Entity *)player, 0, player->velocity.y);
+                            Ice_FullShatter(player, 0, player->velocity.y);
                             player->velocity.y = prevVel - 0x10000;
                             player->onGround   = false;
                             foreach_return;
@@ -987,7 +992,7 @@ void Ice_State_IceBlockFall(void)
         if (!self->velocity.y && velY >= 0x60000) {
             if (ice) {
                 if (ice->stateDraw == Ice_Draw_PlayerBlock) {
-                    Ice_BreakPlayerBlock((Entity *)ice->playerPtr);
+                    Ice_BreakPlayerBlock(ice->playerPtr);
                 }
                 else {
                     Entity *storeEntity = SceneInfo->entity;
@@ -1089,7 +1094,7 @@ void Ice_State_PlayerBlock(void)
     else {
         if (playerPtr->state != Player_State_FlyIn && playerPtr->state != Player_State_JumpIn) {
             if (!Player_CheckValidState(playerPtr)) {
-                Ice_BreakPlayerBlock((Entity *)self->playerPtr);
+                Ice_BreakPlayerBlock(self->playerPtr);
             }
             else {
                 playerPtr->outerbox = NULL;
@@ -1130,11 +1135,11 @@ void Ice_State_PlayerBlock(void)
 
     foreach_active(Player, player)
     {
-        if (player != (EntityPlayer *)self->playerPtr && player->stateInput != Player_ProcessP2Input_AI && player->state != Ice_State_FrozenPlayer
+        if (player != self->playerPtr && player->stateInput != Player_ProcessP2Input_AI && player->state != Ice_State_FrozenPlayer
             && player->velocity.y > 0 && !player->onGround && player->position.y < self->position.y - 0x200000
             && Player_CheckBadnikTouch(player, self, &self->hitboxBlock)) {
             if (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_DROPDASH) {
-                Ice_BreakPlayerBlock((Entity *)self->playerPtr);
+                Ice_BreakPlayerBlock(self->playerPtr);
                 player->velocity.y = -0x30000;
                 player->onGround   = false;
                 foreach_break;

@@ -47,15 +47,17 @@ void GameProgress_ShuffleBSSID(void)
                 globals->blueSpheresID   = 0;
                 globals->blueSpheresInit = true;
             }
+
             if (progress->goldMedalCount >= 32)
                 break;
 
-            bool32 flag = false;
+            bool32 rotatedBSS = false;
             if (progress->silverMedalCount < 32)
-                flag = !progress->medals[globals->blueSpheresID];
+                rotatedBSS = !progress->medals[globals->blueSpheresID];
             else
-                flag = progress->medals[globals->blueSpheresID] < 2;
-            if (flag) {
+                rotatedBSS = progress->medals[globals->blueSpheresID] < 2;
+
+            if (rotatedBSS) {
                 LogHelpers_Print("Blue Spheres ID rotated by %d to %d", globals->blueSpheresID - startID, globals->blueSpheresID);
                 break;
             }
@@ -70,6 +72,7 @@ void GameProgress_ShuffleBSSID(void)
             globals->blueSpheresID   = 0;
             globals->blueSpheresInit = true;
         }
+
         LogHelpers_Print("WARNING GameProgress Attempted to get BS ID before loading SaveGame file");
         LogHelpers_Print("Blue Spheres ID rotated by %d to %d", globals->blueSpheresID - startID, globals->blueSpheresID);
     }
@@ -84,7 +87,7 @@ bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        return progress->zoneClearFlags[zoneID];
+        return progress->zoneCleared[zoneID];
     }
 }
 
@@ -96,9 +99,10 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
 
     for (int32 i = 0; i < 32; ++i) {
         if (i < 7)
-            emeraldsGotten += progress->emeraldFlags[i] == 1;
+            emeraldsGotten += progress->emeraldObtained[i] == 1;
         if (i < 12)
-            completeZones += progress->zoneClearFlags[i] == 1;
+            completeZones += progress->zoneCleared[i] == 1;
+
         medalsGotten += progress->medals[i];
     }
 
@@ -162,7 +166,7 @@ void GameProgress_UnlockAllMedals(void)
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     progress->allSpecialCleared = true;
-    progress->allEmeraldsFlag   = true;
+    progress->allEmeraldsObtained   = true;
     progress->unlockedEndingID  = 2;
     progress->silverMedalCount  = 32;
     progress->goldMedalCount    = 32;
@@ -171,9 +175,9 @@ void GameProgress_UnlockAllMedals(void)
 
     for (int32 m = 0; m < 0x20; ++m) {
         if (m < 7)
-            progress->emeraldFlags[m] = true;
+            progress->emeraldObtained[m] = true;
         if (m < 13)
-            progress->zoneClearFlags[m] = true;
+            progress->zoneCleared[m] = true;
         progress->medals[m] = 2;
     }
 }
@@ -199,7 +203,7 @@ void GameProgress_ClearProgress(void)
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     progress->allSpecialCleared  = false;
-    progress->allEmeraldsFlag    = false;
+    progress->allEmeraldsObtained    = false;
     progress->unlockedEndingID   = 0;
     progress->silverMedalCount   = 0;
     progress->goldMedalCount     = 0;
@@ -208,11 +212,11 @@ void GameProgress_ClearProgress(void)
 
     for (int32 m = 0; m < 0x20; ++m) {
         if (m < 7)
-            progress->emeraldFlags[m] = false;
+            progress->emeraldObtained[m] = false;
         if (m < 13)
-            progress->zoneClearFlags[m] = false;
+            progress->zoneCleared[m] = false;
         if (m < 7)
-            progress->specialClearFlags[m] = false;
+            progress->specialCleared[m] = false;
         if (m < 9)
             progress->unreadNotifs[m] = false;
         progress->medals[m] = 0;
@@ -228,9 +232,9 @@ void GameProgress_MarkZoneCompleted(int32 zoneID)
     if (zoneID >= 0) {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
         for (int32 z = 0; z <= zoneID; ++z) {
-            if (!progress->zoneClearFlags[z]) {
+            if (!progress->zoneCleared[z]) {
                 LogHelpers_Print("PROGRESS Cleared zone %d", z);
-                progress->zoneClearFlags[z] = true;
+                progress->zoneCleared[z] = true;
             }
         }
     }
@@ -244,7 +248,7 @@ bool32 GameProgress_CheckZoneClear(void)
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     for (int32 z = 0; z < 13; ++z) {
-        if (!progress->zoneClearFlags[z]) {
+        if (!progress->zoneCleared[z]) {
             GameProgress_MarkZoneCompleted(z);
             return true;
         }
@@ -260,14 +264,14 @@ void GameProgress_GiveEmerald(int32 emeraldID)
 
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
-    progress->emeraldFlags[emeraldID] = true;
-    bool32 allEmeraldsFlag             = true;
+    progress->emeraldObtained[emeraldID] = true;
+    bool32 allEmeralds             = true;
     for (int32 i = 0; i < 7; ++i) {
-        allEmeraldsFlag = allEmeraldsFlag && progress->emeraldFlags[i];
+        allEmeralds = allEmeralds && progress->emeraldObtained[i];
     }
 
-    if (allEmeraldsFlag)
-        progress->allEmeraldsFlag = true;
+    if (allEmeralds)
+        progress->allEmeraldsObtained = true;
 }
 void GameProgress_GiveMedal(uint8 medalID, uint8 type)
 {
@@ -320,18 +324,18 @@ void GameProgress_PrintSaveProgress(void)
     LogHelpers_Print("Game Progress:\n");
 
     for (int32 e = 0; e < 7; ++e) {
-        if (progress->emeraldFlags[e])
+        if (progress->emeraldObtained[e])
             LogHelpers_Print("Emerald %d => TRUE", e);
         else
             LogHelpers_Print("Emerald %d => FALSE", e);
     }
-    if (progress->allEmeraldsFlag)
+    if (progress->allEmeraldsObtained)
         LogHelpers_Print("ALL EMERALDS!\n");
     else
         LogHelpers_Print("YOU'VE NOT ENOUGH EMERALDS!\n");
 
     for (int32 z = 0; z < 13; ++z) {
-        if (progress->zoneClearFlags[z])
+        if (progress->zoneCleared[z])
             LogHelpers_Print("Zone %d clear => TRUE", z);
         else
             LogHelpers_Print("Zone %d clear => FALSE", z);
@@ -408,7 +412,7 @@ bool32 GameProgress_CheckUnlock(uint8 id)
         EntityGameProgress *progress = GameProgress_GetGameProgress();
         switch (id) {
             case 0:
-            case 1: return progress->zoneClearFlags[0] == 1;
+            case 1: return progress->zoneCleared[0] == 1;
             case 2: return progress->silverMedalCount >= 1;
             case 3: return progress->silverMedalCount >= 6;
             case 4: return progress->silverMedalCount >= 11;

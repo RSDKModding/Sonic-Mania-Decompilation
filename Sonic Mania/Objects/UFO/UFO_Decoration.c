@@ -36,10 +36,10 @@ void UFO_Decoration_LateUpdate(void)
     self->depth3D = mat->values[2][1] * (self->height >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
 
     if (self->depth3D >= 0x4000) {
-        int32 val = (int32)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
+        int32 depth = (int32)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
                    + (mat->values[0][1] * (self->height >> 8) & 0xFFFFFF00))
                   / self->depth3D;
-        self->visible = abs(val) < 0x100;
+        self->visible = abs(depth) < 0x100;
     }
 }
 
@@ -48,6 +48,7 @@ void UFO_Decoration_StaticUpdate(void) {}
 void UFO_Decoration_Draw(void)
 {
     RSDK_THIS(UFO_Decoration);
+
     if (self->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Decoration->sceneIndex);
         RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->size, self->scale.x);
@@ -97,7 +98,9 @@ void UFO_Decoration_StageLoad(void)
     UFO_Decoration->modelIndices[UFO_DECOR_PILLAR2] = RSDK.LoadMesh("Decoration/Pillar2.bin", SCOPE_STAGE);
     UFO_Decoration->modelIndices[UFO_DECOR_BIRD] = RSDK.LoadMesh("Decoration/Bird.bin", SCOPE_STAGE);
     UFO_Decoration->modelIndices[UFO_DECOR_FISH] = RSDK.LoadMesh("Decoration/Fish.bin", SCOPE_STAGE);
+
     UFO_Decoration->sceneIndex      = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
+
     UFO_Decoration->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
 }
 

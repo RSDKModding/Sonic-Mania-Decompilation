@@ -148,7 +148,7 @@ void IceBomba_Fly_Collide(void)
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
                 RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
                 self->state = IceBomba_State_FlyAway;
-                Ice_FreezePlayer((Entity *)player);
+                Ice_FreezePlayer(player);
             }
             self->position = prePos;
         }
@@ -280,12 +280,13 @@ void IceBomba_State_Bomb(void)
             RSDK.PlaySfx(IceBomba->sfxFreeze, false, 0xFF);
             destroyEntity(self);
         }
+
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
-                Ice_FreezePlayer((Entity *)player);
+                Ice_FreezePlayer(player);
                 destroyEntity(self);
                 foreach_break;
             }

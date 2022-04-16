@@ -26,20 +26,20 @@ void AIZSetup_StaticUpdate(void)
     }
 
 #if RETRO_USE_PLUS
-    if (AIZSetup->bg4Info) {
+    if (AIZSetup->background4) {
 #endif
         if (ScreenInfo->position.x <= 4096)
-            AIZSetup->bg2Info->scrollPos = 0;
+            AIZSetup->background2->scrollPos = 0;
         else
-            AIZSetup->bg2Info->scrollPos = 0x1000000;
+            AIZSetup->background2->scrollPos = 0x1000000;
 
         if (ScreenInfo->position.x <= 8704) {
-            AIZSetup->bg2Info->drawLayer[0] = 0;
-            AIZSetup->bg3Info->drawLayer[0] = DRAWLAYER_COUNT;
+            AIZSetup->background2->drawLayer[0] = 0;
+            AIZSetup->background3->drawLayer[0] = DRAWLAYER_COUNT;
         }
         else {
-            AIZSetup->bg2Info->drawLayer[0] = DRAWLAYER_COUNT;
-            AIZSetup->bg3Info->drawLayer[0] = 0;
+            AIZSetup->background2->drawLayer[0] = DRAWLAYER_COUNT;
+            AIZSetup->background3->drawLayer[0] = 0;
         }
 #if RETRO_USE_PLUS
     }
@@ -67,7 +67,7 @@ void AIZSetup_StaticUpdate(void)
 #endif
     }
 
-    if (!AIZSetup->playDrillSfxFlag || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
+    if (!AIZSetup->playDrillSfx || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID) {
         if (AIZSetup->playingDrillSFX) {
             RSDK.StopSfx(AIZSetup->sfxDrill);
             AIZSetup->playingDrillSFX = false;
@@ -122,18 +122,18 @@ void AIZSetup_StageLoad(void)
 #endif
         Zone->cameraBoundsB[0] = SCREEN_YSIZE;
 
-    AIZSetup->cutsceneInit    = false;
-    AIZSetup->aniTiles        = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
-    AIZSetup->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
+    AIZSetup->cutsceneInit = false;
+    AIZSetup->aniTiles     = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
+    AIZSetup->knuxFrames   = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
 
 #if RETRO_USE_PLUS
     if (RSDK.GetSceneLayerID("Background 4") >= DRAWLAYER_COUNT) {
         // Bug Details:
-        // AIZ->bg4Info doesn't get cleared here, so coming from AIZ Intro to AIZ Encore (same folder so object structs aren't reset)
-        // leaves bg4Info's tileLayer pointer intact, though pointing to the wrong layers
+        // AIZ->background4 doesn't get cleared here, so coming from AIZ Intro to AIZ Encore (same folder so object structs aren't reset)
+        // leaves background4's tileLayer pointer intact, though pointing to the wrong layers
         // it also enables the behaviour in StaticUpdate that should only play in AIZ Intro
         // Fix:
-        // AIZSetup->bg4Info = NULL;
+        // AIZSetup->background4 = NULL;
         // (though you should prolly clear the other 3 as well)
 
         for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
@@ -169,19 +169,19 @@ void AIZSetup_StageLoad(void)
     }
     else {
 #endif
-        AIZSetup->bg1Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
-        AIZSetup->bg2Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 2"));
-        AIZSetup->bg3Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 3"));
-        AIZSetup->bg4Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 4"));
+        AIZSetup->background1 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 1"));
+        AIZSetup->background2 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 2"));
+        AIZSetup->background3 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 3"));
+        AIZSetup->background4 = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 4"));
 
-        for (int32 i = 0; i < AIZSetup->bg2Info->scrollInfoCount; ++i) {
-            int32 parallaxFactor                       = AIZSetup->bg2Info->scrollInfo[i].parallaxFactor;
-            AIZSetup->bg2Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
+        for (int32 i = 0; i < AIZSetup->background2->scrollInfoCount; ++i) {
+            int32 parallaxFactor                           = AIZSetup->background2->scrollInfo[i].parallaxFactor;
+            AIZSetup->background2->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
         }
 
-        for (int32 i = 0; i < AIZSetup->bg3Info->scrollInfoCount; ++i) {
-            int32 parallaxFactor                       = AIZSetup->bg3Info->scrollInfo[i].parallaxFactor;
-            AIZSetup->bg3Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
+        for (int32 i = 0; i < AIZSetup->background3->scrollInfoCount; ++i) {
+            int32 parallaxFactor                           = AIZSetup->background3->scrollInfo[i].parallaxFactor;
+            AIZSetup->background3->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * parallaxFactor);
         }
 #if RETRO_USE_PLUS
     }
@@ -189,12 +189,15 @@ void AIZSetup_StageLoad(void)
 
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_RICKY;
+
     Music_SetMusicTrack("RubyPresence.ogg", TRACK_RUBYPRESENCE, 198457);
+
     AIZSetup->sfxDrill     = RSDK.GetSfx("LRZ/Drill.wav");
     AIZSetup->sfxBreak     = RSDK.GetSfx("Stage/LedgeBreak3.wav");
     AIZSetup->sfxImpact    = RSDK.GetSfx("Stage/Impact4.wav");
     AIZSetup->sfxHeliWoosh = RSDK.GetSfx("SPZ1/HeliWooshIn.wav");
-    if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
+
+    if (checkPlayerID(ID_KNUCKLES, 1)) {
         foreach_all(AIZTornado, tornado) { destroyEntity(tornado); }
         foreach_all(AIZTornadoPath, node) { destroyEntity(node); }
     }
@@ -206,6 +209,7 @@ void AIZSetup_StageLoad(void)
     BGSwitch->layerIDs[1]                   = AIZ_BG_JUNGLE;
     BGSwitch->layerIDs[2]                   = AIZ_BG_JUNGLE;
     BGSwitch->layerIDs[3]                   = AIZ_BG_JUNGLE;
+
     RSDK.SetDrawLayerProperties(0, false, Water_SetWaterLevel);
     RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, Water_RemoveWaterEffect);
     Water->waterPalette = 1;
@@ -354,10 +358,13 @@ bool32 AIZSetup_CutsceneSonic_EnterAIZ(EntityCutsceneSeq *host)
         player1->stateInput = StateMachine_None;
     }
     Zone->playerBoundActiveL[0] = false;
+
     if (player2->objectID == Player->objectID)
         player2->state = AIZSetup_PlayerState_Static;
+
     if (tornado->position.x < ScreenInfo->width << 16)
         camera->position.x = ScreenInfo->width << 16;
+
     return tornado->disableInteractions;
 }
 bool32 AIZSetup_CutsceneSonic_EnterAIZJungle(EntityCutsceneSeq *host)
@@ -397,9 +404,9 @@ bool32 AIZSetup_CutsceneSonic_EnterHeavies(EntityCutsceneSeq *host)
             }
             Player->targetLeaderPosition.x = player1->position.x - 0x200000;
             Player->targetLeaderPosition.y = player1->position.y;
-            player1->state           = Player_State_Ground;
-            player1->right           = false;
-            player1->left            = true;
+            player1->state                 = Player_State_Ground;
+            player1->right                 = false;
+            player1->left                  = true;
         }
     }
     else {
@@ -513,7 +520,7 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
     }
 
     if (claw->position.y > -0x520000) {
-        AIZSetup->playDrillSfxFlag = true;
+        AIZSetup->playDrillSfx = true;
         if (!(host->timer % 5))
             Camera_ShakeScreen(0, 0, 2);
         claw->position.y -= 0x4000;
@@ -547,7 +554,7 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
             }
         }
         else {
-            AIZSetup->playDrillSfxFlag         = false;
+            AIZSetup->playDrillSfx             = false;
             host->storedTimer                  = host->timer;
             host->storedValue                  = claw->position.y;
             AIZSetup->decorations[0]->rotSpeed = 0;
@@ -700,13 +707,13 @@ bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
 bool32 AIZSetup_CutsceneKnux_Drillin(EntityCutsceneSeq *host)
 {
     if (host->timer < 120) {
-        AIZSetup->playDrillSfxFlag = true;
+        AIZSetup->playDrillSfx = true;
         if (!(host->timer % 5)) {
             Camera_ShakeScreen(0, 0, 2);
         }
     }
     else if (host->timer == 120) {
-        AIZSetup->playDrillSfxFlag = false;
+        AIZSetup->playDrillSfx = false;
         RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0);
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.02);
     }

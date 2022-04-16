@@ -29,23 +29,23 @@ void UIKeyBinder_Update(void)
 
     TextInfo info;
     INIT_TEXTINFO(info);
-    bool32 flag = true;
+    bool32 keyMapChanged = true;
 
     int32 frameID = -1;
     if (self->lasyKeyMap == mappings) {
-        flag = false;
+        keyMapChanged = false;
     }
     else if (mappings == -1) {
         RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, 0);
         self->lasyKeyMap = -1;
-        flag             = false;
+        keyMapChanged             = false;
     }
     else {
         frameID = UIButtonPrompt_MappingsToFrame(mappings);
     }
 
-    for (int32 b = 0; b <= 8 && flag; ++b) {
-        for (int32 i = 1; i <= 2 && flag; ++i) {
+    for (int32 b = 0; b <= 8 && keyMapChanged; ++b) {
+        for (int32 i = 1; i <= 2 && keyMapChanged; ++i) {
             if ((b != self->type || i != input) && mappings) {
                 if (UIKeyBinder_GetMappings(i, b) != mappings)
                     continue;
@@ -71,12 +71,12 @@ void UIKeyBinder_Update(void)
                 UIKeyBinder_SetMappings(self->type, input, 0);
                 self->lasyKeyMap = 0;
                 UIDialog_CreateDialogYesNo(&info, UIKeyBinder_MoveKeyToActionCB_Yes, UIKeyBinder_MoveKeyToActionCB_No, true, true);
-                flag = false;
+                keyMapChanged = false;
             }
         }
     }
 
-    if (flag) {
+    if (keyMapChanged) {
         if (frameID || self->state != UIKeyBinder_State_Selected) {
             RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->keyAnimator, true, frameID);
             self->lasyKeyMap = mappings;

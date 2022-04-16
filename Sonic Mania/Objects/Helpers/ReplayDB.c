@@ -26,23 +26,23 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed)
 {
     ReplayFrame *framePtr = (ReplayFrame *)uncompressed;
 
-    compressed[0] = framePtr->info;
-    compressed[1] = framePtr->flags;
-    bool32 flag   = framePtr->info == REPLAY_INFO_STATECHANGE || framePtr->info == REPLAY_INFO_PASSEDGATE;
-    uint8 changes = framePtr->flags;
-    uint8 *outPtr = &compressed[2];
+    compressed[0]    = framePtr->info;
+    compressed[1]    = framePtr->flags;
+    bool32 forcePack = framePtr->info == REPLAY_INFO_STATECHANGE || framePtr->info == REPLAY_INFO_PASSEDGATE;
+    uint8 changes    = framePtr->flags;
+    uint8 *outPtr    = &compressed[2];
 
     int32 size = 2 * sizeof(uint8);
 
     // input
-    if (flag || (changes & REPLAY_FLAG_INPUT)) {
+    if (forcePack || (changes & REPLAY_FLAG_INPUT)) {
         *outPtr = framePtr->inputs;
         ++size;
         ++outPtr;
     }
 
     // position
-    if (flag || (changes & REPLAY_FLAG_POS)) {
+    if (forcePack || (changes & REPLAY_FLAG_POS)) {
         *((int32 *)outPtr) = framePtr->position.x;
         size += sizeof(int32);
         outPtr += sizeof(int32);
@@ -53,7 +53,7 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed)
     }
 
     // velocity
-    if (flag || (changes & REPLAY_FLAG_VEL)) {
+    if (forcePack || (changes & REPLAY_FLAG_VEL)) {
         *((int32 *)outPtr) = framePtr->velocity.x;
         size += sizeof(int32);
         outPtr += sizeof(int32);
@@ -64,28 +64,28 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed)
     }
 
     // rotation
-    if (flag || (changes & REPLAY_FLAG_ROT)) {
+    if (forcePack || (changes & REPLAY_FLAG_ROT)) {
         *outPtr = framePtr->rotation >> 1;
         size += sizeof(uint8);
         outPtr += sizeof(uint8);
     }
 
     // direction
-    if (flag || (changes & REPLAY_FLAG_DIR)) {
+    if (forcePack || (changes & REPLAY_FLAG_DIR)) {
         *outPtr = framePtr->dir;
         ++size;
         ++outPtr;
     }
 
     // anim
-    if (flag || (changes & REPLAY_FLAG_ANIM)) {
+    if (forcePack || (changes & REPLAY_FLAG_ANIM)) {
         *outPtr = framePtr->anim;
         ++size;
         ++outPtr;
     }
 
     // frame
-    if (flag || (changes & REPLAY_FLAG_FRAME)) {
+    if (forcePack || (changes & REPLAY_FLAG_FRAME)) {
         *outPtr = framePtr->frame;
         ++size;
         ++outPtr;
@@ -103,20 +103,20 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
     // compress state
     framePtr->info = *compressed;
 
-    bool32 flag     = *compressed == REPLAY_INFO_STATECHANGE || *compressed == REPLAY_INFO_PASSEDGATE;
-    uint8 changes   = compressed[1];
-    framePtr->flags = changes;
+    bool32 forceUnpack = *compressed == REPLAY_INFO_STATECHANGE || *compressed == REPLAY_INFO_PASSEDGATE;
+    uint8 changes      = compressed[1];
+    framePtr->flags    = changes;
 
     int32 size = 2 * sizeof(uint8);
 
     // input
-    if (flag || (changes & REPLAY_FLAG_INPUT)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_INPUT)) {
         framePtr->inputs = *buf++;
         size += sizeof(uint8);
     }
 
     // position
-    if (flag || (changes & REPLAY_FLAG_POS)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_POS)) {
         int32 x = *(int32 *)buf;
         buf += sizeof(int32);
         size += sizeof(int32);
@@ -130,7 +130,7 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
     }
 
     // velocity
-    if (flag || (changes & REPLAY_FLAG_VEL)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_VEL)) {
         int32 x = *(int32 *)buf;
         buf += sizeof(int32);
         size += sizeof(int32);
@@ -144,26 +144,26 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
     }
 
     // rotation
-    if (flag || (changes & REPLAY_FLAG_ROT)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_ROT)) {
         int32 rotation     = *buf;
         framePtr->rotation = rotation << 1;
         size += sizeof(uint8);
     }
 
     // direction
-    if (flag || (changes & REPLAY_FLAG_DIR)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_DIR)) {
         framePtr->dir = *buf++;
         size += sizeof(uint8);
     }
 
     // anim
-    if (flag || (changes & REPLAY_FLAG_ANIM)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_ANIM)) {
         framePtr->anim = *buf++;
         size += sizeof(uint8);
     }
 
     // frame
-    if (flag || (changes & REPLAY_FLAG_FRAME)) {
+    if (forceUnpack || (changes & REPLAY_FLAG_FRAME)) {
         framePtr->frame = *buf++;
         size += sizeof(uint8);
     }

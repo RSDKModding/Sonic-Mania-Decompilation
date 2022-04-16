@@ -15,12 +15,12 @@ void ConveyorPlatform_Update(void)
     if (self->state == Platform_State_Controlled) {
         if (self->timer || self->timer2) {
             if (++self->timer2 == 24) {
-                self->stateCollide = Platform_CollisionState_AllSolid;
+                self->stateCollide = Platform_Collision_AllSolid;
                 self->collision    = PLATFORM_C_SOLID_ALL;
                 self->timer2       = 0;
             }
             else {
-                self->stateCollide = Platform_CollisionState_None;
+                self->stateCollide = Platform_Collision_None;
                 self->collision    = PLATFORM_C_SOLID_NONE;
             }
             self->animator.frameID = ConveyorPlatform->frameIDs[self->timer2];
@@ -31,7 +31,7 @@ void ConveyorPlatform_Update(void)
         if (self->timer2) {
             self->timer2++;
             if (self->timer2 >= self->flipCount) {
-                self->stateCollide = Platform_CollisionState_AllSolid;
+                self->stateCollide = Platform_Collision_AllSolid;
                 self->collision    = PLATFORM_C_SOLID_ALL;
                 self->timer2       = 0;
             }
@@ -39,7 +39,7 @@ void ConveyorPlatform_Update(void)
             self->direction        = ConveyorPlatform->directionIDs[self->timer2 % 24];
         }
         if (!((Zone->timer2 + self->intervalOffset) % self->interval) && !self->timer2) {
-            self->stateCollide = Platform_CollisionState_None;
+            self->stateCollide = Platform_Collision_None;
             self->collision    = PLATFORM_C_SOLID_NONE;
             self->timer2       = 1;
         }
@@ -65,7 +65,7 @@ void ConveyorPlatform_Create(void *data)
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
     self->drawFX |= FX_FLIP;
-    self->stateCollide = Platform_CollisionState_AllSolid;
+    self->stateCollide = Platform_Collision_AllSolid;
     self->collision    = PLATFORM_C_SOLID_ALL;
     self->timer2       = 0;
     if (!SceneInfo->inEditor)

@@ -556,25 +556,25 @@ void LaundroMobile_HandleTileCollisions(void)
 {
     RSDK_THIS(LaundroMobile);
 
-    uint8 flag = 0xFF;
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x200000, 0x200000, false) && flag >= 0) {
+    uint8 collisionLevel = 0xFF;
+    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x200000, 0x200000, false) && collisionLevel >= 0) {
         self->position.y -= 0x10000;
-        flag = 0;
+        collisionLevel = 0;
     }
 
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0x200000, -0x200000, false) && flag >= 1) {
+    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0x200000, -0x200000, false) && collisionLevel >= 1) {
         self->position.y += 0x10000;
-        flag = 1;
+        collisionLevel = 1;
     }
 
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x200000, 0x200000, false) && flag >= 2) {
+    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x200000, 0x200000, false) && collisionLevel >= 2) {
         self->position.y -= 0x10000;
-        flag = 2;
+        collisionLevel = 2;
     }
 
-    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, -0x200000, -0x200000, false) && flag >= 3) {
+    while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, -0x200000, -0x200000, false) && collisionLevel >= 3) {
         self->position.y += 0x10000;
-        flag = 3;
+        collisionLevel = 3;
     }
 }
 

@@ -48,8 +48,8 @@ void PBL_Setup_EditorLoad(void);
 void PBL_Setup_Serialize(void);
 
 // Extra Entity Functions
-void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines);
-void PBL_Setup_TableHigh_ScanlineCallback(ScanlineInfo *scanlines);
+void PBL_Setup_TableLow_ScanlineCB(ScanlineInfo *scanlines);
+void PBL_Setup_TableHigh_ScanlineCB(ScanlineInfo *scanlines);
 void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines);
 void PBL_Setup_DrawLayer_Callback(void);
 

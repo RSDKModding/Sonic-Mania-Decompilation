@@ -15,11 +15,11 @@ void TippingPlatform_Update(void)
 
     if (self->bossID) {
         if (self->animator.frameID) {
-            self->stateCollide = Platform_CollisionState_None;
+            self->stateCollide = Platform_Collision_None;
             self->collision    = PLATFORM_C_SOLID_NONE;
         }
         else {
-            self->stateCollide = Platform_CollisionState_TopSolid;
+            self->stateCollide = Platform_Collision_TopSolid;
             self->collision    = PLATFORM_C_SOLID_TOP;
         }
         if (!self->stoodAngle && self->bossID > TIPPINGPLATFORM_EGGMAN && self->syringe->activated) {
@@ -63,11 +63,11 @@ void TippingPlatform_Update(void)
         else
             isSolid = self->animator.frameID == 6;
         if (isSolid) {
-            self->stateCollide = Platform_CollisionState_TopSolid;
+            self->stateCollide = Platform_Collision_TopSolid;
             self->collision    = PLATFORM_C_SOLID_TOP;
         }
         else {
-            self->stateCollide = Platform_CollisionState_None;
+            self->stateCollide = Platform_Collision_None;
             self->collision    = PLATFORM_C_SOLID_NONE;
         }
     }
@@ -113,7 +113,7 @@ void TippingPlatform_Create(void *data)
                         self->updateRange.x = abs(self->position.x - syringe->position.x) + 0x400000;
                         self->updateRange.y = abs(self->position.y - syringe->position.y) + 0x400000;
                     }
-                    self->stateCollide = Platform_CollisionState_AllSolid;
+                    self->stateCollide = Platform_Collision_AllSolid;
                     self->collision    = PLATFORM_C_SOLID_ALL;
                     foreach_break;
                 }

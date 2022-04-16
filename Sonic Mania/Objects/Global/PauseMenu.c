@@ -42,7 +42,7 @@ void PauseMenu_LateUpdate(void)
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 10, &self->animator, true, 3);
             PauseMenu_PauseSound();
 #if !RETRO_USE_PLUS
-            PauseMenu_SetupLookupTable();
+            PauseMenu_SetupTintTable();
 #endif
             self->state = PauseMenu_State_SetupButtons;
         }
@@ -57,13 +57,14 @@ void PauseMenu_StaticUpdate(void)
             cnt = RSDK.GetEntityCount(TitleCard->objectID, true);
         if (ActClear)
             cnt += RSDK.GetEntityCount(ActClear->objectID, true);
+
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
 
-        bool32 flag = true;
+        bool32 allowEvents = true;
         if (Zone)
-            flag = Zone->timer > 1;
+            allowEvents = Zone->timer > 1;
 
-        if (!cnt && pauseMenu->objectID == TYPE_BLANK && flag && !PauseMenu->disableEvents) {
+        if (!cnt && pauseMenu->objectID == TYPE_BLANK && allowEvents && !PauseMenu->disableEvents) {
             if (API_GetUserAuthStatus() == STATUS_FORBIDDEN) {
                 PauseMenu->signoutDetected = true;
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -88,7 +89,7 @@ void PauseMenu_StaticUpdate(void)
                     }
 #else
                     if (API_InputIDIsDisconnected(i + 1)) {
-                        // API is broken rn, todo: fix!
+                        // API is broken rn, TODO: fix!
                         // PauseMenu->controllerDisconnect = true;
                         // RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                         // pauseMenu->triggerPlayer = i;
@@ -103,8 +104,10 @@ void PauseMenu_StaticUpdate(void)
 void PauseMenu_Draw(void)
 {
     RSDK_THIS(PauseMenu);
+
     if (self->paused)
         RSDK.FillScreen(0, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
+
     if (RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT) <= 1) {
         StateMachine_Run(self->stateDraw);
     }
@@ -129,25 +132,30 @@ void PauseMenu_Create(void *data)
 
 void PauseMenu_StageLoad(void)
 {
-    PauseMenu->active               = ACTIVE_ALWAYS;
-    PauseMenu->sfxBleep             = RSDK.GetSfx("Global/MenuBleep.wav");
-    PauseMenu->sfxAccept            = RSDK.GetSfx("Global/MenuAccept.wav");
+    PauseMenu->active = ACTIVE_ALWAYS;
+
+    PauseMenu->sfxBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
+    PauseMenu->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
+
     PauseMenu->disableEvents        = false;
     PauseMenu->controllerDisconnect = false;
     PauseMenu->forcedDisconnect     = false;
     PauseMenu->signoutDetected      = false;
 #if RETRO_USE_PLUS
     PauseMenu->plusChanged = false;
+
     if (!globals->hasPlusInitial) {
         globals->lastHasPlus    = API.CheckDLC(DLC_PLUS);
         globals->hasPlusInitial = true;
     }
 #endif
+
     for (int32 i = 0; i < 0x10; ++i) {
-        PauseMenu->channelFlags[i] = false;
+        PauseMenu->activeChannels[i] = false;
     }
+
 #if RETRO_USE_PLUS
-    PauseMenu_SetupLookupTable();
+    PauseMenu_SetupTintTable();
 #endif
 }
 
@@ -169,29 +177,29 @@ void PauseMenu_SetupMenu(void)
     // control->rowCount is slightly bugged, if `pauseMenu->disableRestart` is enabled then wrapping by pressing down is broken and wont work
     // Fix:
     // set it properly like buttonCount is done below
-    control->rowCount       = 3;
-    control->columnCount    = 1;
-    control->buttonID = 0;
-    self->manager           = (Entity *)control;
+    control->rowCount    = 3;
+    control->columnCount = 1;
+    control->buttonID    = 0;
+    self->manager        = control;
 
     int32 i = 0;
     for (; i < 3; ++i) {
         if (!self->buttonPtrs[i])
             break;
-        EntityUIButton *button = (EntityUIButton *)self->buttonPtrs[i];
+        EntityUIButton *button = self->buttonPtrs[i];
         button->parent         = (Entity *)control;
         control->buttons[i]    = button;
     }
     control->buttonCount = i;
 }
 
-void PauseMenu_SetupLookupTable(void)
+void PauseMenu_SetupTintTable(void)
 {
 #if RETRO_USE_PLUS
     for (int32 i = 0; i < 0x10000; ++i) {
         int32 brightness =
             ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
-        brightness                = minVal(0xFF, brightness);
+        brightness                    = minVal(0xFF, brightness);
         PauseMenu->tintLookupTable[i] = (brightness >> 3) | ((brightness >> 3) << 11) | 8 * brightness & 0xFFE0;
     }
 #else
@@ -238,7 +246,7 @@ void PauseMenu_AddButton(uint8 id, void *action)
         button->align              = ALIGN_LEFT;
         button->drawOrder          = self->drawOrder;
         button->active             = ACTIVE_ALWAYS;
-        self->buttonPtrs[buttonID] = (Entity *)button;
+        self->buttonPtrs[buttonID] = button;
         ++self->buttonCount;
     }
 }
@@ -271,7 +279,7 @@ void PauseMenu_HandleButtonPositions(void)
     for (int32 i = 0; i < self->buttonCount; ++i) {
         if (!self->buttonPtrs[i])
             break;
-        EntityUIButton *button = (EntityUIButton *)self->buttonPtrs[i];
+        EntityUIButton *button = self->buttonPtrs[i];
         button->startPos.x     = pos.x;
         button->startPos.y     = pos.y;
         button->position.x     = pos.x;
@@ -286,7 +294,7 @@ void PauseMenu_PauseSound(void)
     for (int32 i = 0; i < 0x10; ++i) {
         if (RSDK.ChannelActive(i)) {
             RSDK.PauseChannel(i);
-            PauseMenu->channelFlags[i] = true;
+            PauseMenu->activeChannels[i] = true;
         }
     }
 }
@@ -294,9 +302,9 @@ void PauseMenu_PauseSound(void)
 void PauseMenu_ResumeSound(void)
 {
     for (int32 i = 0; i < 0x10; ++i) {
-        if (PauseMenu->channelFlags[i]) {
+        if (PauseMenu->activeChannels[i]) {
             RSDK.ResumeChannel(i);
-            PauseMenu->channelFlags[i] = false;
+            PauseMenu->activeChannels[i] = false;
         }
     }
 }
@@ -304,9 +312,9 @@ void PauseMenu_ResumeSound(void)
 void PauseMenu_StopSound(void)
 {
     for (int32 i = 0; i < 0x10; ++i) {
-        if (PauseMenu->channelFlags[i]) {
+        if (PauseMenu->activeChannels[i]) {
             RSDK.StopChannel(i);
-            PauseMenu->channelFlags[i] = false;
+            PauseMenu->activeChannels[i] = false;
         }
     }
 }
@@ -392,7 +400,6 @@ uint8 PauseMenu_GetPlayerCount(void)
     }
     return 1;
 }
-
 
 void PauseMenu_ResumeButtonCB(void)
 {
@@ -497,7 +504,7 @@ void PauseMenu_ExitFadeCB(void)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
         sprintf(param->menuTag, "Competition Zones");
-        param->menuSelection = session->levelIndex;
+        param->menuSelection = session->stageIndex;
     }
     RSDK.SetScene("Presentation", "Menu");
     PauseMenu_StopSound();
@@ -513,7 +520,6 @@ void PauseMenu_ButtonActionCB(void)
         StateMachine_Run(pauseMenu->buttonActions[manager->buttonID]);
     }
 }
-
 
 void PauseMenu_State_SetupButtons(void)
 {
@@ -532,7 +538,7 @@ void PauseMenu_State_SetupButtons(void)
             self->state = PauseMenu_State_ForcedPause;
         else
             self->state = PauseMenu_State_ForcedPauseCompetition;
-        self->stateDraw = PauseMenu_Draw_JustLookup;
+        self->stateDraw = PauseMenu_Draw_JustTint;
     }
     else {
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 255);
@@ -562,31 +568,31 @@ void PauseMenu_State_StartPause(void)
 
     if (self->timer == 1) {
         UIControl->inputLocked = false;
-        UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
+        UIControl_SetMenuLostFocus(self->manager);
     }
 
     if (self->timer >= 8) {
-        self->headerPos.x = 0;
-        self->headerPos.y = 0;
+        self->headerPos.x         = 0;
+        self->headerPos.y         = 0;
         self->yellowTrianglePos.x = 0;
         self->yellowTrianglePos.y = 0;
-        self->timer      = 0;
-        self->state      = PauseMenu_State_Paused;
+        self->timer               = 0;
+        self->state               = PauseMenu_State_Paused;
     }
     else {
         Vector2 pos;
 
-        int32 val = 32 * self->timer;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
+        int32 alpha = 32 * self->timer;
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, alpha), -0xF00000, 0, 0, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, alpha), 0xE80000, 0, 0, 0);
 
         ++self->timer;
         self->yellowTrianglePos.x = pos.x;
         self->yellowTrianglePos.y = pos.y;
-        self->lookupAlpha   = val;
+        self->tintAlpha           = alpha;
     }
 }
 
@@ -596,12 +602,12 @@ void PauseMenu_State_StartPauseCompetition(void)
 
     if (self->timer == 1) {
         UIControl->inputLocked = false;
-        UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
+        UIControl_SetMenuLostFocus(self->manager);
     }
 
     if (self->timer >= 8) {
-        self->headerPos.x = 0x000000;
-        self->headerPos.y = 0x000000;
+        self->headerPos.x         = 0x000000;
+        self->headerPos.y         = 0x000000;
         self->yellowTrianglePos.x = 0x000000;
         self->yellowTrianglePos.y = 0x000000;
         if (self->timer >= 16) {
@@ -621,22 +627,22 @@ void PauseMenu_State_StartPauseCompetition(void)
         }
     }
     else {
-        self->headerPos.x = 0xFFF0000;
-        self->headerPos.y = 0xFFF0000;
+        self->headerPos.x         = 0xFFF0000;
+        self->headerPos.y         = 0xFFF0000;
         self->yellowTrianglePos.x = 0xFFF0000;
         self->yellowTrianglePos.y = 0xFFF0000;
-        self->paused     = true;
-        self->fadeTimer  = self->timer << 6;
-        self->timer      = self->timer + 1;
+        self->paused              = true;
+        self->fadeTimer           = self->timer << 6;
+        self->timer               = self->timer + 1;
     }
 }
 
 void PauseMenu_State_Paused(void)
 {
     RSDK_THIS(PauseMenu);
-    self->lookupAlpha   = 255;
-    self->headerPos.x = 0;
-    self->headerPos.y = 0;
+    self->tintAlpha           = 255;
+    self->headerPos.x         = 0;
+    self->headerPos.y         = 0;
     self->yellowTrianglePos.x = 0;
     self->yellowTrianglePos.y = 0;
 
@@ -764,11 +770,11 @@ void PauseMenu_State_Resume(void)
         API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     if (self->timer >= 8) {
-        self->headerPos.y = 0;
-        self->headerPos.x = -0xF00000;
+        self->headerPos.y         = 0;
+        self->headerPos.x         = -0xF00000;
         self->yellowTrianglePos.y = 0;
         self->yellowTrianglePos.x = 0xE80000;
-        self->timer      = 0;
+        self->timer               = 0;
         RSDK.SetGameMode(ENGINESTATE_REGULAR);
         PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
         PauseMenu_ResumeSound();
@@ -776,16 +782,16 @@ void PauseMenu_State_Resume(void)
     else {
         Vector2 pos;
 
-        int32 val = 32 * self->timer;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
+        int32 percent = 0x20 * self->timer;
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, percent), 0, 0, -0xF00000, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, percent), 0, 0, 0xE80000, 0);
 
         self->yellowTrianglePos.x = pos.x;
         self->yellowTrianglePos.y = pos.y;
-        self->lookupAlpha   = ((0x100 - self->timer) << 8) / 8;
+        self->tintAlpha           = ((0x100 - self->timer) << 8) / 8;
         ++self->timer;
     }
 }
@@ -796,7 +802,7 @@ void PauseMenu_State_ResumeCompetition(void)
 
     if (self->timer == 1) {
         UIControl->inputLocked = 0;
-        UIControl_SetMenuLostFocus((EntityUIControl *)self->manager);
+        UIControl_SetMenuLostFocus(self->manager);
     }
 
     if (self->timer >= 8) {
@@ -819,13 +825,13 @@ void PauseMenu_State_ResumeCompetition(void)
         }
     }
     else {
-        self->headerPos.x = 0;
-        self->headerPos.y = 0;
+        self->headerPos.x         = 0;
+        self->headerPos.y         = 0;
         self->yellowTrianglePos.x = 0;
         self->yellowTrianglePos.y = 0;
-        self->paused     = true;
-        self->fadeTimer  = self->timer << 6;
-        self->timer      = self->timer + 1;
+        self->paused              = true;
+        self->fadeTimer           = self->timer << 6;
+        self->timer               = self->timer + 1;
     }
 }
 
@@ -902,7 +908,6 @@ void PauseMenu_State_FadeToCB(void)
     }
 }
 
-
 void PauseMenu_DrawPauseQuads(void)
 {
     RSDK_THIS(PauseMenu);
@@ -917,7 +922,8 @@ void PauseMenu_DrawPauseQuads(void)
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 115, 24, 24, 0x00, 0x00, 0x00);
 
     RSDK.DrawSprite(&self->animator, &drawPos, false);
-    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x, self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
+    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x,
+                                self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
 }
 
 void PauseMenu_Draw_Default(void)
@@ -927,19 +933,19 @@ void PauseMenu_Draw_Default(void)
 #if RETRO_USE_PLUS
         RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_TINT, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->tintAlpha, INK_TINT, true);
         PauseMenu_DrawPauseQuads();
     }
 }
 
-void PauseMenu_Draw_JustLookup(void)
+void PauseMenu_Draw_JustTint(void)
 {
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
 #if RETRO_USE_PLUS
         RSDK.SetTintLookupTable(PauseMenu->tintLookupTable);
 #endif
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_TINT, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->tintAlpha, INK_TINT, true);
     }
 }
 

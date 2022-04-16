@@ -32,14 +32,14 @@ void AIZRockPile_Update(void)
                     int32 side = Player_CheckCollisionBox(player, self, hitbox);
                     if (self->smashSides && (side == C_LEFT || side == C_RIGHT)) {
                         if (side == C_LEFT || side == C_RIGHT) {
-                            bool32 flag = jumping && player->onGround && abs(groundVel) >= 0x48000;
+                            bool32 canBreak = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
                                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
-                                flag |= shield->shieldAnimator.animationID == 2;
+                                canBreak |= shield->shieldAnimator.animationID == 2; // fire dash
                             }
 
-                            flag |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;
-                            if (!player->sidekick && (flag || (player->characterID == ID_KNUCKLES))) {
+                            canBreak |= player->characterID == ID_SONIC && player->superState == SUPERSTATE_SUPER;
+                            if (!player->sidekick && (canBreak || (player->characterID == ID_KNUCKLES))) {
                                 player->position.x = playerX;
                                 player->position.y = playerY;
                                 player->velocity.x = xVelocity;
@@ -55,13 +55,13 @@ void AIZRockPile_Update(void)
                     }
 
                     if (self->smashTop && side == C_TOP) {
-                        bool32 flag = jumping;
-                        flag |= player->characterID == ID_SONIC && player->animator.animationID == ANI_DROPDASH;
-                        flag |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
+                        bool32 canBreak = jumping;
+                        canBreak |= player->characterID == ID_SONIC && player->animator.animationID == ANI_DROPDASH;
+                        canBreak |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
                         if (player->groundedStore && cMode != CMODE_FLOOR && cMode != CMODE_ROOF)
-                            flag = 0;
+                            canBreak = false;
 
-                        if (flag && !player->sidekick) {
+                        if (canBreak && !player->sidekick) {
                             player->onGround = false;
                             if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
                                 player->velocity.y = yVelocity - 0x10000;
@@ -101,6 +101,7 @@ void AIZRockPile_Create(void *data)
                 self->rockSpeedsL   = AIZRockPile->rockSpeedsL_small;
                 self->rockSpeedsR   = AIZRockPile->rockSpeedsR_small;
                 break;
+
             case AIZROCKPILE_MED:
                 self->size          = 5;
                 self->rockPositions = AIZRockPile->rockPositions_med;
@@ -108,6 +109,7 @@ void AIZRockPile_Create(void *data)
                 self->rockSpeedsL   = AIZRockPile->rockSpeedsL_med;
                 self->rockSpeedsR   = AIZRockPile->rockSpeedsR_med;
                 break;
+
             case AIZROCKPILE_BIG:
                 self->size          = 8;
                 self->rockPositions = AIZRockPile->rockPositions_large;

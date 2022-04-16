@@ -129,7 +129,7 @@ void Clapperboard_Collide_Left(void)
 
     int32 clapStartPos = self->hitbox.right - self->hitbox.left;
     self->direction ^= FLIP_X;
-    bool32 clapFlag = false;
+    bool32 clapped = false;
 
     foreach_active(Player, player)
     {
@@ -167,7 +167,7 @@ void Clapperboard_Collide_Left(void)
                         player->animationReserve = ANI_WALK;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 255);
-                    clapFlag = true;
+                    clapped = true;
                 }
                 else {
                     int32 clapSpeed = 16;
@@ -181,7 +181,7 @@ void Clapperboard_Collide_Left(void)
     }
 
     self->direction ^= FLIP_X;
-    if (clapFlag)
+    if (clapped)
         ++self->takeID;
 }
 
@@ -197,7 +197,7 @@ void Clapperboard_Collide_Right(void)
     self->hitbox.left  = (((self->amplitudeL.y >> 8) * RSDK.Sin256(negAngle)) + (self->amplitudeL.x >> 8) * RSDK.Cos256(negAngle)) >> 16;
     self->hitbox.right = (((self->amplitudeR.y >> 8) * RSDK.Sin256(negAngle)) + (self->amplitudeR.x >> 8) * RSDK.Cos256(negAngle)) >> 16;
     int32 clapStartPos = self->hitbox.right - self->hitbox.left;
-    bool32 clapFlag    = false;
+    bool32 clapped    = false;
 
     foreach_active(Player, player)
     {
@@ -236,7 +236,7 @@ void Clapperboard_Collide_Right(void)
                         player->animationReserve = ANI_WALK;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 0xFF);
-                    clapFlag = true;
+                    clapped = true;
                 }
                 else {
                     int32 clapSpeed = 16;
@@ -249,7 +249,7 @@ void Clapperboard_Collide_Right(void)
         }
     }
 
-    if (clapFlag)
+    if (clapped)
         ++self->takeID;
 }
 

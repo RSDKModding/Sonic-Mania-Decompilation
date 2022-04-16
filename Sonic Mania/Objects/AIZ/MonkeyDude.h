@@ -3,13 +3,13 @@
 
 #include "SonicMania.h"
 
-#define MonkeyDude_MaxBodyParts (4)
+#define MonkeyDude_ArmJointCount (4)
 
 // Object Class
 struct ObjectMonkeyDude {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox coconutHitbox;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxCoconut;
     Animator armAnimator;
     Animator tailAnimator;
     Animator coconutAnimator;
@@ -24,20 +24,20 @@ struct EntityMonkeyDude {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 activeParts;
+    int32 activeArmNodes;
     int32 currentAngle;
-    StateMachine(bodyStates[MonkeyDude_MaxBodyParts]);
-    int32 bodyAngles[MonkeyDude_MaxBodyParts];
-    int32 bodyFlags[MonkeyDude_MaxBodyParts];
-    int32 bodyTimers[MonkeyDude_MaxBodyParts];
-    uint8 bodyPartID;
+    StateMachine(armStates[MonkeyDude_ArmJointCount]);
+    int32 armAngles[MonkeyDude_ArmJointCount];
+    int32 armMoveDir[MonkeyDude_ArmJointCount];
+    int32 armTimers[MonkeyDude_ArmJointCount];
+    uint8 armNodeID;
     Vector2 startPos;
     uint8 startDir;
     int32 armY;
     int32 moveCount;
     int32 nummoves;
     int32 throwCount;
-    int32 angleSpeed;
+    int32 angleVel;
     Animator bodyAnimator;
     Animator handAnimator;
     int32 coconutFrame;

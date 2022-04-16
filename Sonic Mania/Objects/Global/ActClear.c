@@ -504,7 +504,7 @@ void ActClear_CheckPlayerVictory(void)
             player->state           = Player_State_Victory;
             player->nextAirState    = StateMachine_None;
             player->nextGroundState = StateMachine_None;
-            if (Zone->forcePlayerOnScreenFlag)
+            if (Zone->forcePlayerOnScreen)
                 player->stateInput = StateMachine_None;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->animator, true, 0);
         }
@@ -552,7 +552,7 @@ void ActClear_State_EnterText(void)
 
     if (self->gotThroughPos.x < 0)
         self->gotThroughPos.x += 0x100000;
-    if (!self->timer && Zone->forcePlayerOnScreenFlag)
+    if (!self->timer && Zone->forcePlayerOnScreen)
         ActClear_SetupForceOnScreenP2();
 
     if (++self->timer == 48) {
@@ -855,7 +855,7 @@ void ActClear_State_ExitActClear(void)
     if (self->totalScorePos.x < -0x2000000) {
         if (ActClear->displayedActID <= 0) {
             if (Zone->stageFinishCallback) {
-                if (Zone->forcePlayerOnScreenFlag) {
+                if (Zone->forcePlayerOnScreen) {
                     self->timer = 0;
                     self->state = ActClear_State_ForcePlayerOnScreen;
                 }

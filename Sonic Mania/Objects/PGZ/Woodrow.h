@@ -28,7 +28,7 @@ struct EntityWoodrow {
     uint8 bombCount;
     uint8 bombFallDelay;
     uint8 moveDelay;
-    int32 rangeFlags;
+    int32 rangeMask;
     Vector2 startPos;
     uint8 startDir;
     Entity *parent;

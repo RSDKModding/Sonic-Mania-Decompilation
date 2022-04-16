@@ -119,7 +119,7 @@ void Woodrow_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Woodrow);
 
-    uint8 flags = 0;
+    uint8 rangeMask = 0;
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Woodrow->hitboxBadnik)) {
@@ -127,26 +127,26 @@ void Woodrow_CheckPlayerCollisions(void)
         }
         else if (player->state != Ice_State_FrozenPlayer) {
             if (Player_CheckCollisionTouch(player, self, &Woodrow->hitboxBombRange)) {
-                if (self->rangeFlags == 1)
+                if (self->rangeMask == 1)
                     self->bombFallDelay = 30;
-                flags |= 2;
-                self->rangeFlags |= 2;
+                rangeMask |= 2;
+                self->rangeMask |= 2;
             }
             else if (Player_CheckCollisionTouch(player, self, &Woodrow->hitboxFullRange)) {
-                self->rangeFlags |= 1;
-                flags |= 1;
+                self->rangeMask |= 1;
+                rangeMask |= 1;
             }
         }
     }
 
-    if (flags) {
-        if (flags == 1 && self->bombFallDelay > 30)
+    if (rangeMask) {
+        if (rangeMask == 1 && self->bombFallDelay > 30)
             self->bombFallDelay = 30;
     }
     else {
         if (self->animator.animationID == 1)
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 4, &self->animator, false, 0);
-        self->rangeFlags = 0;
+        self->rangeMask = 0;
     }
 }
 
@@ -176,11 +176,11 @@ void Woodrow_State_Idle(void)
     RSDK_THIS(Woodrow);
     RSDK.ProcessAnimation(&self->animator);
 
-    if (self->rangeFlags <= 1) {
+    if (self->rangeMask <= 1) {
         if (self->animator.animationID <= 3) {
             if (self->animator.animationID == 1)
                 RSDK.SetSpriteAnimation(Woodrow->aniFrames, 4, &self->animator, false, 0);
-            self->rangeFlags = 0;
+            self->rangeMask = 0;
         }
         else if (self->animator.frameID == self->animator.frameCount - 1) {
             RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, false, 0);
@@ -219,12 +219,12 @@ void Woodrow_State_Idle(void)
                     self->activeBombCount = 1;
                 }
                 else {
-                    self->rangeFlags = 0;
+                    self->rangeMask = 0;
                 }
             }
             if (self->activeBombCount >= self->bombCount) {
                 self->bombFallDelay  = 30;
-                self->rangeFlags = 0;
+                self->rangeMask = 0;
             }
             else {
                 int32 bombSlot = SceneInfo->entitySlot + 1;

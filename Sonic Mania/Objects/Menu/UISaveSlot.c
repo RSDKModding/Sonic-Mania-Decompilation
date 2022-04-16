@@ -1142,22 +1142,24 @@ void UISaveSlot_State_Selected(void)
         EntityFXRuby *fxRuby = self->fxRuby;
         int32 rubyY          = self->position.y;
 
-        int32 val = (4 * self->buttonBounceOffset);
+        int32 offset = (4 * self->buttonBounceOffset);
         if (self->type != UISAVESLOT_NOSAVE)
             rubyY += 0x200000;
 
         if (self->timer == 32) {
             PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
-            fxRuby            = CREATE_ENTITY(FXRuby, NULL, self->position.x - val, rubyY - val);
+            fxRuby            = CREATE_ENTITY(FXRuby, NULL, self->position.x - offset, rubyY - offset);
             fxRuby->fadeWhite = 0;
             fxRuby->fadeBlack = 0;
             fxRuby->drawOrder = 15;
             self->fxRuby      = fxRuby;
         }
+
         if (fxRuby) {
-            fxRuby->position.x = self->position.x - val;
-            fxRuby->position.y = rubyY - val;
+            fxRuby->position.x = self->position.x - offset;
+            fxRuby->position.y = rubyY - offset;
         }
+
         if (self->timer == 152)
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
 
@@ -1178,11 +1180,13 @@ void UISaveSlot_State_Selected(void)
 #endif
         if (self->timer == 32)
             RSDK.PlaySfx(UIWidgets->sfxWarp, false, 255);
+
         if (self->timer > 32) {
-            self->alpha += 32;
+            self->alpha += 0x20;
             self->fxRadius += 12;
         }
-        if (self->fxRadius > 512) {
+
+        if (self->fxRadius > 0x200) {
             StateMachine_Run(self->actionCB);
             self->state = StateMachine_None;
         }

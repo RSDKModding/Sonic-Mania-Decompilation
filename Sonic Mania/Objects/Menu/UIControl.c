@@ -15,9 +15,12 @@ void UIControl_Update(void)
 
     if (self->buttonID >= 0 && self->buttonID != self->lastButtonID)
         self->lastButtonID = self->buttonID;
+
     if (!UIControl->hasTouchInput && self->buttonID == -1)
         self->buttonID = self->lastButtonID;
+
     StateMachine_Run(self->state);
+
     if (self->backoutTimer > 0)
         self->backoutTimer--;
     StateMachine_Run(self->menuUpdateCB);
@@ -245,7 +248,7 @@ void UIControl_ProcessInputs(void)
     }
 
     if (!self->selectionDisabled) {
-        bool32 flag = false;
+        bool32 backPressed = false;
         if (UIControl->keyBack) {
             if (!self->childHasFocus && !self->dialogHasFocus
 #if RETRO_USE_PLUS
@@ -253,8 +256,8 @@ void UIControl_ProcessInputs(void)
 #endif
                 && self->backoutTimer <= 0) {
                 if (self->backPressCB) {
-                    flag = self->backPressCB();
-                    if (!flag) {
+                    backPressed = self->backPressCB();
+                    if (!backPressed) {
                         UIControl->keyBack = false;
                     }
                     else {
@@ -269,14 +272,14 @@ void UIControl_ProcessInputs(void)
                     else {
                         self->selectionDisabled = true;
                         UITransition_StartTransition(UIControl_ReturnToParentMenu, 0);
-                        flag = false;
+                        backPressed = false;
 
                         if (self->buttons[self->buttonID])
                             self->buttons[self->buttonID]->isSelected = false;
                     }
                 }
 
-                if (flag)
+                if (backPressed)
                     return;
             }
 #if RETRO_USE_PLUS
@@ -728,7 +731,7 @@ void UIControl_ProcessButtonInput(void)
 {
     RSDK_THIS(UIControl);
 
-    bool32 flag = false;
+    bool32 allowAction = false;
     if (TouchInfo->count || UIControl->hasTouchInput) {
         EntityUIButton *activeButton = 0;
         UIControl->hasTouchInput     = TouchInfo->count != 0;
@@ -746,13 +749,13 @@ void UIControl_ProcessButtonInput(void)
 #endif
                 ) {
                     if (!button->checkSelectedCB || !button->checkSelectedCB()) {
-                        if (flag || button->touchCB()) {
-                            flag = true;
+                        if (allowAction || button->touchCB()) {
+                            allowAction = true;
                             if (button->touchCB && !activeButton)
                                 activeButton = button;
                         }
                         else {
-                            flag = false;
+                            allowAction = false;
                         }
                     }
                 }
@@ -761,7 +764,7 @@ void UIControl_ProcessButtonInput(void)
         }
 
         if (TouchInfo->count) {
-            if (flag) {
+            if (allowAction) {
                 int32 id = -1;
                 for (int32 i = 0; i < self->buttonCount; ++i) {
                     if (activeButton == self->buttons[i]) {

@@ -94,7 +94,7 @@ void SPZ1Setup_StageLoad(void)
         FXFade_StopAll();
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-        Zone->forcePlayerOnScreenFlag = true;
+        Zone->forcePlayerOnScreen = true;
         Zone->stageFinishCallback     = SPZ1Setup_SetupActTransition;
     }
 

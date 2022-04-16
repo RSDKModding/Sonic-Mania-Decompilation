@@ -175,7 +175,7 @@ void CompetitionMenu_HandleMenuReturn(void)
             if (control == compControl) {
                 foreach_all(UIVsCharSelector, selector)
                 {
-                    switch (session->characterFlags[selector->playerID]) {
+                    switch (session->playerID[selector->playerID]) {
                         case ID_SONIC: selector->frameID = 0; break;
                         case ID_TAILS: selector->frameID = 1; break;
                         case ID_KNUCKLES: selector->frameID = 2; break;
@@ -205,7 +205,7 @@ void CompetitionMenu_HandleMenuReturn(void)
             if (control == CompetitionMenu->compZoneControl) {
                 for (int32 i = 0; i < 12; ++i) {
                     EntityUIVsZoneButton *button = (EntityUIVsZoneButton *)control->buttons[i];
-                    if (button && session->zoneFlags[i])
+                    if (button && session->completedStages[i])
                         button->xOut = true;
                 }
             }
@@ -307,17 +307,17 @@ void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount)
 {
     EntityUIButton *screenLayoutChoice = CompetitionMenu->compRulesControl->buttons[2];
 
-    bool32 flags[5];
-    flags[0] = playerCount == 2;
-    flags[1] = flags[0];
-    flags[2] = playerCount == 3;
-    flags[3] = flags[2];
-    flags[4] = playerCount == 4;
+    bool32 choices[5];
+    choices[0] = playerCount == 2;
+    choices[1] = choices[0];
+    choices[2] = playerCount == 3;
+    choices[3] = choices[2];
+    choices[4] = playerCount == 4;
 
     for (int32 c = 0; c < screenLayoutChoice->choiceCount; ++c) {
         EntityUIChoice *choice = (EntityUIChoice *)UIButton_GetChoicePtr(screenLayoutChoice, c);
         if (choice) {
-            choice->disabled = !flags[c];
+            choice->disabled = !choices[c];
         }
     }
 
@@ -483,7 +483,7 @@ void CompetitionMenu_StartMatch(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
 
     sprintf(param->menuTag, "Competition Round");
-    session->levelIndex  = ((EntityUIControl *)CompetitionMenu->compZoneControl)->buttonID;
+    session->stageIndex  = ((EntityUIControl *)CompetitionMenu->compZoneControl)->buttonID;
     session->zoneID      = param->vsZoneID;
     session->actID       = param->vsActID;
     session->prevMatchID = session->matchID;
@@ -506,7 +506,7 @@ void CompetitionMenu_StartMatch(void)
     globals->medalMods  = 0;
 
     globals->playerID = ID_NONE;
-    for (int32 i = 0; i < session->playerCount; ++i) globals->playerID |= session->characterFlags[i] << (8 * i);
+    for (int32 i = 0; i < session->playerCount; ++i) globals->playerID |= session->playerID[i] << (8 * i);
     globals->itemMode = session->itemMode;
     RSDK.LoadScene();
 }
@@ -551,12 +551,12 @@ void CompetitionMenu_RulesButton_ActionCB(void)
         int32 id                       = RSDK.ControllerIDForInputID(i + 1);
         if (id && id != CONT_UNASSIGNED) {
             switch (button->frameID) {
-                case 0: session->characterFlags[i] = ID_SONIC; break;
-                case 1: session->characterFlags[i] = ID_TAILS; break;
-                case 2: session->characterFlags[i] = ID_KNUCKLES; break;
+                case 0: session->playerID[i] = ID_SONIC; break;
+                case 1: session->playerID[i] = ID_TAILS; break;
+                case 2: session->playerID[i] = ID_KNUCKLES; break;
 #if RETRO_USE_PLUS
-                case 3: session->characterFlags[i] = ID_MIGHTY; break;
-                case 4: session->characterFlags[i] = ID_RAY; break;
+                case 3: session->playerID[i] = ID_MIGHTY; break;
+                case 4: session->playerID[i] = ID_RAY; break;
 #endif
                 default: break;
             }
@@ -580,26 +580,28 @@ void CompetitionMenu_Round_ProcessInputCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (UIControl->keyConfirm) {
-        bool32 flag = false;
-        int32 count = 0;
+        bool32 toCompTotal = false;
+
+        int32 activePlayers = 0;
         for (int32 p = 0; p < session->playerCount; ++p) {
             if (session->lives[p] > 0)
-                count++;
+                activePlayers++;
+
             if (session->wins[p] > (session->matchCount >> 1))
-                flag = true;
+                toCompTotal = true;
         }
 
         EntityUIControl *zoneControl = CompetitionMenu->compZoneControl;
-        int32 count2                 = 0;
+        int32 remainingZones                 = 0;
         for (int32 i = 0; i < 12; ++i) {
             if (zoneControl->buttons[i]) {
                 EntityUIVsZoneButton *zoneButton = (EntityUIVsZoneButton *)zoneControl->buttons[i];
-                if (!session->zoneFlags[i] && GameProgress_GetZoneUnlocked(zoneButton->zoneID))
-                    ++count2;
+                if (!session->completedStages[i] && GameProgress_GetZoneUnlocked(zoneButton->zoneID))
+                    ++remainingZones;
             }
         }
 
-        if (flag || count < 2 || session->matchID >= session->matchCount || !count2) {
+        if (toCompTotal || activePlayers < 2 || session->matchID >= session->matchCount || !remainingZones) {
             UITransition_StartTransition(CompetitionMenu_GotoCompTotal, 0);
         }
         else {
@@ -662,9 +664,9 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     for (int32 p = 0; p < session->playerCount; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
-        results->isWinner = session->winnerFlags[match] & (1 << p);
-        results->isLoser  = session->winnerFlags[match] & (1 << p);
-        if (session->winnerFlags[match] & (1 << p))
+        results->isWinner = session->matchWinner[match] & (1 << p);
+        results->isLoser  = session->matchWinner[match] & (1 << p);
+        if (session->matchWinner[match] & (1 << p))
             winnerCount++;
         results->trophyCount = session->wins[p];
         memset(buffer, 0, sizeof(buffer));
@@ -699,7 +701,7 @@ void CompetitionMenu_Round_MenuSetupCB(void)
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
 
-        if (session->finishFlags[p] != FINISHFLAG_TIMEOVER) {
+        if (session->finishState[p] != FINISHFLAG_TIMEOVER) {
             results->row0Highlight = session->rings[p] == bestRings;
             results->row1Highlight = session->totalRings[p] == bestTotalRings;
             results->row2Highlight = session->score[p] == bestScore;
@@ -711,16 +713,16 @@ void CompetitionMenu_Round_MenuSetupCB(void)
     if (winnerCount == 1) {
         int32 winner = -1;
         for (int32 p = 0; p < session->playerCount; ++p) {
-            if ((1 << p) & session->winnerFlags[match]) {
+            if ((1 << p) & session->matchWinner[match]) {
                 winner = p;
                 break;
             }
         }
 
-        LogHelpers_Print("Announce_CharWins(%d)", session->characterFlags[winner]);
+        LogHelpers_Print("Announce_CharWins(%d)", session->playerID[winner]);
         EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
         announcer->state           = Announcer_State_AnnounceWinPlayer;
-        announcer->playerID        = session->characterFlags[winner];
+        announcer->playerID        = session->playerID[winner];
     }
     else {
         LogHelpers_Print("Announce_ItsADraw(%d)", 0);
@@ -823,12 +825,12 @@ void CompetitionMenu_Results_MenuSetupCB(void)
         results->trophyCount = session->wins[p];
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
-            sprintf(buffer, "%d", session->winnerFlags[r]);
+            sprintf(buffer, "%d", session->matchWinner[r]);
             if (!SceneInfo->inEditor) {
                 RSDK.SetText(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }
-            highlight[r] = ((1 << p) & session->winnerFlags[r]);
+            highlight[r] = ((1 << p) & session->matchWinner[r]);
         }
     }
 }

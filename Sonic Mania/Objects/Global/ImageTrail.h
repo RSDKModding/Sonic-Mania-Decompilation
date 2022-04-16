@@ -14,7 +14,7 @@ struct ObjectImageTrail {
 // Entity Class
 struct EntityImageTrail {
     RSDK_ENTITY
-    Entity *player;
+    EntityPlayer *player;
     int32 playerObjID;
     Vector2 currentPos;
     Vector2 statePos[ImageTrail_TrackCount];

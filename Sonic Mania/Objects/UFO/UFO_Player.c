@@ -308,29 +308,30 @@ void UFO_Player_ChangeMachState(void)
 void UFO_Player_HandleBumperTiles(void)
 {
     RSDK_THIS(UFO_Player);
-    int32 flags = 0;
+    int32 bumpDirMasks = 0;
 
     uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
-        flags = 0b0001;
+        bumpDirMasks = 0b0001;
 
     tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y - 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
-        flags |= 0b0010;
+        bumpDirMasks |= 0b0010;
 
     tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x - 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
-        flags |= 0b0100;
+        bumpDirMasks |= 0b0100;
 
     tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (self->position.x + 0x80000) >> 20, (self->position.y + 0x80000) >> 20);
     if (RSDK.GetTileFlags(tile, 0) == UFO_TFLAGS_BUMPER)
-        flags |= 0b1000;
+        bumpDirMasks |= 0b1000;
 
-    if (flags) {
+    if (bumpDirMasks) {
         if (!self->bumperTimer)
-            RSDK.PlaySfx(UFO_Player->sfxBumper, false, 255);
+            RSDK.PlaySfx(UFO_Player->sfxBumper, false, 0xFF);
+
         self->bumperTimer = 16;
-        switch (flags) {
+        switch (bumpDirMasks) {
             case 0b0001:
             case 0b0110:
             case 0b0111:
@@ -364,8 +365,8 @@ void UFO_Player_HandleBumperTiles(void)
             case 0b1010: self->velocity.x = -0x40000; break;
             case 0b1100: self->velocity.y = -0x40000; break;
 
-            case 0b0000:
-            default: break;
+            default:
+            case 0b0000: break;
         }
     }
 }
@@ -383,7 +384,8 @@ void UFO_Player_HandleSpeedUp(void)
             self->camera->state = UFO_Camera_State_CourseOut;
 
             if (!UFO_Setup->timedOut)
-                RSDK.PlaySfx(UFO_Player->sfxDrop, false, 255);
+                RSDK.PlaySfx(UFO_Player->sfxDrop, false, 0xFF);
+
             return;
         }
     }
@@ -419,14 +421,15 @@ void UFO_Player_HandleSpeedUp(void)
 void UFO_Player_State_Run(void)
 {
     RSDK_THIS(UFO_Player);
-    int32 val = UFO_Player->maxSpeed - 0x87000;
+
+    int32 turnSpeed = UFO_Player->maxSpeed - 0x87000;
     if (self->right) {
-        if (self->angleZ < (val >> 11) + 1280)
-            self->angleZ += (val >> 14) + self->angleVel;
+        if (self->angleZ < (turnSpeed >> 11) + 1280)
+            self->angleZ += (turnSpeed >> 14) + self->angleVel;
     }
     else if (self->left) {
-        if (self->angleZ > -1280 - (val >> 11))
-            self->angleZ -= self->angleVel - (val >> 14);
+        if (self->angleZ > -1280 - (turnSpeed >> 11))
+            self->angleZ -= self->angleVel - (turnSpeed >> 14);
     }
     else {
         self->angleZ -= self->angleZ >> 2;
@@ -491,18 +494,18 @@ void UFO_Player_State_Run(void)
 void UFO_Player_State_Jump(void)
 {
     RSDK_THIS(UFO_Player);
-    int32 val = UFO_Player->maxSpeed - 0x60000;
+    int32 turnSpeed = UFO_Player->maxSpeed - 0x60000;
 
     int32 speed = 0;
     if (self->right) {
-        speed = (val >> 20) + 12;
-        if (self->angleZ < (val >> 10) + 1280)
-            self->angleZ += (self->angleVel >> 1) + (val >> 14);
+        speed = (turnSpeed >> 20) + 12;
+        if (self->angleZ < (turnSpeed >> 10) + 1280)
+            self->angleZ += (self->angleVel >> 1) + (turnSpeed >> 14);
     }
     else if (self->left) {
-        speed = -12 - (val >> 20);
-        if (self->angleZ > -1280 - (val >> 10))
-            self->angleZ -= (self->angleVel >> 1) - (val >> 14);
+        speed = -12 - (turnSpeed >> 20);
+        if (self->angleZ > -1280 - (turnSpeed >> 10))
+            self->angleZ -= (self->angleVel >> 1) - (turnSpeed >> 14);
     }
     else {
         speed = 0;
@@ -522,7 +525,7 @@ void UFO_Player_State_Jump(void)
     self->velocity.y += speed * RSDK.Sin1024(self->angle);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
-    self->gravityStrength += -0x3800 - (val >> 7);
+    self->gravityStrength += -0x3800 - (turnSpeed >> 7);
 
     self->height += self->gravityStrength;
     self->angleX = (self->angleX - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
@@ -546,20 +549,18 @@ void UFO_Player_State_Springboard(void)
     RSDK_THIS(UFO_Player);
 
     int32 tilt = 0;
-    if (self->right) {
+    if (self->right)
         tilt = 8;
-    }
-    else if (self->left) {
+    else if (self->left) 
         tilt = -8;
-    }
 
     self->velocity.x -= self->velocity.x >> 8;
     self->velocity.y -= self->velocity.y >> 8;
     self->velocity.x += tilt * RSDK.Cos1024(self->angle);
-    self->gravityStrength -= 0x5000;
     self->velocity.y += tilt * RSDK.Sin1024(self->angle);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+    self->gravityStrength -= 0x5000;
     self->height += self->gravityStrength;
 
     self->angleX = (self->angleX - (UFO_Player->maxSpeed >> 13)) & 0x3FF;

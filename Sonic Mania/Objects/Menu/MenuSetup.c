@@ -835,7 +835,7 @@ void MenuSetup_HandleMenuReturn(void)
             if (control == MenuSetup->competition) {
                 foreach_all(UIVsCharSelector, selector)
                 {
-                    switch (session->characterFlags[selector->playerID]) {
+                    switch (session->playerID[selector->playerID]) {
                         case ID_SONIC: selector->frameID = 0; break;
                         case ID_TAILS: selector->frameID = 1; break;
                         case ID_KNUCKLES: selector->frameID = 2; break;
@@ -859,7 +859,7 @@ void MenuSetup_HandleMenuReturn(void)
             if (control == MenuSetup->competitionZones) {
                 for (int32 i = 0; i < 12; ++i) {
                     EntityUIVsZoneButton *button = (EntityUIVsZoneButton *)control->buttons[i];
-                    if (button && session->zoneFlags[i])
+                    if (button && session->completedStages[i])
                         button->xOut = true;
                 }
             }
@@ -1322,7 +1322,7 @@ void MenuSetup_VS_ProcessButtonCB(void)
     EntityUIControl *control = MenuSetup->competition;
 
     if (control) {
-        bool32 flag = true;
+        bool32 allPlayersReady = true;
         for (int32 i = 0; i < control->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
 
@@ -1331,15 +1331,15 @@ void MenuSetup_VS_ProcessButtonCB(void)
             StateMachine_Run(button->processButtonCB);
             SceneInfo->entity = entStore;
 
-            if (flag) {
+            if (allPlayersReady) {
                 if (button->ready)
-                    flag = !button->isSelected;
+                    allPlayersReady = !button->isSelected;
                 else
-                    flag = false;
+                    allPlayersReady = false;
             }
         }
 
-        if (flag) {
+        if (allPlayersReady) {
             control->selectionDisabled = true;
             UITransition_StartTransition(MenuSetup_VS_OpenCompRules, 0);
         }
@@ -1366,7 +1366,7 @@ void MenuSetup_VS_StartMatch(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
 
     sprintf(param->menuTag, "Competition Round");
-    session->levelIndex = (MenuSetup->competitionZones)->buttonID;
+    session->stageIndex = (MenuSetup->competitionZones)->buttonID;
     session->zoneID     = param->vsZoneID;
     session->actID      = param->vsActID;
 
@@ -1381,7 +1381,7 @@ void MenuSetup_VS_StartMatch(void)
     globals->medalMods  = 0;
 
     globals->playerID = ID_NONE;
-    for (int32 i = 0; i < competition_PlayerCount; ++i) globals->playerID |= session->characterFlags[i] << (8 * i);
+    for (int32 i = 0; i < competition_PlayerCount; ++i) globals->playerID |= session->playerID[i] << (8 * i);
     globals->itemMode = session->itemMode;
     RSDK.LoadScene();
 }
@@ -1435,16 +1435,18 @@ void MenuSetup_VS_Round_ProcessButtonCB(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (UIControl->confirmPress[0] || UIControl->confirmPress[1] || UIControl->confirmPress[2] || UIControl->confirmPress[3]) {
-        bool32 flag = false;
-        int32 count = 0;
+        bool32 toCompTotal = false;
+
+        int32 activePlayers = 0;
         for (int32 p = 0; p < competition_PlayerCount; ++p) {
             if (session->lives[p] > 0)
-                count++;
+                activePlayers++;
+
             if (session->wins[p] > (session->matchCount >> 1))
-                flag = true;
+                toCompTotal = true;
         }
 
-        if (flag || count < 2 || session->matchID >= session->matchCount)
+        if (toCompTotal || activePlayers < 2 || session->matchID >= session->matchCount)
             UITransition_StartTransition(MenuSetup_VS_OpenCompTotal, 0);
         else
             UITransition_StartTransition(MenuSetup_VS_OpenCompZones, 0);
@@ -1510,9 +1512,9 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     for (int32 p = 0; p < competition_PlayerCount; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
-        results->isWinner = session->winnerFlags[match] & (1 << p);
-        results->isLoser  = session->winnerFlags[match] & (1 << p);
-        if (session->winnerFlags[match] & (1 << p))
+        results->isWinner = session->matchWinner[match] & (1 << p);
+        results->isLoser  = session->matchWinner[match] & (1 << p);
+        if (session->matchWinner[match] & (1 << p))
             winnerCount++;
         results->trophyCount = session->wins[p];
         memset(buffer, 0, sizeof(buffer));
@@ -1547,7 +1549,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
 
-        if (session->finishFlags[p] != FINISHFLAG_TIMEOVER) {
+        if (session->finishState[p] != FINISHFLAG_TIMEOVER) {
             results->row0Highlight = session->rings[p] == bestRings;
             results->row1Highlight = session->totalRings[p] == bestTotalRings;
             results->row2Highlight = session->score[p] == bestScore;
@@ -1559,16 +1561,16 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     if (winnerCount == 1) {
         int32 winner = -1;
         for (int32 p = 0; p < competition_PlayerCount; ++p) {
-            if ((1 << p) & session->winnerFlags[match]) {
+            if ((1 << p) & session->matchWinner[match]) {
                 winner = p;
                 break;
             }
         }
 
-        LogHelpers_Print("Announce_CharWins(%d)", session->characterFlags[winner]);
+        LogHelpers_Print("Announce_CharWins(%d)", session->playerID[winner]);
         EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
         announcer->state           = Announcer_State_AnnounceWinPlayer;
-        announcer->playerID        = session->characterFlags[winner];
+        announcer->playerID        = session->playerID[winner];
     }
     else {
         LogHelpers_Print("Announce_ItsADraw(%d)", 0);
@@ -1670,12 +1672,12 @@ void MenuSetup_VS_Total_MenuSetupCB(void)
         results->trophyCount = session->wins[p];
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
-            sprintf(buffer, "%d", session->winnerFlags[r]);
+            sprintf(buffer, "%d", session->matchWinner[r]);
             if (!SceneInfo->inEditor) {
                 RSDK.SetText(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }
-            highlight[r] = ((1 << p) & session->winnerFlags[r]);
+            highlight[r] = ((1 << p) & session->matchWinner[r]);
         }
     }
 }

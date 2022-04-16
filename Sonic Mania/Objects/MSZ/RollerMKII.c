@@ -224,7 +224,7 @@ int RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox)
 bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
 {
     RSDK_THIS(RollerMKII);
-    bool32 flag = false;
+    bool32 collided = false;
 
     if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
@@ -238,13 +238,14 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                     }
+
                     if (self->velocity.y >= 0x3800)
-                        flag = true;
+                        collided = true;
                 }
             }
             else {
                 Hitbox *hitbox = RSDK.GetHitbox(&platform->animator, 1);
-                flag           = RollerMKII_HandleObjectCollisions((Entity *)platform, hitbox);
+                collided           = RollerMKII_HandleObjectCollisions((Entity *)platform, hitbox);
             }
         }
         else {
@@ -253,7 +254,7 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
         }
         platform->position = platform->centerPos;
     }
-    return flag;
+    return collided;
 }
 
 void RollerMKII_HandleCollisions(void)

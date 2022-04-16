@@ -256,18 +256,19 @@ void Cylinder_State_Spiral(void)
         switch (self->playerStatuses[player->playerID]) {
             case 0:
                 if (player->onGround) {
-                    bool32 flag = true;
-                    if (!Player_CheckCollisionTouch(player, self, &self->hitboxL) || player->groundVel <= 0x30000) {
-                        if (!Player_CheckCollisionTouch(player, self, &self->hitboxR) || player->groundVel >= -0x30000) {
-                            flag = false;
-                        }
-                    }
-                    if (flag) {
+                    bool32 collided = false;
+                    if (Player_CheckCollisionTouch(player, self, &self->hitboxL) && player->groundVel > 0x30000) 
+                        collided = true;
+                    if (Player_CheckCollisionTouch(player, self, &self->hitboxR) && player->groundVel < -0x30000)
+                        collided = true;
+
+                    if (collided) {
                         self->playerStatuses[player->playerID] = 1;
                         player->state                            = Cylinder_Player_State_Spiral;
                     }
                 }
                 break;
+
             case 1:
                 if (player->groundVel <= 0x30000) {
                     if (player->groundVel >= -0x30000) {
@@ -312,6 +313,7 @@ void Cylinder_State_Spiral(void)
                     player->velocity.y = 0;
                 }
                 break;
+
             case 2: {
                 self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + (player->groundVel >> 15)) & 0x3FF;
                 player->position.x                     = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.x;
@@ -389,6 +391,7 @@ void Cylinder_State_Spiral(void)
                 }
                 break;
             }
+
             case 3: {
                 if (Player_CheckCollisionTouch(player, self, &self->hitboxRange)) {
                     if (abs(player->groundVel) <= 0x30000) {
@@ -440,6 +443,7 @@ void Cylinder_State_Spiral(void)
                 }
                 break;
             }
+
             default: break;
         }
     }
@@ -459,7 +463,7 @@ void Cylinder_State_InkRoller(void)
                 if ((player->position.y < self->position.y && player->velocity.y >= 0)
                     || (player->position.y >= self->position.y && player->velocity.y <= 0)) {
 
-                    bool32 flag = true;
+                    bool32 collided = true;
                     if (player->state == Cylinder_Player_State_InkRoller_Stand) {
                         int32 frame = (24 - (24 * angle) / 1024) % 24;
                         if (player->groundVel)
@@ -474,7 +478,7 @@ void Cylinder_State_InkRoller(void)
                     }
                     else {
                         if (player->state != Cylinder_Player_State_InkRoller_Roll) {
-                            flag = false;
+                            collided = false;
                         }
                         else {
                             if (!player->velocity.x)
@@ -482,7 +486,7 @@ void Cylinder_State_InkRoller(void)
                         }
                     }
 
-                    if (flag) {
+                    if (collided) {
                         if (angle >= 0x200)
                             player->drawOrder = Zone->playerDrawHigh;
                         else
@@ -570,24 +574,24 @@ void Cylinder_State_Pillar(void)
         int32 radius           = (self->radius + playerHitbox->bottom) << 6;
 
         if (self->playerStatuses[player->playerID]) {
-            bool32 inputFlag = false;
+            bool32 hasInput = false;
             if (player->groundVel > 0) {
                 if (player->left)
-                    inputFlag = 1;
+                    hasInput = true;
             }
             else if (player->groundVel < 0) {
                 if (!player->right) {
                     if (player->left)
-                        inputFlag = 1;
+                        hasInput = true;
                 }
                 else if (player->right) {
-                    inputFlag = 1;
+                    hasInput = true;
                 }
             }
 
             if (Player_CheckCollisionTouch(player, self, &self->hitboxRange)) {
                 if (player->onGround) {
-                    if (inputFlag) {
+                    if (hasInput) {
                         if (player->velocity.y > 0x18000)
                             player->velocity.y = player->velocity.y - 0x2000;
                         if (player->velocity.y < 0x18000)
@@ -654,13 +658,13 @@ void Cylinder_State_Pillar(void)
                     if (player->position.x >= self->position.x) {
                         player->angle     = 64;
                         player->direction = FLIP_NONE;
-                        if (inputFlag || player->groundVel < player->velocity.y)
+                        if (hasInput || player->groundVel < player->velocity.y)
                             player->groundVel = player->velocity.y;
                     }
                     else {
                         player->angle     = 192;
                         player->direction = FLIP_X;
-                        if (inputFlag || player->groundVel > -player->velocity.y)
+                        if (hasInput || player->groundVel > -player->velocity.y)
                             player->groundVel = -player->velocity.y;
                     }
 
@@ -736,7 +740,7 @@ void Cylinder_Player_State_InkRoller_Stand(void)
     Player_HandleGroundMovement();
     self->skidding = 0;
     if (self->camera)
-        self->camera->offsetYFlag = false;
+        self->camera->disableYOffset = false;
     self->jumpAbilityState = 0;
 
     if (self->jumpPress) {
@@ -783,7 +787,7 @@ void Cylinder_Player_State_InkRoller_Roll(void)
         self->animator.speed = 0xF0;
 
     if (self->camera)
-        self->camera->offsetYFlag = false;
+        self->camera->disableYOffset = false;
     self->jumpAbilityState = 0;
     self->angle            = angle;
     if (self->jumpPress) {

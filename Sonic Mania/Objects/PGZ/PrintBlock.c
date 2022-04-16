@@ -53,11 +53,11 @@ void PrintBlock_Update(void)
     }
 
     if (self->animator.frameID <= 2) {
-        self->stateCollide = Platform_CollisionState_None;
+        self->stateCollide = Platform_Collision_None;
         self->collision    = PLATFORM_C_SOLID_NONE;
     }
     else {
-        self->stateCollide = Platform_CollisionState_AllSolid;
+        self->stateCollide = Platform_Collision_AllSolid;
         self->collision    = PLATFORM_C_SOLID_ALL;
     }
     Platform_Update();

@@ -214,7 +214,7 @@ void JuggleSaw_StateCrab_Handle(void)
         }
 
         if (++self->sawTimer >= self->sawDelay) {
-            bool32 flag = true;
+            bool32 throwSaw = true;
 
             if (!self->friends[0] || self->friends[0]->objectID != self->objectID) {
                 self->friendCount = 0;
@@ -247,17 +247,17 @@ void JuggleSaw_StateCrab_Handle(void)
                             throwCheck = !(self->direction & FLIP_X);
                     }
 
-                    flag = false;
+                    throwSaw = false;
                     if (throwCheck && self->sawTimer >= self->sawDelay) {
-                        flag = true;
+                        throwSaw = true;
                     }
                 }
                 else {
-                    flag = false;
+                    throwSaw = false;
                 }
             }
 
-            if (flag) {
+            if (throwSaw) {
                 RSDK.SetSpriteAnimation(JuggleSaw->aniFrames, self->spawnDir >= FLIP_Y ? 5 : 2, &self->animator, true, 0);
                 if (self->spawnDir >= FLIP_Y)
                     self->direction ^= FLIP_Y;

@@ -175,7 +175,7 @@ void Hatch_State_SubEntryHatch(void)
     RSDK_THIS(Hatch);
     RSDK.ProcessAnimation(&self->hatchAnimator);
 
-    int32 flag = 0;
+    int32 entered = 0;
     foreach_all(Player, player)
     {
         // Bug Details:
@@ -190,10 +190,10 @@ void Hatch_State_SubEntryHatch(void)
         // menu
 
         if (Player_CheckCollisionBox(player, self, &Hatch->hitboxL) == C_TOP) {
-            flag = 1;
+            entered = 1;
         }
         else if (Player_CheckCollisionBox(player, self, &Hatch->hitboxR) == C_TOP) {
-            flag = 1;
+            entered = 1;
         }
         else if (Player_CheckCollisionBox(player, self, &Hatch->hitboxEntry) == C_TOP) {
             if (player->onGround) {
@@ -214,26 +214,26 @@ void Hatch_State_SubEntryHatch(void)
                     player->state = Player_State_None;
                     RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 0);
                     self->state = Hatch_State_PlayerEntered;
-                    flag        = 2;
+                    entered        = 2;
                     foreach_break;
                 }
             }
             else {
-                flag = 1;
+                entered = 1;
             }
         }
         else {
             if (Player_CheckCollisionTouch(player, self, &Hatch->hitboxRange))
-                flag = 1;
+                entered = 1;
         }
     }
 
-    if (flag == 1) {
+    if (entered == 1) {
         if (self->hatchAnimator.animationID == 2)
             RSDK.PlaySfx(Hatch->sfxHatchOpen, false, 255);
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 1, &self->hatchAnimator, false, 0);
     }
-    else if (!flag) {
+    else if (!entered) {
         if (self->hatchAnimator.animationID == 1)
             RSDK.PlaySfx(Hatch->sfxHatchClose, false, 255);
         RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &self->hatchAnimator, false, 0);

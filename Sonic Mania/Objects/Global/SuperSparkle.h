@@ -14,7 +14,7 @@ struct EntitySuperSparkle {
     RSDK_ENTITY
     EntityPlayer *player;
     int32 timer;
-    bool32 activeFlag;
+    bool32 isActive;
 };
 
 // Object Struct

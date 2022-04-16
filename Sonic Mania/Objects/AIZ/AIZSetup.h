@@ -27,12 +27,12 @@ struct ObjectAIZSetup {
     TABLE(int32 aniTiles6[14], { 12, 6, 4, 3, 2, 3, 4, 30, 4, 3, 2, 3, 4, 6 });
 #endif
     bool32 cutsceneInit;
-    bool32 playDrillSfxFlag;
+    bool32 playDrillSfx;
     bool32 playingDrillSFX;
-    TileLayer *bg1Info;
-    TileLayer *bg2Info;
-    TileLayer *bg3Info;
-    TileLayer *bg4Info;
+    TileLayer *background1;
+    TileLayer *background2;
+    TileLayer *background3;
+    TileLayer *background4;
     EntityAIZTornado *tornado;
     EntityAIZKingClaw *claw;
     EntityPlatform *platform;

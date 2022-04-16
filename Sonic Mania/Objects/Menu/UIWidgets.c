@@ -87,29 +87,32 @@ void UIWidgets_DrawRectOutline_Black(int32 x, int32 y, int32 width, int32 height
 {
     int32 w = width << 16 >> 1;
     int32 h = height << 16 >> 1;
-    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, 0x000000, 255, INK_NONE, false);
-    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 255, INK_NONE, false);
-    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, 0x000000, 255, INK_NONE, false);
-    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 255, INK_NONE, false);
+
+    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, 0x000000, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_NONE, false);
 }
 void UIWidgets_DrawRectOutline_Blended(int32 x, int32 y, int32 width, int32 height)
 {
     int32 w = width << 16 >> 1;
     int32 h = height << 16 >> 1;
-    RSDK.DrawRect(x - w + 0x30000, y - h, (width << 16) - 0x60000, 0x30000, 0x000000, 255, INK_BLEND, false);
-    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 255, INK_BLEND, false);
-    RSDK.DrawRect(x - w + 0x30000, h + y - 0x30000, (width << 16) - 0x60000, 0x30000, 0x000000, 255, INK_BLEND, false);
-    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 255, INK_BLEND, false);
+
+    RSDK.DrawRect(x - w + 0x30000, y - h, (width << 16) - 0x60000, 0x30000, 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(x - w + 0x30000, h + y - 0x30000, (width << 16) - 0x60000, 0x30000, 0x000000, 0xFF, INK_BLEND, false);
+    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, 0x000000, 0xFF, INK_BLEND, false);
 }
 void UIWidgets_DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height)
 {
     int32 w       = width << 16 >> 1;
     int32 h       = height << 16 >> 1;
     colour colour = RSDK.GetPaletteEntry(3, (UIWidgets->timer >> 1) & 0xF);
-    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, colour, 255, INK_NONE, false);
-    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
-    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, colour, 255, INK_NONE, false);
-    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
+
+    RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, colour, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, y - h, 0x30000, height << 16, colour, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, colour, 0xFF, INK_NONE, false);
+    RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, colour, 0xFF, INK_NONE, false);
 }
 void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue)
 {
@@ -124,8 +127,8 @@ void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 
         verts[2].y = y;
 
         if (size < 0) {
-            verts[0].y = (size << 16) + y;
             verts[2].x = (size << 16) + x;
+            verts[0].y = (size << 16) + y;
         }
         else {
             verts[1].x = (size << 16) + x;
@@ -151,18 +154,18 @@ void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 
         }
     }
 }
-void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag, int32 red, int32 green, int32 blue, InkEffects ink)
+void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeMode, int32 red, int32 green, int32 blue, InkEffects ink)
 {
     Vector2 verts[3];
 
-    if (flag) {
+    if (sizeMode) {
         verts[0].x = x;
         verts[0].y = y;
         verts[1].x = x;
         verts[1].y = y;
         verts[2].x = x;
         verts[2].y = y;
-        if (flag == 1) {
+        if (sizeMode == 1) {
             verts[0].x = x - (size << 16);
             verts[1].x = x + (size << 16);
             verts[2].y = y + (size << 16);
@@ -183,7 +186,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag,
             verts[0].y -= sy;
             verts[1].x -= sx;
             verts[2].y -= sy;
-            RSDK.DrawQuad(verts, 3, red, green, blue, 255, ink);
+            RSDK.DrawQuad(verts, 3, red, green, blue, 0xFF, ink);
         }
     }
 }
@@ -247,11 +250,13 @@ void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
 
-    drawPos.x                         = x;
-    drawPos.y                         = y;
+    drawPos.x = x;
+    drawPos.y = y;
+
     UIWidgets->arrowsAnimator.frameID = 0;
     drawPos.x -= arrowDist >> 1;
     RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
+
     UIWidgets->arrowsAnimator.frameID = 1;
     drawPos.x += arrowDist;
     RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);

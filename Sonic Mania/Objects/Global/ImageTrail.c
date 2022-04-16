@@ -14,9 +14,9 @@ void ImageTrail_Update(void) {}
 void ImageTrail_LateUpdate(void)
 {
     RSDK_THIS(ImageTrail);
-    EntityPlayer *player = (EntityPlayer *)self->player;
+    EntityPlayer *player = self->player;
 
-    // Check for fadeouts/destroy flags
+    // Check for fadeouts/destroy triggers
     if (player->superState == SUPERSTATE_SUPER) {
         self->baseAlpha = 0x100;
     }
@@ -121,7 +121,7 @@ void ImageTrail_Create(void *data)
         EntityPlayer *player = (EntityPlayer *)data;
         self->active       = ACTIVE_ALWAYS;
         self->visible      = true;
-        self->player       = (Entity *)player;
+        self->player       = player;
         self->playerObjID  = player->objectID;
         self->baseAlpha    = 0x100;
         self->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;

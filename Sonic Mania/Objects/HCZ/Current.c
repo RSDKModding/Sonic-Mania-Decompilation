@@ -555,9 +555,9 @@ void Current_State_WaterDown(void)
                     self->activePlayers |= (1 << playerID);
 
                 if ((1 << playerID) & self->activePlayers) {
-                    bool32 flag = false;
+                    bool32 inBubble = false;
                     if (Water)
-                        flag = Water_GetPlayerBubble(player) != NULL;
+                        inBubble = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
                         int32 anim = player->animator.animationID;
@@ -566,7 +566,8 @@ void Current_State_WaterDown(void)
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.y      = self->strength << 15;
-                            if (!flag) {
+
+                            if (!inBubble) {
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
@@ -574,6 +575,7 @@ void Current_State_WaterDown(void)
                                 player->state           = Current_Player_State_CurrentDown;
                             }
                         }
+
                         if (player->left) {
                             player->velocity.x = -0x10000;
                             player->groundVel  = -0x10000;

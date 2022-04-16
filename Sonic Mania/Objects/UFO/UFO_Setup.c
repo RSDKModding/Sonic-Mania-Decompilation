@@ -27,10 +27,12 @@ void UFO_Setup_StaticUpdate(void)
 {
     ++UFO_Setup->timer;
     UFO_Setup->timer &= 0x7FFF;
+
     if (!(UFO_Setup->timer & 1)) {
         ++UFO_Setup->ringFrame;
         UFO_Setup->ringFrame &= 0xF;
     }
+
     StateMachine_Run(UFO_Setup->deformCB);
 }
 
@@ -101,7 +103,7 @@ void UFO_Setup_StageLoad(void)
 
         int32 *deformData = RSDK.GetSceneLayer(0)->deformationData;
         for (int32 i = 0; i < 0x200; i += 0x10) {
-            int32 val = RSDK.Rand(0, 4);
+            int32 deform = RSDK.Rand(0, 4);
 
             int32 deformPos = i;
             deformPos       = minVal(0x200, deformPos);
@@ -109,7 +111,7 @@ void UFO_Setup_StageLoad(void)
 
             int32 angle = 0;
             for (int32 d = 0; d < 0x10; ++d) {
-                deformData[deformPos + d] = val * RSDK.Sin1024(angle) >> 10;
+                deformData[deformPos + d] = deform * RSDK.Sin1024(angle) >> 10;
                 angle += 0x40;
             }
         }
@@ -117,7 +119,7 @@ void UFO_Setup_StageLoad(void)
 
         deformData = RSDK.GetSceneLayer(1)->deformationData;
         for (int32 i = 0; i < 0x200; i += 0x10) {
-            int32 val = RSDK.Rand(0, 4);
+            int32 deform = RSDK.Rand(0, 4);
 
             int32 deformPos = i;
             deformPos       = minVal(0x200, deformPos);
@@ -125,7 +127,7 @@ void UFO_Setup_StageLoad(void)
 
             int32 angle = 0;
             for (int32 d = 0; d < 0x10; ++d) {
-                deformData[deformPos + d] = val * RSDK.Sin1024(angle) >> 10;
+                deformData[deformPos + d] = deform * RSDK.Sin1024(angle) >> 10;
                 angle += 0x40;
             }
         }
@@ -195,11 +197,11 @@ void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines)
         scanlines->deform.x = (-cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
 
-        int32 val = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal(abs(val) >> 15, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
+        int32 pos = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal(abs(pos) >> 15, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        int32 px = sin * val - ScreenInfo->centerX * scanlines->deform.x;
-        int32 py = cos * val - ScreenInfo->centerX * scanlines->deform.y;
+        int32 px = sin * pos - ScreenInfo->centerX * scanlines->deform.x;
+        int32 py = cos * pos - ScreenInfo->centerX * scanlines->deform.y;
 
         scanlines->position.x = px + camera->position.x;
         scanlines->position.y = py + camera->position.y;
@@ -227,11 +229,12 @@ void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines)
         int32 h             = (camera->height + 0x1000000) / div;
         scanlines->deform.x = -(cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
-        int32 val           = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal((abs(val) >> 15) - 8, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        int32 px = sin * val - ScreenInfo->centerX * scanlines->deform.x;
-        int32 py = cos * val - ScreenInfo->centerX * scanlines->deform.y;
+        int32 pos           = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal((abs(pos) >> 15) - 8, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
+
+        int32 px = sin * pos - ScreenInfo->centerX * scanlines->deform.x;
+        int32 py = cos * pos - ScreenInfo->centerX * scanlines->deform.y;
 
         scanlines->position.x = px + camera->position.x;
         scanlines->position.y = py + camera->position.y;
@@ -259,11 +262,12 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
         int32 h             = height / div;
         scanlines->deform.x = -(cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
-        int32 val           = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal(abs(val) >> 14, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
+        
+        int32 pos           = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal(abs(pos) >> 14, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        int32 px = sin * val - ScreenInfo->centerX * scanlines->deform.x;
-        int32 py = cos * val - ScreenInfo->centerX * scanlines->deform.y;
+        int32 px = sin * pos - ScreenInfo->centerX * scanlines->deform.x;
+        int32 py = cos * pos - ScreenInfo->centerX * scanlines->deform.y;
 
         scanlines->position.x = px + (camera->position.x >> 3);
         scanlines->position.y = py + (camera->position.y >> 3);

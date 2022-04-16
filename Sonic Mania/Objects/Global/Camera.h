@@ -21,7 +21,7 @@ struct EntityCamera {
     Vector2 shakePos;
     Vector2 lookPos;
     Vector2 offset;
-    bool32 offsetYFlag;
+    bool32 disableYOffset;
     int32 centerY;
     int32 adjustY;
     int32 lerpPercent;

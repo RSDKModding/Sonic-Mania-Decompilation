@@ -20,26 +20,27 @@ void PlatformControl_Update(void)
         for (int32 c = 0; c < self->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
             EntityPlatformNode *node = RSDK_GET_ENTITY(platform->speed, PlatformNode);
-            int32 flags                = 0;
+
+            int32 finishDir = 0;
             if (platform->velocity.x <= 0) {
                 if (platform->drawPos.x <= node->position.x)
-                    flags = 1;
+                    finishDir = 1;
             }
             else {
                 if (platform->drawPos.x >= node->position.x)
-                    flags = 1;
+                    finishDir = 1;
             }
 
             if (platform->velocity.y <= 0) {
                 if (platform->drawPos.y <= node->position.y)
-                    flags |= 2;
+                    finishDir |= 2;
             }
             else {
                 if (platform->drawPos.y >= node->position.y)
-                    flags |= 2;
+                    finishDir |= 2;
             }
 
-            if (flags == (1 | 2)) {
+            if (finishDir == (1 | 2)) {
                 platform->timer = node->nodeFlag;
                 if (platform->direction < 4) {
                     if (++platform->speed - nodeSlot >= self->nodeCount) {
@@ -100,10 +101,12 @@ void PlatformControl_Update(void)
                 EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
                 if (platform->state == Platform_State_WaitForControl)
                     platform->state = Platform_State_Controlled;
+
                 if (platform->state == Platform_State_ActivateControlOnStood) {
                     self->setActive = false;
                     return;
                 }
+
                 platform->speed += nodeSlot;
                 platform->active = ACTIVE_NORMAL;
                 PlatformControl_ManagePlatformVelocity(platform, (Entity *)RSDK_GET_ENTITY(platform->speed, PlatformNode));

@@ -241,7 +241,7 @@ void WoodChipper_State_Chipper(void)
     else {
         if (self->timer <= 0) {
             if (self->height < 0) {
-                int32 val = ((RSDK.Sin256(self->angle) << 10) + self->height) & 0xFFFF0000;
+                int32 height = ((RSDK.Sin256(self->angle) << 10) + self->height) & 0xFFFF0000;
 
                 self->height += self->speed;
                 if (self->height > 0)
@@ -250,7 +250,7 @@ void WoodChipper_State_Chipper(void)
                 if (self->angle < 64)
                     self->angle += 4;
 
-                int32 move = val - (((RSDK.Sin256(self->angle) << 10) + self->height) & 0xFFFF0000);
+                int32 move = height - (((RSDK.Sin256(self->angle) << 10) + self->height) & 0xFFFF0000);
 
                 foreach_active(Player, player)
                 {
@@ -290,12 +290,12 @@ void WoodChipper_State_Chipper(void)
             self->shakeOffsets[2].x = 0;
             self->shakeOffsets[2].y = 0;
 
-            int32 val = ((RSDK.Sin256(self->angle) << 10) + (self->height & 0xFC00)) & 0xFFFF0000;
+            int32 height = ((RSDK.Sin256(self->angle) << 10) + (self->height & 0xFC00)) & 0xFFFF0000;
 
             if (self->angle < 64)
                 self->angle += 4;
 
-            int32 move = val - (((RSDK.Sin256(self->angle) << 10) + (self->height & 0xFC00)) & 0xFFFF0000);
+            int32 move = height - (((RSDK.Sin256(self->angle) << 10) + (self->height & 0xFC00)) & 0xFFFF0000);
 
             foreach_active(Player, player)
             {

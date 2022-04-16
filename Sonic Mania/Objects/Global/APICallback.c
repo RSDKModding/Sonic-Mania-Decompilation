@@ -401,11 +401,11 @@ int32 APICallback_GetUserAuthStatus(void)
     }
 
     if (APICallback->saveStatus || APICallback->authStatus != STATUS_ERROR) {
-        if (APICallback->authStatus == STATUS_FORBIDDEN && !APICallback->authForbiddenFlag) {
+        if (APICallback->authStatus == STATUS_FORBIDDEN && !APICallback->authForbidden) {
             EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_CheckUserAuth_CB, 0, 0);
             entity->active                     = ACTIVE_ALWAYS;
             APICallback->activeEntity = (Entity *)entity;
-            APICallback->authForbiddenFlag     = true;
+            APICallback->authForbidden     = true;
         }
     }
     else {
@@ -735,14 +735,14 @@ void APICallback_UnlockAchievement(const char *name)
     }
 }
 
-void APICallback_CheckUserAuth_OK(void) { APICallback->signoutFlag = true; }
+void APICallback_CheckUserAuth_OK(void) { APICallback->signedout = true; }
 
 void APICallback_CheckUserAuth_CB(void)
 {
     RSDK_THIS(APICallback);
     EntityUIDialog *dialog = UIDialog->activeDialog;
     if (self->timer) {
-        if (APICallback->signoutFlag) {
+        if (APICallback->signedout) {
             if (!dialog) {
                 if (Zone) {
                     RSDK.SetScene("Presentation", "Title Screen");

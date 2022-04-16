@@ -83,11 +83,11 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
     for (int32 x = 0; x < self->colWidth;) {
         drawPos.x = startX;
 
-        int32 w     = 0;
-        bool32 flag = false;
+        int32 w               = 0;
+        bool32 useOpeningAnim = false;
         if (x >= size) {
             if (x < size + 6)
-                flag = true;
+                useOpeningAnim = true;
             else
                 w = self->colWidth;
         }
@@ -95,7 +95,12 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
             w = size;
         }
 
-        if (!flag) {
+        if (useOpeningAnim) {
+            RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim, animator, true, 0);
+            x += 2;
+            startX += 0x100000;
+        }
+        else {
             if (w - x < 4) {
                 switch (w - x) {
                     case 3:
@@ -103,12 +108,15 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
                         x += 2;
                         startX += 0x100000;
                         break;
+
                     case 2:
                         RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 2, animator, true, 0);
                         ++x;
                         startX += 0x80000;
                         break;
+
                     case 1: RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim + 1, animator, true, 0); break;
+
                     case 0:
                         RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim, animator, true, 0);
                         x += 2;
@@ -122,11 +130,7 @@ void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 size, b
                 startX += 0x180000;
             }
         }
-        else {
-            RSDK.SetSpriteAnimation(SpikeCorridor->aniFrames, anim, animator, true, 0);
-            x += 2;
-            startX += 0x100000;
-        }
+
         ++x;
         RSDK.DrawSprite(animator, &drawPos, false);
         startX += 0x80000;

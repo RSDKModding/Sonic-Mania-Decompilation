@@ -81,8 +81,8 @@ struct ObjectAPICallback {
     int32 (*GetControllerType)(int32 id, int32);
     int32(*ShowSteamControllerOverlay)(int32);
     int32 saveStatus;
-    bool32 authForbiddenFlag;
-    bool32 signoutFlag;
+    bool32 authForbidden;
+    bool32 signedout;
     int32 prevLeaderboardEntry;
     int32 unused;
     int32 isAutoSaving;

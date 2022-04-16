@@ -20,14 +20,14 @@ void DASetup_StaticUpdate(void)
         DASetup->initialized = true;
     }
 
-    EntityFXFade *fade = (EntityFXFade *)DASetup->fxFade;
-    if (DASetup->flag && fade->timer == 512) {
+    EntityFXFade *fade = DASetup->fxFade;
+    if (DASetup->returnToMenu && fade->timer == 512) {
         Music_FadeOut(0.02);
         RSDK.SetScene("Presentation", "Menu");
         RSDK.LoadScene();
     }
 
-    EntityUIControl *control = (EntityUIControl *)DASetup->control;
+    EntityUIControl *control = DASetup->control;
     if (!control->childHasFocus)
         control->childHasFocus = true;
 }
@@ -41,30 +41,31 @@ void DASetup_StageLoad(void)
 
     foreach_all(UIControl, control)
     {
-        DASetup->control          = (Entity *)control;
+        DASetup->control              = control;
         control->processButtonInputCB = DASetup_State_ManageControl;
     }
 
-    foreach_all(FXFade, fade) { DASetup->fxFade = (Entity *)fade; }
+    foreach_all(FXFade, fade) { DASetup->fxFade = fade; }
 
     foreach_all(UIInfoLabel, label)
     {
-        if (DASetup->labelB) {
-            if (!DASetup->labelA) {
-                DASetup->labelA = (Entity *)label;
+        if (DASetup->trackTitleLabel) {
+            if (!DASetup->trackSelLabel) {
+                DASetup->trackSelLabel = label;
                 foreach_break;
             }
         }
         else {
-            DASetup->labelB = (Entity *)label;
+            DASetup->trackTitleLabel = label;
         }
     }
 
     int32 trackCount = 0;
-    foreach_all(Music, track) { DASetup->trackList[trackCount++] = (Entity *)track; }
+    foreach_all(Music, track) { DASetup->trackList[trackCount++] = track; }
 
-    DASetup->trackCount    = trackCount;
-    DASetup->activeTrack   = -1;
+    DASetup->trackCount  = trackCount;
+    DASetup->activeTrack = -1;
+
     DASetup->sfxEmerald    = RSDK.GetSfx("Special/Emerald.wav");
     DASetup->sfxMedal      = RSDK.GetSfx("Special/Medal.wav");
     DASetup->sfxSSExit     = RSDK.GetSfx("Special/SSExit.wav");
@@ -77,8 +78,8 @@ void DASetup_DisplayTrack(int32 trackID)
     TextInfo text;
     INIT_TEXTINFO(text);
 
-    EntityUIInfoLabel *label     = (EntityUIInfoLabel *)DASetup->labelB;
-    EntityMusic *trackCountTrack = (EntityMusic *)DASetup->trackList[trackID];
+    EntityUIInfoLabel *trackTitleLabel = DASetup->trackTitleLabel;
+    EntityMusic *trackCountTrack       = DASetup->trackList[trackID];
 
     memset(buffer, 0, 0x10 * sizeof(char));
     strcpy(&buffer[2], " - ");
@@ -86,12 +87,13 @@ void DASetup_DisplayTrack(int32 trackID)
     buffer[1] = trackID - 10 * (trackID / 10) + '0';
     RSDK.PrependText(&text, buffer);
     RSDK.AppendString(&text, &trackCountTrack->soundTestTitle);
-    UIInfoLabel_SetString(label, &text);
+    UIInfoLabel_SetString(trackTitleLabel, &text);
 }
 
 bool32 DASetup_HandleMedallionDebug(void)
 {
     EntityGameProgress *progress = GameProgress_GetGameProgress();
+
     if (!globals->medallionDebug || !progress)
         return false;
 
@@ -102,6 +104,7 @@ bool32 DASetup_HandleMedallionDebug(void)
                 return true;
             }
             break;
+
         case 44:
             if (progress->silverMedalCount < 32) {
                 GameProgress_GiveMedal(globals->blueSpheresID, 1);
@@ -116,6 +119,7 @@ bool32 DASetup_HandleMedallionDebug(void)
                 return true;
             }
             break;
+
         case 46:
             if (!progress->allGoldMedals) {
                 GameProgress_UnlockAllMedals();
@@ -124,14 +128,16 @@ bool32 DASetup_HandleMedallionDebug(void)
                 return true;
             }
             break;
+
         case 48:
-            if (progress->silverMedalCount > 0 || progress->zoneClearFlags[0]) {
+            if (progress->silverMedalCount > 0 || progress->zoneCleared[0]) {
                 GameProgress_ClearProgress();
                 progress->allSpecialCleared = false;
                 RSDK.PlaySfx(DASetup->sfxSSExit, false, 255);
                 return true;
             }
             break;
+
         default: break;
     }
     return false;
@@ -144,12 +150,12 @@ void DASetup_SetupUI(void)
 
     TitleBG_SetupFX();
     DASetup_DisplayTrack(0);
-    EntityUIInfoLabel *label = (EntityUIInfoLabel *)DASetup->labelA;
+    EntityUIInfoLabel *trackSelLabel = DASetup->trackSelLabel;
     Localization_GetString(&buffer, STR_SELECTATRACK);
 #if RETRO_USE_PLUS
     RSDK.PrintText(PRINT_NORMAL, &buffer);
 #endif
-    UIInfoLabel_SetString(label, &buffer);
+    UIInfoLabel_SetString(trackSelLabel, &buffer);
 }
 
 void DASetup_State_ManageControl(void)
@@ -221,7 +227,7 @@ void DASetup_State_ManageControl(void)
     if (dir != DASetup->touchDir && ControllerInfo->keyRight.down)
         ControllerInfo->keyRight.press |= ControllerInfo->keyRight.down;
 
-    if (!DASetup->touchConfirm) 
+    if (!DASetup->touchConfirm)
         ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
     if (!DASetup->touchBack)
         ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
@@ -278,7 +284,7 @@ void DASetup_State_ManageControl(void)
             DASetup->activeTrack = -1;
         }
         else {
-            EntityMusic *track = (EntityMusic *)DASetup->trackList[DASetup->trackID];
+            EntityMusic *track = DASetup->trackList[DASetup->trackID];
             if (!DASetup_HandleMedallionDebug()) {
                 if (track->trackFile.length) {
                     DASetup->activeTrack = DASetup->trackID;
@@ -292,16 +298,16 @@ void DASetup_State_ManageControl(void)
         }
     }
 
-    if (!DASetup->flag) {
+    if (!DASetup->returnToMenu) {
 #if RETRO_USE_TOUCH_CONTROLS
         if (UIControl->keyBack || back) {
 #else
         if (UIControl->keyBack) {
 #endif
-            DASetup->flag      = true;
-            EntityFXFade *fade = (EntityFXFade *)DASetup->fxFade;
-            fade->state        = FXFade_State_FadeIn;
-            fade->timer        = 0;
+            DASetup->returnToMenu = true;
+            EntityFXFade *fade    = DASetup->fxFade;
+            fade->state           = FXFade_State_FadeIn;
+            fade->timer           = 0;
         }
     }
 }

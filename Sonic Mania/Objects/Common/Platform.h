@@ -79,18 +79,18 @@ void Platform_Serialize(void);
 // Extra Entity Functions
 
 // Collision States
-void Platform_CollisionState_TopSolid(void);
-void Platform_CollisionState_AllSolid(void);
-void Platform_CollisionState_AllSolid_NoCrush(void);
-void Platform_CollisionState_LRHazard(void);
-void Platform_CollisionState_BottomHazard(void);
-void Platform_CollisionState_TopHazard(void);
-void Platform_CollisionState_Twister(void);
-void Platform_CollisionState_TurnTable(void);
-void Platform_CollisionState_Sticky(void);
-void Platform_CollisionState_Tiles(void);
-void Platform_CollisionState_AllHazard(void);
-void Platform_CollisionState_None(void);
+void Platform_Collision_TopSolid(void);
+void Platform_Collision_AllSolid(void);
+void Platform_Collision_AllSolid_NoCrush(void);
+void Platform_Collision_LRHazard(void);
+void Platform_Collision_BottomHazard(void);
+void Platform_Collision_TopHazard(void);
+void Platform_Collision_Twister(void);
+void Platform_Collision_TurnTable(void);
+void Platform_Collision_Sticky(void);
+void Platform_Collision_Tiles(void);
+void Platform_Collision_AllHazard(void);
+void Platform_Collision_None(void);
 
 //States
 void Platform_State_Fixed(void);

@@ -334,25 +334,25 @@ void Platform_Create(void *data)
             }
             switch (self->collision) {
                 case PLATFORM_C_SOLID_TOP:
-                    self->stateCollide  = Platform_CollisionState_TopSolid;
+                    self->stateCollide  = Platform_Collision_TopSolid;
                     self->hitbox.bottom = self->hitbox.top + 8;
                     break;
                 case PLATFORM_C_SOLID_ALL:
-                default: self->stateCollide = Platform_CollisionState_AllSolid; break;
-                case PLATFORM_C_USE_TILES: self->stateCollide = Platform_CollisionState_Tiles; break;
-                case PLATFORM_C_HAZARD_ALL: self->stateCollide = Platform_CollisionState_AllHazard; break;
-                case PLATFORM_C_SOLID_NONE: self->stateCollide = Platform_CollisionState_None; break;
-                case PLATFORM_C_HAZARD_SIDES: self->stateCollide = Platform_CollisionState_LRHazard; break;
-                case PLATFORM_C_HAZARD_BOTTOM: self->stateCollide = Platform_CollisionState_BottomHazard; break;
-                case PLATFORM_C_HAZARD_TOP: self->stateCollide = Platform_CollisionState_TopHazard; break;
-                case PLATFORM_C_TWISTER: self->stateCollide = Platform_CollisionState_Twister; break;
+                default: self->stateCollide = Platform_Collision_AllSolid; break;
+                case PLATFORM_C_USE_TILES: self->stateCollide = Platform_Collision_Tiles; break;
+                case PLATFORM_C_HAZARD_ALL: self->stateCollide = Platform_Collision_AllHazard; break;
+                case PLATFORM_C_SOLID_NONE: self->stateCollide = Platform_Collision_None; break;
+                case PLATFORM_C_HAZARD_SIDES: self->stateCollide = Platform_Collision_LRHazard; break;
+                case PLATFORM_C_HAZARD_BOTTOM: self->stateCollide = Platform_Collision_BottomHazard; break;
+                case PLATFORM_C_HAZARD_TOP: self->stateCollide = Platform_Collision_TopHazard; break;
+                case PLATFORM_C_TWISTER: self->stateCollide = Platform_Collision_Twister; break;
                 case PLATFORM_C_STICKY_ALL:
                 case PLATFORM_C_STICKY_TOP:
                 case PLATFORM_C_STICKY_LEFT:
                 case PLATFORM_C_STICKY_RIGHT:
-                case PLATFORM_C_STICKY_BOTTOM: self->stateCollide = Platform_CollisionState_Sticky; break;
-                case PLATFORM_C_TURNTABLE: self->stateCollide = Platform_CollisionState_TurnTable; break;
-                case PLATFORM_C_SOLID_ALL_NOCRUSH: self->stateCollide = Platform_CollisionState_AllSolid_NoCrush; break;
+                case PLATFORM_C_STICKY_BOTTOM: self->stateCollide = Platform_Collision_Sticky; break;
+                case PLATFORM_C_TURNTABLE: self->stateCollide = Platform_Collision_TurnTable; break;
+                case PLATFORM_C_SOLID_ALL_NOCRUSH: self->stateCollide = Platform_Collision_AllSolid_NoCrush; break;
             }
             for (int32 i = 0; i < self->childCount; ++i) {
                 EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntityID(self) + 1), Platform);
@@ -559,7 +559,7 @@ void Platform_State_ActiveFromAbove(void)
     int32 drawX = -self->drawPos.x;
     int32 drawY = -self->drawPos.y;
 
-    bool32 flag = false;
+    bool32 activated = false;
     foreach_active(Player, player)
     {
         if (!player->sidekick) {
@@ -574,19 +574,19 @@ void Platform_State_ActiveFromAbove(void)
             if (abs(player->position.x - self->centerPos.x) <= 0x4000000) {
                 if (abs(player->position.y - self->centerPos.y) <= 0x4000000 && (cy + self->centerPos.y) < self->centerPos.y) {
                     if (self->centerPos.y - (cy + self->centerPos.y) < 0x1000000)
-                        flag = true;
+                        activated = true;
                 }
             }
         }
     }
 
-    if (!flag) {
+    if (!activated) {
         if (self->amplitude.y > 0) {
             self->amplitude.y -= (self->speed << 16);
             if (self->amplitude.y <= 0) {
                 self->amplitude.y = 0;
                 if (self->activeScreens && Platform->useClack)
-                    RSDK.PlaySfx(Platform->sfxClack, false, 255);
+                    RSDK.PlaySfx(Platform->sfxClack, false, 0xFF);
             }
         }
     }
@@ -596,7 +596,7 @@ void Platform_State_ActiveFromAbove(void)
             if (self->amplitude.y >= self->amplitude.x) {
                 self->amplitude.y = self->amplitude.x;
                 if (self->activeScreens && Platform->useClack)
-                    RSDK.PlaySfx(Platform->sfxClack, false, 255);
+                    RSDK.PlaySfx(Platform->sfxClack, false, 0xFF);
             }
         }
     }
@@ -1256,7 +1256,7 @@ void Platform_State_Sticky_MoveToStart(void)
 }
 
 // Collision States
-void Platform_CollisionState_AllSolid(void)
+void Platform_Collision_AllSolid(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&self->animator, 1);
@@ -1332,7 +1332,7 @@ void Platform_CollisionState_AllSolid(void)
         }
     }
 }
-void Platform_CollisionState_AllHazard(void)
+void Platform_Collision_AllHazard(void)
 {
     RSDK_THIS(Platform);
     if (self->timer)
@@ -1348,7 +1348,7 @@ void Platform_CollisionState_AllHazard(void)
         }
     }
 }
-void Platform_CollisionState_BottomHazard(void)
+void Platform_Collision_BottomHazard(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&self->animator, 1);
@@ -1427,7 +1427,7 @@ void Platform_CollisionState_BottomHazard(void)
         }
     }
 }
-void Platform_CollisionState_LRHazard(void)
+void Platform_Collision_LRHazard(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox = RSDK.GetHitbox(&self->animator, 1);
@@ -1517,7 +1517,7 @@ void Platform_CollisionState_LRHazard(void)
         }
     }
 }
-void Platform_CollisionState_Tiles(void)
+void Platform_Collision_Tiles(void)
 {
     RSDK_THIS(Platform);
     self->stoodPlayers = 0;
@@ -1570,21 +1570,25 @@ void Platform_CollisionState_Tiles(void)
                         hitbox.left += 16;
                         hitbox.bottom -= 16;
                         break;
+
                     case CMODE_LWALL:
                         hitbox.top += 16;
                         hitbox.right -= 16;
                         hitbox.bottom -= 16;
                         break;
+
                     case CMODE_ROOF:
                         hitbox.top += 16;
                         hitbox.left += 16;
                         hitbox.right -= 16;
                         break;
+
                     case CMODE_RWALL:
                         hitbox.top += 16;
                         hitbox.left += 16;
                         hitbox.bottom -= 16;
                         break;
+
                     default: break;
                 }
             }
@@ -1609,7 +1613,7 @@ void Platform_CollisionState_Tiles(void)
         }
     }
 }
-void Platform_CollisionState_Sticky(void)
+void Platform_Collision_Sticky(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&self->animator, 1);
@@ -1622,10 +1626,11 @@ void Platform_CollisionState_Sticky(void)
         Player_CheckCollisionPlatform(player, self, platformHitbox);
         int32 side = Player_CheckCollisionBox(player, self, solidHitbox);
 
-        bool32 flag = false;
-        if ((self->collision != PLATFORM_C_STICKY_ALL && self->collision != side + PLATFORM_C_STICKY_ALL) || !side)
-            flag = true;
-        if (player->state != Player_State_None && !flag) {
+        bool32 isStuck = false;
+        if ((self->collision == PLATFORM_C_STICKY_ALL || self->collision == side + PLATFORM_C_STICKY_ALL) && side)
+            isStuck = true;
+
+        if (player->state != Player_State_None && isStuck) {
             player->state           = Player_State_None;
             player->nextGroundState = StateMachine_None;
             player->nextAirState    = StateMachine_None;
@@ -1635,12 +1640,16 @@ void Platform_CollisionState_Sticky(void)
             player->animator.speed  = 0;
             switch (side) {
                 case C_TOP: player->angle = 0x00; break;
+
                 case C_LEFT:
                     player->angle    = 0xC0;
                     player->onGround = false;
                     break;
+
                 case C_RIGHT: player->angle = 0x40; break;
+
                 case C_BOTTOM: player->angle = 0x80; break;
+
                 default: break;
             }
 
@@ -1658,30 +1667,8 @@ void Platform_CollisionState_Sticky(void)
             }
             self->stoodPlayers |= 1 << playerID;
         }
-        else {
-            if ((1 << playerID) & self->stoodPlayers) {
-                if (player->state == Player_State_None) {
-                    if (Platform->stoodPos[playerID].x) {
-                        player->position.x = Platform->stoodPos[playerID].x;
-                        player->position.y = Platform->stoodPos[playerID].y;
-                    }
-                    else {
-                        Platform->stoodPos[playerID].x = player->position.x;
-                        Platform->stoodPos[playerID].y = player->position.y;
-                    }
-                    player->position.x += self->collisionOffset.x;
-                    player->position.y += self->collisionOffset.y;
-                    player->position.y &= 0xFFFF0000;
-                    if (player->jumpPress) {
-                        player->tileCollisions = true;
-                        Player_StartJump(player);
-                    }
-                }
-                else {
-                    self->stoodPlayers = self->stoodPlayers & ~(1 << playerID);
-                }
-            }
-            else if (side == C_TOP) {
+        else if ((1 << playerID) & self->stoodPlayers) {
+            if (player->state == Player_State_None) {
                 if (Platform->stoodPos[playerID].x) {
                     player->position.x = Platform->stoodPos[playerID].x;
                     player->position.y = Platform->stoodPos[playerID].y;
@@ -1693,11 +1680,31 @@ void Platform_CollisionState_Sticky(void)
                 player->position.x += self->collisionOffset.x;
                 player->position.y += self->collisionOffset.y;
                 player->position.y &= 0xFFFF0000;
+                if (player->jumpPress) {
+                    player->tileCollisions = true;
+                    Player_StartJump(player);
+                }
             }
+            else {
+                self->stoodPlayers = self->stoodPlayers & ~(1 << playerID);
+            }
+        }
+        else if (side == C_TOP) {
+            if (Platform->stoodPos[playerID].x) {
+                player->position.x = Platform->stoodPos[playerID].x;
+                player->position.y = Platform->stoodPos[playerID].y;
+            }
+            else {
+                Platform->stoodPos[playerID].x = player->position.x;
+                Platform->stoodPos[playerID].y = player->position.y;
+            }
+            player->position.x += self->collisionOffset.x;
+            player->position.y += self->collisionOffset.y;
+            player->position.y &= 0xFFFF0000;
         }
     }
 }
-void Platform_CollisionState_TopHazard(void)
+void Platform_Collision_TopHazard(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox = RSDK.GetHitbox(&self->animator, 1);
@@ -1773,7 +1780,7 @@ void Platform_CollisionState_TopHazard(void)
         }
     }
 }
-void Platform_CollisionState_TopSolid(void)
+void Platform_Collision_TopSolid(void)
 {
     RSDK_THIS(Platform);
     int32 stoodPlayers     = self->stoodPlayers;
@@ -1816,7 +1823,7 @@ void Platform_CollisionState_TopSolid(void)
         }
     }
 }
-void Platform_CollisionState_TurnTable(void)
+void Platform_Collision_TurnTable(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&self->animator, 1);
@@ -1919,7 +1926,7 @@ void Platform_CollisionState_TurnTable(void)
         }
     }
 }
-void Platform_CollisionState_Twister(void)
+void Platform_Collision_Twister(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&self->animator, 1);
@@ -2033,8 +2040,8 @@ void Platform_CollisionState_Twister(void)
         }
     }
 }
-void Platform_CollisionState_None(void) {}
-void Platform_CollisionState_AllSolid_NoCrush(void)
+void Platform_Collision_None(void) {}
+void Platform_Collision_AllSolid_NoCrush(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&self->animator, 1);
@@ -2302,11 +2309,11 @@ void Platform_EditorDraw(void)
 
                 drawPos         = self->drawPos;
                 self->groundVel = 0;
-                bool32 flag     = false;
+                bool32 reachedEnd     = false;
                 uint8 type      = 0;
 
                 while (self->speed) {
-                    if (!flag) {
+                    if (!reachedEnd) {
                         amplitude.y += self->groundVel;
 
                         self->drawPos.x = (amplitude.y >> 8) * RSDK.Cos256(self->angle) + self->centerPos.x;
@@ -2317,7 +2324,7 @@ void Platform_EditorDraw(void)
                             if (amplitude.y >= amplitude.x) {
                                 amplitude.y = amplitude.x;
                                 self->groundVel -= (self->speed << 11);
-                                flag = true;
+                                reachedEnd = true;
                             }
                         }
                         else {
@@ -2509,16 +2516,17 @@ void Platform_EditorDraw(void)
                 Vector2 storePos = self->drawPos;
                 drawPos          = self->drawPos;
 
-                uint8 flags = 0;
-                int8 last   = -1;
-                int32 timer = 0;
-                while (flags != 2) {
+                uint8 finishDirs = 0;
+                int8 last        = -1;
+                int32 timer      = 0;
+                while (finishDirs != 2) {
                     int32 move = timer++ * (self->speed << 7);
 
                     if (((move >> 16) & 1) == self->direction) {
                         if (last > 0)
-                            flags++;
-                        if (flags != 2) {
+                            finishDirs++;
+
+                        if (finishDirs != 2) {
                             self->drawPos.x = self->centerPos.x + ((move & 0xFFFF) * amplitude.x >> 6) - (amplitude.x << 9);
                             self->drawPos.y = self->centerPos.y + ((move & 0xFFFF) * amplitude.y >> 6) - (amplitude.y << 9);
                             storePos        = self->drawPos;
@@ -2527,8 +2535,9 @@ void Platform_EditorDraw(void)
                     }
                     else {
                         if (!last)
-                            flags++;
-                        if (flags != 2) {
+                            finishDirs++;
+
+                        if (finishDirs != 2) {
                             self->drawPos.x = self->centerPos.x + (amplitude.x << 9) - ((move & 0xFFFF) * amplitude.x >> 6);
                             self->drawPos.y = self->centerPos.y + (amplitude.y << 9) - ((move & 0xFFFF) * amplitude.y >> 6);
                             drawPos         = self->drawPos;

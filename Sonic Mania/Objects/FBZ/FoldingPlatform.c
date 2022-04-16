@@ -35,11 +35,11 @@ void FoldingPlatform_Update(void)
         self->state = FoldingPlatform_State_Appear;
     }
     if (self->animator.frameID == 4) {
-        self->stateCollide = Platform_CollisionState_TopSolid;
+        self->stateCollide = Platform_Collision_TopSolid;
         self->collision    = PLATFORM_C_SOLID_TOP;
     }
     else {
-        self->stateCollide = Platform_CollisionState_None;
+        self->stateCollide = Platform_Collision_None;
         self->collision    = PLATFORM_C_SOLID_NONE;
     }
     Platform_Update();

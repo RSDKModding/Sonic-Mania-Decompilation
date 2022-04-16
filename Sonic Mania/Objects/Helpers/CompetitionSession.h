@@ -8,11 +8,13 @@
 #define competition_PlayerCount (2)
 #endif
 
+#define Competition_StageCount (12)
+
 typedef enum {
     FINISHFLAG_NOTFINISHED,
     FINISHFLAG_TIMEOVER,
     FINISHFLAG_FINISHED,
-}vsFinishFlags;
+} vsFinishFlags;
 
 //created so I can easily set up times in an array
 typedef struct {
@@ -31,23 +33,23 @@ struct EntityCompetitionSession {
 	RSDK_ENTITY
     bool32 inMatch;
     int32 playerCount;
-    int32 levelIndex;
+    int32 stageIndex;
     int32 zoneID;
     int32 actID;
     int32 matchID;
     int32 matchCount;
     int32 itemMode;
 #if RETRO_USE_PLUS
-    int32 swapFlag;
+    int32 swapType;
 #endif
-    int32 zoneFlags[12];
-    uint8 characterFlags[PLAYER_MAX];
-    uint8 winnerFlags[12];
+    bool32 completedStages[Competition_StageCount];
+    uint8 playerID[PLAYER_MAX];
+    uint8 matchWinner[Competition_StageCount];
     int32 rings[PLAYER_MAX];
     int32 score[PLAYER_MAX];
     int32 items[PLAYER_MAX];
     vsTime time[PLAYER_MAX];
-    uint8 finishFlags[PLAYER_MAX];
+    uint8 finishState[PLAYER_MAX];
     int32 totalRings[PLAYER_MAX];
     int32 wins[PLAYER_MAX];
     int32 lives[PLAYER_MAX];

@@ -85,7 +85,7 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
             if (camera) {
                 camera->position.x  = glider->position.x;
                 camera->position.y  = glider->position.y;
-                camera->offsetYFlag = true;
+                camera->disableYOffset = true;
                 camera->offset.y    = 0x200000;
             }
             else {

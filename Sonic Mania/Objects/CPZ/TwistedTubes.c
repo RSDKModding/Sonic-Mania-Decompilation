@@ -137,16 +137,16 @@ void TwistedTubes_State_HandleInteractions(void)
             }
 
             if (entered) {
-                player->state                       = Player_State_TransportTube;
-                player->drawOrder                   = 1;
-                player->interaction                 = false;
-                player->tileCollisions              = false;
-                player->onGround                    = false;
-                player->velocity.x                  = 0;
-                player->velocity.y                  = 0;
-                player->nextAirState                = StateMachine_None;
-                player->nextGroundState             = StateMachine_None;
-                TwistedTubes->playerFlags[playerID] = true;
+                player->state                        = Player_State_TransportTube;
+                player->drawOrder                    = 1;
+                player->interaction                  = false;
+                player->tileCollisions               = false;
+                player->onGround                     = false;
+                player->velocity.x                   = 0;
+                player->velocity.y                   = 0;
+                player->nextAirState                 = StateMachine_None;
+                player->nextGroundState              = StateMachine_None;
+                TwistedTubes->playerActive[playerID] = true;
                 RSDK.PlaySfx(TwistedTubes->sfxTravel, false, 255);
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->animator.speed = 240;
@@ -185,6 +185,8 @@ void TwistedTubes_State_FirstLoopR(void)
 {
     RSDK_THIS(TwistedTubes);
     EntityPlayer *player = self->playerPtr;
+    int32 playerID       = RSDK.GetEntityID(player);
+
     self->angle += 8;
     player->position.x = self->position.x + 0x3800 * RSDK.Cos256(self->angle);
     player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 12);
@@ -197,7 +199,7 @@ void TwistedTubes_State_FirstLoopR(void)
     }
 
     if (!Player_CheckValidState(player)) {
-        TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
+        TwistedTubes->playerActive[playerID] = false;
         destroyEntity(self);
     }
 }
@@ -206,6 +208,8 @@ void TwistedTubes_State_TubeLoops(void)
 {
     RSDK_THIS(TwistedTubes);
     EntityPlayer *player = self->playerPtr;
+    int32 playerID       = RSDK.GetEntityID(player);
+
     self->angle += 8;
     player->position.x = self->position.x - 0x3800 * RSDK.Cos256(self->angle);
     player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 9);
@@ -214,11 +218,11 @@ void TwistedTubes_State_TubeLoops(void)
 
     if (self->angle < 128) {
         if (self->angle >= 64 && self->direction == FLIP_X && self->height == 1) {
-            player->position.y                                  = self->position.y;
-            player->velocity.x                                  = 0xC0000;
-            player->velocity.y                                  = 0;
-            self->state                                         = TwistedTubes_State_ExitR;
-            TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
+            player->position.y                   = self->position.y;
+            player->velocity.x                   = 0xC0000;
+            player->velocity.y                   = 0;
+            self->state                          = TwistedTubes_State_ExitR;
+            TwistedTubes->playerActive[playerID] = false;
         }
     }
     else {
@@ -234,12 +238,12 @@ void TwistedTubes_State_TubeLoops(void)
                 self->state = TwistedTubes_State_ExitR;
             else
                 self->state = TwistedTubes_State_ExitL;
-            TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
+            TwistedTubes->playerActive[playerID] = false;
         }
     }
 
     if (!Player_CheckValidState(player)) {
-        TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
+        TwistedTubes->playerActive[playerID] = false;
         destroyEntity(self);
     }
 }
@@ -261,7 +265,7 @@ void TwistedTubes_State_FirstLoopL(void)
     }
 
     if (!Player_CheckValidState(player)) {
-        TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
+        TwistedTubes->playerActive[RSDK.GetEntityID(player)] = false;
         destroyEntity(self);
     }
 }

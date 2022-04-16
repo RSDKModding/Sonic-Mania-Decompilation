@@ -122,7 +122,7 @@ struct EntityIce {
     Animator contentsAnimator;
     Animator contentsAltAnimator;
     Animator glintAnimator;
-    Entity *playerPtr;
+    EntityPlayer *playerPtr;
     Vector2 playerMoveOffset;
     Vector2 contentsOffset;
     int32 destroyDelay;
@@ -150,13 +150,13 @@ void Ice_Serialize(void);
 // Extra Entity Functions
 void Ice_VSSwapCB(void);
 
-void Ice_FreezePlayer(void *p);
+void Ice_FreezePlayer(EntityPlayer *player);
 bool32 Ice_CheckPlayerBlockSmashH(void);
 bool32 Ice_CheckPlayerBlockSmashV(void);
 void Ice_State_FrozenPlayer(void);
-void Ice_ShatterGenerator(int32 xy, int32 count, int32 xr, int32 velX, int32 velY, int32 canBreak);
-void Ice_FullShatter(Entity *p, int32 velX, int32 velY);
-void Ice_BreakPlayerBlock(Entity *p);
+void Ice_ShatterGenerator(int32 count, int32 xr, int32 yr, int32 velX, int32 velY, int32 canBreak);
+void Ice_FullShatter(EntityPlayer *player, int32 velX, int32 velY);
+void Ice_BreakPlayerBlock(EntityPlayer *player);
 Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);
 void Ice_TimeOverCB(void);
 

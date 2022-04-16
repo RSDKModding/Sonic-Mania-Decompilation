@@ -47,10 +47,8 @@ void ParallaxSprite_Draw(void)
         RSDK.DrawRect(x, y, 112, 64, self->colour1, 255, INK_NONE, true);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
-            int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
-            if (val > 64)
-                val = 64;
-            RSDK.DrawRect(x, y - val + 64, 16, val, self->colour2, 255, INK_NONE, true);
+            int32 height = minVal((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
+            RSDK.DrawRect(x, y - height + 64, 16, height, self->colour2, 255, INK_NONE, true);
             x += 16;
         }
     }
@@ -256,10 +254,8 @@ void ParallaxSprite_EditorDraw(void)
         RSDK.DrawRect(x << 16, y << 16, 112 << 16, 64 << 16, self->colour1, 255, 0, false);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
-            int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
-            if (val > 64)
-                val = 64;
-            RSDK.DrawRect(x << 16, (y - val + 64) << 16, 16 << 16, val << 16, self->colour2, 255, 0, false);
+            int32 height = minVal((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
+            RSDK.DrawRect(x << 16, (y - height + 64) << 16, 16 << 16, height << 16, self->colour2, 255, 0, false);
             x += 16;
         }
     }

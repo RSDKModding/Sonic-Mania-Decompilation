@@ -19,11 +19,11 @@ void VanishPlatform_Update(void)
     }
 
     if (self->scale.x <= 336) {
-        self->stateCollide = Platform_CollisionState_None;
+        self->stateCollide = Platform_Collision_None;
         self->collision    = PLATFORM_C_SOLID_NONE;
     }
     else {
-        self->stateCollide = Platform_CollisionState_TopSolid;
+        self->stateCollide = Platform_Collision_TopSolid;
         self->collision    = PLATFORM_C_SOLID_TOP;
     }
     Platform_Update();

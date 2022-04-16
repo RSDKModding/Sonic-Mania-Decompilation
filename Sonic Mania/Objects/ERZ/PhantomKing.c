@@ -734,19 +734,19 @@ void PhantomKing_StateArm_PullBack(void)
 
     PhantomKing_HandleArmMovement();
 
-    uint8 flags = 0;
+    uint8 armFinished = 0;
 
-    if (self->armAngle >= 192)
-        flags = 1;
+    if (self->armAngle >= 0xC0)
+        armFinished = 1;
     else
         self->armAngle += 3;
 
-    if (self->armAngleOffset >= 96)
-        ++flags;
+    if (self->armAngleOffset >= 0x60)
+        ++armFinished;
     else
         self->armAngleOffset += 3;
 
-    if (flags == 2)
+    if (armFinished == 2)
         self->state = PhantomKing_StateArm_Point;
 }
 

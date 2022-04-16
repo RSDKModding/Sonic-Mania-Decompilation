@@ -59,14 +59,14 @@ void PhantomEgg_Create(void *data)
             RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 13, &self->rubyAnimator, true, 0);
             self->targetPos.x = self->position.x;
             self->targetPos.y = self->position.y;
-            self->state      = PhantomEgg_State_SetupArena;
+            self->state       = PhantomEgg_State_SetupArena;
         }
     }
 }
 
 void PhantomEgg_StageLoad(void)
 {
-    PhantomEgg->aniFrames         = RSDK.LoadSpriteAnimation("Phantom/PhantomEgg.bin", SCOPE_STAGE);
+    PhantomEgg->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomEgg.bin", SCOPE_STAGE);
 
     PhantomEgg->savedGameProgress = false;
 
@@ -83,7 +83,7 @@ void PhantomEgg_StageLoad(void)
     RSDK.CopyPalette(1, 128, 0, 128, 128);
     RSDK.CopyPalette(0, 0, 4, 0, 128);
 
-    PhantomEgg->superFlag     = false;
+    PhantomEgg->disableSuperForm = false;
 
     PhantomEgg->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
     PhantomEgg->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
@@ -164,12 +164,12 @@ void PhantomEgg_Hit(void)
 
     if (self->health <= 0) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 20, &self->eggmanAnimator, true, 0);
-        self->targetPos.x          = self->position.x;
-        self->targetPos.y          = self->position.y;
-        self->state               = PhantomEgg_State_Destroyed;
-        self->timer               = 0;
-        PhantomEgg->superFlag       = true;
-        SceneInfo->timeEnabled = false;
+        self->targetPos.x            = self->position.x;
+        self->targetPos.y            = self->position.y;
+        self->state                  = PhantomEgg_State_Destroyed;
+        self->timer                  = 0;
+        PhantomEgg->disableSuperForm = true;
+        SceneInfo->timeEnabled       = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
@@ -200,10 +200,10 @@ void PhantomEgg_HandleNextAttack(void)
     switch (self->attackStateTable[self->attackTimer]) {
         case PHANTOMEGG_ATTACK_JUMP:
             if (self->state != PhantomEgg_State_Attack_JumpLand) {
-                self->groundVel  = 0;
-                self->velocity.x = 0;
-                self->remainingJumps   = 3;
-                self->state      = PhantomEgg_State_Attack_Jumped;
+                self->groundVel      = 0;
+                self->velocity.x     = 0;
+                self->remainingJumps = 3;
+                self->state          = PhantomEgg_State_Attack_Jumped;
                 self->attackTimer++;
                 break;
             }
@@ -254,7 +254,7 @@ void PhantomEgg_SetupScanlineCB(void)
 
 void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
 {
-    int32 id                    = phantomID & 3;
+    int32 id                  = phantomID & 3;
     PhantomEgg->boundsStoreL1 = Zone->cameraBoundsL[0];
     PhantomEgg->boundsStoreR1 = Zone->cameraBoundsR[0];
     PhantomEgg->boundsStoreT1 = Zone->cameraBoundsT[0];
@@ -301,7 +301,7 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
     }
 
     if (phantomHeavy) {
-        int32 phantomSlot                = RSDK.GetEntityID(phantomHeavy);
+        int32 phantomSlot              = RSDK.GetEntityID(phantomHeavy);
         EntityPlatformNode *nodeTop    = RSDK_GET_ENTITY(phantomSlot + 1, PlatformNode);
         EntityPlatformNode *nodeBottom = RSDK_GET_ENTITY(phantomSlot + 2, PlatformNode);
         EntityPlatformNode *nodeLeft   = RSDK_GET_ENTITY(phantomSlot + 3, PlatformNode);
@@ -320,7 +320,7 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
             Zone->playerBoundsR[p] = nodeRight->position.x;
             Zone->playerBoundsT[p] = nodeTop->position.y;
             Zone->playerBoundsB[p] = nodeBottom->position.y;
-            Zone->deathBoundary[p]  = nodeBottom->position.y + 0x800000;
+            Zone->deathBoundary[p] = nodeBottom->position.y + 0x800000;
         }
 
         phantomHeavy->active = ACTIVE_NORMAL;
@@ -381,7 +381,7 @@ void PhantomEgg_HandleReturnWarp(void)
         Zone->playerBoundsR[p] = PhantomEgg->boundsStoreR1 << 16;
         Zone->playerBoundsT[p] = PhantomEgg->boundsStoreT1 << 16;
         Zone->playerBoundsB[p] = PhantomEgg->boundsStoreB1 << 16;
-        Zone->deathBoundary[p]  = Zone->playerBoundsB[p];
+        Zone->deathBoundary[p] = Zone->playerBoundsB[p];
     }
 
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -431,7 +431,7 @@ void PhantomEgg_Draw_Normal(void)
         RSDK.CopyPalette(3, 128, 0, 128, 16);
         RSDK.SetPaletteEntry(0, 128, 0xF0F0F0);
 
-        self->direction         = FLIP_NONE;
+        self->direction            = FLIP_NONE;
         self->coreAnimator.frameID = 1;
         RSDK.DrawSprite(&self->coreAnimator, NULL, false);
         RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
@@ -451,7 +451,7 @@ void PhantomEgg_Draw_Normal(void)
         RSDK.SetPaletteEntry(0, 128, 0x000000);
     }
     else {
-        self->direction         = FLIP_NONE;
+        self->direction            = FLIP_NONE;
         self->coreAnimator.frameID = 1;
         RSDK.DrawSprite(&self->coreAnimator, NULL, false);
         RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
@@ -472,7 +472,7 @@ void PhantomEgg_Draw_Cracked(void)
 {
     RSDK_THIS(PhantomEgg);
 
-    self->direction         = FLIP_NONE;
+    self->direction            = FLIP_NONE;
     self->coreAnimator.frameID = 1;
     RSDK.DrawSprite(&self->coreAnimator, NULL, false);
     RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
@@ -493,12 +493,12 @@ void PhantomEgg_State_SetupArena(void)
     RSDK_THIS(PhantomEgg);
 
     if (++self->timer >= 8) {
-        self->timer               = 0;
+        self->timer                 = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        Zone->cameraBoundsL[0]      = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]      = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]      = Zone->cameraBoundsB[0] - ScreenInfo->height;
         PhantomEgg->boundsL         = (Zone->cameraBoundsL[0] + 64) << 16;
         PhantomEgg->boundsR         = (Zone->cameraBoundsR[0] - 64) << 16;
         PhantomEgg->boundsM         = self->position.x;
@@ -637,7 +637,7 @@ void PhantomEgg_State_BeginFight(void)
     self->position.y = BadnikHelpers_Oscillate(self->targetPos.y, 3, 11);
 
     if (++self->timer == 30) {
-        self->timer               = 0;
+        self->timer            = 0;
         SceneInfo->timeEnabled = true;
         if (Player_GetNearestPlayerX()->position.x < self->position.x)
             self->velocity.x = -0x60000;
@@ -675,11 +675,11 @@ void PhantomEgg_State_MoveAround(void)
     }
 
     if (self->timer <= 0) {
-        self->timer    = RSDK.Rand(0x30, 0x60);
+        self->timer            = RSDK.Rand(0x30, 0x60);
         self->targetVelocity.x = self->targetPos.x + RSDK.Rand(-0x600000, 0x600000);
         self->targetVelocity.y = self->targetPos.y + RSDK.Rand(-0x200000, 0x200000);
 
-        int32 angle    = RSDK.ATan2((self->targetVelocity.x - self->targetPos.x) >> 16, (self->targetVelocity.y - self->targetPos.y) >> 16);
+        int32 angle            = RSDK.ATan2((self->targetVelocity.x - self->targetPos.x) >> 16, (self->targetVelocity.y - self->targetPos.y) >> 16);
         self->targetVelocity.x = RSDK.Cos256(angle) << 9;
         self->targetVelocity.y = RSDK.Sin256(angle) << 9;
         PhantomEgg_HandleNextAttack();
@@ -825,9 +825,9 @@ void PhantomEgg_State_Attack_CableShock(void)
 
         CREATE_ENTITY(PhantomShield, self, self->position.x, self->position.y);
         if (self->legAnimator.frameID > 0) {
-            self->legAnimator.frameID        = 6;
-            self->legAnimator.timer = 0;
-            self->state                    = PhantomEgg_State_Attack_JumpLand;
+            self->legAnimator.frameID = 6;
+            self->legAnimator.timer   = 0;
+            self->state               = PhantomEgg_State_Attack_JumpLand;
         }
         else {
             self->state = PhantomEgg_State_MoveAround;
@@ -1013,8 +1013,7 @@ void PhantomEgg_State_Destroyed(void)
         CREATE_ENTITY(TMZ2Outro, NULL, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 8, &self->legAnimator, true, 1);
 
-        for (int i = 0; i < 0x100; ++i)
-            RSDK.SetPaletteEntry(7, i, RSDK.GetPaletteEntry(1, i) & 0xFF0000);
+        for (int i = 0; i < 0x100; ++i) RSDK.SetPaletteEntry(7, i, RSDK.GetPaletteEntry(1, i) & 0xFF0000);
 
         self->state = PhantomEgg_State_Exploding;
     }
@@ -1113,15 +1112,15 @@ void PhantomEgg_State_CrackedExploding(void)
     RSDK_THIS(PhantomEgg);
 
     if (!(Zone->timer & 0xF)) {
-        int32 x                      = self->position.x + RSDK.Rand(-0x380000, -0x180000);
-        int32 y                      = self->position.y + RSDK.Rand(-0x300000, -0x100000);
+        int32 x                    = self->position.x + RSDK.Rand(-0x380000, -0x180000);
+        int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawOrder       = Zone->drawOrderHigh;
     }
 
     if ((Zone->timer & 0xF) == 8) {
-        int32 x                      = self->position.x + RSDK.Rand(0x180000, 0x380000);
-        int32 y                      = self->position.y + RSDK.Rand(-0x300000, -0x100000);
+        int32 x                    = self->position.x + RSDK.Rand(0x180000, 0x380000);
+        int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawOrder       = Zone->drawOrderHigh;
     }
@@ -1139,8 +1138,7 @@ void PhantomEgg_State_StartGoodEnd(void)
         if (Zone->timer & 8) {
             int32 x = self->position.x + RSDK.Rand(-0x800000, 0x800000);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom + 64) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder =
-                Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
         }
     }
 

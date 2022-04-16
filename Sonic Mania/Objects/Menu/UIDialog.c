@@ -188,14 +188,15 @@ void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(vo
 void UIDialog_Setup(EntityUIDialog *dialog)
 {
     if (dialog) {
-        bool32 flag = false;
+        bool32 foundControl = false;
+
         Vector2 size;
         size.x = ScreenInfo->width << 16;
         size.y = ScreenInfo->height << 16;
         foreach_all(UIControl, control)
         {
             if (control->active == ACTIVE_ALWAYS) {
-                flag                        = true;
+                foundControl                        = true;
                 control->dialogHasFocus     = true;
                 UIDialog->controlStore      = control;
                 UIDialog->controlStateStore = control->state;
@@ -215,7 +216,7 @@ void UIDialog_Setup(EntityUIDialog *dialog)
         control->backPressCB         = UIDialog_HandleAutoClose;
         control->selectionDisabled = true;
         dialog->parent               = control;
-        if (!flag) {
+        if (!foundControl) {
             UIDialog->controlStore      = NULL;
             UIDialog->controlStateStore = StateMachine_None;
         }

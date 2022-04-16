@@ -46,7 +46,7 @@ struct ObjectPhantomEgg {
     uint16 sfxSummon;
     uint16 sfxMissile;
     uint16 aniFrames;
-    bool32 superFlag;
+    bool32 disableSuperForm;
 };
 
 // Entity Class

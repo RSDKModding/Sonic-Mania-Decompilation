@@ -139,19 +139,20 @@ void TimeAttackGate_HandleSpin(void)
                 foreach_break;
             }
 
-            int32 vel = 0;
+            int32 xVel = 0;
             if (player->onGround)
-                vel = player->groundVel;
+                xVel = player->groundVel;
             else
-                vel = player->velocity.x;
-            if (vel >> 15
+                xVel = player->velocity.x;
+            if (xVel >> 15
                 && MathHelpers_CheckPositionOverlap(player->position.x, player->position.y, self->playerPos.x, self->playerPos.y, self->position.x,
                                                     bottom, self->position.x, top)) {
-                int32 val = (vel >> 15) - 2;
-                if ((vel >> 15) >= 0)
-                    val = (vel >> 15) + 2;
-                if (abs(val) > abs(self->spinSpeed))
-                    self->spinSpeed = val;
+                int32 spinSpeed = (xVel >> 15) - 2;
+                if ((xVel >> 15) >= 0)
+                    spinSpeed = (xVel >> 15) + 2;
+
+                if (abs(spinSpeed) > abs(self->spinSpeed))
+                    self->spinSpeed = spinSpeed;
                 self->spinTimer = 0;
             }
         }

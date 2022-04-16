@@ -138,11 +138,11 @@ void UITransition_State_TransitionIn(void)
         offsets[1] = clampVal(remain - 4, 0, 8);
         offsets[2] = clampVal(remain - 8, 0, 8);
 
-        int32 val = 32 * offsets[0];
-        if (val > 0) {
-            if (val < 256) {
-                self->drawPos[0].x = -0xF000 * val + 0xF00000;
-                self->drawPos[0].y = 0xF000 * val - 0xF00000;
+        int32 percent = 32 * offsets[0];
+        if (percent > 0) {
+            if (percent < 256) {
+                self->drawPos[0].x = -0xF000 * percent + 0xF00000;
+                self->drawPos[0].y = 0xF000 * percent - 0xF00000;
             }
             else {
                 self->drawPos[0].x = 0;
@@ -154,11 +154,11 @@ void UITransition_State_TransitionIn(void)
             self->drawPos[0].y = -0xF00000;
         }
 
-        val = 32 * offsets[1];
-        if (val > 0) {
-            if (val < 256) {
-                self->drawPos[1].x = 0xF000 * val - 0xF00000;
-                self->drawPos[1].y = -0xF000 * val + 0xF00000;
+        percent = 32 * offsets[1];
+        if (percent > 0) {
+            if (percent < 256) {
+                self->drawPos[1].x = 0xF000 * percent - 0xF00000;
+                self->drawPos[1].y = -0xF000 * percent + 0xF00000;
             }
             else {
                 self->drawPos[1].x = 0;
@@ -170,11 +170,11 @@ void UITransition_State_TransitionIn(void)
             self->drawPos[1].y = 0xF00000;
         }
 
-        val = 32 * offsets[2];
-        if (val > 0) {
-            if (val < 256) {
-                self->drawPos[2].x = -0xF000 * val + 0xF00000;
-                self->drawPos[2].y = 0xF000 * val - 0xF00000;
+        percent = 32 * offsets[2];
+        if (percent > 0) {
+            if (percent < 256) {
+                self->drawPos[2].x = -0xF000 * percent + 0xF00000;
+                self->drawPos[2].y = 0xF000 * percent - 0xF00000;
             }
             else {
                 self->drawPos[2].x = 0;
@@ -216,11 +216,11 @@ void UITransition_State_TransitionOut(void)
             offsets[1] = clampVal(self->timer - 4, 0, 8);
             offsets[2] = clampVal(self->timer - 1, 0, 8);
 
-            int32 val = 32 * offsets[0];
-            if (val > 0) {
-                if (val < 256) {
-                    self->drawPos[0].x = -0xF000 * val;
-                    self->drawPos[0].y = 0xF000 * val;
+            int32 percent = 32 * offsets[0];
+            if (percent > 0) {
+                if (percent < 256) {
+                    self->drawPos[0].x = -0xF000 * percent;
+                    self->drawPos[0].y = 0xF000 * percent;
                 }
                 else {
                     self->drawPos[0].x = -0xF00000;
@@ -232,11 +232,11 @@ void UITransition_State_TransitionOut(void)
                 self->drawPos[0].y = 0;
             }
 
-            val = 32 * offsets[1];
-            if (val > 0) {
-                if (val < 256) {
-                    self->drawPos[1].x = 0xF000 * val;
-                    self->drawPos[1].y = -0xF000 * val;
+            percent = 32 * offsets[1];
+            if (percent > 0) {
+                if (percent < 256) {
+                    self->drawPos[1].x = 0xF000 * percent;
+                    self->drawPos[1].y = -0xF000 * percent;
                 }
                 else {
                     self->drawPos[1].x = 0xF00000;
@@ -248,10 +248,10 @@ void UITransition_State_TransitionOut(void)
                 self->drawPos[1].y = 0;
             }
 
-            val = 32 * offsets[2];
-            if (val > 0) {
-                if (val < 256) {
-                    self->drawPos[2].x = -0xF000 * val;
+            percent = 32 * offsets[2];
+            if (percent > 0) {
+                if (percent < 256) {
+                    self->drawPos[2].x = -0xF000 * percent;
                     self->drawPos[2].y = 0x1E0000 * offsets[2];
                 }
                 else {

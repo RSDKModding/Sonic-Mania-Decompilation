@@ -336,8 +336,8 @@ void Sol_State_ActiveFireball(void)
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgLow, spawnX >> 20, (spawnY - 0x10000) >> 20);
 
-        int32 flags = RSDK.GetTileFlags(tile, 0);
-        if (((flags == OOZ_TFLAGS_OILSTRIP || flags == OOZ_TFLAGS_OILSLIDE) && collided) || flags == OOZ_TFLAGS_OILPOOL) {
+        int32 tileFlags = RSDK.GetTileFlags(tile, 0);
+        if (((tileFlags == OOZ_TFLAGS_OILSTRIP || tileFlags == OOZ_TFLAGS_OILSLIDE) && collided) || tileFlags == OOZ_TFLAGS_OILPOOL) {
             self->position.x = spawnX - 0x40000;
             self->position.y = spawnY - 0x80000;
             self->rotation   = 0;
@@ -353,7 +353,7 @@ void Sol_State_ActiveFireball(void)
             sol->state    = Sol_State_FireballOilFlame;
             sol->xOffset = sol->position.x & 0xF00000;
 
-            if (flags == OOZ_TFLAGS_OILPOOL) {
+            if (tileFlags == OOZ_TFLAGS_OILPOOL) {
                 self->position.y = (self->position.y & 0xFFF00000) + 0x20000;
                 sol->position.y  = (sol->position.y & 0xFFF00000) + 0x20000;
                 sol->state       = Sol_State_OilFlame;
@@ -400,8 +400,8 @@ void Sol_State_FireballOilFlame(void)
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 20, (self->position.y + 0x70000) >> 20);
 
-        int32 flags = RSDK.GetTileFlags(tile, 0);
-        if (flags == OOZ_TFLAGS_NORMAL || flags == OOZ_TFLAGS_OILFALL) {
+        int32 tileFlags = RSDK.GetTileFlags(tile, 0);
+        if (tileFlags == OOZ_TFLAGS_NORMAL || tileFlags == OOZ_TFLAGS_OILFALL) {
             if (collided) {
                 RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &self->mainAnimator, true, 0);
                 self->state = Sol_State_FlameDissipate;

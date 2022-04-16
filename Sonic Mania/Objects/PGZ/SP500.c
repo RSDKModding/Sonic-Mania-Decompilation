@@ -439,9 +439,9 @@ void SP500_State_MoveToTarget(void)
 {
     RSDK_THIS(SP500);
 
-    uint8 flags = 0;
+    uint8 finishMasks = 0;
     if (self->position.x == self->targetPos.x) {
-        flags = 1;
+        finishMasks = 1;
     }
     else if (self->position.x >= self->targetPos.x) {
         self->position.x -= 0x80000;
@@ -455,7 +455,7 @@ void SP500_State_MoveToTarget(void)
     }
 
     if (self->position.y == self->targetPos.y) {
-        ++flags;
+        ++finishMasks;
     }
     else if (self->position.y >= self->targetPos.y) {
         self->position.y -= 0x80000;
@@ -468,7 +468,7 @@ void SP500_State_MoveToTarget(void)
             self->position.y = self->targetPos.y;
     }
 
-    if (flags == 2) {
+    if (finishMasks == 2) {
         if (self->storedEntity)
             self->state = StateMachine_None;
         else

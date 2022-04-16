@@ -212,7 +212,7 @@ bool32 UISlider_TouchCB(void)
 {
     RSDK_THIS(UISlider);
 
-    bool32 touchFlag = false;
+    bool32 touchPressed = false;
     if (TouchInfo->count) {
         if (!UISlider->activeEntity || UISlider->activeEntity == (Entity *)self) {
             int32 sizeX = self->touchPosSizeS.x >> 1;
@@ -229,25 +229,25 @@ bool32 UISlider_TouchCB(void)
                 }
 
                 if (self->isTouchSelected) {
-                    touchFlag              = true;
+                    touchPressed              = true;
                     UISlider->activeEntity = (Entity *)self;
 
                     self->sliderPosTouch = maxVal(x + sizeX - self->position.x - self->touchPosOffsetS.x, 0x70000);
                     if (self->touchPosSizeS.x - 0x70000 < self->sliderPosTouch)
                         self->sliderPosTouch = self->touchPosSizeS.x - 0x70000;
 
-                    int32 val = 16
+                    int32 sliderPos = 16
                                 * (minVal(((self->sliderPosTouch - 0x70000) >> 4 << 10) / (self->touchPosSizeS.x - 0xE0000) + 2, UISlider_MaxVal)
                                    & -(UISlider_Increment / 0x10));
-                    if (val != self->sliderPos) {
-                        self->sliderPos = val;
+                    if (sliderPos != self->sliderPos) {
+                        self->sliderPos = sliderPos;
                         StateMachine_Run(self->sliderChangedCB);
                     }
                 }
             }
 
-            self->touchPressed = touchFlag;
-            return touchFlag;
+            self->touchPressed = touchPressed;
+            return touchPressed;
         }
     }
     else {

@@ -30,9 +30,9 @@ struct EntityTuesday {
     uint8 invincibleTimer;
     uint8 health;
     Vector2 drawPos;
-    Entity *linkPtrs[8];
-    Entity *parent;
-    uint8 linkFlags;
+    EntityTuesday *linkNodes[8];
+    EntityTuesday *parent;
+    uint8 linkMask;
     uint8 nextShockFlags;
     uint8 shockFlags;
     uint8 shockType;

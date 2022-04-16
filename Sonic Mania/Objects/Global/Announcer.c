@@ -123,7 +123,7 @@ void Announcer_Draw_Countdown(void)
 
         int32 frame                       = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-        switch (session->characterFlags[SceneInfo->currentScreenID]) {
+        switch (session->playerID[SceneInfo->currentScreenID]) {
             default: 
             case ID_SONIC: frame = 0; break;
             case ID_TAILS: frame = 1; break;
@@ -169,16 +169,18 @@ void Announcer_State_Countdown(void)
                 RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 3);
             }
 
-            int32 val = 0;
+            int32 timer = 0;
             if (self->timer - 15 > 0)
-                val = (self->timer - 15) << 9;
-            self->alpha = 512 - val / 45;
+                timer = (self->timer - 15) << 9;
+            self->alpha = 0x200 - timer / 45;
+
             self->timer++;
         }
     }
     else {
         if (self->timer >= 45) {
             self->timer = 0;
+
             self->playerID--;
             if (!self->playerID) {
                 Announcer->finishedCountdown = true;
@@ -190,14 +192,17 @@ void Announcer_State_Countdown(void)
             if (!self->timer) {
                 switch (self->playerID) {
                     default: break;
+
                     case 1:
                         RSDK.PlaySfx(Announcer->sfxOne, false, 255);
                         RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 2);
                         break;
+
                     case 2:
                         RSDK.PlaySfx(Announcer->sfxTwo, false, 255);
                         RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 1);
                         break;
+
                     case 3:
                         RSDK.PlaySfx(Announcer->sfxThree, false, 255);
                         RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 0);
@@ -206,7 +211,7 @@ void Announcer_State_Countdown(void)
             }
             self->drawOffset.x = 0;
             self->drawOffset.y = 0;
-            self->alpha        = 512 - (self->timer << 9) / 45;
+            self->alpha        = 0x200 - (self->timer << 9) / 45;
             self->timer++;
         }
     }
@@ -236,17 +241,17 @@ void Announcer_State_Finished(void)
     else {
         self->visible = true;
         int32 t       = 16 * self->timer;
-        int32 val     = -0x10000 * ScreenInfo->width;
+        int32 xOffset     = -0x10000 * ScreenInfo->width;
         if (t > 0) {
             if (t < 256)
-                self->drawOffset.x = val + t * (-val >> 8);
+                self->drawOffset.x = xOffset + t * (-xOffset >> 8);
             else
                 self->drawOffset.x = 0;
             self->drawOffset.y = 0;
             ++self->timer;
         }
         else {
-            self->drawOffset.x = val;
+            self->drawOffset.x = xOffset;
             self->drawOffset.y = 0;
             ++self->timer;
         }

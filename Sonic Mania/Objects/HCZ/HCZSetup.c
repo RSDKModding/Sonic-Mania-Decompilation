@@ -210,7 +210,7 @@ void HCZSetup_StageLoad(void)
         Zone->stageFinishCallback = HCZSetup_StageFinishCB_Act2;
     }
     else if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-        Zone->forcePlayerOnScreenFlag = true;
+        Zone->forcePlayerOnScreen = true;
         Zone->stageFinishCallback     = HCZSetup_HandleActTransition;
     }
 

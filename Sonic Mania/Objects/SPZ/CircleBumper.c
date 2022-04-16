@@ -227,14 +227,15 @@ void CircleBumper_Move_Path(void)
 void CircleBumper_Move_Track(void)
 {
     RSDK_THIS(CircleBumper);
-    int32 val = Zone->timer << 7;
-    if (((val >> 16) & 1) == self->direction) {
-        self->originPos.x = self->position.x + (val * self->amplitude.x >> 6) - (self->amplitude.x << 15);
-        self->originPos.y = self->position.y + (val * self->amplitude.y >> 6) - (self->amplitude.y << 15);
+
+    int32 timer = Zone->timer << 7;
+    if (((timer >> 16) & 1) == self->direction) {
+        self->originPos.x = self->position.x + (timer * self->amplitude.x >> 6) - (self->amplitude.x << 15);
+        self->originPos.y = self->position.y + (timer * self->amplitude.y >> 6) - (self->amplitude.y << 15);
     }
     else {
-        self->originPos.x = self->position.x + (self->amplitude.x << 15) - (val * self->amplitude.x >> 6);
-        self->originPos.y = self->position.y + (self->amplitude.y << 15) - (val * self->amplitude.y >> 6);
+        self->originPos.x = self->position.x + (self->amplitude.x << 15) - (timer * self->amplitude.x >> 6);
+        self->originPos.y = self->position.y + (self->amplitude.y << 15) - (timer * self->amplitude.y >> 6);
     }
 }
 

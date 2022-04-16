@@ -7,15 +7,15 @@
 struct ObjectDASetup {
     RSDK_OBJECT
     bool32 initialized;
-    int32 flag;
+    int32 returnToMenu;
     int32 trackCount;
     int32 trackID;
     int32 activeTrack;
-    Entity *control;
-    Entity *labelA;
-    Entity *labelB;
-    Entity *fxFade;
-    Entity *trackList[64];
+    EntityUIControl *control;
+    EntityUIInfoLabel *trackSelLabel;
+    EntityUIInfoLabel *trackTitleLabel;
+    EntityFXFade *fxFade;
+    EntityMusic *trackList[64];
     uint16 sfxEmerald;
     uint16 sfxMedal;
     uint16 sfxSSExit;

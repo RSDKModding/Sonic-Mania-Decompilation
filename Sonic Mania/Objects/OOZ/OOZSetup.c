@@ -56,13 +56,13 @@ void OOZSetup_StaticUpdate(void)
                 RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
-            int32 flags = RSDK.GetTileFlags(tile, player->collisionPlane);
 
-            if (flags) {
-                if (player->shield == SHIELD_FIRE && player->superState != SUPERSTATE_SUPER && flags != OOZ_TFLAGS_OILFALL) {
+            int32 tileFlags = RSDK.GetTileFlags(tile, player->collisionPlane);
+            if (tileFlags != OOZ_TFLAGS_NORMAL) {
+                if (player->shield == SHIELD_FIRE && player->superState != SUPERSTATE_SUPER && tileFlags != OOZ_TFLAGS_OILFALL) {
                     int32 tx = (player->position.x & 0xFFF00000) + 0x70000;
                     int32 ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
-                    if (flags == OOZ_TFLAGS_OILPOOL) {
+                    if (tileFlags == OOZ_TFLAGS_OILPOOL) {
                         if (OOZSetup_StartFire(tx, (ty & 0xFFF00000) - 0xC0000, player->angle)) {
                             EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(true), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
                             sol->velocity.x = -0x40000;
@@ -90,7 +90,7 @@ void OOZSetup_StaticUpdate(void)
                     }
                 }
 
-                switch (flags) {
+                switch (tileFlags) {
                     case OOZ_TFLAGS_NORMAL:
                     default: OOZSetup->activePlayers &= ~(1 << playerID); break;
 
@@ -503,7 +503,7 @@ void OOZSetup_PlayerState_OilSlide(void)
     }
     else {
         if (self->camera)
-            self->camera->offsetYFlag = false;
+            self->camera->disableYOffset = false;
         self->jumpAbilityState = 0;
         if (self->angle) {
             if (self->angle <= 128) {
@@ -572,7 +572,7 @@ void OOZSetup_PlayerState_OilFall(void)
     Player_HandleGroundMovement();
 
     if (self->camera)
-        self->camera->offsetYFlag = false;
+        self->camera->disableYOffset = false;
     self->jumpAbilityState = 0;
     self->nextAirState     = Player_State_Air;
     if (self->jumpPress) {

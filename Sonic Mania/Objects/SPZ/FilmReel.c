@@ -43,6 +43,7 @@ void FilmReel_Update(void)
                 }
             }
             break;
+
         case 1:
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->endPos.x) {
@@ -66,6 +67,7 @@ void FilmReel_Update(void)
                 }
             }
             break;
+
         case 2:
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->endPos.x) {
@@ -89,6 +91,7 @@ void FilmReel_Update(void)
                 }
             }
             break;
+
         case 3:
             if (self->drawPos.x != self->endPos.x) {
                 if (self->lastPos.x <= self->drawPos.x) {
@@ -112,6 +115,7 @@ void FilmReel_Update(void)
                 }
             }
             break;
+
         default: break;
     }
 
@@ -266,16 +270,17 @@ void FilmReel_SpinLeft(void)
             if (!player->sidekick) {
                 if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 
-                    bool32 flag = true;
+                    bool32 controllingMovement = true;
                     switch (self->pathFlags) {
                         case 0:
                             if (player->collisionMode || (!player->left && !player->right && player->state != Player_State_Roll)) {
-                                flag = false;
+                                controllingMovement = false;
                             }
 
-                            if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && flag) {
+                            if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && controllingMovement) {
                                 if (player->groundVel < -0x60000)
                                     player->groundVel = -0x60000;
+
                                 if (player->direction == FLIP_X) {
                                     player->position.x = self->position.x;
                                     self->spinSpeed -= player->groundVel;
@@ -287,6 +292,7 @@ void FilmReel_SpinLeft(void)
                                     player->groundVel = -0x60000;
                             }
                             break;
+
                         case 1:
                             if (!player->collisionMode && (player->left || player->right || player->state == Player_State_Roll)
                                 && player->direction == FLIP_X) {
@@ -297,6 +303,7 @@ void FilmReel_SpinLeft(void)
                                 }
                             }
                             break;
+
                         case 2:
                             if (abs(player->position.x - self->position.x) >= 2 * abs(player->groundVel) || player->collisionMode
                                 || player->position.x <= self->position.x) {
@@ -319,10 +326,8 @@ void FilmReel_SpinLeft(void)
                     player->position.x += self->moveOffset.x;
                     player->position.y += self->moveOffset.y;
                 }
-                else {
-                    if (player->camera && self->moveCamera) {
-                        player->camera->state = Camera_State_Follow;
-                    }
+                else if (player->camera && self->moveCamera) {
+                    player->camera->state = Camera_State_Follow;
                 }
             }
         }
@@ -342,16 +347,17 @@ void FilmReel_SpinRight(void)
             if (!player->sidekick) {
                 if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 
-                    bool32 flag = true;
+                    bool32 controllingMovement = true;
                     switch (self->pathFlags) {
                         case 0:
                             if (player->collisionMode || (!player->left && !player->right && player->state != Player_State_Roll)) {
-                                flag = false;
+                                controllingMovement = false;
                             }
 
-                            if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && flag) {
+                            if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && controllingMovement) {
                                 if (player->groundVel > 0x60000)
                                     player->groundVel = 0x60000;
+
                                 if (player->direction == FLIP_NONE) {
                                     player->position.x = self->position.x;
                                     self->spinSpeed += player->groundVel;
@@ -363,19 +369,21 @@ void FilmReel_SpinRight(void)
                                     player->groundVel = 0x60000;
                             }
                             break;
+
                         case 1:
                             if (player->collisionMode || (!player->left && !player->right && player->state != Player_State_Roll)
                                 || player->direction) {
-                                flag = false;
+                                controllingMovement = false;
                             }
 
-                            if (flag) {
+                            if (controllingMovement) {
                                 if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && player->groundVel > 0) {
                                     player->position.x = self->position.x;
                                 }
                                 self->spinSpeed += player->groundVel;
                             }
                             break;
+
                         case 2:
                             if (abs(player->position.x - self->position.x) >= 2 * abs(player->groundVel) || player->collisionMode
                                 || player->position.x >= self->position.x) {
@@ -396,10 +404,8 @@ void FilmReel_SpinRight(void)
                         player->camera->position.y += self->moveOffset.y + ((self->position.y - player->camera->position.y - 0x200000) >> 3);
                     }
                 }
-                else {
-                    if (player->camera && self->moveCamera) {
-                        player->camera->state = Camera_State_Follow;
-                    }
+                else if (player->camera && self->moveCamera) {
+                    player->camera->state = Camera_State_Follow;
                 }
             }
         }

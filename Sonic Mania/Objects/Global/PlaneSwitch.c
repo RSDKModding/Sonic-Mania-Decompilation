@@ -91,18 +91,18 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, 
 
         if (xDif < 0x180000 && yDif < size << 19) {
             if (scanX + pos >= self->position.x) {
-                other->collisionPlane = (flags >> 3) & 1;
+                other->collisionPlane = (flags >> 3) & 1; // collision plane bit
                 if (switchDrawOrder) {
-                    if (!(flags & 4))
+                    if (!(flags & 4)) // priority bit
                         other->drawOrder = low;
                     else
                         other->drawOrder = high;
                 }
             }
             else {
-                other->collisionPlane = (flags >> 1) & 1;
+                other->collisionPlane = (flags >> 1) & 1; // collision plane bit
                 if (switchDrawOrder) {
-                    if (!(flags & 1))
+                    if (!(flags & 1)) // priority bit
                         other->drawOrder = low;
                     else
                         other->drawOrder = high;

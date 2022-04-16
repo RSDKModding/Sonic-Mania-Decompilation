@@ -1452,18 +1452,20 @@ void Gachapandora_StatePrize_AmyGrabbed(void)
     if (self->prevShakeFlags) {
         if (self->shakeTimer) {
             self->shakeTimer--;
-            uint8 flags = 0;
-            if (parent->left)
-                flags = 1;
-            if (parent->right)
-                flags |= 2;
 
-            if (flags) {
-                if (flags != 3 && flags != self->prevShakeFlags) {
-                    self->prevShakeFlags = flags;
+            uint8 shakeFlags = 0;
+            if (parent->left)
+                shakeFlags = 1;
+            if (parent->right)
+                shakeFlags |= 2;
+
+            if (shakeFlags) {
+                if (shakeFlags != 3 && shakeFlags != self->prevShakeFlags) {
+                    self->prevShakeFlags = shakeFlags;
                     if (++self->shakeCount >= 6) {
                         self->shakeCount = 0;
                         self->parent     = NULL;
+
                         if (parent->stateInput == Gachapandora_Player_StateInput_P1Grabbed)
                             parent->stateInput = Player_ProcessP1Input;
                         else if (parent->stateInput == Gachapandora_Player_StateInput_P2PlayerGrabbed)

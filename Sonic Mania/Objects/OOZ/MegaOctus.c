@@ -618,16 +618,16 @@ void MegaOctus_State_Finish(void)
     }
 
     if (++self->timer > 120) {
-        bool32 flag = true;
+        bool32 isFinished = true;
         foreach_active(MegaOctus, boss)
         {
             if (boss->type == MEGAOCTUS_ARM) {
-                flag = false;
+                isFinished = false;
                 foreach_break;
             }
         }
 
-        if (flag) {
+        if (isFinished) {
             Zone->cameraBoundsR[0] += WIDE_SCR_XSIZE;
             destroyEntity(self);
         }
@@ -1213,7 +1213,7 @@ void MegaOctus_StateArm_PullPlatformDown(void)
         parent->state      = MegaOctus_TilePlatformState_RiseOuttaOil;
         parent->velocity.y = 0x60000;
         if (parent->drawPos.y - self->tilePlatY > 0x480000)
-            parent->stateCollide = Platform_CollisionState_None;
+            parent->stateCollide = Platform_Collision_None;
 #else
         parent->drawPos.y += 0x60000;
         parent->centerPos.y += 0x60000;
@@ -1262,7 +1262,7 @@ void MegaOctus_StateArm_RisePlatformUp(void)
             self->timer = 0;
 
         if (parent->drawPos.y - self->tilePlatY < 0x480000)
-            parent->stateCollide = Platform_CollisionState_Tiles;
+            parent->stateCollide = Platform_Collision_Tiles;
     }
 #else
     parent->drawPos.y -= 0x8000;

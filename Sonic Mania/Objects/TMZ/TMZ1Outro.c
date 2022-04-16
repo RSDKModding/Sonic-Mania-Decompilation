@@ -101,17 +101,18 @@ bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host)
     RSDK_THIS(TMZ1Outro);
 
     if (host->timer >= 30) {
-        bool32 flag = true;
+        bool32 finishedMoving = true;
         foreach_active(Player, player)
         {
             if (abs(self->position.x - player->position.x) >= 0x100000) {
                 if (player->position.x > self->position.x) {
                     player->left = true;
-                    flag         = false;
+                    finishedMoving         = false;
                 }
+
                 if (player->position.x < self->position.x) {
                     player->right = true;
-                    flag          = false;
+                    finishedMoving          = false;
                 }
             }
             else {
@@ -126,10 +127,11 @@ bool32 TMZ1Outro_CutsceneAct1_HeadForEntrance(EntityCutsceneSeq *host)
             player->jumpHold  = true;
             if (player->animator.animationID == ANI_PUSH)
                 player->jumpPress = true;
+
             if (!player->onGround || player->velocity.x)
-                flag = false;
+                finishedMoving = false;
         }
-        return flag;
+        return finishedMoving;
     }
     return false;
 }
@@ -143,6 +145,7 @@ bool32 TMZ1Outro_CutsceneAct1_EnterMonarch(EntityCutsceneSeq *host)
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
     if (camera->offset.x > 0)
         camera->offset.x -= 0x10000;
+
     if (self->alpha == 320) {
         globals->suppressTitlecard = true;
         globals->suppressAutoMusic = true;

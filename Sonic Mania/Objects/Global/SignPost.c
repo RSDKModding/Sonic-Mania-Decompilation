@@ -328,9 +328,11 @@ void SignPost_CheckTouch(void)
                                 case ID_SONIC:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &self->facePlateAnimator, true, 0);
                                     break;
+
                                 case ID_TAILS:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &self->facePlateAnimator, true, 0);
                                     break;
+
                                 case ID_KNUCKLES:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &self->facePlateAnimator, true, 0);
                                     break;
@@ -338,6 +340,7 @@ void SignPost_CheckTouch(void)
                                 case ID_MIGHTY:
                                     RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &self->facePlateAnimator, true, 0);
                                     break;
+
                                 case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &self->facePlateAnimator, true, 0); break;
 #endif
                             }
@@ -350,7 +353,7 @@ void SignPost_CheckTouch(void)
                             Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, self->position.x, self->position.y);
                             manager                   = (EntityCompetition *)Competition->activeEntity;
                         }
-                        manager->playerFlags[player->playerID]       = true;
+                        manager->playerFinished[player->playerID]       = true;
                         session->rings[player->playerID]             = player->rings;
                         session->time[player->playerID].minutes      = SceneInfo->minutes;
                         session->time[player->playerID].seconds      = SceneInfo->seconds;

@@ -44,7 +44,7 @@ void TVFlyingBattery_EditorLoad(void);
 void TVFlyingBattery_Serialize(void);
 
 // Extra Entity Functions
-void TVFlyingBattery_DrawSection(Vector2 drawPos, bool32 flag);
+void TVFlyingBattery_DrawSection(Vector2 drawPos, bool32 flipBlades);
 void TVFlyingBattery_DrawSprites(void);
 
 #endif //!OBJ_TVFLYINGBATTERY_H

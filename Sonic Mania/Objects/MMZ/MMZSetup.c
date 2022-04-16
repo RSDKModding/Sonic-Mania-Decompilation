@@ -103,7 +103,7 @@ void MMZSetup_StageLoad(void)
     }
     else {
         if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
-            Zone->forcePlayerOnScreenFlag = true;
+            Zone->forcePlayerOnScreen = true;
             Zone->stageFinishCallback     = MMZSetup_StageFinishCB_Act1;
         }
         Zone->cameraBoundsB[0] = 5120;

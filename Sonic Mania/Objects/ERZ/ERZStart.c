@@ -687,50 +687,53 @@ void ERZStart_Player_HandleSuperDash(EntityPlayer *player)
 {
     RSDK_THIS(Player);
 
-    uint8 flags = 0;
+    uint8 moveDir = 0;
     if (player->up)
-        flags |= 1;
+        moveDir |= 1;
     if (player->down)
-        flags |= 2;
+        moveDir |= 2;
     if (player->left)
-        flags |= 4;
+        moveDir |= 4;
     if (player->right)
-        flags |= 8;
+        moveDir |= 8;
 
     int32 angle = 0;
-    switch (flags) {
+    switch (moveDir) {
         case 0:
             angle = 0;
             if (player->direction)
-                angle = 128;
+                angle = 0x80;
             break;
-        case 1: angle = 192; break;
-        case 2: angle = 64; break;
-        case 4: angle = 128; break;
-        case 5: angle = 160; break;
-        case 6: angle = 96; break;
-        case 8: angle = 0; break;
-        case 9: angle = 224; break;
-        case 10: angle = 32; break;
+        case 1: angle = 0xC0; break;
+        case 2: angle = 0x40; break;
+        case 4: angle = 0x80; break;
+        case 5: angle = 0xA0; break;
+        case 6: angle = 0x60; break;
+        case 8: angle = 0x00; break;
+        case 9: angle = 0xE0; break;
+        case 10: angle = 0x20; break;
         default: break;
     }
 
     player->rings -= 5;
     if (player->rings < 0)
         player->rings = 0;
+
     player->velocity.x = 0x1600 * RSDK.Cos256(angle);
     player->velocity.y = 0x1600 * RSDK.Sin256(angle);
-    RSDK.PlaySfx(ItemBox->sfxHyperRing, false, 255);
-    RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
+
+    RSDK.PlaySfx(ItemBox->sfxHyperRing, false, 0xFF);
+    RSDK.PlaySfx(Player->sfxPeelRelease, false, 0xFF);
     if (player->characterID == ID_KNUCKLES) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 6);
-        player->animator.rotationFlag = 1;
+        player->animator.rotationFlag = 1; // full rotation
     }
     else {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 0);
     }
     player->state            = ERZStart_State_PlayerSuperFly;
     player->abilityValues[0] = 60;
+
     if (FXFade) {
         EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;

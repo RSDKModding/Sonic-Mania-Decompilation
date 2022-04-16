@@ -408,13 +408,13 @@ void Water_State_Palette(void)
 
         Water->wakePosX[p] = 0;
 
-        bool32 loopFlag = true;
+        bool32 canEnterWater = true;
         if (!Player_CheckValidState(player) || player->state == Player_State_TransportTube) {
             if (player->state != Player_State_FlyIn)
-                loopFlag = false;
+                canEnterWater = false;
         }
 
-        if (loopFlag) {
+        if (canEnterWater) {
             EntityWater *childPtr = NULL;
             uint16 underwater     = 0;
             foreach_active(Water, water)
@@ -534,9 +534,9 @@ void Water_State_Palette(void)
                         ++player->drownTimer;
                         Water_SpawnBubble(player, p);
 
-                        bool32 alertFlag = true;
+                        bool32 playAlertSfx = true;
                         switch (player->drownTimer) {
-                            default: alertFlag = false; break;
+                            default: playAlertSfx = false; break;
                             case 960:
                             case 660:
                             case 360:
@@ -559,7 +559,8 @@ void Water_State_Palette(void)
                                 // trust me dude
                                 break;
                         }
-                        if (alertFlag) {
+
+                        if (playAlertSfx) {
                             if (
 #if RETRO_USE_PLUS
                                 globals->gameMode == MODE_ENCORE ||
@@ -690,9 +691,12 @@ void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut)
 void Water_State_Bubble(void)
 {
     RSDK_THIS(Water);
+
     EntityPlayer *player = (EntityPlayer *)self->childPtr;
+
     if (self->animator.animationID == 6 && self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
+
     if (player && player->state == Player_State_Bubble && self->animator.frameID < 3)
         self->bubbleX += 0x40000;
 
@@ -701,6 +705,7 @@ void Water_State_Bubble(void)
             self->bubbleX += self->velocity.x;
             self->velocity.x += self->speed;
         }
+
         Water_HandleBubbleMovement();
         if (self->tileCollisions) {
             if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, false)) {
@@ -741,25 +746,25 @@ void Water_State_Bubble(void)
                 if (Player_CheckValidState(player) || player->state == Player_State_FlyIn) {
                     if (player->shield != SHIELD_BUBBLE && player->underwater && !Water_GetPlayerBubble(player)
                         && player->position.x >= self->position.x - 0x100000 && player->position.x <= self->position.x + 0x100000) {
-                        bool32 flag = false;
+                        bool32 inWater = false;
                         if (player->animator.animationID == ANI_FAN) {
                             if (player->position.y >= self->position.y - 0x100000)
-                                flag = (player->position.y <= self->position.y + 0x100000);
+                                inWater = (player->position.y <= self->position.y + 0x100000);
                         }
                         else {
                             if (player->position.y > self->position.y)
-                                flag = (player->position.y <= self->position.y + 0x100000);
+                                inWater = (player->position.y <= self->position.y + 0x100000);
                         }
 
-                        if (flag) {
-                            bool32 flag2 = false;
+                        if (inWater) {
+                            bool32 inBubble = false;
                             if (!(self->bubbleFlags & 1) && player->sidekick) {
                                 self->bubbleFlags |= 1;
-                                flag2 = true;
+                                inBubble = true;
                             }
 
-                            if (!player->sidekick || flag2) {
-                                if (!flag2) {
+                            if (!player->sidekick || inBubble) {
+                                if (!inBubble) {
                                     self->state       = Water_State_ShrinkPlayerBubble;
                                     self->countdownID = 0;
                                     self->velocity.y  = 0;
@@ -771,22 +776,22 @@ void Water_State_Bubble(void)
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;
-                                    flag               = true;
+                                    bool32 canBreathe     = true;
 
                                     int32 anim = player->animator.animationID;
                                     if (player->characterID == ID_TAILS) {
-                                        flag = anim != ANI_FLY && anim != ANI_FLYTIRED && anim != ANI_FLYLIFT && anim != ANI_SWIM
+                                        canBreathe = anim != ANI_FLY && anim != ANI_FLYTIRED && anim != ANI_FLYLIFT && anim != ANI_SWIM
                                                && anim != ANI_SWIMLIFT;
                                     }
                                     else if (player->characterID == ID_KNUCKLES) {
-                                        flag = anim != ANI_DROPDASH && anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && anim != ANI_SWIM
+                                        canBreathe = anim != ANI_DROPDASH && anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && anim != ANI_SWIM
                                                && anim != ANI_SWIMTIRED && anim != ANI_SWIMLIFT;
                                     }
 
-                                    if (flag && (anim != ANI_FAN && anim != ANI_CLING)) {
+                                    if (canBreathe && (anim != ANI_FAN && anim != ANI_CLING)) {
                                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_BUBBLE, &player->animator, false, 0);
                                         if (!player->sidekick)
-                                            self->playerInBubble = 1;
+                                            self->playerInBubble = true;
                                     }
 
                                     if (player->state == Player_State_FlyCarried) {
@@ -799,9 +804,11 @@ void Water_State_Bubble(void)
                                     }
 #endif
                                 }
+
                                 player->drownTimer = 0;
                                 if (!player->sidekick)
                                     Music_EndQueuedTrack(TRACK_DROWNING, false);
+
                                 RSDK.PlaySfx(Water->sfxBreathe, false, 255);
                             }
                         }

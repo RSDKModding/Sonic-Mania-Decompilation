@@ -222,18 +222,19 @@ void HUD_Draw(void)
         RSDK.DrawSprite(&self->taAnimator4, &lifePos, true);
     }
 #endif
+
 #if RETRO_GAMEVER != VER_100
     else if (self->superButtonPos > -0x200000) {
         lifePos.y = 0x140000;
         lifePos.x = (ScreenInfo[SceneInfo->currentScreenID].width << 16) - self->superButtonPos;
         RSDK.DrawSprite(&self->superButtonAnimator1, &lifePos, true);
         lifePos.x -= 0x140000;
-        bool32 flag = true;
+        bool32 canSuper = true;
 #if RETRO_USE_PLUS
         if (Player->canSuperCB)
-            flag = Player->canSuperCB(true);
+            canSuper = Player->canSuperCB(true);
 #endif
-        if (player->state == Player_State_Air && player->jumpAbilityState == 1 && flag) {
+        if (player->state == Player_State_Air && player->jumpAbilityState == 1 && canSuper) {
             RSDK.DrawSprite(&self->superButtonAnimator2, &lifePos, true);
         }
         else {
@@ -514,13 +515,15 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value)
 #if RETRO_GAMEVER != VER_100
 void HUD_GetKeyFrame(Animator *animator, int32 buttonID)
 {
-    int32 val = UIButtonPrompt_GetGamepadType();
+    int32 gamepadType = UIButtonPrompt_GetGamepadType();
     if (API_GetConfirmButtonFlip && buttonID <= 1)
         buttonID ^= 1;
-    if (val != 1 && (val <= 8 || val > 12)) {
-        RSDK.SetSpriteAnimation(HUD->superButtonFrames, val, animator, true, buttonID);
+
+    // Gamepad
+    if (gamepadType != UIBUTTONPROMPT_KEYBOARD && (gamepadType < UIBUTTONPROMPT_KEYBOARD_FR || gamepadType > UIBUTTONPROMPT_KEYBOARD_SP)) {
+        RSDK.SetSpriteAnimation(HUD->superButtonFrames, gamepadType, animator, true, buttonID);
     }
-    else {
+    else { // Keyboard
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
         int32 id = RSDK.ControllerIDForInputID(player->controllerID);

@@ -888,9 +888,9 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
                 TimeAttackMenu->prevIsUser = !TimeAttackMenu->prevIsUser;
 
                 EntityUIButtonPrompt *prompt = TimeAttackMenu->topRankPrompt;
-                int32 val                    = -(TimeAttackMenu->prevIsUser != 0);
+                int32 id                    = -(TimeAttackMenu->prevIsUser != 0);
                 prompt->prevPrompt           = -1;
-                prompt->promptID             = (val + 15);
+                prompt->promptID             = (id + 15);
                 prompt->visible              = !TimeAttackMenu->isUser;
 
                 self->callback                = StateMachine_None;
@@ -902,9 +902,9 @@ void TimeAttackMenu_State_SetupLeaderboards(void)
         }
         case STATUS_OK: {
             EntityUIButtonPrompt *prompt = TimeAttackMenu->topRankPrompt;
-            int32 val                    = -(TimeAttackMenu->prevIsUser != false);
+            int32 id                    = -(TimeAttackMenu->prevIsUser != false);
             prompt->prevPrompt           = -1;
-            prompt->promptID             = val + 15;
+            prompt->promptID             = id + 15;
             prompt->visible              = TimeAttackMenu->isUser;
 
             EntityUIControl *leaderboardsControl = TimeAttackMenu->leaderboardsControl;
@@ -930,6 +930,7 @@ void TimeAttackMenu_SetupLeaderboardsCarousel(void *c)
         carousel->maxOffset = entryCount.y + entryCount.x;
     else
         carousel->maxOffset = carousel->minOffset + 5;
+
     if (TimeAttackMenu->prevIsUser && entryCount.y) {
         int32 userID = 0;
         for (; entryCount.x < entryCount.y; ++entryCount.x) {

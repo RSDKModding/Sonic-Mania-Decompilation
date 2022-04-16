@@ -77,7 +77,7 @@ void Piston_StageLoad(void)
 void Piston_Collide_Solid(void)
 {
     RSDK_THIS(Piston);
-    Platform_CollisionState_AllSolid();
+    Platform_Collision_AllSolid();
 #if RETRO_USE_PLUS
     for (int32 i = 0; i < Player->playerCount; ++i) {
         if (((1 << i) & self->stoodPlayers) != 0) {

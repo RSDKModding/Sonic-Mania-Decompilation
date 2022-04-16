@@ -64,9 +64,9 @@ void MathHelpers_LerpSin1024(Vector2 *pos, int32 percent, int32 startX, int32 st
         pos->y = endY;
     }
     else {
-        int32 val = (RSDK.Sin1024(percent + 0x300) >> 2) + 0x200;
-        pos->x    = startX + val * ((endX - startX) >> 8);
-        pos->y    = startY + val * ((endY - startY) >> 8);
+        int32 lerpPercent = (RSDK.Sin1024(percent + 0x300) >> 2) + 0x200;
+        pos->x    = startX + lerpPercent * ((endX - startX) >> 8);
+        pos->y    = startY + lerpPercent * ((endY - startY) >> 8);
     }
 }
 
@@ -81,9 +81,9 @@ void MathHelpers_Lerp2Sin1024(Vector2 *pos, int32 percent, int32 startX, int32 s
         pos->y = endY;
     }
     else {
-        int32 val = RSDK.Sin1024(percent) >> 2;
-        pos->x = startX + val * ((endX - startX) >> 8);
-        pos->y = startY + val * ((endY - startY) >> 8);
+        int32 lerpPercent = RSDK.Sin1024(percent) >> 2;
+        pos->x = startX + lerpPercent * ((endX - startX) >> 8);
+        pos->y = startY + lerpPercent * ((endY - startY) >> 8);
     }
 }
 
@@ -98,24 +98,26 @@ void MathHelpers_LerpSin512(Vector2 *pos, int32 percent, int32 startX, int32 sta
         pos->y = endY;
     }
     else {
-        int32 val = (RSDK.Sin512(percent + 0x180) >> 2) + 0x80;
-        pos->x    = startX + val * ((endX - startX) >> 8);
-        pos->y    = startY + val * ((endY - startY) >> 8);
+        int32 lerpPercent = (RSDK.Sin512(percent + 0x180) >> 2) + 0x80;
+        pos->x    = startX + lerpPercent * ((endX - startX) >> 8);
+        pos->y    = startY + lerpPercent * ((endY - startY) >> 8);
     }
 }
 
 Vector2 MathHelpers_GetBezierPoint(int32 percent, int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4)
 {
     int32 invPercent = 0x10000 - percent;
-    int32 p1         = invPercent * ((uint32)(invPercent * invPercent) >> 16) >> 16;
-    int32 p2         = percent * ((uint32)(invPercent * invPercent) >> 16) >> 16;
-    int32 p3         = invPercent * ((uint32)(percent * percent) >> 16) >> 16;
-    int32 p4         = percent * ((uint32)(percent * percent) >> 16) >> 16;
+    int32 point1     = invPercent * ((uint32)(invPercent * invPercent) >> 16) >> 16;
+    int32 point2     = percent * ((uint32)(invPercent * invPercent) >> 16) >> 16;
+    int32 point3     = invPercent * ((uint32)(percent * percent) >> 16) >> 16;
+    int32 point4     = percent * ((uint32)(percent * percent) >> 16) >> 16;
 
-    Vector2 result;
-    result.x = p4 * (x4 >> 16) + p3 * (x3 >> 16) + p2 * (x2 >> 16) + p1 * (x1 >> 16) + 2 * p2 * (x2 >> 16) + 2 * p3 * (x3 >> 16);
-    result.y = p4 * (y4 >> 16) + p3 * (y3 >> 16) + p2 * (y2 >> 16) + p1 * (y1 >> 16) + 2 * p2 * (y2 >> 16) + 2 * p3 * (y3 >> 16);
-    return result;
+    Vector2 resultPos;
+    resultPos.x =
+        point4 * (x4 >> 16) + point3 * (x3 >> 16) + point2 * (x2 >> 16) + point1 * (x1 >> 16) + 2 * point2 * (x2 >> 16) + 2 * point3 * (x3 >> 16);
+    resultPos.y =
+        point4 * (y4 >> 16) + point3 * (y3 >> 16) + point2 * (y2 >> 16) + point1 * (y1 >> 16) + 2 * point2 * (y2 >> 16) + 2 * point3 * (y3 >> 16);
+    return resultPos;
 }
 
 int32 MathHelpers_SquareRoot(uint32 num)

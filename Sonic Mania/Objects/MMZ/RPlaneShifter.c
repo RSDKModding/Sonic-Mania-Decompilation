@@ -216,11 +216,11 @@ void RPlaneShifter_State_Spinning(void)
     RSDK_THIS(RPlaneShifter);
 
     if (abs(self->spinAngle >> 16) < 128) {
-        bool32 flag = true;
+        uint8 updateSpinSpeed = 1;
         if (self->rotateDir && self->spinAngle >> 16 > -65)
-            flag = false;
+            updateSpinSpeed = 0;
         else if (!self->rotateDir && self->spinAngle >> 16 < 65)
-            flag = false;
+            updateSpinSpeed = 0;
 
         int32 speed = 0;
         if (!self->rotateDir)
@@ -228,21 +228,22 @@ void RPlaneShifter_State_Spinning(void)
         else
             speed = -0x3800;
 
-        if (flag) {
+        if (updateSpinSpeed) {
             self->spinSpeed -= speed;
             if (self->rotateDir && self->spinSpeed > -0x3800) {
                 self->spinSpeed = speed;
-                flag            = 2;
+                updateSpinSpeed = 2;
             }
             else if (!self->rotateDir && self->spinSpeed < 0x3800) {
                 self->spinSpeed = speed;
-                flag            = 2;
+                updateSpinSpeed = 2;
             }
         }
         else {
             self->spinSpeed += speed;
         }
-        if (self->rotateDir && self->spinSpeed > -0x3800 && flag != 2) {
+
+        if (self->rotateDir && self->spinSpeed > -0x3800 && updateSpinSpeed != 2) {
             self->spinSpeed = speed;
         }
 

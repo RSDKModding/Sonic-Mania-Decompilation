@@ -15,7 +15,7 @@ struct ObjectTMZ2Outro {
     uint16 sfxDrop;
     uint16 sfxImpact;
     uint16 sfxRubyGet;
-    bool32 flag1;
+    bool32 finishedSaving;
     int32 playerID;
 };
 
@@ -38,8 +38,10 @@ void TMZ2Outro_StaticUpdate(void);
 void TMZ2Outro_Draw(void);
 void TMZ2Outro_Create(void* data);
 void TMZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TMZ2Outro_EditorDraw(void);
 void TMZ2Outro_EditorLoad(void);
+#endif
 void TMZ2Outro_Serialize(void);
 
 // Extra Entity Functions

@@ -41,6 +41,7 @@ void TMZ2Outro_StageLoad(void)
     TMZ2Outro->sfxDrop    = RSDK.GetSfx("Stage/Drop.wav");
     TMZ2Outro->sfxImpact  = RSDK.GetSfx("Stage/Impact2.wav");
     TMZ2Outro->sfxRubyGet = RSDK.GetSfx("TMZ3/RubyGet.wav");
+
     TMZ2Outro->playerID   = ID_NONE;
 }
 
@@ -88,7 +89,7 @@ bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host)
 
     foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
 
-    for (int i = 0; i < 0x100; ++i) {
+    for (int32 i = 0; i < 0x100; ++i) {
         colour clr = RSDK.GetPaletteEntry(1, i);
         RSDK.SetPaletteEntry(7, i, clr & 0xFF0000);
     }
@@ -98,7 +99,7 @@ bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host)
 
 bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
 {
-    bool32 flag = true;
+    bool32 finishedMoving = true;
     foreach_active(Player, player)
     {
         if (player->sidekick && player->characterID == ID_KNUCKLES && !checkPlayerID(ID_KNUCKLES, 1)) {
@@ -108,9 +109,9 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
             }
         }
         else {
-            int pos = PhantomEgg->boundsM + (player->playerID << 21);
-            if (player->position.x >= pos + 0x300000) {
-                if (player->position.x <= pos + 0x700000) {
+            int32 targetPos = PhantomEgg->boundsM + (player->playerID << 21);
+            if (player->position.x >= targetPos + 0x300000) {
+                if (player->position.x <= targetPos + 0x700000) {
                     player->left  = false;
                     player->right = false;
                     if (abs(player->groundVel) < 0x8000) {
@@ -132,18 +133,19 @@ bool32 TMZ2Outro_Cutscene_WatchEggman(EntityCutsceneSeq *host)
                 player->left  = false;
                 player->right = true;
             }
-            flag = false;
+            finishedMoving = false;
         }
     }
 
-    if (flag) {
+    if (finishedMoving) {
         foreach_active(Player, player2)
         {
             if (player2->sidekick && (player2->characterID != ID_KNUCKLES || checkPlayerID(ID_KNUCKLES, 2)))
                 player2->stateInput = Player_ProcessP2Input_AI;
         }
     }
-    return flag;
+
+    return finishedMoving;
 }
 
 void TMZ2Outro_PlayerStateInput_Escape(void)
@@ -166,17 +168,18 @@ void TMZ2Outro_PlayerStateInput_Escape(void)
 
 bool32 TMZ2Outro_Cutscene_EggmanFall(EntityCutsceneSeq *host)
 {
-    bool32 flag = false;
+    bool32 eggmanOnGround = false;
     foreach_active(Eggman, eggman)
     {
         if (eggman->onGround) {
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 8, &eggman->animator, true, 0);
             foreach_active(Player, player) { player->up = false; }
-            flag = true;
+            eggmanOnGround = true;
             foreach_break;
         }
     }
-    return flag;
+
+    return eggmanOnGround;
 }
 
 bool32 TMZ2Outro_Cutscene_StartAlert(EntityCutsceneSeq *host)
@@ -622,21 +625,21 @@ bool32 TMZ2Outro_Cutscene_FadeOut(EntityCutsceneSeq *host)
 }
 bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
 {
-    bool32 goodEndingFlag = false;
+    bool32 hasGoodEnding = false;
 #if RETRO_USE_PLUS
     if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
-        goodEndingFlag =
+        hasGoodEnding =
             (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
 
-    bool32 saveFlag = false;
-    if (!goodEndingFlag)
-        saveFlag = globals->saveSlotID != NO_SAVE_SLOT;
+    bool32 isSaveSlot = false;
+    if (!hasGoodEnding)
+        isSaveSlot = globals->saveSlotID != NO_SAVE_SLOT;
 
-    if (saveFlag) {
+    if (isSaveSlot) {
         if (!host->timer) {
             globals->playerID = TMZ2Outro->playerID;
-            TMZ2Outro->flag1  = false;
+            TMZ2Outro->finishedSaving  = false;
             SaveGame_SaveProgress();
             if (Zone_IsZoneLastAct())
                 GameProgress_MarkZoneCompleted(Zone_GetZoneID());
@@ -645,13 +648,13 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
             UIWaitSpinner_StartWait();
         }
 
-        if (!TMZ2Outro->flag1)
+        if (!TMZ2Outro->finishedSaving)
             return false;
         else
             UIWaitSpinner_FinishWait();
     }
 
-    if (goodEndingFlag) {
+    if (hasGoodEnding) {
         ++SceneInfo->listPos;
         RSDK.LoadScene();
         return true;
@@ -688,10 +691,12 @@ bool32 TMZ2Outro_Cutscene_FinishSequence(EntityCutsceneSeq *host)
     return false;
 }
 
-void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->flag1 = true; }
+void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->finishedSaving = true; }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZ2Outro_EditorDraw(void) {}
 
 void TMZ2Outro_EditorLoad(void) {}
+#endif
 
 void TMZ2Outro_Serialize(void) {}

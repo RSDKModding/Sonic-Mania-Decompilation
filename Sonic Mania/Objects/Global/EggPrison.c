@@ -213,16 +213,16 @@ void EggPrison_HandleMovement(void)
 {
     RSDK_THIS(EggPrison);
 
-    bool32 flag = false;
+    bool32 hitFloor = false;
     if (self->checkTileCollisions) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x300000, 0x900000, false)
             || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x300000, 0x900000, false)) {
             self->originY -= self->velocity.y;
-            flag = true;
+            hitFloor = true;
         }
     }
 
-    if (!flag) {
+    if (!hitFloor) {
         if (self->originY < (ScreenInfo->position.y + 64) << 16)
             self->originY += self->velocity.y;
     }
@@ -408,7 +408,7 @@ void EggPrison_State_SetupActClear(void)
     if (++self->timer == 60) {
         self->timer                 = 0;
         self->state                 = StateMachine_None;
-        Zone->forcePlayerOnScreenFlag = false;
+        Zone->forcePlayerOnScreen = false;
         Music_PlayTrack(TRACK_ACTCLEAR);
         RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, 0);
     }

@@ -87,7 +87,7 @@ struct EntityBSS_Setup {
     int32 globeSpeed;
     bool32 playerWasBumped;
     int32 globeSpeedInc;
-    bool32 bumperFlag;
+    bool32 disableBumpers;
     int32 globeTimer;
     int32 paletteLine;
     int32 offsetDir;

@@ -14,12 +14,12 @@ struct EntityGameProgress {
     uint8 medals[32];
     bool32 allGoldMedals;
     bool32 allSilverMedals;
-    bool32 zoneClearFlags[12];
+    bool32 zoneCleared[12];
     bool32 allZonesCleared;
-    bool32 emeraldFlags[7];
-    bool32 allEmeraldsFlag;
+    bool32 emeraldObtained[7];
+    bool32 allEmeraldsObtained;
     bool32 unreadNotifs[9];
-    bool32 specialClearFlags[7];
+    bool32 specialCleared[7];
     bool32 allSpecialCleared;
     bool32 unlockedEndingID;
     int32 goldMedalCount;

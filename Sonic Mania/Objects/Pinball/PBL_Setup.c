@@ -76,8 +76,8 @@ void PBL_Setup_StageLoad(void)
     PBL_Setup->sectorCount                                     = 0;
     PBL_Setup->score                                           = 0;
     PBL_Setup->score1UP                                        = 10000;
-    RSDK.GetSceneLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_TableLow_ScanlineCallback;
-    RSDK.GetSceneLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_TableHigh_ScanlineCallback;
+    RSDK.GetSceneLayer(PBL_Setup->tableLow)->scanlineCallback  = PBL_Setup_TableLow_ScanlineCB;
+    RSDK.GetSceneLayer(PBL_Setup->tableHigh)->scanlineCallback = PBL_Setup_TableHigh_ScanlineCB;
     RSDK.GetSceneLayer(1)->scanlineCallback                    = PBL_Setup_BG_ScanlineCallback;
     RSDK.SetDrawLayerProperties(1, false, PBL_Setup_DrawLayer_Callback);
     RSDK.SetDrawLayerProperties(3, false, PBL_Setup_DrawLayer_Callback);
@@ -92,7 +92,7 @@ void PBL_Setup_StageLoad(void)
     PBL_Setup->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
 }
 
-void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines)
+void PBL_Setup_TableLow_ScanlineCB(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
@@ -107,21 +107,21 @@ void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines)
         int32 divisor = negSin + (cosVal >> 8);
         if (!divisor)
             divisor = 1;
-        int32 mult            = camera->worldY / divisor;
+        int32 mult          = camera->worldY / divisor;
         scanlines->deform.x = -(cos * mult) >> 8;
         scanlines->deform.y = sin * mult >> 8;
 
-        int32 val = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal((abs(val) >> 12) - 27, 0, 7), i + 120, i + 121);
+        int32 pos = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal((abs(pos) >> 12) - 27, 0, 7), i + 120, i + 121);
 
-        scanlines->position.x = (sin * val - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
-        scanlines->position.y = (cos * val - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
+        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
 
         cosVal += negCos;
         scanlines++;
     }
 }
-void PBL_Setup_TableHigh_ScanlineCallback(ScanlineInfo *scanlines)
+void PBL_Setup_TableHigh_ScanlineCB(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
@@ -136,15 +136,15 @@ void PBL_Setup_TableHigh_ScanlineCallback(ScanlineInfo *scanlines)
         int32 divisor = negSin + (cosVal >> 8);
         if (!divisor)
             divisor = 1;
-        int32 mult            = (camera->worldY - 0x100000) / divisor;
+        int32 mult          = (camera->worldY - 0x100000) / divisor;
         scanlines->deform.x = -(cos * mult) >> 8;
         scanlines->deform.y = sin * mult >> 8;
 
-        int32 val = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
-        RSDK.SetActivePalette(clampVal((abs(val) >> 12) - 24, 0, 7), i + 120, i + 121);
+        int32 pos = (negCos * mult >> 8) - (negSin * (i * mult >> 8) >> 8);
+        RSDK.SetActivePalette(clampVal((abs(pos) >> 12) - 24, 0, 7), i + 120, i + 121);
 
-        scanlines->position.x = (sin * val - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
-        scanlines->position.y = (cos * val - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
+        scanlines->position.x = (sin * pos - ScreenInfo->centerX * scanlines->deform.x) + camera->position.x;
+        scanlines->position.y = (cos * pos - ScreenInfo->centerX * scanlines->deform.y) + camera->position.y;
 
         cosVal += negCos;
         scanlines++;
@@ -162,12 +162,15 @@ void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines)
     int32 clr = 0;
     for (int32 i = 160; i > 40; --i) {
         x += 0xE000;
-        int32 val               = x / (8 * i);
-        scanlines->deform.x   = -(cos * val) >> 7;
-        scanlines->deform.y   = sin * val >> 7;
-        scanlines->position.x = timer + sin * val - centerX * scanlines->deform.x;
-        scanlines->position.y = timer + cos * val - centerX * (sin * val >> 7);
-        RSDK.SetActivePalette(clampVal((abs(val) >> 11) - 16, 0, 7), clr, clr + 1);
+        int32 id             = x / (8 * i);
+
+        scanlines->deform.x   = -(cos * id) >> 7;
+        scanlines->deform.y   = sin * id >> 7;
+        scanlines->position.x = timer + sin * id - centerX * scanlines->deform.x;
+        scanlines->position.y = timer + cos * id - centerX * (sin * id >> 7);
+
+        RSDK.SetActivePalette(clampVal((abs(id) >> 11) - 16, 0, 7), clr, clr + 1);
+        
         scanlines++;
         ++clr;
     }
@@ -187,7 +190,7 @@ void PBL_Setup_ExitPinball(void)
     setup->colour          = 0;
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
-    int32 oldScore             = globals->restartScore;
+    int32 oldScore           = globals->restartScore;
     globals->restartScore += PBL_Setup->score;
     if (globals->restartScore > 9999999 || globals->restartScore < oldScore) {
         globals->restartScore = 9999999;
@@ -233,9 +236,9 @@ void PBL_Setup_State_FadeIn(void)
 {
     RSDK_THIS(PBL_Setup);
     if (self->timer <= 0) {
-        self->timer               = 0;
-        self->visible             = false;
-        self->state               = PBL_Setup_State_ManageStageExit;
+        self->timer            = 0;
+        self->visible          = false;
+        self->state            = PBL_Setup_State_ManageStageExit;
         SceneInfo->timeEnabled = true;
     }
     else {
@@ -262,8 +265,8 @@ void PBL_Setup_SaveAndChangeScene(void)
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         if (saveRAM) {
             saveRAM->characterFlags = globals->characterFlags;
-            saveRAM->stock = globals->stock;
-            saveRAM->playerID= globals->playerID;
+            saveRAM->stock          = globals->stock;
+            saveRAM->playerID       = globals->playerID;
             if (globals->gameMode == MODE_ENCORE)
                 RSDK.SetScene("Encore Mode", "");
             else

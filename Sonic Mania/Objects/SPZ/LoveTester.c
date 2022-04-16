@@ -231,7 +231,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
                         self->playerPtr = player;
                         if (player->camera) {
                             player->camera->targetPtr   = (Entity *)self;
-                            player->camera->offsetYFlag = false;
+                            player->camera->disableYOffset = false;
                         }
                     }
                 }
@@ -252,7 +252,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
                     if (player->camera) {
                         if (self->playerPtr == player) {
                             player->camera->targetPtr   = (Entity *)player;
-                            player->camera->offsetYFlag = true;
+                            player->camera->disableYOffset = true;
                         }
                     }
                 }
@@ -354,10 +354,11 @@ void LoveTester_State_SetupMatching(void)
     LoveTester_CheckPlayerCollisions2(true);
 
     if (self->timer < 168) {
-        int32 val                  = self->timer & 0x80000003;
-        bool32 shouldChangeDisplay = !val;
-        if (val < 0)
-            shouldChangeDisplay = ((val - 1) | 0xFFFFFFFC) == -1;
+        int32 timer = self->timer & 0b10000000000000000000000000000011;
+
+        bool32 shouldChangeDisplay = !timer;
+        if (timer < 0)
+            shouldChangeDisplay = ((timer - 1) | 0xFFFFFFFC) == -1;
 
         if (shouldChangeDisplay) {
             int32 displayBottom = self->tvDisplayBottom;

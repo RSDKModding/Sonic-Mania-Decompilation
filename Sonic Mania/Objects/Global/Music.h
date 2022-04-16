@@ -65,7 +65,7 @@ struct EntityMusic {
     int32 trackID;
     uint32 trackLoop;
     bool32 playOnLoad;
-    int32 restartTrackFlag;
+    bool32 restartTrack;
     int32 timer;
     int32 trackPriority;
     int32 trackStartPos;

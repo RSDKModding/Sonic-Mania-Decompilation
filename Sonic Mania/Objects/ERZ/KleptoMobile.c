@@ -122,7 +122,7 @@ void KleptoMobile_HandleAnimations(void)
 {
     RSDK_THIS(KleptoMobile);
 
-    bool32 flag = false;
+    bool32 laughing = false;
     RSDK.ProcessAnimation(&self->eggmanAnimator);
 
     if (self->invincibilityTimer > 0)
@@ -132,20 +132,20 @@ void KleptoMobile_HandleAnimations(void)
         foreach_active(Player, player)
         {
             if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == ERZStart_State_PlayerRebound)
-                flag = true;
+                laughing = true;
         }
-        if (flag == true)
+        if (laughing)
             RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 14, &self->eggmanAnimator, true, 0);
     }
     else if (self->eggmanAnimator.animationID == 14) {
         foreach_active(Player, player)
         {
             if (player->state == Player_State_Hit || player->state == Player_State_Die || player->state == ERZStart_State_PlayerRebound)
-                flag = true;
+                laughing = true;
         }
 
         if (self->eggmanAnimator.frameID >= 14) {
-            if (flag)
+            if (laughing)
                 RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 14, &self->eggmanAnimator, true, 7);
             else
                 RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 13, &self->eggmanAnimator, true, 0);

@@ -439,7 +439,7 @@ void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx);
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
 void Player_ChangeCharacter(EntityPlayer *entity, int32 character);
-bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags);
+bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks);
 void Player_BlendSuperSonicColours(int32 bankID);
 void Player_BlendSuperTailsColours(int32 bankID);
 void Player_BlendSuperKnuxColours(int32 bankID);

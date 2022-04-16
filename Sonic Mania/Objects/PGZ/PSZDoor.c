@@ -22,18 +22,22 @@ void PSZDoor_Update(void)
             offsetY = -0x10000;
             speed   = -self->speed;
             break;
+
         case PSZDOOR_ORIENATION_U:
             speed   = self->speed;
             offsetY = 0x10000;
             break;
+
         case PSZDOOR_ORIENATION_L:
             speed   = self->speed;
             offsetX = -0x10000;
             break;
+
         case PSZDOOR_ORIENATION_R:
             offsetX = 0x10000;
             speed   = -self->speed;
             break;
+
         default: break;
     }
 
@@ -60,7 +64,7 @@ void PSZDoor_Update(void)
     int32 posX = self->doorPos.x - startX;
     int32 posY = self->doorPos.y - startY;
 
-    bool32 flag = false;
+    bool32 autoOpen = false;
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionBox(player, &self->doorPos, &PSZDoor->hitboxes[self->doorAnimator.frameID]) == C_TOP) {
@@ -70,17 +74,17 @@ void PSZDoor_Update(void)
                 player->position.y += posY;
         }
 
-        if (self->automatic) {
+        if (self->automatic == 1) {
             if (self->orientation >= PSZDOOR_ORIENATION_L) {
                 if (player->position.y < self->position.y) {
                     if (abs(player->position.x - self->position.x) < 0x200000)
-                        flag = true;
+                        autoOpen = true;
                 }
             }
             else {
                 if (player->position.x < self->position.x) {
                     if (abs(player->position.y - self->position.y) < 0x200000)
-                        flag = true;
+                        autoOpen = true;
                 }
             }
         }
@@ -88,18 +92,18 @@ void PSZDoor_Update(void)
             if (self->orientation >= PSZDOOR_ORIENATION_L) {
                 if (player->position.y > self->position.y) {
                     if (abs(player->position.x - self->position.x) < 0x200000)
-                        flag = true;
+                        autoOpen = true;
                 }
             }
             else if (player->position.x > self->position.x) {
                 if (abs(player->position.y - self->position.y) < 0x200000)
-                    flag = true;
+                    autoOpen = true;
             }
         }
     }
 
     EntityDoorTrigger *trigger = self->trigger;
-    if (trigger && ((trigger->objectID == DoorTrigger->objectID && trigger->bulbAnimator.frameID == 1) || flag)) {
+    if (trigger && ((trigger->objectID == DoorTrigger->objectID && trigger->bulbAnimator.frameID == 1) || autoOpen)) {
         if (self->activeScreens)
             RSDK.PlaySfx(PSZDoor->sfxOpen, false, 255);
         self->startPos   = self->doorPos;

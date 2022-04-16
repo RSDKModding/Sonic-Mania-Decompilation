@@ -35,7 +35,7 @@ void Camera_LateUpdate(void)
             self->shakePos.y = -self->shakePos.y;
     }
 
-    if (!self->offsetYFlag) {
+    if (!self->disableYOffset) {
         self->offset.y = maxVal(self->offset.y - (self->offset.y >> 3), 0);
     }
 }

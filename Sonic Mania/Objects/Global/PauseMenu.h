@@ -15,7 +15,7 @@ struct ObjectPauseMenu {
 #if RETRO_USE_PLUS
     bool32 plusChanged;
 #endif
-    bool32 channelFlags[0x10];
+    bool32 activeChannels[0x10];
 #if RETRO_USE_PLUS
     uint16 tintLookupTable[0x10000];
 #endif
@@ -27,16 +27,16 @@ struct EntityPauseMenu {
     StateMachine(state);
     StateMachine(stateDraw);
     int32 timer;
-    int32 lookupAlpha;
+    int32 tintAlpha;
     Vector2 headerPos;
     Vector2 yellowTrianglePos;
-    Entity *manager;
+    EntityUIControl *manager;
     uint8 triggerPlayer;
     bool32 disableRestart;
     int32 buttonCount;
     uint8 buttonIDs[3];
     void (*buttonActions[3])(void);
-    Entity* buttonPtrs[3];
+    EntityUIButton* buttonPtrs[3];
     int32 paused;
     int32 fadeTimer;
     bool32 (*disconnectCheck)(void);
@@ -65,7 +65,7 @@ void PauseMenu_Serialize(void);
 
 // Helper Functions
 void PauseMenu_SetupMenu(void);
-void PauseMenu_SetupLookupTable(void);
+void PauseMenu_SetupTintTable(void);
 
 void PauseMenu_AddButton(uint8 id, void *action);
 void PauseMenu_ClearButtons(EntityPauseMenu *entity);
@@ -117,6 +117,6 @@ void PauseMenu_State_FadeToCB(void);
 void PauseMenu_DrawPauseQuads(void);
 void PauseMenu_Draw_Default(void);
 
-void PauseMenu_Draw_JustLookup(void);
+void PauseMenu_Draw_JustTint(void);
 
 #endif //!OBJ_PAUSEMENU_H

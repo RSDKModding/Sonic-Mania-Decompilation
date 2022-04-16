@@ -140,21 +140,25 @@ void Music_PlayQueuedTrack(uint8 trackID)
         case TRACK_SNEAKERS:
             Music_HandleMusicStack_Powerups(entity);
             entity->trackPriority    = TRACK_PRIORITY_SUPER;
-            entity->restartTrackFlag = true;
+            entity->restartTrack = true;
             break;
+
         case TRACK_DROWNING:
             entity->timer            = 960;
             entity->trackPriority    = TRACK_PRIORITY_DROWN;
-            entity->restartTrackFlag = true;
+            entity->restartTrack = true;
             break;
+
         case TRACK_SUPER:
             entity->trackPriority    = TRACK_PRIORITY_SUPER;
-            entity->restartTrackFlag = true;
+            entity->restartTrack = true;
             break;
+
         case TRACK_1UP:
             entity->timer         = 224;
             entity->trackPriority = TRACK_PRIORITY_1UP;
             break;
+
         default: break;
     }
 
@@ -252,21 +256,25 @@ void Music_PlayAutoMusicQueuedTrack(uint8 trackID)
         case TRACK_SNEAKERS:
             Music_HandleMusicStack_Powerups(entity);
             entity->trackPriority    = TRACK_PRIORITY_POWERUP;
-            entity->restartTrackFlag = true;
+            entity->restartTrack = true;
             break;
+
         case TRACK_DROWNING:
             entity->timer            = 960;
             entity->trackPriority    = TRACK_PRIORITY_DROWN;
-            entity->restartTrackFlag = true;
+            entity->restartTrack = true;
             break;
+
         case TRACK_SUPER:
             entity->trackPriority    = TRACK_PRIORITY_SUPER;
-            entity->restartTrackFlag = true;
+            entity->restartTrack = true;
             break;
+
         case TRACK_1UP:
             entity->timer         = 224;
             entity->trackPriority = TRACK_PRIORITY_1UP;
             break;
+
         default: break;
     }
 }
@@ -345,7 +353,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
                 }
             }
 
-            bool32 restartFlag = entity->restartTrackFlag;
+            bool32 restartTrack = entity->restartTrack;
             destroyEntity(entity);
             int32 priority = 0;
 
@@ -366,7 +374,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
                 }
                 else {
                     Music->activeTrack = trackPtr->trackID;
-                    if (restartFlag)
+                    if (restartTrack)
                         trackPtr->trackStartPos = 0;
                     Music->channelID = RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, trackPtr->trackStartPos,
                                                        Music->trackLoops[Music->activeTrack], true);
@@ -387,7 +395,7 @@ void Music_HandleMusicStackTrackRemoval(EntityMusic *entity)
             else if (Music->nextTrack > TRACK_NONE) { // next track is queued
                 Music->activeTrack = Music->nextTrack;
                 Music->nextTrack   = TRACK_NONE;
-                if (restartFlag)
+                if (restartTrack)
                     Music->trackStartPos = 0;
                 Music->channelID =
                     RSDK.PlayStream(Music->trackNames[Music->activeTrack], 0, Music->trackStartPos, Music->trackLoops[Music->activeTrack], true);

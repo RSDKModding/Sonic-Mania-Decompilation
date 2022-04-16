@@ -240,7 +240,7 @@ void BallHog_State_Bomb(void)
         }
         RSDK.ProcessAnimation(&self->animator);
 
-        bool32 flag = false;
+        bool32 shouldExplode = false;
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &BallHog->hitboxBomb)) {
@@ -248,7 +248,7 @@ void BallHog_State_Bomb(void)
                 if (!Player_CheckMightyUnspin(player, 0x100, 2, &player->uncurlTimer)) {
 #endif
                     Player_CheckHit(player, self);
-                    flag = true;
+                    shouldExplode = true;
                     foreach_break;
 #if RETRO_USE_PLUS
                 }
@@ -256,7 +256,7 @@ void BallHog_State_Bomb(void)
             }
         }
 
-        if (flag || !--self->timer) {
+        if (shouldExplode || !--self->timer) {
             RSDK.PlaySfx(BallHog->sfxExplosion, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             destroyEntity(self);

@@ -415,17 +415,18 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
 
 void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
 {
-    int32 flags = 0;
     RSDK_THIS(Ring);
+
+    int32 collisionSides = 0;
     int32 xVel = self->velocity.x;
     int32 yVel = self->velocity.y;
 
     if (Platform) {
-        foreach_active(Platform, platform) { flags |= 1 << Ring_CheckPlatformCollisions(platform); }
+        foreach_active(Platform, platform) { collisionSides |= 1 << Ring_CheckPlatformCollisions(platform); }
     }
 
     if (Crate) {
-        foreach_active(Crate, crate) { flags |= 1 << Ring_CheckPlatformCollisions((EntityPlatform *)crate); }
+        foreach_active(Crate, crate) { collisionSides |= 1 << Ring_CheckPlatformCollisions((EntityPlatform *)crate); }
     }
 
     if (Bridge) {
@@ -456,31 +457,32 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
                     bridgeHitbox.top    = (hitY >> 16);
                     bridgeHitbox.bottom = (hitY >> 16) + 8;
                 }
+
                 if (RSDK.CheckObjectCollisionTouchBox(bridge, &bridgeHitbox, self, &Ring->hitbox)) {
                     self->position.y = hitY + bridge->position.y - (Ring->hitbox.bottom << 16);
-                    flags |= 2;
+                    collisionSides |= 2;
                 }
             }
         }
     }
 
     if (Spikes) {
-        foreach_active(Spikes, spikes) { flags |= 1 << RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, self, &Ring->hitbox, true); }
+        foreach_active(Spikes, spikes) { collisionSides |= 1 << RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, self, &Ring->hitbox, true); }
     }
 
     if (Ice) {
-        foreach_active(Ice, ice) { flags |= 1 << RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &Ring->hitbox, true); }
+        foreach_active(Ice, ice) { collisionSides |= 1 << RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &Ring->hitbox, true); }
     }
 
     if (BigSqueeze) {
         foreach_active(BigSqueeze, bigSqueeze)
         {
             if (self->position.x < BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x200000)
-                flags |= 8;
+                collisionSides |= 8;
             if (self->position.x > BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x200000)
-                flags |= 4;
+                collisionSides |= 4;
             if (self->position.y > BigSqueeze->boundB - 0x80000)
-                flags |= 2;
+                collisionSides |= 2;
         }
     }
 
@@ -488,29 +490,29 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
         foreach_active(SpikeCorridor, corridor)
         {
             if (corridor->parent) {
-                flags |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[0], self, &Ring->hitbox, true));
-                flags |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[1], self, &Ring->hitbox, true));
-                flags |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[2], self, &Ring->hitbox, true));
-                flags |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[3], self, &Ring->hitbox, true));
+                collisionSides |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[0], self, &Ring->hitbox, true));
+                collisionSides |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[1], self, &Ring->hitbox, true));
+                collisionSides |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[2], self, &Ring->hitbox, true));
+                collisionSides |= (1 << RSDK.CheckObjectCollisionBox(corridor, &corridor->hitboxes[3], self, &Ring->hitbox, true));
             }
         }
     }
 
     if (xVel <= 0) {
-        if (!(flags & 8) && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, self->collisionPlane, -drawPosX, 0, true)) {
+        if (!(collisionSides & 8) && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, self->collisionPlane, -drawPosX, 0, true)) {
             self->velocity.x = -xVel;
         }
     }
-    else if (!(flags & 4) && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, self->collisionPlane, drawPosX, 0, true)) {
+    else if (!(collisionSides & 4) && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, self->collisionPlane, drawPosX, 0, true)) {
         self->velocity.x = -xVel;
     }
 
     if (yVel <= 0) {
-        if (flags & 0x10 || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, self->collisionPlane, 0, -drawPosY, true)) {
+        if (collisionSides & 0x10 || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, self->collisionPlane, 0, -drawPosY, true)) {
             self->velocity.y = -yVel;
         }
     }
-    else if (flags & 2 || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, drawPosY, true)) {
+    else if (collisionSides & 2 || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, drawPosY, true)) {
         self->velocity.y = (yVel >> 2) - yVel;
         if (self->velocity.y > -0x10000)
             self->velocity.y = -0x10000;
@@ -566,6 +568,7 @@ void Ring_State_Path(void)
     else if (self->drawPos.y > node->position.y) {
         self->drawPos.y = node->position.y;
     }
+
     Ring_Collect();
 
     self->animator.frameID = Zone->ringFrame;
@@ -583,6 +586,7 @@ void Ring_State_Track(void)
         self->drawPos.x = self->position.x + (self->amplitude.x << 15) - (timeVal * self->amplitude.x >> 6);
         self->drawPos.y = self->position.y + (self->amplitude.y << 15) - (timeVal * self->amplitude.y >> 6);
     }
+
     Ring_Collect();
 
     self->animator.frameID = Zone->ringFrame;
@@ -623,11 +627,13 @@ void Ring_State_Bounce(void)
 void Ring_State_Grow(void)
 {
     RSDK_THIS(Ring);
-    self->position.x += self->velocity.x;
+
     self->velocity.y += 0x1800;
+    self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
     RSDK.ProcessAnimation(&self->animator);
+
     self->scale.x += 16;
     self->scale.y += 16;
     if (++self->timer > 64)
@@ -636,9 +642,11 @@ void Ring_State_Grow(void)
 void Ring_State_Big(void)
 {
     RSDK_THIS(Ring);
-    self->position.x += self->velocity.x;
+
     self->velocity.y += 0x1200;
+    self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     self->angle += self->animator.speed >> 6;
     if (self->timer <= 0xF0) {
         self->scale.x = (-RSDK.Sin256(self->angle) >> 1) + 0x180;
@@ -682,8 +690,10 @@ void Ring_State_Big(void)
             self->animator.speed -= 8;
         }
     }
+
     if (self->timer > 71)
         Ring_Collect();
+
     if (self->timer > 0xFF)
         destroyEntity(self);
 }
@@ -729,12 +739,15 @@ void Ring_State_Attract(void)
         self->alpha                   = 0x100;
         self->inkEffect               = INK_ALPHA;
     }
+
     Ring_Collect();
+
     self->animator.frameID = Zone->ringFrame;
 }
 void Ring_State_Sparkle(void)
 {
     RSDK_THIS(Ring);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
@@ -754,18 +767,21 @@ void Ring_State_Sparkle(void)
 void Ring_Draw_Normal(void)
 {
     RSDK_THIS(Ring);
+
     self->direction = self->animator.frameID > 8;
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 void Ring_Draw_Oscillating(void)
 {
     RSDK_THIS(Ring);
+
     self->direction = self->animator.frameID > 8;
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 void Ring_Draw_Sparkle(void)
 {
     RSDK_THIS(Ring);
+
     if (self->alpha == 0xE0) {
         self->animator.frameID += 16;
         self->inkEffect = INK_ADD;

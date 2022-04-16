@@ -143,13 +143,12 @@ void GameOver_State_EnterLetters(void)
         }
         else {
             if (session->playerCount <= 0) {
-                bool32 playMusicFlag = false;
+                bool32 playMusic = false;
                 if (Zone->gotTimeOver)
-                    playMusicFlag = true;
+                    playMusic = true;
 
-                if (playMusicFlag) {
+                if (playMusic) 
                     Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
-                }
             }
             else {
                 EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
@@ -162,20 +161,19 @@ void GameOver_State_EnterLetters(void)
                         ++id;
                         ++deadPlayers;
                     }
-                    else if (manager && manager->playerFlags[i]) {
+                    else if (manager && manager->playerFinished[i]) {
                         ++deadPlayers;
                     }
                 }
 
-                bool32 playMusicFlag = true;
+                bool32 playMusic = true;
                 if (id < session->playerCount - 1 && deadPlayers != session->playerCount) {
                     if (!Zone->gotTimeOver)
-                        playMusicFlag = false;
+                        playMusic = false;
                 }
 
-                if (playMusicFlag) {
+                if (playMusic)
                     Music_TransitionTrack(TRACK_GAMEOVER, 0.025);
-                }
             }
         }
 #else
@@ -210,7 +208,7 @@ void GameOver_State_HandleMultiplayer(void)
             ++id;
             ++deadPlayers;
         }
-        else if (manager && manager->playerFlags[i]) {
+        else if (manager && manager->playerFinished[i]) {
             ++deadPlayers;
         }
     }
@@ -278,7 +276,7 @@ void GameOver_State_ExitLetters(void)
 
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
-            session->zoneFlags[session->levelIndex] = 1;
+            session->completedStages[session->stageIndex] = true;
 #if RETRO_USE_PLUS
             session->matchID = session->prevMatchID + 1;
 #else

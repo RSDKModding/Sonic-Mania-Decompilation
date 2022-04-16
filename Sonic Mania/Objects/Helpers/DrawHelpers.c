@@ -111,7 +111,7 @@ void DrawHelpers_DrawRectOutline(int32 x, int32 y, int32 sizeX, int32 sizeY, uin
     RSDK.DrawLine(drawPos.x + sizeX, drawPos.y - 0x10000, drawPos.x + sizeX, drawPos.y + sizeY, colour, 0, INK_NONE, false);
 }
 
-void DrawHelpers_DrawArenaBounds(int32 left, int32 top, int32 right, int32 bottom, uint8 flags, uint32 colour)
+void DrawHelpers_DrawArenaBounds(int32 left, int32 top, int32 right, int32 bottom, uint8 sideMasks, uint32 colour)
 {
     RSDK_THIS_GEN();
 
@@ -121,25 +121,25 @@ void DrawHelpers_DrawArenaBounds(int32 left, int32 top, int32 right, int32 botto
     bottom <<= 16;
 
     // left
-    if (flags & 1) {
+    if (sideMasks & 1) {
         RSDK.DrawLine(self->position.x + left, self->position.y + top, self->position.x + left, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 
     // top
-    if (flags & 2) {
+    if (sideMasks & 2) {
         RSDK.DrawLine(self->position.x + left, self->position.y + top, self->position.x + right, self->position.y + top, colour, 0, INK_NONE,
                       false);
     }
 
     // right
-    if (flags & 4) {
+    if (sideMasks & 4) {
         RSDK.DrawLine(self->position.x + right, self->position.y + top, self->position.x + right, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 
     // bottom
-    if (flags & 8) {
+    if (sideMasks & 8) {
         RSDK.DrawLine(self->position.x + left, self->position.y + bottom, self->position.x + right, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }

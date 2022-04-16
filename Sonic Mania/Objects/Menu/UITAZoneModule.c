@@ -573,17 +573,18 @@ void UITAZoneModule_DrawActInfo_Expanded(void)
     drawPos.x -= 0x630000;
     drawPos.y += 0x2E0000;
 
-    bool32 flag = true;
+    bool32 disableActID = true;
     if (!self->actID) {
         drawPos.x -= (offset << 16);
         drawPos.y -= (offset << 16);
         if (self->state == UITAZoneModule_State_StartTimeAttackAttempt && (self->timer & 2)) {
             drawPos.x += offset << 16;
             drawPos.y += offset << 16;
-            flag = false;
+            disableActID = false;
         }
     }
-    if (flag) {
+
+    if (disableActID) {
         if (self->zoneID != 7 || self->characterID == 3) {
             RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
             if (!self->actID) {
@@ -615,17 +616,18 @@ void UITAZoneModule_DrawActInfo_Expanded(void)
 
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 16, &self->textAnimator, true, 1);
 
-    flag = true;
+    disableActID = true;
     if (self->actID == 1) {
         drawPos.x -= (offset << 16);
         drawPos.y -= (offset << 16);
         if (self->state == UITAZoneModule_State_StartTimeAttackAttempt && (self->timer & 2)) {
             drawPos.x += offset << 16;
             drawPos.y += offset << 16;
-            flag = false;
+            disableActID = false;
         }
     }
-    if (flag) {
+
+    if (disableActID) {
         RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
         if (self->actID == 1) {
             drawPos.x += offset << 16;

@@ -155,7 +155,7 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY)
         popover->size.y      = sizeY;
         popover->size.x      = 0x800000;
         popover->position.y += -0x80000 - (sizeY >> 1);
-        popover->triangleFlag = 1;
+        popover->triangleMode = 1;
         popover->timer        = 0;
         popover->state        = UIPopover_State_Appear;
     }
@@ -170,11 +170,11 @@ void UIPopover_DrawSprites(void)
     RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y, 0x30A0F0,
                   255, INK_NONE, false);
 
-    if (self->triangleFlag == 1) {
+    if (self->triangleMode == 1) {
         int32 x = self->position.x + 0x30000;
         int32 y = (self->size.y >> 1) + self->position.y + 0x30000;
         UIWidgets_DrawEquilateralTriangle(x, y, 8, true, 0x00, 0x00, 0x00, INK_BLEND);
-        UIWidgets_DrawEquilateralTriangle(x - 0x30000, y - 0x30000, 8, self->triangleFlag, 0x30, 0xA0, 0xE0, INK_NONE);
+        UIWidgets_DrawEquilateralTriangle(x - 0x30000, y - 0x30000, 8, self->triangleMode, 0x30, 0xA0, 0xE0, INK_NONE);
     }
 }
 

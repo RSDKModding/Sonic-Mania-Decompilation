@@ -417,16 +417,17 @@ void ItemBox_CheckHit(void)
             }
             else {
                 int32 anim = player->animator.animationID;
-                bool32 flag =
+                bool32 attacking =
                     anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
-                    case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
-                    case ID_KNUCKLES: flag |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
+                    case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
+                    case ID_KNUCKLES: attacking |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
 #if RETRO_USE_PLUS
-                    case ID_MIGHTY: flag |= anim == ANI_DROPDASH || player->jumpAbilityState > 1; break;
+                    case ID_MIGHTY: attacking |= anim == ANI_DROPDASH || player->jumpAbilityState > 1; break;
 #endif
                 }
-                if (!flag) {
+
+                if (!attacking) {
                     self->position.x -= self->moveOffset.x;
                     self->position.y -= self->moveOffset.y;
                     int32 px           = player->position.x;
@@ -785,6 +786,7 @@ void ItemBox_GivePowerup(void)
                     case 7: self->type = ITEMBOX_RANDOM; break;
                     default: self->type = ITEMBOX_RING; break;
                 }
+
                 player = (EntityPlayer *)self->parent;
                 if ((uint32)self->type <= ITEMBOX_STOCK)
                     ItemBox_GivePowerup();
@@ -853,6 +855,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
                     case ITEMBOX_1UP_SONIC:
                         if (globals->gameMode == MODE_TIMEATTACK)
                             continue;
+
                         switch (player->characterID) {
                             case ID_SONIC: itemBox->type = ITEMBOX_1UP_SONIC; break;
                             case ID_TAILS: itemBox->type = ITEMBOX_1UP_TAILS; break;
@@ -866,6 +869,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
                         }
                         itemBox->contentsAnimator.frameID = itemBox->type;
                         break;
+
                     case ITEMBOX_1UP_TAILS:
                     case ITEMBOX_1UP_KNUX:
 #if RETRO_USE_PLUS
@@ -873,11 +877,13 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
                     case ITEMBOX_1UP_RAY:
 #endif
                         continue;
+
                     case ITEMBOX_SWAP:
                         if (globals->gameMode != MODE_COMPETITION)
                             continue;
                         itemBox->contentsAnimator.frameID = itemBox->type;
                         break;
+
                     default: itemBox->contentsAnimator.frameID = itemBox->type; break;
                 }
                 break;
@@ -990,8 +996,10 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
 }
 void ItemBox_HandleObjectCollisions(void)
 {
-    bool32 flag = false;
     RSDK_THIS(ItemBox);
+
+    bool32 platformCollided = false;
+
     if (Platform) {
 #if RETRO_USE_PLUS
         if (self->parent) {
@@ -1009,14 +1017,14 @@ void ItemBox_HandleObjectCollisions(void)
                 self->contentsPos.x += platform->collisionOffset.x;
                 self->contentsPos.y += platform->collisionOffset.y;
                 self->velocity.y = 0;
-                flag             = true;
+                platformCollided             = true;
             }
         }
         else {
             foreach_active(Platform, platform)
             {
                 if (ItemBox_HandlePlatformCollision(platform))
-                    flag = true;
+                    platformCollided = true;
             }
         }
     }
@@ -1026,7 +1034,7 @@ void ItemBox_HandleObjectCollisions(void)
         if (self->parent) {
             EntityTilePlatform *tilePlatform = (EntityTilePlatform *)self->parent;
             if (tilePlatform->objectID == TilePlatform->objectID) {
-                flag                = true;
+                platformCollided                = true;
                 tilePlatform->stood = true;
                 self->position.x    = self->scale.x + tilePlatform->drawPos.x;
                 self->position.y    = (self->scale.y + tilePlatform->drawPos.y) & 0xFFFF0000;
@@ -1070,16 +1078,18 @@ void ItemBox_HandleObjectCollisions(void)
             foreach_active(Crate, crate)
             {
                 if (!crate->ignoreItemBox && ItemBox_HandlePlatformCollision((EntityPlatform *)crate))
-                    flag = true;
+                    platformCollided = true;
             }
         }
     }
-    if (!flag)
+
+    if (!platformCollided)
 #if RETRO_USE_PLUS
         self->parent = NULL;
 #else
         self->groundVel = 0;
 #endif
+
     if (Ice) {
         foreach_active(Ice, ice)
         {
@@ -1105,6 +1115,7 @@ void ItemBox_HandleObjectCollisions(void)
             }
         }
     }
+
     foreach_active(Spikes, spikes)
     {
         int32 storeX = spikes->position.x;

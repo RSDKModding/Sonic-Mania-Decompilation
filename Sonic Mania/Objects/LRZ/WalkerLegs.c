@@ -303,9 +303,9 @@ void WalkerLegs_CheckTileCollisions(void)
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
-        uint8 flags = RSDK.GetTileFlags(tile, self->collisionPlane);
+        uint8 tileFlags = RSDK.GetTileFlags(tile, self->collisionPlane);
         // whats up here? why is it lava & conveyor??
-        if (flags == LRZ2_TFLAGS_LAVA || flags == LRZ2_TFLAGS_CONVEYOR_L) {
+        if (tileFlags == LRZ2_TFLAGS_LAVA || tileFlags == LRZ2_TFLAGS_CONVEYOR_L) {
             RSDK.PlaySfx(WalkerLegs->sfxWalkerLegs2, false, 0xFF);
             WalkerLegs_CreateDebris(self->activeLeg == 1, true);
         }
@@ -342,9 +342,9 @@ void WalkerLegs_CheckStoodLava(void)
         if (tile == (uint16)-1)
             tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x280000) >> 20);
 
-        uint8 flags = RSDK.GetTileFlags(tile, self->collisionPlane);
+        uint8 tileFlags = RSDK.GetTileFlags(tile, self->collisionPlane);
         // whats up here? why is it lava AND conveyor L only???
-        if ((flags == LRZ2_TFLAGS_LAVA || flags == LRZ2_TFLAGS_CONVEYOR_L) && y - otherY < 0x500000) {
+        if ((tileFlags == LRZ2_TFLAGS_LAVA || tileFlags == LRZ2_TFLAGS_CONVEYOR_L) && y - otherY < 0x500000) {
             self->finishedStep = true;
             y += 0x2800;
             WalkerLegs_CreateSmoke(l == 1);

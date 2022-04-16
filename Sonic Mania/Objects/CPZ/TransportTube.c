@@ -238,19 +238,15 @@ void TransportTube_State_ChooseDir(void)
             player->velocity.x = 0;
             player->velocity.y = 0;
 
-            uint8 flags = self->dirMask & ((player->up << 0) | (player->down << 1) | (player->left << 2) | (player->right << 3));
-            if (flags & 1) {
+            uint8 moveMask = self->dirMask & ((player->up << 0) | (player->down << 1) | (player->left << 2) | (player->right << 3));
+            if (moveMask & 1)
                 player->velocity.y = -0x100000;
-            }
-            else if (flags & 2) {
+            else if (moveMask & 2)
                 player->velocity.y = 0x100000;
-            }
-            else if (flags & 4) {
+            else if (moveMask & 4)
                 player->velocity.x = -0x100000;
-            }
-            else if (flags & 8) {
+            else if (moveMask & 8)
                 player->velocity.x = 0x100000;
-            }
 
             if (player->velocity.x || player->velocity.y) {
                 self->playerTimers[i] = 2;

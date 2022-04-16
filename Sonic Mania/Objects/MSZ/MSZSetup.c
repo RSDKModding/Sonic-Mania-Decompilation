@@ -224,7 +224,7 @@ void MSZSetup_StageLoad(void)
                         FXFade_StopAll();
 
                     if (PlayerHelpers_CheckAct1Regular()) {
-                        Zone->forcePlayerOnScreenFlag = true;
+                        Zone->forcePlayerOnScreen = true;
                         Zone->stageFinishCallback     = MSZSetup_StageFinishCB_K;
                     }
                 }
@@ -244,7 +244,7 @@ void MSZSetup_StageLoad(void)
                     FXFade_StopAll();
 
                 if (PlayerHelpers_CheckAct1Regular()) {
-                    Zone->forcePlayerOnScreenFlag = true;
+                    Zone->forcePlayerOnScreen = true;
                     Zone->stageFinishCallback     = MSZSetup_StageFinishCB_K;
                 }
             }

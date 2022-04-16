@@ -273,27 +273,27 @@ void UIButton_ProcessButtonCB_Scroll(void)
         else
             colID = 0;
 
-        bool32 flag = false;
+        bool32 changedSelection = false;
         if (control->rowCount > 1) {
             if (UIControl->keyUp) {
                 --rowID;
-                flag = true;
+                changedSelection = true;
             }
             if (UIControl->keyDown) {
                 ++rowID;
-                flag = true;
+                changedSelection = true;
             }
         }
         if (UIControl->keyLeft) {
             --colID;
-            flag = true;
+            changedSelection = true;
         }
         if (UIControl->keyRight) {
             ++colID;
-            flag = true;
+            changedSelection = true;
         }
 
-        if (flag) {
+        if (changedSelection) {
 #if RETRO_USE_PLUS
             if (control->noWrap) {
                 int32 rowCount = control->rowCount;
@@ -335,6 +335,7 @@ void UIButton_ProcessButtonCB_Scroll(void)
             int32 id = control->buttonCount - 1;
             if (colID + rowID * control->columnCount < id)
                 id = colID + rowID * control->columnCount;
+
             if (control->buttonID != id) {
                 control->buttonID = id;
                 StateMachine_Run(self->buttonLeaveCB);
@@ -748,20 +749,20 @@ void UIButton_State_HandleButtonLeave(void)
     RSDK_THIS(UIButton);
 
     if (self->textBounceOffset) {
-        int32 val = -(self->textBounceOffset / abs(self->textBounceOffset));
-        self->textBounceOffset += val << 16;
-        if (val < 0 && self->textBounceOffset < 0)
+        int32 offset = -(self->textBounceOffset / abs(self->textBounceOffset));
+        self->textBounceOffset += offset << 16;
+        if (offset < 0 && self->textBounceOffset < 0)
             self->textBounceOffset = 0;
-        else if (val > 0 && self->textBounceOffset > 0)
+        else if (offset > 0 && self->textBounceOffset > 0)
             self->textBounceOffset = 0;
     }
 
     if (self->buttonBounceOffset) {
-        int32 val = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
-        self->buttonBounceOffset += val << 16;
-        if (val < 0 && self->buttonBounceOffset < 0)
+        int32 offset = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
+        self->buttonBounceOffset += offset << 16;
+        if (offset < 0 && self->buttonBounceOffset < 0)
             self->buttonBounceOffset = 0;
-        else if (val > 0 && self->buttonBounceOffset > 0)
+        else if (offset > 0 && self->buttonBounceOffset > 0)
             self->buttonBounceOffset = 0;
     }
 }

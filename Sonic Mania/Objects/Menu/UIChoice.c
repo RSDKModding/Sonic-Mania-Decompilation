@@ -265,20 +265,20 @@ void UIChoice_State_HandleButtonLeave(void)
     RSDK_THIS(UIChoice);
 
     if (self->textBounceOffset) {
-        int32 val = -(self->textBounceOffset / abs(self->textBounceOffset));
-        self->textBounceOffset += val << 15;
-        if (val < 0 && self->textBounceOffset < 0) 
+        int32 offset = -(self->textBounceOffset / abs(self->textBounceOffset));
+        self->textBounceOffset += offset << 15;
+        if (offset < 0 && self->textBounceOffset < 0) 
             self->textBounceOffset = 0;
-        else if (val > 0 && self->textBounceOffset > 0) 
+        else if (offset > 0 && self->textBounceOffset > 0) 
             self->textBounceOffset = 0;
     }
 
     if (self->buttonBounceOffset) {
-        int32 val = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
-        self->buttonBounceOffset += val << 16;
-        if (val < 0 && self->buttonBounceOffset < 0) 
+        int32 offset = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
+        self->buttonBounceOffset += offset << 16;
+        if (offset < 0 && self->buttonBounceOffset < 0) 
             self->buttonBounceOffset = 0;
-        else if (val > 0 && self->buttonBounceOffset > 0) 
+        else if (offset > 0 && self->buttonBounceOffset > 0) 
             self->buttonBounceOffset = 0;
     }
 }

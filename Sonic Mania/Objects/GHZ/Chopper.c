@@ -45,10 +45,10 @@ void Chopper_StageLoad(void)
     if (RSDK.CheckStageFolder("GHZ"))
         Chopper->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
 
-    Chopper->hitboxJump.left    = -10;
-    Chopper->hitboxJump.top     = -20;
-    Chopper->hitboxJump.right   = 6;
-    Chopper->hitboxJump.bottom  = 20;
+    Chopper->hitboxJump.left   = -10;
+    Chopper->hitboxJump.top    = -20;
+    Chopper->hitboxJump.right  = 6;
+    Chopper->hitboxJump.bottom = 20;
 
     Chopper->hitboxSwim.left   = -20;
     Chopper->hitboxSwim.top    = -6;
@@ -169,19 +169,19 @@ void Chopper_State_Swim(void)
     RSDK_THIS(Chopper);
     self->position.x += self->velocity.x;
 
-    bool32 flag = false;
+    bool32 hitWall = false;
     if (self->direction) {
-        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
     }
     else {
-        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
     }
 
-    if (--self->timer <= 0 || flag) {
+    if (--self->timer <= 0 || hitWall) {
         self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
         self->timer      = 512;
@@ -231,19 +231,19 @@ void Chopper_State_Charge(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    bool32 flag = false;
+    bool32 hitWall = false;
     if (self->direction) {
-        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
     }
     else {
-        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
     }
 
-    if (flag) {
+    if (hitWall) {
         RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &self->animator, false, 0);
         self->timer      = 512;
         self->velocity.y = 0;
@@ -253,22 +253,22 @@ void Chopper_State_Charge(void)
             self->velocity.x = 0x4000;
         self->direction ^= FLIP_X;
         self->state = Chopper_State_Swim;
-        flag          = false;
+        hitWall     = false;
     }
     else if (self->velocity.y >= 0) {
         if (self->velocity.y > 0)
-            flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true);
+            hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true);
     }
     else {
-        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, true);
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT)
-                flag |= !RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Chopper->hitboxWater);
+                hitWall |= !RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Chopper->hitboxWater);
         }
     }
 
-    if (flag) {
+    if (hitWall) {
         RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &self->animator, false, 0);
         self->timer      = 512;
         self->velocity.y = 0;
@@ -305,8 +305,8 @@ void Chopper_EditorLoad(void)
     RSDK_ENUM_VAR("Swim", CHOPPER_SWIM);
 
     RSDK_ACTIVE_VAR(Chopper, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
 #endif
 

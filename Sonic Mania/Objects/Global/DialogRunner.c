@@ -34,8 +34,8 @@ void DialogRunner_Create(void *data)
 
 void DialogRunner_StageLoad(void)
 {
-    DialogRunner->authForbiddenFlag = false;
-    DialogRunner->signoutFlag       = false;
+    DialogRunner->authForbidden = false;
+    DialogRunner->signedout       = false;
     DialogRunner->unused2           = 0;
     DialogRunner->unused1           = 0;
     DialogRunner->isAutoSaving      = false;
@@ -147,7 +147,7 @@ void DialogRunner_CheckUserAuth_CB()
 {
     RSDK_THIS(DialogRunner);
     if (self->timer) {
-        if (DialogRunner->signoutFlag) {
+        if (DialogRunner->signedout) {
             if (!UIDialog->activeDialog) {
                 if (Zone && Zone_GetZoneID() != ZONE_INVALID) {
                     RSDK.SetScene("Presentation", "Title Screen");
@@ -273,20 +273,20 @@ bool32 DialogRunner_NotifyAutosave(void)
 void DialogRunner_GetUserAuthStatus(void)
 {
     if (API.GetUserAuthStatus() == STATUS_FORBIDDEN) {
-        if (DialogRunner->authForbiddenFlag)
+        if (DialogRunner->authForbidden)
             return;
         EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_CheckUserAuth_CB, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         DialogRunner->entityPtr          = dialogRunner;
-        DialogRunner->authForbiddenFlag  = true;
+        DialogRunner->authForbidden  = true;
     }
 
-    if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->authForbiddenFlag) {
+    if (API.CheckDLC(DLC_PLUS) != globals->lastHasPlus && !DialogRunner->authForbidden) {
         EntityDialogRunner *dialogRunner = CREATE_ENTITY(DialogRunner, DialogRunner_CheckUserAuth_CB, 0, 0);
         dialogRunner->active             = ACTIVE_ALWAYS;
         dialogRunner->useGenericText     = true;
         DialogRunner->entityPtr          = dialogRunner;
-        DialogRunner->authForbiddenFlag  = true;
+        DialogRunner->authForbidden  = true;
         globals->lastHasPlus             = API.CheckDLC(DLC_PLUS);
     }
 }
@@ -305,7 +305,7 @@ void DialogRunner_PromptSavePreference(int32 id)
     dialogRunner->status             = id;
     DialogRunner->entityPtr          = dialogRunner;
 }
-void DialogRunner_SignedOutCB(void) { DialogRunner->signoutFlag = true; }
+void DialogRunner_SignedOutCB(void) { DialogRunner->signedout = true; }
 
 #if RETRO_INCLUDE_EDITOR
 void DialogRunner_EditorDraw(void) {}

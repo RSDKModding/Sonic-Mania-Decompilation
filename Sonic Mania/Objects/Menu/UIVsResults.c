@@ -76,7 +76,7 @@ void UIVsResults_SetupSprites(void)
 
     self->characterID = self->playerID;
     if (!SceneInfo->inEditor) {
-        switch (session->characterFlags[self->playerID]) {
+        switch (session->playerID[self->playerID]) {
             case ID_SONIC: self->characterID = UICHARBUTTON_SONIC; break;
             case ID_TAILS: self->characterID = UICHARBUTTON_TAILS; break;
             case ID_KNUCKLES: self->characterID = UICHARBUTTON_KNUX; break;

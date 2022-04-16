@@ -19,10 +19,10 @@ void SuperSparkle_Update(void)
     }
     else {
         if (player->groundedStore) {
-            self->activeFlag = abs(player->velocity.y) + abs(player->velocity.x) > 0x60000;
+            self->isActive = abs(player->velocity.y) + abs(player->velocity.x) > 0x60000;
         }
 
-        if (self->activeFlag) {
+        if (self->isActive) {
             if (++self->timer == 12) {
                 self->timer        = 0;
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, player->position.x, player->position.y);

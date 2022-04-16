@@ -370,18 +370,18 @@ void Shiversaw_CheckBoxCollisions(EntityPlayer *player)
         }
     }
 
-    uint8 flags = 0;
+    uint8 collisionSideMask = 0;
     foreach_all(Crate, crate)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxT) && !(flags & 1)) {
+        if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxT) && !(collisionSideMask & 1)) {
             if (player->position.x >= self->position.x) {
                 if (self->velocity.x >= 0 && self->velocity.x < 0x8000) {
                     self->velocity.x = 0x8000;
-                    flags |= 1;
+                    collisionSideMask |= 1;
                 }
                 else if (self->velocity.x < 0) {
                     self->velocity.x = 0;
-                    flags |= 1;
+                    collisionSideMask |= 1;
                 }
             }
             else {
@@ -392,10 +392,10 @@ void Shiversaw_CheckBoxCollisions(EntityPlayer *player)
                     self->stateSaw[1] = Shiversaw_StateSaw_Extend;
                 }
                 self->velocity.x = 0;
-                flags |= 1;
+                collisionSideMask |= 1;
             }
         }
-        else if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxL) && !(flags & 2)) {
+        else if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxL) && !(collisionSideMask & 2)) {
             if (player->position.x <= self->position.x) {
                 if (self->velocity.x <= 0 && self->velocity.x > -0x8000) {
                     self->velocity.x = -0x8000;
@@ -413,28 +413,29 @@ void Shiversaw_CheckBoxCollisions(EntityPlayer *player)
                 }
                 self->velocity.x = 0;
             }
-            flags |= 2;
+            collisionSideMask |= 2;
         }
 
-        if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxR) && !(flags & 4)) {
+        if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxR) && !(collisionSideMask & 4)) {
             if (self->velocity.y >= 0 && self->velocity.y < 0x8000) {
                 self->velocity.y = 0x8000;
             }
             else if (self->velocity.y < 0) {
                 self->velocity.y = 0;
             }
-            flags |= 4;
+            collisionSideMask |= 4;
         }
-        else if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxB) && !(flags & 8)) {
+        else if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, self, &Shiversaw->hitboxB) && !(collisionSideMask & 8)) {
             if (self->velocity.y <= 0 && self->velocity.y > -0x8000) {
                 self->velocity.y = -0x8000;
             }
             else if (self->velocity.y > 0) {
                 self->velocity.y = 0;
             }
-            flags |= 8;
+            collisionSideMask |= 8;
         }
-        if (flags == 7) {
+
+        if (collisionSideMask == (1 | 2 | 4)) {
             foreach_break;
         }
     }
@@ -650,10 +651,10 @@ void Shiversaw_State_MoveToPlayer(void)
     self->velocity.x    = 0;
     self->velocity.y    = 0;
 
-    bool32 flag = true;
-    for (int32 i = 0; i < Shiversaw_SawCount; ++i) flag &= self->stateSaw[i] == Shiversaw_StateSaw_Active;
+    bool32 isActive = true;
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) isActive &= self->stateSaw[i] == Shiversaw_StateSaw_Active;
 
-    if (flag) {
+    if (isActive) {
         int32 x = self->position.x;
         int32 y = self->origin.y;
 
@@ -860,7 +861,7 @@ void Shiversaw_CheckCrateCollisions(void)
     self->position.x = self->sawPos[sawID].x;
     self->position.y = self->sawPos[sawID].y;
 
-    bool32 flag = false;
+    bool32 shatteredSaw = false;
     if (self->state != Shiversaw_State_EnterShiversaw) {
         foreach_all(InvisibleBlock, block)
         {
@@ -876,13 +877,13 @@ void Shiversaw_CheckCrateCollisions(void)
                     self->state = Shiversaw_State_HitRecoil_Tutorial;
                 else
                     self->state = Shiversaw_State_HitRecoil;
-                flag = true;
+                shatteredSaw = true;
                 foreach_break;
             }
         }
     }
 
-    if (!flag) {
+    if (!shatteredSaw) {
         foreach_all(Crate, crate)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &crate->hitbox, crate, &crate->hitbox)) {

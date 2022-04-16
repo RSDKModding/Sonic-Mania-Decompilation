@@ -35,7 +35,7 @@ struct ObjectZone {
     RSDK_OBJECT
     int32 actID;
     StateMachine(stageFinishCallback);
-    bool32 forcePlayerOnScreenFlag;
+    bool32 forcePlayerOnScreen; // a little misleading, forces the player on-screen before an act transition if enabled
     StateMachine(vsSwapCB[0x10]);
     int32 vsSwapCBCount;
 #if RETRO_USE_PLUS

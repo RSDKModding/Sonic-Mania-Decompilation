@@ -98,7 +98,7 @@ void FBZSetup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         foreach_all(FBZ1Outro, outro)
         {
-            Zone->forcePlayerOnScreenFlag = true;
+            Zone->forcePlayerOnScreen = true;
             FBZSetup->outroPtr            = outro;
             foreach_break;
         }

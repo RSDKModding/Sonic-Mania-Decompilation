@@ -18,12 +18,12 @@ void WarpDoor_Update(void)
     if (self->destinationTag >= 1 && self->destinationTag <= 256) {
         EntityWarpDoor *tag = (EntityWarpDoor *)WarpDoor->tags[self->destinationTag];
         if (tag) {
-            bool32 flag = false;
+            bool32 warped = false;
             int32 boundID = -1;
             foreach_all(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                    flag = true;
+                    warped = true;
                     if (!self->hasWarped) {
                         EntityCamera *camera = player->camera;
                         int32 camRelPosX       = 0;
@@ -114,8 +114,8 @@ void WarpDoor_Update(void)
                                 }
                             }
                             else if (RSDK.CheckStageFolder("FBZ")) {
-                                RSDK.PlaySfx(WarpDoor->sfxWarpDoor, false, 255);
-                                flag = false;
+                                RSDK.PlaySfx(WarpDoor->sfxWarpDoor, false, 0xFF);
+                                warped = false;
                                 if (self->go) {
                                     tag->fadeTimer = 256;
                                     tag->fadeOut   = true;
@@ -129,8 +129,10 @@ void WarpDoor_Update(void)
                     }
                 }
             }
-            if (flag)
+
+            if (warped)
                 return;
+
             if (self->hasWarped)
                 self->hasWarped = false;
         }

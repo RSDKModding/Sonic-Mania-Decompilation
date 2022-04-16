@@ -24,19 +24,20 @@ void MagSpikeBall_Update(void)
         self->velocity.y += 0x3800;
         if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
             self->velocity.y = 0;
-        bool32 flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true);
+
+        bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true);
 
         foreach_all(MagPlatform, platform)
         {
             platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
             platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
             Hitbox *hitbox       = RSDK.GetHitbox(&platform->animator, 0);
-            flag |= RSDK.CheckObjectCollisionPlatform(platform, hitbox, self, &MagSpikeBall->hitbox, true);
+            collided |= RSDK.CheckObjectCollisionPlatform(platform, hitbox, self, &MagSpikeBall->hitbox, true);
             platform->position.x = platform->centerPos.x;
             platform->position.y = platform->centerPos.y;
         }
 
-        if (flag) {
+        if (collided) {
             self->velocity.y = 0;
             self->active     = ACTIVE_BOUNDS;
         }

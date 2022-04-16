@@ -63,7 +63,7 @@ void UIWidgets_DrawRectOutline_Black(int32 x, int32 y, int32 width, int32 height
 void UIWidgets_DrawRectOutline_Blended(int32 x, int32 y, int32 width, int32 height);
 void UIWidgets_DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height);
 void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue);
-void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag, int32 red, int32 green, int32 blue, InkEffects ink);
+void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeMode, int32 red, int32 green, int32 blue, InkEffects ink);
 void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, int32 edgeSize, int32 red, int32 green, int32 blue);
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);

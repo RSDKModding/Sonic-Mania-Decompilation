@@ -102,7 +102,7 @@ void PullChain_Update(void)
             }
 
             // Make sure we're far enough away before unsetting this
-            // This flag controls if players can grab the hook
+            // This controls if players can grab the hook
             if (self->releasedPlayers & (1 << playerID)) {
                 int32 x = abs(player->position.x - self->position.x);
                 int32 y = abs(player->position.y - 0x180000 - self->position.y);

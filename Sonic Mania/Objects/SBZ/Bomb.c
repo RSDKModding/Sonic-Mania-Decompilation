@@ -148,12 +148,13 @@ void Bomb_State_Walk(void)
         self->state = Bomb_State_Idle;
     }
     else {
-        bool32 flag = false;
-        if ((self->direction & 2))
-            flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, 0, -0x100000, 2);
+        bool32 groundCollided = false;
+        if ((self->direction & 2)) // RWall???
+            groundCollided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, 0, -0x100000, 2);
         else
-            flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2);
-        if (!flag) {
+            groundCollided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2);
+
+        if (!groundCollided) {
             self->timer = 180;
             RSDK.SetSpriteAnimation(Bomb->aniFrames, 0, &self->mainAnimator, true, 0);
             self->state = Bomb_State_Idle;

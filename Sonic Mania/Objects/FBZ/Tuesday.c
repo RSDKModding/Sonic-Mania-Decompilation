@@ -63,17 +63,17 @@ void Tuesday_Create(void *data)
                 self->state = Tuesday_State_Controller;
             else
                 self->state = Tuesday_State_Node;
-            self->linkPtrs[0] = NULL;
-            self->linkPtrs[1] = NULL;
-            self->linkPtrs[2] = NULL;
-            self->linkPtrs[3] = NULL;
-            self->linkPtrs[4] = NULL;
-            self->linkPtrs[5] = NULL;
-            self->linkPtrs[6] = NULL;
-            self->linkPtrs[7] = NULL;
+            self->linkNodes[0] = NULL;
+            self->linkNodes[1] = NULL;
+            self->linkNodes[2] = NULL;
+            self->linkNodes[3] = NULL;
+            self->linkNodes[4] = NULL;
+            self->linkNodes[5] = NULL;
+            self->linkNodes[6] = NULL;
+            self->linkNodes[7] = NULL;
             if (!self->type)
-                self->parent = (Entity *)self;
-            self->linkFlags = 0xFF;
+                self->parent = self;
+            self->linkMask = 0xFF;
             int32 minX      = 0x7FFFFFFF;
             int32 minY      = 0x7FFFFFFF;
             int32 maxX      = 0;
@@ -90,7 +90,7 @@ void Tuesday_Create(void *data)
                 if (child != self && child->objectID == Tuesday->objectID) {
                     ++self->linkCount;
                     if (!self->type) {
-                        child->parent = (Entity *)self;
+                        child->parent = self;
                         if (child->position.x < minX)
                             minX = child->position.x;
                         if (child->position.x > maxX)
@@ -101,6 +101,7 @@ void Tuesday_Create(void *data)
                         if (child->position.y > maxY)
                             maxY = child->position.y;
                     }
+
                     if (!child->drawPos.x) {
                         child->drawPos.x = child->position.x;
                         child->drawPos.y = child->position.y;
@@ -109,114 +110,122 @@ void Tuesday_Create(void *data)
                     int32 distY = (child->drawPos.y - self->drawPos.y) >> 16;
 
                     if (abs(distX) <= 256 && abs(distY) <= 256) {
-                        int32 dir = 0;
+                        int32 dirMask = 0;
                         if (!distX)
-                            dir |= 1; // no x
+                            dirMask |= 1; // no x
                         else if (distX >= 0)
-                            dir |= 2; // right
+                            dirMask |= 2; // right
 
                         if (!distY)
-                            dir |= 4; // no y
+                            dirMask |= 4; // no y
                         else if (distY >= 0)
-                            dir |= 8; // down
+                            dirMask |= 8; // down
 
-                        switch (dir) {
+                        switch (dirMask) {
                             case 0: // SE
                                 if ((self->links & 0x80) && abs(distX) == abs(distY)) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[7];
+                                    EntityTuesday *tuesday = self->linkNodes[7];
                                     if (!tuesday || child->drawPos.y > tuesday->drawPos.y) {
-                                        self->linkPtrs[7] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x08;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x80;
+                                        self->linkNodes[7] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x08;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x80;
                                     }
                                 }
                                 break;
+
                             case 1: // S
                                 if (self->links & 0x40) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[6];
+                                    EntityTuesday *tuesday = self->linkNodes[6];
                                     if (!tuesday || child->drawPos.y > tuesday->drawPos.y) {
-                                        self->linkPtrs[6] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x04;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x40;
+                                        self->linkNodes[6] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x04;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x40;
                                     }
                                 }
                                 break;
+
                             case 2: // SW
                                 if ((self->links & 0x20) && abs(distX) == abs(distY)) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[5];
+                                    EntityTuesday *tuesday = self->linkNodes[5];
                                     if (!tuesday || child->drawPos.x < tuesday->drawPos.x) {
-                                        self->linkPtrs[5] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x02;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x20;
+                                        self->linkNodes[5] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x02;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x20;
                                     }
                                 }
                                 break;
+
                             case 4: // E
                                 if (self->links & 1) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[0];
+                                    EntityTuesday *tuesday = self->linkNodes[0];
                                     if (!tuesday || child->drawPos.x > tuesday->drawPos.x) {
-                                        self->linkPtrs[0] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x10;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 1;
+                                        self->linkNodes[0] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x10;
+                                        else if (child->linkMask)
+                                            self->linkMask = 1;
                                     }
                                 }
                                 break;
+
                             case 6: // W
                                 if (self->links & 0x10) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[4];
+                                    EntityTuesday *tuesday = self->linkNodes[4];
                                     if (!tuesday || child->drawPos.x < tuesday->drawPos.x) {
-                                        self->linkPtrs[4] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 1;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x10;
+                                        self->linkNodes[4] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 1;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x10;
                                     }
                                 }
                                 break;
+
                             case 8: // NE
                                 if ((self->links & 2) && abs(distX) == abs(distY)) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[1];
+                                    EntityTuesday *tuesday = self->linkNodes[1];
                                     if (!tuesday || child->drawPos.x > tuesday->drawPos.x) {
-                                        self->linkPtrs[1] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x20;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x02;
+                                        self->linkNodes[1] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x20;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x02;
                                     }
                                 }
                                 break;
+
                             case 9: // N
                                 if (self->links & 4) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[2];
+                                    EntityTuesday *tuesday = self->linkNodes[2];
                                     if (!tuesday || child->drawPos.y < tuesday->drawPos.y) {
-                                        self->linkPtrs[2] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x40;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x04;
+                                        self->linkNodes[2] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x40;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x04;
                                     }
                                 }
                                 break;
+
                             case 10: // NW
                                 if ((self->links & 8) && abs(distX) == abs(distY)) {
-                                    EntityTuesday *tuesday = (EntityTuesday *)self->linkPtrs[3];
+                                    EntityTuesday *tuesday = self->linkNodes[3];
                                     if (!tuesday || child->drawPos.y < tuesday->drawPos.y) {
-                                        self->linkPtrs[3] = (Entity *)child;
-                                        if (self->linkFlags)
-                                            child->linkFlags |= 0x80;
-                                        else if (child->linkFlags)
-                                            self->linkFlags = 0x08;
+                                        self->linkNodes[3] = child;
+                                        if (self->linkMask)
+                                            child->linkMask |= 0x80;
+                                        else if (child->linkMask)
+                                            self->linkMask = 0x08;
                                     }
                                 }
                                 break;
+
                             default: break;
                         }
                     }
@@ -270,10 +279,10 @@ void Tuesday_DrawElectricity(void)
 
         Animator animator;
         for (int32 i = 0; i < 8; ++i) {
-            if (((1 << i) & self->shockFlags) && self->linkPtrs[i]) {
+            if (((1 << i) & self->shockFlags) && self->linkNodes[i]) {
                 drawPos.x           = self->drawPos.x;
                 drawPos.y           = self->drawPos.y;
-                EntityTuesday *link = (EntityTuesday *)self->linkPtrs[i];
+                EntityTuesday *link = self->linkNodes[i];
                 switch (i) {
                     case 0:
                         drawPos.x -= 0x200000;
@@ -458,7 +467,7 @@ void Tuesday_State_Node(void)
             else {
                 if (self->timer < 60) {
                     if (self->shockFlags == 17) {
-                        EntityTuesday *child = (EntityTuesday *)self->linkPtrs[0];
+                        EntityTuesday *child = self->linkNodes[0];
                         if (child) {
                             hitbox.top    = -2;
                             hitbox.bottom = 2;
@@ -469,7 +478,7 @@ void Tuesday_State_Node(void)
                             }
                         }
 
-                        child = (EntityTuesday *)self->linkPtrs[4];
+                        child = self->linkNodes[4];
                         if (child) {
                             hitbox.left   = -0;
                             hitbox.top    = -2;
@@ -483,7 +492,7 @@ void Tuesday_State_Node(void)
                     else {
                         if (self->shockFlags != 68) {
                             if (self->shockFlags == 170) {
-                                EntityTuesday *child = (EntityTuesday *)self->linkPtrs[1];
+                                EntityTuesday *child = self->linkNodes[1];
                                 if (child) {
                                     hitbox.top    = 0;
                                     hitbox.bottom = (child->drawPos.y - self->position.y) >> 16;
@@ -498,7 +507,7 @@ void Tuesday_State_Node(void)
                                     }
                                 }
                                 else {
-                                    child = (EntityTuesday *)self->linkPtrs[3];
+                                    child = self->linkNodes[3];
                                     if (child) {
                                         hitbox.bottom = (child->drawPos.y - self->position.y) >> 16;
                                         hitbox.left   = 0;
@@ -513,7 +522,7 @@ void Tuesday_State_Node(void)
                                         }
                                     }
                                     else {
-                                        child = (EntityTuesday *)self->linkPtrs[5];
+                                        child = self->linkNodes[5];
                                         if (child) {
                                             hitbox.top    = (child->drawPos.y - self->position.y) >> 16;
                                             hitbox.bottom = 0;
@@ -528,7 +537,7 @@ void Tuesday_State_Node(void)
                                             }
                                         }
                                         else {
-                                            child = (EntityTuesday *)self->linkPtrs[7];
+                                            child = self->linkNodes[7];
                                             if (child) {
                                                 hitbox.top    = (child->drawPos.y - self->position.y) >> 16;
                                                 hitbox.bottom = 0;
@@ -548,7 +557,7 @@ void Tuesday_State_Node(void)
                             }
                         }
                         else {
-                            EntityTuesday *child = (EntityTuesday *)self->linkPtrs[2];
+                            EntityTuesday *child = self->linkNodes[2];
                             if (child) {
                                 hitbox.left   = 2;
                                 hitbox.top    = -2;
@@ -559,7 +568,7 @@ void Tuesday_State_Node(void)
                                 }
                             }
 
-                            child = (EntityTuesday *)self->linkPtrs[6];
+                            child = self->linkNodes[6];
                             if (child) {
                                 hitbox.left   = -2;
                                 hitbox.right  = 2;
@@ -580,7 +589,7 @@ void Tuesday_State_Node(void)
     self->position.y = storeY;
     if (self->nextShockFlags != 0b11111111 && self->nextShockFlags) {
         for (int32 i = 0; i < 8; ++i) {
-            EntityTuesday *child = (EntityTuesday *)self->linkPtrs[i];
+            EntityTuesday *child = self->linkNodes[i];
             if (child) {
                 if (!child->nextShockFlags)
                     child->nextShockFlags = self->nextShockFlags;
@@ -628,73 +637,72 @@ void Tuesday_State_Destroyed(void)
         if (Zone->timer & 4) {
             int32 data = ((RSDK.Rand(0, 256) > 192) + 2);
 
-            int32 val    = 0;
-            int32 minVal = 0, maxVal = 0;
+            int32 xOffset = 0, yOffset = 0;
             if (self->type) {
-                val    = RSDK.Rand(-12, 12);
-                maxVal = 12;
-                minVal = -12;
+                xOffset = RSDK.Rand(-12, 12);
+                yOffset = RSDK.Rand(-12, 12);
             }
             else {
-                val    = RSDK.Rand(-8, 73);
-                maxVal = 33;
-                minVal = -32;
+                xOffset = RSDK.Rand(-32, 33);
+                yOffset = RSDK.Rand(-8, 73);
             }
-            EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid(data), (RSDK.Rand(minVal, maxVal) << 16) + self->drawPos.x, (val << 16) + self->drawPos.y);
-            explosion->drawOrder = Zone->drawOrderHigh;
+
+            int32 x                    = self->drawPos.x + (xOffset << 16);
+            int32 y                    = self->drawPos.y + (yOffset << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(data), x, y);
+            explosion->drawOrder       = Zone->drawOrderHigh;
         }
     }
 
     if (!--self->invincibleTimer) {
-        --((EntityTuesday *)self->parent)->linkCount;
+        --self->parent->linkCount;
 
-        EntityTuesday *child = (EntityTuesday *)self->linkPtrs[0];
+        EntityTuesday *child = self->linkNodes[0];
         if (child) {
-            child->linkPtrs[4] = NULL;
-            child->linkFlags &= ~0x10;
+            child->linkNodes[4] = NULL;
+            child->linkMask &= ~0x10;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[1];
+        child = self->linkNodes[1];
         if (child) {
-            child->linkPtrs[5] = NULL;
-            child->linkFlags &= ~0x20;
+            child->linkNodes[5] = NULL;
+            child->linkMask &= ~0x20;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[2];
+        child = self->linkNodes[2];
         if (child) {
-            child->linkPtrs[6] = NULL;
-            child->linkFlags &= ~0x40;
+            child->linkNodes[6] = NULL;
+            child->linkMask &= ~0x40;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[3];
+        child = self->linkNodes[3];
         if (child) {
-            child->linkPtrs[7] = NULL;
-            child->linkFlags &= ~0x80;
+            child->linkNodes[7] = NULL;
+            child->linkMask &= ~0x80;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[4];
+        child = self->linkNodes[4];
         if (child) {
-            child->linkPtrs[0] = NULL;
-            child->linkFlags &= ~1;
+            child->linkNodes[0] = NULL;
+            child->linkMask &= ~1;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[5];
+        child = self->linkNodes[5];
         if (child) {
-            child->linkPtrs[1] = NULL;
-            child->linkFlags &= ~2;
+            child->linkNodes[1] = NULL;
+            child->linkMask &= ~2;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[6];
+        child = self->linkNodes[6];
         if (child) {
-            child->linkPtrs[2] = NULL;
-            child->linkFlags &= ~4;
+            child->linkNodes[2] = NULL;
+            child->linkMask &= ~4;
         }
 
-        child = (EntityTuesday *)self->linkPtrs[7];
+        child = self->linkNodes[7];
         if (child) {
-            child->linkPtrs[3] = NULL;
-            child->linkFlags &= ~8;
+            child->linkNodes[3] = NULL;
+            child->linkMask &= ~8;
         }
 
         child                       = CREATE_ENTITY(Tuesday, intToVoid(true), self->drawPos.x, self->drawPos.y);
@@ -739,14 +747,14 @@ void Tuesday_State_Destroyed(void)
             child->state      = Tuesday_State_Debris;
         }
 
-        self->linkPtrs[4] = NULL;
-        self->linkPtrs[5] = NULL;
-        self->linkPtrs[6] = NULL;
-        self->linkPtrs[7] = NULL;
-        self->linkPtrs[0] = NULL;
-        self->linkPtrs[1] = NULL;
-        self->linkPtrs[2] = NULL;
-        self->linkPtrs[3] = NULL;
+        self->linkNodes[4] = NULL;
+        self->linkNodes[5] = NULL;
+        self->linkNodes[6] = NULL;
+        self->linkNodes[7] = NULL;
+        self->linkNodes[0] = NULL;
+        self->linkNodes[1] = NULL;
+        self->linkNodes[2] = NULL;
+        self->linkNodes[3] = NULL;
         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 3, &self->nodeAnimator, true, 4);
         self->state = StateMachine_None;
     }

@@ -26,7 +26,6 @@ void EncoreIntro_Update(void)
         }
     }
 
-    // skip part 2 flag
     if (self->skipPart2) {
         EncoreIntro_SetupCutscenePart2();
         CutsceneSeq_StartSequence(self, EncoreIntro_Cutscene_AIZEncore, EncoreIntro_Cutscene_CapsuleFound, EncoreIntro_Cutscene_BuddySelect,

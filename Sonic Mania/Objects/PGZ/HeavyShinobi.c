@@ -689,16 +689,16 @@ void HeavyShinobi_StateAsteron_Thrown(void)
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
 
-        bool32 flag = false;
+        bool32 isStuck = false;
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &HeavyShinobi->hitboxAsteron)) {
                 if (player->state == Ice_State_FrozenPlayer) {
-                    self->playerPtr        = (Entity *)player;
+                    self->playerPtr        = player;
                     self->playerDistance.x = self->position.x - player->position.x;
                     self->playerDistance.y = self->position.y - player->position.y;
 
-                    flag = true;
+                    isStuck = true;
                     foreach_break;
                 }
 
@@ -717,21 +717,22 @@ void HeavyShinobi_StateAsteron_Thrown(void)
             }
         }
 
-        if (!flag && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true))
-            flag = true;
+        if (!isStuck && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true))
+            isStuck = true;
 
-        if (!flag) {
+        if (!isStuck) {
             foreach_active(HeavyShinobi, boss)
             {
-                if (boss->type == SHINOBI_BOUNDS && RSDK.CheckObjectCollisionBox(boss, &HeavyShinobi->hitboxBounds, self, &HeavyShinobi->hitboxAsteron, true)) {
-                    flag = true;
-                }
+                if (boss->type == SHINOBI_BOUNDS
+                    && RSDK.CheckObjectCollisionBox(boss, &HeavyShinobi->hitboxBounds, self, &HeavyShinobi->hitboxAsteron, true))
+                    isStuck = true;
             }
         }
 
-        if (flag) {
+        if (isStuck) {
             if (self->mainAnimator.frameID & 1)
                 self->mainAnimator.frameID = (self->mainAnimator.frameID + 1) & 7;
+
             RSDK.PlaySfx(HeavyShinobi->sfxStick, false, 255);
             RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, (self->mainAnimator.frameID >> 1) + 10, &self->fxAnimator, true, 0);
             self->state = HeavyShinobi_StateAsteron_Explode;
@@ -750,6 +751,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
 void HeavyShinobi_StateAsteron_Debris(void)
 {
     RSDK_THIS(HeavyShinobi);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -773,7 +775,7 @@ void HeavyShinobi_StateAsteron_Explode(void)
 
         foreach_active(Player, player)
         {
-            if (self->playerPtr == (Entity *)player) {
+            if (self->playerPtr == player) {
                 if (player->state != Ice_State_FrozenPlayer) {
                     RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
                     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
@@ -792,7 +794,7 @@ void HeavyShinobi_StateAsteron_Explode(void)
             }
         }
 
-        EntityPlayer *playerPtr = (EntityPlayer *)self->playerPtr;
+        EntityPlayer *playerPtr = self->playerPtr;
         if (playerPtr) {
             self->position.x = playerPtr->position.x + self->playerDistance.x;
             self->position.y = playerPtr->position.y + self->playerDistance.y;
@@ -848,7 +850,7 @@ void HeavyShinobi_StateAsteron_Explode(void)
             }
 
             if (playerPtr) {
-                Ice_BreakPlayerBlock((Entity *)playerPtr);
+                Ice_BreakPlayerBlock(playerPtr);
                 playerPtr->state = Player_State_Air;
                 Player_CheckHit(playerPtr, self);
             }

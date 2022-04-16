@@ -430,9 +430,9 @@ void BSS_Setup_HandleSteppedObjects(void)
 {
     RSDK_THIS(BSS_Setup);
     if (self->globeTimer < 32)
-        self->bumperFlag = false;
+        self->disableBumpers = false;
     if (self->globeTimer > 224)
-        self->bumperFlag = false;
+        self->disableBumpers = false;
 
     int32 fieldPos = self->playerPos.y + (BSS_PLAYFIELD_H * self->playerPos.x);
     switch (BSS_Setup->playField[fieldPos]) {
@@ -458,6 +458,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
             }
             break;
+
         case BSS_SPHERE_RED:
             if (self->state != BSS_Setup_State_Exit && self->globeTimer < 32) {
                 self->state        = BSS_Setup_State_Exit;
@@ -468,11 +469,12 @@ void BSS_Setup_HandleSteppedObjects(void)
                 Music_FadeOut(0.0125);
             }
             break;
+
         case BSS_SPHERE_BUMPER:
-            if (!self->bumperFlag && self->globeTimer < 112) {
+            if (!self->disableBumpers && self->globeTimer < 112) {
                 if (self->globeTimer > 16) {
                     if (self->globeSpeed < 0) {
-                        self->bumperFlag      = true;
+                        self->disableBumpers  = true;
                         self->globeSpeed      = -self->globeSpeed;
                         self->playerWasBumped = false;
                         RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
@@ -481,7 +483,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 else if (!self->spinState) {
                     if (self->globeSpeed < 0) {
                         self->globeTimer      = 16;
-                        self->bumperFlag      = true;
+                        self->disableBumpers  = true;
                         self->globeSpeed      = -self->globeSpeed;
                         self->playerWasBumped = false;
                         RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
@@ -489,6 +491,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
             }
             break;
+
         case BSS_SPHERE_YELLOW:
             if (self->globeTimer < 128) {
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
@@ -502,6 +505,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 RSDK.PlaySfx(BSS_Setup->sfxSpring, false, 255);
             }
             break;
+
         case BSS_SPHERE_GREEN:
             if (self->globeTimer > 128) {
                 CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_GREEN), self->playerPos.x, self->playerPos.y);
@@ -509,6 +513,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
             }
             break;
+
         case BSS_SPHERE_PINK:
             if (self->state != BSS_Setup_State_PinkSphereWarp && self->globeTimer < 64) {
                 self->state      = BSS_Setup_State_PinkSphereWarp;
@@ -528,6 +533,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_CollectRing();
             }
             break;
+
         default: break;
     }
 
@@ -558,6 +564,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
             }
             break;
+
         case BSS_SPHERE_RED:
             if (self->state != BSS_Setup_State_Exit && self->globeTimer > 224) {
                 self->palettePage ^= 1;
@@ -572,13 +579,14 @@ void BSS_Setup_HandleSteppedObjects(void)
                 Music_FadeOut(0.0125);
             }
             break;
+
         case BSS_SPHERE_BUMPER:
-            if (!self->bumperFlag && self->globeTimer > 144) {
+            if (!self->disableBumpers && self->globeTimer > 144) {
                 if (self->globeTimer >= 240) {
                     if (!self->spinState) {
                         if (self->globeSpeed > 0) {
                             self->globeTimer      = 240;
-                            self->bumperFlag      = true;
+                            self->disableBumpers  = true;
                             self->globeSpeed      = -self->globeSpeed;
                             self->playerWasBumped = true;
                             RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
@@ -587,7 +595,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
                 else {
                     if (self->globeSpeed > 0) {
-                        self->bumperFlag      = true;
+                        self->disableBumpers  = true;
                         self->globeSpeed      = -self->globeSpeed;
                         self->playerWasBumped = true;
                         RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
@@ -595,6 +603,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 }
             }
             break;
+
         case BSS_SPHERE_YELLOW:
             if (self->globeTimer > 128) {
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
@@ -608,6 +617,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 RSDK.PlaySfx(BSS_Setup->sfxSpring, false, 255);
             }
             break;
+
         case BSS_SPHERE_GREEN:
             if (self->globeTimer > 128) {
                 CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_GREEN), posX, posY);
@@ -615,6 +625,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
             }
             break;
+
         case BSS_RING:
             if (self->globeTimer > 128) {
                 CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_RING), posX, posY);
@@ -622,6 +633,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_CollectRing();
             }
             break;
+
         case BSS_EMERALD_CHAOS:
         case BSS_EMERALD_SUPER:
         case BSS_MEDAL_SILVER:
@@ -658,6 +670,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 RSDK.PlaySfx(BSS_Setup->sfxSSExit, false, 255);
             }
             break;
+
         default: break;
     }
 }
@@ -677,18 +690,22 @@ void BSS_Setup_HandleCollectableMovement(void)
                 self->offset.x = offset->x;
                 self->offset.y = offset->y;
                 break;
+
             case FLIP_X:
                 self->offset.x = -offset->y;
                 self->offset.y = offset->x;
                 break;
+
             case FLIP_Y:
                 self->offset.x = offset->x;
                 self->offset.y = -offset->y;
                 break;
+
             case FLIP_XY:
                 self->offset.x = offset->y;
                 self->offset.y = offset->x;
                 break;
+
             default: break;
         }
 
@@ -775,10 +792,10 @@ void BSS_Setup_State_PinkSphereWarp(void)
         RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
         RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->animator, true, 0);
 
-        int32 count = BSS_Setup->pinkSphereCount;
-        int32 dir   = RSDK.Rand(0, count - 1);
-        bool32 flag = false;
-        for (; (count && dir >= 0) && !flag; --count) {
+        int32 count                = BSS_Setup->pinkSphereCount;
+        int32 dir                  = RSDK.Rand(0, count - 1);
+        bool32 foundValidPlayerPos = false;
+        for (; (count && dir >= 0) && !foundValidPlayerPos; --count) {
             for (int32 y = 0; y < BSS_PLAYFIELD_H; ++y) {
                 for (int32 x = 0; x < BSS_PLAYFIELD_W; ++x) {
                     uint16 tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
@@ -786,16 +803,16 @@ void BSS_Setup_State_PinkSphereWarp(void)
                         self->playerPos.x = x;
                         self->playerPos.y = y;
 
-                        x    = 0x20;
-                        y    = 0x20;
-                        flag = true;
+                        x                   = 0x20;
+                        y                   = 0x20;
+                        foundValidPlayerPos = true;
                     }
                 }
             }
         }
 
-        dir  = RSDK.Rand(0, 4);
-        flag = false;
+        dir                       = RSDK.Rand(0, 4);
+        bool32 foundValidSpawnDir = false;
         for (int32 i = 0; i < 4; ++i) {
             int32 x = self->playerPos.x;
             int32 y = self->playerPos.y;
@@ -808,14 +825,14 @@ void BSS_Setup_State_PinkSphereWarp(void)
             }
             uint16 tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
             if (tile < BSS_SPHERE_RED || (tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK)) {
-                flag = true;
+                foundValidSpawnDir = true;
                 break;
             }
 
             dir = (dir + 1) & 3;
         }
 
-        if (!flag) {
+        if (!foundValidSpawnDir) {
             for (int32 i = 0; i < 4; ++i) {
                 int32 x = self->playerPos.x;
                 int32 y = self->playerPos.y;
@@ -829,7 +846,7 @@ void BSS_Setup_State_PinkSphereWarp(void)
 
                 uint16 tile = BSS_Setup->playField[y + (BSS_PLAYFIELD_H * x)];
                 if (tile < BSS_SPHERE_RED || (tile > BSS_SPHERE_BUMPER && tile != BSS_SPHERE_PINK)) {
-                    flag = true;
+                    foundValidSpawnDir = true;
                     break;
                 }
 
@@ -892,7 +909,7 @@ void BSS_Setup_State_HandleStage(void)
     RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
 
     if (self->playerWasBumped) {
-        if (!self->bumperFlag && player1->up)
+        if (!self->disableBumpers && player1->up)
             self->playerWasBumped = false;
     }
     else {
@@ -1110,7 +1127,7 @@ void BSS_Setup_LaunchSpheres(void)
     int32 y                = self->spinTimer << 17;
     RSDKScreenInfo *screen = ScreenInfo;
 
-    int32 slot                            = RESERVE_ENTITY_COUNT;
+    int32 slot                         = RESERVE_ENTITY_COUNT;
     EntityBSS_Collectable *collectable = NULL;
 
     collectable = RSDK_GET_ENTITY(slot++, BSS_Collectable);

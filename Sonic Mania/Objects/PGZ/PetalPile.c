@@ -56,9 +56,9 @@ void PetalPile_Create(void *data)
 
 void PetalPile_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("PSZ1")) 
+    if (RSDK.CheckStageFolder("PSZ1"))
         PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Petal.bin", SCOPE_STAGE);
-    else if (RSDK.CheckStageFolder("PSZ2")) 
+    else if (RSDK.CheckStageFolder("PSZ2"))
         PetalPile->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Petal.bin", SCOPE_STAGE);
 
     PetalPile->sfxPetals = RSDK.GetSfx("PSZ/Petals.wav");
@@ -117,23 +117,25 @@ void PetalPile_State_HandleInteractions(void)
             if (!player->sidekick) {
                 if (abs(player->groundVel) >= 0x60000 || player->velocity.y > 0x60000 || player->velocity.y < -0x70000
                     || player->state == Player_State_Spindash || player->state == Player_State_DropDash) {
-                    bool32 flag = false;
+                    bool32 isFast = false;
                     if (player->state == Player_State_Spindash || player->state == Player_State_DropDash || abs(player->groundVel) >= 0x60000)
-                        flag = true;
-                    self->petalDir = flag * (2 * (player->direction != FLIP_NONE) - 1);
+                        isFast = true;
+
+                    self->petalDir = isFast * (2 * (player->direction != FLIP_NONE) - 1);
 
                     if (player->state == Player_State_Spindash || player->state == Player_State_DropDash)
                         self->petalRadius = 0xF5555;
                     else
                         self->petalRadius = 0xB5555;
-                    self->petalVel = player->groundVel >> 1;
+                    self->petalVel   = player->groundVel >> 1;
                     self->distance.x = player->position.x - self->position.x;
-                    self->distance.y   = 0;
+                    self->distance.y = 0;
                     RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                     self->state = PetalPile_State_SetupEmitter;
                     foreach_break;
                 }
             }
+
             if (!self->emitterMode && abs(player->groundVel) < 0x60000 && abs(player->groundVel) > abs(self->maxSpeed.x))
                 player->groundVel =
                     player->groundVel - ((abs(player->groundVel) - abs(self->maxSpeed.x)) >> 1) * (((player->groundVel >> 31) & -2) + 1);
@@ -149,9 +151,9 @@ void PetalPile_State_HandleInteractions(void)
         foreach_active(Explosion, explosion)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, explosion, &hitbox)) {
-                self->petalDir = 0;
+                self->petalDir    = 0;
                 self->petalRadius = 0xF5555;
-                self->distance.x   = explosion->position.x - self->position.x;
+                self->distance.x  = explosion->position.x - self->position.x;
                 self->distance.y  = 0;
                 RSDK.PlaySfx(PetalPile->sfxPetals, false, 255);
                 self->state = PetalPile_State_SetupEmitter;
@@ -175,10 +177,12 @@ void PetalPile_State_SetupEmitter(void)
             offsetX = self->position.x + self->distance.x;
             offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
+
         case -1:
             offsetX = self->position.x + ((self->hitbox.right + 16) << 16);
             offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
             break;
+
         case 1:
             offsetX = self->position.x + ((self->hitbox.left - 16) << 16);
             offsetY = self->position.y + ((self->hitbox.bottom + 32) << 16);
@@ -186,17 +190,13 @@ void PetalPile_State_SetupEmitter(void)
     }
 
     int32 pos = 0;
-    for (int32 i = 0; i < count; ++i) {
-        int32 val = abs((self->position.x - offsetX) + pattern[i].x);
-        if (pos <= val)
-            pos = val;
-    }
+    for (int32 i = 0; i < count; ++i) pos = maxVal(pos, abs((self->position.x - offsetX) + pattern[i].x));
 
     for (int32 i = 0; i < count; ++i) {
         int32 spawnX = pattern[i].x + self->position.x;
         int32 spawnY = pattern[i].y + self->position.y;
 
-        int32 angle              = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
+        int32 angle            = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
         EntityPetalPile *petal = CREATE_ENTITY(PetalPile, self, spawnX, spawnY);
         petal->state           = PetalPile_StateLeaf_Setup;
         petal->stateDraw       = PetalPile_Draw_Leaf;
@@ -250,15 +250,15 @@ void PetalPile_State_Emitter(void)
 {
     RSDK_THIS(PetalPile);
 
-    bool32 flag = false;
+    bool32 collided = false;
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-            flag = true;
+            collided = true;
         }
     }
 
-    if (!flag) {
+    if (!collided) {
         self->state = PetalPile_State_Setup;
     }
 }
@@ -270,9 +270,9 @@ void PetalPile_StateLeaf_Setup(void)
     self->hitbox.top    = -1;
     self->hitbox.right  = 1;
     self->hitbox.bottom = 1;
-    self->active         = ACTIVE_NORMAL;
-    self->updateRange.x  = 0x10000;
-    self->updateRange.y  = 0x10000;
+    self->active        = ACTIVE_NORMAL;
+    self->updateRange.x = 0x10000;
+    self->updateRange.y = 0x10000;
     RSDK.SetSpriteAnimation(PetalPile->aniFrames, 0, &self->animator, true, 0);
     self->state = PetalPile_StateLeaf_Delay;
     PetalPile_StateLeaf_Delay();
@@ -358,14 +358,16 @@ void PetalPile_StateLeaf_Fall(void)
             self->petalVel = 0;
     }
     self->position.x += self->petalVel;
+
     self->velocity.y += 0x4000;
     if (self->velocity.y > 0x10000)
         self->velocity.y = 0x10000;
-    int32 val = RSDK.Sin256(4 * self->petalOffset) << 8;
-    ++self->timer;
-    self->position.x += val;
-    self->velocity.x = val;
+    self->velocity.x = RSDK.Sin256(4 * self->petalOffset) << 8;
+
+    self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
+    ++self->timer;
     if (self->timer > 3) {
 #if RETRO_USE_PLUS
         if (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 6)

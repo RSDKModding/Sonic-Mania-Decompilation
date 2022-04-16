@@ -46,22 +46,23 @@ void UFO_Camera_StageLoad(void)
 void UFO_Camera_HandleCamPos(void)
 {
     RSDK_THIS(UFO_Camera);
-    int32 val = RSDK.Cos1024(-self->angleX) << 12;
-    if (val < 0x3C0000)
-        val = 0x3C0000;
+    int32 cos = RSDK.Cos1024(-self->angleX) << 12;
+    if (cos < 0x3C0000)
+        cos = 0x3C0000;
 
-    if (!val)
-        val = 1;
-    int32 div  = !val ? 1 : val;
-    int32 val2 = self->angle - self->prevAngle;
-    int32 val3 = val2 - 0x400;
+    if (!cos)
+        cos = 1;
+    int32 div  = !cos ? 1 : cos;
+
+    int32 angle = self->angle - self->prevAngle;
+    int32 angle2 = angle - 0x400;
     if (self->angle <= 0x200)
-        val3 = val2 + 0x400;
+        angle2 = angle + 0x400;
 
-    if (abs(val2) >= abs(val3))
-        ScreenInfo->position.x -= 2 * val3;
+    if (abs(angle) >= abs(angle2))
+        ScreenInfo->position.x -= 2 * angle2;
     else
-        ScreenInfo->position.x -= 2 * val2;
+        ScreenInfo->position.x -= 2 * angle;
 
     int32 offset           = ((RSDK.Sin1024(-self->angleX) << 12) << 8) / div;
     ScreenInfo->position.y = offset - ScreenInfo->centerY + 512;
@@ -75,46 +76,47 @@ void UFO_Camera_State_Normal(void)
     RSDK_THIS(UFO_Camera);
     EntityUFO_Player *target = (EntityUFO_Player *)self->target;
     if (target) {
-        int32 angle2   = (-0x200 - target->angle) & 0x3FF;
-        int32 angleDif = angle2 - self->angle;
+        int32 negAngle   = (-0x200 - target->angle) & 0x3FF;
+        int32 angleDist = negAngle - self->angle;
 
-        int32 val1, val2, val3;
-        if (angleDif >= 0)
-            val1 = angle2 - self->angle;
+        int32 angle1, angle2, angle3;
+        if (angleDist >= 0)
+            angle1 = negAngle - self->angle;
         else
-            val1 = self->angle - angle2;
+            angle1 = self->angle - negAngle;
 
-        if (angleDif + 0x400 >= 0)
-            val2 = angleDif + 0x400;
+        if (angleDist + 0x400 >= 0)
+            angle2 = angleDist + 0x400;
         else
-            val2 = self->angle - angle2 - 0x400;
+            angle2 = self->angle - negAngle - 0x400;
 
-        if (angleDif - 0x400 >= 0)
-            val3 = angleDif - 0x400;
+        if (angleDist - 0x400 >= 0)
+            angle3 = angleDist - 0x400;
         else
-            val3 = self->angle - angle2 + 0x400;
-        if (val1 >= val3) {
-            if (val3 < val2) {
-                self->angle = self->angle + ((angleDif - 0x400) >> 3);
+            angle3 = self->angle - negAngle + 0x400;
+
+        if (angle1 >= angle3) {
+            if (angle3 < angle2) {
+                self->angle = self->angle + ((angleDist - 0x400) >> 3);
             }
             else {
-                self->angle = self->angle + ((angleDif + 0x400) >> 3);
+                self->angle = self->angle + ((angleDist + 0x400) >> 3);
             }
         }
-        else if (val1 < val2) {
-            self->angle = self->angle + (angleDif >> 3);
+        else if (angle1 < angle2) {
+            self->angle = self->angle + (angleDist >> 3);
         }
         else {
-            self->angle = self->angle + ((angleDif + 0x400) >> 3);
+            self->angle = self->angle + ((angleDist + 0x400) >> 3);
         }
 
         self->angle &= 0x3FF;
         if (target->state == UFO_Player_State_Springboard) {
             self->angleX = -(target->height >> 18);
-            int32 val    = self->radius * RSDK.Cos1024(self->angleX) >> 10;
+            int32 rad    = self->radius * RSDK.Cos1024(self->angleX) >> 10;
 
-            self->position.x = target->position.x - val * RSDK.Sin1024(self->angle);
-            self->position.y = target->position.y - val * RSDK.Cos1024(self->angle);
+            self->position.x = target->position.x - rad * RSDK.Sin1024(self->angle);
+            self->position.y = target->position.y - rad * RSDK.Cos1024(self->angle);
 
             self->height = (target->height >> 1) - (RSDK.Sin1024(self->angleX) << 14) + 0x400000;
         }

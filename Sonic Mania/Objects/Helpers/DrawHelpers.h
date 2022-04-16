@@ -37,6 +37,6 @@ void DrawHelpers_DrawCross(int32 x, int32 y, int32 sizeX, int32 sizeY, uint32 co
 
 //Custom Helpers I added for editor stuff
 void DrawHelpers_DrawRectOutline(int32 x, int32 y, int32 sizeX, int32 sizeY, uint32 colour);
-void DrawHelpers_DrawArenaBounds(int32 left, int32 top, int32 right, int32 bottom, uint8 flags, uint32 colour);
+void DrawHelpers_DrawArenaBounds(int32 left, int32 top, int32 right, int32 bottom, uint8 sideMasks, uint32 colour);
 
 #endif //! OBJ_DRAWHELPERS_H

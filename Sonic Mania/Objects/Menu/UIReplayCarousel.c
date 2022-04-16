@@ -538,13 +538,13 @@ void UIReplayCarousel_Draw_Carousel(void)
         API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "characterID", &characterID);
         API.GetUserDBValue(globals->replayTableID, row, DBVAR_UINT8, "encore", &encore);
         if (id == self->curReplayID && parent->active == ACTIVE_ALWAYS) {
-            int32 val = (zoneID % 12) >> 3;
-            int32 pal = 0;
+            int32 palRow = (zoneID % 12) >> 3;
+            int32 bankID = 0;
             if (encore)
-                pal = val + 4;
+                bankID = palRow + 4;
             else
-                pal = val + 1;
-            RSDK.CopyPalette(pal, (32 * (zoneID % 12)), 0, 224, 32);
+                bankID = palRow + 1;
+            RSDK.CopyPalette(bankID, (32 * (zoneID % 12)), 0, 224, 32);
             RSDK.SetSpriteAnimation(UIReplayCarousel->aniFrames, 11, &self->zoneIconAnimator, true, zoneID % 12);
         }
         UIReplayCarousel_DrawBGShapes(self->position.x, posY, encore, id);

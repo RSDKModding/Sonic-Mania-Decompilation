@@ -51,7 +51,7 @@ struct EntityHeavyShinobi {
     int32 type;
     int32 timer;
     int32 glitchTimer;
-    Entity *playerPtr;
+    EntityPlayer *playerPtr;
     Vector2 playerDistance;
     Animator mainAnimator;
     Animator fxAnimator;

@@ -15,8 +15,10 @@ void DNARiser_Update(void)
 
     if (self->scaleTimer)
         self->scaleTimer--;
+
     if (self->sfxTimer > 0)
         self->sfxTimer--;
+
     StateMachine_Run(self->state);
     if (self->popped) {
         if (self->popAnimator.frameID == self->popAnimator.loopIndex)
@@ -113,10 +115,10 @@ Vector2 DNARiser_CalculateScale(Vector2 *scalePtr)
         y = scalePtr->y;
     }
 
-    int32 val  = (30 - self->scaleTimer);
-    int32 sine = RSDK.Sin1024(((val * (0x40000000 / ((10983 * val + 286520) >> 7))) >> 11) & 0x3FF);
-    scale.x    = (((val - 30) * (sine << 6) / 100 + 0x10000) * x) >> 16;
-    scale.y    = (((30 - val) * (sine << 6) / 100 + 0x10000) * y) >> 16;
+    int32 timer = (30 - self->scaleTimer);
+    int32 sine  = RSDK.Sin1024(((timer * (0x40000000 / ((10983 * timer + 286520) >> 7))) >> 11) & 0x3FF);
+    scale.x     = (((timer - 30) * (sine << 6) / 100 + 0x10000) * x) >> 16;
+    scale.y     = (((30 - timer) * (sine << 6) / 100 + 0x10000) * y) >> 16;
     return scale;
 }
 
@@ -277,16 +279,17 @@ void DNARiser_State_HelixRise(void)
             }
         }
 
-        if (((1 << playerID) & self->activePlayers)) {
-            bool32 skipFlag = false;
+        if ((1 << playerID) & self->activePlayers) {
+            bool32 playerActive = false;
             if (!Player_CheckValidState(player)) {
                 self->activePlayers &= ~(1 << playerID);
                 if (self->activePlayers)
-                    skipFlag = true;
+                    playerActive = true;
                 else
                     DNARiser_SetupBurst();
             }
-            if (!skipFlag) {
+
+            if (!playerActive) {
                 if (player->jumpPress) {
                     player->velocity.y = 0;
                     player->velocity.x = 0;

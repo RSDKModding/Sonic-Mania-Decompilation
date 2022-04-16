@@ -7,8 +7,8 @@
 // Object Class
 struct ObjectDialogRunner {
     RSDK_OBJECT
-    int32 authForbiddenFlag;
-    bool32 signoutFlag;
+    int32 authForbidden;
+    bool32 signedout;
     int32 unused1;
     int32 unused2;
     bool32 isAutoSaving;

@@ -24,7 +24,7 @@ void Tubinaut_Draw(void)
     RSDK_THIS(Tubinaut);
 
     if (self->attackTimer < 256 || self->orbCount <= 1) {
-        for (int i = 0; i < Tubinaut_OrbCount; ++i) {
+        for (int32 i = 0; i < Tubinaut_OrbCount; ++i) {
             if (self->ballsVisible[i]) {
                 RSDK.DrawSprite(&self->ballAnimators[i], &self->orbPositions[i], false);
             }
@@ -141,8 +141,8 @@ void Tubinaut_CheckPlayerCollisions(void)
             }
         }
         else {
-            bool32 flag = false;
-            for (int i = 0; i < Tubinaut_OrbCount; ++i) {
+            bool32 repelled = false;
+            for (int32 i = 0; i < Tubinaut_OrbCount; ++i) {
                 if (self->ballsVisible[i]) {
                     self->position.x = self->orbPositions[i].x;
                     self->position.y = self->orbPositions[i].y;
@@ -152,7 +152,7 @@ void Tubinaut_CheckPlayerCollisions(void)
 #if RETRO_USE_PLUS
                         if (player->state != Player_State_MightyHammerDrop) {
 #endif
-                            flag                         = true;
+                            repelled                         = true;
                             self->playerTimers[playerID] = 15;
 #if RETRO_USE_PLUS
                         }
@@ -180,8 +180,8 @@ void Tubinaut_CheckPlayerCollisions(void)
 
             self->position.x = storeX;
             self->position.y = storeY;
-            if (!flag && Player_CheckBadnikTouch(player, self, &Tubinaut->hitboxFace) && Player_CheckBadnikBreak(player, self, false)) {
-                for (int i = 0; i < Tubinaut_OrbCount; ++i) {
+            if (!repelled && Player_CheckBadnikTouch(player, self, &Tubinaut->hitboxFace) && Player_CheckBadnikBreak(player, self, false)) {
+                for (int32 i = 0; i < Tubinaut_OrbCount; ++i) {
                     if (self->ballsVisible[i]) {
                         EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, intToVoid(i + 1), self->orbPositions[i].x, self->orbPositions[i].y);
                         orb->velocity.x     = 0x380 * RSDK.Cos256(self->orbAngles[i] >> 4);
@@ -201,10 +201,10 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
 {
     RSDK_THIS(Tubinaut);
 
-    bool32 flag = Player_CheckAttacking(player, self);
+    bool32 isAttacking = Player_CheckAttacking(player, self);
 
 #if RETRO_USE_PLUS
-    if (!flag && player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
+    if (!isAttacking && player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         if (!player->uncurlTimer) {
             RSDK.PlaySfx(Player->sfxPimPom, false, 255);
             player->uncurlTimer = 30;
@@ -212,15 +212,15 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
                 player->groundVel = -0x10000;
             else
                 player->groundVel = 0x10000;
-            flag = true;
+            isAttacking = true;
         }
     }
 #endif
 
-    if (!flag)
+    if (!isAttacking)
         Player_CheckHit(player, self);
 
-    return flag;
+    return isAttacking;
 }
 
 void Tubinaut_OrbHit(EntityPlayer *player, int orbID)
@@ -235,9 +235,9 @@ void Tubinaut_OrbHit(EntityPlayer *player, int orbID)
 #if RETRO_USE_PLUS
         if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_DROPDASH) {
 #endif
-            int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
+            int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
-            int velX = 0, velY = 0;
+            int32 velX = 0, velY = 0;
 #if RETRO_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
                 velX = player->velocity.x;

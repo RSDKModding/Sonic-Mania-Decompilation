@@ -413,25 +413,25 @@ void TitleCard_State_ShowTitle(void)
     RSDK_THIS(TitleCard);
     Zone_ApplyWorldBounds();
 
-    int32 val = self->points0[0].x + (self->points0[2].x - self->points0[0].x - 0x100000) / 6;
-    if (val < self->points0[2].x)
-        val = self->points0[2].x;
-    self->points0[0].x = val;
+    int32 pos = self->points0[0].x + (self->points0[2].x - self->points0[0].x - 0x100000) / 6;
+    if (pos < self->points0[2].x)
+        pos = self->points0[2].x;
+    self->points0[0].x = pos;
 
-    val = self->points0[0].y + (self->points0[2].y - self->points0[0].y - 0x100000) / 6;
-    if (val < self->points0[2].y)
-        val = self->points0[2].y;
-    self->points0[0].y = val;
+    pos = self->points0[0].y + (self->points0[2].y - self->points0[0].y - 0x100000) / 6;
+    if (pos < self->points0[2].y)
+        pos = self->points0[2].y;
+    self->points0[0].y = pos;
 
-    val = self->points0[1].x + (self->points0[3].x - self->points0[1].x - 0x100000) / 6;
-    if (val < self->points0[3].x)
-        val = self->points0[3].x;
-    self->points0[1].x = val;
+    pos = self->points0[1].x + (self->points0[3].x - self->points0[1].x - 0x100000) / 6;
+    if (pos < self->points0[3].x)
+        pos = self->points0[3].x;
+    self->points0[1].x = pos;
 
-    val = self->points0[1].y + (self->points0[3].y - self->points0[1].y - 0x100000) / 6;
-    if (val < self->points0[3].y)
-        val = self->points0[3].y;
-    self->points0[1].y = val;
+    pos = self->points0[1].y + (self->points0[3].y - self->points0[1].y - 0x100000) / 6;
+    if (pos < self->points0[3].y)
+        pos = self->points0[3].y;
+    self->points0[1].y = pos;
 
     self->points4[0].x = (self->points0[0].x - 0xF00000) + self->points4[3].x;
     self->points4[1].x = (self->points0[0].x - 0xF00000) + self->points4[2].x;

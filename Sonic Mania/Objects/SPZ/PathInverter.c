@@ -151,13 +151,13 @@ void PathInverter_State_Horizontal(void)
                             PathInverter_HandlePathSwitch(player);
                     }
                     else {
-                        bool32 flag = false;
+                        bool32 noInteractions = false;
                         if (player->velocity.x <= 0)
-                            flag = player->position.x <= self->position.x + 0x80000;
+                            noInteractions = player->position.x <= self->position.x + 0x80000;
                         else
-                            flag = player->position.x >= self->position.x - 0x80000;
+                            noInteractions = player->position.x >= self->position.x - 0x80000;
 
-                        if (flag)
+                        if (noInteractions)
                             self->playerPtrs[player->playerID] = NULL;
                         else
                             PathInverter_HandlePathSwitch(player);
