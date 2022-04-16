@@ -17,17 +17,20 @@ void GHZ2Outro_Update(void)
         CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_HoleSceneFadeIn, GHZ2Outro_Cutscene_SpyOnEggman, GHZ2Outro_Cutscene_BreakupGroup,
                                   GHZ2Outro_Cutscene_RubyHover, GHZ2Outro_Cutscene_StartRubyWarp, GHZ2Outro_Cutscene_HandleRubyWarp,
                                   GHZ2Outro_Cutscene_LoadCPZ1, StateMachine_None);
+
 #if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-            seq->skipType         = SKIPTYPE_CALLBACK;
+            seq->skipType          = SKIPTYPE_CALLBACK;
             seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
         }
 #endif
+
         self->active = ACTIVE_NEVER;
     }
     else {
         CutsceneSeq_StartSequence(self, GHZ2Outro_Cutscene_FinishActClear, GHZ2Outro_Cutscene_JumpIntoHole, StateMachine_None);
+
 #if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
@@ -47,11 +50,12 @@ void GHZ2Outro_Draw(void) {}
 void GHZ2Outro_Create(void *data)
 {
     RSDK_THIS(GHZ2Outro);
+
     if (!SceneInfo->inEditor) {
         self->activated = data != NULL;
 
-        foreach_all(DERobot, robot) { self->DERobot = (Entity *)robot; }
-        foreach_all(Eggman, eggman) { self->eggman = (Entity *)eggman; }
+        foreach_all(DERobot, robot) { self->DERobot = robot; }
+        foreach_all(Eggman, eggman) { self->eggman = eggman; }
 
         self->active  = ACTIVE_NORMAL;
         self->visible = false;
@@ -68,9 +72,10 @@ void GHZ2Outro_StageLoad(void)
 bool32 GHZ2Outro_Cutscene_FinishActClear(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityDERobot *robot = (EntityDERobot *)self->DERobot;
-    robot->state       = StateMachine_None;
-    robot->active = ACTIVE_NEVER;
+
+    EntityDERobot *robot = self->DERobot;
+    robot->state         = StateMachine_None;
+    robot->active        = ACTIVE_NEVER;
 
     CutsceneSeq_LockAllPlayerControl();
 
@@ -87,8 +92,8 @@ bool32 GHZ2Outro_Cutscene_FinishActClear(EntityCutsceneSeq *host)
         }
     }
 
-    Zone->deathBoundary[0] += 0x4000 << 0x10;
-    Zone->deathBoundary[1] += 0x4000 << 0x10;
+    Zone->deathBoundary[0] += 0x4000 << 16;
+    Zone->deathBoundary[1] += 0x4000 << 16;
     Music_PlayTrack(TRACK_STAGE);
 
     foreach_active(EggPrison, prison) { prison->state = EggPrison_State_FlyOffScreen; }
@@ -98,25 +103,30 @@ bool32 GHZ2Outro_Cutscene_FinishActClear(EntityCutsceneSeq *host)
 bool32 GHZ2Outro_Cutscene_JumpIntoHole(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityDERobot *robot = (EntityDERobot *)self->DERobot;
+
+    EntityDERobot *robot = self->DERobot;
 
     foreach_active(Player, player)
     {
         player->jumpPress = false;
+
         if (player->onGround) {
             if (player->angle > 8 && player->angle < 64 && player->groundVel > -0x20000)
                 player->groundVel = -0x20000;
+
             if (player->position.x - robot->position.x < 0x600000) {
                 player->jumpPress = true;
                 player->jumpHold  = true;
             }
         }
+
         if (player->position.x < robot->position.x + 0x200000)
             player->velocity.x -= player->velocity.x >> 4;
+
         if (player->position.x < robot->position.x - 0x200000)
             player->position.x = robot->position.x - 0x200000;
     }
-    
+
     if (player->position.y > (ScreenInfo->position.y + 0x200) << 16) {
         foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
         RSDK.SetScene("Cutscenes", "Green Hill Zone 2");
@@ -124,12 +134,14 @@ bool32 GHZ2Outro_Cutscene_JumpIntoHole(EntityCutsceneSeq *host)
         Zone_StartFadeOut(0x10, 0x000000);
         return true;
     }
+
     return false;
 }
 
 bool32 GHZ2Outro_Cutscene_HoleSceneFadeIn(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
+
     if (host->timer >= 8) {
         CutsceneSeq_LockAllPlayerControl();
 
@@ -143,31 +155,34 @@ bool32 GHZ2Outro_Cutscene_HoleSceneFadeIn(EntityCutsceneSeq *host)
 
         foreach_all(DERobot, robot)
         {
-            robot->state  = StateMachine_None;
+            robot->state   = StateMachine_None;
             robot->active  = ACTIVE_NORMAL;
             robot->visible = true;
         }
-        EntityDERobot *deRobot = (EntityDERobot *)self->DERobot;
-        deRobot->state  = DERobot_State_CutsceneExplode;
+
+        EntityDERobot *deRobot = self->DERobot;
+        deRobot->state         = DERobot_State_CutsceneExplode;
 
         CutsceneHBH_ShinobiBounceSetup();
         CutsceneHBH_KingSetup();
         CutsceneHBH_RiderSetup();
-        EntityEggman *eggman = (EntityEggman *)self->eggman;
+
+        EntityEggman *eggman = self->eggman;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
         eggman->direction = FLIP_NONE;
         eggman->state     = Eggman_State_ProcessAnimation;
 
         foreach_all(PhantomRuby, ruby)
         {
-            self->phantomRuby = (Entity *)ruby;
-            ruby->state         = PhantomRuby_State_MoveRotateGravity;
-            ruby->drawFX        = FX_ROTATE;
+            self->phantomRuby = ruby;
+            ruby->state       = PhantomRuby_State_MoveRotateGravity;
+            ruby->drawFX      = FX_ROTATE;
         }
 
         FXRuby_SetupLayerDeformation();
         return true;
     }
+
     return false;
 }
 bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host)
@@ -211,11 +226,12 @@ bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host)
         }
     }
 
-    if (host->timer == 90) {
+    if (host->timer == 90)
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.0125);
-    }
+
     if (host->timer == 120)
         Camera_SetupLerp(3, 0, self->position.x, self->position.y, 4);
+
     if (host->timer >= 208) {
         foreach_active(Player, player)
         {
@@ -230,10 +246,11 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
 
-    EntityEggman *eggman = (EntityEggman *)self->eggman;
+    EntityEggman *eggman = self->eggman;
 
     switch (host->timer) {
         default: break;
+
         case 90:
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 5, &eggman->animator, true, 2);
             eggman->timer      = 30;
@@ -243,6 +260,7 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
             eggman->state      = Eggman_State_FallUntilTimerReset;
             eggman->animID     = 3;
             break;
+
         case 160: {
             foreach_active(DERobot, robot)
             {
@@ -250,23 +268,28 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
                     robot->state = DERobot_Cutscene_ActivateArm;
                 }
             }
+
             RSDK.PlaySfx(DERobot->sfxButton2, false, 255);
             break;
         }
+
         case 240:
             eggman->state  = Eggman_State_ProcessThenSet;
             eggman->animID = 2;
             Music_SetMusicTrack("RubyPresence.ogg", TRACK_RUBYPRESENCE, 198457);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.025);
             break;
+
         case 272: {
             EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
             if (mystic)
                 mystic->state = CutsceneHBH_State_MysticExit;
+
             Camera_SetupLerp(0, 0, self->position.x, self->position.y - 0x400000, 1);
             RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, false, 0xFF);
             break;
         }
+
         case 288: {
             EntityCutsceneHBH *rider = CutsceneHBH_GetEntity(HBH_RIDER);
             if (rider) {
@@ -276,14 +299,18 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
                 }
                 rider->state = CutsceneHBH_State_RiderExit;
             }
+
             RSDK.PlaySfx(GHZ2Outro->sfxHeliWoosh, false, 255);
             break;
         }
+
         case 304: {
             CutsceneHBH_ShinobiJumpSetup();
+
             RSDK.PlaySfx(GHZ2Outro->sfxShinobiJump, false, 255);
             break;
         }
+
         case 320: {
             EntityCutsceneHBH *gunner = CutsceneHBH_GetEntity(HBH_GUNNER);
             if (gunner) {
@@ -296,9 +323,10 @@ bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host)
                 king->direction ^= FLIP_X;
                 king->state = CutsceneHBH_State_KingExit;
             }
+
             RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, false, 0xFF);
             foreach_active(Player, player) { player->down = false; }
-            EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
+            EntityPhantomRuby *ruby = self->phantomRuby;
             ruby->startPos.x        = ruby->position.x;
             ruby->startPos.y        = ruby->position.y;
             ruby->state             = PhantomRuby_State_Oscillate;
@@ -312,7 +340,7 @@ bool32 GHZ2Outro_Cutscene_RubyHover(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
     EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
+    EntityPhantomRuby *ruby = self->phantomRuby;
 
     if (ruby) {
         if (ruby->state == PhantomRuby_State_Oscillate) {
@@ -323,12 +351,14 @@ bool32 GHZ2Outro_Cutscene_RubyHover(EntityCutsceneSeq *host)
             return true;
         }
     }
+
     return false;
 }
 bool32 GHZ2Outro_Cutscene_StartRubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
+
+    EntityPhantomRuby *ruby = self->phantomRuby;
     if (!host->timer)
         PhantomRuby_SetupFlash(ruby);
 
@@ -336,23 +366,25 @@ bool32 GHZ2Outro_Cutscene_StartRubyWarp(EntityCutsceneSeq *host)
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         return true;
     }
+
     return false;
 }
 bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
-    EntityPlayer *player1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
+
+    EntityPhantomRuby *ruby = self->phantomRuby;
+    EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {
-        fxRuby = (EntityFXRuby *)self->fxRuby;
+        fxRuby = self->fxRuby;
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
-        self->fxRuby    = (Entity *)fxRuby;
+        self->fxRuby      = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
@@ -364,18 +396,18 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
             if (host->storedTimer) {
                 if (host->timer == host->storedTimer + 48) {
                     fxRuby->delay = 64;
-                    fxRuby->state     = FXRuby_State_IncreaseStageDeform;
+                    fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedTimer + 180) {
                     fxRuby->delay = 32;
-                    fxRuby->state     = FXRuby_State_IncreaseStageDeform;
+                    fxRuby->state = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->storedTimer    = host->timer;
-                    host->values[0] = true;
+                    host->storedTimer = host->timer;
+                    host->values[0]   = true;
                 }
             }
             else {
@@ -403,17 +435,17 @@ bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host)
         }
     }
     else {
-        if (fxRuby->fadeWhite >= 512) {
-            if (fxRuby->fadeBlack >= 512) {
+        if (fxRuby->fadeWhite >= 0x200) {
+            if (fxRuby->fadeBlack >= 0x200) {
                 if (host->timer == host->storedTimer + 150)
                     return true;
             }
             else {
-                fxRuby->fadeBlack += 16;
+                fxRuby->fadeBlack += 0x10;
             }
         }
         else {
-            fxRuby->fadeWhite += 16;
+            fxRuby->fadeWhite += 0x10;
         }
     }
 
@@ -424,12 +456,14 @@ bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host)
 {
     if (host->timer == 16) {
         globals->enableIntro = true;
+
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "Chemical Plant Zone+ 1");
         else
 #endif
             RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
+
         RSDK.LoadScene();
         return true;
     }

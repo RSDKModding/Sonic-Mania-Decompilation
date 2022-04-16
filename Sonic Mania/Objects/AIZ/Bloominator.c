@@ -52,17 +52,17 @@ void Bloominator_StageLoad(void)
     if (RSDK.CheckStageFolder("AIZ"))
         Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
 
-    Bloominator->hitbox.left             = -12;
-    Bloominator->hitbox.top              = -20;
-    Bloominator->hitbox.right            = 12;
-    Bloominator->hitbox.bottom           = 20;
+    Bloominator->hitboxBadnik.left   = -12;
+    Bloominator->hitboxBadnik.top    = -20;
+    Bloominator->hitboxBadnik.right  = 12;
+    Bloominator->hitboxBadnik.bottom = 20;
 
-    Bloominator->projectileHitbox.left   = -4;
-    Bloominator->projectileHitbox.top    = -4;
-    Bloominator->projectileHitbox.right  = 4;
-    Bloominator->projectileHitbox.bottom = 4;
+    Bloominator->hitboxProjectile.left   = -4;
+    Bloominator->hitboxProjectile.top    = -4;
+    Bloominator->hitboxProjectile.right  = 4;
+    Bloominator->hitboxProjectile.bottom = 4;
 
-    Bloominator->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
+    Bloominator->sfxShot = RSDK.GetSfx("Stage/Shot.wav");
 
     DEBUGMODE_ADD_OBJ(Bloominator);
 }
@@ -80,14 +80,23 @@ void Bloominator_DebugSpawn(void)
     CREATE_ENTITY(Bloominator, NULL, self->position.x, self->position.y);
 }
 
-void Bloominator_CheckHit(void)
+void Bloominator_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Bloominator);
+
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Bloominator->hitbox))
+        if (Player_CheckBadnikTouch(player, self, &Bloominator->hitboxBadnik))
             Player_CheckBadnikBreak(player, self, true);
     }
+}
+
+void Bloominator_CheckOffScreen(void)
+{
+    RSDK_THIS(Bloominator);
+
+    if (!RSDK.CheckOnScreen(self, NULL))
+        Bloominator_Create(NULL);
 }
 
 void Bloominator_State_Setup(void)
@@ -95,11 +104,11 @@ void Bloominator_State_Setup(void)
     RSDK_THIS(Bloominator);
     self->active = ACTIVE_NORMAL;
     self->timer  = 0;
-    self->state  = Bloominator_Idle;
-    Bloominator_Idle();
+    self->state  = Bloominator_State_Idle;
+    Bloominator_State_Idle();
 }
 
-void Bloominator_Idle(void)
+void Bloominator_State_Idle(void)
 {
     RSDK_THIS(Bloominator);
     if (self->activeScreens) {
@@ -111,9 +120,9 @@ void Bloominator_Idle(void)
     }
 
     RSDK.ProcessAnimation(&self->animator);
-    Bloominator_CheckHit();
-    if (!RSDK.CheckOnScreen(self, NULL))
-        Bloominator_Create(NULL);
+
+    Bloominator_CheckPlayerCollisions();
+    Bloominator_CheckOffScreen();
 }
 
 void Bloominator_State_Firing(void)
@@ -139,28 +148,30 @@ void Bloominator_State_Firing(void)
         case 50:
             self->timer = -60;
             RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &self->animator, true, 0);
-            self->state = Bloominator_Idle;
+            self->state = Bloominator_State_Idle;
             break;
     }
 
     RSDK.ProcessAnimation(&self->animator);
-    Bloominator_CheckHit();
-    if (!RSDK.CheckOnScreen(self, NULL))
-        Bloominator_Create(NULL);
+
+    Bloominator_CheckPlayerCollisions();
+    Bloominator_CheckOffScreen();
 }
 
 void Bloominator_State_Spikeball(void)
 {
     RSDK_THIS(Bloominator);
+
     if (RSDK.CheckOnScreen(self, NULL)) {
         self->position.x += self->velocity.x;
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
+
         RSDK.ProcessAnimation(&self->animator);
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &Bloominator->projectileHitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &Bloominator->hitboxProjectile)) {
                 Player_CheckProjectileHit(player, self);
             }
         }

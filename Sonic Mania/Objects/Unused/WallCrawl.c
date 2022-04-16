@@ -53,22 +53,27 @@ void WallCrawl_Create(void *data)
 void WallCrawl_StageLoad(void)
 {
     WallCrawl->aniFrames                = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
-    WallCrawl->hitbox.left              = -14;
-    WallCrawl->hitbox.top               = -14;
-    WallCrawl->hitbox.right             = 14;
-    WallCrawl->hitbox.bottom            = 14;
-    WallCrawl->checkbox.left            = -128;
-    WallCrawl->checkbox.top             = -128;
-    WallCrawl->checkbox.right           = 128;
-    WallCrawl->checkbox.bottom          = 128;
-    WallCrawl->attackbox.left           = -132;
-    WallCrawl->attackbox.top            = 8;
-    WallCrawl->attackbox.right          = 132;
-    WallCrawl->attackbox.bottom         = -8;
-    WallCrawl->projectileHurtbox.left   = -24;
-    WallCrawl->projectileHurtbox.top    = -1;
-    WallCrawl->projectileHurtbox.right  = 24;
-    WallCrawl->projectileHurtbox.bottom = 9;
+
+    WallCrawl->hitboxBadnik.left              = -14;
+    WallCrawl->hitboxBadnik.top               = -14;
+    WallCrawl->hitboxBadnik.right             = 14;
+    WallCrawl->hitboxBadnik.bottom            = 14;
+
+    WallCrawl->hitboxRange.left            = -128;
+    WallCrawl->hitboxRange.top             = -128;
+    WallCrawl->hitboxRange.right           = 128;
+    WallCrawl->hitboxRange.bottom          = 128;
+
+    WallCrawl->hitboxLaser.left           = -132;
+    WallCrawl->hitboxLaser.top            = 8;
+    WallCrawl->hitboxLaser.right          = 132;
+    WallCrawl->hitboxLaser.bottom         = -8;
+
+    WallCrawl->hitboxProjectile.left   = -24;
+    WallCrawl->hitboxProjectile.top    = -1;
+    WallCrawl->hitboxProjectile.right  = 24;
+    WallCrawl->hitboxProjectile.bottom = 9;
+
     DEBUGMODE_ADD_OBJ(WallCrawl);
 }
 
@@ -83,7 +88,7 @@ void WallCrawl_DebugSpawn(void)
 void WallCrawl_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(WallCrawl->aniFrames, 2, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void WallCrawl_HandlePlayerInteractions(void)
@@ -92,7 +97,7 @@ void WallCrawl_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (!self->timer) {
-            if (Player_CheckCollisionTouch(player, self, &WallCrawl->checkbox)) {
+            if (Player_CheckCollisionTouch(player, self, &WallCrawl->hitboxRange)) {
                 if (self->playerPtr) {
                     if (abs(player->position.x - self->position.x) < abs(self->playerPtr->position.x - self->position.x))
                         self->playerPtr = player;
@@ -102,7 +107,7 @@ void WallCrawl_HandlePlayerInteractions(void)
                 }
             }
         }
-        if (Player_CheckBadnikTouch(player, self, &WallCrawl->hitbox))
+        if (Player_CheckBadnikTouch(player, self, &WallCrawl->hitboxBadnik))
             Player_CheckBadnikBreak(player, self, true);
     }
 }
@@ -131,20 +136,21 @@ void WallCrawl_State_Setup(void)
         offsetX = 0xC0000;
 
     RSDK.ObjectTileGrip(self, Zone->fgLayers, (2 * ((self->direction & FLIP_X) != 0) + 1), 0, offsetX, offsetY, 8);
-    self->state = WallCrawl_State_Main;
-    WallCrawl_State_Main();
+    self->state = WallCrawl_State_Moving;
+    WallCrawl_State_Moving();
 }
 
-void WallCrawl_State_Main(void)
+void WallCrawl_State_Moving(void)
 {
     RSDK_THIS(WallCrawl);
 
     if (self->timer)
         self->timer--;
+
     EntityPlayer *playerPtr = self->playerPtr;
     if (playerPtr) {
-        if (Player_CheckCollisionTouch(playerPtr, self, &WallCrawl->checkbox)) {
-            if (!Player_CheckCollisionTouch(playerPtr, self, &WallCrawl->attackbox)) {
+        if (Player_CheckCollisionTouch(playerPtr, self, &WallCrawl->hitboxRange)) {
+            if (!Player_CheckCollisionTouch(playerPtr, self, &WallCrawl->hitboxLaser)) {
                 self->animator.speed = 48;
                 if (playerPtr->position.y <= self->position.y) {
                     self->direction &= ~FX_ROTATE;
@@ -206,8 +212,8 @@ void WallCrawl_State_Idle(void)
     if (!--self->idleTimer) {
         if (abs(self->velocity.y) == 0x8000)
             self->direction ^= FLIP_Y;
-        self->state = WallCrawl_State_Main;
-        WallCrawl_State_Main();
+        self->state = WallCrawl_State_Moving;
+        WallCrawl_State_Moving();
     }
     else {
         WallCrawl_HandlePlayerInteractions();
@@ -227,7 +233,7 @@ void WallCrawl_State_Projectile(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &WallCrawl->projectileHurtbox)) {
+        if (Player_CheckCollisionTouch(player, self, &WallCrawl->hitboxProjectile)) {
             Player_CheckHit(player, self);
         }
     }

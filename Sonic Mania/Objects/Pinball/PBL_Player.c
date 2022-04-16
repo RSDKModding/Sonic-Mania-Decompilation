@@ -72,7 +72,7 @@ void PBL_Player_Create(void *data)
         self->collisionLayers = 1 << PBL_Setup->tableHigh;
         RSDK.SetModelAnimation(PBL_Player->jumpFrames, &self->animator, 128, 0, true, 0);
 
-        foreach_all(PBL_Camera, camera) { camera->targetPtr = (Entity *)self; }
+        foreach_all(PBL_Camera, camera) { camera->target = (Entity *)self; }
     }
 }
 

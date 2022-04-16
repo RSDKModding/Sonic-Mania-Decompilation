@@ -155,7 +155,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     player1->tileCollisions = true;
     player1->onGround       = true;
     player1->state          = Player_State_Ground;
-    camera->targetPtr       = (Entity *)player1;
+    camera->target          = (Entity *)player1;
     camera->state           = Camera_State_Follow;
     camera->position.x      = player1->position.x;
 
@@ -715,8 +715,8 @@ bool32 EncoreIntro_Cutscene_AIZEncoreTutorial(EntityCutsceneSeq *host)
         player->right = true;
         if (player->velocity.x >= 0x20000)
             player->velocity.x = 0x20000;
-        self->velocity.x  = player->velocity.x;
-        camera->targetPtr = (Entity *)self;
+        self->velocity.x = player->velocity.x;
+        camera->target   = (Entity *)self;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
@@ -1030,8 +1030,8 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
         player->camera         = camera;
 
         Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
-        camera->targetPtr = (Entity *)player;
-        camera->state     = Camera_State_Follow;
+        camera->target = (Entity *)player;
+        camera->state  = Camera_State_Follow;
 
         Hitbox *playerHitbox = Player_GetHitbox(player);
         while (
@@ -1071,6 +1071,7 @@ bool32 EncoreIntro_Cutscene_FadeOutAndReset(EntityCutsceneSeq *host)
     else {
         fxRuby->fadeBlack += 16;
     }
+
     return false;
 }
 
@@ -1085,6 +1086,7 @@ bool32 EncoreIntro_Cutscene_FadeInAndStart(EntityCutsceneSeq *host)
     else {
         fxRuby->fadeBlack -= 16;
     }
+
     return false;
 }
 
@@ -1103,6 +1105,7 @@ bool32 EncoreIntro_Cutscene_SkipAndFadeOut(EntityCutsceneSeq *host)
     else if (host->timer >= 150) {
         return EncoreIntro_Cutscene_LoadGHZ(host);
     }
+
     return false;
 }
 

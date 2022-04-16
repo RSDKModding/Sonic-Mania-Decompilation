@@ -161,7 +161,7 @@ bool32 SPZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
-        camera->targetPtr   = (Entity *)player1;
+        camera->target   = (Entity *)player1;
         camera->state       = Camera_State_Follow;
         player1->stateInput = Player_ProcessP1Input;
         player1->state      = Player_State_Ground;

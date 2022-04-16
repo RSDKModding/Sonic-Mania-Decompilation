@@ -69,9 +69,9 @@ void Camera_Create(void *data)
         self->boundsT = Zone->cameraBoundsT[self->screenID];
         self->boundsB = Zone->cameraBoundsB[self->screenID];
 
-        if (self->targetPtr) {
-            self->position.x = self->targetPtr->position.x;
-            self->position.y = self->targetPtr->position.y;
+        if (self->target) {
+            self->position.x = self->target->position.x;
+            self->position.y = self->target->position.y;
             self->state      = Camera_State_Follow;
         }
         else {
@@ -119,7 +119,7 @@ EntityCamera *Camera_SetTargetEntity(int32 screen, void *t)
     foreach_all(Camera, camera)
     {
         if (camera->screenID == screen) {
-            camera->targetPtr  = target;
+            camera->target  = target;
             camera->position.x = target->position.x;
             camera->position.y = target->position.y;
             foreach_return camera;
@@ -305,10 +305,10 @@ void Camera_State_Roam(void)
 void Camera_State_Follow(void)
 {
     RSDK_THIS(Camera);
-    if (self->targetPtr) {
+    if (self->target) {
         Camera_HandleHBounds();
         Camera_HandleVBounds();
-        Entity *target = self->targetPtr;
+        Entity *target = self->target;
         target->position.x += self->targetMoveVel.x;
         if (target->position.x <= self->position.x + self->offset.x) {
             if (target->position.x < self->position.x - self->offset.x) {
@@ -350,9 +350,9 @@ void Camera_State_Follow(void)
 void Camera_State_HLock(void)
 {
     RSDK_THIS(Camera);
-    if (self->targetPtr) {
+    if (self->target) {
         Camera_HandleHBounds();
-        Entity *target = self->targetPtr;
+        Entity *target = self->target;
         target->position.x += self->targetMoveVel.x;
         if (target->position.x <= self->position.x + self->offset.x) {
             if (target->position.x < self->position.x - self->offset.x) {
@@ -375,9 +375,9 @@ void Camera_State_HLock(void)
 void Camera_State_VLock(void)
 {
     RSDK_THIS(Camera);
-    if (self->targetPtr) {
+    if (self->target) {
         Camera_HandleVBounds();
-        Entity *target = self->targetPtr;
+        Entity *target = self->target;
         target->position.y += self->targetMoveVel.y;
         int32 adjust = target->position.y - self->adjustY;
         if (adjust <= self->position.y + self->offset.y) {

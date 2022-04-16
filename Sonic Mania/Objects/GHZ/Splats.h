@@ -4,21 +4,22 @@
 #include "SonicMania.h"
 
 typedef enum {
-    //GHZ
+    // GHZ
     SPLATS_BOUNCEAROUND = 0,
-    //PGZ
+
+    // PGZ
     SPLATS_SPAWNER = 0,
     SPLATS_INKSPLATS,
     SPLATS_SPLAT,
-}SplatsTypes;
+} SplatsTypes;
 
 // Object Class
 struct ObjectSplats {
     RSDK_OBJECT
-    StateMachine(state);
-    Hitbox hitboxGHZBadnik;
+    StateMachine(initialState);
+    Hitbox hitboxBadnikGHZ;
     Hitbox hitboxJar;
-    Hitbox hitboxPGZBadnik;
+    Hitbox hitboxBadnikPGZ;
     uint16 aniFrames;
     uint16 sfxSplatsSpawn;
     uint16 sfxSplatsLand;
@@ -34,7 +35,7 @@ struct EntitySplats {
     uint16 minDelay;
     int32 delay;
     bool32 isOnScreen;
-    Entity *parent;
+    EntitySplats *parent;
     Vector2 startPos;
     int32 startDir;
     Animator mainAnimator;
@@ -49,7 +50,7 @@ void Splats_Update(void);
 void Splats_LateUpdate(void);
 void Splats_StaticUpdate(void);
 void Splats_Draw(void);
-void Splats_Create(void* data);
+void Splats_Create(void *data);
 void Splats_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Splats_EditorDraw(void);
@@ -74,4 +75,4 @@ void Splats_State_HandleLanding(void);
 void Splats_State_NoMoreJumps(void);
 void Splats_State_InkSplat(void);
 
-#endif //!OBJ_SPLATS_H
+#endif //! OBJ_SPLATS_H

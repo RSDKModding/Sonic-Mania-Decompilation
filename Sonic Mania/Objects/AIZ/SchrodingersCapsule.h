@@ -39,7 +39,7 @@ void SchrodingersCapsule_Update(void);
 void SchrodingersCapsule_LateUpdate(void);
 void SchrodingersCapsule_StaticUpdate(void);
 void SchrodingersCapsule_Draw(void);
-void SchrodingersCapsule_Create(void* data);
+void SchrodingersCapsule_Create(void *data);
 void SchrodingersCapsule_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SchrodingersCapsule_EditorDraw(void);
@@ -56,4 +56,4 @@ void SchrodingersCapsule_State_SetupActClear(void);
 
 #endif
 
-#endif //!OBJ_SCHRODINGERSCAPSULE_H
+#endif //! OBJ_SCHRODINGERSCAPSULE_H

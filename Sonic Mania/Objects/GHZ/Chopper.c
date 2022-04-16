@@ -30,8 +30,7 @@ void Chopper_Create(void *data)
     RSDK_THIS(Chopper);
     self->visible       = true;
     self->drawOrder     = Zone->drawOrderLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -83,6 +82,7 @@ void Chopper_DebugSpawn(void)
 void Chopper_CheckOffScreen(void)
 {
     RSDK_THIS(Chopper);
+
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
@@ -119,6 +119,7 @@ void Chopper_State_Setup(void)
 
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = -0x10000;
+
     if (self->type == CHOPPER_JUMP) {
         RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &self->animator, true, 0);
         self->state = Chopper_State_Jump;
@@ -140,8 +141,10 @@ void Chopper_State_Setup(void)
 void Chopper_State_Jump(void)
 {
     RSDK_THIS(Chopper);
+
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
+
     if (self->velocity.y >= -0x38000) {
         if (self->velocity.y <= 0x38000) {
             self->animator.speed = 2;
@@ -159,7 +162,9 @@ void Chopper_State_Jump(void)
         self->position.y = self->startPos.y;
         self->velocity.y = -0x70000;
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     Chopper_CheckPlayerCollisions_Jump();
     Chopper_CheckOffScreen();
 }
@@ -167,6 +172,7 @@ void Chopper_State_Jump(void)
 void Chopper_State_Swim(void)
 {
     RSDK_THIS(Chopper);
+
     self->position.x += self->velocity.x;
 
     bool32 hitWall = false;
@@ -198,6 +204,7 @@ void Chopper_State_Swim(void)
                     self->velocity.x = -0x20000;
                 else
                     self->velocity.x = 0x20000;
+
                 if (abs(player->position.y - self->position.y) > 0x100000) {
                     if (player->position.y < self->position.y)
                         self->velocity.y = -0x8000;
@@ -207,7 +214,9 @@ void Chopper_State_Swim(void)
             }
         }
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     Chopper_CheckPlayerCollisions_Swim();
     Chopper_CheckOffScreen();
 }
@@ -220,6 +229,7 @@ void Chopper_State_ChargeDelay(void)
         self->state = Chopper_State_Charge;
     else
         --self->timer;
+
     RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions_Swim();
     Chopper_CheckOffScreen();
@@ -253,7 +263,8 @@ void Chopper_State_Charge(void)
             self->velocity.x = 0x4000;
         self->direction ^= FLIP_X;
         self->state = Chopper_State_Swim;
-        hitWall     = false;
+
+        hitWall = false;
     }
     else if (self->velocity.y >= 0) {
         if (self->velocity.y > 0)
@@ -304,6 +315,7 @@ void Chopper_EditorLoad(void)
     RSDK_ENUM_VAR("Jump", CHOPPER_JUMP);
     RSDK_ENUM_VAR("Swim", CHOPPER_SWIM);
 
+    // Only used with "Swim" type, "Jump" type ignores it
     RSDK_ACTIVE_VAR(Chopper, direction);
     RSDK_ENUM_VAR("Left", FLIP_NONE);
     RSDK_ENUM_VAR("Right", FLIP_X);

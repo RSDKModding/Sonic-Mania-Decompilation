@@ -66,8 +66,8 @@ void Platform_Update(void)
                 child->position.y += self->collisionOffset.y;
                 if (child->objectID == Spikes->objectID) {
                     EntitySpikes *spikes = (EntitySpikes *)child;
-                    spikes->offset.x     = self->collisionOffset.x;
-                    spikes->offset.y     = self->collisionOffset.y;
+                    spikes->collisionOffset.x     = self->collisionOffset.x;
+                    spikes->collisionOffset.y     = self->collisionOffset.y;
                 }
                 else if (child->objectID == Platform->objectID) {
                     EntityPlatform *platform = (EntityPlatform *)child;

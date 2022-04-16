@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectWisp {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
 };
 
@@ -16,7 +16,7 @@ struct EntityWisp {
     StateMachine(state);
     int32 timer;
     int32 buzzCount;
-    EntityPlayer *targetPtr;
+    EntityPlayer *target;
     Vector2 startPos;
     Animator bodyAnimator;
     Animator wingAnimator;

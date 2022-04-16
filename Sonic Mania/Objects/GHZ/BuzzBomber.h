@@ -24,7 +24,7 @@ struct EntityBuzzBomber {
     Animator animator;
     Animator wingAnimator;
     Animator thrustAnimator;
-    Hitbox rangeHitbox;
+    Hitbox hitboxRange;
 };
 
 // Object Struct
@@ -35,7 +35,7 @@ void BuzzBomber_Update(void);
 void BuzzBomber_LateUpdate(void);
 void BuzzBomber_StaticUpdate(void);
 void BuzzBomber_Draw(void);
-void BuzzBomber_Create(void* data);
+void BuzzBomber_Create(void *data);
 void BuzzBomber_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BuzzBomber_EditorDraw(void);
@@ -50,14 +50,14 @@ void BuzzBomber_DebugSpawn(void);
 void BuzzBomber_CheckOffScreen(void);
 void BuzzBomber_CheckPlayerCollisions(void);
 
-//States
+// States
 void BuzzBomber_State_Setup(void);
-void BuzzBomber_State_BuzzAround(void);
-void BuzzBomber_State_IdleDelay(void);
+void BuzzBomber_State_Flying(void);
+void BuzzBomber_State_Idle(void);
 void BuzzBomber_State_DetectedPlayer(void);
 
-//Projectile States
+// Projectile States
 void BuzzBomber_State_ProjectileCharge(void);
 void BuzzBomber_State_ProjectileShot(void);
 
-#endif //!OBJ_BUZZBOMBER_H
+#endif //! OBJ_BUZZBOMBER_H

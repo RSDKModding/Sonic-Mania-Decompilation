@@ -15,12 +15,12 @@ struct EntityBridge {
     uint8 length;
     bool32 burnable;
     uint8 burnOffset;
-    uint8 activePlayerCount;
+    uint8 stoodEntityCount;
     uint8 timer;
     int32 stoodPos;
     int32 bridgeDepth;
     int32 depression;
-    Entity *playerPtr;
+    void *stoodEntity;
     int32 startPos;
     int32 endPos;
     Animator animator;
@@ -45,6 +45,7 @@ void Bridge_Serialize(void);
 
 // Extra Entity Functions
 void Bridge_Burn(int32 offset);
+bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 noVarUpdates, bool32 isPlayer);
 
 
 #endif //!OBJ_BRIDGE_H

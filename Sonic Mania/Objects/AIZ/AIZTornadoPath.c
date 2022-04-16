@@ -28,7 +28,7 @@ void AIZTornadoPath_Create(void *data)
         switch (self->type) {
             case AIZTORNADOPATH_START:
                 if (!StarPost->postIDs[0]) {
-                    self->active       = ACTIVE_NORMAL;
+                    self->active         = ACTIVE_NORMAL;
                     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                     if (camera) {
                         camera->state          = StateMachine_None;
@@ -97,14 +97,14 @@ void AIZTornadoPath_StageLoad(void)
 void AIZTornadoPath_HandleMoveSpeed(void)
 {
     RSDK_THIS(AIZTornadoPath);
-    bool32 usingCamPos               = false;
+    bool32 usingCamPos        = false;
     EntityCamera *camera      = AIZTornadoPath->camera;
     EntityAIZTornado *tornado = AIZTornadoPath->tornado;
 
     int32 x = 0, y = 0;
     if (camera && camera->position.x >= ScreenInfo->width << 16) {
-        x    = camera->position.x;
-        y    = camera->position.y;
+        x           = camera->position.x;
+        y           = camera->position.y;
         usingCamPos = true;
     }
     else {
@@ -126,7 +126,7 @@ void AIZTornadoPath_HandleMoveSpeed(void)
     int32 spd = self->speed >> 3;
     if (xDist * xDist + yDist * yDist < spd) {
         self->active = ACTIVE_NEVER;
-        node->active   = ACTIVE_NORMAL;
+        node->active = ACTIVE_NORMAL;
         if (node->easeToSpeed)
             node->speed = self->speed;
         else
@@ -205,7 +205,7 @@ void AIZTornadoPath_State_ExitTornadoSequence(void)
         }
         player->groundVel = AIZTornadoPath->moveVel.x;
         Player_StartJump(player);
-        player->right     = true;
+        player->right                = true;
         tornado->disableInteractions = true;
     }
 
@@ -224,7 +224,7 @@ void AIZTornadoPath_State_PrepareCatchPlayer(void)
         if (player->pushing > 0) {
             player->jumpPress         = true;
             player->jumpHold          = true;
-            self->state             = AIZTornadoPath_State_CatchPlayer;
+            self->state               = AIZTornadoPath_State_CatchPlayer;
             AIZTornadoPath->moveVel.x = 0;
             AIZTornadoPath->moveVel.y = 0;
         }
@@ -280,14 +280,14 @@ void AIZTornadoPath_State_CatchPlayer(void)
 void AIZTornadoPath_EditorDraw(void)
 {
     RSDK_THIS(AIZTornadoPath);
-    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &self->animator, true, 7);
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &self->unusedAnimator, true, 7);
+    RSDK.DrawSprite(&self->unusedAnimator, NULL, false);
 }
 
 void AIZTornadoPath_EditorLoad(void)
 {
     AIZTornadoPath->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &AIZTornadoPath->animator, true, 7);
+    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &AIZTornadoPath->unusedAnimator, true, 7);
 
     RSDK_ACTIVE_VAR(AIZTornadoPath, type);
     RSDK_ENUM_VAR("Start Node", AIZTORNADOPATH_START);

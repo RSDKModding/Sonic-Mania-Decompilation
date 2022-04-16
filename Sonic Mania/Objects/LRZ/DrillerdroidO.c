@@ -1042,14 +1042,14 @@ void DrillerdroidO_State_FireballEmitter(void)
     if (collided && DrillerdroidO->emitFireballs) {
         if (!(Zone->timer & 0x3F)) {
             EntityLRZFireball *fireball =
-                CREATE_ENTITY(LRZFireball, LRZFireball_StateChild_LauncherGravity, self->position.x, self->position.y + 0x940000);
+                CREATE_ENTITY(LRZFireball, LRZFireball_StateFireball_LauncherGravity, self->position.x, self->position.y + 0x940000);
             fireball->angle      = 0xEE;
             fireball->rotation   = 0xEE;
             fireball->groundVel  = -0x300;
             fireball->velocity.x = fireball->groundVel * RSDK.Sin512(0x12);
             fireball->velocity.y = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
 
-            fireball             = CREATE_ENTITY(LRZFireball, LRZFireball_StateChild_LauncherGravity, self->position.x, self->position.y + 0x940000);
+            fireball             = CREATE_ENTITY(LRZFireball, LRZFireball_StateFireball_LauncherGravity, self->position.x, self->position.y + 0x940000);
             fireball->angle      = 0x116;
             fireball->rotation   = 0x116;
             fireball->groundVel  = -0x300;

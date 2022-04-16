@@ -1120,19 +1120,19 @@ void ItemBox_HandleObjectCollisions(void)
     {
         int32 storeX = spikes->position.x;
         int32 storeY = spikes->position.y;
-        spikes->position.x -= spikes->offset.x;
-        spikes->position.y -= spikes->offset.y;
+        spikes->position.x -= spikes->collisionOffset.x;
+        spikes->position.y -= spikes->collisionOffset.y;
         if (RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, self, &ItemBox->hitbox, true)) {
-            self->position.x += spikes->offset.x;
-            self->position.y += spikes->offset.y;
+            self->position.x += spikes->collisionOffset.x;
+            self->position.y += spikes->collisionOffset.y;
             self->position.y &= 0xFFFF0000;
 
-            self->contentsPos.x += spikes->offset.x;
-            self->contentsPos.y += spikes->offset.y;
+            self->contentsPos.x += spikes->collisionOffset.x;
+            self->contentsPos.y += spikes->collisionOffset.y;
             self->contentsPos.y &= 0xFFFF0000;
 
-            self->moveOffset.x = spikes->offset.x;
-            self->moveOffset.y = spikes->offset.y;
+            self->moveOffset.x = spikes->collisionOffset.x;
+            self->moveOffset.y = spikes->collisionOffset.y;
             self->velocity.y   = 0;
         }
         spikes->position.x = storeX;

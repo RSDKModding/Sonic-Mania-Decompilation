@@ -55,13 +55,13 @@ void DERobot_Create(void *data)
                     self->arms[3]       = RSDK_GET_ENTITY(slotID + 6, DERobot);
                     self->health        = 8;
                     self->state         = DERobot_State_SetupArena;
-                    self->stateDraw     = DERobot_Draw_Basic;
+                    self->stateDraw     = DERobot_Draw_Simple;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
 
                 case DEROBOT_HEAD:
                     self->parent    = RSDK.GetEntityByID(slotID + 1);
-                    self->stateDraw = DERobot_Draw_HasParent;
+                    self->stateDraw = DERobot_Draw_RelativeToParent;
                     self->drawFX    = FX_ROTATE;
                     self->offset.x  = -0x160000;
                     self->offset.y  = -0x240000;
@@ -77,11 +77,11 @@ void DERobot_Create(void *data)
                         self->state     = DERobot_State_ArmIdle;
                     }
                     else if (self->frameID) {
-                        self->stateDraw = DERobot_Draw_Basic;
+                        self->stateDraw = DERobot_Draw_Simple;
                     }
                     else {
                         self->parent    = RSDK.GetEntityByID(slotID - 4);
-                        self->stateDraw = DERobot_Draw_HasParent;
+                        self->stateDraw = DERobot_Draw_RelativeToParent;
                         self->offset.x  = -0xC0000;
                         self->offset.y  = -0x100000;
                     }
@@ -90,7 +90,7 @@ void DERobot_Create(void *data)
 
                 case DEROBOT_LEG:
                     if (self->frameID) {
-                        self->stateDraw = DERobot_Draw_Basic;
+                        self->stateDraw = DERobot_Draw_Simple;
                     }
                     else {
                         RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->altAnimator, true, 1);
@@ -118,14 +118,14 @@ void DERobot_Create(void *data)
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
                     self->state     = DERobot_State_BombLaunched;
-                    self->stateDraw = DERobot_Draw_Basic;
+                    self->stateDraw = DERobot_Draw_Simple;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
 
                 case DEROBOT_BODY_CUTSCENE:
                     self->active        = ACTIVE_BOUNDS;
                     self->visible       = true;
-                    self->stateDraw     = DERobot_Draw_Basic;
+                    self->stateDraw     = DERobot_Draw_Simple;
                     self->shoulderFront = RSDK_GET_ENTITY(slotID + 4, DERobot);
                     self->arms[0]       = RSDK_GET_ENTITY(slotID + 1, DERobot);
                     self->arms[1]       = RSDK_GET_ENTITY(slotID + 2, DERobot);
@@ -133,7 +133,7 @@ void DERobot_Create(void *data)
                     break;
 
                 default:
-                    self->stateDraw = DERobot_Draw_Basic;
+                    self->stateDraw = DERobot_Draw_Simple;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
                     break;
             }
@@ -146,24 +146,28 @@ void DERobot_Create(void *data)
 
 void DERobot_StageLoad(void)
 {
-    DERobot->aniFrames         = RSDK.LoadSpriteAnimation("GHZ/DERobot.bin", SCOPE_STAGE);
-    DERobot->hitbox.left       = -32;
-    DERobot->hitbox.top        = -40;
-    DERobot->hitbox.right      = 32;
-    DERobot->hitbox.bottom     = 32;
+    DERobot->aniFrames = RSDK.LoadSpriteAnimation("GHZ/DERobot.bin", SCOPE_STAGE);
+
+    DERobot->hitboxBody.left   = -32;
+    DERobot->hitboxBody.top    = -40;
+    DERobot->hitboxBody.right  = 32;
+    DERobot->hitboxBody.bottom = 32;
+
     DERobot->hitboxHand.left   = -9;
     DERobot->hitboxHand.top    = -9;
     DERobot->hitboxHand.right  = 9;
     DERobot->hitboxHand.bottom = 9;
-    DERobot->sfxHit            = RSDK.GetSfx("Stage/BossHit.wav");
-    DERobot->sfxExplosion      = RSDK.GetSfx("Stage/Explosion2.wav");
-    DERobot->sfxImpact         = RSDK.GetSfx("Stage/Impact2.wav");
-    DERobot->sfxTargeting      = RSDK.GetSfx("Stage/Targeting1.wav");
-    DERobot->sfxLedgeBreak     = RSDK.GetSfx("Stage/LedgeBreak.wav");
-    DERobot->sfxBuzzsaw        = RSDK.GetSfx("Stage/Buzzsaw.wav");
-    DERobot->sfxDrop           = RSDK.GetSfx("Stage/Drop.wav");
-    DERobot->sfxButton2        = RSDK.GetSfx("Stage/Button2.wav");
-    DERobot->sfxHullClose      = RSDK.GetSfx("Stage/HullClose.wav");
+
+    DERobot->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    DERobot->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    DERobot->sfxImpact     = RSDK.GetSfx("Stage/Impact2.wav");
+    DERobot->sfxTargeting  = RSDK.GetSfx("Stage/Targeting1.wav");
+    DERobot->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
+    DERobot->sfxBuzzsaw    = RSDK.GetSfx("Stage/Buzzsaw.wav");
+    DERobot->sfxDrop       = RSDK.GetSfx("Stage/Drop.wav");
+    DERobot->sfxButton2    = RSDK.GetSfx("Stage/Button2.wav");
+    DERobot->sfxHullClose  = RSDK.GetSfx("Stage/HullClose.wav");
+
     RSDK.SetPaletteEntry(0, 236, 0x282028);
     RSDK.SetPaletteEntry(0, 237, 0x383040);
     RSDK.SetPaletteEntry(0, 238, 0x484868);
@@ -256,21 +260,24 @@ void DERobot_HandleTerrainDestruction(void)
     if (tx > self->destroyedTerrainX) {
         self->destroyedTerrainX = tx;
         int32 ty                = (self->position.y >> 20) - 16;
-        int32 spawnY            = (ty << 20) + 0x80000;
+
+        int32 spawnX = (tx << 20) + 0x80000;
+        int32 spawnY = (ty << 20) + 0x80000;
 
         bool32 playSFX = false;
         for (int32 i = 0; i < 32; ++i) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != (uint16)-1) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
-                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), (tx << 20) + 0x80000, spawnY);
+
+                EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
                 wall->velocity.y          = RSDK.Rand(-0x20000, 0x20000);
-                playSFX                   = true;
                 wall->drawFX              = FX_ROTATE | FX_FLIP;
+                playSFX                   = true;
             }
             ++ty;
             spawnY += 0x100000;
@@ -285,8 +292,9 @@ void DERobot_DestroyTerrainFinal(void)
 {
     RSDK_THIS(DERobot);
 
-    int32 tx     = (self->position.x >> 20) - 4;
-    int32 ty     = (self->position.y >> 20) - 16;
+    int32 tx = (self->position.x >> 20) - 4;
+    int32 ty = (self->position.y >> 20) - 16;
+
     int32 spawnX = (tx << 20) + 0x80000;
     for (int32 y = 0; y < 8; ++y) {
         int32 spawnY = (ty << 20) + 0x80000;
@@ -294,6 +302,7 @@ void DERobot_DestroyTerrainFinal(void)
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
             if (tile != (uint16)-1) {
                 RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
+
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                 wall->drawOrder           = Zone->drawOrderHigh;
                 wall->visible             = true;
@@ -385,6 +394,7 @@ void DERobot_CheckPlayerCollisions_Body(void)
 
     if (self->invincibilityTimer > 0) {
         self->invincibilityTimer--;
+
         if ((self->invincibilityTimer & 2)) {
             RSDK.SetPaletteEntry(0, 236, 0xC0C0C0);
             RSDK.SetPaletteEntry(0, 237, 0xD0D0D0);
@@ -403,8 +413,9 @@ void DERobot_CheckPlayerCollisions_Body(void)
 
     foreach_active(Player, player)
     {
-        if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &DERobot->hitbox) && Player_CheckBossHit(player, self)) {
+        if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &DERobot->hitboxBody) && Player_CheckBossHit(player, self)) {
             DERobot_Hit();
+            // DERobot_Hit should already play sfxHit, not sure why its here too
             RSDK.PlaySfx(DERobot->sfxHit, false, 255);
             player->velocity.x = 0x60000;
         }
@@ -446,13 +457,15 @@ void DERobot_CheckPlayerCollisions_ArmExtend(void)
 void DERobot_CheckPlayerCollisions_Hand(void)
 {
     RSDK_THIS(DERobot);
+
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
-    Vector2 pos;
-    pos.x = self->position.x;
-    pos.y = self->position.y;
+
+    Vector2 pivot;
+    pivot.x = self->position.x;
+    pivot.y = self->position.y;
     self->position.x += (self->armExtend + 35) << 16;
-    Zone_RotateOnPivot(&self->position, &pos, -(self->angle >> 3));
+    Zone_RotateOnPivot(&self->position, &pivot, -(self->angle >> 3));
 
     foreach_active(Player, player)
     {
@@ -472,14 +485,16 @@ void DERobot_CheckPlayerCollisions_Hand(void)
 bool32 DERobot_CheckRubyGrabbed(void)
 {
     RSDK_THIS(DERobot);
+
     bool32 grabbedRuby = false;
     int32 storeX       = self->position.x;
     int32 storeY       = self->position.y;
-    Vector2 pos;
-    pos.x = self->position.x;
-    pos.y = self->position.y;
+
+    Vector2 pivot;
+    pivot.x = self->position.x;
+    pivot.y = self->position.y;
     self->position.x += (self->armExtend + 48) << 16;
-    Zone_RotateOnPivot(&self->position, &pos, -(self->angle >> 3));
+    Zone_RotateOnPivot(&self->position, &pivot, -(self->angle >> 3));
 
     foreach_active(PhantomRuby, ruby)
     {
@@ -502,27 +517,27 @@ bool32 DERobot_CheckRubyGrabbed(void)
 void DERobot_CheckPlayerCollisions_Bomb(void)
 {
     RSDK_THIS(DERobot);
+
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &DERobot->hitboxHand)) {
+        if (Player_CheckCollisionTouch(player, self, &DERobot->hitboxHand))
             Player_CheckHit(player, self);
-        }
     }
 }
 
-void DERobot_Draw_HasParent(void)
+void DERobot_Draw_RelativeToParent(void)
 {
     RSDK_THIS(DERobot);
-    self->position.x = self->parent->position.x;
-    self->position.y = self->parent->position.y;
-    self->position.x += self->offset.x;
-    self->position.y += self->offset.y;
+
+    self->position.x = self->parent->position.x + self->offset.x;
+    self->position.y = self->parent->position.y + self->offset.y;
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
 void DERobot_Draw_Arm(void)
 {
     RSDK_THIS(DERobot);
+
     self->rotation = self->angle >> 2;
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
@@ -537,9 +552,10 @@ void DERobot_Draw_Arm(void)
     RSDK.DrawSprite(&self->armAnimator, NULL, false);
 }
 
-void DERobot_Draw_Basic(void)
+void DERobot_Draw_Simple(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 }
 
@@ -558,37 +574,30 @@ void DERobot_Draw_FrontLeg(void)
 void DERobot_Draw_Target(void)
 {
     RSDK_THIS(DERobot);
+
     Vector2 drawPos;
 
     self->mainAnimator.frameID = 0;
     self->inkEffect            = INK_ALPHA;
     self->direction            = FLIP_NONE;
-    drawPos.x                  = self->position.x;
-    drawPos.y                  = self->position.y;
-    drawPos.x -= self->offset.x;
-    drawPos.y -= self->offset.y;
+    drawPos.x                  = self->position.x - self->offset.x;
+    drawPos.y                  = self->position.y - self->offset.y;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->direction = FLIP_X;
-    drawPos.x       = self->position.x;
-    drawPos.y       = self->position.y;
-    drawPos.x += self->offset.x;
-    drawPos.y -= self->offset.y;
+    drawPos.x       = self->position.x + self->offset.x;
+    drawPos.y       = self->position.y - self->offset.y;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->mainAnimator.frameID = 1;
     self->direction            = FLIP_NONE;
-    drawPos.x                  = self->position.x;
-    drawPos.y                  = self->position.y;
-    drawPos.x -= self->offset.x;
-    drawPos.y += self->offset.y;
+    drawPos.x                  = self->position.x - self->offset.x;
+    drawPos.y                  = self->position.y + self->offset.y;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->direction = FLIP_X;
-    drawPos.x       = self->position.x;
-    drawPos.y       = self->position.y;
-    drawPos.x += self->offset.x;
-    drawPos.y += self->offset.y;
+    drawPos.x       = self->position.x + self->offset.x;
+    drawPos.y       = self->position.y + self->offset.y;
     RSDK.DrawSprite(&self->mainAnimator, &drawPos, false);
 
     self->inkEffect = INK_NONE;
@@ -600,16 +609,20 @@ void DERobot_Draw_Target(void)
 void DERobot_State_ArmIdle(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->armAnimator);
     if (self->armAnimator.speed > 0x40)
         self->armAnimator.speed -= 4;
+
     DERobot_CheckPlayerCollisions_Hand();
 }
 
 void DERobot_State_ArmExtendPrepare(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->armAnimator);
+
     if (self->armAnimator.speed == 240)
         RSDK.PlaySfx(DERobot->sfxBuzzsaw, false, 255);
 
@@ -617,18 +630,22 @@ void DERobot_State_ArmExtendPrepare(void)
         self->state = DERobot_State_ArmExtending;
     else
         self->armAnimator.speed += 4;
+
     DERobot_CheckPlayerCollisions_Hand();
 }
 
 void DERobot_State_ArmExtending(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->altAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
     if (self->armExtend < 192)
         self->armExtend += 8;
+
     DERobot_CheckPlayerCollisions_ArmExtend();
     DERobot_CheckPlayerCollisions_Hand();
+
     if (++self->timer == 120) {
         self->timer = 0;
         self->state = DERobot_State_ArmRetracting;
@@ -638,8 +655,10 @@ void DERobot_State_ArmExtending(void)
 void DERobot_State_ArmRetracting(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->altAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
+
     if (self->armExtend <= 0) {
         self->state = DERobot_State_ArmIdle;
     }
@@ -647,12 +666,14 @@ void DERobot_State_ArmRetracting(void)
         DERobot_CheckPlayerCollisions_ArmExtend();
         self->armExtend -= 8;
     }
+
     DERobot_CheckPlayerCollisions_Hand();
 }
 
 void DERobot_State_ArmDestroyed(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->altAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
 
@@ -668,9 +689,8 @@ void DERobot_Cutscene_ActivateArm(void)
     if (self->angle > -96)
         self->angle -= 4;
 
-    if (self->armAnimator.speed < 0x80) {
+    if (self->armAnimator.speed < 0x80)
         self->armAnimator.speed += 4;
-    }
 
     if (self->timer++ == -1)
         RSDK.PlaySfx(DERobot->sfxButton2, false, 255);
@@ -685,6 +705,7 @@ void DERobot_Cutscene_ActivateArm(void)
 void DERobot_Cutscene_ReachForRuby(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->altAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
 
@@ -697,6 +718,7 @@ void DERobot_Cutscene_ReachForRuby(void)
 void DERobot_Cutscene_GrabbedRuby(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->altAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
 
@@ -713,6 +735,7 @@ void DERobot_Cutscene_GrabbedRuby(void)
 void DERobot_Cutscene_ArmDeactivate(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->armAnimator);
 
     if (self->armAnimator.speed)
@@ -727,6 +750,7 @@ void DERobot_State_CloseHeadHatch(void)
     if (self->timer == 30) {
         RSDK.PlaySfx(DERobot->sfxButton2, false, 255);
     }
+
     if (self->timer >= 30) {
         if (self->rotation >= 0) {
             self->timer  = 0;
@@ -743,6 +767,7 @@ void DERobot_State_CloseHeadHatch(void)
 void DERobot_State_BombLaunched(void)
 {
     RSDK_THIS(DERobot);
+
     self->angle += 7;
     if (self->angle > 480) {
         self->velocity.y += 0x4000;
@@ -757,15 +782,19 @@ void DERobot_State_BombLaunched(void)
         self->position.y = self->offset.y - self->scale.y * RSDK.Sin1024(self->angle);
         self->velocity.y = self->position.y - self->velocity.y;
     }
+
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xE0000, true))
         self->state = DERobot_State_BombLanded;
+
     DERobot_CheckPlayerCollisions_Bomb();
 }
 
 void DERobot_State_BombLanded(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     if (self->mainAnimator.speed >= 0x80) {
         self->visible              = false;
         self->state                = DERobot_State_BombExplode;
@@ -776,14 +805,17 @@ void DERobot_State_BombLanded(void)
     else {
         self->mainAnimator.speed++;
     }
+
     DERobot_CheckPlayerCollisions_Bomb();
 }
 
 void DERobot_State_BombExplode(void)
 {
     RSDK_THIS(DERobot);
-    ++self->timer;
+
     self->position.y -= 0x20000;
+
+    ++self->timer;
     if (self->timer < 16)
         DERobot_CheckPlayerCollisions_Bomb();
 
@@ -799,8 +831,10 @@ void DERobot_State_BombExplode(void)
 void DERobot_State_SetupArena(void)
 {
     RSDK_THIS(DERobot);
+
     if (++self->timer >= 8) {
-        self->timer           = 0;
+        self->timer = 0;
+
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.y <= self->position.y + 0x200000 && player1->state != Player_State_ForceRoll_Ground) {
             for (int32 i = 0; i < Player->playerCount; ++i) {
@@ -822,6 +856,7 @@ void DERobot_State_SetupArena(void)
 void DERobot_State_SetupBoss(void)
 {
     RSDK_THIS(DERobot);
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (self->timer) {
@@ -838,6 +873,7 @@ void DERobot_State_SetupBoss(void)
             self->state   = DERobot_State_SurpriseFall;
             if (player1->characterID == ID_TAILS)
                 player1->stateAbility = Player_JumpAbility_Tails;
+
             EntityDERobot *kneeBack = self->legs[0];
             kneeBack->active        = ACTIVE_NORMAL;
             kneeBack->visible       = true;
@@ -897,6 +933,7 @@ void DERobot_State_SetupBoss(void)
     }
     else if (player1->position.x > 0x800000 + self->position.x && player1->onGround) {
         RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->boundsOffset.x = 1;
+
         ++self->timer;
         if (player1->characterID == ID_TAILS)
             player1->stateAbility = StateMachine_None;
@@ -912,6 +949,7 @@ void DERobot_State_SetupBoss(void)
 void DERobot_State_Target(void)
 {
     RSDK_THIS(DERobot);
+
     RSDK.ProcessAnimation(&self->altAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
 
@@ -920,7 +958,7 @@ void DERobot_State_Target(void)
         self->position.y = self->parent->position.y;
     }
 
-    self->alpha += 32;
+    self->alpha += 0x20;
     self->offset.x -= self->velocity.x;
     if (self->offset.x <= 0xC0000) {
         self->alpha    = 0;
@@ -930,6 +968,7 @@ void DERobot_State_Target(void)
     self->offset.y = self->offset.x;
     if (++self->timer == 60)
         RSDK.SetSpriteAnimation(DERobot->aniFrames, 8, &self->armAnimator, true, 0);
+
     if (self->timer == 96) {
         self->parent = 0;
         foreach_active(DERobot, robot)
@@ -940,6 +979,7 @@ void DERobot_State_Target(void)
             }
         }
     }
+
     if (self->timer == 128)
         destroyEntity(self);
 }
@@ -947,10 +987,13 @@ void DERobot_State_Target(void)
 void DERobot_State_SurpriseFall(void)
 {
     RSDK_THIS(DERobot);
+
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
+
     DERobot_HandleLegMovement(0);
     DERobot_HandleLegMovement(3);
+
     if (self->legs[2]->onGround) {
         self->angleVel = -0x10000;
         self->state    = DERobot_State_FallLand;
@@ -959,6 +1002,7 @@ void DERobot_State_SurpriseFall(void)
         Camera_ShakeScreen(0, 0, 8);
         RSDK.PlaySfx(DERobot->sfxLedgeBreak, false, 255);
     }
+
     DERobot_HandleArmMovement(0);
     DERobot_HandleArmMovement(2);
 }
@@ -966,8 +1010,10 @@ void DERobot_State_SurpriseFall(void)
 void DERobot_State_FallLand(void)
 {
     RSDK_THIS(DERobot);
+
     EntityDERobot *kneeBack  = self->legs[0];
     EntityDERobot *kneeFront = self->legs[3];
+
     kneeBack->angle += self->angleVel >> 12;
     if (kneeBack->angle <= 0) {
         self->angleVel += 2048;
@@ -989,17 +1035,21 @@ void DERobot_State_FallLand(void)
         self->state         = DERobot_State_Walk;
     }
     kneeFront->angle = kneeBack->angle;
+
     DERobot_HandleLegMovement2(1);
     DERobot_HandleLegMovement2(4);
     DERobot_HandleArmMovement(0);
     DERobot_HandleArmMovement(2);
+
     DERobot_CheckPlayerCollisions_Body();
 }
 
 void DERobot_State_Walk(void)
 {
     RSDK_THIS(DERobot);
-    int32 id              = self->movingSide;
+
+    int32 id = self->movingSide;
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     DERobot_HandleScreenBounds();
 
@@ -1080,6 +1130,7 @@ void DERobot_State_Walk(void)
     leg->angleVel += leg->angleInc;
     if (leg->angle > 176)
         leg->angleInc = self->angleMaxInc;
+
     DERobot_HandleLegMovement((id + 3) % 6);
 
     if (foot->onGround && (-knee->angle >> 6) > 0) {
@@ -1094,12 +1145,14 @@ void DERobot_State_Walk(void)
             foreach_active(CollapsingPlatform, platform) { platform->stoodPos.x = platform->position.x; }
         }
     }
+
     DERobot_CheckPlayerCollisions_Body();
 }
 
 void DERobot_State_ArmAttack(void)
 {
     RSDK_THIS(DERobot);
+
     DERobot_HandleScreenBounds();
     EntityDERobot *armBack = self->arms[0];
     if (self->movingSide == 3) {
@@ -1130,6 +1183,7 @@ void DERobot_State_ArmAttack(void)
         leg->angleInc = self->angleMaxInc;
 
     DERobot_HandleLegMovement((self->movingSide + 3) % 6);
+
     if (foot->onGround && (-knee->angle >> 6) > 0) {
         self->movingSide = (self->movingSide + 3) % 6;
         leg->angleVel    = self->angleVelStart;
@@ -1141,6 +1195,7 @@ void DERobot_State_ArmAttack(void)
             DERobot_Hit();
         }
     }
+
     DERobot_CheckPlayerCollisions_Body();
 }
 
@@ -1161,8 +1216,9 @@ void DERobot_State_Explode(void)
                     robot->angleVel   = -8;
                     robot->drawFX     = FX_ROTATE;
                     robot->state      = DERobot_State_DebrisFall;
-                    robot->stateDraw  = DERobot_Draw_Basic;
+                    robot->stateDraw  = DERobot_Draw_Simple;
                     break;
+
                 case DEROBOT_ARM:
                 case DEROBOT_LEG:
                 case DEROBOT_SPIKES:
@@ -1174,8 +1230,8 @@ void DERobot_State_Explode(void)
                     robot->angleVel   = RSDK.Rand(-16, 16);
                     robot->drawFX     = FX_ROTATE;
                     robot->state      = DERobot_State_DebrisFall;
-                    if (robot->stateDraw == DERobot_Draw_HasParent)
-                        robot->stateDraw = DERobot_Draw_Basic;
+                    if (robot->stateDraw == DERobot_Draw_RelativeToParent)
+                        robot->stateDraw = DERobot_Draw_Simple;
                     break;
             }
         }
@@ -1197,6 +1253,7 @@ void DERobot_State_ExplodeTerrain(void)
 
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
+
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
         DERobot_DestroyTerrainFinal();
         RSDK.PlaySfx(DERobot->sfxLedgeBreak, false, 255);
@@ -1221,8 +1278,10 @@ void DERobot_State_ExplodeTerrain(void)
 void DERobot_State_Finish(void)
 {
     RSDK_THIS(DERobot);
+
     self->velocity.y += 0x2000;
     self->position.y += self->velocity.y;
+
     if (++self->timer == 96)
         RSDK.PlaySfx(DERobot->sfxDrop, false, 255);
 
@@ -1240,8 +1299,8 @@ void DERobot_State_Finish(void)
     }
 
     if (!(Zone->timer & 7)) {
-        int x                      = (RSDK.Rand(-48, 48) << 16) + self->position.x;
-        int y                      = (RSDK.Rand(-48, 48) << 16) + self->position.y;
+        int32 x                    = (RSDK.Rand(-48, 48) << 16) + self->position.x;
+        int32 y                    = (RSDK.Rand(-48, 48) << 16) + self->position.y;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawOrder       = Zone->drawOrderHigh;
     }
@@ -1264,7 +1323,9 @@ void DERobot_State_DebrisFall(void)
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     self->rotation += self->angleVel;
+
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }
@@ -1281,6 +1342,7 @@ void DERobot_State_FinishBounds(void)
             player->groundVel  = 0;
             player->pushing    = false;
         }
+
         if (player->position.x > 0x4E800000) {
             player->position.x = 0x4E800000;
             player->velocity.x = 0;
@@ -1293,9 +1355,10 @@ void DERobot_State_FinishBounds(void)
 void DERobot_State_CutsceneExplode(void)
 {
     RSDK_THIS(DERobot);
+
     if (!(Zone->timer & 0x3F)) {
-        int x                      = (RSDK.Rand(-32, 32) << 16) + self->position.x;
-        int y                      = (RSDK.Rand(-32, 32) << 16) + self->position.y;
+        int32 x                    = (RSDK.Rand(-32, 32) << 16) + self->position.x;
+        int32 y                    = (RSDK.Rand(-32, 32) << 16) + self->position.y;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
         explosion->drawOrder       = Zone->drawOrderHigh;
     }
@@ -1308,9 +1371,10 @@ void DERobot_EditorDraw(void)
 
     self->drawFX = FX_NONE;
     self->parent = (Entity *)self;
+
     switch (self->aniID) {
         case DEROBOT_BODY:
-            self->stateDraw = DERobot_Draw_Basic;
+            self->stateDraw = DERobot_Draw_Simple;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
 
             if (showGizmos()) {
@@ -1321,7 +1385,7 @@ void DERobot_EditorDraw(void)
             break;
 
         case DEROBOT_HEAD:
-            self->stateDraw = DERobot_Draw_HasParent;
+            self->stateDraw = DERobot_Draw_RelativeToParent;
             self->drawFX    = FX_ROTATE;
             self->offset.x  = -0x160000;
             self->offset.y  = -0x240000;
@@ -1337,10 +1401,10 @@ void DERobot_EditorDraw(void)
                 self->state     = DERobot_State_ArmIdle;
             }
             else if (self->frameID) {
-                self->stateDraw = DERobot_Draw_Basic;
+                self->stateDraw = DERobot_Draw_Simple;
             }
             else {
-                self->stateDraw = DERobot_Draw_HasParent;
+                self->stateDraw = DERobot_Draw_RelativeToParent;
                 self->offset.x  = -0xC0000;
                 self->offset.y  = -0x100000;
             }
@@ -1349,7 +1413,7 @@ void DERobot_EditorDraw(void)
 
         case DEROBOT_LEG:
             if (self->frameID) {
-                self->stateDraw = DERobot_Draw_Basic;
+                self->stateDraw = DERobot_Draw_Simple;
             }
             else {
                 RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->altAnimator, true, 1);
@@ -1369,7 +1433,7 @@ void DERobot_EditorDraw(void)
             break;
 
         default:
-            self->stateDraw = DERobot_Draw_Basic;
+            self->stateDraw = DERobot_Draw_Simple;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, self->aniID, &self->mainAnimator, true, self->frameID);
             break;
     }

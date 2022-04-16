@@ -36,7 +36,7 @@ void GHZSetup_Update(void);
 void GHZSetup_LateUpdate(void);
 void GHZSetup_StaticUpdate(void);
 void GHZSetup_Draw(void);
-void GHZSetup_Create(void* data);
+void GHZSetup_Create(void *data);
 void GHZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GHZSetup_EditorDraw(void);
@@ -54,4 +54,4 @@ void GHZSetup_BGSwitchCB_Outside_Act1(void);
 void GHZSetup_BGSwitchCB_Caves_Act1(void);
 void GHZSetup_SpawnGHZ2Outro(void);
 
-#endif //!OBJ_GHZSETUP_H
+#endif //! OBJ_GHZSETUP_H

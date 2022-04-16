@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectMotobug {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
 };
 

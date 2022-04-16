@@ -481,7 +481,7 @@ void TitleCard_State_Idle(void)
                 EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                 EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 player->camera         = camera;
-                camera->targetPtr      = (Entity *)player;
+                camera->target      = (Entity *)player;
                 camera->state          = Camera_State_Follow;
                 Camera->centerBounds.x = 0x20000;
                 Camera->centerBounds.y = 0x20000;

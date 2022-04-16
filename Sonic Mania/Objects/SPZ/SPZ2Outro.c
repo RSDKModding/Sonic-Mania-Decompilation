@@ -89,7 +89,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         weatherTV->timer            = 0;
         RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(weatherTV));
         WeatherTV->useHighLayer = true;
-        camera->targetPtr       = NULL;
+        camera->target       = NULL;
         player1->camera         = NULL;
 #if RETRO_USE_PLUS
         Player->disableP2KeyCheck = true;

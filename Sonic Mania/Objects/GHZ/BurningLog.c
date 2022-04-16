@@ -12,7 +12,9 @@ ObjectBurningLog *BurningLog;
 void BurningLog_Update(void)
 {
     RSDK_THIS(BurningLog);
+
     RSDK.ProcessAnimation(&self->animator);
+
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
@@ -20,6 +22,7 @@ void BurningLog_Update(void)
         {
             if (self->velocity.y < 0x380000)
                 Player_CheckCollisionPlatform(player, self, &BurningLog->hitboxPlatform);
+
             if (Player_CheckCollisionTouch(player, self, &BurningLog->hitboxFlame)) {
                 Player_CheckElementalHit(player, self, SHIELD_FIRE);
             }
@@ -48,8 +51,10 @@ void BurningLog_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x10000000;
     self->drawOrder     = Zone->drawOrderLow;
+
     if (data)
         self->timer = voidToInt(data);
+
     RSDK.SetSpriteAnimation(BurningLog->aniFrames, 0, &self->animator, true, 0);
 }
 

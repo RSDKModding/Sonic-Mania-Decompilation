@@ -432,37 +432,9 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
     if (Bridge) {
         foreach_active(Bridge, bridge)
         {
-            if (self->position.x > bridge->startPos && self->position.x < bridge->endPos && self->velocity.y >= 0) {
-                Hitbox bridgeHitbox;
-                bridgeHitbox.left  = -0x400;
-                bridgeHitbox.right = 0x400;
-
-                int32 divisor = 0;
-                int32 ang     = 0;
-                if (self->position.x - bridge->startPos <= divisor) {
-                    divisor = bridge->stoodPos;
-                    ang     = (self->position.x - bridge->startPos) << 7;
-                }
-                else {
-                    divisor = bridge->endPos - divisor - bridge->startPos;
-                    ang     = (bridge->endPos - self->position.x) << 7;
-                }
-
-                int32 hitY = (bridge->depression * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
-                if (self->velocity.y >= 0x8000) {
-                    bridgeHitbox.bottom = (hitY >> 16);
-                    bridgeHitbox.top    = (hitY >> 16) - 8;
-                }
-                else {
-                    bridgeHitbox.top    = (hitY >> 16);
-                    bridgeHitbox.bottom = (hitY >> 16) + 8;
-                }
-
-                if (RSDK.CheckObjectCollisionTouchBox(bridge, &bridgeHitbox, self, &Ring->hitbox)) {
-                    self->position.y = hitY + bridge->position.y - (Ring->hitbox.bottom << 16);
-                    collisionSides |= 2;
-                }
-            }
+            bool32 collided = Bridge_HandleCollisions(self, bridge, &Ring->hitbox, false, false);
+            if (collided)
+                collisionSides |= 2;
         }
     }
 

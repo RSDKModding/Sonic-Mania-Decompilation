@@ -7,7 +7,7 @@
 struct ObjectCrabmeat {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
-    Hitbox projectileHitbox;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
 };
 
@@ -46,7 +46,7 @@ void Crabmeat_CheckOffScreen(void);
 void Crabmeat_CheckPlayerCollisions(void);
 
 void Crabmeat_State_Setup(void);
-void Crabmeat_State_Main(void);
+void Crabmeat_State_Moving(void);
 void Crabmeat_State_Shoot(void);
 void Crabmeat_State_Projectile(void);
 

@@ -20,14 +20,14 @@ struct EntityPBL_Camera {
     int32 unused1;
     int32 worldY;
     int32 rotationY;
-    int32 cameraStartOffset; // I don't think this is every actually set...
+    int32 cameraStartOffset; // I don't think this is ever actually set
     int32 curCamBoundaryT;
     int32 curCamBoundaryB;
     int32 newCamBoundaryT;
     int32 newCamBoundaryB;
     int32 prevAngle;
     int32 centerY;
-    Entity *targetPtr;
+    Entity *target;
     Matrix matTransform;
     Matrix unusedMatrix1;
     Vector2 targetPos;

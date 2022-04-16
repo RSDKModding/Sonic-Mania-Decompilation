@@ -9,6 +9,9 @@
 
 ObjectCanista *Canista;
 
+// This object looks like it was based on Unused/WallCrawl
+// Would explain WallCrawl's presence in the blueprint sheet, being a "proto" form of this
+
 void Canista_Update(void)
 {
     RSDK_THIS(Canista);
@@ -94,6 +97,7 @@ void Canista_StageLoad(void)
     Canista->hitboxProjectile.bottom = 5;
 
     DEBUGMODE_ADD_OBJ(Canista);
+
     Canista->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
@@ -218,7 +222,7 @@ void Canista_State_Moving(void)
                     self->velocity.y         = ((self->shootOffset + storeY) & 0xFFFF0000) < (player->position.y & 0xFFFF0000) ? 0x10000 : -0x10000;
                 }
                 else {
-                    self->state          = Canista_State_Stopped;
+                    self->state          = Canista_State_Idle;
                     self->stopTimer      = 60;
                     self->detectedPlayer = NULL;
                     self->detectDelay    = 180;
@@ -234,7 +238,7 @@ void Canista_State_Moving(void)
                         self->velocity.y = -0x1000;
                 }
                 else {
-                    self->state          = Canista_State_Stopped;
+                    self->state          = Canista_State_Idle;
                     self->stopTimer      = 60;
                     self->detectedPlayer = NULL;
                     self->detectDelay    = 180;
@@ -264,7 +268,7 @@ void Canista_State_Moving(void)
         offset = 0x100000;
     if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, (2 * ((self->direction & FLIP_X) != 0) + CMODE_LWALL), 0, offset,
                              ((self->velocity.y >> 31) & 0xFFD40000) + 0x140000, 0)) {
-        self->state     = Canista_State_Stopped;
+        self->state     = Canista_State_Idle;
         self->stopTimer = 30;
         if (self->detectedPlayer) {
             self->detectedPlayer = NULL;
@@ -286,7 +290,7 @@ void Canista_State_Moving(void)
     Canista_CheckOffScreen();
 }
 
-void Canista_State_Stopped(void)
+void Canista_State_Idle(void)
 {
     RSDK_THIS(Canista);
     if (!--self->stopTimer) {

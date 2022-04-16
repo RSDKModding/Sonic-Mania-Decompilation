@@ -9,8 +9,8 @@ struct ObjectSpikeLog {
     bool32 hasAchievement;
     uint8 timer;
     uint16 aniFrames;
-    Hitbox hitbox;
-    Hitbox burnHitbox;
+    Hitbox hitboxSpikeLog;
+    Hitbox hitboxBurnLog;
 };
 
 // Entity Class

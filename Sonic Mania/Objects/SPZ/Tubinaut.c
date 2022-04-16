@@ -136,7 +136,7 @@ void Tubinaut_CheckPlayerCollisions(void)
             --self->playerTimers[playerID];
         }
         else if (self->orbState == Tubinaut_Orb_Attack && self->orbCount > 1) {
-            if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitboxSpin) && !Player_CheckHit(player, self)) {
+            if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitboxSpin) && (self->orbCount == 2 || (self->orbCount == 3 && !Player_CheckHit(player, self)))) {
                 Tubinaut_HandleRepel(player, playerID);
             }
         }
@@ -223,7 +223,7 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
     return isAttacking;
 }
 
-void Tubinaut_OrbHit(EntityPlayer *player, int orbID)
+void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID)
 {
     RSDK_THIS(Tubinaut);
 
@@ -286,7 +286,7 @@ void Tubinaut_OrbHit(EntityPlayer *player, int orbID)
     }
 }
 
-void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
+void Tubinaut_HandleRepel(EntityPlayer *player, int32 playerID)
 {
     RSDK_THIS(Tubinaut);
 

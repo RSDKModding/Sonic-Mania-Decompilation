@@ -68,7 +68,7 @@ void Canista_CheckOffScreen(void);
 
 void Canista_State_Setup(void);
 void Canista_State_Moving(void);
-void Canista_State_Stopped(void);
+void Canista_State_Idle(void);
 
 void Canista_CheckPlayerProjectileCollisions(void);
 void Canista_StateProjectile_Shot(void);

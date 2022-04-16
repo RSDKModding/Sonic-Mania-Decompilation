@@ -13,6 +13,7 @@ ObjectAIZRockPile *AIZRockPile;
 void AIZRockPile_Update(void)
 {
     RSDK_THIS(AIZRockPile);
+
     Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 1);
 
     foreach_active(Player, player)
@@ -49,6 +50,7 @@ void AIZRockPile_Update(void)
                                     AIZRockPile_SpawnRocks(self->rockSpeedsL);
                                 else
                                     AIZRockPile_SpawnRocks(self->rockSpeedsR);
+
                                 foreach_return;
                             }
                         }
@@ -74,6 +76,7 @@ void AIZRockPile_Update(void)
                 }
             }
         }
+
         Player_CheckCollisionBox(player, self, hitbox);
     }
 }
@@ -91,7 +94,9 @@ void AIZRockPile_Draw(void)
 void AIZRockPile_Create(void *data)
 {
     RSDK_THIS(AIZRockPile);
+
     RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 0, &self->animator, true, self->size + 3);
+
     if (!SceneInfo->inEditor) {
         switch (self->size) {
             case AIZROCKPILE_SMALL:
@@ -130,6 +135,7 @@ void AIZRockPile_Create(void *data)
 void AIZRockPile_StageLoad(void)
 {
     AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
+
     AIZRockPile->sfxBreak   = RSDK.GetSfx("Stage/LedgeBreak3.wav");
 }
 

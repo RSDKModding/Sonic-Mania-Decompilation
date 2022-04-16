@@ -60,9 +60,9 @@ void Tubinaut_DebugDraw(void);
 
 void Tubinaut_CheckPlayerCollisions(void);
 bool32 Tubinaut_CheckAttacking(EntityPlayer *player);
-void Tubinaut_OrbHit(EntityPlayer *player, int orbID);
+void Tubinaut_OrbHit(EntityPlayer *player, int32 orbID);
 
-void Tubinaut_HandleRepel(EntityPlayer *player, int playerID);
+void Tubinaut_HandleRepel(EntityPlayer *player, int32 playerID);
 void Tubinaut_HandleOrbs(void);
 void Tubinaut_CheckOffScreen(void);
 

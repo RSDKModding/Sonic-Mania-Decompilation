@@ -30,8 +30,8 @@ void AIZEncoreTutorial_Draw(void)
     RSDK.DrawSprite(&self->bubbleAnimator, NULL, false);
 
     self->inkEffect = INK_ALPHA;
-    drawPos.x         = (RSDK.Cos256(self->angle) << 12) + self->position.x;
-    drawPos.y         = ((RSDK.Sin256(self->angle) + 512) << 11) + self->position.y;
+    drawPos.x       = (RSDK.Cos256(self->angle) << 12) + self->position.x;
+    drawPos.y       = ((RSDK.Sin256(self->angle) + 512) << 11) + self->position.y;
     RSDK.DrawSprite(&self->playerAnimator, &drawPos, false);
 
     drawPos.x = (RSDK.Cos256(self->angle + 128) << 12) + self->position.x;
@@ -44,6 +44,7 @@ void AIZEncoreTutorial_Draw(void)
 
     switch (self->buttonPressAnimator.frameID) {
         default: break;
+
         case 0:
         case 2: drawPos.y -= 0x30000; break;
     }

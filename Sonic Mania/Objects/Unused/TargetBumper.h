@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-typedef enum { TARGETBUMP_HORIZONTAL, TARGETBUMP_VERTICAL, TARGETBUMP_CIRCLE } TargetBumperTypes;
+typedef enum { TARGETBUMP_HORIZONTAL, TARGETBUMP_VERTICAL, TARGETBUMP_DIAGONAL } TargetBumperTypes;
 
 typedef enum { TARGETBUMP_THREE_HIT, TARGETBUMP_TWO_HIT, TARGETBUMP_ONE_HIT } TargetBumperHitCount;
 
@@ -45,8 +45,9 @@ void TargetBumper_Serialize(void);
 void TargetBumper_DebugSpawn(void);
 void TargetBumper_DebugDraw(void);
 
-void TargetBumper_Collide(void);
-void TargetBumper_State_Collide(void);
+void TargetBumper_CheckPlayerCollisions(void);
+
+void TargetBumper_State_Idle(void);
 void TargetBumper_State_Hit(void);
 
 #endif //! OBJ_TARGETBUMPER_H

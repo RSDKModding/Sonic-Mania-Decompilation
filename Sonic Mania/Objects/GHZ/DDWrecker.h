@@ -37,7 +37,7 @@ struct EntityDDWrecker {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateBall);
-    Vector2 startPos;
+    Vector2 originPos;
     int32 type;
     int32 timer;
     int32 invincibilityTimer;
@@ -47,11 +47,11 @@ struct EntityDDWrecker {
     int32 spinTimer;
     int32 spinAngle;
     int32 radius;
-    uint16 slots[6];
+    uint16 siblingSlots[6];
     EntityDDWrecker *bodyA;
     EntityDDWrecker *bodyB;
     int32 unused1;
-    int32 unknownAngle; // updated but never used..
+    int32 unusedAngle; // updated but never used..
     int32 unused2;
     int32 unused3;
     int32 blendAmount;
@@ -67,7 +67,7 @@ void DDWrecker_Update(void);
 void DDWrecker_LateUpdate(void);
 void DDWrecker_StaticUpdate(void);
 void DDWrecker_Draw(void);
-void DDWrecker_Create(void* data);
+void DDWrecker_Create(void *data);
 void DDWrecker_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DDWrecker_EditorDraw(void);
@@ -104,4 +104,4 @@ void DDWrecker_State_Debris(void);
 void DDWrecker_State_Die(void);
 void DDWrecker_State_SpawnSignpost(void);
 
-#endif //!OBJ_DDWRECKER_H
+#endif //! OBJ_DDWRECKER_H

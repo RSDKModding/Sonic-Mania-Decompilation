@@ -28,8 +28,10 @@ void Crabmeat_Draw(void)
 void Crabmeat_Create(void *data)
 {
     RSDK_THIS(Crabmeat);
+
     self->visible   = true;
     self->drawOrder = Zone->drawOrderLow;
+
     if (data) {
         self->inkEffect     = INK_ADD;
         self->alpha         = 0xC0;
@@ -56,14 +58,16 @@ void Crabmeat_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         Crabmeat->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE);
-    Crabmeat->hitboxBadnik.left             = -14;
-    Crabmeat->hitboxBadnik.top              = -14;
-    Crabmeat->hitboxBadnik.right            = 14;
-    Crabmeat->hitboxBadnik.bottom           = 14;
-    Crabmeat->projectileHitbox.left   = -6;
-    Crabmeat->projectileHitbox.top    = -6;
-    Crabmeat->projectileHitbox.right  = 6;
-    Crabmeat->projectileHitbox.bottom = 6;
+
+    Crabmeat->hitboxBadnik.left   = -14;
+    Crabmeat->hitboxBadnik.top    = -14;
+    Crabmeat->hitboxBadnik.right  = 14;
+    Crabmeat->hitboxBadnik.bottom = 14;
+
+    Crabmeat->hitboxProjectile.left   = -6;
+    Crabmeat->hitboxProjectile.top    = -6;
+    Crabmeat->hitboxProjectile.right  = 6;
+    Crabmeat->hitboxProjectile.bottom = 6;
 
     DEBUGMODE_ADD_OBJ(Crabmeat);
 }
@@ -83,6 +87,7 @@ void Crabmeat_DebugSpawn(void)
 void Crabmeat_CheckOffScreen(void)
 {
     RSDK_THIS(Crabmeat);
+
     if (self->tileCollisions && !RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
@@ -95,10 +100,11 @@ void Crabmeat_CheckOffScreen(void)
 void Crabmeat_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Crabmeat);
+
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Crabmeat->hitboxBadnik))
-            Player_CheckBadnikBreak(player, (Entity *)self, true);
+            Player_CheckBadnikBreak(player, self, true);
     }
 }
 
@@ -109,17 +115,17 @@ void Crabmeat_State_Setup(void)
     self->active     = ACTIVE_NORMAL;
     self->velocity.x = -0x8000;
     RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 1, &self->animator, true, 0);
-    self->state = Crabmeat_State_Main;
-    Crabmeat_State_Main();
+    self->state = Crabmeat_State_Moving;
+    Crabmeat_State_Moving();
 }
 
-void Crabmeat_State_Main(void)
+void Crabmeat_State_Moving(void)
 {
     RSDK_THIS(Crabmeat);
 
     self->position.x += self->velocity.x;
-    if (self->timer >= 128
-        || (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xE0000 * (self->velocity.x > 0 ? 1 : -1), 0xF0000, 8))) {
+
+    if (self->timer >= 128 || (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xE0000 * (self->velocity.x > 0 ? 1 : -1), 0xF0000, 8))) {
         self->timer = 0;
         if (self->shootState == 0)
             RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 0, &self->animator, true, 0);
@@ -130,7 +136,9 @@ void Crabmeat_State_Main(void)
     else {
         self->timer++;
     }
+
     RSDK.ProcessAnimation(&self->animator);
+
     Crabmeat_CheckPlayerCollisions();
     Crabmeat_CheckOffScreen();
 }
@@ -152,17 +160,17 @@ void Crabmeat_State_Shoot(void)
                 self->direction ^= FLIP_X;
                 self->velocity.x = -self->velocity.x;
                 self->timer      = 0;
-                self->state      = Crabmeat_State_Main;
+                self->state      = Crabmeat_State_Moving;
                 break;
 
             case 1:
                 self->shootState = 2;
 
                 EntityCrabmeat *projectile = CREATE_ENTITY(Crabmeat, intToVoid(true), self->position.x - 0x100000, self->position.y);
-                projectile->velocity.x = -0x10000;
-                projectile->velocity.y = -0x40000;
+                projectile->velocity.x     = -0x10000;
+                projectile->velocity.y     = -0x40000;
 
-                projectile = CREATE_ENTITY(Crabmeat, intToVoid(true), self->position.x + 0x100000, self->position.y);
+                projectile             = CREATE_ENTITY(Crabmeat, intToVoid(true), self->position.x + 0x100000, self->position.y);
                 projectile->velocity.x = 0x10000;
                 projectile->velocity.y = -0x40000;
                 break;
@@ -177,9 +185,11 @@ void Crabmeat_State_Shoot(void)
 void Crabmeat_State_Projectile(void)
 {
     RSDK_THIS(Crabmeat);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     if (!RSDK.CheckOnScreen(self, NULL)) {
         destroyEntity(self);
     }
@@ -188,7 +198,7 @@ void Crabmeat_State_Projectile(void)
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &Crabmeat->projectileHitbox))
+            if (Player_CheckCollisionTouch(player, self, &Crabmeat->hitboxProjectile))
                 Player_CheckProjectileHit(player, self);
         }
     }

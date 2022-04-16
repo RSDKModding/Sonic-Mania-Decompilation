@@ -7,7 +7,7 @@
 // Object Class
 struct ObjectRhinobot {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxHuff;
 };
@@ -26,8 +26,8 @@ struct EntityRhinobot {
     int32 topSpeed;
     Vector2 startPos;
     uint8 startDir;
-    Animator animatorBot;
-    Animator animatorDust;
+    Animator bodyAnimator;
+    Animator dustAnimator;
 };
 
 // Object Struct
@@ -38,7 +38,7 @@ void Rhinobot_Update(void);
 void Rhinobot_LateUpdate(void);
 void Rhinobot_StaticUpdate(void);
 void Rhinobot_Draw(void);
-void Rhinobot_Create(void* data);
+void Rhinobot_Create(void *data);
 void Rhinobot_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Rhinobot_EditorDraw(void);
@@ -47,16 +47,16 @@ void Rhinobot_EditorLoad(void);
 void Rhinobot_Serialize(void);
 
 // Extra Entity Functions
+void Rhinobot_DebugSpawn(void);
+void Rhinobot_DebugDraw(void);
+
 bool32 Rhinobot_CheckTileCollisions(void);
-void Rhinobot_CheckHit(void);
+void Rhinobot_CheckPlayerCollisions(void);
 void Rhinobot_CheckOffScreen(void);
 
-void Rhinobot_DebugDraw(void);
-void Rhinobot_DebugSpawn(void);
-
-void Rhinobot_StateDelay_Charge(void);
-void Rhinobot_StateDelay_Skidding(void);
-void Rhinobot_StateDelay_SkidFinish(void);
+void Rhinobot_Delay_Charge(void);
+void Rhinobot_Delay_Skidding(void);
+void Rhinobot_Delay_SkidFinish(void);
 
 void Rhinobot_State_Setup(void);
 void Rhinobot_State_Moving(void);
@@ -66,4 +66,4 @@ void Rhinobot_State_Fall(void);
 
 #endif
 
-#endif //!OBJ_RHINOBOT_H
+#endif //! OBJ_RHINOBOT_H

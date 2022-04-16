@@ -9,7 +9,7 @@ typedef enum {
     AIZROCKPILE_SMALL,
     AIZROCKPILE_MED,
     AIZROCKPILE_BIG,
-}AIZRockPileTypes;
+} AIZRockPileTypes;
 
 // Object Class
 struct ObjectAIZRockPile {

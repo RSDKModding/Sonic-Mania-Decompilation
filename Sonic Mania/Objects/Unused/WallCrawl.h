@@ -6,10 +6,10 @@
 // Object Class
 struct ObjectWallCrawl {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox checkbox;
-    Hitbox attackbox;
-    Hitbox projectileHurtbox;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Hitbox hitboxLaser;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
 };
 
@@ -49,7 +49,7 @@ void WallCrawl_HandlePlayerInteractions(void);
 void WallCrawl_CheckOffScreen(void);
 
 void WallCrawl_State_Setup(void);
-void WallCrawl_State_Main(void);
+void WallCrawl_State_Moving(void);
 void WallCrawl_State_Idle(void);
 
 void WallCrawl_State_Projectile(void);

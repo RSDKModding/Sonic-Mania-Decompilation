@@ -168,7 +168,7 @@ bool32 MSZ2Cutscene_Cutscene_EnterPistol(EntityCutsceneSeq *host)
     if (pistol->rotation == 448) {
         player1->jumpPress = true;
         player1->camera    = NULL;
-        camera->targetPtr  = NULL;
+        camera->target  = NULL;
         return true;
     }
     return false;

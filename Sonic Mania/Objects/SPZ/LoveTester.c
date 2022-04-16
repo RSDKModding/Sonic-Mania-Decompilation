@@ -230,7 +230,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
                     if (!self->playerPtr) {
                         self->playerPtr = player;
                         if (player->camera) {
-                            player->camera->targetPtr   = (Entity *)self;
+                            player->camera->target   = (Entity *)self;
                             player->camera->disableYOffset = false;
                         }
                     }
@@ -251,7 +251,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
                     player->velocity.y     = 0;
                     if (player->camera) {
                         if (self->playerPtr == player) {
-                            player->camera->targetPtr   = (Entity *)player;
+                            player->camera->target   = (Entity *)player;
                             player->camera->disableYOffset = true;
                         }
                     }

@@ -51,7 +51,7 @@ void MonkeyDude_Update(void);
 void MonkeyDude_LateUpdate(void);
 void MonkeyDude_StaticUpdate(void);
 void MonkeyDude_Draw(void);
-void MonkeyDude_Create(void* data);
+void MonkeyDude_Create(void *data);
 void MonkeyDude_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MonkeyDude_EditorDraw(void);
@@ -75,4 +75,4 @@ void MonkeyDude_StateBody_Throw(void);
 void MonkeyDude_State_Coconut(void);
 #endif
 
-#endif //!OBJ_MONKEYDUDE_H
+#endif //! OBJ_MONKEYDUDE_H

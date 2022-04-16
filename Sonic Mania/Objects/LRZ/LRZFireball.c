@@ -71,12 +71,12 @@ void LRZFireball_StageLoad(void)
     if (RSDK.CheckStageFolder("LRZ1"))
         LRZFireball->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LRZFireball.bin", SCOPE_STAGE);
 
-    LRZFireball->hitbox.left   = -6;
-    LRZFireball->hitbox.top    = -6;
-    LRZFireball->hitbox.right  = 6;
-    LRZFireball->hitbox.bottom = 6;
+    LRZFireball->hitboxFireball.left   = -6;
+    LRZFireball->hitboxFireball.top    = -6;
+    LRZFireball->hitboxFireball.right  = 6;
+    LRZFireball->hitboxFireball.bottom = 6;
 
-    LRZFireball->sfxFireball   = RSDK.GetSfx("Stage/Fireball.wav");
+    LRZFireball->sfxFireball = RSDK.GetSfx("Stage/Fireball.wav");
 }
 
 void LRZFireball_CheckPlayerCollisions(void)
@@ -85,7 +85,7 @@ void LRZFireball_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &LRZFireball->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &LRZFireball->hitboxFireball)) {
             Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
     }
@@ -122,15 +122,16 @@ void LRZFireball_State_Spawner(void)
     RSDK_THIS(LRZFireball);
 
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        EntityLRZFireball *child = CREATE_ENTITY(LRZFireball, LRZFireball_StateChild_Spawner, self->position.x, self->position.y);
+        EntityLRZFireball *fireball = CREATE_ENTITY(LRZFireball, LRZFireball_StateFireball_Spawner, self->position.x, self->position.y);
 
-        child->angle      = self->rotation;
-        child->rotation   = self->rotation;
+        fireball->angle    = self->rotation;
+        fireball->rotation = self->rotation;
 
-        child->groundVel  = -self->groundVel;
-        child->velocity.x = child->groundVel * RSDK.Sin512(0x100 - child->angle);
-        child->velocity.y = child->groundVel * RSDK.Cos512(0x100 - child->angle);
-        RSDK.PlaySfx(LRZFireball->sfxFireball, false, 255);
+        fireball->groundVel  = -self->groundVel;
+        fireball->velocity.x = fireball->groundVel * RSDK.Sin512(0x100 - fireball->angle);
+        fireball->velocity.y = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
+
+        RSDK.PlaySfx(LRZFireball->sfxFireball, false, 0xFF);
     }
 }
 
@@ -139,14 +140,15 @@ void LRZFireball_State_LauncherStatic(void)
     RSDK_THIS(LRZFireball);
 
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        EntityLRZFireball *child = CREATE_ENTITY(LRZFireball, LRZFireball_StateChild_LauncherStatic, self->position.x, self->position.y);
+        EntityLRZFireball *fireball = CREATE_ENTITY(LRZFireball, LRZFireball_StateFireball_LauncherStatic, self->position.x, self->position.y);
 
-        child->angle      = self->rotation;
-        child->rotation   = self->rotation;
+        fireball->angle    = self->rotation;
+        fireball->rotation = self->rotation;
 
-        child->groundVel  = -self->groundVel;
-        child->velocity.x = child->groundVel * RSDK.Sin512(0x100 - child->angle);
-        child->velocity.y = child->groundVel * RSDK.Cos512(0x100 - child->angle);
+        fireball->groundVel  = -self->groundVel;
+        fireball->velocity.x = fireball->groundVel * RSDK.Sin512(0x100 - fireball->angle);
+        fireball->velocity.y = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
+
         RSDK.PlaySfx(LRZFireball->sfxFireball, false, 0xFF);
     }
 }
@@ -156,19 +158,20 @@ void LRZFireball_State_LauncherGravity(void)
     RSDK_THIS(LRZFireball);
 
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        EntityLRZFireball *child = CREATE_ENTITY(LRZFireball, LRZFireball_StateChild_LauncherGravity, self->position.x, self->position.y);
+        EntityLRZFireball *fireball = CREATE_ENTITY(LRZFireball, LRZFireball_StateFireball_LauncherGravity, self->position.x, self->position.y);
 
-        child->angle      = self->rotation;
-        child->rotation   = self->rotation;
+        fireball->angle    = self->rotation;
+        fireball->rotation = self->rotation;
 
-        child->groundVel  = -self->groundVel;
-        child->velocity.x = child->groundVel * RSDK.Sin512(0x100 - child->angle);
-        child->velocity.y = child->groundVel * RSDK.Cos512(0x100 - child->angle);
+        fireball->groundVel  = -self->groundVel;
+        fireball->velocity.x = fireball->groundVel * RSDK.Sin512(0x100 - fireball->angle);
+        fireball->velocity.y = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
+
         RSDK.PlaySfx(LRZFireball->sfxFireball, false, 0xFF);
     }
 }
 
-void LRZFireball_StateChild_Spawner(void)
+void LRZFireball_StateFireball_Spawner(void)
 {
     RSDK_THIS(LRZFireball);
 
@@ -185,7 +188,7 @@ void LRZFireball_StateChild_Spawner(void)
     LRZFireball_CheckOffScreen();
 }
 
-void LRZFireball_StateChild_LauncherStatic(void)
+void LRZFireball_StateFireball_LauncherStatic(void)
 {
     RSDK_THIS(LRZFireball);
 
@@ -196,7 +199,7 @@ void LRZFireball_StateChild_LauncherStatic(void)
     LRZFireball_CheckOffScreen();
 }
 
-void LRZFireball_StateChild_LauncherGravity(void)
+void LRZFireball_StateFireball_LauncherGravity(void)
 {
     RSDK_THIS(LRZFireball);
 
@@ -228,8 +231,6 @@ void LRZFireball_EditorDraw(void)
     }
 
     LRZFireball_Draw_Simple();
-
-    // TODO: transparent fireball strength indicator
 }
 
 void LRZFireball_EditorLoad(void)

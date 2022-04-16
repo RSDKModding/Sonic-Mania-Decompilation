@@ -12,32 +12,30 @@ ObjectZipLine *ZipLine;
 void ZipLine_Update(void)
 {
     RSDK_THIS(ZipLine);
+
     StateMachine_Run(self->state);
 
-    int32 storeX     = self->position.x;
-    int32 storeY     = self->position.y;
-    self->position.x = self->handlePos.x;
-    self->position.y = self->handlePos.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
+
+    self->position = self->handlePos;
     foreach_active(Player, player)
     {
-        int32 pid = RSDK.GetEntityID(player);
-        if (self->grabDelay[pid])
-            self->grabDelay[pid]--;
+        int32 playerID = RSDK.GetEntityID(player);
+        if (self->grabDelay[playerID])
+            self->grabDelay[playerID]--;
 
-        if ((1 << pid) & self->activePlayers) {
+        if ((1 << playerID) & self->activePlayers) {
             if (Player_CheckValidState(player)) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
+
                 if (player->state != Player_State_Hit) {
                     if (player->velocity.x) {
+                        self->groundVel = player->groundVel;
                         if ((uint8)(self->angle - 0x40) < 0x80)
                             self->groundVel = -player->groundVel;
-                        else
-                            self->groundVel = player->groundVel;
 
-                        if (self->groundVel > 0xA0000)
-                            self->groundVel = 0xA0000;
-                        else if (self->groundVel < -0xA0000)
-                            self->groundVel = -0xA0000;
+                        self->groundVel = clampVal(self->groundVel, -0xA0000, 0xA0000);
 
                         self->velocity.x   = self->groundVel * RSDK.Cos256(self->angle) >> 8;
                         self->velocity.y   = self->groundVel * RSDK.Sin256(self->angle) >> 8;
@@ -47,213 +45,105 @@ void ZipLine_Update(void)
                         player->angle      = 0;
                         player->rotation   = 0;
                     }
-                    int32 prevX        = player->position.x;
+
+                    int32 lastX        = player->position.x;
                     player->position.x = self->position.x;
-                    player->position.y = self->position.y;
-                    player->position.y +=
-                        (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000) + ((ZipLine->hitbox.top - playerHitbox->top) << 16);
-                    if (abs(prevX - self->position.x) <= 0x100000) {
-                        if (!self->grabDelay[pid] && player->jumpPress) {
+                    player->position.y = self->position.y + (((ZipLine->hitboxHandle.bottom - ZipLine->hitboxHandle.top) << 15) & 0xFFFF0000)
+                                         + ((ZipLine->hitboxHandle.top - playerHitbox->top) << 16);
+
+                    if (abs(lastX - self->position.x) <= 0x100000) {
+                        if (!self->grabDelay[playerID] && player->jumpPress) {
                             player->velocity.y       = -0x40000;
                             player->jumpAbilityState = 1;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                            player->animator.speed = 48;
-                            player->state          = Player_State_Air;
-                            self->grabDelay[pid]   = 60;
-                            self->activePlayers &= ~(1 << pid);
+                            player->animator.speed    = 48;
+                            player->state             = Player_State_Air;
+                            self->grabDelay[playerID] = 60;
+                            self->activePlayers &= ~(1 << playerID);
                             player->onGround       = false;
                             player->groundedStore  = false;
                             player->tileCollisions = true;
                         }
                     }
                     else {
-                        player->state        = Player_State_Air;
-                        self->grabDelay[pid] = 60;
-                        self->activePlayers &= ~(1 << pid);
+                        player->state             = Player_State_Air;
+                        self->grabDelay[playerID] = 60;
+                        self->activePlayers &= ~(1 << playerID);
                         player->onGround       = false;
                         player->groundedStore  = false;
                         player->tileCollisions = true;
                     }
                 }
                 else {
-                    self->grabDelay[pid] = 60;
-                    self->activePlayers &= ~(1 << pid);
+                    self->grabDelay[playerID] = 60;
+                    self->activePlayers &= ~(1 << playerID);
                     player->onGround       = false;
                     player->groundedStore  = false;
                     player->tileCollisions = true;
                 }
             }
             else {
-                self->activePlayers &= ~(1 << pid);
+                self->activePlayers &= ~(1 << playerID);
                 if (player->state != Player_State_Die) {
                     player->tileCollisions = true;
                 }
             }
         }
-        else {
-            if (!self->grabDelay[pid] && player->state != Player_State_None && !player->down) {
-                Hitbox *playerHitbox = Player_GetHitbox(player);
-                Hitbox otherHitbox;
-                otherHitbox.top    = playerHitbox->top - 4;
-                otherHitbox.left   = playerHitbox->left;
-                otherHitbox.right  = playerHitbox->right;
-                otherHitbox.bottom = otherHitbox.top + 8;
-                if (RSDK.CheckObjectCollisionTouchBox(self, &ZipLine->hitbox, player, &otherHitbox)) {
-                    if (player->sidekick || self->state == ZipLine_State_Moving) {
-                        self->activePlayers |= 1 << pid;
-                        player->onGround      = false;
-                        player->groundedStore = false;
-                        player->velocity.x    = 0;
-                        player->velocity.y    = 0;
-                        player->groundVel     = 0;
-                        player->angle         = 0;
-                        player->rotation      = 0;
-                        player->position.x    = self->position.x;
-                        player->position.y    = self->position.y;
-                        player->position.y +=
-                            ((ZipLine->hitbox.top - playerHitbox->top) << 16) + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
-                        player->tileCollisions = false;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
-                        player->state           = Player_State_None;
-                        player->nextAirState    = StateMachine_None;
-                        player->nextGroundState = StateMachine_None;
-                        RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
-                        self->grabDelay[pid] = 15;
-                        self->active         = ACTIVE_NORMAL;
-                    }
-                    else if (!self->state) {
-                        self->groundVel = player->groundVel;
-                        if ((uint8)(self->angle - 0x40) < 0x80)
-                            self->groundVel = -player->groundVel;
+        else if (!self->grabDelay[playerID] && player->state != Player_State_None && !player->down) {
+            Hitbox *playerHitbox = Player_GetHitbox(player);
+            Hitbox otherHitbox;
+            otherHitbox.top    = playerHitbox->top - 4;
+            otherHitbox.left   = playerHitbox->left;
+            otherHitbox.right  = playerHitbox->right;
+            otherHitbox.bottom = otherHitbox.top + 8;
 
-                        if (self->groundVel > 0xA0000)
-                            self->groundVel = 0xA0000;
-                        else if (self->groundVel < -0xA0000)
-                            self->groundVel = -0xA0000;
+            if (RSDK.CheckObjectCollisionTouchBox(self, &ZipLine->hitboxHandle, player, &otherHitbox)) {
+                if (player->sidekick || self->state == ZipLine_State_Moving) {
+                    ZipLine_GrabHandle(player, playerID, playerHitbox);
+                }
+                else if (!self->state) {
+                    self->groundVel = player->groundVel;
+                    if ((uint8)(self->angle - 0x40) < 0x80)
+                        self->groundVel = -player->groundVel;
 
-                        self->velocity.x = self->groundVel * RSDK.Cos256(self->angle) >> 8;
-                        self->velocity.y = self->groundVel * RSDK.Sin256(self->angle) >> 8;
-                        if (self->angle & 0x7F) {
-                            if ((uint8)self->angle < 0x80) {
-                                if (self->handlePos.x == self->startPos.x) {
-                                    if (self->velocity.y < 0) {
-                                        self->velocity.x = 0;
-                                        self->velocity.y = 0;
-                                        self->groundVel  = 0;
-                                    }
-                                    self->state = ZipLine_State_Moving;
+                    self->groundVel = clampVal(self->groundVel, -0xA0000, 0xA0000);
+
+                    self->velocity.x = self->groundVel * RSDK.Cos256(self->angle) >> 8;
+                    self->velocity.y = self->groundVel * RSDK.Sin256(self->angle) >> 8;
+
+                    if (self->angle & 0x7F) {
+                        if ((uint8)self->angle < 0x80) {
+                            if (self->handlePos.x == self->startPos.x) {
+                                if (self->velocity.y < 0) {
+                                    self->velocity.x = 0;
+                                    self->velocity.y = 0;
+                                    self->groundVel  = 0;
                                 }
-
-                                if (self->handlePos.x == self->endPos.x && self->velocity.y < 0) {
-                                    self->state = ZipLine_State_Moving;
-                                    self->activePlayers |= 1 << pid;
-                                    player->onGround      = false;
-                                    player->groundedStore = false;
-                                    player->velocity.x    = 0;
-                                    player->velocity.y    = 0;
-                                    player->groundVel     = 0;
-                                    player->angle         = 0;
-                                    player->rotation      = 0;
-                                    player->position.x    = self->position.x;
-                                    player->position.y    = self->position.y;
-                                    player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
-                                                          + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
-                                    player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
-                                    player->state           = Player_State_None;
-                                    player->nextAirState    = StateMachine_None;
-                                    player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
-                                    self->grabDelay[pid] = 15;
-                                    self->active         = ACTIVE_NORMAL;
-                                }
+                                self->state = ZipLine_State_Moving;
                             }
-                            else {
-                                if (self->handlePos.x == self->endPos.x) {
-                                    if (self->velocity.y < 0) {
-                                        self->velocity.x = 0;
-                                        self->velocity.y = 0;
-                                        self->groundVel  = 0;
-                                    }
-                                    self->state = ZipLine_State_Moving;
-                                }
 
-                                if (self->handlePos.x == self->startPos.x && self->velocity.y < 0) {
-                                    self->state = ZipLine_State_Moving;
-                                    self->activePlayers |= 1 << pid;
-                                    player->onGround      = false;
-                                    player->groundedStore = false;
-                                    player->velocity.x    = 0;
-                                    player->velocity.y    = 0;
-                                    player->groundVel     = 0;
-                                    player->angle         = 0;
-                                    player->rotation      = 0;
-                                    player->position.x    = self->position.x;
-                                    player->position.y    = self->position.y;
-                                    player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
-                                                          + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
-                                    player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
-                                    player->state           = Player_State_None;
-                                    player->nextAirState    = StateMachine_None;
-                                    player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
-                                    self->grabDelay[pid] = 15;
-                                    self->active         = ACTIVE_NORMAL;
-                                }
-                            }
+                            if (self->handlePos.x == self->endPos.x && self->velocity.y < 0)
+                                ZipLine_GrabHandle(player, playerID, playerHitbox);
                         }
                         else {
-                            if (self->groundVel) {
-                                if (self->groundVel < 0) {
-                                    if (self->handlePos.x != self->startPos.x) {
-                                        self->state = ZipLine_State_Moving;
-                                        self->activePlayers |= 1 << pid;
-                                        player->onGround      = false;
-                                        player->groundedStore = false;
-                                        player->velocity.x    = 0;
-                                        player->velocity.y    = 0;
-                                        player->groundVel     = 0;
-                                        player->angle         = 0;
-                                        player->rotation      = 0;
-                                        player->position.x    = self->position.x;
-                                        player->position.y    = self->position.y;
-                                        player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
-                                                              + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
-                                        player->tileCollisions = false;
-                                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
-                                        player->state           = Player_State_None;
-                                        player->nextAirState    = StateMachine_None;
-                                        player->nextGroundState = StateMachine_None;
-                                        RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
-                                        self->grabDelay[pid] = 15;
-                                        self->active         = ACTIVE_NORMAL;
-                                    }
+                            if (self->handlePos.x == self->endPos.x) {
+                                if (self->velocity.y < 0) {
+                                    self->velocity.x = 0;
+                                    self->velocity.y = 0;
+                                    self->groundVel  = 0;
                                 }
-                                else if (self->handlePos.x != self->endPos.x) {
-                                    self->state = ZipLine_State_Moving;
-                                    self->activePlayers |= 1 << pid;
-                                    player->onGround      = false;
-                                    player->groundedStore = false;
-                                    player->velocity.x    = 0;
-                                    player->velocity.y    = 0;
-                                    player->groundVel     = 0;
-                                    player->angle         = 0;
-                                    player->rotation      = 0;
-                                    player->position.x    = self->position.x;
-                                    player->position.y    = self->position.y;
-                                    player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
-                                                          + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
-                                    player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
-                                    player->state           = Player_State_None;
-                                    player->nextAirState    = StateMachine_None;
-                                    player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
-                                    self->grabDelay[pid] = 15;
-                                    self->active         = ACTIVE_NORMAL;
-                                }
+
+                                self->state = ZipLine_State_Moving;
                             }
+
+                            if (self->handlePos.x == self->startPos.x && self->velocity.y < 0)
+                                ZipLine_GrabHandle(player, playerID, playerHitbox);
+                        }
+                    }
+                    else if (self->groundVel) {
+                        if ((self->groundVel < 0 && self->handlePos.x != self->startPos.x)
+                            || (self->groundVel > 0 && self->handlePos.x != self->endPos.x)) {
+                            ZipLine_GrabHandle(player, playerID, playerHitbox);
                         }
                     }
                 }
@@ -271,6 +161,7 @@ void ZipLine_StaticUpdate(void) {}
 void ZipLine_Draw(void)
 {
     RSDK_THIS(ZipLine);
+
     RSDK.DrawLine(self->startPos.x, self->startPos.y, self->endPos.x, self->endPos.y, 0x6060A0, 0x00, INK_NONE, false);
     RSDK.DrawLine(self->startPos.x, self->startPos.y + 0x10000, self->endPos.x, self->endPos.y + 0x10000, 0x303070, 0x00, INK_NONE, false);
 
@@ -289,13 +180,12 @@ void ZipLine_Create(void *data)
     self->visible = true;
     self->drawFX  = FX_FLIP;
     RSDK.SetSpriteAnimation(ZipLine->aniFrames, 0, &self->animator, true, 0);
-    self->drawOrder   = Zone->playerDrawLow;
-    self->handlePos.x = self->position.x;
-    self->handlePos.y = self->position.y;
-    self->startPos.x  = self->position.x;
-    self->startPos.y  = self->position.y;
-    self->endPos.x    = self->position.x + (self->length << 8) * RSDK.Cos256(self->angle);
-    self->endPos.y    = self->position.y + (self->length << 8) * RSDK.Sin256(self->angle);
+    self->drawOrder = Zone->playerDrawLow;
+
+    self->handlePos = self->position;
+    self->startPos  = self->position;
+    self->endPos.x  = self->position.x + (self->length << 8) * RSDK.Cos256(self->angle);
+    self->endPos.y  = self->position.y + (self->length << 8) * RSDK.Sin256(self->angle);
 
     if (!SceneInfo->inEditor) {
         self->position.x += (self->endPos.x - self->startPos.x) >> 1;
@@ -310,10 +200,11 @@ void ZipLine_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         ZipLine->aniFrames = RSDK.LoadSpriteAnimation("GHZ/ZipLine.bin", SCOPE_STAGE);
-    ZipLine->hitbox.top    = 0;
-    ZipLine->hitbox.left   = -8;
-    ZipLine->hitbox.bottom = 24;
-    ZipLine->hitbox.right  = 8;
+
+    ZipLine->hitboxHandle.top    = 0;
+    ZipLine->hitboxHandle.left   = -8;
+    ZipLine->hitboxHandle.bottom = 24;
+    ZipLine->hitboxHandle.right  = 8;
 
     Zone_AddVSSwapCallback(ZipLine_VSSwapCB);
 }
@@ -332,19 +223,46 @@ void ZipLine_VSSwapCB(void)
     }
 }
 
+void ZipLine_GrabHandle(EntityPlayer *player, int32 playerID, Hitbox *playerHitbox)
+{
+    RSDK_THIS(ZipLine);
+
+    self->state = ZipLine_State_Moving;
+    self->activePlayers |= 1 << playerID;
+    player->onGround      = false;
+    player->groundedStore = false;
+    player->velocity.x    = 0;
+    player->velocity.y    = 0;
+    player->groundVel     = 0;
+    player->angle         = 0;
+    player->rotation      = 0;
+    player->position.x    = self->position.x;
+    player->position.y    = self->position.y;
+    player->position.y +=
+        ((ZipLine->hitboxHandle.top - playerHitbox->top) << 16) + (((ZipLine->hitboxHandle.bottom - ZipLine->hitboxHandle.top) << 15) & 0xFFFF0000);
+    player->tileCollisions = false;
+    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 0);
+    player->state           = Player_State_None;
+    player->nextAirState    = StateMachine_None;
+    player->nextGroundState = StateMachine_None;
+    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
+    self->grabDelay[playerID] = 15;
+    self->active              = ACTIVE_NORMAL;
+}
+
 void ZipLine_ForceReleasePlayers(void)
 {
     RSDK_THIS(ZipLine);
 
     foreach_active(Player, player)
     {
-        int32 pid = RSDK.GetEntityID(player);
-        if ((1 << pid) & self->activePlayers) {
-            self->grabDelay[pid] = 60;
-            player->velocity.y   = self->velocity.y;
-            player->velocity.x   = self->velocity.x;
-            player->groundVel    = player->velocity.x;
-            self->activePlayers &= ~(1 << pid);
+        int32 playerID = RSDK.GetEntityID(player);
+        if ((1 << playerID) & self->activePlayers) {
+            self->grabDelay[playerID] = 60;
+            player->velocity.y        = self->velocity.y;
+            player->velocity.x        = self->velocity.x;
+            player->groundVel         = player->velocity.x;
+            self->activePlayers &= ~(1 << playerID);
             player->onGround       = false;
             player->groundedStore  = false;
             player->tileCollisions = true;
@@ -357,6 +275,7 @@ void ZipLine_ForceReleasePlayers(void)
 Vector2 ZipLine_GetJoinPos(void)
 {
     RSDK_THIS(ZipLine);
+
     EntityZipLine *endMarker = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ZipLine);
     Vector2 result;
     result.x = 0;
@@ -427,9 +346,11 @@ Vector2 ZipLine_GetJoinPos(void)
     }
     return result;
 }
+
 void ZipLine_State_Moving(void)
 {
     RSDK_THIS(ZipLine);
+
     self->groundVel += (RSDK.Sin256(self->angle) << 14 >> 8);
     if (self->groundVel >= 0xA0000)
         self->groundVel = 0xA0000;
@@ -456,7 +377,7 @@ void ZipLine_State_Moving(void)
             otherHitbox.right = (self->joinPos.x - self->position.x) >> 16;
         }
 
-        if (RSDK.CheckObjectCollisionTouchBox(self, &ZipLine->hitbox, self, &otherHitbox)) {
+        if (RSDK.CheckObjectCollisionTouchBox(self, &ZipLine->hitboxHandle, self, &otherHitbox)) {
             EntityZipLine *endMarker = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ZipLine);
             endMarker->handlePos.x   = self->joinPos.x;
             endMarker->handlePos.y   = self->joinPos.y;
@@ -480,9 +401,8 @@ void ZipLine_State_Moving(void)
                     player->angle        = 0;
                     player->rotation     = 0;
                     player->position.x   = endMarker->handlePos.x;
-                    player->position.y   = endMarker->handlePos.y;
-                    player->position.y +=
-                        (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000) + ((ZipLine->hitbox.top - playerHitbox->top) << 16);
+                    player->position.y   = endMarker->handlePos.y + (((ZipLine->hitboxHandle.bottom - ZipLine->hitboxHandle.top) << 15) & 0xFFFF0000)
+                                         + ((ZipLine->hitboxHandle.top - playerHitbox->top) << 16);
                 }
             }
             return;
@@ -579,12 +499,10 @@ void ZipLine_State_Moving(void)
 void ZipLine_EditorDraw(void)
 {
     RSDK_THIS(ZipLine);
-    self->handlePos.x = self->position.x;
-    self->handlePos.y = self->position.y;
-    self->startPos.x  = self->position.x;
-    self->startPos.y  = self->position.y;
-    self->endPos.x    = self->position.x + (self->length << 8) * RSDK.Cos256(self->angle);
-    self->endPos.y    = self->position.y + (self->length << 8) * RSDK.Sin256(self->angle);
+    self->handlePos = self->position;
+    self->startPos  = self->position;
+    self->endPos.x  = self->position.x + (self->length << 8) * RSDK.Cos256(self->angle);
+    self->endPos.y  = self->position.y + (self->length << 8) * RSDK.Sin256(self->angle);
 
     ZipLine_Draw();
 }

@@ -7,7 +7,7 @@
 struct ObjectZipLine {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxHandle;
 };
 
 // Entity Class
@@ -33,7 +33,7 @@ void ZipLine_Update(void);
 void ZipLine_LateUpdate(void);
 void ZipLine_StaticUpdate(void);
 void ZipLine_Draw(void);
-void ZipLine_Create(void* data);
+void ZipLine_Create(void *data);
 void ZipLine_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ZipLine_EditorDraw(void);
@@ -43,8 +43,9 @@ void ZipLine_Serialize(void);
 
 // Extra Entity Functions
 void ZipLine_VSSwapCB(void);
+void ZipLine_GrabHandle(EntityPlayer *player, int32 playerID, Hitbox *playerHitbox);
 void ZipLine_ForceReleasePlayers(void);
 Vector2 ZipLine_GetJoinPos(void);
 void ZipLine_State_Moving(void);
 
-#endif //!OBJ_ZIPLINE_H
+#endif //! OBJ_ZIPLINE_H

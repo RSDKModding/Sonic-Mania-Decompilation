@@ -238,7 +238,7 @@ void SP500_State_Activate(void)
             else
                 child->targetPos.y = self->position.y - (self->height << 19);
             EntityCamera *camera = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->camera;
-            camera->targetPtr    = (Entity *)child;
+            camera->target    = (Entity *)child;
             child->storedEntity  = (Entity *)RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             self->storedEntity = (Entity *)child;
         }
@@ -399,7 +399,7 @@ void SP500_State_PrintFinished(void)
                 Ink->playerColours[i] = 0;
             }
             EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            player1->camera->targetPtr = (Entity *)player1;
+            player1->camera->target = (Entity *)player1;
             EntitySP500 *machine       = (EntitySP500 *)self->storedEntity;
             machine->targetPos.x       = player1->position.x;
             machine->targetPos.y       = player1->position.y;

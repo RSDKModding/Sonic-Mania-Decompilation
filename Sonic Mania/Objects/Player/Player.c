@@ -1815,7 +1815,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 player->scrollDelay  = 0;
                 EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                 player->camera       = camera;
-                camera->targetPtr    = (Entity *)player;
+                camera->target    = (Entity *)player;
                 camera->state        = Camera_State_Follow;
                 Player_RemoveEncoreLeader();
             }
@@ -1951,7 +1951,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     player->objectID = TYPE_BLANK;
                     if (player->camera) {
                         screenID                  = player->camera->screenID;
-                        player->camera->targetPtr = (Entity *)player->camera;
+                        player->camera->target = (Entity *)player->camera;
                     }
                     if (globals->gameMode == MODE_COMPETITION) {
                         int32 playerID                    = RSDK.GetEntityID(player);
@@ -1994,7 +1994,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     player->objectID = TYPE_BLANK;
                     if (player->camera) {
                         screenID                  = player->camera->screenID;
-                        player->camera->targetPtr = (Entity *)player->camera;
+                        player->camera->target = (Entity *)player->camera;
                     }
                     EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                     RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(false));
@@ -2331,15 +2331,7 @@ bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *e, Hitbox *entityHitb
 
     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + player->playerID, Shield);
     Hitbox *otherHitbox  = &defaultHitbox;
-    if (shield->objectID != Shield->objectID || shield->state != Shield_State_Insta) {
-        Hitbox *hitbox = player->outerbox;
-        if (!hitbox)
-            hitbox = RSDK.GetHitbox(&player->animator, 0);
-
-        if (hitbox)
-            otherHitbox = hitbox;
-    }
-    else {
+    if (shield->objectID == Shield->objectID && shield->state == Shield_State_Insta) {
         Hitbox *plrHitbox = RSDK.GetHitbox(&player->animator, 0);
         if (plrHitbox)
             otherHitbox = plrHitbox;
@@ -2349,6 +2341,15 @@ bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *e, Hitbox *entityHitb
         playerHitbox.bottom = 2 * otherHitbox->bottom - (otherHitbox->bottom >> 1);
         otherHitbox         = &playerHitbox;
     }
+    else {
+        Hitbox *hitbox = player->outerbox;
+        if (!hitbox)
+            hitbox = RSDK.GetHitbox(&player->animator, 0);
+
+        if (hitbox)
+            otherHitbox = hitbox;
+    }
+
     return RSDK.CheckObjectCollisionTouchBox(entity, entityHitbox, player, otherHitbox);
 }
 bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
@@ -5361,7 +5362,7 @@ void Player_State_FlyIn(void)
         parent->position.y = (ScreenInfo->position.y - 128) << 16;
     }
 
-    if (self->camera && self->camera->targetPtr != parent) {
+    if (self->camera && self->camera->target != parent) {
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_ENCORE) {
 #endif

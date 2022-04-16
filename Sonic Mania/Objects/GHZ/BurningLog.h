@@ -26,7 +26,7 @@ void BurningLog_Update(void);
 void BurningLog_LateUpdate(void);
 void BurningLog_StaticUpdate(void);
 void BurningLog_Draw(void);
-void BurningLog_Create(void* data);
+void BurningLog_Create(void *data);
 void BurningLog_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BurningLog_EditorDraw(void);
@@ -36,5 +36,4 @@ void BurningLog_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_BURNINGLOG_H
+#endif //! OBJ_BURNINGLOG_H

@@ -25,7 +25,7 @@ struct EntityAIZTornado {
     Vector2 newPos;
     Vector2 moveVelocity;
     bool32 disableInteractions;
-    int32 offsetX; //unused here (used in MSZ/Tornado)
+    int32 offsetX; // unused here (used in MSZ/Tornado)
     Animator animatorTornado;
     Animator animatorPropeller;
     Animator animatorFlame;
@@ -40,7 +40,7 @@ void AIZTornado_Update(void);
 void AIZTornado_LateUpdate(void);
 void AIZTornado_StaticUpdate(void);
 void AIZTornado_Draw(void);
-void AIZTornado_Create(void* data);
+void AIZTornado_Create(void *data);
 void AIZTornado_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void AIZTornado_EditorDraw(void);
@@ -53,5 +53,4 @@ void AIZTornado_HandleMovement(void);
 void AIZTornado_HandlePlayerCollisions(void);
 void AIZTornado_State_Move(void);
 
-
-#endif //!OBJ_AIZTORNADO_H
+#endif //! OBJ_AIZTORNADO_H

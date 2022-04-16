@@ -22,15 +22,17 @@ void GHZCutsceneST_Update(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
-                CutsceneSeq_StartSequence(self, GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp,
-                                          GHZCutsceneST_Cutscene_ExitHBH, GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
+                CutsceneSeq_StartSequence(self, GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp, GHZCutsceneST_Cutscene_ExitHBH,
+                                          GHZCutsceneST_Cutscene_SetupGHZ1, StateMachine_None);
+
 #if RETRO_USE_PLUS
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
-                    cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
+                    cutsceneSeq->skipType          = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
 #endif
+
                 self->activated = true;
             }
         }
@@ -66,58 +68,58 @@ void GHZCutsceneST_SetupObjects(void)
     {
         if (!platform->frameID) {
             platform->drawOrder     = Zone->drawOrderHigh - 1;
-            GHZCutsceneST->platform = (Entity *)platform;
+            GHZCutsceneST->platform = platform;
             foreach_break;
         }
     }
 
     foreach_all(AIZKingClaw, claw)
     {
-        GHZCutsceneST->claw = (Entity *)claw;
+        GHZCutsceneST->claw = claw;
         foreach_break;
     }
 
     foreach_all(PhantomRuby, phantomRuby)
     {
-        GHZCutsceneST->phantomRuby = (Entity *)phantomRuby;
+        GHZCutsceneST->phantomRuby = phantomRuby;
         foreach_break;
     }
 
     foreach_all(FXRuby, fxRuby)
     {
-        GHZCutsceneST->fxRuby  = (Entity *)fxRuby;
-        fxRuby->state          = StateMachine_None;
-        fxRuby->fadeBlack      = 0x200;
-        fxRuby->fadeWhite      = 0x200;
-        fxRuby->outerRadius    = ScreenInfo->width;
-        fxRuby->timer      = 64;
+        GHZCutsceneST->fxRuby = fxRuby;
+        fxRuby->state         = StateMachine_None;
+        fxRuby->fadeBlack     = 0x200;
+        fxRuby->fadeWhite     = 0x200;
+        fxRuby->outerRadius   = ScreenInfo->width;
+        fxRuby->timer         = 64;
         foreach_break;
     }
 
-    foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = (Entity *)cutsceneHBH; }
+    foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = cutsceneHBH; }
 }
 
 void GHZCutsceneST_SetupKnuxCutscene(void)
 {
-    if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
-        EntityPlatform *platform = (EntityPlatform *)GHZCutsceneST->platform;
-        Entity *claw             = GHZCutsceneST->claw;
-        Entity *fxRuby           = GHZCutsceneST->fxRuby;
-        Entity *phantomRuby      = GHZCutsceneST->phantomRuby;
+    if (checkPlayerID(ID_KNUCKLES, 1)) {
+        EntityPlatform *platform       = GHZCutsceneST->platform;
+        EntityAIZKingClaw *claw        = GHZCutsceneST->claw;
+        EntityFXRuby *fxRuby           = GHZCutsceneST->fxRuby;
+        EntityPhantomRuby *phantomRuby = GHZCutsceneST->phantomRuby;
 
-        GHZCutsceneST->cutsceneHBH[0]->position.y += 0x2C00000;
-        GHZCutsceneST->cutsceneHBH[1]->position.y += 0x2C00000;
-        GHZCutsceneST->cutsceneHBH[2]->position.y += 0x2C00000;
-        GHZCutsceneST->cutsceneHBH[3]->position.y += 0x2C00000;
-        GHZCutsceneST->cutsceneHBH[4]->position.y += 0x2C00000;
-        fxRuby->position.y += 0x2C00000;
-        phantomRuby->position.y += 0x2C00000;
-        platform->position.y += 0x2C00000;
+        GHZCutsceneST->cutsceneHBH[0]->position.y += 704 << 16;
+        GHZCutsceneST->cutsceneHBH[1]->position.y += 704 << 16;
+        GHZCutsceneST->cutsceneHBH[2]->position.y += 704 << 16;
+        GHZCutsceneST->cutsceneHBH[3]->position.y += 704 << 16;
+        GHZCutsceneST->cutsceneHBH[4]->position.y += 704 << 16;
+        fxRuby->position.y += 704 << 16;
+        phantomRuby->position.y += 704 << 16;
+        platform->position.y += 704 << 16;
         platform->drawPos.x   = platform->position.x;
         platform->drawPos.y   = platform->position.y;
         platform->centerPos.x = platform->position.x;
         platform->centerPos.y = platform->position.y;
-        claw->position.y += 0x2C00000;
+        claw->position.y += 704 << 16;
     }
 }
 
@@ -133,14 +135,14 @@ void GHZCutsceneST_SkipCB(void)
 }
 #endif
 
-
 bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-    EntityFXRuby *fxRuby    = (EntityFXRuby *)GHZCutsceneST->fxRuby;
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(camera);
+
+    EntityFXRuby *fxRuby    = GHZCutsceneST->fxRuby;
+    EntityPhantomRuby *ruby = GHZCutsceneST->phantomRuby;
+
     if (host->timer) {
         if (host->timer >= 60) {
             if (fxRuby->fadeBlack <= 0) {
@@ -177,14 +179,16 @@ bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
         player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
     }
+
     return false;
 }
 bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
-    EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
-    EntityFXRuby *fxRuby    = (EntityFXRuby *)GHZCutsceneST->fxRuby;
+    RSDK_GET_PLAYER(player1, player2, camera);
+    unused(player2);
+
+    EntityPhantomRuby *ruby = GHZCutsceneST->phantomRuby;
+    EntityFXRuby *fxRuby    = GHZCutsceneST->fxRuby;
     if (!host->timer)
         fxRuby->state = FXRuby_State_ShrinkRing;
 
@@ -196,8 +200,8 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
             if (!player || player->objectID == TYPE_BLANK)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
-            int32 x              = (player->position.x - player->position.x) >> 3;
-            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
+            int32 x            = (player->position.x - player->position.x) >> 3;
+            int32 y            = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedTimer)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -205,7 +209,8 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
             player->camera     = NULL;
             ++curPlayer;
         }
-        host->values[0] = 1;
+
+        host->values[0] = true;
         Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
         return true;
     }
@@ -229,9 +234,11 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
-    EntityPhantomRuby *ruby  = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
-    EntityAIZKingClaw *claw  = (EntityAIZKingClaw *)GHZCutsceneST->claw;
-    EntityPlatform *platform = (EntityPlatform *)GHZCutsceneST->platform;
+
+    EntityPhantomRuby *ruby  = GHZCutsceneST->phantomRuby;
+    EntityAIZKingClaw *claw  = GHZCutsceneST->claw;
+    EntityPlatform *platform = GHZCutsceneST->platform;
+
     if (host->timer >= 60) {
         if (host->timer == 60) {
             int32 id = 0;
@@ -241,9 +248,10 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
                     break;
                 player->up = false;
             }
+
             Music_FadeOut(0.025);
         }
-        
+
         if (host->timer == 180) {
             player1->camera = camera;
             Camera_SetTargetEntity(0, player1);
@@ -252,7 +260,7 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
         else {
             claw->velocity.y -= 0x1800;
             for (int32 hbhChar = 0; hbhChar < 5; ++hbhChar) {
-                EntityCutsceneHBH *hbh = (EntityCutsceneHBH *)GHZCutsceneST->cutsceneHBH[hbhChar];
+                EntityCutsceneHBH *hbh = GHZCutsceneST->cutsceneHBH[hbhChar];
                 switch (hbhChar) {
                     case HBH_GUNNER:
                         hbh->velocity.x += 0x800;
@@ -260,6 +268,7 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
                         hbh->position.x += hbh->velocity.x;
                         hbh->position.y += hbh->velocity.y;
                         break;
+
                     case HBH_SHINOBI:
                         if (host->timer == 60) {
                             RSDK.SetSpriteAnimation(hbh->aniFrames, 3, &hbh->mainAnimator, true, 0);
@@ -268,17 +277,20 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
                         hbh->position.x -= 0x4000;
                         hbh->position.y -= 0x40000;
                         break;
+
                     case HBH_MYSTIC:
                         hbh->velocity.x += 0x2000;
                         hbh->velocity.y -= 0x1000;
                         hbh->position.x += hbh->velocity.x;
                         hbh->position.y += hbh->velocity.y;
                         break;
+
                     case HBH_RIDER:
                     case HBH_KING:
                         hbh->position.x += claw->velocity.x;
                         hbh->position.y += claw->velocity.y;
                         break;
+
                     default: break;
                 }
             }
@@ -295,18 +307,21 @@ bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
             claw->position.y += claw->velocity.y;
         }
     }
+
     return false;
 }
 
 bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZCutsceneST);
+
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE)
         RSDK.SetScene("Encore Mode", "");
     else
 #endif
         RSDK.SetScene("Mania Mode", "");
+
     globals->parallaxOffset[0] = self->timer;
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;

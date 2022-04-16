@@ -24,20 +24,20 @@ void SchrodingersCapsule_Update(void)
 
             if (self->state == SchrodingersCapsule_State_HandleBounds) {
                 if (Player_CheckCollisionBox(player, self, &self->hitboxButton) == C_TOP) {
-                    self->buttonPos   = 0x80000;
+                    self->buttonPos    = 0x80000;
                     player->velocity.x = 0;
                     player->groundVel  = 0;
                     CutsceneSeq_LockPlayerControl(player);
-                    stoodSolid               = false;
+                    stoodSolid         = false;
                     player->state      = Player_State_Ground;
                     player->stateInput = StateMachine_None;
-                    self->active     = ACTIVE_NORMAL;
-                    self->state      = SchrodingersCapsule_State_Activated;
+                    self->active       = ACTIVE_NORMAL;
+                    self->state        = SchrodingersCapsule_State_Activated;
                 }
                 else {
                     if (Player_CheckCollisionTouch(player, self, &self->hitboxButtonTrigger)) {
                         Hitbox *playerHitbox = Player_GetHitbox(player);
-                        self->buttonPos     = ((playerHitbox->bottom + 48) << 16) - self->position.y + player->position.y;
+                        self->buttonPos      = ((playerHitbox->bottom + 48) << 16) - self->position.y + player->position.y;
                         if (self->buttonPos <= 0x80000) {
                             if (self->buttonPos < 0)
                                 self->buttonPos = 0;
@@ -54,7 +54,7 @@ void SchrodingersCapsule_Update(void)
                     }
 
                     if (stoodSolid) {
-                        EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+                        EntityPhantomRuby *ruby = EncoreIntro->phantomRuby;
                         if (ruby->velocity.y > 0)
                             ruby->velocity.y = -ruby->velocity.y;
                         ruby->state = EncoreIntro_PhantomRuby_CapsuleRiseUp;
@@ -121,32 +121,35 @@ void SchrodingersCapsule_Create(void *data)
         RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &self->glassAnimator, true, 0);
         RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 3, &self->mightyAnimator, true, 0);
         RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 4, &self->rayAnimator, true, 0);
-        self->hitboxSolid.left           = -40;
-        self->hitboxSolid.top            = -40;
-        self->hitboxSolid.right          = 40;
-        self->hitboxSolid.bottom         = 40;
 
-        self->hitboxButton.left          = -16;
-        self->hitboxButton.top           = -44;
-        self->hitboxButton.right         = 16;
-        self->hitboxButton.bottom        = -30;
+        self->hitboxSolid.left   = -40;
+        self->hitboxSolid.top    = -40;
+        self->hitboxSolid.right  = 40;
+        self->hitboxSolid.bottom = 40;
+
+        self->hitboxButton.left   = -16;
+        self->hitboxButton.top    = -44;
+        self->hitboxButton.right  = 16;
+        self->hitboxButton.bottom = -30;
 
         self->hitboxButtonTrigger.left   = -15;
         self->hitboxButtonTrigger.top    = -60;
         self->hitboxButtonTrigger.right  = 15;
         self->hitboxButtonTrigger.bottom = -30;
-        self->state          = SchrodingersCapsule_State_Setup;
-        self->active         = ACTIVE_BOUNDS;
-        self->updateRange.x  = 0x800000;
-        self->updateRange.y  = 0x800000;
-        self->visible        = true;
-        self->drawOrder      = Zone->drawOrderLow;
+
+        self->state         = SchrodingersCapsule_State_Setup;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
     }
 }
 
 void SchrodingersCapsule_StageLoad(void)
 {
-    SchrodingersCapsule->aniFrames     = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE);
+    SchrodingersCapsule->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE);
+
     SchrodingersCapsule->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
     SchrodingersCapsule->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
 }
@@ -154,12 +157,14 @@ void SchrodingersCapsule_StageLoad(void)
 void SchrodingersCapsule_State_Setup(void)
 {
     RSDK_THIS(SchrodingersCapsule);
+
     self->state = SchrodingersCapsule_State_HandleBounds;
 }
 
 void SchrodingersCapsule_State_HandleBounds(void)
 {
     RSDK_THIS(SchrodingersCapsule);
+
     RSDK.ProcessAnimation(&self->glassAnimator);
     RSDK.ProcessAnimation(&self->mightyAnimator);
     RSDK.ProcessAnimation(&self->rayAnimator);
@@ -171,8 +176,8 @@ void SchrodingersCapsule_State_HandleBounds(void)
                 if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
-                    Zone->cameraBoundsL[p]     = (self->position.x >> 16) - ScreenInfo[p].centerX;
-                    Zone->cameraBoundsR[p]     = (self->position.x >> 16) + ScreenInfo[p].centerX;
+                    Zone->cameraBoundsL[p]      = (self->position.x >> 16) - ScreenInfo[p].centerX;
+                    Zone->cameraBoundsR[p]      = (self->position.x >> 16) + ScreenInfo[p].centerX;
                 }
             }
         }
@@ -186,7 +191,7 @@ void SchrodingersCapsule_State_Activated(void)
     RSDK.ProcessAnimation(&self->mightyAnimator);
     RSDK.ProcessAnimation(&self->rayAnimator);
     RSDK.SetSpriteAnimation(-1, 0, &self->glassAnimator, true, 0);
-    self->state               = SchrodingersCapsule_State_Explode;
+    self->state            = SchrodingersCapsule_State_Explode;
     SceneInfo->timeEnabled = false;
 }
 
@@ -199,14 +204,14 @@ void SchrodingersCapsule_State_Explode(void)
     if (!(self->timer % 3)) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
                                                    (RSDK.Rand(-24, 24) << 16) + self->position.x, (RSDK.Rand(-24, 24) << 16) + self->position.y);
-        explosion->drawOrder = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->drawOrderHigh;
 
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, false, 0xFF);
     }
 
     if (++self->timer == 60) {
-        self->timer             = 0;
-        self->state             = StateMachine_None;
+        self->timer                = 0;
+        self->state                = StateMachine_None;
         self->mainAnimator.frameID = 1;
         RSDK.SetSpriteAnimation(-1, -1, &self->mightyAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, -1, &self->rayAnimator, true, 0);

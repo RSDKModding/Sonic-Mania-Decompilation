@@ -81,7 +81,7 @@ bool32 TTCutscene_Cutscene_Setup(EntityCutsceneSeq *host)
         Zone->deathBoundary[1]      = 0x7FFF0000;
         Zone->deathBoundary[2]      = 0x7FFF0000;
         Zone->deathBoundary[3]      = 0x7FFF0000;
-        camera->targetPtr           = NULL;
+        camera->target           = NULL;
         player1->camera             = NULL;
         player1->stateInput         = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();

@@ -45,7 +45,7 @@ struct EntitySpikes {
     int32 planeFilter;
     int32 stateMove;
     int32 moveOffset;
-    Vector2 offset;
+    Vector2 collisionOffset;
     int16 timer2;
     uint8 shatterTimer;
     Hitbox hitbox;

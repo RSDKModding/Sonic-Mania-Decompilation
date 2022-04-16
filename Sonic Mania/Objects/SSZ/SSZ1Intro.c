@@ -73,7 +73,7 @@ bool32 SSZ1Intro_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         player1->camera = 0;
         camera->position.y -= 0x40000;
-        camera->targetPtr   = NULL;
+        camera->target   = NULL;
         player1->stateInput = StateMachine_None;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
@@ -148,7 +148,7 @@ bool32 SSZ1Intro_Cutscene_BeginAct1(EntityCutsceneSeq *host)
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
         player1->camera         = camera;
-        camera->targetPtr       = (Entity *)player1;
+        camera->target       = (Entity *)player1;
         camera->state           = Camera_State_Follow;
         if (player2->objectID == Player->objectID) {
             player2->stateInput     = Player_ProcessP2Input_AI;

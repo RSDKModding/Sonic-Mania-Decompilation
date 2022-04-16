@@ -31,7 +31,7 @@ void WaterfallSound_Update(void);
 void WaterfallSound_LateUpdate(void);
 void WaterfallSound_StaticUpdate(void);
 void WaterfallSound_Draw(void);
-void WaterfallSound_Create(void* data);
+void WaterfallSound_Create(void *data);
 void WaterfallSound_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void WaterfallSound_EditorDraw(void);
@@ -44,4 +44,4 @@ bool32 WaterfallSound_CheckCB(void);
 void WaterfallSound_UpdateCB(int32 sfxID);
 #endif
 
-#endif //!OBJ_WATERFALLSOUND_H
+#endif //! OBJ_WATERFALLSOUND_H

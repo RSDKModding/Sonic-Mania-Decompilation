@@ -45,15 +45,15 @@ void SpikeLog_StageLoad(void)
     if (RSDK.CheckStageFolder("GHZ"))
         SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
 
-    SpikeLog->hitbox.left   = -8;
-    SpikeLog->hitbox.top    = -16;
-    SpikeLog->hitbox.right  = 8;
-    SpikeLog->hitbox.bottom = 0;
+    SpikeLog->hitboxSpikeLog.left   = -8;
+    SpikeLog->hitboxSpikeLog.top    = -16;
+    SpikeLog->hitboxSpikeLog.right  = 8;
+    SpikeLog->hitboxSpikeLog.bottom = 0;
 
-    SpikeLog->burnHitbox.left   = -9;
-    SpikeLog->burnHitbox.top    = -16;
-    SpikeLog->burnHitbox.right  = 9;
-    SpikeLog->burnHitbox.bottom = 0;
+    SpikeLog->hitboxBurnLog.left   = -9;
+    SpikeLog->hitboxBurnLog.top    = -16;
+    SpikeLog->hitboxBurnLog.right  = 9;
+    SpikeLog->hitboxBurnLog.bottom = 0;
 }
 
 void SpikeLog_State_Main(void)
@@ -65,7 +65,8 @@ void SpikeLog_State_Main(void)
         if (player->shield != SHIELD_FIRE || player->invincibleTimer) {
             if ((self->animator.frameID & 0xFFFFFFFC) != 8)
                 continue;
-            if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitbox)) {
+
+            if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitboxSpikeLog)) {
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY) {
                     int32 anim = player->animator.animationID;
@@ -97,17 +98,15 @@ void SpikeLog_State_Main(void)
 #endif
             }
         }
-        else {
-            if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitbox)) {
-                if (!SpikeLog->hasAchievement) {
-                    API_UnlockAchievement("ACH_GHZ");
-                    SpikeLog->hasAchievement = true;
-                }
-                CREATE_ENTITY(BurningLog, intToVoid(0x10), self->position.x, self->position.y);
-                RSDK.SetTileInfo(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, -1);
-                self->frame = 8;
-                self->state = SpikeLog_State_Burn;
+        else if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitboxSpikeLog)) {
+            if (!SpikeLog->hasAchievement) {
+                API_UnlockAchievement("ACH_GHZ");
+                SpikeLog->hasAchievement = true;
             }
+            CREATE_ENTITY(BurningLog, intToVoid(16), self->position.x, self->position.y);
+            RSDK.SetTileInfo(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, -1);
+            self->frame = 8;
+            self->state = SpikeLog_State_Burn;
         }
     }
 }
@@ -119,8 +118,8 @@ void SpikeLog_State_Burn(void)
         foreach_all(SpikeLog, other)
         {
             if (other->state == SpikeLog_State_Main
-                && RSDK.CheckObjectCollisionTouchBox(other, &SpikeLog->burnHitbox, self, &SpikeLog->burnHitbox)) {
-                CREATE_ENTITY(BurningLog, intToVoid(0x10), other->position.x, other->position.y);
+                && RSDK.CheckObjectCollisionTouchBox(other, &SpikeLog->hitboxBurnLog, self, &SpikeLog->hitboxBurnLog)) {
+                CREATE_ENTITY(BurningLog, intToVoid(16), other->position.x, other->position.y);
                 RSDK.SetTileInfo(Zone->fgLow, other->position.x >> 20, other->position.y >> 20, -1);
                 other->frame  = 8;
                 other->state  = SpikeLog_State_Burn;

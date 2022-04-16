@@ -15,10 +15,10 @@ struct ObjectGHZ2Outro {
 // Entity Class
 struct EntityGHZ2Outro {
     MANIA_CUTSCENE_BASE
-    Entity *eggman;
-    Entity *DERobot;
-    Entity *phantomRuby;
-    Entity *fxRuby;
+    EntityEggman *eggman;
+    EntityDERobot *DERobot;
+    EntityPhantomRuby *phantomRuby;
+    EntityFXRuby *fxRuby;
 };
 
 // Object Struct
@@ -29,10 +29,12 @@ void GHZ2Outro_Update(void);
 void GHZ2Outro_LateUpdate(void);
 void GHZ2Outro_StaticUpdate(void);
 void GHZ2Outro_Draw(void);
-void GHZ2Outro_Create(void* data);
+void GHZ2Outro_Create(void *data);
 void GHZ2Outro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void GHZ2Outro_EditorDraw(void);
 void GHZ2Outro_EditorLoad(void);
+#endif
 void GHZ2Outro_Serialize(void);
 
 // Extra Entity Functions
@@ -51,4 +53,4 @@ bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host);
 void GHZ2Outro_Cutscene_SkipCB(void);
 #endif
 
-#endif //!OBJ_GHZ2OUTRO_H
+#endif //! OBJ_GHZ2OUTRO_H

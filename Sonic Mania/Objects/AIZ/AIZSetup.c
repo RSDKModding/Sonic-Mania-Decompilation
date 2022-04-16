@@ -16,13 +16,13 @@ void AIZSetup_LateUpdate(void) {}
 void AIZSetup_StaticUpdate(void)
 {
 #if RETRO_USE_PLUS
-    if (Zone->actID != 3 && !AIZSetup->cutsceneInit) {
+    if (Zone->actID != 3 && !AIZSetup->hasSetupCutscene) {
 #else
-    if (!AIZSetup->cutsceneInit) {
+    if (!AIZSetup->hasSetupCutscene) {
 #endif
         AIZSetup_SetupObjects();
         AIZSetup_GetCutsceneSetupPtr();
-        AIZSetup->cutsceneInit = true;
+        AIZSetup->hasSetupCutscene = true;
     }
 
 #if RETRO_USE_PLUS
@@ -79,34 +79,34 @@ void AIZSetup_StaticUpdate(void)
     }
 
 #if RETRO_USE_PLUS
-    --AIZSetup->aniTilesDelay1;
-    if (AIZSetup->aniTilesDelay1 < 0) {
-        ++AIZSetup->aniTileFrameA;
-        if (AIZSetup->aniTiles1[AIZSetup->aniTileFrameA] == -1) {
-            AIZSetup->aniTileFrameA = 0;
-        }
-        AIZSetup->aniTilesDelay1 = AIZSetup->aniTiles2[AIZSetup->aniTileFrameA];
-        RSDK.DrawAniTiles(AIZSetup->aniTiles, 196, 16 * AIZSetup->aniTiles1[AIZSetup->aniTileFrameA], 0, 16, 32);
+    --AIZSetup->bellPlantAniTimer;
+    if (AIZSetup->bellPlantAniTimer < 0) {
+        ++AIZSetup->bellPlantAniFrame;
+        if (AIZSetup->bellPlantAniFramePos[AIZSetup->bellPlantAniFrame] == -1)
+            AIZSetup->bellPlantAniFrame = 0;
+
+        AIZSetup->bellPlantAniTimer = AIZSetup->bellPlantAniDurations[AIZSetup->bellPlantAniFrame];
+        RSDK.DrawAniTiles(AIZSetup->aniTiles, 196, 16 * AIZSetup->bellPlantAniFramePos[AIZSetup->bellPlantAniFrame], 0, 16, 32);
     }
 
-    --AIZSetup->aniTilesDelay2;
-    if (AIZSetup->aniTilesDelay2 < 0) {
-        ++AIZSetup->aniTileFrameB;
-        if (AIZSetup->aniTiles3[AIZSetup->aniTileFrameB] == -1) {
-            AIZSetup->aniTileFrameB = 0;
-        }
-        AIZSetup->aniTilesDelay2 = AIZSetup->aniTiles4[AIZSetup->aniTileFrameB];
-        RSDK.DrawAniTiles(AIZSetup->aniTiles, 198, 16 * AIZSetup->aniTiles3[AIZSetup->aniTileFrameB], 32, 16, 48);
+    --AIZSetup->curlPlant1AniTimer;
+    if (AIZSetup->curlPlant1AniTimer < 0) {
+        ++AIZSetup->curlPlant1AniFrame;
+        if (AIZSetup->curlPlant1AniFramePos[AIZSetup->curlPlant1AniFrame] == -1)
+            AIZSetup->curlPlant1AniFrame = 0;
+
+        AIZSetup->curlPlant1AniTimer = AIZSetup->curlPlant1AniDurations[AIZSetup->curlPlant1AniFrame];
+        RSDK.DrawAniTiles(AIZSetup->aniTiles, 198, 16 * AIZSetup->curlPlant1AniFramePos[AIZSetup->curlPlant1AniFrame], 32, 16, 48);
     }
 
-    --AIZSetup->aniTilesDelay3;
-    if (AIZSetup->aniTilesDelay3 < 0) {
-        ++AIZSetup->aniTileFrameC;
-        if (AIZSetup->aniTiles5[AIZSetup->aniTileFrameC] == -1) {
-            AIZSetup->aniTileFrameC = 0;
-        }
-        AIZSetup->aniTilesDelay3 = AIZSetup->aniTiles6[AIZSetup->aniTileFrameC];
-        RSDK.DrawAniTiles(AIZSetup->aniTiles, 201, 16 * AIZSetup->aniTiles5[AIZSetup->aniTileFrameC], 32, 16, 48);
+    --AIZSetup->curlPlant2AniTimer;
+    if (AIZSetup->curlPlant2AniTimer < 0) {
+        ++AIZSetup->curlPlant2AniFrame;
+        if (AIZSetup->curlPlant2AniFramePos[AIZSetup->curlPlant2AniFrame] == -1)
+            AIZSetup->curlPlant2AniFrame = 0;
+
+        AIZSetup->curlPlant2AniTimer = AIZSetup->curlPlant2AniDurations[AIZSetup->curlPlant2AniFrame];
+        RSDK.DrawAniTiles(AIZSetup->aniTiles, 201, 16 * AIZSetup->curlPlant2AniFramePos[AIZSetup->curlPlant2AniFrame], 32, 16, 48);
     }
 #endif
 }
@@ -122,7 +122,8 @@ void AIZSetup_StageLoad(void)
 #endif
         Zone->cameraBoundsB[0] = SCREEN_YSIZE;
 
-    AIZSetup->cutsceneInit = false;
+    AIZSetup->hasSetupCutscene = false;
+
     AIZSetup->aniTiles     = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);
     AIZSetup->knuxFrames   = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
 
@@ -158,10 +159,10 @@ void AIZSetup_StageLoad(void)
                 pos = 0;
 
             int32 angle = 0;
-            int32 rand  = RSDK.Rand(0, 4);
+            int32 deform  = RSDK.Rand(0, 4);
             for (int32 i = 0; i < 16; ++i) {
-                deformData[pos + i]           = (rand * RSDK.Sin1024(angle)) >> 10;
-                deformData[(pos + 0x200) + i] = (rand * RSDK.Sin1024(angle)) >> 10;
+                deformData[pos + i]           = (deform * RSDK.Sin1024(angle)) >> 10;
+                deformData[(pos + 0x200) + i] = (deform * RSDK.Sin1024(angle)) >> 10;
                 angle += 64;
             }
             id += 16;
@@ -253,6 +254,7 @@ void AIZSetup_PlayerState_P2Enter(void)
 void AIZSetup_HandleHeavyMovement(void)
 {
     EntityAIZKingClaw *claw = AIZSetup->claw;
+
     int32 x                 = -0x10000;
     foreach_all(AIZEggRobo, robo)
     {
@@ -316,6 +318,7 @@ void AIZSetup_GetCutsceneSetupPtr(void)
 #endif
             AIZSetup_CutsceneST_Setup();
             break;
+
         case ID_KNUCKLES: AIZSetup_CutsceneK_Setup(); break;
     }
 }
@@ -339,6 +342,7 @@ void AIZSetup_CutsceneST_Setup(void)
                               AIZSetup_CutsceneSonic_P2FlyIn, AIZSetup_CutsceneSonic_EnterClaw, AIZSetup_CutsceneSonic_WatchClaw,
                               AIZSetup_CutsceneSonic_RubyGrabbed, AIZSetup_CutsceneSonic_RubyAppear, AIZSetup_CutsceneSonic_RubyFX,
                               AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
+
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
@@ -521,9 +525,12 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
 
     if (claw->position.y > -0x520000) {
         AIZSetup->playDrillSfx = true;
+
         if (!(host->timer % 5))
             Camera_ShakeScreen(0, 0, 2);
+
         claw->position.y -= 0x4000;
+
         for (int32 i = 0; i < 3; ++i) {
             EntityDecoration *decor = AIZSetup->decorations[i];
             decor->drawFX |= FX_ROTATE;
@@ -555,13 +562,18 @@ bool32 AIZSetup_CutsceneSonic_RubyGrabbed(EntityCutsceneSeq *host)
         }
         else {
             AIZSetup->playDrillSfx             = false;
+
             host->storedTimer                  = host->timer;
             host->storedValue                  = claw->position.y;
+
             AIZSetup->decorations[0]->rotSpeed = 0;
             AIZSetup->decorations[1]->rotSpeed = 0;
+
             if (checkPlayerID(ID_TAILS, 2))
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
-            RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0);
+
+            RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0x00);
+
             Music_TransitionTrack(TRACK_EGGMAN1, 0.05);
         }
     }
@@ -574,6 +586,7 @@ bool32 AIZSetup_CutsceneSonic_RubyAppear(EntityCutsceneSeq *host)
 
     if (!host->timer)
         PhantomRuby_SetupFlash(ruby);
+
     return ruby->flashFinished;
 }
 bool32 AIZSetup_CutsceneSonic_RubyFX(EntityCutsceneSeq *host)
@@ -663,6 +676,7 @@ void AIZSetup_CutsceneK_Setup(void)
     CutsceneSeq_StartSequence(self, AIZSetup_CutsceneKnux_Chillin, AIZSetup_CutsceneKnux_StartDrillin, AIZSetup_CutsceneKnux_Drillin,
                               AIZSetup_CutsceneKnux_PrepareForTrouble, AIZSetup_CutsceneKnux_EnterThreat, AIZSetup_CutsceneKnux_HeaviesAppear,
                               AIZSetup_CutsceneKnux_RubyImpact, AIZSetup_CutsceneKnux_RubyFX, AIZSetup_Cutscene_LoadGHZ, StateMachine_None);
+
 #if RETRO_USE_PLUS
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
@@ -685,6 +699,7 @@ bool32 AIZSetup_CutsceneKnux_Chillin(EntityCutsceneSeq *host)
         player1->drawFX     = FX_FLIP;
         RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 1, &player1->animator, true, 0);
     }
+
     return host->timer == 180;
 }
 bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
@@ -695,28 +710,33 @@ bool32 AIZSetup_CutsceneKnux_StartDrillin(EntityCutsceneSeq *host)
 
     switch (host->timer) {
         case 0: RSDK.PlaySfx(AIZKingClaw->sfxClack, false, 0); break;
+
         case 10:
             RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, false, 0);
             RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 2, &player1->animator, true, 0);
             break;
+
         case 40: return true;
+
         default: break;
     }
+
     return false;
 }
 bool32 AIZSetup_CutsceneKnux_Drillin(EntityCutsceneSeq *host)
 {
     if (host->timer < 120) {
         AIZSetup->playDrillSfx = true;
-        if (!(host->timer % 5)) {
+
+        if (!(host->timer % 5))
             Camera_ShakeScreen(0, 0, 2);
-        }
     }
     else if (host->timer == 120) {
         AIZSetup->playDrillSfx = false;
-        RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0);
+        RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0x00);
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.02);
     }
+
     return host->timer == 200;
 }
 bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
@@ -737,6 +757,7 @@ bool32 AIZSetup_CutsceneKnux_PrepareForTrouble(EntityCutsceneSeq *host)
             animal->behaviour = ANIMAL_BEHAVE_BOUNCEAROUND;
         }
     }
+
     return host->timer == 60;
 }
 bool32 AIZSetup_CutsceneKnux_EnterThreat(EntityCutsceneSeq *host)
@@ -783,7 +804,9 @@ bool32 AIZSetup_CutsceneKnux_HeaviesAppear(EntityCutsceneSeq *host)
         player1->drawOrder = Zone->playerDrawHigh + 2;
         RSDK.PlaySfx(AIZSetup->sfxHeliWoosh, false, 0);
     }
+
     AIZSetup_HandleHeavyMovement();
+
     return ruby->position.x >= player1->position.x - 0x100000;
 }
 bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
@@ -808,12 +831,15 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
         player1->state           = Player_State_None;
         player1->onGround        = false;
         player1->drawOrder       = Zone->playerDrawHigh + 1;
+
         if (player2->objectID == Player->objectID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
+
         Camera_ShakeScreen(0, 4, 4);
     }
 
     AIZSetup_HandleHeavyMovement();
+
     if (player1->onGround) {
         if (player1->velocity.x > 0)
             player1->velocity.x -= 0x2000;
@@ -825,10 +851,13 @@ bool32 AIZSetup_CutsceneKnux_RubyImpact(EntityCutsceneSeq *host)
     }
     else {
         player1->velocity.y += 0x3800;
+
         if (player1->velocity.x > 0)
             player1->velocity.x -= 0x1000;
+
         if (player1->velocity.x < 0)
             player1->velocity.x = 0;
+
         RSDK.SetSpriteAnimation(AIZSetup->knuxFrames, 4, &player1->animator, true, 0);
     }
     return false;
@@ -842,33 +871,38 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host)
     EntityFXRuby *fxRuby = AIZSetup->fxRuby;
 
     if (player1->velocity.x > 0)
-        player1->velocity.x -= 4096;
+        player1->velocity.x -= 0x1000;
+
     if (player1->velocity.x < 0)
         player1->velocity.x = 0;
 
     if (host->timer == 180) {
         fxRuby->delay = 32;
         fxRuby->state = FXRuby_State_IncreaseStageDeform;
+
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
         Camera_ShakeScreen(0, 4, 4);
         Music_FadeOut(0.025);
+
         host->storedTimer = host->timer;
-        host->values[0]   = 1;
+        host->values[0]   = true;
     }
 
     AIZSetup_HandleHeavyMovement();
+
     if (host->values[0]) {
-        if (fxRuby->fadeWhite < 512) {
-            fxRuby->fadeWhite += 16;
+        if (fxRuby->fadeWhite < 0x200) {
+            fxRuby->fadeWhite += 0x10;
         }
-        else if (fxRuby->fadeBlack >= 512) {
+        else if (fxRuby->fadeBlack >= 0x200) {
             if (host->timer == host->storedTimer + 150)
                 return true;
         }
         else {
-            fxRuby->fadeBlack += 16;
+            fxRuby->fadeBlack += 0x200;
         }
     }
+
     return false;
 }
 
@@ -878,6 +912,7 @@ bool32 AIZSetup_Cutscene_LoadGHZ(EntityCutsceneSeq *host)
 
     RSDK.SetScene("Cutscenes", "Green Hill Zone");
     RSDK.LoadScene();
+
     return true;
 }
 

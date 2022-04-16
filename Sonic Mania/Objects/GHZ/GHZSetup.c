@@ -49,9 +49,11 @@ void GHZSetup_Create(void *data) {}
 
 void GHZSetup_StageLoad(void)
 {
-    GHZSetup->aniTiles      = RSDK.LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
+    GHZSetup->aniTiles = RSDK.LoadSpriteSheet("GHZ/AniTiles.gif", SCOPE_STAGE);
+
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;
+
     if (Zone->actID) {
         BGSwitch->switchCallback[GHZ_BG_OUTSIDE] = GHZSetup_BGSwitchCB_Outside_Act2;
         BGSwitch->switchCallback[GHZ_BG_CAVES]   = GHZSetup_BGSwitchCB_Caves_Act2;
@@ -69,9 +71,10 @@ void GHZSetup_StageLoad(void)
             Zone->stageFinishCallback = GHZSetup_SpawnGHZ2Outro;
     }
     else {
-        TileLayer *backgroundOutside             = RSDK.GetSceneLayer(0);
-        backgroundOutside->scrollPos             = 0x180000;
-        backgroundOutside->parallaxFactor        = -backgroundOutside->parallaxFactor;
+        TileLayer *backgroundOutside      = RSDK.GetSceneLayer(0);
+        backgroundOutside->scrollPos      = 0x180000;
+        backgroundOutside->parallaxFactor = -backgroundOutside->parallaxFactor;
+
         BGSwitch->switchCallback[GHZ_BG_OUTSIDE] = GHZSetup_BGSwitchCB_Outside_Act1;
         BGSwitch->switchCallback[GHZ_BG_CAVES]   = GHZSetup_BGSwitchCB_Caves_Act1;
 
@@ -96,6 +99,7 @@ void GHZSetup_StageLoad(void)
         RSDK.CopyPalette(0, 128, 2, 128, 80);
         RSDK.RotatePalette(2, 181, 184, true);
         RSDK.RotatePalette(2, 197, 200, true);
+
         if (Water) {
             foreach_all(Water, water)
             {
@@ -115,6 +119,7 @@ void GHZSetup_SetupStartingBG(void)
         BGSwitch->layerIDs[1] = GHZ_BG_CAVES;
         BGSwitch->layerIDs[2] = GHZ_BG_CAVES;
         BGSwitch->layerIDs[3] = GHZ_BG_CAVES;
+
         for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
             GHZSetup_BGSwitchCB_Caves_Act2();
         }
@@ -139,20 +144,21 @@ void GHZSetup_SetupActTransition(void)
 }
 void GHZSetup_HandleActTransition(void)
 {
-    Zone->cameraBoundsL[0] = 0x100 - ScreenInfo->centerX;
+    Zone->cameraBoundsL[0] = 256 - ScreenInfo->centerX;
     Zone->cameraBoundsB[0] = 1412;
+
     Zone_ReloadStoredEntities(256 << 16, 1412 << 16, true);
 
-    TileLayer *layer2 = RSDK.GetSceneLayer(2);
-    layer2->scrollPos += 0xB000 * layer2->parallaxFactor;
-    for (int32 s = 0; s < layer2->scrollInfoCount; ++s) {
-        layer2->scrollInfo[s].scrollPos += 0x3CB000 * layer2->scrollInfo[s].parallaxFactor;
+    TileLayer *bgCave1 = RSDK.GetSceneLayer(2);
+    bgCave1->scrollPos += 0xB000 * bgCave1->parallaxFactor;
+    for (int32 s = 0; s < bgCave1->scrollInfoCount; ++s) {
+        bgCave1->scrollInfo[s].scrollPos += 0x3CB000 * bgCave1->scrollInfo[s].parallaxFactor;
     }
 
-    TileLayer *layer3 = RSDK.GetSceneLayer(3);
-    layer3->scrollPos += 0xB000 * layer3->parallaxFactor;
-    for (int32 s = 0; s < layer3->scrollInfoCount; ++s) {
-        layer3->scrollInfo[s].scrollPos += 0x3CB000 * layer3->scrollInfo[s].parallaxFactor;
+    TileLayer *bgCave2 = RSDK.GetSceneLayer(3);
+    bgCave2->scrollPos += 0xB000 * bgCave2->parallaxFactor;
+    for (int32 s = 0; s < bgCave2->scrollInfoCount; ++s) {
+        bgCave2->scrollInfo[s].scrollPos += 0x3CB000 * bgCave2->scrollInfo[s].parallaxFactor;
     }
 
     for (BGSwitch->screenID = 0; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++BGSwitch->screenID) {
@@ -185,7 +191,7 @@ void GHZSetup_BGSwitchCB_Caves_Act1(void)
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
 }
-void GHZSetup_SpawnGHZ2Outro(void) { CREATE_ENTITY(GHZ2Outro, intToVoid(1), 0, 0); }
+void GHZSetup_SpawnGHZ2Outro(void) { CREATE_ENTITY(GHZ2Outro, intToVoid(true), 0, 0); }
 
 #if RETRO_INCLUDE_EDITOR
 void GHZSetup_EditorDraw(void) {}

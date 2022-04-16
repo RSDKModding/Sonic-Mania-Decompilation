@@ -100,8 +100,8 @@ void AIZKingClaw_HandleClawPositions(void)
 
     self->clawPos.x = self->position.x;
     self->clawPos.y = self->position.y;
-    int32 moveX       = RSDK.Sin256(self->angle) << 12;
-    int32 moveY       = RSDK.Cos256(self->angle) << 12;
+    int32 moveX     = RSDK.Sin256(self->angle) << 12;
+    int32 moveY     = RSDK.Cos256(self->angle) << 12;
 
     for (int32 i = 0; i < AIZKingClaw_ChainCount; ++i) {
         self->chainPos[i].x = self->clawPos.x;

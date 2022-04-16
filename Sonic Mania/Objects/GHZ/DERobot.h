@@ -22,7 +22,7 @@ struct ObjectDERobot {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitboxHand;
-    Hitbox hitbox;
+    Hitbox hitboxBody;
     uint16 unused1;
     uint16 unused2;
     uint16 unused3;
@@ -51,8 +51,8 @@ struct EntityDERobot {
     EntityDERobot *head;
     EntityDERobot *shoulderFront;
     EntityEggman *eggman;
-    EntityDERobot *legs[6]; //knee, leg, foot (for back, then for front)
-    EntityDERobot *arms[4]; //arm, hand, (for back, then for front)
+    EntityDERobot *legs[6]; // knee, leg, foot (for back, then for front)
+    EntityDERobot *arms[4]; // arm, hand, (for back, then for front)
     int32 movingSide;
     int32 unused5;
     int32 angleVel;
@@ -82,7 +82,7 @@ void DERobot_Update(void);
 void DERobot_LateUpdate(void);
 void DERobot_StaticUpdate(void);
 void DERobot_Draw(void);
-void DERobot_Create(void* data);
+void DERobot_Create(void *data);
 void DERobot_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DERobot_EditorDraw(void);
@@ -106,9 +106,9 @@ void DERobot_CheckPlayerCollisions_Hand(void);
 bool32 DERobot_CheckRubyGrabbed(void);
 void DERobot_CheckPlayerCollisions_Bomb(void);
 
-void DERobot_Draw_HasParent(void);
+void DERobot_Draw_RelativeToParent(void);
 void DERobot_Draw_Arm(void);
-void DERobot_Draw_Basic(void);
+void DERobot_Draw_Simple(void);
 void DERobot_Draw_FrontLeg(void);
 void DERobot_Draw_Target(void);
 
@@ -146,4 +146,4 @@ void DERobot_State_DebrisFall(void);
 void DERobot_State_FinishBounds(void);
 void DERobot_State_CutsceneExplode(void);
 
-#endif //!OBJ_DEROBOT_H
+#endif //! OBJ_DEROBOT_H

@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectBatbrain {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
     uint16 sfxFlap;
 };
@@ -16,7 +16,7 @@ struct EntityBatbrain {
     RSDK_ENTITY
     StateMachine(state);
     int32 targetY;
-    Entity *target;
+    EntityPlayer *target;
     Vector2 startPos;
     Animator animator;
 };
@@ -41,7 +41,7 @@ void Batbrain_Serialize(void);
 void Batbrain_DebugDraw(void);
 void Batbrain_DebugSpawn(void);
 //Helpers
-void Batbrain_CheckHit(void);
+void Batbrain_CheckPlayerCollisions(void);
 void Batbrain_CheckOffScreen(void);
 //States
 void Batbrain_State_Setup(void);

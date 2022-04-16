@@ -36,11 +36,11 @@ void FernParallax_Draw(void)
     thisHitbox.top    = -screen->centerY;
     thisHitbox.bottom = screen->centerY;
 
-    Vector2 *bufPos = (Vector2 *)&FernParallax->entityBuffer[0][0];
-    bufPos->x = screenX;
-    bufPos->y = screenY;
+    Vector2 *bufPos = (Vector2 *)&FernParallax->entityBuffer[0 * ENTITY_SIZE];
+    bufPos->x       = screenX;
+    bufPos->y       = screenY;
 
-    bufPos    = (Vector2 *)&FernParallax->entityBuffer[1][0];
+    bufPos    = (Vector2 *)&FernParallax->entityBuffer[1 * ENTITY_SIZE];
     bufPos->x = drawPos.x;
     bufPos->y = drawPos.y;
 
@@ -74,7 +74,16 @@ void FernParallax_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void FernParallax_EditorLoad(void) { FernParallax->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE); }
+void FernParallax_EditorLoad(void)
+{
+    FernParallax->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(FernParallax, aniID);
+    RSDK_ENUM_VAR("Leaf 1", AIZ_DECOR_LEAF1);
+    RSDK_ENUM_VAR("Leaf 2", AIZ_DECOR_LEAF2);
+    RSDK_ENUM_VAR("Leaf 3", AIZ_DECOR_LEAF3);
+    RSDK_ENUM_VAR("Leaf 4", AIZ_DECOR_LEAF4);
+}
 #endif
 
 void FernParallax_Serialize(void)

@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectCheckerBall {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBall;
     Hitbox innerBox;
     Hitbox outerBox;
     uint8 heightArray[24];
@@ -34,7 +34,7 @@ void CheckerBall_Update(void);
 void CheckerBall_LateUpdate(void);
 void CheckerBall_StaticUpdate(void);
 void CheckerBall_Draw(void);
-void CheckerBall_Create(void* data);
+void CheckerBall_Create(void *data);
 void CheckerBall_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CheckerBall_EditorDraw(void);
@@ -52,4 +52,4 @@ void CheckerBall_HandlePlayerInteractions(void);
 void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox);
 void CheckerBall_HandleObjectCollisions(void);
 
-#endif //!OBJ_CHECKERBALL_H
+#endif //! OBJ_CHECKERBALL_H

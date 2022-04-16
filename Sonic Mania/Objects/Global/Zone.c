@@ -577,7 +577,7 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
         camera->position.x     = xOffset;
         camera->position.y     = yOffset;
         camera->state          = 0;
-        camera->targetPtr      = NULL;
+        camera->target      = NULL;
         camera->boundsL        = (xOffset >> 16) - ScreenInfo->centerX;
         camera->boundsR        = (xOffset >> 16) + ScreenInfo->centerX;
         camera->boundsT        = (yOffset >> 16) - ScreenInfo->height;
@@ -1046,11 +1046,11 @@ void Zone_HandlePlayerSwap(void)
         }
 
         EntityCamera *camera = playerPtr->camera;
-        void *camTarget      = camera->targetPtr;
+        void *camTarget      = camera->target;
         void *camState       = camera->state;
         int32 camScreen      = camera->screenID;
         RSDK.CopyEntity(camera, &Zone->entityData[8 + p], false);
-        camera->targetPtr                       = camTarget;
+        camera->target                       = camTarget;
         camera->screenID                        = camScreen;
         camera->state                           = camState;
         ScreenInfo[camera->screenID].position.x = Zone->screenPosX[p];
@@ -1191,11 +1191,11 @@ void Zone_HandlePlayerSwap(void)
         }
 
         EntityCamera *camera = playerPtr->camera;
-        void *camTarget = camera->targetPtr;
+        void *camTarget = camera->target;
         void *camState = camera->state;
         int32 camScreen = camera->screenID;
         RSDK.CopyEntity(camera, cameraPtrs[p], false);
-        camera->targetPtr = camTarget;
+        camera->target = camTarget;
         camera->screenID = camScreen;
         camera->state = camState;
         ScreenInfo[camScreen].position.x = screenPos[p].x;

@@ -35,7 +35,7 @@ void Chopper_Update(void);
 void Chopper_LateUpdate(void);
 void Chopper_StaticUpdate(void);
 void Chopper_Draw(void);
-void Chopper_Create(void* data);
+void Chopper_Create(void *data);
 void Chopper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Chopper_EditorDraw(void);
@@ -51,11 +51,11 @@ void Chopper_CheckOffScreen(void);
 void Chopper_CheckPlayerCollisions_Jump(void);
 void Chopper_CheckPlayerCollisions_Swim(void);
 
-//States
+// States
 void Chopper_State_Setup(void);
 void Chopper_State_Jump(void);
 void Chopper_State_Swim(void);
 void Chopper_State_ChargeDelay(void);
 void Chopper_State_Charge(void);
 
-#endif //!OBJ_CHOPPER_H
+#endif //! OBJ_CHOPPER_H

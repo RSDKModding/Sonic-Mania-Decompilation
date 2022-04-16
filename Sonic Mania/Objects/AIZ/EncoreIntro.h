@@ -46,7 +46,7 @@ void EncoreIntro_Update(void);
 void EncoreIntro_LateUpdate(void);
 void EncoreIntro_StaticUpdate(void);
 void EncoreIntro_Draw(void);
-void EncoreIntro_Create(void* data);
+void EncoreIntro_Create(void *data);
 void EncoreIntro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EncoreIntro_EditorDraw(void);
@@ -97,4 +97,4 @@ void EncoreIntro_PlayerState_BuddySel(void);
 void EncoreIntro_PlayerState_HandleAir(void);
 void EncoreIntro_PlayerState_InputNone(void);
 
-#endif //!OBJ_ENCOREINTRO_H
+#endif //! OBJ_ENCOREINTRO_H

@@ -190,35 +190,9 @@ bool32 Animals_CheckGroundCollision(void)
     if (Animals->hasBridge) {
         foreach_active(Bridge, bridge)
         {
-            if (self->position.x > bridge->startPos && self->position.x < bridge->endPos && self->velocity.y >= 0) {
-                Hitbox bridgeHitbox;
-                bridgeHitbox.left  = -0x400;
-                bridgeHitbox.right = 0x400;
-
-                int32 divisor = 0;
-                int32 ang     = 0;
-                if (self->position.x - bridge->startPos <= bridge->stoodPos) {
-                    divisor = bridge->stoodPos;
-                    ang     = (self->position.x - bridge->startPos) << 7;
-                }
-                else {
-                    divisor = bridge->endPos - bridge->stoodPos - bridge->startPos;
-                    ang     = (bridge->endPos - self->position.x) << 7;
-                }
-
-                int32 hitY = (bridge->depression * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
-                if (self->velocity.y < 0x8000) {
-                    bridgeHitbox.bottom = (hitY >> 16);
-                    bridgeHitbox.top    = (hitY >> 16) - 8;
-                }
-                else {
-                    bridgeHitbox.top    = (hitY >> 16);
-                    bridgeHitbox.bottom = (hitY >> 16) + 8;
-                }
-                if (RSDK.CheckObjectCollisionTouchBox(bridge, &bridgeHitbox, self, &self->hitbox)) {
-                    self->position.y = hitY + bridge->position.y - (self->hitbox.bottom << 16);
-                    return true;
-                }
+            bool32 collided = Bridge_HandleCollisions(self, bridge, &self->hitbox, false, false);
+            if (collided) {
+                foreach_return true;
             }
         }
     }

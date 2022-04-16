@@ -238,8 +238,8 @@ void PBL_Crane_State_CreatePrizes(void)
     self->position.y       = 0;
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     camera->worldY           = 0x1000000;
-    self->cameraTarget         = camera->targetPtr;
-    camera->targetPtr        = NULL;
+    self->cameraTarget         = camera->target;
+    camera->target        = NULL;
     self->visible          = true;
     int32 spawnX               = self->position.x - 0x6C0000;
     int32 spawnY               = 0x600000 + self->position.y;
@@ -511,7 +511,7 @@ void PBL_Crane_StatePrize_PrizeGet(void)
                 sector->active = ACTIVE_NORMAL;
         }
         RSDK.PrintInteger(PRINT_NORMAL, "Sector", PBL_Setup->sectorID);
-        camera->targetPtr = self->cameraTarget;
+        camera->target = self->cameraTarget;
         camera->rotationY = -96;
         foreach_active(PBL_HUD, hud)
         {

@@ -8,7 +8,7 @@
 struct ObjectFernParallax {
     RSDK_OBJECT
     uint16 aniFrames;
-    uint8 entityBuffer[2][ENTITY_SIZE];
+    uint8 entityBuffer[2 * ENTITY_SIZE];
 };
 
 // Entity Class
@@ -28,7 +28,7 @@ void FernParallax_Update(void);
 void FernParallax_LateUpdate(void);
 void FernParallax_StaticUpdate(void);
 void FernParallax_Draw(void);
-void FernParallax_Create(void* data);
+void FernParallax_Create(void *data);
 void FernParallax_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FernParallax_EditorDraw(void);
@@ -39,4 +39,4 @@ void FernParallax_Serialize(void);
 // Extra Entity Functions
 #endif
 
-#endif //!OBJ_FERNPARALLAX_H
+#endif //! OBJ_FERNPARALLAX_H

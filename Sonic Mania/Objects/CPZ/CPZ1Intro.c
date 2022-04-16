@@ -159,7 +159,7 @@ bool32 CPZ1Intro_Cutscene_RubyWarp(void *h)
     if (!host->timer) {
         player1->camera = NULL;
         camera->position.y -= 0x40000;
-        camera->targetPtr   = 0;
+        camera->target   = 0;
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;
@@ -371,7 +371,7 @@ bool32 CPZ1Intro_Cutscene_ReadyStage(void *h)
         player1->onGround       = true;
         player1->state          = Player_State_Ground;
         player1->camera         = camera;
-        camera->targetPtr       = (Entity *)player1;
+        camera->target       = (Entity *)player1;
         camera->state           = Camera_State_Follow;
         if (player2->objectID == Player->objectID) {
             player2->stateInput     = Player_ProcessP2Input_AI;

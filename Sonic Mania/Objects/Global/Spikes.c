@@ -72,8 +72,8 @@ void Spikes_Update(void)
         case SPIKES_MOVE_HIDDEN_FOREVER: break;
     }
 
-    self->position.x -= self->offset.x;
-    self->position.y -= self->offset.y;
+    self->position.x -= self->collisionOffset.x;
+    self->position.y -= self->collisionOffset.y;
     if (self->stateMove != SPIKES_MOVE_HIDDEN) {
         foreach_active(Player, player)
         {
@@ -122,8 +122,8 @@ void Spikes_Update(void)
                             case C_TOP:
                                 player->collisionFlagV |= 1;
                                 if (player->velocity.y >= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
-                                    player->position.x += self->offset.x;
-                                    player->position.y += self->offset.y;
+                                    player->position.x += self->collisionOffset.x;
+                                    player->position.y += self->collisionOffset.y;
                                     if (side == self->type)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
@@ -156,8 +156,8 @@ void Spikes_Update(void)
                             switch (side) {
                                 case C_TOP:
                                     if (!player->velocity.y) {
-                                        player->position.x += self->offset.x;
-                                        player->position.y += self->offset.y;
+                                        player->position.x += self->collisionOffset.x;
+                                        player->position.y += self->collisionOffset.y;
                                         Player_CheckHit(player, self);
                                     }
                                     break;
@@ -201,8 +201,8 @@ void Spikes_Update(void)
                         case C_TOP:
                             if (player->velocity.y < 0x40000) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
-                                    player->position.x += self->offset.x;
-                                    player->position.y += self->offset.y;
+                                    player->position.x += self->collisionOffset.x;
+                                    player->position.y += self->collisionOffset.y;
                                 }
                             }
                             else {
@@ -221,16 +221,16 @@ void Spikes_Update(void)
                             }
                             else {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
-                                    player->position.x += self->offset.x;
-                                    player->position.y += self->offset.y;
+                                    player->position.x += self->collisionOffset.x;
+                                    player->position.y += self->collisionOffset.y;
                                 }
                             }
                             break;
                         case C_RIGHT:
                             if (player->velocity.x > -0x20000) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
-                                    player->position.x += self->offset.x;
-                                    player->position.y += self->offset.y;
+                                    player->position.x += self->collisionOffset.x;
+                                    player->position.y += self->collisionOffset.y;
                                 }
                             }
                             else {
@@ -243,8 +243,8 @@ void Spikes_Update(void)
                         case C_BOTTOM:
                             if (player->velocity.y > -0x40000) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
-                                    player->position.x += self->offset.x;
-                                    player->position.y += self->offset.y;
+                                    player->position.x += self->collisionOffset.x;
+                                    player->position.y += self->collisionOffset.y;
                                 }
                             }
                             else {
@@ -255,8 +255,8 @@ void Spikes_Update(void)
                             }
                         default:
                             if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
-                                player->position.x += self->offset.x;
-                                player->position.y += self->offset.y;
+                                player->position.x += self->collisionOffset.x;
+                                player->position.y += self->collisionOffset.y;
                             }
                             break;
                     }
@@ -265,8 +265,8 @@ void Spikes_Update(void)
         }
     }
 
-    self->position.x += self->offset.x;
-    self->position.y += self->offset.y;
+    self->position.x += self->collisionOffset.x;
+    self->position.y += self->collisionOffset.y;
     if (Ice && !Press) {
         RSDK.ProcessAnimation(&self->animator);
         if (--self->timer2 <= 0) {

@@ -7,8 +7,8 @@
 // Object Class
 struct ObjectBloominator {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox projectileHitbox;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxShot;
 };
@@ -29,7 +29,7 @@ void Bloominator_Update(void);
 void Bloominator_LateUpdate(void);
 void Bloominator_StaticUpdate(void);
 void Bloominator_Draw(void);
-void Bloominator_Create(void* data);
+void Bloominator_Create(void *data);
 void Bloominator_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Bloominator_EditorDraw(void);
@@ -41,11 +41,13 @@ void Bloominator_Serialize(void);
 void Bloominator_DebugDraw(void);
 void Bloominator_DebugSpawn(void);
 
-void Bloominator_CheckHit(void);
-void Bloominator_Idle(void);
+void Bloominator_CheckPlayerCollisions(void);
+void Bloominator_CheckOffScreen(void);
+
+void Bloominator_State_Idle(void);
 void Bloominator_State_Firing(void);
 void Bloominator_State_Setup(void);
 void Bloominator_State_Spikeball(void);
 #endif
 
-#endif //!OBJ_BLOOMINATOR_H
+#endif //! OBJ_BLOOMINATOR_H

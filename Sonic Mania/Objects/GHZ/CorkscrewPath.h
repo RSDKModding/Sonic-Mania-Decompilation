@@ -14,7 +14,7 @@ struct ObjectCorkscrewPath {
 struct EntityCorkscrewPath {
     RSDK_ENTITY
     int32 period;
-    int32 periodShifted;
+    int32 xSize; // length to the (left/right) edges from the center
     int32 amplitude;
     int32 activePlayers;
     Animator animator; // also probably editor-only
@@ -28,7 +28,7 @@ void CorkscrewPath_Update(void);
 void CorkscrewPath_LateUpdate(void);
 void CorkscrewPath_StaticUpdate(void);
 void CorkscrewPath_Draw(void);
-void CorkscrewPath_Create(void* data);
+void CorkscrewPath_Create(void *data);
 void CorkscrewPath_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CorkscrewPath_EditorDraw(void);
@@ -38,5 +38,4 @@ void CorkscrewPath_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_CORKSCREWPATH_H
+#endif //! OBJ_CORKSCREWPATH_H

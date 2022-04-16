@@ -20,8 +20,8 @@ struct ObjectAIZTornadoPath {
     EntityAIZTornado *tornado;
     EntityCamera *camera;
     Vector2 moveVel;
-    uint16 aniFrames;
-    Animator animator;
+    uint16 aniFrames; // prolly editor-only
+    Animator unusedAnimator;
 };
 
 // Entity Class
@@ -33,7 +33,7 @@ struct EntityAIZTornadoPath {
     int32 timer;
     bool32 easeToSpeed;
     int32 speed;
-    Animator animator;
+    Animator unusedAnimator;
 };
 
 // Object Struct
@@ -44,7 +44,7 @@ void AIZTornadoPath_Update(void);
 void AIZTornadoPath_LateUpdate(void);
 void AIZTornadoPath_StaticUpdate(void);
 void AIZTornadoPath_Draw(void);
-void AIZTornadoPath_Create(void* data);
+void AIZTornadoPath_Create(void *data);
 void AIZTornadoPath_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void AIZTornadoPath_EditorDraw(void);
@@ -61,4 +61,4 @@ void AIZTornadoPath_State_ExitTornadoSequence(void);
 void AIZTornadoPath_State_PrepareCatchPlayer(void);
 void AIZTornadoPath_State_CatchPlayer(void);
 
-#endif //!OBJ_AIZTORNADOPATH_H
+#endif //! OBJ_AIZTORNADOPATH_H

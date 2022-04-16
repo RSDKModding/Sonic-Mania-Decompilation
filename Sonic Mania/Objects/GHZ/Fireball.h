@@ -4,16 +4,16 @@
 #include "SonicMania.h"
 
 typedef enum {
-    FIREBALL_UPDOWN,
-    FIREBALL_MOVE,
-    FIREBALL_MOVEGRAVITY,
-}FireballTypes;
+    FIREBALL_SPAWNER,
+    FIREBALL_LAUNCHER_STATIC,
+    FIREBALL_LAUNCHER_GRAVITY,
+} FireballTypes;
 
 // Object Class
 struct ObjectFireball {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxFireball;
     uint16 sfxFireball;
 };
 
@@ -49,14 +49,17 @@ void Fireball_Serialize(void);
 // Extra Entity Functions
 void Fireball_HandlePlayerInteractions(void);
 
-void Fireball_State_UpDown_Spawner(void);
-void Fireball_State_Move_Spawner(void);
-void Fireball_State_MoveGravity_Spawner(void);
-void Fireball_State_UpDown(void);
-void Fireball_State_Move(void);
-void Fireball_State_MoveGravity(void);
-void Fireball_State_Dissipate(void);
+// Spawner States
+void Fireball_State_Spawner(void);
+void Fireball_State_LauncherStatic(void);
+void Fireball_State_LauncherGravity(void);
 
-void Fireball_Draw_Normal(void);
+// Fireball States
+void Fireball_StateFireball_Spawner(void);
+void Fireball_StateFireball_LauncherStatic(void);
+void Fireball_StateFireball_LauncherGravity(void);
+void Fireball_StateFireball_Dissipate(void);
+
+void Fireball_Draw_Simple(void);
 
 #endif //! OBJ_FIREBALL_H

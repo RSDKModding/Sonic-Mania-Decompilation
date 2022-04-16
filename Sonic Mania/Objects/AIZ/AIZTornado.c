@@ -56,16 +56,19 @@ void AIZTornado_Create(void *data)
         self->isStood       = true;
         self->offsetX       = 0x80000;
         self->showFlame     = true;
+
         if (RSDK.CheckStageFolder("AIZ") || RSDK.CheckStageFolder("Credits"))
             self->active = ACTIVE_NORMAL;
+
         if (!StarPost->postIDs[0]) {
             self->active = ACTIVE_NORMAL;
             self->state  = AIZTornado_State_Move;
         }
+
         RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 0, &self->animatorTornado, true, 0);
         RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 1, &self->animatorPropeller, true, 0);
         RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 2, &self->animatorFlame, true, 0);
-        if (globals->playerID & 1)
+        if (globals->playerID & 1) // if tails is the leader
             RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 6, &self->animatorPilot, true, 0);
         else
             RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 3, &self->animatorPilot, true, 0);
@@ -128,7 +131,7 @@ void AIZTornado_HandlePlayerCollisions(void)
         player->position.x += self->moveVelocity.x;
         player->position.y += self->moveVelocity.y;
         player->flailing = false;
-        self->isStood  = true;
+        self->isStood    = true;
         if (player->velocity.y > 0x10000) {
             self->collideTimer = 0;
             self->gravityForce = 0x20000;

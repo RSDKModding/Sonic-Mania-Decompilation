@@ -7,11 +7,11 @@
 struct ObjectGHZCutsceneST {
     RSDK_OBJECT
     int32 unused1;
-    Entity *fxRuby;
-    Entity *claw;
-    Entity *platform;
-    Entity *phantomRuby;
-    Entity *cutsceneHBH[5];
+    EntityFXRuby *fxRuby;
+    EntityAIZKingClaw *claw;
+    EntityPlatform *platform;
+    EntityPhantomRuby *phantomRuby;
+    EntityCutsceneHBH *cutsceneHBH[5];
 };
 
 // Entity Class
@@ -27,6 +27,7 @@ struct EntityGHZCutsceneST {
     int32 unused3;
     int32 unused4;
     Hitbox hitbox2;
+
     // Unique Variables
     Hitbox hitbox;
 };
@@ -39,7 +40,7 @@ void GHZCutsceneST_Update(void);
 void GHZCutsceneST_LateUpdate(void);
 void GHZCutsceneST_StaticUpdate(void);
 void GHZCutsceneST_Draw(void);
-void GHZCutsceneST_Create(void* data);
+void GHZCutsceneST_Create(void *data);
 void GHZCutsceneST_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void GHZCutsceneST_EditorDraw(void);
@@ -59,5 +60,4 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);
 bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host);
 bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host);
 
-
-#endif //!OBJ_GHZCUTSCENEST_H
+#endif //! OBJ_GHZCUTSCENEST_H

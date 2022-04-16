@@ -142,7 +142,7 @@ void PhantomRider_State_HandleBegin(void)
         EntityPhantomRider *child = CREATE_ENTITY(PhantomRider, intToVoid(PHANTOMRIDER_JIMMY), player1->position.x, player1->position.y);
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->targetPtr    = (Entity*)child;
+        camera->target    = (Entity*)child;
         camera->state        = Camera_State_Follow;
 
         player1->camera       = NULL;

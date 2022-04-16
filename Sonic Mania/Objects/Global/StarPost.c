@@ -102,7 +102,7 @@ void StarPost_StageLoad(void)
                     int32 ms = SceneInfo->milliseconds;
                     int32 s  = SceneInfo->seconds;
                     int32 m  = SceneInfo->minutes;
-                    if ((ms || s || m) || ms != globals->tempMilliseconds || s != globals->tempSeconds || m != globals->tempMinutes) {
+                    if (!(ms || s || m) || ms != globals->tempMilliseconds || s != globals->tempSeconds || m != globals->tempMinutes) {
                         SceneInfo->milliseconds = StarPost->storedMS;
                         SceneInfo->seconds      = StarPost->storedSeconds;
                         SceneInfo->minutes      = StarPost->storedMinutes;

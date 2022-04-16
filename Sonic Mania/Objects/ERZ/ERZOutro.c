@@ -230,7 +230,7 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
             fxRuby->state     = FXRuby_State_ExpandRing;
             fxRuby->drawOrder = Zone->drawOrderLow - 1;
             player1->camera   = 0;
-            camera->targetPtr = 0;
+            camera->target = 0;
             Camera_SetupLerp(0, 0, x, y, 3);
             portal->position.x = x;
             portal->position.y = y;

@@ -19,14 +19,14 @@ typedef enum {
 struct ObjectAIZSetup {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    TABLE(int32 aniTiles1[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
-    TABLE(int32 aniTiles2[12], { 6, 4, 3, 2, 3, 4, 6, 4, 3, 2, 3, 4 });
-    TABLE(int32 aniTiles3[15], { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, -1 });
-    TABLE(int32 aniTiles4[14], { 30, 4, 3, 2, 3, 4, 6, 12, 6, 4, 3, 2, 3, 4 });
-    TABLE(int32 aniTiles5[15], { 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, -1 });
-    TABLE(int32 aniTiles6[14], { 12, 6, 4, 3, 2, 3, 4, 30, 4, 3, 2, 3, 4, 6 });
+    TABLE(int32 bellPlantAniFramePos[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
+    TABLE(int32 bellPlantAniDurations[12], { 6, 4, 3, 2, 3, 4, 6, 4, 3, 2, 3, 4 });
+    TABLE(int32 curlPlant1AniFramePos[15], { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, -1 });
+    TABLE(int32 curlPlant1AniDurations[14], { 30, 4, 3, 2, 3, 4, 6, 12, 6, 4, 3, 2, 3, 4 });
+    TABLE(int32 curlPlant2AniFramePos[15], { 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, -1 });
+    TABLE(int32 curlPlant2AniDurations[14], { 12, 6, 4, 3, 2, 3, 4, 30, 4, 3, 2, 3, 4, 6 });
 #endif
-    bool32 cutsceneInit;
+    bool32 hasSetupCutscene;
     bool32 playDrillSfx;
     bool32 playingDrillSFX;
     TileLayer *background1;
@@ -40,13 +40,13 @@ struct ObjectAIZSetup {
     EntityFXRuby *fxRuby;
     EntityDecoration *decorations[3];
 #if RETRO_USE_PLUS
-    int32 aniTileFrameA;
-    int32 aniTilesDelay1;
-    int32 aniTileFrameB;
-    int32 aniTilesDelay2;
-    int32 aniTileFrameC;
-    int32 aniTilesDelay3;
-#endif  
+    int32 bellPlantAniFrame;
+    int32 bellPlantAniTimer;
+    int32 curlPlant1AniFrame;
+    int32 curlPlant1AniTimer;
+    int32 curlPlant2AniFrame;
+    int32 curlPlant2AniTimer;
+#endif
     uint16 knuxFrames;
     uint16 sfxDrill;
     uint16 sfxBreak;
@@ -57,7 +57,7 @@ struct ObjectAIZSetup {
 
 // Entity Class
 struct EntityAIZSetup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -68,7 +68,7 @@ void AIZSetup_Update(void);
 void AIZSetup_LateUpdate(void);
 void AIZSetup_StaticUpdate(void);
 void AIZSetup_Draw(void);
-void AIZSetup_Create(void* data);
+void AIZSetup_Create(void *data);
 void AIZSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void AIZSetup_EditorDraw(void);
@@ -117,4 +117,4 @@ bool32 AIZSetup_CutsceneKnux_RubyFX(EntityCutsceneSeq *host);
 
 bool32 AIZSetup_Cutscene_LoadGHZ(EntityCutsceneSeq *host);
 
-#endif //!OBJ_AIZSETUP_H
+#endif //! OBJ_AIZSETUP_H

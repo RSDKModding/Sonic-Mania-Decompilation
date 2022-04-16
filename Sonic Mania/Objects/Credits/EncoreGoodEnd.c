@@ -334,7 +334,7 @@ bool32 EncoreGoodEnd_Cutscene_MoveToPlace(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         EncoreGoodEnd_SetupPlayer(player1->characterID);
         EncoreGoodEnd_SetupPlayer(player2->characterID);
-        camera->targetPtr = (Entity *)EncoreGoodEnd->decorations[E_END_SONIC];
+        camera->target = (Entity *)EncoreGoodEnd->decorations[E_END_SONIC];
         self->position.y  = EncoreGoodEnd->decorations[E_END_KING]->position.y;
         EncoreGoodEnd->decorations[E_END_KING]->position.y += 0x500000;
         RSDK.SetSpriteAnimation(Decoration->aniFrames, E_END_DECOR_SONICLAYDOWN, &EncoreGoodEnd->decorations[E_END_SONIC]->animator, true, 21);

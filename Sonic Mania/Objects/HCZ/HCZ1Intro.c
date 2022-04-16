@@ -85,7 +85,7 @@ bool32 HCZ1Intro_Cutscene_Intro(EntityCutsceneSeq *host)
 
     if (host->timer >= 8) {
         if (host->timer == 8) {
-            camera->targetPtr   = (Entity *)player1;
+            camera->target   = (Entity *)player1;
             camera->state       = Camera_State_Follow;
             player1->stateInput = Player_ProcessP1Input;
             player1->camera     = camera;

@@ -13,13 +13,13 @@ void Bridge_Update(void)
 {
     RSDK_THIS(Bridge);
 
-    if (self->activePlayerCount) {
+    if (self->stoodEntityCount) {
         if (self->timer < 0x80)
             self->timer += 8;
     }
     else {
         if (self->timer) {
-            self->playerPtr = (Entity *)-1;
+            self->stoodEntity = (Entity *)-1;
             self->timer -= 8;
         }
         else {
@@ -27,7 +27,7 @@ void Bridge_Update(void)
         }
     }
 
-    self->activePlayerCount = 0;
+    self->stoodEntityCount = 0;
     self->bridgeDepth       = (self->depression * self->timer) >> 7;
 
     foreach_active(Player, player)
@@ -36,106 +36,7 @@ void Bridge_Update(void)
         if (player->state == Player_State_KnuxLedgePullUp)
             continue;
 
-        if (player->position.x > self->startPos && player->position.x < self->endPos) {
-            if (player != (EntityPlayer *)self->playerPtr) {
-                if (!self->activePlayerCount)
-                    self->stoodPos = player->position.x - self->startPos;
-
-                if (player->velocity.y >= 0) {
-                    Hitbox bridgeHitbox;
-                    bridgeHitbox.left  = -0x400;
-                    bridgeHitbox.right = 0x400;
-
-                    int32 divisor = 0;
-                    int32 ang     = 0;
-                    if (player->position.x - self->startPos <= self->stoodPos) {
-                        divisor = self->stoodPos;
-                        ang     = (player->position.x - self->startPos) << 7;
-                    }
-                    else {
-                        divisor = self->endPos - self->startPos - self->stoodPos;
-                        ang     = (self->endPos - player->position.x) << 7;
-                    }
-
-                    int32 hitY = (self->bridgeDepth * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
-                    if (player->velocity.y >= 0x8000) {
-                        bridgeHitbox.top    = (hitY >> 16);
-                        bridgeHitbox.bottom = bridgeHitbox.top + 8;
-                    }
-                    else {
-                        bridgeHitbox.bottom = (hitY >> 16);
-                        bridgeHitbox.top    = (hitY >> 16) - 8;
-                    }
-
-                    if (Player_CheckCollisionTouch(player, self, &bridgeHitbox)) {
-                        ++self->activePlayerCount;
-                        player->position.y = hitY + self->position.y - (playerHitbox->bottom << 16);
-                        if (!player->onGround) {
-                            player->onGround  = true;
-                            player->groundVel = player->velocity.x;
-                        }
-                        player->flailing = false;
-
-                        EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-                        if (player == player1) {
-                            if (self->playerPtr != (Entity *)-1 && self->playerPtr != (Entity *)-2) {
-                                int32 distance    = self->endPos - self->startPos;
-                                self->stoodPos    = player->position.x - self->startPos;
-                                self->depression  = (distance >> 13) * RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16));
-                                self->bridgeDepth = (self->depression * self->timer) >> 7;
-                            }
-                            self->playerPtr = (Entity *)player;
-                            if (player->velocity.y < 0x10000)
-                                self->timer = 0x80;
-                        }
-                        else {
-                            if (self->playerPtr == (Entity *)-1) {
-                                self->playerPtr = (Entity *)player;
-                                if (player->velocity.y < 0x10000)
-                                    self->timer = 0x80;
-                            }
-                            if (self->playerPtr == (Entity *)-2)
-                                self->playerPtr = (Entity *)player;
-                        }
-
-                        if (!player->onGround) {
-                            player->onGround  = true;
-                            player->groundVel = player->velocity.x;
-                        }
-                        player->velocity.y = 0;
-                        if (player->shield == SHIELD_FIRE && self->burnable)
-                            Bridge_Burn((player->position.x - self->startPos) >> 20);
-                    }
-                }
-            }
-            else {
-                self->stoodPos   = player->position.x - self->startPos;
-                int32 distance   = (self->endPos - self->startPos);
-                self->depression = RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);
-
-                if (player->position.y > self->position.y - 0x300000) {
-                    if (player->velocity.y >= 0) {
-                        ++self->activePlayerCount;
-                        player->position.y = self->bridgeDepth + self->position.y - ((playerHitbox->bottom + 8) << 16);
-                        if (!player->onGround) {
-                            player->onGround  = true;
-                            player->groundVel = player->velocity.x;
-                        }
-                        player->velocity.y = 0;
-                        player->flailing   = false;
-                        if (player->shield == SHIELD_FIRE && self->burnable)
-                            Bridge_Burn((player->position.x - self->startPos) >> 20);
-                    }
-                    else {
-                        self->playerPtr = (Entity *)-2;
-                    }
-                }
-            }
-        }
-        else if (player == (EntityPlayer *)self->playerPtr) {
-            self->timer     = 32;
-            self->playerPtr = (Entity *)-2;
-        }
+        Bridge_HandleCollisions(player, self, playerHitbox, true, true);
     }
 
     if (self->burnOffset != 0xFF)
@@ -192,7 +93,7 @@ void Bridge_Create(void *data)
     self->endPos        = len + self->position.x;
     self->updateRange.x = len;
     self->updateRange.y = 0x800000;
-    self->playerPtr     = (Entity *)-1;
+    self->stoodEntity   = (Entity *)-1;
     self->burnOffset    = 0xFF;
     RSDK.SetSpriteAnimation(Bridge->aniFrames, 0, &self->animator, true, 0);
 }
@@ -238,6 +139,144 @@ void Bridge_Burn(int32 offset)
         }
     }
     destroyEntity(self);
+}
+
+bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 noVarUpdates, bool32 isPlayer)
+{
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
+    // use EntityPlayer as the type so we can access player variables if needed
+    // if `isPlayer` is false, then only base entity variables will be accessed
+    EntityPlayer *entity  = (EntityPlayer *)e;
+
+    bool32 bridgeCollided = false;
+
+    if (entity->position.x > self->startPos && entity->position.x < self->endPos) {
+        if (entity != self->stoodEntity) {
+            if (noVarUpdates && !self->stoodEntityCount)
+                self->stoodPos = entity->position.x - self->startPos;
+
+            if (entity->velocity.y >= 0) {
+                Hitbox hitboxBridge;
+                hitboxBridge.left  = -0x400;
+                hitboxBridge.right = 0x400;
+
+                int32 divisor = 0;
+                int32 ang     = 0;
+                if (entity->position.x - self->startPos <= self->stoodPos) {
+                    divisor = self->stoodPos;
+                    ang     = (entity->position.x - self->startPos) << 7;
+                }
+                else {
+                    divisor = self->endPos - self->startPos - self->stoodPos;
+                    ang     = (self->endPos - entity->position.x) << 7;
+                }
+
+                int32 hitY = (self->bridgeDepth * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                if (entity->velocity.y >= 0x8000) {
+                    hitboxBridge.top    = (hitY >> 16);
+                    hitboxBridge.bottom = hitboxBridge.top + 8;
+                }
+                else {
+                    hitboxBridge.bottom = (hitY >> 16);
+                    hitboxBridge.top    = (hitY >> 16) - 8;
+                }
+
+                bool32 collided = false;
+                if (isPlayer)
+                    collided = Player_CheckCollisionTouch(entity, self, &hitboxBridge);
+                else
+                    collided = RSDK.CheckObjectCollisionTouchBox(self, &hitboxBridge, entity, entityHitbox);
+
+                if (collided) {
+                    entity->position.y = hitY + self->position.y - (entityHitbox->bottom << 16);
+
+                    if (noVarUpdates) {
+                        ++self->stoodEntityCount;
+                        if (!entity->onGround) {
+                            entity->onGround  = true;
+                            entity->groundVel = entity->velocity.x;
+                        }
+
+                        if (isPlayer)
+                            entity->flailing = false;
+
+                        if (entity == player1) {
+                            if (self->stoodEntity != (void *)-1 && self->stoodEntity != (void *)-2) {
+                                int32 distance    = self->endPos - self->startPos;
+                                self->stoodPos    = entity->position.x - self->startPos;
+                                self->depression  = (distance >> 13) * RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16));
+                                self->bridgeDepth = (self->depression * self->timer) >> 7;
+                            }
+
+                            self->stoodEntity = entity;
+                            if (entity->velocity.y < 0x10000)
+                                self->timer = 0x80;
+                        }
+                        else {
+                            if (self->stoodEntity == (void *)-1) {
+                                self->stoodEntity = entity;
+                                if (entity->velocity.y < 0x10000)
+                                    self->timer = 0x80;
+                            }
+
+                            if (self->stoodEntity == (void *)-2)
+                                self->stoodEntity = entity;
+                        }
+
+                        if (!entity->onGround) {
+                            entity->onGround  = true;
+                            entity->groundVel = entity->velocity.x;
+                        }
+
+                        entity->velocity.y = 0;
+
+                        if (isPlayer) {
+                            if (entity->shield == SHIELD_FIRE && self->burnable)
+                                Bridge_Burn((entity->position.x - self->startPos) >> 20);
+                        }
+                    }
+
+                    bridgeCollided = true;
+                }
+            }
+        }
+        else if (noVarUpdates) {
+            self->stoodPos   = entity->position.x - self->startPos;
+            int32 distance   = (self->endPos - self->startPos);
+            self->depression = RSDK.Sin512((self->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);
+
+            if (entity->position.y > self->position.y - 0x300000) {
+                if (entity->velocity.y >= 0) {
+                    ++self->stoodEntityCount;
+                    entity->position.y = self->bridgeDepth + self->position.y - ((entityHitbox->bottom + 8) << 16);
+
+                    if (!entity->onGround) {
+                        entity->onGround  = true;
+                        entity->groundVel = entity->velocity.x;
+                    }
+
+                    entity->velocity.y = 0;
+                    if (isPlayer) {
+                        entity->flailing = false;
+                        if (entity->shield == SHIELD_FIRE && self->burnable)
+                            Bridge_Burn((entity->position.x - self->startPos) >> 20);
+                    }
+
+                    bridgeCollided = true;
+                }
+                else {
+                    self->stoodEntity = (void *)-2;
+                }
+            }
+        }
+    }
+    else if (entity == self->stoodEntity) {
+        self->timer       = 32;
+        self->stoodEntity = (void *)-2;
+    }
+
+    return bridgeCollided;
 }
 
 #if RETRO_INCLUDE_EDITOR

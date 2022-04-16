@@ -76,7 +76,7 @@ void PBL_Camera_HandleScreenPos(void)
 void PBL_Camera_State_Normal(void)
 {
     RSDK_THIS(PBL_Camera);
-    Entity *target = self->targetPtr;
+    Entity *target = self->target;
     if (target) {
         if (target->position.y < self->position.y - 0x1500000) {
             self->position.y += maxVal(target->position.y - self->position.y + 0x1500000, -0x100000);

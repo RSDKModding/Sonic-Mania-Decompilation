@@ -7,13 +7,13 @@ typedef enum {
     LRZFIREBALL_SPAWNER,
     LRZFIREBALL_LAUNCHER_STATIC,
     LRZFIREBALL_LAUNCHER_GRAVITY,
-}LRZFireballTypes;
+} LRZFireballTypes;
 
 // Object Class
 struct ObjectLRZFireball {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxFireball;
     uint16 sfxFireball;
 };
 
@@ -39,7 +39,7 @@ void LRZFireball_Update(void);
 void LRZFireball_LateUpdate(void);
 void LRZFireball_StaticUpdate(void);
 void LRZFireball_Draw(void);
-void LRZFireball_Create(void* data);
+void LRZFireball_Create(void *data);
 void LRZFireball_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LRZFireball_EditorDraw(void);
@@ -52,14 +52,16 @@ void LRZFireball_CheckPlayerCollisions(void);
 void LRZFireball_CheckOffScreen(void);
 void LRZFireball_CheckTileCollisions(void);
 
+// Spawner States
 void LRZFireball_State_Spawner(void);
 void LRZFireball_State_LauncherStatic(void);
 void LRZFireball_State_LauncherGravity(void);
 
-void LRZFireball_StateChild_Spawner(void);
-void LRZFireball_StateChild_LauncherStatic(void);
-void LRZFireball_StateChild_LauncherGravity(void);
+// Fireball States
+void LRZFireball_StateFireball_Spawner(void);
+void LRZFireball_StateFireball_LauncherStatic(void);
+void LRZFireball_StateFireball_LauncherGravity(void);
 
 void LRZFireball_Draw_Simple(void);
 
-#endif //!OBJ_LRZFIREBALL_H
+#endif //! OBJ_LRZFIREBALL_H

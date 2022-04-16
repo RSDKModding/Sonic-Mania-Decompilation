@@ -87,16 +87,10 @@ void FBZ1Outro_HandleTrash(void)
         signPost->velocity.y = 0;
         signPost->position.y = BigSqueeze->boundB - 0x180000;
 
-        int32 dist = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
-        if (signPost->position.x < dist)
-            dist = signPost->position.x;
+        int32 boundsL = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x180000;
+        int32 boundsR = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
 
-        if (BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_L] + 0x180000 <= dist) {
-            dist = BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x180000;
-            if (signPost->position.x < dist)
-                dist = signPost->position.x;
-        }
-        signPost->position.x = dist;
+        signPost->position.x = clampVal(signPost->position.x, boundsL, boundsR);
     }
 }
 
@@ -108,6 +102,7 @@ void FBZ1Outro_DispenseTrash(void)
         trash->position.y += trash->velocity.y;
         trash->velocity.y += 0x3800;
     }
+
     foreach_active(FBZSinkTrash, sinkTrash)
     {
         sinkTrash->position.y += sinkTrash->velocity.y;
@@ -134,6 +129,7 @@ bool32 FBZ1Outro_Cutscene_CrushTrash(EntityCutsceneSeq *host)
     EntityBigSqueeze *bossManager = FBZ1Outro->bossManager;
 
     EntityCollapsingPlatform *platform = FBZ1Outro->collapsingPlatform;
+
     if (!host->timer) {
         player1->stateInput = StateMachine_None;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE1, &player1->animator, false, 0);
@@ -211,6 +207,7 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
         craneP1->startPos.y = craneP1->position.y;
         self->grabbedPlayers |= 1;
     }
+
     if (player2->objectID == Player->objectID) {
         EntityCrane *craneP2 = FBZ1Outro->craneP2;
         craneP2->position.x  = player2->position.x;
@@ -220,8 +217,10 @@ bool32 FBZ1Outro_Cutscene_TrashDrop(EntityCutsceneSeq *host)
             self->grabbedPlayers |= 2;
         }
     }
+
     if (self->grabbedPlayers == (1 | 2))
         return true;
+
     FBZ1Outro_DispenseTrash();
     return false;
 }

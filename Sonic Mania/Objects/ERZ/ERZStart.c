@@ -237,7 +237,7 @@ bool32 ERZStart_Cutscene_KingMovingRuby(EntityCutsceneSeq *host)
 
     EntityPhantomKing *king = ERZStart->king;
     if (!host->timer) {
-        camera->targetPtr           = NULL;
+        camera->target           = NULL;
         player1->camera             = NULL;
         Zone->playerBoundActiveL[0] = false;
         Zone->playerBoundActiveR[0] = false;
@@ -633,7 +633,7 @@ bool32 ERZStart_Cutscene_StartFight(EntityCutsceneSeq *host)
         Zone->playerBoundActiveT[0] = true;
         PhantomKing_SetupKing(king);
         Camera_SetTargetEntity(0, player1);
-        camera->targetPtr = (Entity *)player1;
+        camera->target = (Entity *)player1;
         camera->offset.x  = 0;
         camera->offset.y  = 0;
         camera->state     = Camera_State_Follow;

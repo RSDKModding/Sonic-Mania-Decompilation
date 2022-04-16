@@ -28,6 +28,7 @@ void WaterfallSound_Draw(void)
                   self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
     RSDK.DrawLine(self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
                   self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+
     if (self->sfxActive)
         DrawHelpers_DrawCross(self->sfxPos.x, self->sfxPos.y, 0x200000, 0x200000, 0xFF00FF);
 }

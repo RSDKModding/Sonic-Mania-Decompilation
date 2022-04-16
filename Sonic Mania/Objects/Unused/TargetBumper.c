@@ -37,7 +37,7 @@ void TargetBumper_Create(void *data)
     self->updateRange.y = 0x400000;
     RSDK.SetSpriteAnimation(TargetBumper->aniFrames, self->type, &self->animator, true, 0);
     self->animator.frameID = self->hitCount;
-    self->state            = TargetBumper_State_Collide;
+    self->state            = TargetBumper_State_Idle;
 }
 
 void TargetBumper_StageLoad(void)
@@ -59,37 +59,37 @@ void TargetBumper_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void TargetBumper_Collide(void)
+void TargetBumper_CheckPlayerCollisions(void)
 {
     RSDK_THIS(TargetBumper);
 
-    Hitbox hitbox;
+    Hitbox hitboxBumper;
     switch (self->type) {
         case TARGETBUMP_HORIZONTAL:
-            hitbox.left   = -14;
-            hitbox.top    = -4;
-            hitbox.right  = 14;
-            hitbox.bottom = 4;
+            hitboxBumper.left   = -14;
+            hitboxBumper.top    = -4;
+            hitboxBumper.right  = 14;
+            hitboxBumper.bottom = 4;
             break;
 
         case TARGETBUMP_VERTICAL:
-            hitbox.left   = -4;
-            hitbox.top    = -14;
-            hitbox.right  = 4;
-            hitbox.bottom = 14;
+            hitboxBumper.left   = -4;
+            hitboxBumper.top    = -14;
+            hitboxBumper.right  = 4;
+            hitboxBumper.bottom = 14;
             break;
 
-        case TARGETBUMP_CIRCLE:
-            hitbox.left   = -8;
-            hitbox.top    = -8;
-            hitbox.right  = 8;
-            hitbox.bottom = 8;
+        case TARGETBUMP_DIAGONAL:
+            hitboxBumper.left   = -8;
+            hitboxBumper.top    = -8;
+            hitboxBumper.right  = 8;
+            hitboxBumper.bottom = 8;
             break;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &hitbox) && player->animator.animationID != ANI_HURT) {
+        if (Player_CheckCollisionTouch(player, self, &hitboxBumper) && player->animator.animationID != ANI_HURT) {
             self->curPos = self->startPos;
             self->state  = TargetBumper_State_Hit;
             self->active = ACTIVE_NORMAL;
@@ -105,6 +105,7 @@ void TargetBumper_Collide(void)
                         self->curPos.y -= 0x20000;
                     }
                     break;
+
                 case TARGETBUMP_VERTICAL:
                     if (player->position.x <= self->position.x) {
                         player->velocity.x = -0x70000;
@@ -115,7 +116,8 @@ void TargetBumper_Collide(void)
                         self->curPos.x -= 0x20000;
                     }
                     break;
-                case TARGETBUMP_CIRCLE: {
+
+                case TARGETBUMP_DIAGONAL: {
                     int32 angle = 96;
                     if (self->direction)
                         angle = 32;
@@ -133,10 +135,12 @@ void TargetBumper_Collide(void)
                             angle -= ang;
                             angle &= 0xFF;
                         }
-                        if ((self->direction & 1))
+
+                        if ((self->direction & FLIP_X))
                             self->curPos.x += 0x20000;
                         else
                             self->curPos.x -= 0x20000;
+
                         self->curPos.y += 0x20000;
                     }
                     else {
@@ -145,10 +149,12 @@ void TargetBumper_Collide(void)
                             angle -= ang;
                             angle &= 0xFF;
                         }
-                        if ((self->direction & 1))
+
+                        if ((self->direction & FLIP_X))
                             self->curPos.x -= 0x20000;
                         else
                             self->curPos.x += 0x20000;
+
                         self->curPos.y -= 0x20000;
                     }
                     player->velocity.x = -0x700 * RSDK.Cos256(angle);
@@ -166,12 +172,15 @@ void TargetBumper_Collide(void)
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                     player->animator.animationID = ANI_WALK;
             }
+
             if (player->animator.animationID != ANI_FLY)
                 player->groundVel = player->velocity.x;
+
             player->onGround       = false;
             player->tileCollisions = true;
             if (self->hitCount < 3) {
-                self->hitTimer        = 0;
+                self->hitTimer = 0;
+
                 EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
                 bonus->animator.frameID = 16;
                 Player_GiveScore(player, 10);
@@ -182,12 +191,12 @@ void TargetBumper_Collide(void)
     }
 }
 
-void TargetBumper_State_Collide(void) { TargetBumper_Collide(); }
+void TargetBumper_State_Idle(void) { TargetBumper_CheckPlayerCollisions(); }
 
 void TargetBumper_State_Hit(void)
 {
     RSDK_THIS(TargetBumper);
-    TargetBumper_Collide();
+    TargetBumper_CheckPlayerCollisions();
 
     if ((self->hitTimer & 4)) {
         self->position.x = self->startPos.x;
@@ -203,7 +212,7 @@ void TargetBumper_State_Hit(void)
             self->position.x = self->startPos.x;
             self->position.y = self->startPos.y;
             self->hitTimer   = 0;
-            self->state      = TargetBumper_State_Collide;
+            self->state      = TargetBumper_State_Idle;
         }
         else {
             destroyEntity(self);
@@ -217,6 +226,7 @@ void TargetBumper_EditorDraw(void)
     RSDK_THIS(TargetBumper);
     RSDK.SetSpriteAnimation(TargetBumper->aniFrames, self->type, &self->animator, true, 0);
     self->animator.frameID = self->hitCount;
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -227,7 +237,7 @@ void TargetBumper_EditorLoad(void)
     RSDK_ACTIVE_VAR(TargetBumper, type);
     RSDK_ENUM_VAR("Horizontal", TARGETBUMP_HORIZONTAL);
     RSDK_ENUM_VAR("Vertical", TARGETBUMP_VERTICAL);
-    RSDK_ENUM_VAR("Circular", TARGETBUMP_CIRCLE);
+    RSDK_ENUM_VAR("Diagonal", TARGETBUMP_DIAGONAL);
 
     RSDK_ACTIVE_VAR(TargetBumper, hitCount);
     RSDK_ENUM_VAR("Three Hits", TARGETBUMP_THREE_HIT);
@@ -236,7 +246,7 @@ void TargetBumper_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(TargetBumper, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flipped", FLIP_X);
 }
 #endif
 
