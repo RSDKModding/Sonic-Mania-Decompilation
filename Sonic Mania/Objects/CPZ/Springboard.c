@@ -173,7 +173,7 @@ void Springboard_Create(void *data)
 {
     RSDK_THIS(Springboard);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;

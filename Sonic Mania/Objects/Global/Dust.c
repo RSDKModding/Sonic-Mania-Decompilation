@@ -33,7 +33,7 @@ void Dust_Create(void *data)
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->drawFX    = FX_FLIP | FX_ROTATE;
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
         self->parent    = (Entity *)data;
     }
 }

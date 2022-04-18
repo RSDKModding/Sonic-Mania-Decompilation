@@ -28,7 +28,7 @@ void HangGlider_Draw(void)
         RSDK.DrawSprite(&self->handleBackAnimator, NULL, false);
         if (self->playerPtr)
             RSDK.DrawSprite(&self->playerAnimator, NULL, false);
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
+        RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&self->handleFrontAnimator, NULL, false);
@@ -40,7 +40,7 @@ void HangGlider_Create(void *data)
     RSDK_THIS(HangGlider);
     if (!SceneInfo->inEditor) {
         self->visible         = true;
-        self->drawOrder       = Zone->drawOrderLow;
+        self->drawOrder       = Zone->objectDrawLow;
         self->active          = ACTIVE_BOUNDS;
         self->updateRange.x   = 0x400000;
         self->updateRange.y   = 0x400000;

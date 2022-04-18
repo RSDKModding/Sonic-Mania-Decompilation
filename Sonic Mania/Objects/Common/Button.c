@@ -102,7 +102,7 @@ void Button_Create(void *data)
         self->updateRange.x   = 0x200000;
         self->updateRange.y   = 0x200000;
         self->visible         = true;
-        self->drawOrder       = Zone->drawOrderLow;
+        self->drawOrder       = Zone->objectDrawLow;
     }
 }
 

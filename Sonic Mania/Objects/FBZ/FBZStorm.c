@@ -103,7 +103,7 @@ void FBZStorm_Create(void *data)
     RSDK_THIS(FBZStorm);
     if (!SceneInfo->inEditor) {
         self->active     = ACTIVE_NORMAL;
-        self->drawOrder  = Zone->drawOrderHigh;
+        self->drawOrder  = Zone->objectDrawHigh;
         self->drawFX     = FX_ROTATE;
         self->inkEffect  = INK_ALPHA;
         self->velocity.x = -0x40000;

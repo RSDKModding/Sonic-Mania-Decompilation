@@ -37,13 +37,13 @@ void AIZKingClaw_LateUpdate(void) {}
 
 void AIZKingClaw_StaticUpdate(void)
 {
-    foreach_active(AIZKingClaw, claw) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(claw)); }
+    foreach_active(AIZKingClaw, claw) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(claw)); }
 }
 
 void AIZKingClaw_Draw(void)
 {
     RSDK_THIS(AIZKingClaw);
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow) {
         RSDK.DrawSprite(&self->clawBackAnimator, &self->clawPos, false);
     }
     else {
@@ -60,7 +60,7 @@ void AIZKingClaw_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_ROTATE;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x1000000;

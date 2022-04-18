@@ -104,7 +104,7 @@ void PullSwitch_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->handlePos     = self->position;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

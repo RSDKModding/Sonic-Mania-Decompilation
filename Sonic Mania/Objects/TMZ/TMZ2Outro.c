@@ -295,7 +295,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
             ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
             ruby->velocity.y  = 0;
             ruby->isPermanent = true;
-            ruby->drawOrder   = Zone->drawOrderHigh;
+            ruby->drawOrder   = Zone->objectDrawHigh;
             ruby->active      = ACTIVE_NORMAL;
             ruby->state       = PhantomRuby_State_MoveToPos;
         }

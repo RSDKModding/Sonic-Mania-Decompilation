@@ -44,7 +44,7 @@ void ERZKing_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x1000000;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->type          = voidToInt(data);
 
@@ -439,7 +439,7 @@ void ERZKing_State_Explode(void)
             int32 x = RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16;
             int32 y = RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16;
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x + self->position.x, y + self->position.y)->drawOrder =
-                Zone->drawOrderHigh;
+                Zone->objectDrawHigh;
         }
     }
 

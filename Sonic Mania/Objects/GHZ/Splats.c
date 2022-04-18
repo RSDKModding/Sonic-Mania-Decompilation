@@ -43,14 +43,14 @@ void Splats_Create(void *data)
 
     if (Splats->initialState == Splats_State_BounceAround) {
         self->drawFX |= FX_FLIP;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
         self->state = Splats_State_Setup;
     }
     else {
         switch (voidToInt(data)) {
             case SPLATS_SPAWNER:
-                self->drawOrder = Zone->drawOrderHigh;
+                self->drawOrder = Zone->objectDrawHigh;
                 self->delay     = 0;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->mainAnimator, true, 0);
                 self->state = Splats_State_Setup;
@@ -58,7 +58,7 @@ void Splats_Create(void *data)
 
             case SPLATS_INKSPLATS:
                 self->drawFX |= FX_FLIP;
-                self->drawOrder = Zone->drawOrderLow;
+                self->drawOrder = Zone->objectDrawLow;
                 self->active    = ACTIVE_NORMAL;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
                 self->mainAnimator.loopIndex  = 1;
@@ -70,7 +70,7 @@ void Splats_Create(void *data)
                 self->drawFX |= FX_FLIP;
                 self->inkEffect |= INK_ALPHA;
                 self->alpha     = 256;
-                self->drawOrder = Zone->drawOrderHigh;
+                self->drawOrder = Zone->objectDrawHigh;
                 self->active    = ACTIVE_NORMAL;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 3, &self->mainAnimator, true, 0);
                 self->state = Splats_State_InkSplat;
@@ -405,12 +405,12 @@ void Splats_EditorDraw(void)
 
     if (RSDK.CheckStageFolder("GHZ")) {
         self->drawFX |= FX_FLIP;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->mainAnimator, true, 0);
     }
     else {
         self->drawFX    = FX_NONE;
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->mainAnimator, true, 0);
     }
 

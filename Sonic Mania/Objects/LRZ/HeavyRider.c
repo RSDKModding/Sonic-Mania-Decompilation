@@ -39,7 +39,7 @@ void HeavyRider_Create(void *data)
                 case HEAVYRIDER_RIDER:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = false;
-                    self->drawOrder = Zone->drawOrderHigh;
+                    self->drawOrder = Zone->objectDrawHigh;
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 5, &self->thrustAnimator, true, 0);
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 7, &self->spikeBallAnimator, true, 0);
@@ -64,7 +64,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = (self->size + 0x400) << 11;
                     self->visible       = false;
-                    self->drawOrder     = Zone->drawOrderLow;
+                    self->drawOrder     = Zone->objectDrawLow;
                     self->state         = HeavyRider_State_PlaneSwitch;
                     self->stateDraw     = HeavyRider_Draw_PlaneSwitch;
                     break;
@@ -78,7 +78,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->visible       = false;
-                    self->drawOrder     = Zone->drawOrderLow;
+                    self->drawOrder     = Zone->objectDrawLow;
                     self->state         = HeavyRider_State_ChargeTrigger;
                     self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
@@ -89,7 +89,7 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x100000;
                     self->updateRange.y = 0x100000;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh - 1;
+                    self->drawOrder     = Zone->objectDrawHigh - 1;
                     self->state         = HeavyRider_State_Puff;
                     self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
@@ -100,19 +100,19 @@ void HeavyRider_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     self->state         = HeavyRider_State_Fireball;
                     self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
 
                 case HEAVYRIDER_JIMMY:
                     RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 4, &self->mainAnimator, true, 0);
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     self->active        = ACTIVE_NORMAL;
                     self->updateRange.x = 0x1800000;
                     self->updateRange.y = 0x1800000;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     self->state         = HeavyRider_StateJimmy_Idle;
                     self->stateDraw     = HeavyRider_Draw_Simple;
                     break;
@@ -349,11 +349,11 @@ void HeavyRider_Hit(void)
             int32 angle = 0x400;
             int32 cos   = RSDK.Cos256(HeavyRider->spikeBallAngle);
             for (int32 i = 0; i < 8; ++i) {
-                HeavyRider_SpawnDebris(1, Zone->drawOrderHigh, spawnX + angle * cos, self->position.y - 0x210000);
+                HeavyRider_SpawnDebris(1, Zone->objectDrawHigh, spawnX + angle * cos, self->position.y - 0x210000);
                 angle += 0x800;
             }
 
-            HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, spawnX + angle * cos, self->position.y - 0x210000);
+            HeavyRider_SpawnDebris(2, Zone->objectDrawHigh, spawnX + angle * cos, self->position.y - 0x210000);
             HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_NONE;
 
             RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
@@ -362,7 +362,7 @@ void HeavyRider_Hit(void)
             RSDK.SetSpriteAnimation(-1, 0, &self->fireballAnimator, true, 0);
         }
         else if (HeavyRider->spikeBallState == HEAVYRIDER_SPIKEBALL_THROWN) {
-            HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, HeavyRider->spikeBallPos.x, HeavyRider->spikeBallPos.y);
+            HeavyRider_SpawnDebris(2, Zone->objectDrawHigh, HeavyRider->spikeBallPos.x, HeavyRider->spikeBallPos.y);
             HeavyRider->spikeBallState = HEAVYRIDER_SPIKEBALL_NONE;
         }
         SceneInfo->timeEnabled = false;
@@ -384,7 +384,7 @@ void HeavyRider_Explode(void)
         if (!(Zone->timer & 0xF)) {
             int32 x = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -788,7 +788,7 @@ void HeavyRider_State_ChargeDash(void)
             debris->velocity.y    = RSDK.Rand(-2, 2) << 16;
             debris->drawFX        = FX_FLIP;
             debris->direction     = i & 3;
-            debris->drawOrder     = Zone->drawOrderHigh;
+            debris->drawOrder     = Zone->objectDrawHigh;
             int32 frame           = RSDK.Rand(0, 4);
             int32 anim            = RSDK.Rand(12, 15);
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, anim, &debris->animator, true, frame);
@@ -884,7 +884,7 @@ void HeavyRider_State_Finish(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.y > 0)
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
@@ -893,7 +893,7 @@ void HeavyRider_State_Finish(void)
         self->position.y        = (ScreenInfo->position.y - 48) << 16;
         EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), self->position.x, self->position.y);
         prison->isPermanent     = true;
-        prison->drawOrder       = Zone->drawOrderHigh;
+        prison->drawOrder       = Zone->objectDrawHigh;
         destroyEntity(self);
     }
 }

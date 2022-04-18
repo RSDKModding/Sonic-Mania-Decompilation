@@ -18,7 +18,7 @@ void GreenScreen_StaticUpdate(void)
     int32 count = 0;
     foreach_active(GreenScreen, screen)
     {
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(screen));
+        RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(screen));
         ++count;
     }
     GreenScreen->greenScreenActive = count > 0;
@@ -31,7 +31,7 @@ void GreenScreen_Create(void *data)
     RSDK_THIS(GreenScreen);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = true;
@@ -119,10 +119,10 @@ void GreenScreen_DrawSprites(void)
 {
     RSDK_THIS(GreenScreen);
 
-    if ((SceneInfo->currentDrawGroup != Zone->drawOrderHigh && self->showBG) || (SceneInfo->inEditor && self->paraPreview))
+    if ((SceneInfo->currentDrawGroup != Zone->objectDrawHigh && self->showBG) || (SceneInfo->inEditor && self->paraPreview))
         GreenScreen_DrawBackgrounds();
 
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh || SceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 0, &self->animator, true, 0);
         RSDK.DrawSprite(&self->animator, NULL, false);
     }

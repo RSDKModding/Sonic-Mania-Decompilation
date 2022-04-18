@@ -35,7 +35,7 @@ void ERZRider_Create(void *data)
     RSDK_THIS(ERZRider);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

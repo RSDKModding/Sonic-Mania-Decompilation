@@ -57,7 +57,7 @@ void Tornado_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->movePos       = self->position;
         self->turnAngle     = 48;
         self->isStood       = true;
@@ -395,7 +395,7 @@ void Tornado_State_Mayday(void)
             EntityExplosion *explosion =
                 CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), (RSDK.Rand(-32, 32) << 16) + self->position.x,
                               (RSDK.Rand(-16, 16) << 16) + self->position.y);
-            explosion->drawOrder = Zone->drawOrderHigh;
+            explosion->drawOrder = Zone->objectDrawHigh;
         }
     }
 }

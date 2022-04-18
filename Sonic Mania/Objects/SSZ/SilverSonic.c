@@ -66,7 +66,7 @@ void SilverSonic_Create(void *data)
         if (self->attackType == 2)
             self->attackType = 1;
         self->attackRepeatCount = 1;
-        self->drawOrder         = Zone->drawOrderLow;
+        self->drawOrder         = Zone->objectDrawLow;
     }
 }
 
@@ -508,7 +508,7 @@ void SilverSonic_State_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + RSDK.Rand(-0x100000, 0x100000);
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 

@@ -77,7 +77,7 @@ void TimeTravelSetup_Particle_CB(EntityDebris *debris)
     RSDK.SetSpriteAnimation(TimeTravelSetup->aniFrames, 0, &debris->animator, true, 0);
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
-    debris->drawOrder     = Zone->drawOrderHigh;
+    debris->drawOrder     = Zone->objectDrawHigh;
 }
 
 #if RETRO_INCLUDE_EDITOR

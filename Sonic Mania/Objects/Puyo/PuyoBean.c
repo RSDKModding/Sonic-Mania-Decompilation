@@ -45,9 +45,9 @@ void PuyoBean_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible = true;
         if (PuyoGame)
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
         else
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
 
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
@@ -1132,7 +1132,7 @@ void PuyoBean_State_BeanPop(void)
             debris->timer        = 14;
             debris->velocity.x   = RSDK.Cos256(angle) << 9;
             debris->velocity.y   = RSDK.Sin256(angle) << 9;
-            debris->drawOrder    = Zone->drawOrderHigh + 1;
+            debris->drawOrder    = Zone->objectDrawHigh + 1;
             RSDK.SetSpriteAnimation(PuyoBean->aniFrames, self->type + PUYOBEAN_ANI_DEBRIS, &debris->animator, true, 0);
         }
         destroyEntity(self);

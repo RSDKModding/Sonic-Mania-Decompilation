@@ -38,7 +38,7 @@ void Gondola_Update(void)
     self->position.y = self->drawPos.y & 0xFFFF0000;
     Gondola_HandleTileCollisions();
 
-    self->drawOrder = self->onGround ? Zone->drawOrderLow : Zone->playerDrawLow;
+    self->drawOrder = self->onGround ? Zone->objectDrawLow : Zone->playerDrawLow;
     self->collisionOffset.x += self->position.x;
     self->collisionOffset.y += self->position.y;
     Gondola_HandlePlayerInteractions();

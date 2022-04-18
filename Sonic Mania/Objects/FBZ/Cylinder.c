@@ -27,7 +27,7 @@ void Cylinder_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
         self->visible   = false;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         switch (self->type) {
             case CYLINDER_TUBE_H:
                 self->updateRange.x = self->length << 16;

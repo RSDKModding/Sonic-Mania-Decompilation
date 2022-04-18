@@ -93,7 +93,7 @@ void ChemicalPool_Create(void *data)
         self->visible       = true;
         self->alpha         = 0xFF;
         self->active        = ACTIVE_BOUNDS;
-        self->drawOrder     = Zone->drawOrderHigh - 2;
+        self->drawOrder     = Zone->objectDrawHigh - 2;
         self->updateRange.x = self->size.x >> 1;
         self->updateRange.y = self->size.y >> 1;
         self->tileSizeX     = self->size.x >> 20;
@@ -228,7 +228,7 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
         if (debris->position.x < x)
             debris->velocity.x = -debris->velocity.x;
         debris->velocity.y = RSDK.RandSeeded(-0x40000, -0x10000, &Zone->randSeed);
-        debris->drawOrder  = Zone->drawOrderHigh;
+        debris->drawOrder  = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &debris->animator, true, RSDK.RandSeeded(0, 2, &Zone->randSeed));
 #else
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + RSDK.Rand(-0x80000, 0x80000), y + RSDK.Rand(0x40000, 0x140000));
@@ -238,7 +238,7 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
         if (debris->position.x < x)
             debris->velocity.x = -debris->velocity.x;
         debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
-        debris->drawOrder  = Zone->drawOrderHigh;
+        debris->drawOrder  = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &debris->animator, true, RSDK.Rand(0, 2));
 #endif
     }

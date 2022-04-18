@@ -62,7 +62,7 @@ void InvisibleBlock_Create(void *data)
         self->hitbox.left   = -self->hitbox.right;
         self->hitbox.bottom = 8 * self->height + 8;
         self->hitbox.top    = -self->hitbox.bottom;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
     }
 }
 

@@ -56,7 +56,7 @@ void Hatterkiller_Update(void)
                     debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                     debris->velocity.y    = RSDK.Rand(-0x20000, -0x10000);
                     debris->gravityStrength       = 0x4800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                 }
@@ -118,7 +118,7 @@ void Hatterkiller_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->active        = ACTIVE_NORMAL;
-        self->drawOrder     = Zone->drawOrderLow + 1;
+        self->drawOrder     = Zone->objectDrawLow + 1;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
 

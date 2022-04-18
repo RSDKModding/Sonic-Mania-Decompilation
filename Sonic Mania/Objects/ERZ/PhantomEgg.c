@@ -44,7 +44,7 @@ void PhantomEgg_Create(void *data)
         self->type             = voidToInt(data);
         if (!data) {
             self->visible       = false;
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             self->hitbox.left   = -24;
             self->hitbox.top    = -24;
             self->hitbox.right  = 24;
@@ -188,7 +188,7 @@ void PhantomEgg_Explode(Hitbox *hitbox)
         if (!(Zone->timer & 8)) {
             int32 x = self->position.x + (RSDK.Rand(hitbox->left, hitbox->right) << 16);
             int32 y = self->position.y + (RSDK.Rand(hitbox->top, hitbox->bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 }
@@ -1085,7 +1085,7 @@ void PhantomEgg_State_CrackOpen(void)
 
     if (self->timer == 64) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 2, &self->crackAnimator, false, 0);
-        self->drawOrder = Zone->drawOrderLow + 1;
+        self->drawOrder = Zone->objectDrawLow + 1;
         self->stateDraw = StateMachine_None;
 
         EntityEggman *eggman = CREATE_ENTITY(Eggman, NULL, self->position.x, self->position.y + 0x100000);
@@ -1115,14 +1115,14 @@ void PhantomEgg_State_CrackedExploding(void)
         int32 x                    = self->position.x + RSDK.Rand(-0x380000, -0x180000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
     }
 
     if ((Zone->timer & 0xF) == 8) {
         int32 x                    = self->position.x + RSDK.Rand(0x180000, 0x380000);
         int32 y                    = self->position.y + RSDK.Rand(-0x300000, -0x100000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
     }
 
     if (++self->timer == 120)
@@ -1138,7 +1138,7 @@ void PhantomEgg_State_StartGoodEnd(void)
         if (Zone->timer & 8) {
             int32 x = self->position.x + RSDK.Rand(-0x800000, 0x800000);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom + 64) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 

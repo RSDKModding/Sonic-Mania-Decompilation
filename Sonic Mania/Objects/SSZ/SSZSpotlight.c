@@ -72,9 +72,9 @@ void SSZSpotlight_Create(void *data)
 
         switch (self->drawFlag) {
             default: break;
-            case 0: self->drawOrder = Zone->drawOrderLow; break;
-            case 1: self->drawOrder = Zone->drawOrderHigh; break;
-            case 2: self->drawOrder = Zone->drawOrderLow - 1; break;
+            case 0: self->drawOrder = Zone->objectDrawLow; break;
+            case 1: self->drawOrder = Zone->objectDrawHigh; break;
+            case 2: self->drawOrder = Zone->objectDrawLow - 1; break;
         }
 
         self->angle = self->offset;

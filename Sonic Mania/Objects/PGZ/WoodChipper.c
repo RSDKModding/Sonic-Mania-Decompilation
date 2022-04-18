@@ -123,7 +123,7 @@ void WoodChipper_Create(void *data)
     RSDK_THIS(WoodChipper);
     self->active    = ACTIVE_BOUNDS;
     self->visible   = 1;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     if (!SceneInfo->inEditor) {
         if (data) {
             --self->drawOrder;

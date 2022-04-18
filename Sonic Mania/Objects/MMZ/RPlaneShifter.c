@@ -32,7 +32,7 @@ void RPlaneShifter_Create(void *data)
 {
     RSDK_THIS(RPlaneShifter);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->active    = ACTIVE_BOUNDS;
     self->angle     = 0;
     if (SceneInfo->inEditor && !self->height)

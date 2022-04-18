@@ -39,12 +39,12 @@ void WallCrawl_Create(void *data)
     self->updateRange.y = 0x800000;
     self->playerPtr     = NULL;
     if (data) {
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(WallCrawl->aniFrames, 3, &self->animator, true, 0);
         self->state = WallCrawl_State_Projectile;
     }
     else {
-        self->drawOrder = Zone->drawOrderLow + 1;
+        self->drawOrder = Zone->objectDrawLow + 1;
         RSDK.SetSpriteAnimation(WallCrawl->aniFrames, 2, &self->animator, true, 0);
         self->state = WallCrawl_State_Setup;
     }

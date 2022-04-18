@@ -115,7 +115,7 @@ void ParallaxSprite_Create(void *data)
             self->parallaxFactor.y >>= 8;
             self->visible   = true;
             self->inkEffect = INK_BLEND;
-            self->drawOrder = Zone->drawOrderHigh + 1;
+            self->drawOrder = Zone->objectDrawHigh + 1;
             self->state     = ParallaxSprite_State_RotateAndScroll;
             break;
 

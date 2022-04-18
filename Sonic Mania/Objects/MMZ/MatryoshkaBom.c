@@ -38,9 +38,9 @@ void MatryoshkaBom_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->drawOrderHigh + 2;
+        self->drawOrder = Zone->objectDrawHigh + 2;
     else
-        self->drawOrder = Zone->drawOrderLow + 2;
+        self->drawOrder = Zone->objectDrawLow + 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 

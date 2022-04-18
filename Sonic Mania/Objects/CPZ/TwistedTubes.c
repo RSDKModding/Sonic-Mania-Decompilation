@@ -76,7 +76,7 @@ void TwistedTubes_Create(void *data)
         }
         else {
             self->visible       = true;
-            self->drawOrder     = Zone->drawOrderHigh;
+            self->drawOrder     = Zone->objectDrawHigh;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.y = (self->height + 4) << 21;
             self->updateRange.x = 0x800000;

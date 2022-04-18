@@ -29,7 +29,7 @@ void SSZ2Setup_StaticUpdate(void)
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = player->velocity.x < 0;
-                debris->drawOrder  = Zone->drawOrderLow;
+                debris->drawOrder  = Zone->objectDrawLow;
                 debris->position.x = player->position.x;
                 debris->position.y = player->position.y + (hitbox->bottom << 16);
                 debris->timer      = 30;
@@ -166,7 +166,7 @@ void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void)
 #else
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
 #endif
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(hotaru);
         }

@@ -47,9 +47,9 @@ void SpecialRing_Create(void *data)
         self->updateRange.y = 0x900000;
         self->drawFX        = FX_FLIP;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
         self->state = SpecialRing_State_Normal;
         RSDK.SetSpriteAnimation(SpecialRing->aniFrames, 0, &self->warpAnimator, true, 0);
     }
@@ -161,7 +161,7 @@ void SpecialRing_State_Warp(void)
             ring->stateDraw = Ring_Draw_Sparkle;
             ring->active    = ACTIVE_NORMAL;
             ring->visible   = false;
-            ring->drawOrder = Zone->drawOrderLow;
+            ring->drawOrder = Zone->objectDrawLow;
             RSDK.SetSpriteAnimation(Ring->aniFrames, i % 3 + 2, &ring->animator, true, 0);
             int32 cnt = ring->animator.frameCount;
             if (ring->animator.animationID == 2) {

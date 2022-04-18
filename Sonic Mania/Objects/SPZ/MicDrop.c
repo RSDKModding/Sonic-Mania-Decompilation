@@ -57,7 +57,7 @@ void MicDrop_Create(void *data)
     RSDK_THIS(MicDrop);
 
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->active        = ACTIVE_BOUNDS;

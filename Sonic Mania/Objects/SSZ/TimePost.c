@@ -68,7 +68,7 @@ void TimePost_Create(void *data)
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->spinSpeed     = 0x3000;
         self->spinCount     = 8;
         self->maxAngle      = 0x10000;
@@ -145,7 +145,7 @@ void TimePost_ParticleCB_TimeSparkles(EntityDebris *debris)
     RSDK.SetSpriteAnimation(TimePost->sparkleFrames, 0, &debris->animator, true, 0);
     debris->updateRange.x = 0x800000;
     debris->updateRange.y = 0x800000;
-    debris->drawOrder     = Zone->drawOrderHigh;
+    debris->drawOrder     = Zone->objectDrawHigh;
     debris->timer         = 180;
 }
 

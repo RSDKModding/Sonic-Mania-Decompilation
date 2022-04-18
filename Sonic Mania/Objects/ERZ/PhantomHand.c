@@ -44,7 +44,7 @@ void PhantomHand_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible            = true;
-        self->drawOrder          = Zone->drawOrderLow;
+        self->drawOrder          = Zone->objectDrawLow;
         self->parent             = (Entity *)data;
         self->targetPos.x        = self->position.x;
         self->targetPos.y        = self->position.y;
@@ -267,7 +267,7 @@ void PhantomHand_State_Clasp(void)
 
     RSDK.ProcessAnimation(&self->handAnimator);
     if (self->handAnimator.frameID == 5) {
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
     }
 
     if (self->handAnimator.frameID == 10) {

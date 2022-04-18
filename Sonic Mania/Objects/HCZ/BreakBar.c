@@ -25,7 +25,7 @@ void BreakBar_Create(void *data)
 {
     RSDK_THIS(BreakBar);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->updateRange.x = 0x800000;
@@ -155,7 +155,7 @@ void BreakBar_HandlePlayerInteractions(EntityPlayer *player)
                 else
                     frame = i != 0;
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, spawnX, spawnY);
-                debris->drawOrder    = Zone->drawOrderLow;
+                debris->drawOrder    = Zone->objectDrawLow;
                 if (player->underwater)
                     debris->gravityStrength = 0x2000;
                 else

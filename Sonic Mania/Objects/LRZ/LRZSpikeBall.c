@@ -44,7 +44,7 @@ void LRZSpikeBall_Create(void *data)
     RSDK_THIS(LRZSpikeBall);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

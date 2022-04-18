@@ -94,13 +94,13 @@ void Snowflakes_LateUpdate(void) {}
 
 void Snowflakes_StaticUpdate(void)
 {
-    foreach_active(Snowflakes, snowflake) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(snowflake)); }
+    foreach_active(Snowflakes, snowflake) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(snowflake)); }
 }
 
 void Snowflakes_Draw(void)
 {
     RSDK_THIS(Snowflakes);
-    int32 drawHigh  = Zone->drawOrderHigh;
+    int32 drawHigh  = Zone->objectDrawHigh;
     int32 drawLayer = SceneInfo->currentDrawGroup;
 
     for (int32 i = 0; i < 0x40; ++i) {
@@ -139,7 +139,7 @@ void Snowflakes_Create(void *data)
 {
     RSDK_THIS(Snowflakes);
     self->active        = ACTIVE_NORMAL;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;

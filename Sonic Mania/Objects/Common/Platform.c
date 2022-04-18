@@ -152,7 +152,7 @@ void Platform_Create(void *data)
         self->amplitude.y >>= 10;
         self->active      = ACTIVE_BOUNDS;
         self->visible     = true;
-        self->drawOrder   = Zone->drawOrderLow + 1;
+        self->drawOrder   = Zone->objectDrawLow + 1;
         self->centerPos.x = self->position.x;
         self->centerPos.y = self->position.y;
         self->drawPos.x   = self->position.x;
@@ -160,7 +160,7 @@ void Platform_Create(void *data)
         RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &self->animator, true, 0);
         self->animator.frameID = self->frameID;
         if (!SceneInfo->inEditor && RSDK.GetFrameID(&self->animator) == 'l')
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
 
         switch (self->type) {
             case PLATFORM_FIXED:

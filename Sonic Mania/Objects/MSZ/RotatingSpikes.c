@@ -65,7 +65,7 @@ void RotatingSpikes_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->angleOffset &= 0x3FF;
-        self->drawOrder = !self->priority ? Zone->drawOrderLow : Zone->drawOrderHigh;
+        self->drawOrder = !self->priority ? Zone->objectDrawLow : Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &self->pivotAnimator, true, 0);
         RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &self->spikeBallAnimator, true, 0);
     }
@@ -85,7 +85,7 @@ void RotatingSpikes_EditorDraw(void)
     RSDK_THIS(RotatingSpikes);
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &self->pivotAnimator, true, 0);
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &self->spikeBallAnimator, true, 0);
-    self->drawOrder = !self->priority ? Zone->drawOrderLow : Zone->drawOrderHigh;
+    self->drawOrder = !self->priority ? Zone->objectDrawLow : Zone->objectDrawHigh;
 
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &self->pivotAnimator, true, 0);
     RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &self->spikeBallAnimator, true, 0);

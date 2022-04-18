@@ -106,7 +106,7 @@ void RockDrill_Create(void *data)
         self->drillDelay[0]  = 4;
         self->pistonDelay[0] = 4;
         RSDK.SetSpriteAnimation(RockDrill->aniFrames, 0, &self->animator, true, 0);
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->state     = RockDrill_State_Setup;
     }
 }
@@ -178,7 +178,7 @@ void RockDrill_SpawnDebris(int offset)
     debris->velocity.x    = RSDK.Rand(0, 6) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
     debris->gravityStrength       = 0x3800;
-    debris->drawOrder     = Zone->drawOrderLow;
+    debris->drawOrder     = Zone->objectDrawLow;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
 
@@ -187,7 +187,7 @@ void RockDrill_SpawnDebris(int offset)
     debris->velocity.x    = RSDK.Rand(-6, 0) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
     debris->gravityStrength       = 0x3800;
-    debris->drawOrder     = Zone->drawOrderLow;
+    debris->drawOrder     = Zone->objectDrawLow;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
 }
@@ -312,7 +312,7 @@ void RockDrill_State_Falling(void)
         if (RSDK.GetTileFlags(tileLow, 0) == LRZ2_TFLAGS_LAVA || RSDK.GetTileFlags(tileHigh, 0) == LRZ2_TFLAGS_LAVA) {
             self->timer      = 0;
             self->velocity.y = 0x8000;
-            self->drawOrder  = Zone->drawOrderLow - 1;
+            self->drawOrder  = Zone->objectDrawLow - 1;
             self->state      = RockDrill_State_Explode;
         }
         else {
@@ -333,7 +333,7 @@ void RockDrill_State_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh + 2;
+            explosion->drawOrder       = Zone->objectDrawHigh + 2;
         }
     }
 
@@ -343,7 +343,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -352,7 +352,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -361,7 +361,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -370,7 +370,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -379,7 +379,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -388,7 +388,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -397,7 +397,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -406,7 +406,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -415,7 +415,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -424,7 +424,7 @@ void RockDrill_State_Explode(void)
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderLow;
+        debris->drawOrder     = Zone->objectDrawLow;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 

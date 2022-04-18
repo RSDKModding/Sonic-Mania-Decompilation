@@ -31,7 +31,7 @@ void Vultron_Create(void *data)
     RSDK_THIS(Vultron);
     if (!SceneInfo->inEditor) {
         self->visible   = true;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->drawFX    = FX_FLIP;
         if (data)
             self->type = voidToInt(data);

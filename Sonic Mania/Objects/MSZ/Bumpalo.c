@@ -33,7 +33,7 @@ void Bumpalo_Create(void *data)
 {
     RSDK_THIS(Bumpalo);
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawOrder     = Zone->objectDrawLow + 1;
     self->drawFX        = FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;

@@ -54,7 +54,7 @@ void Toxomister_Create(void *data)
             self->state = Toxomister_StateCloud_FallDelay;
         }
         else {
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
             self->direction *= FLIP_Y;
             RSDK.SetSpriteAnimation(Toxomister->aniFrames, 0, &self->animator, true, 0);
             self->state = Toxomister_State_Setup;

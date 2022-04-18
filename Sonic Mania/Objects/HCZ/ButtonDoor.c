@@ -57,7 +57,7 @@ void ButtonDoor_Create(void *data)
         self->length = 2 - (RSDK.CheckStageFolder("HCZ") != true);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->visible       = 1;

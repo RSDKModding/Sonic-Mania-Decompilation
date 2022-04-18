@@ -97,7 +97,7 @@ void Shiversaw_Create(void *data)
         if (globals->gameMode < MODE_TIMEATTACK) {
             self->active    = ACTIVE_BOUNDS;
             self->visible   = false;
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 0, &self->tanksAnimator, true, 0);
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 1, &self->bellowsAnimator, true, 7);
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 4, &self->connectorAnimator, true, 0);
@@ -320,7 +320,7 @@ void Shiversaw_Explode(void)
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion =
                 CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder = Zone->drawOrderHigh + 2;
+            explosion->drawOrder = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -1168,7 +1168,7 @@ void Shiversaw_EditorDraw(void)
     RSDK_THIS(Shiversaw);
     self->active    = ACTIVE_BOUNDS;
     self->visible   = false;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 0, &self->tanksAnimator, true, 0);
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 1, &self->bellowsAnimator, true, 7);
     RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 4, &self->connectorAnimator, true, 0);

@@ -33,7 +33,7 @@ void EggTV_Create(void *data)
     
     self->active = ACTIVE_BOUNDS;
     if (self->drawOverTV)
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     else
         self->drawOrder = Zone->fgLayerLow + 1;
 

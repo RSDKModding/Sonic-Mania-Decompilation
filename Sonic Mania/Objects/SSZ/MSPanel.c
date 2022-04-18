@@ -49,7 +49,7 @@ void MSPanel_Create(void *data)
         RSDK.SetSpriteAnimation(MSPanel->aniFrames, 1, &self->panelAnimator, true, 0);
         RSDK.SetSpriteAnimation(MSPanel->aniFrames, 0, &self->cablesAnimator, true, 0);
         self->state     = MSPanel_State_SetupPanel;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     }
 }
 
@@ -96,7 +96,7 @@ void MSPanel_State_Explode(void)
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x400000);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 }
@@ -111,7 +111,7 @@ void MSPanel_State_Rumbling(void)
             int32 x                    = self->position.x + RSDK.Rand(-0x600000, 0x600000);
             int32 y                    = self->position.y + RSDK.Rand(-0x200000, 0x600000);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 

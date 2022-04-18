@@ -55,7 +55,7 @@ void BreakableWall_Create(void *data)
         self->drawFX |= FX_FLIP;
         if (!SceneInfo->inEditor) {
             self->visible       = false;
-            self->drawOrder     = Zone->drawOrderHigh;
+            self->drawOrder     = Zone->objectDrawHigh;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
@@ -144,7 +144,7 @@ void BreakableWall_State_FallingTile(void)
     RSDK_THIS(BreakableWall);
     if (--self->timer <= 0) {
         RSDK.SetTileInfo(self->layerID, self->tilePos.x, self->tilePos.y, -1);
-        if (self->drawOrder < Zone->drawOrderLow) {
+        if (self->drawOrder < Zone->objectDrawLow) {
             if (BreakableWall->farPlaneLayer != (uint16)-1)
                 RSDK.SetTileInfo(BreakableWall->farPlaneLayer, self->tilePos.x, self->tilePos.y, -1);
         }
@@ -166,7 +166,7 @@ void BreakableWall_State_Tile(void)
     self->velocity.y += self->gravityStrength;
     if (self->velocity.x)
         self->rotation += self->tileRotation;
-    if (self->drawOrder >= Zone->drawOrderLow) {
+    if (self->drawOrder >= Zone->objectDrawLow) {
         if (!RSDK.CheckOnScreen(self, &self->updateRange))
             destroyEntity(self);
     }
@@ -312,7 +312,7 @@ void BreakableWall_HandleTopBreak_All(void)
                                 tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
                                 RSDK.SetTileInfo(self->priority, posX, posY, -1);
 
-                                if (self->drawOrder < Zone->drawOrderLow) {
+                                if (self->drawOrder < Zone->objectDrawLow) {
                                     if (BreakableWall->farPlaneLayer != (uint16)-1)
                                         RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
                                 }
@@ -534,7 +534,7 @@ void BreakableWall_HandleBottomBreak_All(void)
                             tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
                             RSDK.SetTileInfo(self->priority, posX, posY, -1);
 
-                            if (self->drawOrder < Zone->drawOrderLow) {
+                            if (self->drawOrder < Zone->objectDrawLow) {
                                 if (BreakableWall->farPlaneLayer != (uint16)-1)
                                     RSDK.SetTileInfo(BreakableWall->farPlaneLayer, posX, posY, -1);
                             }
@@ -599,7 +599,7 @@ void BreakableWall_HandleBlockBreak_V(void)
             tileChunk->velocity.x += 40 * spd * RSDK.Cos256(angle);
             tileChunk->velocity.y += 40 * spd * RSDK.Sin256(angle);
             RSDK.SetTileInfo(self->priority, tileX, tileY, -1);
-            if (self->drawOrder < Zone->drawOrderLow) {
+            if (self->drawOrder < Zone->objectDrawLow) {
                 if (BreakableWall->farPlaneLayer != (uint16)-1)
                     RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
@@ -671,7 +671,7 @@ void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *self, uint8 flip)
             }
 
             RSDK.SetTileInfo(self->priority, tileX, tileY, -1);
-            if (self->drawOrder < Zone->drawOrderLow) {
+            if (self->drawOrder < Zone->objectDrawLow) {
                 if (BreakableWall->farPlaneLayer != (uint16)-1)
                     RSDK.SetTileInfo(BreakableWall->farPlaneLayer, tileX, tileY, -1);
             }
@@ -688,7 +688,7 @@ void BreakableWall_GiveScoreBonus(void *plr)
     EntityPlayer *player = (EntityPlayer *)plr;
     RSDK_THIS(BreakableWall);
     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
-    scoreBonus->drawOrder        = Zone->drawOrderHigh;
+    scoreBonus->drawOrder        = Zone->objectDrawHigh;
     scoreBonus->animator.frameID = player->scoreBonus;
     switch (player->scoreBonus) {
         case 0: Player_GiveScore(player, 100); break;

@@ -47,7 +47,7 @@ void PuyoMatch_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active          = ACTIVE_BOUNDS;
         self->visible         = true;
-        self->drawOrder       = Zone->drawOrderLow;
+        self->drawOrder       = Zone->objectDrawLow;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
         self->stateInput      = PuyoBean_StateInput_HandlePlayerInputs;

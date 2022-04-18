@@ -45,7 +45,7 @@ void Crane_Create(void *data)
 {
     RSDK_THIS(Crane);
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;

@@ -62,18 +62,18 @@ void Scarab_Create(void *data)
 {
     RSDK_THIS(Scarab);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
 
     if (!self->planeFilter) {
-        self->drawOrderLow  = Zone->drawOrderLow;
+        self->drawOrderLow  = Zone->objectDrawLow;
         self->drawOrderHigh = Zone->playerDrawHigh;
     }
     if ((uint8)(self->planeFilter - 1) & 2) {
-        self->drawOrderLow  = Zone->drawOrderHigh;
+        self->drawOrderLow  = Zone->objectDrawHigh;
         self->drawOrderHigh = Zone->playerDrawHigh;
     }
     else {
-        self->drawOrderLow  = Zone->drawOrderLow;
+        self->drawOrderLow  = Zone->objectDrawLow;
         self->drawOrderHigh = Zone->playerDrawLow;
     }
 

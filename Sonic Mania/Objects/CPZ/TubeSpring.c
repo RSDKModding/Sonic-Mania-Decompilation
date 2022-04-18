@@ -33,7 +33,7 @@ void TubeSpring_Create(void *data)
     RSDK_THIS(TubeSpring);
     Spring_Create(NULL);
     RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
-    self->drawOrder               = Zone->drawOrderHigh;
+    self->drawOrder               = Zone->objectDrawHigh;
     self->velocity.y              = !self->type ? -0x100000 : -0xA8000;
     self->type                    = 0xFF;
     self->animator.speed = 0;

@@ -165,7 +165,7 @@ void JacobsLadder_Create(void *data)
 {
     RSDK_THIS(JacobsLadder);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->updateRange.x = 0x800000;

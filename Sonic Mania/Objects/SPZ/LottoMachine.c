@@ -37,7 +37,7 @@ void LottoMachine_StaticUpdate(void)
     foreach_all(LottoMachine, lottoMachine)
     {
         int slot = RSDK.GetEntityID(lottoMachine);
-        RSDK.AddDrawListRef(Zone->drawOrderLow, slot);
+        RSDK.AddDrawListRef(Zone->objectDrawLow, slot);
         RSDK.AddDrawListRef(lottoMachine->drawOrderHigh, slot);
     }
 }
@@ -137,12 +137,12 @@ void LottoMachine_Create(void *data)
         self->updateRange.x       = 0x1000000;
         self->updateRange.y       = 0x1000000;
         self->visible             = true;
-        self->drawOrder           = Zone->drawOrderHigh + 1;
+        self->drawOrder           = Zone->objectDrawHigh + 1;
         self->alpha               = 160;
         self->drawFX              = FX_ROTATE | FX_FLIP;
         self->chuteTargetPos      = 0x180000;
         self->chutePos            = 0x180000;
-        self->drawOrderHigh       = Zone->drawOrderHigh;
+        self->drawOrderHigh       = Zone->objectDrawHigh;
         self->motorAnimator.speed = 0;
         self->state               = LottoMachine_State_Startup;
     }
@@ -512,7 +512,7 @@ void LottoMachine_State_HandleBallCollect(void)
                 self->timer          = 0;
                 self->chuteVel       = 0x20000;
                 self->chuteTargetPos = -0x180000;
-                self->drawOrderHigh  = Zone->drawOrderLow + 1;
+                self->drawOrderHigh  = Zone->objectDrawLow + 1;
                 self->state          = LottoMachine_State_CollectBall;
             }
             break;
@@ -549,7 +549,7 @@ void LottoMachine_State_HandleBallCollect(void)
                 self->timer          = 0;
                 self->chuteVel       = 0x20000;
                 self->chuteTargetPos = -0x180000;
-                self->drawOrderHigh  = Zone->drawOrderHigh;
+                self->drawOrderHigh  = Zone->objectDrawHigh;
                 self->state          = LottoMachine_State_DropPlayers;
             }
             break;

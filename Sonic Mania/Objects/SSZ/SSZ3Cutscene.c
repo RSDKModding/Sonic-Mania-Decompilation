@@ -154,7 +154,7 @@ bool32 SSZ3Cutscene_CutsceneOutro_SetupOutro(EntityCutsceneSeq *host)
         ruby->startPos.x = (pos2 << 20) + 0x1D00000;
         ruby->startPos.y = 0x1A00000;
         ruby->position   = ruby->startPos;
-        ruby->drawOrder  = Zone->drawOrderLow;
+        ruby->drawOrder  = Zone->objectDrawLow;
         self->ruby       = ruby;
     }
 

@@ -35,7 +35,7 @@ void SpikeLog_Create(void *data)
     self->updateRange.y = 0x400000;
     if (!SceneInfo->inEditor)
         self->frame *= 4;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(SpikeLog->aniFrames, 0, &self->animator, true, 0);
     self->state = SpikeLog_State_Main;
 }

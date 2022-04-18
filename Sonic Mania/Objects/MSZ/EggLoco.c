@@ -115,7 +115,7 @@ void EggLoco_Create(void *data)
     RSDK_THIS(EggLoco);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0xA00000;
         self->updateRange.y = 0x600000;
@@ -217,7 +217,7 @@ void EggLoco_State_Tooting(void)
         dust->state      = Dust_State_MoveGravity;
         dust->velocity.x = 0x20000;
         dust->velocity.y = -0x18000;
-        dust->drawOrder  = Zone->drawOrderLow;
+        dust->drawOrder  = Zone->objectDrawLow;
     }
 
     if (self->eggmanAnimator.animationID == 11 && self->eggmanAnimator.frameID == self->eggmanAnimator.frameCount - 1)

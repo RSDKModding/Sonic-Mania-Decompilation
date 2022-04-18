@@ -32,7 +32,7 @@ void PetalPile_Create(void *data)
     RSDK_THIS(PetalPile);
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderHigh;
+    self->drawOrder     = Zone->objectDrawHigh;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x100000;
     self->updateRange.y = 0x100000;
@@ -219,9 +219,9 @@ void PetalPile_State_SetupEmitter(void)
         petal->velStore.x = (radius >> 8) * RSDK.Cos256(angle);
         petal->velStore.y = (radius >> 9) * RSDK.Sin256(angle) - 0x20000;
         if (self->tileLayer)
-            petal->drawOrder = Zone->drawOrderLow;
+            petal->drawOrder = Zone->objectDrawLow;
         else
-            petal->drawOrder = Zone->drawOrderHigh;
+            petal->drawOrder = Zone->objectDrawHigh;
     }
 
     if (self->emitterMode) {

@@ -30,7 +30,7 @@ void SuperSparkle_Update(void)
                 debris->timer        = 16;
                 debris->inkEffect    = INK_ADD;
                 debris->alpha        = 256;
-                debris->drawOrder    = Zone->drawOrderHigh;
+                debris->drawOrder    = Zone->objectDrawHigh;
                 debris->drawOrder    = player->drawOrder;
                 RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &debris->animator, true, 0);
             }

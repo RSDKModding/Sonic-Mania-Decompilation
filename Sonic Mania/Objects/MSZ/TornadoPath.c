@@ -232,12 +232,12 @@ void TornadoPath_State_ExitTornadoSequence(void)
     foreach_active(Tornado, tornado)
     {
         if (self->type == TORNADOPATH_EXITTORNADO_STOPAUTOSCROLL) {
-            tornado->drawOrder = Zone->drawOrderHigh;
+            tornado->drawOrder = Zone->objectDrawHigh;
             MSZSetup_ReloadBGParallax_Multiply(0x000);
             tornado->state = Tornado_State_FlyAway_Right;
         }
         else {
-            tornado->drawOrder = Zone->drawOrderLow;
+            tornado->drawOrder = Zone->objectDrawLow;
             tornado->state     = Tornado_State_FlyAway_Left;
         }
     }

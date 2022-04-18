@@ -47,7 +47,7 @@ void MagnetSphere_Create(void *data)
     RSDK_THIS(MagnetSphere);
     self->drawFX        = FX_FLIP;
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderHigh;
+    self->drawOrder     = Zone->objectDrawHigh;
     self->active        = ACTIVE_BOUNDS;
     self->alpha         = 0xFF;
     self->updateRange.x = 0x400000;

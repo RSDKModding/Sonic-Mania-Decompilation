@@ -25,7 +25,7 @@ void LocoSmoke_Update(void)
             debris->gravityStrength = 512;
             debris->velocity.x      = RSDK.Rand(-0x20000, -0x8000);
             debris->velocity.y      = RSDK.Rand(-0x20000, -0x8000);
-            debris->drawOrder       = Zone->drawOrderLow - 1;
+            debris->drawOrder       = Zone->objectDrawLow - 1;
             debris->timer           = 42;
             RSDK.SetSpriteAnimation(LocoSmoke->aniFrames, 9, &debris->animator, true, 0);
         }
@@ -53,7 +53,7 @@ void LocoSmoke_Create(void *data)
     RSDK_THIS(LocoSmoke);
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->inkEffect = INK_ALPHA;
     self->alpha     = 0x100;
     RSDK.SetSpriteAnimation(LocoSmoke->aniFrames, 8, &self->animator, true, 0);

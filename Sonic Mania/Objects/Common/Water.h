@@ -15,6 +15,13 @@ typedef enum {
     WATER_COUNTDOWNBUBBLE,
 } WaterTypes;
 
+typedef enum {
+    WATER_PRIORITY_OBJECT_LOW,
+    WATER_PRIORITY_PLAYER_LOW,
+    WATER_PRIORITY_PLAYER_HIGH,
+    WATER_PRIORITY_HUD_LOW,
+} WaterPriorities;
+
 // Object Class
 struct ObjectWater {
     RSDK_OBJECT

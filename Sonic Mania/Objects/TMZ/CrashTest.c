@@ -58,7 +58,7 @@ void CrashTest_Create(void *data)
     RSDK_THIS(CrashTest);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -382,7 +382,7 @@ void CrashTest_State_Move(void)
                 debris->rotSpeed = -8;
             else
                 debris->rotSpeed = 8;
-            debris->drawOrder  = Zone->drawOrderHigh;
+            debris->drawOrder  = Zone->objectDrawHigh;
             debris->gravityStrength    = 0x3800;
             debris->direction  = self->direction;
             debris->velocity.x = (RSDK.Rand(-32, 32) << 12) + (self->velocity.x >> 1) * (2 * (self->direction != FLIP_NONE) - 1);
@@ -418,7 +418,7 @@ void CrashTest_State_Crashed(void)
                 int32 x                    = startX + (RSDK.Rand(-16, 16) << 16);
                 int32 y                    = self->startPos.y + (RSDK.Rand(-22, 0) << 16);
                 EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
-                explosion->drawOrder       = Zone->drawOrderHigh;
+                explosion->drawOrder       = Zone->objectDrawHigh;
             }
         }
         ++self->timer;

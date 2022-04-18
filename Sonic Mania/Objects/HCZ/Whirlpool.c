@@ -136,7 +136,7 @@ void Whirlpool_Create(void *data)
 {
     RSDK_THIS(Whirlpool);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->inkEffect     = INK_ADD;
     self->visible       = true;

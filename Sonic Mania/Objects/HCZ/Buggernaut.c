@@ -39,7 +39,7 @@ void Buggernaut_Create(void *data)
     RSDK_THIS(Buggernaut);
 
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow + 1;
+    self->drawOrder = Zone->objectDrawLow + 1;
 
     if (!SceneInfo->inEditor) {
         self->drawFX |= FX_FLIP;

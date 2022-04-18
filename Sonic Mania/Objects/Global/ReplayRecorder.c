@@ -1082,7 +1082,7 @@ void ReplayRecorder_PlayerState(void)
                     self->drawFX |= FX_SCALE;
                     self->scale.x   = 0x100;
                     self->scale.y   = 0x100;
-                    self->drawOrder = Zone->drawOrderLow;
+                    self->drawOrder = Zone->objectDrawLow;
                     foreach_break;
                 }
             }

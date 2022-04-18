@@ -36,7 +36,7 @@ void Aquis_Create(void *data)
 {
     RSDK_THIS(Aquis);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;

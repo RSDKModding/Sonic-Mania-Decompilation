@@ -36,7 +36,7 @@ void FBZMissile_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         if (data)
@@ -46,7 +46,7 @@ void FBZMissile_Create(void *data)
             case FBZMISSILE_LAUNCHER_V:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &self->animator, true, 0);
                 self->direction *= FLIP_Y;
-                self->drawOrder = Zone->drawOrderHigh;
+                self->drawOrder = Zone->objectDrawHigh;
                 self->state     = FBZMissile_StateLauncher_Delay;
                 break;
             case FBZMISSILE_LAUNCHER_H:
@@ -55,7 +55,7 @@ void FBZMissile_Create(void *data)
                 break;
             case FBZMISSILE_HULL:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &self->animator, true, 0);
-                self->drawOrder = Zone->drawOrderHigh;
+                self->drawOrder = Zone->objectDrawHigh;
                 self->timer     = self->interval;
                 self->state     = FBZMissile_State_Hull;
                 break;
@@ -176,7 +176,7 @@ void FBZMissile_StateVertical_Rise(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
     if (self->velocity.y >= 0) {
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->state     = FBZMissile_StateVertical_Fall;
     }
     if (self->velocity.y > -0x1D000)
@@ -209,7 +209,7 @@ void FBZMissile_StateVertical_Fall(void)
 #endif
                     Player_CheckHit(player, self);
 
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->objectDrawHigh;
                 RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                 destroyEntity(self);
 
@@ -225,14 +225,14 @@ void FBZMissile_StateVertical_Fall(void)
                         destroyEntity(missile);
                         RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->objectDrawHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(self);
                 }
             }
         }
         else {
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             destroyEntity(self);
         }
@@ -296,14 +296,14 @@ void FBZMissile_EditorDraw(void)
         case FBZMISSILE_LAUNCHER_V:
             RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &self->animator, true, 0);
             self->direction *= FLIP_Y;
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
             break;
         case FBZMISSILE_LAUNCHER_H:
             RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
             break;
         case FBZMISSILE_HULL:
             RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &self->animator, true, 0);
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
             break;
         default: break;
     }

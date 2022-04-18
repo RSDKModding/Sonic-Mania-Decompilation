@@ -65,7 +65,7 @@ void FXSpinRay_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible        = true;
         self->active         = ACTIVE_NORMAL;
-        self->drawOrder      = Zone->drawOrderHigh;
+        self->drawOrder      = Zone->objectDrawHigh;
         self->size           = 0x600000;
         self->vertexPos[0].x = -0xC0000;
         self->vertexPos[1].x = self->size >> 3;

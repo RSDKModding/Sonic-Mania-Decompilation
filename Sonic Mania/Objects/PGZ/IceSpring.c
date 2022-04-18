@@ -158,9 +158,9 @@ void IceSpring_Create(void *data)
         self->updateRange.y  = 0x600000;
         self->visible        = true;
         if (self->planeFilter && ((uint8)(self->planeFilter - 1) & 2))
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
 
         switch (self->type) {
             case ICESPRING_VERTICAL:

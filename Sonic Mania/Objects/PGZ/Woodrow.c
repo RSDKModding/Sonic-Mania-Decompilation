@@ -30,7 +30,7 @@ void Woodrow_Create(void *data)
     RSDK_THIS(Woodrow);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->drawOrderLow - 1;
+    self->drawOrder     = Zone->objectDrawLow - 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -46,7 +46,7 @@ void Woodrow_Create(void *data)
             self->state = Woodrow_State_Bomb;
         }
         else {
-            self->drawOrder          = Zone->drawOrderHigh;
+            self->drawOrder          = Zone->objectDrawHigh;
             self->bombCount          = 0;
             int32 pos                = SceneInfo->entitySlot + 1;
             EntityWoodrow *bombSpawn = RSDK_GET_ENTITY(pos, Woodrow);
@@ -299,7 +299,7 @@ void Woodrow_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
             RSDK.PlaySfx(Woodrow->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             destroyEntity(self);
         }
         RSDK.ProcessAnimation(&self->animator);
@@ -312,7 +312,7 @@ void Woodrow_State_Bomb(void)
 #endif
                     Player_CheckHit(player, self);
                 RSDK.PlaySfx(Woodrow->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
                 destroyEntity(self);
                 foreach_break;
             }
@@ -365,11 +365,11 @@ void Woodrow_EditorDraw(void)
     RSDK_THIS(Woodrow);
 
     if (self->type == WOODROW_BOMB) {
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 2, &self->animator, true, 0);
     }
     else {
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(Woodrow->aniFrames, 0, &self->animator, true, 0);
     }
 

@@ -59,7 +59,7 @@ void Flamethrower_Create(void *data)
         if (Flamethrower->hitboxMouthH.left)
             self->drawOrder = Zone->playerDrawLow;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
     }
     else {
         self->drawOrder = Zone->playerDrawLow;
@@ -297,7 +297,7 @@ void Flamethrower_State_Setup(void)
         if (Flamethrower->hitboxMouthH.left)
             self->drawOrder = Zone->playerDrawLow;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
     }
     else {
         self->drawOrder = Zone->playerDrawLow;
@@ -340,9 +340,9 @@ void Flamethrower_State_EmittingFlames(void)
         flame->active             = ACTIVE_NORMAL;
         flame->visible            = true;
         if (RSDK.CheckStageFolder("LRZ3"))
-            flame->drawOrder = Zone->drawOrderLow - 1;
+            flame->drawOrder = Zone->objectDrawLow - 1;
         else
-            flame->drawOrder = Zone->drawOrderLow;
+            flame->drawOrder = Zone->objectDrawLow;
         flame->maxDist     = self->maxDist;
         flame->state       = Flamethrower_State_SetupFireball;
         flame->angle       = self->angle;
@@ -385,9 +385,9 @@ void Flamethrower_State_SetupFireball(void)
     }
 
     if (RSDK.CheckStageFolder("LRZ3"))
-        self->drawOrder = Zone->drawOrderLow - 1;
+        self->drawOrder = Zone->objectDrawLow - 1;
     else
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
 
     self->state      = Flamethrower_State_Fireball;
     self->lastPos.x = 0;
@@ -407,14 +407,14 @@ void Flamethrower_State_Fireball(void)
         self->lastYVelocity = self->velocity.y;
 
     // Check for flipping downwards after going upwards
-    if (self->currentDist > 12 && self->lastYVelocity < 0 && self->velocity.y > 0 && self->drawOrder == Zone->drawOrderLow)
-        self->drawOrder = Zone->drawOrderHigh;
+    if (self->currentDist > 12 && self->lastYVelocity < 0 && self->velocity.y > 0 && self->drawOrder == Zone->objectDrawLow)
+        self->drawOrder = Zone->objectDrawHigh;
 
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
     if (HeavyRider && self->velocity.y > 0)
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
 
     if (self->lastPos.x && self->lastPos.y) {
         int32 rx = (self->position.x - self->lastPos.x) >> 8;

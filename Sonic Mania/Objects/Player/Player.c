@@ -12,6 +12,7 @@ ObjectPlayer *Player;
 void Player_Update(void)
 {
     RSDK_THIS(Player);
+
 #if RETRO_USE_PLUS
     if (!API.CheckDLC(DLC_PLUS) && self->characterID > ID_KNUCKLES)
         Player_ChangeCharacter(self, ID_SONIC);
@@ -142,8 +143,10 @@ void Player_Update(void)
 void Player_LateUpdate(void)
 {
     RSDK_THIS(Player);
+
     if (self->superState == SUPERSTATE_FADEIN && self->state != Player_State_Transform)
         Player_CheckGoSuper(self, 0x7F);
+
     if (self->state == Player_State_FlyCarried) {
         self->flyCarryLeaderPos.x = self->position.x >> 0x10 << 0x10;
         self->flyCarryLeaderPos.y = self->position.y >> 0x10 << 0x10;
@@ -269,14 +272,10 @@ void Player_LateUpdate(void)
         if (self->nextGroundState) {
             self->state           = self->nextGroundState;
             self->nextGroundState = StateMachine_None;
-            if (self->sidekick) {
-                EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-                player->scoreBonus   = 0;
-            }
-            else {
-                EntityPlayer *player = self;
-                player->scoreBonus   = 0;
-            }
+            if (self->sidekick) 
+                RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->scoreBonus = 0;
+            else 
+                self->scoreBonus     = 0;
         }
 
         if (self->camera) {
@@ -510,6 +509,7 @@ void Player_Draw(void)
 void Player_Create(void *data)
 {
     RSDK_THIS(Player);
+
     if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Player->sonicFrames, ANI_IDLE, &self->animator, true, 0);
         // self->characterID = ID_SONIC;
@@ -2359,7 +2359,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
     if (Player_CheckAttacking(player, entity)) {
         CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), entity->position.x, entity->position.y);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
         if (Zone_GetZoneID() > ZONE_INVALID) {
@@ -2407,7 +2407,7 @@ bool32 Player_CheckBadnikBreak(EntityPlayer *player, void *e, bool32 destroy)
         if (globals->gameMode != MODE_COMPETITION)
             player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
-        scoreBonus->drawOrder        = Zone->drawOrderHigh;
+        scoreBonus->drawOrder        = Zone->objectDrawHigh;
         scoreBonus->animator.frameID = player->scoreBonus;
 
         switch (player->scoreBonus) {
@@ -2606,10 +2606,12 @@ void Player_UpdatePhysicsState(EntityPlayer *entity)
         state |= 2;
         decelShift = 2;
     }
+
     if (entity->speedShoesTimer > 0) {
         state |= 4;
         decelShift = 1;
     }
+
     int32 tableID               = 8 * state;
     entity->topSpeed            = tablePtr[tableID];
     entity->acceleration        = tablePtr[tableID + 1];
@@ -2645,13 +2647,14 @@ void Player_HandleGroundMovement(void)
 
     if (self->controlLock > 0) {
         self->controlLock--;
-        if (!self->invertGravity) {
+
+        if (!self->invertGravity)
             self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
-        }
     }
     else {
         bool32 left  = false;
         bool32 right = false;
+
         if (self->invertGravity) {
             right = self->left;
             left  = self->right;
@@ -2660,6 +2663,7 @@ void Player_HandleGroundMovement(void)
             left  = self->left;
             right = self->right;
         }
+
         if (left) {
             if (self->groundVel > -self->topSpeed) {
                 if (self->groundVel <= 0) {
@@ -2671,18 +2675,17 @@ void Player_HandleGroundMovement(void)
                         self->skidding  = 24;
                     }
 
-                    int32 skid = self->skidSpeed;
-                    if (self->groundVel < skid) {
-                        self->groundVel = -abs(skid);
-                    }
-                    else {
-                        self->groundVel -= skid;
-                    }
+                    if (self->groundVel < self->skidSpeed)
+                        self->groundVel = -abs(self->skidSpeed);
+                    else 
+                        self->groundVel -= self->skidSpeed;
                 }
             }
+
             if (self->groundVel <= 0 && self->skidding < 1)
                 self->direction = FLIP_X;
         }
+
         if (right) {
             if (self->groundVel < self->topSpeed) {
                 if (self->groundVel >= 0) {
@@ -2694,12 +2697,10 @@ void Player_HandleGroundMovement(void)
                         self->skidding  = 24;
                     }
 
-                    if (self->groundVel > -self->skidSpeed) {
+                    if (self->groundVel > -self->skidSpeed)
                         self->groundVel = abs(self->skidSpeed);
-                    }
-                    else {
+                    else 
                         self->groundVel += self->skidSpeed;
-                    }
                 }
             }
 
@@ -2714,17 +2715,15 @@ void Player_HandleGroundMovement(void)
                 if (self->right) {
                     if (!self->left) {
                         if (self->angle > 0xC0 && self->angle < 0xE4) {
-                            if (self->groundVel > -0x20000 && self->groundVel < 0x28000) {
+                            if (self->groundVel > -0x20000 && self->groundVel < 0x28000)
                                 self->controlLock = 30;
-                            }
                         }
                     }
                 }
                 else if (self->left) {
                     if (self->angle > 0x1C && self->angle < 0x40) {
-                        if (self->groundVel > -0x28000 && self->groundVel < 0x20000) {
+                        if (self->groundVel > -0x28000 && self->groundVel < 0x20000)
                             self->controlLock = 30;
-                        }
                     }
                 }
             }
@@ -2746,14 +2745,13 @@ void Player_HandleGroundMovement(void)
                     self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
 
                 if (self->angle > 0xC0 && self->angle < 0xE4) {
-                    if (self->groundVel > -0x10000 && self->groundVel < 0x10000) {
+                    if (abs(self->groundVel) < 0x10000)
                         self->controlLock = 30;
-                    }
                 }
+
                 if (self->angle > 0x1C && self->angle < 0x40) {
-                    if (self->groundVel > -0x10000 && self->groundVel < 0x10000) {
+                    if (abs(self->groundVel) < 0x10000)
                         self->controlLock = 30;
-                    }
                 }
             }
         }
@@ -2840,18 +2838,18 @@ void Player_HandleAirMovement(void)
         self->camera->disableYOffset = true;
         self->camera->offset.y    = 0x200000;
     }
+
     self->velocity.y += self->gravityStrength;
     if (self->velocity.y < self->jumpCap && self->animator.animationID == ANI_JUMP && !self->jumpHold && self->applyJumpCap) {
+        self->velocity.x -= (self->velocity.x >> 5);
         self->velocity.y = self->jumpCap;
-        self->velocity.x = self->velocity.x - (self->velocity.x >> 5);
     }
 
     self->collisionMode = CMODE_FLOOR;
     self->pushing       = 0;
-    if (self->rotation >= 256) {
-        if (self->rotation < 512) {
+    if (self->rotation >= 0x100) {
+        if (self->rotation < 0x200)
             self->rotation += 4;
-        }
     }
     else if (self->rotation > 0) {
         self->rotation -= 4;
@@ -2868,9 +2866,8 @@ void Player_HandleAirFriction(void)
         self->velocity.x -= self->velocity.x >> 5;
 
     if (self->velocity.x <= -self->topSpeed) {
-        if (self->left) {
+        if (self->left)
             self->direction = FLIP_X;
-        }
     }
     else {
         if (self->left) {
@@ -2899,10 +2896,12 @@ void Player_StartJump(EntityPlayer *entity)
     entity->velocity.x = (entity->groundVel * RSDK.Cos256(entity->angle) + entity->velocity.x) >> 8;
     entity->velocity.y = entity->groundVel * RSDK.Sin256(entity->angle);
     entity->velocity.y = (entity->velocity.y - (entity->gravityStrength + entity->jumpStrength) * RSDK.Cos256(entity->angle)) >> 8;
+
     if (entity->camera) {
         entity->camera->disableYOffset = true;
         entity->camera->offset.y    = 0x200000;
     }
+
     RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->animator, false, 0);
     if (entity->characterID == ID_TAILS) {
         entity->animator.speed = 120;
@@ -2910,8 +2909,10 @@ void Player_StartJump(EntityPlayer *entity)
     else {
         entity->animator.speed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
     }
+
     if (entity->animator.speed > 0xF0)
         entity->animator.speed = 0xF0;
+
     entity->angle            = 0;
     entity->collisionMode    = CMODE_FLOOR;
     entity->skidding         = 0;
@@ -3357,15 +3358,12 @@ void Player_State_Ground(void)
     }
     else {
         if (!self->groundVel) {
-            if (self->left) {
+            if (self->left) 
                 --self->pushing;
-            }
-            else if (self->right) {
+            else if (self->right) 
                 ++self->pushing;
-            }
-            else {
+            else 
                 self->pushing = 0;
-            }
         }
         else {
             if (!self->left && !self->right) {
@@ -3675,8 +3673,10 @@ void Player_State_Ground(void)
 void Player_State_Air(void)
 {
     RSDK_THIS(Player);
+
     self->tileCollisions = true;
     Player_HandleAirFriction();
+
     if (self->onGround) {
         self->state = Player_State_Ground;
         if (self->camera)

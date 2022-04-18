@@ -87,7 +87,7 @@ bool32 SPZ2Outro_Cutscene_SetupFBZTV(EntityCutsceneSeq *host)
         weatherTV->stateDraw        = WeatherTV_Draw_Outro;
         weatherTV->state            = WeatherTV_State_Outro;
         weatherTV->timer            = 0;
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(weatherTV));
+        RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(weatherTV));
         WeatherTV->useHighLayer = true;
         camera->target       = NULL;
         player1->camera         = NULL;

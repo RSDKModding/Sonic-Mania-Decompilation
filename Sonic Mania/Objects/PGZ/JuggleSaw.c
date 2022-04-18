@@ -32,7 +32,7 @@ void JuggleSaw_Create(void *data)
     RSDK_THIS(JuggleSaw);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0xC00000;
     self->updateRange.y = 0xC00000;

@@ -30,7 +30,7 @@ void CircleBumper_Create(void *data)
 {
     RSDK_THIS(CircleBumper);
     self->visible     = true;
-    self->drawOrder   = Zone->drawOrderHigh;
+    self->drawOrder   = Zone->objectDrawHigh;
     self->originPos.x = self->position.x;
     self->originPos.y = self->position.y;
     self->active      = ACTIVE_BOUNDS;

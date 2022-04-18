@@ -46,7 +46,7 @@ void Technosqueek_Create(void *data)
 {
     RSDK_THIS(Technosqueek);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->startPos.x    = self->position.x;

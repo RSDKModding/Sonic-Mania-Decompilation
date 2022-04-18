@@ -22,7 +22,7 @@ void Tuesday_StaticUpdate(void)
     foreach_all(Tuesday, tuesday)
     {
         if (!tuesday->velocity.y) {
-            RSDK.AddDrawListRef(Zone->drawOrderLow, RSDK.GetEntityID(tuesday));
+            RSDK.AddDrawListRef(Zone->objectDrawLow, RSDK.GetEntityID(tuesday));
         }
     }
 }
@@ -45,7 +45,7 @@ void Tuesday_Create(void *data)
     RSDK_THIS(Tuesday);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawOrder     = Zone->objectDrawLow + 1;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -650,7 +650,7 @@ void Tuesday_State_Destroyed(void)
             int32 x                    = self->drawPos.x + (xOffset << 16);
             int32 y                    = self->drawPos.y + (yOffset << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(data), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 

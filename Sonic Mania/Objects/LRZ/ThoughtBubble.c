@@ -58,7 +58,7 @@ void ThoughtBubble_Create(void *data)
     RSDK_THIS(ThoughtBubble);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -138,7 +138,7 @@ void ThoughtBubble_BubbleDisappear(void)
         int32 scale            = RSDK.Rand(0x200, 0x400);
         debris->scale.x      = scale;
         debris->scale.y      = scale;
-        debris->drawOrder    = Zone->drawOrderHigh;
+        debris->drawOrder    = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(ThoughtBubble->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
     }
     self->state = ThoughtBubble_DestroyBubble;

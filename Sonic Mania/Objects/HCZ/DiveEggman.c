@@ -359,7 +359,7 @@ bool32 DiveEggman_CheckNoBombExplode(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (!--self->timer) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(DiveEggman->sfxExplosion, false, 255);
         EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
         water->velocity.y  = -0x8800;

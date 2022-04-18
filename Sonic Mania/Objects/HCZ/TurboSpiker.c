@@ -37,7 +37,7 @@ void TurboSpiker_Create(void *data)
     self->playedLaunchSfx = false;
     self->visible      = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawOrder     = Zone->objectDrawLow + 1;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -216,9 +216,9 @@ void TurboSpiker_State_Hidden(void)
             RSDK.PlaySfx(TurboSpiker->sfxSplash, false, 0xFF);
             RSDK.SetSpriteAnimation(-1, 0, &self->animator, true, 0);
             RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
-            self->drawOrder = Zone->drawOrderLow + 1;
+            self->drawOrder = Zone->objectDrawLow + 1;
             if (self->spike)
-                self->spike->drawOrder = Zone->drawOrderLow;
+                self->spike->drawOrder = Zone->objectDrawLow;
 
             EntityTurboSpiker *ember = CREATE_ENTITY(TurboSpiker, intToVoid(true), self->position.x, self->position.y);
             ember->direction         = self->direction;

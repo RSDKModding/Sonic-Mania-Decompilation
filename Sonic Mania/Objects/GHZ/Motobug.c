@@ -30,7 +30,7 @@ void Motobug_Create(void *data)
     RSDK_THIS(Motobug);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->startDir      = self->direction;
     self->active        = ACTIVE_BOUNDS;

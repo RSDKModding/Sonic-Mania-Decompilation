@@ -376,7 +376,7 @@ void Current_State_WaterLeft(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(false);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->drawOrderHigh;
+            child->drawOrder     = Zone->objectDrawHigh;
             child->strength      = (self->strength + (self->strength >> 3)) >> 1;
             child->size.x        = self->position.x - (self->size.x >> 1) + 0x400000;
             child->drawOrder     = Zone->playerDrawLow;
@@ -447,7 +447,7 @@ void Current_State_WaterRight(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(true);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->drawOrderHigh;
+            child->drawOrder     = Zone->objectDrawHigh;
             child->strength      = (self->strength + (self->strength >> 3)) >> 1;
             child->size.x        = (self->size.x >> 1) + self->position.x - 0x400000;
             child->type          = CURRENT_C_RIGHT;
@@ -523,7 +523,7 @@ void Current_State_WaterUp(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(false);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->drawOrderHigh;
+            child->drawOrder     = Zone->objectDrawHigh;
             child->strength      = (self->strength + (self->strength >> 3)) >> 1;
             child->size.y        = (self->position.y - (self->size.y >> 1)) + 0x400000;
             child->type          = CURRENT_C_UP;
@@ -600,7 +600,7 @@ void Current_State_WaterDown(void)
         if (!(Zone->timer & 7)) {
             Vector2 pos          = Current_GetBubbleSpawnPosVertical(true);
             EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_BUBBLE), pos.x, pos.y);
-            child->drawOrder     = Zone->drawOrderHigh;
+            child->drawOrder     = Zone->objectDrawHigh;
             child->strength      = (self->strength + (self->strength >> 3)) >> 1;
             child->size.y        = (self->size.y >> 1) + self->position.y - 0x400000;
             child->type          = CURRENT_C_DOWN;
@@ -629,7 +629,7 @@ void Current_State_PushLeft(void)
     if (!(Zone->timer & 7)) {
         Vector2 pos          = Current_GetBubbleSpawnPosHorizontal(0);
         EntityCurrent *child = CREATE_ENTITY(Current, intToVoid(CURRENT_CHILD_WIND), pos.x, pos.y);
-        child->drawOrder     = Zone->drawOrderHigh;
+        child->drawOrder     = Zone->objectDrawHigh;
         child->strength      = 4 * self->strength + RSDK.Rand(1 - self->strength, 5);
         child->size.x        = self->position.x - (self->size.x >> 1) + 0x400000;
         if (child->position.x < (self->position.x + (self->size.x >> 1)))

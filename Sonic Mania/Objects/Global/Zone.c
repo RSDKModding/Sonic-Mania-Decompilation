@@ -338,10 +338,10 @@ void Zone_StageLoad(void)
     Zone->gotTimeOver     = false;
     Zone->vsSwapCBCount   = 0;
     Zone->fgLayerLow      = 0;
-    Zone->drawOrderLow    = 2;
+    Zone->objectDrawLow    = 2;
     Zone->playerDrawLow   = 4;
     Zone->fgLayerHigh     = 6;
-    Zone->drawOrderHigh   = 8;
+    Zone->objectDrawHigh   = 8;
     Zone->playerDrawHigh  = 12;
     Zone->hudDrawOrder    = 14;
 
@@ -1360,10 +1360,10 @@ void Zone_EditorLoad(void)
 {
 
     Zone->fgLayerLow     = 0;
-    Zone->drawOrderLow   = 2;
+    Zone->objectDrawLow   = 2;
     Zone->playerDrawLow  = 4;
     Zone->fgLayerHigh    = 6;
-    Zone->drawOrderHigh  = 8;
+    Zone->objectDrawHigh  = 8;
     Zone->playerDrawHigh = 12;
     Zone->hudDrawOrder   = 14;
 }

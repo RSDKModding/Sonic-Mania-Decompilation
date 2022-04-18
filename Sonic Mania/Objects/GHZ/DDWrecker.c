@@ -82,7 +82,7 @@ void DDWrecker_Create(void *data)
                 default: break;
             }
             self->visible   = true;
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
         }
         else {
             self->active        = ACTIVE_BOUNDS;
@@ -869,7 +869,7 @@ void DDWrecker_Explode(void)
             int32 y                    = self->position.y + (RSDK.Rand(-20, 20) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
-            explosion->drawOrder = Zone->drawOrderHigh;
+            explosion->drawOrder = Zone->objectDrawHigh;
         }
     }
 }

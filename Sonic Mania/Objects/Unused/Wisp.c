@@ -35,7 +35,7 @@ void Wisp_Create(void *data)
 {
     RSDK_THIS(Wisp);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->active        = ACTIVE_BOUNDS;

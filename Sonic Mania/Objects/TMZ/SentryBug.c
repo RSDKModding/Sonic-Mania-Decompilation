@@ -72,7 +72,7 @@ void SentryBug_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->amplitude.x >>= 10;
         self->amplitude.y >>= 10;
         self->originPos = self->position;
@@ -263,7 +263,7 @@ void SentryBug_State_AwaitPlayer(void)
                 self->angle       = 0;
                 self->playerPtr   = player;
                 self->netScale    = 0x6800;
-                self->drawOrder   = Zone->drawOrderHigh;
+                self->drawOrder   = Zone->objectDrawHigh;
                 self->active      = ACTIVE_NORMAL;
 
                 RSDK.PlaySfx(SentryBug->sfxPon, false, 255);
@@ -415,7 +415,7 @@ void SentryBug_State_ReturnToSlots(void)
         self->angle       = 0;
         self->timer       = 60;
         self->active      = ACTIVE_BOUNDS;
-        self->drawOrder   = Zone->drawOrderLow;
+        self->drawOrder   = Zone->objectDrawLow;
         self->stateOrbs   = SentryBug_StateOrbs_Attached;
         self->state       = SentryBug_State_AwaitPlayer;
     }

@@ -54,7 +54,7 @@ void MeterDroid_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             self->health        = 6;
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             self->state         = MeterDroid_State_Setup;
             RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
             RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &self->propellorAnimator, true, 0);
@@ -185,7 +185,7 @@ void MeterDroid_Hit(void)
         if (self->stateDraw == MeterDroid_Draw_ThrownWrench) {
             int32 x = RSDK.Rand(MeterDroid->hitboxBoss.left, MeterDroid->hitboxBoss.right) << 16;
             int32 y = RSDK.Rand(MeterDroid->hitboxBoss.top, MeterDroid->hitboxBoss.bottom) << 16;
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + self->wrenchPos.x, y + self->wrenchPos.y)->drawOrder = Zone->objectDrawHigh;
             self->stateDraw                                                                                              = MeterDroid_Draw_Normal;
         }
         SceneInfo->timeEnabled = false;
@@ -521,7 +521,7 @@ void MeterDroid_State_MoveToValve(void)
 
     if (rx * rx + ry * ry < 96) {
         self->direction = self->targetValve->direction;
-        self->drawOrder = Zone->drawOrderLow - 1;
+        self->drawOrder = Zone->objectDrawLow - 1;
         self->state     = MeterDroid_State_MoveIntoBG;
     }
     MeterDroid_CheckPlayerCollisions_NoWrench_NoFlip();
@@ -604,7 +604,7 @@ void MeterDroid_State_WatchPlatformsPopUp(void)
         RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &self->mainAnimator, true, 0);
         self->origin.x  = self->position.x;
         self->origin.y  = self->position.y;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->state     = MeterDroid_State_PickMoveDir;
         self->stateDraw = MeterDroid_Draw_Normal;
     }
@@ -621,7 +621,7 @@ void MeterDroid_State_Destroyed(void)
             int32 x                    = (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16;
             int32 y                    = (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 
@@ -663,7 +663,7 @@ void MeterDroid_State_FinishAct(void)
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + 1),
                                                        (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16,
                                                        (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 

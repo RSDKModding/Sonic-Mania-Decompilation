@@ -116,14 +116,14 @@ void CollapsingPlatform_Create(void *data)
     self->position.x &= 0xFFF80000;
     self->position.y &= 0xFFF80000;
     self->drawFX |= FX_FLIP;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     if (self->targetLayer == COLLAPSEPLAT_TARGET_LOW) {
         self->targetLayer = Zone->fgLow;
-        self->drawOrder   = Zone->drawOrderLow;
+        self->drawOrder   = Zone->objectDrawLow;
     }
     else {
         self->targetLayer = Zone->fgHigh;
-        self->drawOrder   = Zone->drawOrderHigh;
+        self->drawOrder   = Zone->objectDrawHigh;
     }
 
     if (!SceneInfo->inEditor) {

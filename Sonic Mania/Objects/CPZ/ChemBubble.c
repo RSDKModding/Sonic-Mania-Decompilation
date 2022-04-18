@@ -31,7 +31,7 @@ void ChemBubble_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible    = true;
         self->active     = ACTIVE_NORMAL;
-        self->drawOrder  = Zone->drawOrderHigh - 2;
+        self->drawOrder  = Zone->objectDrawHigh - 2;
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
 #if RETRO_USE_PLUS

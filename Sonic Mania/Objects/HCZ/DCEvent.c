@@ -341,7 +341,7 @@ void DCEvent_State_Bomb(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (DCEvent->canExplodeBombs) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(DCEvent->sfxImpact6, false, 255);
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);
         Camera_ShakeScreen(0, 4, 0);
@@ -374,7 +374,7 @@ void DCEvent_State_Bomb(void)
             debris->velocity.y = RSDK.Rand(-8, 5) << 16;
             debris->direction  = RSDK.Rand(0, 4);
             debris->drawFX     = FX_FLIP;
-            debris->drawOrder  = Zone->drawOrderHigh;
+            debris->drawOrder  = Zone->objectDrawHigh;
             debris->gravityStrength    = 0x3800;
             RSDK.CopyTileLayer(Zone->moveLayer, 1038, 146, Zone->moveLayer, 1068, 8, 20, 6);
         }
@@ -390,7 +390,7 @@ void DCEvent_State_BombExplode(void)
     if (!(Zone->timer & 3)) {
         self->position.y -= 0x100000;
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), (RSDK.Rand(-16, 17) << 17) + self->position.x, self->position.y)->drawOrder =
-            Zone->drawOrderHigh;
+            Zone->objectDrawHigh;
 
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);
 

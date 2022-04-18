@@ -228,7 +228,7 @@ bool32 ERZOutro_Cutscene_AttackRecoil(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, true, 0);
             host->values[0]   = 1;
             fxRuby->state     = FXRuby_State_ExpandRing;
-            fxRuby->drawOrder = Zone->drawOrderLow - 1;
+            fxRuby->drawOrder = Zone->objectDrawLow - 1;
             player1->camera   = 0;
             camera->target = 0;
             Camera_SetupLerp(0, 0, x, y, 3);
@@ -315,7 +315,7 @@ bool32 ERZOutro_Cutscene_OpenPortal(EntityCutsceneSeq *host)
     ERZOutro_HandleRubyHover();
     if (host->timer == 90) {
         portal->state     = RubyPortal_State_Opened;
-        portal->drawOrder = Zone->drawOrderLow;
+        portal->drawOrder = Zone->objectDrawLow;
         portal->visible   = true;
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
     }

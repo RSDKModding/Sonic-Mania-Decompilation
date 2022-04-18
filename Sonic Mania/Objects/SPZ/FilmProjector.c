@@ -30,7 +30,7 @@ void FilmProjector_Draw(void)
 {
     RSDK_THIS(FilmProjector);
 
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh) {
         Vector2 drawPos;
         self->drawFX &= ~FX_FLIP;
 
@@ -77,7 +77,7 @@ void FilmProjector_Draw(void)
     else {
         RSDK.DrawSprite(&self->screenAnimator, &self->filmPos, false);
         RSDK.DrawSprite(&self->eggmanAnimator, &self->filmPos, false);
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
+        RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
     }
 }
 
@@ -97,7 +97,7 @@ void FilmProjector_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->filmPos.x  = self->position.x;
         self->filmPos.y  = self->position.y;
         if (self->direction == FLIP_NONE)

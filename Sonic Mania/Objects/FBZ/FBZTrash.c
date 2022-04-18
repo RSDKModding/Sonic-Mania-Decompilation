@@ -35,7 +35,7 @@ void FBZTrash_Create(void *data)
 
         if (data) {
             self->type          = voidToInt(data);
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             self->hitbox.left   = -8;
             self->hitbox.top    = -8;
             self->hitbox.right  = 8;
@@ -45,7 +45,7 @@ void FBZTrash_Create(void *data)
             self->state         = FBZTrash_State_ReactMagnet;
         }
         else {
-            self->drawOrder     = Zone->drawOrderHigh;
+            self->drawOrder     = Zone->objectDrawHigh;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x200000;
             self->onGround      = true;

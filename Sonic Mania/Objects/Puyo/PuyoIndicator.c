@@ -34,7 +34,7 @@ void PuyoIndicator_Create(void *data)
 {
     RSDK_THIS(PuyoIndicator);
     self->active     = ACTIVE_NORMAL;
-    self->drawOrder  = Zone->drawOrderHigh;
+    self->drawOrder  = Zone->objectDrawHigh;
     self->startPos.x = self->position.x;
     self->startPos.y = self->position.y;
     self->visible    = true;

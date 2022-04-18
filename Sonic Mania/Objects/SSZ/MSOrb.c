@@ -36,7 +36,7 @@ void MSOrb_Create(void *data)
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
         self->alpha         = 0xC0;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         RSDK.SetSpriteAnimation(MSOrb->aniFrames, 15, &self->animator, true, 0);
         self->state     = MSOrb_State_Orb;
         self->stateDraw = MSOrb_Draw_Orb;
@@ -90,7 +90,7 @@ void MSOrb_EditorDraw(void)
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     self->alpha         = 0xC0;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(MSOrb->aniFrames, 15, &self->animator, true, 0);
 
     MSOrb_Draw_Orb();

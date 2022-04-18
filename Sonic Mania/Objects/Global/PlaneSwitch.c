@@ -35,7 +35,7 @@ void PlaneSwitch_Create(void *data)
         self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
         self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
         self->visible       = false;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->negAngle      = (uint8) - (self->angle & 0xFF);
     }
 }
@@ -119,7 +119,7 @@ void PlaneSwitch_EditorDraw(void)
     self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
     self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
     self->visible       = false;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->negAngle      = (uint8) - (uint8)self->angle;
 
     PlaneSwitch_DrawSprites();

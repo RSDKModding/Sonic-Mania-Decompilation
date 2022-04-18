@@ -74,7 +74,7 @@ void LightBarrier_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->updateRange.y = self->size << 15;
         self->updateRange.x = 0x800000;
         RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->emitterAnimator, true, 0);

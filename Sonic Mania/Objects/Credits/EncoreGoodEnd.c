@@ -432,7 +432,7 @@ bool32 EncoreGoodEnd_Cutscene_KingAppear(EntityCutsceneSeq *host)
             EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
             fxFade->speedIn      = 256;
             fxFade->speedOut     = 64;
-            fxFade->drawOrder    = Zone->drawOrderHigh;
+            fxFade->drawOrder    = Zone->objectDrawHigh;
             RSDK.PlaySfx(EncoreGoodEnd->sfxSnap, false, 255);
             return true;
         }
@@ -447,7 +447,7 @@ bool32 EncoreGoodEnd_Cutscene_ThanksForPlaying(EntityCutsceneSeq *host)
         foreach_active(Decoration, decor)
         {
             if (decor->type >= 25) {
-                decor->drawOrder = Zone->drawOrderHigh + 1;
+                decor->drawOrder = Zone->objectDrawHigh + 1;
                 if (decor->position.y >= self->position.y)
                     decor->position.y -= 0x20000;
                 else

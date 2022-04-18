@@ -36,7 +36,7 @@ void LRZRockPile_Create(void *data)
     if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
         self->drawOrder = Zone->playerDrawHigh;
     else
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
 
     self->startPos      = self->position;
     self->visible       = true;

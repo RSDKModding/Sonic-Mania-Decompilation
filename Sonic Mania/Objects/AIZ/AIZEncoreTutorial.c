@@ -57,7 +57,7 @@ void AIZEncoreTutorial_Create(void *data)
     RSDK_THIS(AIZEncoreTutorial);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -130,7 +130,7 @@ void AIZEncoreTutorial_State_ExitTutorial(void)
             debris->direction  = i & 3;
             debris->scale.x    = RSDK.Rand(0x200, 0x400);
             debris->scale.y    = debris->scale.x;
-            debris->drawOrder  = Zone->drawOrderHigh;
+            debris->drawOrder  = Zone->objectDrawHigh;
             RSDK.SetSpriteAnimation(AIZEncoreTutorial->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
         }
         destroyEntity(self);

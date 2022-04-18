@@ -22,10 +22,10 @@ void EscapeCar_StaticUpdate(void) {}
 void EscapeCar_Draw(void)
 {
     RSDK_THIS(EscapeCar);
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow) {
         RSDK.DrawSprite(&self->driverAnimator, NULL, false);
         if (!SceneInfo->currentScreenID)
-            RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
+            RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&self->carAnimator, NULL, false);
@@ -39,7 +39,7 @@ void EscapeCar_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -244,7 +244,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
         debris->drawFX       = FX_SCALE | FX_ROTATE;
         debris->scale.x      = 0x200;
         debris->scale.y      = 0x200;
-        debris->drawOrder    = Zone->drawOrderLow + 1;
+        debris->drawOrder    = Zone->objectDrawLow + 1;
         debris->rotSpeed     = 2;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &debris->animator, true, 0);
         debris->animator.rotationFlag = 1;
@@ -256,7 +256,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
         debris->velocity.x            = 0x40000;
         debris->velocity.y            = -0x48000;
         debris->drawFX                = FX_ROTATE;
-        debris->drawOrder             = Zone->drawOrderLow + 1;
+        debris->drawOrder             = Zone->objectDrawLow + 1;
         debris->rotSpeed              = -4;
         debris->animator              = self->carAnimator;
         debris->isPermanent           = true;
@@ -272,7 +272,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
 void EscapeCar_EditorDraw(void)
 {
     RSDK_THIS(EscapeCar);
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 #if RETRO_USE_PLUS

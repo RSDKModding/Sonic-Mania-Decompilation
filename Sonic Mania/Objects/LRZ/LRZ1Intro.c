@@ -35,7 +35,7 @@ void LRZ1Intro_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
         RSDK.SetSpriteAnimation(LRZ1Intro->aniFrames, 0, &self->animator, true, 0);
@@ -88,7 +88,7 @@ void LRZ1Intro_HandleLavaContact(void)
     if (!(Zone->timer & 3)) {
         int32 x                                                              = self->position.x + 0xE00000;
         int32 y                                                              = self->spawnPosY + RSDK.Rand(0x400000, 0x580000);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
     }
 
     if (self->velocity.y <= 0x10000) {

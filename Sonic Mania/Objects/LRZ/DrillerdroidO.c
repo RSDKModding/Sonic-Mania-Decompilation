@@ -54,7 +54,7 @@ void DrillerdroidO_Create(void *data)
                     self->updateRange.y = 0x800000;
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 0, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 5, &self->armorAnimator, true, 0);
-                    self->drawOrder               = Zone->drawOrderHigh;
+                    self->drawOrder               = Zone->objectDrawHigh;
                     DrillerdroidO->boss           = self;
                     DrillerdroidO->childSlotStart = SceneInfo->entitySlot + 2;
                     DrillerdroidO->currentLevel   = 4;
@@ -68,7 +68,7 @@ void DrillerdroidO_Create(void *data)
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
                     RSDK.SetSpriteAnimation(DrillerdroidO->ticFrames, 0, &self->mainAnimator, true, 0);
-                    self->drawOrder = Zone->drawOrderHigh;
+                    self->drawOrder = Zone->objectDrawHigh;
                     self->state     = DrillerdroidO_State_FireballEmitter;
                     self->stateDraw = DrillerdroidO_Draw_FireballEmitter;
                     break;
@@ -82,7 +82,7 @@ void DrillerdroidO_Create(void *data)
                     self->updateRange.y = 0x800000;
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 2, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 3, &self->armorAnimator, true, 0);
-                    self->drawOrder = Zone->drawOrderHigh;
+                    self->drawOrder = Zone->objectDrawHigh;
                     self->state     = DrillerdroidO_State_Target;
                     self->stateDraw = DrillerdroidO_Draw_Target;
                     break;
@@ -256,7 +256,7 @@ void DrillerdroidO_Explode(void)
         if (!(Zone->timer & 3)) {
             int x = self->position.y + (RSDK.Rand(-19, 20) << 16);
             int y = self->position.x + (RSDK.Rand(-24, 25) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh + 2;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -270,7 +270,7 @@ void DrillerdroidO_SpawnDebris(int offset)
     debris->velocity.x    = RSDK.Rand(0, 6) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
     debris->gravityStrength       = 0x3800;
-    debris->drawOrder     = Zone->drawOrderLow;
+    debris->drawOrder     = Zone->objectDrawLow;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
 
@@ -279,7 +279,7 @@ void DrillerdroidO_SpawnDebris(int offset)
     debris->velocity.x    = RSDK.Rand(-6, 0) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
     debris->gravityStrength       = 0x3800;
-    debris->drawOrder     = Zone->drawOrderLow;
+    debris->drawOrder     = Zone->objectDrawLow;
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
 }
@@ -408,7 +408,7 @@ void DrillerdroidO_State_BeginDrilling(void)
             EntityLavaGeyser *geyser = CREATE_ENTITY(LavaGeyser, NULL, self->position.x, self->position.y + 0x580000);
             geyser->force            = 56 << 12;
             geyser->duration         = 120;
-            geyser->drawOrder        = Zone->drawOrderHigh;
+            geyser->drawOrder        = Zone->objectDrawHigh;
             geyser->state            = LavaGeyser_HandleSetup;
         }
         self->timer = 240;
@@ -750,7 +750,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(-8, -4) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -759,7 +759,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -768,7 +768,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(-8, -4) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -777,7 +777,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -786,7 +786,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(-8, -4) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -795,7 +795,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -804,7 +804,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(-8, -4) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -813,7 +813,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -822,7 +822,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(-8, -4) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
@@ -831,7 +831,7 @@ void DrillerdroidO_State_Destroyed(void)
         debris->velocity.x    = RSDK.Rand(-4, 4) << 15;
         debris->velocity.y    = RSDK.Rand(-8, -4) << 15;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 

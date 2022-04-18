@@ -30,7 +30,7 @@ void DERobot_Create(void *data)
     RSDK_THIS(DERobot);
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             int32 slotID        = RSDK.GetEntityID(self);
@@ -106,7 +106,7 @@ void DERobot_Create(void *data)
                     self->active     = ACTIVE_NORMAL;
                     self->visible    = true;
                     self->drawFX     = FX_FLIP;
-                    self->drawOrder  = Zone->drawOrderHigh;
+                    self->drawOrder  = Zone->objectDrawHigh;
                     self->velocity.x = 0x20000;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &self->altAnimator, true, 0);
                     self->state     = DERobot_State_Target;
@@ -271,7 +271,7 @@ void DERobot_HandleTerrainDestruction(void)
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
 
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                wall->drawOrder           = Zone->drawOrderHigh;
+                wall->drawOrder           = Zone->objectDrawHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -304,7 +304,7 @@ void DERobot_DestroyTerrainFinal(void)
                 RSDK.SetTileInfo(Zone->fgLow, tx, ty, -1);
 
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                wall->drawOrder           = Zone->drawOrderHigh;
+                wall->drawOrder           = Zone->objectDrawHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -329,7 +329,7 @@ void DERobot_DestroyTerrainFinal(void)
             if (tile != (uint16)-1) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, -1);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                wall->drawOrder           = Zone->drawOrderHigh;
+                wall->drawOrder           = Zone->objectDrawHigh;
                 wall->visible             = true;
                 wall->tileInfo            = tile;
                 wall->velocity.x          = RSDK.Rand(-0x20000, 0x20000);
@@ -383,7 +383,7 @@ void DERobot_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-48, 48) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-48, 48) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 }
@@ -503,7 +503,7 @@ bool32 DERobot_CheckRubyGrabbed(void)
                 grabbedRuby      = true;
                 ruby->position.x = self->position.x;
                 ruby->position.y = self->position.y;
-                ruby->drawOrder  = Zone->drawOrderLow;
+                ruby->drawOrder  = Zone->objectDrawLow;
                 ruby->state      = PhantomRuby_State_RotateToOrigin;
             }
         }
@@ -799,7 +799,7 @@ void DERobot_State_BombLanded(void)
         self->visible              = false;
         self->state                = DERobot_State_BombExplode;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x80000);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
         RSDK.PlaySfx(DERobot->sfxExplosion, false, 255);
     }
     else {
@@ -821,7 +821,7 @@ void DERobot_State_BombExplode(void)
 
     if (!(self->timer & 7)) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
     }
 
     if (self->timer == 32)
@@ -1302,7 +1302,7 @@ void DERobot_State_Finish(void)
         int32 x                    = (RSDK.Rand(-48, 48) << 16) + self->position.x;
         int32 y                    = (RSDK.Rand(-48, 48) << 16) + self->position.y;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
     }
 
     foreach_active(Player, player)
@@ -1360,7 +1360,7 @@ void DERobot_State_CutsceneExplode(void)
         int32 x                    = (RSDK.Rand(-32, 32) << 16) + self->position.x;
         int32 y                    = (RSDK.Rand(-32, 32) << 16) + self->position.y;
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), x, y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
     }
 }
 

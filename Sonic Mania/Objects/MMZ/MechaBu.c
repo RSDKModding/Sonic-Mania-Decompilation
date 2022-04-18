@@ -37,9 +37,9 @@ void MechaBu_Create(void *data)
 
     self->visible = true;
     if (self->planeFilter > 0 && (((uint8)self->planeFilter - 1) & 2))
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos      = self->position;
     self->startDir      = self->direction;

@@ -99,7 +99,7 @@ void PropellerShaft_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->updateRange.y = self->size << 16;
         self->updateRange.x = 0x400000;
         self->hitbox.top    = -self->size;
@@ -115,7 +115,7 @@ void PropellerShaft_StageLoad(void) {}
 void PropellerShaft_EditorDraw(void)
 {
     RSDK_THIS(PropellerShaft);
-    self->drawOrder = Zone->drawOrderHigh;
+    self->drawOrder = Zone->objectDrawHigh;
 
     if (showGizmos()) {
         DrawHelpers_DrawRectOutline(self->position.x, self->position.y, 16 << 16, self->size << 17, 0xFFFF00);

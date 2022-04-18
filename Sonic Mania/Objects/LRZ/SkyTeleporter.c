@@ -26,7 +26,7 @@ void SkyTeleporter_StaticUpdate(void)
 void SkyTeleporter_Draw(void)
 {
     RSDK_THIS(SkyTeleporter);
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow)
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawLow)
         RSDK.DrawSprite(&self->animator, NULL, false);
     else
         SkyTeleporter_DrawTeleportBeam();
@@ -36,7 +36,7 @@ void SkyTeleporter_Create(void *data)
 {
     RSDK_THIS(SkyTeleporter);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;

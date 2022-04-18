@@ -34,7 +34,7 @@ void OneWayDoor_Create(void *data)
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
     self->state         = OneWayDoor_State_MoveDown;
-    self->drawOrder     = Zone->drawOrderHigh - 2;
+    self->drawOrder     = Zone->objectDrawHigh - 2;
     RSDK.SetSpriteAnimation(OneWayDoor->aniFrames, 0, &self->animator, true, 0);
 
     if (RSDK.CheckStageFolder("MMZ")) {

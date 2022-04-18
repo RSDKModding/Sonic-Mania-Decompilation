@@ -56,7 +56,7 @@ void LavaGeyser_Create(void *data)
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->force <<= 12;
         self->state = LavaGeyser_State_Setup;
     }

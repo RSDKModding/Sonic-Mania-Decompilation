@@ -78,7 +78,7 @@ void SwingRope_Update(void)
             otherHitbox.bottom = 0;
             if (RSDK.CheckObjectCollisionTouchBox(self, &SwingRope->hitbox1, player, &otherHitbox)) {
                 self->playerLayers[player->playerID] = player->drawOrder;
-                player->drawOrder                      = Zone->drawOrderLow;
+                player->drawOrder                      = Zone->objectDrawLow;
                 player->state                          = Player_State_None;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, 0, 0);
                 player->velocity.x = 0;
@@ -135,7 +135,7 @@ void SwingRope_Create(void *data)
     RSDK_THIS(SwingRope);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;

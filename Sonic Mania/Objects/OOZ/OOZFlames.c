@@ -40,7 +40,7 @@ void OOZFlames_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible   = true;
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
         self->active    = ACTIVE_NORMAL;
         self->drawFX    = FX_SCALE;
         self->inkEffect = INK_ADD;

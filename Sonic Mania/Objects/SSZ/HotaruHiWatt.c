@@ -45,7 +45,7 @@ void HotaruHiWatt_Create(void *data)
             self->updateRange.x = 0xC00000;
             self->updateRange.y = 0xC00000;
             self->type          = voidToInt(data);
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             switch (self->type) {
                 case HHW_BOSS:
                     self->visible = false;
@@ -737,7 +737,7 @@ void HotaruHiWatt_State_MiniLaser(void)
         else {
             RSDK.SetSpriteAnimation(HotaruHiWatt->hotaruFrames, 3, &self->mainAnimator, true, 0);
             self->position.y += 0x80000;
-            self->drawOrder                  = Zone->drawOrderHigh;
+            self->drawOrder                  = Zone->objectDrawHigh;
             self->state                      = HotaruHiWatt_State_MiniLaserStrike;
             HotaruHiWatt->spawnedLaserStrike = true;
         }
@@ -1174,7 +1174,7 @@ void HotaruHiWatt_StateBoss_Destroyed(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 

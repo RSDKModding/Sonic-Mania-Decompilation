@@ -35,7 +35,7 @@ void CableWarp_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->alpha         = 0x100;
         switch (self->type) {
             case CABLEWARP_ENTRY:

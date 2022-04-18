@@ -153,7 +153,7 @@ void PullChain_Create(void *data)
     if (!self->decorMode)
         self->drawOrder = Zone->playerDrawLow;
     else
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     self->basePos       = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
@@ -226,7 +226,7 @@ void PullChain_EditorDraw(void)
     if (!self->decorMode)
         self->drawOrder = Zone->playerDrawLow;
     else
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 0, &self->hookAnimator, true, self->decorMode);
     RSDK.SetSpriteAnimation(PullChain->aniFrames, 1, &self->chainAnimator, true, self->decorMode);
 

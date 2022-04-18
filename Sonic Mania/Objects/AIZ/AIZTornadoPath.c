@@ -188,7 +188,7 @@ void AIZTornadoPath_State_DisablePlayerInteractions(void)
 
 void AIZTornadoPath_State_ExitTornadoSequence(void)
 {
-    foreach_active(AIZTornado, tornado) { tornado->drawOrder = Zone->drawOrderLow; }
+    foreach_active(AIZTornado, tornado) { tornado->drawOrder = Zone->objectDrawLow; }
 
     if (!tornado->disableInteractions) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);

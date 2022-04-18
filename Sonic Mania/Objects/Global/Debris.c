@@ -77,7 +77,7 @@ void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entries, int32 animatio
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];
             debris->gravityStrength       = 0x3800;
-            debris->drawOrder     = Zone->drawOrderHigh;
+            debris->drawOrder     = Zone->objectDrawHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
         }
@@ -107,7 +107,7 @@ void Debris_FallFlickerSetup(int32 aniFrames, int32 *entries)
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];
             debris->gravityStrength       = 0x3800;
-            debris->drawOrder     = Zone->drawOrderHigh;
+            debris->drawOrder     = Zone->objectDrawHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
         }

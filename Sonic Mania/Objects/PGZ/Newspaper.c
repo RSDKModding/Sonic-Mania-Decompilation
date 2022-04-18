@@ -50,7 +50,7 @@ void Newspaper_Create(void *data)
                 self->drawOrder = Zone->playerDrawLow;
                 break;
             case NEWSPAPER_WHITE_BG:
-            case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->drawOrderLow; break;
+            case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->objectDrawLow; break;
             default: break;
         }
 
@@ -96,7 +96,7 @@ void Newspaper_HandleInteractions(void)
                 self->timer      = 2;
                 if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
-                debris->drawOrder = Zone->drawOrderLow;
+                debris->drawOrder = Zone->objectDrawLow;
                 RSDK.SetSpriteAnimation(Newspaper->aniFrames, RSDK.Rand(0, 2) + 2, &debris->animator, true, RSDK.Rand(0, 6));
 
                 if (Newspaper->sfxPaperStack) {
@@ -128,7 +128,7 @@ void Newspaper_EditorDraw(void)
             self->drawOrder = Zone->playerDrawLow;
             break;
         case NEWSPAPER_WHITE_BG:
-        case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->drawOrderLow; break;
+        case NEWSPAPER_BLUE_BG: self->drawOrder = Zone->objectDrawLow; break;
         default: break;
     }
 #else

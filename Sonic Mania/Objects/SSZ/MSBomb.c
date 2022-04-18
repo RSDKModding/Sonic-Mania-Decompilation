@@ -33,7 +33,7 @@ void MSBomb_Create(void *data)
 
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
 
     if (data) {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 1, &self->animator, true, 0);

@@ -75,7 +75,7 @@ void EggJanken_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     self->visible       = false;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->drawFX |= FX_ROTATE | FX_FLIP;
     self->origin.x             = self->position.x;
     self->origin.y             = self->position.y;
@@ -365,7 +365,7 @@ void EggJanken_State_WaitForButton(void)
         part->velocity.y = -0x10000;
         part->angle      = 1;
 
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
     }
@@ -464,7 +464,7 @@ void EggJanken_State_Destroyed(void)
         if (Zone->timer & 4) {
             int32 x                                                               = self->position.x + (RSDK.Rand(-24, 24) << 16);
             int32 y                                                               = self->position.y + (RSDK.Rand(-24, 24) << 16);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 

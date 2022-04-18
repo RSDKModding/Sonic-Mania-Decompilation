@@ -43,7 +43,7 @@ void AmoebaDroid_Create(void *data)
             switch (self->type) {
                 case AMOEBADROID_BOSS:
                     self->visible       = false;
-                    self->drawOrder     = Zone->drawOrderLow;
+                    self->drawOrder     = Zone->objectDrawLow;
                     self->drawFX        = FX_FLIP;
                     self->health        = 6;
                     self->hitbox.left   = -22;
@@ -58,7 +58,7 @@ void AmoebaDroid_Create(void *data)
                     break;
                 case AMOEBADROID_BLOB_BIG:
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     self->hitbox.left   = -40;
                     self->hitbox.top    = -40;
                     self->hitbox.right  = 40;
@@ -73,7 +73,7 @@ void AmoebaDroid_Create(void *data)
                 case AMOEBADROID_BLOB_SMALL:
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     self->hitbox.left   = -8;
                     self->hitbox.top    = -8;
                     self->hitbox.right  = 8;
@@ -131,9 +131,9 @@ void AmoebaDroid_HandleSmallBlobMovement(void)
         smallBlob->position.y = self->blobRadius * RSDK.Sin256(angle) + self->position.y;
         smallBlob->velocity.y = (self->blobRadius * RSDK.Sin256(angle) + self->position.y) - smallBlob->velocity.y;
         if ((self->blobAngleX & 0x7F) && angle < 0x80)
-            smallBlob->drawOrder = Zone->drawOrderLow - 1;
+            smallBlob->drawOrder = Zone->objectDrawLow - 1;
         else
-            smallBlob->drawOrder = Zone->drawOrderLow;
+            smallBlob->drawOrder = Zone->objectDrawLow;
         angle = (angle + 32) & 0xFF;
     }
 }
@@ -180,7 +180,7 @@ void AmoebaDroid_Explode(void)
         if (Zone->timer & 4) {
             int32 x = (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16) + self->position.x;
             int32 y = (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16) + self->position.y;
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 }
@@ -503,7 +503,7 @@ void AmoebaDroid_State_BounceAttack(void)
                 debris->velocity.y    = RSDK.Rand(-0x40000, -0x20000);
                 debris->gravityStrength       = 0x3800;
                 debris->inkEffect     = INK_BLEND;
-                debris->drawOrder     = Zone->drawOrderLow;
+                debris->drawOrder     = Zone->objectDrawLow;
                 debris->updateRange.x = 0x200000;
                 debris->updateRange.y = 0x200000;
             }
@@ -620,14 +620,14 @@ void AmoebaDroid_State_SmallBlob(void)
                 debris->velocity.y    = -0x20000;
                 debris->gravityStrength       = 0x3800;
                 debris->inkEffect     = INK_BLEND;
-                debris->drawOrder     = Zone->drawOrderLow;
+                debris->drawOrder     = Zone->objectDrawLow;
                 debris->updateRange.x = 0x200000;
                 debris->updateRange.y = 0x200000;
             }
             destroyEntity(self);
         }
         else {
-            if (self->interaction && self->drawOrder == Zone->drawOrderLow)
+            if (self->interaction && self->drawOrder == Zone->objectDrawLow)
                 AmoebaDroid_CheckPlayerHit();
 
             if (!RSDK.CheckOnScreen(self, NULL))
@@ -635,7 +635,7 @@ void AmoebaDroid_State_SmallBlob(void)
         }
     }
     else {
-        if (self->interaction && self->drawOrder == Zone->drawOrderLow)
+        if (self->interaction && self->drawOrder == Zone->objectDrawLow)
             AmoebaDroid_CheckPlayerHit();
 
         if (!RSDK.CheckOnScreen(self, NULL))

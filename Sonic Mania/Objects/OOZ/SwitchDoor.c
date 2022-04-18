@@ -52,7 +52,7 @@ void SwitchDoor_Create(void *data)
         self->updateRange.y = 0x140000;
         self->activated      = false;
         self->visible       = false;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
     }
 }
 

@@ -36,7 +36,7 @@ void FlasherMKII_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->startPos      = self->position;
         switch (self->orientation) {
             case FLASHERMKII_ORIENTATION_UP:

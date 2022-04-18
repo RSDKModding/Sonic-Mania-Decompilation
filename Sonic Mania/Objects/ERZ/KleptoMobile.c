@@ -41,7 +41,7 @@ void KleptoMobile_Create(void *data)
             self->updateRange.x   = 0x800000;
             self->updateRange.y   = 0x800000;
             self->visible         = true;
-            self->drawOrder       = Zone->drawOrderLow;
+            self->drawOrder       = Zone->objectDrawLow;
             self->drawFX          = FX_FLIP;
             self->explosionVolume = 0x200;
 
@@ -1034,7 +1034,7 @@ void KleptoMobile_State_Destroyed(void)
         if (Zone->timer & 4) {
             int x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 
@@ -1067,7 +1067,7 @@ void KleptoMobile_State_Explode(void)
         if (Zone->timer & 4) {
             int x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
     if (self->position.y >= 0x2800000) {
@@ -1095,7 +1095,7 @@ void KleptoMobile_State_CutsceneExplode(void)
             if ((Zone->timer & 4) != 0) {
                 int32 x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
                 int32 y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
             }
         }
 

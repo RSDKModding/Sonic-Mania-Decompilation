@@ -37,9 +37,9 @@ void PopcornKernel_Create(void *data)
         self->state  = PopcornKernel_State_BounceAround;
         RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 7));
         if (self->animator.frameID >= 0 && (self->animator.frameID <= 1 || self->animator.frameID == 5))
-            self->drawOrder = Zone->drawOrderLow - 1;
+            self->drawOrder = Zone->objectDrawLow - 1;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
         self->active          = ACTIVE_NORMAL;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x2000000;

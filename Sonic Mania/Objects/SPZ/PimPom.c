@@ -48,7 +48,7 @@ void PimPom_Create(void *data)
 
         self->updateRange.x = (40 - (self->length * (self->gap + 24))) << 16;
         self->updateRange.y = (40 - (self->length * (self->gap + 24))) << 16;
-        self->drawOrder     = Zone->drawOrderLow + 1;
+        self->drawOrder     = Zone->objectDrawLow + 1;
         self->newAngle      = 0x20 * self->angle;
         self->angle         = 0x20 * self->angle;
         self->negAngle      = 0x100 - self->angle;
@@ -496,7 +496,7 @@ void PimPom_EditorDraw(void)
 
     self->updateRange.x = (40 - (self->length * (self->gap + 24))) << 16;
     self->updateRange.y = (40 - (self->length * (self->gap + 24))) << 16;
-    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawOrder     = Zone->objectDrawLow + 1;
     self->newAngle      = 0x20 * self->angle;
     self->angle         = 0x20 * self->angle;
     self->negAngle      = 0x100 - self->angle;

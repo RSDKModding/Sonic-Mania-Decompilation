@@ -39,7 +39,7 @@ void Sweep_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible = true;
         self->drawFX |= FX_FLIP;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->startPos  = self->position;
         self->startDir  = self->direction;
         self->timer     = 128;

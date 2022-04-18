@@ -152,7 +152,7 @@ void Bungee_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
-    self->drawOrder     = Zone->drawOrderHigh;
+    self->drawOrder     = Zone->objectDrawHigh;
     self->startPos.x    = self->position.x;
     self->startPos.y    = self->position.y;
     self->updateRange.x = 0x800000;

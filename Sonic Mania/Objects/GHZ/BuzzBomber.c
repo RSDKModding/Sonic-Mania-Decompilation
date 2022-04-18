@@ -42,7 +42,7 @@ void BuzzBomber_Create(void *data)
     RSDK_THIS(BuzzBomber);
     self->visible = true;
     self->drawFX |= FX_FLIP;
-    self->drawOrder      = Zone->drawOrderLow;
+    self->drawOrder      = Zone->objectDrawLow;
     self->startPos.x     = self->position.x;
     self->startPos.y     = self->position.y;
     self->startDir       = self->direction;

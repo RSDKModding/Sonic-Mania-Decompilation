@@ -86,7 +86,7 @@ void Bridge_Create(void *data)
     self->visible = true;
     if (!SceneInfo->inEditor)
         ++self->length;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     int32 len           = self->length << 19;
     self->startPos      = self->position.x - len;

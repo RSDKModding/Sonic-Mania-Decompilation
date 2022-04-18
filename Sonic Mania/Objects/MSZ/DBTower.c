@@ -57,7 +57,7 @@ void DBTower_Create(void *data)
 
             if (data) {
                 self->active    = ACTIVE_NORMAL;
-                self->drawOrder = Zone->drawOrderLow;
+                self->drawOrder = Zone->objectDrawLow;
                 RSDK.SetSpriteAnimation(DBTower->aniFrames, 2, &self->bodyAnimator, true, 0);
                 self->segmentAnimators[0] = &self->bodyAnimator;
                 self->bodyPositions[0].x  = self->position.x;
@@ -66,7 +66,7 @@ void DBTower_Create(void *data)
             }
             else {
                 self->active    = ACTIVE_BOUNDS;
-                self->drawOrder = Zone->drawOrderLow + 1;
+                self->drawOrder = Zone->objectDrawLow + 1;
                 self->timer     = 0;
                 self->direction = FLIP_X;
 
@@ -190,7 +190,7 @@ void DBTower_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh + 2;
+            explosion->drawOrder       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -348,7 +348,7 @@ void DBTower_State_Destroyed(void)
             debris->velocity.x       = 4 * RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y       = 4 * RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength  = 0x4800;
-            debris->drawOrder        = Zone->drawOrderHigh;
+            debris->drawOrder        = Zone->objectDrawHigh;
             debris->updateRange.x    = 0x400000;
             debris->updateRange.y    = 0x400000;
             self->bodyPositions[i].x = -0x800000;

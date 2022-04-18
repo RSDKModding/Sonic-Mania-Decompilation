@@ -151,7 +151,7 @@ bool32 GHZ2Outro_Cutscene_HoleSceneFadeIn(EntityCutsceneSeq *host)
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
 
-        foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->drawOrderLow; }
+        foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->objectDrawLow; }
 
         foreach_all(DERobot, robot)
         {

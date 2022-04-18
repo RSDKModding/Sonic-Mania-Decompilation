@@ -38,7 +38,7 @@ void RubyPortal_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(RubyPortal->aniFrames, 0, &self->animator, true, 0);
@@ -126,7 +126,7 @@ void RubyPortal_HandleTileDestruction(void)
                 uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                    wall->drawOrder           = Zone->drawOrderLow + 1;
+                    wall->drawOrder           = Zone->objectDrawLow + 1;
                     wall->layerID             = Zone->fgLow;
                     wall->tileInfo            = tile;
                     wall->drawFX              = FX_SCALE | FX_ROTATE | FX_FLIP;
@@ -145,7 +145,7 @@ void RubyPortal_HandleTileDestruction(void)
                 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
                 if (tile != (uint16)-1) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
-                    wall->drawOrder           = Zone->drawOrderHigh;
+                    wall->drawOrder           = Zone->objectDrawHigh;
                     wall->layerID             = Zone->fgHigh;
                     wall->tileInfo            = tile;
                     wall->drawFX              = FX_SCALE | FX_ROTATE | FX_FLIP;
@@ -389,7 +389,7 @@ void RubyPortal_EditorDraw(void)
 {
     RSDK_THIS(RubyPortal);
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->scale.x       = 0x200;
     self->scale.y       = 0x200;
     self->alpha         = 0xFF;

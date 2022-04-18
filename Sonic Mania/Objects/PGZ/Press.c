@@ -91,7 +91,7 @@ void Press_Create(void *data)
     RSDK_THIS(Press);
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
 
     if (!SceneInfo->inEditor) {
         self->size *= 8;

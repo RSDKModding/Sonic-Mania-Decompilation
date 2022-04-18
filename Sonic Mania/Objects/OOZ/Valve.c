@@ -43,7 +43,7 @@ void Valve_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow - 1;
+        self->drawOrder     = Zone->objectDrawLow - 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->valveAnimator, true, 3);

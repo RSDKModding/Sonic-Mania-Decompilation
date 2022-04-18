@@ -44,7 +44,7 @@ void Hatch_LateUpdate(void) {}
 
 void Hatch_StaticUpdate(void)
 {
-    foreach_all(Hatch, hatch) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(hatch)); }
+    foreach_all(Hatch, hatch) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(hatch)); }
 }
 
 void Hatch_Draw(void)
@@ -68,7 +68,7 @@ void Hatch_Create(void *data)
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_BOUNDS;
-        self->drawOrder = Zone->drawOrderLow + 1;
+        self->drawOrder = Zone->objectDrawLow + 1;
 
         self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
         self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));
@@ -499,7 +499,7 @@ void Hatch_EditorDraw(void)
 {
     RSDK_THIS(Hatch);
 
-    self->drawOrder = Zone->drawOrderLow + 1;
+    self->drawOrder = Zone->objectDrawLow + 1;
 
     self->updateRange.x = 16 * maxVal(abs(self->subOff1.x), abs(self->subOff2.x));
     self->updateRange.y = 16 * maxVal(abs(self->subOff1.y), abs(self->subOff2.y));

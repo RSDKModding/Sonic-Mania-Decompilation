@@ -30,7 +30,7 @@ void DoorTrigger_Update(void)
             shard->state     = Debris_State_Move;
             shard->drawFX    = FX_FLIP;
             shard->direction = self->direction;
-            shard->drawOrder = Zone->drawOrderHigh - 1;
+            shard->drawOrder = Zone->objectDrawHigh - 1;
             RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, anim, &shard->animator, true, 0);
         }
     }
@@ -100,10 +100,10 @@ void DoorTrigger_Update(void)
                         shard->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                         shard->drawFX     = FX_FLIP;
                         shard->direction  = i & 3;
-                        shard->drawOrder  = Zone->drawOrderHigh;
+                        shard->drawOrder  = Zone->objectDrawHigh;
                         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &shard->animator, true, RSDK.Rand(0, 4));
                     }
-                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), spawnX, spawnY)->drawOrder = Zone->drawOrderHigh;
+                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), spawnX, spawnY)->drawOrder = Zone->objectDrawHigh;
                 }
             }
             else {
@@ -145,7 +145,7 @@ void DoorTrigger_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->updateRange.y = 0x800000;
         self->updateRange.x = 0x800000;
         RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->baseAnimator, true, 0);
@@ -183,7 +183,7 @@ void DoorTrigger_EditorDraw(void)
     RSDK_THIS(DoorTrigger);
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderHigh;
+    self->drawOrder     = Zone->objectDrawHigh;
     self->updateRange.y = 0x800000;
     self->updateRange.x = 0x800000;
     RSDK.SetSpriteAnimation(DoorTrigger->aniFrames, 0, &self->baseAnimator, true, 0);

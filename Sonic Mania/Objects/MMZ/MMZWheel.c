@@ -59,7 +59,7 @@ void MMZWheel_Create(void *data)
     RSDK_THIS(MMZWheel);
     self->active    = ACTIVE_BOUNDS;
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     if (SceneInfo->inEditor && !self->speed)
         self->speed = 1;
     self->updateRange.y = 0x800000;

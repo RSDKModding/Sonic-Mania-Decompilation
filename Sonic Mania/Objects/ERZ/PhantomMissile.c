@@ -36,7 +36,7 @@ void PhantomMissile_Create(void *data)
     RSDK_THIS(PhantomMissile);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->drawFX        = FX_ROTATE;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -99,7 +99,7 @@ void PhantomMissile_HandleExhaust(void)
         int32 y          = RSDK.Cos512(self->rotation) << 11;
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - x, self->position.y + y);
         dust->state      = Dust_State_Move;
-        dust->drawOrder  = Zone->drawOrderHigh;
+        dust->drawOrder  = Zone->objectDrawHigh;
         dust->inkEffect  = INK_BLEND;
     }
 }
@@ -161,7 +161,7 @@ void PhantomMissile_State_Launched(void)
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 1, &self->targetOutsideAnimator, true, 0);
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 2, &self->targetInsideAnimator, true, 0);
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 3, &self->targetNumbersAnimator, true, self->id);
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
         self->state     = PhantomMissile_State_Attacking;
     }
     PhantomMissile_HandleExhaust();
@@ -204,14 +204,14 @@ void PhantomMissile_State_Attacking(void)
     self->position.x += self->targetRadius * RSDK.Sin512(self->rotation);
     self->position.y -= self->targetRadius * RSDK.Cos512(self->rotation);
     if (rx * rx + ry * ry < 64) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->targetPos.x, self->targetPos.y - 0x80000)->drawOrder = Zone->objectDrawHigh;
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &self->missileAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 1, &self->targetOutsideAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->targetInsideAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->targetNumbersAnimator, true, 0);
         self->timer          = 0;
         self->reattachRadius = 0;
-        self->drawOrder      = Zone->drawOrderLow;
+        self->drawOrder      = Zone->objectDrawLow;
         self->visible        = 0;
         self->state          = PhantomMissile_State_Explode;
         Camera_ShakeScreen(0, 0, 3);

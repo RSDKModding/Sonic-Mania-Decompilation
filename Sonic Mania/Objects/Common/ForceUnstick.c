@@ -43,7 +43,7 @@ void ForceUnstick_Create(void *data)
         self->hitbox.top    = -self->hitbox.bottom;
         self->visible       = false;
         self->active        = ACTIVE_BOUNDS;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
     }
 }
 

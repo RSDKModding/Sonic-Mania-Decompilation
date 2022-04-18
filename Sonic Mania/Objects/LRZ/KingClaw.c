@@ -32,7 +32,7 @@ void KingClaw_Draw(void)
         for (int32 i = 0; i < KingClaw_ChainCount; ++i) RSDK.DrawSprite(&self->chainAnimator, &self->chainPos[i], false);
     }
     else {
-        if (SceneInfo->currentDrawGroup != Zone->drawOrderLow) 
+        if (SceneInfo->currentDrawGroup != Zone->objectDrawLow) 
             RSDK.DrawSprite(&self->clawBackAnimator, &self->drawPos, false);
         else 
             for (int32 i = 0; i < KingClaw_ChainCount; ++i) RSDK.DrawSprite(&self->chainAnimator, &self->chainPos[i], false);
@@ -48,7 +48,7 @@ void KingClaw_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawFX        = FX_ROTATE;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->targetY       = self->position.y - 0x300000;
         self->position.y    = self->position.y - 0x1000000;
         self->active        = ACTIVE_XBOUNDS;

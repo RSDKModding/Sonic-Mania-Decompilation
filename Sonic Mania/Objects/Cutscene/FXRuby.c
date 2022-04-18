@@ -61,7 +61,7 @@ void FXRuby_Create(void *data)
         self->visible = true;
         self->active  = ACTIVE_NORMAL;
         if (Zone)
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
         else
             self->drawOrder = DRAWLAYER_COUNT - 1;
         self->radiusSpeed = 4;

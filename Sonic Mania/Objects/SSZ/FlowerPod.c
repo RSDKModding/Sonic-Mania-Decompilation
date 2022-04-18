@@ -33,7 +33,7 @@ void FlowerPod_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
 
@@ -73,7 +73,7 @@ void FlowerPod_SpawnSeeds(void)
         EntityFlowerPod *seed = CREATE_ENTITY(FlowerPod, intToVoid(true), self->position.x, self->position.y);
         seed->isPermanent     = true;
         seed->velocity.x      = v;
-        seed->drawOrder       = Zone->drawOrderLow;
+        seed->drawOrder       = Zone->objectDrawLow;
         seed->velocity.y      = -0x30000;
     }
 }
@@ -102,7 +102,7 @@ void FlowerPod_State_Exploding(void)
             int32 x                    = self->position.x + (RSDK.Rand(-32, 32) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-32, 0) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 

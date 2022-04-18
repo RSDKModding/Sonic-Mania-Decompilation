@@ -67,7 +67,7 @@ void MSHologram_Create(void *data)
             self->active        = ACTIVE_BOUNDS;
             self->visible       = true;
             self->drawFX        = FX_FLIP;
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &self->projectorAnimator, true, 0);
@@ -121,7 +121,7 @@ void MSHologram_State_Explode(void)
             int32 x                      = RSDK.Rand(-8, 8) << 16;
             int32 y                      = RSDK.Rand(-8, 8) << 16;
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 

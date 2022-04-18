@@ -42,9 +42,9 @@ void LightBulb_Create(void *data)
 {
     RSDK_THIS(LightBulb);
     if (self->priority)
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     else
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
     self->visible       = true;
     self->alpha         = 256;
     self->active        = ACTIVE_BOUNDS;
@@ -119,7 +119,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
             CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;
             Player_GiveScore(player, 10);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawOrder =
-                Zone->drawOrderHigh;
+                Zone->objectDrawHigh;
 
             for (int32 i = 0; i < 6; ++i) {
                 int32 x                = self->position.x + RSDK.Rand(-0x80000, 0x80000);
@@ -133,7 +133,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
-                debris->drawOrder  = Zone->drawOrderHigh;
+                debris->drawOrder  = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 

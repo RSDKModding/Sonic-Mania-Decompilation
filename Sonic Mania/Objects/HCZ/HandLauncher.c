@@ -53,7 +53,7 @@ void HandLauncher_Create(void *data)
     RSDK_THIS(HandLauncher);
 
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->visible   = true;
     self->drawFX    = FX_FLIP;
     if (!self->speed)

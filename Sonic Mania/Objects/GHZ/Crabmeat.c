@@ -30,7 +30,7 @@ void Crabmeat_Create(void *data)
     RSDK_THIS(Crabmeat);
 
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
 
     if (data) {
         self->inkEffect     = INK_ADD;

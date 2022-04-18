@@ -39,7 +39,7 @@ void Animals_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
 #if RETRO_USE_PLUS
     if (!(globals->secrets & getMod(SECRET_RICKYMODE)))
 #endif

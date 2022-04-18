@@ -25,7 +25,7 @@ void LoveTester_LateUpdate(void) {}
 
 void LoveTester_StaticUpdate(void)
 {
-    foreach_active(LoveTester, loveTester) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(loveTester)); }
+    foreach_active(LoveTester, loveTester) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(loveTester)); }
 }
 
 void LoveTester_Draw(void)
@@ -43,7 +43,7 @@ void LoveTester_Create(void *data)
     RSDK_THIS(LoveTester);
 
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->storedPos.x   = self->position.x;
     self->storedPos.y   = self->position.y;
     self->visible       = true;
@@ -55,7 +55,7 @@ void LoveTester_Create(void *data)
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
         self->active        = ACTIVE_NORMAL;
-        self->drawOrder     = Zone->drawOrderHigh;
+        self->drawOrder     = Zone->objectDrawHigh;
         self->state         = LoveTester_State_HeartParticles;
     }
     else {
@@ -127,7 +127,7 @@ void LoveTester_DrawSprites(void)
 
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
-    if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh || SceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup != Zone->objectDrawHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 1, &self->mainAnimator, true, 0);
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
@@ -149,7 +149,7 @@ void LoveTester_DrawSprites(void)
         self->position.y = storeY;
     }
 
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh || SceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     }
@@ -264,7 +264,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
 void LoveTester_GiveScore(EntityPlayer *player)
 {
     EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, player->position.x, player->position.y);
-    bonus->drawOrder        = Zone->drawOrderHigh;
+    bonus->drawOrder        = Zone->objectDrawHigh;
     bonus->animator.frameID = 0;
     Player_GiveScore(player, 100);
     RSDK.PlaySfx(LoveTester->sfxScore, false, 255);

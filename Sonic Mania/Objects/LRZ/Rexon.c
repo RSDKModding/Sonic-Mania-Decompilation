@@ -60,7 +60,7 @@ void Rexon_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->type          = voidToInt(data);
 
     switch (self->type) {
@@ -206,7 +206,7 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
 #else
         CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
 #endif
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), rexon->position.x, rexon->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), rexon->position.x, rexon->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         rexon->position.x = x;
         rexon->position.y = y;
@@ -349,7 +349,7 @@ void Rexon_State_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(Rexon->hitboxShell.left, Rexon->hitboxShell.right) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(Rexon->hitboxShell.top, Rexon->hitboxShell.bottom) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh;
+            explosion->drawOrder       = Zone->objectDrawHigh;
         }
     }
 

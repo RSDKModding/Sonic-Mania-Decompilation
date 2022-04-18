@@ -114,7 +114,7 @@ void Turntable_Create(void *data)
 {
     RSDK_THIS(Turntable);
     self->active        = ACTIVE_BOUNDS;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->origin.x      = self->position.x;
     self->origin.y      = self->position.y;
     self->visible       = true;

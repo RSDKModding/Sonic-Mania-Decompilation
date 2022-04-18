@@ -44,7 +44,7 @@ void Tubinaut_Create(void *data)
     RSDK_THIS(Tubinaut);
 
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     if (data) {
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x400000;

@@ -72,7 +72,7 @@ void DirectorChair_Create(void *data)
         self->drawPos.y     = self->position.y;
         self->updateRange.x = 0x800000;
         self->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (self->size + 1);
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->minRetract    = (self->size >> 2) - 16;
         if (self->type == DIRECTORCHAIR_CLOSED)
             self->rotation = self->minRetract;
@@ -323,7 +323,7 @@ void DirectorChair_EditorDraw(void)
     self->drawPos.y     = self->position.y;
     self->updateRange.x = 0x800000;
     self->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (self->size + 1);
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->minRetract    = (self->size >> 2) - 16;
     if (self->type == DIRECTORCHAIR_CLOSED)
         self->rotation = self->minRetract;

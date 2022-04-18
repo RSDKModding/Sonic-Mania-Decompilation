@@ -36,7 +36,7 @@ void CrimsonEye_Create(void *data)
                 case CRIMSONEYE_CONTAINER:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderLow + 1;
+                    self->drawOrder = Zone->objectDrawLow + 1;
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 0, &self->animator, true, 0);
                     self->updateRange.x        = 0x800000;
                     self->updateRange.y        = 0x800000;
@@ -49,7 +49,7 @@ void CrimsonEye_Create(void *data)
                 case CRIMSONEYE_CORE:
                     self->active    = ACTIVE_NEVER;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderLow + 1;
+                    self->drawOrder = Zone->objectDrawLow + 1;
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &self->animator, true, 0);
                     self->originPos     = self->position;
                     self->state         = CrimsonEye_StateCore_ContainerActive;
@@ -62,7 +62,7 @@ void CrimsonEye_Create(void *data)
                     self->drawFX    = FX_SCALE;
                     self->active    = ACTIVE_NEVER;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderLow + 1;
+                    self->drawOrder = Zone->objectDrawLow + 1;
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 2, &self->animator, true, 0);
                     self->scale.x       = 0x200;
                     self->scale.y       = 0x200;
@@ -75,7 +75,7 @@ void CrimsonEye_Create(void *data)
                 case CRIMSONEYE_ARROW:
                     self->active    = ACTIVE_BOUNDS;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderLow;
+                    self->drawOrder = Zone->objectDrawLow;
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 3, &self->animator, true, 0);
                     self->scale.x       = 0x200;
                     self->scale.y       = 0x200;
@@ -88,7 +88,7 @@ void CrimsonEye_Create(void *data)
                 case CRIMSONEYE_SPIKE:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderLow + 1;
+                    self->drawOrder = Zone->objectDrawLow + 1;
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 2, &self->animator, true, 0);
                     self->state         = CrimsonEye_StateSpike_Harmful;
                     self->stateDraw     = CrimsonEye_Draw_Simple;
@@ -99,7 +99,7 @@ void CrimsonEye_Create(void *data)
                 case CRIMSONEYE_SHOT:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderLow + 1;
+                    self->drawOrder = Zone->objectDrawLow + 1;
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 4, &self->animator, true, 0);
                     self->state         = CrimsonEye_State_Shot;
                     self->stateDraw     = CrimsonEye_Draw_Simple;
@@ -197,7 +197,7 @@ void CrimsonEye_Explode(void)
         }
 
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS)), x, y);
-        explosion->drawOrder       = Zone->drawOrderHigh + 2;
+        explosion->drawOrder       = Zone->objectDrawHigh + 2;
     }
 }
 
@@ -349,7 +349,7 @@ void CrimsonEye_StateContainer_CoreActive(void)
 
     if (CrimsonEye->health == 8 && !self->animator.frameID) {
         self->animator.frameID = 1;
-        self->drawOrder        = Zone->drawOrderLow;
+        self->drawOrder        = Zone->objectDrawLow;
 
         // Destroy Container
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
@@ -357,7 +357,7 @@ void CrimsonEye_StateContainer_CoreActive(void)
         debris->velocity.x    = -0x20000;
         debris->velocity.y    = -0x20000;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
         debris->delay         = 60;
@@ -367,16 +367,16 @@ void CrimsonEye_StateContainer_CoreActive(void)
         debris->velocity.x    = 0x20000;
         debris->velocity.y    = -0x20000;
         debris->gravityStrength       = 0x3800;
-        debris->drawOrder     = Zone->drawOrderHigh;
+        debris->drawOrder     = Zone->objectDrawHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
         debris->delay         = 60;
     }
 
-    if (self->drawOrder > Zone->drawOrderLow) {
+    if (self->drawOrder > Zone->objectDrawLow) {
         foreach_active(Ring, ring)
         {
-            if (ring->drawOrder == Zone->drawOrderLow)
+            if (ring->drawOrder == Zone->objectDrawLow)
                 ring->drawOrder++;
         }
     }
@@ -433,7 +433,7 @@ void CrimsonEye_StateContainer_Explode(void)
             int32 x                    = self->position.x + RSDK.Rand(-0x200000, 0x200000);
             int32 y                    = self->position.y + RSDK.Rand(-0x800000, 0x800000);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh + 2;
+            explosion->drawOrder       = Zone->objectDrawHigh + 2;
         }
     }
     if (++self->timer == 48) {
@@ -636,7 +636,7 @@ void CrimsonEye_DestroyBall(void)
         EntityCrimsonEye *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + CrimsonEye->ballDestroyOrder[CrimsonEye->destroyedBallCount], CrimsonEye);
         child->state            = CrimsonEye_StateBall_Destroyed;
         child->timer            = 30;
-        child->drawOrder        = Zone->drawOrderLow;
+        child->drawOrder        = Zone->objectDrawLow;
         child->scale.y          = 0x200;
         child->scale.x          = 0x200;
         ++CrimsonEye->destroyedBallCount;
@@ -678,7 +678,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = -0x30000;
                     debris->velocity.y    = -0x40000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 120;
@@ -688,7 +688,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = 0x30000;
                     debris->velocity.y    = -0x40000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 120;
@@ -698,7 +698,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = -0x20000;
                     debris->velocity.y    = -0x20000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 120;
@@ -708,7 +708,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = 0x20000;
                     debris->velocity.y    = -0x20000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 120;
@@ -718,7 +718,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = 0;
                     debris->velocity.y    = -0x30000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
@@ -727,7 +727,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = 0;
                     debris->velocity.y    = 0;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
@@ -738,7 +738,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = -0x20000;
                     debris->velocity.y    = -0x20000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
@@ -749,7 +749,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = 0x20000;
                     debris->velocity.y    = -0x20000;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
@@ -761,7 +761,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = velX;
                     debris->velocity.y    = velY;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 60;
@@ -771,7 +771,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = velX;
                     debris->velocity.y    = velY;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 60;
@@ -781,7 +781,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->velocity.x    = velX;
                     debris->velocity.y    = velY;
                     debris->gravityStrength       = 0x3800;
-                    debris->drawOrder     = Zone->drawOrderHigh;
+                    debris->drawOrder     = Zone->objectDrawHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
                     debris->delay         = 60;
@@ -813,7 +813,7 @@ void CrimsonEye_StateCore_BreakOut(void)
     if (--self->timer <= 0) {
         self->timer = 90;
         --CrimsonEye->health;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->state     = CrimsonEye_StateCore_BrokenOut;
     }
 }
@@ -829,7 +829,7 @@ void CrimsonEye_StateCore_BrokenOut(void)
         CrimsonEye->elevatorGravity = 0x4000;
         self->velocity.x            = -0x10000;
         self->timer                 = 90;
-        self->drawOrder             = Zone->drawOrderLow + 1;
+        self->drawOrder             = Zone->objectDrawLow + 1;
         self->state                 = CrimsonEye_StateCore_Hovering;
     }
 }
@@ -1006,14 +1006,14 @@ void CrimsonEye_StateBall_Spinning(void)
     self->position.x = CrimsonEye->ballSpinRadius * RSDK.Cos256(angle) + CrimsonEye->containerPos.x;
     self->position.y = (RSDK.Sin256(CrimsonEye->ballSpinAngleY) << 13) + CrimsonEye->containerPos.y + CrimsonEye->ballOffsetY;
     if (angle <= 0x80) {
-        self->drawOrder        = Zone->drawOrderLow;
+        self->drawOrder        = Zone->objectDrawLow;
         self->animator.frameID = 0;
         self->scale.x          = 2 * abs(angle - 0x40) + 0x182;
         self->scale.y          = 2 * abs(angle - 0x40) + 0x182;
     }
     else {
         self->animator.frameID = 1;
-        self->drawOrder        = Zone->drawOrderLow + 1;
+        self->drawOrder        = Zone->objectDrawLow + 1;
         self->scale.x          = 2 * (0x13F - abs(angle - 0xC0));
         self->scale.y          = 2 * (0x13F - abs(angle - 0xC0));
         CrimsonEye_CheckPlayerCollisions_Ball();
@@ -1029,7 +1029,7 @@ void CrimsonEye_StateBall_Destroyed(void)
     if (--self->timer <= 0) {
         int32 angle = 0;
         RSDK.PlaySfx(CrimsonEye->sfxExplosion, false, 255);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh + 2;
         for (int32 i = 0; i < 8; ++i) {
             EntityCrimsonEye *child = CREATE_ENTITY(CrimsonEye, intToVoid(CRIMSONEYE_SPIKE), self->position.x, self->position.y);
             child->animator.frameID = i + 2;
@@ -1125,7 +1125,7 @@ void CrimsonEye_EditorDraw(void)
     RSDK_THIS(CrimsonEye);
     switch (self->type) {
         case CRIMSONEYE_CONTAINER:
-            self->drawOrder = Zone->drawOrderLow + 1;
+            self->drawOrder = Zone->objectDrawLow + 1;
             RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 0, &self->animator, true, 0);
             self->updateRange.x        = 0x800000;
             self->updateRange.y        = 0x800000;
@@ -1135,7 +1135,7 @@ void CrimsonEye_EditorDraw(void)
             break;
 
         case CRIMSONEYE_CORE:
-            self->drawOrder = Zone->drawOrderLow + 1;
+            self->drawOrder = Zone->objectDrawLow + 1;
             RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &self->animator, true, 0);
             self->originPos     = self->position;
             self->stateDraw     = CrimsonEye_Draw_Core;
@@ -1145,7 +1145,7 @@ void CrimsonEye_EditorDraw(void)
 
         case CRIMSONEYE_BALL:
             self->drawFX    = FX_SCALE;
-            self->drawOrder = Zone->drawOrderLow + 1;
+            self->drawOrder = Zone->objectDrawLow + 1;
             RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 2, &self->animator, true, 0);
             self->scale.x       = 0x200;
             self->scale.y       = 0x200;
@@ -1155,7 +1155,7 @@ void CrimsonEye_EditorDraw(void)
             break;
 
         case CRIMSONEYE_ARROW:
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
             RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 3, &self->animator, true, 0);
             self->scale.x       = 0x200;
             self->scale.y       = 0x200;
@@ -1165,7 +1165,7 @@ void CrimsonEye_EditorDraw(void)
             break;
 
         case CRIMSONEYE_SPIKE:
-            self->drawOrder = Zone->drawOrderLow + 1;
+            self->drawOrder = Zone->objectDrawLow + 1;
             RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 2, &self->animator, true, 0);
             self->stateDraw     = CrimsonEye_Draw_Simple;
             self->updateRange.x = 0x800000;
@@ -1173,7 +1173,7 @@ void CrimsonEye_EditorDraw(void)
             break;
 
         case CRIMSONEYE_SHOT:
-            self->drawOrder = Zone->drawOrderLow + 1;
+            self->drawOrder = Zone->objectDrawLow + 1;
             RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 4, &self->animator, true, 0);
             self->stateDraw     = CrimsonEye_Draw_Simple;
             self->updateRange.x = 0x800000;

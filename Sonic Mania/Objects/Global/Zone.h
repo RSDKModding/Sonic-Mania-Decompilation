@@ -81,8 +81,8 @@ struct ObjectZone {
     uint16 moveID;
     uint8 fgLayerLow;
     uint8 fgLayerHigh;
-    uint8 drawOrderLow;
-    uint8 drawOrderHigh;
+    uint8 objectDrawLow;
+    uint8 objectDrawHigh;
     uint8 playerDrawLow;
     uint8 playerDrawHigh;
     uint8 hudDrawOrder;

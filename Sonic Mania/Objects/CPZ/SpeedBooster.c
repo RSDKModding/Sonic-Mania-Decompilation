@@ -40,7 +40,7 @@ void SpeedBooster_Create(void *data)
     if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
         self->drawOrder = Zone->playerDrawLow;
     else
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
     self->drawPos.x     = self->position.x;
     self->drawPos.y     = self->position.y;
     self->updateRange.x = 0x400000;

@@ -134,7 +134,7 @@ void Water_Create(void *data)
                 self->active = ACTIVE_BOUNDS;
                 self->drawFX = FX_FLIP;
                 switch (self->priority) {
-                    case 0: self->drawOrder = Zone->drawOrderLow - 1; break;
+                    case 0: self->drawOrder = Zone->objectDrawLow - 1; break;
                     case 1: self->drawOrder = Zone->playerDrawLow; break;
                     case 2: self->drawOrder = Zone->playerDrawHigh; break;
                     case 3: self->drawOrder = Zone->hudDrawOrder - 1; break;
@@ -156,7 +156,7 @@ void Water_Create(void *data)
 
             case WATER_BUBBLER:
             case WATER_HCZ_BUBBLER:
-                self->drawOrder     = Zone->drawOrderLow;
+                self->drawOrder     = Zone->objectDrawLow;
                 self->inkEffect     = INK_ADD;
                 self->alpha         = 0x100;
                 self->active        = ACTIVE_BOUNDS;
@@ -184,7 +184,7 @@ void Water_Create(void *data)
                 break;
 
             case WATER_BUBBLE_SPAWNER:
-                self->drawOrder     = Zone->drawOrderLow;
+                self->drawOrder     = Zone->objectDrawLow;
                 self->active        = ACTIVE_BOUNDS;
                 self->updateRange.x = 0x100000;
                 self->updateRange.y = 0x100000;
@@ -1402,6 +1402,12 @@ void Water_EditorLoad(void)
     RSDK_ENUM_VAR("Adjuster", WATER_ADJUST);
     RSDK_ENUM_VAR("Bubbler (Big Bubble)", WATER_HCZ_BUBBLER);
     RSDK_ENUM_VAR("Ride Bubble Spawner", WATER_BUBBLE_SPAWNER);
+
+    RSDK_ACTIVE_VAR(Water, priority);
+    RSDK_ENUM_VAR("Object Layer (Low)", WATER_PRIORITY_OBJECT_LOW);
+    RSDK_ENUM_VAR("Player Layer (Low)", WATER_PRIORITY_PLAYER_LOW);
+    RSDK_ENUM_VAR("Player Layer (High)", WATER_PRIORITY_PLAYER_HIGH);
+    RSDK_ENUM_VAR("HUD Layer (Low)", WATER_PRIORITY_HUD_LOW);
 }
 #endif
 

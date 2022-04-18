@@ -41,7 +41,7 @@ void TMZ3Setup_StageLoad(void)
     TMZ3Setup->palDelay = RSDK.Rand(2, 60);
     TMZ3Setup->palTimer = 192;
 
-    ++Zone->drawOrderLow;
+    ++Zone->objectDrawLow;
 
     Animals->animalTypes[0] = ANIMAL_TOCKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;

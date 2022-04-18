@@ -211,7 +211,7 @@ bool32 EncoreIntro_Cutscene_SetupAIZEncore(EntityCutsceneSeq *host)
             player1->groundVel  = 0;
             player1->velocity.x = 0;
             player1->direction  = FLIP_NONE;
-            foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->drawOrderLow; }
+            foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->objectDrawLow; }
             Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
             Zone->playerBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
         }
@@ -861,7 +861,7 @@ bool32 EncoreIntro_Cutscene_KingActivate(EntityCutsceneSeq *host)
         buddy->velocity.x = player->velocity.x;
 
     switch (host->timer) {
-        case 9: ruby->drawOrder = Zone->drawOrderLow; break;
+        case 9: ruby->drawOrder = Zone->objectDrawLow; break;
 
         case 42: RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->mainAnimator, true, 0); break;
 

@@ -42,7 +42,7 @@ void IceBomba_Create(void *data)
 {
     RSDK_THIS(IceBomba);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     if (!SceneInfo->inEditor) {
         self->dip <<= 7;
         self->drawFX |= FX_FLIP;
@@ -145,7 +145,7 @@ void IceBomba_Fly_Collide(void)
             self->position.y += 0x1A0000;
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(-1, 0, &self->bombAnimator, true, 0);
                 self->state = IceBomba_State_FlyAway;
                 Ice_FreezePlayer(player);
@@ -275,7 +275,7 @@ void IceBomba_State_Bomb(void)
     if (RSDK.CheckOnScreen(self, NULL)) {
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             RSDK.PlaySfx(IceBomba->sfxExplosion, false, 255);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PILLAR), self->position.x, self->position.y + 0x100000);
             RSDK.PlaySfx(IceBomba->sfxFreeze, false, 0xFF);
             destroyEntity(self);
@@ -285,7 +285,7 @@ void IceBomba_State_Bomb(void)
         {
             if (Player_CheckCollisionTouch(player, self, &IceBomba->hitboxBomb)) {
                 RSDK.PlaySfx(IceBomba->sfxExplosion, false, 0xFF);
-                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
                 Ice_FreezePlayer(player);
                 destroyEntity(self);
                 foreach_break;

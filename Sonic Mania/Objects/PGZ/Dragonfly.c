@@ -45,7 +45,7 @@ void Dragonfly_Create(void *data)
 {
     RSDK_THIS(Dragonfly);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
 
     if (!SceneInfo->inEditor) {
         if (!self->speed) {

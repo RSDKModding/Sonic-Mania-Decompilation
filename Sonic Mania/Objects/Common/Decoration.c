@@ -53,9 +53,9 @@ void Decoration_Create(void *data)
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
         if (RSDK.GetFrameID(&self->animator)) // ideally use 'h'
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
     }
 }
 

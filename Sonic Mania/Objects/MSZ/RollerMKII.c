@@ -29,7 +29,7 @@ void RollerMKII_Create(void *data)
 {
     RSDK_THIS(RollerMKII);
     self->visible         = true;
-    self->drawOrder       = Zone->drawOrderLow;
+    self->drawOrder       = Zone->objectDrawLow;
     self->startPos        = self->position;
     self->startDir        = self->direction;
     self->drawFX          = FX_FLIP;

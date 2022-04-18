@@ -42,7 +42,7 @@ void Kanabun_Create(void *data)
     self->drawFX = FX_FLIP | FX_ROTATE | FX_SCALE;
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->startPos      = self->position;
         self->startDir      = self->direction;
         self->active        = ACTIVE_BOUNDS;
@@ -113,9 +113,9 @@ void Kanabun_HandleMovement(void)
     self->scale.x = (abs(RSDK.Sin512(((self->angle >> 1) + 0x80) & 0x1FF)) >> 1) + 0x100;
     self->scale.y = self->scale.x;
     if (((uint32)(self->angle - 0x80) & 0x1FF) >= 0x100)
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
     else
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
 }
 
 void Kanabun_State_Setup(void)
@@ -154,7 +154,7 @@ void Kanabun_State_Moving(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    if (self->drawOrder == Zone->drawOrderHigh)
+    if (self->drawOrder == Zone->objectDrawHigh)
         Kanabun_CheckPlayerCollisions();
 
     Kanabun_CheckOffScreen();
@@ -174,7 +174,7 @@ void Kanabun_State_Turning(void)
         self->state = Kanabun_State_Moving;
     }
     else {
-        if (self->drawOrder == Zone->drawOrderHigh)
+        if (self->drawOrder == Zone->objectDrawHigh)
             Kanabun_CheckPlayerCollisions();
         Kanabun_CheckOffScreen();
     }

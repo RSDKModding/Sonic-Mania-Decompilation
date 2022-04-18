@@ -44,7 +44,7 @@ void FXExpandRing_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible     = true;
         self->active      = ACTIVE_NORMAL;
-        self->drawOrder   = Zone->drawOrderHigh;
+        self->drawOrder   = Zone->objectDrawHigh;
         self->expandMax   = 64;
         self->expandSpeed = 8;
         self->state       = FXExpandRing_State_FadeIn;

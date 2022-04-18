@@ -56,7 +56,7 @@ void HiLoSign_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_SCALE;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->scale.x       = 0x200;
         self->scale.y       = 0x200;
         self->state         = HiLoSign_State_Spinning;

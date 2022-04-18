@@ -79,7 +79,7 @@ void PaintingEyes_Create(void *data)
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow - 1;
+        self->drawOrder     = Zone->objectDrawLow - 1;
     }
 }
 

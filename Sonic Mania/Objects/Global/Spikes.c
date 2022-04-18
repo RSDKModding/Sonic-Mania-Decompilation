@@ -308,9 +308,9 @@ void Spikes_Create(void *data)
         self->visible = true;
         self->type    = (self->type >> 1) & 1;
         if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-            self->drawOrder = Zone->drawOrderHigh;
+            self->drawOrder = Zone->objectDrawHigh;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
         self->alpha = 128;
 
         switch (self->type) {

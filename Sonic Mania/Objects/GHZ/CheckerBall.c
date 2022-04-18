@@ -38,7 +38,7 @@ void CheckerBall_Create(void *data)
 {
     RSDK_THIS(CheckerBall);
     self->visible         = true;
-    self->drawOrder       = Zone->drawOrderLow;
+    self->drawOrder       = Zone->objectDrawLow;
     self->active          = ACTIVE_BOUNDS;
     self->updateRange.x   = 0x400000;
     self->updateRange.y   = 0x400000;
@@ -293,12 +293,12 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
 
     if (RSDK.CheckObjectCollisionTouchBox(badnik, hitbox, self, &CheckerBall->hitboxBall)) {
         CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), badnik->position.x, badnik->position.y);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnik->position.x, badnik->position.y - 0x100000)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnik->position.x, badnik->position.y - 0x100000)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 0xFF);
 
         EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, badnik->position.x, badnik->position.y);
-        bonus->drawOrder        = Zone->drawOrderHigh;
+        bonus->drawOrder        = Zone->objectDrawHigh;
         bonus->animator.frameID = player1->scoreBonus;
         switch (player1->scoreBonus) {
             case 0: Player_GiveScore(player1, 100); break;
@@ -573,7 +573,7 @@ void CheckerBall_HandleObjectCollisions(void)
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
-                debris->drawOrder  = Zone->drawOrderHigh;
+                debris->drawOrder  = Zone->objectDrawHigh;
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 

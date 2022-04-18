@@ -96,7 +96,7 @@ void WeatherMobile_Create(void *data)
             switch (self->type) {
                 case WEATHERMOBILE_EGGMAN:
                     self->visible       = false;
-                    self->drawOrder     = Zone->drawOrderLow;
+                    self->drawOrder     = Zone->objectDrawLow;
                     self->hitbox.left   = -22;
                     self->hitbox.top    = -22;
                     self->hitbox.right  = 22;
@@ -116,7 +116,7 @@ void WeatherMobile_Create(void *data)
                 case WEATHERMOBILE_LIGHTS:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderHigh;
+                    self->drawOrder = Zone->objectDrawHigh;
                     self->drawFX    = FX_FLIP;
                     RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 12, &self->mainAnimator, true, 0);
                     RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 12, &self->eggmanAnimator, true, 2);
@@ -135,7 +135,7 @@ void WeatherMobile_Create(void *data)
                 case WEATHERMOBILE_WIND:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderHigh;
+                    self->drawOrder = Zone->objectDrawHigh;
                     if (RSDK.Rand(0, 8) == 4) {
                         RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 14, &self->mainAnimator, true, 0);
                     }
@@ -159,7 +159,7 @@ void WeatherMobile_Create(void *data)
                 case WEATHERMOBILE_RAIN:
                     self->active    = ACTIVE_NORMAL;
                     self->visible   = true;
-                    self->drawOrder = Zone->drawOrderHigh;
+                    self->drawOrder = Zone->objectDrawHigh;
                     self->drawFX    = FX_ROTATE;
                     self->groundVel = 512;
                     RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 19, &self->mainAnimator, true, 0);
@@ -169,7 +169,7 @@ void WeatherMobile_Create(void *data)
                 case WEATHERMOBILE_CLOUD:
                     self->active        = ACTIVE_NORMAL;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     self->hitbox.left   = -8;
                     self->hitbox.top    = 0;
                     self->hitbox.right  = 8;
@@ -839,7 +839,7 @@ void WeatherMobile_State_Defeated(void)
         if (Zone->timer & 4) {
             int x = self->position.x + (RSDK.Rand(self->hitbox.left, self->hitbox.right) << 16);
             int y = self->position.y + (RSDK.Rand(self->hitbox.top, self->hitbox.bottom) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 
@@ -852,7 +852,7 @@ void WeatherMobile_State_Defeated(void)
             debris->velocity.x    = -0x20000;
             debris->velocity.y    = -0x10000;
             debris->gravityStrength       = 0x3800;
-            debris->drawOrder     = Zone->drawOrderHigh;
+            debris->drawOrder     = Zone->objectDrawHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
 
@@ -861,7 +861,7 @@ void WeatherMobile_State_Defeated(void)
             debris->velocity.x    = 0x20000;
             debris->velocity.y    = -0x10000;
             debris->gravityStrength       = 0x3800;
-            debris->drawOrder     = Zone->drawOrderHigh;
+            debris->drawOrder     = Zone->objectDrawHigh;
             debris->updateRange.x = 0x800000;
             debris->updateRange.y = 0x800000;
             RSDK.SetSpriteAnimation(-1, 0, &self->radarDishLAnimator, true, 0);

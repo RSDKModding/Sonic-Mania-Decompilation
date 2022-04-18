@@ -284,7 +284,7 @@ void AIZSetup_SetupObjects(void)
     foreach_all(Platform, platform)
     {
         if (!platform->frameID) {
-            platform->drawOrder = Zone->drawOrderHigh - 1;
+            platform->drawOrder = Zone->objectDrawHigh - 1;
             AIZSetup->platform  = platform;
             foreach_break;
         }

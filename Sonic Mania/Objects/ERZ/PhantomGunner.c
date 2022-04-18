@@ -115,7 +115,7 @@ void PhantomGunner_HandleDudExhaust(void)
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(self->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(self->rotation) << 4;
-        debris->drawOrder  = Zone->drawOrderLow;
+        debris->drawOrder  = Zone->objectDrawLow;
         debris->timer      = 41;
     }
 }
@@ -130,7 +130,7 @@ void PhantomGunner_HandleMalfunctionDudExhaust(void)
             int32 y              = 0x600 * RSDK.Cos512(self->rotation);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + x, self->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
-            debris->drawOrder = Zone->drawOrderHigh;
+            debris->drawOrder = Zone->objectDrawHigh;
             debris->drawFX    = FX_SCALE;
             debris->timer     = 52;
             debris->scale.x   = (self->scale.x * RSDK.Rand(128, 384)) >> 9;
@@ -144,7 +144,7 @@ void PhantomGunner_HandleMalfunctionDudExhaust(void)
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(self->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(self->rotation) << 4;
-        debris->drawOrder  = Zone->drawOrderLow;
+        debris->drawOrder  = Zone->objectDrawLow;
         debris->drawFX     = FX_SCALE;
         debris->timer      = 41;
         debris->scale.y    = self->scale.x;
@@ -160,7 +160,7 @@ void PhantomGunner_SpawnDust(void)
         int32 y          = self->position.y + RSDK.Rand(-0x280000, -0x180000);
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, x, y);
         dust->state      = Dust_State_Move;
-        dust->drawOrder  = Zone->drawOrderHigh;
+        dust->drawOrder  = Zone->objectDrawHigh;
     }
 }
 
@@ -208,7 +208,7 @@ void PhantomGunner_CheckPlayerMissileCollisions(void)
                 if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
                     explosion->interaction     = false;
-                    explosion->drawOrder       = Zone->drawOrderHigh;
+                    explosion->drawOrder       = Zone->objectDrawHigh;
                     if (self->parachuteAnimator.animationID == 12 && self->parachuteAnimator.frameID > 0)
                         PhantomGunner_SpawnDust();
                     RSDK.PlaySfx(PhantomEgg->sfxExplosion2, false, 255);
@@ -403,7 +403,7 @@ void PhantomGunner_State_LaunchedRocket(void)
         else
             self->type = (PhantomGunner->launchedRocketID & 1) + PHANTOMGUNNER_MORTAR;
         ++PhantomGunner->launchedRocketID;
-        self->drawOrder  = Zone->drawOrderLow;
+        self->drawOrder  = Zone->objectDrawLow;
         self->position.y = (ScreenInfo->position.y - 64) << 16;
 
         bool32 canFire = false;
@@ -545,7 +545,7 @@ void PhantomGunner_State_Dud_Active(void)
     if (self->timer == 320) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y);
         explosion->interaction     = false;
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
         destroyEntity(self);
     }
     else {

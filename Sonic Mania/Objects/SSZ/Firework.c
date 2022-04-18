@@ -82,7 +82,7 @@ void Firework_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_ROTATE | FX_FLIP;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
@@ -286,7 +286,7 @@ void Firework_HandleDebrisSpawn(void)
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->position.x -= 0x600 * RSDK.Cos1024(self->angle);
         debris->position.y -= 0x600 * RSDK.Sin1024(self->angle);
-        debris->drawOrder = Zone->drawOrderLow;
+        debris->drawOrder = Zone->objectDrawLow;
         debris->timer     = 52;
     }
 }
@@ -311,7 +311,7 @@ void Firework_HandleRideEnd(bool32 crashed)
 
     self->rideActive = false;
     if (crashed) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
         RSDK.PlaySfx(Firework->sfxExplosion2, false, 255);
         Firework_RemovePlayers(true);
         self->state = Firework_State_Explode;
@@ -452,7 +452,7 @@ void Firework_State_Setup(void)
     self->activated      = false;
     self->moveVelocity   = 0;
     self->ridePos        = 0;
-    self->drawOrder      = Zone->drawOrderLow;
+    self->drawOrder      = Zone->objectDrawLow;
     RSDK.SetSpriteAnimation(Firework->aniFrames, 0, &self->mainAnimator, true, 0);
     self->state = Firework_State_AwaitPlayerRide;
 }

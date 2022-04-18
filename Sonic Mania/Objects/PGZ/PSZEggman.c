@@ -42,7 +42,7 @@ void PSZEggman_Create(void *data)
     RSDK_THIS(PSZEggman);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->eggmanPos.x     = self->position.x - 0x180000;
         self->eggmanPos.y     = self->position.y + 0x10000;
         self->alpha         = 64;
@@ -88,7 +88,7 @@ void PSZEggman_EditorDraw(void)
 {
     RSDK_THIS(PSZEggman);
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->eggmanPos.x     = self->position.x - 0x180000;
     self->eggmanPos.y     = self->position.y + 0x10000;
     self->alpha         = 0x40;

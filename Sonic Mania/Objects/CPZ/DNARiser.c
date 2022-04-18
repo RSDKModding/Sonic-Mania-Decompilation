@@ -32,7 +32,7 @@ void DNARiser_LateUpdate(void) {}
 
 void DNARiser_StaticUpdate(void)
 {
-    foreach_active(DNARiser, entity) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(entity)); }
+    foreach_active(DNARiser, entity) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(entity)); }
 }
 
 void DNARiser_Draw(void)
@@ -46,7 +46,7 @@ void DNARiser_Create(void *data)
     RSDK_THIS(DNARiser);
     self->visible   = true;
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = Zone->drawOrderLow + 1;
+    self->drawOrder = Zone->objectDrawLow + 1;
     self->amplitude = 0x2E0000;
     if (SceneInfo->inEditor) {
         self->speed.x = 0;
@@ -480,7 +480,7 @@ void DNARiser_Draw_Main(void)
     self->scale.x = 0x200;
     self->scale.y = 0x200;
     self->drawFX  = FX_NONE;
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh) {
         if (isYellowBig) {
             drawPos.x = sineOff + self->position.x;
             drawPos.y = self->position.y;
@@ -551,7 +551,7 @@ void DNARiser_Draw_Helix(void)
     self->scale.y = 0x200;
     self->drawFX  = FX_NONE;
     self->drawFX  = INK_NONE;
-    if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh && !(self->startHelixPos & 1)) {
+    if (SceneInfo->currentDrawGroup != Zone->objectDrawHigh && !(self->startHelixPos & 1)) {
         if (isYellowBig) {
             drawPos.x = self->position.x - sineOff;
             drawPos.y = self->position.y;
@@ -588,7 +588,7 @@ void DNARiser_Draw_Helix(void)
 
         for (int32 i = 0; i < 8; ++i) {
             bool32 isYellowSmall = (isYellowBig && i <= 3) || (!isYellowBig && i >= 4);
-            bool32 canDraw       = SceneInfo->currentDrawGroup == Zone->drawOrderHigh
+            bool32 canDraw       = SceneInfo->currentDrawGroup == Zone->objectDrawHigh
                                  ? ((isYellowBig && !isYellowSmall) || (!isYellowBig && isYellowSmall))
                                  : ((isYellowBig && isYellowSmall) || (!isYellowBig && !isYellowSmall));
 
@@ -603,7 +603,7 @@ void DNARiser_Draw_Helix(void)
         }
     }
 
-    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh && !(self->startHelixPos & 1)) {
+    if (SceneInfo->currentDrawGroup == Zone->objectDrawHigh && !(self->startHelixPos & 1)) {
         if (isYellowBig) {
             drawPos.x = self->position.x + sineOff;
             drawPos.y = self->position.y;

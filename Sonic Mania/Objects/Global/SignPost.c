@@ -114,7 +114,7 @@ void SignPost_Create(void *data)
                     self->updateRange.y = bottom + 0x400000;
             }
             self->visible   = true;
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
             self->spinSpeed = 0x3000;
             self->spinCount = 8;
             self->maxAngle  = 0x10000;
@@ -495,7 +495,7 @@ void SignPost_State_Fall(void)
                     self->velocity.y = -0x20000;
                     RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
                     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
-                    scoreBonus->drawOrder        = Zone->drawOrderHigh;
+                    scoreBonus->drawOrder        = Zone->objectDrawHigh;
                     scoreBonus->animator.frameID = 0;
                     Player_GiveScore(player, 100);
                 }

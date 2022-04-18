@@ -37,7 +37,7 @@ void Shutterbug_Create(void *data)
 {
     RSDK_THIS(Shutterbug);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderHigh;
+    self->drawOrder = Zone->objectDrawHigh;
 
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;

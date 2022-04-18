@@ -42,7 +42,7 @@ void SSZEggman_Create(void *data)
     RSDK_THIS(SSZEggman);
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->drawFX        = FX_FLIP;
         self->alpha         = 64;
         self->active        = ACTIVE_BOUNDS;

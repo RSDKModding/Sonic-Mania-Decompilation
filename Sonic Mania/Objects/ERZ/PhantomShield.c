@@ -48,7 +48,7 @@ void PhantomShield_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
         self->parent        = (Entity *)data;
         self->active        = ACTIVE_NORMAL;
         self->drawFX        = FX_FLIP;

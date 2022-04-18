@@ -70,7 +70,7 @@ void EggPistonsMKII_Create(void *data)
                     self->hitbox.bottom      = 6;
                     self->state              = EggPistonsMKII_State_SetupArena;
                     self->visible            = false;
-                    self->drawOrder          = Zone->drawOrderLow;
+                    self->drawOrder          = Zone->objectDrawLow;
                     EggPistonsMKII->controller = self;
                     break;
 
@@ -84,7 +84,7 @@ void EggPistonsMKII_Create(void *data)
                     self->hitbox.bottom = 8;
                     self->state         = EggPistonsMKII_StatePiston_Idle;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderLow + 1;
+                    self->drawOrder     = Zone->objectDrawLow + 1;
                     break;
 
                 case EGGPISTON_BARRIER:
@@ -97,7 +97,7 @@ void EggPistonsMKII_Create(void *data)
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderLow;
+                    self->drawOrder     = Zone->objectDrawLow;
                     break;
 
                 case EGGPISTON_PLASMABALL:
@@ -110,7 +110,7 @@ void EggPistonsMKII_Create(void *data)
                     self->updateRange.x = 0x800000;
                     self->updateRange.y = 0x800000;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderLow;
+                    self->drawOrder     = Zone->objectDrawLow;
                     break;
 
                 case EGGPISTON_ALARM:
@@ -118,7 +118,7 @@ void EggPistonsMKII_Create(void *data)
                     self->updateRange.y = 0x800000;
                     self->state         = EggPistonsMKII_StateAlarm_Active;
                     self->visible       = true;
-                    self->drawOrder     = Zone->drawOrderHigh;
+                    self->drawOrder     = Zone->objectDrawHigh;
                     break;
 
                 default: break;
@@ -245,7 +245,7 @@ void EggPistonsMKII_Explode(void)
         if (Zone->timer & 4) {
             int32 x = self->position.x + (RSDK.Rand(-24, 24) << 16);
             int32 y = self->position.y + (RSDK.Rand(-48, 48) << 16);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->objectDrawHigh;
         }
     }
 }
@@ -466,7 +466,7 @@ void EggPistonsMKII_State_StartPinchMode(void)
 
         EntityEggPistonsMKII *orbSpawner = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, EggPistonsMKII);
         RSDK.PlaySfx(EggPistonsMKII->sfxExplosion, false, 255);
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), orbSpawner->position.x, orbSpawner->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), orbSpawner->position.x, orbSpawner->position.y)->drawOrder = Zone->objectDrawHigh;
         EggPistonsMKII->isPhase2                                                                                        = true;
         destroyEntity(orbSpawner);
 
@@ -736,7 +736,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
                 debris->gravityStrength       = 0x3800;
                 debris->velocity.x    = ((i & 1) << 17 >> (i >> 1)) - 0x10000;
                 debris->velocity.y    = 0x18000 * ((i >> 1) - 2);
-                debris->drawOrder     = Zone->drawOrderHigh;
+                debris->drawOrder     = Zone->objectDrawHigh;
                 debris->updateRange.x = 0x400000;
                 debris->updateRange.y = 0x400000;
             }

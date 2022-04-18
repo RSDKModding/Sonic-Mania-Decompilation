@@ -14,11 +14,15 @@ void Camera_Update(void) {}
 void Camera_LateUpdate(void)
 {
     RSDK_THIS(Camera);
+
     self->lastPos.x = self->position.x;
     self->lastPos.y = self->position.y;
+
     StateMachine_Run(self->state);
+
     self->velocity.x = self->position.x - self->lastPos.x;
     self->velocity.y = self->position.y - self->lastPos.y;
+
     Camera_SetCameraBounds(self);
 
     if (self->shakePos.x) {
@@ -44,6 +48,7 @@ void Camera_StaticUpdate(void)
 {
     if (Camera->centerBounds.x < 0x100000)
         Camera->centerBounds.x += 0x4000;
+
     if (Camera->centerBounds.y < 0x180000)
         Camera->centerBounds.y += 0x8000;
 }

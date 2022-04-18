@@ -77,7 +77,7 @@ void FXWaveRing_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible      = true;
         self->active       = ACTIVE_NORMAL;
-        self->drawOrder    = Zone->drawOrderHigh;
+        self->drawOrder    = Zone->objectDrawHigh;
         self->radiusOffset = 48;
         self->radius       = 8;
         self->angleVel     = 2;

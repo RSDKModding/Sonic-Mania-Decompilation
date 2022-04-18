@@ -29,7 +29,7 @@ void Ball_Create(void *data)
 {
     RSDK_THIS(Ball);
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -88,7 +88,7 @@ void Ball_HandleInteractions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Ball->hitboxBall)) {
             Player_CheckHit(player, self);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
@@ -115,7 +115,7 @@ void Ball_SpawnSplashes(void)
     RSDK.PlaySfx(Ball->sfxSplash, false, 255);
     for (int32 i = 0; i < 5; ++i) {
         EntityBall *ball = CREATE_ENTITY(Ball, intToVoid(true), self->position.x, self->position.y);
-        ball->drawOrder  = Zone->drawOrderHigh;
+        ball->drawOrder  = Zone->objectDrawHigh;
         ball->velocity.x = RSDK.Rand(-0x100, 0x100) << 10;
         if (ball->velocity.x < 0)
             ball->velocity.x += 0x20000;
@@ -191,7 +191,7 @@ void Ball_State_TargetingPlayer(void)
 
     if (abs(self->position.x - playerPtr->position.x) < 0x100000) {
         if (abs(0x500000 + self->position.y - playerPtr->position.y) < 0x100000 && RSDK.CheckOnScreen(self, &self->updateRange)) {
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);

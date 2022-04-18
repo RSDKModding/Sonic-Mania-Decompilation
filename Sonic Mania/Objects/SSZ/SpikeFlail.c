@@ -33,7 +33,7 @@ void SpikeFlail_LateUpdate(void) {}
 
 void SpikeFlail_StaticUpdate(void)
 {
-    foreach_active(SpikeFlail, flail) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(flail)); }
+    foreach_active(SpikeFlail, flail) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(flail)); }
 }
 
 void SpikeFlail_Draw(void)
@@ -49,7 +49,7 @@ void SpikeFlail_Draw(void)
     int32 ballPos = (((16 * self->chainLength + 34) * RSDK.Cos512(0)) << 7) + self->position.x;
 
     if (self->angle >= 0x100) {
-        if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh) {
+        if (SceneInfo->currentDrawGroup != Zone->objectDrawHigh) {
             self->scale = SpikeFlail_GetScale(ballPos, self->angle);
             RSDK.DrawSprite(&self->spikeBallAnimator, &spikeBallPos, false);
 
@@ -75,7 +75,7 @@ void SpikeFlail_Draw(void)
         }
     }
     else {
-        if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh) {
+        if (SceneInfo->currentDrawGroup != Zone->objectDrawHigh) {
             self->scale.x = 0x200;
             self->scale.y = 0x200;
             RSDK.DrawSprite(&self->poleAnimator, NULL, false);
@@ -117,7 +117,7 @@ void SpikeFlail_Create(void *data)
     self->active        = ACTIVE_BOUNDS;
     self->visible       = true;
     self->drawFX        = FX_SCALE;
-    self->drawOrder     = Zone->drawOrderLow;
+    self->drawOrder     = Zone->objectDrawLow;
     self->origin        = self->position;
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x800000;

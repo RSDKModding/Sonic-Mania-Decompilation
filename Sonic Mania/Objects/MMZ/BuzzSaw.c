@@ -43,7 +43,7 @@ void BuzzSaw_Create(void *data)
         self->amplitude.x >>= 10;
         self->amplitude.y >>= 10;
         self->visible   = true;
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
         self->startPos  = self->position;
 
         if (self->type == BUZZSAW_ATTACHED)

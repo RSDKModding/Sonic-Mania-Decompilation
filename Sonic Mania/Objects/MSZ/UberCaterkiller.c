@@ -19,7 +19,7 @@ void UberCaterkiller_LateUpdate(void) {}
 
 void UberCaterkiller_StaticUpdate(void)
 {
-    foreach_all(UberCaterkiller, boss) { RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(boss)); }
+    foreach_all(UberCaterkiller, boss) { RSDK.AddDrawListRef(Zone->objectDrawHigh, RSDK.GetEntityID(boss)); }
 }
 
 void UberCaterkiller_Draw(void)
@@ -96,7 +96,7 @@ void UberCaterkiller_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible       = false;
         self->drawFX        = FX_SCALE | FX_ROTATE | FX_FLIP;
-        self->drawOrder     = Zone->drawOrderLow - 1;
+        self->drawOrder     = Zone->objectDrawLow - 1;
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
@@ -235,7 +235,7 @@ void UberCaterkiller_Explode(void)
             int32 x                    = self->position.x + (RSDK.Rand(-19, 20) << 16);
             int32 y                    = self->position.y + (RSDK.Rand(-24, 25) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh + 2;
+            explosion->drawOrder       = Zone->objectDrawHigh + 2;
         }
     }
 }
@@ -342,7 +342,7 @@ void UberCaterkiller_State_MoveIntoBG(void)
         explosion->drawFX     = FX_SCALE;
         explosion->scale.x    = self->bodyScales[0];
         explosion->scale.y    = self->bodyScales[0];
-        explosion->drawOrder  = Zone->drawOrderLow - 1;
+        explosion->drawOrder  = Zone->objectDrawLow - 1;
         explosion->velocity.x = -0x10000;
     }
 
@@ -384,7 +384,7 @@ void UberCaterkiller_State_MoveToTargetPos(void)
         explosion->drawFX     = FX_SCALE;
         explosion->scale.x    = self->bodyScales[0];
         explosion->scale.y    = self->bodyScales[0];
-        explosion->drawOrder  = Zone->drawOrderLow - 1;
+        explosion->drawOrder  = Zone->objectDrawLow - 1;
         explosion->velocity.x = -0x10000;
     }
 
@@ -647,7 +647,7 @@ void UberCaterkiller_State_Destroyed(void)
             debris->velocity.x      = 4 * RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y      = 4 * RSDK.Rand(-0x20000, -0x10000);
             debris->gravityStrength = 0x4800;
-            debris->drawOrder       = Zone->drawOrderHigh;
+            debris->drawOrder       = Zone->objectDrawHigh;
             debris->drawFX |= FX_SCALE;
             debris->updateRange.x    = 0x400000;
             debris->updateRange.y    = 0x400000;

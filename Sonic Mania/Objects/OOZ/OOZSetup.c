@@ -179,7 +179,7 @@ void OOZSetup_StaticUpdate(void)
             if (RSDK.GetTileFlags(tile, ring->collisionPlane) == OOZ_TFLAGS_OILPOOL) {
                 ring->velocity.x -= ring->velocity.x >> 4;
                 ring->velocity.y = 0x2800;
-                ring->drawOrder  = Zone->drawOrderHigh;
+                ring->drawOrder  = Zone->objectDrawHigh;
                 if (ring->alpha > 64) {
                     ring->alpha     = 64;
                     ring->inkEffect = INK_ALPHA;
@@ -220,7 +220,7 @@ void OOZSetup_Create(void *data)
     self->visible = true;
     self->drawFX  = FX_ROTATE;
     if (!self->type)
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     else
         self->drawOrder = 14;
 }

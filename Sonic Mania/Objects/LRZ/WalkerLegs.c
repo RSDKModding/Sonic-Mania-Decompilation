@@ -35,7 +35,7 @@ void WalkerLegs_Create(void *data)
     RSDK_THIS(WalkerLegs);
 
     self->active    = ACTIVE_BOUNDS;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->startPos  = self->position;
     self->legPos[0] = self->position;
     self->legPos[1] = self->position;
@@ -203,7 +203,7 @@ void WalkerLegs_CheckObjectCrush(void)
                     int32 y              = spikes->position.y + (((2 * (l != 0) - 1) * (spikes->type != SPIKES_UP)) << 19);
                     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
                     RSDK.SetSpriteAnimation(BuckwildBall->particleFrames, 4, &debris->animator, true, spikes->type >> 1);
-                    debris->drawOrder = Zone->drawOrderHigh;
+                    debris->drawOrder = Zone->objectDrawHigh;
                     debris->direction = spikes->direction;
                     debris->drawFX |= FX_ROTATE;
                     debris->gravityStrength    = 0x3800;
@@ -377,7 +377,7 @@ void WalkerLegs_CreateDebris(bool32 isRightLeg, bool32 isMagma)
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX, spawnY);
 
             RSDK.SetSpriteAnimation(WalkerLegs->particleFrames, !isMagma, &debris->animator, true, 0);
-            debris->drawOrder  = Zone->drawOrderHigh;
+            debris->drawOrder  = Zone->objectDrawHigh;
             debris->gravityStrength    = 0x3800;
             debris->velocity.x = 0x180 * (abs(spawnX - x) >> 8) / size;
             if (debris->position.x < self->position.x) {
@@ -409,7 +409,7 @@ void WalkerLegs_CreateSmoke(bool32 isRightLeg)
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
                 debris->velocity.x = 0;
                 debris->velocity.y = -0x1000 * RSDK.Rand(0, 4);
-                debris->drawOrder  = Zone->drawOrderHigh - 1;
+                debris->drawOrder  = Zone->objectDrawHigh - 1;
                 debris->timer      = 30;
             }
         }

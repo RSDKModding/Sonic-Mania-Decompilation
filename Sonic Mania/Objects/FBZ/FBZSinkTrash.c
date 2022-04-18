@@ -55,7 +55,7 @@ void FBZSinkTrash_Update(void)
                             debris->gravityStrength       = 0x3800;
                             debris->updateRange.y = 0x200000;
                             debris->updateRange.x = 0x200000;
-                            debris->drawOrder     = Zone->drawOrderLow;
+                            debris->drawOrder     = Zone->objectDrawLow;
                         }
                     }
                 }
@@ -74,7 +74,7 @@ void FBZSinkTrash_Update(void)
                                 debris->gravityStrength       = 0x3800;
                                 debris->updateRange.y = 0x200000;
                                 debris->updateRange.x = 0x200000;
-                                debris->drawOrder     = Zone->drawOrderLow;
+                                debris->drawOrder     = Zone->objectDrawLow;
                             }
                         }
                         else {
@@ -94,7 +94,7 @@ void FBZSinkTrash_Update(void)
                                 debris->gravityStrength       = 0x3800;
                                 debris->updateRange.y = 0x200000;
                                 debris->updateRange.x = 0x200000;
-                                debris->drawOrder     = Zone->drawOrderLow;
+                                debris->drawOrder     = Zone->objectDrawLow;
                             }
                         }
                     }
@@ -115,7 +115,7 @@ void FBZSinkTrash_Update(void)
                             debris->gravityStrength       = 0x3800;
                             debris->updateRange.y = 0x200000;
                             debris->updateRange.x = 0x200000;
-                            debris->drawOrder     = Zone->drawOrderLow;
+                            debris->drawOrder     = Zone->objectDrawLow;
                         }
 #if RETRO_USE_PLUS
                     }
@@ -200,9 +200,9 @@ void FBZSinkTrash_Create(void *data)
         self->visible       = true;
         self->drawFX        = FX_FLIP;
         if (self->type == FBZSINKTRASH_LOOSE)
-            self->drawOrder = Zone->drawOrderHigh - 2;
+            self->drawOrder = Zone->objectDrawHigh - 2;
         else
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
 
         self->hitboxTrash.left   = -(self->size.x >> 17);
         self->hitboxTrash.top    = -(self->size.y >> 17);

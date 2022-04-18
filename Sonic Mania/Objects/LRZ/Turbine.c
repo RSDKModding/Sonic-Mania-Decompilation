@@ -68,7 +68,7 @@ void Turbine_Create(void *data)
             default:
             case TURBINE_WALLDECOR: self->state = StateMachine_None; break;
         }
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
     }
 }
 

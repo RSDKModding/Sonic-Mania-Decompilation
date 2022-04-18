@@ -63,8 +63,8 @@ void CPZBoss_StageLoad(void)
     CPZBoss->hitbox.right  = 16;
     CPZBoss->hitbox.bottom = 16;
     CPZBoss->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
-    RSDK.SetDrawLayerProperties(Zone->drawOrderHigh, false, NULL);
-    RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, NULL);
+    RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, NULL);
+    RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, NULL);
 }
 
 void CPZBoss_DrawLayerCB_SetupPuyoDropperClip(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
@@ -102,8 +102,8 @@ bool32 CPZBoss_CheckMatchReset(void)
 {
     RSDK_THIS(CPZBoss);
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.SetDrawLayerProperties(Zone->drawOrderHigh, false, NULL);
-        RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, NULL);
+        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, NULL);
+        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, NULL);
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         PuyoBean->comboChainCount[0] = 0;
         PuyoBean->disableBeanLink[0] = 0;
@@ -257,8 +257,8 @@ void CPZBoss_State_SetupMatch(void)
         self->direction = FLIP_NONE;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->playerAnimator, false, 0);
         self->state = CPZBoss_State_HandleMatch_Player;
-        RSDK.SetDrawLayerProperties(Zone->drawOrderHigh, false, CPZBoss_DrawLayerCB_SetupPuyoDropperClip);
-        RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoDropperClip);
+        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, CPZBoss_DrawLayerCB_SetupPuyoDropperClip);
+        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoDropperClip);
     }
 }
 

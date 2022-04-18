@@ -29,7 +29,7 @@ void Octus_Create(void *data)
 {
     RSDK_THIS(Octus);
     self->visible   = true;
-    self->drawOrder = Zone->drawOrderLow;
+    self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->startPos = self->position;
     self->startDir = self->direction;

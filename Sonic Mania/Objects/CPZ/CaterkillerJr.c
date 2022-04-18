@@ -51,7 +51,7 @@ void CaterkillerJr_Create(void *data)
     RSDK_THIS(CaterkillerJr);
     if (!SceneInfo->inEditor) {
         self->visible           = true;
-        self->drawOrder         = Zone->drawOrderHigh;
+        self->drawOrder         = Zone->objectDrawHigh;
         self->startPos.x        = self->position.x;
         self->startPos.y        = self->position.y;
         self->drawFX            = FX_FLIP;
@@ -210,7 +210,7 @@ void CaterkillerJr_State_Move(void)
                 debris->velocity.x    = RSDK.Rand(-16, 16) << 14;
                 debris->velocity.y    = RSDK.Rand(-8, 8) << 14;
                 debris->gravityStrength       = 0x3800;
-                debris->drawOrder     = Zone->drawOrderLow;
+                debris->drawOrder     = Zone->objectDrawLow;
                 debris->updateRange.x = 0x400000;
                 debris->updateRange.y = 0x400000;
             }

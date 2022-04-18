@@ -30,9 +30,9 @@ void Ring_Create(void *data)
     RSDK_THIS(Ring);
     self->visible = true;
 
-    int32 layer = Zone->drawOrderLow;
+    int32 layer = Zone->objectDrawLow;
     if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
-        layer = Zone->drawOrderHigh;
+        layer = Zone->objectDrawHigh;
 
     self->drawOrder = layer + 1;
     if (self->type == RING_TYPE_BIG) {
@@ -158,7 +158,7 @@ void Ring_Collect(void)
                     if (self->drawOrder == 1)
                         sparkle->drawOrder = 1;
                     else
-                        sparkle->drawOrder = Zone->drawOrderHigh;
+                        sparkle->drawOrder = Zone->objectDrawHigh;
                     RSDK.SetSpriteAnimation(Ring->aniFrames, RING_TYPE_SPARKLE1 + (i % 3), &sparkle->animator, true, 0);
                     int32 frameCount = sparkle->animator.frameCount;
                     if (sparkle->animator.animationID == 2) {

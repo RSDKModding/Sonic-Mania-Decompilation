@@ -43,7 +43,7 @@ void ShopWindow_Create(void *data)
         self->visible = true;
         if (data) {
             self->active        = ACTIVE_NORMAL;
-            self->drawOrder     = Zone->drawOrderLow;
+            self->drawOrder     = Zone->objectDrawLow;
             self->updateRange.x = 0x400000;
             self->updateRange.y = 0x400000;
             self->drawFX        = FX_FLIP;
@@ -57,9 +57,9 @@ void ShopWindow_Create(void *data)
             self->updateRange.x = self->size.x;
             self->updateRange.y = self->size.y;
             if (!self->silhouette)
-                self->drawOrder = Zone->drawOrderLow;
+                self->drawOrder = Zone->objectDrawLow;
             else
-                self->drawOrder = Zone->drawOrderHigh;
+                self->drawOrder = Zone->objectDrawHigh;
 
             self->inkEffect = INK_ADD;
             self->alpha     = 0x80;
@@ -89,7 +89,7 @@ void ShopWindow_Create(void *data)
         foreach_all(CircleBumper, bumper)
         {
             if (RSDK.CheckObjectCollisionTouchBox(bumper, &CircleBumper->hitbox, self, &self->hitboxItem))
-                bumper->drawOrder = Zone->drawOrderLow;
+                bumper->drawOrder = Zone->objectDrawLow;
         }
     }
 }
@@ -242,9 +242,9 @@ void ShopWindow_EditorDraw(void)
     self->updateRange.x = self->size.x;
     self->updateRange.y = self->size.y;
     if (!self->silhouette)
-        self->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->objectDrawLow;
     else
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
 
     self->inkEffect = INK_ADD;
     self->alpha     = 0x80;

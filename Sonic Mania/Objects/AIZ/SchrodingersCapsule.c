@@ -142,7 +142,7 @@ void SchrodingersCapsule_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         self->visible       = true;
-        self->drawOrder     = Zone->drawOrderLow;
+        self->drawOrder     = Zone->objectDrawLow;
     }
 }
 
@@ -204,7 +204,7 @@ void SchrodingersCapsule_State_Explode(void)
     if (!(self->timer % 3)) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
                                                    (RSDK.Rand(-24, 24) << 16) + self->position.x, (RSDK.Rand(-24, 24) << 16) + self->position.y);
-        explosion->drawOrder       = Zone->drawOrderHigh;
+        explosion->drawOrder       = Zone->objectDrawHigh;
 
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, false, 0xFF);
     }

@@ -79,7 +79,7 @@ void MetalSonic_Create(void *data)
             self->tileCollisions  = true;
             self->collisionLayers = Zone->fgLayers;
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->metalSonicAnimator, true, 0);
-            self->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->objectDrawLow;
             self->state     = MetalSonic_State_SetupArena;
         }
     }
@@ -385,7 +385,7 @@ void MetalSonic_Explode(void)
             int32 y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
-            explosion->drawOrder       = Zone->drawOrderHigh + 2;
+            explosion->drawOrder       = Zone->objectDrawHigh + 2;
         }
     }
 }

@@ -35,7 +35,7 @@ void Cactula_Create(void *data)
 {
     RSDK_THIS(Cactula);
     self->visible       = true;
-    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawOrder     = Zone->objectDrawLow + 1;
     self->drawFX        = FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
@@ -140,7 +140,7 @@ void Cactula_State_DropBomb(void)
             RSDK.PlaySfx(Cactula->sfxCactDrop, false, 255);
             EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_MoveGravity, self->position.x, self->position.y);
             projectile->gravityStrength  = 0x3800;
-            projectile->drawOrder        = Zone->drawOrderLow;
+            projectile->drawOrder        = Zone->objectDrawLow;
             projectile->hitbox.left      = -6;
             projectile->hitbox.top       = -6;
             projectile->hitbox.right     = 6;

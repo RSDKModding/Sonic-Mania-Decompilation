@@ -56,7 +56,7 @@ void LaunchSpring_Create(void *data)
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &self->jointAnimator, true, 0);
         RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &self->springAnimator, true, 0);
-        self->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->objectDrawHigh;
 
         switch (self->type) {
             case LAUNCHSPRING_SPINNING:

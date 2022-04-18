@@ -95,10 +95,10 @@ void FarPlane_StageLoad(void)
             Zone->deathBoundary[s] -= 0x8000000;
         }
 
-        ++Zone->drawOrderLow;
+        ++Zone->objectDrawLow;
         ++Zone->playerDrawLow;
         ++Zone->fgLayerHigh;
-        ++Zone->drawOrderHigh;
+        ++Zone->objectDrawHigh;
         ++Zone->playerDrawHigh;
         RSDK.ClearCameras();
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
