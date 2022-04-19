@@ -55,15 +55,15 @@ void CutsceneSeq_Draw(void)
 {
     RSDK_THIS(CutsceneSeq);
 
-    colour colours[8];
-    colours[0] = 0x00FF00;
-    colours[1] = 0xFF0000;
-    colours[2] = 0x0000FF;
-    colours[3] = 0xFF00FF;
-    colours[4] = 0xFFFF00;
-    colours[5] = 0x00FFFF;
-    colours[6] = 0x9933FF;
-    colours[7] = 0xFF9900;
+    color colors[8];
+    colors[0] = 0x00FF00;
+    colors[1] = 0xFF0000;
+    colors[2] = 0x0000FF;
+    colors[3] = 0xFF00FF;
+    colors[4] = 0xFFFF00;
+    colors[5] = 0x00FFFF;
+    colors[6] = 0x9933FF;
+    colors[7] = 0xFF9900;
 
     for (int32 i = 0; i < 8; ++i) {
         Vector2 *point = &self->points[i];
@@ -71,7 +71,7 @@ void CutsceneSeq_Draw(void)
 #if RETRO_USE_PLUS
             RSDK.PrintVector2(0, "Draw poi ", point->x, point->y);
 #endif
-            DrawHelpers_DrawCross(point->x, point->y, 0x200000, 0x200000, colours[i]);
+            DrawHelpers_DrawCross(point->x, point->y, 0x200000, 0x200000, colors[i]);
         }
     }
 

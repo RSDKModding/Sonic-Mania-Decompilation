@@ -6,11 +6,11 @@
 // Object Class
 struct ObjectSSZSpotlight {
     RSDK_OBJECT
-    TABLE(colour coloursManiaA[8], { 0x000020, 0x000020, 0x40D080, 0x40D080, 0x40D080, 0x40D080, 0x000020, 0x000020 });
-    TABLE(colour coloursManiaB[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
+    TABLE(color colorsManiaA[8], { 0x000020, 0x000020, 0x40D080, 0x40D080, 0x40D080, 0x40D080, 0x000020, 0x000020 });
+    TABLE(color colorsManiaB[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
 #if RETRO_USE_PLUS
-    TABLE(colour coloursEncoreA[8], { 0x000020, 0x000020, 0xD01848, 0xD01848, 0xD01848, 0xD01848, 0x000020, 0x000020 });
-    TABLE(colour coloursEncoreB[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
+    TABLE(color colorsEncoreA[8], { 0x000020, 0x000020, 0xD01848, 0xD01848, 0xD01848, 0xD01848, 0x000020, 0x000020 });
+    TABLE(color colorsEncoreB[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
 #endif
     uint16 aniFrames;
 };
@@ -27,7 +27,7 @@ struct EntitySSZSpotlight {
     Vector2 offsetPos;
     Vector2 vertStore[8];
     Vector2 vertPos[8];
-    colour *vertClrPtrs;
+    color *vertClrPtrs;
     Animator animator;
 };
 

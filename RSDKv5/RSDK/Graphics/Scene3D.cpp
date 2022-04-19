@@ -407,7 +407,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
         if (model->flags & MODEL_USETEXTURES)
             RSDK::AllocateStorage(sizeof(TexCoord) * model->vertCount, (void **)&model->texCoords, RSDK::DATASET_STG, true);
         if (model->flags & MODEL_USECOLOURS)
-            RSDK::AllocateStorage(sizeof(Colour) * model->vertCount, (void **)&model->colours, RSDK::DATASET_STG, true);
+            RSDK::AllocateStorage(sizeof(Color) * model->vertCount, (void **)&model->colors, RSDK::DATASET_STG, true);
 
         if (model->flags & MODEL_USETEXTURES) {
             for (int v = 0; v < model->vertCount; ++v) {
@@ -418,7 +418,7 @@ uint16 LoadMesh(const char *filename, Scopes scope)
 
         if (model->flags & MODEL_USECOLOURS) {
             for (int v = 0; v < model->vertCount; ++v) {
-                model->colours[v].colour = ReadInt32(&info, false);
+                model->colors[v].color = ReadInt32(&info, false);
             }
         }
 
@@ -486,7 +486,7 @@ uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 
     return id;
 }
-void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, colour colour)
+void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, color color)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld) {
@@ -520,7 +520,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                 vertex->z = matWorld->values[2][3] + ((modelVert->x * matWorld->values[2][0]) >> 8)
                                             + ((matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
 
-                                vertex->colour = colour;
+                                vertex->color = color;
                             }
                         }
                         break;
@@ -546,7 +546,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                     vertex->nz = ((modelVert->ny * matNormals->values[2][1]) >> 8)
                                                  + ((matNormals->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matNormals->values[2][2] >> 8));
 
-                                    vertex->colour = colour;
+                                    vertex->color = color;
                                 }
                             }
                         }
@@ -564,7 +564,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                     vertex->z = matWorld->values[2][3] + ((matWorld->values[2][2] * modelVert->z) >> 8)
                                                 + ((matWorld->values[2][0] * modelVert->x >> 8) + (matWorld->values[2][1] * modelVert->y >> 8));
 
-                                    vertex->colour = colour;
+                                    vertex->color = color;
                                 }
                             }
                         }
@@ -575,7 +575,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
-                                    Colour *modelColour    = &mdl->colours[indices[i++]];
+                                    Color *modelColor    = &mdl->colors[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
 
                                     vertex->x              = matWorld->values[0][3] + (matWorld->values[0][2] * modelVert->z >> 8)
@@ -592,7 +592,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                     vertex->nz = ((matNormals->values[2][2] * modelVert->nz) >> 8)
                                                  + ((modelVert->ny * matNormals->values[2][1] >> 8) + (matNormals->values[2][0] * modelVert->nx >> 8));
 
-                                    vertex->colour = modelColour->colour;
+                                    vertex->color = modelColor->color;
                                 }
                             }
                         }
@@ -601,7 +601,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
                                     ModelVertex *modelVert = &mdl->vertices[indices[i]];
-                                    Colour *modelColour    = &mdl->colours[indices[i++]];
+                                    Color *modelColor    = &mdl->colors[indices[i++]];
                                     Scene3DVertex *vertex  = &scn->vertices[vertID++];
 
                                     vertex->x              = matWorld->values[0][3] + (matWorld->values[0][0] * modelVert->x >> 8)
@@ -611,7 +611,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                     vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * modelVert->z >> 8)
                                                 + (modelVert->y * matWorld->values[2][1] >> 8) + (modelVert->x * matWorld->values[2][0] >> 8);
 
-                                    vertex->colour = modelColour->colour;
+                                    vertex->color = modelColor->color;
                                 }
                             }
                         }
@@ -622,7 +622,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
     }
 }
 void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals,
-                         colour colour)
+                         color color)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && animator) {
@@ -666,7 +666,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                             + (matWorld->values[1][0] * x >> 8);
                                 vertex->z = matWorld->values[2][3] + ((x * matWorld->values[2][0]) >> 8)
                                             + ((matWorld->values[2][2] * z >> 8) + (matWorld->values[2][1] * y >> 8));
-                                vertex->colour = colour;
+                                vertex->color = color;
                             }
                         }
                         break;
@@ -698,7 +698,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                         (ny * matNormals->values[1][1] >> 8) + (nz * matNormals->values[1][2] >> 8) + (nx * matNormals->values[1][0] >> 8);
                                     vertex->nz =
                                         ((ny * matNormals->values[2][1]) >> 8) + ((matNormals->values[2][0] * nx >> 8) + (nz * matNormals->values[2][2] >> 8));
-                                    vertex->colour = colour;
+                                    vertex->color = color;
                                 }
                             }
                         }
@@ -719,7 +719,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                                 + (matWorld->values[1][0] * x >> 8);
                                     vertex->z = matWorld->values[2][3] + ((matWorld->values[2][2] * z) >> 8)
                                                 + ((matWorld->values[2][0] * x >> 8) + (matWorld->values[2][1] * y >> 8));
-                                    vertex->colour = colour;
+                                    vertex->color = color;
                                 }
                             }
                         }
@@ -738,7 +738,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                     int ny                     = frameVert->ny + ((interpolate * (nextFrameVert->ny - frameVert->ny)) >> 8);
                                     int nz                     = frameVert->nz + ((interpolate * (nextFrameVert->nz - frameVert->nz)) >> 8);
 
-                                    Colour *modelColour   = &mdl->colours[indices[i++]];
+                                    Color *modelColor   = &mdl->colors[indices[i++]];
                                     Scene3DVertex *vertex = &scn->vertices[vertID++];
                                     vertex->x = matWorld->values[0][3] + (matWorld->values[0][2] * z >> 8) + (y * matWorld->values[0][1] >> 8)
                                                 + (matWorld->values[0][0] * x >> 8);
@@ -752,7 +752,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                         (matNormals->values[1][0] * nx >> 8) + (ny * matNormals->values[1][1] >> 8) + (matNormals->values[1][2] * nz >> 8);
                                     vertex->nz =
                                         ((matNormals->values[2][2] * nz) >> 8) + ((ny * matNormals->values[2][1] >> 8) + (matNormals->values[2][0] * nx >> 8));
-                                    vertex->colour = modelColour->colour;
+                                    vertex->color = modelColor->color;
                                 }
                             }
                         }
@@ -765,7 +765,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                     int x                      = frameVert->x + ((interpolate * (nextFrameVert->x - frameVert->x)) >> 8);
                                     int y                      = frameVert->y + ((interpolate * (nextFrameVert->y - frameVert->y)) >> 8);
                                     int z                      = frameVert->z + ((interpolate * (nextFrameVert->z - frameVert->z)) >> 8);
-                                    Colour *modelColour   = &mdl->colours[indices[i++]];
+                                    Color *modelColor   = &mdl->colors[indices[i++]];
                                     Scene3DVertex *vertex = &scn->vertices[vertID++];
                                     vertex->x = matWorld->values[0][3] + (matWorld->values[0][0] * x >> 8) + (y * matWorld->values[0][1] >> 8)
                                                 + (z * matWorld->values[0][2] >> 8);
@@ -773,7 +773,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, RSDK::Animator *animato
                                                 + (y * matWorld->values[1][1] >> 8);
                                     vertex->z = matWorld->values[2][3] + (matWorld->values[2][2] * z >> 8) + (y * matWorld->values[2][1] >> 8)
                                                 + (x * matWorld->values[2][0] >> 8);
-                                    vertex->colour = modelColour->colour;
+                                    vertex->color = modelColor->color;
                                 }
                             }
                         }
@@ -845,10 +845,10 @@ void Draw3DScene(uint16 sceneID)
                 for (int i = 0; i < scn->faceCount; ++i) {
                     Scene3DVertex *drawVert = &scn->vertices[scn->faceBuffer[i].index];
                     for (int v = 0; v < *vertCnt - 1; ++v) {
-                        DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].colour,
+                        DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, drawVert[0].color,
                                  entity->alpha, (InkEffects)entity->inkEffect, false);
                     }
-                    DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, drawVert[0].colour,
+                    DrawLine(drawVert[0].x << 8, drawVert[0].y << 8, drawVert[*vertCnt - 1].x << 8, drawVert[*vertCnt - 1].y << 8, drawVert[0].color,
                              entity->alpha, (InkEffects)entity->inkEffect, false);
                     vertCnt++;
                 }
@@ -860,7 +860,7 @@ void Draw3DScene(uint16 sceneID)
                         vertPos[v].x = (drawVert[v].x << 8) - (currentScreen->position.x << 16);
                         vertPos[v].y = (drawVert[v].y << 8) - (currentScreen->position.y << 16);
                     }
-                    DrawFace(vertPos, *vertCnt, (drawVert->colour >> 16) & 0xFF, (drawVert->colour >> 8) & 0xFF, (drawVert->colour >> 0) & 0xFF,
+                    DrawFace(vertPos, *vertCnt, (drawVert->color >> 16) & 0xFF, (drawVert->color >> 8) & 0xFF, (drawVert->color >> 0) & 0xFF,
                              entity->alpha, (InkEffects)entity->inkEffect);
                     vertCnt++;
                 }
@@ -883,17 +883,17 @@ void Draw3DScene(uint16 sceneID)
                     int specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular     = minVal(0xFF, specular);
                     specular     = maxVal(0, specular);
-                    int clrR     = specular + ((int)((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                    int clrR     = specular + ((int)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                     specular = normalVal >> 6 >> scn->specularIntensityY;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrG = specular + ((int)((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                    int clrG = specular + ((int)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                     specular = normalVal >> 6 >> scn->specularIntensityZ;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrB = specular + ((int)((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                    int clrB = specular + ((int)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                     clrR = minVal(0xFF, clrR);
                     clrR = maxVal(0, clrR);
@@ -902,13 +902,13 @@ void Draw3DScene(uint16 sceneID)
                     clrB = minVal(0xFF, clrB);
                     clrB = maxVal(0, clrB);
 
-                    uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                    uint color = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                     for (int v = 0; v < vertCount - 1; ++v) {
-                        DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, colour,
+                        DrawLine(drawVert[v + 0].x << 8, drawVert[v + 0].y << 8, drawVert[v + 1].x << 8, drawVert[v + 1].y << 8, color,
                                  entity->alpha, (InkEffects)entity->inkEffect, false);
                     }
-                    DrawLine(drawVert[vertCount - 1].x << 8, drawVert[vertCount - 1].y << 8, drawVert[0].x << 8, drawVert[0].y << 8, colour,
+                    DrawLine(drawVert[vertCount - 1].x << 8, drawVert[vertCount - 1].y << 8, drawVert[0].x << 8, drawVert[0].y << 8, color,
                              entity->alpha, (InkEffects)entity->inkEffect, false);
 
                     vertCnt++;
@@ -932,17 +932,17 @@ void Draw3DScene(uint16 sceneID)
                     int specular = normalVal >> 6 >> scn->specularIntensityX;
                     specular     = minVal(0xFF, specular);
                     specular     = maxVal(0, specular);
-                    int clrR     = specular + ((int)((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                    int clrR     = specular + ((int)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                     specular = normalVal >> 6 >> scn->specularIntensityY;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrG = specular + ((int)((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                    int clrG = specular + ((int)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                     specular = normalVal >> 6 >> scn->specularIntensityZ;
                     specular = minVal(0xFF, specular);
                     specular = maxVal(0, specular);
-                    int clrB = specular + ((int)((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                    int clrB = specular + ((int)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                     clrR = minVal(0xFF, clrR);
                     clrR = maxVal(0, clrR);
@@ -951,10 +951,10 @@ void Draw3DScene(uint16 sceneID)
                     clrB = minVal(0xFF, clrB);
                     clrB = maxVal(0, clrB);
 
-                    uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                    uint color = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                     drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                    DrawFace(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF, entity->alpha,
+                    DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha,
                              (InkEffects)entity->inkEffect);
 
                     vertCnt++;
@@ -975,19 +975,19 @@ void Draw3DScene(uint16 sceneID)
                         int specular = (normalVal >> 6) >> scn->specularIntensityX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0x00, specular);
-                        int ambDif   = (int)((drawVert->colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX);
+                        int ambDif   = (int)((drawVert->color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX);
                         int clrR     = specular + (ambDif >> scn->diffuseIntensityX);
 
                         specular = (normalVal >> 6) >> scn->specularIntensityY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0x00, specular);
-                        ambDif   = (int)((drawVert->colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY);
+                        ambDif   = (int)((drawVert->color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY);
                         int clrG = specular + (ambDif >> scn->diffuseIntensityY);
 
                         specular = (normalVal >> 6) >> scn->specularIntensityZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0x00, specular);
-                        ambDif   = (int)((drawVert->colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ);
+                        ambDif   = (int)((drawVert->color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ);
                         int clrB = specular + (ambDif >> scn->diffuseIntensityZ);
 
                         clrR = minVal(0xFF, clrR);
@@ -1023,10 +1023,10 @@ void Draw3DScene(uint16 sceneID)
 
                     if (v < 0xFF) {
                         for (int v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(vertPos[v + 0].x, drawVert[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].colour, entity->alpha,
+                            DrawLine(vertPos[v + 0].x, drawVert[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, drawVert[0].color, entity->alpha,
                                      (InkEffects)entity->inkEffect, true);
                         }
-                        DrawLine(vertPos[0].x, vertPos[0].y, vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, drawVert[0].colour, entity->alpha,
+                        DrawLine(vertPos[0].x, vertPos[0].y, vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, drawVert[0].color, entity->alpha,
                                  (InkEffects)entity->inkEffect, true);
                     }
                     vertCnt++;
@@ -1050,8 +1050,8 @@ void Draw3DScene(uint16 sceneID)
                     }
 
                     if (v < 0xFF) {
-                        DrawFace(vertPos, *vertCnt, (drawVert[0].colour >> 16) & 0xFF, (drawVert[0].colour >> 8) & 0xFF,
-                                 (drawVert[0].colour >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
+                        DrawFace(vertPos, *vertCnt, (drawVert[0].color >> 16) & 0xFF, (drawVert[0].color >> 8) & 0xFF,
+                                 (drawVert[0].color >> 0) & 0xFF, entity->alpha, (InkEffects)entity->inkEffect);
                     }
                     vertCnt++;
                 }
@@ -1082,17 +1082,17 @@ void Draw3DScene(uint16 sceneID)
                         int specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0, specular);
-                        int clrR = specular + ((int)((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                        int clrR = specular + ((int)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                         specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrG = specular + ((int)((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                        int clrG = specular + ((int)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                         specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrB = specular + ((int)((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                        int clrB = specular + ((int)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -1101,14 +1101,14 @@ void Draw3DScene(uint16 sceneID)
                         clrB = minVal(0xFF, clrB);
                         clrB = maxVal(0, clrB);
 
-                        uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        uint color = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                         drawVert = &scn->vertices[scn->faceBuffer[i].index];
                         for (int v = 0; v < *vertCnt - 1; ++v) {
-                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, colour, entity->alpha,
+                            DrawLine(vertPos[v + 0].x, vertPos[v + 0].y, vertPos[v + 1].x, vertPos[v + 1].y, color, entity->alpha,
                                      (InkEffects)entity->inkEffect, true);
                         }
-                        DrawLine(vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, vertPos[0].x, vertPos[0].y, colour, entity->alpha,
+                        DrawLine(vertPos[*vertCnt - 1].x, vertPos[*vertCnt - 1].y, vertPos[0].x, vertPos[0].y, color, entity->alpha,
                                  (InkEffects)entity->inkEffect, true);
                     }
 
@@ -1141,17 +1141,17 @@ void Draw3DScene(uint16 sceneID)
                         int specular = normalVal >> 6 >> scn->specularIntensityX;
                         specular     = minVal(0xFF, specular);
                         specular     = maxVal(0, specular);
-                        int clrR = specular + ((int)((drawVert[0].colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                        int clrR = specular + ((int)((drawVert[0].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                         specular = normalVal >> 6 >> scn->specularIntensityY;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrG = specular + ((int)((drawVert[0].colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                        int clrG = specular + ((int)((drawVert[0].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                         specular = normalVal >> 6 >> scn->specularIntensityZ;
                         specular = minVal(0xFF, specular);
                         specular = maxVal(0, specular);
-                        int clrB = specular + ((int)((drawVert[0].colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                        int clrB = specular + ((int)((drawVert[0].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                         clrR = minVal(0xFF, clrR);
                         clrR = maxVal(0, clrR);
@@ -1160,10 +1160,10 @@ void Draw3DScene(uint16 sceneID)
                         clrB = minVal(0xFF, clrB);
                         clrB = maxVal(0, clrB);
 
-                        uint colour = (clrR << 16) | (clrG << 8) | (clrB << 0);
+                        uint color = (clrR << 16) | (clrG << 8) | (clrB << 0);
 
                         drawVert = &scn->vertices[scn->faceBuffer[i].index];
-                        DrawFace(vertPos, *vertCnt, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF, entity->alpha,
+                        DrawFace(vertPos, *vertCnt, (color >> 16) & 0xFF, (color >> 8) & 0xFF, (color >> 0) & 0xFF, entity->alpha,
                                  (InkEffects)entity->inkEffect);
                     }
 
@@ -1192,19 +1192,19 @@ void Draw3DScene(uint16 sceneID)
                             specular     = minVal(0xFF, specular);
                             specular     = maxVal(0, specular);
                             int clrR =
-                                specular + ((int)((drawVert[v].colour >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
+                                specular + ((int)((drawVert[v].color >> 16) & 0xFF) * ((normal >> 10) + scn->diffuseX) >> scn->diffuseIntensityX);
 
                             specular = normalVal >> 6 >> scn->specularIntensityY;
                             specular = minVal(0xFF, specular);
                             specular = maxVal(0, specular);
                             int clrG =
-                                specular + ((int)((drawVert[v].colour >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
+                                specular + ((int)((drawVert[v].color >> 8) & 0xFF) * ((normal >> 10) + scn->diffuseY) >> scn->diffuseIntensityY);
 
                             specular = normalVal >> 6 >> scn->specularIntensityZ;
                             specular = minVal(0xFF, specular);
                             specular = maxVal(0, specular);
                             int clrB =
-                                specular + ((int)((drawVert[v].colour >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
+                                specular + ((int)((drawVert[v].color >> 0) & 0xFF) * ((normal >> 10) + scn->diffuseZ) >> scn->diffuseIntensityZ);
 
                             clrR = minVal(0xFF, clrR);
                             clrR = maxVal(0, clrR);

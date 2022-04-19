@@ -38,7 +38,7 @@ struct EntityUFO_Setup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    colour fadeColour;
+    color fadeColor;
 };
 
 // Object Struct

@@ -34,7 +34,7 @@ void SentryBug_Draw(void)
             RSDK.MatrixRotateXYZ(&self->matWorld, self->netRotation, self->netRotation, 0);
             RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &self->matTransform);
             RSDK.Prepare3DScene(SentryBug->sceneIndex);
-            RSDK.AddModelTo3DScene(SentryBug->meshFrames, SentryBug->sceneIndex, S3D_FLATCLR_WIREFRAME, &self->matWorld, NULL, self->netColour);
+            RSDK.AddModelTo3DScene(SentryBug->meshFrames, SentryBug->sceneIndex, S3D_FLATCLR_WIREFRAME, &self->matWorld, NULL, self->netColor);
 
             self->inkEffect = INK_ALPHA;
             RSDK.Draw3DScene(SentryBug->sceneIndex);
@@ -43,7 +43,7 @@ void SentryBug_Draw(void)
 
         for (int32 angle = 0, i = 0; angle < 0xFC; ++i) {
             self->orbAnimator.frameID = ((angle + self->netRotation + 8) >> 5) & 7;
-            if (self->netColour == 0xF0F000)
+            if (self->netColor == 0xF0F000)
                 self->orbAnimator.frameID += 8;
 
             RSDK.DrawSprite(&self->orbAnimator, &self->orbPositions[i], false);
@@ -77,7 +77,7 @@ void SentryBug_Create(void *data)
         self->amplitude.y >>= 10;
         self->originPos = self->position;
         self->startPos  = self->position;
-        self->netColour = 0xF02000;
+        self->netColor = 0xF02000;
         self->alpha     = 0x100;
         if (!self->speed)
             self->speed = 4;
@@ -381,14 +381,14 @@ void SentryBug_State_NetFlash(void)
     player->velocity.x >>= 2;
     player->velocity.y >>= 2;
     if (Zone->timer & 2)
-        self->netColour = 0xF0F000;
+        self->netColor = 0xF0F000;
     else
-        self->netColour = 0xF02000;
+        self->netColor = 0xF02000;
     if (++self->timer == 30) {
         self->timer = 0;
         Player_CheckHit(player, self);
         self->orbAnimator.frameID = 0;
-        self->netColour           = 0xF02000;
+        self->netColor           = 0xF02000;
         self->orbsDetatched       = false;
         self->stateOrbs           = SentryBug_StateOrbs_ReturnToSlots;
         self->state               = SentryBug_State_ReturnToSlots;

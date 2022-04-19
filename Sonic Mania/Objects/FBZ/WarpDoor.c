@@ -372,14 +372,14 @@ void WarpDoor_DrawDebug(void)
     }
 
     if (SceneInfo->inEditor) {
-        int32 colour = 0xFF0000;
+        int32 color = 0xFF0000;
         if (!self->go)
-            colour = 0x0000FF;
+            color = 0x0000FF;
 
         if (self->destinationTag >= 1 && self->destinationTag <= 256) {
             EntityWarpDoor *dest = (EntityWarpDoor *)WarpDoor->tags[self->destinationTag];
             if (dest) {
-                DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, FLIP_NONE, colour);
+                DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, FLIP_NONE, color);
                 DrawHelpers_DrawArrow(self->position.x, dest->position.x, self->position.y, dest->position.y, 0x00FFFF);
             }
         }
@@ -390,11 +390,11 @@ void WarpDoor_DrawDebug(void)
             hitbox.top    = self->yBoundaryPosT;
             hitbox.right  = self->xBoundaryPosR;
             hitbox.bottom = self->yBoundaryPosB;
-            DrawHelpers_DrawHitboxOutline(0, 0, &hitbox, FLIP_NONE, colour);
-            RSDK.DrawLine(self->xBoundaryPosL << 16, self->yBoundaryPosT << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
-            RSDK.DrawLine(self->xBoundaryPosR << 16, self->yBoundaryPosT << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
-            RSDK.DrawLine(self->xBoundaryPosR << 16, self->yBoundaryPosB << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
-            RSDK.DrawLine(self->xBoundaryPosL << 16, self->yBoundaryPosB << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
+            DrawHelpers_DrawHitboxOutline(0, 0, &hitbox, FLIP_NONE, color);
+            RSDK.DrawLine(self->xBoundaryPosL << 16, self->yBoundaryPosT << 16, self->position.x, self->position.y, color, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosR << 16, self->yBoundaryPosT << 16, self->position.x, self->position.y, color, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosR << 16, self->yBoundaryPosB << 16, self->position.x, self->position.y, color, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosL << 16, self->yBoundaryPosB << 16, self->position.x, self->position.y, color, 0xFF, INK_NONE, false);
         }
     }
 }

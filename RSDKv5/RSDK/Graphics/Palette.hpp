@@ -4,9 +4,9 @@
 #define PALETTE_COUNT (0x8)
 #define PALETTE_SIZE  (0x100)
 
-union Colour {
+union Color {
     uint8 bytes[4];
-    uint32 colour;
+    uint32 color;
 };
 
 extern uint16 rgb32To16_R[0x100];
@@ -22,7 +22,7 @@ extern uint16 fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
 extern uint8 gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
 
-extern int32 maskColour;
+extern int32 maskColor;
 
 #if RETRO_REV02
 extern uint16 *tintLookupTable;
@@ -57,14 +57,14 @@ inline uint32 GetPaletteEntry(uint8 paletteID, uint8 index)
     return R | G | B;
 }
 
-inline void SetPaletteEntry(uint8 paletteID, uint8 index, uint32 colour)
+inline void SetPaletteEntry(uint8 paletteID, uint8 index, uint32 color)
 {
-    fullPalette[paletteID][index] = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+    fullPalette[paletteID][index] = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 }
 
-inline void SetPaletteMask(uint32 colour)
+inline void SetPaletteMask(uint32 color)
 {
-    maskColour = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+    maskColor = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 }
 
 #if RETRO_REV02
@@ -102,7 +102,7 @@ inline void RotatePalette(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 
 
 void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, short blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-void BlendColours(byte paletteID, byte *coloursA, byte *coloursB, int32 alpha, int32 index, int32 count);
+void BlendColors(byte paletteID, byte *colorsA, byte *colorsB, int32 alpha, int32 index, int32 count);
 #endif
 
 #endif

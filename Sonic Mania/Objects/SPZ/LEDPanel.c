@@ -27,7 +27,7 @@ void LEDPanel_Draw(void)
     RSDK_THIS(LEDPanel);
 
     RSDK.DrawRect(self->position.x - (self->size.x >> 1) + 0x80000, self->position.y - (self->size.y >> 1), self->size.x - 0x100000, self->size.y,
-                  LEDPanel->storedColour, 512, INK_NONE, false);
+                  LEDPanel->storedColor, 512, INK_NONE, false);
 
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
@@ -122,7 +122,7 @@ void LEDPanel_StageLoad(void)
 
     RSDK.SetText(&LEDPanel->text, " ", 0);
 
-    LEDPanel->storedColour = RSDK.GetPaletteEntry(0, 190);
+    LEDPanel->storedColor = RSDK.GetPaletteEntry(0, 190);
 }
 
 void LEDPanel_SetupActiveText(int row, TextInfo *src)

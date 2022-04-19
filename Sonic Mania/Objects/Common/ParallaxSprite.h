@@ -34,8 +34,8 @@ struct EntityParallaxSprite {
     Vector2 scrollSpeed;
     Vector2 loopPoint;
     bool32 hiddenAtStart;
-    colour colour1;
-    colour colour2;
+    color color1;
+    color color2;
     Vector2 acceleration;
     Vector2 scrollPos;
     int32 sprX;

@@ -11,7 +11,7 @@ struct ObjectLEDPanel {
     RSDK_OBJECT
     uint16 aniFrames;
     TextInfo text;
-    colour storedColour;
+    color storedColor;
 };
 
 // Entity Class

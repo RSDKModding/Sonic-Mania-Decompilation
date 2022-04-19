@@ -37,7 +37,7 @@ void Ink_Update(void)
                         // case ID_MIGHTY: RSDK.CopyPalette(self->type + 3, 96, 0, 96, 6); break;
                         // case ID_RAY: RSDK.CopyPalette(self->type + 3, 113, 0, 113, 6); break;
                 }
-                Ink->playerColours[playerID] = self->type + 1;
+                Ink->playerColors[playerID] = self->type + 1;
                 RSDK.SetSpriteAnimation(Ink->aniFrames, self->type + 6, &self->splashAnimator, true, 0);
             }
         }
@@ -94,7 +94,7 @@ void Ink_StageLoad(void)
     Ink->hitbox3.top    = 26;
     Ink->hitbox3.right  = 24;
     Ink->hitbox3.bottom = 30;
-    for (int32 p = 0; p < 4; ++p) Ink->playerColours[p] = 0;
+    for (int32 p = 0; p < 4; ++p) Ink->playerColors[p] = 0;
 }
 
 #if RETRO_INCLUDE_EDITOR

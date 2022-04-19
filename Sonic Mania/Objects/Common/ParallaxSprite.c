@@ -44,11 +44,11 @@ void ParallaxSprite_Draw(void)
     if (self->attribute == PARALLAXSPRITE_ATTR_COLORS) {
         int32 y = (drawPos.y >> 16) - 32;
         int32 x = (drawPos.x >> 16) - 56;
-        RSDK.DrawRect(x, y, 112, 64, self->colour1, 255, INK_NONE, true);
+        RSDK.DrawRect(x, y, 112, 64, self->color1, 255, INK_NONE, true);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
             int32 height = minVal((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
-            RSDK.DrawRect(x, y - height + 64, 16, height, self->colour2, 255, INK_NONE, true);
+            RSDK.DrawRect(x, y - height + 64, 16, height, self->color2, 255, INK_NONE, true);
             x += 16;
         }
     }
@@ -80,13 +80,13 @@ void ParallaxSprite_Create(void *data)
         case PARALLAXSPRITE_ATTR_COLORS:
 #if RETRO_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
-                self->colour1 = 0x189098;
-                self->colour2 = 0x00D098;
+                self->color1 = 0x189098;
+                self->color2 = 0x00D098;
             }
             else {
 #endif
-                self->colour1 = 0x885820;
-                self->colour2 = 0xE89850;
+                self->color1 = 0x885820;
+                self->color2 = 0xE89850;
 #if RETRO_USE_PLUS
             }
 #endif
@@ -251,11 +251,11 @@ void ParallaxSprite_EditorDraw(void)
     if (self->attribute == PARALLAXSPRITE_ATTR_COLORS) {
         int32 x = (drawPos.x >> 16) - 56;
         int32 y = (drawPos.y >> 16) - 32;
-        RSDK.DrawRect(x << 16, y << 16, 112 << 16, 64 << 16, self->colour1, 255, 0, false);
+        RSDK.DrawRect(x << 16, y << 16, 112 << 16, 64 << 16, self->color1, 255, 0, false);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
             int32 height = minVal((RSDK.Sin256(i + Zone->timer) >> 3) + 48, 64);
-            RSDK.DrawRect(x << 16, (y - height + 64) << 16, 16 << 16, height << 16, self->colour2, 255, 0, false);
+            RSDK.DrawRect(x << 16, (y - height + 64) << 16, 16 << 16, height << 16, self->color2, 255, 0, false);
             x += 16;
         }
     }

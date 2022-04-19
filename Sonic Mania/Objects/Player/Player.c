@@ -437,62 +437,62 @@ void Player_Draw(void)
         RSDK.DrawSprite(&self->animator, NULL, false);
     }
     else {
-        uint32 colourStore[6];
+        uint32 colorStore[6];
         switch (self->characterID) {
             case ID_SONIC:
                 for (int32 c = 0; c < 6; ++c) {
-                    colourStore[c] = RSDK.GetPaletteEntry(0, c + 0x40);
+                    colorStore[c] = RSDK.GetPaletteEntry(0, c + 0x40);
                     RSDK.SetPaletteEntry(0, c + 0x40, Player->superPalette_Sonic[c]);
                 }
 
                 RSDK.DrawSprite(&self->animator, NULL, false);
 
-                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x40, colourStore[c]);
+                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x40, colorStore[c]);
                 break;
 
             case ID_TAILS:
                 for (int32 c = 0; c < 6; ++c) {
-                    colourStore[c] = RSDK.GetPaletteEntry(0, c + 0x46);
+                    colorStore[c] = RSDK.GetPaletteEntry(0, c + 0x46);
                     RSDK.SetPaletteEntry(0, c + 0x46, Player->superPalette_Tails[c]);
                 }
 
                 RSDK.DrawSprite(&self->animator, NULL, false);
 
-                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x46, colourStore[c]);
+                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x46, colorStore[c]);
                 break;
 
             case ID_KNUCKLES:
                 for (int32 c = 0; c < 6; ++c) {
-                    colourStore[c] = RSDK.GetPaletteEntry(0, c + 0x50);
+                    colorStore[c] = RSDK.GetPaletteEntry(0, c + 0x50);
                     RSDK.SetPaletteEntry(0, c + 0x50, Player->superPalette_Knux[c]);
                 }
 
                 RSDK.DrawSprite(&self->animator, NULL, false);
 
-                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x50, colourStore[c]);
+                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x50, colorStore[c]);
                 break;
 
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
                 for (int32 c = 0; c < 6; ++c) {
-                    colourStore[c] = RSDK.GetPaletteEntry(0, 0x60 + c);
+                    colorStore[c] = RSDK.GetPaletteEntry(0, 0x60 + c);
                     RSDK.SetPaletteEntry(0, 0x60 + c, Player->superPalette_Mighty[c]);
                 }
 
                 RSDK.DrawSprite(&self->animator, NULL, false);
 
-                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, 0x60 + c, colourStore[c]);
+                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, 0x60 + c, colorStore[c]);
                 break;
 
             case ID_RAY:
                 for (int32 c = 0; c < 6; ++c) {
-                    colourStore[c] = RSDK.GetPaletteEntry(0, c + 113);
+                    colorStore[c] = RSDK.GetPaletteEntry(0, c + 113);
                     RSDK.SetPaletteEntry(0, c + 113, Player->superPalette_Ray[c]);
                 }
 
                 RSDK.DrawSprite(&self->animator, NULL, false);
 
-                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 113, colourStore[c]);
+                for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 113, colorStore[c]);
                 break;
 #endif
         }
@@ -1205,7 +1205,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldMasks)
     player->timer              = 0;
     return true;
 }
-void Player_BlendSuperSonicColours(int32 bankID)
+void Player_BlendSuperSonicColors(int32 bankID)
 {
     RSDK_THIS(Player);
     if (self->superState == SUPERSTATE_SUPER) {
@@ -1238,7 +1238,7 @@ void Player_BlendSuperSonicColours(int32 bankID)
     }
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 64, 69);
 }
-void Player_BlendSuperTailsColours(int32 bankID)
+void Player_BlendSuperTailsColors(int32 bankID)
 {
     RSDK_THIS(Player);
     if (self->superState != SUPERSTATE_SUPER) {
@@ -1263,7 +1263,7 @@ void Player_BlendSuperTailsColours(int32 bankID)
     // set this "76" to "75" to fix tails' super palette overwriting an extra colour
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 70, 76);
 }
-void Player_BlendSuperKnuxColours(int32 bankID)
+void Player_BlendSuperKnuxColors(int32 bankID)
 {
     RSDK_THIS(Player);
     if (self->superState != SUPERSTATE_SUPER) {
@@ -1289,7 +1289,7 @@ void Player_BlendSuperKnuxColours(int32 bankID)
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 80, 86);
 }
 #if RETRO_USE_PLUS
-void Player_BlendSuperMightyColours(int32 bankID)
+void Player_BlendSuperMightyColors(int32 bankID)
 {
     RSDK_THIS(Player);
     if (self->superState != SUPERSTATE_SUPER) {
@@ -1314,7 +1314,7 @@ void Player_BlendSuperMightyColours(int32 bankID)
     // set this "102" to "101" to fix mighty's super palette messing up a skin tone colour
     RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 96, 102);
 }
-void Player_BlendSuperRayColours(int32 bankID)
+void Player_BlendSuperRayColors(int32 bankID)
 {
     RSDK_THIS(Player);
     if (self->superState != SUPERSTATE_SUPER) {
@@ -1344,7 +1344,7 @@ void Player_HandleSuperForm(void)
     if (self->superState != SUPERSTATE_NONE) {
         switch (self->characterID) {
             case ID_SONIC:
-                Player_BlendSuperSonicColours(0);
+                Player_BlendSuperSonicColors(0);
                 if (FarPlane) {
                     RSDK.CopyPalette(0, 64, 3, 64, 6);
                 }
@@ -1366,7 +1366,7 @@ void Player_HandleSuperForm(void)
                         }
                     }
 
-                    Player_BlendSuperSonicColours(1);
+                    Player_BlendSuperSonicColors(1);
 
                     if (self->superBlendState > 1) {
                         for (int32 i = 0; i < 6; ++i) {
@@ -1395,7 +1395,7 @@ void Player_HandleSuperForm(void)
                         }
                     }
 
-                    Player_BlendSuperSonicColours(2);
+                    Player_BlendSuperSonicColors(2);
 
                     if (self->superBlendState > 1) {
                         for (int32 i = 0; i < 6; ++i) {
@@ -1413,7 +1413,7 @@ void Player_HandleSuperForm(void)
                 break;
 
             case ID_TAILS:
-                Player_BlendSuperTailsColours(0);
+                Player_BlendSuperTailsColors(0);
                 if (FarPlane) {
                     RSDK.CopyPalette(0, 70, 3, 70, 6);
                 }
@@ -1427,7 +1427,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 70, Player->superPalette_Tails_HCZ[i + 12]);
                     }
 
-                    Player_BlendSuperTailsColours(1);
+                    Player_BlendSuperTailsColors(1);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 70, Player->superPalette_Tails[i]);
@@ -1440,7 +1440,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 70, Player->superPalette_Tails_CPZ[i + 12]);
                     }
 
-                    Player_BlendSuperTailsColours(2);
+                    Player_BlendSuperTailsColors(2);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 70, Player->superPalette_Tails[i]);
@@ -1450,7 +1450,7 @@ void Player_HandleSuperForm(void)
                 break;
 
             case ID_KNUCKLES:
-                Player_BlendSuperKnuxColours(0);
+                Player_BlendSuperKnuxColors(0);
                 if (FarPlane) {
                     RSDK.CopyPalette(0, 80, 3, 80, 6);
                 }
@@ -1464,7 +1464,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 80, Player->superPalette_Knux_HCZ[i + 12]);
                     }
 
-                    Player_BlendSuperKnuxColours(1);
+                    Player_BlendSuperKnuxColors(1);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 80, Player->superPalette_Knux[i]);
@@ -1477,7 +1477,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 80, Player->superPalette_Knux_CPZ[i + 12]);
                     }
 
-                    Player_BlendSuperKnuxColours(2);
+                    Player_BlendSuperKnuxColors(2);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 80, Player->superPalette_Knux[i]);
@@ -1488,7 +1488,7 @@ void Player_HandleSuperForm(void)
 
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                Player_BlendSuperMightyColours(0);
+                Player_BlendSuperMightyColors(0);
                 if (FarPlane) {
                     RSDK.CopyPalette(0, 96, 3, 96, 6);
                 }
@@ -1502,7 +1502,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 96, Player->superPalette_Mighty_HCZ[i + 12]);
                     }
 
-                    Player_BlendSuperMightyColours(1);
+                    Player_BlendSuperMightyColors(1);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 96, Player->superPalette_Mighty[i]);
@@ -1515,7 +1515,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 96, Player->superPalette_Mighty_CPZ[i + 12]);
                     }
 
-                    Player_BlendSuperMightyColours(2);
+                    Player_BlendSuperMightyColors(2);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 96, Player->superPalette_Mighty[i]);
@@ -1525,7 +1525,7 @@ void Player_HandleSuperForm(void)
                 break;
 
             case ID_RAY:
-                Player_BlendSuperRayColours(0);
+                Player_BlendSuperRayColors(0);
                 if (FarPlane) {
                     RSDK.CopyPalette(0, 113, 3, 113, 6);
                 }
@@ -1539,7 +1539,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 113, Player->superPalette_Ray_HCZ[i + 12]);
                     }
 
-                    Player_BlendSuperRayColours(1);
+                    Player_BlendSuperRayColors(1);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 113, Player->superPalette_Ray[i]);
@@ -1552,7 +1552,7 @@ void Player_HandleSuperForm(void)
                         RSDK.SetPaletteEntry(7, i + 113, Player->superPalette_Ray_CPZ[i + 12]);
                     }
 
-                    Player_BlendSuperRayColours(2);
+                    Player_BlendSuperRayColors(2);
 
                     for (int32 i = 0; i < 6; ++i) {
                         RSDK.SetPaletteEntry(6, i + 113, Player->superPalette_Ray[i]);
@@ -2892,10 +2892,9 @@ void Player_StartJump(EntityPlayer *entity)
     if (entity->collisionMode == CMODE_FLOOR && entity->state != Player_State_Roll)
         entity->position.y += entity->jumpOffset;
 
-    entity->velocity.x = (entity->gravityStrength + entity->jumpStrength) * RSDK.Sin256(entity->angle);
-    entity->velocity.x = (entity->groundVel * RSDK.Cos256(entity->angle) + entity->velocity.x) >> 8;
-    entity->velocity.y = entity->groundVel * RSDK.Sin256(entity->angle);
-    entity->velocity.y = (entity->velocity.y - (entity->gravityStrength + entity->jumpStrength) * RSDK.Cos256(entity->angle)) >> 8;
+    int32 jumpForce    = entity->gravityStrength + entity->jumpStrength;
+    entity->velocity.x = (entity->groundVel * RSDK.Cos256(entity->angle) + jumpForce * RSDK.Sin256(entity->angle)) >> 8;
+    entity->velocity.y = (entity->groundVel * RSDK.Sin256(entity->angle) - jumpForce * RSDK.Cos256(entity->angle)) >> 8;
 
     if (entity->camera) {
         entity->camera->disableYOffset = true;
@@ -2903,12 +2902,10 @@ void Player_StartJump(EntityPlayer *entity)
     }
 
     RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->animator, false, 0);
-    if (entity->characterID == ID_TAILS) {
+    if (entity->characterID == ID_TAILS)
         entity->animator.speed = 120;
-    }
-    else {
+    else
         entity->animator.speed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
-    }
 
     if (entity->animator.speed > 0xF0)
         entity->animator.speed = 0xF0;

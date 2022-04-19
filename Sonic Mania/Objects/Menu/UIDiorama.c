@@ -67,7 +67,7 @@ void UIDiorama_Draw(void)
             self->dioramaSize.y = 0xA20000;
             // Draw Lime BG Rect to clear the screen, ONLY draw over the already existing lime pixels
             // Extra Note: as far as I can tell this doesn't *actually* do anything, the sprite already has a lime area setup
-            RSDK.DrawRect(self->dioramaPos.x, self->dioramaPos.y, self->dioramaSize.x, self->dioramaSize.y, self->maskColour, 255, INK_MASKED, false);
+            RSDK.DrawRect(self->dioramaPos.x, self->dioramaPos.y, self->dioramaSize.x, self->dioramaSize.y, self->maskColor, 255, INK_MASKED, false);
         }
 
         self->inkEffect = INK_MASKED;
@@ -201,7 +201,7 @@ void UIDiorama_State_ManiaMode_Alt_Run(void)
     UIDiorama_StateInfo_ManiaMode *info = (UIDiorama_StateInfo_ManiaMode *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->terrainAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->clouds1Animator, true, 1);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->clouds2Animator, true, 2);
@@ -230,7 +230,7 @@ void UIDiorama_State_ManiaMode_Alt_Jog(void)
     UIDiorama_StateInfo_ManiaMode *info = (UIDiorama_StateInfo_ManiaMode *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->terrainAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->clouds1Animator, true, 1);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->clouds2Animator, true, 2);
@@ -259,7 +259,7 @@ void UIDiorama_State_ManiaMode_Alt_Loop(void)
     UIDiorama_StateInfo_ManiaMode *info = (UIDiorama_StateInfo_ManiaMode *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->terrainAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->clouds1Animator, true, 1);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 2, &info->clouds2Animator, true, 2);
@@ -295,7 +295,7 @@ void UIDiorama_State_PlusUpsell(void)
     UIDiorama_StateInfo_PlusUpsell *info = (UIDiorama_StateInfo_PlusUpsell *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 3, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 3, &info->flashAnimator, true, 1);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 3, &info->logoAnimator, true, 2);
@@ -345,7 +345,7 @@ void UIDiorama_State_EncoreMode(void)
     UIDiorama_StateInfo_EncoreMode *info = (UIDiorama_StateInfo_EncoreMode *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 4, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->capsuleFrames, 0, &info->capsuleAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->capsuleFrames, 1, &info->buttonAnimator, true, 0);
@@ -369,7 +369,7 @@ void UIDiorama_State_TimeAttack(void)
     UIDiorama_StateInfo_TimeAttack *info = (UIDiorama_StateInfo_TimeAttack *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 5, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_BORED2, &info->sonicAnimator, true, 3);
         info->sonicAnimator.loopIndex  = 3;
@@ -397,7 +397,7 @@ void UIDiorama_State_Competition(void)
     UIDiorama_StateInfo_Competition *info = (UIDiorama_StateInfo_Competition *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 6, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 10, &info->platformAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->ringFrames, 0, &info->ringAnimator, true, 0);
@@ -466,7 +466,7 @@ void UIDiorama_State_Options(void)
     UIDiorama_StateInfo_Options *info = (UIDiorama_StateInfo_Options *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 7, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_TWISTER, &info->sonicAnimator, true, 17);
         RSDK.SetSpriteAnimation(UIDiorama->tailsFrames, ANI_TWISTER, &info->tailsAnimator, true, 19);
@@ -516,7 +516,7 @@ void UIDiorama_State_Extras(void)
     UIDiorama_StateInfo_Extras *info = (UIDiorama_StateInfo_Extras *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 8, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->bssFrames, 8, &info->medalAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->bssSonicFrames, 1, &info->sonicAnimator, true, 0);
@@ -537,7 +537,7 @@ void UIDiorama_State_Exit(void)
     UIDiorama_StateInfo_Exit *info = (UIDiorama_StateInfo_Exit *)self->values;
 
     if (self->needsSetup) {
-        self->maskColour = 0x00FF00;
+        self->maskColor = 0x00FF00;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 9, &info->dioramaAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->sonicFrames, ANI_OUTTAHERE, &info->sonicAnimator, true, 0);
         info->sonicAnimator.loopIndex  = 5;
@@ -639,14 +639,14 @@ void UIDiorama_Draw_PlusUpsell(void)
         drawPos.y += info->plusPos.y;
         RSDK.DrawSprite(&info->plusAnimator, &drawPos, false);
 
-        colour rectColour = 0x000000;
+        color rectColor = 0x000000;
         if (info->showFlash) {
-            rectColour = 0x01D870;
+            rectColor = 0x01D870;
         }
         else {
-            rectColour = 0xF0C801;
+            rectColor = 0xF0C801;
         }
-        RSDK.DrawRect(self->dioramaPos.x, self->dioramaPos.y, self->dioramaSize.x, self->dioramaSize.y, rectColour, 255, INK_MASKED, false);
+        RSDK.DrawRect(self->dioramaPos.x, self->dioramaPos.y, self->dioramaSize.x, self->dioramaSize.y, rectColor, 255, INK_MASKED, false);
     }
     else {
         self->inkEffect = INK_ADD;

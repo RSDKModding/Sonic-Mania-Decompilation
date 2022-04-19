@@ -19,7 +19,7 @@ struct EntitySyringe {
     int32 type;
     int32 offsetY;
     bool32 activated;
-    colour colour;
+    color color;
     uint8 tag;
     Animator containerAnimator;
     Animator handleAnimator;

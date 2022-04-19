@@ -42,7 +42,7 @@ void FXWaveRing_Draw(void)
     RSDK_THIS(FXWaveRing);
 
     int32 angInc  = 256 / self->pointCount;
-    uint32 colour = (self->r << 16) | (self->g << 8) | self->b;
+    uint32 color = (self->r << 16) | (self->g << 8) | self->b;
     int32 sin     = self->radius * RSDK.Sin256(self->angle2) + (self->radiusOffset << 8);
 
     int32 x = sin * RSDK.Sin256(self->angle) + self->position.x;
@@ -60,14 +60,14 @@ void FXWaveRing_Draw(void)
         prevY = y;
         x     = sin * RSDK.Sin256(angle) + self->position.x;
         y     = sin * RSDK.Cos256(angle) + self->position.y;
-        RSDK.DrawLine(prevX, prevY, x, y, colour, self->alpha, self->inkEffect, false);
+        RSDK.DrawLine(prevX, prevY, x, y, color, self->alpha, self->inkEffect, false);
 
         prevX = x;
         prevY = y;
     }
 
     sin = self->radius * RSDK.Sin256(self->angle2) + (self->radiusOffset << 8);
-    RSDK.DrawLine(x, y, sin * RSDK.Sin256(self->angle) + self->position.x, sin * RSDK.Cos256(self->angle) + self->position.y, colour, self->alpha,
+    RSDK.DrawLine(x, y, sin * RSDK.Sin256(self->angle) + self->position.x, sin * RSDK.Cos256(self->angle) + self->position.y, color, self->alpha,
                   self->inkEffect, false);
 }
 

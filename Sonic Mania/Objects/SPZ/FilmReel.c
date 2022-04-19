@@ -182,21 +182,21 @@ void FilmReel_Draw(void)
 
     self->celluoidAnimator.frameID = (self->rotation >> 4) & 1;
 
-    colour colour1 = 0x3868A8;
+    color color1 = 0x3868A8;
     if (self->celluoidAnimator.frameID)
-        colour1 = 0x204078;
+        color1 = 0x204078;
 
-    colour colour2 = 0x204078;
+    color color2 = 0x204078;
     if (self->celluoidAnimator.frameID)
-        colour2 = 0x182850;
+        color2 = 0x182850;
 
     if (self->lineDir) {
-        RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, colour1, 255, INK_NONE, false);
-        RSDK.DrawLine(self->drawPos.x, self->drawPos.y + 0x18000, x2, y2 + 0x18000, colour2, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, color1, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x, self->drawPos.y + 0x18000, x2, y2 + 0x18000, color2, 255, INK_NONE, false);
     }
     else {
-        RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, colour1, 255, INK_NONE, false);
-        RSDK.DrawLine(self->drawPos.x - 0x18000, self->drawPos.y, x2 - 0x18000, y2, colour2, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, color1, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x - 0x18000, self->drawPos.y, x2 - 0x18000, y2, color2, 255, INK_NONE, false);
     }
     RSDK.DrawSprite(&self->pinAnimator, &self->drawPos, false);
 

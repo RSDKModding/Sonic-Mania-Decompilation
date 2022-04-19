@@ -105,7 +105,7 @@ struct EntityZone {
     int32 screenID;
     int32 timer;
     int32 fadeSpeed;
-    int32 fadeColour;
+    int32 fadeColor;
 };
 
 // Object Struct
@@ -128,10 +128,10 @@ void Zone_Serialize(void);
 int32 Zone_GetZoneID(void);
 void Zone_StoreEntities(int32 xOffset, int32 yOffset);
 void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds);
-void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
-void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
-void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour);
-void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour);
+void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor);
+void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor);
+void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor);
+void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor);
 void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivot, int32 angle);
 void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);

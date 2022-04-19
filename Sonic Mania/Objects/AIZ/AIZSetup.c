@@ -60,10 +60,10 @@ void AIZSetup_StaticUpdate(void)
         RSDK.RotatePalette(0, 171, 174, true);
 #if RETRO_USE_PLUS
         RSDK.RotatePalette(1, 171, 174, true);
-        CutsceneHBH->paletteColours[43] = RSDK.GetPaletteEntry(0, 171);
-        CutsceneHBH->paletteColours[44] = RSDK.GetPaletteEntry(0, 172);
-        CutsceneHBH->paletteColours[45] = RSDK.GetPaletteEntry(0, 173);
-        CutsceneHBH->paletteColours[46] = RSDK.GetPaletteEntry(0, 174);
+        CutsceneHBH->paletteColors[43] = RSDK.GetPaletteEntry(0, 171);
+        CutsceneHBH->paletteColors[44] = RSDK.GetPaletteEntry(0, 172);
+        CutsceneHBH->paletteColors[45] = RSDK.GetPaletteEntry(0, 173);
+        CutsceneHBH->paletteColors[46] = RSDK.GetPaletteEntry(0, 174);
 #endif
     }
 

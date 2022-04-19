@@ -34,7 +34,7 @@ void BSS_Palette_StageLoad(void)
     {
         if (entity->useStageConfig) {
             // Used for Randomized modes
-            BSS_Palette->startColourID = 16 * entity->paletteID;
+            BSS_Palette->startColorID = 16 * entity->paletteID;
         }
         else {
             // Used for the 32 Bonus Stages
@@ -62,9 +62,9 @@ void BSS_Palette_Serialize(void)
     RSDK_EDITABLE_VAR(BSS_Palette, VAR_ENUM, paletteID);
     RSDK_EDITABLE_VAR(BSS_Palette, VAR_UINT8, skyAlpha);
     RSDK_EDITABLE_VAR(BSS_Palette, VAR_UINT8, globeAlpha);
-    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, playfieldA);
-    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, playfieldB);
-    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, bgColor1);
-    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, bgColor2);
-    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOUR, bgColor3);
+    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOR, playfieldA);
+    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOR, playfieldB);
+    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOR, bgColor1);
+    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOR, bgColor2);
+    RSDK_EDITABLE_VAR(BSS_Palette, VAR_COLOR, bgColor3);
 }

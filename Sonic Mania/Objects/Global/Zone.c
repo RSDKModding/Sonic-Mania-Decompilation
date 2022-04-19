@@ -592,10 +592,10 @@ void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setATLBounds
     globals->atlEntityCount = 0;
 }
 
-void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour)
+void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColor)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-    zone->fadeColour = fadeColour;
+    zone->fadeColor = fadeColor;
     zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
@@ -605,10 +605,10 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour)
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
-void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
+void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColor)
 {
     EntityZone *zone = CREATE_ENTITY(Zone, NULL, 0, 0);
-    zone->fadeColour = fadeColour;
+    zone->fadeColor = fadeColor;
     zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 640;
@@ -618,10 +618,10 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
-void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour)
+void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColor)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-    zone->fadeColour = fadeColour;
+    zone->fadeColor = fadeColor;
     zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
@@ -632,10 +632,10 @@ void Zone_StartFadeOut_MusicFade(int32 fadeSpeed, int32 fadeColour)
     Music_FadeOut(0.025);
 }
 
-void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColour)
+void Zone_StartFadeOut_Competition(int32 fadeSpeed, int32 fadeColor)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-    zone->fadeColour = fadeColour;
+    zone->fadeColor = fadeColor;
     zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
@@ -660,7 +660,7 @@ void Zone_ReloadScene(int32 screen)
     entity->screenID   = screen;
     entity->timer      = 640;
     entity->fadeSpeed  = 16;
-    entity->fadeColour = 0xF0F0F0;
+    entity->fadeColor = 0xF0F0F0;
 #if RETRO_USE_PLUS
     if (globals->gameMode != MODE_ENCORE || EncoreIntro) {
 #endif
@@ -682,7 +682,7 @@ void Zone_ReloadScene(int32 screen)
 void Zone_StartTeleportAction(void)
 {
     EntityZone *entity = CREATE_ENTITY(Zone, NULL, 0, 0);
-    entity->fadeColour = 0xF0F0F0;
+    entity->fadeColor = 0xF0F0F0;
     entity->timer      = 640;
     entity->screenID   = PLAYER_MAX;
     entity->fadeSpeed  = 16;
@@ -813,7 +813,7 @@ int32 Zone_GetManiaStageID(void)
 void Zone_Draw_Fade(void)
 {
     RSDK_THIS(Zone);
-    RSDK.FillScreen(self->fadeColour, self->timer, self->timer - 0x80, self->timer - 0x100);
+    RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 0x80, self->timer - 0x100);
 }
 
 void Zone_State_Fadeout(void)
@@ -893,7 +893,7 @@ void Zone_TitleCard_SupressCB(void)
     zone->screenID             = 0;
     zone->timer                = 640;
     zone->fadeSpeed            = 16;
-    zone->fadeColour           = 0xF0F0F0;
+    zone->fadeColor           = 0xF0F0F0;
     zone->state                = Zone_State_Fadeout_Destroy;
     zone->stateDraw            = Zone_Draw_Fade;
     zone->visible              = true;

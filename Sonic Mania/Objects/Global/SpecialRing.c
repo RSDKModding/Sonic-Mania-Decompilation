@@ -67,7 +67,7 @@ void SpecialRing_StageLoad(void)
     SpecialRing->hitbox.bottom = 18;
 
     // sets diffuse colour (overrides)
-    RSDK.SetDiffuseColour(SpecialRing->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseColor(SpecialRing->sceneIndex, 160, 160, 160);
     // sets diffuse intensity (0-8 means more diffuse, any more and it'll start darkening to black (9-12), any greater than 11 is full black)
     RSDK.SetDiffuseIntensity(SpecialRing->sceneIndex, 8, 8, 8);
     // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)

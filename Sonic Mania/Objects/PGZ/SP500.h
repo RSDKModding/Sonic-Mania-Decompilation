@@ -38,7 +38,7 @@ struct EntitySP500 {
     bool32 showGreenLight;
     bool32 showRedLight;
     int32 curPrintDir;
-    int32 inkColour;
+    int32 inkColor;
     Vector2 targetPos;
     Entity *storedEntity;
     Animator animator;

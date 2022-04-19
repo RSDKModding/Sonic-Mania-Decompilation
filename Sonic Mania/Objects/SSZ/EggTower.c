@@ -49,7 +49,7 @@ void EggTower_StageLoad(void)
 {
     EggTower->modelIndex = RSDK.LoadMesh("SSZ/EggTower.bin", SCOPE_STAGE);
     EggTower->sceneIndex = RSDK.Create3DScene("View:EggTower", 0x2000, SCOPE_STAGE);
-    RSDK.SetDiffuseColour(EggTower->sceneIndex, 192, 192, 192);
+    RSDK.SetDiffuseColor(EggTower->sceneIndex, 192, 192, 192);
     RSDK.SetDiffuseIntensity(EggTower->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(EggTower->sceneIndex, 16, 16, 16);
 }

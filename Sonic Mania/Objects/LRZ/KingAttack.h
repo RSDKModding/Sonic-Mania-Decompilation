@@ -16,7 +16,7 @@ typedef enum {
 // Object Class
 struct ObjectKingAttack {
     RSDK_OBJECT
-    TABLE(int32 laserColours[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
+    TABLE(int32 laserColors[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 aniFrames;
     uint16 sfxLaserSweep;
     uint16 sfxLaserErupt;
@@ -35,7 +35,7 @@ struct EntityKingAttack {
     Vector2 targetPos;
     Vector2 targetVelocity;
     Vector2 laserVertPostions[8];
-    int32 *laserColours;
+    int32 *laserColors;
     Hitbox hitbox;
     Animator animator;
 };

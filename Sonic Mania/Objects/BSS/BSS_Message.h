@@ -22,7 +22,7 @@ struct EntityBSS_Message {
     int32 timer;
     int32 timer2;
     bool32 shouldFade;
-    int32 colour;
+    int32 color;
     bool32 saveInProgress;
     Animator leftAnimator;
     Animator rightAnimator;

@@ -114,7 +114,7 @@ void BSS_Setup_StageLoad(void)
         BSS_Setup->randomNumbers[2] = RSDK.RandSeeded(0, max, &key);
         BSS_Setup->randomNumbers[3] = RSDK.RandSeeded(0, max, &key);
 
-        BSS_Palette->startColourID = 16 * (BSS_Setup->randomNumbers[1] & 0x0F);
+        BSS_Palette->startColorID = 16 * (BSS_Setup->randomNumbers[1] & 0x0F);
 
         // Top Left Quadrant
         for (int32 y = 0, py = 0; y < BSS_PLAYFIELD_H / 2; ++y, ++py) {
@@ -229,14 +229,14 @@ int32 BSS_Setup_GetStageID(void)
 void BSS_Setup_SetupPalette(void)
 {
     // Globe Colour 1 & 2
-    for (int32 i = 0; i < 0x10; ++i) RSDK.SetPaletteEntry(0, 0x80 + i, RSDK.GetPaletteEntry(1, BSS_Palette->startColourID));
-    for (int32 i = 0; i < 0x10; ++i) RSDK.SetPaletteEntry(0, 0x90 + i, RSDK.GetPaletteEntry(1, BSS_Palette->startColourID + 1));
+    for (int32 i = 0; i < 0x10; ++i) RSDK.SetPaletteEntry(0, 0x80 + i, RSDK.GetPaletteEntry(1, BSS_Palette->startColorID));
+    for (int32 i = 0; i < 0x10; ++i) RSDK.SetPaletteEntry(0, 0x90 + i, RSDK.GetPaletteEntry(1, BSS_Palette->startColorID + 1));
 
     // Sky Colours
-    for (int32 i = 0; i < 3; ++i) RSDK.SetPaletteEntry(0, 0xA0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColourID + 2));
+    for (int32 i = 0; i < 3; ++i) RSDK.SetPaletteEntry(0, 0xA0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColorID + 2));
 
     // Emerald Colours (Unused in mania)
-    for (int32 i = 0; i < 4; ++i) RSDK.SetPaletteEntry(0, 0xC0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColourID + 8));
+    for (int32 i = 0; i < 4; ++i) RSDK.SetPaletteEntry(0, 0xC0 + i, RSDK.GetPaletteEntry(1, i + BSS_Palette->startColorID + 8));
 
     // Alt Globe Palettes
     for (int32 i = 0; i < 0x100; i += 0x10) {

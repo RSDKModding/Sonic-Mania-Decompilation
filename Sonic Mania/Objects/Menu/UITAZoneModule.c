@@ -208,10 +208,10 @@ void UITAZoneModule_DrawBGShapes(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    uint32 colour = 0x5FA0B0;
+    uint32 color = 0x5FA0B0;
 #if RETRO_USE_PLUS
     if (self->isEncore)
-        colour = 0xF26C4F;
+        color = 0xF26C4F;
 #endif
 
     int32 drawY = self->drawPos.y + 0x230000;
@@ -220,8 +220,8 @@ void UITAZoneModule_DrawBGShapes(void)
     RSDK.DrawRect(self->drawPos.x + 0x790000, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(self->drawPos.x - 0x990000, self->drawPos.y - 0x1C0000, 0x1320000, 0x2C0000, 0, 255, INK_NONE, false);
 
-    UIWidgets_DrawRightTriangle(self->drawPos.x + 0x990000, self->drawPos.y + 0x230000, -71, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF,
-                                colour & 0xFF);
+    UIWidgets_DrawRightTriangle(self->drawPos.x + 0x990000, self->drawPos.y + 0x230000, -71, (color >> 16) & 0xFF, (color >> 8) & 0xFF,
+                                color & 0xFF);
 
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor)
@@ -247,14 +247,14 @@ void UITAZoneModule_DrawFGShapes(void)
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos;
     drawPos       = self->drawPos;
-    uint32 colour = 0xF0F0F0;
+    uint32 color = 0xF0F0F0;
 #if RETRO_USE_PLUS
     if (self->isEncore)
-        colour = 0xF26C4F;
+        color = 0xF26C4F;
 #endif
     drawPos.x -= 0x390000;
     drawPos.y += 0x170000;
-    RSDK.DrawRect(drawPos.x, drawPos.y, 0x840000, 0xD0000, colour, 255, INK_NONE, false);
+    RSDK.DrawRect(drawPos.x, drawPos.y, 0x840000, 0xD0000, color, 255, INK_NONE, false);
 
 #if RETRO_USE_PLUS
     RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->timeAttackAnimator, true, (self->isEncore != 0) + 10);
@@ -264,7 +264,7 @@ void UITAZoneModule_DrawFGShapes(void)
     RSDK.DrawSprite(&self->timeAttackAnimator, &drawPos, false);
 
 #if RETRO_USE_PLUS
-    drawPos = UIWidgets_DrawTriJoinRect(drawPos.x + 0x840000, drawPos.y, colour, 0xF0D808);
+    drawPos = UIWidgets_DrawTriJoinRect(drawPos.x + 0x840000, drawPos.y, color, 0xF0D808);
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x400000, 0xD0000, 0xF0D808, 255, INK_NONE, false);
 #else
     drawPos.x += 0x5C0000;
@@ -552,15 +552,15 @@ void UITAZoneModule_DrawActInfo_Expanded(void)
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos = self->drawPos;
 
-    uint32 colour1 = 0;
+    uint32 color1 = 0;
     if (self->actID)
-        colour1 = 0xE82858;
+        color1 = 0xE82858;
 
-    uint32 colour2 = 0;
+    uint32 color2 = 0;
     if (self->actID != 1)
-        colour2 = 0xE82858;
+        color2 = 0xE82858;
 
-    RSDK.DrawRect(drawPos.x - 0x990000, drawPos.y + 0x240000, 0x860000, 0x150000, colour1, 255, INK_NONE, false);
+    RSDK.DrawRect(drawPos.x - 0x990000, drawPos.y + 0x240000, 0x860000, 0x150000, color1, 255, INK_NONE, false);
 
     int32 offset = 0;
     if (RSDK.Sin256(8 * minVal(self->expandTimer, 16)) >= 0)
@@ -600,16 +600,16 @@ void UITAZoneModule_DrawActInfo_Expanded(void)
 
     drawPos.x = self->drawPos.x - 0x130000;
     drawPos.y = self->drawPos.y + 0x240000;
-    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 20, (colour1 >> 16) & 0xFF, (colour1 >> 8) & 0xFF, colour1 & 0xFF);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 20, (color1 >> 16) & 0xFF, (color1 >> 8) & 0xFF, color1 & 0xFF);
 
     drawPos.x += 0x140000;
     drawPos.y += 0x140000;
-    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -20, (colour2 >> 16) & 0xFF, (colour2 >> 8) & 0xFF, colour2 & 0xFF);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -20, (color2 >> 16) & 0xFF, (color2 >> 8) & 0xFF, color2 & 0xFF);
 
     drawPos3.x = drawPos.x + 0x40000;
     drawPos3.y = drawPos.y - 0xA0000;
     drawPos.y -= 0x140000;
-    RSDK.DrawRect(drawPos.x, drawPos.y, 0x980000, 0x150000, colour2, 255, INK_NONE, false);
+    RSDK.DrawRect(drawPos.x, drawPos.y, 0x980000, 0x150000, color2, 255, INK_NONE, false);
 
     drawPos.x += 0x4B0000;
     drawPos.y += 0xA0000;

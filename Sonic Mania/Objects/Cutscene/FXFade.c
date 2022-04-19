@@ -31,6 +31,7 @@ void FXFade_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->visible = true;
         self->active  = ACTIVE_NORMAL;
+
         if (RSDK.CheckStageFolder("Menu")) {
             self->drawOrder = 14;
         }
@@ -43,12 +44,16 @@ void FXFade_Create(void *data)
         else {
             self->drawOrder = 15;
         }
+
         if (!self->speedIn)
             self->speedIn = 32;
+
         if (!self->speedOut)
             self->speedOut = 32;
+
         if (!self->color)
             self->color = voidToInt(data);
+
         if (!self->eventOnly) {
 #if RETRO_USE_PLUS
             self->transitionScene = false;
@@ -162,7 +167,7 @@ void FXFade_Serialize(void)
     RSDK_EDITABLE_VAR(FXFade, VAR_ENUM, speedIn);
     RSDK_EDITABLE_VAR(FXFade, VAR_ENUM, wait);
     RSDK_EDITABLE_VAR(FXFade, VAR_ENUM, speedOut);
-    RSDK_EDITABLE_VAR(FXFade, VAR_COLOUR, color);
+    RSDK_EDITABLE_VAR(FXFade, VAR_COLOR, color);
     RSDK_EDITABLE_VAR(FXFade, VAR_BOOL, oneWay);
     RSDK_EDITABLE_VAR(FXFade, VAR_BOOL, eventOnly);
     RSDK_EDITABLE_VAR(FXFade, VAR_BOOL, overHUD);

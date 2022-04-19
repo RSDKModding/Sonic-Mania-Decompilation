@@ -30,25 +30,25 @@ void KingAttack_Draw(void)
         case KINGATTACK_LASER:
             for (int i = 0; i < 6; i += 2) {
                 Vector2 vertices[4];
-                colour colours[4];
+                color colors[4];
 
                 vertices[0].x = self->laserVertPostions[i].x - x;
                 vertices[0].y = self->laserVertPostions[i].y - y;
-                colours[0]    = self->laserColours[i];
+                colors[0]    = self->laserColors[i];
 
                 vertices[1].x = self->laserVertPostions[i + 1].x - x;
                 vertices[1].y = self->laserVertPostions[i + 1].y - y;
-                colours[1]    = self->laserColours[i + 1];
+                colors[1]    = self->laserColors[i + 1];
 
                 vertices[2].x = self->laserVertPostions[i + 3].x - x;
                 vertices[2].y = self->laserVertPostions[i + 3].y - y;
-                colours[2]    = self->laserColours[i + 3];
+                colors[2]    = self->laserColors[i + 3];
 
                 vertices[3].x = self->laserVertPostions[i + 2].x - x;
                 vertices[3].y = self->laserVertPostions[i + 2].y - y;
-                colours[3]    = self->laserColours[i + 2];
+                colors[3]    = self->laserColors[i + 2];
 
-                RSDK.DrawBlendedQuad(vertices, colours, 4, self->alpha, INK_ADD);
+                RSDK.DrawBlendedQuad(vertices, colors, 4, self->alpha, INK_ADD);
             }
             //[Fallthrough]
         default: RSDK.DrawSprite(&self->animator, NULL, false); break;
@@ -74,7 +74,7 @@ void KingAttack_Create(void *data)
             case KINGATTACK_LASER:
                 self->inkEffect              = INK_ADD;
                 self->visible                = true;
-                self->laserColours           = KingAttack->laserColours;
+                self->laserColors           = KingAttack->laserColors;
                 self->state                  = KingAttack_State_Laser;
                 KingAttack->laserEruptActive = false;
                 RSDK.PlaySfx(KingAttack->sfxLaserSweep, false, 255);

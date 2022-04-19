@@ -39,7 +39,7 @@ void UFO_Setup_StaticUpdate(void)
 void UFO_Setup_Draw(void)
 {
     RSDK_THIS(UFO_Setup);
-    RSDK.FillScreen(self->fadeColour, self->timer, self->timer - 128, self->timer - 256);
+    RSDK.FillScreen(self->fadeColor, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void UFO_Setup_Create(void *data)
@@ -48,7 +48,7 @@ void UFO_Setup_Create(void *data)
     self->active     = ACTIVE_NORMAL;
     self->visible    = true;
     self->drawOrder  = 15;
-    self->fadeColour = 0xF0F0F0;
+    self->fadeColor = 0xF0F0F0;
     self->timer      = 512;
     self->state      = UFO_Setup_State_ShowStartMessage;
 }
@@ -392,7 +392,7 @@ void UFO_Setup_State_FinishFadeout(void)
             RSDK.AddDrawListRef(14, 1);
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
-                UIBackground->activeColours = &UIBackground->bgColours[18];
+                UIBackground->activeColors = &UIBackground->bgColors[18];
 #endif
             self->visible = false;
             self->state   = StateMachine_None;

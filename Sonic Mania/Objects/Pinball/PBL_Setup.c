@@ -53,7 +53,7 @@ void PBL_Setup_StaticUpdate(void)
 void PBL_Setup_Draw(void)
 {
     RSDK_THIS(PBL_Setup);
-    RSDK.FillScreen(self->colour, self->timer, self->timer - 128, self->timer - 256);
+    RSDK.FillScreen(self->color, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void PBL_Setup_Create(void *data)
@@ -62,7 +62,7 @@ void PBL_Setup_Create(void *data)
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->drawOrder = DRAWLAYER_COUNT - 1;
-    self->colour    = 0xF0F0F0;
+    self->color    = 0xF0F0F0;
     self->timer     = 512;
     self->state     = PBL_Setup_State_FadeIn;
 }
@@ -187,7 +187,7 @@ void PBL_Setup_ExitPinball(void)
     EntityPBL_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, PBL_Setup);
     setup->visible         = true;
     setup->state           = PBL_Setup_SaveAndChangeScene;
-    setup->colour          = 0;
+    setup->color          = 0;
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
     int32 oldScore           = globals->restartScore;

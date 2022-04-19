@@ -184,7 +184,7 @@ enum FunctionTableIDs {
     FunctionTable_RotatePalette,
     FunctionTable_SetLimitedFade,
 #if RETRO_REV02
-    FunctionTable_BlendColours,
+    FunctionTable_BlendColors,
 #endif
     FunctionTable_DrawRect,
     FunctionTable_DrawLine,
@@ -202,7 +202,7 @@ enum FunctionTableIDs {
     FunctionTable_LoadMesh,
     FunctionTable_Create3DScene,
     FunctionTable_Prepare3DScene,
-    FunctionTable_SetDiffuseColour,
+    FunctionTable_SetDiffuseColor,
     FunctionTable_SetDiffuseIntensity,
     FunctionTable_SetSpecularIntensity,
     FunctionTable_SetupMesh,
@@ -575,7 +575,7 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_RotatePalette, RotatePalette);
     addToRSDKFunctionTable(FunctionTable_SetLimitedFade, SetPaletteFade);
 #if RETRO_REV02
-    addToRSDKFunctionTable(FunctionTable_BlendColours, BlendColours);
+    addToRSDKFunctionTable(FunctionTable_BlendColors, BlendColors);
 #endif
     addToRSDKFunctionTable(FunctionTable_DrawRect, DrawRectangle);
     addToRSDKFunctionTable(FunctionTable_DrawLine, DrawLine);
@@ -593,7 +593,7 @@ void RSDK::setupFunctions()
     addToRSDKFunctionTable(FunctionTable_LoadMesh, LoadMesh);
     addToRSDKFunctionTable(FunctionTable_Create3DScene, Create3DScene);
     addToRSDKFunctionTable(FunctionTable_Prepare3DScene, Prepare3DScene);
-    addToRSDKFunctionTable(FunctionTable_SetDiffuseColour, SetDiffuseColour);
+    addToRSDKFunctionTable(FunctionTable_SetDiffuseColor, SetDiffuseColor);
     addToRSDKFunctionTable(FunctionTable_SetDiffuseIntensity, SetDiffuseIntensity);
     addToRSDKFunctionTable(FunctionTable_SetSpecularIntensity, SetSpecularIntensity);
     addToRSDKFunctionTable(FunctionTable_SetupMesh, AddModelToScene);

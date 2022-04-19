@@ -83,11 +83,11 @@ void UITransition_DrawShapes(void)
 {
     RSDK_THIS(UITransition);
     Vector2 positions[3];
-    uint32 colours[3];
+    uint32 colors[3];
 
-    colours[0] = 0xE48E00;
-    colours[1] = 0x1888F0;
-    colours[2] = 0xE82858;
+    colors[0] = 0xE48E00;
+    colors[1] = 0x1888F0;
+    colors[2] = 0xE82858;
 
     int32 screenCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     int32 screenCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
@@ -99,7 +99,7 @@ void UITransition_DrawShapes(void)
     positions[2].y      = screenCenterY + self->drawPos[2].y;
 
     for (int32 i = 0; i < 3; ++i) {
-        UIWidgets_DrawParallelogram(positions[i].x, positions[i].y, 0, SCREEN_YSIZE, SCREEN_YSIZE, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF);
+        UIWidgets_DrawParallelogram(positions[i].x, positions[i].y, 0, SCREEN_YSIZE, SCREEN_YSIZE, (colors[i] >> 16) & 0xFF, (colors[i] >> 8) & 0xFF, colors[i] & 0xFF);
     }
 }
 
@@ -279,10 +279,10 @@ void UITransition_State_TransitionOut(void)
         if (MenuSetup) {
 #if RETRO_USE_PLUS
             ManiaModeMenu_ChangeMenuTrack();
-            ManiaModeMenu_SetBGColours();
+            ManiaModeMenu_SetBGColors();
 #else
             MenuSetup_ChangeMenuTrack();
-            MenuSetup_SetBGColours();
+            MenuSetup_SetBGColors();
 #endif
         }
         EntityUIControl *control   = UIControl_GetUIControl();

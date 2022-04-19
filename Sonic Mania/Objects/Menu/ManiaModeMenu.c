@@ -183,14 +183,14 @@ int32 ManiaModeMenu_StartReturnToTitle(void)
     return 1;
 }
 
-void ManiaModeMenu_SetBGColours(void)
+void ManiaModeMenu_SetBGColors(void)
 {
     switch (ManiaModeMenu_GetActiveMenu()) {
-        case MAINMENU_MAIN: UIBackground->activeColours = UIBackground->bgColours; break;
+        case MAINMENU_MAIN: UIBackground->activeColors = UIBackground->bgColors; break;
         case MAINMENU_TIMEATTACK:
-        case MAINMENU_COMPETITION: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
-        case MAINMENU_SAVESELECT: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
-        case MAINMENU_SAVESELECT_ENCORE: UIBackground->activeColours = &UIBackground->bgColours[15]; break;
+        case MAINMENU_COMPETITION: UIBackground->activeColors = &UIBackground->bgColors[3]; break;
+        case MAINMENU_SAVESELECT: UIBackground->activeColors = &UIBackground->bgColors[6]; break;
+        case MAINMENU_SAVESELECT_ENCORE: UIBackground->activeColors = &UIBackground->bgColors[15]; break;
         default: break;
     }
 }

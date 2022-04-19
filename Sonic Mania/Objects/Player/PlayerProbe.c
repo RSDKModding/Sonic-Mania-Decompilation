@@ -139,12 +139,12 @@ void PlayerProbe_DrawSprites(void)
     }
 }
 
-void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 colour)
+void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
 {
     int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
-    RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, false);
-    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), (RSDK.Sin256(angle + 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
-    RSDK.DrawLine(x2, y2, (RSDK.Cos256(angle - 12) << 12) + x2, (RSDK.Sin256(angle - 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x1, y1, x2, y2, color, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), (RSDK.Sin256(angle + 12) << 12) + y2, color, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, (RSDK.Cos256(angle - 12) << 12) + x2, (RSDK.Sin256(angle - 12) << 12) + y2, color, 0x7F, INK_ADD, false);
 }
 
 #if RETRO_INCLUDE_EDITOR

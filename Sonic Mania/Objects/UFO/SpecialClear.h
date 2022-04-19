@@ -51,7 +51,7 @@ struct EntitySpecialClear {
     bool32 showFade;
     bool32 continuesVisible;
     bool32 continuesFlag;
-    int32 fillColour;
+    int32 fillColor;
     int32 score;
     int32 score1UP;
     int32 lives;

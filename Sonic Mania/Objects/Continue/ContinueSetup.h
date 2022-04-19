@@ -21,7 +21,7 @@ struct EntityContinueSetup {
     int32 countTimer;
     int32 rotationX;
     int32 unused1;
-    int32 numberColour;
+    int32 numberColor;
     bool32 showContinues;
     Matrix matTranslate;
     Matrix matTranslateFinal;

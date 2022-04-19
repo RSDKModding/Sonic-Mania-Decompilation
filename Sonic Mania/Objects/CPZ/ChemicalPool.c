@@ -46,12 +46,12 @@ void ChemicalPool_Draw(void)
         verts[3].x = vertices[1].x + screenX;
         verts[3].y = vertices[1].y - screenY;
 
-        colour *surfaceColours = NULL;
+        color *surfaceColors = NULL;
         if (self->timer >= 1)
-            surfaceColours = ChemicalPool->surfaceColoursFlash;
+            surfaceColors = ChemicalPool->surfaceColorsFlash;
         else
-            surfaceColours = self->surfaceColours;
-        RSDK.DrawBlendedQuad(verts, surfaceColours, 4, 0xC0, INK_NONE);
+            surfaceColors = self->surfaceColors;
+        RSDK.DrawBlendedQuad(verts, surfaceColors, 4, 0xC0, INK_NONE);
 
         verts[0].x = verts[3].x;
         verts[0].y = verts[3].y;
@@ -123,7 +123,7 @@ void ChemicalPool_Create(void *data)
         self->hitbox.top       = (self->type == CHEMICALPOOL_BLUE ? 6 : 0) - (self->size.y >> 17);
         self->hitbox.right     = -self->hitbox.left;
         self->hitbox.bottom    = -self->hitbox.bottom;
-        ChemicalPool_SetupColours();
+        ChemicalPool_SetupColors();
         RSDK.SetSpriteAnimation(ChemicalPool->aniFrames, 0, &self->animator, true, 0);
     }
 }
@@ -141,8 +141,8 @@ void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int32 newType, int32
     chemPool->r                 = chemPool->r + ((newR - chemPool->r) >> 2);
     chemPool->b                 = chemPool->b + ((newB - chemPool->b) >> 2);
     chemPool->g                 = chemPool->g + ((newG - chemPool->g) >> 2);
-    chemPool->surfaceColours[2] = (chemPool->r << 16) | (chemPool->g << 8) | chemPool->b;
-    chemPool->surfaceColours[3] = (chemPool->r << 16) | (chemPool->g << 8) | chemPool->b;
+    chemPool->surfaceColors[2] = (chemPool->r << 16) | (chemPool->g << 8) | chemPool->b;
+    chemPool->surfaceColors[3] = (chemPool->r << 16) | (chemPool->g << 8) | chemPool->b;
 
     uint32 change = abs(newR - chemPool->r) + abs(newG - chemPool->g) + abs(newB - chemPool->b) - 1;
     if (change < 0x1F && chemPool->state != ChemicalPool_State_Change) {
@@ -244,17 +244,17 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
     }
 }
 
-void ChemicalPool_SetupColours(void)
+void ChemicalPool_SetupColors(void)
 {
     RSDK_THIS(ChemicalPool);
 
     switch (self->type) {
         case CHEMICALPOOL_BLUE:
         default:
-            self->surfaceColours[0] = 0x0060E0;
-            self->surfaceColours[1] = 0x0060E0;
-            self->surfaceColours[2] = 0x0008C0;
-            self->surfaceColours[3] = 0x0008C0;
+            self->surfaceColors[0] = 0x0060E0;
+            self->surfaceColors[1] = 0x0060E0;
+            self->surfaceColors[2] = 0x0008C0;
+            self->surfaceColors[3] = 0x0008C0;
             self->r                 = 0x00;
             self->g                 = 0x08;
             self->b                 = 0xC0;
@@ -263,10 +263,10 @@ void ChemicalPool_SetupColours(void)
             break;
 
         case CHEMICALPOOL_GREEN:
-            self->surfaceColours[0] = 0x20E020;
-            self->surfaceColours[1] = 0x20E020;
-            self->surfaceColours[2] = 0x189000;
-            self->surfaceColours[3] = 0x189000;
+            self->surfaceColors[0] = 0x20E020;
+            self->surfaceColors[1] = 0x20E020;
+            self->surfaceColors[2] = 0x189000;
+            self->surfaceColors[3] = 0x189000;
             self->r                 = 0x18;
             self->g                 = 0x90;
             self->b                 = 0x00;
@@ -275,10 +275,10 @@ void ChemicalPool_SetupColours(void)
             break;
 
         case CHEMICALPOOL_CYAN:
-            self->surfaceColours[0] = 0x00B8F0;
-            self->surfaceColours[1] = 0x00B8F0;
-            self->surfaceColours[2] = 0x0080B0;
-            self->surfaceColours[3] = 0x0080B0;
+            self->surfaceColors[0] = 0x00B8F0;
+            self->surfaceColors[1] = 0x00B8F0;
+            self->surfaceColors[2] = 0x0080B0;
+            self->surfaceColors[3] = 0x0080B0;
             self->r                 = 0x00;
             self->g                 = 0x80;
             self->b                 = 0xB0;
@@ -388,7 +388,7 @@ void ChemicalPool_State_Change(void)
             }
         }
         self->changeTimer = 0;
-        ChemicalPool_SetupColours();
+        ChemicalPool_SetupColors();
         self->active = ACTIVE_BOUNDS;
     }
 }

@@ -7,13 +7,13 @@
 struct ObjectUIWidgets {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    int32 buttonColours[16];
+    int32 buttonColors[16];
     int32 timer;
     Animator unusedAnimator1;
     Animator unusedAnimator2;
 #else
     int32 timer;
-    int32 buttonColours[16];
+    int32 buttonColors[16];
 #endif
     Animator frameAnimator;
     Animator arrowsAnimator;
@@ -30,7 +30,7 @@ struct ObjectUIWidgets {
     uint16 sfxWoosh;
     uint16 sfxFail;
 #if RETRO_USE_PLUS
-    colour buttonColour;
+    color buttonColor;
 #endif
 };
 
@@ -67,7 +67,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeM
 void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, int32 edgeSize, int32 red, int32 green, int32 blue);
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
 void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
-Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, colour leftColour, colour rightColour);
+Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color rightColor);
 #if RETRO_USE_PLUS
 void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 #endif

@@ -76,7 +76,7 @@ struct EntityMenuSetup {
     int32 delay;
     int32 fadeShift;
     int32 fadeTimer;
-    int32 fadeColour;
+    int32 fadeColor;
 };
 
 // Object Struct
@@ -107,7 +107,7 @@ void MenuSetup_HandleUnlocks(void);
 void MenuSetup_HandleMenuReturn(void);
 int32 MenuSetup_GetActiveMenu(void);
 void MenuSetup_ChangeMenuTrack(void);
-void MenuSetup_SetBGColours(void);
+void MenuSetup_SetBGColors(void);
 void MenuSetup_MenuButton_ActionCB(void);
 void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay);
 

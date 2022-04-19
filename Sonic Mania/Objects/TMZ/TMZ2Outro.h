@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectTMZ2Outro {
     RSDK_OBJECT
-    TABLE(colour colours[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
+    TABLE(color colors[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
     uint16 sfxAlarm;
     uint16 unused;
     uint16 sfxGrab;

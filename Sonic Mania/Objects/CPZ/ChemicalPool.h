@@ -8,7 +8,7 @@ typedef enum { CHEMICALPOOL_BLUE, CHEMICALPOOL_GREEN, CHEMICALPOOL_CYAN } Chemic
 // Object Class
 struct ObjectChemicalPool {
     RSDK_OBJECT
-    TABLE(colour surfaceColoursFlash[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
+    TABLE(color surfaceColorsFlash[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
     uint16 aniFrames;
     int32 surfaceDeformation[0x1000];
     int32 deformTable[0x1000];
@@ -39,7 +39,7 @@ struct EntityChemicalPool {
     int32 impactPowerSides;
     Hitbox hitbox;
     Vector2 vertices[66];
-    colour surfaceColours[4];
+    color surfaceColors[4];
     Animator animator;
 };
 
@@ -64,7 +64,7 @@ void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int32 newType, int32
 void ChemicalPool_ProcessDeformations(void);
 void ChemicalPool_SetDeform(int32 impactX, int32 impactVelocity);
 void ChemicalPool_SpawnDebris(int32 x, int32 y);
-void ChemicalPool_SetupColours(void);
+void ChemicalPool_SetupColors(void);
 //States
 void ChemicalPool_State_HarmfulBlue(void);
 void ChemicalPool_State_Green(void);

@@ -55,7 +55,7 @@ void Syringe_Draw(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + self->offsetY;
-    RSDK.DrawRect(drawPos.x - 0x100000, drawPos.y, 0x200000, 0x4E0000 - self->offsetY, self->colour, 0xC0, INK_ALPHA, false);
+    RSDK.DrawRect(drawPos.x - 0x100000, drawPos.y, 0x200000, 0x4E0000 - self->offsetY, self->color, 0xC0, INK_ALPHA, false);
     RSDK.DrawSprite(&self->handleAnimator, &drawPos, false);
     RSDK.DrawSprite(&self->containerAnimator, NULL, false);
 }
@@ -71,9 +71,9 @@ void Syringe_Create(void *data)
         self->updateRange.y = 0x800000;
 
         switch (self->type) {
-            case CHEMICALPOOL_BLUE: self->colour = 0x0008C0; break;
-            case CHEMICALPOOL_GREEN: self->colour = 0x189000; break;
-            case CHEMICALPOOL_CYAN: self->colour = 0x0080B0; break;
+            case CHEMICALPOOL_BLUE: self->color = 0x0008C0; break;
+            case CHEMICALPOOL_GREEN: self->color = 0x189000; break;
+            case CHEMICALPOOL_CYAN: self->color = 0x0080B0; break;
         }
 
         RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->handleAnimator, true, 0);
@@ -103,9 +103,9 @@ void Syringe_EditorDraw(void)
 {
     RSDK_THIS(Syringe);
     switch (self->type) {
-        case CHEMICALPOOL_BLUE: self->colour = 0x0008C0; break;
-        case CHEMICALPOOL_GREEN: self->colour = 0x189000; break;
-        case CHEMICALPOOL_CYAN: self->colour = 0x0080B0; break;
+        case CHEMICALPOOL_BLUE: self->color = 0x0008C0; break;
+        case CHEMICALPOOL_GREEN: self->color = 0x189000; break;
+        case CHEMICALPOOL_CYAN: self->color = 0x0080B0; break;
     }
 
     RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &self->handleAnimator, true, 0);

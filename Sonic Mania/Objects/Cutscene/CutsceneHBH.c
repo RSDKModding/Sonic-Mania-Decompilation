@@ -58,7 +58,7 @@ void CutsceneHBH_Create(void *data)
     self->updateRange.y = 0x800000;
     self->angleOffset       = RSDK.Rand(0, 256);
     CutsceneHBH_LoadSprites();
-    CutsceneHBH_SetupColours();
+    CutsceneHBH_SetupColors();
     if (RSDK.CheckStageFolder("MSZ"))
         self->noGlobalTimer = true;
     else
@@ -74,13 +74,13 @@ void CutsceneHBH_StageLoad(void) { CutsceneHBH_StorePalette(); }
 // example: in the case of heavy shinobi's shoes, they now occupy the indices at the end now, which are all 0x000000 in these tables
 // this results in the shoes having shades of black instead of orange as intended
 
-void CutsceneHBH_SetupColours(void)
+void CutsceneHBH_SetupColors(void)
 {
     RSDK_THIS(CutsceneHBH);
     switch (self->characterID) {
         case HBH_GUNNER: {
-            self->colourSet      = 0;
-            colour tempPal[0x80] = { 0x200020, 0x400040, 0x500050, 0x700070, 0x880088, 0xB000B0, 0xC800C8, 0xF000F0, 0x300040, 0x480070, 0x5000A0,
+            self->colorSet      = 0;
+            color tempPal[0x80] = { 0x200020, 0x400040, 0x500050, 0x700070, 0x880088, 0xB000B0, 0xC800C8, 0xF000F0, 0x300040, 0x480070, 0x5000A0,
                                      0x4828F0, 0x3850F0, 0x5898F0, 0x98C8F0, 0xD8E8F0, 0x080078, 0x1000C0, 0x0028F0, 0x0040F0, 0x00A8F0, 0x40F0F0,
                                      0xC8F0F0, 0xF0F0F0, 0x280068, 0x280098, 0x3010D0, 0x2830F0, 0x1880F0, 0x48B8F0, 0x98E0F0, 0xD0F0F0, 0xA80810,
                                      0xE04830, 0xF08840, 0xF0B850, 0xF0D860, 0xF0E870, 0xF0F090, 0x300060, 0x480068, 0x580070, 0x700078, 0x880880,
@@ -92,12 +92,12 @@ void CutsceneHBH_SetupColours(void)
                                      0x5800C8, 0x8810C8, 0xC830C8, 0x98F068, 0xA8F070, 0x100848, 0x101048, 0x102050, 0x102858, 0x180838, 0x201038,
                                      0x282038, 0x302838, 0x0070E0, 0x00A0C0, 0x80D810, 0x28C010, 0xF04040, 0xF05050, 0x48A0E8, 0x60B0F0, 0x380028,
                                      0x580030, 0x780830, 0x981830, 0xB83030, 0x000000, 0x000000, 0xFFFFFF };
-            memcpy(self->colours, tempPal, sizeof(self->colours));
+            memcpy(self->colors, tempPal, sizeof(self->colors));
             break;
         }
         case HBH_SHINOBI: {
-            self->colourSet      = 1;
-            colour tempPal[0x80] = { 0x000000, 0x083048, 0x005848, 0x107858, 0x309060, 0x50A868, 0x68B868, 0x80D068, 0xA8E088, 0xC8E8A0, 0x481878,
+            self->colorSet      = 1;
+            color tempPal[0x80] = { 0x000000, 0x083048, 0x005848, 0x107858, 0x309060, 0x50A868, 0x68B868, 0x80D068, 0xA8E088, 0xC8E8A0, 0x481878,
                                      0x6020B0, 0x9830C0, 0xC050E8, 0xF080F0, 0xF0A8F0, 0x506870, 0x607080, 0x887868, 0xA09078, 0xB8B090, 0xD0D0A8,
                                      0xE0E0C0, 0xF0F0D8, 0x602030, 0x781818, 0x983810, 0xB05010, 0xC07818, 0xD89840, 0xF0C078, 0xF0E0B8, 0x282060,
                                      0x500880, 0x880090, 0xB80888, 0xD80848, 0xE83850, 0xE86880, 0x000000, 0x284058, 0x385078, 0x5068A0, 0x6878B0,
@@ -109,15 +109,15 @@ void CutsceneHBH_SetupColours(void)
                                      0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                                      0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                                      0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xFFFFFF };
-            memcpy(self->colours, tempPal, sizeof(self->colours));
+            memcpy(self->colors, tempPal, sizeof(self->colors));
             break;
         }
         case HBH_MYSTIC:
         case HBH_ROUGE_FANG:
         case HBH_ROUGE_BEAN:
         case HBH_ROUGE_BARK: {
-            self->colourSet      = 2;
-            colour tempPal[0x80] = { 0x200000, 0x300010, 0x400030, 0x600038, 0x800030, 0x901038, 0xA81038, 0xB82020, 0xB83828, 0xC04020, 0xC85020,
+            self->colorSet      = 2;
+            color tempPal[0x80] = { 0x200000, 0x300010, 0x400030, 0x600038, 0x800030, 0x901038, 0xA81038, 0xB82020, 0xB83828, 0xC04020, 0xC85020,
                                      0xD06020, 0xD88020, 0xE0A028, 0xE0C030, 0xE8D038, 0x004000, 0x086000, 0x087800, 0x209000, 0x38A800, 0x60C000,
                                      0x80E008, 0xE0E0A0, 0x780080, 0xA00880, 0xC018A0, 0xE040C0, 0xE068D0, 0xE0A0E0, 0x000000, 0x000000, 0x201030,
                                      0x182050, 0x203880, 0x2850A0, 0x2878B8, 0x30B8F0, 0x60E8F0, 0x88F0F0, 0xB0F0F0, 0x402000, 0x603000, 0x804000,
@@ -129,14 +129,14 @@ void CutsceneHBH_SetupColours(void)
                                      0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF,
                                      0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF,
                                      0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFFFFFF };
-            memcpy(self->colours, tempPal, sizeof(self->colours));
+            memcpy(self->colors, tempPal, sizeof(self->colors));
             break;
         }
         case HBH_RIDER:
         case HBH_KING:
         case HBH_KINGTMZ2: {
-            self->colourSet      = 3;
-            colour tempPal[0x80] = { 0x000000, 0x202020, 0x202040, 0x302070, 0x4020A0, 0x4030B0, 0x4040C0, 0x6060D1, 0x8080E0, 0x90A0E0, 0xA0C0E0,
+            self->colorSet      = 3;
+            color tempPal[0x80] = { 0x000000, 0x202020, 0x202040, 0x302070, 0x4020A0, 0x4030B0, 0x4040C0, 0x6060D1, 0x8080E0, 0x90A0E0, 0xA0C0E0,
                                      0xB0D0E0, 0xC0E0E0, 0x783810, 0xA06040, 0xC07020, 0x203060, 0x204080, 0x2050A0, 0x2060C0, 0x3080C0, 0x40A0C0,
                                      0x50C0D0, 0x60E0E0, 0x205060, 0x206040, 0x308060, 0x40A080, 0x60C0A0, 0x80E0C0, 0x404000, 0xE0E000, 0x302060,
                                      0x402080, 0x4030A0, 0x4040C0, 0x7030D0, 0xA020E0, 0xC060E0, 0xE0A0E0, 0xD0C0E0, 0x202030, 0x302040, 0x302050,
@@ -148,13 +148,13 @@ void CutsceneHBH_SetupColours(void)
                                      0xE0E000, 0x202040, 0x302060, 0x402080, 0x503070, 0x604080, 0x8050A0, 0xA060C0, 0xB080D0, 0xC0A0E0, 0xD0C0E0,
                                      0xE0E0E0, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                                      0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xFFFFFF };
-            memcpy(self->colours, tempPal, sizeof(self->colours));
+            memcpy(self->colors, tempPal, sizeof(self->colors));
             break;
         }
         case HBH_KINGDAMAGED:
         case HBH_PILE: {
-            self->colourSet      = 4;
-            colour tempPal[0x80] = { 0x883801, 0xB86801, 0xE09060, 0xF0B090, 0xA06040, 0xE08008, 0xE0A008, 0xE0C070, 0x085848, 0x107858, 0x309060,
+            self->colorSet      = 4;
+            color tempPal[0x80] = { 0x883801, 0xB86801, 0xE09060, 0xF0B090, 0xA06040, 0xE08008, 0xE0A008, 0xE0C070, 0x085848, 0x107858, 0x309060,
                                      0x50A868, 0x68B868, 0x80D068, 0xA8E088, 0xC8E8A0, 0x400101, 0x900101, 0xE00101, 0xE04830, 0xF08840, 0xF0D860,
                                      0xF0E870, 0xF0F090, 0x302060, 0x402080, 0x4030A0, 0x7030D0, 0xA020E0, 0xC060E0, 0xE0A0E0, 0x013048, 0xA09078,
                                      0xB8B090, 0xD0D0A8, 0xF0F0D8, 0x2850A0, 0x2878B8, 0x30B8F0, 0x60E8F0, 0x603001, 0x804001, 0xA05001, 0x584008,
@@ -166,7 +166,7 @@ void CutsceneHBH_SetupColours(void)
                                      0x803018, 0xB05030, 0xD08850, 0xE8B858, 0xF0D898, 0x480808, 0x701001, 0xA82008, 0xD03808, 0xE86818, 0xF0A020,
                                      0xF0D068, 0xF0E0B8, 0x100828, 0x180840, 0x201050, 0x281068, 0x381880, 0x682098, 0x803098, 0xB038A8, 0xC858B8,
                                      0x500120, 0x800120, 0xB80110, 0xE01001, 0xB8A0E0, 0xC0B8E8, 0xFFFFFF };
-            memcpy(self->colours, tempPal, sizeof(self->colours));
+            memcpy(self->colors, tempPal, sizeof(self->colors));
             break;
         }
         default: break;
@@ -177,19 +177,19 @@ void CutsceneHBH_SetupPalettes(void)
 {
     RSDK_THIS(CutsceneHBH);
     for (int32 c = 0; c < 0x80; ++c) {
-        RSDK.SetPaletteEntry(0, c + 0x80, self->colours[c]);
+        RSDK.SetPaletteEntry(0, c + 0x80, self->colors[c]);
     }
 }
 void CutsceneHBH_StorePalette(void)
 {
     for (int32 c = 0; c < 0x80; ++c) {
-        CutsceneHBH->paletteColours[c] = RSDK.GetPaletteEntry(0, c + 0x80);
+        CutsceneHBH->paletteColors[c] = RSDK.GetPaletteEntry(0, c + 0x80);
     }
 }
 void CutsceneHBH_RestorePalette(void)
 {
     for (int32 c = 0; c < 0x80; ++c) {
-        RSDK.SetPaletteEntry(0, c + 0x80, CutsceneHBH->paletteColours[c]);
+        RSDK.SetPaletteEntry(0, c + 0x80, CutsceneHBH->paletteColors[c]);
     }
 }
 

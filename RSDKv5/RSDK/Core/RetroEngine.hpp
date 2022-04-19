@@ -21,7 +21,6 @@ typedef unsigned int uint32;
 
 typedef uint32 bool32;
 
-typedef uint32 colour;
 typedef uint32 color;
 
 typedef unsigned char byte;

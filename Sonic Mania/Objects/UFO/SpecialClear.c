@@ -210,7 +210,7 @@ void SpecialClear_Draw(void)
     }
 
     if (self->showFade)
-        RSDK.FillScreen(self->fillColour, self->timer, self->timer - 128, self->timer - 256);
+        RSDK.FillScreen(self->fillColor, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void SpecialClear_Create(void *data)
@@ -221,7 +221,7 @@ void SpecialClear_Create(void *data)
         self->visible    = true;
         self->drawOrder  = 14;
         self->timer      = 512;
-        self->fillColour = 0xF0F0F0;
+        self->fillColor = 0xF0F0F0;
         self->showFade   = true;
         self->state      = SpecialClear_State_SetupDelay;
         if (RSDK.CheckStageFolder("SpecialBS")) {
@@ -623,8 +623,8 @@ void SpecialClear_State_ShowSuperMessage(void)
 void SpecialClear_State_ExitFadeOut(void)
 {
     RSDK_THIS(SpecialClear);
-    if (self->fillColour) {
-        self->fillColour -= 0x80808;
+    if (self->fillColor) {
+        self->fillColor -= 0x80808;
     }
     else if (!self->saveInProgress) {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;

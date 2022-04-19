@@ -41,7 +41,7 @@ struct EntitySentryBug {
     Vector2 netPos;
     int32 netRotation;
     int32 netScale;
-    int32 netColour;
+    int32 netColor;
     Vector2 orbPositions[6];
     Vector2 orbVelocities[6];
     Animator unusedAnimator;

@@ -34,14 +34,14 @@ void ContinueSetup_Draw(void)
     RSDK.MatrixMultiply(&self->matFinal, &self->matTranslate, &self->matFinal);
     RSDK.MatrixMultiply(&self->matFinal, &self->matFinal, &self->matTranslateFinal);
     RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer / 10 % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                           &self->matFinal, &self->matFinal, self->numberColour);
+                           &self->matFinal, &self->matFinal, self->numberColor);
 
     RSDK.MatrixTranslateXYZ(&self->matTranslate, 0x120000, 0, 0, true);
     RSDK.MatrixMultiply(&self->matFinal, &self->matRotateY, &self->matRotateX);
     RSDK.MatrixMultiply(&self->matFinal, &self->matTranslate, &self->matFinal);
     RSDK.MatrixMultiply(&self->matFinal, &self->matFinal, &self->matTranslateFinal);
     RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                           &self->matFinal, &self->matFinal, self->numberColour);
+                           &self->matFinal, &self->matFinal, self->numberColor);
 
     RSDK.Draw3DScene(ContinueSetup->sceneIndex);
 
@@ -69,7 +69,7 @@ void ContinueSetup_Create(void *data)
         self->rotationX     = 240;
         self->angle         = 256;
         self->countTimer    = 10;
-        self->numberColour        = 0xFF00FF;
+        self->numberColor        = 0xFF00FF;
         self->showContinues       = 1;
         self->state         = ContinueSetup_State_FadeIn;
         self->updateRange.x = 0x4000000;
@@ -97,7 +97,7 @@ void ContinueSetup_StageLoad(void)
         ContinueSetup->countIndex[i] = RSDK.LoadMesh(paths[i], SCOPE_STAGE);
     }
     ContinueSetup->sceneIndex = RSDK.Create3DScene("View:Continue", 4096, SCOPE_STAGE);
-    RSDK.SetDiffuseColour(ContinueSetup->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseColor(ContinueSetup->sceneIndex, 160, 160, 160);
     RSDK.SetDiffuseIntensity(ContinueSetup->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(ContinueSetup->sceneIndex, 15, 15, 15);
     ContinueSetup->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
@@ -123,7 +123,7 @@ void ContinueSetup_State_HandleCountdown(void)
             self->countTimer--;
             if (self->alpha < 255)
                 self->alpha += 24;
-            self->numberColour = RSDK.GetPaletteEntry(2, self->alpha);
+            self->numberColor = RSDK.GetPaletteEntry(2, self->alpha);
         }
     }
     if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press || TouchInfo->count) {

@@ -16,9 +16,6 @@
 
 #define unused(x) (void)x
 
-typedef uint32 colour;
-typedef uint32 color;
-
 #if RETRO_USE_MOD_LOADER
 typedef enum {
     MODCB_GAME_STARTUP,
@@ -263,8 +260,8 @@ typedef struct {
 #else
     uint16 *(*GetTintLookupTable)(void);
 #endif
-    void (*SetPaletteMask)(uint32 maskColour);
-    void (*SetPaletteEntry)(uint8 paletteID, uint8 index, uint32 colour);
+    void (*SetPaletteMask)(uint32 maskColor);
+    void (*SetPaletteEntry)(uint8 paletteID, uint8 index, uint32 color);
     uint32 (*GetPaletteEntry)(uint8 paletteID, uint8 index);
     void (*SetActivePalette)(uint8 newActivePal, int32 startLine, int32 endLine);
     void (*CopyPalette)(uint8 sourcePalette, uint8 srcPaletteStart, uint8 destinationPalette, uint8 destPaletteStart, uint16 count);
@@ -274,14 +271,14 @@ typedef struct {
     void (*RotatePalette)(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 right);
     void (*SetLimitedFade)(uint8 destPaletteID, uint8 srcPaletteA, uint8 srcPaletteB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_USE_PLUS
-    void (*BlendColours)(uint8 paletteID, uint8 *coloursA, uint8 *coloursB, int32 alpha, int32 index, int32 count);
+    void (*BlendColors)(uint8 paletteID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
 #endif
-    void (*DrawRect)(int32 x, int32 y, int32 width, int32 height, uint32 colour, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawLine)(int32 x1, int32 y1, int32 x2, int32 y2, uint32 colour, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 colour, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 colour, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawRect)(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawLine)(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawCircle)(int32 x, int32 y, int32 radius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
+    void (*DrawCircleOutline)(int32 x, int32 y, int32 innerRadius, int32 outerRadius, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawQuad)(Vector2 *verticies, int32 vertCount, int32 r, int32 g, int32 b, int32 alpha, InkEffects inkEffect);
-    void (*DrawBlendedQuad)(Vector2 *verticies, colour *vertColours, int32 vertCount, int32 alpha, InkEffects inkEffect);
+    void (*DrawBlendedQuad)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startCharID, int32 endCharID, Alignments align, int32 spacing,
@@ -289,17 +286,17 @@ typedef struct {
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);
-    void (*FillScreen)(uint32 colour, int32 alphaR, int32 alphaG, int32 alphaB);
+    void (*FillScreen)(uint32 color, int32 alphaR, int32 alphaG, int32 alphaB);
     uint16 (*LoadMesh)(const char *filename, uint8 scope);
     uint16 (*Create3DScene)(const char *identifier, uint16 faceCount, uint8 scope);
     void (*Prepare3DScene)(uint16 index);
-    void (*SetDiffuseColour)(uint16 index, int32 x, int32 y, int32 z);
+    void (*SetDiffuseColor)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
-    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, colour colour);
+    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, color color);
     void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 speed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
     void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
-                                  colour colour);
+                                  color color);
     void (*Draw3DScene)(uint16 index);
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
     uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 listCount, Scopes scope);

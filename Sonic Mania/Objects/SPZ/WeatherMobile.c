@@ -332,16 +332,16 @@ void WeatherMobile_Draw_Lights(void)
 
     drawPos.x     = (self->parent->position.x >> 16) - ScreenInfo->position.x;
     drawPos.y     = (self->parent->position.y >> 16) - ScreenInfo->position.y;
-    colour colour = RSDK.GetPaletteEntry(0, 151);
+    color color = RSDK.GetPaletteEntry(0, 151);
     if (self->direction) {
-        RSDK.DrawRect(0, 0, drawPos.x - 36, ScreenInfo->height, colour, self->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x + 28, 0, ScreenInfo->width, ScreenInfo->height, colour, self->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x - 36, 0, 64, drawPos.y - 29, colour, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(0, 0, drawPos.x - 36, ScreenInfo->height, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x + 28, 0, ScreenInfo->width, ScreenInfo->height, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x - 36, 0, 64, drawPos.y - 29, color, self->alpha, INK_ADD, true);
     }
     else {
-        RSDK.DrawRect(0, 0, drawPos.x - 28, ScreenInfo->height, colour, self->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x + 36, 0, ScreenInfo->width, ScreenInfo->height, colour, self->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x - 28, 0, 64, drawPos.y - 29, colour, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(0, 0, drawPos.x - 28, ScreenInfo->height, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x + 36, 0, ScreenInfo->width, ScreenInfo->height, color, self->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x - 28, 0, 64, drawPos.y - 29, color, self->alpha, INK_ADD, true);
     }
 }
 

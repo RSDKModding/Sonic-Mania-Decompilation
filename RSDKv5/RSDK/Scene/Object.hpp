@@ -56,7 +56,7 @@ enum VariableTypes {
     VAR_STRING,
     VAR_VECTOR2,
     VAR_FLOAT, // Not actually used in Sonic Mania so it's just an assumption, but this is the only thing that'd fit the 32 bit limit and make sense
-    VAR_COLOUR,
+    VAR_COLOR,
 };
 
 enum ActiveFlags {

@@ -314,16 +314,16 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
         }
     }
 }
-void SpinBooster_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 colour)
+void SpinBooster_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
 {
-    RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x1, y1, x2, y2, color, 0x7F, INK_ADD, false);
     int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
     int32 c1    = RSDK.Cos256(angle + 12) << 12;
     int32 s1    = RSDK.Sin256(angle + 12) << 12;
     int32 c2    = RSDK.Cos256(angle - 12) << 12;
     int32 s2    = RSDK.Sin256(angle - 12) << 12;
-    RSDK.DrawLine(x2, y2, x2 + c1, y2 + s1, colour, 0x7F, INK_ADD, false);
-    RSDK.DrawLine(x2, y2, x2 + c2, y2 + s2, colour, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + c1, y2 + s1, color, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + c2, y2 + s2, color, 0x7F, INK_ADD, false);
 }
 void SpinBooster_DrawSprites(void)
 {

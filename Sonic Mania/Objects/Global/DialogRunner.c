@@ -94,7 +94,7 @@ void DialogRunner_NotifyAutoSave(void)
         if (!UIDialog->activeDialog) {
             Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_NotifyAutoSave_CB, true);
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {
@@ -135,7 +135,7 @@ void DialogRunner_PromptSavePreference_CB(void)
             }
             Localization_GetString(&info, stringID);
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, DialogRunner_SetNoSaveEnabled, DialogRunner_SetNoSaveDisabled, true, true);
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {
@@ -160,7 +160,7 @@ void DialogRunner_CheckUserAuth_CB()
                     UFO_Setup->resetToTitle = true;
                     foreach_all(UFO_Setup, setup)
                     {
-                        setup->fadeColour = 0;
+                        setup->fadeColor = 0;
                         setup->state      = UFO_Setup_State_FinishFadeout;
                         setup->active     = ACTIVE_ALWAYS;
                         setup->visible    = true;
@@ -190,7 +190,7 @@ void DialogRunner_CheckUserAuth_CB()
                 id = STR_RETRURNINGTOTITLE;
             Localization_GetString(&info, id);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_SignedOutCB, true);
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {
@@ -220,7 +220,7 @@ void DialogRunner_ManageNotifs(void)
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_GetNextNotif, true);
             dialog->playEventSfx   = true;
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {

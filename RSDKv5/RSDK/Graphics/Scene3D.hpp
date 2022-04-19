@@ -53,7 +53,7 @@ struct Model {
     uint32 hash[4];
     ModelVertex *vertices;
     TexCoord *texCoords;
-    Colour *colours;
+    Color *colors;
     uint16 *indices;
     uint16 vertCount;
     uint16 indexCount;
@@ -72,7 +72,7 @@ struct Scene3DVertex {
     int32 nz;
     int32 tx;
     int32 ty;
-    uint32 colour;
+    uint32 color;
 };
 
 struct FaceBufferEntry {
@@ -160,7 +160,7 @@ inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed
     animator->loopIndex       = loopIndex;
     animator->animationID     = model;
 }
-inline void SetDiffuseColour(uint16 sceneID, uint8 x, uint8 y, uint8 z)
+inline void SetDiffuseColor(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
@@ -187,8 +187,8 @@ inline void SetSpecularIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
         scn->specularIntensityZ = z;
     }
 }
-void AddModelToScene(uint16 animID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
-void AddMeshFrameToScene(uint16 animID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
+void AddModelToScene(uint16 animID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
+void AddMeshFrameToScene(uint16 animID, uint16 sceneID, RSDK::Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, color color);
 void Draw3DScene(uint16 sceneID);
 
 #endif

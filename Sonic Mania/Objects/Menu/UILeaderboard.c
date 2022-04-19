@@ -374,14 +374,14 @@ void UILeaderboard_DrawRank(int32 id)
     drawPos.x = (id << 20) + self->position.x - 0x200000;
     drawPos.y = (id << 20) + self->position.y + 0x40000;
 
-    int32 colour = 0x5870E0;
+    int32 color = 0x5870E0;
     switch (self->ranks[id]) {
         default: break;
-        case 1: colour = 0xD9AD04; break;
-        case 2: colour = 0x98C0C8; break;
-        case 3: colour = 0xC05802; break;
+        case 1: color = 0xD9AD04; break;
+        case 2: color = 0x98C0C8; break;
+        case 3: color = 0xC05802; break;
     }
-    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 169, 15, 15, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, 169, 15, 15, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 
     drawPos.x -= 0x7A0000;
     if (!self->isUser[id] || !(UIControl->timer & 4)) {

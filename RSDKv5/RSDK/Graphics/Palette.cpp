@@ -13,7 +13,7 @@ uint16 fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
 uint8 gfxLineBuffer[SCREEN_YSIZE];
 
-int32 maskColour = 0;
+int32 maskColor = 0;
 #if RETRO_REV02
 uint16 *tintLookupTable = NULL;
 #else
@@ -83,9 +83,9 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, shor
 }
 
 #if RETRO_REV02
-void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int32 alpha, int32 index, int32 count) {
+void BlendColors(byte paletteID, byte* colorsA, byte* colorsB, int32 alpha, int32 index, int32 count) {
 
-    if (paletteID >= PALETTE_COUNT || !coloursA || !coloursB)
+    if (paletteID >= PALETTE_COUNT || !colorsA || !colorsB)
         return;
 
     if (alpha > 0xFF) 
@@ -97,11 +97,11 @@ void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int32 alpha, i
     ushort *palettePtr = &fullPalette[paletteID][index];
     for (int32 i = index; i < index + count; ++i) {
         // bgrx formatted array
-        int32 r = alpha * coloursB[2] + alpha2 * coloursA[2];
-        int32 g = alpha * coloursB[1] + alpha2 * coloursA[1];
-        int32 b = alpha * coloursB[0] + alpha2 * coloursA[0];
-        coloursA += 4;
-        coloursB += 4;
+        int32 r = alpha * colorsB[2] + alpha2 * colorsA[2];
+        int32 g = alpha * colorsB[1] + alpha2 * colorsA[1];
+        int32 b = alpha * colorsB[0] + alpha2 * colorsA[0];
+        colorsA += 4;
+        colorsB += 4;
         *palettePtr = PACK_RGB888((byte)(r >> 8), (byte)(g >> 8), (byte)(b >> 8));
         ++palettePtr;
     }

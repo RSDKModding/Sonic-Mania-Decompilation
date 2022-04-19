@@ -208,15 +208,15 @@ inline void SetDrawLayerProperties(byte layer, bool32 sorted, void (*callback)(v
 
 void SwapDrawListEntries(uint8 layer, uint16 indexA, uint16 indexB, int32 count);
 
-void FillScreen(uint colour, int alphaR, int alphaG, int alphaB);
+void FillScreen(uint color, int alphaR, int alphaG, int alphaB);
 
-void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
-void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
-void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
-void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative);
+void DrawLine(int x1, int y1, int x2, int y2, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
+void DrawRectangle(int x, int y, int width, int height, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
+void DrawCircle(int x, int y, int radius, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
+void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative);
 
 void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect);
-void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect);
+void DrawBlendedFace(Vector2 *vertices, uint *colors, int vertCount, int alpha, InkEffects inkEffect);
 
 void DrawSprite(RSDK::Animator *animator, Vector2 *position, bool32 screenRelative);
 void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, FlipFlags direction, InkEffects inkEffect, int alpha, int sheetID);
@@ -230,6 +230,6 @@ void DrawAniTile(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uin
 
 void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative);
-void DrawDevText(const char *text, int x, int y, int align, uint colour);
+void DrawDevText(const char *text, int x, int y, int align, uint color);
 
 #endif // !DRAWING_H

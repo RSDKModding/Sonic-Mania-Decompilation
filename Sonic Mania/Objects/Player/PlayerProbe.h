@@ -37,6 +37,6 @@ void PlayerProbe_Serialize(void);
 // Extra Entity Functions
 void PlayerProbe_Print(EntityPlayer *player);
 void PlayerProbe_DrawSprites(void);
-void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 colour);
+void PlayerProbe_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color);
 
 #endif //!OBJ_PLAYERPROBE_H

@@ -22,7 +22,7 @@ struct EntityPBL_TargetBumper {
     RSDK_ENTITY
     StateMachine(state);
     int32 height;
-    int32 colour;
+    int32 color;
     Matrix unusedMatrix1;
     Matrix matTransform;
     Matrix matWorld;

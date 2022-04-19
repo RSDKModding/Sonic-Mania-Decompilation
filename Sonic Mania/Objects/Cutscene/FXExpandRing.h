@@ -14,7 +14,7 @@ struct EntityFXExpandRing {
     StateMachine(state);
     int32 timer;
     int32 expandSpeed;
-    int32 colour;
+    int32 color;
     int32 expandMax;
     int32 innerRadius;
     int32 outerRadius;

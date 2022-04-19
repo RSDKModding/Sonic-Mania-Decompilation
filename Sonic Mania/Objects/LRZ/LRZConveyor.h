@@ -14,7 +14,7 @@ typedef enum {
 struct ObjectLRZConveyor {
     RSDK_OBJECT
     uint16 aniFrames;
-    colour lineColours[64];
+    color lineColors[64];
 };
 
 // Entity Class
@@ -58,7 +58,7 @@ void LRZConveyor_HandleBehaviour(void);
 void LRZConveyor_HandlePlayerInteractions(void);
 int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr);
 void LRZConveyor_DrawWheels(void);
-void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, colour *colour);
+void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, color *color);
 void LRZConveyor_DrawConveyorLines(void);
 
 #endif //!OBJ_LRZCONVEYOR_H

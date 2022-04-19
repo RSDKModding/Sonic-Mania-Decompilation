@@ -39,7 +39,7 @@ void SSZSpotlight_Draw(void)
     RSDK_THIS(SSZSpotlight);
     Vector2 *vertPosPtr = self->vertPos;
     Vector2 vertPos[4];
-    colour vertClrs[4];
+    color vertClrs[4];
 
     int32 screenX = self->position.x - (ScreenInfo[SceneInfo->currentScreenID].position.x << 16);
 
@@ -117,21 +117,21 @@ void SSZSpotlight_Create(void *data)
 #if RETRO_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
             if (self->color)
-                self->vertClrPtrs = SSZSpotlight->coloursEncoreB;
+                self->vertClrPtrs = SSZSpotlight->colorsEncoreB;
             else
-                self->vertClrPtrs = SSZSpotlight->coloursEncoreA;
+                self->vertClrPtrs = SSZSpotlight->colorsEncoreA;
         }
         else {
             if (self->color)
-                self->vertClrPtrs = SSZSpotlight->coloursManiaB;
+                self->vertClrPtrs = SSZSpotlight->colorsManiaB;
             else
-                self->vertClrPtrs = SSZSpotlight->coloursManiaA;
+                self->vertClrPtrs = SSZSpotlight->colorsManiaA;
         }
 #else
         if (self->color)
-            self->vertClrPtrs = SSZSpotlight->coloursManiaB;
+            self->vertClrPtrs = SSZSpotlight->colorsManiaB;
         else
-            self->vertClrPtrs = SSZSpotlight->coloursManiaA;
+            self->vertClrPtrs = SSZSpotlight->colorsManiaA;
 #endif
 
         self->active        = ACTIVE_XBOUNDS;

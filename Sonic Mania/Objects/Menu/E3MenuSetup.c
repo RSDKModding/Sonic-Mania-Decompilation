@@ -36,7 +36,7 @@ void E3MenuSetup_StaticUpdate(void)
 void E3MenuSetup_Draw(void)
 {
     RSDK_THIS(E3MenuSetup);
-    RSDK.FillScreen(self->fadeColour, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
+    RSDK.FillScreen(self->fadeColor, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 }
 
 void E3MenuSetup_Create(void *data)
@@ -117,7 +117,7 @@ void E3MenuSetup_Delay_LoadScene(void)
 void E3MenuSetup_ZoneSelect_ActionCB(void)
 {
     EntityE3MenuSetup *entity = CREATE_ENTITY(E3MenuSetup, NULL, 0xFFF00000, 0xFFF00000);
-    entity->fadeColour        = 0x000000;
+    entity->fadeColor        = 0x000000;
     entity->delay             = 32;
     entity->fadeSpeed         = 5;
     entity->state             = E3MenuSetup_State_FadeOut;

@@ -29,7 +29,7 @@ struct Image {
     int32 width;
     int32 height;
     int32 depth;
-    colour *palette;
+    color *palette;
     uint8 *dataPtr;
 };
 

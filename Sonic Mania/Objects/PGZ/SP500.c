@@ -225,8 +225,8 @@ void SP500_State_Activate(void)
 
     if (++self->timer >= 60) {
         self->timer = 0;
-        if (Ink && Ink->playerColours[0]) {
-            self->inkColour = Ink->playerColours[0] - 1;
+        if (Ink && Ink->playerColors[0]) {
+            self->inkColor = Ink->playerColors[0] - 1;
             RSDK.PlaySfx(SP500->sfxBeep4, false, 255);
             self->showGreenLight = true;
             self->active      = ACTIVE_NORMAL;
@@ -312,7 +312,7 @@ void SP500_State_Printing(void)
 
     uint16 tile = (uint16)-1;
 
-    switch (self->inkColour) {
+    switch (self->inkColor) {
         default: break;
         case 0: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcC.x + (self->offset >> 20), self->srcC.y + self->printRowID); break;
         case 1: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcM.x + (self->offset >> 20), self->srcM.y + self->printRowID); break;
@@ -396,7 +396,7 @@ void SP500_State_PrintFinished(void)
                     case ID_KNUCKLES: RSDK.CopyPalette(6, 80, 0, 80, 6); break;
                     // also see the Ink object for an concept on how this would work with mighty & ray
                 }
-                Ink->playerColours[i] = 0;
+                Ink->playerColors[i] = 0;
             }
             EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             player1->camera->target = (Entity *)player1;

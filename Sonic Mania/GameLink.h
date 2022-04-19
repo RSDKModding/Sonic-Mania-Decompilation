@@ -25,7 +25,6 @@ typedef uint32 bool32;
 #define true 1
 #define false 0
 
-typedef uint32 colour;
 typedef uint32 color;
 
 #define SCREEN_XMAX    (1280)
@@ -532,7 +531,7 @@ typedef enum {
     VAR_STRING,
     VAR_VECTOR2,
     VAR_FLOAT,
-    VAR_COLOUR,
+    VAR_COLOR,
 } VarTypes;
 
 #if RETRO_USE_PLUS

@@ -95,7 +95,7 @@ void UFO_ItemBox_StageLoad(void)
     UFO_ItemBox->meshFrames = RSDK.LoadMesh("Special/ItemBox.bin", SCOPE_STAGE);
     UFO_ItemBox->sceneIndex = RSDK.Create3DScene("View:Items", 1024, SCOPE_STAGE);
     UFO_ItemBox->breakCount = -1;
-    RSDK.SetDiffuseColour(UFO_ItemBox->sceneIndex, 160, 160, 0);
+    RSDK.SetDiffuseColor(UFO_ItemBox->sceneIndex, 160, 160, 0);
     RSDK.SetDiffuseIntensity(UFO_ItemBox->sceneIndex, 8, 8, 0);
     RSDK.SetSpecularIntensity(UFO_ItemBox->sceneIndex, 14, 14, 0);
     UFO_ItemBox->sfxDestroy      = RSDK.GetSfx("Global/Destroy.wav");

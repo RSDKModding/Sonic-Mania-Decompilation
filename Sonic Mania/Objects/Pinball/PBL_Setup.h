@@ -27,7 +27,7 @@ struct EntityPBL_Setup {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 colour;
+    int32 color;
     Matrix unusedMatrix1;
 };
 

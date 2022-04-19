@@ -493,11 +493,11 @@ void LoadSceneFile()
                                 ReadBytes(&info, buffer, sizeof(bool32));
                             break;
 
-                        case VAR_COLOUR:
+                        case VAR_COLOR:
                             if (varList[v].active) 
-                                ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(colour));
+                                ReadBytes(&info, &entityBuffer[varList[v].offset], sizeof(color));
                             else
-                                ReadBytes(&info, buffer, sizeof(colour));
+                                ReadBytes(&info, buffer, sizeof(color));
                             break;
 
                         case VAR_STRING:

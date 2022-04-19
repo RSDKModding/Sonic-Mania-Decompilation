@@ -328,15 +328,15 @@ void UIReplayCarousel_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore, in
     RSDK.DrawRect(drawX + 0x790000, (drawY + 0x298000) - 0x550000, 0x200000, 0x550000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(drawX - 10027008, drawY - 2785280, 20054016, 0x2C0000, 0, 255, INK_NONE, false);
 
-    uint32 colour = 0xF0F0F0;
+    uint32 color = 0xF0F0F0;
     if (isEncore)
-        colour = 0xF26C4F;
-    UIWidgets_DrawParallelogram(drawX - 0xA0000, drawY + 0xE0000, 128, 16, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
+        color = 0xF26C4F;
+    UIWidgets_DrawParallelogram(drawX - 0xA0000, drawY + 0xE0000, 128, 16, 16, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 
-    colour = 0x5FA0B0;
+    color = 0x5FA0B0;
     if (isEncore)
-        colour = 0xF26C4F;
-    UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x298000, -76, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
+        color = 0xF26C4F;
+    UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x298000, -76, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(drawX + 0x30000, drawY + 0x30000, 312, 91);
@@ -351,7 +351,7 @@ void UIReplayCarousel_DrawStageInfo(int32 drawX, int32 drawY, uint8 act, uint8 c
 {
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
-    uint32 colours[] = { 0xE82858, 0x5870E0, 0xF0D808, 0x010101 };
+    uint32 colors[] = { 0xE82858, 0x5870E0, 0xF0D808, 0x010101 };
     int32 widths[]   = { 60, 82, 52, 70 };
 
     drawPos.x = drawX - 0x990000;
@@ -359,17 +359,17 @@ void UIReplayCarousel_DrawStageInfo(int32 drawX, int32 drawY, uint8 act, uint8 c
 
     Vector2 drawOffsets[4];
     for (int32 i = 0; i < 4; ++i) {
-        RSDK.DrawRect(drawPos.x, drawPos.y, widths[i] << 16, 0xD0000, colours[i], 255, INK_NONE, false);
+        RSDK.DrawRect(drawPos.x, drawPos.y, widths[i] << 16, 0xD0000, colors[i], 255, INK_NONE, false);
 
         drawOffsets[i].x = drawPos.x + 0x10000;
         drawOffsets[i].y = drawPos.y + 0xC0000;
         drawPos.x += (widths[i] << 16);
         if (i < 3) {
-            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 13, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 13, (colors[i] >> 16) & 0xFF, (colors[i] >> 8) & 0xFF, colors[i] & 0xFF);
 
             drawPos.x += 0xE0000;
-            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colours[i + 1] >> 16) & 0xFF, (colours[i + 1] >> 8) & 0xFF,
-                                        colours[i + 1] & 0xFF);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colors[i + 1] >> 16) & 0xFF, (colors[i + 1] >> 8) & 0xFF,
+                                        colors[i + 1] & 0xFF);
         }
     }
 

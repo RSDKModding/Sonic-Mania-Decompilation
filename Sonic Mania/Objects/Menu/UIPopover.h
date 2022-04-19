@@ -39,7 +39,7 @@ struct EntityUIPopover {
     EntityUIButton *buttons[UIPopover_OptionCount];
     StateMachine(closeCB);
     bool32 playEventSfx; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
-    bool32 useAltColour; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
+    bool32 useAltColor; // unused, so just a guess based on what this is in UIDialog, though theres about a 50/50 chance its right to some extent
     uint8 triangleMode;
 };
 

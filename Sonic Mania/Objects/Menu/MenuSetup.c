@@ -66,7 +66,7 @@ void MenuSetup_StaticUpdate(void)
     if (!MenuSetup->initializedMenuReturn) {
         ManiaModeMenu_HandleMenuReturn();
         MenuSetup->initializedMenuReturn = true;
-        ManiaModeMenu_SetBGColours();
+        ManiaModeMenu_SetBGColors();
         if (!globals->suppressAutoMusic) {
             ManiaModeMenu_ChangeMenuTrack();
         }
@@ -106,7 +106,7 @@ void MenuSetup_StaticUpdate(void)
     if (!MenuSetup->initializedMenuReturn) {
         MenuSetup_HandleMenuReturn();
         MenuSetup->initializedMenuReturn = true;
-        MenuSetup_SetBGColours();
+        MenuSetup_SetBGColors();
         if (!globals->suppressAutoMusic) {
             MenuSetup_ChangeMenuTrack();
         }
@@ -120,7 +120,7 @@ void MenuSetup_StaticUpdate(void)
 void MenuSetup_Draw(void)
 {
     RSDK_THIS(MenuSetup);
-    RSDK.FillScreen(self->fadeColour, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
+    RSDK.FillScreen(self->fadeColor, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 }
 
 void MenuSetup_Create(void *data)
@@ -183,7 +183,7 @@ void MenuSetup_StartTransition(void (*callback)(void), int32 delay)
 {
     EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
     menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
+    menuSetup->fadeColor      = 0x000000;
     menuSetup->fadeShift       = 5;
     menuSetup->delay           = delay;
 #if RETRO_USE_PLUS
@@ -199,7 +199,7 @@ void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay)
 {
     EntityMenuSetup *menuSetup = CREATE_ENTITY(MenuSetup, NULL, -0x100000, -0x100000);
     menuSetup->active          = ACTIVE_ALWAYS;
-    menuSetup->fadeColour      = 0x000000;
+    menuSetup->fadeColor      = 0x000000;
     menuSetup->fadeShift       = 5;
     menuSetup->delay           = delay;
     menuSetup->state           = MenuSetup_State_SetupLeaderboards;
@@ -912,13 +912,13 @@ void MenuSetup_ChangeMenuTrack(void)
         Music_TransitionTrack(trackID, 0.12);
 }
 
-void MenuSetup_SetBGColours(void)
+void MenuSetup_SetBGColors(void)
 {
     switch (MenuSetup_GetActiveMenu()) {
-        case MAINMENU_MAIN: UIBackground->activeColours = UIBackground->bgColours; break;
+        case MAINMENU_MAIN: UIBackground->activeColors = UIBackground->bgColors; break;
         case MAINMENU_TIMEATTACK:
-        case MAINMENU_COMPETITION: UIBackground->activeColours = &UIBackground->bgColours[3]; break;
-        case MAINMENU_SAVESELECT: UIBackground->activeColours = &UIBackground->bgColours[6]; break;
+        case MAINMENU_COMPETITION: UIBackground->activeColors = &UIBackground->bgColors[3]; break;
+        case MAINMENU_SAVESELECT: UIBackground->activeColors = &UIBackground->bgColors[6]; break;
         default: break;
     }
 }

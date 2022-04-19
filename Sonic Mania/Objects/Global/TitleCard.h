@@ -49,7 +49,7 @@ struct EntityTitleCard {
     Animator nameLetterAnimator;
     Animator zoneLetterAnimator;
     Animator actNumbersAnimator;
-    colour colours[5];
+    color colors[5];
 };
 
 // Object Struct
@@ -69,7 +69,7 @@ void TitleCard_EditorLoad(void);
 void TitleCard_Serialize(void);
 
 // Extra Entity Functions
-void TitleCard_SetColours(void);
+void TitleCard_SetColors(void);
 void TitleCard_SetPoints(void);
 void TitleCard_SetWordPositions(void);
 void TitleCard_CheckPointBoundaries(void);

@@ -65,7 +65,7 @@ void UIRankButton_SetTimeAttackRank(EntityUIRankButton *button, int32 rank, int3
 void UIRankButton_SetupLeaderboardRank(EntityUIRankButton *button, LeaderboardEntry *entry);
 
 void UIRankButton_DrawSprites(void);
-void UIRankButton_DrawBackgroundShape(int32 x, int32 y, int32 width, int32 height, int32 colour);
+void UIRankButton_DrawBackgroundShape(int32 x, int32 y, int32 width, int32 height, int32 color);
 
 bool32 UIRankButton_CheckButtonEnterCB(void);
 bool32 UIRankButton_CheckSelectedCB(void);

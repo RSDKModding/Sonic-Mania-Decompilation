@@ -90,7 +90,7 @@ bool32 TMZ2Outro_Cutscene_SetupOutro(EntityCutsceneSeq *host)
     foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
 
     for (int32 i = 0; i < 0x100; ++i) {
-        colour clr = RSDK.GetPaletteEntry(1, i);
+        color clr = RSDK.GetPaletteEntry(1, i);
         RSDK.SetPaletteEntry(7, i, clr & 0xFF0000);
     }
 
@@ -326,7 +326,7 @@ bool32 TMZ2Outro_Cutscene_StartRubyRampage(EntityCutsceneSeq *host)
             alert->state = TMZAlert_State_Activating;
         }
 
-        for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colours[i]);
+        for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colors[i]);
         if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
             CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
                           (ScreenInfo->position.y + ScreenInfo->centerY) << 16);

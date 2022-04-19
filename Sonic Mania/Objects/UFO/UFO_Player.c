@@ -75,12 +75,16 @@ void UFO_Player_Create(void *data)
         self->updateRange.y = 0x800000;
         self->drawFX        = FX_FLIP;
         self->drawOrder     = 4;
+
         if (!self->machQuota1)
             self->machQuota1 = 32;
+
         if (!self->machQuota2)
             self->machQuota2 = 32;
+
         if (!self->machQuota3)
             self->machQuota3 = 32;
+
         if (self->startingRings > 0)
             UFO_Setup->rings = self->startingRings;
 
@@ -104,6 +108,15 @@ void UFO_Player_StageLoad(void)
     }
 
     switch (globals->playerID & 0xFF) {
+        default:
+        case ID_SONIC:
+            UFO_Player->jogModel    = RSDK.LoadMesh("Special/SonicJog.bin", SCOPE_STAGE);
+            UFO_Player->dashModel   = RSDK.LoadMesh("Special/SonicDash.bin", SCOPE_STAGE);
+            UFO_Player->jumpModel   = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
+            UFO_Player->ballModel   = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
+            UFO_Player->tumbleModel = RSDK.LoadMesh("Special/SonicTumble.bin", SCOPE_STAGE);
+            break;
+
         case ID_TAILS:
             UFO_Player->jogModel    = RSDK.LoadMesh("Special/TailsJog.bin", SCOPE_STAGE);
             UFO_Player->dashModel   = RSDK.LoadMesh("Special/TailsDash.bin", SCOPE_STAGE);
@@ -111,6 +124,7 @@ void UFO_Player_StageLoad(void)
             UFO_Player->ballModel   = RSDK.LoadMesh("Special/TailsBall.bin", SCOPE_STAGE);
             UFO_Player->tumbleModel = RSDK.LoadMesh("Special/TailsTumble.bin", SCOPE_STAGE);
             break;
+
         case ID_KNUCKLES:
             UFO_Player->jogModel    = RSDK.LoadMesh("Special/KnuxJog.bin", SCOPE_STAGE);
             UFO_Player->dashModel   = RSDK.LoadMesh("Special/KnuxDash.bin", SCOPE_STAGE);
@@ -118,6 +132,7 @@ void UFO_Player_StageLoad(void)
             UFO_Player->ballModel   = RSDK.LoadMesh("Special/KnuxBall.bin", SCOPE_STAGE);
             UFO_Player->tumbleModel = RSDK.LoadMesh("Special/KnuxTumble.bin", SCOPE_STAGE);
             break;
+
 #if RETRO_USE_PLUS
         case ID_MIGHTY:
             UFO_Player->jogModel    = RSDK.LoadMesh("Special/MightyJog.bin", SCOPE_STAGE);
@@ -126,6 +141,7 @@ void UFO_Player_StageLoad(void)
             UFO_Player->ballModel   = RSDK.LoadMesh("Special/MightyBall.bin", SCOPE_STAGE);
             UFO_Player->tumbleModel = RSDK.LoadMesh("Special/MightyTumble.bin", SCOPE_STAGE);
             break;
+
         case ID_RAY:
             UFO_Player->jogModel    = RSDK.LoadMesh("Special/RayJog.bin", SCOPE_STAGE);
             UFO_Player->dashModel   = RSDK.LoadMesh("Special/RayDash.bin", SCOPE_STAGE);
@@ -134,17 +150,10 @@ void UFO_Player_StageLoad(void)
             UFO_Player->tumbleModel = RSDK.LoadMesh("Special/RayTumble.bin", SCOPE_STAGE);
             break;
 #endif
-        default:
-            UFO_Player->jogModel    = RSDK.LoadMesh("Special/SonicJog.bin", SCOPE_STAGE);
-            UFO_Player->dashModel   = RSDK.LoadMesh("Special/SonicDash.bin", SCOPE_STAGE);
-            UFO_Player->jumpModel   = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
-            UFO_Player->ballModel   = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
-            UFO_Player->tumbleModel = RSDK.LoadMesh("Special/SonicTumble.bin", SCOPE_STAGE);
-            break;
     }
 
     UFO_Player->sceneIndex = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
-    RSDK.SetDiffuseColour(UFO_Player->sceneIndex, 160, 160, 160);
+    RSDK.SetDiffuseColor(UFO_Player->sceneIndex, 160, 160, 160);
     RSDK.SetDiffuseIntensity(UFO_Player->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(UFO_Player->sceneIndex, 15, 15, 15);
 
@@ -292,11 +301,13 @@ void UFO_Player_ChangeMachState(void)
             self->velDivisor     = 16;
             self->angleVel       = 128;
             break;
+
         case 1:
             UFO_Player->maxSpeed = 0xA0000;
             self->velDivisor     = 18;
             self->angleVel       = 144;
             break;
+
         case 2:
             UFO_Player->maxSpeed = 0xE0000;
             self->velDivisor     = 20;
@@ -468,10 +479,19 @@ void UFO_Player_State_Run(void)
         self->velocity.x += (x - self->velocity.x) / self->velDivisor;
         self->velocity.y += (-y - self->velocity.y) / self->velDivisor;
     }
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (!self->jumpPress || self->state == UFO_Player_State_CourseOut) {
+    if (self->jumpPress && self->state != UFO_Player_State_CourseOut) {
+        self->gravityStrength = 0x50000;
+        self->onGround        = false;
+        self->state           = UFO_Player_State_Jump;
+        RSDK.SetModelAnimation(UFO_Player->jumpModel, &self->animator, 128, 0, true, 0);
+        RSDK.PlaySfx(UFO_Player->sfxJump, false, 0xFF);
+        UFO_Player_HandleBumperTiles();
+    }
+    else {
         if (self->groundVel <= 0xC0000) {
             RSDK.SetModelAnimation(UFO_Player->jogModel, &self->animator, 128, 0, 0, 0);
             self->animator.speed = (self->groundVel >> 12) + 48;
@@ -479,14 +499,6 @@ void UFO_Player_State_Run(void)
         else {
             RSDK.SetModelAnimation(UFO_Player->dashModel, &self->animator, 160, 0, 0, 0);
         }
-        UFO_Player_HandleBumperTiles();
-    }
-    else {
-        self->gravityStrength = 0x50000;
-        self->onGround        = 0;
-        self->state           = UFO_Player_State_Jump;
-        RSDK.SetModelAnimation(UFO_Player->jumpModel, &self->animator, 128, 0, true, 0);
-        RSDK.PlaySfx(UFO_Player->sfxJump, false, 0xFF);
         UFO_Player_HandleBumperTiles();
     }
 }
@@ -520,9 +532,9 @@ void UFO_Player_State_Jump(void)
 
     self->velocity.x -= self->velocity.x >> 8;
     self->velocity.y -= self->velocity.y >> 8;
-
     self->velocity.x += speed * RSDK.Cos1024(self->angle);
     self->velocity.y += speed * RSDK.Sin1024(self->angle);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->gravityStrength += -0x3800 - (turnSpeed >> 7);

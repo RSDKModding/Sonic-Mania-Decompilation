@@ -260,7 +260,7 @@ void Hatch_State_PlayerEntered(void)
         RSDK.PlaySfx(Hatch->sfxDescend, false, 255);
         self->state      = Hatch_State_Descend;
         EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-        zone->fadeColour = 0;
+        zone->fadeColor = 0;
         zone->timer      = 0;
         zone->drawOrder  = 15;
         zone->visible    = true;

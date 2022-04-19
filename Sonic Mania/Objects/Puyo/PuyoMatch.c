@@ -265,7 +265,7 @@ void PuyoMatch_State_HandleCombos(void)
     if (++self->comboCount == 3 && self->stateInput == PuyoBean_StateInput_HandlePlayerInputs)
         API_UnlockAchievement("ACH_CPZ");
 
-    uint8 comboColours         = 0;
+    uint8 comboColors         = 0;
     EntityPuyoBean *targetBean = NULL;
     foreach_active(PuyoBean, bean)
     {
@@ -273,7 +273,7 @@ void PuyoMatch_State_HandleCombos(void)
             if (bean->state == PuyoBean_State_BeginBeanPop || bean->state == PuyoBean_State_BeanPop) {
                 if (!self->comboBeanCount++)
                     targetBean = bean;
-                comboColours |= 1 << (bean->type / 6);
+                comboColors |= 1 << (bean->type / 6);
             }
         }
     }
@@ -287,7 +287,7 @@ void PuyoMatch_State_HandleCombos(void)
     // Bonus for getting multiple combos in one go
     self->concurrentBonus = 0;
     for (int32 b = 0; b < 5; ++b) {
-        if (getBit(comboColours, b))
+        if (getBit(comboColors, b))
             ++self->concurrentBonus;
     }
 

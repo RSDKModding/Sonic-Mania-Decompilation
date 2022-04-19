@@ -51,14 +51,14 @@ char drawGroupNames[0x10][0x10] = {
                                                                                                                                                      \
     frameBufferClr = R | G | B;
 
-// Only draw if framebuffer clr IS maskColour
+// Only draw if framebuffer clr IS maskColor
 #define setPixelMasked(pixel, frameBufferClr)                                                                                                        \
-    if (frameBufferClr == maskColour)                                                                                                                \
+    if (frameBufferClr == maskColor)                                                                                                                \
         frameBufferClr = pixel;
 
-// Only draw if framebuffer clr is NOT maskColour
+// Only draw if framebuffer clr is NOT maskColor
 #define setPixelUnmasked(pixel, frameBufferClr)                                                                                                      \
-    if (frameBufferClr != maskColour)                                                                                                                \
+    if (frameBufferClr != maskColor)                                                                                                                \
         frameBufferClr = pixel;
 
 bool32 InitRenderDevice()
@@ -588,7 +588,7 @@ void SwapDrawListEntries(uint8 layer, uint16 entitySlotA, uint16 entitySlotB, in
     }
 }
 
-void FillScreen(uint colour, int alphaR, int alphaG, int alphaB)
+void FillScreen(uint color, int alphaR, int alphaG, int alphaB)
 {
     alphaR = minVal(0xFF, alphaR);
     alphaR = maxVal(0x00, alphaR);
@@ -601,9 +601,9 @@ void FillScreen(uint colour, int alphaR, int alphaG, int alphaB)
 
     if (alphaR + alphaG + alphaB) {
         validDraw        = true;
-        ushort clrBlendR = blendLookupTable[0x20 * alphaR + rgb32To16_B[(colour >> 0x10) & 0xFF]];
-        ushort clrBlendG = blendLookupTable[0x20 * alphaG + rgb32To16_B[(colour >> 0x08) & 0xFF]];
-        ushort clrBlendB = blendLookupTable[0x20 * alphaB + rgb32To16_B[(colour >> 0x00) & 0xFF]];
+        ushort clrBlendR = blendLookupTable[0x20 * alphaR + rgb32To16_B[(color >> 0x10) & 0xFF]];
+        ushort clrBlendG = blendLookupTable[0x20 * alphaG + rgb32To16_B[(color >> 0x08) & 0xFF]];
+        ushort clrBlendB = blendLookupTable[0x20 * alphaB + rgb32To16_B[(color >> 0x00) & 0xFF]];
 
         ushort *fbBlendR = &blendLookupTable[0x20 * (0xFF - alphaR)];
         ushort *fbBlendG = &blendLookupTable[0x20 * (0xFF - alphaG)];
@@ -622,7 +622,7 @@ void FillScreen(uint colour, int alphaR, int alphaG, int alphaB)
     }
 }
 
-void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
+void DrawLine(int x1, int y1, int x2, int y2, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
     switch (inkEffect) {
         default: break;
@@ -813,14 +813,14 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         drawY2 = v;
     }
 
-    ushort colour16        = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+    ushort color16        = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
     ushort *frameBufferPtr = &currentScreen->frameBuffer[drawX1 + drawY1 * currentScreen->pitch];
 
     switch (inkEffect) {
         case INK_NONE:
             if (drawY1 > drawY2) {
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    *frameBufferPtr = colour16;
+                    *frameBufferPtr = color16;
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -836,7 +836,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 while (true) {
-                    *frameBufferPtr = colour16;
+                    *frameBufferPtr = color16;
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -858,7 +858,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         case INK_BLEND:
             if (drawY1 > drawY2) {
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    setPixelBlend(colour16, *frameBufferPtr);
+                    setPixelBlend(color16, *frameBufferPtr);
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -874,7 +874,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 while (true) {
-                    setPixelBlend(colour16, *frameBufferPtr);
+                    setPixelBlend(color16, *frameBufferPtr);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -899,7 +899,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
 
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    setPixelAlpha(colour16, *frameBufferPtr, alpha);
+                    setPixelAlpha(color16, *frameBufferPtr, alpha);
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -918,7 +918,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 uint16 *pixelBlend   = &blendLookupTable[0x20 * alpha];
 
                 while (true) {
-                    setPixelAlpha(colour16, *frameBufferPtr, alpha);
+                    setPixelAlpha(color16, *frameBufferPtr, alpha);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -941,7 +941,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             if (drawY1 > drawY2) {
                 ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    setPixelAdditive(colour16, *frameBufferPtr);
+                    setPixelAdditive(color16, *frameBufferPtr);
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -958,7 +958,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             else {
                 ushort *blendTablePtr = &blendLookupTable[0x20 * alpha];
                 while (true) {
-                    setPixelAdditive(colour16, *frameBufferPtr);
+                    setPixelAdditive(color16, *frameBufferPtr);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -981,7 +981,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             if (drawY1 > drawY2) {
                 ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    setPixelSubtractive(colour16, *frameBufferPtr);
+                    setPixelSubtractive(color16, *frameBufferPtr);
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -998,7 +998,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             else {
                 ushort *subBlendTable = &subtractLookupTable[0x20 * alpha];
                 while (true) {
-                    setPixelSubtractive(colour16, *frameBufferPtr);
+                    setPixelSubtractive(color16, *frameBufferPtr);
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -1058,8 +1058,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         case INK_MASKED:
             if (drawY1 > drawY2) {
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    if (*frameBufferPtr == maskColour)
-                        *frameBufferPtr = colour16;
+                    if (*frameBufferPtr == maskColor)
+                        *frameBufferPtr = color16;
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -1075,8 +1075,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 while (true) {
-                    if (*frameBufferPtr == maskColour)
-                        *frameBufferPtr = colour16;
+                    if (*frameBufferPtr == maskColor)
+                        *frameBufferPtr = color16;
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -1098,8 +1098,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         case INK_UNMASKED:
             if (drawY1 > drawY2) {
                 while (drawX1 < drawX2 || drawY1 >= drawY2) {
-                    if (*frameBufferPtr != maskColour)
-                        *frameBufferPtr = colour16;
+                    if (*frameBufferPtr != maskColor)
+                        *frameBufferPtr = color16;
 
                     if (hSize > -sizeX) {
                         hSize -= max;
@@ -1115,8 +1115,8 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             else {
                 while (true) {
-                    if (*frameBufferPtr != maskColour)
-                        *frameBufferPtr = colour16;
+                    if (*frameBufferPtr != maskColor)
+                        *frameBufferPtr = color16;
                     if (drawX1 < drawX2 || drawY1 < drawY2) {
                         if (hSize > -sizeX) {
                             hSize -= max;
@@ -1137,7 +1137,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             break;
     }
 }
-void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
+void DrawRectangle(int x, int y, int width, int height, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
     switch (inkEffect) {
         default: break;
@@ -1189,7 +1189,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     int pitch              = currentScreen->pitch - width;
     validDraw              = true;
     ushort *frameBufferPtr = &currentScreen->frameBuffer[x + (y * currentScreen->pitch)];
-    ushort colour16        = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+    ushort color16        = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 
     switch (inkEffect) {
         case INK_NONE: {
@@ -1197,7 +1197,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    *frameBufferPtr = colour16;
+                    *frameBufferPtr = color16;
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1209,7 +1209,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    setPixelBlend(colour16, *frameBufferPtr);
+                    setPixelBlend(color16, *frameBufferPtr);
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1224,7 +1224,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    setPixelAlpha(colour16, *frameBufferPtr, alpha);
+                    setPixelAlpha(color16, *frameBufferPtr, alpha);
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1237,7 +1237,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    setPixelAdditive(colour16, *frameBufferPtr);
+                    setPixelAdditive(color16, *frameBufferPtr);
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1250,7 +1250,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    setPixelSubtractive(colour16, *frameBufferPtr);
+                    setPixelSubtractive(color16, *frameBufferPtr);
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1274,8 +1274,8 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    if (*frameBufferPtr == maskColour)
-                        *frameBufferPtr = colour16;
+                    if (*frameBufferPtr == maskColor)
+                        *frameBufferPtr = color16;
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1287,8 +1287,8 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             while (h--) {
                 int w = width;
                 while (w--) {
-                    if (*frameBufferPtr != maskColour)
-                        *frameBufferPtr = colour16;
+                    if (*frameBufferPtr != maskColor)
+                        *frameBufferPtr = color16;
                     ++frameBufferPtr;
                 }
                 frameBufferPtr += pitch;
@@ -1297,7 +1297,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
         }
     }
 }
-void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
+void DrawCircle(int x, int y, int radius, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
     if (radius > 0) {
         switch (inkEffect) {
@@ -1413,7 +1413,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
             // validDraw              = true;
             ushort *frameBufferPtr = &currentScreen->frameBuffer[top * currentScreen->pitch];
-            ushort colour16        = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+            ushort color16        = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 
             switch (inkEffect) {
                 default: break;
@@ -1434,7 +1434,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                frameBufferPtr[edge->start + x] = colour16;
+                                frameBufferPtr[edge->start + x] = color16;
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1458,7 +1458,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                setPixelBlend(colour16, frameBufferPtr[edge->start + x]);
+                                setPixelBlend(color16, frameBufferPtr[edge->start + x]);
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1485,7 +1485,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                setPixelAlpha(colour16, frameBufferPtr[edge->start + x], alpha);
+                                setPixelAlpha(color16, frameBufferPtr[edge->start + x], alpha);
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1510,7 +1510,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                setPixelAdditive(colour16, frameBufferPtr[edge->start + x]);
+                                setPixelAdditive(color16, frameBufferPtr[edge->start + x]);
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1536,7 +1536,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                setPixelSubtractive(colour16, frameBufferPtr[edge->start + x]);
+                                setPixelSubtractive(color16, frameBufferPtr[edge->start + x]);
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1585,8 +1585,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                if (frameBufferPtr[edge->start + x] == maskColour)
-                                    frameBufferPtr[edge->start + x] = colour16;
+                                if (frameBufferPtr[edge->start + x] == maskColor)
+                                    frameBufferPtr[edge->start + x] = color16;
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1610,8 +1610,8 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 
                             int count = edge->end - edge->start;
                             for (int x = 0; x < count; ++x) {
-                                if (frameBufferPtr[edge->start + x] != maskColour)
-                                    frameBufferPtr[edge->start + x] = colour16;
+                                if (frameBufferPtr[edge->start + x] != maskColor)
+                                    frameBufferPtr[edge->start + x] = color16;
                             }
                             ++edge;
                             frameBufferPtr += currentScreen->pitch;
@@ -1622,7 +1622,7 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
         }
     }
 }
-void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
+void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint color, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
     switch (inkEffect) {
         default: break;
@@ -1683,7 +1683,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
             int or2                = outerRadius * outerRadius;
             validDraw              = true;
             ushort *frameBufferPtr = &currentScreen->frameBuffer[left + top * currentScreen->pitch];
-            ushort colour16        = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+            ushort color16        = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
             int pitch              = (left + currentScreen->pitch - right);
 
             switch (inkEffect) {
@@ -1700,7 +1700,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2)
-                                        *frameBufferPtr = colour16;
+                                        *frameBufferPtr = color16;
                                     ++frameBufferPtr;
                                     ++xDif1;
                                     --xDif2;
@@ -1724,7 +1724,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2)
-                                        setPixelBlend(colour16, *frameBufferPtr);
+                                        setPixelBlend(color16, *frameBufferPtr);
                                     ++frameBufferPtr;
                                     ++xDif1;
                                     --xDif2;
@@ -1751,7 +1751,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2) {
-                                        setPixelAlpha(colour16, *frameBufferPtr, alpha);
+                                        setPixelAlpha(color16, *frameBufferPtr, alpha);
                                     }
                                     ++frameBufferPtr;
                                     ++xDif1;
@@ -1777,7 +1777,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2) {
-                                        setPixelAdditive(colour16, *frameBufferPtr);
+                                        setPixelAdditive(color16, *frameBufferPtr);
                                     }
                                     ++frameBufferPtr;
                                     ++xDif1;
@@ -1804,7 +1804,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
                                     if (r2 >= ir2 && r2 < or2) {
-                                        setPixelSubtractive(colour16, *frameBufferPtr);
+                                        setPixelSubtractive(color16, *frameBufferPtr);
                                     }
                                     ++frameBufferPtr;
                                     ++xDif1;
@@ -1853,8 +1853,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 int xDif2 = right - left;
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
-                                    if (r2 >= ir2 && r2 < or2 && *frameBufferPtr == maskColour)
-                                        *frameBufferPtr = colour16;
+                                    if (r2 >= ir2 && r2 < or2 && *frameBufferPtr == maskColor)
+                                        *frameBufferPtr = color16;
                                     ++frameBufferPtr;
                                     ++xDif1;
                                     --xDif2;
@@ -1877,8 +1877,8 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                                 int xDif2 = right - left;
                                 do {
                                     int r2 = y2 + xDif1 * xDif1;
-                                    if (r2 >= ir2 && r2 < or2 && *frameBufferPtr != maskColour)
-                                        *frameBufferPtr = colour16;
+                                    if (r2 >= ir2 && r2 < or2 && *frameBufferPtr != maskColor)
+                                        *frameBufferPtr = color16;
                                     ++frameBufferPtr;
                                     ++xDif1;
                                     --xDif2;
@@ -1955,7 +1955,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
         ProcessScanEdge(vertices[0].x, vertices[0].y, vertices[vertCount - 1].x, vertices[vertCount - 1].y);
 
         ushort *frameBufferPtr = &currentScreen->frameBuffer[topScreen * currentScreen->pitch];
-        ushort colour16        = rgb32To16_B[b] | rgb32To16_G[g] | rgb32To16_R[r];
+        ushort color16        = rgb32To16_B[b] | rgb32To16_G[g] | rgb32To16_R[r];
 
         edge = &scanEdgeBuffer[topScreen];
         switch (inkEffect) {
@@ -1974,7 +1974,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        frameBufferPtr[edge->start + x] = colour16;
+                        frameBufferPtr[edge->start + x] = color16;
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -1994,7 +1994,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        setPixelBlend(colour16, frameBufferPtr[edge->start + x]);
+                        setPixelBlend(color16, frameBufferPtr[edge->start + x]);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2017,7 +2017,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        setPixelAlpha(colour16, frameBufferPtr[edge->start + x], alpha);
+                        setPixelAlpha(color16, frameBufferPtr[edge->start + x], alpha);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2039,7 +2039,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        setPixelAdditive(colour16, frameBufferPtr[edge->start + x]);
+                        setPixelAdditive(color16, frameBufferPtr[edge->start + x]);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2061,7 +2061,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        setPixelSubtractive(colour16, frameBufferPtr[edge->start + x]);
+                        setPixelSubtractive(color16, frameBufferPtr[edge->start + x]);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2102,8 +2102,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        if (frameBufferPtr[edge->start + x] == maskColour)
-                            frameBufferPtr[edge->start + x] = colour16;
+                        if (frameBufferPtr[edge->start + x] == maskColor)
+                            frameBufferPtr[edge->start + x] = color16;
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2123,8 +2123,8 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
-                        if (frameBufferPtr[edge->start + x] != maskColour)
-                            frameBufferPtr[edge->start + x] = colour16;
+                        if (frameBufferPtr[edge->start + x] != maskColor)
+                            frameBufferPtr[edge->start + x] = color16;
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2133,7 +2133,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
         }
     }
 }
-void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect)
+void DrawBlendedFace(Vector2 *vertices, uint *colors, int vertCount, int alpha, InkEffects inkEffect)
 {
     switch (inkEffect) {
         default: break;
@@ -2188,9 +2188,9 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
         }
 
         for (int v = 0; v < vertCount - 1; ++v) {
-            ProcessScanEdgeClr(colours[v + 0], colours[v + 1], vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
+            ProcessScanEdgeClr(colors[v + 0], colors[v + 1], vertices[v + 0].x, vertices[v + 0].y, vertices[v + 1].x, vertices[v + 1].y);
         }
-        ProcessScanEdgeClr(colours[vertCount - 1], colours[0], vertices[vertCount - 1].x, vertices[vertCount - 1].y, vertices[0].x, vertices[0].y);
+        ProcessScanEdgeClr(colors[vertCount - 1], colors[0], vertices[vertCount - 1].x, vertices[vertCount - 1].y, vertices[0].x, vertices[0].y);
 
         ushort *frameBufferPtr = &currentScreen->frameBuffer[topScreen * currentScreen->pitch];
 
@@ -2234,8 +2234,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                     }
 
                     for (int x = 0; x < count; ++x) {
-                        ushort colour16                 = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        frameBufferPtr[edge->start + x] = colour16;
+                        ushort color16                 = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        frameBufferPtr[edge->start + x] = color16;
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
@@ -2283,8 +2283,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        setPixelBlend(colour, frameBufferPtr[edge->start + x]);
+                        ushort color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        setPixelBlend(color, frameBufferPtr[edge->start + x]);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2332,8 +2332,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        setPixelAlpha(colour, frameBufferPtr[edge->start + x], alpha);
+                        ushort color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        setPixelAlpha(color, frameBufferPtr[edge->start + x], alpha);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2380,8 +2380,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        setPixelAdditive(colour, frameBufferPtr[edge->start + x]);
+                        ushort color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        setPixelAdditive(color, frameBufferPtr[edge->start + x]);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2428,8 +2428,8 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        setPixelSubtractive(colour, frameBufferPtr[edge->start + x]);
+                        ushort color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        setPixelSubtractive(color, frameBufferPtr[edge->start + x]);
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2517,9 +2517,9 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        if (frameBufferPtr[edge->start + x] == maskColour)
-                            frameBufferPtr[edge->start + x] = colour;
+                        ushort color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        if (frameBufferPtr[edge->start + x] == maskColor)
+                            frameBufferPtr[edge->start + x] = color;
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2564,9 +2564,9 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                         startR += deltaR;
                         startG += deltaG;
                         startB += deltaB;
-                        ushort colour = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
-                        if (frameBufferPtr[edge->start + x] != maskColour)
-                            frameBufferPtr[edge->start + x] = colour;
+                        ushort color = (startB >> 19) + ((startG >> 13) & 0x7E0) + ((startR >> 8) & 0xF800);
+                        if (frameBufferPtr[edge->start + x] != maskColor)
+                            frameBufferPtr[edge->start + x] = color;
                     }
                     ++edge;
                     frameBufferPtr += currentScreen->pitch;
@@ -2844,8 +2844,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAlpha(colour, *frameBufferPtr, alpha);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAlpha(color, *frameBufferPtr, alpha);
                             }
                             ++gfxData;
                             ++frameBufferPtr;
@@ -2863,8 +2863,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAdditive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAdditive(color, *frameBufferPtr);
                             }
                             ++gfxData;
                             ++frameBufferPtr;
@@ -2882,8 +2882,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelSubtractive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelSubtractive(color, *frameBufferPtr);
                             }
                             ++gfxData;
                             ++frameBufferPtr;
@@ -2913,7 +2913,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr == maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr == maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             ++gfxData;
                             ++frameBufferPtr;
@@ -2928,7 +2928,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr != maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr != maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             ++gfxData;
                             ++frameBufferPtr;
@@ -2985,8 +2985,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAlpha(colour, *frameBufferPtr, alpha);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAlpha(color, *frameBufferPtr, alpha);
                             }
                             --gfxData;
                             ++frameBufferPtr;
@@ -3004,8 +3004,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAdditive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAdditive(color, *frameBufferPtr);
                             }
                             --gfxData;
                             ++frameBufferPtr;
@@ -3023,8 +3023,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelSubtractive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelSubtractive(color, *frameBufferPtr);
                             }
                             --gfxData;
                             ++frameBufferPtr;
@@ -3054,7 +3054,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr == maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr == maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             --gfxData;
                             ++frameBufferPtr;
@@ -3069,7 +3069,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr != maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr != maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             --gfxData;
                             ++frameBufferPtr;
@@ -3126,8 +3126,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAlpha(colour, *frameBufferPtr, alpha);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAlpha(color, *frameBufferPtr, alpha);
                             }
                             ++gfxData;
                             ++frameBufferPtr;
@@ -3145,8 +3145,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAdditive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAdditive(color, *frameBufferPtr);
                             }
                             ++gfxData;
                             ++frameBufferPtr;
@@ -3164,8 +3164,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelSubtractive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelSubtractive(color, *frameBufferPtr);
                             }
                             ++gfxData;
                             ++frameBufferPtr;
@@ -3195,7 +3195,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr == maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr == maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             ++gfxData;
                             ++frameBufferPtr;
@@ -3210,7 +3210,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr != maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr != maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             ++gfxData;
                             ++frameBufferPtr;
@@ -3267,8 +3267,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAlpha(colour, *frameBufferPtr, alpha);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAlpha(color, *frameBufferPtr, alpha);
                             }
                             --gfxData;
                             ++frameBufferPtr;
@@ -3286,8 +3286,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelAdditive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelAdditive(color, *frameBufferPtr);
                             }
                             --gfxData;
                             ++frameBufferPtr;
@@ -3305,8 +3305,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         int w = width;
                         while (w--) {
                             if (*gfxData > 0) {
-                                ushort colour = activePalette[*gfxData];
-                                setPixelSubtractive(colour, *frameBufferPtr);
+                                ushort color = activePalette[*gfxData];
+                                setPixelSubtractive(color, *frameBufferPtr);
                             }
                             --gfxData;
                             ++frameBufferPtr;
@@ -3336,7 +3336,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr == maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr == maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             --gfxData;
                             ++frameBufferPtr;
@@ -3351,7 +3351,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
                         lineBuffer++;
                         int w = width;
                         while (w--) {
-                            if (*gfxData > 0 && *frameBufferPtr != maskColour)
+                            if (*gfxData > 0 && *frameBufferPtr != maskColor)
                                 *frameBufferPtr = activePalette[*gfxData];
                             --gfxData;
                             ++frameBufferPtr;
@@ -3568,8 +3568,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index) {
-                                ushort colour = palettePtr[index];
-                                setPixelAlpha(colour, *frameBufferPtr, alpha);
+                                ushort color = palettePtr[index];
+                                setPixelAlpha(color, *frameBufferPtr, alpha);
                             }
                         }
                         ++frameBufferPtr;
@@ -3592,8 +3592,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index) {
-                                ushort colour = palettePtr[index];
-                                setPixelAdditive(colour, *frameBufferPtr);
+                                ushort color = palettePtr[index];
+                                setPixelAdditive(color, *frameBufferPtr);
                             }
                         }
                         ++frameBufferPtr;
@@ -3616,8 +3616,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
                             if (index) {
-                                ushort colour = palettePtr[index];
-                                setPixelSubtractive(colour, *frameBufferPtr);
+                                ushort color = palettePtr[index];
+                                setPixelSubtractive(color, *frameBufferPtr);
                             }
                         }
                         ++frameBufferPtr;
@@ -3657,7 +3657,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
-                            if (index && *frameBufferPtr == maskColour)
+                            if (index && *frameBufferPtr == maskColor)
                                 *frameBufferPtr = palettePtr[index];
                         }
                         ++frameBufferPtr;
@@ -3677,7 +3677,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                     for (int x = 0; x < xSize; ++x) {
                         if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
                             byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
-                            if (index && *frameBufferPtr != maskColour)
+                            if (index && *frameBufferPtr != maskColor)
                                 *frameBufferPtr = palettePtr[index];
                         }
                         ++frameBufferPtr;
@@ -3779,8 +3779,8 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex) {
-                        ushort colour = palettePtr[palIndex];
-                        setPixelAlpha(colour, *frameBufferPtr, alpha);
+                        ushort color = palettePtr[palIndex];
+                        setPixelAlpha(color, *frameBufferPtr, alpha);
                     }
                     lx += dx;
                     ly += dy;
@@ -3801,8 +3801,8 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex) {
-                        ushort colour = palettePtr[palIndex];
-                        setPixelAdditive(colour, *frameBufferPtr);
+                        ushort color = palettePtr[palIndex];
+                        setPixelAdditive(color, *frameBufferPtr);
                     }
                     lx += dx;
                     ly += dy;
@@ -3823,8 +3823,8 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
                     if (palIndex) {
-                        ushort colour = palettePtr[palIndex];
-                        setPixelSubtractive(colour, *frameBufferPtr);
+                        ushort color = palettePtr[palIndex];
+                        setPixelSubtractive(color, *frameBufferPtr);
                     }
                     lx += dx;
                     ly += dy;
@@ -3860,7 +3860,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int dy             = scanlinePtr->deform.y;
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
-                    if (palIndex && *frameBufferPtr == maskColour)
+                    if (palIndex && *frameBufferPtr == maskColor)
                         *frameBufferPtr = palettePtr[palIndex];
                     lx += dx;
                     ly += dy;
@@ -3878,7 +3878,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
                 int dy             = scanlinePtr->deform.y;
                 for (int i = 0; i < currentScreen->pitch; ++i) {
                     byte palIndex = gfxDataPtr[((height & (ly >> 0x10)) << lineSize) + (width & (lx >> 0x10))];
-                    if (palIndex && *frameBufferPtr != maskColour)
+                    if (palIndex && *frameBufferPtr != maskColor)
                         *frameBufferPtr = palettePtr[palIndex];
                     lx += dx;
                     ly += dy;
@@ -4221,10 +4221,10 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
         }
     }
 }
-void DrawDevText(const char *text, int x, int y, int align, uint colour)
+void DrawDevText(const char *text, int x, int y, int align, uint color)
 {
     int length      = 0;
-    ushort colour16 = rgb32To16_B[(colour >> 0) & 0xFF] | rgb32To16_G[(colour >> 8) & 0xFF] | rgb32To16_R[(colour >> 16) & 0xFF];
+    ushort color16 = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 
     bool32 endFlag = false;
     while (!endFlag) {
@@ -4268,7 +4268,7 @@ void DrawDevText(const char *text, int x, int y, int align, uint colour)
                             do {
                                 --w;
                                 if (*engineTextPtr)
-                                    *frameBufferPtr = colour16;
+                                    *frameBufferPtr = color16;
                                 ++engineTextPtr;
                                 ++frameBufferPtr;
                             } while (w);

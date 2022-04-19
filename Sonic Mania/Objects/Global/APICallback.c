@@ -231,7 +231,7 @@ void APICallback_NotifyAutoSave_CB(void)
             TextInfo info;
             Localization_GetString(&info, STR_AUTOSAVENOTIF);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_NotifyAutoSave_OK, true);
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {
@@ -260,7 +260,7 @@ void APICallback_PromptSavePreference_CB(void)
             Localization_GetString(&info, stringID);
 
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_SetNoSaveEnabled, APICallback_SetNoSaveDisabled, true, true);
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {
@@ -643,7 +643,7 @@ void APICallback_TryAuth_CB(void)
                 case PLATFORM_SWITCH: Localization_GetString(&info, STR_LOADNINTENDO); break;
             }
             EntityUIDialog *dialog = UIDialog_CreateDialogYesNo(&info, APICallback_TryAuth_Yes, APICallback_TryAuth_No, true, true);
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {
@@ -759,7 +759,7 @@ void APICallback_CheckUserAuth_CB(void)
             TextInfo info;
             Localization_GetString(&info, STR_SIGNOUTDETECTED);
             dialog = UIDialog_CreateDialogOk(&info, APICallback_CheckUserAuth_OK, true);
-            dialog->useAltColour = true;
+            dialog->useAltColor = true;
         }
     }
     else {
@@ -802,7 +802,7 @@ void APICallback_ManageNotifs(void)
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_GetNextNotif, true);
             dialog->playEventSfx   = true;
-            dialog->useAltColour   = true;
+            dialog->useAltColor   = true;
         }
     }
     else {

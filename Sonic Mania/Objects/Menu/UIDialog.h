@@ -39,7 +39,7 @@ struct EntityUIDialog {
     EntityUIButton *entPtrs[UIDialog_OptionCount];
     StateMachine(closeCB);
     bool32 playEventSfx;
-    bool32 useAltColour;
+    bool32 useAltColor;
     int32 lineLength[3];
     int32 lineCount;
     Animator animator;

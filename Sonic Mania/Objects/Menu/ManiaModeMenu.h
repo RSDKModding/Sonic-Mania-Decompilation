@@ -48,7 +48,7 @@ void ManiaModeMenu_InitLocalization(bool32 success);
 int32 ManiaModeMenu_GetActiveMenu(void);
 void ManiaModeMenu_ChangeMenuTrack(void);
 int32 ManiaModeMenu_StartReturnToTitle(void);
-void ManiaModeMenu_SetBGColours(void);
+void ManiaModeMenu_SetBGColors(void);
 void ManiaModeMenu_ReturnToTitle(void);
 void ManiaModeMenu_State_HandleTransition(void);
 void ManiaModeMenu_HandleUnlocks(void);

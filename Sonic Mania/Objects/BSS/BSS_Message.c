@@ -33,7 +33,7 @@ void BSS_Message_Draw(void)
     RSDK.DrawSprite(&self->rightAnimator, &drawPos, true);
 
     if (self->shouldFade)
-        RSDK.FillScreen(self->colour, self->timer, self->timer - 128, self->timer - 256);
+        RSDK.FillScreen(self->color, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void BSS_Message_Create(void *data)
@@ -47,7 +47,7 @@ void BSS_Message_Create(void *data)
         switch (voidToInt(data)) {
             case BSS_MESSAGE_GETSPHERES:
                 self->shouldFade   = true;
-                self->colour = 0xF0F0F0;
+                self->color = 0xF0F0F0;
                 self->timer  = 512;
                 self->state  = BSS_Message_State_GetBS;
                 RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->leftAnimator, true, 0);
@@ -61,7 +61,7 @@ void BSS_Message_Create(void *data)
                 break;
             case BSS_MESSAGE_FINISHED:
                 self->shouldFade   = true;
-                self->colour = 0;
+                self->color = 0;
                 self->state  = BSS_Message_State_Finished;
                 break;
         }
@@ -172,8 +172,8 @@ void BSS_Message_LoadPrevScene(void)
 {
     RSDK_THIS(BSS_Message);
 
-    if (self->colour) {
-        self->colour -= 0x80808;
+    if (self->color) {
+        self->color -= 0x80808;
     }
     else {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;

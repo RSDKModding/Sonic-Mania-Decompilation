@@ -21,7 +21,7 @@ typedef enum {
 struct ObjectCutsceneHBH {
     RSDK_OBJECT
     uint16 aniFrames;
-    colour paletteColours[128];
+    color paletteColors[128];
 };
 
 // Entity Class
@@ -37,8 +37,8 @@ struct EntityCutsceneHBH {
     Vector2 originPos;
     int32 timer;
     int32 angleOffset;
-    int32 colourSet;
-    colour colours[128];
+    int32 colorSet;
+    color colors[128];
     bool32 useCustomPalettes;
     bool32 noGlobalTimer;
     uint16 aniFrames;
@@ -63,7 +63,7 @@ void CutsceneHBH_EditorLoad(void);
 void CutsceneHBH_Serialize(void);
 
 // Extra Entity Functions
-void CutsceneHBH_SetupColours(void);
+void CutsceneHBH_SetupColors(void);
 void CutsceneHBH_SetupPalettes(void);
 void CutsceneHBH_StorePalette(void);
 void CutsceneHBH_RestorePalette(void);

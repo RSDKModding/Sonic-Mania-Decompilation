@@ -38,8 +38,8 @@ void PBL_TargetBumper_Draw(void)
 {
     RSDK_THIS(PBL_TargetBumper);
     if (self->depth3D >= 0x4000) {
-        uint32 colour = RSDK.GetPaletteEntry(0, (self->colour & 0xFF) - 80);
-        RSDK.SetDiffuseColour(PBL_TargetBumper->sceneIndex, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
+        uint32 color = RSDK.GetPaletteEntry(0, (self->color & 0xFF) - 80);
+        RSDK.SetDiffuseColor(PBL_TargetBumper->sceneIndex, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
         RSDK.Prepare3DScene(PBL_TargetBumper->sceneIndex);
         RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.y, 256);
         RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, false);
@@ -65,7 +65,7 @@ void PBL_TargetBumper_Create(void *data)
         self->scale.x       = 0x100;
         self->scale.y       = 0x100;
         self->state         = PBL_TargetBumper_State_Active;
-        self->colour      = 2 * (RSDK.GetEntityID(self) % 3);
+        self->color      = 2 * (RSDK.GetEntityID(self) % 3);
         RSDK.SetModelAnimation(PBL_TargetBumper->modelFrames, &self->animator, 96, 0, true, 0);
     }
 }

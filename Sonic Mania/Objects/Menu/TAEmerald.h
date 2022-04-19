@@ -11,7 +11,7 @@ typedef enum {
     TAEMERALD_GRAY,
     TAEMERALD_CYAN,
     TAEMERALD_RED,
-}TAEmeraldColours;
+}TAEmeraldColors;
 
 // Object Class
 struct ObjectTAEmerald {

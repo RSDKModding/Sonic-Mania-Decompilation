@@ -83,12 +83,12 @@ void UITABanner_DrawBGShapes(int32 drawX, int32 drawY, bool32 isEncore)
     RSDK.DrawRect(drawX + 0x790000, (drawY + 0x1D8000) - 0x3D0000, 0x200000, 0x3D0000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(drawX - 0x990000, drawY - 0x1E8000, 0x1320000, 0x220000, 0, 255, INK_NONE, false);
 
-    uint32 colour = 0;
+    uint32 color = 0;
     if (isEncore)
-        colour = 0xF26C4F;
+        color = 0xF26C4F;
     else
-        colour = 0x5FA0B0;
-    UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x1D8000, -58, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
+        color = 0x5FA0B0;
+    UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x1D8000, -58, (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF);
 
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(drawX + 0x30000, drawY + 0x30000, 312, 67);
@@ -100,13 +100,13 @@ void UITABanner_DrawStageInfo(uint8 actID, uint8 characterID, bool32 isEncore, i
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
 
-    colour colours[3];
+    color colors[3];
     if (!isEncore)
-        colours[0] = 0x5870E0;
+        colors[0] = 0x5870E0;
     else
-        colours[0] = 0xF26C4F;
-    colours[1] = 0xF0D808;
-    colours[2] = 0x010101;
+        colors[0] = 0xF26C4F;
+    colors[1] = 0xF0D808;
+    colors[2] = 0x010101;
 
     int32 widths[3];
     widths[0] = 60;
@@ -117,16 +117,16 @@ void UITABanner_DrawStageInfo(uint8 actID, uint8 characterID, bool32 isEncore, i
 
     Vector2 drawOffsets[3];
     for (int32 i = 0; i < 3; ++i) {
-        RSDK.DrawRect(drawPos.x, drawPos.y, widths[i] << 16, 0xD0000, colours[i], 255, INK_NONE, false);
+        RSDK.DrawRect(drawPos.x, drawPos.y, widths[i] << 16, 0xD0000, colors[i], 255, INK_NONE, false);
 
         drawOffsets[i].x = drawPos.x + 0x10000;
         drawOffsets[i].y = drawPos.y + 0xC0000;
         drawPos.x += (widths[i] << 16);
         if (i < 2) {
-            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 13, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 13, (colors[i] >> 16) & 0xFF, (colors[i] >> 8) & 0xFF, colors[i] & 0xFF);
 
             drawPos.x += 0xE0000;
-            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colours[i + 1] >> 16) & 0xFF, (colours[i + 1] >> 8) & 0xFF, colours[i + 1] & 0xFF);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colors[i + 1] >> 16) & 0xFF, (colors[i + 1] >> 8) & 0xFF, colors[i + 1] & 0xFF);
         }
     }
 

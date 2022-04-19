@@ -96,14 +96,14 @@ void PaperRoller_Create(void *data)
 
 void PaperRoller_StageLoad(void)
 {
-    uint32 colours[]       = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
+    uint32 colors[]       = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
     PaperRoller->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PaperRoller.bin", SCOPE_STAGE);
-    for (int32 i = 0; i < 0x40; ++i) PaperRoller->colours[i] = colours[i & 3];
+    for (int32 i = 0; i < 0x40; ++i) PaperRoller->colors[i] = colors[i & 3];
     PaperRoller->sfxPaper = RSDK.GetSfx("PSZ/Paper.wav");
 }
 
 void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 deformX, int32 deformY,
-                                  int32 len, uint32 colour)
+                                  int32 len, uint32 color)
 {
     RSDK_THIS(PaperRoller);
 
@@ -117,15 +117,15 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
         int32 moveY = (endY - startY) / count;
 
         for (int32 i = 0; i < count; ++i) {
-            int32 colourID = 0;
+            int32 colorID = 0;
             if (self->direction)
-                colourID = len % count;
+                colorID = len % count;
             else
-                colourID = count - len % count - 1;
-            uint32 lineClr = PaperRoller->colours[(Zone->timer + colourID) % count];
+                colorID = count - len % count - 1;
+            uint32 lineClr = PaperRoller->colors[(Zone->timer + colorID) % count];
 
             if (!deformY) {
-                RSDK.DrawLine(offsetX + currentX, offsetY + currentY, offsetX + (currentX + moveX), offsetY + (currentY + moveY), colour ? colour : lineClr, 127,
+                RSDK.DrawLine(offsetX + currentX, offsetY + currentY, offsetX + (currentX + moveX), offsetY + (currentY + moveY), color ? color : lineClr, 127,
                               INK_NONE, false);
             }
             else {
@@ -191,7 +191,7 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 distY          = (lenY + angValY) >> 8;
                 int32 offsetX2 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
                 int32 offsetY2 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
-                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, colour ? colour : lineClr, 0x7F,
+                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, color ? color : lineClr, 0x7F,
                               INK_NONE, false);
             }
             ++len;

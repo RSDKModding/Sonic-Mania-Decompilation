@@ -7,7 +7,7 @@ typedef enum {
     MSZSPOTLIGHT_RED,
     MSZSPOTLIGHT_GREEN,
     MSZSPOTLIGHT_BLUE,
-}MSZSpotlightColours;
+}MSZSpotlightColors;
 
 // Object Class
 struct ObjectMSZSpotlight {

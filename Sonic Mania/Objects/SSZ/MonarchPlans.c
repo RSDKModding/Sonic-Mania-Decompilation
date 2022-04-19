@@ -66,7 +66,7 @@ void MonarchPlans_StageLoad(void)
     MonarchPlans->hitbox.right  = 24;
     MonarchPlans->hitbox.bottom = 24;
 
-    RSDK.SetDiffuseColour(MonarchPlans->sceneIndex, 0xA0, 0xA0, 0xA0);
+    RSDK.SetDiffuseColor(MonarchPlans->sceneIndex, 0xA0, 0xA0, 0xA0);
     RSDK.SetDiffuseIntensity(MonarchPlans->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(MonarchPlans->sceneIndex, 14, 14, 14);
 }

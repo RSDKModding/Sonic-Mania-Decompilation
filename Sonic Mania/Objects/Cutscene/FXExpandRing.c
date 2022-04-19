@@ -34,7 +34,7 @@ void FXExpandRing_StaticUpdate(void) {}
 void FXExpandRing_Draw(void)
 {
     RSDK_THIS(FXExpandRing);
-    RSDK.DrawCircleOutline(self->position.x, self->position.y, self->innerRadius, self->outerRadius, self->colour, self->alpha, INK_ADD,
+    RSDK.DrawCircleOutline(self->position.x, self->position.y, self->innerRadius, self->outerRadius, self->color, self->alpha, INK_ADD,
                            false);
 }
 
@@ -48,7 +48,7 @@ void FXExpandRing_Create(void *data)
         self->expandMax   = 64;
         self->expandSpeed = 8;
         self->state       = FXExpandRing_State_FadeIn;
-        self->colour      = 0xF0F0F0;
+        self->color      = 0xF0F0F0;
     }
 }
 

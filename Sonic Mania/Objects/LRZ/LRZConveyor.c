@@ -75,8 +75,8 @@ void LRZConveyor_StageLoad(void)
 {
     LRZConveyor->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConveyor.bin", SCOPE_STAGE);
 
-    colour lineColours[] = { 0x225BDD, 0x429AFD, 0x51DEFF, 0xAFFDF0 };
-    for (int i = 0; i < 0x40; ++i) LRZConveyor->lineColours[i] = lineColours[i & 3];
+    color lineColors[] = { 0x225BDD, 0x429AFD, 0x51DEFF, 0xAFFDF0 };
+    for (int i = 0; i < 0x40; ++i) LRZConveyor->lineColors[i] = lineColors[i & 3];
 }
 
 void LRZConveyor_HandleBehaviour(void)
@@ -219,7 +219,7 @@ void LRZConveyor_DrawWheels(void)
     RSDK.DrawSprite(&self->wheelAnimator, &drawPos, false);
 }
 
-void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, colour *colour)
+void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 len, color *color)
 {
     RSDK_THIS(LRZConveyor);
 
@@ -228,25 +228,25 @@ void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 
     int32 currentX = startY;
     int32 currentY = startX;
     for (int32 i = 0; i < count; ++i) {
-        int32 colourID = 0;
+        int32 colorID = 0;
         if (self->direction == FLIP_X)
-            colourID = count - len % count - 1;
+            colorID = count - len % count - 1;
         else
-            colourID = len % count;
+            colorID = len % count;
 
         if (!self->off)
-            colourID += Zone->timer >> 1;
+            colorID += Zone->timer >> 1;
 
         currentX += (endX - startY) / count;
         currentY += (endY - startX) / count;
 
-        uint32 *lineColour = NULL;
-        if (colour) 
-            lineColour = colour;
+        uint32 *lineColor = NULL;
+        if (color) 
+            lineColor = color;
         else 
-            lineColour = &LRZConveyor->lineColours[(colourID % count) & 0x3F];
+            lineColor = &LRZConveyor->lineColors[(colorID % count) & 0x3F];
 
-        RSDK.DrawLine(currentX + offsetX, currentY + offsetY, currentX + offsetX, currentY + offsetY, *lineColour, 0x7F, INK_NONE, false);
+        RSDK.DrawLine(currentX + offsetX, currentY + offsetY, currentX + offsetX, currentY + offsetY, *lineColor, 0x7F, INK_NONE, false);
         ++len;
     }
 }
@@ -255,7 +255,7 @@ void LRZConveyor_DrawConveyorLines(void)
 {
     RSDK_THIS(LRZConveyor);
 
-    colour colour = 0x51DEFF;
+    color color = 0x51DEFF;
 
     int32 slopeLen = (self->length >> 1) * (self->slope << 8);
     int32 startX   = self->position.x - (self->length << 15);
@@ -269,8 +269,8 @@ void LRZConveyor_DrawConveyorLines(void)
     LRZConveyor_DrawDeformedLine(endX, startY, startX, slopeY + 0xF0000, 0, 0, len, NULL);
     LRZConveyor_DrawDeformedLine(startX, slopeY - 0x100000, endX, endY, 0, 0x10000, 0, NULL);
     LRZConveyor_DrawDeformedLine(endX, startY, startX, slopeY + 0xF0000, 0, -0x10000, len, NULL);
-    LRZConveyor_DrawDeformedLine(startX, slopeY - 0x100000, endX, endY, 0, 0x20000, 0, &colour);
-    LRZConveyor_DrawDeformedLine(endX, startY, startX, slopeY + 0xF0000, 0, -0x20000, len, &colour);
+    LRZConveyor_DrawDeformedLine(startX, slopeY - 0x100000, endX, endY, 0, 0x20000, 0, &color);
+    LRZConveyor_DrawDeformedLine(endX, startY, startX, slopeY + 0xF0000, 0, -0x20000, len, &color);
 }
 
 #if RETRO_INCLUDE_EDITOR

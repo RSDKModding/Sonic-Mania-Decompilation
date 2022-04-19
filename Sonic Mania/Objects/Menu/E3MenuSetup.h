@@ -23,7 +23,7 @@ struct EntityE3MenuSetup {
     int32 delay;
     int32 fadeSpeed;
     int32 fadeTimer;
-    int32 fadeColour;
+    int32 fadeColor;
     int32 unused;
 };
 

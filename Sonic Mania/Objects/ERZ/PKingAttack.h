@@ -17,7 +17,7 @@ typedef enum {
 struct ObjectPKingAttack {
     RSDK_OBJECT
     // Not Used because he doesn't fire lasers... this object was prolly built off LRZ/KingAttack tbh
-    TABLE(int32 laserColours[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
+    TABLE(int32 laserColors[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
     uint16 sfxPulse;
     uint16 aniFrames;
 };
@@ -32,7 +32,7 @@ struct EntityPKingAttack {
     Vector2 targetPos;
     Vector2 targetVelocity;
     Vector2 laserVertPostions[8]; // Leftover from LRZ/KingAttack, not used here
-    int32 *laserColours;          // Leftover from LRZ/KingAttack, not used here
+    int32 *laserColors;          // Leftover from LRZ/KingAttack, not used here
     Hitbox hitbox;
     Animator animator;
 };

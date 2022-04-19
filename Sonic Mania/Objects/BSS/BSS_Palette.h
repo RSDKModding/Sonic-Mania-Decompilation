@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectBSS_Palette {
     RSDK_OBJECT
-    int32 startColourID;
+    int32 startColorID;
     int32 skyAlpha;
     int32 globeAlpha;
     int32 unused1;
@@ -19,11 +19,11 @@ struct EntityBSS_Palette {
     int32 paletteID;
     uint8 skyAlpha;
     uint8 globeAlpha;
-    colour playfieldA;
-    colour playfieldB;
-    colour bgColor1;
-    colour bgColor2;
-    colour bgColor3;
+    color playfieldA;
+    color playfieldB;
+    color bgColor1;
+    color bgColor2;
+    color bgColor3;
 };
 
 // Object Struct
