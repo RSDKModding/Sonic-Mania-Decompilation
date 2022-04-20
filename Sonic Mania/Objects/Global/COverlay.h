@@ -11,7 +11,7 @@ struct ObjectCOverlay {
 
 // Entity Class
 struct EntityCOverlay {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -22,7 +22,7 @@ void COverlay_Update(void);
 void COverlay_LateUpdate(void);
 void COverlay_StaticUpdate(void);
 void COverlay_Draw(void);
-void COverlay_Create(void* data);
+void COverlay_Create(void *data);
 void COverlay_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void COverlay_EditorDraw(void);
@@ -35,4 +35,4 @@ void COverlay_DebugDraw(void);
 void COverlay_DebugSpawn(void);
 void COverlay_DrawTile(void);
 
-#endif //!OBJ_COVERLAY_H
+#endif //! OBJ_COVERLAY_H

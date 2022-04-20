@@ -125,8 +125,8 @@ bool32 SPZ1Intro_Cutscene_ExitPipe(EntityCutsceneSeq *host)
         lid->velocity.y   = -0x60000;
         lid->velocity.x   = -0x18000;
         lid->gravityStrength      = 0x3800;
-        lid->scaleInc.x   = 8;
-        lid->scaleInc.y   = 8;
+        lid->scaleSpeed.x   = 8;
+        lid->scaleSpeed.y   = 8;
         lid->rotSpeed     = -1;
         RSDK.SetSpriteAnimation(SPZ1Intro->aniFrames, 1, &lid->animator, true, 0);
     }

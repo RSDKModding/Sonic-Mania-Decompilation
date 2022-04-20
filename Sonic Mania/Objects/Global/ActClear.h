@@ -50,7 +50,7 @@ struct EntityActClear {
     Vector2 ringBonusPos;
     Vector2 coolBonusPos;
     Vector2 totalScorePos;
-    void *playerPtr;
+    EntityPlayer *targetPlayer;
     Animator hudElementsAnimator;
     Animator numbersAnimator;
     Animator playerNameAnimator;
@@ -69,7 +69,7 @@ void ActClear_Update(void);
 void ActClear_LateUpdate(void);
 void ActClear_StaticUpdate(void);
 void ActClear_Draw(void);
-void ActClear_Create(void* data);
+void ActClear_Create(void *data);
 void ActClear_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ActClear_EditorDraw(void);
@@ -81,7 +81,7 @@ void ActClear_Serialize(void);
 #if RETRO_USE_PLUS
 void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
-void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
+void ActClear_DrawNumbers(Vector2 *drawPos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);
 void ActClear_SaveGameCallback(bool32 success);
 void ActClear_SetupForceOnScreenP2(void);
@@ -100,4 +100,4 @@ void ActClear_State_ExitActClear(void);
 
 void ActClear_State_ForcePlayerOnScreen(void);
 
-#endif //!OBJ_ACTCLEAR_H
+#endif //! OBJ_ACTCLEAR_H

@@ -166,11 +166,11 @@ bool32 Dango_HandleMovement(StateMachine(nextState), uint8 anim)
 
     bool32 collidedWall = false;
     if (self->groundVel <= 0)
-        collidedWall = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, Dango->hitboxBadnik.left << 16, 0, 4);
+        collidedWall = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, Dango->hitboxBadnik.left << 16, 0, 4);
     else
-        collidedWall = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, Dango->hitboxBadnik.right << 16, 0, 4);
+        collidedWall = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, Dango->hitboxBadnik.right << 16, 0, 4);
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, 2)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, 2)) {
         uint16 tile = RSDK.GetTileInfo(Zone->fgLow, self->position.x >> 16, (self->position.y + 0xD0000) >> 16);
         self->angle = RSDK.GetTileAngle(tile, 0, 0);
 
@@ -226,7 +226,7 @@ void Dango_State_Walking(void)
 {
     RSDK_THIS(Dango);
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         RSDK.ProcessAnimation(&self->animator);
         Dango_CheckPlayerCollisions();
         Dango_CheckOffScreen();
@@ -277,7 +277,7 @@ void Dango_State_Falling_Uncurled(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Dango->aniFrames, 1, &self->animator, true, 0);
         self->state = Dango_State_Walking;
@@ -312,7 +312,7 @@ void Dango_State_Rolling(void)
     RSDK_THIS(Dango);
 
     RSDK.ProcessAnimation(&self->animator);
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         Dango_CheckPlayerCollisions();
         Dango_CheckOffScreen();
         Dango_HandleMovement(Dango_State_Uncurling, 4);
@@ -333,7 +333,7 @@ void Dango_State_Falling_Curled(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, true)) {
         self->velocity.y = 0;
         self->state      = Dango_State_Rolling;
     }
@@ -384,7 +384,7 @@ void Dango_StateTaunt_RollIn(void)
     RSDK.ProcessAnimation(&self->animator);
 
     self->position.x += self->groundVel;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xE0000, 14);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xE0000, 14);
 
     foreach_active(PhantomRuby, ruby)
     {

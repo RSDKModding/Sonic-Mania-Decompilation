@@ -32,7 +32,7 @@ void MMZWheel_Update(void)
         case MMZWHEEL_MOTION_SMOOTH: self->position.x = self->center.x + (self->amplitude << 6) * RSDK.Sin1024(self->speed * Zone->timer); break;
     }
 
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, 0, CMODE_FLOOR, 0, 0x180000, 8);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, 0, CMODE_FLOOR, 0, 0x180000, 8);
 
     self->offset.x += self->position.x;
     self->offset.y += self->position.y;

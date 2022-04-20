@@ -173,9 +173,10 @@ void LRZConvControl_EditorDraw(void)
             case LRZCONVCTRL_TRIGGER_BUTTON:
                 RSDK_DRAWING_OVERLAY(true);
                 self->taggedButton = LRZ2Setup_SetupTagLink(self->buttonTag, (Entity *)self);
-                if (self->taggedButton)
+                if (self->taggedButton) {
                     DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y,
-                                          0xFFFF00);
+                                          0xFFFF00, INK_NONE, 0xFF);
+                }
                 RSDK_DRAWING_OVERLAY(false);
                 break;
         }

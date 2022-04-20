@@ -35,8 +35,8 @@ struct ObjectAnnouncer {
     uint16 sfxPlayer3;
     uint16 sfxPlayer4;
 #endif
-    uint16 sfxItsADraw;
-    uint16 sfxItsADraw_Set;
+    uint16 sfxDrawRound;
+    uint16 sfxDrawSet;
     bool32 finishedCountdown;
 };
 

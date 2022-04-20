@@ -90,7 +90,7 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
         if (entity->objectID == LRZConvItem->objectID)
             hitbox = LRZConvItem->hitboxRock;
         else if (entity->objectID == ItemBox->objectID)
-            hitbox = ItemBox->hitbox;
+            hitbox = ItemBox->hitboxItemBox;
         else if (entity->objectID == Iwamodoki->objectID)
             hitbox = Iwamodoki->hitboxBadnik;
 
@@ -116,12 +116,12 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
 
         // Try to collide with the floor
         int32 prevY         = entity->position.y;
-        bool32 tileCollided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 16, 4);
+        bool32 tileCollided = RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 16, 4);
         if (!tileCollided) {
-            if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)
-                || !RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)) {
-                if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4)) {
-                    tileCollided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4);
+            if (!RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)
+                || !RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)) {
+                if (RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4)) {
+                    tileCollided = RSDK.ObjectTileGrip(entity, Zone->collisionLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4);
                 }
             }
         }
@@ -197,9 +197,9 @@ Vector2 LRZConvItem_HandleLRZConvPhys(void *e)
 
         bool32 wallCollided = false;
         if (entity->velocity.x < 0)
-            wallCollided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, hitbox.left << 16, hitbox.top << 16, false);
+            wallCollided = RSDK.ObjectTileCollision(entity, Zone->collisionLayers, CMODE_FLOOR, 0, hitbox.left << 16, hitbox.top << 16, false);
         else if (entity->velocity.x > 0)
-            wallCollided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, hitbox.right << 16, hitbox.top << 16, false);
+            wallCollided = RSDK.ObjectTileCollision(entity, Zone->collisionLayers, CMODE_FLOOR, 0, hitbox.right << 16, hitbox.top << 16, false);
 
         // Apply Lava Physics
         if (lavaCollided) {

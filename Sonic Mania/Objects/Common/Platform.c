@@ -695,14 +695,14 @@ void Platform_State_Pushable(void)
             player->position.x = self->drawPos.x + ((self->hitbox.right - playerHitbox->left - 1) << 16);
     }
 
-    bool32 collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, (self->hitbox.left + 16) << 16, self->hitbox.bottom << 16, 4);
+    bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, (self->hitbox.left + 16) << 16, self->hitbox.bottom << 16, 4);
     int32 y         = self->position.y;
 
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, 4);
     if (self->position.y < y)
         y = self->position.y;
 
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, (self->hitbox.right - 16) << 16, self->hitbox.bottom << 16, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, (self->hitbox.right - 16) << 16, self->hitbox.bottom << 16, 4);
     if (self->position.y < y)
         y = self->position.y;
 
@@ -720,10 +720,10 @@ void Platform_State_Pushable(void)
                 self->state = Platform_State_Pushable_FallingR;
         }
     }
-    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, self->hitbox.left << 16, (self->hitbox.bottom - 8) << 16, true);
-    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->hitbox.right << 16, (self->hitbox.bottom - 8) << 16, true);
-    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, self->hitbox.left << 16, (self->hitbox.top + 8) << 16, true);
-    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->hitbox.right << 16, (self->hitbox.top + 8) << 16, true);
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, self->hitbox.left << 16, (self->hitbox.bottom - 8) << 16, true);
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, self->hitbox.right << 16, (self->hitbox.bottom - 8) << 16, true);
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, self->hitbox.left << 16, (self->hitbox.top + 8) << 16, true);
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, self->hitbox.right << 16, (self->hitbox.top + 8) << 16, true);
 
     self->drawPos.x = self->position.x;
     self->drawPos.y = self->position.y;
@@ -922,7 +922,7 @@ void Platform_State_Pushable_FallingL(void)
 
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
-    if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, self->hitbox.left << 16, self->hitbox.bottom << 16, false))
+    if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, self->hitbox.left << 16, self->hitbox.bottom << 16, false))
         self->state = Platform_State_Pushable_Falling;
     self->position.x = storeX;
     self->position.y = storeY;
@@ -937,7 +937,7 @@ void Platform_State_Pushable_FallingR(void)
 
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
-    if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, self->hitbox.right << 16, self->hitbox.bottom << 16, false))
+    if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, self->hitbox.right << 16, self->hitbox.bottom << 16, false))
         self->state = Platform_State_Pushable_Falling;
     self->position.x = storeX;
     self->position.y = storeY;
@@ -953,14 +953,14 @@ void Platform_State_Pushable_Falling(void)
     self->velocity.y += 0x3800;
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
-    bool32 collided  = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, (self->hitbox.left + 16) << 16, self->hitbox.bottom << 16, 4);
+    bool32 collided  = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, (self->hitbox.left + 16) << 16, self->hitbox.bottom << 16, 4);
     int32 ypos       = self->position.y;
 
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, 4);
     if (self->position.y < ypos)
         ypos = self->position.y;
 
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, (self->hitbox.right - 16) << 16, self->hitbox.bottom << 16, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, (self->hitbox.right - 16) << 16, self->hitbox.bottom << 16, 4);
     if (self->position.y < ypos)
         ypos = self->position.y;
     if (collided) {
@@ -1538,7 +1538,7 @@ void Platform_Collision_Tiles(void)
         hitbox.top -= 16;
 
         if (Player_CheckCollisionTouch(player, self, &hitbox)) {
-            player->collisionLayers |= Zone->moveID;
+            player->collisionLayers |= Zone->moveMask;
             player->moveLayerPosition.x = self->tileOrigin.x - self->drawPos.x;
             player->moveLayerPosition.y = self->tileOrigin.y - self->drawPos.y;
             if (player->animator.animationID == ANI_PUSH && player->onGround) {
@@ -2205,12 +2205,14 @@ void Platform_EditorDraw(void)
 
             Platform_EditorDraw_Normal();
             break;
+
         case PLATFORM_COLLAPSING:
             self->updateRange.x = 0x800000;
             self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
 
             Platform_EditorDraw_Normal();
             break;
+
         case PLATFORM_MOVING:
             self->updateRange.x = (abs(amplitude.x) + 0x2000) << 10;
             self->updateRange.y = (abs(amplitude.y) + 0x2000) << 10;
@@ -2238,8 +2240,8 @@ void Platform_EditorDraw(void)
                 self->drawPos.y = amplitude.y * RSDK.Sin1024(0x300) + self->centerPos.y;
                 Platform_EditorDraw_Normal();
 
-                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
-                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, INK_NONE, 0xFF);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
                 self->inkEffect = INK_NONE;
 
@@ -2363,9 +2365,9 @@ void Platform_EditorDraw(void)
                 Platform_EditorDraw_Normal();
 
                 self->inkEffect = INK_NONE;
-                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, INK_NONE, 0xFF);
                 if (type)
-                    DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
+                    DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2410,8 +2412,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
 
-                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
-                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, INK_NONE, 0xFF);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2496,8 +2498,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
 
-                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
-                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, INK_NONE, 0xFF);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2556,8 +2558,8 @@ void Platform_EditorDraw(void)
 
                 self->inkEffect = INK_NONE;
 
-                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
-                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(drawPos.x, drawPos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, INK_NONE, 0xFF);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
                 RSDK_DRAWING_OVERLAY(false);
             }
@@ -2614,7 +2616,7 @@ void Platform_EditorDraw(void)
                 self->drawPos.y += amplitude.y;
                 Platform_EditorDraw_Normal();
 
-                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y, 0x00FF00);
+                DrawHelpers_DrawArrow(self->drawPos.x, self->drawPos.y - amplitude.y, self->drawPos.x, self->drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
                 self->inkEffect = INK_NONE;
 
@@ -2631,7 +2633,7 @@ void Platform_EditorDraw(void)
             if (!child)
                 continue;
 
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
         }
 
         RSDK_DRAWING_OVERLAY(false);

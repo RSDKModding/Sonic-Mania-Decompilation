@@ -264,7 +264,7 @@ void Cylinder_State_Spiral(void)
 
                     if (collided) {
                         self->playerStatuses[player->playerID] = 1;
-                        player->state                            = Cylinder_Player_State_Spiral;
+                        player->state                            = Cylinder_PlayerState_Spiral;
                     }
                 }
                 break;
@@ -464,7 +464,7 @@ void Cylinder_State_InkRoller(void)
                     || (player->position.y >= self->position.y && player->velocity.y <= 0)) {
 
                     bool32 collided = true;
-                    if (player->state == Cylinder_Player_State_InkRoller_Stand) {
+                    if (player->state == Cylinder_PlayerState_InkRoller_Stand) {
                         int32 frame = (24 - (24 * angle) / 1024) % 24;
                         if (player->groundVel)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
@@ -477,7 +477,7 @@ void Cylinder_State_InkRoller(void)
                             player->direction = player->velocity.x > 0;
                     }
                     else {
-                        if (player->state != Cylinder_Player_State_InkRoller_Roll) {
+                        if (player->state != Cylinder_PlayerState_InkRoller_Roll) {
                             collided = false;
                         }
                         else {
@@ -556,7 +556,7 @@ void Cylinder_State_InkRoller(void)
                     player->direction ^= FLIP_X;
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
-                    player->state           = Cylinder_Player_State_InkRoller_Stand;
+                    player->state           = Cylinder_PlayerState_InkRoller_Stand;
                 }
             }
         }
@@ -711,7 +711,7 @@ void Cylinder_State_Pillar(void)
                     self->playerStatuses[player->playerID] = 1;
                     player->nextAirState                     = 0;
                     player->nextGroundState                  = 0;
-                    player->state                            = Cylinder_Player_State_Pillar;
+                    player->state                            = Cylinder_PlayerState_Pillar;
                     player->tileCollisions                   = false;
 
                     if (abs(player->groundVel) > 0x18000) {
@@ -734,7 +734,7 @@ void Cylinder_State_Pillar(void)
     }
 }
 
-void Cylinder_Player_State_InkRoller_Stand(void)
+void Cylinder_PlayerState_InkRoller_Stand(void)
 {
     RSDK_THIS(Player);
     Player_HandleGroundMovement();
@@ -760,13 +760,13 @@ void Cylinder_Player_State_InkRoller_Stand(void)
 
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
             self->direction ^= FLIP_X;
-            self->state = Cylinder_Player_State_InkRoller_Roll;
+            self->state = Cylinder_PlayerState_InkRoller_Roll;
             RSDK.PlaySfx(Player->sfxRoll, false, 255);
         }
     }
 }
 
-void Cylinder_Player_State_InkRoller_Roll(void)
+void Cylinder_PlayerState_InkRoller_Roll(void)
 {
     RSDK_THIS(Player);
     int32 angle     = self->angle;
@@ -774,7 +774,7 @@ void Cylinder_Player_State_InkRoller_Roll(void)
     Player_HandleRollDeceleration();
     if (self->state == Player_State_Ground) {
         self->direction ^= FLIP_X;
-        self->state = Cylinder_Player_State_InkRoller_Stand;
+        self->state = Cylinder_PlayerState_InkRoller_Stand;
     }
     if (self->characterID == ID_TAILS) {
         self->animator.speed = 120;
@@ -799,7 +799,7 @@ void Cylinder_Player_State_InkRoller_Roll(void)
     }
 }
 
-void Cylinder_Player_State_Pillar(void)
+void Cylinder_PlayerState_Pillar(void)
 {
     RSDK_THIS(Player);
     if (self->onGround) {
@@ -807,7 +807,7 @@ void Cylinder_Player_State_Pillar(void)
     }
 }
 
-void Cylinder_Player_State_Spiral(void)
+void Cylinder_PlayerState_Spiral(void)
 {
     RSDK_THIS(Player);
     self->down = false;

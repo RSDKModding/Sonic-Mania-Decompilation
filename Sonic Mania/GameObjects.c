@@ -65,11 +65,6 @@ void LinkGameLogicDLL(EngineInfo *info)
     ScreenInfo = info->screenInfo;
     RSDK.InitGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 
-    defaultHitbox.left   = -10;
-    defaultHitbox.top    = -20;
-    defaultHitbox.right  = 10;
-    defaultHitbox.bottom = 20;
-
     RSDK_ADD_OBJECT(Acetone);
     RSDK_ADD_OBJECT(ActClear);
     RSDK_ADD_OBJECT(AIZEggRobo);
@@ -776,6 +771,11 @@ void LinkGameLogicDLL(EngineInfo *info)
 
 #if RETRO_USE_MOD_LOADER
     if (info->modPtrs) {
+
+        // ===============
+        // Globals
+        // ===============
+
         ADD_PUBLIC_FUNC(Player_State_None);
         ADD_PUBLIC_FUNC(Player_State_Ground);
         ADD_PUBLIC_FUNC(Player_State_Air);
@@ -850,13 +850,13 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_GiveScore);
         ADD_PUBLIC_FUNC(Player_GiveRings);
         ADD_PUBLIC_FUNC(Player_GiveLife);
-        ADD_PUBLIC_FUNC(Player_ApplyShieldEffect);
+        ADD_PUBLIC_FUNC(Player_ApplyShield);
         ADD_PUBLIC_FUNC(Player_ChangeCharacter);
         ADD_PUBLIC_FUNC(Player_CheckGoSuper);
         ADD_PUBLIC_FUNC(Ring_LoseRings);
         ADD_PUBLIC_FUNC(Ring_LoseHyperRings);
         ADD_PUBLIC_FUNC(Player_HandleDeath);
-        ADD_PUBLIC_FUNC(Player_ResetState);
+        ADD_PUBLIC_FUNC(Player_HandleQuickRespawn);
 
         ADD_PUBLIC_FUNC(Player_GetHitbox);
         ADD_PUBLIC_FUNC(Player_CheckCollisionTouch);
@@ -894,7 +894,6 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(SaveGame_SavePlayerState);
         ADD_PUBLIC_FUNC(SaveGame_LoadPlayerState);
         ADD_PUBLIC_FUNC(SaveGame_ResetPlayerState);
-        ADD_PUBLIC_FUNC(SaveGame_SaveFile_CB);
 
         ADD_PUBLIC_FUNC(GameProgress_GetNotifStringID);
         ADD_PUBLIC_FUNC(GameProgress_ShuffleBSSID);
@@ -952,7 +951,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Dust_State_GlideSlide);
         ADD_PUBLIC_FUNC(Dust_State_Skid);
         ADD_PUBLIC_FUNC(Dust_State_Spindash);
-        ADD_PUBLIC_FUNC(Dust_State_MoveGravity);
+        ADD_PUBLIC_FUNC(Dust_State_MoveFriction);
 
         ADD_PUBLIC_FUNC(Debris_State_Fall);
         ADD_PUBLIC_FUNC(Debris_State_Move);
@@ -961,10 +960,16 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
 
         ADD_PUBLIC_FUNC(Music_SetMusicTrack);
-        ADD_PUBLIC_FUNC(Music_State_PlayAutoMusic);
         ADD_PUBLIC_FUNC(Music_PlayQueuedTrack);
         ADD_PUBLIC_FUNC(Music_PlayTrack);
         ADD_PUBLIC_FUNC(Music_PlayTrackPtr);
+        ADD_PUBLIC_FUNC(Music_PlayAutoMusicQueuedTrack);
+        ADD_PUBLIC_FUNC(Music_EndQueuedTrack);
+        ADD_PUBLIC_FUNC(Music_ClearMusicStack);
+        ADD_PUBLIC_FUNC(Music_TransitionTrack);
+        ADD_PUBLIC_FUNC(Music_FadeOut);
+
+        ADD_PUBLIC_FUNC(PlaneSwitch_CheckCollisions);
 
         ADD_PUBLIC_FUNC(Soundboard_LoadSFX);
 
@@ -976,8 +981,115 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Zone_StartTeleportAction);
         ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
         ADD_PUBLIC_FUNC(Zone_IsZoneLastAct);
+#if RETRO_USE_PLUS
         ADD_PUBLIC_FUNC(Zone_GetEncoreStageID);
         ADD_PUBLIC_FUNC(Zone_GetManiaStageID);
+#endif
+
+        // ===============
+        // GHZ
+        // ===============
+
+        ADD_PUBLIC_FUNC(Bridge_HandleCollisions);
+
+        // ===============
+        // CPZ
+        // ===============
+
+        // ===============
+        // SPZ
+        // ===============
+
+        // ===============
+        // FBZ
+        // ===============
+
+        ADD_PUBLIC_FUNC(Current_PlayerState_CurrentDown);
+        ADD_PUBLIC_FUNC(Current_PlayerState_CurrentLeft);
+        ADD_PUBLIC_FUNC(Current_PlayerState_CurrentRight);
+        ADD_PUBLIC_FUNC(Current_PlayerState_CurrentUp);
+
+        ADD_PUBLIC_FUNC(Cylinder_PlayerState_Pillar);
+        ADD_PUBLIC_FUNC(Cylinder_PlayerState_Spiral);
+
+        // ===============
+        // PGZ
+        // ===============
+
+        ADD_PUBLIC_FUNC(Cylinder_PlayerState_InkRoller_Stand);
+        ADD_PUBLIC_FUNC(Cylinder_PlayerState_InkRoller_Roll);
+
+        ADD_PUBLIC_FUNC(Ice_State_FrozenPlayer);
+
+        // ===============
+        // SSZ
+        // ===============
+
+        // ===============
+        // HCZ
+        // ===============
+
+        // ===============
+        // MSZ
+        // ===============
+
+        // ===============
+        // OOZ
+        // ===============
+
+        ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilFall);
+        ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilPool);
+        ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilSlide);
+        ADD_PUBLIC_FUNC(OOZSetup_PlayerState_OilStrip);
+
+        // ===============
+        // LRZ
+        // ===============
+
+        // ===============
+        // MMZ
+        // ===============
+
+        ADD_PUBLIC_FUNC(PlaneSeeSaw_PlayerState_ToBG);
+        ADD_PUBLIC_FUNC(PlaneSeeSaw_PlayerState_ToFG);
+
+        ADD_PUBLIC_FUNC(SizeLaser_P2JumpInShrink);
+        ADD_PUBLIC_FUNC(SizeLaser_PlayerState_Grow);
+        ADD_PUBLIC_FUNC(SizeLaser_P2JumpInGrow);
+
+        // ===============
+        // TMZ
+        // ===============
+
+        ADD_PUBLIC_FUNC(GymBar_PlayerState_Hang);
+        ADD_PUBLIC_FUNC(GymBar_PlayerState_SwingV);
+        ADD_PUBLIC_FUNC(GymBar_PlayerState_SwingH);
+
+        // ===============
+        // ERZ
+        // ===============
+
+        // ===============
+        // Blue Spheres
+        // ===============
+
+        // ===============
+        // UFO
+        // ===============
+
+#if RETRO_USE_PLUS
+        // ===============
+        // Pinball
+        // ===============
+
+#endif
+        // ===============
+        // Puyo
+        // ===============
+
+        // ===============
+        // Menu
+        // ===============
 
         ADD_PUBLIC_FUNC(UIControl_MatchMenuTag);
     }

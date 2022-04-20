@@ -271,9 +271,9 @@ void Shuriken_State_ArrowInAir(void)
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
 
     if (collided) {
         foreach_active(Shuriken, shuriken)
@@ -303,9 +303,9 @@ void Shuriken_State_ArrowOnWall(void)
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
     if (!collided || self->timer >= 300 || self->dropTimer >= 60) {
         self->updateRange.x = 0x4000000;
         self->updateRange.y = 0x4000000;

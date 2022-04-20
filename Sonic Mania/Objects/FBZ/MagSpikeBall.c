@@ -16,16 +16,16 @@ void MagSpikeBall_Update(void)
     self->position.y += self->velocity.y;
     if (self->direction) {
         self->velocity.y -= 0x3800;
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
             self->velocity.y = 0;
         self->direction = FLIP_NONE;
     }
     else {
         self->velocity.y += 0x3800;
-        if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
+        if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
             self->velocity.y = 0;
 
-        bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true);
+        bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, true);
 
         foreach_all(MagPlatform, platform)
         {

@@ -277,7 +277,7 @@ void Crate_State_Fall(void)
     self->velocity.y += 0x3800;
     self->position.x = self->drawPos.x;
     self->position.y = self->drawPos.y;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, CMODE_FLOOR, 0, 0x180000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, CMODE_FLOOR, 0, 0x180000, true)) {
         self->velocity.y = 0;
         self->state      = Crate_State_None;
     }

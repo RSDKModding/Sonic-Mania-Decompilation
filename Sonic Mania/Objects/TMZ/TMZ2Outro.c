@@ -343,7 +343,7 @@ bool32 TMZ2Outro_Cutscene_Panic(EntityCutsceneSeq *host)
             eggman->direction  = FLIP_NONE;
             eggman->state      = Eggman_State_WalkOffScreen;
             eggman->velocity.x = 0x10000;
-            RSDK.ObjectTileGrip(eggman, Zone->fgLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
+            RSDK.ObjectTileGrip(eggman, Zone->collisionLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
         }
     }
 
@@ -509,7 +509,7 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
             eggman->direction  = FLIP_NONE;
             eggman->state      = Eggman_State_WalkOffScreen;
             eggman->velocity.x = 0x10000;
-            RSDK.ObjectTileGrip(eggman, Zone->fgLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
+            RSDK.ObjectTileGrip(eggman, Zone->collisionLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
         }
     }
 

@@ -217,7 +217,7 @@ void FBZMissile_StateVertical_Fall(void)
             }
         }
 
-        if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
+        if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
             foreach_active(FBZMissile, missile)
             {
                 if (missile->type == FBZMISSILE_HULL && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, self, &FBZMissile->hitbox1)) {

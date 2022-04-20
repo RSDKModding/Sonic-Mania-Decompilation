@@ -14,6 +14,7 @@ void ScoreBonus_Update(void)
     RSDK_THIS(ScoreBonus);
 
     self->position.y -= 0x20000;
+
     if (!--self->timer)
         destroyEntity(self);
 }
@@ -25,12 +26,14 @@ void ScoreBonus_StaticUpdate(void) {}
 void ScoreBonus_Draw(void)
 {
     RSDK_THIS(ScoreBonus);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void ScoreBonus_Create(void *data)
 {
     RSDK_THIS(ScoreBonus);
+
     RSDK.SetSpriteAnimation(ScoreBonus->aniFrames, 0, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;

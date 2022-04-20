@@ -154,7 +154,7 @@ void PhantomRuby_State_MoveRotateGravity_CheckGround(void)
     RSDK_THIS(PhantomRuby);
     PhantomRuby_State_MoveRotateGravity();
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
         self->velocity.x >>= 1;
         if (-(self->velocity.y >> 1) > -0x10000)
             self->velocity.y = 0;

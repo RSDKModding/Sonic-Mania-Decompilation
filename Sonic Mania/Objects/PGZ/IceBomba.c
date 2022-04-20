@@ -273,7 +273,7 @@ void IceBomba_State_Bomb(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     if (RSDK.CheckOnScreen(self, NULL)) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             RSDK.PlaySfx(IceBomba->sfxExplosion, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             CREATE_ENTITY(Ice, intToVoid(ICE_CHILD_PILLAR), self->position.x, self->position.y + 0x100000);

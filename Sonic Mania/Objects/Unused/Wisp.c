@@ -208,7 +208,7 @@ void Wisp_EditorLoad(void)
 
     // despite being editable, this variable is set to FLIP_NONE on create, thereby making the editable var's value unused
     RSDK_ACTIVE_VAR(Wisp, direction);
-    RSDK_ENUM_VAR("Unused", FLIP_NONE);
+    RSDK_ENUM_VAR("(Unused)", FLIP_NONE);
     // RSDK_ENUM_VAR("No Flip", FLIP_NONE);
     // RSDK_ENUM_VAR("Flip X", FLIP_X);
 }

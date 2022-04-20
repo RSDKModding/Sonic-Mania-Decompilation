@@ -152,7 +152,7 @@ bool32 OOZ1Outro_Cutscene_BeginAct(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titlecard)
         {
             titlecard->active    = ACTIVE_NORMAL;
-            titlecard->state     = TitleCard_State_Initial;
+            titlecard->state     = TitleCard_State_SetupBGElements;
             titlecard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }

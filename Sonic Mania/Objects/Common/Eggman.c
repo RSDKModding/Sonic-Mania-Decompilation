@@ -130,7 +130,7 @@ void Eggman_State_FallAndCollide(void)
     RSDK.ProcessAnimation(&self->animator);
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x100000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x100000, true)) {
         self->onGround = true;
         self->state    = Eggman_State_ProcessAnimation;
     }

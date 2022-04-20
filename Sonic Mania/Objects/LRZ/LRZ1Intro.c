@@ -187,7 +187,7 @@ void LRZ1Intro_State_EnterSub(void)
     if (self->velocity.y > 0x60000)
         camera->lookPos.y += 3;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true)) {
         Zone->playerBoundActiveL[0] = true;
         self->spawnPosY             = self->position.y + 0x380000;
         self->state                 = LRZ1Intro_State_RidingSub;
@@ -214,7 +214,7 @@ void LRZ1Intro_State_RidingSub(void)
     if (!(Zone->timer & 0xF))
         RSDK.PlaySfx(LRZ1Intro->sfxLava, false, 255);
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x1000000, 0x600000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x1000000, 0x600000, true)) {
         Camera_ShakeScreen(0, 0, 6);
         self->state = LRZ1Intro_State_CrashedSub;
         RSDK.PlaySfx(LRZ1Intro->sfxWalkerLegs2, false, 255);

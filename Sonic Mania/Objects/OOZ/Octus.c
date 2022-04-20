@@ -203,7 +203,7 @@ void Octus_State_Fall(void)
 
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1000;
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, 1)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xD0000, 1)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &self->animator, true, 0);
         self->state = Octus_State_CheckPlayerInRange;

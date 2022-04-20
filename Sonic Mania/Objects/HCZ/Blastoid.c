@@ -177,10 +177,10 @@ void Blastoid_State_Projectile(void)
         // This implies these used to be "ObjectTileGrip" at some point, and were then changed to "ObjectTileCollision" without changing the last
         // parameter Not that it *really* matters, since 4 will evaluate to true since it's non-zero
 
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, Blastoid->hitboxProjectile.top << 13, 4)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, Blastoid->hitboxProjectile.left << 13, 0, 4)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Blastoid->hitboxProjectile.bottom << 13, 4)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, Blastoid->hitboxProjectile.right << 13, 0, 4)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, Blastoid->hitboxProjectile.top << 13, 4)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, Blastoid->hitboxProjectile.left << 13, 0, 4)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, Blastoid->hitboxProjectile.bottom << 13, 4)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, Blastoid->hitboxProjectile.right << 13, 0, 4)) {
             destroyEntity(self);
         }
         else {
@@ -212,7 +212,7 @@ void Blastoid_EditorDraw(void)
 
         EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
         if (CollapsingPlatform && platform->objectID == CollapsingPlatform->objectID)
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, platform->position.x, platform->position.y, 0xFFFF00, INK_NONE, 0xFF);
 
         RSDK_DRAWING_OVERLAY(false);
     }

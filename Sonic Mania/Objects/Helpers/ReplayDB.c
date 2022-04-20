@@ -30,9 +30,9 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed)
     compressed[1]    = framePtr->flags;
     bool32 forcePack = framePtr->info == REPLAY_INFO_STATECHANGE || framePtr->info == REPLAY_INFO_PASSEDGATE;
     uint8 changes    = framePtr->flags;
-    uint8 *outPtr    = &compressed[2];
 
-    int32 size = 2 * sizeof(uint8);
+    int32 size    = 2 * sizeof(uint8);
+    uint8 *outPtr = &compressed[2];
 
     // input
     if (forcePack || (changes & REPLAY_FLAG_INPUT)) {
@@ -91,23 +91,22 @@ int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, void *uncompressed)
         ++outPtr;
     }
 
-    return size;
+    return outPtr - compressed;
 }
 
 int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
 {
     ReplayFrame *framePtr = (ReplayFrame *)uncompressed;
 
-    uint8 *buf = &compressed[2];
-
     // compress state
-    framePtr->info = *compressed;
+    framePtr->info = compressed[0];
 
     bool32 forceUnpack = *compressed == REPLAY_INFO_STATECHANGE || *compressed == REPLAY_INFO_PASSEDGATE;
     uint8 changes      = compressed[1];
     framePtr->flags    = changes;
 
     int32 size = 2 * sizeof(uint8);
+    uint8 *buf = &compressed[2];
 
     // input
     if (forceUnpack || (changes & REPLAY_FLAG_INPUT)) {
@@ -145,7 +144,7 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
 
     // rotation
     if (forceUnpack || (changes & REPLAY_FLAG_ROT)) {
-        int32 rotation     = *buf;
+        int32 rotation     = *buf++;
         framePtr->rotation = rotation << 1;
         size += sizeof(uint8);
     }
@@ -167,7 +166,8 @@ int32 ReplayDB_Buffer_UnpackEntry(void *uncompressed, uint8 *compressed)
         framePtr->frame = *buf++;
         size += sizeof(uint8);
     }
-    return size;
+
+    return buf - compressed;
 }
 
 #if RETRO_INCLUDE_EDITOR

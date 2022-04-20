@@ -82,7 +82,7 @@ void Music_Update(void);
 void Music_LateUpdate(void);
 void Music_StaticUpdate(void);
 void Music_Draw(void);
-void Music_Create(void* data);
+void Music_Create(void *data);
 void Music_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Music_EditorDraw(void);
@@ -95,9 +95,9 @@ void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint);
 void Music_State_PlayAutoMusic(void);
 // Plays a track, and manages the music stack so it can be returned to
 void Music_PlayQueuedTrack(uint8 trackID);
-//Plays a track, doesn't use the music stack at all
+// Plays a track, doesn't use the music stack at all
 void Music_PlayTrack(uint8 trackID);
-//Play a track using the info from a music entity
+// Play a track using the info from a music entity
 void Music_PlayTrackPtr(EntityMusic *entity);
 
 void Music_PlayAutoMusicQueuedTrack(uint8 trackID);
@@ -116,4 +116,4 @@ void Music_State_FadeTrackIn(void);
 void Music_State_FadeOut(void);
 void Music_State_TransitionTrack(void);
 
-#endif //!OBJ_MUSIC_H
+#endif //! OBJ_MUSIC_H

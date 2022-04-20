@@ -26,7 +26,7 @@ void Dust_Update(void);
 void Dust_LateUpdate(void);
 void Dust_StaticUpdate(void);
 void Dust_Draw(void);
-void Dust_Create(void* data);
+void Dust_Create(void *data);
 void Dust_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Dust_EditorDraw(void);
@@ -40,6 +40,6 @@ void Dust_State_Skid(void);
 void Dust_State_GlideSlide(void);
 void Dust_State_Move(void);
 void Dust_State_MoveCollide(void);
-void Dust_State_MoveGravity(void);
+void Dust_State_MoveFriction(void);
 
-#endif //!OBJ_DUST_H
+#endif //! OBJ_DUST_H

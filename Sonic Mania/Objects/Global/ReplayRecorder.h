@@ -5,10 +5,10 @@
 
 #if RETRO_USE_PLUS
 
-#define Replay_Signature  (0xF6057BED)
-#define Replay_BufferSize (0x100000)
+#define REPLAY_SIGNATURE   (0xF6057BED)
+#define REPLAY_BUFFER_SIZE (0x100000)
 
-#define Replay_MaxFrameCount (37447)
+#define REPLAY_MAX_FRAMECOUNT (37447)
 
 typedef struct {
     uint32 signature;
@@ -41,7 +41,7 @@ typedef struct {
 
 typedef struct {
     ReplayHeader header;
-    ReplayFrame frames[Replay_MaxFrameCount];
+    ReplayFrame frames[REPLAY_MAX_FRAMECOUNT];
     // there's an extra 4 bytes here, but they're just padding to make the size correct
     int32 padding;
 } Replay;
@@ -68,29 +68,29 @@ typedef enum {
 // Object Class
 struct ObjectReplayRecorder {
     RSDK_OBJECT
-    void *actions[64];
+    StateMachine(actions[64]);
     int32 frameCounter;
-    Replay *writeBuffer;
-    Replay *readBuffer;
-    ReplayFrame *frameBuffer_w;
-    ReplayFrame *frameBuffer_r;
-    EntityReplayRecorder *recorder_r;
-    EntityReplayRecorder *recorder_w;
+    Replay *recordBuffer;
+    Replay *playbackBuffer;
+    ReplayFrame *recordingFrames;
+    ReplayFrame *playbackFrames;
+    EntityReplayRecorder *recordingManager;
+    EntityReplayRecorder *playbackManager;
     bool32 initialized;
     int32 startRecording;
     int32 startPlayback;
     int32 savedReplay;
     int32 startedRecording;
     int32 isReplaying;
-    int32 hasSetupGhostView;
     int32 hasSetupGhostVS;
+    int32 hasSetupGhostView;
     int32 passedStartLine;
     int32 reachedGoal;
     int32 packedStartFrame;
-    void *buffer;
-    void (*loadCallback)(bool32);
+    void *fileBuffer;
+    void (*loadCallback)(bool32 success);
     char filename[0x100];
-    void (*saveFinishPtr)(bool32);
+    void (*saveFinishPtr)(bool32 success);
     int32 replayID;
     int32 replayRowID;
 };
@@ -100,15 +100,15 @@ struct EntityReplayRecorder {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLate);
-    StateMachine(playerState);
-    StateMachine(storedState);
-    StateMachine(stateStore);
+    StateMachine(ghostPlayerState);
+    StateMachine(prevPlayerState);
+    StateMachine(curPlayerState);
     uint16 animID;
     uint16 frameID;
     EntityPlayer *player;
     int32 paused;
     int32 changeFlags;
-    int32 playing;
+    int32 isGhostPlayback;
     int32 replayFrame;
     int32 maxFrameCount;
     int32 replayStopDelay;
@@ -120,7 +120,7 @@ struct EntityReplayRecorder {
     int32 storedSpeed;
     uint8 storedAnim;
     uint16 storedFrame;
-    int32 alphaStore;
+    int32 ghostAlpha;
 };
 
 // Object Struct
@@ -131,7 +131,7 @@ void ReplayRecorder_Update(void);
 void ReplayRecorder_LateUpdate(void);
 void ReplayRecorder_StaticUpdate(void);
 void ReplayRecorder_Draw(void);
-void ReplayRecorder_Create(void* data);
+void ReplayRecorder_Create(void *data);
 void ReplayRecorder_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ReplayRecorder_EditorDraw(void);
@@ -156,7 +156,7 @@ void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer);
 void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer);
 void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer);
 void ReplayRecorder_SetReplayStatus(int32 status);
-void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*callback)(bool32));
+void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*callback)(bool32 success));
 void ReplayRecorder_Load_CB(int32 status);
 void ReplayRecorder_ConfigureGhost_CB(void);
 void ReplayRecorder_SetupActions(void);
@@ -170,23 +170,23 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame);
 void ReplayRecorder_SeekFunc(EntityReplayRecorder *recorder);
 void ReplayRecorder_Stop(EntityReplayRecorder *recorder);
 void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 allowSpriteChanges);
-void ReplayRecorder_ForceApplyFramePtr(EntityReplayRecorder *recorder, ReplayFrame* framePtr);
+void ReplayRecorder_ForceApplyFramePtr(EntityReplayRecorder *recorder, ReplayFrame *framePtr);
 void ReplayRecorder_ApplyFramePtr(EntityReplayRecorder *recorder, ReplayFrame *framePtr);
 bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder);
 void ReplayRecorder_PackFrame(ReplayFrame *recording);
 void ReplayRecorder_PlayBackInput(void);
 void ReplayRecorder_Pause(EntityReplayRecorder *recorder);
-void ReplayRecorder_PlayerState(void);
-void ReplayRecorder_StatePlay(void);
-void ReplayRecorder_None_Replay(void);
-void ReplayRecorder_StateLate_Replay(void);
-void ReplayRecorder_None_Record(void);
-void ReplayRecorder_RecordFrameData(void);
-void ReplayRecorder_LoadReplayDB(void (*callback)(bool32));
-void ReplayRecorder_SaveReplayDB(void (*callback)(bool32));
+void ReplayRecorder_PlayerState_PlaybackReplay(void);
+void ReplayRecorder_State_SetupPlayback(void);
+void ReplayRecorder_State_Playback(void);
+void ReplayRecorder_Late_Playback(void);
+void ReplayRecorder_State_Record(void);
+void ReplayRecorder_Late_RecordFrames(void);
+void ReplayRecorder_LoadReplayDB(void (*callback)(bool32 success));
+void ReplayRecorder_SaveReplayDB(void (*callback)(bool32 success));
 void ReplayRecorder_CreateReplayDB(void);
-uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int32 charID, int32 score, char mode);
-void ReplayRecorder_DeleteReplay(int32 row, void (*callback)(bool32), bool32 useAltCB);
+uint32 ReplayRecorder_AddReplayID(uint8 zoneID, uint8 act, uint8 characterID, int32 score, uint8 encore);
+void ReplayRecorder_DeleteReplay(int32 row, void (*callback)(bool32 success), bool32 useAltCB);
 void ReplayRecorder_DeleteReplay_CB(int32 status);
 void ReplayRecorder_DeleteReplaySave_CB(int32 status);
 void ReplayRecorder_DeleteReplaySave2_CB(int32 status);
@@ -194,4 +194,4 @@ void ReplayRecorder_SetStatus(int32 status);
 void ReplayRecorder_ReplaySaveFinish(int32 status);
 #endif
 
-#endif //!OBJ_REPLAYRECORDER_H
+#endif //! OBJ_REPLAYRECORDER_H

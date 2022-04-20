@@ -8,11 +8,11 @@
 struct ObjectReplayDB {
     RSDK_OBJECT
     Entity *loadEntity;
-    void (*loadCallback)(bool32);
+    void (*loadCallback)(bool32 success);
     Entity *saveEntity;
-    void (*saveCallback)(bool32);
+    void (*saveCallback)(bool32 success);
     Entity *deleteEntity;
-    void (*deleteCallback)(bool32);
+    void (*deleteCallback)(bool32 success);
 };
 
 // Entity Class

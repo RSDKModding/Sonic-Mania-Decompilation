@@ -87,18 +87,18 @@ bool32 Rhinobot_CheckTileCollisions(void)
     RSDK_THIS(Rhinobot);
 
     if (self->moveDir) {
-        if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x40000, 0xF0000, 8)) {
-            if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, false))
+        if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x40000, 0xF0000, 8)) {
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, 0, false))
                 return false;
-            if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
+            if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
                 return false;
             self->state = Rhinobot_State_Fall;
         }
     }
-    else if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x40000, 0xF0000, 8)) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, false))
+    else if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x40000, 0xF0000, 8)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, 0, false))
             return false;
-        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
+        if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
             return false;
         self->state = Rhinobot_State_Fall;
     }
@@ -292,7 +292,7 @@ void Rhinobot_State_Fall(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->bodyAnimator, true, 0);
         self->drawDust = true;

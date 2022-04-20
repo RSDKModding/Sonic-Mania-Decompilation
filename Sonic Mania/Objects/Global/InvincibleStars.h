@@ -12,7 +12,7 @@ struct ObjectInvincibleStars {
 // Entity Class
 struct EntityInvincibleStars {
     RSDK_ENTITY
-    Entity *parent;
+    EntityPlayer *player;
     Vector2 starPos[8];
     int32 starAngle[2];
     int32 starFrame[2];

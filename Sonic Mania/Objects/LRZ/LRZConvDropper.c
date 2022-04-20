@@ -181,7 +181,7 @@ void LRZConvDropper_EditorDraw(void)
             EntityLRZConvItem *child = RSDK_GET_ENTITY(slot++, LRZConvItem);
 
             if (child)
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
         }
 
         RSDK_DRAWING_OVERLAY(false);

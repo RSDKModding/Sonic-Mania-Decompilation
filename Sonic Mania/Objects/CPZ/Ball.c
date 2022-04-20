@@ -207,7 +207,7 @@ void Ball_State_Chemical(void)
 {
     RSDK_THIS(Ball);
     RSDK.ProcessAnimation(&self->animator);
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
         Ball_SpawnSplashes();
     }
     else {
@@ -296,17 +296,21 @@ void Ball_EditorDraw(void)
     if (showGizmos()) {
         switch (self->type) {
             case BALL_SPAWN_LEFT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             case BALL_SPAWN_UP:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             case BALL_SPAWN_RIGHT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             case BALL_SPAWN_DOWN:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00, INK_NONE, 0xFF);
                 break;
+
             default: break;
         }
     }

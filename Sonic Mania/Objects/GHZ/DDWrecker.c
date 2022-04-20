@@ -621,7 +621,7 @@ void DDWrecker_State_HandleBounceAttack(void)
     self->animator.speed = 0x100 - 32 * self->timer;
 
     if (self->velocity.y > 0) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, 0, 0, 0x180000, true)) {
             ++self->timer;
             Camera_ShakeScreen(0, 0, 3);
             RSDK.PlaySfx(DDWrecker->sfxImpact, false, 255);

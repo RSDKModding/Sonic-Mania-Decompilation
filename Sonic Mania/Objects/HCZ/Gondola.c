@@ -194,7 +194,7 @@ void Gondola_HandleTileCollisions(void)
 {
     RSDK_THIS(Gondola);
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->hitbox.bottom << 16, true)) {
         self->maxStoodAngle = 0;
         if (self->velocity.y > 0)
             self->velocity.y = 0;
@@ -205,12 +205,12 @@ void Gondola_HandleTileCollisions(void)
         self->onGround      = false;
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, self->hitbox.top << 16, true) && self->velocity.y < 0) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, self->hitbox.top << 16, true) && self->velocity.y < 0) {
         self->velocity.y = 0;
     }
 
     // RWall = Right side of the wall, so this would collide with the *left* side of the boat
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, (self->hitbox.left - 8) << 16, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, (self->hitbox.left - 8) << 16, 0, true)) {
         if (self->velocity.x < 0)
             self->velocity.x = 0;
         self->stoppedL = true;
@@ -220,7 +220,7 @@ void Gondola_HandleTileCollisions(void)
     }
 
     // LWall = Left side of the wall, so this would collide with the *right* side of the boat
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, (self->hitbox.right + 8) << 16, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, (self->hitbox.right + 8) << 16, 0, true)) {
         if (self->velocity.x > 0)
             self->velocity.x = 0;
         self->stoppedR = true;

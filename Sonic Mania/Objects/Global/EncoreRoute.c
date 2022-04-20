@@ -14,35 +14,37 @@ void EncoreRoute_Update(void)
 {
     RSDK_THIS(EncoreRoute);
 
-    int32 offX = self->offset.x >> 16;
-    int32 offY = self->offset.y >> 16;
+    uint8 layerSrc = -1;
+    uint8 layerDest = -1;
 
-    int32 posY = self->position.y >> 20;
-    for (int32 y = 0; y < (self->size.y >> 0x10); ++y) {
-        int32 posX = self->position.x >> 20;
-        for (int32 x = 0; x < (self->size.x >> 0x10); ++x) {
-            uint8 src = -1;
-            uint8 dst = -1;
+    switch (self->layerSrc) {
+        case EROUTE_LAYER_FGLOW: layerSrc = Zone->fgLow; break;
+        case EROUTE_LAYER_FGHIGH: layerSrc = Zone->fgHigh; break;
+        case EROUTE_LAYER_MOVE: layerSrc = Zone->moveLayer; break;
+        case EROUTE_LAYER_SCRATCH: layerSrc = Zone->scratchLayer; break;
+        default: break;
+    }
 
-            switch (self->layerSrc) {
-                case 0: src = Zone->fgLow; break;
-                case 1: src = Zone->fgHigh; break;
-                case 2: src = Zone->moveLayer; break;
-                case 3: src = Zone->scratchLayer; break;
-                default: break;
-            }
+    switch (self->layerDest) {
+        case EROUTE_LAYER_FGLOW: layerDest = Zone->fgLow; break;
+        case EROUTE_LAYER_FGHIGH: layerDest = Zone->fgHigh; break;
+        case EROUTE_LAYER_MOVE: layerDest = Zone->moveLayer; break;
+        case EROUTE_LAYER_SCRATCH: layerDest = Zone->scratchLayer; break;
+        default: break;
+    }
 
-            switch (self->layerDest) {
-                case 0: dst = Zone->fgLow; break;
-                case 1: dst = Zone->fgHigh; break;
-                case 2: dst = Zone->moveLayer; break;
-                case 3: dst = Zone->scratchLayer; break;
-                default: break;
-            }
+    int32 srcX = self->offset.x >> 16;
+    int32 srcY = self->offset.y >> 16;
+    int32 dstX = self->position.x >> 20;
+    int32 dstY = self->position.y >> 20;
 
-            RSDK.SetTileInfo(dst, x + posX, y + posY, RSDK.GetTileInfo(src, x + offX, y + offY));
+    for (int32 y = 0; y < (self->size.y >> 16); ++y) {
+        for (int32 x = 0; x < (self->size.x >> 16); ++x) {
+            uint16 tile = RSDK.GetTileInfo(layerSrc, srcX + x, srcY + y);
+            RSDK.SetTileInfo(layerDest, dstX + x, dstY + y, tile);
         }
     }
+
     destroyEntity(self);
 }
 
@@ -55,6 +57,7 @@ void EncoreRoute_Draw(void) {}
 void EncoreRoute_Create(void *data)
 {
     RSDK_THIS(EncoreRoute);
+
     self->active = ACTIVE_ALWAYS;
 }
 
@@ -64,6 +67,7 @@ void EncoreRoute_StageLoad(void) {}
 void EncoreRoute_EditorDraw(void)
 {
     RSDK_THIS(EncoreRoute);
+
     Vector2 drawPos;
 
     self->drawFX = FX_FLIP;
@@ -108,9 +112,10 @@ void EncoreRoute_EditorDraw(void)
     }
 
     if (showGizmos()) {
+        // Point to where the tiles come from
         RSDK_DRAWING_OVERLAY(true);
         DrawHelpers_DrawArrow(self->position.x + (size.x >> 1), self->position.y + (size.y >> 1), self->offset.x + (size.x >> 1),
-                              self->offset.y + (size.y >> 1), 0xE0E0E0);
+                              self->offset.y + (size.y >> 1), 0xE0E0E0, INK_NONE, 0xFF);
         RSDK_DRAWING_OVERLAY(false);
     }
 }
@@ -119,6 +124,18 @@ void EncoreRoute_EditorLoad(void)
 {
     EncoreRoute->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(EncoreRoute->aniFrames, 0, &EncoreRoute->animator, true, 0);
+
+    RSDK_ACTIVE_VAR(EncoreRoute, layerSrc);
+    RSDK_ENUM_VAR("FG Low", EROUTE_LAYER_FGLOW);
+    RSDK_ENUM_VAR("FG High", EROUTE_LAYER_FGHIGH);
+    RSDK_ENUM_VAR("Move", EROUTE_LAYER_MOVE);
+    RSDK_ENUM_VAR("Scratch", EROUTE_LAYER_SCRATCH);
+
+    RSDK_ACTIVE_VAR(EncoreRoute, layerDest);
+    RSDK_ENUM_VAR("FG Low", EROUTE_LAYER_FGLOW);
+    RSDK_ENUM_VAR("FG High", EROUTE_LAYER_FGHIGH);
+    RSDK_ENUM_VAR("Move", EROUTE_LAYER_MOVE);
+    RSDK_ENUM_VAR("Scratch", EROUTE_LAYER_SCRATCH);
 
     RSDK_ACTIVE_VAR(EncoreRoute, frameID);
     RSDK_ENUM_VAR("(Unused)", EROUTE_FRAME_UNUSED);

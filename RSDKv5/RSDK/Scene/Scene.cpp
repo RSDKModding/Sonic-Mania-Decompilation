@@ -387,9 +387,8 @@ void LoadSceneFile()
             }
 
 #if !RETRO_USE_ORIGINAL_CODE
-            if (!objID && i >= TYPE_DEFAULTCOUNT) {
+            if (!objID && i >= TYPE_DEFAULTCOUNT)
                 PrintLog(PRINT_NORMAL, "Object %d is unimplimented!", i);
-            }
 #endif
 
             ObjectInfo *obj          = &objectList[stageObjectIDs[objID]];
@@ -1105,29 +1104,24 @@ void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcL
         TileLayer *dstLayer = &tileLayers[dstLayerID];
         TileLayer *srcLayer = &tileLayers[srcLayerID];
 
-        if (startX1 >= 0 && startX1 < dstLayer->xsize) {
-            if (startY1 >= 0 && startY1 < dstLayer->ysize) {
-                if (startX2 >= 0 && startX2 < srcLayer->xsize) {
-                    if (startY2 >= 0 && startY2 < srcLayer->ysize) {
+        if (startX1 >= 0 && startX1 < dstLayer->xsize && startY1 >= 0 && startY1 < dstLayer->ysize) {
+            if (startX2 >= 0 && startX2 < srcLayer->xsize && startY2 >= 0 && startY2 < srcLayer->ysize) {
+                if (startX1 + countX > dstLayer->xsize)
+                    countX = dstLayer->xsize - startX1;
 
-                        if (startX1 + countX > dstLayer->xsize) 
-                            countX = dstLayer->xsize - startX1;
+                if (startY1 + countY > dstLayer->ysize)
+                    countY = dstLayer->ysize - startY1;
 
-                        if (startY1 + countY > dstLayer->ysize) 
-                            countY = dstLayer->ysize - startY1;
+                if (startX2 + countX > srcLayer->xsize)
+                    countX = srcLayer->xsize - startX2;
 
-                        if (startX2 + countX > srcLayer->xsize) 
-                            countX = srcLayer->xsize - startX2;
+                if (startY2 + countY > srcLayer->ysize)
+                    countY = srcLayer->ysize - startY2;
 
-                        if (startY2 + countY > srcLayer->ysize) 
-                            countY = srcLayer->ysize - startY2;
-
-                        for (int32 y = 0; y < countY; ++y) {
-                            for (int32 x = 0; x < countX; ++x) {
-                                uint16 tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
-                                dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
-                            }
-                        }
+                for (int32 y = 0; y < countY; ++y) {
+                    for (int32 x = 0; x < countX; ++x) {
+                        uint16 tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
+                        dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
                     }
                 }
             }
@@ -1139,6 +1133,7 @@ void DrawLayerHScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int32 lineTileCount         = (currentScreen->pitch >> 4) - 1;
     uint8 *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
@@ -1285,6 +1280,7 @@ void DrawLayerVScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int32 lineTileCount       = (currentScreen->size.y >> 4) - 1;
     uint16 *frameBuffer     = &currentScreen->frameBuffer[currentScreen->clipBound_X1];
     ScanlineInfo *scanLines = &scanlines[currentScreen->clipBound_X1];
@@ -1419,6 +1415,7 @@ void DrawLayerRotozoom(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     uint16 *layout            = layer->layout;
     uint8 *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];

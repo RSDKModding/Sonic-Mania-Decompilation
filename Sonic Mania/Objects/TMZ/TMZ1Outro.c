@@ -166,7 +166,7 @@ bool32 TMZ1Outro_CutsceneAct2_BeginAct2(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active              = ACTIVE_NORMAL;
-            titleCard->state               = TitleCard_State_Initial;
+            titleCard->state               = TitleCard_State_SetupBGElements;
             titleCard->stateDraw           = TitleCard_Draw_SlideIn;
             globals->suppressAutoMusic = false;
             Music_PlayTrack(TRACK_STAGE);

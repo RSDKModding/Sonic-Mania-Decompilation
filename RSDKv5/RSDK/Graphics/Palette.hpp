@@ -86,16 +86,12 @@ inline void RotatePalette(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 
 {
     if (right) {
         uint16 startClr = fullPalette[palID][endIndex];
-        for (int32 i = endIndex; i > startIndex; --i) {
-            fullPalette[palID][i] = fullPalette[palID][i - 1];
-        }
+        for (int32 i = endIndex; i > startIndex; --i) fullPalette[palID][i] = fullPalette[palID][i - 1];
         fullPalette[palID][startIndex] = startClr;
     }
     else {
         uint16 startClr = fullPalette[palID][startIndex];
-        for (int32 i = startIndex; i < endIndex; ++i) {
-            fullPalette[palID][i] = fullPalette[palID][i + 1];
-        }
+        for (int32 i = startIndex; i < endIndex; ++i) fullPalette[palID][i] = fullPalette[palID][i + 1];
         fullPalette[palID][endIndex] = startClr;
     }
 }

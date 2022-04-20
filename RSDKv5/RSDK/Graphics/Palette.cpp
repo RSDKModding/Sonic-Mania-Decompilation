@@ -53,11 +53,7 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, shor
     if (destPaletteID >= PALETTE_COUNT || srcPaletteA >= PALETTE_COUNT || srcPaletteB >= PALETTE_COUNT)
         return;
 
-    if (blendAmount > 0xFF) 
-        blendAmount = 0xFF;
-    else if (blendAmount < 0)
-        blendAmount = 0;
-
+    blendAmount = clampVal(blendAmount, 0x00, 0xFF);
 
     if (startIndex >= endIndex)
         return;
@@ -88,10 +84,7 @@ void BlendColors(byte paletteID, byte* colorsA, byte* colorsB, int32 alpha, int3
     if (paletteID >= PALETTE_COUNT || !colorsA || !colorsB)
         return;
 
-    if (alpha > 0xFF) 
-        alpha = 0xFF;
-    else if (alpha < 0) 
-        alpha = 0;
+    alpha = clampVal(alpha, 0x00, 0xFF);
 
     byte alpha2        = 0xFF - alpha;
     ushort *palettePtr = &fullPalette[paletteID][index];

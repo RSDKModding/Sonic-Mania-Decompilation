@@ -144,32 +144,17 @@ inline void AddCamera(Vector2 *pos, int offsetX, int offsetY, bool32 worldRelati
 
 inline void ClearCameras() { cameraCount = 0; }
 
-inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
+inline void SetClipBounds(byte screenID, int32 x1, int32 y1, int32 x2, int32 y2)
 {
     ScreenInfo *screen; 
 
     if (screenID < SCREEN_MAX) {
         screen = &screens[screenID];
 
-        if (x1 <= screen->size.x)
-            screen->clipBound_X1 = x1 >= 0 ? x1 : 0;
-        else
-            screen->clipBound_X1 = screen->size.x;
-
-        if (y1 <= screen->size.y)
-            screen->clipBound_Y1 = y1 >= 0 ? y1 : 0;
-        else
-            screen->clipBound_Y1 = screen->size.y;
-
-        if (x2 >= 0)
-            screen->clipBound_X2 = x2 < screen->size.x ? x2 : screen->size.x;
-        else
-            screen->clipBound_X2 = 0;
-
-        if (y2 >= 0)
-            screen->clipBound_Y2 = y2 < screen->size.y ? y2 : screen->size.y;
-        else
-            screen->clipBound_Y2 = 0;
+        screen->clipBound_X1 = clampVal(x1, 0, screen->size.x);
+        screen->clipBound_Y1 = clampVal(y1, 0, screen->size.y);
+        screen->clipBound_X2 = clampVal(x2, 0, screen->size.x);
+        screen->clipBound_Y2 = clampVal(y2, 0, screen->size.y);
     }
 }
 

@@ -73,14 +73,14 @@ struct EntityHUD {
     Animator lifeIconAnimator;
     Animator playerIDAnimator;
 #if RETRO_GAMEVER != VER_100
-    Animator superButtonAnimator1;
-    Animator superButtonAnimator2;
+    Animator superIconAnimator;
+    Animator superButtonAnimator;
 #endif
 #if RETRO_USE_PLUS
-    Animator taAnimator1;
-    Animator taAnimator4;
-    Animator taAnimator2;
-    Animator taAnimator3;
+    Animator thumbsUpIconAnimator;
+    Animator thumbsUpButtonAnimator;
+    Animator replayClapAnimator;
+    Animator saveReplayButtonAnimator;
 #endif
 };
 
@@ -92,7 +92,7 @@ void HUD_Update(void);
 void HUD_LateUpdate(void);
 void HUD_StaticUpdate(void);
 void HUD_Draw(void);
-void HUD_Create(void* data);
+void HUD_Create(void *data);
 void HUD_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HUD_EditorDraw(void);
@@ -104,9 +104,9 @@ void HUD_Serialize(void);
 void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 maxDigits);
 void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value);
 void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value);
-void HUD_GetKeyFrame(Animator *animator, int32 buttonID);
-void HUD_GetSuperFrames(void);
+void HUD_GetButtonFrame(Animator *animator, int32 buttonID);
+void HUD_GetActionButtonFrames(void);
 void HUD_State_ComeOnScreen(void);
 void HUD_State_GoOffScreen(void);
 
-#endif //!OBJ_HUD_H
+#endif //! OBJ_HUD_H

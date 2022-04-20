@@ -266,6 +266,7 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
                             tmp = dataPos;
                         dataPos = tmp + sizeof(UnknownStruct) * arraySize; // 18 (0x12) (2 * 9)
                         break;
+
                     default: break;
                 }
             }
@@ -274,8 +275,8 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
     }
 }
 
-void SetActiveVariable(int32 objectID, const char *name) {}
-void AddEnumVariable(const char *name) {}
+void SetActiveVariable(int32 objectID, const char *name) { /* Editor-Only function*/ }
+void AddEnumVariable(const char *name) { /* Editor-Only function*/ }
 
 void InitObjects()
 {
@@ -306,26 +307,25 @@ void InitObjects()
     }
 
     sceneInfo.state = ENGINESTATE_REGULAR;
-    if (!cameraCount) {
+    if (!cameraCount)
         AddCamera(&screens[0].position, screens[0].center.x << 0x10, screens[0].center.x << 0x10, false);
-    }
 }
 void ProcessObjects()
 {
-    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) {
-        drawLayers[i].entityCount = 0;
-    }
+    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) drawLayers[i].entityCount = 0;
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
 #if RETRO_USE_MOD_LOADER
         currentObjectID = o;
 #endif
+
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
         if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_NORMAL) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_REGULAR));
 #endif
@@ -349,10 +349,14 @@ void ProcessObjects()
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->objectID) {
             switch (sceneInfo.entity->active) {
+                default: break;
+
                 case ACTIVE_NEVER:
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;
+
                 case ACTIVE_ALWAYS:
                 case ACTIVE_NORMAL: sceneInfo.entity->inBounds = true; break;
+
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -365,6 +369,7 @@ void ProcessObjects()
                         }
                     }
                     break;
+
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -375,6 +380,7 @@ void ProcessObjects()
                         }
                     }
                     break;
+
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -385,6 +391,7 @@ void ProcessObjects()
                         }
                     }
                     break;
+
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -413,13 +420,12 @@ void ProcessObjects()
         }
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONUPDATE, intToVoid(ENGINESTATE_REGULAR));
 #endif
 
-    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].entryCount = 0;
-    }
+    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) typeGroups[i].entryCount = 0;
 
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
@@ -445,26 +451,27 @@ void ProcessObjects()
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_REGULAR));
 #endif
 }
 void ProcessPausedObjects()
 {
-    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) {
-        drawLayers[i].entityCount = 0;
-    }
+    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) drawLayers[i].entityCount = 0;
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
 #if RETRO_USE_MOD_LOADER
         currentObjectID = o;
 #endif
+
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
         if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_PAUSED));
 #endif
@@ -487,13 +494,12 @@ void ProcessPausedObjects()
         }
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_PAUSED));
 #endif
 
-    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].entryCount = 0;
-    }
+    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) typeGroups[i].entryCount = 0;
 
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
@@ -507,6 +513,7 @@ void ProcessPausedObjects()
         }
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONUPDATE, intToVoid(ENGINESTATE_PAUSED));
 #endif
@@ -528,20 +535,20 @@ void ProcessPausedObjects()
 }
 void ProcessFrozenObjects()
 {
-    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) {
-        drawLayers[i].entityCount = 0;
-    }
+    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) drawLayers[i].entityCount = 0;
 
     for (int32 o = 0; o < sceneInfo.classCount; ++o) {
 #if RETRO_USE_MOD_LOADER
         currentObjectID = o;
 #endif
+
         ObjectInfo *objInfo = &objectList[stageObjectIDs[o]];
         if ((*objInfo->type)->active == ACTIVE_ALWAYS || (*objInfo->type)->active == ACTIVE_PAUSED) {
             if (objInfo->staticUpdate)
                 objInfo->staticUpdate();
         }
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONSTATICUPDATE, intToVoid(ENGINESTATE_FROZEN));
 #endif
@@ -565,10 +572,14 @@ void ProcessFrozenObjects()
         sceneInfo.entity = &objectEntityList[e];
         if (sceneInfo.entity->objectID) {
             switch (sceneInfo.entity->active) {
+                default: break;
+
                 case ACTIVE_NEVER:
                 case ACTIVE_PAUSED: sceneInfo.entity->inBounds = false; break;
+
                 case ACTIVE_ALWAYS:
                 case ACTIVE_NORMAL: sceneInfo.entity->inBounds = true; break;
+
                 case ACTIVE_BOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -581,6 +592,7 @@ void ProcessFrozenObjects()
                         }
                     }
                     break;
+
                 case ACTIVE_XBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -591,6 +603,7 @@ void ProcessFrozenObjects()
                         }
                     }
                     break;
+
                 case ACTIVE_YBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -601,6 +614,7 @@ void ProcessFrozenObjects()
                         }
                     }
                     break;
+
                 case ACTIVE_RBOUNDS:
                     sceneInfo.entity->inBounds = false;
                     for (int32 s = 0; s < cameraCount; ++s) {
@@ -631,13 +645,12 @@ void ProcessFrozenObjects()
         }
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONUPDATE, intToVoid(ENGINESTATE_FROZEN));
 #endif
 
-    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) {
-        typeGroups[i].entryCount = 0;
-    }
+    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) typeGroups[i].entryCount = 0;
 
     sceneInfo.entitySlot = 0;
     for (int32 e = 0; e < ENTITY_COUNT; ++e) {
@@ -665,6 +678,7 @@ void ProcessFrozenObjects()
         sceneInfo.entity->activeScreens = 0;
         sceneInfo.entitySlot++;
     }
+
 #if RETRO_USE_MOD_LOADER
     RunModCallbacks(MODCB_ONLATEUPDATE, intToVoid(ENGINESTATE_FROZEN));
 #endif
@@ -675,9 +689,7 @@ void ProcessObjectDrawLists()
         for (int32 s = 0; s < engine.screenCount; ++s) {
             currentScreen             = &screens[s];
             sceneInfo.currentScreenID = s;
-            for (int32 l = 0; l < DRAWLAYER_COUNT; ++l) {
-                drawLayers[l].layerCount = 0;
-            }
+            for (int32 l = 0; l < DRAWLAYER_COUNT; ++l) drawLayers[l].layerCount = 0;
 
             for (int32 t = 0; t < LAYER_COUNT; ++t) {
                 uint8 drawOrder = tileLayers[t].drawLayer[s];
@@ -783,15 +795,20 @@ void ProcessObjectDrawLists()
 
                     switch (info->type) {
                         case H_TYPE_TOUCH: DrawRectangle(x, y, w, h, info->collision ? 0x808000 : 0xFF0000, 0x60, INK_ALPHA, false); break;
+
                         case H_TYPE_CIRCLE:
                             DrawCircle(info->pos.x, info->pos.y, info->hitbox.left, info->collision ? 0x808000 : 0xFF0000, 0x60, INK_ALPHA, false);
                             break;
+
                         case H_TYPE_BOX:
                             DrawRectangle(x, y, w, h, 0x0000FF, 0x60, INK_ALPHA, false);
+
                             if (info->collision & 1) // top
                                 DrawRectangle(x, y, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+
                             if (info->collision & 8) // bottom
                                 DrawRectangle(x, y + h, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+
                             if (info->collision & 2) { // left
                                 int32 sy = y;
                                 int32 sh = h;
@@ -803,6 +820,7 @@ void ProcessObjectDrawLists()
                                     sh -= 1 << 16;
                                 DrawRectangle(x, sy, 1 << 16, sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
                             }
+
                             if (info->collision & 4) { // right
                                 int32 sy = y;
                                 int32 sh = h;
@@ -815,10 +833,13 @@ void ProcessObjectDrawLists()
                                 DrawRectangle(x + w, sy, 1 << 16, sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
                             }
                             break;
+
                         case H_TYPE_PLAT:
                             DrawRectangle(x, y, w, h, 0x00FF00, 0x60, INK_ALPHA, false);
+
                             if (info->collision & 1) // top
                                 DrawRectangle(x, y, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
+
                             if (info->collision & 8) // bottom
                                 DrawRectangle(x, y + h, w, 1 << 16, 0xFFFF00, 0xC0, INK_ALPHA, false);
                             break;
@@ -897,6 +918,7 @@ void ResetEntitySlot(uint16 slotID, uint16 type, void *data)
     ObjectInfo *objInfo = &objectList[stageObjectIDs[type]];
     if (slotID < ENTITY_COUNT)
         slot = slotID;
+
     Entity *entityPtr = &objectEntityList[slot];
     memset(&objectEntityList[slot], 0, objInfo->entitySize);
     if (objInfo->create) {
@@ -980,6 +1002,7 @@ bool32 GetActiveEntities(uint16 group, Entity **entity)
         }
     }
     foreachStackPtr--;
+
     return false;
 }
 bool32 GetEntities(uint16 type, Entity **entity)
@@ -1005,6 +1028,7 @@ bool32 GetEntities(uint16 type, Entity **entity)
         }
     }
     foreachStackPtr--;
+
     return false;
 }
 

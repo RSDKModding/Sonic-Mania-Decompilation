@@ -799,31 +799,38 @@ void Tuesday_EditorDraw(void)
         // active links
         if (self->links & 0x80) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0xA0) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0xA0) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0xA0) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x40) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x300000, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x300000, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x20) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0xE0) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0xE0) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0xE0) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x1) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x300000, self->position.y, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x300000, self->position.y, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x10) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x300000, self->position.y, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x300000, self->position.y, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x2) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0x60) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0x60) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0x60) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x4) {
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x300000, 0x00FF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x300000, 0x00FF00, INK_NONE, 0xFF);
         }
+
         if (self->links & 0x8) {
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x18 * (RSDK.Cos256(0x20) << 9),
-                                  self->position.y + 0x18 * (RSDK.Sin256(0x20) << 9), 0x00FF00);
+                                  self->position.y + 0x18 * (RSDK.Sin256(0x20) << 9), 0x00FF00, INK_NONE, 0xFF);
         }
     }
 }

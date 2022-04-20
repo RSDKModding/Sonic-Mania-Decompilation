@@ -38,7 +38,7 @@ void ConveyorPlatform_Update(void)
             self->animator.frameID = ConveyorPlatform->frameIDs[self->timer2 % 24];
             self->direction        = ConveyorPlatform->directionIDs[self->timer2 % 24];
         }
-        if (!((Zone->timer2 + self->intervalOffset) % self->interval) && !self->timer2) {
+        if (!((Zone->persistentTimer + self->intervalOffset) % self->interval) && !self->timer2) {
             self->stateCollide = Platform_Collision_None;
             self->collision    = PLATFORM_C_SOLID_NONE;
             self->timer2       = 1;

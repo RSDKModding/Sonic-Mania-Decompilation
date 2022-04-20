@@ -264,7 +264,7 @@ void FilmReel_SpinLeft(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
-            player->collisionLayers |= Zone->moveID;
+            player->collisionLayers |= Zone->moveMask;
             player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
             player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
             if (!player->sidekick) {
@@ -341,7 +341,7 @@ void FilmReel_SpinRight(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
-            player->collisionLayers |= Zone->moveID;
+            player->collisionLayers |= Zone->moveMask;
             player->moveLayerPosition.x = FilmReel->offsetPos.x - self->lastPos.x;
             player->moveLayerPosition.y = FilmReel->offsetPos.y - self->lastPos.y;
             if (!player->sidekick) {

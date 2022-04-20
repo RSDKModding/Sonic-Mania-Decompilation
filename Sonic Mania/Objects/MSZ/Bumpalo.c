@@ -271,7 +271,7 @@ void Bumpalo_HandlePlatformCollisions(EntityPlatform *platform)
             if (platform->collision != PLATFORM_C_SOLID_ALL) {
                 if (platform->collision == PLATFORM_C_USE_TILES
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Bumpalo->hitboxBadnik)) {
-                    if ((self->collisionLayers & Zone->moveID) != 0) {
+                    if ((self->collisionLayers & Zone->moveMask) != 0) {
                         TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
@@ -363,9 +363,9 @@ void Bumpalo_HandleObjectCollisions(void)
     }
 
     if (self->direction)
-        self->wallCollided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x140000, 0, true);
+        self->wallCollided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x140000, 0, true);
     else
-        self->wallCollided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x140000, 0, true);
+        self->wallCollided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x140000, 0, true);
 }
 
 void Bumpalo_State_Setup(void)
@@ -390,7 +390,7 @@ void Bumpalo_State_Moving(void)
     self->wallCollided = false;
     Bumpalo_HandleObjectCollisions();
 
-    self->onGround |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8);
+    self->onGround |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8);
     if (!self->onGround) {
         if (self->ignoreCliffs) {
             self->state = Bumpalo_State_Falling;
@@ -401,8 +401,8 @@ void Bumpalo_State_Moving(void)
 
             RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 0, &self->badnikAnimator, true, 0);
             self->timer    = 0;
-            self->onGround = self->direction ? RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x40000, 0xF0000, 8)
-                                             : RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x40000, 0xF0000, 8);
+            self->onGround = self->direction ? RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x40000, 0xF0000, 8)
+                                             : RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x40000, 0xF0000, 8);
             if (!self->onGround) {
                 self->state = Bumpalo_State_Falling;
             }
@@ -516,7 +516,7 @@ void Bumpalo_State_Bumped(void)
     self->onGround     = false;
     self->wallCollided = false;
     Bumpalo_HandleObjectCollisions();
-    self->onGround |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, true);
+    self->onGround |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, true);
 
     if (self->velocity.y >= 0 && self->onGround) {
         self->velocity.x = 0;
@@ -531,7 +531,7 @@ void Bumpalo_State_Bumped(void)
             else
                 self->velocity.x = 0x10000;
 
-            if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
+            if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8)) {
                 self->state = Bumpalo_State_Moving;
                 Bumpalo_State_Moving();
             }
@@ -565,7 +565,7 @@ void Bumpalo_State_Falling(void)
     self->wallCollided = false;
     Bumpalo_HandleObjectCollisions();
 
-    self->onGround |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, true);
+    self->onGround |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xF0000, true);
     if (self->onGround) {
         self->velocity.y = 0;
         RSDK.PlaySfx(Player->sfxLand, false, 255);

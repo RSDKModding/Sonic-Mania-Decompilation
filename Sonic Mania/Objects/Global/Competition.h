@@ -15,7 +15,7 @@ struct ObjectCompetition {
     int32 unused7;
     int32 unused8;
     uint16 aniFrames;
-    Entity *activeEntity;
+    EntityCompetition *sessionManager;
     int32 unused9;
 };
 
@@ -38,7 +38,7 @@ void Competition_Update(void);
 void Competition_LateUpdate(void);
 void Competition_StaticUpdate(void);
 void Competition_Draw(void);
-void Competition_Create(void* data);
+void Competition_Create(void *data);
 void Competition_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Competition_EditorDraw(void);
@@ -55,4 +55,4 @@ void Competition_ClearMatchData(void);
 void Competition_CalculateScore(int32 playerID, uint8 flags);
 #endif
 
-#endif //!OBJ_COMPETITION_H
+#endif //! OBJ_COMPETITION_H

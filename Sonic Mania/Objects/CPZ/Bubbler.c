@@ -206,7 +206,7 @@ void Bubbler_State_Projectile_Seed(void)
     RSDK.ProcessAnimation(&self->bodyHitbox);
     self->position.y += 0x10000;
     Bubbler_HandleProjectileInteractions();
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, false)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, false)) {
         RSDK.SetSpriteAnimation(Bubbler->aniFrames, 4, &self->bodyHitbox, true, 0);
         self->state = Bubbler_State_Projectile_Bubbler;
     }

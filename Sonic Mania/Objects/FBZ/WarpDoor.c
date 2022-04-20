@@ -15,8 +15,9 @@ void WarpDoor_Update(void)
 
     if (self->fadeTimer > 0)
         self->fadeTimer -= 16;
+
     if (self->destinationTag >= 1 && self->destinationTag <= 256) {
-        EntityWarpDoor *tag = (EntityWarpDoor *)WarpDoor->tags[self->destinationTag];
+        EntityWarpDoor *tag = WarpDoor->tags[self->destinationTag];
         if (tag) {
             bool32 warped = false;
             int32 boundID = -1;
@@ -146,9 +147,9 @@ void WarpDoor_StaticUpdate(void)
     if (!WarpDoor->hasSetupTags) {
         foreach_all(WarpDoor, warpDoor)
         {
-            if (warpDoor->tag >= 1) {
-                WarpDoor->tags[warpDoor->tag] = (Entity *)warpDoor;
-            }
+            if (warpDoor->tag >= 1)
+                WarpDoor->tags[warpDoor->tag] = warpDoor;
+
             if (warpDoor->definesBounds) {
                 WarpDoor->boundaries[WarpDoor->boundCount].top    = warpDoor->yBoundaryPosT;
                 WarpDoor->boundaries[WarpDoor->boundCount].right  = warpDoor->xBoundaryPosR;
@@ -216,24 +217,26 @@ void WarpDoor_StageLoad(void)
     WarpDoor->hasSetupStartBounds = false;
     WarpDoor->hasSetupTags = 0;
     WarpDoor->boundCount = 0;
-    for (int32 i = 0; i < 0x100; ++i) {
+
+    for (int32 i = 0; i < 0x100; ++i)
         WarpDoor->tags[i] = NULL;
-    }
+
     if (RSDK.CheckStageFolder("FBZ"))
         WarpDoor->sfxWarpDoor = RSDK.GetSfx("FBZ/WarpDoor.wav");
+
     if (RSDK.CheckStageFolder("TMZ2")) {
-        WarpDoor->sfxRubyAttackL[0] = RSDK.GetSfx("Ruby/Attack1_L.wav");
-        WarpDoor->sfxRubyAttackR[0] = RSDK.GetSfx("Ruby/Attack1_R.wav");
-        WarpDoor->sfxRubyAttackL[1] = RSDK.GetSfx("Ruby/Attack2_L.wav");
-        WarpDoor->sfxRubyAttackR[1] = RSDK.GetSfx("Ruby/Attack2_R.wav");
-        WarpDoor->sfxRubyAttackL[2] = RSDK.GetSfx("Ruby/Attack3_L.wav");
-        WarpDoor->sfxRubyAttackR[2] = RSDK.GetSfx("Ruby/Attack3_R.wav");
-        WarpDoor->sfxRubyAttackL[3] = RSDK.GetSfx("Ruby/Attack4_L.wav");
-        WarpDoor->sfxRubyAttackR[3] = RSDK.GetSfx("Ruby/Attack4_R.wav");
-        WarpDoor->sfxRubyAttackL[4] = RSDK.GetSfx("Ruby/Attack5_L.wav");
-        WarpDoor->sfxRubyAttackR[4] = RSDK.GetSfx("Ruby/Attack5_R.wav");
-        WarpDoor->sfxRubyAttackL[5] = RSDK.GetSfx("Ruby/Attack6_L.wav");
-        WarpDoor->sfxRubyAttackR[5] = RSDK.GetSfx("Ruby/Attack6_R.wav");
+        WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK1 - 1] = RSDK.GetSfx("Ruby/Attack1_L.wav");
+        WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK1 - 1] = RSDK.GetSfx("Ruby/Attack1_R.wav");
+        WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK2 - 1] = RSDK.GetSfx("Ruby/Attack2_L.wav");
+        WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK2 - 1] = RSDK.GetSfx("Ruby/Attack2_R.wav");
+        WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK3 - 1] = RSDK.GetSfx("Ruby/Attack3_L.wav");
+        WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK3 - 1] = RSDK.GetSfx("Ruby/Attack3_R.wav");
+        WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK4 - 1] = RSDK.GetSfx("Ruby/Attack4_L.wav");
+        WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK4 - 1] = RSDK.GetSfx("Ruby/Attack4_R.wav");
+        WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK5 - 1] = RSDK.GetSfx("Ruby/Attack5_L.wav");
+        WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK5 - 1] = RSDK.GetSfx("Ruby/Attack5_R.wav");
+        WarpDoor->sfxRubyAttackL[RUBYSFX_ATTACK6 - 1] = RSDK.GetSfx("Ruby/Attack6_L.wav");
+        WarpDoor->sfxRubyAttackR[RUBYSFX_ATTACK6 - 1] = RSDK.GetSfx("Ruby/Attack6_R.wav");
     }
 }
 
@@ -377,10 +380,10 @@ void WarpDoor_DrawDebug(void)
             color = 0x0000FF;
 
         if (self->destinationTag >= 1 && self->destinationTag <= 256) {
-            EntityWarpDoor *dest = (EntityWarpDoor *)WarpDoor->tags[self->destinationTag];
+            EntityWarpDoor *dest = WarpDoor->tags[self->destinationTag];
             if (dest) {
                 DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &self->hitbox, FLIP_NONE, color);
-                DrawHelpers_DrawArrow(self->position.x, dest->position.x, self->position.y, dest->position.y, 0x00FFFF);
+                DrawHelpers_DrawArrowAdditive(self->position.x, dest->position.x, self->position.y, dest->position.y, 0x00FFFF);
             }
         }
 

@@ -320,9 +320,9 @@ void Sol_State_ActiveFireball(void)
         int32 offsetY = RSDK.Cos512(512 - self->rotation) << 10;
         int32 cmode   = 3 - (((self->rotation - 64) >> 7) & 3);
 
-        bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, cmode, 1, offsetX, offsetY, true);
+        bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, cmode, 1, offsetX, offsetY, true);
         if (!collided) 
-            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, cmode, 0, offsetX, offsetY, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, cmode, 0, offsetX, offsetY, true);
 
         if (collided) {
             RSDK.SetSpriteAnimation(Sol->aniFrames, 2, &self->mainAnimator, true, 0);
@@ -385,9 +385,9 @@ void Sol_State_FireballOilFlame(void)
 {
     RSDK_THIS(Sol);
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        bool32 collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 1, 0, 0x80000, 16);
+        bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 1, 0, 0x80000, 16);
         if (!collided)
-            collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 16);
+            collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 16);
 
         if (collided) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, (self->position.y + 0x90000) >> 20);

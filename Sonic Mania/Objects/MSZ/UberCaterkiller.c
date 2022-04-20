@@ -653,8 +653,8 @@ void UberCaterkiller_State_Destroyed(void)
             debris->updateRange.y    = 0x400000;
             debris->scale.x          = self->bodyScales[i];
             debris->scale.y          = self->bodyScales[i];
-            debris->scaleInc.y       = RSDK.Rand(-4, 5);
-            debris->scaleInc.x       = debris->scaleInc.y;
+            debris->scaleSpeed.y       = RSDK.Rand(-4, 5);
+            debris->scaleSpeed.x       = debris->scaleSpeed.y;
             self->bodyPositions[i].x = -0x800000;
             self->bodyPositions[i].y = -0x800000;
         }

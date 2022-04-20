@@ -180,7 +180,7 @@ void Canista_State_Setup(void)
     int32 offset = -0x110000;
     if (!(self->direction & FLIP_X))
         offset = 0x100000;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, (2 * ((self->direction & FLIP_X) != 0) + 1), 0, offset, -0x180000, 8);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & FLIP_X) != 0) + 1), 0, offset, -0x180000, 8);
     self->moveDir       = 0;
     self->timer         = 0;
     self->stopTimer     = 0;
@@ -266,7 +266,7 @@ void Canista_State_Moving(void)
     int32 offset = -0x110000;
     if (!(self->direction & FLIP_X))
         offset = 0x100000;
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, (2 * ((self->direction & FLIP_X) != 0) + CMODE_LWALL), 0, offset,
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & FLIP_X) != 0) + CMODE_LWALL), 0, offset,
                              ((self->velocity.y >> 31) & 0xFFD40000) + 0x140000, 0)) {
         self->state     = Canista_State_Idle;
         self->stopTimer = 30;

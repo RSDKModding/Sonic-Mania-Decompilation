@@ -178,9 +178,9 @@ void Stegway_State_Moving(void)
 
     bool32 collided = false;
     if (self->direction)
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xC0000, 0x100000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0xC0000, 0x100000, 8);
     else
-        collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0xC0000, 0x100000, 8);
+        collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0xC0000, 0x100000, 8);
 
     if (!collided) {
         self->state = Stegway_State_Turn;
@@ -251,13 +251,13 @@ void Stegway_State_Dash(void)
     if (!self->noFloor) {
         int32 storeX = self->position.x;
         int32 storeY = self->position.y;
-        if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, dir << 22, 0x100000, 8))
+        if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, dir << 22, 0x100000, 8))
             self->noFloor = true;
         self->position.x = storeX;
         self->position.y = storeY;
     }
 
-    bool32 collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xC0000 * dir, 0x100000, 8);
+    bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0xC0000 * dir, 0x100000, 8);
 
     if (self->noFloor) {
         if (self->velocity.x * dir >= 0x4000) {

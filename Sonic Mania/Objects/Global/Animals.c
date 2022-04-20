@@ -12,7 +12,9 @@ ObjectAnimals *Animals;
 void Animals_Update(void)
 {
     RSDK_THIS(Animals);
+
     StateMachine_Run(self->state);
+
     if (!self->behaviour && !RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }
@@ -24,22 +26,26 @@ void Animals_StaticUpdate(void) {}
 void Animals_Draw(void)
 {
     RSDK_THIS(Animals);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Animals_Create(void *data)
 {
     RSDK_THIS(Animals);
+
     if (self->behaviour == ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS)
         self->active = ACTIVE_BOUNDS;
     else
         self->active = ACTIVE_NORMAL;
+
     self->drawFX |= FX_FLIP;
-    int32 type            = ANIMAL_POCKY;
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
     self->drawOrder     = Zone->objectDrawLow;
+
+    int32 type = ANIMAL_POCKY;
 #if RETRO_USE_PLUS
     if (!(globals->secrets & getMod(SECRET_RICKYMODE)))
 #endif
@@ -52,24 +58,26 @@ void Animals_Create(void *data)
         RSDK.Rand(0, 256) == 21
 #endif
     ) {
-        type                  = ANIMAL_POCKY;
-        self->velocity.y    = -0x40000;
-        self->type          = type - 1;
-        self->state         = Animals_State_Freed;
-        self->hitbox.top    = -Animals->hitboxes[self->type] >> 16;
-        self->hitbox.left   = -4;
-        self->hitbox.right  = 4;
-        self->hitbox.bottom = Animals->hitboxes[self->type] >> 16;
+        type                      = ANIMAL_POCKY;
+        self->velocity.y          = -0x40000;
+        self->type                = type - 1;
+        self->state               = Animals_State_Freed;
+        self->hitboxAnimal.top    = -Animals->hitboxes[self->type] >> 16;
+        self->hitboxAnimal.left   = -4;
+        self->hitboxAnimal.right  = 4;
+        self->hitboxAnimal.bottom = Animals->hitboxes[self->type] >> 16;
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * self->type, &self->animator, true, 0);
     }
     else if (type) {
-        self->velocity.y    = -0x40000;
-        self->type          = type - 1;
-        self->state         = Animals_State_Freed;
-        self->hitbox.top    = -Animals->hitboxes[self->type] >> 16;
-        self->hitbox.left   = -4;
-        self->hitbox.right  = 4;
-        self->hitbox.bottom = Animals->hitboxes[self->type] >> 16;
+        self->velocity.y = -0x40000;
+        self->type       = type - 1;
+        self->state      = Animals_State_Freed;
+
+        self->hitboxAnimal.top    = -Animals->hitboxes[self->type] >> 16;
+        self->hitboxAnimal.left   = -4;
+        self->hitboxAnimal.right  = 4;
+        self->hitboxAnimal.bottom = Animals->hitboxes[self->type] >> 16;
+
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * self->type, &self->animator, true, 0);
     }
     else if (self->behaviour == ANIMAL_BEHAVE_FOLLOW) {
@@ -78,6 +86,7 @@ void Animals_Create(void *data)
             case ANIMAL_FLICKY:
             case ANIMAL_CUCKY:
             case ANIMAL_LOCKY: self->state = Animals_State_FollowPlayer_Bird; break;
+
             case ANIMAL_RICKY:
             case ANIMAL_POCKY:
             case ANIMAL_PECKY:
@@ -87,8 +96,10 @@ void Animals_Create(void *data)
             case ANIMAL_TOCKY:
             case ANIMAL_WOCKY:
             case ANIMAL_MICKY: self->state = Animals_State_FollowPlayer_Normal; break;
+
             default: break;
         }
+
         Animals_CheckPlayerPos();
         self->velocity.y = Animals->yVelocity[self->type];
         if (self->direction == FLIP_NONE)
@@ -105,8 +116,10 @@ void Animals_Create(void *data)
 void Animals_StageLoad(void)
 {
     Animals->aniFrames = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
+
     if (RSDK.GetObjectIDByName("Platform"))
         Animals->hasPlatform = true;
+
     if (RSDK.GetObjectIDByName("Bridge"))
         Animals->hasBridge = true;
 }
@@ -118,6 +131,7 @@ void Animals_CheckPlayerPos(void)
     switch (self->behaviour) {
         default:
         case ANIMAL_BEHAVE_BOUNCEAROUND: self->direction = FLIP_X; break;
+
         case ANIMAL_BEHAVE_FOLLOW: {
             EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             if (!player) {
@@ -127,13 +141,14 @@ void Animals_CheckPlayerPos(void)
                 self->direction = FLIP_NONE;
             }
             else {
-                self->direction = FLIP_X; 
+                self->direction = FLIP_X;
             }
             break;
         }
+
         case ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS:
 #if RETRO_USE_PLUS
-            self->direction = RSDK.RandSeeded(0, 2, &Zone->randSeed); 
+            self->direction = RSDK.RandSeeded(0, 2, &Zone->randSeed);
 #else
             self->direction = RSDK.Rand(0, 2);
 #endif
@@ -146,39 +161,47 @@ void Animals_CheckPlayerPos(void)
         self->velocity.x = Animals->xVelocity[self->type];
 }
 
-bool32 Animals_CheckPlatformCollision(void *plat)
+bool32 Animals_CheckPlatformCollision(void *p)
 {
     RSDK_THIS(Animals);
-    EntityPlatform *platform = (EntityPlatform *)plat;
-    bool32 collision              = false;
+    EntityPlatform *platform = (EntityPlatform *)p;
+
+    bool32 collided = false;
     if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
+
         if (platform->collision <= PLATFORM_C_SOLID_ALL) {
-            collision = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &self->hitbox, true);
+            collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &self->hitboxAnimal, true);
         }
-        else if (platform->collision == PLATFORM_C_USE_TILES && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &self->hitbox)) {
-            if (self->collisionLayers & Zone->moveID) {
+        else if (platform->collision == PLATFORM_C_USE_TILES
+                 && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &self->hitboxAnimal)) {
+            if (self->collisionLayers & Zone->moveMask) {
                 TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
                 move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                 move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
             }
+
             if (self->velocity.y >= 0x3800)
-                collision = true;
+                collided = true;
         }
         platform->position.x = platform->centerPos.x;
         platform->position.y = platform->centerPos.y;
     }
-    return collision;
+
+    return collided;
 }
 
 bool32 Animals_CheckGroundCollision(void)
 {
     RSDK_THIS(Animals);
+
     if (self->velocity.y <= 0)
         return false;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, Animals->hitboxes[self->type], false))
+
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, Animals->hitboxes[self->type], false))
         return true;
+
     if (Animals->hasPlatform) {
         foreach_active(Platform, platform)
         {
@@ -190,7 +213,7 @@ bool32 Animals_CheckGroundCollision(void)
     if (Animals->hasBridge) {
         foreach_active(Bridge, bridge)
         {
-            bool32 collided = Bridge_HandleCollisions(self, bridge, &self->hitbox, false, false);
+            bool32 collided = Bridge_HandleCollisions(self, bridge, &self->hitboxAnimal, false, false);
             if (collided) {
                 foreach_return true;
             }
@@ -202,15 +225,19 @@ bool32 Animals_CheckGroundCollision(void)
 void Animals_State_Freed(void)
 {
     RSDK_THIS(Animals);
+
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     RSDK.ProcessAnimation(&self->animator);
+
     if (Animals_CheckGroundCollision()) {
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * self->type + 1, &self->animator, true, 0);
         switch (self->type) {
             case ANIMAL_FLICKY:
             case ANIMAL_CUCKY:
             case ANIMAL_LOCKY: self->state = Animals_State_FollowPlayer_Bird; break;
+
             case ANIMAL_RICKY:
             case ANIMAL_POCKY:
             case ANIMAL_PECKY:
@@ -220,8 +247,10 @@ void Animals_State_Freed(void)
             case ANIMAL_TOCKY:
             case ANIMAL_WOCKY:
             case ANIMAL_MICKY: self->state = Animals_State_FollowPlayer_Normal; break;
+
             default: break;
         }
+
         Animals_CheckPlayerPos();
         self->velocity.y = Animals->yVelocity[self->type];
     }
@@ -230,36 +259,43 @@ void Animals_State_Freed(void)
 void Animals_State_FollowPlayer_Normal(void)
 {
     RSDK_THIS(Animals);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += Animals->gravityStrength[self->type];
+
     if (Animals_CheckGroundCollision()) {
         Animals_CheckPlayerPos();
         self->velocity.y = Animals->yVelocity[self->type];
     }
+
     self->animator.frameID = self->velocity.y < 0;
 }
 
 void Animals_State_FollowPlayer_Bird(void)
 {
     RSDK_THIS(Animals);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += Animals->gravityStrength[self->type];
+
     if (Animals_CheckGroundCollision()) {
         Animals_CheckPlayerPos();
         self->velocity.y = Animals->yVelocity[self->type];
     }
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
 void Animals_State_BounceAround(void)
 {
     RSDK_THIS(Animals);
-    if (self->delay <= 0)
+
+    if (self->timer <= 0)
         self->state = Animals_State_Freed;
     else
-        self->delay--;
+        self->timer--;
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -298,7 +334,7 @@ void Animals_EditorLoad(void)
     RSDK_ACTIVE_VAR(Animals, behaviour);
     RSDK_ENUM_VAR("Bounce Around (No Bounds)", ANIMAL_BEHAVE_BOUNCEAROUND);
     RSDK_ENUM_VAR("Follow Player", ANIMAL_BEHAVE_FOLLOW);
-    RSDK_ENUM_VAR("Bounce Around (Bounds)", ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS);
+    RSDK_ENUM_VAR("Bounce Around (Use Bounds)", ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS);
 }
 #endif
 

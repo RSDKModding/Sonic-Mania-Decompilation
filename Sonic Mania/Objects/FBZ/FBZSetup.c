@@ -35,7 +35,7 @@ void FBZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(FBZSetup->aniTiles, 397, 384, 16 * (FBZSetup->frameD + 2), 64, 16);
     }
 
-    RSDK.GetSceneLayer(FBZSetup->bgOutsideLayer)->scrollPos = (RSDK.Sin512(Zone->timer2) + 512) << 10;
+    RSDK.GetSceneLayer(FBZSetup->bgOutsideLayer)->scrollPos = (RSDK.Sin512(Zone->persistentTimer) + 512) << 10;
 }
 
 void FBZSetup_Draw(void) {}

@@ -474,7 +474,7 @@ void AmoebaDroid_State_BounceAttack(void)
         self->position.x = self->position.x - 0x10000;
     }
 
-    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x180000, true)) {
+    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x180000, true)) {
         if (--self->timer <= 0) {
             EntityAmoebaDroid *bigBlob = (EntityAmoebaDroid *)self->blobs[0];
             RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 6, &bigBlob->animator, false, 0);
@@ -611,7 +611,7 @@ void AmoebaDroid_State_SmallBlob(void)
         self->position.x += self->velocity.x;
         self->velocity.y += 0x2000;
         self->position.y += self->velocity.y;
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x60000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x60000, true)) {
             for (int32 i = 0; i < 4; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x + RSDK.Rand(-0x40000, 0x40000),
                                                      self->position.y + RSDK.Rand(-0x40000, 0x40000));

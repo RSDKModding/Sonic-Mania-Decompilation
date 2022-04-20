@@ -149,7 +149,7 @@ void BallHog_State_Jump(void)
         self->position.y += self->velocity.y;
         self->velocity.y += 0x95C0;
 
-        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, 2)) {
+        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x140000, 2)) {
             self->velocity.y = 0;
             self->timer      = 10;
             RSDK.SetSpriteAnimation(BallHog->aniFrames, 2, &self->animator, true, 0);
@@ -222,16 +222,16 @@ void BallHog_State_Bomb(void)
     self->velocity.y += 0x3800;
 
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
+        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
             RSDK.PlaySfx(BallHog->sfxArrowHit, false, 255);
             int32 storeY = self->position.y;
 
             self->velocity.y = -0x30000;
-            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x20000, 0x80000, 8);
+            RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x20000, 0x80000, 8);
             int32 y1 = self->position.y;
 
             self->position.y = storeY;
-            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000, 0x80000, 8);
+            RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x20000, 0x80000, 8);
             int32 y2 = self->position.y;
 
             self->position.y = storeY;

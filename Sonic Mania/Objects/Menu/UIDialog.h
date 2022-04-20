@@ -16,7 +16,7 @@ typedef enum {
 // Object Class
 struct ObjectUIDialog {
     RSDK_OBJECT
-    void *activeDialog;
+    EntityUIDialog *activeDialog;
     EntityUIControl *controlStore;
     StateMachine(controlStateStore);
 };
@@ -65,7 +65,7 @@ void UIDialog_Serialize(void);
 EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg);
 void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
 
-void UIDialog_AddButton(uint8 a1, EntityUIDialog *dialog, void (*callback)(void), bool32 closeOnSelect);
+void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(void), bool32 closeOnSelect);
 void UIDialog_Setup(EntityUIDialog *dialog);
 void UIDialog_CloseOnSel_HandleSelection(EntityUIDialog *self, void (*callback)(void));
 void UIDialog_DrawBGShapes(void);

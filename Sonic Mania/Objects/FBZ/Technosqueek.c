@@ -276,7 +276,7 @@ void Technosqueek_State_Fall(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
         self->startDir   = self->direction;
@@ -346,7 +346,7 @@ void Technosqueek_EditorDraw(void)
                 if (!self->groundVel)
                     break;
             }
-            DrawHelpers_DrawArrow(self->startPos.x, self->startPos.y, self->position.x, self->position.y, 0x00FF00);
+            DrawHelpers_DrawArrow(self->startPos.x, self->startPos.y, self->position.x, self->position.y, 0x00FF00, INK_NONE, 0xFF);
 
             self->inkEffect = INK_BLEND;
             Technosqueek_Draw();

@@ -29,18 +29,15 @@ void SizeLaser_StaticUpdate(void)
         SizeLaser->playerPositions[playerID].y = player->position.y;
 
         if (player->scale.x > 0x200) {
-            Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
-            if (!playerHitbox)
-                playerHitbox = &defaultHitbox;
+           
+            Hitbox *playerHitbox = Player_GetHitbox(player);
 
             SizeLaser->playerOuterBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
             SizeLaser->playerOuterBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
             SizeLaser->playerOuterBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
             SizeLaser->playerOuterBox[playerID].bottom = (player->scale.x * playerHitbox->bottom) >> 9;
 
-            playerHitbox = RSDK.GetHitbox(&player->animator, 1);
-            if (!playerHitbox)
-                playerHitbox = &defaultHitbox;
+            playerHitbox = Player_GetAltHitbox(player);
             SizeLaser->playerInnerBox[playerID].left   = (player->scale.x * playerHitbox->left) >> 9;
             SizeLaser->playerInnerBox[playerID].top    = (player->scale.x * playerHitbox->top) >> 9;
             SizeLaser->playerInnerBox[playerID].right  = (player->scale.x * playerHitbox->right) >> 9;
@@ -572,9 +569,9 @@ void SizeLaser_State_Laser(void)
 
     bool32 collided = false;
     switch (self->orientation) {
-        case SIZELASER_ORIENTATION_DOWN: collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x40000, false); break;
-        case SIZELASER_ORIENTATION_RIGHT: collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x40000, 0, false); break;
-        case SIZELASER_ORIENTATION_LEFT: collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x40000, 0, false); break;
+        case SIZELASER_ORIENTATION_DOWN: collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x40000, false); break;
+        case SIZELASER_ORIENTATION_RIGHT: collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x40000, 0, false); break;
+        case SIZELASER_ORIENTATION_LEFT: collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x40000, 0, false); break;
     }
 
     if (collided) {
@@ -624,7 +621,7 @@ void SizeLaser_EditorDraw(void)
             case SIZELASER_ORIENTATION_LEFT: extendX = -(self->extend << 16); break;
         }
 
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + extendX, self->position.y + extendY, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + extendX, self->position.y + extendY, 0x00FF00, INK_NONE, 0xFF);
     }
 }
 

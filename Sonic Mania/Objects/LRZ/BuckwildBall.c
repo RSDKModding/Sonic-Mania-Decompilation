@@ -14,7 +14,7 @@ void BuckwildBall_Update(void)
     RSDK_THIS(BuckwildBall);
     StateMachine_Run(self->state);
     if (self->state != BuckwildBall_State_AwaitDetection && self->state != BuckwildBall_State_Debris && self->state != BuckwildBall_State_Setup) {
-        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
+        if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
             if (self->particleDelay-- <= 0) {
                 BuckwildBall_SpawnDebris();
                 BuckwildBall_HandleTimerSfx();
@@ -304,7 +304,7 @@ void BuckwildBall_State_Falling(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1C0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x1C0000, true)) {
         if (!RSDK.GetEntityCount(Drillerdroid->objectID, true) || (Drillerdroid->platformActive[self->bossBallSlot] == true)) {
             self->velocity.y = 0;
             self->state      = BuckwildBall_State_Rolling;
@@ -342,7 +342,7 @@ void BuckwildBall_State_Rolling(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x1C0000, 2)) {
         self->velocity.y = 0;
         if (abs(self->velocity.x) > 0x20000 && RSDK.Rand(0, 100) > 0x50) {
             BuckwildBall_SpawnDebris();
@@ -353,9 +353,9 @@ void BuckwildBall_State_Rolling(void)
 
     bool32 collidedWall = false;
     if (self->direction == FLIP_X)
-        collidedWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x1C0000, 0, true);
+        collidedWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x1C0000, 0, true);
     else if (self->direction == FLIP_NONE) 
-        collidedWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x1C0000, 0, true);
+        collidedWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x1C0000, 0, true);
 
     if (collidedWall) {
         self->state = BuckwildBall_State_Debris;
@@ -429,7 +429,8 @@ void BuckwildBall_EditorDraw(void)
                 DrawHelpers_DrawHitboxOutline(self->ballPos.x, self->ballPos.y, &self->detectHitbox, FLIP_NONE, 0xFF0000);
 
                 self->velocity.x = abs(self->speed << 15) * (2 * (self->direction != FLIP_NONE) - 1);
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + (self->velocity.x << 3), self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + (self->velocity.x << 3), self->position.y, 0xFFFF00,
+                                      INK_NONE, 0xFF);
                 break;
         }
         RSDK_DRAWING_OVERLAY(false);

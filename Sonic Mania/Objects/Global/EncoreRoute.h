@@ -5,9 +5,9 @@
 
 #if RETRO_USE_PLUS
 
-typedef enum {
-    EROUTE_FRAME_UNUSED
-}EncoreRouteFrameIDs;
+typedef enum { EROUTE_LAYER_FGLOW, EROUTE_LAYER_FGHIGH, EROUTE_LAYER_MOVE, EROUTE_LAYER_SCRATCH } EncoreRouteLayerIDs;
+
+typedef enum { EROUTE_FRAME_UNUSED } EncoreRouteFrameIDs;
 
 // Object Class
 struct ObjectEncoreRoute {
@@ -34,7 +34,7 @@ void EncoreRoute_Update(void);
 void EncoreRoute_LateUpdate(void);
 void EncoreRoute_StaticUpdate(void);
 void EncoreRoute_Draw(void);
-void EncoreRoute_Create(void* data);
+void EncoreRoute_Create(void *data);
 void EncoreRoute_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EncoreRoute_EditorDraw(void);
@@ -46,4 +46,4 @@ void EncoreRoute_Serialize(void);
 
 #endif
 
-#endif //!OBJ_ENCOREROUTE_H
+#endif //! OBJ_ENCOREROUTE_H

@@ -132,18 +132,18 @@ void Blaster_State_Move(void)
     RSDK_THIS(Blaster);
 
     self->position.x += self->velocity.x;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 8);
     if (!--self->timer) {
         self->state = Blaster_State_HandleTurn;
         self->timer = 30;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
     }
-    else if (self->velocity.x < 0 && !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0xE0000, 0x140000, false)) {
+    else if (self->velocity.x < 0 && !RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0xE0000, 0x140000, false)) {
         self->state = Blaster_State_HandleTurn;
         self->timer = 30;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
     }
-    else if (self->velocity.x > 0 && !RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0xE0000, 0x140000, false)) {
+    else if (self->velocity.x > 0 && !RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0xE0000, 0x140000, false)) {
         self->state = Blaster_State_HandleTurn;
         self->timer = 30;
         RSDK.SetSpriteAnimation(Blaster->aniFrames, 0, &self->animator, true, 0);
@@ -226,7 +226,7 @@ void Blaster_State_MagnetAttract(void)
 
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x3800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, 8))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0xC0000, 8))
         self->velocity.y = 0;
     Blaster_HandlePlayerInteractions();
 
@@ -248,7 +248,7 @@ void Blaster_State_MagnetReleased(void)
     Blaster_HandlePlayerInteractions();
     Blaster_CheckOffScreen();
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
         self->velocity.y = 0;
         self->state      = Blaster_State_Move;
     }
@@ -291,7 +291,7 @@ void Blaster_State_Fall(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
         self->direction  = self->direction;

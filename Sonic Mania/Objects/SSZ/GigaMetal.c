@@ -857,7 +857,7 @@ void GigaMetal_State_Laser(void)
         }
 
         if (!(Zone->timer & 3)) {
-            if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x20000, true))
+            if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x20000, true))
                 CREATE_ENTITY(Explosion, NULL, self->position.x, self->position.y);
         }
 

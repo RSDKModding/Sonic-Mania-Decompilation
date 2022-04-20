@@ -625,15 +625,12 @@ void LevelSelect_HandleNewStagePos(void)
         SceneInfo->listPos += curLabel->data0;
 
 #if RETRO_USE_PLUS
-        if (self->labelID == self->labelCount - 4) {
+        if (self->labelID == self->labelCount - 4)
             SceneInfo->listPos += self->offsetUFO;
-        }
-        else if (self->labelID == self->labelCount - 3) {
+        else if (self->labelID == self->labelCount - 3)
             SceneInfo->listPos += self->offsetBSS;
-        }
-        else if (globals->gameMode == MODE_ENCORE) {
+        else if (globals->gameMode == MODE_ENCORE)
             SceneInfo->listPos = Zone_GetEncoreStageID();
-        }
 #endif
 
         int32 p1ID = 0;

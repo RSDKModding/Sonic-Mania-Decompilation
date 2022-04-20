@@ -430,7 +430,7 @@ void Crane_EditorDraw(void)
         RSDK.DrawSprite(&self->backAnimator, &drawPos, false);
         RSDK.DrawSprite(&self->frontAnimator, &drawPos, false);
 
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, drawPos.x, drawPos.y, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, drawPos.x, drawPos.y, 0x00FF00, INK_NONE, 0xFF);
 
         self->inkEffect = INK_NONE;
     }

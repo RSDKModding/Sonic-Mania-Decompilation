@@ -787,14 +787,8 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseSaveGame(void)
 
     memset(globals->noSaveSlot, 0, 0x400);
     globals->continues = 0;
-    if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-        SaveGame->saveEntityPtr = SceneInfo->entity;
-        SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
-        API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
-    }
-    else {
-        OptionsMenu_EraseSaveDataCB(false);
-    }
+
+    SaveGame_SaveFile(OptionsMenu_EraseSaveDataCB);
 }
 
 void OptionsMenu_AreYouSureDlg_YesCB_EraseAllData(void)
@@ -812,14 +806,8 @@ void OptionsMenu_AreYouSureDlg_YesCB_EraseAllData(void)
     globals->continues = 0;
     GameProgress_ClearProgress();
     API.RemoveAllDBRows(globals->taTableID);
-    if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-        SaveGame->saveEntityPtr = SceneInfo->entity;
-        SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
-        API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
-    }
-    else {
-        OptionsMenu_EraseSaveDataCB(false);
-    }
+
+    SaveGame_SaveFile(OptionsMenu_EraseSaveDataCB);
 }
 
 void OptionsMenu_EraseSaveGameButton_ActionCB(void)

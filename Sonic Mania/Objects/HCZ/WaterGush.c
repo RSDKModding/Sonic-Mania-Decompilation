@@ -403,8 +403,8 @@ void WaterGush_SpawnBrickDebris(void)
         brick->gravityStrength    = 0x3800;
         brick->scale.x    = 0x200;
         brick->scale.y    = 0x200;
-        brick->scaleInc.x = 8 >> i;
-        brick->scaleInc.y = 8 >> i;
+        brick->scaleSpeed.x = 8 >> i;
+        brick->scaleSpeed.y = 8 >> i;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[2].x, brickPos[2].y);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);
@@ -418,8 +418,8 @@ void WaterGush_SpawnBrickDebris(void)
         brick->gravityStrength    = 0x3800;
         brick->scale.x    = 512;
         brick->scale.y    = 512;
-        brick->scaleInc.x = 8 >> i;
-        brick->scaleInc.y = 8 >> i;
+        brick->scaleSpeed.x = 8 >> i;
+        brick->scaleSpeed.y = 8 >> i;
 
         brick = CREATE_ENTITY(Debris, Debris_State_Fall, brickPos[3].x, brickPos[3].y);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &brick->animator, true, 0);

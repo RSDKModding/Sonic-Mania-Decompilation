@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define GameOver_LetterCount (8)
+#define GAMEOVER_LETTER_COUNT (8)
 
 // Object Class
 struct ObjectGameOver {
@@ -20,12 +20,12 @@ struct EntityGameOver {
     int32 playerID;
     Vector2 barPos;
     Vector2 verts[4];
-    Vector2 letterPositions[GameOver_LetterCount];
-    Vector2 finalOffsets[GameOver_LetterCount];
-    Vector2 letterPosMove[GameOver_LetterCount];
-    int32 letterBounceCount[GameOver_LetterCount];
-    int32 letterRotations[GameOver_LetterCount];
-    int32 letterRotateSpeed[GameOver_LetterCount];
+    Vector2 letterPositions[GAMEOVER_LETTER_COUNT];
+    Vector2 finalOffsets[GAMEOVER_LETTER_COUNT];
+    Vector2 letterPosMove[GAMEOVER_LETTER_COUNT];
+    int32 letterBounceCount[GAMEOVER_LETTER_COUNT];
+    int32 letterRotations[GAMEOVER_LETTER_COUNT];
+    int32 letterRotateSpeed[GAMEOVER_LETTER_COUNT];
     Animator animator;
 };
 

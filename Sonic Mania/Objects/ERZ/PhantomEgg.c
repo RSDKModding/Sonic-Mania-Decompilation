@@ -713,7 +713,7 @@ void PhantomEgg_State_Attack_Jumped(void)
     self->position.y += self->velocity.y;
 
     Hitbox *hitbox = RSDK.GetHitbox(&self->legAnimator, 0);
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox->bottom << 16, true) == true) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, hitbox->bottom << 16, true) == true) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 4, &self->armLAnimator, true, 0);
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 4, &self->armRAnimator, true, 0);
         self->state = PhantomEgg_State_Attack_JumpLand;
@@ -740,7 +740,7 @@ void PhantomEgg_State_Attack_JumpLand(void)
     PhantomEgg_HandleAnimations();
 
     Hitbox *hitbox = RSDK.GetHitbox(&self->legAnimator, 0);
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox->bottom << 16, 16);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, hitbox->bottom << 16, 16);
 
     if (self->legAnimator.frameID == 5)
         PhantomEgg_HandleNextAttack();

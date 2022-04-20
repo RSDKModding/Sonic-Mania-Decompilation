@@ -484,7 +484,7 @@ void HotaruMKII_State_Laser(void)
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
         if (self->childCount == 1) {
             ++self->drawOrder;
             self->position.y += 0x80000;

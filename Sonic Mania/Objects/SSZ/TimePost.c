@@ -234,7 +234,7 @@ void TimePost_EditorLoad(void)
     TimePost->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(TimePost, type); // might have been "Past"/"Future" at one point?
-    RSDK_ENUM_VAR("Unused", 0);
+    RSDK_ENUM_VAR("(Unused)", 0);
 }
 #endif
 

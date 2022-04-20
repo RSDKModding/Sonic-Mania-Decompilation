@@ -190,6 +190,7 @@ bool32 RSDK::ImageGIF::Load(const char *fileName, bool32 loadHeader)
 {
     if (!decoder)
         return false;
+
     if (fileName) {
         if (!LoadFile(&info, fileName, FMODE_RB))
             return false;

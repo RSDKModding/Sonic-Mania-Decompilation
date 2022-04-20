@@ -216,7 +216,7 @@ void Newtron_State_StartFly(void)
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
 
-        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
+        if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
             self->velocity.y = 0;
             if (self->direction == FLIP_NONE)
                 self->velocity.x = 0x20000;
@@ -238,7 +238,7 @@ void Newtron_State_Fly(void)
     RSDK_THIS(Newtron);
 
     self->position.x += self->velocity.x;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
 
     RSDK.ProcessAnimation(&self->animator);
     RSDK.ProcessAnimation(&self->flameAnimator);

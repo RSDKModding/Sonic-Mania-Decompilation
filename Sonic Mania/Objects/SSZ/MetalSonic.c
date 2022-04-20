@@ -77,7 +77,7 @@ void MetalSonic_Create(void *data)
             self->updateRange.x   = 0x800000;
             self->updateRange.y   = 0x800000;
             self->tileCollisions  = true;
-            self->collisionLayers = Zone->fgLayers;
+            self->collisionLayers = Zone->collisionLayers;
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->metalSonicAnimator, true, 0);
             self->drawOrder = Zone->objectDrawLow;
             self->state     = MetalSonic_State_SetupArena;
@@ -1598,7 +1598,7 @@ void MetalSonic_State_Hover_Phase2(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x140000, true))
         self->velocity.y = 0;
 
     if (self->direction == FLIP_X) {
@@ -1997,7 +1997,7 @@ void MetalSonic_StateWall_Fall(void)
     self->position.y = self->drawPos.y;
     self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, (self->speed << 21) + 0x100000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, (self->speed << 21) + 0x100000, true)) {
         self->velocity.y = 0;
         self->drawPos.y = self->position.y;
         self->centerPos.y = self->position.y;

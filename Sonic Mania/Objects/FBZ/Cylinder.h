@@ -61,9 +61,9 @@ void Cylinder_State_Spiral(void);
 void Cylinder_State_InkRoller(void);
 void Cylinder_State_Pillar(void);
 
-void Cylinder_Player_State_InkRoller_Stand(void);
-void Cylinder_Player_State_InkRoller_Roll(void);
-void Cylinder_Player_State_Pillar(void);
-void Cylinder_Player_State_Spiral(void);
+void Cylinder_PlayerState_InkRoller_Stand(void);
+void Cylinder_PlayerState_InkRoller_Roll(void);
+void Cylinder_PlayerState_Pillar(void);
+void Cylinder_PlayerState_Spiral(void);
 
 #endif //!OBJ_CYLINDER_H

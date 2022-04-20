@@ -320,7 +320,7 @@ void Ice_VSSwapCB(void)
 #if RETRO_USE_PLUS
         Zone->playerSwapEnabled[Zone->swapPlayerID] = false;
 #else
-        Ice_BreakPlayerBlock((Entity *)player);
+        Ice_BreakPlayerBlock(player);
 #endif
     }
 }
@@ -895,7 +895,7 @@ void Ice_State_IceBlock(void)
 
     RSDK.ProcessAnimation(&self->glintAnimator);
     if (self->blockAnimator.animationID == ICEANI_PILLARBLOCK) {
-        if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitboxBlock.bottom << 16, true)
+        if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->hitboxBlock.bottom << 16, true)
             && self->state == Ice_State_IceBlock) {
             self->state = Ice_State_StartBlockFall;
         }
@@ -947,7 +947,7 @@ void Ice_State_IceBlockFall(void)
     self->playerMoveOffset.y = -(int32)(self->position.y & 0xFFFF0000);
     self->playerMoveOffset.y += (self->velocity.y + self->position.y) & 0xFFFF0000;
     self->velocity.y += 0x3800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->hitboxBlock.bottom << 16, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, self->hitboxBlock.bottom << 16, true)) {
         self->velocity.y = 0;
         self->state      = Ice_State_IceBlock;
         Ice_State_IceBlock();
@@ -980,7 +980,7 @@ void Ice_State_IceBlockFall(void)
         foreach_all(ItemBox, itemBox)
         {
             if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
-                && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitbox, self, &self->hitboxBlock, true)) {
+                && RSDK.CheckObjectCollisionPlatform(itemBox, &ItemBox->hitboxItemBox, self, &self->hitboxBlock, true)) {
                 self->velocity.y = 0;
                 if (itemBox->onGround) {
                     self->active = ACTIVE_BOUNDS;

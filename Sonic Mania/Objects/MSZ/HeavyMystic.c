@@ -1022,7 +1022,7 @@ void HeavyMystic_StateBoss_FangHop(void)
         self->velocity.x = -self->velocity.x;
 
     RSDK.ProcessAnimation(&self->animator);
-    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true)) {
+    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x140000, true)) {
         if (--self->attackID > 0) {
             self->velocity.y = -0x50000;
             self->velocity.x = RSDK.Rand(0, 2) != 0 ? -0x10000 : 0x10000;
@@ -1073,7 +1073,7 @@ void HeavyMystic_StateBoss_RougeHit(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->velocity.y > 0) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x240000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x240000, true)) {
             RSDK.PlaySfx(HeavyMystic->sfxPowerDown, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             self->direction ^= FLIP_X;
@@ -1170,7 +1170,7 @@ void HeavyMystic_StateBoss_BarkJump(void)
         self->velocity.x = -self->velocity.x;
 
     RSDK.ProcessAnimation(&self->animator);
-    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
+    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
         self->timer = 15;
         RSDK.SetSpriteAnimation(HeavyMystic->rouguesFrames, 12, &self->animator, true, 0);
         self->state = HeavyMystic_StateBoss_BarkIdle;
@@ -1288,7 +1288,7 @@ void HeavyMystic_StateBoss_BeanJump(void)
 
     RSDK.ProcessAnimation(&self->animator);
 
-    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true) == true) {
+    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x140000, true) == true) {
         if (--self->attackID <= 0) {
             self->attackID   = 1;
             self->timer      = 15;
@@ -1485,7 +1485,7 @@ void HeavyMystic_StateBox_Dropping(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x280000, true)) {
         Camera_ShakeScreen(0, 0, 6);
         RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
         RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);

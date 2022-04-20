@@ -818,7 +818,7 @@ void EggJanken_State_Drop(void)
     self->position.y = self->origin.y;
     self->velocity.y += 0x7000;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
         for (self->armID = 0; self->armID < EggJanken_ArmCount; ++self->armID) {
             for (self->armJointID = 0; self->armJointID < EggJanken_SegmentCount; ++self->armJointID) {
                 self->jointAngleVels[self->armID]                                                = 8;

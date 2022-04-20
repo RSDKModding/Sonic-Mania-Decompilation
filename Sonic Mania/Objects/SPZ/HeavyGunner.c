@@ -415,7 +415,7 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
         camera->boundsR        = Zone->cameraBoundsR[0];
 
         if (self->flyInTimer == 120) {
-            if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
+            if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 self->position.y += 0x80000;
             Zone->cameraBoundsB[0] = (self->position.y >> 16) + 168;
             Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
@@ -434,7 +434,7 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
         camera->boundsR        = Zone->cameraBoundsR[0];
 
         if (self->flyInTimer == 120) {
-            if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
+            if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 self->position.y += 0x80000;
             Zone->cameraBoundsB[0] = (self->position.y >> 16) + 168;
             Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
@@ -824,7 +824,7 @@ void HeavyGunner_StateMissile_FindFloor(void)
     self->position.x += Zone->autoScrollSpeed;
     self->position.y += 0x20000;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
         self->direction = FLIP_X;
         if (self->type == HEAVYGUNNER_MISSILE)
             self->velocity.x = -0x10000;
@@ -841,7 +841,7 @@ void HeavyGunner_StateMissile_AttackPlayer(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->exhaustAnimator);
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 64);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 64);
 
     Hitbox *hitbox = NULL;
     if (self->type == HEAVYGUNNER_MISSILE)
@@ -1236,7 +1236,7 @@ void HeavyGunner_StateHeli_WooshIn(void)
     self->rotation = (self->velocity.x + 0x40000) >> 13;
     if (self->rotation < 0)
         self->rotation = 0;
-    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
+    RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
     if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16))
         self->state = HeavyGunner_StateHeli_FindFloor;
 }
@@ -1262,7 +1262,7 @@ void HeavyGunner_StateHeli_FindFloor(void)
     if (self->rotation < 0)
         self->rotation = 0;
 
-    bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
+    bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
     if (self->velocity.x < 0 && collided) {
         if (self->position.x < Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
             self->velocity.x = 0;
@@ -1288,7 +1288,7 @@ void HeavyGunner_StateHeli_HandleAttacks(void)
     RSDK.ProcessAnimation(&self->feet2Animator);
     RSDK.ProcessAnimation(&self->gunnerAnimator);
     self->position.x += Zone->autoScrollSpeed;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 64);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 64);
     self->position.y += RSDK.Sin256(self->angle) << 11;
     self->angle = (self->angle + 3) & 0xFF;
     if (self->gunnerAnimator.animationID == 3)
@@ -1353,7 +1353,7 @@ void HeavyGunner_StateHeli_ShotsFired(void)
     self->velocity.x += 0x1800;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->rotation = self->velocity.x >> 14;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 64);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 64);
     self->position.y += RSDK.Sin256(self->angle) << 11;
     self->angle = (self->angle + 3) & 0xFF;
     if (self->rotation > 0)
@@ -1484,7 +1484,7 @@ void HeavyGunner_StateHeli_ExplodeAndFall(void)
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->velocity.y += 0x3800;
     self->position.y += self->velocity.y;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true))
         self->velocity.y = -(self->velocity.y >> 1);
 
     if ((++self->timer & 7) == 2)
@@ -1531,7 +1531,7 @@ void HeavyGunner_StateHeli_ExplodeAndFall(void)
         {
             signPost->position.y   = camera->position.y;
             Zone->cameraBoundsL[0] = (signPost->position.x >> 16) - 512;
-            RSDK.ObjectTileGrip(signPost, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, 0x40);
+            RSDK.ObjectTileGrip(signPost, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x180000, 0x40);
         }
 
         Zone->autoScrollSpeed       = 0;

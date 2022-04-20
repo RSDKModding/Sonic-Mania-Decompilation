@@ -253,8 +253,8 @@ int Shutterbug_BounceX(void)
     // oh lemme tell ya buddy i have no fuckin idea
 
     int32 x         = (self->velocity.x <= 0) ? -0x90000 : 0x90000;
-    bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, x, 0x80000, false)
-                      || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, x, -0x80000, false);
+    bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, x, 0x80000, false)
+                      || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, x, -0x80000, false);
     if (collided)
         self->velocity.x = -self->velocity.x;
     return collided;
@@ -265,8 +265,8 @@ int Shutterbug_BounceY(void)
 
     // makes sense here though!
     int32 y         = (self->velocity.y <= 0) ? -0x90000 : 0x90000;
-    bool32 collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, y, false)
-                      || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, y, false);
+    bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x80000, y, false)
+                      || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, y, false);
     if (collided)
         self->velocity.y = -self->velocity.y;
     return collided;

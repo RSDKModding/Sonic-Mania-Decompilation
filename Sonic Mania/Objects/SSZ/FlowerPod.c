@@ -138,7 +138,7 @@ void FlowerPod_State_SeedFall(void)
     self->position.y += self->velocity.y;
     self->rotation = 2 * RSDK.ATan2(self->velocity.x, self->velocity.y);
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)) {
         self->rotation = 0;
         self->timer    = 30;
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 4, &self->stemAnimator, true, 0);

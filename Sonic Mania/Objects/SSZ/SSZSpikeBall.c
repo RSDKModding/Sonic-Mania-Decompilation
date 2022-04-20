@@ -322,35 +322,35 @@ void SSZSpikeBall_EditorDraw(void)
 
         switch (self->type) {
             case SSZSPIKEBALL_LAUNCHER_UP:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - 0x200000, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_LAUNCHER_DOWN:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + 0x200000, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_LAUNCHER_LEFT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x200000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_LAUNCHER_RIGHT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x200000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_UP:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - distance, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - distance, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_DOWN:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + distance, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + distance, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_LEFT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - distance, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - distance, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
 
             case SSZSPIKEBALL_MOVEBALL_RIGHT:
-                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + distance, self->position.y, 0xFFFF00);
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + distance, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
                 break;
         }
 

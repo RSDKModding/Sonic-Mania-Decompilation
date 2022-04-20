@@ -986,7 +986,7 @@ void Gachapandora_StatePrize_CapsuleFall(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2000;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 2, &debris->animator, true, 4);
         debris->velocity.x    = RSDK.Rand(-1, 2) << 16;
@@ -1063,7 +1063,7 @@ void Gachapandora_StatePrize_ExitCapsule(void)
             RSDK.ProcessAnimation(&self->mainAnimator);
             self->position.x += self->velocity.x;
             if (self->velocity.y >= 0) {
-                if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
+                if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
                     self->velocity.y    = 0;
                     self->hitbox.left   = -5;
                     self->hitbox.top    = -11;
@@ -1078,7 +1078,7 @@ void Gachapandora_StatePrize_ExitCapsule(void)
 
         case GACHAPANDORA_DRILLER:
             if (self->velocity.y >= 0) {
-                if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x110000, true)) {
+                if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x110000, true)) {
                     if (self->direction == FLIP_NONE)
                         self->velocity.x = -0x20000;
                     else
@@ -1136,7 +1136,7 @@ void Gachapandora_StatePrize_DrillerCapsuleExitBounce(void)
 
     Gachapandora_StatePrize_DrillerMove();
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x110000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x110000, true)) {
         self->velocity.y = 0;
         self->state      = Gachapandora_StatePrize_DrillerMove;
     }
@@ -1382,7 +1382,7 @@ void Gachapandora_StatePrize_AmyJump(void)
     }
 
     if (self->state == Gachapandora_StatePrize_AmyJump) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
             self->velocity.y     = 0;
             EntityPlayer *player = Player_GetNearestPlayer();
             if (self->position.x < (ScreenInfo->position.x + 8) << 16 || self->position.x > (ScreenInfo->width + ScreenInfo->position.x - 8) << 16
@@ -1410,7 +1410,7 @@ void Gachapandora_StatePrize_AmyRebound(void)
     if (self->invincibilityTimer)
         self->invincibilityTimer--;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
         self->velocity.y     = 0;
         EntityPlayer *player = Player_GetNearestPlayer();
 
@@ -1555,7 +1555,7 @@ void Gachapandora_StateFireball_Falling(void)
     }
 
     self->position.y += 0x18000;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x20000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x20000, true)) {
         self->timer  = 6;
         self->health = 4;
         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 12, &self->mainAnimator, true, 0);
@@ -1639,7 +1639,7 @@ void Gachapandora_StateDebris_BossDebris(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2800;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
         self->velocity.y = -0x20000;
         self->velocity.x = RSDK.Rand(-2, 3) << 16;
         self->state      = Gachapandora_StateDebris_Falling;
@@ -1698,7 +1698,7 @@ void Gachapandora_StateSpark_Detatched(void)
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x40000, true)) {
         RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 16, &self->mainAnimator, true, 0);
         self->velocity.x = 0;
         self->velocity.y = 0;
@@ -1726,7 +1726,7 @@ void Gachapandora_StateEggman_Escape(void)
 
     self->position.y += self->velocity.y;
     self->velocity.y += 0x1800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x180000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->state      = Gachapandora_StateEggman_RunAway;

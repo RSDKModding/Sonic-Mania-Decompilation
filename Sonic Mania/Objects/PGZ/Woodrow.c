@@ -297,7 +297,7 @@ void Woodrow_State_Bomb(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
             RSDK.PlaySfx(Woodrow->sfxExplosion, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->objectDrawHigh;
             destroyEntity(self);

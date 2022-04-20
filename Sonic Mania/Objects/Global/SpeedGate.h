@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectSpeedGate {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxGate;
     int32 unused;
     uint16 aniFrames;
     uint16 sfxStarPost;
@@ -25,13 +25,13 @@ struct EntitySpeedGate {
     int32 activeTimer;
     Vector2 timerPos;
     Vector2 playerDistance;
-    EntityPlayer *playerPtr;
+    EntityPlayer *triggerPlayer;
     Animator baseAnimator;
     Animator topAnimator;
     Animator timerAnimator;
     Animator finsAnimator;
     Animator bubbleAnimator;
-    int32 activePlayers;
+    int32 interactedPlayers;
 };
 
 // Object Struct

@@ -675,7 +675,7 @@ void TimeAttackMenu_StartTAAttempt(void)
 
     Replay *replayPtr = (Replay *)globals->replayReadBuffer;
 
-    if (replayPtr->header.isNotEmpty && replayPtr->header.signature == Replay_Signature)
+    if (replayPtr->header.isNotEmpty && replayPtr->header.signature == REPLAY_SIGNATURE)
         memset(globals->replayReadBuffer, 0, sizeof(globals->replayReadBuffer));
     TimeAttackMenu_LoadScene();
 }

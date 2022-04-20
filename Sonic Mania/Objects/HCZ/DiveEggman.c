@@ -154,8 +154,8 @@ void DiveEggman_StateEggman_Swimming(void)
         self->velocity.y -= 0x400;
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)
-        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x200000, 0, true)
+        || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
         self->direction ^= FLIP_X;
         self->velocity.x = -self->velocity.x;
     }
@@ -527,7 +527,7 @@ void DiveEggman_EditorDraw(void)
 
         EntityCollapsingPlatform *screwMobile = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
         if (ScrewMobile && screwMobile->objectID == ScrewMobile->objectID)
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, screwMobile->position.x, screwMobile->position.y, 0xFFFF00);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, screwMobile->position.x, screwMobile->position.y, 0xFFFF00, INK_NONE, 0xFF);
 
         RSDK_DRAWING_OVERLAY(false);
     }

@@ -10,7 +10,7 @@ typedef enum { WARPDOOR_PLRSTATE_NONE, WARPDOOR_PLRSTATE_HURT } WarpDoorPlayerSt
 // Object Class
 struct ObjectWarpDoor {
     RSDK_OBJECT
-    Entity *tags[256];
+    EntityWarpDoor *tags[256];
     Hitbox boundaries[256];
     uint8 boundCount;
     uint8 lastBoundsID;

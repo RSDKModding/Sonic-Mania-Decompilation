@@ -119,12 +119,12 @@ bool32 Buggernaut_HandleTileCollisionsX(void)
 
     bool32 collided = false;
     if (self->velocity.x <= 0) {
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x90000, -0x80000, false);
-        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x90000, 0x80000, false);
+        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x90000, -0x80000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x90000, 0x80000, false);
     }
     else {
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x90000, -0x80000, false);
-        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x90000, 0x80000, false);
+        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x90000, -0x80000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x90000, 0x80000, false);
     }
 
     if (collided)
@@ -138,12 +138,12 @@ bool32 Buggernaut_HandleTileCollisionsY(void)
 
     bool32 collided = false;
     if (self->velocity.y <= 0) {
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, -0x90000, false);
-        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
+        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, -0x90000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
     }
     else {
-        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, 0x90000, false);
-        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
+        collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, -0x80000, 0x90000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
     }
 
     if (collided)
@@ -367,7 +367,7 @@ void Buggernaut_EditorLoad(void)
 
     // despite being editable, this variable is set to FLIP_NONE on create, thereby making the editable var's value unused
     RSDK_ACTIVE_VAR(Buggernaut, direction);
-    RSDK_ENUM_VAR("Unused", FLIP_NONE);
+    RSDK_ENUM_VAR("(Unused)", FLIP_NONE);
     // RSDK_ENUM_VAR("No Flip", FLIP_NONE);
     // RSDK_ENUM_VAR("Flip X", FLIP_X);
 }

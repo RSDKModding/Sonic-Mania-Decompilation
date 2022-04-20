@@ -492,13 +492,13 @@ void SP500_EditorDraw(void)
         self->active = ACTIVE_NORMAL;
 
         DrawHelpers_DrawRectOutline(self->srcC.x, self->srcC.y, self->len << 16, self->height << 16, 0x00FFFF);
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcC.x, self->srcC.y, 0x00FFFF);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcC.x, self->srcC.y, 0x00FFFF, INK_NONE, 0xFF);
 
         DrawHelpers_DrawRectOutline(self->srcM.x, self->srcM.y, self->len << 16, self->height << 16, 0x00FF00);
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcM.x, self->srcM.y, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcM.x, self->srcM.y, 0x00FF00, INK_NONE, 0xFF);
 
         DrawHelpers_DrawRectOutline(self->srcY.x, self->srcY.y, self->len << 16, self->height << 16, 0xFFFF00);
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcY.x, self->srcY.y, 0xFFFF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->srcY.x, self->srcY.y, 0xFFFF00, INK_NONE, 0xFF);
     }
 }
 

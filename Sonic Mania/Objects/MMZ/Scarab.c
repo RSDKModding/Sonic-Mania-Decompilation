@@ -266,7 +266,7 @@ void Scarab_State_Move(void)
     int32 y = self->position.y;
 
     self->position.x = x;
-    if (abs(x - self->startPos.x) < (self->amplitude << 16) && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, 2)) {
+    if (abs(x - self->startPos.x) < (self->amplitude << 16) && RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x60000, 2)) {
         self->position.x = x;
     }
     else {
@@ -274,7 +274,7 @@ void Scarab_State_Move(void)
         self->position.x = self->startPos.x + (self->amplitude << 16) * self->moveDir;
         self->moveDir    = -self->moveDir;
     }
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, 4);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x60000, 4);
 }
 
 void Scarab_State_Wait(void)

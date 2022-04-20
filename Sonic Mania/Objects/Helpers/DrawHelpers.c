@@ -49,7 +49,7 @@ void DrawHelpers_DrawHitboxOutline(int32 x, int32 y, Hitbox *hitbox, uint8 direc
     RSDK.DrawLine(x + (left << 16), y + (bottom << 16), x + (left << 16), y + (top << 16), color, 0xFF, INK_NONE, false);
 }
 
-void DrawHelpers_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
+void DrawHelpers_DrawArrowAdditive(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
 {
     int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
     RSDK.DrawLine(x1, y1, x2, y2, color, 0x7F, INK_ADD, false);
@@ -97,6 +97,17 @@ void DrawHelpers_DrawCross(int32 x, int32 y, int32 sizeX, int32 sizeY, uint32 co
 }
 
 //Custom ones!!
+
+// Adds alpha & ink effect in params for extra customizability
+void DrawHelpers_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, uint32 inkEffect, uint32 alpha)
+{
+    int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
+    RSDK.DrawLine(x1, y1, x2, y2, color, alpha, inkEffect, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), y2 + (RSDK.Sin256(angle + 12) << 12), color, alpha, inkEffect, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle - 12) << 12), y2 + (RSDK.Sin256(angle - 12) << 12), color, alpha, inkEffect, false);
+}
+
+
 void DrawHelpers_DrawRectOutline(int32 x, int32 y, int32 sizeX, int32 sizeY, uint32 color)
 {
     Vector2 drawPos;

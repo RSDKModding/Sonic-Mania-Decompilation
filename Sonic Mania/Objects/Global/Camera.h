@@ -44,7 +44,7 @@ void Camera_Update(void);
 void Camera_LateUpdate(void);
 void Camera_StaticUpdate(void);
 void Camera_Draw(void);
-void Camera_Create(void* data);
+void Camera_Create(void *data);
 void Camera_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Camera_EditorDraw(void);
@@ -60,11 +60,11 @@ void Camera_HandleHBounds(void);
 void Camera_HandleVBounds(void);
 void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed);
 
-//States
+// States
 void Camera_State_Roam(void);
 void Camera_State_Follow(void);
 void Camera_State_HLock(void);
 void Camera_State_VLock(void);
 void Camera_State_HandleLerp(void);
 
-#endif //!OBJ_CAMERA_H
+#endif //! OBJ_CAMERA_H

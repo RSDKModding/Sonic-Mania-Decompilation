@@ -247,7 +247,7 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
         }
         player->position.x += RSDK.Cos256(angle) << 8;
         player->position.y += RSDK.Sin256(angle) << 8;
-        RSDK.ObjectTileGrip(player, Zone->fgLayers, cMode, 0, offsetX, offsetY, 1);
+        RSDK.ObjectTileGrip(player, Zone->collisionLayers, cMode, 0, offsetX, offsetY, 1);
         player->angle = plrAngle;
         if (player->onGround) {
             uint8 mode = 0;

@@ -12,10 +12,10 @@ ObjectSpikes *Spikes;
 void Spikes_Update(void)
 {
     RSDK_THIS(Spikes);
+
     switch (self->stateMove) {
-        default: 
-        case SPIKES_MOVE_STATIC:
-            break;
+        default:
+        case SPIKES_MOVE_STATIC: break;
 
         case SPIKES_MOVE_HIDDEN:
             if (self->stagger << 6 == (Zone->timer & 0x40)) {
@@ -57,7 +57,7 @@ void Spikes_Update(void)
             }
             break;
 
-        // Used by SpiderMobile to hide the spikes on the arena
+        // Used by FBZ/SpiderMobile to hide the spikes on the arena
         case SPIKES_MOVE_DISAPPEAR_FOREVER:
             if (self->moveOffset >= 0x280000) {
                 self->stateMove = SPIKES_MOVE_HIDDEN_FOREVER;
@@ -74,11 +74,12 @@ void Spikes_Update(void)
 
     self->position.x -= self->collisionOffset.x;
     self->position.y -= self->collisionOffset.y;
+
     if (self->stateMove != SPIKES_MOVE_HIDDEN) {
         foreach_active(Player, player)
         {
             if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
-                EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                 if (!Ice || (player->state != Ice_State_FrozenPlayer && shield->shieldAnimator.animationID != 2) || Press) {
                     int32 playerVelX = player->velocity.x;
                     int32 playerVelY = player->velocity.y;
@@ -102,6 +103,7 @@ void Spikes_Update(void)
                                     player->onGround = false;
                             }
                             shouldShatter = false;
+
 #if RETRO_USE_PLUS
                             if (side == C_TOP && player->state == Player_State_MightyHammerDrop) {
                                 if (Ice) {
@@ -128,6 +130,7 @@ void Spikes_Update(void)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
+
                             case C_LEFT:
                                 player->collisionFlagH |= 1;
                                 if (player->velocity.x >= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
@@ -135,6 +138,7 @@ void Spikes_Update(void)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
+
                             case C_RIGHT:
                                 player->collisionFlagH |= 2;
                                 if (player->velocity.x <= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
@@ -142,6 +146,7 @@ void Spikes_Update(void)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
+
                             case C_BOTTOM:
                                 player->collisionFlagV |= 2;
                                 if (player->velocity.y <= 0 || self->stateMove == SPIKES_MOVE_APPEAR) {
@@ -149,6 +154,7 @@ void Spikes_Update(void)
                                         Spikes_CheckHit(player, playerVelX, playerVelY);
                                 }
                                 break;
+
                             default: break;
                         }
 #else
@@ -161,18 +167,22 @@ void Spikes_Update(void)
                                         Player_CheckHit(player, self);
                                     }
                                     break;
+
                                 case C_LEFT:
                                     if (!player->velocity.x)
                                         Player_CheckHit(player, self);
                                     break;
+
                                 case C_RIGHT:
                                     if (!player->velocity.x)
                                         Player_CheckHit(player, self);
                                     break;
+
                                 case C_BOTTOM:
                                     if (!player->velocity.y)
                                         Player_CheckHit(player, self);
                                     break;
+
                                 default: break;
                             }
                         }
@@ -186,16 +196,14 @@ void Spikes_Update(void)
                     }
                 }
                 else {
-                    int32 posStoreX = player->position.x;
-                    int32 posStoreY = player->position.y;
+                    int32 storedX = player->position.x;
+                    int32 storedY = player->position.y;
 
                     uint8 side = C_NONE;
-                    if (player->state == Ice_State_FrozenPlayer) {
+                    if (player->state == Ice_State_FrozenPlayer)
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &Ice->hitboxPlayerBlockOuter, false);
-                    }
-                    else {
+                    else
                         side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, Player_GetHitbox(player), false);
-                    }
 
                     switch (side) {
                         case C_TOP:
@@ -207,16 +215,17 @@ void Spikes_Update(void)
                             }
                             else {
                                 Spikes_Shatter(0, 0);
-                                player->position.x = posStoreX;
-                                player->position.y = posStoreY;
+                                player->position.x = storedX;
+                                player->position.y = storedY;
                                 foreach_return;
                             }
                             break;
+
                         case C_LEFT:
                             if (player->velocity.x >= 0x20000) {
                                 Spikes_Shatter(player->velocity.x, 0);
-                                player->position.x = posStoreX;
-                                player->position.y = posStoreY;
+                                player->position.x = storedX;
+                                player->position.y = storedY;
                                 foreach_return;
                             }
                             else {
@@ -226,6 +235,7 @@ void Spikes_Update(void)
                                 }
                             }
                             break;
+
                         case C_RIGHT:
                             if (player->velocity.x > -0x20000) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
@@ -235,11 +245,12 @@ void Spikes_Update(void)
                             }
                             else {
                                 Spikes_Shatter(player->velocity.x, 0);
-                                player->position.x = posStoreX;
-                                player->position.y = posStoreY;
+                                player->position.x = storedX;
+                                player->position.y = storedY;
                                 foreach_return;
                             }
                             break;
+
                         case C_BOTTOM:
                             if (player->velocity.y > -0x40000) {
                                 if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
@@ -249,11 +260,13 @@ void Spikes_Update(void)
                             }
                             else {
                                 Spikes_Shatter(0, player->velocity.y);
-                                player->position.x = posStoreX;
-                                player->position.y = posStoreY;
+                                player->position.x = storedX;
+                                player->position.y = storedY;
                                 foreach_return;
                             }
+
                         default:
+                        case C_NONE:
                             if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
                                 player->position.x += self->collisionOffset.x;
                                 player->position.y += self->collisionOffset.y;
@@ -267,9 +280,12 @@ void Spikes_Update(void)
 
     self->position.x += self->collisionOffset.x;
     self->position.y += self->collisionOffset.y;
+
+    // if the Ice object is in the scene & the Press object isn't (aka if the stage is PGZ2)
     if (Ice && !Press) {
         RSDK.ProcessAnimation(&self->animator);
-        if (--self->timer2 <= 0) {
+
+        if (--self->glintTimer <= 0) {
             switch (self->type) {
                 case C_TOP:
                 case C_BOTTOM: RSDK.SetSpriteAnimation(Spikes->aniFrames, 2, &self->animator, true, 0); break;
@@ -277,11 +293,12 @@ void Spikes_Update(void)
                 case C_RIGHT: RSDK.SetSpriteAnimation(Spikes->aniFrames, 3, &self->animator, true, 0); break;
                 default: break;
             }
-            self->timer2 = RSDK.Rand(0, 240) + 30;
+
+            self->glintTimer = RSDK.Rand(0, 240) + 30;
         }
+
         if (self->shatterTimer > 0) {
-            self->shatterTimer--;
-            if (!self->shatterTimer)
+            if (!--self->shatterTimer)
                 Spikes_Shatter(0, 0);
         }
     }
@@ -296,9 +313,11 @@ void Spikes_Draw(void) { StateMachine_Run(Spikes->stateDraw); }
 void Spikes_Create(void *data)
 {
     RSDK_THIS(Spikes);
+
     self->drawFX = FX_FLIP;
     if (self->count < 2)
         self->count = 2;
+
     if (!SceneInfo->inEditor) {
         if (data)
             self->type = voidToInt(data);
@@ -311,7 +330,7 @@ void Spikes_Create(void *data)
             self->drawOrder = Zone->objectDrawHigh;
         else
             self->drawOrder = Zone->objectDrawLow;
-        self->alpha = 128;
+        self->alpha = 0x80;
 
         switch (self->type) {
             case 0: // vertical
@@ -331,6 +350,7 @@ void Spikes_Create(void *data)
                 self->hitbox.right  = 8 * self->count;
                 self->hitbox.bottom = 16;
                 break;
+
             case 1: // horizontal
                 self->updateRange.x = 0x600000;
                 self->updateRange.y = (self->count + 6) << 20;
@@ -361,6 +381,7 @@ void Spikes_Create(void *data)
 void Spikes_StageLoad(void)
 {
     Spikes->stateDraw = Spikes_Draw_Stage;
+
     if (RSDK.CheckStageFolder("FBZ")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
@@ -371,10 +392,13 @@ void Spikes_StageLoad(void)
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
         Spikes->stateDraw = Spikes_Draw_Global;
     }
+
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->verticalAnimator, true, 0);
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->horizontalAnimator, true, 0);
-    Spikes->unused1  = 0x100000;
-    Spikes->unused2  = 0x100000;
+
+    Spikes->unused1 = 0x100000;
+    Spikes->unused2 = 0x100000;
+
     Spikes->sfxMove  = RSDK.GetSfx("Global/SpikesMove.wav");
     Spikes->sfxSpike = RSDK.GetSfx("Global/Spike.wav");
 }
@@ -388,8 +412,8 @@ void Spikes_Draw_Global(void)
     drawPos.y = self->position.y;
     int32 cnt = self->count >> 1;
     switch (self->type) {
-        case 1:
-        case 4:
+        case C_TOP:
+        case C_BOTTOM:
             drawPos.x = 0x100000 - (self->count << 19) + self->position.x;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
@@ -401,8 +425,9 @@ void Spikes_Draw_Global(void)
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
             }
             break;
-        case 2:
-        case 3:
+
+        case C_LEFT:
+        case C_RIGHT:
             drawPos.y = 0x100000 - (self->count << 19) + self->position.y;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
@@ -414,8 +439,10 @@ void Spikes_Draw_Global(void)
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
             }
             break;
+
         default: break;
     }
+
     self->inkEffect = INK_ADD;
     RSDK.DrawSprite(&self->animator, NULL, false);
 
@@ -431,8 +458,8 @@ void Spikes_Draw_Stage(void)
     drawPos.y = self->position.y;
     int32 cnt = self->count >> 1;
     switch (self->type) {
-        case 1:
-        case 4:
+        case C_TOP:
+        case C_BOTTOM:
             drawPos.x = (0x100000 - (self->count << 19)) + self->position.x;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
@@ -443,8 +470,9 @@ void Spikes_Draw_Stage(void)
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
             }
             break;
-        case 2:
-        case 3:
+
+        case C_LEFT:
+        case C_RIGHT:
             drawPos.y = (0x100000 - (self->count << 19)) + self->position.y;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
@@ -455,6 +483,7 @@ void Spikes_Draw_Stage(void)
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
             }
             break;
+
         default: break;
     }
 }
@@ -462,14 +491,17 @@ void Spikes_Draw_Stage(void)
 void Spikes_Shatter(int32 velX, int32 velY)
 {
     RSDK_THIS(Spikes);
+
     RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
     Ice_ShatterGenerator(16, 16, 16, velX, velY, false);
     destroyEntity(self);
 }
+
 #if RETRO_USE_PLUS
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 {
     RSDK_THIS(Spikes);
+
     if (player->state == Player_State_Hit)
         return;
     if (!Player_CheckValidState(player) || player->invincibleTimer || player->blinkTimer > 0)
@@ -504,16 +536,19 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 
                     player->velocity.x -= player->velocity.x >> 2;
                     break;
+
                 case C_LEFT:
                     player->velocity.y = -0x40000;
                     player->velocity.x = -0x28000;
                     player->state      = Player_State_Air;
                     break;
+
                 case C_RIGHT:
                     player->velocity.y = -0x40000;
                     player->velocity.x = 0x28000;
                     player->state      = Player_State_Air;
                     break;
+
                 case C_BOTTOM:
                     player->velocity.y = 0x20000;
                     player->state      = Player_State_Air;
@@ -531,8 +566,10 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
                 RSDK.PlaySfx(Player->sfxMightyUnspin, false, 255);
             }
+
             if (player->animator.animationID != ANI_FLY)
                 RSDK.PlaySfx(Player->sfxPimPom, false, 255);
+
             if (player->underwater) {
                 player->velocity.x >>= 1;
                 player->velocity.y >>= 1;
@@ -545,11 +582,13 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                     player->velocity.x = 0x48000;
                 else
                     player->velocity.x = -0x48000;
+
                 player->state = Player_State_Air;
                 player->velocity.x -= player->velocity.x >> 2;
                 player->onGround         = false;
                 player->applyJumpCap     = false;
                 player->jumpAbilityState = 0;
+
                 if (player->state == Player_State_Hit) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
@@ -558,8 +597,10 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
                     RSDK.PlaySfx(Player->sfxMightyUnspin, false, 255);
                 }
+
                 if (player->animator.animationID != ANI_FLY)
                     RSDK.PlaySfx(Player->sfxPimPom, false, 255);
+
                 if (player->underwater) {
                     player->velocity.x >>= 1;
                     player->velocity.y >>= 1;
@@ -588,7 +629,9 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
         player->velocity.x = 0x20000;
     else
         player->velocity.x = -0x20000;
+
     Player_Hit(player);
+
     if (player->deathType == PLAYER_DEATH_DIE_USESFX) {
         player->deathType = PLAYER_DEATH_DIE_NOSFX;
         RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
@@ -611,16 +654,17 @@ void Spikes_EditorDraw(void)
         case 0:
             self->direction = FLIP_Y * dir;
             if (self->direction)
-                type = 4;
+                type = C_BOTTOM;
             else
-                type = 1;
+                type = C_TOP;
             break;
+
         case 1:
             self->direction = dir;
             if (self->direction)
-                type = 2;
+                type = C_LEFT;
             else
-                type = 3;
+                type = C_RIGHT;
             break;
     }
 
@@ -629,8 +673,8 @@ void Spikes_EditorDraw(void)
     drawPos.y = self->position.y;
     int32 cnt = self->count >> 1;
     switch (type) {
-        case 1:
-        case 4:
+        case C_TOP:
+        case C_BOTTOM:
             drawPos.x = 0x100000 - (self->count << 19) + self->position.x;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
@@ -642,8 +686,9 @@ void Spikes_EditorDraw(void)
                 RSDK.DrawSprite(&Spikes->verticalAnimator, &drawPos, false);
             }
             break;
-        case 2:
-        case 3:
+
+        case C_LEFT:
+        case C_RIGHT:
             drawPos.y = 0x100000 - (self->count << 19) + self->position.y;
             for (; cnt; --cnt) {
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
@@ -655,6 +700,7 @@ void Spikes_EditorDraw(void)
                 RSDK.DrawSprite(&Spikes->horizontalAnimator, &drawPos, false);
             }
             break;
+
         default: break;
     }
 }
@@ -662,6 +708,7 @@ void Spikes_EditorDraw(void)
 void Spikes_EditorLoad(void)
 {
     Spikes->stateDraw = Spikes_Draw_Stage;
+
     if (RSDK.CheckStageFolder("FBZ")) {
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
@@ -672,6 +719,7 @@ void Spikes_EditorLoad(void)
         Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
         Spikes->stateDraw = Spikes_Draw_Global;
     }
+
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->verticalAnimator, true, 0);
     RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->horizontalAnimator, true, 0);
 

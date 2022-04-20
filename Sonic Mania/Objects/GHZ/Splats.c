@@ -183,7 +183,7 @@ void Splats_State_BounceAround(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
-    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x100000, true)) {
+    if (self->velocity.y > 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, 0, 0, 0x100000, true)) {
         if (self->bounceCount && ++self->activeCount >= self->bounceCount) {
             self->activeCount = 0;
             self->direction ^= FLIP_X;
@@ -275,7 +275,7 @@ void Splats_State_JumpOutOfJar(void)
     if (self->velocity.y > 0) {
         self->mainAnimator.loopIndex  = 4;
         self->mainAnimator.frameCount = 5;
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x120000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, 0, 0, 0x120000, true)) {
             RSDK.PlaySfx(Splats->sfxSplatsLand, false, 255);
             EntitySplats *splat = CREATE_ENTITY(Splats, intToVoid(SPLATS_SPLAT), self->position.x, self->position.y);
             splat->direction    = self->direction;
@@ -298,7 +298,7 @@ void Splats_State_HandleBouncing(void)
     if (self->velocity.y > 0) {
         self->mainAnimator.loopIndex  = 4;
         self->mainAnimator.frameCount = 5;
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x120000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, 0, 0, 0, 0x120000, true)) {
             RSDK.PlaySfx(Splats->sfxSplatsLand, false, 0xFF);
             if (self->bounceCount) {
                 if (++self->activeCount < self->bounceCount) {

@@ -12,6 +12,7 @@ ObjectItemBox *ItemBox;
 void ItemBox_Update(void)
 {
     RSDK_THIS(ItemBox);
+
     StateMachine_Run(self->state);
 
 #if RETRO_USE_PLUS
@@ -43,6 +44,7 @@ void ItemBox_LateUpdate(void) {}
 
 void ItemBox_StaticUpdate(void)
 {
+    // Handle The Contents outline scrolling
     if (!(Zone->timer & 3)) {
         RSDK.RotatePalette(0, 60, 63, true);
         RSDK.RotatePalette(1, 60, 63, true);
@@ -52,6 +54,7 @@ void ItemBox_StaticUpdate(void)
 void ItemBox_Draw(void)
 {
     RSDK_THIS(ItemBox);
+
     if (!self->hidden) {
         if (self->isContents) {
             if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
@@ -83,8 +86,10 @@ void ItemBox_Draw(void)
 void ItemBox_Create(void *data)
 {
     RSDK_THIS(ItemBox);
+
     if (data)
         self->type = voidToInt(data);
+
     if (self->state != ItemBox_State_Broken) {
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &self->boxAnimator, true, 0);
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->contentsAnimator, true, 0);
@@ -122,6 +127,7 @@ void ItemBox_Create(void *data)
                 }
                 self->contentsAnimator.frameID = self->type;
                 break;
+
 #if RETRO_USE_PLUS
             case ITEMBOX_SWAP:
             case ITEMBOX_RANDOM:
@@ -131,6 +137,7 @@ void ItemBox_Create(void *data)
                     destroyEntity(self);
 #endif
                 break;
+
             default: self->contentsAnimator.frameID = self->type; break;
         }
     }
@@ -170,15 +177,17 @@ void ItemBox_Create(void *data)
 
 void ItemBox_StageLoad(void)
 {
-    ItemBox->aniFrames           = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
-    ItemBox->hitbox.left         = -15;
-    ItemBox->hitbox.top          = -16;
-    ItemBox->hitbox.right        = 15;
-    ItemBox->hitbox.bottom       = 16;
-    ItemBox->hiddenHitbox.left   = -15;
-    ItemBox->hiddenHitbox.top    = -24;
-    ItemBox->hiddenHitbox.right  = 15;
-    ItemBox->hiddenHitbox.bottom = 16;
+    ItemBox->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+
+    ItemBox->hitboxItemBox.left   = -15;
+    ItemBox->hitboxItemBox.top    = -16;
+    ItemBox->hitboxItemBox.right  = 15;
+    ItemBox->hitboxItemBox.bottom = 16;
+
+    ItemBox->hitboxHidden.left   = -15;
+    ItemBox->hitboxHidden.top    = -24;
+    ItemBox->hitboxHidden.right  = 15;
+    ItemBox->hitboxHidden.bottom = 16;
 
     DEBUGMODE_ADD_OBJ(ItemBox);
 
@@ -203,7 +212,9 @@ void ItemBox_StageLoad(void)
 void ItemBox_DebugDraw(void)
 {
     RSDK_THIS(ItemBox);
+
     DebugMode->subtypeCount = ITEMBOX_COUNT;
+
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 
@@ -225,24 +236,26 @@ void ItemBox_DebugSpawn(void)
 void ItemBox_State_Broken(void)
 {
     RSDK_THIS(ItemBox);
+
     if (LRZConvItem)
         LRZConvItem_HandleLRZConvPhys(self);
+
     ItemBox_HandleFallingCollision();
 }
 void ItemBox_State_ContentsShown(void)
 {
     RSDK_THIS(ItemBox);
-    if (LRZConvItem && self->lrzConvPhys) {
+
+    if (LRZConvItem && self->lrzConvPhys)
         LRZConvItem_HandleLRZConvPhys(self);
-    }
-    else {
+    else
         ItemBox_HandleFallingCollision();
-    }
 
     if (self->contentsSpeed < 0) {
         self->contentsPos.y += self->contentsSpeed;
         self->contentsSpeed += 0x1800;
     }
+
     if (self->contentsSpeed >= 0) {
         self->contentsSpeed = 0;
         ItemBox_GivePowerup();
@@ -254,12 +267,12 @@ void ItemBox_State_ContentsShown(void)
 void ItemBox_State_ContentsDisappear(void)
 {
     RSDK_THIS(ItemBox);
-    if (LRZConvItem && self->lrzConvPhys) {
+
+    if (LRZConvItem && self->lrzConvPhys)
         LRZConvItem_HandleLRZConvPhys(self);
-    }
-    else {
+    else
         ItemBox_HandleFallingCollision();
-    }
+
     RSDK.ProcessAnimation(&self->contentsAnimator);
 
     if (self->contentsAnimator.frameID == self->contentsAnimator.frameCount - 1) {
@@ -271,15 +284,19 @@ void ItemBox_State_ContentsDisappear(void)
 void ItemBox_State_Normal(void)
 {
     RSDK_THIS(ItemBox);
+
     self->contentsPos.x = self->position.x;
 
     if (self->direction == FLIP_NONE)
         self->contentsPos.y = self->position.y - 0x30000;
     else
         self->contentsPos.y = self->position.y + 0x30000;
+
     ItemBox_HandleObjectCollisions();
     ItemBox_CheckHit();
+
     RSDK.ProcessAnimation(&self->overlayAnimator);
+
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
@@ -293,6 +310,7 @@ void ItemBox_State_Normal(void)
     }
     else {
         RSDK.ProcessAnimation(&self->debrisAnimator);
+
         if (!self->debrisAnimator.frameID) {
             self->timer                        = RSDK.Rand(1, 15);
             self->debrisAnimator.frameDuration = RSDK.Rand(1, 32);
@@ -302,6 +320,7 @@ void ItemBox_State_Normal(void)
 void ItemBox_State_Falling(void)
 {
     RSDK_THIS(ItemBox);
+
     if (ItemBox_HandleFallingCollision())
         self->state = ItemBox_State_Normal;
 
@@ -313,6 +332,7 @@ void ItemBox_State_Falling(void)
 
     ItemBox_CheckHit();
     RSDK.ProcessAnimation(&self->overlayAnimator);
+
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
@@ -344,7 +364,9 @@ void ItemBox_State_Conveyor(void)
         self->contentsPos.y = self->position.y + 0x30000;
 
     ItemBox_CheckHit();
+
     RSDK.ProcessAnimation(&self->overlayAnimator);
+
 #if RETRO_USE_PLUS
     if (self->type == ITEMBOX_STOCK) {
         RSDK.ProcessAnimation(&self->contentsAnimator);
@@ -368,6 +390,7 @@ void ItemBox_State_Conveyor(void)
 void ItemBox_CheckHit(void)
 {
     RSDK_THIS(ItemBox);
+
     foreach_active(Player, player)
     {
         if (self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) {
@@ -389,7 +412,7 @@ void ItemBox_CheckHit(void)
                 self->position.y -= self->moveOffset.y;
                 int32 px           = player->position.x;
                 int32 py           = player->position.y;
-                uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitbox);
+                uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
                 player->position.x = px;
                 player->position.y = py;
                 self->position.x += self->moveOffset.x;
@@ -397,8 +420,10 @@ void ItemBox_CheckHit(void)
 
                 if (side == C_BOTTOM) {
                     self->active = ACTIVE_ALWAYS;
+
                     if (!self->lrzConvPhys)
                         self->state = ItemBox_State_Falling;
+
                     self->velocity.y = -0x20000;
                     if (!player->onGround)
                         player->velocity.y = 0x20000;
@@ -408,7 +433,7 @@ void ItemBox_CheckHit(void)
                     player->position.y += self->moveOffset.y;
                 }
 
-                if (Player_CheckCollisionBox(player, self, &ItemBox->hitbox) == C_BOTTOM) {
+                if (Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox) == C_BOTTOM) {
                     if (player->onGround) {
                         player->position.x = px;
                         player->position.y = py;
@@ -432,7 +457,7 @@ void ItemBox_CheckHit(void)
                     self->position.y -= self->moveOffset.y;
                     int32 px           = player->position.x;
                     int32 py           = player->position.y;
-                    uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitbox);
+                    uint8 side         = Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox);
                     player->position.x = px;
                     player->position.y = py;
                     self->position.x += self->moveOffset.x;
@@ -451,14 +476,14 @@ void ItemBox_CheckHit(void)
                         player->position.y += self->moveOffset.y;
                     }
 
-                    if (Player_CheckCollisionBox(player, self, &ItemBox->hitbox) == C_BOTTOM) {
+                    if (Player_CheckCollisionBox(player, self, &ItemBox->hitboxItemBox) == C_BOTTOM) {
                         if (player->onGround) {
                             player->position.x = px;
                             player->position.y = py;
                         }
                     }
                 }
-                else if (Player_CheckBadnikTouch(player, self, &ItemBox->hitbox)) {
+                else if (Player_CheckBadnikTouch(player, self, &ItemBox->hitboxItemBox)) {
                     ItemBox_Break(self, player);
                     foreach_break;
                 }
@@ -469,6 +494,7 @@ void ItemBox_CheckHit(void)
 void ItemBox_GivePowerup(void)
 {
     RSDK_THIS(ItemBox);
+
     EntityPlayer *player = (EntityPlayer *)self->storedEntity;
 
     switch (self->type) {
@@ -476,13 +502,13 @@ void ItemBox_GivePowerup(void)
 
         case ITEMBOX_BLUESHIELD:
             player->shield = SHIELD_BLUE;
-            Player_ApplyShieldEffect(player);
+            Player_ApplyShield(player);
             RSDK.PlaySfx(Shield->sfxBlueShield, false, 255);
             break;
 
         case ITEMBOX_BUBBLESHIELD:
             player->shield = SHIELD_BUBBLE;
-            Player_ApplyShieldEffect(player);
+            Player_ApplyShield(player);
             RSDK.PlaySfx(Shield->sfxBubbleShield, false, 255);
             player->drownTimer = 0;
             Music_EndQueuedTrack(TRACK_DROWNING, false);
@@ -490,13 +516,13 @@ void ItemBox_GivePowerup(void)
 
         case ITEMBOX_FIRESHIELD:
             player->shield = SHIELD_FIRE;
-            Player_ApplyShieldEffect(player);
+            Player_ApplyShield(player);
             RSDK.PlaySfx(Shield->sfxFireShield, false, 255);
             break;
 
         case ITEMBOX_LIGHTNINGSHIELD:
             player->shield = SHIELD_LIGHTNING;
-            Player_ApplyShieldEffect(player);
+            Player_ApplyShield(player);
             RSDK.PlaySfx(Shield->sfxLightningShield, false, 255);
             break;
 
@@ -529,7 +555,8 @@ void ItemBox_GivePowerup(void)
             Player_GiveLife(player);
             break;
 
-        case ITEMBOX_EGGMAN: Player_CheckHit(player, self); return;
+        case ITEMBOX_EGGMAN: Player_CheckHit(player, self); break;
+
         case ITEMBOX_HYPERRING:
             RSDK.PlaySfx(ItemBox->sfxHyperRing, false, 255);
             player->hyperRing = true;
@@ -573,6 +600,7 @@ void ItemBox_GivePowerup(void)
         case ITEMBOX_RANDOM: {
             uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
             uint8 newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
             if (player->animator.animationID == ANI_TRANSFORM) {
                 RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
             }
@@ -643,6 +671,7 @@ void ItemBox_GivePowerup(void)
                                     }
                                 }
                             }
+
                             if (inc)
                                 ++p;
                         }
@@ -725,8 +754,8 @@ void ItemBox_GivePowerup(void)
                                     player2->state            = Player_State_JumpIn;
                                     player2->abilityValues[0] = ((ScreenInfo->position.y + ScreenInfo->height + 16) << 16) - player->position.y;
                                     player2->drawFX |= FX_SCALE;
-                                    player2->scale.x = 1024;
-                                    player2->scale.y = 1024;
+                                    player2->scale.x = 0x400;
+                                    player2->scale.y = 0x400;
                                     int32 spd        = player2->abilityValues[0] / -12;
                                     if (spd >= -0x68000 || spd > -0xE0000) {
                                         if (spd < -0x68000)
@@ -750,7 +779,7 @@ void ItemBox_GivePowerup(void)
                                 player2->active           = ACTIVE_NORMAL;
                                 player2->collisionPlane   = 0;
                                 player2->collisionMode    = CMODE_FLOOR;
-                                player2->collisionLayers  = Zone->fgLayers;
+                                player2->collisionLayers  = Zone->collisionLayers;
                                 player2->controllerID     = CONT_P2;
                                 player2->sidekick         = true;
                                 player2->drawFX           = FX_FLIP | FX_ROTATE;
@@ -759,6 +788,7 @@ void ItemBox_GivePowerup(void)
                             }
                         }
                     }
+
                     RSDK.PlaySfx(ItemBox->sfxRevovery, false, 255);
                 }
                 else {
@@ -770,6 +800,7 @@ void ItemBox_GivePowerup(void)
                         case 4: Player_ChangeCharacter(player, ID_RAY); break;
                         default: break;
                     }
+
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), player->position.x, player->position.y);
                     explosion->drawOrder       = Zone->objectDrawHigh;
                     RSDK.PlaySfx(ItemBox->sfxPowerDown, false, 255);
@@ -798,20 +829,22 @@ void ItemBox_GivePowerup(void)
         default: break;
     }
 }
-void ItemBox_Break(EntityItemBox *itemBox, void *p)
+void ItemBox_Break(EntityItemBox *itemBox, EntityPlayer *player)
 {
-    EntityPlayer *player = (EntityPlayer *)p;
     if (globals->gameMode == MODE_COMPETITION) {
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         ++session->items[RSDK.GetEntityID(player)];
     }
+
     RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
+
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
         player->velocity.y -= 0x10000;
     else
 #endif
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
+
     itemBox->storedEntity  = (Entity *)player;
     itemBox->alpha         = 0x100;
     itemBox->contentsSpeed = -0x30000;
@@ -831,9 +864,9 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     for (int32 d = 0; d < 6; ++d) {
         EntityDebris *debris =
             CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000), itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
-        debris->state      = Debris_State_Fall;
-        debris->gravityStrength    = 0x4000;
-        debris->velocity.x = RSDK.Rand(0, 0x20000);
+        debris->state           = Debris_State_Fall;
+        debris->gravityStrength = 0x4000;
+        debris->velocity.x      = RSDK.Rand(0, 0x20000);
         if (debris->position.x < itemBox->position.x)
             debris->velocity.x = -debris->velocity.x;
         debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
@@ -844,6 +877,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     }
 
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
+
     itemBox->active = ACTIVE_NORMAL;
     if (itemBox->type == ITEMBOX_RANDOM) {
 #if RETRO_USE_PLUS
@@ -896,6 +930,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 bool32 ItemBox_HandleFallingCollision(void)
 {
     RSDK_THIS(ItemBox);
+
     if (self->direction)
         return false;
 
@@ -907,15 +942,17 @@ bool32 ItemBox_HandleFallingCollision(void)
 #else
         self->groundVel = 0;
 #endif
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
+
     ItemBox_HandleObjectCollisions();
 
     if (self->velocity.y >= 0
         && (self->direction == FLIP_Y && self->boxAnimator.animationID == 1
-                ? RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true)
-                : RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true))) {
+                ? RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)
+                : RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true))) {
         self->velocity.y = 0;
         if (self->state != ItemBox_State_ContentsDisappear && self->state != ItemBox_State_ContentsShown)
             self->active = ACTIVE_BOUNDS;
@@ -931,40 +968,42 @@ bool32 ItemBox_HandleFallingCollision(void)
 }
 bool32 ItemBox_HandlePlatformCollision(void *p)
 {
-    EntityPlatform *platform = (EntityPlatform *)p;
     RSDK_THIS(ItemBox);
+    EntityPlatform *platform = (EntityPlatform *)p;
 
     bool32 collided = false;
     if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
-        if (platform->collision) {
-            if (platform->collision != 1) {
-                if (platform->collision != 2 || !RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &ItemBox->hitbox)) {
-                    platform->position.x = platform->centerPos.x;
-                    platform->position.y = platform->centerPos.y;
-                    return false;
-                }
-                if (self->collisionLayers & Zone->moveID) {
+
+        switch (platform->collision) {
+            case PLATFORM_C_SOLID_TOP:
+                collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &ItemBox->hitboxItemBox, 1);
+                break;
+            case PLATFORM_C_SOLID_ALL:
+                collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &ItemBox->hitboxItemBox, 1);
+                break;
+
+            case PLATFORM_C_USE_TILES:
+                if (self->collisionLayers & Zone->moveMask) {
                     TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
                     move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                     move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                 }
+
                 if (self->state == ItemBox_State_Normal || self->velocity.y > 0x3800) {
                     platform->position.x = platform->centerPos.x;
                     platform->position.y = platform->centerPos.y;
                     return false;
                 }
-                else {
-                }
+
                 collided = true;
-            }
-            else {
-                collided = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &ItemBox->hitbox, 1);
-            }
-        }
-        else {
-            collided = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &ItemBox->hitbox, 1);
+                break;
+
+            default:
+                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &ItemBox->hitboxItemBox))
+                    collided = true;
+                break;
         }
 
         if (!collided) {
@@ -978,20 +1017,26 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
 #else
         self->groundVel = RSDK.GetEntityID(platform);
 #endif
-        self->scale.x       = (self->position.x - platform->drawPos.x) & 0xFFFF0000;
-        self->scale.y       = (self->position.y - platform->drawPos.y) & 0xFFFF0000;
+
+        self->scale.x = (self->position.x - platform->drawPos.x) & 0xFFFF0000;
+        self->scale.y = (self->position.y - platform->drawPos.y) & 0xFFFF0000;
+
         self->updateRange.x = platform->updateRange.x;
         self->updateRange.y = platform->updateRange.y;
+
         if (self->state == ItemBox_State_Falling)
             self->state = ItemBox_State_Normal;
+
         if (platform->state == Platform_State_Collapse && !platform->timer)
             platform->timer = 30;
-        platform->stood      = true;
+
         self->velocity.y     = 0;
+        platform->stood      = true;
         platform->position.x = platform->centerPos.x;
         platform->position.y = platform->centerPos.y;
         return collided;
     }
+
     return false;
 }
 void ItemBox_HandleObjectCollisions(void)
@@ -1008,6 +1053,7 @@ void ItemBox_HandleObjectCollisions(void)
         if (self->groundVel) {
             EntityPlatform *platform = RSDK_GET_ENTITY(self->groundVel, Platform);
 #endif
+
             if (platform->objectID == Platform->objectID) {
                 platform->stood    = true;
                 self->position.x   = self->scale.x + platform->drawPos.x;
@@ -1017,7 +1063,7 @@ void ItemBox_HandleObjectCollisions(void)
                 self->contentsPos.x += platform->collisionOffset.x;
                 self->contentsPos.y += platform->collisionOffset.y;
                 self->velocity.y = 0;
-                platformCollided             = true;
+                platformCollided = true;
             }
         }
         else {
@@ -1030,20 +1076,18 @@ void ItemBox_HandleObjectCollisions(void)
     }
 
 #if RETRO_USE_PLUS
-    if (TilePlatform) {
-        if (self->parent) {
-            EntityTilePlatform *tilePlatform = (EntityTilePlatform *)self->parent;
-            if (tilePlatform->objectID == TilePlatform->objectID) {
-                platformCollided                = true;
-                tilePlatform->stood = true;
-                self->position.x    = self->scale.x + tilePlatform->drawPos.x;
-                self->position.y    = (self->scale.y + tilePlatform->drawPos.y) & 0xFFFF0000;
-                self->moveOffset.x  = tilePlatform->collisionOffset.x & 0xFFFF0000;
-                self->moveOffset.y  = tilePlatform->collisionOffset.y & 0xFFFF0000;
-                self->contentsPos.x += tilePlatform->collisionOffset.x;
-                self->contentsPos.y += tilePlatform->collisionOffset.y;
-                self->velocity.y = 0;
-            }
+    if (TilePlatform && self->parent) {
+        EntityTilePlatform *tilePlatform = (EntityTilePlatform *)self->parent;
+        if (tilePlatform->objectID == TilePlatform->objectID) {
+            platformCollided    = true;
+            tilePlatform->stood = true;
+            self->position.x    = self->scale.x + tilePlatform->drawPos.x;
+            self->position.y    = (self->scale.y + tilePlatform->drawPos.y) & 0xFFFF0000;
+            self->moveOffset.x  = tilePlatform->collisionOffset.x & 0xFFFF0000;
+            self->moveOffset.y  = tilePlatform->collisionOffset.y & 0xFFFF0000;
+            self->contentsPos.x += tilePlatform->collisionOffset.x;
+            self->contentsPos.y += tilePlatform->collisionOffset.y;
+            self->velocity.y = 0;
         }
     }
 #endif
@@ -1099,17 +1143,20 @@ void ItemBox_HandleObjectCollisions(void)
                 ice->position.x -= ice->playerMoveOffset.x;
                 ice->position.y -= ice->playerMoveOffset.y;
 
-                if (RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &ItemBox->hitbox, true)) {
+                if (RSDK.CheckObjectCollisionBox(ice, &ice->hitboxBlock, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
                     self->position.x += ice->playerMoveOffset.x;
                     self->position.y += ice->playerMoveOffset.y;
                     self->position.y = self->position.y >> 0x10 << 0x10;
+
                     self->contentsPos.x += ice->playerMoveOffset.x;
                     self->contentsPos.y += ice->playerMoveOffset.y;
                     self->contentsPos.y = self->contentsPos.y >> 0x10 << 0x10;
-                    self->moveOffset.x  = ice->playerMoveOffset.x;
-                    self->moveOffset.y  = ice->playerMoveOffset.y;
-                    self->velocity.y    = 0;
+
+                    self->moveOffset.x = ice->playerMoveOffset.x;
+                    self->moveOffset.y = ice->playerMoveOffset.y;
+                    self->velocity.y   = 0;
                 }
+
                 ice->position.x = storeX;
                 ice->position.y = storeY;
             }
@@ -1120,9 +1167,10 @@ void ItemBox_HandleObjectCollisions(void)
     {
         int32 storeX = spikes->position.x;
         int32 storeY = spikes->position.y;
+
         spikes->position.x -= spikes->collisionOffset.x;
         spikes->position.y -= spikes->collisionOffset.y;
-        if (RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, self, &ItemBox->hitbox, true)) {
+        if (RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
             self->position.x += spikes->collisionOffset.x;
             self->position.y += spikes->collisionOffset.y;
             self->position.y &= 0xFFFF0000;
@@ -1135,6 +1183,7 @@ void ItemBox_HandleObjectCollisions(void)
             self->moveOffset.y = spikes->collisionOffset.y;
             self->velocity.y   = 0;
         }
+
         spikes->position.x = storeX;
         spikes->position.y = storeY;
     }
@@ -1146,12 +1195,14 @@ void ItemBox_HandleObjectCollisions(void)
                 if (itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling) {
                     int32 storeX = itemBox->position.x;
                     int32 storeY = itemBox->position.y;
+
                     itemBox->position.x -= itemBox->moveOffset.x;
                     itemBox->position.y -= itemBox->moveOffset.y;
-                    if (RSDK.CheckObjectCollisionBox(itemBox, &ItemBox->hitbox, self, &ItemBox->hitbox, true) == C_TOP) {
+                    if (RSDK.CheckObjectCollisionBox(itemBox, &ItemBox->hitboxItemBox, self, &ItemBox->hitboxItemBox, true) == C_TOP) {
                         self->position.x += itemBox->moveOffset.x;
                         self->position.y += itemBox->moveOffset.y;
                         self->position.y = self->position.y >> 0x10 << 0x10;
+
                         self->contentsPos.x += itemBox->moveOffset.x;
                         self->contentsPos.y += itemBox->moveOffset.y;
                         self->contentsPos.y = self->contentsPos.y >> 0x10 << 0x10;
@@ -1160,6 +1211,7 @@ void ItemBox_HandleObjectCollisions(void)
                         self->moveOffset.y = itemBox->moveOffset.y;
                         self->velocity.y   = 0;
                     }
+
                     itemBox->position.x = storeX;
                     itemBox->position.y = storeY;
                 }
@@ -1172,7 +1224,8 @@ void ItemBox_HandleObjectCollisions(void)
 void ItemBox_EditorDraw(void)
 {
     RSDK_THIS(ItemBox);
-    int dir = self->direction;
+
+    int32 dir = self->direction;
     self->direction *= FLIP_Y;
 
     self->contentsPos.x = self->position.x;

@@ -12,6 +12,7 @@ ObjectTimeAttackGate *TimeAttackGate;
 void TimeAttackGate_Update(void)
 {
     RSDK_THIS(TimeAttackGate);
+
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
         StateMachine_Run(self->state);
     }
@@ -23,9 +24,9 @@ void TimeAttackGate_StaticUpdate(void)
 {
     if (globals->gameMode == MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (TimeAttackGate->isFinished || !TimeAttackGate->started) {
+
+        if (TimeAttackGate->isFinished || !TimeAttackGate->started)
             player->drownTimer = 0;
-        }
 
         if (TimeAttackGate->suppressedTitlecard) {
             EntityTimeAttackGate *entity        = CREATE_ENTITY(TimeAttackGate, intToVoid(true), 0, 0);
@@ -33,6 +34,7 @@ void TimeAttackGate_StaticUpdate(void)
             entity->fadeTimer                   = 532;
             TimeAttackGate->suppressedTitlecard = false;
         }
+
         if (DebugMode->debugActive)
             TimeAttackGate->disableRecords = true;
     }
@@ -41,15 +43,18 @@ void TimeAttackGate_StaticUpdate(void)
 void TimeAttackGate_Draw(void)
 {
     RSDK_THIS(TimeAttackGate);
+
     StateMachine_Run(self->stateDraw);
 }
 
 void TimeAttackGate_Create(void *data)
 {
     RSDK_THIS(TimeAttackGate);
+
     if (SceneInfo->inEditor || globals->gameMode == MODE_TIMEATTACK) {
         RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 0, &self->baseAnimator, true, 0);
         RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 1, &self->topAnimator, true, 0);
+
         self->visible = true;
         if (self->finishLine)
             RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 4, &self->finAnimator, true, 0);
@@ -107,16 +112,21 @@ void TimeAttackGate_Create(void *data)
 void TimeAttackGate_StageLoad(void)
 {
     TimeAttackGate->teleportChannel = -1;
-    TimeAttackGate->aniFrames       = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
-    TimeAttackGate->hitbox.left     = -8;
-    TimeAttackGate->hitbox.top      = -44;
-    TimeAttackGate->hitbox.right    = 8;
-    TimeAttackGate->hitbox.bottom   = 20;
-    TimeAttackGate->sfxSignpost     = RSDK.GetSfx("Global/SignPost.wav");
-    TimeAttackGate->sfxTeleport     = RSDK.GetSfx("Global/Teleport.wav");
-    TimeAttackGate->started         = false;
-    TimeAttackGate->disableRecords  = false;
-    SceneInfo->timeEnabled          = false;
+
+    TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+
+    TimeAttackGate->hitboxGate.left   = -8;
+    TimeAttackGate->hitboxGate.top    = -44;
+    TimeAttackGate->hitboxGate.right  = 8;
+    TimeAttackGate->hitboxGate.bottom = 20;
+
+    TimeAttackGate->sfxSignpost = RSDK.GetSfx("Global/SignPost.wav");
+    TimeAttackGate->sfxTeleport = RSDK.GetSfx("Global/Teleport.wav");
+
+    TimeAttackGate->started        = false;
+    TimeAttackGate->disableRecords = false;
+    SceneInfo->timeEnabled         = false;
+
     if (globals->suppressTitlecard)
         TimeAttackGate->suppressedTitlecard = true;
 }
@@ -125,8 +135,8 @@ void TimeAttackGate_HandleSpin(void)
 {
     RSDK_THIS(TimeAttackGate);
 
-    int32 top    = ((TimeAttackGate->hitbox.top - self->extendTop) << 16) + self->position.y;
-    int32 bottom = ((TimeAttackGate->hitbox.bottom + self->extendBottom) << 16) + self->position.y;
+    int32 top    = self->position.y + ((TimeAttackGate->hitboxGate.top - self->extendTop) << 16);
+    int32 bottom = self->position.y + ((TimeAttackGate->hitboxGate.bottom + self->extendBottom) << 16);
 
     foreach_active(Player, player)
     {
@@ -139,11 +149,7 @@ void TimeAttackGate_HandleSpin(void)
                 foreach_break;
             }
 
-            int32 xVel = 0;
-            if (player->onGround)
-                xVel = player->groundVel;
-            else
-                xVel = player->velocity.x;
+            int32 xVel = player->onGround ? player->groundVel : player->velocity.x;
             if (xVel >> 15
                 && MathHelpers_CheckPositionOverlap(player->position.x, player->position.y, self->playerPos.x, self->playerPos.y, self->position.x,
                                                     bottom, self->position.x, top)) {
@@ -153,30 +159,36 @@ void TimeAttackGate_HandleSpin(void)
 
                 if (abs(spinSpeed) > abs(self->spinSpeed))
                     self->spinSpeed = spinSpeed;
+
                 self->spinTimer = 0;
             }
         }
     }
 
-    self->angle += self->spinSpeed;
     bool32 finishedSpinning = false;
+
+    self->angle += self->spinSpeed;
     if (self->spinSpeed <= 0) {
-        if (self->angle <= -512) {
+        if (self->angle <= -0x200) {
             ++self->spinTimer;
-            self->angle += 512;
+            self->angle += 0x200;
+
             self->spinSpeed += 4;
             if (self->spinSpeed > -2)
                 self->spinSpeed = -2;
+
             finishedSpinning = self->spinSpeed == -2;
         }
     }
     else {
-        if (self->angle >= 512) {
+        if (self->angle >= 0x200) {
             ++self->spinTimer;
-            self->angle -= 512;
+            self->angle -= 0x200;
+
             self->spinSpeed -= 4;
             if (self->spinSpeed < 2)
                 self->spinSpeed = 2;
+
             finishedSpinning = self->spinSpeed == 2;
         }
     }
@@ -190,9 +202,10 @@ void TimeAttackGate_HandleSpin(void)
 void TimeAttackGate_HandleStart(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int32 top             = ((TimeAttackGate->hitbox.top - self->extendTop) << 16) + self->position.y;
-    int32 bottom          = ((TimeAttackGate->hitbox.bottom + self->extendBottom) << 16) + self->position.y;
+
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    int32 top             = ((TimeAttackGate->hitboxGate.top - self->extendTop) << 16) + self->position.y;
+    int32 bottom          = ((TimeAttackGate->hitboxGate.bottom + self->extendBottom) << 16) + self->position.y;
 
     if (MathHelpers_CheckPositionOverlap(player1->position.x, player1->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
                                          self->position.x, top)) {
@@ -200,12 +213,15 @@ void TimeAttackGate_HandleStart(void)
         if (!self->finishLine) {
             if (!TimeAttackGate->started) {
                 RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
-                TimeAttackGate->playerPtr       = player1;
-                TimeAttackGate->started         = true;
-                SceneInfo->timeEnabled          = true;
+
+                TimeAttackGate->triggerPlayer = player1;
+                TimeAttackGate->started       = true;
+                SceneInfo->timeEnabled        = true;
+
                 EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(true), self->position.x, self->position.y);
-                TimeAttackGate->activeEntity    = (Entity *)restarter;
+                TimeAttackGate->restartManager  = restarter;
                 restarter->isPermanent          = true;
+
 #if RETRO_USE_PLUS
                 StateMachine_Run(TimeAttackGate->startCB);
 #endif
@@ -214,15 +230,19 @@ void TimeAttackGate_HandleStart(void)
         else if (TimeAttackGate->started) {
             Music_FadeOut(0.025);
             Announcer_AnnounceGoal(0);
+
             RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
-            TimeAttackGate->playerPtr = NULL;
-            TimeAttackGate->started   = false;
-            SceneInfo->timeEnabled    = false;
+            TimeAttackGate->triggerPlayer = NULL;
+            TimeAttackGate->started       = false;
+            SceneInfo->timeEnabled        = false;
+
 #if RETRO_USE_PLUS
             StateMachine_Run(TimeAttackGate->endCB);
 #endif
+
             if (!TimeAttackGate->disableRecords)
                 ActClear->bufferMoveEnabled = true;
+
 #if RETRO_USE_PLUS
             TimeAttackGate_AddRecord();
 #endif
@@ -239,13 +259,14 @@ void TimeAttackGate_AddRecord(void)
     if (!TimeAttackGate->disableRecords) {
         if (ActClear)
             ActClear->isSavingGame = true;
+
         if (UIWaitSpinner)
             UIWaitSpinner_StartWait();
 
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         int32 characterID      = param->characterID;
         int32 zoneID           = param->zoneID;
-        int32 score            = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
+        int32 score            = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
         int32 act              = param->actID;
         bool32 encore          = SceneInfo->filter == (FILTER_BOTH | FILTER_ENCORE);
 
@@ -253,21 +274,23 @@ void TimeAttackGate_AddRecord(void)
         TimeAttackData_AddLeaderboardEntry(zoneID, act, characterID, encore, score);
     }
 }
-#endif
 
 void TimeAttackGate_LeaderboardCB(bool32 success)
 {
     if (ActClear)
         ActClear->isSavingGame = false;
+
     if (UIWaitSpinner)
         UIWaitSpinner_FinishWait();
 }
+#endif
 
 void TimeAttackGate_CheckTouch(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int32 x = self->boundsOffset.x + self->position.x;
-    int32 y = self->boundsOffset.y + self->position.y;
+
+    int32 x = self->position.x + self->boundsOffset.x;
+    int32 y = self->position.y + self->boundsOffset.y;
 
     Hitbox hitbox;
     hitbox.left   = -(self->boundsSize.x >> 17);
@@ -275,28 +298,29 @@ void TimeAttackGate_CheckTouch(void)
     hitbox.top    = -(self->boundsSize.y >> 17);
     hitbox.bottom = self->boundsSize.y >> 17;
 
-    for (int32 i = 0; i < Player->playerCount; ++i) {
-        EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
+    for (int32 p = 0; p < Player->playerCount; ++p) {
+        EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
-        bool32 active = false;
+        bool32 passedGate = false;
         if (self->boundsSize.x <= 0 || self->boundsSize.y <= 0) {
-            active = self->position.x - player->position.x < 0x1000000;
+            passedGate = self->position.x - player->position.x < 0x1000000;
         }
         else {
             int32 storeX     = self->position.x;
             int32 storeY     = self->position.y;
             self->position.x = x;
             self->position.y = y;
-            active           = Player_CheckCollisionTouch(player, self, &hitbox);
+            passedGate       = Player_CheckCollisionTouch(player, self, &hitbox);
             self->position.x = storeX;
             self->position.y = storeY;
         }
 
-        if (active) {
-            Zone->cameraBoundsL[i] = (self->position.x >> 16) - ScreenInfo[i].centerX;
-            Zone->cameraBoundsR[i] = (self->position.x >> 16) + ScreenInfo[i].centerX;
+        if (passedGate) {
+            Zone->cameraBoundsL[p] = (self->position.x >> 16) - ScreenInfo[p].centerX;
+            Zone->cameraBoundsR[p] = (self->position.x >> 16) + ScreenInfo[p].centerX;
+
             if (self->topBoundary)
-                Zone->cameraBoundsT[i] = (self->position.y) - ScreenInfo[i].centerY;
+                Zone->cameraBoundsT[p] = (self->position.y) - ScreenInfo[p].centerY;
         }
     }
 }
@@ -304,11 +328,14 @@ void TimeAttackGate_CheckTouch(void)
 void TimeAttackGate_State_Gate(void)
 {
     RSDK_THIS(TimeAttackGate);
+
     TimeAttackGate_HandleSpin();
     TimeAttackGate_HandleStart();
+
     foreach_active(Player, player)
     {
         player->lives = 1;
+
         if (!player->sidekick) {
             if (!self->finishLine) {
                 if (!TimeAttackGate->started) {
@@ -330,17 +357,17 @@ void TimeAttackGate_State_Gate(void)
                     player->jumpPress  = false;
                     player->jumpHold   = false;
                 }
-                if (!self->finishLine) {
-                    if (!TimeAttackGate->started) {
-                        foreach_active(HUD, hud)
-                        {
-                            if (hud)
-                                hud->enableTimeFlash = true;
-                            foreach_break;
-                        }
+
+                if (!self->finishLine && !TimeAttackGate->started) {
+                    foreach_active(HUD, hud)
+                    {
+                        if (hud)
+                            hud->enableTimeFlash = true;
+                        foreach_break;
                     }
                 }
             }
+
             self->playerPos.x = player->position.x;
             self->playerPos.y = player->position.y;
         }
@@ -348,8 +375,10 @@ void TimeAttackGate_State_Gate(void)
 
     if (self->finishLine) {
         TimeAttackGate_CheckTouch();
+
         if (self->hasFinished) {
             TimeAttackGate->isFinished = true;
+
             if (self->timer >= 180) {
                 if (self->timer == 180) {
                     Music_PlayTrack(TRACK_ACTCLEAR);
@@ -367,57 +396,55 @@ void TimeAttackGate_State_Gate(void)
 void TimeAttackGate_State_Restarter(void)
 {
     RSDK_THIS(TimeAttackGate);
+
     if (TimeAttackGate->isFinished) {
         destroyEntity(self);
     }
     else {
-        EntityPlayer *player = TimeAttackGate->playerPtr;
+        EntityPlayer *player = TimeAttackGate->triggerPlayer;
+
         if (player) {
             if (player->state == Player_State_Die || player->state == Player_State_Drown) {
                 self->restartTimer = 0;
-                self->radius       = (720 * self->restartTimer / 35);
             }
             else {
-                if (ControllerInfo[player->controllerID].keyY.press) {
+                if (ControllerInfo[player->controllerID].keyY.press)
                     self->restartTimer = 0;
-                }
+
                 if (!ControllerInfo[player->controllerID].keyY.down) {
                     if (self->restartTimer > 0) {
                         TimeAttackGate->teleportChannel = -1;
                         RSDK.StopSfx(TimeAttackGate->sfxTeleport);
                         self->restartTimer -= 4;
                     }
+
                     if (self->restartTimer < 0)
                         self->restartTimer = 0;
-                    self->radius = (720 * self->restartTimer / 35);
                 }
                 else {
                     if (!self->restartTimer)
                         TimeAttackGate->teleportChannel = RSDK.PlaySfx(TimeAttackGate->sfxTeleport, false, 255);
 
-                    if (self->restartTimer < 35) {
+                    if (self->restartTimer == 35) {
+                        self->state                = NULL;
+                        globals->suppressTitlecard = true;
+
+                        for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
+                            if (c != Music->channelID && c != TimeAttackGate->teleportChannel)
+                                RSDK.StopChannel(c);
+                        }
+
+                        if (!Music->activeTrack)
+                            globals->suppressAutoMusic = true;
+
+                        RSDK.LoadScene();
+                    }
+                    else if (self->restartTimer < 35)
                         self->restartTimer++;
-                        self->radius = (720 * self->restartTimer / 35);
-                    }
-                    else {
-                        if (self->restartTimer != 35) {
-                            self->radius = (720 * self->restartTimer / 35);
-                        }
-                        else {
-                            self->state                = NULL;
-                            globals->suppressTitlecard = true;
-                            for (int32 i = 0; i < CHANNEL_COUNT; ++i) {
-                                if (i != Music->channelID && i != TimeAttackGate->teleportChannel) {
-                                    RSDK.StopChannel(i);
-                                }
-                            }
-                            if (!Music->activeTrack)
-                                globals->suppressAutoMusic = true;
-                            RSDK.LoadScene();
-                        }
-                    }
                 }
             }
+
+            self->radius = (720 * self->restartTimer / 35);
         }
     }
 }
@@ -425,6 +452,7 @@ void TimeAttackGate_State_Restarter(void)
 void TimeAttackGate_State_Fadeout(void)
 {
     RSDK_THIS(TimeAttackGate);
+
     if (self->fadeTimer <= 0) {
         globals->suppressTitlecard = false;
         destroyEntity(self);
@@ -480,10 +508,12 @@ void TimeAttackGate_Draw_Gate(void)
 void TimeAttackGate_Draw_Restarter(void)
 {
     RSDK_THIS(TimeAttackGate);
-    EntityPlayer *player = TimeAttackGate->playerPtr;
+
+    EntityPlayer *player = TimeAttackGate->triggerPlayer;
     if (player) {
         if (self->radius > 0)
             RSDK.DrawCircle(player->position.x, player->position.y, self->radius, 0xF0F0F0, (self->restartTimer << 8) / 35, INK_ADD, false);
+
         if (self->fadeTimer > 0)
             RSDK.FillScreen(0xFFFFFF, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
     }
@@ -569,9 +599,9 @@ void TimeAttackGate_EditorDraw(void)
 
         DrawHelpers_DrawArenaBounds(left >> 16, top >> 16, (right + 0x400000) >> 16, (bottom + 0x400000) >> 16, 1 | 2 | 4 | 8, 0xFFFF00);
 
-        Hitbox hitbox = TimeAttackGate->hitbox;
-        hitbox.top    = TimeAttackGate->hitbox.top - self->extendTop;
-        hitbox.bottom = self->extendBottom + TimeAttackGate->hitbox.bottom;
+        Hitbox hitbox = TimeAttackGate->hitboxGate;
+        hitbox.top    = TimeAttackGate->hitboxGate.top - self->extendTop;
+        hitbox.bottom = self->extendBottom + TimeAttackGate->hitboxGate.bottom;
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &hitbox, FLIP_NONE, 0xFF0000);
 
         RSDK_DRAWING_OVERLAY(false);
@@ -582,10 +612,10 @@ void TimeAttackGate_EditorLoad(void)
 {
     TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
 
-    TimeAttackGate->hitbox.left   = -8;
-    TimeAttackGate->hitbox.top    = -44;
-    TimeAttackGate->hitbox.right  = 8;
-    TimeAttackGate->hitbox.bottom = 20;
+    TimeAttackGate->hitboxGate.left   = -8;
+    TimeAttackGate->hitboxGate.top    = -44;
+    TimeAttackGate->hitboxGate.right  = 8;
+    TimeAttackGate->hitboxGate.bottom = 20;
 }
 #endif
 

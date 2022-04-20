@@ -65,7 +65,7 @@ void RisingLava_State_RiseShake(void)
     move->scrollPos += 0x8000;
     foreach_active(Player, player)
     {
-        player->collisionLayers |= Zone->moveID;
+        player->collisionLayers |= Zone->moveMask;
         player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
         player->moveLayerPosition.y = move->scrollPos;
     }
@@ -86,7 +86,7 @@ void RisingLava_State_StoppedRising(void)
 
     foreach_active(Player, player)
     {
-        player->collisionLayers |= Zone->moveID;
+        player->collisionLayers |= Zone->moveMask;
         player->moveLayerPosition.x = move->scrollInfo[0].scrollPos;
         player->moveLayerPosition.y = move->scrollPos;
     }
@@ -104,7 +104,7 @@ void RisingLava_EditorDraw(void)
 
         DrawHelpers_DrawRectOutline(self->offset.x, self->offset.y, self->size.x, self->size.y, 0xFFFF00);
 
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->offset.x, self->offset.y, 0xFFFF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->offset.x, self->offset.y, 0xFFFF00, INK_NONE, 0xFF);
 
         RSDK_DRAWING_OVERLAY(false);
     }

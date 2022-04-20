@@ -89,7 +89,7 @@ void SpiralPlatform_EditorDraw(void)
 
     if (showGizmos()) {
         DrawHelpers_DrawRectOutline(0x400000, 0x280000, 0x600000, 0x300000, 0xFFFF00);
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, 0x400000, 0x280000, 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, 0x400000, 0x280000, 0x00FF00, INK_NONE, 0xFF);
         self->active = ACTIVE_NORMAL;
     }
 }

@@ -731,7 +731,7 @@ void WeatherMobile_State_RainDrop(void)
     self->position.y += self->groundVel * RSDK.Cos256(self->angle);
     self->groundVel += 0x80;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)) {
         RSDK.SetSpriteAnimation(WeatherMobile->aniFrames, 20, &self->mainAnimator, true, 0);
         self->state = WeatherMobile_State_RainDropSplash;
     }

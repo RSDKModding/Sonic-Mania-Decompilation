@@ -12,9 +12,12 @@ ObjectExplosion *Explosion;
 void Explosion_Update(void)
 {
     RSDK_THIS(Explosion);
+
     RSDK.ProcessAnimation(&self->animator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (self->animator.frameID == self->animator.frameCount - 1)
         destroyEntity(self);
 }
@@ -26,24 +29,28 @@ void Explosion_StaticUpdate(void) {}
 void Explosion_Draw(void)
 {
     RSDK_THIS(Explosion);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Explosion_Create(void *data)
 {
     RSDK_THIS(Explosion);
+
     self->active  = ACTIVE_NORMAL;
     self->visible = true;
     if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
         self->drawOrder = Zone->objectDrawHigh;
     else
         self->drawOrder = Zone->objectDrawLow;
+
     RSDK.SetSpriteAnimation(Explosion->aniFrames, voidToInt(data), &self->animator, true, 0);
 }
 
 void Explosion_StageLoad(void)
 {
-    Explosion->aniFrames  = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
+    Explosion->aniFrames = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
+
     Explosion->sfxDestroy = RSDK.GetSfx("Global/Destroy.wav");
 }
 

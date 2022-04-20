@@ -114,7 +114,7 @@ void MagPlatform_State_Rise(void)
     int32 posY           = self->position.y;
     self->position.y = self->drawPos.y;
     self->velocity.y -= 0x3800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x40000, true))
         self->velocity.y = 0;
 
     if (self->drawPos.y <= self->centerPos.y - self->length) {
@@ -133,7 +133,7 @@ void MagPlatform_State_Fall(void)
 
     self->drawPos.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))
+    if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x40000, true))
         self->velocity.y = 0;
 
     if (self->drawPos.y >= self->centerPos.y) {

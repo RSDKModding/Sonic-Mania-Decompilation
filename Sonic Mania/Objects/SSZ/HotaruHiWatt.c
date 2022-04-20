@@ -730,7 +730,7 @@ void HotaruHiWatt_State_MiniLaser(void)
     RSDK_THIS(HotaruHiWatt);
 
     self->position.y += 0x80000;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
         if (HotaruHiWatt->spawnedLaserStrike) {
             destroyEntity(self);
         }
@@ -1100,7 +1100,7 @@ void HotaruHiWatt_StateBoss_LaserAttack_Right(void)
     int32 x = self->position.x;
     int32 y = self->position.y;
     self->position.y += 0x800000;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, 32);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, 32);
     self->laserImpactPos.x = self->position.x;
     self->laserImpactPos.y = self->position.y;
 
@@ -1132,7 +1132,7 @@ void HotaruHiWatt_StateBoss_LaserAttack_Left(void)
     int32 x = self->position.x;
     int32 y = self->position.y;
     self->position.y += 0x800000;
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, 32);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, 32);
     self->laserImpactPos.x = self->position.x;
     self->laserImpactPos.y = self->position.y;
 

@@ -336,7 +336,7 @@ void TurboTurtle_State_Walking(void)
     int32 offsets[] = { 0, 0, 0, 0, 1, 1, 0, 0 };
 
     self->position.x += (2 * (self->currentSide == 1) - 1) * (offsets[self->animator.frameID] << 16);
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2)) {
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 2)) {
         self->stepTimer = 0;
         TurboTurtle_SetupState();
     }

@@ -379,7 +379,7 @@ void HeavyShinobi_State_Slash(void)
 
     self->position.y += self->velocity.y;
     self->velocity.y += 0x2800;
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true))
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true))
         self->velocity.y = 0;
 
     if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
@@ -477,7 +477,7 @@ void HeavyShinobi_State_Jump(void)
         }
     }
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
@@ -539,7 +539,7 @@ void HeavyShinobi_State_Glitched(void)
         }
     }
 
-    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
+    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
         RSDK.GetEntityByID(SLOT_PLAYER1);
         self->velocity.x = 0;
         self->velocity.y = 0;
@@ -589,7 +589,7 @@ void HeavyShinobi_State_Destroyed(void)
         }
     }
 
-    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
+    if (self->velocity.y > 0x2800 && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2A0000, true)) {
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->direction  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
@@ -717,7 +717,7 @@ void HeavyShinobi_StateAsteron_Thrown(void)
             }
         }
 
-        if (!isStuck && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true))
+        if (!isStuck && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, true))
             isStuck = true;
 
         if (!isStuck) {

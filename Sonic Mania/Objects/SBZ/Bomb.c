@@ -150,9 +150,9 @@ void Bomb_State_Walk(void)
     else {
         bool32 groundCollided = false;
         if ((self->direction & 2)) // RWall???
-            groundCollided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, 0, -0x100000, 2);
+            groundCollided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, 0, -0x100000, 2);
         else
-            groundCollided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2);
+            groundCollided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 2);
 
         if (!groundCollided) {
             self->timer = 180;

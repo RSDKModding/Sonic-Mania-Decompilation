@@ -68,7 +68,7 @@ void PhantomMissile_GetTargetPos(void)
             self->position.x = self->targetPos.x;
             self->position.y = self->targetPos.y;
 
-            while (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 16)) {
+            while (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 16)) {
                 self->position.y += 0x100000;
             }
 

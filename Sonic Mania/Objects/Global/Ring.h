@@ -9,7 +9,7 @@ typedef enum {
     RING_TYPE_SPARKLE1,
     RING_TYPE_SPARKLE2,
     RING_TYPE_SPARKLE3,
-}RingTypes;
+} RingTypes;
 
 typedef enum {
     RING_MOVE_FIXED,
@@ -17,7 +17,7 @@ typedef enum {
     RING_MOVE_CIRCLE,
     RING_MOVE_TRACK,
     RING_MOVE_PATH,
-}RingMoveTypes;
+} RingMoveTypes;
 
 // Object Class
 struct ObjectRing {
@@ -55,7 +55,7 @@ void Ring_Update(void);
 void Ring_LateUpdate(void);
 void Ring_StaticUpdate(void);
 void Ring_Draw(void);
-void Ring_Create(void* data);
+void Ring_Create(void *data);
 void Ring_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Ring_EditorDraw(void);
@@ -75,7 +75,7 @@ void Ring_FakeLoseRings(Vector2 *position, int32 ringCount, uint8 drawOrder);
 uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
 void Ring_CheckObjectCollisions(int32 offsetX, int32 offsetY);
 
-//States
+// States
 void Ring_State_Normal(void);
 void Ring_State_Move(void);
 void Ring_State_Circular(void);
@@ -87,9 +87,9 @@ void Ring_State_Big(void);
 void Ring_State_Attract(void);
 void Ring_State_Sparkle(void);
 
-//Draw States
+// Draw States
 void Ring_Draw_Normal(void);
 void Ring_Draw_Oscillating(void);
 void Ring_Draw_Sparkle(void);
 
-#endif //!OBJ_RING_H
+#endif //! OBJ_RING_H

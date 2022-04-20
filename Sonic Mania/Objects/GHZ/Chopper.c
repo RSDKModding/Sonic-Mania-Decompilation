@@ -177,14 +177,14 @@ void Chopper_State_Swim(void)
 
     bool32 hitWall = false;
     if (self->direction) {
-        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
     }
     else {
-        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
     }
 
     if (--self->timer <= 0 || hitWall) {
@@ -243,14 +243,14 @@ void Chopper_State_Charge(void)
 
     bool32 hitWall = false;
     if (self->direction) {
-        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
     }
     else {
-        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
-        hitWall |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, 0, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
+        hitWall |= RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
     }
 
     if (hitWall) {
@@ -268,10 +268,10 @@ void Chopper_State_Charge(void)
     }
     else if (self->velocity.y >= 0) {
         if (self->velocity.y > 0)
-            hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true);
+            hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true);
     }
     else {
-        hitWall = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, true);
+        hitWall = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, true);
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT)

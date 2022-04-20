@@ -256,7 +256,7 @@ void Spiny_State_Shot(void)
     self->velocity.y += 0x2000;
     if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         RSDK.ProcessAnimation(&self->animator);
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)) {
             self->inkEffect |= INK_ADD;
             self->alpha = 0x100;
             self->state = Spiny_State_ShotDisappear;

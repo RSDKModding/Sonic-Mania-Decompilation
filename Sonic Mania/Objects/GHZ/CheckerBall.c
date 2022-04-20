@@ -44,7 +44,7 @@ void CheckerBall_Create(void *data)
     self->updateRange.y   = 0x400000;
     self->onGround        = false;
     self->tileCollisions  = true;
-    self->collisionLayers = Zone->fgLayers;
+    self->collisionLayers = Zone->collisionLayers;
     self->roundedPos.x    = self->position.x;
     self->roundedPos.y    = self->position.y;
     self->collisionPlane  = 0;
@@ -542,7 +542,7 @@ void CheckerBall_HandleObjectCollisions(void)
     foreach_active(ItemBox, itemBox)
     {
         if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
-            && RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitbox, self, &CheckerBall->hitboxBall)) {
+            && RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitboxItemBox, self, &CheckerBall->hitboxBall)) {
 
             // This code is basically "ItemBox_Break"
             // "ItemBox_Break" was updated for plus stuff (mighty, swap monitors, etc)

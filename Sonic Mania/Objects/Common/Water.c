@@ -708,14 +708,14 @@ void Water_State_Bubble(void)
 
         Water_HandleBubbleMovement();
         if (self->tileCollisions) {
-            if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, false)) {
-                while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, false)
-                       && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, false)) {
+            if (!RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, false)) {
+                while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, false)
+                       && RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x100000, false)) {
                     self->position.y += 0x10000;
                 }
             }
             else {
-                while (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 0)) {
+                while (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 0)) {
                     self->position.y -= 0x10000;
                 }
             }
@@ -771,8 +771,8 @@ void Water_State_Bubble(void)
                                     self->childPtr    = player;
                                 }
 
-                                if (player->state != Current_Player_State_CurrentRight && player->state != Current_Player_State_CurrentLeft
-                                    && player->state != Current_Player_State_CurrentUp && player->state != Current_Player_State_CurrentDown) {
+                                if (player->state != Current_PlayerState_CurrentRight && player->state != Current_PlayerState_CurrentLeft
+                                    && player->state != Current_PlayerState_CurrentUp && player->state != Current_PlayerState_CurrentDown) {
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;
@@ -1015,9 +1015,9 @@ void Water_State_HCZBubble(void)
             }
         }
 
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x180000, true)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x180000, 0, true)
-            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, -0x180000, true)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_RWALL, 0, -0x180000, 0, true)
+            || RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
             Water_HCZBubbleBurst(self, false);
         }
     }
@@ -1354,9 +1354,10 @@ void Water_EditorDraw(void)
                 Water_SetupTagLink();
 
                 RSDK_DRAWING_OVERLAY(true);
-                if (self->taggedButton)
+                if (self->taggedButton) {
                     DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y,
-                                          0xFFFF00);
+                                          0xFFFF00, INK_NONE, 0xFF);
+                }
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;
@@ -1375,9 +1376,10 @@ void Water_EditorDraw(void)
                 Water_SetupTagLink();
 
                 RSDK_DRAWING_OVERLAY(true);
-                if (self->taggedButton)
+                if (self->taggedButton) {
                     DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y,
-                                          0xFFFF00);
+                                          0xFFFF00, INK_NONE, 0xFF);
+                }
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;

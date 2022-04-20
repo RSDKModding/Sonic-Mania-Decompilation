@@ -144,6 +144,6 @@ void Localization_Serialize(void);
 void Localization_LoadStrings(void);
 void Localization_GetString(TextInfo *textInfo, uint8 id);
 void Localization_GetZoneName(TextInfo *info, uint8 zone);
-void Localization_SetZoneNameShort(TextInfo *info, uint8 zone);
+void Localization_GetZoneInitials(TextInfo *info, uint8 zone);
 
 #endif //!OBJ_LOCALIZATION_H

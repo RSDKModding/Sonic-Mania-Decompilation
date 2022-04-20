@@ -88,7 +88,7 @@ void SeltzerWater_State_Falling(void)
     self->position.y += self->velocity.y;
     self->velocity.y += self->gravityStrength;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x60000, true)) {
         RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 5, &self->animator, true, 0);
         self->state = SeltzerWater_State_Splash;
     }

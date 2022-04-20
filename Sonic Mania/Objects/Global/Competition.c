@@ -12,6 +12,7 @@ ObjectCompetition *Competition;
 void Competition_Update(void)
 {
     RSDK_THIS(Competition);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,13 +23,14 @@ void Competition_StaticUpdate(void) {}
 void Competition_Draw(void)
 {
     RSDK_THIS(Competition);
-    #if RETRO_USE_PLUS
+
+#if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SceneInfo->currentScreenID, Player)->objectID == Player->objectID) {
 #endif
         if (!self->playerFinished[SceneInfo->currentScreenID]) {
             Vector2 drawPos;
-            drawPos.x                = (ScreenInfo[SceneInfo->currentScreenID].centerX - 4) << 16;
-            drawPos.y                = 0x1A0000;
+            drawPos.x              = (ScreenInfo[SceneInfo->currentScreenID].centerX - 4) << 16;
+            drawPos.y              = 0x1A0000;
             self->animator.frameID = self->timer / 10;
             RSDK.DrawSprite(&self->animator, &drawPos, true);
 
@@ -44,22 +46,27 @@ void Competition_Draw(void)
 void Competition_Create(void *data)
 {
     RSDK_THIS(Competition);
+
     if (!SceneInfo->inEditor) {
         self->isPermanent = true;
         self->active      = ACTIVE_NORMAL;
-        self->visible     = 1;
+        self->visible     = true;
         self->drawOrder   = Zone->hudDrawOrder - 1;
+
         self->seconds     = SceneInfo->seconds;
         if (SceneInfo->minutes == 9) {
             self->timer = 0;
+
             if (60 - SceneInfo->seconds > 0)
                 self->timer = 60 - SceneInfo->seconds;
+
             if (!SceneInfo->milliseconds)
                 SceneInfo->milliseconds = 1;
         }
         else {
             self->timer = 60;
         }
+
         self->state = Competition_State_Manager;
         RSDK.SetSpriteAnimation(Competition->aniFrames, 1, &self->animator, true, 0);
     }
@@ -67,9 +74,9 @@ void Competition_Create(void *data)
 
 void Competition_StageLoad(void)
 {
-    Competition->activeEntity = NULL;
+    Competition->sessionManager = NULL;
 
-    Competition->aniFrames    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    Competition->aniFrames = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
 }
 
 void Competition_State_Manager(void)
@@ -78,13 +85,12 @@ void Competition_State_Manager(void)
 
 #if RETRO_USE_PLUS
     if (self->timer <= 0) {
-        Zone->gotTimeOver           = true;
+        Zone->gotTimeOver      = true;
         SceneInfo->timeEnabled = false;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-            if (player->objectID == Player->objectID && player->state == Player_State_Die) {
+            if (player->objectID == Player->objectID && player->state == Player_State_Die)
                 player->visible = true;
-            }
         }
         self->state = StateMachine_None;
     }
@@ -97,14 +103,13 @@ void Competition_State_Manager(void)
                 Music_PlayQueuedTrack(TRACK_DROWNING);
             }
             else if (!self->timer) {
-                Zone->gotTimeOver           = true;
+                Zone->gotTimeOver      = true;
                 SceneInfo->timeEnabled = false;
                 for (int32 p = 0; p < Player->playerCount; ++p) {
                     if (!self->playerFinished[p]) {
                         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-                        if (player->objectID == Player->objectID) {
+                        if (player->objectID == Player->objectID)
                             player->deathType = PLAYER_DEATH_DIE_USESFX;
-                        }
                     }
                 }
             }
@@ -119,8 +124,8 @@ void Competition_State_Manager(void)
             for (int32 p = 0; p < Player->playerCount; ++p) {
                 if (!self->playerFinished[p]) {
                     EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-                    player->deathType     = PLAYER_DEATH_DIE_USESFX;
-                    self->state        = StateMachine_None;
+                    player->deathType    = PLAYER_DEATH_DIE_USESFX;
+                    self->state          = StateMachine_None;
                 }
             }
         }
@@ -138,8 +143,8 @@ void Competition_ResetOptions(void)
     session->stageIndex               = 0;
 
     for (int32 i = 0; i < Competition_StageCount; ++i) {
-        session->completedStages[i]   = false;
-        session->matchWinner[i]   = 0;
+        session->completedStages[i] = false;
+        session->matchWinner[i]     = 0;
     }
 
     for (int32 p = 0; p < PLAYER_MAX; ++p) {
@@ -198,9 +203,7 @@ void Competition_CalculateScore(int32 playerID, uint8 finishFlag)
     }
 
     if (deathCount < session->playerCount - 1) {
-        for (int32 p = 0; p < session->playerCount; ++p) {
-            allPlayersFinished = allPlayersFinished && (!session->lives[p] || session->finishState[p]);
-        }
+        for (int32 p = 0; p < session->playerCount; ++p) allPlayersFinished = allPlayersFinished && (!session->lives[p] || session->finishState[p]);
     }
 
     if (allPlayersFinished) {
@@ -211,7 +214,7 @@ void Competition_CalculateScore(int32 playerID, uint8 finishFlag)
             uint32 winnerItems      = 0;
             uint32 winnerTotalRings = 0;
 
-            int32 times[4];
+            int32 times[PLAYER_MAX];
             for (int32 p = 0; p < session->playerCount; ++p) {
                 int32 mins = session->time[p].minutes;
                 int32 secs = session->time[p].seconds;
@@ -235,8 +238,8 @@ void Competition_CalculateScore(int32 playerID, uint8 finishFlag)
                     winnerTime = time;
             }
 
-            int32 scores[4];
-            memset(scores, 0, 4 * sizeof(int32));
+            int32 scores[PLAYER_MAX];
+            memset(scores, 0, PLAYER_MAX * sizeof(int32));
 
             int32 winner = 0;
             for (int32 p = 0; p < session->playerCount; ++p) {

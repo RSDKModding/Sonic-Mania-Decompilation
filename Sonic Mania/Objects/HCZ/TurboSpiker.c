@@ -127,10 +127,10 @@ void TurboSpiker_HandleMovement(void)
 
     self->position.x += self->velocity.x;
 
-    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 1, &self->shellAnimator, true, 0);
         self->timer = 0;
-        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000 * (self->direction ? -1 : 1), 0x80000, 8))
+        if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0x20000 * (self->direction ? -1 : 1), 0x80000, 8))
             self->state = TurboSpiker_State_Turning;
         else
             self->state = TurboSpiker_State_Falling;
@@ -310,7 +310,7 @@ void TurboSpiker_State_Falling(void)
         self->spike->position.y = self->position.y;
     }
 
-    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
+    if (RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
         self->velocity.y = 0;
         RSDK.SetSpriteAnimation(TurboSpiker->aniFrames, 0, &self->shellAnimator, true, 0);
         self->state = TurboSpiker_State_Moving;

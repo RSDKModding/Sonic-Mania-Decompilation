@@ -99,7 +99,7 @@ void RTeleporter_State_Destroyed(void)
         RSDK.PlaySfx(RTeleporter->sfxGoodFuture, false, 255);
         RSDK.SetSpriteAnimation(RTeleporter->aniFrames, 2, &self->mainAnimator, true, 0);
         self->position.y += 0x180000;
-        RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
+        RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
         self->state     = StateMachine_None;
         self->stateDraw = RTeleporter_Draw_Destroyed;
     }

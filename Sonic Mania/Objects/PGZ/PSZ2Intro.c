@@ -164,7 +164,7 @@ bool32 PSZ2Intro_Cutscene_JogIntoPlace(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
-            titleCard->state     = TitleCard_State_Initial;
+            titleCard->state     = TitleCard_State_SetupBGElements;
             titleCard->stateDraw = TitleCard_Draw_SlideIn;
             foreach_break;
         }

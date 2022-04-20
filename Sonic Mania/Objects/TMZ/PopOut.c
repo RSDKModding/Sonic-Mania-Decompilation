@@ -47,7 +47,7 @@ void PopOut_Update(void)
             if (self->appearTimer < 8) {
                 self->appearTimer++;
                 if (self->childType <= POPOUT_CHILD_SPRING_YELLOW && child && self->appearTimer == 8) {
-                    child->timer            = 0;
+                    child->sfxTimer            = 0;
                     child->animator.speed   = 0;
                     child->animator.frameID = 0;
                 }
@@ -59,7 +59,7 @@ void PopOut_Update(void)
         if (self->appearTimer > 0) {
             self->appearTimer--;
             if (self->childType <= POPOUT_CHILD_SPRING_YELLOW && child && self->appearTimer == 7) {
-                child->timer            = 0;
+                child->sfxTimer            = 0;
                 child->animator.speed   = 0;
                 child->animator.frameID = 0;
             }

@@ -295,9 +295,9 @@ void Firework_HandleTileCollisions(void)
 {
     RSDK_THIS(Firework);
 
-    bool32 collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, Firework->hitboxTileCheck.right << 13, 0, 4);
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Firework->hitboxTileCheck.top << 13, 4);
-    collided |= RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, Firework->hitboxTileCheck.left << 13, 0, 4);
+    bool32 collided = RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_LWALL, 0, Firework->hitboxTileCheck.right << 13, 0, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_ROOF, 0, 0, Firework->hitboxTileCheck.top << 13, 4);
+    collided |= RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_RWALL, 0, Firework->hitboxTileCheck.left << 13, 0, 4);
 
     if (collided) {
         Camera_ShakeScreen(0, 0, 4);
@@ -570,7 +570,8 @@ void Firework_EditorDraw(void)
     if (showGizmos()) {
         RSDK_DRAWING_OVERLAY(true);
 
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - (self->distance << 16), 0xFFFF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y - (self->distance << 16), 0xFFFF00, INK_NONE,
+                              0xFF);
 
         RSDK_DRAWING_OVERLAY(false);
     }

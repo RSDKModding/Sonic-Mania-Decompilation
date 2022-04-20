@@ -353,7 +353,7 @@ void Current_State_WaterLeft(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentLeft;
+                                player->state           = Current_PlayerState_CurrentLeft;
                             }
                         }
 
@@ -424,7 +424,7 @@ void Current_State_WaterRight(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentRight;
+                                player->state           = Current_PlayerState_CurrentRight;
                             }
                         }
 
@@ -495,7 +495,7 @@ void Current_State_WaterUp(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentUp;
+                                player->state           = Current_PlayerState_CurrentUp;
                             }
                         }
 
@@ -572,7 +572,7 @@ void Current_State_WaterDown(void)
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
-                                player->state           = Current_Player_State_CurrentDown;
+                                player->state           = Current_PlayerState_CurrentDown;
                             }
                         }
 
@@ -742,7 +742,7 @@ void Current_State_Child(void)
         destroyEntity(self);
 }
 
-void Current_Player_State_CurrentLeft(void)
+void Current_PlayerState_CurrentLeft(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -750,7 +750,7 @@ void Current_Player_State_CurrentLeft(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->left << 16, hitbox->bottom << 16, true);
 }
 
-void Current_Player_State_CurrentRight(void)
+void Current_PlayerState_CurrentRight(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -758,7 +758,7 @@ void Current_Player_State_CurrentRight(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, hitbox->right << 16, hitbox->bottom << 16, true);
 }
 
-void Current_Player_State_CurrentUp(void)
+void Current_PlayerState_CurrentUp(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -766,7 +766,7 @@ void Current_Player_State_CurrentUp(void)
     RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, hitbox->right << 16, hitbox->top << 16, true);
 }
 
-void Current_Player_State_CurrentDown(void)
+void Current_PlayerState_CurrentDown(void)
 {
     RSDK_THIS(Player);
     Hitbox *hitbox = Player_GetHitbox(self);
@@ -816,8 +816,10 @@ void Current_EditorDraw(void)
         Current_SetupTagLink();
 
         RSDK_DRAWING_OVERLAY(true);
-        if (self->taggedButton)
-            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00);
+        if (self->taggedButton) {
+            DrawHelpers_DrawArrow(self->taggedButton->position.x, self->taggedButton->position.y, self->position.x, self->position.y, 0xFFFF00,
+                                  INK_NONE, 0xFF);
+        }
         RSDK_DRAWING_OVERLAY(false);
     }
 }

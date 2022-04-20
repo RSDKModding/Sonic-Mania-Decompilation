@@ -143,7 +143,7 @@ void UIVsZoneButton_SetNameText(void)
             self->nameText.length = 3;
         }
         else {
-            Localization_SetZoneNameShort(&self->nameText, self->zoneID);
+            Localization_GetZoneInitials(&self->nameText, self->zoneID);
             if (self->zoneID < UIVSZONEBUTTON_FUZZ) {
                 char buffer[0x10];
                 sprintf(buffer, " %d", self->act + 1);

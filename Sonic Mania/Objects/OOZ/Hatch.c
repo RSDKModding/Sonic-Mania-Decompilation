@@ -27,7 +27,7 @@ void Hatch_Update(void)
                     moveLayer->scrollPos               = -self->vScrollPos;
                     moveLayer->scrollInfo[0].scrollPos = -self->hScrollPos;
                 }
-                player->collisionLayers |= Zone->moveID;
+                player->collisionLayers |= Zone->moveMask;
                 player->moveLayerPosition.x = moveLayer->scrollInfo[0].scrollPos;
                 player->moveLayerPosition.y = moveLayer->scrollPos;
             }
@@ -511,7 +511,7 @@ void Hatch_EditorDraw(void)
     RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
     if (showGizmos()) {
-        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + (self->depth << 16), 0x00FF00);
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x, self->position.y + (self->depth << 16), 0x00FF00, INK_NONE, 0xFF);
 
         self->hitbox.left   = (self->subOff1.x >> 12) - ((self->position.x >> 16) & 0xF) + 16;
         self->hitbox.top    = (self->subOff1.y >> 12) - ((self->position.y >> 16) & 0xF) + 16;

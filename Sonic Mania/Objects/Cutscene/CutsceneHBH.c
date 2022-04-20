@@ -376,7 +376,7 @@ void CutsceneHBH_State_ShinobiBounce(void)
     if (self->timer <= 0) {
         self->velocity.y += 0x2000;
         self->position.y += self->velocity.y;
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2E0000, true)) {
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x2E0000, true)) {
             RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->mainAnimator, true, 0);
             self->velocity.y = -0x20000;
             self->timer      = 3;
@@ -426,14 +426,14 @@ void CutsceneHBH_State_RiderMove(void)
                 self->timer = 1;
                 RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->mainAnimator, true, 0);
             }
-            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
             if (self->mainAnimator.frameID == self->mainAnimator.frameCount - 1) {
                 self->direction = FLIP_NONE;
                 RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->mainAnimator, true, 0);
             }
-            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
     }
     else {
@@ -445,14 +445,14 @@ void CutsceneHBH_State_RiderMove(void)
                 self->direction = FLIP_X;
                 RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->mainAnimator, true, 0);
             }
-            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
             if (self->position.x - self->originPos.x < -0x300000) {
                 self->timer = 0;
                 RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->mainAnimator, true, 0);
             }
-            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
     }
 }
@@ -468,7 +468,7 @@ void CutsceneHBH_State_RiderExit(void)
         self->direction = FLIP_NONE;
         RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->mainAnimator, true, 0);
     }
-    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+    RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }
@@ -504,7 +504,7 @@ void CutsceneHBH_State_KingTMZ2_Fall(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x2C0000, true)) {
+    if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x2C0000, true)) {
         RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->mainAnimator, true, 0);
         self->velocity.y = 0;
         self->state      = CutsceneHBH_State_KingTMZ2_Land;

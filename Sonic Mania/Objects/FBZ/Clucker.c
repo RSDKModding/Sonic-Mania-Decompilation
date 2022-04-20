@@ -329,7 +329,7 @@ void Clucker_State_Egg(void)
                 Player_CheckProjectileHit(player, self);
         }
 
-        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, false))
+        if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, false))
             destroyEntity(self);
     }
     else {

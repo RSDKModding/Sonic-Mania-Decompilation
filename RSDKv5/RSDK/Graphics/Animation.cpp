@@ -11,9 +11,8 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
     GEN_HASH(filename, hash);
 
     for (int32 i = 0; i < SPRFILE_COUNT; ++i) {
-        if (HASH_MATCH(spriteAnimationList[i].hash, hash)) {
+        if (HASH_MATCH(spriteAnimationList[i].hash, hash))
             return i;
-        }
     }
 
     uint16 id = -1;
@@ -59,6 +58,7 @@ uint16 RSDK::LoadSpriteAnimation(const char *filename, Scopes scope)
 
         spr->animCount = ReadInt16(&info);
         AllocateStorage(spr->animCount * sizeof(SpriteAnimationEntry), (void **)&spr->animations, DATASET_STG, false);
+
         int32 frameID = 0;
         for (int32 a = 0; a < spr->animCount; ++a) {
             SpriteAnimationEntry *animation = &spr->animations[a];
@@ -127,8 +127,9 @@ uint16 RSDK::CreateSpriteAnimation(const char *filename, uint32 frameCount, uint
     spr->scope           = scope;
     memcpy(spr->hash, hash, 4 * sizeof(uint32));
 
-    AllocateStorage(sizeof(SpriteFrame) * (frameCount > 0x400 ? 0x400 : frameCount), (void **)&spr->frames, DATASET_STG, true);
-    AllocateStorage(sizeof(SpriteAnimationEntry) * (animCount > 0x40 ? 0x40 : animCount), (void **)&spr->animations, DATASET_STG, true);
+    
+    AllocateStorage(sizeof(SpriteFrame) * minVal(frameCount, SPRITEFRAME_COUNT), (void **)&spr->frames, DATASET_STG, true);
+    AllocateStorage(sizeof(SpriteAnimationEntry) * minVal(animCount, SPRITEANIM_COUNT), (void **)&spr->animations, DATASET_STG, true);
 
     return id;
 }
@@ -141,6 +142,7 @@ void RSDK::ProcessAnimation(Animator *animator)
             if (animator->frames == (SpriteFrame *)1) {
                 while (animator->timer > animator->frameDuration) {
                     ++animator->frameID;
+
                     animator->timer -= animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
@@ -149,9 +151,11 @@ void RSDK::ProcessAnimation(Animator *animator)
             else {
                 while (animator->timer > animator->frameDuration) {
                     ++animator->frameID;
+
                     animator->timer -= animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
+
                     animator->frameDuration = animator->frames[animator->frameID].duration;
                 }
             }
@@ -172,21 +176,10 @@ int32 RSDK::GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int3
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
-        if (startIndex >= 0) {
-            if (startIndex >= info->length)
-                startIndex = info->length - 1;
-        }
-        else {
-            startIndex = 0;
-        }
+        startIndex = clampVal(startIndex, 0, info->length - 1);
 
-        if (length > 0) {
-            if (length > info->length)
-                length = info->length;
-        }
-        else {
+        if (length <= 0 || length > info->length)
             length = info->length;
-        }
 
         int32 w = 0;
         for (int32 c = startIndex; c < length; ++c) {
