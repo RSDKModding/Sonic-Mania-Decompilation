@@ -4473,7 +4473,7 @@ void Player_State_BubbleBounce(void)
             self->controlLock = 0;
 
             int32 vel = 0;
-            if (self->underwater)
+            if (self->underwater != 1) // only apply lower velocity if in palette water, rect water uses regular vel
                 vel = self->gravityStrength + 0x78000;
             else
                 vel = self->gravityStrength + 0x40000;

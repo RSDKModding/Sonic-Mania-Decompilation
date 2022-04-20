@@ -856,7 +856,7 @@ void TitleCard_Draw_SlideAway(void)
     drawPos.x = self->zoneXPos;
     drawPos.y = 0xBA0000;
     for (int32 i = 0; i < 4; ++i) {
-        self->zoneLetterAnimator.frameID = 0;
+        self->zoneLetterAnimator.frameID = i;
         RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
     }
 
