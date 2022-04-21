@@ -51,7 +51,7 @@ void ParallaxSprite_Update(void);
 void ParallaxSprite_LateUpdate(void);
 void ParallaxSprite_StaticUpdate(void);
 void ParallaxSprite_Draw(void);
-void ParallaxSprite_Create(void* data);
+void ParallaxSprite_Create(void *data);
 void ParallaxSprite_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ParallaxSprite_EditorDraw(void);
@@ -62,8 +62,8 @@ void ParallaxSprite_Serialize(void);
 // Extra Entity Functions
 void ParallaxSprite_State_RotateAndScroll(void);
 void ParallaxSprite_State_Spawner(void);
-void ParallaxSprite_State_FadeOutAndDie(void);
+void ParallaxSprite_State_FadeOutAndDestroy(void);
 void ParallaxSprite_State_FadeIntoHalf(void);
 void ParallaxSprite_State_FadeOut(void);
 
-#endif //!OBJ_PARALLAXSPRITE_H
+#endif //! OBJ_PARALLAXSPRITE_H

@@ -13,10 +13,10 @@ struct ObjectEggman {
 struct EntityEggman {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateStore);
+    StateMachine(nextState);
     int32 timer;
     uint16 animID;
-    Entity* parent;
+    Entity *parent;
     Vector2 offset;
     Hitbox hitbox;
     Animator animator;
@@ -30,7 +30,7 @@ void Eggman_Update(void);
 void Eggman_LateUpdate(void);
 void Eggman_StaticUpdate(void);
 void Eggman_Draw(void);
-void Eggman_Create(void* data);
+void Eggman_Create(void *data);
 void Eggman_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Eggman_EditorDraw(void);
@@ -47,4 +47,4 @@ void Eggman_State_FallUntilTimerReset(void);
 void Eggman_State_FallAndCollide(void);
 void Eggman_State_WalkOffScreen(void);
 
-#endif //!OBJ_EGGMAN_H
+#endif //! OBJ_EGGMAN_H

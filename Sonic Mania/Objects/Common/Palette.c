@@ -20,12 +20,13 @@ void Palette_Draw(void) {}
 
 void Palette_Create(void *data)
 {
-    char text[32];
-
     RSDK_THIS(Palette);
+
     if (!SceneInfo->inEditor && (!self->loadOnce || Palette->count <= 1)) {
+        char text[32];
         RSDK.GetCString(text, &self->paletteFile);
         RSDK.LoadPalette(self->bankID, text, self->rowFlags);
+
         destroyEntity(self);
     }
 }
@@ -36,9 +37,11 @@ void Palette_StageLoad(void)
         Palette->count++;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Palette_EditorDraw(void)
 {
     RSDK_THIS(Palette);
+
     RSDK.SetSpriteAnimation(Palette->aniFrames, 0, &self->animator, true, 9);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
@@ -57,6 +60,7 @@ void Palette_EditorLoad(void)
     RSDK_ENUM_VAR("Bank 6", PALETTE_BANK_6);
     RSDK_ENUM_VAR("Bank 7", PALETTE_BANK_7);
 }
+#endif
 
 void Palette_Serialize(void)
 {

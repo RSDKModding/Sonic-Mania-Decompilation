@@ -112,10 +112,8 @@ void DrawHelpers_DrawRectOutline(int32 x, int32 y, int32 sizeX, int32 sizeY, uin
 {
     Vector2 drawPos;
 
-    drawPos.x = x;
-    drawPos.y = y;
-    drawPos.x -= sizeX >> 1;
-    drawPos.y -= sizeY >> 1;
+    drawPos.x = x - (sizeX >> 1);
+    drawPos.y = y - (sizeY >> 1);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + sizeX, drawPos.y - 0x10000, color, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, sizeY + drawPos.y, drawPos.x + sizeX, sizeY + drawPos.y, color, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + sizeY, color, 0, INK_NONE, false);

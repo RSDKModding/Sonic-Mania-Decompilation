@@ -114,8 +114,8 @@ void EncoreRoute_EditorDraw(void)
     if (showGizmos()) {
         // Point to where the tiles come from
         RSDK_DRAWING_OVERLAY(true);
-        DrawHelpers_DrawArrow(self->position.x + (size.x >> 1), self->position.y + (size.y >> 1), self->offset.x + (size.x >> 1),
-                              self->offset.y + (size.y >> 1), 0xE0E0E0, INK_NONE, 0xFF);
+        DrawHelpers_DrawArrow(self->offset.x + (size.x >> 1), self->offset.y + (size.y >> 1), self->position.x + (size.x >> 1),
+                              self->position.y + (size.y >> 1), 0xE0E0E0, INK_NONE, 0xFF);
         RSDK_DRAWING_OVERLAY(false);
     }
 }

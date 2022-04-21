@@ -161,7 +161,6 @@ void FilmProjector_EditorDraw(void)
     self->drawFX &= ~FX_ROTATE;
     RSDK.DrawSprite(&self->reelEdgeAnimator, &drawPos, false);
 
-    SceneInfo->effectGizmo = true;
     self->drawFX |= FX_FLIP;
     RSDK.DrawSprite(&self->projectorAnimator, NULL, false);
 

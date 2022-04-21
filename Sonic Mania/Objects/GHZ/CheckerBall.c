@@ -630,7 +630,7 @@ void CheckerBall_HandleObjectCollisions(void)
 
     foreach_active(CollapsingPlatform, collapsingPlatform)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(collapsingPlatform, &collapsingPlatform->hitbox, self, &CheckerBall->hitboxBall) && self->onGround)
+        if (RSDK.CheckObjectCollisionTouchBox(collapsingPlatform, &collapsingPlatform->hitboxTrigger, self, &CheckerBall->hitboxBall) && self->onGround)
             collapsingPlatform->stoodPos.x = self->position.x;
     }
 

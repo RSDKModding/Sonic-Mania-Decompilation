@@ -39,8 +39,10 @@ void ShopWindow_Draw(void)
 void ShopWindow_Create(void *data)
 {
     RSDK_THIS(ShopWindow);
+
     if (!SceneInfo->inEditor) {
         self->visible = true;
+
         if (data) {
             self->active        = ACTIVE_NORMAL;
             self->drawOrder     = Zone->objectDrawLow;
@@ -56,10 +58,7 @@ void ShopWindow_Create(void *data)
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = self->size.x;
             self->updateRange.y = self->size.y;
-            if (!self->silhouette)
-                self->drawOrder = Zone->objectDrawLow;
-            else
-                self->drawOrder = Zone->objectDrawHigh;
+            self->drawOrder     = !self->silhouette ? Zone->objectDrawLow : Zone->objectDrawHigh;
 
             self->inkEffect = INK_ADD;
             self->alpha     = 0x80;
@@ -238,59 +237,23 @@ void ShopWindow_Draw_Shattered(void)
 void ShopWindow_EditorDraw(void)
 {
     RSDK_THIS(ShopWindow);
+
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = self->size.x;
     self->updateRange.y = self->size.y;
-    if (!self->silhouette)
-        self->drawOrder = Zone->objectDrawLow;
-    else
-        self->drawOrder = Zone->objectDrawHigh;
+    self->drawOrder     = !self->silhouette ? Zone->objectDrawLow : Zone->objectDrawHigh;
 
-    self->inkEffect = INK_ADD;
-    self->alpha     = 0x80;
-    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 0, &self->animator, false, 0);
+    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 1, &self->animator, false, 0);
 
-    Vector2 size;
-    size.x = self->size.x >> 16;
-    size.y = self->size.y >> 16;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    Vector2 drawPos;
-    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
 
-    int32 x = (self->position.x >> 0x10) - screen->position.x - size.x;
-    int32 y = (self->position.y >> 0x10) - screen->position.y - size.y;
-    RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + 2 * size.x, y + 2 * size.y + 1);
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x * 2, self->size.y * 2, 0xFFFF00);
 
-    drawPos.x = (x + screen->position.x) << 16;
-    drawPos.y = (y + screen->position.y) << 16;
-
-    self->animator.frameID = 0;
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
-
-    self->animator.frameID = 1;
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
-
-    self->animator.frameID = 2;
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
-
-    self->animator.frameID = 3;
-    RSDK.DrawSprite(&self->animator, &drawPos, false);
-
-    if (!self->shatter) {
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK_DRAWING_OVERLAY(false);
     }
-    else {
-        drawPos.x              = self->position.x - (size.x << 16) + 0x180000;
-        drawPos.y              = self->position.y + ((size.y - 24) << 16);
-        self->inkEffect        = INK_NONE;
-        self->animator.frameID = 4;
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
-
-        self->inkEffect = INK_ADD;
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
-    }
-
-    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x * 2, self->size.y * 2, 0xFFFF00);
 }
 
 void ShopWindow_EditorLoad(void) { ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE); }

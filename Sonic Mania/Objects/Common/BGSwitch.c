@@ -40,6 +40,7 @@ void BGSwitch_Draw(void) {}
 void BGSwitch_Create(void *data)
 {
     RSDK_THIS(BGSwitch);
+
     if (!SceneInfo->inEditor) {
         self->updateRange.x = self->size.x;
         self->updateRange.y = self->size.y;
@@ -59,6 +60,7 @@ void BGSwitch_StageLoad(void)
 void BGSwitch_EditorDraw(void)
 {
     RSDK_THIS(BGSwitch);
+
     self->updateRange.x = self->size.x;
     self->updateRange.y = self->size.y;
 

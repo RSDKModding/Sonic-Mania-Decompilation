@@ -27,7 +27,7 @@ void SpinBooster_Update(void)
             if (x < self->position.x)
                 self->activePlayers &= ~(1 << playerID);
             else
-                self->activePlayers |= (1 << playerID);
+                self->activePlayers |= 1 << playerID;
         }
         else if (x < self->position.x) {
             // Exit Tube
@@ -43,6 +43,7 @@ void SpinBooster_Update(void)
                     player->state          = player->onGround ? Player_State_Roll : Player_State_Air;
                 }
             }
+
             self->activePlayers &= ~(1 << playerID);
         }
         else if (!((1 << playerID) & self->activePlayers)) {
@@ -63,6 +64,7 @@ void SpinBooster_Draw(void) { SpinBooster_DrawSprites(); }
 void SpinBooster_Create(void *data)
 {
     RSDK_THIS(SpinBooster);
+
     RSDK.SetSpriteAnimation(SpinBooster->aniFrames, 0, &self->animator, true, 0);
     self->drawFX |= FX_FLIP;
     self->animator.frameID = 4;
@@ -79,6 +81,7 @@ void SpinBooster_Create(void *data)
             case FLIP_Y: self->angle = 0x80; break;
             case FLIP_XY: self->angle = 0xC0; break;
         }
+
         self->active = ACTIVE_BOUNDS;
 
         self->updateRange.x = self->size * abs(RSDK.Sin256(self->angle)) << 11;
@@ -102,38 +105,41 @@ int32 SpinBooster_GetRollDir(EntityPlayer *player)
             if (self->autoGrip != 5) {
                 if ((self->autoGrip == 7 || self->autoGrip == 8) && player->up)
                     return CMODE_ROOF;
+
                 return CMODE_FLOOR;
-            }
-            if (player->down) {
-                return CMODE_FLOOR;
-            }
-            if (player->up) {
-                return CMODE_ROOF;
             }
 
-            if (!self->bias)
+            if (player->down)
                 return CMODE_FLOOR;
-            else
+
+            if (player->up)
                 return CMODE_ROOF;
+
+            return !self->bias ? CMODE_FLOOR : CMODE_ROOF;
+
         case FLIP_X:
             if (self->autoGrip != 5) {
                 if (self->autoGrip == 7) {
-                    if (!player->left) {
+                    if (!player->left)
                         return -1;
-                    }
+
                     return CMODE_RWALL;
                 }
 
                 if (self->autoGrip == 6) {
                     if (!player->right)
                         return -1;
+
                     return CMODE_LWALL;
                 }
+
                 if (self->autoGrip != 8)
                     return -1;
+
                 if (!player->left) {
                     if (!player->right)
                         return -1;
+
                     return CMODE_LWALL;
                 }
                 else {
@@ -143,53 +149,65 @@ int32 SpinBooster_GetRollDir(EntityPlayer *player)
             else {
                 if (player->left)
                     return CMODE_RWALL;
+
                 if (player->right)
                     return CMODE_LWALL;
-                return CMODE_ROOF * (self->bias != 0) + 1;
+
+                return !self->bias ? CMODE_LWALL : CMODE_RWALL;
             }
+
         case FLIP_Y:
             if (self->autoGrip != 5) {
                 if ((self->autoGrip == 6 || self->autoGrip == 8) && player->up)
                     return CMODE_ROOF;
+
                 return CMODE_FLOOR;
             }
+
             if (player->down)
                 return CMODE_FLOOR;
+
             if (player->up)
                 return CMODE_ROOF;
 
-            if (!self->bias)
-                return CMODE_ROOF;
-            else
-                return CMODE_FLOOR;
+            return !self->bias ? CMODE_ROOF : CMODE_FLOOR;
+
         case FLIP_XY:
             if (self->autoGrip == 5) {
-                return 2 * (player->left != 0) + 1;
+                return !player->left ? CMODE_LWALL : CMODE_RWALL;
             }
             else if (self->autoGrip == 6) {
                 if (!player->left)
                     return -1;
+
                 return CMODE_RWALL;
             }
             else {
                 if (self->autoGrip == 7) {
                     if (!player->right)
                         return -1;
+
                     return CMODE_LWALL;
                 }
+
                 if (self->autoGrip != 8)
                     return -1;
+
                 if (!player->left) {
                     if (!player->right)
                         return -1;
+
                     return CMODE_LWALL;
                 }
                 else {
                     return CMODE_RWALL;
                 }
             }
-        default: break;
+
+        default: 
+            break;
     }
+
     return -1;
 }
 void SpinBooster_HandleRollDir(EntityPlayer *player)
@@ -197,18 +215,15 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
     RSDK_THIS(SpinBooster);
 
     if (self->autoGrip) {
-        int8 cMode = 0;
-        if (self->autoGrip < 5) {
-            cMode = self->autoGrip - 1;
-        }
-        else {
+        int8 cMode = self->autoGrip - 1;
+        if (self->autoGrip >= 5)
             cMode = SpinBooster_GetRollDir(player);
-        }
 
         if (cMode < 0) {
             player->onGround = false;
             return;
         }
+
         int32 offsetX  = 0;
         int32 offsetY  = 0;
         int32 plrAngle = 0;
@@ -219,18 +234,22 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
                 plrAngle = 0x00;
                 angle    = 0x40;
                 break;
+
             case CMODE_LWALL:
                 plrAngle = -0x40;
                 angle    = 0x00;
                 break;
+
             case CMODE_ROOF:
                 plrAngle = -0x80;
                 angle    = -0x40;
                 break;
+
             case CMODE_RWALL:
                 plrAngle = 0x40;
                 angle    = -0x80;
                 break;
+
             default:
                 plrAngle = 0x00;
                 angle    = 0x00;
@@ -245,9 +264,11 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
             case CMODE_RWALL: offsetX = playerHitbox->left << 16; break;
             default: break;
         }
+
         player->position.x += RSDK.Cos256(angle) << 8;
         player->position.y += RSDK.Sin256(angle) << 8;
         RSDK.ObjectTileGrip(player, Zone->collisionLayers, cMode, 0, offsetX, offsetY, 1);
+
         player->angle = plrAngle;
         if (player->onGround) {
             uint8 mode = 0;
@@ -258,9 +279,8 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
                 case CMODE_RWALL: mode = CMODE_LWALL; break;
             }
 
-            if (cMode == mode) {
+            if (cMode == mode)
                 player->groundVel = -player->groundVel;
-            }
         }
         else {
             switch (cMode) {
@@ -271,6 +291,7 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
                 default: break;
             }
         }
+
         player->collisionMode = cMode;
         player->onGround      = true;
     }
@@ -283,6 +304,7 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
         int32 entAng = RSDK.Cos256(self->angle) + RSDK.Sin256(self->angle);
         int32 plrAng = RSDK.Cos256(player->angle) - RSDK.Sin256(player->angle);
         int32 power  = (self->boostPower << 15) * ((plrAng > 0) - (plrAng < 0)) * ((entAng > 0) - (entAng < 0));
+
         if (self->boostPower >= 0)
             player->groundVel += power;
         else
@@ -291,6 +313,7 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
     else {
         int32 x = (0x80 * RSDK.Cos256(self->angle)) * self->boostPower;
         int32 y = (-0x80 * RSDK.Sin256(self->angle)) * self->boostPower;
+
         if (self->boostPower >= 0) {
             player->velocity.x += x;
             player->velocity.y += y;
@@ -316,23 +339,19 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
 }
 void SpinBooster_DrawArrow(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color)
 {
-    RSDK.DrawLine(x1, y1, x2, y2, color, 0x7F, INK_ADD, false);
     int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
-    int32 c1    = RSDK.Cos256(angle + 12) << 12;
-    int32 s1    = RSDK.Sin256(angle + 12) << 12;
-    int32 c2    = RSDK.Cos256(angle - 12) << 12;
-    int32 s2    = RSDK.Sin256(angle - 12) << 12;
-    RSDK.DrawLine(x2, y2, x2 + c1, y2 + s1, color, 0x7F, INK_ADD, false);
-    RSDK.DrawLine(x2, y2, x2 + c2, y2 + s2, color, 0x7F, INK_ADD, false);
+
+    RSDK.DrawLine(x1, y1, x2, y2, color, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle + 12) << 12), y2 + (RSDK.Sin256(angle + 12) << 12), color, 0x7F, INK_ADD, false);
+    RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle - 12) << 12), y2 + (RSDK.Sin256(angle - 12) << 12), color, 0x7F, INK_ADD, false);
 }
 void SpinBooster_DrawSprites(void)
 {
     RSDK_THIS(SpinBooster);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.y -= self->size << 19;
+    drawPos.y = self->position.y - (self->size << 19);
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     for (int32 i = 0; i < self->size; ++i) {
@@ -349,6 +368,7 @@ void SpinBooster_DrawSprites(void)
         int32 clr      = ((power >> 31) & 0xFE0001) + 0xFFFF;
         if (!power)
             power = 1;
+
         int32 x2 = power * (RSDK.Cos256(negAngle) << 11) + self->position.x;
         int32 y2 = power * (RSDK.Sin256(negAngle) << 11) + self->position.y;
         SpinBooster_DrawArrow(x, y, x2, y2, clr);
@@ -368,16 +388,15 @@ void SpinBooster_DrawSprites(void)
                     case 3: angle = 0xC0; break;
                     case 4: angle = 0x80; break;
                 }
+
                 x2 = (RSDK.Cos256(angle) << 14) + self->position.x;
                 y2 = (RSDK.Sin256(angle) << 14) + self->position.y;
                 SpinBooster_DrawArrow(x, y, x2, y2, 0x00FF00);
                 break;
             }
+
             case 5:
-                if (!self->bias)
-                    clr = 0x00FF00;
-                else
-                    clr = 0xFFFF00;
+                clr = !self->bias ? 0x00FF00 : 0xFFFF00;
 
                 x2 = (RSDK.Cos256((negAngle + 64) & 0xFF) << 14) + self->position.x;
                 y2 = (RSDK.Sin256((negAngle + 64) & 0xFF) << 14) + self->position.y;
@@ -387,6 +406,7 @@ void SpinBooster_DrawSprites(void)
                 y2 = (RSDK.Sin256((negAngle - 64) & 0xFF) << 14) + self->position.y;
                 SpinBooster_DrawArrow(x, y, x2, y2, clr);
                 break;
+
             case 6:
                 clr = 0xFFFF00;
 
@@ -398,6 +418,7 @@ void SpinBooster_DrawSprites(void)
                 y2 = (RSDK.Sin256(negAngle) << 14) + self->position.y;
                 SpinBooster_DrawArrow(x, y, x2, y2, 0x00FF00);
                 break;
+
             case 0:
             case 7:
                 clr = 0xFFFF00;
@@ -410,6 +431,7 @@ void SpinBooster_DrawSprites(void)
                 y2 = (RSDK.Sin256(negAngle) << 14) + self->position.y;
                 SpinBooster_DrawArrow(x, y, x2, y2, 0x00FF00);
                 break;
+
             case 8:
                 clr = 0xFFFF00;
 
@@ -449,6 +471,7 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
                 player->position.y += player->jumpOffset;
             player->pushing = false;
         }
+
         player->nextAirState    = StateMachine_None;
         player->nextGroundState = StateMachine_None;
 
@@ -457,12 +480,9 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
 
         player->state = player->onGround ? Player_State_ForceRoll_Ground : Player_State_ForceRoll_Air;
 
-        if (abs(player->groundVel) < 0x10000) {
-            if (self->direction & FLIP_X)
-                player->groundVel = -0x40000;
-            else
-                player->groundVel = 0x40000;
-        }
+        if (abs(player->groundVel) < 0x10000)
+            player->groundVel = (self->direction & FLIP_X) ? -0x40000 : 0x40000;
+
         SpinBooster_ApplyRollVelocity(player);
     }
 }
@@ -479,6 +499,10 @@ void SpinBooster_EditorLoad(void)
     RSDK_ENUM_VAR("Flip X", FLIP_X);
     RSDK_ENUM_VAR("Flip Y", FLIP_Y);
     RSDK_ENUM_VAR("Flip XY", FLIP_XY);
+
+    RSDK_ACTIVE_VAR(SpinBooster, bias);
+    RSDK_ENUM_VAR("No Bias", 0);
+    RSDK_ENUM_VAR("Has Bias", 1);
 }
 #endif
 

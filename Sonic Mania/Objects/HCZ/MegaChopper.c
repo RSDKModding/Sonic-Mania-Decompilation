@@ -214,7 +214,7 @@ void MegaChopper_State_InWater(void)
         bool32 inWater = false;
         foreach_active(Water, water)
         {
-            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
+            if (water->type == WATER_TINT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
                 inWater = true;
             }
         }
@@ -253,7 +253,7 @@ void MegaChopper_State_OutOfWater(void)
     else {
         foreach_active(Water, water)
         {
-            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
+            if (water->type == WATER_TINT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitboxPoint)) {
                 self->state = MegaChopper_State_InWater;
             }
         }

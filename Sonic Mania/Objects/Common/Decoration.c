@@ -12,7 +12,9 @@ ObjectDecoration *Decoration;
 void Decoration_Update(void)
 {
     RSDK_THIS(Decoration);
+
     RSDK.ProcessAnimation(&self->animator);
+
     self->rotation = (self->rotation + self->rotSpeed) & 0x1FF;
 }
 
@@ -23,11 +25,14 @@ void Decoration_StaticUpdate(void) {}
 void Decoration_Draw(void)
 {
     RSDK_THIS(Decoration);
+
     if (self->isTMZ) {
         RSDK.CopyPalette(0, 160, 1, 160, 16);
         RSDK.CopyPalette(2, 160, 0, 160, 16);
     }
+
     Decoration_DrawSprite();
+
     if (self->isTMZ)
         RSDK.CopyPalette(1, 160, 0, 160, 16);
 }
@@ -40,10 +45,13 @@ void Decoration_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->active  = ACTIVE_BOUNDS;
         self->visible = true;
+
         if (self->rotSpeed)
             self->drawFX |= FX_ROTATE;
+
         if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
             self->isTMZ = true;
+
         if (self->isTMZ) {
             self->inkEffect |= INK_ADD;
             self->alpha = 0xE0;
@@ -52,6 +60,7 @@ void Decoration_Create(void *data)
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
+
         if (RSDK.GetFrameID(&self->animator)) // ideally use 'h'
             self->drawOrder = Zone->objectDrawHigh;
         else
@@ -92,6 +101,7 @@ void Decoration_StageLoad(void)
 void Decoration_DrawSprite(void)
 {
     RSDK_THIS(Decoration);
+
     Vector2 drawPos, repeat;
 
     repeat.x  = self->repeatTimes.x >> 16;
@@ -113,6 +123,7 @@ void Decoration_DrawSprite(void)
 void Decoration_EditorDraw(void)
 {
     RSDK_THIS(Decoration);
+
     RSDK.SetSpriteAnimation(Decoration->aniFrames, self->type, &self->animator, true, 0);
 
     if (self->rotSpeed)

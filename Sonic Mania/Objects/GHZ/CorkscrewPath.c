@@ -106,7 +106,7 @@ void CorkscrewPath_EditorDraw(void)
     size.x = abs(self->period) << 15;
     size.y = (self->amplitude << 6) * RSDK.Cos1024(0);
 
-    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, size.x, size.y, 0xFFFF00);
+    DrawHelpers_DrawRectOutline(self->position.x, self->position.y, size.x << 1, size.y << 1, 0xFFFF00);
 }
 
 void CorkscrewPath_EditorLoad(void) { CorkscrewPath->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

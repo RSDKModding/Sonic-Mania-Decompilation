@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DECORATION_NONE,
+} DecorationTypes;
+
 // Object Class
 struct ObjectDecoration {
     RSDK_OBJECT

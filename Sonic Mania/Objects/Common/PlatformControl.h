@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PLATFORMCONTROL_LOOP,
+    PLATFORMCONTROL_PINGPONG,
+    PLATFORMCONTROL_TOSTART,
+    PLATFORMCONTROL_STOP,
+} PlatformControlTypes;
+
 // Object Class
 struct ObjectPlatformControl {
 	RSDK_OBJECT
@@ -18,7 +25,7 @@ struct EntityPlatformControl {
     uint8 type;
     bool32 isActive;
     int32 buttonTag;
-    Entity *taggedButton;
+    EntityButton *taggedButton;
 };
 
 // Object Struct
@@ -38,6 +45,6 @@ void PlatformControl_EditorLoad(void);
 void PlatformControl_Serialize(void);
 
 // Extra Entity Functions
-void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, Entity *node);
+void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, EntityPlatformNode *node);
 
 #endif //!OBJ_PLATFORMCONTROL_H

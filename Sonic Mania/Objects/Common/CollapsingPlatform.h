@@ -39,7 +39,7 @@ struct EntityCollapsingPlatform {
     int32 unused1;
     int32 collapseDelay;
     uint16 storedTiles[256];
-    Hitbox hitbox;
+    Hitbox hitboxTrigger;
     Vector2 stoodPos;
 };
 
@@ -51,7 +51,7 @@ void CollapsingPlatform_Update(void);
 void CollapsingPlatform_LateUpdate(void);
 void CollapsingPlatform_StaticUpdate(void);
 void CollapsingPlatform_Draw(void);
-void CollapsingPlatform_Create(void* data);
+void CollapsingPlatform_Create(void *data);
 void CollapsingPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CollapsingPlatform_EditorDraw(void);
@@ -66,4 +66,4 @@ void CollapsingPlatform_State_Center(void);
 void CollapsingPlatform_State_LeftOrRight(void);
 void CollapsingPlatform_State_PlayerPos(void);
 
-#endif //!OBJ_COLLAPSINGPLATFORM_H
+#endif //! OBJ_COLLAPSINGPLATFORM_H

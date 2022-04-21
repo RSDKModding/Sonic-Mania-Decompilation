@@ -161,11 +161,15 @@ void Jawz_EditorDraw(void)
     Jawz_Draw();
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         if (self->triggerDir < JAWS_TRIGGER_RIGHT)
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x - 0x300000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
 
         if (self->triggerDir != JAWS_TRIGGER_LEFT)
             DrawHelpers_DrawArrow(self->position.x, self->position.y, self->position.x + 0x300000, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

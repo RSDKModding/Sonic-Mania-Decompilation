@@ -156,43 +156,42 @@ void WaterfallSound_UpdateCB(int32 sfxID)
 void WaterfallSound_EditorDraw(void)
 {
     RSDK_THIS(WaterfallSound);
+
     self->updateRange.x = TILE_SIZE * self->size.x;
     self->updateRange.y = TILE_SIZE * self->size.y;
 
-    if (showGizmos()) {
-        RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
-                      self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y,
-                      self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
-                      self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
-                      self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
 
-        self->drawFX = FX_FLIP;
-        RSDK.SetSpriteAnimation(WaterfallSound->aniFrames, 0, &self->animator, true, 0);
+    self->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(WaterfallSound->aniFrames, 0, &self->animator, true, 0);
 
-        Vector2 drawPos;
-        drawPos.x = self->position.x;
-        drawPos.y = self->position.y;
-        drawPos.x -= (TILE_SIZE * self->size.x);
-        drawPos.y -= (TILE_SIZE * self->size.y);
+    Vector2 drawPos;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= (TILE_SIZE * self->size.x);
+    drawPos.y -= (TILE_SIZE * self->size.y);
 
-        self->direction = FLIP_NONE;
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        drawPos.x += (TILE_SIZE * self->size.x) << 1;
-        self->direction = FLIP_X;
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
+    drawPos.x += (TILE_SIZE * self->size.x) << 1;
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        drawPos.y += (TILE_SIZE * self->size.y) << 1;
-        self->direction = FLIP_XY;
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
+    drawPos.y += (TILE_SIZE * self->size.y) << 1;
+    self->direction = FLIP_XY;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        drawPos.x -= (TILE_SIZE * self->size.x) << 1;
-        self->direction = FLIP_Y;
-        RSDK.DrawSprite(&self->animator, &drawPos, false);
-    }
+    drawPos.x -= (TILE_SIZE * self->size.x) << 1;
+    self->direction = FLIP_Y;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
 
 void WaterfallSound_EditorLoad(void) { WaterfallSound->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE); }

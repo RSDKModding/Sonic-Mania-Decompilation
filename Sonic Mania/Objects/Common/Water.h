@@ -5,7 +5,7 @@
 
 typedef enum {
     WATER_PALETTE,
-    WATER_RECT,
+    WATER_TINT,
     WATER_BUBBLER,
     WATER_ADJUST,
     WATER_HCZ_BUBBLER,
@@ -29,9 +29,9 @@ struct ObjectWater {
     int32 newWaterLevel;
     int32 targetWaterLevel;
     int32 waterMoveSpeed;
-    int32 constBubbleTimer[4];
-    int32 randBubbleTimer[4];
-    int32 unused1[4]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
+    int32 constBubbleTimer[PLAYER_MAX];
+    int32 randBubbleTimer[PLAYER_MAX];
+    int32 unused1[PLAYER_MAX]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
     TABLE(int32 bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
     uint16 aniFrames;
     uint16 bigBubbleFrames;
@@ -55,9 +55,10 @@ struct ObjectWater {
     bool32 moveWaterLevel;
     int32 waterLevelVolume;
     int32 waterPalette;
-    bool32 disableWaterSplash; // this is never set except for once and it's used in if ! statements to link the player or not. i'm so sorry for the name
-    int32 wakePosX[4];
-    uint8 wakeDir[4];
+    bool32
+        disableWaterSplash; // this is never set except for once and it's used in if ! statements to link the player or not. i'm so sorry for the name
+    int32 wakePosX[PLAYER_MAX];
+    uint8 wakeDir[PLAYER_MAX];
     Animator wakeAnimator;
     int32 unused3;
     bool32 playingSkimSFX;
@@ -92,7 +93,7 @@ struct EntityWater {
     int32 hczBubbleTimer;
     int32 timer;
     uint8 activePlayers;
-    uint8 activePlayers2;
+    uint8 releasedPlayers;
     Vector2 bubbleOffset;
     Vector2 bubbleVelocity;
     EntityButton *taggedButton;
