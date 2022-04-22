@@ -389,9 +389,9 @@ void UILeaderboard_DrawRank(int32 id)
             drawPos.x += 0xE60000;
         }
         else {
-            RSDK.DrawText(&self->textAnimator, &drawPos, &self->rankText[id], 0, self->rankText[id].length, ALIGN_RIGHT, 0, 0, 0, false);
+            RSDK.DrawText(&self->textAnimator, &drawPos, &self->rankText[id], 0, self->rankText[id].length, ALIGN_CENTER, 0, NULL, NULL, false);
             drawPos.x += 0x320000;
-            RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText[id], 0, self->nameText[id].length, ALIGN_LEFT, 0, 0, 0, false);
+            RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText[id], 0, self->nameText[id].length, ALIGN_LEFT, 0, NULL, NULL, false);
             drawPos.x += 0xB40000;
         }
 

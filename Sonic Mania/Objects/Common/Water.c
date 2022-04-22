@@ -1344,7 +1344,14 @@ void Water_EditorDraw(void)
             RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
 
             Water->waterLevel = self->position.y;
-            Water_Draw_Palette();
+
+            Vector2 drawPos;
+            drawPos.x = (((self->position.x >> 16) & 0xFFFFFFC0) + 32) << 16;
+            drawPos.y = self->position.y;
+            for (int32 i = (WIDE_SCR_XSIZE >> 6) + 2; i > 0; --i) {
+                RSDK.DrawSprite(&self->animator, &drawPos, false);
+                drawPos.x += 0x400000;
+            }
             break;
 
         case WATER_TINT:

@@ -308,9 +308,11 @@ typedef struct {
     void *functionPtrs;
 #if RETRO_USE_PLUS
     void *APIPtrs;
-    RSDKSKUInfo *skuInfo;
 #endif
     RSDKGameInfo *gameInfo;
+#if RETRO_USE_PLUS
+    RSDKSKUInfo *skuInfo;
+#endif
     RSDKSceneInfo *sceneInfo;
     RSDKControllerState *controllerInfo;
     RSDKAnalogState *stickInfoL;

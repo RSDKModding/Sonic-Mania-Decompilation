@@ -759,14 +759,14 @@ void TitleCard_Draw_ShowTitleCard(void)
         RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 130);
         drawPos.y = 0x720000;
         drawPos.x = self->word1XPos - 0x140000;
-        RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_RIGHT, 1, 0, self->charPos, true);
+        RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_CENTER, 1, 0, self->charPos, true);
     }
 
     // Draw TitleCard Word 2 (if there are 2 words, otherwise draw the entire zoneName)
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 170);
     drawPos.y = 0x9A0000;
     drawPos.x = self->word2XPos - 0x140000;
-    RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_RIGHT, 1, 0, self->charPos, true);
+    RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_CENTER, 1, 0, self->charPos, true);
 
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, ScreenInfo[SceneInfo->currentScreenID].height);
 
@@ -864,13 +864,13 @@ void TitleCard_Draw_SlideAway(void)
     if (self->titleCardWord2 > 0) {
         drawPos.y = 0x720000;
         drawPos.x = self->word1XPos - 0x140000;
-        RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_RIGHT, 1, 0, 0, true);
+        RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->titleCardWord2, ALIGN_CENTER, 1, 0, 0, true);
     }
 
     // Draw TitleCard Word 2 (if there are 2 words, otherwise draw the entire zoneName)
     drawPos.y = 0x9A0000;
     drawPos.x = self->word2XPos - 0x140000;
-    RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_RIGHT, 1, 0, 0, true);
+    RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->titleCardWord2, 0, ALIGN_CENTER, 1, 0, 0, true);
 }
 
 #if RETRO_INCLUDE_EDITOR

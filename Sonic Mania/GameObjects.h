@@ -247,7 +247,7 @@ typedef struct {
     bool32 (*SplitStringList)(TextInfo *list, TextInfo *strings, int32 start, int32 end);
     void (*GetCString)(char *text, TextInfo *info);
     bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 exactMatch);
-    void (*GetDisplayInfo)(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, TextInfo *text);
+    void (*GetDisplayInfo)(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text);
     void (*GetWindowSize)(int32 *width, int32 *height);
     int32 (*SetScreenSize)(uint8 screenID, uint16 width, uint16 height);
     void (*SetClipBounds)(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2);
@@ -281,8 +281,8 @@ typedef struct {
     void (*DrawBlendedQuad)(Vector2 *verticies, color *vertColors, int32 vertCount, int32 alpha, InkEffects inkEffect);
     void (*DrawSprite)(Animator *animator, Vector2 *position, bool32 screenRelative);
     void (*DrawDeformedSprite)(uint16 sheet, InkEffects inkEffect, bool32 screenRelative);
-    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startCharID, int32 endCharID, Alignments align, int32 spacing,
-                     int32 a8, Vector2 *charPos, bool32 ScreenRelative);
+    void (*DrawText)(Animator *animator, Vector2 *position, TextInfo *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing,
+                     void *unused, Vector2 *charOffsets, bool32 screenRelative);
     void (*DrawTile)(uint16 *tileInfo, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative);
     void (*CopyTile)(void);
     void (*DrawAniTiles)(uint16 sheetID, uint16 tileIndex, uint16 srcX, uint16 srcY, uint16 width, uint16 height);

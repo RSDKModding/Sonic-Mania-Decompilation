@@ -4027,7 +4027,7 @@ void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
     }
 }
 
-void DrawTile(ushort *tiles, int countX, int countY, Vector2 *position, Vector2 *offset, bool32 screenRelative)
+void DrawTile(ushort *tiles, int32 countX, int32 countY, Vector2 *position, Vector2 *offset, bool32 screenRelative)
 {
     if (tiles) {
         if (!position)
@@ -4283,7 +4283,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
     }
 }
 
-void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int startFrame, int endFrame, byte align, int spacing, int a8,
+void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int32 startFrame, int32 endFrame, int32 align, int32 spacing, void *unused,
               Vector2 *charOffsets, bool32 screenRelative)
 {
     if (animator && info && animator->frames) {
@@ -4292,8 +4292,8 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
 
         Entity *entity = sceneInfo.entity;
 
-        int x = position->x >> 0x10;
-        int y = position->y >> 0x10;
+        int32 x = position->x >> 0x10;
+        int32 y = position->y >> 0x10;
         if (!screenRelative) {
             x -= currentScreen->position.x;
             y -= currentScreen->position.y;
@@ -4331,7 +4331,8 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
                 }
                 break;
 
-            case ALIGN_RIGHT:
+            case ALIGN_RIGHT: break;
+
             case ALIGN_CENTER:
                 --endFrame;
                 if (charOffsets) {
@@ -4362,9 +4363,9 @@ void DrawText(RSDK::Animator *animator, Vector2 *position, TextInfo *info, int s
         }
     }
 }
-void DrawDevText(const char *text, int x, int y, int align, uint color)
+void DrawDevText(const char *text, int32 x, int32 y, int32 align, uint color)
 {
-    int length     = 0;
+    int32 length     = 0;
     ushort color16 = rgb32To16_B[(color >> 0) & 0xFF] | rgb32To16_G[(color >> 8) & 0xFF] | rgb32To16_R[(color >> 16) & 0xFF];
 
     bool32 finished = false;
@@ -4372,7 +4373,7 @@ void DrawDevText(const char *text, int x, int y, int align, uint color)
         char cur = text[length];
         finished = true;
 
-        int cnt = 0;
+        int32 cnt = 0;
         if (cur != '\n') {
             while (cur) {
                 cur = text[++length];
@@ -4385,14 +4386,14 @@ void DrawDevText(const char *text, int x, int y, int align, uint color)
         }
 
         if (y >= 0 && y < currentScreen->size.y - 7) {
-            int drawX  = x;
-            int alignX = 0;
-            if (align == ALIGN_CENTER) {
+            int32 drawX  = x;
+
+            int32 alignX = 0;
+            if (align == ALIGN_CENTER)
                 alignX = 4 * cnt;
-            }
-            else if (align == ALIGN_RIGHT) {
+            else if (align == ALIGN_RIGHT)
                 alignX = 8 * cnt;
-            }
+
             drawX = x - alignX;
 
             const char *textPtr = &text[length - cnt];
@@ -4405,7 +4406,7 @@ void DrawDevText(const char *text, int x, int y, int align, uint color)
                         byte *engineTextPtr = &engineTextBuffer[0x40 * *textPtr];
                         do {
                             --h;
-                            int w = 8;
+                            int32 w = 8;
                             do {
                                 --w;
                                 if (*engineTextPtr)
@@ -4422,6 +4423,7 @@ void DrawDevText(const char *text, int x, int y, int align, uint color)
                 }
             }
         }
+
         y += 8;
         ++length;
     }

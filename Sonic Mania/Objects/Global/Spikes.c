@@ -648,6 +648,9 @@ void Spikes_EditorDraw(void)
 {
     RSDK_THIS(Spikes);
 
+    if (self->count < 2)
+        self->count = 2;
+
     int32 dir  = self->type & 1;
     int32 type = 0;
     switch ((self->type >> 1) & 1) {

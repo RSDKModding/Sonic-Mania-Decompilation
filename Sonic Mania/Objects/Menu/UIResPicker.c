@@ -114,13 +114,11 @@ void UIResPicker_StageLoad(void) { UIResPicker->aniFrames = RSDK.LoadSpriteAnima
 void UIResPicker_GetDisplayInfo(EntityUIResPicker *entity)
 {
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
-        TextInfo info;
-        RSDK.GetDisplayInfo(&entity->selection, &entity->displayWidth, &entity->displayHeight, &entity->displayRefreshRate, &info);
+        char buffer[0x40];
+        RSDK.GetDisplayInfo(&entity->selection, &entity->displayWidth, &entity->displayHeight, &entity->displayRefreshRate, buffer);
 
-        char buffer[0x20];
-        RSDK.GetCString(buffer, &info);
         if (strcmp(buffer, "DEFAULT") != 0)
-            RSDK.CopyString(&entity->text, &info);
+            RSDK.PrependText(&entity->text, buffer);
         else
             Localization_GetString(&entity->text, STR_DEFAULT);
         RSDK.SetSpriteString(UIWidgets->fontFrames, 0, &entity->text);

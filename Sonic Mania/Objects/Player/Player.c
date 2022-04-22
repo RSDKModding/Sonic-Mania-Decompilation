@@ -546,7 +546,7 @@ void Player_Create(void *data)
 
     if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Player->sonicFrames, ANI_IDLE, &self->animator, true, 0);
-        // self->characterID = ID_SONIC;
+        self->characterID = ID_SONIC;
     }
     else {
         self->playerID = RSDK.GetEntityID(self);

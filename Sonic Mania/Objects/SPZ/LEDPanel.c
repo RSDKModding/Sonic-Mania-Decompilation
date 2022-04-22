@@ -44,7 +44,7 @@ void LEDPanel_Draw(void)
     RSDK.SetClipBounds(SceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
 
     for (int32 r = 0; r < LEDPanel_RowCount; ++r) {
-        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].length, ALIGN_RIGHT, 0, 0, NULL, false);
+        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].length, ALIGN_CENTER, 0, 0, NULL, false);
     }
 
     screen->clipBound_X1 = clipX1;

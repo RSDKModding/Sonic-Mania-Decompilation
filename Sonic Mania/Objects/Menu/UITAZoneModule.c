@@ -357,15 +357,15 @@ void UITAZoneModule_DrawModuleInfo(void)
             drawPos.x = self->drawPos.x - 0x370000;
             if (self->text2.length) {
                 drawPos.y = self->drawPos.y - 0x160000;
-                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
 
                 drawPos.y += 0x1C0000;
                 drawPos.x += 0x200000;
-                RSDK.DrawText(&self->medLetterAnimator2, &drawPos, &self->text2, 0, self->text2.length, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->medLetterAnimator2, &drawPos, &self->text2, 0, self->text2.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
             }
             else {
                 drawPos.y = self->drawPos.y - 0x60000;
-                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->medLetterAnimator1, &drawPos, &self->text1, 0, self->text1.length, ALIGN_LEFT, 0, intToVoid(2), NULL, false);
             }
         }
     }

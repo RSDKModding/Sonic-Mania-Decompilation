@@ -1380,6 +1380,18 @@ void DERobot_EditorDraw(void)
             if (showGizmos()) {
                 RSDK_DRAWING_OVERLAY(true);
                 DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER + 128, -SCREEN_YSIZE, WIDE_SCR_XCENTER + 128, 0, 1 | 0 | 4 | 8, 0x00C0F0);
+
+                int32 slot = RSDK.GetEntityID(self);
+                for (int32 i = -7; i < 7; ++i) {
+                    if (i == 0) // thats this object lol
+                        continue;
+
+                    EntityDERobot *child = RSDK_GET_ENTITY(slot + i, DERobot);
+
+                    if (child)
+                        DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
+                }
+
                 RSDK_DRAWING_OVERLAY(false);
             }
             break;

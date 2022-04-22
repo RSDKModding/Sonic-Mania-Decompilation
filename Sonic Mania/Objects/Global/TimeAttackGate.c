@@ -601,7 +601,7 @@ void TimeAttackGate_EditorDraw(void)
 
         Hitbox hitbox = TimeAttackGate->hitboxGate;
         hitbox.top    = TimeAttackGate->hitboxGate.top - self->extendTop;
-        hitbox.bottom = self->extendBottom + TimeAttackGate->hitboxGate.bottom;
+        hitbox.bottom = TimeAttackGate->hitboxGate.bottom + self->extendBottom;
         DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &hitbox, FLIP_NONE, 0xFF0000);
 
         RSDK_DRAWING_OVERLAY(false);
