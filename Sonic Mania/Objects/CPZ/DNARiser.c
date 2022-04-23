@@ -257,7 +257,7 @@ void DNARiser_State_HelixRise(void)
                 child->state          = DNARiser_State_OrbSetup;
                 child->active         = ACTIVE_NORMAL;
                 child->startHelixPos  = self->helixPos;
-                child->parent         = (Entity *)self;
+                child->parent         = self;
                 child->angle          = (((0x57262 * (4 * self->helixPos)) >> 16) + 100) & 0x3FF;
                 child->amplitude      = 0x2E0000;
                 child->drawOrder      = self->drawOrder - 1;

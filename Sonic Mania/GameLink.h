@@ -311,7 +311,7 @@ typedef struct {
 #endif
     RSDKGameInfo *gameInfo;
 #if RETRO_USE_PLUS
-    RSDKSKUInfo *skuInfo;
+    RSDKSKUInfo *currentSKU;
 #endif
     RSDKSceneInfo *sceneInfo;
     RSDKControllerState *controllerInfo;

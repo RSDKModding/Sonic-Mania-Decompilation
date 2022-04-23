@@ -415,7 +415,7 @@ bool32 RSDK::loadMod(ModInfo *info, std::string modsPath, std::string folder, bo
                         linkInfo.APIPtrs    = APIFunctionTable;
                         linkInfo.currentSKU = &SKU::curSKU;
 #endif
-                        linkInfo.engineInfo = &gameVerInfo;
+                        linkInfo.gameInfo   = &gameVerInfo;
                         linkInfo.sceneInfo  = &sceneInfo;
                         linkInfo.controller = controller;
                         linkInfo.stickL     = stickL;

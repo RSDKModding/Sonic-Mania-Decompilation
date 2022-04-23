@@ -48,7 +48,7 @@ void LinkGameLogicDLL(EngineInfo *info)
 
     GameInfo = info->gameInfo;
 #if RETRO_USE_PLUS
-    SKU = info->skuInfo;
+    SKU = info->currentSKU;
 #endif
     SceneInfo        = info->sceneInfo;
     ControllerInfo   = info->controllerInfo;

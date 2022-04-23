@@ -1177,7 +1177,7 @@ void InitScriptSystem()
     info.APIPtrs    = RSDK::APIFunctionTable;
     info.currentSKU = &RSDK::SKU::curSKU;
 #endif
-    info.engineInfo = &RSDK::gameVerInfo;
+    info.gameInfo   = &RSDK::gameVerInfo;
     info.sceneInfo  = &sceneInfo;
     info.controller = controller;
     info.stickL     = stickL;

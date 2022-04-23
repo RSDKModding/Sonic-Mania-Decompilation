@@ -92,7 +92,7 @@ void CPZSetup_StageLoad(void)
         BGSwitch->layerIDs[3] = CPZ_BG_CPZ1;
 
         bool32 setCPZ1BG = false;
-        if (!!PlayerHelpers_CheckStageReload() || PlayerHelpers_CheckPlayerPos(0x18900000, 0xAC0000, 0x2560000, 0x19800000)) {
+        if (!PlayerHelpers_CheckStageReload() || PlayerHelpers_CheckPlayerPos(0x18900000, 0xAC0000, 0x2560000, 0x19800000)) {
             setCPZ1BG = true;
 
             Zone->cameraBoundsB[0] = 6528;

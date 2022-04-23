@@ -42,9 +42,11 @@ struct GameInfo {
     void *functionPtrs;
 #if RETRO_REV02
     void *APIPtrs;
+#endif
+    GameVersionInfo *gameInfo;
+#if RETRO_REV02
     SKU::SKUInfo *currentSKU;
 #endif
-    GameVersionInfo *engineInfo;
     SceneInfo *sceneInfo;
     ControllerState *controller;
     AnalogState *stickL;
