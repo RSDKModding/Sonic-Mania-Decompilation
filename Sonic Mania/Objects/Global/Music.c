@@ -171,9 +171,9 @@ void Music_PlayQueuedTrack(uint8 trackID)
 
     for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
-        if (music->objectID == Music->objectID && music != music) {
-            if (music->trackPriority > music->trackPriority) {
-                music->volume = 0.0;
+        if (music->objectID == Music->objectID && music != entity) {
+            if (music->trackPriority > entity->trackPriority) {
+                entity->volume = 0.0;
                 return;
             }
         }

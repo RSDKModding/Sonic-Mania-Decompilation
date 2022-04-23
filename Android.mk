@@ -1,5 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
+RSDK_DIR := RSDKv5/
 OGG_DIR := dependencies/android/libogg
 VORBIS_DIR := dependencies/android/libvorbis
 THEORA_DIR := dependencies/android/libtheora
@@ -80,6 +81,7 @@ SDL_PATH := ../SDL
 LOCAL_CFLAGS   := -fexceptions -frtti
 
 LOCAL_C_INCLUDES := \
+    $(LOCAL_PATH)/$(RSDK_DIR) \
     $(LOCAL_PATH)/$(SDL_PATH)/include \
     $(LOCAL_PATH)/dependencies/all \
     $(LOCAL_PATH)/dependencies/all/tinyxml2 \
@@ -88,18 +90,31 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/$(THEORA_DIR)/include \
 #    $(LOCAL_PATH)/dependencies/android
 
-
 WILDCARD_SETUP := \
   $(wildcard $(LOCAL_PATH)/dependencies/all/iniparser/*.cpp) \
   $(LOCAL_PATH)/dependencies/all/tinyxml2/tinyxml2.cpp \
   $(wildcard $(LOCAL_PATH)/dependencies/all/theoraplay/*.c) \
-  $(wildcard $(LOCAL_PATH)/RSDKv5/*.cpp)
+  $(wildcard $(LOCAL_PATH)/RSDKv5/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Audio/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Core/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Dev/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Graphics/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Input/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Scene/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Scene/Objects/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/Storage/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/User/Core/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/User/Dummy/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/User/EOS/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/User/NX/*.cpp) \
+  $(wildcard $(LOCAL_PATH)/RSDKv5/RSDK/User/Steam/*.cpp)
 
 LOCAL_SHARED_LIBRARIES := SDL2 libogg libvorbis libtheora
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
 LOCAL_SRC_FILES := $(subst jni/src/, , $(WILDCARD_SETUP))
 
 include $(BUILD_STATIC_LIBRARY)
+
 #MOD BC ITS FUNNY
 include $(CLEAR_VARS)
 
