@@ -7,9 +7,9 @@
 struct ObjectSpeedBooster {
     RSDK_OBJECT
     StateMachine(defaultState);
-	Hitbox hitbox;
+    Hitbox hitbox;
     uint16 aniFrames;
-	uint16 sfxSpeedBooster;
+    uint16 sfxSpeedBooster;
 };
 
 // Entity Class
@@ -32,7 +32,7 @@ void SpeedBooster_Update(void);
 void SpeedBooster_LateUpdate(void);
 void SpeedBooster_StaticUpdate(void);
 void SpeedBooster_Draw(void);
-void SpeedBooster_Create(void* data);
+void SpeedBooster_Create(void *data);
 void SpeedBooster_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SpeedBooster_EditorDraw(void);
@@ -45,7 +45,7 @@ void SpeedBooster_DebugDraw(void);
 
 // Extra Entity Functions
 void SpeedBooster_State_SpeedBooster(void);
-void SpeedBooster_Interact(void);
+void SpeedBooster_HandleInteractions(void);
 
 void SpeedBooster_State_SSZFire(void);
 void SpeedBooster_State_SSZRecoil(void);
@@ -53,4 +53,4 @@ void SpeedBooster_State_SSZRetract(void);
 
 void SpeedBooster_State_SSZBullet(void);
 
-#endif //!OBJ_SPEEDBOOSTER_H
+#endif //! OBJ_SPEEDBOOSTER_H

@@ -3,15 +3,20 @@
 
 #include "SonicMania.h"
 
-#define Starcase_StairCount (4)
+#define STAIRCASE_STAIR_COUNT (4)
+
+typedef enum {
+    STAIRCASE_DOWN,
+    STAIRCASE_UP,
+} StaircaseTypes;
 
 // Object Class
 struct ObjectStaircase {
     RSDK_OBJECT
     Hitbox blockHitbox;
-    uint16 animID;
+    uint16 aniFrames;
     uint16 unused;
-    uint16 sfxID;
+    uint16 sfxBlockStop;
 };
 
 // Entity Class
@@ -19,7 +24,7 @@ struct EntityStaircase {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    Vector2 blocks[Starcase_StairCount];
+    Vector2 blockPos[STAIRCASE_STAIR_COUNT];
     int32 timer;
     Animator animator;
     uint8 type;

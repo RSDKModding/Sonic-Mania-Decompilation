@@ -40,11 +40,11 @@ struct EntityDNARiser {
     Vector2 startPos;
     Vector2 maxSpeed;
     uint16 helixPos;
-    Entity *firstChild;
-    Entity *child;
-    Entity *sibling;
-    Entity *lastChild;
-    Entity *parent;
+    EntityDNARiser *firstChild;
+    EntityDNARiser *child;
+    EntityDNARiser *sibling;
+    EntityDNARiser *lastChild;
+    EntityDNARiser *parent;
 };
 
 // Object Struct

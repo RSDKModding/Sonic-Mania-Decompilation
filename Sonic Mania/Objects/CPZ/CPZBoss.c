@@ -13,6 +13,7 @@ ObjectCPZBoss *CPZBoss;
 void CPZBoss_Update(void)
 {
     RSDK_THIS(CPZBoss);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,7 +24,8 @@ void CPZBoss_StaticUpdate(void) {}
 void CPZBoss_Draw(void)
 {
     RSDK_THIS(CPZBoss);
-    RSDK.DrawSprite(&self->playerAnimator, NULL, false);
+
+    RSDK.DrawSprite(&self->characterAnimator, NULL, false);
     RSDK.DrawSprite(&self->enterAnimator, &self->startPos, false);
     RSDK.DrawSprite(&self->panelAnimator, &self->startPos, false);
 }
@@ -31,24 +33,25 @@ void CPZBoss_Draw(void)
 void CPZBoss_Create(void *data)
 {
     RSDK_THIS(CPZBoss);
+
     if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK) {
             destroyEntity(self);
         }
         else {
             self->drawOrder     = Zone->playerDrawLow;
-            self->startPos.x    = self->position.x;
-            self->startPos.y    = self->position.y;
+            self->startPos      = self->position;
             self->active        = ACTIVE_BOUNDS;
             self->visible       = true;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
+
             if (self->type == CPZBOSS_PLAYER) {
                 self->drawFX = FX_FLIP;
                 self->state  = CPZBoss_State_SetupArena;
             }
             else {
-                RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->characterAnimator, true, 0);
                 RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 0, &self->panelAnimator, true, 0);
             }
         }
@@ -57,18 +60,21 @@ void CPZBoss_Create(void *data)
 
 void CPZBoss_StageLoad(void)
 {
-    CPZBoss->aniFrames     = RSDK.LoadSpriteAnimation("Eggman/EggmanCPZ.bin", SCOPE_STAGE);
-    CPZBoss->hitbox.left   = -16;
-    CPZBoss->hitbox.top    = 8;
-    CPZBoss->hitbox.right  = 16;
-    CPZBoss->hitbox.bottom = 16;
-    CPZBoss->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    CPZBoss->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanCPZ.bin", SCOPE_STAGE);
+
+    CPZBoss->hitboxPlayerTrigger.left   = -16;
+    CPZBoss->hitboxPlayerTrigger.top    = 8;
+    CPZBoss->hitboxPlayerTrigger.right  = 16;
+    CPZBoss->hitboxPlayerTrigger.bottom = 16;
+
+    CPZBoss->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+
     RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, NULL);
     RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, NULL);
 }
 
-void CPZBoss_DrawLayerCB_SetupPuyoDropperClip(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
-void CPZBoss_DrawLayerCB_RemovePuyoDropperClip(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
+void CPZBoss_DrawLayerCB_SetupPuyoHUD(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
+void CPZBoss_DrawLayerCB_RemovePuyoHUD(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
 
 void CPZBoss_Explode_Eggman(void)
 {
@@ -101,6 +107,7 @@ void CPZBoss_Explode_Player(void)
 bool32 CPZBoss_CheckMatchReset(void)
 {
     RSDK_THIS(CPZBoss);
+
     if (!RSDK.CheckOnScreen(self, NULL)) {
         RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, NULL);
         RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, NULL);
@@ -109,12 +116,16 @@ bool32 CPZBoss_CheckMatchReset(void)
         PuyoBean->disableBeanLink[0] = 0;
         PuyoBean->comboChainCount[1] = 0;
         PuyoBean->disableBeanLink[1] = 0;
-        for (int i = 0; i < 0x100; ++i) PuyoBean->playfield[i] = NULL;
+
+        for (int32 i = 0; i < 0x100; ++i) PuyoBean->playfield[i] = NULL;
+
         foreach_all(PuyoBean, bean) { destroyEntity(bean); }
+
         int32 layerID = RSDK.GetSceneLayerID("FG High");
         RSDK.CopyTileLayer(layerID, 438, 150, layerID, 452, 150, 6, 2);
         SceneInfo->timeEnabled = true;
         CPZBoss_Create(NULL);
+
         return true;
     }
     return false;
@@ -123,12 +134,14 @@ bool32 CPZBoss_CheckMatchReset(void)
 void CPZBoss_State_SetupArena(void)
 {
     RSDK_THIS(CPZBoss);
+
     if (++self->timer >= 8) {
         SceneInfo->timeEnabled = false;
         Music_SetMusicTrack("BossPuyo.ogg", TRACK_EGGMAN2, 846720);
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
         Entity *entPtr = RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
         Camera_SetupLerp(2, 0, entPtr->position.x, entPtr->position.y, 8);
+
         foreach_active(HUD, hud)
         {
             CPZBoss->hudSlotID = RSDK.GetEntityID(hud);
@@ -142,15 +155,18 @@ void CPZBoss_State_SetupArena(void)
             else
                 player->velocity.y = 0;
         }
+
         switch (globals->playerID & 0xFF) {
+            default:
+            case ID_SONIC: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMSonic.bin", SCOPE_STAGE); break;
             case ID_TAILS: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMTails.bin", SCOPE_STAGE); break;
             case ID_KNUCKLES: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMKnux.bin", SCOPE_STAGE); break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMMighty.bin", SCOPE_STAGE); break;
             case ID_RAY: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMRay.bin", SCOPE_STAGE); break;
 #endif
-            default: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMSonic.bin", SCOPE_STAGE); break;
         }
+
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 0, &self->panelAnimator, true, 0);
         self->timer  = 0;
@@ -169,6 +185,7 @@ void CPZBoss_State_EnterPlayer(void)
             if (!player->sidekick)
                 player->velocity.y = 0x80000;
         }
+
         self->state = CPZBoss_State_CheckPlayerReady;
     }
 }
@@ -176,10 +193,11 @@ void CPZBoss_State_EnterPlayer(void)
 void CPZBoss_State_CheckPlayerReady(void)
 {
     RSDK_THIS(CPZBoss);
+
     if (!CPZBoss_CheckMatchReset()) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &CPZBoss->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &CPZBoss->hitboxPlayerTrigger)) {
                 if (player->sidekick) {
                     player->state = Player_State_Air;
                 }
@@ -197,7 +215,7 @@ void CPZBoss_State_CheckPlayerReady(void)
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     RSDK.SetSpriteAnimation(-1, 0, &self->enterAnimator, true, 0);
-                    RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->playerAnimator, true, 1);
+                    RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->characterAnimator, true, 1);
                     self->direction = FLIP_X;
                     self->state     = CPZBoss_State_PlayPlayerEnterAnim;
                 }
@@ -211,12 +229,13 @@ void CPZBoss_State_PlayPlayerEnterAnim(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
-        RSDK.ProcessAnimation(&self->playerAnimator);
-        if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+        RSDK.ProcessAnimation(&self->characterAnimator);
+
+        if (self->characterAnimator.frameID == self->characterAnimator.frameCount - 1) {
             foreach_active(CPZBoss, boss)
             {
                 if (boss->type == CPZBOSS_EGGMAN) {
-                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 4, &boss->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 4, &boss->characterAnimator, true, 0);
                     boss->state = CPZBoss_State_HandleMatch_Eggman;
                 }
             }
@@ -242,23 +261,26 @@ void CPZBoss_State_SetupMatch(void)
             match->state    = PuyoMatch_State_HandleMatch;
             match->matchKey = rand;
             PuyoMatch_SetupNextBeans(match);
+
             if (match->playerID == 1) {
                 match->stateInput                        = PuyoAI_Input_AI;
                 PuyoAI->isAI[match->playerID]            = false;
                 PuyoAI->lastBeanY[match->playerID]       = PUYO_PLAYFIELD_H;
-                PuyoAI->desiredColumn[match->playerID]         = 0;
-                PuyoAI->desiredRotation[match->playerID]          = 0;
+                PuyoAI->desiredColumn[match->playerID]   = 0;
+                PuyoAI->desiredRotation[match->playerID] = 0;
                 PuyoAI->isAI[match->playerID]            = true;
                 PuyoAI->controlInterval[match->playerID] = 16;
                 PuyoAI->controlChance[match->playerID]   = 50;
             }
+
             CPZBoss->managers[matchCount++] = match;
         }
+
         self->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->characterAnimator, false, 0);
         self->state = CPZBoss_State_HandleMatch_Player;
-        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, CPZBoss_DrawLayerCB_SetupPuyoDropperClip);
-        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoDropperClip);
+        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh, false, CPZBoss_DrawLayerCB_SetupPuyoHUD);
+        RSDK.SetDrawLayerProperties(Zone->objectDrawHigh + 1, false, CPZBoss_DrawLayerCB_RemovePuyoHUD);
     }
 }
 
@@ -267,33 +289,34 @@ void CPZBoss_State_HandleMatch_Player(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
+        RSDK.ProcessAnimation(&self->characterAnimator);
+
         EntityPuyoMatch *manager = CPZBoss->managers[self->type];
-        RSDK.ProcessAnimation(&self->playerAnimator);
-        if (self->playerAnimator.animationID == 2) {
+        if (self->characterAnimator.animationID == 2) {
             if (manager) {
                 EntityPuyoBean *bean = manager->beanPtr;
                 if (bean) {
                     if (bean->state == PuyoBean_State_JunkLand) {
-                        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 3, &self->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 3, &self->characterAnimator, false, 0);
                     }
                     else {
                         if (bean->down)
-                            self->playerAnimator.frameID = 3;
+                            self->characterAnimator.frameID = 3;
                         else if (bean->left)
-                            self->playerAnimator.frameID = 1;
+                            self->characterAnimator.frameID = 1;
                         else if (bean->right)
-                            self->playerAnimator.frameID = 2;
+                            self->characterAnimator.frameID = 2;
 
                         if (bean->rotateRight)
-                            self->playerAnimator.frameID = 4;
+                            self->characterAnimator.frameID = 4;
                         else if (bean->rotateLeft)
-                            self->playerAnimator.frameID = 5;
+                            self->characterAnimator.frameID = 5;
                     }
                 }
             }
         }
-        else if (self->playerAnimator.animationID == 3 && self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
-            RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->playerAnimator, false, 0);
+        else if (self->characterAnimator.animationID == 3 && self->characterAnimator.frameID == self->characterAnimator.frameCount - 1) {
+            RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &self->characterAnimator, false, 0);
         }
 
         if (ControllerInfo[CONT_P1].keyStart.press) {
@@ -329,11 +352,11 @@ void CPZBoss_State_HandleMatch_Player(void)
         if (manager) {
             if (manager->state == PuyoMatch_State_Lose) {
                 PuyoBean_DestroyPuyoBeans();
-                self->timer       = 0;
-                self->state       = CPZBoss_State_HandleMatchFinish_PlayerLose;
+                self->timer     = 0;
+                self->state     = CPZBoss_State_HandleMatchFinish_PlayerLose;
                 PuyoAI->isAI[0] = false;
                 PuyoAI->isAI[1] = false;
-                RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 3, &self->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 3, &self->characterAnimator, false, 0);
             }
         }
     }
@@ -344,21 +367,20 @@ void CPZBoss_State_HandleMatch_Eggman(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
+        RSDK.ProcessAnimation(&self->characterAnimator);
+
         EntityPuyoMatch *manager = CPZBoss->managers[self->type];
-
-        RSDK.ProcessAnimation(&self->playerAnimator);
-
-        if (self->playerAnimator.animationID == 2) {
+        if (self->characterAnimator.animationID == 2) {
             if (manager) {
                 EntityPuyoBean *bean = manager->beanPtr;
                 if (bean && bean->state == PuyoBean_State_JunkLand)
-                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->characterAnimator, false, 0);
             }
         }
         else {
-            if (self->playerAnimator.animationID == 3 || self->playerAnimator.animationID == 4) {
-                if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1)
-                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->playerAnimator, false, 0);
+            if (self->characterAnimator.animationID == 3 || self->characterAnimator.animationID == 4) {
+                if (self->characterAnimator.frameID == self->characterAnimator.frameCount - 1)
+                    RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->characterAnimator, false, 0);
             }
         }
 
@@ -368,7 +390,7 @@ void CPZBoss_State_HandleMatch_Eggman(void)
                 self->state          = CPZBoss_State_HandleMatchFinish_EggmanLose;
                 self->explosionPos.x = self->position.x + 0x400000;
                 self->explosionPos.y = (ScreenInfo->height + ScreenInfo->position.y) << 16;
-                RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &self->characterAnimator, false, 0);
             }
         }
     }
@@ -379,12 +401,13 @@ void CPZBoss_State_HandleMatchFinish_EggmanLose(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
-        RSDK.ProcessAnimation(&self->playerAnimator);
+        RSDK.ProcessAnimation(&self->characterAnimator);
+
         CPZBoss_Explode_Eggman();
 
         self->explosionPos.y -= 0x40000;
         if (self->explosionPos.y < self->position.y - 0xD00000) {
-            RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 5, &self->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 5, &self->characterAnimator, false, 0);
             self->state = CPZBoss_State_PlayerWin;
             foreach_active(CPZShutter, shutter) { shutter->state = CPZShutter_State_Close; }
         }
@@ -396,7 +419,8 @@ void CPZBoss_State_PlayerWin(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
-        RSDK.ProcessAnimation(&self->playerAnimator);
+        RSDK.ProcessAnimation(&self->characterAnimator);
+
         CPZBoss_Explode_Player();
 
         if (++self->timer == 60) {
@@ -404,7 +428,7 @@ void CPZBoss_State_PlayerWin(void)
             self->active = ACTIVE_NORMAL;
             self->state  = CPZBoss_State_EggmanFall;
             RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);
-            RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 6, &self->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 6, &self->characterAnimator, false, 0);
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
             RSDK.PlaySfx(PuyoBean->sfxFall, false, 255);
@@ -420,7 +444,7 @@ void CPZBoss_State_PlayerWin(void)
             {
                 if (!boss->type) {
                     boss->state = CPZBoss_State_PlayerExit;
-                    RSDK.SetSpriteAnimation(-1, 0, &boss->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(-1, 0, &boss->characterAnimator, false, 0);
                     RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &boss->enterAnimator, true, 0);
 
                     foreach_all(Player, player)
@@ -450,7 +474,8 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
     RSDK_THIS(CPZBoss);
 
     if (!CPZBoss_CheckMatchReset()) {
-        RSDK.ProcessAnimation(&self->playerAnimator);
+        RSDK.ProcessAnimation(&self->characterAnimator);
+
         if (++self->timer == 60) {
             self->timer = 0;
             self->state = (Type_StateMachine)CPZBoss_CheckMatchReset;
@@ -475,7 +500,7 @@ void CPZBoss_State_HandleMatchFinish_PlayerLose(void)
                 player->velocity.y = -0x20000;
                 RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntityID(&player));
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
-                RSDK.SetSpriteAnimation(-1, 0, &self->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(-1, 0, &self->characterAnimator, false, 0);
                 RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);
             }
 
@@ -501,19 +526,20 @@ void CPZBoss_State_EggmanFall(void)
 {
     RSDK_THIS(CPZBoss);
 
-    RSDK.ProcessAnimation(&self->playerAnimator);
+    RSDK.ProcessAnimation(&self->characterAnimator);
     if (self->timer > 32) {
         self->velocity.y += 0x2800;
         self->position.y += self->velocity.y;
     }
-    self->timer++;
-    if (self->timer == 95)
+
+    if (++self->timer == 95)
         self->state = StateMachine_None;
 }
 
 void CPZBoss_State_PlayerExit(void)
 {
     RSDK_THIS(CPZBoss);
+
     if (++self->timer == 240) {
         self->timer = 0;
         foreach_active(Player, player)
@@ -561,6 +587,7 @@ void CPZBoss_State_Destroyed(void)
             if (!player->sidekick)
                 player->stateInput = Player_ProcessP1Input;
         }
+
         self->active = ACTIVE_BOUNDS;
         self->state  = StateMachine_None;
     }
@@ -576,10 +603,10 @@ void CPZBoss_EditorDraw(void)
         self->drawFX = FX_FLIP;
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->enterAnimator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 0, &self->panelAnimator, true, 0);
-        RSDK.SetSpriteAnimation(-1, 0, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(-1, 0, &self->characterAnimator, true, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->characterAnimator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 0, &self->panelAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->enterAnimator, true, 0);
     }

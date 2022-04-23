@@ -12,12 +12,14 @@ ObjectSyringe *Syringe;
 void Syringe_Update(void)
 {
     RSDK_THIS(Syringe);
+
     if (self->activated) {
         if (self->offsetY < 0x280000) {
             self->offsetY += 0x8000;
             if (!(Zone->timer & 3))
                 CREATE_ENTITY(Reagent, intToVoid(self->type), self->position.x, self->position.y + 0x680000);
         }
+
         self->active = ACTIVE_NORMAL;
     }
     else if (!RSDK.CheckOnScreen(self, NULL)) {
@@ -29,9 +31,11 @@ void Syringe_Update(void)
     {
         Player_CheckCollisionPlatform(player, self, &Syringe->hitboxBody);
         self->position.y += self->offsetY;
+
         if (Player_CheckCollisionPlatform(player, self, &Syringe->hitboxHandle)) {
             self->activated = true;
             player->position.y += 0x10000;
+
             EntityCamera *camera = player->camera;
             if (camera) {
                 if (camera->lookPos.y < 96) {
@@ -40,6 +44,7 @@ void Syringe_Update(void)
                 }
             }
         }
+
         self->position.y -= self->offsetY;
     }
 }
@@ -63,6 +68,7 @@ void Syringe_Draw(void)
 void Syringe_Create(void *data)
 {
     RSDK_THIS(Syringe);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = Zone->objectDrawLow;
@@ -102,6 +108,7 @@ void Syringe_StageLoad(void)
 void Syringe_EditorDraw(void)
 {
     RSDK_THIS(Syringe);
+
     switch (self->type) {
         case CHEMICALPOOL_BLUE: self->color = 0x0008C0; break;
         case CHEMICALPOOL_GREEN: self->color = 0x189000; break;

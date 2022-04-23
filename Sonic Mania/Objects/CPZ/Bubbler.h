@@ -32,7 +32,7 @@ void Bubbler_Update(void);
 void Bubbler_LateUpdate(void);
 void Bubbler_StaticUpdate(void);
 void Bubbler_Draw(void);
-void Bubbler_Create(void* data);
+void Bubbler_Create(void *data);
 void Bubbler_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Bubbler_EditorDraw(void);
@@ -53,7 +53,7 @@ void Bubbler_State_MotherPatrol(void);
 void Bubbler_State_FoundPlayer(void);
 void Bubbler_State_AttackPlayer(void);
 
-void Bubbler_State_Projectile_Seed(void);
-void Bubbler_State_Projectile_Bubbler(void);
+void Bubbler_StateProjectile_Seed(void);
+void Bubbler_StateProjectile_Bubbler(void);
 
-#endif //!OBJ_BUBBLER_H
+#endif //! OBJ_BUBBLER_H

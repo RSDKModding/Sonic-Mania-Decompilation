@@ -7,7 +7,7 @@
 struct ObjectCPZ2Outro {
     RSDK_OBJECT
     int32 unused;
-    Entity *prisonPtr;
+    EntityEggPrison *eggPrison;
 };
 
 // Entity Class
@@ -33,6 +33,6 @@ void CPZ2Outro_Serialize(void);
 
 // Extra Entity Functions
 void CPZ2Outro_SetupCutscene(void);
-bool32 CPZ2Outro_Cutscene_Outro(void *h);
+bool32 CPZ2Outro_Cutscene_Outro(EntityCutsceneSeq *host);
 
 #endif //!OBJ_CPZ2OUTRO_H

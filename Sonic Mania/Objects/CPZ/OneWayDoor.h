@@ -17,7 +17,7 @@ struct EntityOneWayDoor {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-	int32 yChange;
+	int32 offsetY;
 	Animator animator;
 };
 

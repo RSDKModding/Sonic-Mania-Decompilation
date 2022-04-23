@@ -30,6 +30,7 @@ void Spring_StaticUpdate(void) {}
 void Spring_Draw(void)
 {
     RSDK_THIS(Spring);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -136,8 +137,10 @@ void Spring_State_Vertical(void)
         foreach_active(Player, player)
         {
             if (!self->planeFilter || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
-                int32 col = (self->type == 0xFF && player->velocity.y < -0x50000) ? Player_CheckCollisionPlatform(player, self, &self->hitbox)
-                                                                                  : Player_CheckCollisionBox(player, self, &self->hitbox);
+                int32 col = (self->type == SPRING_TUBESPRING && player->velocity.y < -0x50000)
+                                ? Player_CheckCollisionPlatform(player, self, &self->hitbox)
+                                : Player_CheckCollisionBox(player, self, &self->hitbox);
+
                 if (col == C_TOP) {
                     int32 anim = player->animator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))

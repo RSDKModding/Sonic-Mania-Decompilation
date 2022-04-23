@@ -6,15 +6,15 @@
 typedef enum {
     STICKYPLATFORM_UP,
     STICKYPLATFORM_DOWN,
-    STICKYPLATFORM_LEFT,
     STICKYPLATFORM_RIGHT,
+    STICKYPLATFORM_LEFT,
 } StickyPlatformTypes;
 
 // Object Class
 struct ObjectStickyPlatform {
 	RSDK_OBJECT
-	uint16 sfxID;
-	uint16 animID;
+	uint16 sfxLand;
+	uint16 aniFrames;
 };
 
 // Entity Class
@@ -26,9 +26,9 @@ struct EntityStickyPlatform {
     int32 speed;
     bool32 oscillate;
     int32 unused;
-    int32 playerBits;
-    int32 cooldowns[4];
-    Vector2 startPos;
+    int32 activePlayers;
+    int32 playerTimer[4];
+    Vector2 centerPos;
     Hitbox hitbox;
     Animator animator;
 };
@@ -55,6 +55,6 @@ void StickyPlatform_Interact(void);
 void StickyPlatform_State_HandleMovement(void);
 void StickyPlatform_State_MoveBack(void);
 void StickyPlatform_State_MoveBackForth(void);
-void StickyPlatform_State_AddSpeed(void);
+void StickyPlatform_State_Oscillating(void);
 
 #endif //!OBJ_STICKYPLATFORM_H

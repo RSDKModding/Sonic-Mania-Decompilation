@@ -6,7 +6,7 @@
 typedef enum {
     SPINY_FLOOR,
     SPINY_WALL,
-}SpinyTypes;
+} SpinyTypes;
 
 // Object Class
 struct ObjectSpiny {
@@ -40,7 +40,7 @@ void Spiny_Update(void);
 void Spiny_LateUpdate(void);
 void Spiny_StaticUpdate(void);
 void Spiny_Draw(void);
-void Spiny_Create(void* data);
+void Spiny_Create(void *data);
 void Spiny_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Spiny_EditorDraw(void);
@@ -60,7 +60,8 @@ void Spiny_State_Floor(void);
 void Spiny_State_Shoot_Floor(void);
 void Spiny_State_Wall(void);
 void Spiny_State_Shoot_Wall(void);
+
 void Spiny_State_Shot(void);
 void Spiny_State_ShotDisappear(void);
 
-#endif //!OBJ_SPINY_H
+#endif //! OBJ_SPINY_H

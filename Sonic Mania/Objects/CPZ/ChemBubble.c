@@ -12,6 +12,7 @@ ObjectChemBubble *ChemBubble;
 void ChemBubble_Update(void)
 {
     RSDK_THIS(ChemBubble);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,18 +23,20 @@ void ChemBubble_StaticUpdate(void) {}
 void ChemBubble_Draw(void)
 {
     RSDK_THIS(ChemBubble);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void ChemBubble_Create(void *data)
 {
     RSDK_THIS(ChemBubble);
+
     if (!SceneInfo->inEditor) {
-        self->visible    = true;
-        self->active     = ACTIVE_NORMAL;
-        self->drawOrder  = Zone->objectDrawHigh - 2;
-        self->startPos.x = self->position.x;
-        self->startPos.y = self->position.y;
+        self->visible   = true;
+        self->active    = ACTIVE_NORMAL;
+        self->drawOrder = Zone->objectDrawHigh - 2;
+        self->startPos  = self->position;
+
 #if RETRO_USE_PLUS
         self->velocity.y = RSDK.RandSeeded(-0x20000, 0, &Zone->randSeed);
         self->angleShift = RSDK.RandSeeded(12, 16, &Zone->randSeed);
@@ -43,6 +46,7 @@ void ChemBubble_Create(void *data)
         self->angleShift = RSDK.Rand(12, 16);
         self->amplitude  = RSDK.Rand(9, 10);
 #endif
+
         RSDK.SetSpriteAnimation(ChemBubble->aniFrames, RSDK.Rand(1, 3), &self->animator, true, 0);
         self->drawFX = FX_SCALE;
         self->state  = ChemBubble_State_Appear;
@@ -54,8 +58,10 @@ void ChemBubble_StageLoad(void) { ChemBubble->aniFrames = RSDK.LoadSpriteAnimati
 void ChemBubble_State_Appear(void)
 {
     RSDK_THIS(ChemBubble);
+
     self->scale.x += 0x20;
     self->scale.y = self->scale.x;
+
     if (self->scale.x == 0x200) {
         self->drawFX = FX_NONE;
         self->state  = ChemBubble_State_Rising;
@@ -65,14 +71,17 @@ void ChemBubble_State_Appear(void)
 void ChemBubble_State_Rising(void)
 {
     RSDK_THIS(ChemBubble);
-    EntityChemicalPool *parent = (EntityChemicalPool *)self->parent;
+    EntityChemicalPool *parent = self->parent;
 
     self->velocity.y -= 0x2000;
     self->position.y += self->velocity.y;
+
     int32 x          = (RSDK.Sin256(self->position.y >> self->angleShift) << self->amplitude) + self->startPos.x;
     self->position.x = x;
-    int32 deform     = ChemicalPool->surfaceDeformation[x >> 20];
-    int32 y = parent->offsetY + (((x >> 12) & 0xFF) * (ChemicalPool->surfaceDeformation[(x + 0x100000) >> 20] - deform) >> 8) + deform + 0x20000;
+
+    int32 deform = ChemicalPool->surfaceDeformation[x >> 20];
+    int32 y      = parent->offsetY + (((x >> 12) & 0xFF) * (ChemicalPool->surfaceDeformation[(x + 0x100000) >> 20] - deform) >> 8) + deform + 0x20000;
+
     if (self->position.y <= y) {
         self->position.y = y;
         if (self->animator.animationID == 2) {
@@ -82,6 +91,7 @@ void ChemBubble_State_Rising(void)
         else {
             RSDK.SetSpriteAnimation(ChemBubble->aniFrames, 4, &self->animator, true, 5);
         }
+
         self->state = ChemBubble_State_Surfaced;
     }
 }
@@ -89,13 +99,15 @@ void ChemBubble_State_Rising(void)
 void ChemBubble_State_Surfaced(void)
 {
     RSDK_THIS(ChemBubble);
-    EntityChemicalPool *parent = (EntityChemicalPool *)self->parent;
+    EntityChemicalPool *parent = self->parent;
 
     RSDK.ProcessAnimation(&self->animator);
-    int32 deform     = ChemicalPool->surfaceDeformation[self->position.x >> 20];
-    self->position.y = parent->offsetY
-                       + (((self->position.x >> 12) & 0xFF) * (ChemicalPool->surfaceDeformation[(self->position.x + 0x100000) >> 20] - deform) >> 8)
-                       + deform + 0x20000;
+
+    int32 x = self->position.x;
+
+    int32 deform = ChemicalPool->surfaceDeformation[x >> 20];
+    self->position.y =
+        parent->offsetY + (((x >> 12) & 0xFF) * (ChemicalPool->surfaceDeformation[(x + 0x100000) >> 20] - deform) >> 8) + deform + 0x20000;
 
     if (self->animator.animationID == 4) {
         if (self->animator.frameID == self->animator.frameCount - 1)

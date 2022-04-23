@@ -12,6 +12,7 @@ ObjectTransportTube *TransportTube;
 void TransportTube_Update(void)
 {
     RSDK_THIS(TransportTube);
+
     StateMachine_Run(self->state);
 }
 
@@ -31,11 +32,14 @@ void TransportTube_Create(void *data)
         self->updateRange.x = 0xC00000;
         self->updateRange.y = 0xC00000;
         TransportTube_SetupDirections(self);
+
         switch (self->type) {
             case TRANSPORTTUBE_CHANGEDIR: self->state = TransportTube_State_ChangeDir; break;
             case TRANSPORTTUBE_ENTRY: self->state = TransportTube_State_Entry; break;
+
             case TRANSPORTTUBE_TOTARGET_NEXT:
             case TRANSPORTTUBE_TOTARGET_PREV: self->state = TransportTube_State_ToTargetEntity; break;
+
             case TRANSPORTTUBE_TOTARGET_NODE: self->state = TransportTube_State_TargetSeqNode; break;
             case TRANSPORTTUBE_JUNCTION: self->state = TransportTube_State_ChooseDir; break;
             case TRANSPORTTUBE_EXIT: self->state = TransportTube_State_Exit; break;
@@ -96,6 +100,7 @@ void TransportTube_State_ChangeDir(void)
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         int32 rx             = (player->position.x - self->position.x) >> 16;
         int32 ry             = (player->position.y - self->position.y) >> 16;
+
         if (self->playerTimers[i]) {
             if (rx * rx + ry * ry >= 0xC0)
                 self->playerTimers[i]--;
@@ -180,12 +185,13 @@ void TransportTube_State_ToTargetEntity(void)
                     TransportTube->nextSlot[i] = 1;
                 else
                     TransportTube->nextSlot[i] = -1;
-                EntityTransportTube *entPtr = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->nextSlot[i], TransportTube);
-                int32 angle           = RSDK.ATan2((entPtr->position.x - player->position.x) >> 16, (entPtr->position.y - player->position.y) >> 16);
-                player->velocity.x    = 0xC00 * RSDK.Cos256(angle);
-                player->velocity.y    = 0xC00 * RSDK.Sin256(angle);
-                entPtr->players[i]    = player;
-                self->playerTimers[i] = 2;
+
+                EntityTransportTube *node = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->nextSlot[i], TransportTube);
+                int32 angle               = RSDK.ATan2((node->position.x - player->position.x) >> 16, (node->position.y - player->position.y) >> 16);
+                player->velocity.x        = 0xC00 * RSDK.Cos256(angle);
+                player->velocity.y        = 0xC00 * RSDK.Sin256(angle);
+                node->players[i]          = player;
+                self->playerTimers[i]     = 2;
             }
         }
     }
@@ -202,14 +208,15 @@ void TransportTube_State_TargetSeqNode(void)
                 int32 rx = (player->position.x - self->position.x) >> 16;
                 int32 ry = (player->position.y - self->position.y) >> 16;
                 if (rx * rx + ry * ry < 0xC0) {
-                    EntityTransportTube *tube = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->nextSlot[i], TransportTube);
-                    player->position.x        = self->position.x;
-                    player->position.y        = self->position.y;
-                    int32 angle        = RSDK.ATan2((tube->position.x - player->position.x) >> 16, (tube->position.y - player->position.y) >> 16);
+                    player->position.x = self->position.x;
+                    player->position.y = self->position.y;
+
+                    EntityTransportTube *node = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->nextSlot[i], TransportTube);
+                    int32 angle        = RSDK.ATan2((node->position.x - player->position.x) >> 16, (node->position.y - player->position.y) >> 16);
                     player->velocity.x = 0xC00 * RSDK.Cos256(angle);
                     player->velocity.y = 0xC00 * RSDK.Sin256(angle);
                     self->players[i]   = NULL;
-                    tube->players[i]   = player;
+                    node->players[i]   = player;
                 }
             }
             else {
@@ -304,7 +311,7 @@ void TransportTube_EditorDraw(void)
 
     RSDK_DRAWING_OVERLAY(false);
 
-    RSDK.SetSpriteAnimation(TransportTube->aniFrames, self->type == TRANSPORTTUBE_JUNCTION ? 2 : 1, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(TransportTube->aniFrames, self->type == TRANSPORTTUBE_JUNCTION ? 1 : 2, &self->animator, true, 0);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

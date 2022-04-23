@@ -12,8 +12,8 @@ struct ObjectCPZ1Intro {
     uint16 sfxChemDrop;
     uint16 sfxDNABurst;
     int32 playerAnimID;
-    Entity *fxRuby;
-    Entity *debris;
+    EntityFXRuby *fxRuby;
+    EntityDebris *debris;
 };
 
 // Entity Class
@@ -38,8 +38,8 @@ void CPZ1Intro_EditorLoad(void);
 void CPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
-void CPZ1Intro_Particle_CB(Entity *debris);
-void CPZ1Intro_HandleRubyHover(Entity *player1, Entity *cutSeq, Entity *player2, int32 targetY);
+void CPZ1Intro_Particle_CB(EntityDebris *debris);
+void CPZ1Intro_HandleRubyHover(EntityCutsceneSeq *cutsceneSequence, EntityPlayer *player1, EntityPlayer *player2, int32 targetY);
 
 bool32 CPZ1Intro_CheckSonicAnimFinish(void);
 bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer);
@@ -49,11 +49,11 @@ bool32 CPZ1Intro_CheckMightyAnimFinish(void);
 bool32 CPZ1Intro_CheckRayAnimFinish(void);
 #endif
 
-bool32 CPZ1Intro_Cutscene_RubyWarp(void *h);
-bool32 CPZ1Intro_Cutscene_PostWarpDrop(void *h);
-bool32 CPZ1Intro_Cutscene_Waiting(void *h);
-bool32 CPZ1Intro_Cutscene_ChemicalDrop(void *h);
-bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(void *h);
-bool32 CPZ1Intro_Cutscene_ReadyStage(void *h);
+bool32 CPZ1Intro_Cutscene_RubyWarp(EntityCutsceneSeq *host);
+bool32 CPZ1Intro_Cutscene_PostWarpDrop(EntityCutsceneSeq *host);
+bool32 CPZ1Intro_Cutscene_Waiting(EntityCutsceneSeq *host);
+bool32 CPZ1Intro_Cutscene_ChemicalDrop(EntityCutsceneSeq *host);
+bool32 CPZ1Intro_Cutscene_PlayerChemicalReact(EntityCutsceneSeq *host);
+bool32 CPZ1Intro_Cutscene_ReadyStage(EntityCutsceneSeq *host);
 
 #endif //!OBJ_CPZ1INTRO_H

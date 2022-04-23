@@ -10,6 +10,7 @@ typedef enum {
     SPRING_HORIZ_RED,
     SPRING_DIAG_YELLOW,
     SPRING_DIAG_RED,
+    SPRING_TUBESPRING = 0xFF,
 } SpringTypes;
 
 // Object Class

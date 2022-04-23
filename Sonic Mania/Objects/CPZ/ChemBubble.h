@@ -17,7 +17,7 @@ struct EntityChemBubble {
     int32 amplitude;
     int32 angleShift;
     Vector2 startPos;
-    Entity *parent;
+    EntityChemicalPool *parent;
     Animator animator;
 };
 
@@ -29,7 +29,7 @@ void ChemBubble_Update(void);
 void ChemBubble_LateUpdate(void);
 void ChemBubble_StaticUpdate(void);
 void ChemBubble_Draw(void);
-void ChemBubble_Create(void* data);
+void ChemBubble_Create(void *data);
 void ChemBubble_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ChemBubble_EditorDraw(void);
@@ -42,4 +42,4 @@ void ChemBubble_State_Appear(void);
 void ChemBubble_State_Rising(void);
 void ChemBubble_State_Surfaced(void);
 
-#endif //!OBJ_CHEMBUBBLE_H
+#endif //! OBJ_CHEMBUBBLE_H

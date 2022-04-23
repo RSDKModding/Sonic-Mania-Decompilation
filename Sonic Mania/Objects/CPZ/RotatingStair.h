@@ -12,12 +12,12 @@ typedef enum {
     ROTATINGSTAIR_DOWN_INTERVAL,
     ROTATINGSTAIR_RIGHT_INTERVAL,
     ROTATINGSTAIR_UP_INTERVAL,
-}RotatingStairModes;
+} RotatingStairModes;
 
 // Object Class
 struct ObjectRotatingStair {
-	RSDK_OBJECT
-    uint8 unused; //its set to 0, but its not actually used
+    RSDK_OBJECT
+    uint8 unused; // its set to 0, but its not actually used
 };
 
 // Entity Class
@@ -45,9 +45,9 @@ struct EntityRotatingStair {
     Animator animator;
     int32 childCount;
 
-	uint16 oscOff;
-	int32 duration;
-	int32 interval;
+    uint16 oscOff;
+    int32 duration;
+    int32 interval;
 };
 
 // Object Struct
@@ -58,7 +58,7 @@ void RotatingStair_Update(void);
 void RotatingStair_LateUpdate(void);
 void RotatingStair_StaticUpdate(void);
 void RotatingStair_Draw(void);
-void RotatingStair_Create(void* data);
+void RotatingStair_Create(void *data);
 void RotatingStair_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RotatingStair_EditorDraw(void);
@@ -70,4 +70,4 @@ void RotatingStair_Serialize(void);
 void RotatingStair_State_Move(void);
 void RotatingStair_State_Move_Intervals(void);
 
-#endif //!OBJ_ROTATINGSTAIR_H
+#endif //! OBJ_ROTATINGSTAIR_H

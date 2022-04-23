@@ -12,9 +12,12 @@ ObjectTubeSpring *TubeSpring;
 void TubeSpring_Update(void)
 {
     RSDK_THIS(TubeSpring);
+
     if (self->timer > 0)
         self->timer--;
+
     StateMachine_Run(self->state);
+
     RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -25,19 +28,21 @@ void TubeSpring_StaticUpdate(void) {}
 void TubeSpring_Draw(void)
 {
     RSDK_THIS(TubeSpring);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TubeSpring_Create(void *data)
 {
     RSDK_THIS(TubeSpring);
+
     Spring_Create(NULL);
     RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
-    self->drawOrder               = Zone->objectDrawHigh;
-    self->velocity.y              = !self->type ? -0x100000 : -0xA8000;
-    self->type                    = 0xFF;
+    self->drawOrder      = Zone->objectDrawHigh;
+    self->velocity.y     = !self->type ? -0x100000 : -0xA8000;
+    self->type           = SPRING_TUBESPRING;
     self->animator.speed = 0;
-    self->state                   = TubeSpring_Interact;
+    self->state          = TubeSpring_State_Idle;
 }
 
 void TubeSpring_StageLoad(void)
@@ -46,52 +51,59 @@ void TubeSpring_StageLoad(void)
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TubeSpring.bin", SCOPE_STAGE);
     if (RSDK.CheckStageFolder("FBZ"))
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TubeSpring.bin", SCOPE_STAGE);
-    TubeSpring->sfxExit       = RSDK.GetSfx("Tube/Exit.wav");
+
+    TubeSpring->sfxExit = RSDK.GetSfx("Tube/Exit.wav");
+
     TubeSpring->hitbox.left   = -16;
     TubeSpring->hitbox.top    = 12;
     TubeSpring->hitbox.right  = 16;
     TubeSpring->hitbox.bottom = 48;
 }
 
-void TubeSpring_Interact(void) { TubeSpring_Spring(true); }
+void TubeSpring_State_Idle(void) { TubeSpring_HandleInteractions(true); }
 
-void TubeSpring_Springing(void)
+void TubeSpring_State_Springing(void)
 {
     RSDK_THIS(TubeSpring);
-    if (!TubeSpring_Spring(false) && self->animator.frameID == self->animator.frameCount - 1) {
+
+    if (!TubeSpring_HandleInteractions(false) && self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 2, &self->animator, true, 0);
-        self->state = TubeSpring_Pullback;
-        TubeSpring_Pullback();
+        self->state = TubeSpring_State_Pullback;
+        TubeSpring_State_Pullback();
     }
 }
-void TubeSpring_Pullback(void)
+void TubeSpring_State_Pullback(void)
 {
     RSDK_THIS(TubeSpring);
+
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
-        self->state = TubeSpring_Interact;
+        self->state = TubeSpring_State_Idle;
     }
 }
 
-bool32 TubeSpring_Spring(bool32 interact)
+bool32 TubeSpring_HandleInteractions(bool32 setState)
 {
     RSDK_THIS(TubeSpring);
+
     Spring_State_Vertical();
+
     bool32 sprung = false;
     for (int32 i = 0; i < Player->playerCount; i++) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
+
         if (Player_CheckValidState(player)) {
-            bool32 oldinter     = player->interaction;
-            player->interaction = true;
+            bool32 interactStore = player->interaction;
+            player->interaction  = true;
             if (!Player_CheckCollisionTouch(player, self, &TubeSpring->hitbox)) {
-                player->interaction = oldinter;
+                player->interaction = interactStore;
                 continue;
             }
 
-            if (interact) {
+            if (setState) {
                 RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 1, &self->animator, true, 0);
                 RSDK.PlaySfx(TubeSpring->sfxExit, false, 255);
-                self->state = TubeSpring_Springing;
+                self->state = TubeSpring_State_Springing;
             }
 
             sprung = true;
@@ -106,6 +118,7 @@ bool32 TubeSpring_Spring(bool32 interact)
             }
         }
     }
+
     return sprung;
 }
 
@@ -113,6 +126,7 @@ bool32 TubeSpring_Spring(bool32 interact)
 void TubeSpring_EditorDraw(void)
 {
     RSDK_THIS(TubeSpring);
+
     Spring_Create(NULL);
     RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
 
@@ -125,6 +139,17 @@ void TubeSpring_EditorLoad(void)
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TubeSpring.bin", SCOPE_STAGE);
     if (RSDK.CheckStageFolder("FBZ"))
         TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TubeSpring.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TubeSpring, type);
+    RSDK_ENUM_VAR("Strong", SPRING_VERT_YELLOW);
+    RSDK_ENUM_VAR("Weak", SPRING_VERT_RED);
+
+    // technically unused, FX_FLIP isn't ever set on the animator
+    RSDK_ACTIVE_VAR(TubeSpring, flipFlag);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
 }
 #endif
 

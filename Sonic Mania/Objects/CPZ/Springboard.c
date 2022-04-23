@@ -12,9 +12,11 @@ ObjectSpringboard *Springboard;
 void Springboard_Update(void)
 {
     RSDK_THIS(Springboard);
+
     RSDK.ProcessAnimation(&self->animator);
 
-    //bounceDelay is unused, but if it was used, it'd prolly be "if (!--self->bounceDelay) {" around this foreach loop. source: it was exactly like that in S2 '13
+    // bounceDelay is unused, but if it was used, it'd prolly be "if (!--self->bounceDelay) {" around this foreach loop.
+    // source: it was exactly like that in S2 '13
     foreach_active(Player, playerPtr)
     {
         if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntityID(playerPtr)) & self->activePlayers)) {
@@ -33,14 +35,15 @@ void Springboard_Update(void)
                         playerPtr->animationReserve = playerPtr->animator.animationID;
                     else
                         playerPtr->animationReserve = ANI_WALK;
+
                     playerPtr->state          = Player_State_Air;
                     playerPtr->onGround       = false;
                     playerPtr->tileCollisions = true;
                     RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRINGCS, &playerPtr->animator, true, 1);
-                    playerPtr->groundVel   = playerPtr->velocity.x;
-                    int32 springPos        = minVal(2 * pos - 16, 39);
-                    playerPtr->velocity.y  = Springboard->springPower[springPos] - playerPtr->gravityStrength - self->force;
+                    playerPtr->groundVel    = playerPtr->velocity.x;
+                    playerPtr->velocity.y   = Springboard->springPower[minVal(2 * pos - 16, 39)] - playerPtr->gravityStrength - self->force;
                     playerPtr->applyJumpCap = false;
+
                     RSDK.PlaySfx(Springboard->sfxSpring, false, 0xFF);
                 }
             }
@@ -50,10 +53,11 @@ void Springboard_Update(void)
     foreach_active(Player, player)
     {
         int32 playerID   = RSDK.GetEntityID(player);
-        int32 playerVel  = player->groundVel;
-        int32 playerVelX = player->velocity.x;
-        bool32 bounced   = false;
+
+        int32 playerGndVel = player->groundVel;
+        int32 playerVelX   = player->velocity.x;
         int32 springPos  = clampVal((player->position.x - self->position.x + 0x1C0000) >> 17, 0, 27);
+        bool32 bounced   = false;
 
         if (!self->direction) {
             int32 hitboxTop = 0;
@@ -77,37 +81,42 @@ void Springboard_Update(void)
 
             bounced = collision == C_TOP;
             switch (collision) {
-                case 2: player->groundVel = playerVel; player->velocity.x = playerVelX;
-                case 0:
-                case 3:
-                case 4:
+                case C_LEFT:
+                    player->groundVel  = playerGndVel;
+                    player->velocity.x = playerVelX;
+                    // [Fallthrough]
+                case C_NONE:
+                case C_RIGHT:
+                case C_BOTTOM:
                     if (player->velocity.y >= 0 && ((1 << playerID) & self->activePlayers)) {
                         Hitbox *playerHitbox = Player_GetHitbox(player);
                         player->position.y   = self->position.y - (playerHitbox->bottom << 16) - (hitboxTop << 16);
+
                         if (!bounced)
                             bounced = player->position.x > self->position.x;
                     }
                     break;
-                case 1:
+
+                case C_TOP:
 #if RETRO_USE_PLUS 
                     if (player->state == Player_State_MightyHammerDrop)
                         player->state = Player_State_Air;
 #endif
                     break;
+
                 default: break;
             }
+
             player->flailing = false;
         }
         else if (self->direction == FLIP_X) {
             int32 pos       = abs(springPos - 27);
             int32 hitboxTop = 0;
 
-            if (self->animator.frameID <= 2) {
+            if (self->animator.frameID <= 2)
                 hitboxTop = Springboard->heightsFlat[pos];
-            }
-            else if (self->animator.frameID == 3) {
+            else if (self->animator.frameID == 3)
                 hitboxTop = Springboard->heightsReady[pos];
-            }
 
             Hitbox hitbox;
             hitbox.left   = -28;
@@ -120,22 +129,26 @@ void Springboard_Update(void)
                 collision = Player_CheckCollisionBox(player, self, &hitbox);
             else
                  collision = Player_CheckCollisionPlatform(player, self, &hitbox);
+
             bounced = collision == C_TOP;
             switch (collision) {
-                case 0:
-                case 2:
-                case 4: break;
-                case 1:
+                case C_NONE:
+                case C_LEFT:
+                case C_BOTTOM: break;
+
+                case C_TOP:
 #if RETRO_USE_PLUS 
                     if (player->state == Player_State_MightyHammerDrop) {
                         player->state = Player_State_Air;
                     }
 #endif
                     break;
-                case 3:
-                    player->groundVel  = playerVel;
+
+                case C_RIGHT:
+                    player->groundVel  = playerGndVel;
                     player->velocity.x = playerVelX;
                     break;
+
                 default: break;
             }
 
@@ -145,6 +158,7 @@ void Springboard_Update(void)
                 if (!bounced)
                     bounced = player->position.x < self->position.x;
             }
+
             player->flailing = false;
         }
 
@@ -166,18 +180,21 @@ void Springboard_StaticUpdate(void) {}
 void Springboard_Draw(void)
 {
     RSDK_THIS(Springboard);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Springboard_Create(void *data)
 {
     RSDK_THIS(Springboard);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow;
     self->drawFX |= FX_FLIP;
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
+
     if (!SceneInfo->inEditor) {
         self->force = (self->force + 8) << 15;
         RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &self->animator, true, 3);
@@ -187,13 +204,16 @@ void Springboard_Create(void *data)
 void Springboard_StageLoad(void)
 {
     Springboard->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Springboard.bin", SCOPE_STAGE);
+
     Springboard->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
+
     DEBUGMODE_ADD_OBJ(Springboard);
 }
 
 void Springboard_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Springboard, NULL, self->position.x, self->position.y);
 }
 void Springboard_DebugDraw(void)
@@ -216,8 +236,8 @@ void Springboard_EditorLoad(void)
     Springboard->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Springboard.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Springboard, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 
