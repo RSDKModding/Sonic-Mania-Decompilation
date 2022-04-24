@@ -3,9 +3,9 @@
 
 #include "SonicMania.h"
 
-#define EggJanken_ArmCount     (2)
-#define EggJanken_JointCount   (3)
-#define EggJanken_SegmentCount (EggJanken_JointCount + 1)
+#define EGGJANKEN_ARM_COUNT     (2)
+#define EGGJANKEN_JOINT_COUNT   (3)
+#define EGGJANKEN_SEGMENT_COUNT (EGGJANKEN_JOINT_COUNT + 1)
 
 // Object Class
 struct ObjectEggJanken {
@@ -44,18 +44,18 @@ struct EntityEggJanken {
     Vector2 origin;
     int32 startY;
     int32 storedXVel;
-    uint8 eyeFrames[EggJanken_ArmCount];
-    uint8 jankenResult2[EggJanken_ArmCount];
-    int32 jointFlags[EggJanken_ArmCount];
-    int32 jointAngleVels[EggJanken_ArmCount];
-    int32 armRadius[EggJanken_ArmCount];
-    int32 armRadiusSpeed[EggJanken_ArmCount];
-    Vector2 armPos[EggJanken_ArmCount];
-    StateMachine(stateArm[EggJanken_ArmCount]);
-    int32 jointAngles[EggJanken_SegmentCount * EggJanken_ArmCount];
-    int32 jointTargetAngles[EggJanken_SegmentCount * EggJanken_ArmCount];
-    int32 jointDirection[EggJanken_SegmentCount * EggJanken_ArmCount];
-    int32 jointDelays[EggJanken_SegmentCount * EggJanken_ArmCount];
+    uint8 eyeFrames[EGGJANKEN_ARM_COUNT];
+    uint8 jankenResult2[EGGJANKEN_ARM_COUNT];
+    int32 jointFlags[EGGJANKEN_ARM_COUNT];
+    int32 jointAngleVels[EGGJANKEN_ARM_COUNT];
+    int32 armRadius[EGGJANKEN_ARM_COUNT];
+    int32 armRadiusSpeed[EGGJANKEN_ARM_COUNT];
+    Vector2 armPos[EGGJANKEN_ARM_COUNT];
+    StateMachine(stateArm[EGGJANKEN_ARM_COUNT]);
+    int32 jointAngles[EGGJANKEN_SEGMENT_COUNT * EGGJANKEN_ARM_COUNT];
+    int32 jointTargetAngles[EGGJANKEN_SEGMENT_COUNT * EGGJANKEN_ARM_COUNT];
+    int32 jointDirection[EGGJANKEN_SEGMENT_COUNT * EGGJANKEN_ARM_COUNT];
+    int32 jointDelays[EGGJANKEN_SEGMENT_COUNT * EGGJANKEN_ARM_COUNT];
     uint8 attackingArmID;
     uint8 armID;
     uint8 armJointID;
@@ -76,7 +76,7 @@ void EggJanken_Update(void);
 void EggJanken_LateUpdate(void);
 void EggJanken_StaticUpdate(void);
 void EggJanken_Draw(void);
-void EggJanken_Create(void* data);
+void EggJanken_Create(void *data);
 void EggJanken_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggJanken_EditorDraw(void);
@@ -87,35 +87,41 @@ void EggJanken_Serialize(void);
 // Extra Entity Functions
 void EggJanken_CheckPlayerCollisions(void);
 void EggJanken_HandleMovement(void);
+void EggJanken_Explode(void);
 
 void EggJanken_ResetStates(void);
 void EggJanken_SwapArmSwingDir(void);
 
-void EggJanken_Result_Win(void);
-void EggJanken_Result_Lose(void);
-void EggJanken_Result_Draw(void);
+// Result States
+void EggJanken_Result_PlayerWins(void);
+void EggJanken_Result_PlayerLoses(void);
+void EggJanken_Result_PlayerDraws(void);
 
+// Boss States
 void EggJanken_State_SetupArena(void);
 void EggJanken_State_StartFight(void);
 void EggJanken_State_EnterJanken(void);
-void EggJanken_State_WaitForButton(void);
+void EggJanken_State_AwaitButtonPress(void);
 void EggJanken_State_Opened(void);
 void EggJanken_State_InitialArmExtend(void);
 void EggJanken_State_InitialArmRaise(void);
 void EggJanken_State_None(void);
 void EggJanken_State_Destroyed(void);
 void EggJanken_State_ButtonPressed(void);
-void EggJanken_State_ResultWinner(void);
+
+void EggJanken_State_ResultPlayerWinner(void);
 void EggJanken_State_HitShake(void);
+
 void EggJanken_State_FinishedBeingHit(void);
 void EggJanken_State_RaiseArms(void);
 void EggJanken_State_SwingDropArms(void);
-void EggJanken_State_ResultDraw(void);
+void EggJanken_State_ResultPlayerDraw(void);
 void EggJanken_State_WaitForArmAttackExtend(void);
 void EggJanken_State_PrepareArmAttack(void);
 void EggJanken_State_ArmAttack(void);
 void EggJanken_State_FinishedArmAttack(void);
-void EggJanken_State_ResultLoser(void);
+
+void EggJanken_State_ResultPlayerLoser(void);
 void EggJanken_State_FlipOver(void);
 void EggJanken_State_ExtendDropArms(void);
 void EggJanken_State_DropTarget(void);
@@ -126,21 +132,24 @@ void EggJanken_State_RetractDropArms(void);
 void EggJanken_State_RiseUp(void);
 void EggJanken_State_FlipBackOver(void);
 
-void EggJanken_StateEyes_Setup(void);
-void EggJanken_StateEyes_ChangeSlots(void);
-void EggJanken_StateEyes_None(void);
+// Eyes States
+void EggJanken_Eyes_Setup(void);
+void EggJanken_Eyes_ChangeSlots(void);
+void EggJanken_Eyes_None(void);
 
-void EggJanken_StateArm_None(void);
-void EggJanken_StateArm_Idle(void);
-void EggJanken_StateArm_RetractArm(void);
-void EggJanken_StateArm_ExtendArm(void);
-void EggJanken_StateArm_StretchRetractArm(void);
-void EggJanken_StateArm_SwingArm(void);
-void EggJanken_StateArm_ArmAttack(void);
-void EggJanken_StateArm_Dropping(void);
+// Arm States
+void EggJanken_Arm_None(void);
+void EggJanken_Arm_Idle(void);
+void EggJanken_Arm_RetractArm(void);
+void EggJanken_Arm_ExtendArm(void);
+void EggJanken_Arm_StretchRetractArm(void);
+void EggJanken_Arm_SwingArm(void);
+void EggJanken_Arm_ArmAttack(void);
+void EggJanken_Arm_Dropping(void);
 
+// Draw States
 void EggJanken_Draw_Closed(void);
 void EggJanken_Draw_Active(void);
 void EggJanken_Draw_Destroyed(void);
 
-#endif //!OBJ_EGGJANKEN_H
+#endif //! OBJ_EGGJANKEN_H

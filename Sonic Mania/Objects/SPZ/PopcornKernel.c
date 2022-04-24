@@ -14,6 +14,7 @@ void PopcornKernel_Update(void)
     RSDK_THIS(PopcornKernel);
 
     StateMachine_Run(self->state);
+
     self->angle += self->angleVel;
     self->rotation = (self->angle >> 15) & 0x1FF;
 }
@@ -25,6 +26,7 @@ void PopcornKernel_StaticUpdate(void) {}
 void PopcornKernel_Draw(void)
 {
     RSDK_THIS(PopcornKernel);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
@@ -35,11 +37,13 @@ void PopcornKernel_Create(void *data)
     if (!SceneInfo->inEditor) {
         self->drawFX = FX_ROTATE;
         self->state  = PopcornKernel_State_BounceAround;
+
         RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 7));
         if (self->animator.frameID >= 0 && (self->animator.frameID <= 1 || self->animator.frameID == 5))
             self->drawOrder = Zone->objectDrawLow - 1;
         else
             self->drawOrder = Zone->objectDrawLow;
+
         self->active          = ACTIVE_NORMAL;
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x2000000;
@@ -97,6 +101,7 @@ void PopcornKernel_State_RiseUp(void)
     self->velocity.y += 0x800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (self->position.y < self->maxY) {
         self->state = PopcornKernel_State_FallDown;
         //???
@@ -112,6 +117,7 @@ void PopcornKernel_State_FallDown(void)
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (!RSDK.CheckOnScreen(self, NULL))
         destroyEntity(self);
 }

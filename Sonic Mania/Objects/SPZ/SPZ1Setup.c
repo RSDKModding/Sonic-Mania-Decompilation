@@ -38,11 +38,11 @@ void SPZ1Setup_StaticUpdate(void)
         RSDK.RotatePalette(0, 240, 243, true);
     }
 
-    SPZ1Setup->palFadePercent += 3;
-    SPZ1Setup->palFadePercent &= 0x1FF;
-    RSDK.SetLimitedFade(0, 1, 3, abs(RSDK.Sin512(SPZ1Setup->palFadePercent) >> 1), 152, 159);
-    ++SPZ1Setup->streetLightTimer;
+    SPZ1Setup->pulsePercent += 3;
+    SPZ1Setup->pulsePercent &= 0x1FF;
+    RSDK.SetLimitedFade(0, 1, 3, abs(RSDK.Sin512(SPZ1Setup->pulsePercent) >> 1), 152, 159);
 
+    ++SPZ1Setup->streetLightTimer;
     if (SPZ1Setup->streetLightTimer == 3) {
         SPZ1Setup->streetLightTimer = 0;
         SPZ1Setup->streetLightFrame += 9;
@@ -69,33 +69,35 @@ void SPZ1Setup_StageLoad(void)
 {
     SPZ1Setup->aniTiles = RSDK.LoadSpriteSheet("SPZ1/AniTiles.gif", SCOPE_STAGE);
 
-    SPZ1Setup->cityBGLow  = RSDK.GetSceneLayer(0);
-    SPZ1Setup->cityBGHigh = RSDK.GetSceneLayer(0);
+    SPZ1Setup->cityBGLow  = RSDK.GetSceneLayer(0); // Background 1
+    SPZ1Setup->cityBGHigh = RSDK.GetSceneLayer(1); // Background 2
 
     int32 pos = 0;
     for (int32 i = 0; i < 0x200; ++i) {
-        int32 off = clampVal(pos, 0, 0x200);
+        int32 off    = clampVal(pos, 0, 0x200);
         int32 deform = RSDK.Rand(0, 4);
-        
-        int32 ang     = 0;
+
+        int32 angle = 0;
         for (int32 d = 0; d < 0x10; ++d) {
-            SPZ1Setup->cityBGLow->deformationData[off + d]  = deform * RSDK.Sin1024(ang) >> 10;
-            SPZ1Setup->cityBGHigh->deformationData[off + d] = deform * RSDK.Sin1024(ang) >> 10;
-            ang += 64;
+            SPZ1Setup->cityBGLow->deformationData[off + d]  = deform * RSDK.Sin1024(angle) >> 10;
+            SPZ1Setup->cityBGHigh->deformationData[off + d] = deform * RSDK.Sin1024(angle) >> 10;
+            angle += 0x40;
         }
-        pos += 16;
+        pos += 0x10;
     }
+
     memcpy(&SPZ1Setup->cityBGLow->deformationData[0x200], &SPZ1Setup->cityBGLow->deformationData[0], 0x200 * sizeof(int32));
     memcpy(&SPZ1Setup->cityBGHigh->deformationData[0x200], &SPZ1Setup->cityBGHigh->deformationData[0], 0x200 * sizeof(int32));
 
     Animals->animalTypes[0] = ANIMAL_PECKY;
     Animals->animalTypes[1] = ANIMAL_MICKY;
+
     if (isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload())
         FXFade_StopAll();
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1()) {
         Zone->forcePlayerOnScreen = true;
-        Zone->stageFinishCallback     = SPZ1Setup_SetupActTransition;
+        Zone->stageFinishCallback = SPZ1Setup_StageFinishCB;
     }
 
 #if RETRO_USE_PLUS
@@ -108,7 +110,7 @@ void SPZ1Setup_StageLoad(void)
 #endif
 }
 
-void SPZ1Setup_SetupActTransition(void)
+void SPZ1Setup_StageFinishCB(void)
 {
     Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();

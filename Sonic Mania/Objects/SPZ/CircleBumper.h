@@ -9,12 +9,12 @@ typedef enum {
     CIRCLEBUMPER_CIRCLE,
     CIRCLEBUMPER_TRACK,
     CIRCLEBUMPER_PATH,
-}CircleBumperTypes;
+} CircleBumperTypes;
 
 // Object Class
 struct ObjectCircleBumper {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBumper;
     uint16 aniFrames;
     uint16 sfxBumper;
 };
@@ -28,7 +28,7 @@ struct EntityCircleBumper {
     int32 type;
     Vector2 amplitude;
     int32 speed;
-    Vector2 originPos;
+    Vector2 drawPos;
     Animator animator;
     int32 unused;
 };

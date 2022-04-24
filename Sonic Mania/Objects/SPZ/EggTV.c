@@ -12,8 +12,11 @@ ObjectEggTV *EggTV;
 void EggTV_Update(void)
 {
     RSDK_THIS(EggTV);
-    if (self->lineAlpha < 96)
-        self->lineAlpha += 4;
+
+    // Scanlines are drawn with INK_BLEND so this doesn't actually do anything...
+    // (Probably done because it could get real laggy with so many lines)
+    if (self->scanlineAlpha < 0x60)
+        self->scanlineAlpha += 4;
 }
 
 void EggTV_LateUpdate(void) {}
@@ -23,6 +26,7 @@ void EggTV_StaticUpdate(void) { RSDK.ProcessAnimation(&EggTV->animator); }
 void EggTV_Draw(void)
 {
     EggTV_DrawTV();
+
     if (globals->gameMode != MODE_COMPETITION)
         EggTV_DrawScanlines();
 }
@@ -31,11 +35,8 @@ void EggTV_Create(void *data)
 {
     RSDK_THIS(EggTV);
     
-    self->active = ACTIVE_BOUNDS;
-    if (self->drawOverTV)
-        self->drawOrder = Zone->objectDrawLow;
-    else
-        self->drawOrder = Zone->fgLayerLow + 1;
+    self->active    = ACTIVE_BOUNDS;
+    self->drawOrder = self->drawOverTV ? Zone->objectDrawLow : (Zone->fgLayerLow + 1);
 
     self->visible       = true;
     self->drawFX        = FX_NONE;
@@ -62,7 +63,7 @@ void EggTV_DrawScanlines(void)
     if (self->size.y >= 0 && (self->size.y & 0xFFFF0000)) {
         for (int32 i = 0; i < (self->size.y >> 16); i += 2) {
             RSDK.DrawLine(self->position.x - (self->size.x >> 1), y, self->position.x + (self->size.x >> 1), y, 0x404060,
-                          self->lineAlpha, INK_BLEND, false);
+                          self->scanlineAlpha, INK_BLEND, false);
             y += 0x20000;
         }
     }
@@ -77,6 +78,7 @@ void EggTV_DrawTV(void)
     self->scale.x   = ((self->size.x >> 16) << 9) / 0x60;
     self->scale.y   = ((self->size.y >> 16) << 9) / 0x60;
     RSDK.DrawSprite(&EggTV->animator, NULL, false);
+
     self->drawFX = FX_NONE;
 }
 
@@ -89,12 +91,20 @@ void EggTV_EditorDraw(void)
     self->updateRange.y = 0x800000 + self->size.y;
 
     EggTV_DrawTV();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void EggTV_EditorLoad(void)
 {
     EggTV->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/EggTV.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(EggTV->aniFrames, 0, &EggTV->animator, true, 0);
+    RSDK.SetSpriteAnimation(EggTV->aniFrames, 0, &EggTV->animator, true, 14);
 }
 #endif
 

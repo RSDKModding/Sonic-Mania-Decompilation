@@ -12,6 +12,7 @@ ObjectLetterboard *Letterboard;
 void Letterboard_Update(void)
 {
     RSDK_THIS(Letterboard);
+
     StateMachine_Run(self->state);
 }
 
@@ -55,12 +56,12 @@ void Letterboard_Create(void *data)
 
 void Letterboard_StageLoad(void)
 {
-    Letterboard->aniFrames     = RSDK.LoadSpriteAnimation("SPZ2/Letterboard.bin", SCOPE_STAGE);
+    Letterboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Letterboard.bin", SCOPE_STAGE);
 
-    Letterboard->hitbox.left   = -12;
-    Letterboard->hitbox.top    = -12;
-    Letterboard->hitbox.right  = 12;
-    Letterboard->hitbox.bottom = 12;
+    Letterboard->hitboxBoard.left   = -12;
+    Letterboard->hitboxBoard.top    = -12;
+    Letterboard->hitboxBoard.right  = 12;
+    Letterboard->hitboxBoard.bottom = 12;
 
     Letterboard->sfxLetterTurn = RSDK.GetSfx("Stage/LetterTurn.wav");
     Letterboard->sfxWin        = RSDK.GetSfx("Stage/Win.wav");
@@ -86,6 +87,7 @@ void Letterboard_State_Controller(void)
 
     if (revealedAll) {
         RSDK.PlaySfx(Letterboard->sfxWin, false, 0xFF);
+
         self->active = ACTIVE_BOUNDS;
         self->state  = StateMachine_None;
         if (globals->gameMode != MODE_COMPETITION)
@@ -101,7 +103,7 @@ void Letterboard_State_CheckPlayerSpin(void)
     {
         self->spinSpeed = (abs(player->velocity.x) + abs(player->velocity.y)) >> 14;
         if (self->spinSpeed > 0) {
-            if (Player_CheckCollisionTouch(player, self, &Letterboard->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &Letterboard->hitboxBoard)) {
                 self->drawFX = FX_SCALE;
                 self->state  = Letterboard_State_Spun;
                 if (self->spinSpeed > 16)
@@ -110,7 +112,7 @@ void Letterboard_State_CheckPlayerSpin(void)
                     self->spinSpeed = 8;
 
                 self->timer = 2;
-                int32 slot      = SceneInfo->entitySlot;
+                int32 slot  = SceneInfo->entitySlot;
 
                 EntityLetterboard *letterboard = self;
                 while (slot >= 0) {
@@ -120,7 +122,7 @@ void Letterboard_State_CheckPlayerSpin(void)
                 }
 
                 letterboard->active = ACTIVE_NORMAL;
-                self->active      = ACTIVE_NORMAL;
+                self->active        = ACTIVE_NORMAL;
                 RSDK.PlaySfx(Letterboard->sfxLetterTurn, false, 255);
                 foreach_break;
             }
@@ -133,7 +135,7 @@ void Letterboard_State_Spun(void)
     RSDK_THIS(Letterboard);
 
     int32 prevAngle = self->angle;
-    self->angle = (self->angle + self->spinSpeed) & 0x1FF;
+    self->angle     = (self->angle + self->spinSpeed) & 0x1FF;
     if (self->angle >= 0x100 && prevAngle < 0x100 && --self->timer <= 0) {
         self->active = ACTIVE_BOUNDS;
         self->angle  = 0x100;
@@ -145,6 +147,7 @@ void Letterboard_State_Spun(void)
 void Letterboard_EditorDraw(void)
 {
     RSDK_THIS(Letterboard);
+
     RSDK.SetSpriteAnimation(Letterboard->aniFrames, 0, &self->animatorBack, true, 0);
     RSDK.SetSpriteAnimation(Letterboard->aniFrames, 1, &self->animatorFront, true, 0);
 
@@ -154,6 +157,21 @@ void Letterboard_EditorDraw(void)
     }
     else {
         RSDK.DrawSprite(&self->animatorBack, NULL, false);
+    }
+
+    if (self->controller && showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        int32 slot = SceneInfo->entitySlot + 1;
+        for (int32 i = 0; i < self->letterID; ++i) {
+            EntityLetterboard *letterboard = RSDK_GET_ENTITY(slot + i, Letterboard);
+
+            if (letterboard) {
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, letterboard->position.x, letterboard->position.y, 0xFFFF00, INK_NONE, 0xFF);
+            }
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 

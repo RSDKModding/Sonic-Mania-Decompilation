@@ -8,7 +8,7 @@ struct ObjectSPZ1Setup {
     RSDK_OBJECT
     int32 fgLightsPalTimer;
     int32 bgLightsPalTimer;
-    int32 palFadePercent;
+    int32 pulsePercent;
     int32 flashingLightsFrame;
     int32 conveyorFrame;
     int32 streetLightTimer;
@@ -20,7 +20,7 @@ struct ObjectSPZ1Setup {
 
 // Entity Class
 struct EntitySPZ1Setup {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -31,7 +31,7 @@ void SPZ1Setup_Update(void);
 void SPZ1Setup_LateUpdate(void);
 void SPZ1Setup_StaticUpdate(void);
 void SPZ1Setup_Draw(void);
-void SPZ1Setup_Create(void* data);
+void SPZ1Setup_Create(void *data);
 void SPZ1Setup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SPZ1Setup_EditorDraw(void);
@@ -40,6 +40,6 @@ void SPZ1Setup_EditorLoad(void);
 void SPZ1Setup_Serialize(void);
 
 // Extra Entity Functions
-void SPZ1Setup_SetupActTransition(void);
+void SPZ1Setup_StageFinishCB(void);
 
-#endif //!OBJ_SPZ1SETUP_H
+#endif //! OBJ_SPZ1SETUP_H

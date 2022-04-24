@@ -12,14 +12,11 @@ ObjectSpinSign *SpinSign;
 void SpinSign_Update(void)
 {
     RSDK_THIS(SpinSign);
+
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &SpinSign->hitboxes[self->type])) {
-            int32 vel = 0;
-            if (self->type & 1)
-                vel = player->velocity.x;
-            else
-                vel = player->velocity.y;
+            int32 vel = (self->type & 1) ? player->velocity.x : player->velocity.y;
 
             int32 speed = (vel >> 7) + (vel >> 6);
             if (abs(speed) > self->timer && speed >= 0xC00) {
@@ -30,6 +27,7 @@ void SpinSign_Update(void)
             }
         }
     }
+
     StateMachine_Run(self->state);
 }
 
@@ -40,6 +38,7 @@ void SpinSign_StaticUpdate(void) {}
 void SpinSign_Draw(void)
 {
     RSDK_THIS(SpinSign);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -58,27 +57,32 @@ void SpinSign_Create(void *data)
         self->scale.x       = 0x200;
         self->scale.y       = 0x200;
         self->state         = SpinSign_State_Spinning;
+
         switch (self->type) {
             case SPINSIGN_SONIC_H:
                 self->sidesAnimator.frameID = 1;
                 RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->frontAnimator, true, 0);
                 self->stateDraw = SpinSign_Draw_SonicH;
                 break;
+
             case SPINSIGN_SONIC_V:
                 self->sidesAnimator.frameID = 0;
                 RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->frontAnimator, true, 0);
                 self->stateDraw = SpinSign_Draw_SonicV;
                 break;
+
             case SPINSIGN_MANIA_H:
                 self->sidesAnimator.frameID = 1;
                 RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->frontAnimator, true, 0);
                 self->stateDraw = SpinSign_Draw_ManiaH;
                 break;
+
             case SPINSIGN_MANIA_V:
                 self->sidesAnimator.frameID = 2;
                 RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->frontAnimator, true, 0);
                 self->stateDraw = SpinSign_Draw_ManiaV;
                 break;
+
             default: break;
         }
     }
@@ -109,12 +113,14 @@ void SpinSign_StageLoad(void)
     SpinSign->hitboxes[SPINSIGN_MANIA_V].bottom = 40;
 
     DEBUGMODE_ADD_OBJ(SpinSign);
+
     SpinSign->sfxSignPost = RSDK.GetSfx("Global/SignPost.wav");
 }
 
 void SpinSign_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(SpinSign, NULL, self->position.x, self->position.y);
 }
 void SpinSign_DebugDraw(void)
@@ -150,6 +156,7 @@ void SpinSign_State_Spinning(void)
             self->state = SpinSign_State_SlowDown;
         }
     }
+
     self->rotation = (self->angle >> 8) & 0x1FF;
 }
 void SpinSign_State_SlowDown(void)
@@ -168,6 +175,7 @@ void SpinSign_State_SlowDown(void)
         self->timer  = 0;
         self->state  = SpinSign_State_Spinning;
     }
+
     self->rotation = (self->angle >> 8) & 0x1FF;
 }
 
@@ -179,7 +187,7 @@ void SpinSign_Draw_SonicH(void)
     self->drawFX = FX_SCALE;
     drawPos.x    = self->position.x;
 
-    Animator *animator = self->rotation <= 128 || self->rotation >= 384 ? &self->eggmanAnimator : &self->frontAnimator;
+    Animator *animator = self->rotation <= 0x80 || self->rotation >= 0x180 ? &self->eggmanAnimator : &self->frontAnimator;
     animator->frameID  = (Zone->timer >> 4) & 1;
 
     self->scale.y = abs(RSDK.Cos512(self->rotation)) + 1;
@@ -192,14 +200,17 @@ void SpinSign_Draw_SonicH(void)
             RSDK.DrawSprite(animator, &drawPos, false);
             drawPos.y += -0xF00 * self->scale.y - (scale << 9);
             break;
+
         case 1:
         case 3:
             drawPos.y = self->position.y - (scale << 9);
             RSDK.DrawSprite(animator, &drawPos, false);
             drawPos.y += ((scale - 64) << 9) + 0xF00 * self->scale.y;
             break;
+
         default: break;
     }
+
     self->scale.y               = scale;
     self->sidesAnimator.frameID = (animator->frameID + 2) ^ (self->rotation < 256);
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
@@ -212,7 +223,7 @@ void SpinSign_Draw_SonicV(void)
     drawPos.y    = self->position.y;
     self->drawFX = FX_SCALE;
 
-    Animator *animator = self->rotation <= 128 || self->rotation >= 384 ? &self->eggmanAnimator : &self->frontAnimator;
+    Animator *animator = self->rotation <= 0x80 || self->rotation >= 0x180 ? &self->eggmanAnimator : &self->frontAnimator;
     animator->frameID  = (Zone->timer >> 4) & 1;
 
     self->scale.x = abs(RSDK.Cos512(self->rotation)) + 1;
@@ -225,14 +236,17 @@ void SpinSign_Draw_SonicV(void)
             RSDK.DrawSprite(animator, &drawPos, false);
             drawPos.x += -0xF00 * self->scale.x - (scale << 9);
             break;
+
         case 1:
         case 3:
             drawPos.x = self->position.x - (scale << 9);
             RSDK.DrawSprite(animator, &drawPos, false);
             drawPos.x += ((scale - 64) << 9) + 0xF00 * self->scale.x;
             break;
+
         default: break;
     }
+
     self->scale.x               = scale;
     self->sidesAnimator.frameID = animator->frameID ^ (self->rotation < 256);
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
@@ -244,7 +258,7 @@ void SpinSign_Draw_ManiaH(void)
 
     drawPos.x                   = self->position.x;
     self->drawFX                = FX_SCALE;
-    self->frontAnimator.frameID = self->rotation <= 128 || self->rotation >= 384;
+    self->frontAnimator.frameID = self->rotation <= 0x80 || self->rotation >= 0x180;
 
     self->scale.y = abs(RSDK.Cos512(self->rotation)) + 1;
     int32 scale   = abs(RSDK.Sin512(self->rotation)) + 1;
@@ -256,14 +270,17 @@ void SpinSign_Draw_ManiaH(void)
             RSDK.DrawSprite(&self->frontAnimator, &drawPos, false);
             drawPos.y += -0x1400 * self->scale.y - (scale << 9);
             break;
+
         case 1:
         case 3:
             drawPos.y = self->position.y - (scale << 9);
             RSDK.DrawSprite(&self->frontAnimator, &drawPos, false);
             drawPos.y += (scale + 2 * (5 * self->scale.y - 32)) << 9;
             break;
+
         default: break;
     }
+
     self->scale.y               = scale;
     self->sidesAnimator.frameID = self->frontAnimator.frameID + 6;
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
@@ -275,7 +292,7 @@ void SpinSign_Draw_ManiaV(void)
 
     drawPos.y                   = self->position.y;
     self->drawFX                = FX_SCALE;
-    self->frontAnimator.frameID = self->rotation <= 128 || self->rotation >= 384;
+    self->frontAnimator.frameID = self->rotation <= 0x80 || self->rotation >= 0x180;
 
     self->scale.x = abs(RSDK.Cos512(self->rotation)) + 1;
     int32 scale   = abs(RSDK.Sin512(self->rotation)) + 1;
@@ -287,14 +304,17 @@ void SpinSign_Draw_ManiaV(void)
             RSDK.DrawSprite(&self->frontAnimator, &drawPos, false);
             drawPos.x += -0xC00 * self->scale.x - (scale << 9);
             break;
+
         case 1:
         case 3:
             drawPos.x = self->position.x - (scale << 9);
             RSDK.DrawSprite(&self->frontAnimator, &drawPos, false);
             drawPos.x += (scale + 2 * (3 * self->scale.x - 32)) << 9;
             break;
+
         default: break;
     }
+
     self->scale.x               = scale;
     self->sidesAnimator.frameID = self->frontAnimator.frameID + 4;
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
@@ -319,21 +339,25 @@ void SpinSign_EditorDraw(void)
             RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->frontAnimator, true, 0);
             SpinSign_Draw_SonicH();
             break;
+
         case SPINSIGN_SONIC_V:
             self->sidesAnimator.frameID = 0;
             RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->frontAnimator, true, 0);
             SpinSign_Draw_SonicV();
             break;
+
         case SPINSIGN_MANIA_H:
             self->sidesAnimator.frameID = 1;
             RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->frontAnimator, true, 0);
             SpinSign_Draw_ManiaH();
             break;
+
         case SPINSIGN_MANIA_V:
             self->sidesAnimator.frameID = 2;
             RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->frontAnimator, true, 0);
             SpinSign_Draw_ManiaV();
             break;
+
         default: break;
     }
 }

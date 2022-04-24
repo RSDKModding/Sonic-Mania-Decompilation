@@ -14,6 +14,7 @@ void Clapperboard_Update(void)
     RSDK_THIS(Clapperboard);
 
     StateMachine_Run(self->state);
+
     self->rotation     = self->angle >> 1;
     self->stoodPlayers = 0;
     StateMachine_Run(self->stateCollide);
@@ -84,6 +85,7 @@ void Clapperboard_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         if (self->direction == FLIP_NONE) {
             self->amplitudeL.x = -0x40000;
             self->amplitudeR.x = 0x6C0000;
@@ -97,6 +99,7 @@ void Clapperboard_Create(void *data)
             self->angle        = 0x040;
             self->stateCollide = Clapperboard_Collide_Left;
         }
+
         self->amplitudeL.y = -0x40000;
         self->amplitudeR.y = -0x40000;
         self->state        = Clapperboard_State_Idle;
@@ -133,16 +136,7 @@ void Clapperboard_Collide_Left(void)
 
     foreach_active(Player, player)
     {
-        int32 dist = (player->position.x - self->position.x) >> 16;
-        if (dist >= self->hitbox.left) {
-            if (dist > self->hitbox.right)
-                dist = self->hitbox.right;
-        }
-        else {
-            dist = self->hitbox.left;
-        }
-
-        int32 standPos      = self->hitbox.right - dist;
+        int32 standPos      = self->hitbox.right - clampVal((player->position.x - self->position.x) >> 16, self->hitbox.left, self->hitbox.right);
         int32 top           = (ampR >> 16) + ((ampR >> 16) - (ampL >> 16)) * standPos / clapStartPos - (self->clapSpeed & 0xFFFF);
         self->hitbox.top    = top;
         self->hitbox.bottom = top + 24;
@@ -160,11 +154,13 @@ void Clapperboard_Collide_Left(void)
                     player->onGround   = false;
                     player->state      = Player_State_Air;
                     player->velocity.y = -0x40000 - 0x60000 * standPos / clapStartPos;
-                    if (player->animator.animationID == ANI_WALK
-                        || (player->animator.animationID > ANI_AIRWALK && player->animator.animationID <= ANI_DASH))
+
+                    int32 anim = player->animator.animationID;
+                    if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                         player->animationReserve = player->animator.animationID;
                     else
                         player->animationReserve = ANI_WALK;
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 255);
                     clapped = true;
@@ -173,6 +169,7 @@ void Clapperboard_Collide_Left(void)
                     int32 clapSpeed = 16;
                     if (abs(player->groundVel) < 0xA0000)
                         clapSpeed = 16 * standPos / clapStartPos;
+
                     if (clapSpeed > self->clapSpeed)
                         self->clapSpeed = clapSpeed;
                 }
@@ -197,20 +194,11 @@ void Clapperboard_Collide_Right(void)
     self->hitbox.left  = (((self->amplitudeL.y >> 8) * RSDK.Sin256(negAngle)) + (self->amplitudeL.x >> 8) * RSDK.Cos256(negAngle)) >> 16;
     self->hitbox.right = (((self->amplitudeR.y >> 8) * RSDK.Sin256(negAngle)) + (self->amplitudeR.x >> 8) * RSDK.Cos256(negAngle)) >> 16;
     int32 clapStartPos = self->hitbox.right - self->hitbox.left;
-    bool32 clapped    = false;
+    bool32 clapped     = false;
 
     foreach_active(Player, player)
     {
-        int32 dist = (player->position.x - self->position.x) >> 16;
-        if (dist >= self->hitbox.left) {
-            if (dist > self->hitbox.right)
-                dist = self->hitbox.right;
-        }
-        else {
-            dist = self->hitbox.left;
-        }
-
-        int32 standPos      = dist - self->hitbox.left;
+        int32 standPos      = clampVal((player->position.x - self->position.x) >> 16, self->hitbox.left, self->hitbox.right) - self->hitbox.left;
         int32 top           = (ampL >> 16) + ((ampL >> 16) - (ampR >> 16)) * standPos / clapStartPos - (self->clapSpeed & 0xFFFF);
         self->hitbox.top    = top;
         self->hitbox.bottom = top + 24;
@@ -229,11 +217,13 @@ void Clapperboard_Collide_Right(void)
                     player->onGround   = false;
                     player->state      = Player_State_Air;
                     player->velocity.y = -0x40000 - 0x60000 * standPos / clapStartPos;
-                    if (player->animator.animationID == ANI_WALK
-                        || (player->animator.animationID > ANI_AIRWALK && player->animator.animationID <= ANI_DASH))
+
+                    int32 anim = player->animator.animationID;
+                    if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                         player->animationReserve = player->animator.animationID;
                     else
                         player->animationReserve = ANI_WALK;
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 0xFF);
                     clapped = true;
@@ -242,6 +232,7 @@ void Clapperboard_Collide_Right(void)
                     int32 clapSpeed = 16;
                     if (abs(player->groundVel) < 0xA0000)
                         clapSpeed = 16 * standPos / clapStartPos;
+
                     if (clapSpeed > self->clapSpeed)
                         self->clapSpeed = clapSpeed;
                 }
@@ -257,12 +248,8 @@ void Clapperboard_State_Idle(void)
 {
     RSDK_THIS(Clapperboard);
 
-    if (self->stoodPlayers > 0) {
-        if (self->direction == FLIP_NONE)
-            self->state = Clapperboard_State_ClappingR;
-        else
-            self->state = Clapperboard_State_ClappingL;
-    }
+    if (self->stoodPlayers > 0)
+        self->state = self->direction == FLIP_NONE ? Clapperboard_State_ClappingR : Clapperboard_State_ClappingL;
 }
 
 void Clapperboard_State_ClappingL(void)
@@ -315,10 +302,8 @@ void Clapperboard_State_ClapReboundR(void)
 void Clapperboard_EditorDraw(void)
 {
     RSDK_THIS(Clapperboard);
-    if (self->direction == FLIP_NONE)
-        self->boardAnimator.frameID = 2;
-    else
-        self->boardAnimator.frameID = 3;
+
+    self->boardAnimator.frameID = self->direction == FLIP_NONE ? 2 : 3;
 
     Clapperboard_Draw();
 }
@@ -331,8 +316,8 @@ void Clapperboard_EditorLoad(void)
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Clapperboard.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Clapperboard, direction);
-    RSDK_ENUM_VAR("Left", FLIP_NONE);
-    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

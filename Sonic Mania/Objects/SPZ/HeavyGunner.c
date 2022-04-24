@@ -12,6 +12,7 @@ ObjectHeavyGunner *HeavyGunner;
 void HeavyGunner_Update(void)
 {
     RSDK_THIS(HeavyGunner);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void HeavyGunner_StaticUpdate(void) {}
 void HeavyGunner_Draw(void)
 {
     RSDK_THIS(HeavyGunner);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -36,6 +38,7 @@ void HeavyGunner_Create(void *data)
                 self->active    = ACTIVE_NORMAL;
                 self->visible   = true;
                 self->drawOrder = Zone->objectDrawLow - 1;
+
                 switch (self->type) {
                     case HEAVYGUNNER_HELI:
                         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 6, &self->mainAnimator, true, 0);
@@ -47,23 +50,24 @@ void HeavyGunner_Create(void *data)
                         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &self->feetAnimator, true, 0);
                         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &self->feet2Animator, true, 2);
                         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 0, &self->gunnerAnimator, true, 0);
+
                         self->drawFX    = FX_ROTATE;
-                        self->rotation  = 64;
-                        self->state     = HeavyGunner_StateHeli_WaitForPlayer;
+                        self->rotation  = 0x40;
+                        self->state     = HeavyGunner_StateHeli_AwaitPlayer;
                         self->stateDraw = HeavyGunner_Draw_Heli;
                         break;
 
                     case HEAVYGUNNER_EGGROBO:
                         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 17, &self->feetAnimator, true, 0);
                         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 16, &self->mainAnimator, true, RSDK.Rand(0, 4));
-                        self->drawFX    = FX_SCALE | FX_ROTATE;
-                        self->state     = HeavyGunner_StateEggRobo_Patrolling;
-                        self->stateDraw = HeavyGunner_Draw_EggRobo;
-                        self->scale.x   = 0x200;
-                        self->scale.y   = 0x200;
+                        self->drawFX       = FX_SCALE | FX_ROTATE;
+                        self->state        = HeavyGunner_StateEggRobo_Patrolling;
+                        self->stateDraw    = HeavyGunner_Draw_EggRobo;
+                        self->scale.x      = 0x200;
+                        self->scale.y      = 0x200;
                         self->targetScale  = 512;
-                        self->parentOffset  = RSDK.Rand(-0x200000, 0x600000);
-                        self->timer     = 240;
+                        self->parentOffset = RSDK.Rand(-0x200000, 0x600000);
+                        self->timer        = 240;
                         break;
 
                     case HEAVYGUNNER_GUN:
@@ -209,19 +213,19 @@ bool32 HeavyGunner_BurnCheckCB(void)
 
 void HeavyGunner_HandleBGWrap(int multiplier)
 {
-    TileLayer *bg1 = RSDK.GetSceneLayer(0);
-    for (int s = 0; s < bg1->scrollInfoCount; ++s) {
-        bg1->scrollInfo[s].scrollPos += multiplier * bg1->scrollInfo[s].parallaxFactor;
+    TileLayer *background1 = RSDK.GetSceneLayer(0);
+    for (int32 s = 0; s < background1->scrollInfoCount; ++s) {
+        background1->scrollInfo[s].scrollPos += multiplier * background1->scrollInfo[s].parallaxFactor;
     }
 
-    TileLayer *bg2 = RSDK.GetSceneLayer(1);
-    for (int s = 0; s < bg2->scrollInfoCount; ++s) {
-        bg2->scrollInfo[s].scrollPos += multiplier * bg2->scrollInfo[s].parallaxFactor;
+    TileLayer *background2 = RSDK.GetSceneLayer(1);
+    for (int32 s = 0; s < background2->scrollInfoCount; ++s) {
+        background2->scrollInfo[s].scrollPos += multiplier * background2->scrollInfo[s].parallaxFactor;
     }
 
-    TileLayer *bg3 = RSDK.GetSceneLayer(2);
-    for (int s = 0; s < bg3->scrollInfoCount; ++s) {
-        bg3->scrollInfo[s].scrollPos += multiplier * bg3->scrollInfo[s].parallaxFactor;
+    TileLayer *background3 = RSDK.GetSceneLayer(2);
+    for (int32 s = 0; s < background3->scrollInfoCount; ++s) {
+        background3->scrollInfo[s].scrollPos += multiplier * background3->scrollInfo[s].parallaxFactor;
     }
 }
 
@@ -236,6 +240,7 @@ void HeavyGunner_DestroyAllMissiles(void)
                 RSDK.PlaySfx(HeavyGunner->sfxFlip, false, 0xFF);
                 gunner->velocity.x = -0x10000;
                 RSDK.SetSpriteAnimation(-1, 0, &gunner->exhaustAnimator, true, 0);
+
                 gunner->direction = FLIP_NONE;
                 gunner->rotation  = 256;
                 gunner->state     = HeavyGunner_StateMissile_Malfunction;
@@ -251,6 +256,7 @@ void HeavyGunner_Draw_Heli(void)
 
     drawPos.x = self->position.x + 0x1B0000;
     drawPos.y = self->position.y;
+
     RSDK.DrawSprite(&self->feetAnimator, &drawPos, false);
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     RSDK.DrawSprite(&self->pilotAnimator, NULL, false);
@@ -308,27 +314,27 @@ void HeavyGunner_StateManager_SetupArena(void)
             self->position.x     = camera->position.x - 0x100000;
             self->position.y     = camera->position.y;
 
-            Zone->playerBoundActiveL[0] = true;
-            Zone->playerBoundActiveR[0] = true;
-            HeavyGunner->boundsL        = Zone->cameraBoundsL[0];
-            HeavyGunner->boundsR        = Zone->cameraBoundsR[0];
-            HeavyGunner->boundsT        = Zone->cameraBoundsT[0];
-            HeavyGunner->boundsB        = 0xC00;
-            HeavyGunner->stageWrapActive       = true;
+            Zone->playerBoundActiveL[0]  = true;
+            Zone->playerBoundActiveR[0]  = true;
+            HeavyGunner->boundsL         = Zone->cameraBoundsL[0];
+            HeavyGunner->boundsR         = Zone->cameraBoundsR[0];
+            HeavyGunner->boundsT         = Zone->cameraBoundsT[0];
+            HeavyGunner->boundsB         = 0xC00;
+            HeavyGunner->stageWrapActive = true;
 
             int32 mult = -0x1E00 * ScreenInfo->position.y;
 
-            TileLayer *bg1 = RSDK.GetSceneLayer(0);
-            bg1->scrollPos += mult;
-            bg1->parallaxFactor = 88;
+            TileLayer *background1 = RSDK.GetSceneLayer(0);
+            background1->scrollPos += mult;
+            background1->parallaxFactor = 88;
 
-            TileLayer *bg2 = RSDK.GetSceneLayer(1);
-            bg2->scrollPos += mult;
-            bg2->parallaxFactor = 88;
+            TileLayer *background2 = RSDK.GetSceneLayer(1);
+            background2->scrollPos += mult;
+            background2->parallaxFactor = 88;
 
-            TileLayer *bg3 = RSDK.GetSceneLayer(2);
-            bg3->scrollPos += mult;
-            bg3->parallaxFactor = 88;
+            TileLayer *background3 = RSDK.GetSceneLayer(2);
+            background3->scrollPos += mult;
+            background3->parallaxFactor = 88;
 
             foreach_active(ParallaxSprite, sprite)
             {
@@ -339,8 +345,8 @@ void HeavyGunner_StateManager_SetupArena(void)
             Zone->autoScrollSpeed = player1->velocity.x;
 
             EntityHeavyGunner *robo1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, HeavyGunner);
-            int x                    = robo1->position.x;
-            int y                    = robo1->position.y;
+            int32 x                  = robo1->position.x;
+            int32 y                  = robo1->position.y;
             RSDK.ResetEntitySlot(SceneInfo->entitySlot + 1, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo1->position.x = x;
             robo1->position.y = y;
@@ -392,17 +398,21 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
     if (HeavyGunner->stageWrapActive) {
         if (self->position.x >= 0x49800000) {
             HeavyGunner_HandleBGWrap(0x80000);
+
             foreach_active(HeavyGunner, gunner) { gunner->position.x -= 0x8000000; }
-            for (int p = 0; p < Player->playerCount; ++p) {
+
+            for (int32 p = 0; p < Player->playerCount; ++p) {
                 EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
                 player->position.x -= 0x8000000;
             }
+
             foreach_active(Ring, ring) { ring->position.x -= 0x8000000; }
+
             foreach_active(ImageTrail, imageTrail)
             {
                 imageTrail->position.x -= 0x8000000;
                 imageTrail->currentPos.x -= 0x8000000;
-                for (int i = 0; i < ImageTrail_TrackCount; ++i) imageTrail->statePos[i].x -= 0x8000000;
+                for (int32 i = 0; i < ImageTrail_TrackCount; ++i) imageTrail->statePos[i].x -= 0x8000000;
             }
         }
 
@@ -410,9 +420,10 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
         Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
         Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundsR[0] = Zone->cameraBoundsR[0] << 16;
-        EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL        = Zone->cameraBoundsL[0];
-        camera->boundsR        = Zone->cameraBoundsR[0];
+
+        EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+        camera->boundsL      = Zone->cameraBoundsL[0];
+        camera->boundsR      = Zone->cameraBoundsR[0];
 
         if (self->flyInTimer == 120) {
             if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
@@ -429,9 +440,10 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
         Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
         Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundsR[0] = Zone->cameraBoundsR[0] << 16;
-        EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL        = Zone->cameraBoundsL[0];
-        camera->boundsR        = Zone->cameraBoundsR[0];
+
+        EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
+        camera->boundsL      = Zone->cameraBoundsL[0];
+        camera->boundsR      = Zone->cameraBoundsR[0];
 
         if (self->flyInTimer == 120) {
             if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
@@ -449,7 +461,8 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
         Zone->cameraBoundsT[0]      = HeavyGunner->boundsT;
         Zone->cameraBoundsB[0]      = HeavyGunner->boundsB;
         Zone->playerBoundActiveR[0] = false;
-        for (int p = 0; p < Player->playerCount; ++p) {
+
+        for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
             if (player->stateInput == Player_ProcessP1Input) {
                 player->stateInput = HeavyGunner_Input_LockedP1;
@@ -461,6 +474,7 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
                 player->stateInput = HeavyGunner_Input_LockedP2_AI;
             }
         }
+
         self->state = HeavyGunner_StateManager_HandlePathChange;
     }
 
@@ -480,6 +494,7 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
 
         if (player->groundVel < Zone->autoScrollSpeed - 0x20000)
             player->groundVel = Zone->autoScrollSpeed - 0x20000;
+
         player->direction = FLIP_NONE;
         player->topSpeed  = Zone->autoScrollSpeed + 0x20000;
 
@@ -490,9 +505,8 @@ void HeavyGunner_StateManager_HandleStageWrap(void)
             player->abilitySpeed     = Zone->autoScrollSpeed - 0x18000;
         }
         else if (player->state == Player_State_KnuxGlideRight) {
-            if (player->abilitySpeed < Zone->autoScrollSpeed - 0x18000) {
+            if (player->abilitySpeed < Zone->autoScrollSpeed - 0x18000)
                 player->abilitySpeed = Zone->autoScrollSpeed - 0x18000;
-            }
         }
 
         if (player->groundVel > player->topSpeed)
@@ -516,6 +530,7 @@ void HeavyGunner_StateManager_HandlePathChange(void)
             else if (player->velocity.x < 0x80000) {
                 player->velocity.x = 0x80000;
             }
+
             player->direction = FLIP_NONE;
 
             if (player->state == Player_State_KnuxGlideLeft) {
@@ -525,9 +540,8 @@ void HeavyGunner_StateManager_HandlePathChange(void)
                 player->abilitySpeed     = Zone->autoScrollSpeed;
             }
             else if (player->state == Player_State_KnuxGlideRight) {
-                if (player->abilitySpeed < Zone->autoScrollSpeed) {
+                if (player->abilitySpeed < Zone->autoScrollSpeed)
                     player->abilitySpeed = Zone->autoScrollSpeed;
-                }
             }
         }
     }
@@ -536,6 +550,7 @@ void HeavyGunner_StateManager_HandlePathChange(void)
         self->position.x = camera->position.x - 0x100000;
         self->position.y = camera->position.y - 0x800000;
         HeavyGunner_HandleBGWrap(0x100000);
+
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
             player->position.x -= 0x10000000;
@@ -544,6 +559,7 @@ void HeavyGunner_StateManager_HandlePathChange(void)
         }
 
         foreach_active(Ring, ring) { ring->position.x -= 0x10000000; }
+
         foreach_active(ImageTrail, imageTrail)
         {
             imageTrail->position.x -= 0x10000000;
@@ -554,25 +570,24 @@ void HeavyGunner_StateManager_HandlePathChange(void)
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
-            if (player->stateInput == HeavyGunner_Input_LockedP1) {
+            if (player->stateInput == HeavyGunner_Input_LockedP1)
                 player->stateInput = Player_ProcessP1Input;
-            }
-            else if (player->stateInput == HeavyGunner_Input_LockedP2) {
+            else if (player->stateInput == HeavyGunner_Input_LockedP2)
                 player->stateInput = Player_ProcessP2Input_Player;
-            }
-            else if (player->stateInput == HeavyGunner_Input_LockedP2_AI) {
+            else if (player->stateInput == HeavyGunner_Input_LockedP2_AI)
                 player->stateInput = Player_ProcessP2Input_AI;
-            }
         }
-        Zone->playerBoundActiveR[0] = true;
-        HeavyGunner->stageWrapActive       = true;
-        self->state                 = HeavyGunner_StateManager_HandleStageWrap;
+
+        Zone->playerBoundActiveR[0]  = true;
+        HeavyGunner->stageWrapActive = true;
+        self->state                  = HeavyGunner_StateManager_HandleStageWrap;
 
         EntityHeavyGunner *heli = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
         heli->position.x        = camera->position.x - 0x1200000;
         heli->position.y        = camera->position.y - 0xC00000;
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 1, &heli->gunnerAnimator, true, 0);
-        heli->state = HeavyGunner_StateHeli_WaitForPlayer;
+        heli->state = HeavyGunner_StateHeli_AwaitPlayer;
+
         for (int32 c = 3 - heli->nextRoboID; c > 0; --c) {
             EntityHeavyGunner *robo = RSDK_GET_ENTITY(SceneInfo->entitySlot + c, HeavyGunner);
             robo->position.x        = camera->position.x - 0x200000;
@@ -584,6 +599,7 @@ void HeavyGunner_StateManager_HandlePathChange(void)
 void HeavyGunner_Input_LockedP1(void)
 {
     RSDK_THIS(Player);
+
     Player_ProcessP1Input();
 
     if (self->state != Player_State_None) {
@@ -597,12 +613,14 @@ void HeavyGunner_Input_LockedP1(void)
 void HeavyGunner_Input_LockedP2(void)
 {
     RSDK_THIS(Player);
+
     Player_ProcessP2Input_Player();
 
     self->up        = false;
     self->down      = false;
     self->jumpPress = false;
     self->jumpHold  = false;
+
     if (self->stateInput == Player_ProcessP2Input_AI)
         self->stateInput = HeavyGunner_Input_LockedP2_AI;
 }
@@ -616,6 +634,7 @@ void HeavyGunner_Input_LockedP2_AI(void)
     self->down      = false;
     self->jumpPress = false;
     self->jumpHold  = false;
+
     if (self->stateInput == Player_ProcessP2Input_Player)
         self->stateInput = HeavyGunner_Input_LockedP2;
 }
@@ -629,11 +648,9 @@ void HeavyGunner_StateEggRobo_Patrolling(void)
     RSDK.ProcessAnimation(&self->feetAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
 
-    int32 angle = 0;
-    if (self->position.x <= parent->position.x)
-        angle = RSDK.Sin256(self->angle);
-    else
-        angle = RSDK.Sin256(self->angle) - 64;
+    int32 angle = RSDK.Sin256(self->angle);
+    if (self->position.x > parent->position.x)
+        angle -= 0x40;
 
     self->position.x += (angle << 9) + Zone->autoScrollSpeed;
     self->rotation = (RSDK.Sin256(self->angle) >> 4) - 32;
@@ -649,6 +666,7 @@ void HeavyGunner_StateEggRobo_Patrolling(void)
         self->drawOrder = Zone->objectDrawLow - 1;
     else
         self->drawOrder = Zone->objectDrawHigh;
+
     if (parent->state == HeavyGunner_StateHeli_EscapeMissile)
         self->velocity.y = -0x8000;
     else
@@ -656,7 +674,8 @@ void HeavyGunner_StateEggRobo_Patrolling(void)
 
     self->position.y += self->velocity.y;
     if (--self->timer <= 0) {
-        self->timer    = RSDK.Rand(120, 240);
+        self->timer = RSDK.Rand(120, 240);
+
         self->parentOffset = RSDK.Rand(-0x200000, 0x600000);
         switch (RSDK.Rand(0, 8)) {
             case 0:
@@ -664,9 +683,12 @@ void HeavyGunner_StateEggRobo_Patrolling(void)
             case 2:
             case 3:
             case 4: self->targetScale = 0x200; break;
+
             case 5:
             case 6: self->targetScale = 0x180; break;
+
             case 7: self->targetScale = 0x300; break;
+
             default: break;
         }
     }
@@ -695,14 +717,18 @@ void HeavyGunner_StateEggRobo_ThrowGun(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->feetAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
+
     self->velocity.x -= 0x1000;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
-    self->rotation = (self->velocity.x - 0x40000) >> 13;
     self->position.y += self->velocity.y + ((self->parent->position.y - self->position.y + 0x400000) >> 6);
+
+    self->rotation = (self->velocity.x - 0x40000) >> 13;
+
     if (self->velocity.x < 0 && self->position.x < self->parent->position.x + 0x600000) {
         self->drawOrder = Zone->objectDrawLow - 1;
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 21, &self->armAnimator, true, 0);
-        self->state              = HeavyGunner_StateEggRobo_ThrownGun;
+        self->state = HeavyGunner_StateEggRobo_ThrownGun;
+
         EntityHeavyGunner *child = CREATE_ENTITY(HeavyGunner, intToVoid(HEAVYGUNNER_GUN), self->position.x + 0x80000, self->position.y - 0x80000);
         child->velocity.x        = -0x34000;
         child->velocity.y        = -0x80000;
@@ -723,6 +749,7 @@ void HeavyGunner_StateEggRobo_ThrownGun(void)
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->feetAnimator);
     RSDK.ProcessAnimation(&self->armAnimator);
+
     self->position.x += Zone->autoScrollSpeed;
     self->velocity.y += ((self->parent->position.y - self->position.y + 0x400000) >> 8) - (self->velocity.y >> 4);
     self->position.y += self->velocity.y;
@@ -737,6 +764,7 @@ void HeavyGunner_StateEggRobo_ThrownGun(void)
 void HeavyGunner_StateGun_Thrown(void)
 {
     RSDK_THIS(HeavyGunner);
+
     EntityHeavyGunner *parent = self->parent;
 
     self->velocity.y += 0x4000;
@@ -746,15 +774,14 @@ void HeavyGunner_StateGun_Thrown(void)
 
     if (self->position.x < parent->position.x - 0x180000)
         self->velocity.x = 0;
-    if (self->velocity.y > 0) {
-        if (self->position.y > parent->position.y - 0x200000) {
-            RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 1, &parent->gunnerAnimator, true, 0);
-            RSDK.PlaySfx(Player->sfxGrab, false, 255);
-            self->drawOrder = Zone->hudDrawOrder;
-            self->state     = HeavyGunner_StateGun_Grabbed;
-            self->timer     = 0x200;
-            self->stateDraw = HeavyGunner_Draw_FadeOut;
-        }
+
+    if (self->velocity.y > 0 && self->position.y > parent->position.y - 0x200000) {
+        RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 1, &parent->gunnerAnimator, true, 0);
+        RSDK.PlaySfx(Player->sfxGrab, false, 255);
+        self->drawOrder = Zone->hudDrawOrder;
+        self->state     = HeavyGunner_StateGun_Grabbed;
+        self->timer     = 0x200;
+        self->stateDraw = HeavyGunner_Draw_FadeOut;
     }
 }
 
@@ -772,10 +799,13 @@ void HeavyGunner_StateMissile_Launched(void)
     RSDK_THIS(HeavyGunner);
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->velocity.x -= 0x1800;
     self->velocity.y += 0x3800;
+
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->position.y += self->velocity.y;
+
     self->scale.x += ((0x200 - self->scale.x) >> 3);
     self->scale.y = self->scale.x;
 
@@ -801,7 +831,9 @@ void HeavyGunner_StateMissile_BlastOff(void)
 
     if (self->velocity.x < 0x80000)
         self->velocity.x += 0x3800;
+
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
+
     if (self->exhaustAnimator.animationID == 26 && self->exhaustAnimator.frameID == self->exhaustAnimator.frameCount - 1)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 25, &self->exhaustAnimator, true, 0);
 
@@ -811,6 +843,7 @@ void HeavyGunner_StateMissile_BlastOff(void)
         explosion->drawFX          = FX_ROTATE;
         explosion->rotation        = 128;
     }
+
     if (--self->timer <= 0) {
         self->timer = 0;
         self->state = HeavyGunner_StateMissile_FindFloor;
@@ -825,12 +858,9 @@ void HeavyGunner_StateMissile_FindFloor(void)
     self->position.y += 0x20000;
 
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
-        self->direction = FLIP_X;
-        if (self->type == HEAVYGUNNER_MISSILE)
-            self->velocity.x = -0x10000;
-        else
-            self->velocity.x = -0x20000;
-        self->state = HeavyGunner_StateMissile_AttackPlayer;
+        self->direction  = FLIP_X;
+        self->velocity.x = self->type == HEAVYGUNNER_MISSILE ? -0x10000 : -0x20000;
+        self->state      = HeavyGunner_StateMissile_AttackPlayer;
     }
 }
 
@@ -840,14 +870,11 @@ void HeavyGunner_StateMissile_AttackPlayer(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->exhaustAnimator);
+
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x100000, 64);
 
-    Hitbox *hitbox = NULL;
-    if (self->type == HEAVYGUNNER_MISSILE)
-        hitbox = &HeavyGunner->hitboxMissile;
-    else
-        hitbox = &HeavyGunner->hitboxMissileF;
+    Hitbox *hitbox = self->type == HEAVYGUNNER_MISSILE ? &HeavyGunner->hitboxMissile : &HeavyGunner->hitboxMissileF;
 
     foreach_active(Player, player)
     {
@@ -870,15 +897,18 @@ void HeavyGunner_StateMissile_AttackPlayer(void)
                 self->direction = FLIP_NONE;
                 self->rotation  = 256;
                 self->state     = HeavyGunner_StateMissile_Malfunction;
+
                 RSDK.PlaySfx(HeavyGunner->sfxHit, false, 255);
                 RSDK.PlaySfx(HeavyGunner->sfxFlip, false, 255);
             }
             else {
                 Player_CheckHit(player, self);
                 RSDK.PlaySfx(HeavyGunner->sfxExplosion3, false, 255);
-                int32 x                = RSDK.Cos512(self->rotation) << 11;
-                int32 y                = RSDK.Sin512(self->rotation) << 11;
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + self->position.x, y + self->position.y);
+
+                int32 x              = RSDK.Cos512(self->rotation) << 11;
+                int32 y              = RSDK.Sin512(self->rotation) << 11;
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + x, self->position.y + y);
+
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
                 debris->velocity.x = self->velocity.x + Zone->autoScrollSpeed;
                 debris->drawOrder  = Zone->objectDrawLow;
@@ -894,10 +924,12 @@ void HeavyGunner_StateMissile_Malfunction(void)
     RSDK_THIS(HeavyGunner);
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->position.x += RSDK.Cos512(self->rotation) << 8;
     self->position.y += (RSDK.Sin512(self->rotation) - 0x200) << 8;
-    self->rotation += 32;
+
+    self->rotation += 0x20;
 
     if (!(Zone->timer & 3)) {
         int32 x = RSDK.Cos512(self->rotation) << 11;
@@ -940,6 +972,7 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
     self->position.y += self->velocity.y;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->velocity.y += ((parent->position.y - self->position.y) >> 8) - (self->velocity.y >> 4);
+
     if (self->velocity.x >= -0x20000) {
         if (self->velocity.x > 0x70000)
             self->velocity.x = 0x70000;
@@ -952,10 +985,11 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
         self->rotation  = 0;
         self->direction = FLIP_X;
         self->velocity.x -= RSDK.Cos512(0) << 6;
+
         if (Zone->timer & 3) {
             if ((Zone->timer & 3) == 2) {
-                int32 x                = 0x600 * RSDK.Cos512(self->rotation);
-                int32 y                = 0x600 * RSDK.Sin512(self->rotation);
+                int32 x              = 0x600 * RSDK.Cos512(self->rotation);
+                int32 y              = 0x600 * RSDK.Sin512(self->rotation);
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
                 debris->velocity.x = Zone->autoScrollSpeed;
@@ -967,8 +1001,8 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
             }
         }
         else {
-            int32 x                = RSDK.Cos512(self->rotation) << 11;
-            int32 y                = RSDK.Sin512(self->rotation) << 11;
+            int32 x              = RSDK.Cos512(self->rotation) << 11;
+            int32 y              = RSDK.Sin512(self->rotation) << 11;
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + self->position.x, y + self->position.y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
             debris->velocity.x = (RSDK.Cos512(self->rotation) << 8) + Zone->autoScrollSpeed;
@@ -991,7 +1025,8 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
                 self->state   = HeavyGunner_StateMissile_AttackRobo;
                 RSDK.PlaySfx(HeavyGunner->sfxWooshOut, false, 255);
             }
-            self->groundVel = 256;
+
+            self->groundVel = 0x100;
         }
     }
     else {
@@ -1000,8 +1035,8 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
 
         if (Zone->timer & 3) {
             if ((Zone->timer & 3) == 2) {
-                int32 x                = 0x600 * RSDK.Cos512(self->rotation);
-                int32 y                = 0x600 * RSDK.Sin512(self->rotation);
+                int32 x              = 0x600 * RSDK.Cos512(self->rotation);
+                int32 y              = 0x600 * RSDK.Sin512(self->rotation);
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
                 debris->velocity.x = Zone->autoScrollSpeed;
@@ -1013,8 +1048,8 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
             }
         }
         else {
-            int32 x                = RSDK.Cos512(self->rotation) << 11;
-            int32 y                = RSDK.Sin512(self->rotation) << 11;
+            int32 x              = RSDK.Cos512(self->rotation) << 11;
+            int32 y              = RSDK.Sin512(self->rotation) << 11;
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - (x << 11), self->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed - (RSDK.Cos512(self->rotation) << 8);
@@ -1028,13 +1063,15 @@ void HeavyGunner_StateMissile_ReturnToSender(void)
 void HeavyGunner_StateMissile_AttackRobo(void)
 {
     RSDK_THIS(HeavyGunner);
+
     EntityHeavyGunner *parent = self->parent;
 
     RSDK.ProcessAnimation(&self->mainAnimator);
 
     int32 angle = RSDK.ATan2(self->position.x - parent->position.x, self->position.y - parent->position.y);
     self->groundVel += 16;
-    self->rotation   = 2 * angle;
+    self->rotation = 2 * angle;
+
     self->velocity.x = self->groundVel * RSDK.Cos512(self->rotation);
     self->velocity.y = self->groundVel * RSDK.Sin512(self->rotation);
     self->position.x += Zone->autoScrollSpeed - self->velocity.x;
@@ -1052,8 +1089,8 @@ void HeavyGunner_StateMissile_AttackRobo(void)
     self->drawOrder = parent->drawOrder;
     if (Zone->timer & 3) {
         if ((Zone->timer & 3) == 2) {
-            int32 x                = 0x600 * RSDK.Cos512(self->rotation);
-            int32 y                = 0x600 * RSDK.Sin512(self->rotation);
+            int32 x              = 0x600 * RSDK.Cos512(self->rotation);
+            int32 y              = 0x600 * RSDK.Sin512(self->rotation);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed;
@@ -1065,8 +1102,8 @@ void HeavyGunner_StateMissile_AttackRobo(void)
         }
     }
     else {
-        int32 x                = RSDK.Cos512(self->rotation) << 11;
-        int32 y                = RSDK.Sin512(self->rotation) << 11;
+        int32 x              = RSDK.Cos512(self->rotation) << 11;
+        int32 y              = RSDK.Sin512(self->rotation) << 11;
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + self->position.x, y + self->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
         debris->velocity.x = (RSDK.Cos512(self->rotation) << 8) + Zone->autoScrollSpeed;
@@ -1079,25 +1116,25 @@ void HeavyGunner_StateMissile_AttackRobo(void)
     int32 ry = (self->position.y - parent->position.y) >> 16;
     if (rx * rx + ry * ry < 0x100) {
         for (int32 i = 0; i < 12; ++i) {
-            int32 x                = self->position.x + RSDK.Rand(-0xC0000, 0xC0000);
-            int32 y                = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
+            int32 x              = self->position.x + RSDK.Rand(-0xC0000, 0xC0000);
+            int32 y              = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 28, &debris->animator, true, i >> 1);
-            debris->velocity.x = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
-            debris->gravityStrength    = 0x3800;
-            debris->scale      = parent->scale;
-            debris->rotSpeed   = RSDK.Rand(-24, 24);
-            debris->drawOrder  = Zone->objectDrawLow;
+            debris->velocity.x      = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
+            debris->gravityStrength = 0x3800;
+            debris->scale           = parent->scale;
+            debris->rotSpeed        = RSDK.Rand(-24, 24);
+            debris->drawOrder       = Zone->objectDrawLow;
             if (i >> 1 < 3)
                 debris->drawFX = FX_SCALE | FX_ROTATE;
         }
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, parent->position.x, parent->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_ENEMY, &debris->animator, true, 0);
-        debris->velocity.x    = Zone->autoScrollSpeed;
-        debris->drawOrder     = Zone->objectDrawHigh;
-        debris->timer         = 32;
+        debris->velocity.x           = Zone->autoScrollSpeed;
+        debris->drawOrder            = Zone->objectDrawHigh;
+        debris->timer                = 32;
         HeavyGunner->stageWrapActive = false;
 
         int32 plane = RSDK.Rand(0, 2);
@@ -1121,15 +1158,17 @@ void HeavyGunner_StateMissile_AttackGunner(void)
 
     int32 angle = RSDK.ATan2(self->position.x - parent->position.x, self->position.y - parent->position.y);
     self->groundVel += 16;
-    self->rotation   = 2 * angle;
+    self->rotation = 2 * angle;
+
     self->velocity.x = self->groundVel * RSDK.Cos512(self->rotation);
     self->velocity.y = self->groundVel * RSDK.Sin512(self->rotation);
     self->position.x += Zone->autoScrollSpeed - self->velocity.x;
     self->position.y -= self->velocity.y;
+
     if (Zone->timer & 3) {
         if ((Zone->timer & 3) == 2) {
-            int32 x                = 0x600 * RSDK.Cos512(self->rotation);
-            int32 y                = 0x600 * RSDK.Sin512(self->rotation);
+            int32 x              = 0x600 * RSDK.Cos512(self->rotation);
+            int32 y              = 0x600 * RSDK.Sin512(self->rotation);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x - x, self->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed;
@@ -1141,8 +1180,8 @@ void HeavyGunner_StateMissile_AttackGunner(void)
         }
     }
     else {
-        int32 x                = RSDK.Cos512(self->rotation) << 11;
-        int32 y                = RSDK.Sin512(self->rotation) << 11;
+        int32 x              = RSDK.Cos512(self->rotation) << 11;
+        int32 y              = RSDK.Sin512(self->rotation) << 11;
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + self->position.x, y + self->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
         debris->velocity.x = (RSDK.Cos512(self->rotation) << 8) + Zone->autoScrollSpeed;
@@ -1155,25 +1194,25 @@ void HeavyGunner_StateMissile_AttackGunner(void)
     int32 ry = (self->position.y - parent->position.y) >> 16;
     if (rx * rx + ry * ry < 0x300) {
         for (int32 i = 0; i < 12; ++i) {
-            int32 x                = self->position.x + RSDK.Rand(0x60000, 0x180000);
-            int32 y                = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
+            int32 x              = self->position.x + RSDK.Rand(0x60000, 0x180000);
+            int32 y              = self->position.y + RSDK.Rand(-0xC0000, 0xC0000);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x, y);
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 28, &debris->animator, true, i >> 1);
-            debris->velocity.x = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
-            debris->gravityStrength    = 0x3800;
-            debris->rotSpeed   = RSDK.Rand(-24, 24);
-            debris->drawOrder  = Zone->objectDrawHigh;
+            debris->velocity.x      = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
+            debris->gravityStrength = 0x3800;
+            debris->rotSpeed        = RSDK.Rand(-24, 24);
+            debris->drawOrder       = Zone->objectDrawHigh;
             if (i >> 1 < 3)
                 debris->drawFX = FX_ROTATE;
         }
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, self->position.y - 0x200000);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 13, &debris->animator, true, 0);
-        debris->velocity.x = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
-        debris->velocity.y = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
-        debris->gravityStrength    = 0x3800;
-        debris->drawOrder  = Zone->objectDrawHigh;
+        debris->velocity.x      = Zone->autoScrollSpeed + RSDK.Rand(-0x20000, 0x20000);
+        debris->velocity.y      = RSDK.Rand(-0x20000, 0x20000) - 0x40000;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawHigh;
 
         debris = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x + 0x60000, self->position.y - 0x40000);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
@@ -1190,6 +1229,7 @@ void HeavyGunner_StateMissile_AttackGunner(void)
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 12, &parent->tBladeAnimator, true, 2);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 12, &parent->beaconAnimator, true, 3);
         RSDK.SetSpriteAnimation(-1, 0, &parent->pilotAnimator, true, 0);
+
         --parent->missileID;
         parent->state          = HeavyGunner_StateHeli_Exploding;
         SceneInfo->timeEnabled = false;
@@ -1200,7 +1240,7 @@ void HeavyGunner_StateMissile_AttackGunner(void)
     }
 }
 
-void HeavyGunner_StateHeli_WaitForPlayer(void)
+void HeavyGunner_StateHeli_AwaitPlayer(void)
 {
     RSDK_THIS(HeavyGunner);
 
@@ -1209,6 +1249,7 @@ void HeavyGunner_StateHeli_WaitForPlayer(void)
         self->velocity.y = 0;
         self->drawFX     = FX_ROTATE;
         self->state      = HeavyGunner_StateHeli_WooshIn;
+
         Camera_ShakeScreen(0, 12, 12);
         RSDK.PlaySfx(HeavyGunner->sfxRumble, false, 255);
         RSDK.PlaySfx(HeavyGunner->sfxWooshIn, false, 255);
@@ -1233,9 +1274,11 @@ void HeavyGunner_StateHeli_WooshIn(void)
     self->position.x += self->velocity.x;
     self->position.x += Zone->autoScrollSpeed;
     self->position.y += 0x10000;
+
     self->rotation = (self->velocity.x + 0x40000) >> 13;
     if (self->rotation < 0)
         self->rotation = 0;
+
     RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
     if (self->position.x > Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16))
         self->state = HeavyGunner_StateHeli_FindFloor;
@@ -1254,23 +1297,24 @@ void HeavyGunner_StateHeli_FindFloor(void)
     RSDK.ProcessAnimation(&self->feetAnimator);
     RSDK.ProcessAnimation(&self->feet2Animator);
     RSDK.ProcessAnimation(&self->gunnerAnimator);
+
     self->velocity.x -= 0x1000;
     self->position.x += self->velocity.x;
     self->position.x += Zone->autoScrollSpeed;
     self->position.y += 0x10000;
+
     self->rotation = (self->velocity.x + 0x40000) >> 13;
     if (self->rotation < 0)
         self->rotation = 0;
 
     bool32 collided = RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
-    if (self->velocity.x < 0 && collided) {
-        if (self->position.x < Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
-            self->velocity.x = 0;
-            self->drawFX     = 0;
-            if (self->nextRoboID > 0)
-                self->timer = 240;
-            self->state = HeavyGunner_StateHeli_HandleAttacks;
-        }
+    if (self->velocity.x < 0 && collided && self->position.x < Zone->playerBoundsL[0] + ((ScreenInfo->centerX - 16) << 16)) {
+        self->velocity.x = 0;
+        self->drawFX     = FX_NONE;
+        if (self->nextRoboID > 0)
+            self->timer = 240;
+
+        self->state = HeavyGunner_StateHeli_HandleAttacks;
     }
 }
 
@@ -1287,10 +1331,13 @@ void HeavyGunner_StateHeli_HandleAttacks(void)
     RSDK.ProcessAnimation(&self->feetAnimator);
     RSDK.ProcessAnimation(&self->feet2Animator);
     RSDK.ProcessAnimation(&self->gunnerAnimator);
+
     self->position.x += Zone->autoScrollSpeed;
     RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 64);
+
     self->position.y += RSDK.Sin256(self->angle) << 11;
     self->angle = (self->angle + 3) & 0xFF;
+
     if (self->gunnerAnimator.animationID == 3)
         self->timer = 0;
 
@@ -1307,23 +1354,22 @@ void HeavyGunner_StateHeli_HandleAttacks(void)
         self->velocity.x = -0x30000;
 
         int32 dudID = RSDK.Rand(0, 3);
+
         EntityHeavyGunner *child =
             CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 0) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->velocity.y -= 0x10000;
-        child->parent   = self;
+        child->parent    = self;
         child->missileID = 0;
         ++self->missileID;
 
-        child =
-            CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 1) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
-        child->parent   = self;
+        child = CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 1) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+        child->parent    = self;
         child->missileID = 15 * ((dudID != 1) + 1);
         ++self->missileID;
 
-        child =
-            CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 2) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
+        child = CREATE_ENTITY(HeavyGunner, intToVoid((dudID == 2) + HEAVYGUNNER_MISSILE_F), self->position.x - 0x200000, self->position.y - 0x100000);
         child->velocity.y += 0x10000;
-        child->parent   = self;
+        child->parent    = self;
         child->missileID = 30 * ((dudID != 2) + 1);
         ++self->missileID;
 
@@ -1353,9 +1399,12 @@ void HeavyGunner_StateHeli_ShotsFired(void)
     self->velocity.x += 0x1800;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->rotation = self->velocity.x >> 14;
+
     RSDK.ObjectTileGrip(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x800000, 64);
+
     self->position.y += RSDK.Sin256(self->angle) << 11;
     self->angle = (self->angle + 3) & 0xFF;
+
     if (self->rotation > 0)
         self->rotation = 0;
 
@@ -1379,6 +1428,7 @@ void HeavyGunner_StateHeli_EscapeMissile(void)
     RSDK.ProcessAnimation(&self->feetAnimator);
     RSDK.ProcessAnimation(&self->feet2Animator);
     RSDK.ProcessAnimation(&self->gunnerAnimator);
+
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->position.y += self->velocity.y;
     self->velocity.y -= 0x4000;
@@ -1399,8 +1449,10 @@ void HeavyGunner_StateHeli_IncomingMissile(void)
 
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->velocity.x -= 0xE00;
+
     if (self->velocity.y < 0x400)
         self->velocity.y += 16;
+
     self->position.y += self->velocity.y * RSDK.Sin256(self->angle);
     self->angle = (self->angle + 6) & 0xFF;
 
@@ -1411,12 +1463,12 @@ void HeavyGunner_StateHeli_IncomingMissile(void)
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x - 0x300000, self->position.y - 0x240000);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 20, &debris->animator, true, 0);
-        debris->velocity.y = -0x20000;
-        debris->velocity.x = Zone->autoScrollSpeed - 0x20000;
-        debris->gravityStrength    = 0x3800;
-        debris->drawFX     = FX_ROTATE;
-        debris->rotSpeed   = -16;
-        debris->drawOrder  = Zone->objectDrawHigh;
+        debris->velocity.y      = -0x20000;
+        debris->velocity.x      = Zone->autoScrollSpeed - 0x20000;
+        debris->gravityStrength = 0x3800;
+        debris->drawFX          = FX_ROTATE;
+        debris->rotSpeed        = -16;
+        debris->drawOrder       = Zone->objectDrawHigh;
     }
 }
 
@@ -1432,10 +1484,11 @@ void HeavyGunner_StateHeli_Exploding(void)
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     if (self->velocity.x < 0x8000)
         self->velocity.x += 0xE00;
-    ++self->timer;
+
     self->position.y += self->velocity.y * RSDK.Sin256(self->angle);
     self->angle = (self->angle + 6) & 0xFF;
 
+    ++self->timer;
     if ((self->timer & 7) == 2)
         RSDK.PlaySfx(HeavyGunner->sfxExplosion2, false, 255);
 
@@ -1458,17 +1511,17 @@ void HeavyGunner_StateHeli_Exploding(void)
 
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &debris->animator, true, self->feetAnimator.frameID);
-        debris->velocity.y = -0x10000;
-        debris->velocity.x = Zone->autoScrollSpeed - 0x10000;
-        debris->gravityStrength    = 0x3800;
-        debris->drawOrder  = Zone->objectDrawHigh;
+        debris->velocity.y      = -0x10000;
+        debris->velocity.x      = Zone->autoScrollSpeed - 0x10000;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawHigh;
 
         debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x + 0x1B0000, self->position.y);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &debris->animator, true, self->feet2Animator.frameID);
-        debris->velocity.y = -0x10000;
-        debris->velocity.x = Zone->autoScrollSpeed + 0x10000;
-        debris->gravityStrength    = 0x3800;
-        debris->drawOrder  = Zone->objectDrawLow - 1;
+        debris->velocity.y      = -0x10000;
+        debris->velocity.x      = Zone->autoScrollSpeed + 0x10000;
+        debris->gravityStrength = 0x3800;
+        debris->drawOrder       = Zone->objectDrawLow - 1;
         RSDK.SetSpriteAnimation(-1, 0, &self->feetAnimator, true, 0);
         RSDK.SetSpriteAnimation(-1, 0, &self->feet2Animator, true, 0);
         self->state = HeavyGunner_StateHeli_ExplodeAndFall;
@@ -1481,25 +1534,30 @@ void HeavyGunner_StateHeli_ExplodeAndFall(void)
 
     RSDK.ProcessAnimation(&self->mainAnimator);
     RSDK.ProcessAnimation(&self->rBladeAnimator);
-    self->position.x += self->velocity.x + Zone->autoScrollSpeed;
+
     self->velocity.y += 0x3800;
+    self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->position.y += self->velocity.y;
+
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0x200000, true))
         self->velocity.y = -(self->velocity.y >> 1);
 
-    if ((++self->timer & 7) == 2)
+    self->timer++;
+    if ((self->timer & 7) == 2)
         RSDK.PlaySfx(HeavyGunner->sfxExplosion2, false, 255);
+
     if (!(self->timer & 0x1F))
         RSDK.PlaySfx(HeavyGunner->sfxHit, false, 255);
 
     if (!(self->timer & 3)) {
-        int32 x                      = self->position.x + RSDK.Rand(-0x300000, 0x300000);
-        int32 y                      = self->position.y + RSDK.Rand(-0x300000, 0x300000);
+        int32 x                    = self->position.x + RSDK.Rand(-0x300000, 0x300000);
+        int32 y                    = self->position.y + RSDK.Rand(-0x300000, 0x300000);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(RSDK.Rand(EXPLOSION_BOSS, EXPLOSION_BOSSPUFF + 1)), x, y);
-        explosion->drawOrder       = Zone->objectDrawHigh;
-        explosion->drawFX          = FX_SCALE;
-        explosion->scale.x         = RSDK.Rand(0x100, 0x200);
-        explosion->scale.y         = explosion->scale.x;
+
+        explosion->drawOrder = Zone->objectDrawHigh;
+        explosion->drawFX    = FX_SCALE;
+        explosion->scale.x   = RSDK.Rand(0x100, 0x200);
+        explosion->scale.y   = explosion->scale.x;
     }
 
     if (self->timer > 200) {
@@ -1507,6 +1565,7 @@ void HeavyGunner_StateHeli_ExplodeAndFall(void)
         self->state     = HeavyGunner_StateHeli_FadeOutDestroy;
         self->timer     = 768;
         self->stateDraw = HeavyGunner_Draw_FadeOut;
+
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
         RSDK.PlaySfx(HeavyGunner->sfxExplosion3, false, 255);
 
@@ -1546,6 +1605,7 @@ void HeavyGunner_StateEscapeHBH_Hover(void)
     RSDK_THIS(HeavyGunner);
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->position.y += self->velocity.y;
@@ -1563,6 +1623,7 @@ void HeavyGunner_StateEscapeHBH_FlyAway(void)
     RSDK_THIS(HeavyGunner);
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     self->velocity.y -= 0x6000;
     self->position.x += self->velocity.x + Zone->autoScrollSpeed;
     self->position.y += self->velocity.y;
@@ -1594,9 +1655,22 @@ void HeavyGunner_EditorDraw(void)
     RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 11, &self->feet2Animator, true, 2);
     RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 0, &self->gunnerAnimator, true, 0);
     self->drawFX   = FX_ROTATE;
-    self->rotation = 64;
+    self->rotation = 0x40;
 
     HeavyGunner_Draw_Heli();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        for (int32 i = 0; i < 4; ++i) {
+            EntityHeavyGunner *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1 + i, HeavyGunner);
+
+            if (child)
+                DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);
+        }
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void HeavyGunner_EditorLoad(void) { HeavyGunner->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE); }

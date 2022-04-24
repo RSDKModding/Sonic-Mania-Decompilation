@@ -7,7 +7,7 @@ typedef enum {
     POPCORNMACHINE_LEFT,
     POPCORNMACHINE_RIGHT,
     POPCORNMACHINE_BOTH,
-}PopcornMachineTypes;
+} PopcornMachineTypes;
 
 // Object Class
 struct ObjectPopcornMachine {
@@ -29,7 +29,7 @@ struct EntityPopcornMachine {
     uint8 type;
     uint8 height;
     int32 timer;
-    Entity *parent;
+    EntityPopcornMachine *parent;
     EntityPlayer *player;
     int32 bounds[PLAYER_MAX];
     Vector2 dispenserHolderPos;
@@ -48,7 +48,7 @@ void PopcornMachine_Update(void);
 void PopcornMachine_LateUpdate(void);
 void PopcornMachine_StaticUpdate(void);
 void PopcornMachine_Draw(void);
-void PopcornMachine_Create(void* data);
+void PopcornMachine_Create(void *data);
 void PopcornMachine_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PopcornMachine_EditorDraw(void);
@@ -70,4 +70,4 @@ void PopcornMachine_StateController_RisePlayer(void);
 void PopcornMachine_StateController_FirePlayer(void);
 void PopcornMachine_StateController_HandleFinish(void);
 
-#endif //!OBJ_POPCORNMACHINE_H
+#endif //! OBJ_POPCORNMACHINE_H

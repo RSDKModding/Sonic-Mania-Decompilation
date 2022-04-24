@@ -16,7 +16,7 @@ typedef enum {
     EGGJANKENPART_BALL_BL,
     EGGJANKENPART_BALL_BR,
     EGGJANKENPART_BUTTON,
-}EggJankenPart_Parts;
+} EggJankenPart_Parts;
 
 // Object Class
 struct ObjectEggJankenPart {
@@ -38,7 +38,7 @@ void EggJankenPart_Update(void);
 void EggJankenPart_LateUpdate(void);
 void EggJankenPart_StaticUpdate(void);
 void EggJankenPart_Draw(void);
-void EggJankenPart_Create(void* data);
+void EggJankenPart_Create(void *data);
 void EggJankenPart_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void EggJankenPart_EditorDraw(void);
@@ -48,5 +48,4 @@ void EggJankenPart_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_EGGJANKENPART_H
+#endif //! OBJ_EGGJANKENPART_H

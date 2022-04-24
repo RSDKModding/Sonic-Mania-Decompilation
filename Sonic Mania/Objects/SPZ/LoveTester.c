@@ -16,9 +16,7 @@ void LoveTester_Update(void)
     StateMachine_Run(self->state);
     StateMachine_Run(self->stateLights);
 
-    for (int i = 0; i < 10; ++i) {
-        RSDK.ProcessAnimation(&self->lightAnimator[i]);
-    }
+    for (int32 i = 0; i < 10; ++i) RSDK.ProcessAnimation(&self->lightAnimator[i]);
 }
 
 void LoveTester_LateUpdate(void) {}
@@ -44,13 +42,14 @@ void LoveTester_Create(void *data)
 
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = Zone->objectDrawLow;
-    self->storedPos.x   = self->position.x;
-    self->storedPos.y   = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     LoveTester_SetupHitboxes();
+
     if (data) {
         self->updateRange.x = 0x100000;
         self->updateRange.y = 0x100000;
@@ -127,6 +126,7 @@ void LoveTester_DrawSprites(void)
 
     int32 storeX = self->position.x;
     int32 storeY = self->position.y;
+
     if (SceneInfo->currentDrawGroup != Zone->objectDrawHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 1, &self->mainAnimator, true, 0);
         RSDK.DrawSprite(&self->mainAnimator, NULL, false);
@@ -186,7 +186,7 @@ void LoveTester_DrawTVDisplay(uint8 displayList, uint8 frame, bool32 isTVActive)
     }
 }
 
-void LoveTester_CheckPlayerCollisions(void)
+void LoveTester_CheckPlayerCollisions_Solid(void)
 {
     RSDK_THIS(LoveTester);
 
@@ -198,6 +198,7 @@ void LoveTester_CheckPlayerCollisions(void)
         int32 velY   = player->velocity.y;
         int32 sideL  = Player_CheckCollisionBox(player, self, &LoveTester->hitboxL);
         int32 sideR  = Player_CheckCollisionBox(player, self, &LoveTester->hitboxR);
+
         if (sideL == C_TOP || sideL == C_BOTTOM || sideR == C_TOP || sideR == C_BOTTOM) {
             player->onGround   = false;
             player->velocity.x = velX;
@@ -208,7 +209,7 @@ void LoveTester_CheckPlayerCollisions(void)
     }
 }
 
-void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
+void LoveTester_CheckPlayerCollisions_Entry(bool32 allowSidekick)
 {
     RSDK_THIS(LoveTester);
 
@@ -216,21 +217,22 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
     {
         int32 playerID = RSDK.GetEntityID(player);
         if (allowSidekick || !player->sidekick) {
-
             if (!((1 << playerID) & self->activePlayers)) {
                 if (Player_CheckBadnikTouch(player, self, &LoveTester->hitboxEntry)) {
                     self->activePlayers |= 1 << playerID;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
-                    player->nextGroundState = 0;
-                    player->nextAirState    = 0;
+
+                    player->nextGroundState = StateMachine_None;
+                    player->nextAirState    = StateMachine_None;
                     player->velocity.x >>= 15;
                     player->velocity.y >>= 15;
                     player->onGround = false;
                     player->state    = Player_State_None;
+
                     if (!self->playerPtr) {
                         self->playerPtr = player;
                         if (player->camera) {
-                            player->camera->target   = (Entity *)self;
+                            player->camera->target         = (Entity *)self;
                             player->camera->disableYOffset = false;
                         }
                     }
@@ -242,6 +244,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
                 player->position.x += (self->position.x - player->position.x) >> 1;
                 player->position.y += (self->position.y + 0x10000 - player->position.y) >> 1;
                 player->state = Player_State_None;
+
                 if (self->matchingFinished) {
                     self->activePlayers &= ~(1 << playerID);
                     player->state          = Player_State_Air;
@@ -249,11 +252,9 @@ void LoveTester_CheckPlayerCollisions2(bool32 allowSidekick)
                     player->onGround       = false;
                     player->velocity.x     = 0;
                     player->velocity.y     = 0;
-                    if (player->camera) {
-                        if (self->playerPtr == player) {
-                            player->camera->target   = (Entity *)player;
-                            player->camera->disableYOffset = true;
-                        }
+                    if (player->camera && self->playerPtr == player) {
+                        player->camera->target         = (Entity *)player;
+                        player->camera->disableYOffset = true;
                     }
                 }
             }
@@ -266,6 +267,7 @@ void LoveTester_GiveScore(EntityPlayer *player)
     EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, player->position.x, player->position.y);
     bonus->drawOrder        = Zone->objectDrawHigh;
     bonus->animator.frameID = 0;
+
     Player_GiveScore(player, 100);
     RSDK.PlaySfx(LoveTester->sfxScore, false, 255);
 }
@@ -274,7 +276,7 @@ void LoveTester_CreateHeartParticles(void)
 {
     RSDK_THIS(LoveTester);
 
-    for (int velX = 0, frame = 0; velX < 0x10000; velX += 0x4000, ++frame) {
+    for (int32 velX = 0, frame = 0; velX < 0x10000; velX += 0x4000, ++frame) {
         EntityLoveTester *child = CREATE_ENTITY(LoveTester, intToVoid(true), self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 4, &child->mainAnimator, true, frame & 1);
         child->velocity.x = velX - 0x6000;
@@ -285,14 +287,13 @@ void LoveTester_State_Setup(void)
 {
     RSDK_THIS(LoveTester);
 
-    for (int32 i = 0; i < 10; ++i) {
-        RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[i], true, 5);
-    }
+    for (int32 i = 0; i < 10; ++i) RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[i], true, 5);
 
     self->playerPtr        = NULL;
     self->matchingFinished = false;
     self->activePlayers    = 0;
-    self->state            = LoveTester_State_WaitForActivated;
+
+    self->state = LoveTester_State_WaitForActivated;
     LoveTester_State_WaitForActivated();
 }
 
@@ -300,8 +301,9 @@ void LoveTester_State_WaitForActivated(void)
 {
     RSDK_THIS(LoveTester);
 
-    LoveTester_CheckPlayerCollisions();
-    LoveTester_CheckPlayerCollisions2(false);
+    LoveTester_CheckPlayerCollisions_Solid();
+    LoveTester_CheckPlayerCollisions_Entry(false);
+
     if (self->playerPtr) {
         self->timer            = 0;
         self->isTVActiveTop    = true;
@@ -318,8 +320,8 @@ void LoveTester_State_SetupTopDisplay(void)
 {
     RSDK_THIS(LoveTester);
 
-    LoveTester_CheckPlayerCollisions();
-    LoveTester_CheckPlayerCollisions2(true);
+    LoveTester_CheckPlayerCollisions_Solid();
+    LoveTester_CheckPlayerCollisions_Entry(true);
 
     if (self->timer >= 8) {
         EntityPlayer *player   = self->playerPtr;
@@ -337,6 +339,7 @@ void LoveTester_State_SetupTopDisplay(void)
         do {
             self->nextDisplayBottom = RSDK.Rand(LOVETESTER_LIST_SONIC, LOVETESTER_LIST_HEART);
         } while (self->nextDisplayBottom == self->tvDisplayTop);
+
         self->state = LoveTester_State_SetupMatching;
     }
     else {
@@ -350,8 +353,8 @@ void LoveTester_State_SetupMatching(void)
 {
     RSDK_THIS(LoveTester);
 
-    LoveTester_CheckPlayerCollisions();
-    LoveTester_CheckPlayerCollisions2(true);
+    LoveTester_CheckPlayerCollisions_Solid();
+    LoveTester_CheckPlayerCollisions_Entry(true);
 
     if (self->timer < 168) {
         int32 timer = self->timer & 0b10000000000000000000000000000011;
@@ -363,6 +366,7 @@ void LoveTester_State_SetupMatching(void)
         if (shouldChangeDisplay) {
             int32 displayBottom = self->tvDisplayBottom;
             int32 displayTop    = self->tvDisplayTop;
+
             while (true) {
                 self->tvDisplayBottom = displayTop;
                 if (displayTop != self->tvDisplayTop && displayTop != displayBottom)
@@ -454,18 +458,21 @@ void LoveTester_State_UnluckyMatch(void)
     else {
         switch (self->timer++ % 32) {
             default: break;
+
             case 0:
                 self->tvDisplayBottom = self->nextDisplayBottom;
                 LoveTester_GiveScore(player);
                 break;
+
             case 16:
                 self->tvDisplayBottom = 6;
                 LoveTester_GiveScore(player);
                 break;
         }
     }
-    LoveTester_CheckPlayerCollisions();
-    LoveTester_CheckPlayerCollisions2(true);
+
+    LoveTester_CheckPlayerCollisions_Solid();
+    LoveTester_CheckPlayerCollisions_Entry(true);
 }
 
 void LoveTester_State_GoodMatch(void)
@@ -483,8 +490,8 @@ void LoveTester_State_GoodMatch(void)
         ++self->timer;
     }
 
-    LoveTester_CheckPlayerCollisions();
-    LoveTester_CheckPlayerCollisions2(true);
+    LoveTester_CheckPlayerCollisions_Solid();
+    LoveTester_CheckPlayerCollisions_Entry(true);
 }
 
 void LoveTester_State_BadMatch(void)
@@ -505,15 +512,16 @@ void LoveTester_State_BadMatch(void)
         }
     }
 
-    LoveTester_CheckPlayerCollisions();
-    LoveTester_CheckPlayerCollisions2(true);
+    LoveTester_CheckPlayerCollisions_Solid();
+    LoveTester_CheckPlayerCollisions_Entry(true);
 }
 
 void LoveTester_State_ReleasePlayers(void)
 {
     RSDK_THIS(LoveTester);
 
-    LoveTester_CheckPlayerCollisions();
+    LoveTester_CheckPlayerCollisions_Solid();
+
     foreach_active(Player, player)
     {
         if (player == self->playerPtr) {
@@ -532,6 +540,7 @@ void LoveTester_State_HeartParticles(void)
     self->velocity.y -= 0x700;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
@@ -566,6 +575,7 @@ void LoveTester_StateLights_FlashSlow(void)
             RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[0], true, 0);
             break;
     }
+
     ++self->lightsID;
 }
 
@@ -593,6 +603,7 @@ void LoveTester_StateLights_FlashMed(void)
             RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[5], true, 0);
             break;
     }
+
     ++self->lightsID;
 }
 
@@ -626,6 +637,7 @@ void LoveTester_StateLights_FlashFast(void)
             RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[9], true, 0);
             break;
     }
+
     ++self->lightsID;
 }
 
@@ -634,9 +646,7 @@ void LoveTester_EditorDraw(void)
 {
     RSDK_THIS(LoveTester);
 
-    for (int i = 0; i < 10; ++i) {
-        RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[i], true, 5);
-    }
+    for (int32 i = 0; i < 10; ++i) RSDK.SetSpriteAnimation(LoveTester->aniFrames, 2, &self->lightAnimator[i], true, 5);
 
     LoveTester_Draw();
 }

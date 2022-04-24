@@ -34,7 +34,7 @@ void ShopWindow_Update(void);
 void ShopWindow_LateUpdate(void);
 void ShopWindow_StaticUpdate(void);
 void ShopWindow_Draw(void);
-void ShopWindow_Create(void* data);
+void ShopWindow_Create(void *data);
 void ShopWindow_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ShopWindow_EditorDraw(void);
@@ -50,4 +50,4 @@ void ShopWindow_Draw_Normal(void);
 void ShopWindow_Draw_Shard(void);
 void ShopWindow_Draw_Shattered(void);
 
-#endif //!OBJ_SHOPWINDOW_H
+#endif //! OBJ_SHOPWINDOW_H

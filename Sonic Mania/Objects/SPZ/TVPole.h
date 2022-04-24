@@ -15,7 +15,7 @@ struct EntityTVPole {
     StateMachine(state);
     uint16 length;
     int32 activePlayers;
-    int32 playerTimers[4];
+    int32 playerTimers[PLAYER_MAX];
     Hitbox hitbox;
     Animator animator;
 };
@@ -28,7 +28,7 @@ void TVPole_Update(void);
 void TVPole_LateUpdate(void);
 void TVPole_StaticUpdate(void);
 void TVPole_Draw(void);
-void TVPole_Create(void* data);
+void TVPole_Create(void *data);
 void TVPole_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TVPole_EditorDraw(void);
@@ -40,4 +40,4 @@ void TVPole_Serialize(void);
 void TVPole_State_CheckGrab(void);
 void TVPole_State_ForceRelease(void);
 
-#endif //!OBJ_TVPOLE_H
+#endif //! OBJ_TVPOLE_H

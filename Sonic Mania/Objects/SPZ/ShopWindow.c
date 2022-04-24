@@ -12,6 +12,7 @@ ObjectShopWindow *ShopWindow;
 void ShopWindow_Update(void)
 {
     RSDK_THIS(ShopWindow);
+
     StateMachine_Run(self->state);
 
     if (self->silhouette) {
@@ -33,6 +34,7 @@ void ShopWindow_StaticUpdate(void) {}
 void ShopWindow_Draw(void)
 {
     RSDK_THIS(ShopWindow);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -87,7 +89,7 @@ void ShopWindow_Create(void *data)
 
         foreach_all(CircleBumper, bumper)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(bumper, &CircleBumper->hitbox, self, &self->hitboxItem))
+            if (RSDK.CheckObjectCollisionTouchBox(bumper, &CircleBumper->hitboxBumper, self, &self->hitboxItem))
                 bumper->drawOrder = Zone->objectDrawLow;
         }
     }
@@ -105,6 +107,7 @@ void ShopWindow_StageLoad(void)
 void ShopWindow_State_Shard(void)
 {
     RSDK_THIS(ShopWindow);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -115,6 +118,7 @@ void ShopWindow_State_Shard(void)
     self->scale.y = RSDK.Cos512(self->shardScale.y);
 
     RSDK.ProcessAnimation(&self->animator);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
@@ -122,6 +126,7 @@ void ShopWindow_State_Shard(void)
 void ShopWindow_State_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
+
     if (++self->animator.timer == 2) {
         int32 cntY = (self->size.y >> 3) + 1;
         int32 cntX = (self->size.x >> 3) + 1;
@@ -133,9 +138,9 @@ void ShopWindow_State_Shattered(void)
                 EntityShopWindow *shard =
                     CREATE_ENTITY(ShopWindow, intToVoid(true), posX + ((RSDK.Rand(0, 8) - 4) << 16), posY + ((RSDK.Rand(0, 8) - 4) << 16));
 
-                if (RSDK.Rand(0, 3) == 1) 
+                if (RSDK.Rand(0, 3) == 1)
                     RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 3, &shard->animator, 0, RSDK.Rand(0, 18));
-                else 
+                else
                     RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 2, &shard->animator, 0, RSDK.Rand(0, 21));
 
                 shard->scaleSpeed.x = RSDK.Rand(1, 16);
@@ -146,8 +151,10 @@ void ShopWindow_State_Shattered(void)
                 posX += 0x100000;
                 shard->velocity.y = RSDK.Rand(-6, 2) << 16;
             }
+
             posY += 0x100000;
         }
+
         RSDK.PlaySfx(ShopWindow->sfxShatter, false, 0xFF);
         destroyEntity(self);
     }
@@ -156,6 +163,7 @@ void ShopWindow_State_Shattered(void)
 void ShopWindow_State_Silhouette(void)
 {
     RSDK_THIS(ShopWindow);
+
     if (self->shatter) {
 
         foreach_active(Player, player)
@@ -180,6 +188,7 @@ void ShopWindow_State_Silhouette(void)
 void ShopWindow_Draw_Normal(void)
 {
     RSDK_THIS(ShopWindow);
+
     Vector2 drawPos;
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
@@ -204,10 +213,7 @@ void ShopWindow_Draw_Normal(void)
     self->animator.frameID = 3;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    if (!self->shatter) {
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
-    }
-    else {
+    if (self->shatter) {
         drawPos.x              = self->position.x - (self->size.x << 16) + 0x180000;
         drawPos.y              = self->position.y + ((self->size.y - 24) << 16);
         self->inkEffect        = INK_NONE;
@@ -215,8 +221,9 @@ void ShopWindow_Draw_Normal(void)
         RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         self->inkEffect = INK_ADD;
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
+
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
 }
 
 void ShopWindow_Draw_Shard(void)
@@ -228,9 +235,10 @@ void ShopWindow_Draw_Shard(void)
 void ShopWindow_Draw_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
+
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     RSDK.DrawRect((self->position.x >> 0x10) - screen->position.x - self->size.x, (self->position.y >> 0x10) - screen->position.y - self->size.y,
-                  2 * self->size.x, 2 * self->size.y, 0xF0F0F0, 255, 0, true);
+                  2 * self->size.x, 2 * self->size.y, 0xF0F0F0, 0xFF, INK_NONE, true);
 }
 
 #if RETRO_INCLUDE_EDITOR

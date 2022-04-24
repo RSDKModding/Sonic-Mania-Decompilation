@@ -12,6 +12,7 @@ ObjectTVPole *TVPole;
 void TVPole_Update(void)
 {
     RSDK_THIS(TVPole);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,8 +23,8 @@ void TVPole_StaticUpdate(void) {}
 void TVPole_Draw(void)
 {
     RSDK_THIS(TVPole);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     drawPos.x += -0x40000 - ((8 * self->length) >> 1 << 16);
@@ -36,6 +37,7 @@ void TVPole_Draw(void)
         RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += 0x80000;
     }
+
     self->animator.frameID = 2;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
@@ -52,11 +54,12 @@ void TVPole_Create(void *data)
         self->updateRange.x = 0x1000000;
         self->updateRange.y = 0x1000000;
 
-        int len             = (8 * self->length) >> 1;
+        int32 len           = (8 * self->length) >> 1;
         self->hitbox.left   = -8 - len;
         self->hitbox.right  = len + 8;
         self->hitbox.top    = -32;
         self->hitbox.bottom = -24;
+
         RSDK.SetSpriteAnimation(TVPole->aniFrames, 1, &self->animator, true, 2);
     }
 }
@@ -70,19 +73,17 @@ void TVPole_State_CheckGrab(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;
 
-        if (((1 << playerID) & self->activePlayers) == 0 && !self->playerTimers[playerID]) {
+        if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID]) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->velocity.y <= 0) {
                 self->activePlayers |= 1 << playerID;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->animator, true, 0);
                 player->direction ^= FLIP_X;
-                if (player->direction == FLIP_NONE)
-                    player->rotation = 0x180;
-                else
-                    player->rotation = 0x80;
+                player->rotation        = player->direction == FLIP_NONE ? 0x180 : 0x80;
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
                 player->nextGroundState = StateMachine_None;
@@ -90,16 +91,20 @@ void TVPole_State_CheckGrab(void)
                 player->state           = Player_State_None;
             }
         }
+
         if ((1 << playerID) & self->activePlayers) {
             player->position.y = self->position.y - 0x140000;
+
             if (player->left) {
                 player->position.x -= 0x10000;
+
                 int32 x = self->position.x + ((self->hitbox.left + 16) << 16);
                 if (player->position.x < x)
                     player->position.x = x;
             }
             else if (player->right) {
                 player->position.x += 0x10000;
+
                 int32 x = self->position.x + ((self->hitbox.right - 16) << 16);
                 if (player->position.x > x)
                     player->position.x = x;
@@ -123,7 +128,8 @@ void TVPole_State_ForceRelease(void)
 
     foreach_active(Player, player)
     {
-        int32 playerID               = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
+
         self->playerTimers[playerID] = 0;
         if ((1 << playerID) & self->activePlayers) {
             player->onGround   = false;
@@ -141,6 +147,7 @@ void TVPole_State_ForceRelease(void)
 void TVPole_EditorDraw(void)
 {
     RSDK_THIS(TVPole);
+
     self->updateRange.x = 0x1000000;
     self->updateRange.y = 0x1000000;
     RSDK.SetSpriteAnimation(TVPole->aniFrames, 1, &self->animator, true, 2);

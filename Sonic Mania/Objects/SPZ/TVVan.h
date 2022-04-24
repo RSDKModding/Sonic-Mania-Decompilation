@@ -20,7 +20,7 @@ typedef enum {
     TVVAN_UNUSED2,
     TVVAN_EXITTV,
     TVVAN_RADIO,
-}TVVanTypes;
+} TVVanTypes;
 
 // Object Class
 struct ObjectTVVan {
@@ -73,7 +73,7 @@ void TVVan_Update(void);
 void TVVan_LateUpdate(void);
 void TVVan_StaticUpdate(void);
 void TVVan_Draw(void);
-void TVVan_Create(void* data);
+void TVVan_Create(void *data);
 void TVVan_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TVVan_EditorDraw(void);
@@ -116,4 +116,4 @@ void TVVan_StateTV_Destroyed(void);
 
 void TVVan_StateRadio_EnterTV(void);
 
-#endif //!OBJ_TVVAN_H
+#endif //! OBJ_TVVAN_H

@@ -15,6 +15,7 @@ ObjectCanista *Canista;
 void Canista_Update(void)
 {
     RSDK_THIS(Canista);
+
     StateMachine_Run(self->state);
 }
 
@@ -25,6 +26,7 @@ void Canista_StaticUpdate(void) {}
 void Canista_Draw(void)
 {
     RSDK_THIS(Canista);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     RSDK.DrawSprite(&self->tapeAnimator, NULL, false);
     RSDK.DrawSprite(&self->cannonAnimator, NULL, false);
@@ -33,8 +35,10 @@ void Canista_Draw(void)
 void Canista_Create(void *data)
 {
     RSDK_THIS(Canista);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawLow + 1;
+
     if (data) {
         self->drawFX |= FX_FLIP;
         self->inkEffect     = INK_ALPHA;
@@ -51,17 +55,19 @@ void Canista_Create(void *data)
         self->drawFX |= FX_ROTATE | FX_FLIP;
         self->shootOffset <<= 16;
         self->shootSize <<= 16;
-        self->startPos.x          = self->position.x;
-        self->startPos.y          = self->position.y;
-        self->startDir            = self->direction;
-        self->active              = ACTIVE_BOUNDS;
-        self->updateRange.x       = 0x800000;
-        self->updateRange.y       = 0x800000;
+
+        self->startPos      = self->position;
+        self->startDir      = self->direction;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+
         self->detectedPlayer      = NULL;
         self->hitboxDetect.left   = -self->detectSize.x >> 17;
         self->hitboxDetect.top    = -self->detectSize.y >> 17;
         self->hitboxDetect.right  = self->detectSize.x >> 17;
         self->hitboxDetect.bottom = self->detectSize.y >> 17;
+
         RSDK.SetSpriteAnimation(Canista->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(Canista->aniFrames, 1, &self->tapeAnimator, true, 0);
         RSDK.SetSpriteAnimation(Canista->aniFrames, 2, &self->cannonAnimator, true, 0);
@@ -154,6 +160,7 @@ void Canista_CheckPlayerBadnikCollisions(void)
 
         self->position.x = storeX;
         self->position.y = storeY;
+
         if (Player_CheckBadnikTouch(player, self, &Canista->hitboxBadnik))
             Player_CheckBadnikBreak(player, self, true);
     }
@@ -164,10 +171,10 @@ void Canista_CheckOffScreen(void)
     RSDK_THIS(Canista);
 
     if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
-        self->position.x  = self->startPos.x;
-        self->position.y  = self->startPos.y;
-        self->direction   = self->startDir;
-        self->shootOffset = (self->shootOffset >> 16);
+        self->position  = self->startPos;
+        self->direction = self->startDir;
+        self->shootOffset >>= 16;
+
         Canista_Create(NULL);
     }
 }
@@ -177,9 +184,8 @@ void Canista_State_Setup(void)
     RSDK_THIS(Canista);
 
     self->active = ACTIVE_NORMAL;
-    int32 offset = -0x110000;
-    if (!(self->direction & FLIP_X))
-        offset = 0x100000;
+    int32 offset = !(self->direction & FLIP_X) ? 0x100000 : -0x110000;
+
     RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & FLIP_X) != 0) + 1), 0, offset, -0x180000, 8);
     self->moveDir       = 0;
     self->timer         = 0;
@@ -200,6 +206,7 @@ void Canista_State_Moving(void)
     if (player) {
         int32 storeX = self->position.x;
         int32 storeY = self->position.y;
+
         if (self->triggerMode) {
             self->position.x = self->startPos.x + self->detectOffset.x;
             self->position.y = self->startPos.y + self->detectOffset.y;
@@ -230,30 +237,29 @@ void Canista_State_Moving(void)
             }
             else {
                 bool32 collided = Player_CheckCollisionTouch(player, self, &Canista->hitboxDetect);
-                if (!collided) {
+
+                if (Player_CheckCollisionTouch(player, self, &Canista->hitboxDetect)) {
+                    self->state          = Canista_State_Idle;
+                    self->stopTimer      = 60;
+                    self->detectedPlayer = NULL;
+                    self->detectDelay    = 180;
+                }
+                else {
                     self->mainAnimator.speed = 128;
                     if (player->position.y - 0x400000 > storeY)
                         self->velocity.y = 0x10000;
                     else
                         self->velocity.y = -0x1000;
                 }
-                else {
-                    self->state          = Canista_State_Idle;
-                    self->stopTimer      = 60;
-                    self->detectedPlayer = NULL;
-                    self->detectDelay    = 180;
-                }
             }
         }
+
         self->position.x = storeX;
         self->position.y = storeY;
     }
     else {
         self->mainAnimator.speed = 85;
-        if (self->moveDir)
-            self->velocity.y = -0x8000;
-        else
-            self->velocity.y = 0x8000;
+        self->velocity.y         = self->moveDir ? -0x8000 : 0x8000;
     }
 
     self->position.y += self->velocity.y;
@@ -263,11 +269,9 @@ void Canista_State_Moving(void)
     else
         self->rotation -= tapeRotation;
 
-    int32 offset = -0x110000;
-    if (!(self->direction & FLIP_X))
-        offset = 0x100000;
-    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & FLIP_X) != 0) + CMODE_LWALL), 0, offset,
-                             ((self->velocity.y >> 31) & 0xFFD40000) + 0x140000, 0)) {
+    int32 offsetX = !(self->direction & FLIP_X) ? 0x100000 : -0x110000;
+    int32 offsetY = ((self->velocity.y >> 31) & 0xFFD40000) + 0x140000;
+    if (!RSDK.ObjectTileGrip(self, Zone->collisionLayers, (2 * ((self->direction & FLIP_X) != 0) + CMODE_LWALL), 0, offsetX, offsetY, 0)) {
         self->state     = Canista_State_Idle;
         self->stopTimer = 30;
         if (self->detectedPlayer) {
@@ -275,6 +279,7 @@ void Canista_State_Moving(void)
             self->detectDelay    = 180;
         }
     }
+
     RSDK.ProcessAnimation(&self->mainAnimator);
 
     if (self->timer) {
@@ -286,6 +291,7 @@ void Canista_State_Moving(void)
         self->cannonAnimator.timer   = (self->cannonAnimator.timer + (abs(self->velocity.y) >> 15)) % 7;
         self->cannonAnimator.frameID = (self->cannonAnimator.timer / 3) & 1;
     }
+
     Canista_CheckPlayerBadnikCollisions();
     Canista_CheckOffScreen();
 }
@@ -293,50 +299,39 @@ void Canista_State_Moving(void)
 void Canista_State_Idle(void)
 {
     RSDK_THIS(Canista);
+
     if (!--self->stopTimer) {
         if (abs(self->velocity.y) == 0x8000)
             self->moveDir ^= 1;
+
         self->state = Canista_State_Moving;
         Canista_State_Moving();
     }
     else {
         if (self->stopTimer == 30) {
-            int32 offsetX = -0x180000;
-            if (!(self->direction & FLIP_X))
-                offsetX = 0x180000;
+            int32 offsetX = !(self->direction & FLIP_X) ? 0x180000 : -0x180000;
 
             EntityCanista *shot = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
             shot->direction     = self->direction;
-            if (shot->direction == FLIP_X)
-                shot->velocity.x = 0x40000;
-            else
-                shot->velocity.x = -0x40000;
+            shot->velocity.x    = shot->direction == FLIP_X ? 0x40000 : -0x40000;
 
-            shot            = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
-            shot->direction = self->direction;
-            if (shot->direction == FLIP_X)
-                shot->velocity.x = 0x4C000;
-            else
-                shot->velocity.x = -0x4C000;
+            shot             = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            shot->direction  = self->direction;
+            shot->velocity.x = shot->direction == FLIP_X ? 0x4C000 : -0x4C000;
 
-            shot            = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
-            shot->direction = self->direction;
-            if (shot->direction == FLIP_X)
-                shot->velocity.x = 0x58000;
-            else
-                shot->velocity.x = -0x58000;
+            shot             = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            shot->direction  = self->direction;
+            shot->velocity.x = shot->direction == FLIP_X ? 0x58000 : -0x58000;
 
-            shot            = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
-            shot->direction = self->direction;
-            if (shot->direction == FLIP_X)
-                shot->velocity.x = 0x64000;
-            else
-                shot->velocity.x = -0x64000;
+            shot             = CREATE_ENTITY(Canista, intToVoid(true), offsetX + self->position.x, self->position.y);
+            shot->direction  = self->direction;
+            shot->velocity.x = shot->direction == FLIP_X ? 0x64000 : -0x64000;
 
             self->cannonAnimator.frameID = 2;
             self->timer                  = 4;
             RSDK.PlaySfx(Canista->sfxPon, false, 0xFF);
         }
+
         Canista_CheckPlayerBadnikCollisions();
         Canista_CheckOffScreen();
     }
@@ -349,12 +344,14 @@ void Canista_State_Idle(void)
     else {
         self->cannonAnimator.frameID = (self->cannonAnimator.timer / 3) & 1;
     }
+
     Canista_CheckOffScreen();
 }
 
 void Canista_CheckPlayerProjectileCollisions(void)
 {
     RSDK_THIS(Canista);
+
     if (self->alpha >= 0x80) {
 
         foreach_active(Player, player)
@@ -373,6 +370,7 @@ void Canista_CheckPlayerProjectileCollisions(void)
     }
 
     RSDK.ProcessAnimation(&self->mainAnimator);
+
     if (!RSDK.CheckOnScreen(self, &self->updateRange))
         destroyEntity(self);
 }
@@ -380,15 +378,17 @@ void Canista_CheckPlayerProjectileCollisions(void)
 void Canista_StateProjectile_Shot(void)
 {
     RSDK_THIS(Canista);
+
     self->position.x += self->velocity.x;
+
     if (self->direction == FLIP_X) {
         self->velocity.x -= 0x2000;
         if (self->velocity.x < 0) {
-            self->startPos.x = self->position.x;
-            self->startPos.y = self->position.y;
+            self->startPos   = self->position;
             self->velocity.x = 0;
             self->rotation   = 6;
             self->angle      = 2;
+
             RSDK.SetSpriteAnimation(Canista->aniFrames, 4, &self->mainAnimator, true, 0);
             self->state = Canista_StateProjectile_Fall;
         }
@@ -396,15 +396,16 @@ void Canista_StateProjectile_Shot(void)
     else {
         self->velocity.x += 0x2000;
         if (self->velocity.x > 0) {
-            self->startPos.x = self->position.x;
-            self->startPos.y = self->position.y;
+            self->startPos   = self->position;
             self->velocity.x = 0;
             self->rotation   = 6;
             self->angle      = 2;
+
             RSDK.SetSpriteAnimation(Canista->aniFrames, 4, &self->mainAnimator, true, 0);
             self->state = Canista_StateProjectile_Fall;
         }
     }
+
     Canista_CheckPlayerProjectileCollisions();
 }
 
@@ -419,6 +420,7 @@ void Canista_StateProjectile_Fall(void)
     self->startPos.x += self->velocity.x;
     self->startPos.y += self->velocity.y;
     self->velocity.y += 0x800;
+
     if (self->velocity.y > 0x10000) {
         self->velocity.y -= 0x8000;
         if (self->velocity.y < 0x10000)
@@ -449,6 +451,7 @@ void Canista_StateProjectile_Fall(void)
         if (self->alpha <= 0)
             destroyEntity(self);
     }
+
     Canista_CheckPlayerProjectileCollisions();
 }
 
@@ -460,6 +463,8 @@ void Canista_EditorDraw(void)
     Canista_Draw();
 
     if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
         if (self->triggerMode) {
             self->hitboxDetect.left   = -self->detectSize.x >> 17;
             self->hitboxDetect.top    = -self->detectSize.y >> 17;
@@ -472,6 +477,8 @@ void Canista_EditorDraw(void)
         else {
             DrawHelpers_DrawHitboxOutline(self->position.x, self->position.y, &Canista->hitboxDetect, self->direction, 0xFF0000);
         }
+
+        RSDK_DRAWING_OVERLAY(false);
     }
 }
 
@@ -493,8 +500,8 @@ void Canista_EditorLoad(void)
     Canista->hitboxDetect.bottom = 49;
 
     RSDK_ACTIVE_VAR(Canista, direction);
-    RSDK_ENUM_VAR("Right", FLIP_NONE);
-    RSDK_ENUM_VAR("Left", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 
     RSDK_ACTIVE_VAR(Canista, triggerMode);
     RSDK_ENUM_VAR("Use Static Size", CANISTA_TRIGGER_STATIC);

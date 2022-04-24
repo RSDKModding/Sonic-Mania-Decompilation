@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectLetterboard {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBoard;
     uint16 aniFrames;
     uint16 sfxLetterTurn;
     uint16 sfxWin;

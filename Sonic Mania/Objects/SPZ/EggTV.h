@@ -16,7 +16,7 @@ struct EntityEggTV {
     StateMachine(state);
     Vector2 size;
     bool32 drawOverTV;
-    int32 lineAlpha;
+    int32 scanlineAlpha;
     Hitbox hitbox;
     Animator unusedAnimator;
 };

@@ -863,9 +863,13 @@ void Ring_EditorDraw(void)
                 RSDK.DrawLine(pos.x, pos.y, self->drawPos.x, self->drawPos.y, 0x00FF00, 0, INK_NONE, false);
                 break;
 
-            case RING_MOVE_PATH:
-                // idk tbh
+            case RING_MOVE_PATH: {
+                Entity *target = RSDK_GET_ENTITY(self->speed, );
+
+                if (target)
+                    DrawHelpers_DrawArrow(self->position.x, self->position.y, target->position.x, target->position.y, 0x00FF00, INK_NONE, 0xFF);
                 break;
+            }
 
             default:
             case RING_MOVE_FIXED:

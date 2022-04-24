@@ -17,9 +17,9 @@ typedef enum {
 // Object Class
 struct ObjectCrane {
     RSDK_OBJECT
-    Hitbox hitbox1;
+    Hitbox hitboxUnused;
     Hitbox hitboxGrab;
-    Hitbox hitbox3;
+    Hitbox hitboxRange;
     uint16 aniFrames;
     uint16 sfxGrab;
 };
@@ -37,7 +37,7 @@ struct EntityCrane {
     uint8 playerType;
     Vector2 startPos;
     uint8 startDir;
-    int32 timer2;
+    int32 delay;
     int32 timer;
 };
 
