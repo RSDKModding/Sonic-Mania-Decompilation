@@ -12,6 +12,7 @@ ObjectFoldingPlatform *FoldingPlatform;
 void FoldingPlatform_Update(void)
 {
     RSDK_THIS(FoldingPlatform);
+
     int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
 
     if (timer >= self->duration) {
@@ -20,20 +21,21 @@ void FoldingPlatform_Update(void)
         }
         else {
             self->active           = ACTIVE_NORMAL;
-            self->timer    = timer - self->duration;
+            self->timer            = timer - self->duration;
             self->state            = FoldingPlatform_State_Disappear;
             self->animator.frameID = 4 - ((timer - self->duration) >> 1);
         }
     }
     else {
-        self->active        = ACTIVE_NORMAL;
-        self->timer = timer;
+        self->active = ACTIVE_NORMAL;
+        self->timer  = timer;
         if (timer > 8)
             self->animator.frameID = 4;
         else
             self->animator.frameID = timer >> 1;
         self->state = FoldingPlatform_State_Appear;
     }
+
     if (self->animator.frameID == 4) {
         self->stateCollide = Platform_Collision_TopSolid;
         self->collision    = PLATFORM_C_SOLID_TOP;
@@ -42,6 +44,7 @@ void FoldingPlatform_Update(void)
         self->stateCollide = Platform_Collision_None;
         self->collision    = PLATFORM_C_SOLID_NONE;
     }
+
     Platform_Update();
 }
 
@@ -52,18 +55,23 @@ void FoldingPlatform_StaticUpdate(void) {}
 void FoldingPlatform_Draw(void)
 {
     RSDK_THIS(FoldingPlatform);
+
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void FoldingPlatform_Create(void *data)
 {
     RSDK_THIS(FoldingPlatform);
+
     if (!self->interval)
         self->interval = 480;
+
     if (!self->duration)
         self->duration = 240;
+
     self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
+
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
     self->drawFX  = FX_FLIP;
     self->scale.x = 0x000;
@@ -76,6 +84,7 @@ void FoldingPlatform_StageLoad(void) {}
 void FoldingPlatform_State_Appear(void)
 {
     RSDK_THIS(FoldingPlatform);
+
     if (!(++self->timer & 1)) {
         if (self->animator.frameID < 4)
             self->animator.frameID++;
@@ -88,6 +97,7 @@ void FoldingPlatform_State_Appear(void)
 void FoldingPlatform_State_Disappear(void)
 {
     RSDK_THIS(FoldingPlatform);
+
     --self->timer;
     if (!(self->timer & 1)) {
         if (self->animator.frameID > 0) {
@@ -114,8 +124,8 @@ void FoldingPlatform_EditorDraw(void)
 void FoldingPlatform_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(FoldingPlatform, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

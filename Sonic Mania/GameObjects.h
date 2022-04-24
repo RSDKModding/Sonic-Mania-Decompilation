@@ -261,17 +261,17 @@ typedef struct {
     uint16 *(*GetTintLookupTable)(void);
 #endif
     void (*SetPaletteMask)(uint32 maskColor);
-    void (*SetPaletteEntry)(uint8 paletteID, uint8 index, uint32 color);
-    uint32 (*GetPaletteEntry)(uint8 paletteID, uint8 index);
-    void (*SetActivePalette)(uint8 newActivePal, int32 startLine, int32 endLine);
-    void (*CopyPalette)(uint8 sourcePalette, uint8 srcPaletteStart, uint8 destinationPalette, uint8 destPaletteStart, uint16 count);
+    void (*SetPaletteEntry)(uint8 bankID, uint8 index, uint32 color);
+    uint32 (*GetPaletteEntry)(uint8 bankID, uint8 index);
+    void (*SetActivePalette)(uint8 newActiveBank, int32 startLine, int32 endLine);
+    void (*CopyPalette)(uint8 sourceBank, uint8 srcBankStart, uint8 destinationBank, uint8 destBankStart, uint16 count);
 #if RETRO_USE_PLUS
-    void (*LoadPalette)(uint8 bank, const char *path, uint16 rowFlags);
+    void (*LoadPalette)(uint8 bankID, const char *path, uint16 rowFlags);
 #endif
-    void (*RotatePalette)(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 right);
-    void (*SetLimitedFade)(uint8 destPaletteID, uint8 srcPaletteA, uint8 srcPaletteB, int16 blendAmount, int32 startIndex, int32 endIndex);
+    void (*RotatePalette)(uint8 bankID, uint8 startIndex, uint8 endIndex, bool32 right);
+    void (*SetLimitedFade)(uint8 destBankID, uint8 srcBankA, uint8 srcBankB, int16 blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_USE_PLUS
-    void (*BlendColors)(uint8 paletteID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
+    void (*BlendColors)(uint8 bankID, uint8 *colorsA, uint8 *colorsB, int32 alpha, int32 index, int32 count);
 #endif
     void (*DrawRect)(int32 x, int32 y, int32 width, int32 height, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);
     void (*DrawLine)(int32 x1, int32 y1, int32 x2, int32 y2, uint32 color, int32 alpha, InkEffects inkEffect, bool32 screenRelative);

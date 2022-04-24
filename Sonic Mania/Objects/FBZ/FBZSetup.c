@@ -16,26 +16,37 @@ void FBZSetup_LateUpdate(void) {}
 void FBZSetup_StaticUpdate(void)
 {
     if (!(Zone->timer & 1)) {
-        ++FBZSetup->frameA;
-        FBZSetup->frameA &= 7;
-        if (Zone->actID == 1)
-            RSDK.DrawAniTiles(FBZSetup->aniTiles, 381, 0, 16 * FBZSetup->frameA, 256, 16);
-        RSDK.DrawAniTiles(FBZSetup->aniTiles, 401, 16 * (FBZSetup->frameA + 16), 0, 16, 126);
+        ++FBZSetup->cylinderAniFrame;
+        FBZSetup->cylinderAniFrame &= 7;
+
+        if (Zone->actID == 1) // Cylinder H (left cylinder on the sheet)
+            RSDK.DrawAniTiles(FBZSetup->aniTiles, 381, 0, 16 * FBZSetup->cylinderAniFrame, 256, 16);
+
+        // Cylinder V (right cylinder on the sheet)
+        RSDK.DrawAniTiles(FBZSetup->aniTiles, 401, 16 * (FBZSetup->cylinderAniFrame + 16), 0, 16, 126);
     }
 
     if (!(Zone->timer & 3)) {
-        ++FBZSetup->frameB;
-        FBZSetup->frameB &= 3;
-        ++FBZSetup->frameC;
-        FBZSetup->frameC &= 7;
-        ++FBZSetup->frameD;
-        FBZSetup->frameD %= 6;
-        RSDK.DrawAniTiles(FBZSetup->aniTiles, 377, 16 * (FBZSetup->frameB + 24), 16, 16, 32);
-        RSDK.DrawAniTiles(FBZSetup->aniTiles, 379, 16 * (FBZSetup->frameC + 24), 0, 16, 32);
-        RSDK.DrawAniTiles(FBZSetup->aniTiles, 397, 384, 16 * (FBZSetup->frameD + 2), 64, 16);
+        ++FBZSetup->propellerShaftAniFrameUnused;
+        FBZSetup->propellerShaftAniFrameUnused &= 3;
+
+        ++FBZSetup->propellerShaftAniFrame;
+        FBZSetup->propellerShaftAniFrame &= 7;
+
+        ++FBZSetup->spiralPlatformAniFrame;
+        FBZSetup->spiralPlatformAniFrame %= 6;
+
+        // Propeller Shaft AniTiles (unused?, these don't match propellers, just some clouds)
+        RSDK.DrawAniTiles(FBZSetup->aniTiles, 377, 16 * (FBZSetup->propellerShaftAniFrameUnused + 24), 16, 16, 32);
+
+        // Propeller Shaft AniTiles
+        RSDK.DrawAniTiles(FBZSetup->aniTiles, 379, 16 * (FBZSetup->propellerShaftAniFrame + 24), 0, 16, 32);
+
+        // Spiral Platform AniTiles (unused in-game)
+        RSDK.DrawAniTiles(FBZSetup->aniTiles, 397, 384, 16 * (FBZSetup->spiralPlatformAniFrame + 2), 64, 16);
     }
 
-    RSDK.GetSceneLayer(FBZSetup->bgOutsideLayer)->scrollPos = (RSDK.Sin512(Zone->persistentTimer) + 512) << 10;
+    RSDK.GetSceneLayer(FBZSetup->backgroundOutside)->scrollPos = (RSDK.Sin512(Zone->persistentTimer) + 512) << 10;
 }
 
 void FBZSetup_Draw(void) {}
@@ -44,40 +55,32 @@ void FBZSetup_Create(void *data) {}
 
 void FBZSetup_StageLoad(void)
 {
-    FBZSetup->aniTiles                           = RSDK.LoadSpriteSheet("FBZ/AniTiles.gif", SCOPE_STAGE);
+    FBZSetup->aniTiles = RSDK.LoadSpriteSheet("FBZ/AniTiles.gif", SCOPE_STAGE);
 
-    FBZSetup->bgOutsideLayer                     = RSDK.GetSceneLayerID("Background Outside");
+    FBZSetup->backgroundOutside = RSDK.GetSceneLayerID("Background Outside");
 
-    Animals->animalTypes[0]                      = ANIMAL_FLICKY;
-    Animals->animalTypes[1]                      = ANIMAL_RICKY;
+    Animals->animalTypes[0] = ANIMAL_FLICKY;
+    Animals->animalTypes[1] = ANIMAL_RICKY;
 
     BGSwitch->switchCallback[FBZ_BG_INSIDE1]     = FBZSetup_BGSwitchCB_ShowInside1;
     BGSwitch->switchCallback[FBZ_BG_INSIDE2]     = FBZSetup_BGSwitchCB_ShowInside2;
     BGSwitch->switchCallback[FBZ_BG_INSIDE1_DUP] = FBZSetup_BGSwitchCB_ShowInside1_Dup;
 
-    TileLayer *background1    = RSDK.GetSceneLayer(0);
-    background1->drawLayer[0] = 0;
-    background1->drawLayer[1] = 0;
-    background1->drawLayer[2] = 0;
-    background1->drawLayer[3] = 0;
+    TileLayer *backgroundInside    = RSDK.GetSceneLayer(0);
+    backgroundInside->drawLayer[0] = 0;
+    backgroundInside->drawLayer[1] = 0;
+    backgroundInside->drawLayer[2] = 0;
+    backgroundInside->drawLayer[3] = 0;
     if (!Zone->actID)
-        background1->scanlineCallback = FBZSetup_ScanlineCallback;
+        backgroundInside->scanlineCallback = FBZSetup_ScanlineCB_BGInside;
 
     int32 ang       = -336;
     int32 scanlineY = 0;
     for (int32 i = 0; i < 0x400; ++i) {
-        int32 angle = ang >> 1;
-        if (RSDK.Sin1024(angle) >= 0)
-            FBZSetup->deformX[i] = 32 * (RSDK.Sin1024(angle) + 0x400);
-        else
-            FBZSetup->deformX[i] = 32 * (-RSDK.Sin1024(angle) + 0x400);
+        FBZSetup->scanlineDeformX[i] = 32 * (abs(RSDK.Sin1024(ang >> 1)) + 0x400);
+        FBZSetup->positionYMove[i]   = 32 * (abs(RSDK.Cos1024(ang >> 1)) + 0x800);
 
-        if (RSDK.Cos1024(angle) >= 0)
-            FBZSetup->positionYMove[i] = 32 * (RSDK.Cos1024(angle) + 0x800);
-        else
-            FBZSetup->positionYMove[i] = 32 * (-RSDK.Cos1024(angle) + 0x800);
-
-        FBZSetup->positionY[i] = scanlineY & 0x1FF0000;
+        FBZSetup->scanlinePosY[i] = scanlineY & 0x1FF0000;
         ang += 3;
         scanlineY += FBZSetup->positionYMove[i];
     }
@@ -99,7 +102,7 @@ void FBZSetup_StageLoad(void)
         foreach_all(FBZ1Outro, outro)
         {
             Zone->forcePlayerOnScreen = true;
-            FBZSetup->outroPtr            = outro;
+            FBZSetup->outro           = outro;
             foreach_break;
         }
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act1;
@@ -144,59 +147,67 @@ void FBZSetup_ActTransitionLoad(void)
     foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->scrollPos.x = globals->parallaxOffset[id++]; }
 }
 
-void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6)
+void FBZSetup_AddDynamicBG(ScanlineInfo *scanlines, int32 parallaxFactorX, int32 parallaxFactorY, int32 startLine, int32 lineCount, int32 sourcePosY)
 {
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 scroll          = (a3 * screen->position.y) >> 8;
-    int32 start        = a4 - scroll;
-    int32 end          = a4 - scroll + a5;
-    int32 x            = (a1 * screen->position.x) << 8;
-    if (start < SCREEN_YSIZE && end > 0) {
-        int32 y = a6;
-        if (start < 0) {
-            y     = a6 - (start << 16);
-            start = 0;
-        }
-        if (end > SCREEN_YSIZE)
-            end = SCREEN_YSIZE;
-        ScanlineInfo *scanlinePtr = &scanlines[start];
+    int32 scanlineX = (parallaxFactorX * screen->position.x) << 8;
+    int32 screenY   = (parallaxFactorY * screen->position.y) >> 8;
 
-        for (int32 i = 0; i < end - start; ++i) {
-            scanlinePtr->position.x = x;
-            scanlinePtr->position.y = y;
+    int32 start = startLine - screenY;
+    int32 end   = start + lineCount;
+
+    if (start < SCREEN_YSIZE && end > 0) {
+        end     = minVal(end, SCREEN_YSIZE);
+
+        // sourcePosY = start layer line
+        int32 scanlineY = sourcePosY;
+        if (start < 0) {
+            scanlineY = sourcePosY - (start << 16);
+            start     = 0;
+        }
+
+        ScanlineInfo *scanlinePtr = &scanlines[start];
+        int32 count = end - start;
+        for (int32 i = 0; i < count; ++i) {
+            scanlinePtr->position.x = scanlineX;
+            scanlinePtr->position.y = scanlineY;
             scanlinePtr->deform.x   = 0x10000;
+
             ++scanlinePtr;
-            y += 0x10000;
+            scanlineY += 0x10000;
         }
     }
 }
 
-void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines)
+void FBZSetup_ScanlineCB_BGInside(ScanlineInfo *scanlines)
 {
-    RSDKScreenInfo *screen        = &ScreenInfo[SceneInfo->currentScreenID];
+    RSDKScreenInfo *screen    = &ScreenInfo[SceneInfo->currentScreenID];
     int32 y                   = screen->position.y >> 3;
-    ScanlineInfo *scanlinePtr = scanlines;
 
+    // Handle the cool deformation on the BG Inside layer
+    ScanlineInfo *scanlinePtr = scanlines;
     for (int32 i = 0; i < SCREEN_YSIZE; ++i) {
         int32 pos               = (i + y) & 0x3FF;
-        scanlinePtr->deform.x   = FBZSetup->deformX[pos];
+        scanlinePtr->deform.x   = FBZSetup->scanlineDeformX[pos];
         scanlinePtr->deform.y   = 0;
-        scanlinePtr->position.x = ((screen->position.x << 14) - FBZSetup->deformX[pos] * screen->centerX) & 0xFFFF8000;
-        scanlinePtr->position.y = FBZSetup->positionY[pos];
+        scanlinePtr->position.x = ((screen->position.x << 14) - FBZSetup->scanlineDeformX[pos] * screen->centerX) & 0xFFFF8000;
+        scanlinePtr->position.y = FBZSetup->scanlinePosY[pos];
         ++scanlinePtr;
     }
 
-    FBZSetup_HandleScanlines(scanlines, 128, 32, 0, 112, 0x2400000);
-    FBZSetup_HandleScanlines(scanlines, 128, 32, 456, 128, 0x2000000);
-    FBZSetup_HandleScanlines(scanlines, 112, 64, 420, 16, 0x3300000);
-    FBZSetup_HandleScanlines(scanlines, 144, 80, 640, 48, 0x3000000);
-    FBZSetup_HandleScanlines(scanlines, 160, 96, 512, 64, 0x2C00000);
+    // Add Other bits of the layer to overlay so it's not so barren
+    FBZSetup_AddDynamicBG(scanlines, 128, 32, 0, 112, 576 << 16);
+    FBZSetup_AddDynamicBG(scanlines, 128, 32, 456, 128, 512 << 16);
+    FBZSetup_AddDynamicBG(scanlines, 112, 64, 420, 16, 816 << 16);
+    FBZSetup_AddDynamicBG(scanlines, 144, 80, 640, 48, 768 << 16);
+    FBZSetup_AddDynamicBG(scanlines, 160, 96, 512, 64, 704 << 16);
 }
 
 void FBZSetup_BGSwitchCB_ShowInside1(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+
     if (Zone->actID == 1) {
         RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID] = 0;
@@ -209,6 +220,7 @@ void FBZSetup_BGSwitchCB_ShowInside1(void)
 void FBZSetup_BGSwitchCB_ShowInside2(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
+
     if (Zone->actID == 1) {
         RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
         RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
@@ -222,6 +234,7 @@ void FBZSetup_BGSwitchCB_ShowInside2(void)
 void FBZSetup_BGSwitchCB_ShowInside1_Dup(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
+
     if (Zone->actID == 1) {
         RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
@@ -255,7 +268,7 @@ void FBZSetup_GenericTriggerCB_ShowInterior(void)
     foreach_active(ParallaxSprite, parallaxSprite) { parallaxSprite->state = ParallaxSprite_State_FadeOut; }
 }
 
-void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outroPtr->active = ACTIVE_NORMAL; }
+void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outro->active = ACTIVE_NORMAL; }
 #if RETRO_USE_PLUS
 void FBZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
 #endif
@@ -277,6 +290,9 @@ void FBZSetup_EditorLoad(void)
     RSDK_ACTIVE_VAR(Decoration, type);
     RSDK_ENUM_VAR("Blueprint 1", FBZ_DECORATION_BLUEPRINT1);
     RSDK_ENUM_VAR("Blueprint 2", FBZ_DECORATION_BLUEPRINT2);
+
+    RSDK_ACTIVE_VAR(ParallaxSprite, aniID);
+    RSDK_ENUM_VAR("Clouds", FBZ_PARALLAXSPRITE_CLOUDS);
 }
 #endif
 

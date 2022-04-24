@@ -13,6 +13,7 @@ ObjectHangGlider *HangGlider;
 void HangGlider_Update(void)
 {
     RSDK_THIS(HangGlider);
+
     StateMachine_Run(self->state);
 }
 
@@ -23,11 +24,14 @@ void HangGlider_StaticUpdate(void) {}
 void HangGlider_Draw(void)
 {
     RSDK_THIS(HangGlider);
+
     if (SceneInfo->currentDrawGroup == self->drawOrder) {
         RSDK.DrawSprite(&self->sailAnimator, NULL, false);
         RSDK.DrawSprite(&self->handleBackAnimator, NULL, false);
-        if (self->playerPtr)
+
+        if (self->attachedPlayer)
             RSDK.DrawSprite(&self->playerAnimator, NULL, false);
+
         RSDK.AddDrawListRef(Zone->objectDrawHigh, SceneInfo->entitySlot);
     }
     else {
@@ -38,6 +42,7 @@ void HangGlider_Draw(void)
 void HangGlider_Create(void *data)
 {
     RSDK_THIS(HangGlider);
+
     if (!SceneInfo->inEditor) {
         self->visible         = true;
         self->drawOrder       = Zone->objectDrawLow;
@@ -46,6 +51,7 @@ void HangGlider_Create(void *data)
         self->updateRange.y   = 0x400000;
         self->gravityStrength = 0x1000;
         self->state           = HangGlider_State_CheckGrab;
+
         RSDK.SetSpriteAnimation(HangGlider->aniFrames, 0, &self->sailAnimator, true, 0);
         RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->handleBackAnimator, true, 0);
         RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->handleFrontAnimator, true, 1);
@@ -59,30 +65,31 @@ void HangGlider_StageLoad(void)
     else
         HangGlider->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/HangGlider.bin", SCOPE_STAGE);
 
-    HangGlider->hitbox.left   = 12;
-    HangGlider->hitbox.top    = 8;
-    HangGlider->hitbox.right  = 24;
-    HangGlider->hitbox.bottom = 128;
+    // A distance check was used instead
+    HangGlider->hitboxUnused.left   = 12;
+    HangGlider->hitboxUnused.top    = 8;
+    HangGlider->hitboxUnused.right  = 24;
+    HangGlider->hitboxUnused.bottom = 128;
 }
 
 void HangGlider_State_CheckGrab(void)
 {
     RSDK_THIS(HangGlider);
+
     foreach_active(Player, player)
     {
-        if (abs(player->position.x - self->position.x) < 0x40000) {
-            if (abs(player->position.y - self->position.y) < 0x140000) {
-                self->playerPtr  = player;
-                player->active   = ACTIVE_NEVER;
-                player->visible  = 0;
-                self->velocity.x = (0xC0 * player->velocity.x) >> 8;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &self->playerAnimator, true, 0);
-                self->playerAnimator.rotationFlag = 1;
-                self->rotation                    = 128;
-                self->drawFX                      = FX_ROTATE;
-                RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                self->state = HangGlider_State_Glide;
-            }
+        if (abs(player->position.x - self->position.x) < 0x40000 && abs(player->position.y - self->position.y) < 0x140000) {
+            self->attachedPlayer = player;
+            player->active       = ACTIVE_NEVER;
+            player->visible      = false;
+            self->velocity.x     = (0xC0 * player->velocity.x) >> 8;
+
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &self->playerAnimator, true, 0);
+            self->playerAnimator.rotationFlag = 1; // full rotation
+            self->rotation                    = 0x80;
+            self->drawFX                      = FX_ROTATE;
+            RSDK.PlaySfx(Player->sfxGrab, false, 255);
+            self->state = HangGlider_State_Glide;
         }
     }
 }
@@ -93,14 +100,16 @@ void HangGlider_State_Glide(void)
     self->velocity.y += self->gravityStrength;
     if (self->velocity.y > 0x10000)
         self->velocity.y = 0x10000;
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    EntityPlayer *player = self->playerPtr;
+    EntityPlayer *player = self->attachedPlayer;
     if (player) {
         player->position.x = self->position.x;
         player->position.y = self->position.y;
     }
+
     RSDK.ProcessAnimation(&self->sailAnimator);
     RSDK.ProcessAnimation(&self->playerAnimator);
 }
@@ -109,6 +118,7 @@ void HangGlider_State_Glide(void)
 void HangGlider_EditorDraw(void)
 {
     RSDK_THIS(HangGlider);
+
     RSDK.SetSpriteAnimation(HangGlider->aniFrames, 0, &self->sailAnimator, true, 0);
     RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->handleBackAnimator, true, 0);
     RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->handleFrontAnimator, true, 1);

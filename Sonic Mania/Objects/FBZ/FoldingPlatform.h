@@ -5,12 +5,13 @@
 
 // Object Class
 struct ObjectFoldingPlatform {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityFoldingPlatform {
     MANIA_PLATFORM_BASE
+
     uint16 interval;
     uint16 intervalOffset;
     int32 duration;
@@ -24,7 +25,7 @@ void FoldingPlatform_Update(void);
 void FoldingPlatform_LateUpdate(void);
 void FoldingPlatform_StaticUpdate(void);
 void FoldingPlatform_Draw(void);
-void FoldingPlatform_Create(void* data);
+void FoldingPlatform_Create(void *data);
 void FoldingPlatform_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FoldingPlatform_EditorDraw(void);
@@ -36,4 +37,4 @@ void FoldingPlatform_Serialize(void);
 void FoldingPlatform_State_Appear(void);
 void FoldingPlatform_State_Disappear(void);
 
-#endif //!OBJ_FOLDINGPLATFORM_H
+#endif //! OBJ_FOLDINGPLATFORM_H

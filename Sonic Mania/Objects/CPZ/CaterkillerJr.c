@@ -120,12 +120,12 @@ void CaterkillerJr_SetupPositions(void)
     }
 
     if (self->direction) {
-        self->boundL = self->position.x - 0x3C0000;
-        self->boundR = self->position.x + 0xBC0000;
+        self->boundsL = self->position.x - 0x3C0000;
+        self->boundsR = self->position.x + 0xBC0000;
     }
     else {
-        self->boundL = self->position.x - 0xBC0000;
-        self->boundR = self->position.x + 0x3C0000;
+        self->boundsL = self->position.x - 0xBC0000;
+        self->boundsR = self->position.x + 0x3C0000;
     }
 
     self->timer = 0;
@@ -173,22 +173,22 @@ void CaterkillerJr_State_Move(void)
         RSDK.ProcessAnimation(&self->bodyAnimators[i]);
 
         self->bodyPosition[i].x += self->bodyVelocity[i].x;
-        if (self->bodyDirection[i] && self->bodyPosition[i].x >= self->boundR - 0x80000) {
+        if (self->bodyDirection[i] && self->bodyPosition[i].x >= self->boundsR - 0x80000) {
             self->bodyDirection[i] ^= FLIP_X;
             self->bodyAnimators[i].timer   = 0;
             self->bodyAnimators[i].frameID = 0;
         }
-        else if (!self->bodyDirection[i] && self->bodyPosition[i].x <= self->boundL + 0x80000) {
+        else if (!self->bodyDirection[i] && self->bodyPosition[i].x <= self->boundsL + 0x80000) {
             self->bodyDirection[i] ^= FLIP_X;
             self->bodyAnimators[i].timer   = 0;
             self->bodyAnimators[i].frameID = 0;
         }
 
-        if (self->bodyVelocity[i].x <= 0 && self->bodyPosition[i].x <= self->boundL) {
+        if (self->bodyVelocity[i].x <= 0 && self->bodyPosition[i].x <= self->boundsL) {
             self->bodyVelocity[i].x = -self->bodyVelocity[i].x;
             self->bodyTimer[i]      = 0xA00;
         }
-        else if (self->bodyVelocity[i].x >= 0 && self->bodyPosition[i].x >= self->boundR) {
+        else if (self->bodyVelocity[i].x >= 0 && self->bodyPosition[i].x >= self->boundsR) {
             self->bodyVelocity[i].x = -self->bodyVelocity[i].x;
             self->bodyTimer[i]      = 0xA00;
         }

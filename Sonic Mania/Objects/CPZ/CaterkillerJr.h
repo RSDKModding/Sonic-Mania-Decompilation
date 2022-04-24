@@ -22,8 +22,8 @@ struct EntityCaterkillerJr {
     Vector2 bodyVelocity[8];
     int32 bodyDirection[8];
     int32 bodyTimer[8];
-    int32 boundL;
-    int32 boundR;
+    int32 boundsL;
+    int32 boundsR;
     Animator bodyAnimators[CATERKILLERJR_SEGMENT_COUNT];
     Animator smokePuffAnimators[3];
 };

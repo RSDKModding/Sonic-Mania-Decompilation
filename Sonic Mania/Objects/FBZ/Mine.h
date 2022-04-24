@@ -7,7 +7,7 @@
 struct ObjectMine {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxMine;
     uint16 sfxExplosion;
 };
 
@@ -26,7 +26,7 @@ void Mine_Update(void);
 void Mine_LateUpdate(void);
 void Mine_StaticUpdate(void);
 void Mine_Draw(void);
-void Mine_Create(void* data);
+void Mine_Create(void *data);
 void Mine_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Mine_EditorDraw(void);
@@ -39,4 +39,4 @@ void Mine_Serialize(void);
 void Mine_CheckMightyHit(void);
 #endif
 
-#endif //!OBJ_MINE_H
+#endif //! OBJ_MINE_H

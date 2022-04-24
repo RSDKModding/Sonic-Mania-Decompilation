@@ -110,8 +110,8 @@ void ChemicalPool_Create(void *data)
             vertices += 2;
         }
 
-        self->startX           = (self->position.x - (self->size.x >> 1)) >> 20;
-        self->endX             = (self->position.x + (self->size.x >> 1)) >> 20;
+        self->leftEdge         = (self->position.x - (self->size.x >> 1)) >> 20;
+        self->rightEdge        = (self->position.x + (self->size.x >> 1)) >> 20;
         self->impactPower      = 0x80;
         self->impactPowerSides = 0x99;
         self->r                = 0x00;
@@ -160,22 +160,22 @@ void ChemicalPool_ProcessDeformations(void)
 {
     RSDK_THIS(ChemicalPool);
 
-    for (int32 i = self->startX; i < self->endX; ++i) {
+    for (int32 i = self->leftEdge; i < self->rightEdge; ++i) {
         int32 deform = ChemicalPool->surfaceDeformation[i];
         ChemicalPool->impactTable[i] += (-deform >> 5) - (ChemicalPool->impactTable[i] >> 3);
         ChemicalPool->deformTable[i] = ChemicalPool->impactTable[i] + ChemicalPool->surfaceDeformation[i];
     }
 
-    for (int32 i = self->startX; i < self->endX; ++i) {
-        int32 prev = maxVal(i - 1, self->startX);
-        int32 next = minVal(i + 1, self->endX);
+    for (int32 i = self->leftEdge; i < self->rightEdge; ++i) {
+        int32 prev = maxVal(i - 1, self->leftEdge);
+        int32 next = minVal(i + 1, self->rightEdge);
 
         ChemicalPool->surfaceDeformation[i] = (self->impactPower * ChemicalPool->deformTable[i] >> 8)
                                               + (self->impactPowerSides * (ChemicalPool->deformTable[prev] + ChemicalPool->deformTable[next]) >> 9);
     }
 
     self->maxDeform   = 0;
-    int32 id          = self->startX;
+    int32 id          = self->leftEdge;
     Vector2 *vertices = self->vertices;
     for (int32 i = 0; i <= self->tileSizeX; ++i) {
         if (ChemicalPool->surfaceDeformation[id] > self->maxDeform)
@@ -198,9 +198,9 @@ void ChemicalPool_SetDeform(int32 impactX, int32 impactVelocity)
 
     foreach_active(ChemicalPool, chemPool)
     {
-        if (bounceX > chemPool->startX && bounceX < chemPool->endX) {
-            int32 prev = maxVal(bounceX - 1, chemPool->startX + 1);
-            int32 next = minVal(bounceX + 2, chemPool->endX);
+        if (bounceX > chemPool->leftEdge && bounceX < chemPool->rightEdge) {
+            int32 prev = maxVal(bounceX - 1, chemPool->leftEdge + 1);
+            int32 next = minVal(bounceX + 2, chemPool->rightEdge);
 
             for (int32 i = 0; i < next - prev; ++i) ChemicalPool->impactTable[prev + i] += impactVelocity;
 

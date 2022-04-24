@@ -12,10 +12,11 @@ ObjectTwistingDoor *TwistingDoor;
 void TwistingDoor_Update(void)
 {
     RSDK_THIS(TwistingDoor);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
     --self->animator.timer;
     Platform_Update();
 
-    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (self->state == TwistingDoor_State_CheckOpen) {
         if (Player_CheckValidState(player1)) {
             if (self->autoOpen) {
@@ -36,15 +37,17 @@ void TwistingDoor_Update(void)
                             if (player1->position.x <= self->position.x)
                                 return;
                         }
+
                         if (x - x2 < 0x400000) {
                             if (abs(player1->position.y - self->position.y) < 0x400000) {
-                                self->state         = TwistingDoor_State_Opening;
-                                self->active        = ACTIVE_NORMAL;
-                                self->timer         = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
+                                self->state  = TwistingDoor_State_Opening;
+                                self->active = ACTIVE_NORMAL;
+                                self->timer  = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
                             }
                         }
                         break;
                     }
+
                     case TWISTINGDOOR_H_SHORT:
                     case TWISTINGDOOR_H_LONG: {
                         int32 y  = 0;
@@ -64,13 +67,14 @@ void TwistingDoor_Update(void)
 
                         if (y - y2 < 0x400000) {
                             if (abs(player1->position.x - self->position.x) < 0x400000) {
-                                self->state         = TwistingDoor_State_Opening;
-                                self->active        = ACTIVE_NORMAL;
-                                self->timer         = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
+                                self->state  = TwistingDoor_State_Opening;
+                                self->active = ACTIVE_NORMAL;
+                                self->timer  = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
                             }
                         }
                         break;
                     }
+
                     default: break;
                 }
             }
@@ -85,12 +89,14 @@ void TwistingDoor_StaticUpdate(void) {}
 void TwistingDoor_Draw(void)
 {
     RSDK_THIS(TwistingDoor);
+
     RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void TwistingDoor_Create(void *data)
 {
     RSDK_THIS(TwistingDoor);
+
     self->collision = PLATFORM_C_SOLID_ALL;
     Platform_Create(NULL);
 
@@ -98,17 +104,11 @@ void TwistingDoor_Create(void *data)
     RSDK.SetSpriteAnimation(TwistingDoor->aniFrames, self->type, &self->animator, true, 0);
 
     if (self->type == TWISTINGDOOR_V_SHORT || self->type == TWISTINGDOOR_V_LONG) {
-        if (!self->direction)
-            self->groundVel = -0x10000;
-        else
-            self->groundVel = 0x10000;
+        self->groundVel = self->direction ? 0x10000 : -0x10000;
         self->direction *= FLIP_Y;
     }
     else {
-        if (!self->direction)
-            self->groundVel = 0x10000;
-        else
-            self->groundVel = -0x10000;
+        self->groundVel = self->direction ? -0x10000 : 0x10000;
     }
 
     self->taggedButton         = NULL;
@@ -129,7 +129,8 @@ void TwistingDoor_Create(void *data)
         self->updateRange.x = 0x400000 + abs(self->position.x - taggedButton->position.x);
         self->updateRange.y = 0x400000 + abs(self->position.y - taggedButton->position.y);
     }
-    self->state         = TwistingDoor_State_CheckOpen;
+
+    self->state = TwistingDoor_State_CheckOpen;
 }
 
 void TwistingDoor_StageLoad(void)
@@ -143,13 +144,15 @@ void TwistingDoor_StageLoad(void)
 void TwistingDoor_State_CheckOpen(void)
 {
     RSDK_THIS(TwistingDoor);
+
     EntityButton *button = self->taggedButton;
     if (button->currentlyActive) {
         RSDK.PlaySfx(TwistingDoor->sfxOpen, false, 255);
-        self->active        = ACTIVE_NORMAL;
-        self->state         = TwistingDoor_State_Opening;
-        self->timer         = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
+        self->active = ACTIVE_NORMAL;
+        self->state  = TwistingDoor_State_Opening;
+        self->timer  = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
     }
+
     self->velocity.y = 0;
     self->velocity.x = 0;
 }
@@ -157,6 +160,7 @@ void TwistingDoor_State_CheckOpen(void)
 void TwistingDoor_State_Opening(void)
 {
     RSDK_THIS(TwistingDoor);
+
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->type == TWISTINGDOOR_H_SHORT || self->type == TWISTINGDOOR_H_LONG) {
@@ -173,6 +177,7 @@ void TwistingDoor_State_Opening(void)
             self->timer = 180;
         else
             self->active = ACTIVE_NORMAL;
+
         self->state = TwistingDoor_State_Opened;
     }
 }
@@ -184,7 +189,7 @@ void TwistingDoor_State_Opened(void)
     self->velocity.x = 0;
     self->velocity.y = 0;
     if (self->close && --self->timer <= 0) {
-        self->state         = TwistingDoor_State_Closing;
+        self->state = TwistingDoor_State_Closing;
         self->timer = self->type < TWISTINGDOOR_H_LONG ? 64 : 128;
     }
 }
@@ -192,6 +197,7 @@ void TwistingDoor_State_Opened(void)
 void TwistingDoor_State_Closing(void)
 {
     RSDK_THIS(TwistingDoor);
+
     if (--self->animator.frameID < 0)
         self->animator.frameID = 7;
 
@@ -222,10 +228,12 @@ void TwistingDoor_EditorDraw(void)
         self->direction >>= 1;
 
     self->drawPos = self->position;
-    int dir       = self->direction;
+    int32 dir     = self->direction;
     if (self->type == TWISTINGDOOR_V_SHORT || self->type == TWISTINGDOOR_V_LONG)
         self->direction *= FLIP_Y;
+
     TwistingDoor_Draw();
+
     self->direction = dir;
 
     if (showGizmos()) {
@@ -269,7 +277,7 @@ void TwistingDoor_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(TwistingDoor, direction);
     RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip", FLIP_X);
+    RSDK_ENUM_VAR("Flipped", FLIP_X);
 }
 #endif
 

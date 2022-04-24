@@ -113,8 +113,6 @@ void LoadStaticObject(uint8 *obj, uint32 *hash, int32 dataPos)
         sprintf(buffer, "Data/Objects/Static/%s.bin", hashBuf);
         InitFileInfo(&info);
         loaded = LoadFile(&info, buffer, FMODE_RB);
-        if (loaded)
-            printf("what");
 #if !RETRO_USE_ORIGINAL_CODE
     }
 #endif

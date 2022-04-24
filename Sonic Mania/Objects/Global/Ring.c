@@ -468,7 +468,7 @@ void Ring_CheckObjectCollisions(int32 drawPosX, int32 drawPosY)
             if (self->position.x > BigSqueeze->crusherX[BIGSQUEEZE_CRUSHER_R] - 0x200000)
                 collisionSides |= 4;
 
-            if (self->position.y > BigSqueeze->boundB - 0x80000)
+            if (self->position.y > BigSqueeze->boundsB - 0x80000)
                 collisionSides |= 2;
         }
     }

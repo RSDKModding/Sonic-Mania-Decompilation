@@ -57,7 +57,7 @@ void FlameSpring_Update(void);
 void FlameSpring_LateUpdate(void);
 void FlameSpring_StaticUpdate(void);
 void FlameSpring_Draw(void);
-void FlameSpring_Create(void* data);
+void FlameSpring_Create(void *data);
 void FlameSpring_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FlameSpring_EditorDraw(void);
@@ -72,4 +72,4 @@ void FlameSpring_State_Flame(void);
 void FlameSpring_Draw_Spring(void);
 void FlameSpring_Draw_Flame(void);
 
-#endif //!OBJ_FLAMESPRING_H
+#endif //! OBJ_FLAMESPRING_H

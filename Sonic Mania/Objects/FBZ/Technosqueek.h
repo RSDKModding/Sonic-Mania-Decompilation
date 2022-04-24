@@ -11,7 +11,7 @@ typedef enum {
 // Object Class
 struct ObjectTechnosqueek {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     uint16 aniFrames;
 };
 
@@ -53,7 +53,7 @@ void Technosqueek_Serialize(void);
 void Technosqueek_DebugSpawn(void);
 void Technosqueek_DebugDraw(void);
 
-void Technosqueek_HandlePlayerInteractions(void);
+void Technosqueek_HandlePlayerCollisions(void);
 void Technosqueek_CheckOffScreen(void);
 
 void Technosqueek_State_Setup(void);

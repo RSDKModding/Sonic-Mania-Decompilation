@@ -6,7 +6,7 @@
 #if RETRO_USE_PLUS
 // Object Class
 struct ObjectFBZ2Outro {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -23,7 +23,7 @@ void FBZ2Outro_Update(void);
 void FBZ2Outro_LateUpdate(void);
 void FBZ2Outro_StaticUpdate(void);
 void FBZ2Outro_Draw(void);
-void FBZ2Outro_Create(void* data);
+void FBZ2Outro_Create(void *data);
 void FBZ2Outro_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void FBZ2Outro_EditorDraw(void);
@@ -40,4 +40,4 @@ bool32 FBZ2Outro_Cutscene_GlideAway(EntityCutsceneSeq *host);
 
 #endif
 
-#endif //!OBJ_FBZ2OUTRO_H
+#endif //! OBJ_FBZ2OUTRO_H

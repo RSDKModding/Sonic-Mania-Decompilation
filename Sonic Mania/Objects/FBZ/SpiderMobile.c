@@ -12,7 +12,9 @@ ObjectSpiderMobile *SpiderMobile;
 void SpiderMobile_Update(void)
 {
     RSDK_THIS(SpiderMobile);
+
     StateMachine_Run(self->state);
+
     self->groundedStore = self->onGround;
 }
 
@@ -23,6 +25,7 @@ void SpiderMobile_StaticUpdate(void) {}
 void SpiderMobile_Draw(void)
 {
     RSDK_THIS(SpiderMobile);
+
     if (self->stateDraw) {
         StateMachine_Run(self->stateDraw);
     }
@@ -39,12 +42,13 @@ void SpiderMobile_Create(void *data)
     }
     else {
         self->drawFX = FX_FLIP;
+
         if (!SceneInfo->inEditor) {
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 destroyEntity(self);
             }
             else {
-                self->alpha = 255;
+                self->alpha = 0xFF;
                 switch (voidToInt(data)) {
                     case SPIDERMOBILE_BOSS:
                         self->visible           = false;
@@ -55,6 +59,7 @@ void SpiderMobile_Create(void *data)
                         self->active            = ACTIVE_BOUNDS;
                         self->updateRange.x     = 0x400000;
                         self->updateRange.y     = 0x400000;
+
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 0, &self->bumperAnimator, true, 0);
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 1, &self->starAnimator, true, 0);
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 2, &self->headAnimator, true, 0);
@@ -63,18 +68,23 @@ void SpiderMobile_Create(void *data)
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 5, &self->legsAnimator, true, 0);
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 6, &self->webAnimator, true, 0);
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 7, &self->eggmanAnimator, true, 0);
+
                         self->stateDraw = SpiderMobile_Draw_Body;
-                        self->state     = SpiderMobile_StateBody_SetupBounds;
+                        self->state     = SpiderMobile_StateBody_AwaitPlayer;
                         break;
+
                     case SPIDERMOBILE_ORB:
                         self->active        = ACTIVE_NORMAL;
                         self->updateRange.x = 0x300000;
                         self->updateRange.y = 0x300000;
                         self->visible       = true;
                         self->drawOrder     = Zone->objectDrawHigh;
+
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 14, &self->partAnimator, true, 0);
+
                         self->state = SpiderMobile_StateOrb_Charge;
                         break;
+
                     case SPIDERMOBILE_BUMPERDEBRIS:
                         self->visible       = true;
                         self->drawOrder     = Zone->objectDrawHigh;
@@ -84,22 +94,27 @@ void SpiderMobile_Create(void *data)
                         self->updateRange.y = 0x800000;
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 0, &self->bumperAnimator, true, 0);
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 1, &self->starAnimator, true, 0);
+
                         self->velocity.x = RSDK.Rand(-0x20000, 0x20000);
                         self->velocity.y = -0x40000;
                         self->stateDraw  = SpiderMobile_Draw_Bumper;
                         self->state      = SpiderMobile_State_Bumper;
                         break;
+
                     case SPIDERMOBILE_EGGMAN:
                         self->visible       = true;
                         self->drawOrder     = Zone->objectDrawLow;
                         self->active        = ACTIVE_NORMAL;
                         self->updateRange.x = 0x800000;
                         self->updateRange.y = 0x800000;
+
                         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 11, &self->partAnimator, true, 0);
+
                         self->velocity.x = 0x10000;
                         self->velocity.y = -0x20000;
                         self->state      = SpiderMobile_State_Eggman;
                         break;
+
                     default: break;
                 }
             }
@@ -212,10 +227,11 @@ void SpiderMobile_HandleRisingMovement(void)
     }
 
     self->angleVel += self->velocity.x;
-    self->webCurveAngle = self->webCurveAngle - (self->webCurveAngle >> 2);
-    self->angle         = self->angleVel >> 15;
-    self->position.x    = self->origin.x - self->moveAmplitude * RSDK.Sin512(self->angle);
-    self->position.y    = self->origin.y + self->moveAmplitude * RSDK.Cos512(self->angle);
+    self->webCurveAngle -= (self->webCurveAngle >> 2);
+
+    self->angle      = self->angleVel >> 15;
+    self->position.x = self->origin.x - self->moveAmplitude * RSDK.Sin512(self->angle);
+    self->position.y = self->origin.y + self->moveAmplitude * RSDK.Cos512(self->angle);
 }
 
 void SpiderMobile_CheckPlayerCollisions(void)
@@ -238,7 +254,9 @@ void SpiderMobile_CheckPlayerCollisions(void)
             amp                = maxVal((abs(player->velocity.x) + abs(player->velocity.y)) >> 9, 0x600);
             player->velocity.x = amp * RSDK.Cos256(angle);
             player->velocity.y = amp * RSDK.Sin256(angle);
+
             RSDK.PlaySfx(SpiderMobile->sfxBumper, false, 255);
+
             foreach_break;
         }
     }
@@ -277,7 +295,7 @@ void SpiderMobile_Hit(void)
         self->state            = SpiderMobile_StateBody_Destroyed;
         self->timer            = 0;
         SceneInfo->timeEnabled = false;
-        Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
+        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 10, &self->eggmanAnimator, true, 0);
     }
     else {
@@ -296,7 +314,7 @@ void SpiderMobile_Explode(void)
 
         if (Zone->timer & 4) {
             int32 x                    = self->headPos.x + (RSDK.Rand(-48, 48) << 16);
-            int32 y                    = self->headPos.x + (RSDK.Rand(-48, 48) << 16);
+            int32 y                    = self->headPos.y + (RSDK.Rand(-48, 48) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawOrder       = Zone->objectDrawHigh;
         }
@@ -316,6 +334,7 @@ void SpiderMobile_HandlePlatformMovement(void)
     Zone->deathBoundary[0] += offsetY;
     Zone->playerBoundsB[0] += offsetY;
     RSDK.GetSceneLayer(Zone->fgHigh)->scrollPos -= offsetY;
+
     self->position.y += offsetY;
     self->origin.y += offsetY;
 
@@ -326,9 +345,8 @@ void SpiderMobile_HandlePlatformMovement(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        if (player->objectID == Player->objectID && player->state == Player_State_Transform) {
+        if (player->objectID == Player->objectID && player->state == Player_State_Transform)
             Player_CheckCollisionPlatform(player, self, &SpiderMobile->hitboxPlatform);
-        }
     }
 
     foreach_active(Player, player)
@@ -349,6 +367,7 @@ void SpiderMobile_HandlePlatformMovement(void)
             player->camera->boundsT += offsetY >> 16;
             player->camera->boundsB += offsetY >> 16;
         }
+
         if (player->state == Player_State_None) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
             if (tile == (uint16)-1 || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
@@ -384,28 +403,29 @@ void SpiderMobile_HandleWebClimbArmMovement(void)
     RSDK_THIS(SpiderMobile);
 
     int32 angle = 16 * Zone->timer;
-    if (self->armMoveAmplitude >= 64) {
+    if (self->armMoveAmplitude >= 0x40) {
         self->legAngles[0] = (RSDK.Sin256(angle) >> 3) - (self->velocity.y >> 14) - 64;
         self->legAngles[6] = (RSDK.Sin256(angle + 224) >> 3) + (self->velocity.y >> 14) + 64;
     }
     else {
-        self->legAngles[0] = ((self->legAngles[0] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle) >> 3) - (self->velocity.y >> 14) - 64)) >> 6);
-        self->legAngles[6] = ((self->legAngles[6] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((self->velocity.y >> 14) + 64 + (RSDK.Sin256(angle + 224) >> 3))) >> 6);
+        self->legAngles[0] = ((self->legAngles[0] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle) >> 3) - (self->velocity.y >> 14) - 0x40)) >> 6);
+        self->legAngles[6] = ((self->legAngles[6] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((self->velocity.y >> 14) + 0x40 + (RSDK.Sin256(angle + 0xE0) >> 3))) >> 6);
+
         self->armMoveAmplitude += 4;
     }
 
-    if (self->legAngles[2] < 40)
+    if (self->legAngles[2] < 0x28)
         self->legAngles[2] += 2;
 
-    if (self->legAngles[4] < 64)
+    if (self->legAngles[4] < 0x40)
         self->legAngles[4] += 2;
 
-    if (self->legAngles[8] > -40)
+    if (self->legAngles[8] > -0x28)
         self->legAngles[8] -= 2;
 
-    if (self->legAngles[10] > -64)
+    if (self->legAngles[10] > -0x40)
         self->legAngles[10] -= 2;
 
     for (int32 i = 0; i < 12; i += 2) self->legAngles[i + 1] = self->legAngles[i];
@@ -416,33 +436,37 @@ void SpiderMobile_HandleDestroyedArmMovement(void)
     RSDK_THIS(SpiderMobile);
 
     int32 angle = 16 * Zone->timer;
-    if (self->armMoveAmplitude >= 64) {
-        self->legAngles[0]  = (RSDK.Sin256(angle) >> 3) - (self->velocity.y >> 14) - 64;
-        self->legAngles[2]  = (RSDK.Sin256(angle + 64) >> 4) - (self->velocity.y >> 15) - 16;
-        self->legAngles[4]  = (RSDK.Sin256(angle + 128) >> 3) - (self->velocity.y >> 14) + 48;
-        self->legAngles[6]  = (RSDK.Sin256(angle + 224) >> 3) + (self->velocity.y >> 14) + 64;
-        self->legAngles[8]  = (RSDK.Sin256(angle + 288) >> 4) + (self->velocity.y >> 15) + 16;
-        self->legAngles[10] = (RSDK.Sin256(angle + 352) >> 3) + (self->velocity.y >> 14) - 48;
+    if (self->armMoveAmplitude >= 0x40) {
+        self->legAngles[0]  = (RSDK.Sin256(angle + 0x00) >> 3) - (self->velocity.y >> 14) - 0x40;
+        self->legAngles[2]  = (RSDK.Sin256(angle + 0x40) >> 4) - (self->velocity.y >> 15) - 0x10;
+        self->legAngles[4]  = (RSDK.Sin256(angle + 0x80) >> 3) - (self->velocity.y >> 14) + 0x30;
+        self->legAngles[6]  = (RSDK.Sin256(angle + 0xE0) >> 3) + (self->velocity.y >> 14) + 0x40;
+        self->legAngles[8]  = (RSDK.Sin256(angle + 0x120) >> 4) + (self->velocity.y >> 15) + 0x10;
+        self->legAngles[10] = (RSDK.Sin256(angle + 0x160) >> 3) + (self->velocity.y >> 14) - 0x30;
     }
     else {
-        self->legAngles[0] = ((self->legAngles[0] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle) >> 3) - (self->velocity.y >> 14) - 64)) >> 6);
-        self->legAngles[2] = ((self->legAngles[2] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 64) >> 4) - (self->velocity.y >> 15) - 16)) >> 6);
-        self->legAngles[4] = ((self->legAngles[4] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 128) >> 3) - (self->velocity.y >> 14) + 48)) >> 6);
-        self->legAngles[6] = ((self->legAngles[6] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 224) >> 3) + (self->velocity.y >> 14) + 64)) >> 6);
-        self->legAngles[8] = ((self->legAngles[8] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 288) >> 4) + (self->velocity.y >> 15) + 16)) >> 6);
-        self->legAngles[10] = ((self->legAngles[10] * (64 - self->armMoveAmplitude)) >> 6)
-                              + ((self->armMoveAmplitude * ((self->velocity.y >> 14) - 48 + (RSDK.Sin256(angle + 352) >> 3))) >> 6);
+        self->legAngles[0] = ((self->legAngles[0] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x00) >> 3) - (self->velocity.y >> 14) - 0x40)) >> 6);
+
+        self->legAngles[2] = ((self->legAngles[2] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x40) >> 4) - (self->velocity.y >> 15) - 0x10)) >> 6);
+
+        self->legAngles[4] = ((self->legAngles[4] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x80) >> 3) - (self->velocity.y >> 14) + 0x30)) >> 6);
+
+        self->legAngles[6] = ((self->legAngles[6] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0xE0) >> 3) + (self->velocity.y >> 14) + 0x40)) >> 6);
+
+        self->legAngles[8] = ((self->legAngles[8] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x120) >> 4) + (self->velocity.y >> 15) + 0x10)) >> 6);
+
+        self->legAngles[10] = ((self->legAngles[10] * (0x40 - self->armMoveAmplitude)) >> 6)
+                              + ((self->armMoveAmplitude * ((self->velocity.y >> 14) - 0x30 + (RSDK.Sin256(angle + 0x160) >> 3))) >> 6);
+
         self->armMoveAmplitude += 4;
     }
 
-    for (int32 i = 0; i < 12; i += 2) {
-        self->legAngles[i + 1] = self->legAngles[i];
-    }
+    for (int32 i = 0; i < 12; i += 2) self->legAngles[i + 1] = self->legAngles[i];
 }
 
 void SpiderMobile_HandleIdleArmMovement(void)
@@ -450,27 +474,33 @@ void SpiderMobile_HandleIdleArmMovement(void)
     RSDK_THIS(SpiderMobile);
 
     int32 angle = 4 * Zone->timer;
-    if (self->armMoveAmplitude >= 64) {
-        self->legAngles[0]  = (RSDK.Sin256(angle) >> 5) - (self->velocity.y >> 14) - 64;
-        self->legAngles[2]  = (RSDK.Sin256(angle + 64) >> 5) - (self->velocity.y >> 15) - 16;
-        self->legAngles[4]  = (RSDK.Sin256(angle + 128) >> 5) - (self->velocity.y >> 14) + 48;
-        self->legAngles[6]  = (RSDK.Sin256(angle + 224) >> 5) + (self->velocity.y >> 14) + 64;
-        self->legAngles[8]  = (RSDK.Sin256(angle + 288) >> 5) + (self->velocity.y >> 15) + 16;
-        self->legAngles[10] = (RSDK.Sin256(angle + 352) >> 5) + (self->velocity.y >> 14) - 48;
+    if (self->armMoveAmplitude >= 0x40) {
+        self->legAngles[0]  = (RSDK.Sin256(angle + 0x00) >> 5) - (self->velocity.y >> 14) - 0x40;
+        self->legAngles[2]  = (RSDK.Sin256(angle + 0x40) >> 5) - (self->velocity.y >> 15) - 0x10;
+        self->legAngles[4]  = (RSDK.Sin256(angle + 0x80) >> 5) - (self->velocity.y >> 14) + 0x30;
+        self->legAngles[6]  = (RSDK.Sin256(angle + 0xE0) >> 5) + (self->velocity.y >> 14) + 0x40;
+        self->legAngles[8]  = (RSDK.Sin256(angle + 0x120) >> 5) + (self->velocity.y >> 15) + 0x10;
+        self->legAngles[10] = (RSDK.Sin256(angle + 0x160) >> 5) + (self->velocity.y >> 14) - 0x30;
     }
     else {
-        self->legAngles[0] = ((self->legAngles[0] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle) >> 5) - (self->velocity.y >> 14) - 64)) >> 6);
-        self->legAngles[2] = ((self->legAngles[2] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 64) >> 5) - (self->velocity.y >> 15) - 16)) >> 6);
-        self->legAngles[4] = ((self->legAngles[4] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 128) >> 5) - (self->velocity.y >> 14) + 48)) >> 6);
-        self->legAngles[6] = ((self->legAngles[6] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 224) >> 5) + (self->velocity.y >> 14) + 64)) >> 6);
-        self->legAngles[8] = ((self->legAngles[8] * (64 - self->armMoveAmplitude)) >> 6)
-                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 288) >> 5) + (self->velocity.y >> 15) + 16)) >> 6);
-        self->legAngles[10] = ((self->legAngles[10] * (64 - self->armMoveAmplitude)) >> 6)
-                              + ((self->armMoveAmplitude * ((self->velocity.y >> 14) - 48 + (RSDK.Sin256(angle + 352) >> 5))) >> 6);
+        self->legAngles[0] = ((self->legAngles[0] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x00) >> 5) - (self->velocity.y >> 14) - 0x40)) >> 6);
+
+        self->legAngles[2] = ((self->legAngles[2] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x40) >> 5) - (self->velocity.y >> 15) - 0x10)) >> 6);
+
+        self->legAngles[4] = ((self->legAngles[4] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x80) >> 5) - (self->velocity.y >> 14) + 0x30)) >> 6);
+
+        self->legAngles[6] = ((self->legAngles[6] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0xE0) >> 5) + (self->velocity.y >> 14) + 0x40)) >> 6);
+
+        self->legAngles[8] = ((self->legAngles[8] * (0x40 - self->armMoveAmplitude)) >> 6)
+                             + ((self->armMoveAmplitude * ((RSDK.Sin256(angle + 0x120) >> 5) + (self->velocity.y >> 15) + 0x10)) >> 6);
+
+        self->legAngles[10] = ((self->legAngles[10] * (0x40 - self->armMoveAmplitude)) >> 6)
+                              + ((self->armMoveAmplitude * ((self->velocity.y >> 14) - 0x30 + (RSDK.Sin256(angle + 0x160) >> 5))) >> 6);
+
         self->armMoveAmplitude += 4;
     }
 
@@ -496,41 +526,29 @@ void SpiderMobile_UpdateLimbPositions(void)
     self->pincer1StartPos.x = (self->headPos.x - 0x1A00 * RSDK.Sin512(angle)) - 0x900 * RSDK.Cos512(angle);
     self->pincer1StartPos.y = (self->headPos.y + 0x1A00 * RSDK.Cos512(angle)) - 0x900 * RSDK.Sin512(angle);
 
-    self->pincer1EndPos.x = self->pincer1StartPos.x;
-    self->pincer1EndPos.y = self->pincer1StartPos.y;
-    self->pincer1EndPos.x -= 0x600 * RSDK.Sin512(angle + self->pincerRotation);
-    self->pincer1EndPos.y += 0x600 * RSDK.Cos512(angle + self->pincerRotation);
+    self->pincer1EndPos.x = self->pincer1StartPos.x - (0x600 * RSDK.Sin512(angle + self->pincerRotation));
+    self->pincer1EndPos.y = self->pincer1StartPos.y + (0x600 * RSDK.Cos512(angle + self->pincerRotation));
 
     self->pincer2StartPos.x = (self->headPos.x - 0x1A00 * RSDK.Sin512(angle)) + 0x900 * RSDK.Cos512(angle);
     self->pincer2StartPos.y = (self->headPos.y + 0x1A00 * RSDK.Cos512(angle)) + 0x900 * RSDK.Sin512(angle);
 
-    self->pincer2EndPos.x = self->pincer2StartPos.x;
-    self->pincer2EndPos.y = self->pincer2StartPos.y;
-    self->pincer2EndPos.x -= 0x600 * RSDK.Sin512(angle - self->pincerRotation);
-    self->pincer2EndPos.y += 0x600 * RSDK.Cos512(angle - self->pincerRotation);
+    self->pincer2EndPos.x = self->pincer2StartPos.x - (0x600 * RSDK.Sin512(angle - self->pincerRotation));
+    self->pincer2EndPos.y = self->pincer2StartPos.y + (0x600 * RSDK.Cos512(angle - self->pincerRotation));
 
     for (int32 i = 0; i < 6; i += 2) {
-        self->legPositions[i + 0].x = self->legJointPos[0].x;
-        self->legPositions[i + 0].y = self->legJointPos[0].y;
-        self->legPositions[i + 0].x += 0x1100 * RSDK.Cos512(self->angle + self->legAngles[i]);
-        self->legPositions[i + 0].y += 0x1100 * RSDK.Sin512(self->angle + self->legAngles[i]);
+        self->legPositions[i + 0].x = self->legJointPos[0].x + (0x1100 * RSDK.Cos512(self->angle + self->legAngles[i]));
+        self->legPositions[i + 0].y = self->legJointPos[0].y + (0x1100 * RSDK.Sin512(self->angle + self->legAngles[i]));
 
-        self->legPositions[i + 1].x = self->legPositions[i].x;
-        self->legPositions[i + 1].y = self->legPositions[i].y;
-        self->legPositions[i + 1].x += 0xF00 * RSDK.Cos512(self->angle + self->legAngles[i] + self->legAngles[i + 1]);
-        self->legPositions[i + 1].y += 0xF00 * RSDK.Sin512(self->angle + self->legAngles[i] + self->legAngles[i + 1]);
+        self->legPositions[i + 1].x = self->legPositions[i].x + (0xF00 * RSDK.Cos512(self->angle + self->legAngles[i] + self->legAngles[i + 1]));
+        self->legPositions[i + 1].y = self->legPositions[i].y + (0xF00 * RSDK.Sin512(self->angle + self->legAngles[i] + self->legAngles[i + 1]));
     }
 
     for (int32 i = 6; i < 12; i += 2) {
-        self->legPositions[i + 0].x = self->legJointPos[1].x;
-        self->legPositions[i + 0].y = self->legJointPos[1].y;
-        self->legPositions[i + 0].x -= 0x1100 * RSDK.Cos512(self->angle + self->legAngles[i]);
-        self->legPositions[i + 0].y -= 0x1100 * RSDK.Sin512(self->angle + self->legAngles[i]);
+        self->legPositions[i + 0].x = self->legJointPos[1].x - (0x1100 * RSDK.Cos512(self->angle + self->legAngles[i]));
+        self->legPositions[i + 0].y = self->legJointPos[1].y - (0x1100 * RSDK.Sin512(self->angle + self->legAngles[i]));
 
-        self->legPositions[i + 1].x = self->legPositions[i].x;
-        self->legPositions[i + 1].y = self->legPositions[i].y;
-        self->legPositions[i + 1].x -= 0xF00 * RSDK.Cos512(self->angle + self->legAngles[i] + self->legAngles[i + 1]);
-        self->legPositions[i + 1].y -= 0xF00 * RSDK.Sin512(self->angle + self->legAngles[i] + self->legAngles[i + 1]);
+        self->legPositions[i + 1].x = self->legPositions[i].x - (0xF00 * RSDK.Cos512(self->angle + self->legAngles[i] + self->legAngles[i + 1]));
+        self->legPositions[i + 1].y = self->legPositions[i].y - (0xF00 * RSDK.Sin512(self->angle + self->legAngles[i] + self->legAngles[i + 1]));
     }
 }
 
@@ -610,11 +628,10 @@ void SpiderMobile_Draw_Body(void)
     RSDK.DrawSprite(&self->orbAnimator, &self->pincer2StartPos, false);
 
     Vector2 drawPos;
-    drawPos = self->position;
-    drawPos.x += 0x1300 * RSDK.Sin512(self->angle);
-    drawPos.y += -0x1300 * RSDK.Cos512(self->angle);
-    self->webAnimator.frameID = 1;
+    drawPos.x = self->position.x + (0x1300 * RSDK.Sin512(self->angle));
+    drawPos.y = self->position.y + (-0x1300 * RSDK.Cos512(self->angle));
 
+    self->webAnimator.frameID = 1;
     for (int32 i = 0; i < 16; ++i) {
         self->rotation = ((self->webCurveAngle * RSDK.Sin256(32 * i)) >> 16) + self->angle;
         RSDK.DrawSprite(&self->webAnimator, &drawPos, false);
@@ -625,10 +642,11 @@ void SpiderMobile_Draw_Body(void)
 
     self->webAnimator.frameID = 0;
     self->rotation            = self->angle;
-    RSDK.DrawSprite(&self->webAnimator, 0, false);
+    RSDK.DrawSprite(&self->webAnimator, NULL, false);
 
     if (self->knockbackCooldown > 0)
         RSDK.SetPaletteEntry(0, 18, 0xE0E040);
+
     self->bumperAnimator.frameID = 0;
     RSDK.DrawSprite(&self->bumperAnimator, NULL, false);
     RSDK.DrawSprite(&self->starAnimator, NULL, false);
@@ -647,6 +665,7 @@ void SpiderMobile_Draw_Body(void)
 void SpiderMobile_Draw_Bumper(void)
 {
     RSDK_THIS(SpiderMobile);
+
     if (!(Zone->timer & 1)) {
         self->inkEffect              = INK_NONE;
         self->bumperAnimator.frameID = 0;
@@ -666,29 +685,34 @@ void SpiderMobile_Draw_Bumper(void)
 void SpiderMobile_Draw_Cockpit(void)
 {
     RSDK_THIS(SpiderMobile);
+
     RSDK.DrawSprite(&self->headAnimator, NULL, false);
     RSDK.DrawSprite(&self->eggmanAnimator, NULL, false);
 }
 
-void SpiderMobile_StateBody_SetupBounds(void)
+void SpiderMobile_StateBody_AwaitPlayer(void)
 {
     RSDK_THIS(SpiderMobile);
+
     if (++self->timer >= 8) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (abs(player1->position.y - self->position.y) <= 0xA00000) {
-            self->timer                 = 0;
+            self->timer = 0;
+
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
             Zone->cameraBoundsL[0]      = (self->position.x >> 16) - WIDE_SCR_XCENTER;
             Zone->cameraBoundsR[0]      = (self->position.x >> 16) + WIDE_SCR_XCENTER;
             Zone->cameraBoundsT[0]      = (self->position.y >> 16) - ScreenInfo->height;
             Zone->cameraBoundsB[0]      = (self->position.y >> 16);
-            SpiderMobile->boundL        = (Zone->cameraBoundsL[0] + 64) << 16;
-            SpiderMobile->boundR        = (Zone->cameraBoundsR[0] - 64) << 16;
-            SpiderMobile->startX        = self->position.x;
-            SpiderMobile->boundT        = (Zone->cameraBoundsT[0] + 48) << 16;
-            SpiderMobile->boundB        = (Zone->cameraBoundsB[0] - 8) << 16;
-            self->state                 = SpiderMobile_StateBody_SetupArena;
+
+            SpiderMobile->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
+            SpiderMobile->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;
+            SpiderMobile->boundsM = self->position.x;
+            SpiderMobile->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
+            SpiderMobile->boundsB = (Zone->cameraBoundsB[0] - 8) << 16;
+
+            self->state = SpiderMobile_StateBody_SetupArena;
             FBZSetup_GenericTriggerCB_ShowInterior();
         }
         else {
@@ -774,17 +798,19 @@ void SpiderMobile_StateBody_SetupArena(void)
 void SpiderMobile_StateBody_InitialDrop(void)
 {
     RSDK_THIS(SpiderMobile);
+
     if (self->onGround) {
         if (!self->groundedStore)
             RSDK.PlaySfx(SpiderMobile->sfxFall, false, 255);
+
         self->state = SpiderMobile_StateBody_Rise;
         Camera_ShakeScreen(0, 0, 4);
-        SpiderMobile_HandleIdleArmMovement();
     }
     else {
         SpiderMobile_HandleFallingMovement();
-        SpiderMobile_HandleIdleArmMovement();
     }
+
+    SpiderMobile_HandleIdleArmMovement();
     SpiderMobile_UpdateLimbPositions();
 }
 
@@ -807,6 +833,7 @@ void SpiderMobile_StateBody_Rise(void)
     else {
         if (!self->bounceDelay)
             SpiderMobile_CheckPlayerCollisions();
+
         SpiderMobile_HandleFallingMovement();
     }
 
@@ -829,6 +856,7 @@ void SpiderMobile_StateBody_Rise(void)
         self->armMoveAmplitude = 0;
         self->state            = SpiderMobile_StateBody_Climb;
     }
+
     SpiderMobile_HandlePlatformMovement();
     SpiderMobile_HandleIdleArmMovement();
     SpiderMobile_UpdateLimbPositions();
@@ -838,6 +866,7 @@ void SpiderMobile_StateBody_Rise(void)
 void SpiderMobile_StateBody_Climb(void)
 {
     RSDK_THIS(SpiderMobile);
+
     if (self->knockbackCooldown > 0)
         self->knockbackCooldown--;
 
@@ -846,11 +875,13 @@ void SpiderMobile_StateBody_Climb(void)
 
     if (self->headRotation < 0) {
         self->headRotation += 4;
+
         if (self->headRotation > 0)
             self->headRotation = 0;
     }
     else if (self->headRotation > 0) {
         self->headRotation -= 4;
+
         if (self->headRotation < 0)
             self->headRotation = 0;
     }
@@ -871,6 +902,7 @@ void SpiderMobile_StateBody_Climb(void)
     else {
         SpiderMobile_HandleFallingMovement();
     }
+
     SpiderMobile_HandlePlatformMovement();
     SpiderMobile_HandleWebClimbArmMovement();
     SpiderMobile_UpdateLimbPositions();
@@ -883,6 +915,7 @@ void SpiderMobile_StateBody_HandleOrbAttack(void)
 
     if (self->invincibilityTimer > 0)
         self->invincibilityTimer--;
+
     SpiderMobile_HandleRisingMovement();
     SpiderMobile_CheckPlayerCollisions();
 
@@ -897,6 +930,7 @@ void SpiderMobile_StateBody_HandleOrbAttack(void)
 
     if (self->pincerRotation >= 56) {
         RSDK.ProcessAnimation(&self->electricAnimator);
+
         if (!(self->timer % 60))
             CREATE_ENTITY(SpiderMobile, intToVoid(SPIDERMOBILE_ORB), self->position.x, self->position.y)->parent = self;
     }
@@ -910,6 +944,7 @@ void SpiderMobile_StateBody_HandleOrbAttack(void)
         self->timer    = 0;
         self->onGround = false;
         SpiderMobile_HandleFallingMovement();
+
         self->state = SpiderMobile_StateBody_Rise;
         RSDK.SetSpriteAnimation(-1, 0, &self->electricAnimator, false, 0);
     }
@@ -940,74 +975,74 @@ void SpiderMobile_StateBody_Destroyed(void)
         for (int32 i = 0; i < 2; ++i) {
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legJointPos[i].x, self->legJointPos[i].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 0);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->drawFX     = FX_ROTATE | FX_FLIP;
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->drawFX          = FX_ROTATE | FX_FLIP;
         }
 
         // Leg Debris L
         for (int32 i = 0; i < 6; i += 2) {
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 5, &debris->animator, false, 1);
-            debris->rotation   = self->angle + self->legAngles[i];
-            debris->rotSpeed   = RSDK.Rand(-8, 8);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->drawFX     = FX_ROTATE | FX_FLIP;
+            debris->rotation        = self->angle + self->legAngles[i];
+            debris->rotSpeed        = RSDK.Rand(-8, 8);
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->drawFX          = FX_ROTATE | FX_FLIP;
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 5, &debris->animator, false, 0);
-            debris->rotation   = self->angle + self->legAngles[i] + self->legAngles[i + 1];
-            debris->rotSpeed   = RSDK.Rand(-8, 8);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->drawFX     = FX_ROTATE | FX_FLIP;
+            debris->rotation        = self->angle + self->legAngles[i] + self->legAngles[i + 1];
+            debris->rotSpeed        = RSDK.Rand(-8, 8);
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->drawFX          = FX_ROTATE | FX_FLIP;
         }
 
         // Leg Debris R
         for (int32 i = 6; i < 12; i += 2) {
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 5, &debris->animator, false, 0);
-            debris->rotation   = self->angle + self->legAngles[i];
-            debris->rotSpeed   = RSDK.Rand(-8, 8);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->drawFX     = FX_ROTATE | FX_FLIP;
+            debris->rotation        = self->angle + self->legAngles[i];
+            debris->rotSpeed        = RSDK.Rand(-8, 8);
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->drawFX          = FX_ROTATE | FX_FLIP;
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 5, &debris->animator, false, 1);
-            debris->rotation   = self->angle + self->legAngles[i] + self->legAngles[i + 1];
-            debris->rotSpeed   = RSDK.Rand(-8, 8);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
-            debris->drawFX     = FX_ROTATE | FX_FLIP;
+            debris->rotation        = self->angle + self->legAngles[i] + self->legAngles[i + 1];
+            debris->rotSpeed        = RSDK.Rand(-8, 8);
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
+            debris->drawFX          = FX_ROTATE | FX_FLIP;
         }
 
         // Leg Joints Debris
         for (int32 i = 0; i < 12; i += 2) {
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i].x, self->legPositions[i].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 2);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
 
             debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->legPositions[i + 1].x, self->legPositions[i + 1].y);
             RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &debris->animator, false, 1);
-            debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-            debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
-            debris->gravityStrength    = 0x3800;
-            debris->drawOrder  = Zone->objectDrawHigh;
+            debris->velocity.x      = RSDK.Rand(-0x20000, 0x20000);
+            debris->velocity.y      = RSDK.Rand(-0x20000, -0x10000);
+            debris->gravityStrength = 0x3800;
+            debris->drawOrder       = Zone->objectDrawHigh;
         }
 
         RSDK.SetSpriteAnimation(-1, 0, &self->legsAnimator, true, 0);
@@ -1034,6 +1069,7 @@ void SpiderMobile_StateBody_Destroyed(void)
 void SpiderMobile_StateBody_CockpitExplode(void)
 {
     RSDK_THIS(SpiderMobile);
+
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -1057,6 +1093,7 @@ void SpiderMobile_StateBody_CockpitExplode(void)
 void SpiderMobile_StateBody_MovePlatformToEnd(void)
 {
     RSDK_THIS(SpiderMobile);
+
     if (++self->timer == 30) {
         self->offsetY -= 0x10000;
         self->timer = 0;
@@ -1069,6 +1106,7 @@ void SpiderMobile_StateBody_MovePlatformToEnd(void)
             spikes->drawOrder = 1;
         }
     }
+
     SpiderMobile_HandlePlatformMovement();
 
     if (Zone->cameraBoundsB[0] <= 5248) {
@@ -1088,12 +1126,14 @@ void SpiderMobile_StateBody_MovePlatformToEnd(void)
 void SpiderMobile_StateBody_FinishedMovingPlatform(void)
 {
     RSDK_THIS(SpiderMobile);
-    int32 storeX     = self->position.x;
-    int32 storeY     = self->position.y;
+
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
+
     self->position.x = self->origin.x;
     self->position.y = self->origin.y;
-
     foreach_active(Player, player) { Player_CheckCollisionPlatform(player, self, &SpiderMobile->hitboxPlatform); }
+
     self->position.x = storeX;
     self->position.y = storeY;
 }
@@ -1101,6 +1141,7 @@ void SpiderMobile_StateBody_FinishedMovingPlatform(void)
 void SpiderMobile_State_Bumper(void)
 {
     RSDK_THIS(SpiderMobile);
+
     self->velocity.y += 0x3800;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
@@ -1113,10 +1154,13 @@ void SpiderMobile_State_Bumper(void)
 void SpiderMobile_State_Eggman(void)
 {
     RSDK_THIS(SpiderMobile);
+
     RSDK.ProcessAnimation(&self->partAnimator);
+
     self->velocity.y -= 0x1000;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     if (++self->timer == 180)
         destroyEntity(self);
 }
@@ -1124,6 +1168,7 @@ void SpiderMobile_State_Eggman(void)
 void SpiderMobile_StateOrb_Charge(void)
 {
     RSDK_THIS(SpiderMobile);
+
     EntitySpiderMobile *parent = self->parent;
 
     RSDK.ProcessAnimation(&self->partAnimator);
@@ -1131,8 +1176,10 @@ void SpiderMobile_StateOrb_Charge(void)
 
     self->position.x = parent->headPos.x - 0x2500 * RSDK.Sin512(angle);
     self->position.y = parent->headPos.y + 0x2500 * RSDK.Cos512(angle);
+
     if (!self->timer)
         RSDK.PlaySfx(SpiderMobile->sfxCharge, false, 255);
+
     if (++self->timer == 32) {
         self->timer      = 0;
         self->velocity.x = -0x200 * RSDK.Sin512(parent->headRotation + parent->angle);
@@ -1147,15 +1194,16 @@ void SpiderMobile_StateOrb_Charge(void)
 void SpiderMobile_StateOrb_Fired(void)
 {
     RSDK_THIS(SpiderMobile);
+
     RSDK.ProcessAnimation(&self->partAnimator);
+
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &SpiderMobile->hitboxOrb)) {
+        if (Player_CheckCollisionTouch(player, self, &SpiderMobile->hitboxOrb))
             Player_CheckHit(player, self);
-        }
     }
 
     if (!RSDK.CheckOnScreen(self, NULL))
@@ -1175,9 +1223,57 @@ bool32 SpiderMobile_ElevatorCheckCB(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SpiderMobile_EditorDraw(void) {}
+void SpiderMobile_EditorDraw(void)
+{
+    RSDK_THIS(SpiderMobile);
 
-void SpiderMobile_EditorLoad(void) {}
+    // self->alpha             = 0xFF;
+    self->visible           = false;
+    self->drawFX            = FX_ROTATE | FX_FLIP;
+    self->webCurveDirection = 1;
+    self->active            = ACTIVE_BOUNDS;
+    self->updateRange.x     = 0x400000;
+    self->updateRange.y     = 0x400000;
+
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 0, &self->bumperAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 1, &self->starAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 2, &self->headAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 3, &self->orbAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 4, &self->pincerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 5, &self->legsAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 6, &self->webAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 7, &self->eggmanAnimator, true, 0);
+
+    SpiderMobile_HandleIdleArmMovement();
+    SpiderMobile_UpdateLimbPositions();
+
+    SpiderMobile_Draw_Body();
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawArenaBounds(-WIDE_SCR_XCENTER, -SCREEN_YSIZE, WIDE_SCR_XCENTER, 0, 1 | 2 | 4 | 8, 0x00C0F0);
+
+        // Draw overrides inkEffect which doesn't look great
+        // self->inkEffect = INK_BLEND;
+        // Vector2 pos     = self->position;
+        // self->position  = self->origin;
+        //
+        // SpiderMobile_HandleIdleArmMovement();
+        // SpiderMobile_UpdateLimbPositions();
+        //
+        // SpiderMobile_Draw_Body();
+        //
+        // self->inkEffect = INK_NONE;
+        // self->position  = pos;
+
+        DrawHelpers_DrawArrow(self->position.x, self->position.y, self->origin.x, self->origin.y, 0xFFFF00, INK_NONE, 0xFF);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
+}
+
+void SpiderMobile_EditorLoad(void) { SpiderMobile->aniFrames = RSDK.LoadSpriteAnimation("FBZ/SpiderMobile.bin", SCOPE_STAGE); }
 #endif
 
 void SpiderMobile_Serialize(void) { RSDK_EDITABLE_VAR(SpiderMobile, VAR_VECTOR2, origin); }

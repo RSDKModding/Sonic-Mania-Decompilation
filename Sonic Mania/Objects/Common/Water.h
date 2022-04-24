@@ -55,8 +55,7 @@ struct ObjectWater {
     bool32 moveWaterLevel;
     int32 waterLevelVolume;
     int32 waterPalette;
-    bool32
-        disableWaterSplash; // this is never set except for once and it's used in if ! statements to link the player or not. i'm so sorry for the name
+    bool32 disableWaterSplash; // this is never set except for once and it's used in if ! statements to link the player or not
     int32 wakePosX[PLAYER_MAX];
     uint8 wakeDir[PLAYER_MAX];
     Animator wakeAnimator;

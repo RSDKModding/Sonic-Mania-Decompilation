@@ -11,8 +11,8 @@ typedef enum {
 // Object Class
 struct ObjectTuesday {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
+    Hitbox hitboxNode;
+    Hitbox hitboxGondola;
     uint16 aniFrames;
     uint16 sfxElecCharge;
     uint16 sfxZap;
@@ -60,6 +60,9 @@ void Tuesday_EditorLoad(void);
 void Tuesday_Serialize(void);
 
 // Extra Entity Functions
+void Tuesday_Hit(void);
+void Tuesday_Explode(void);
+
 void Tuesday_DrawElectricity(void);
 void Tuesday_State_Controller(void);
 void Tuesday_State_Node(void);

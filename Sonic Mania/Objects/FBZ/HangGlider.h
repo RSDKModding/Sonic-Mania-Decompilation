@@ -6,7 +6,7 @@
 // Object Class
 struct ObjectHangGlider {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxUnused;
     uint16 aniFrames;
 };
 
@@ -18,7 +18,7 @@ struct EntityHangGlider {
     int32 gravityStrength;
     int32 unused2;
     int32 unused3;
-    EntityPlayer *playerPtr;
+    EntityPlayer *attachedPlayer;
     Animator sailAnimator;
     Animator handleBackAnimator;
     Animator handleFrontAnimator;

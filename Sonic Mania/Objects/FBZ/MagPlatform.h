@@ -12,6 +12,7 @@ struct ObjectMagPlatform {
 // Entity Class
 struct EntityMagPlatform {
     MANIA_PLATFORM_BASE
+
     int32 length;
 };
 

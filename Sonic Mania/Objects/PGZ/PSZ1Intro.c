@@ -42,7 +42,7 @@ void PSZ1Intro_StageLoad(void) {}
 
 void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider)
 {
-    EntityPlayer *player = (EntityPlayer *)glider->playerPtr;
+    EntityPlayer *player = (EntityPlayer *)glider->attachedPlayer;
     if (player) {
         player->state      = Player_State_Air;
         player->onGround   = false;
@@ -51,7 +51,7 @@ void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider)
         player->active     = ACTIVE_NORMAL;
         player->stateInput = StateMachine_None;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
-        glider->playerPtr = NULL;
+        glider->attachedPlayer = NULL;
     }
 }
 
@@ -72,7 +72,7 @@ bool32 PSZ1Intro_Cutscene_SetupGliders(EntityCutsceneSeq *host)
             player->position.y   = glider->position.y;
             player->active       = ACTIVE_NEVER;
             glider->active       = ACTIVE_NORMAL;
-            glider->playerPtr    = player;
+            glider->attachedPlayer    = player;
             glider->velocity.x   = 0x40000;
             glider->velocity.y   = -0x20000;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->playerAnimator, true, 0);

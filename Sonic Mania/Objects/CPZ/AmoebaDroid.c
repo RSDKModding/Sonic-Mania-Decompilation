@@ -728,7 +728,7 @@ void AmoebaDroid_State_PoolSplash(void)
     int32 pos = (self->position.x + 0x80000) >> 20;
     foreach_active(ChemicalPool, pool)
     {
-        if (pos >= pool->startX && pos < pool->endX)
+        if (pos >= pool->leftEdge && pos < pool->rightEdge)
             self->position.y = pool->offsetY + ChemicalPool->surfaceDeformation[pos];
     }
 
