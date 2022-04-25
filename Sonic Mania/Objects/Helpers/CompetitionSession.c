@@ -31,13 +31,13 @@ void CompetitionSession_ResetOptions(void)
     session->stageIndex               = 0;
 
     for (int32 i = 0; i < 12; ++i) {
-        session->completedStages[i]   = 0;
-        session->matchWinner[i] = 0;
+        session->completedStages[i] = 0;
+        session->matchWinner[i]     = 0;
     }
 
     for (int32 i = 0; i < 4; ++i) {
         session->finishState[i]       = FINISHFLAG_NOTFINISHED;
-        session->playerID[i]    = 0;
+        session->playerID[i]          = 0;
         session->time[i].minutes      = 0;
         session->time[i].seconds      = 0;
         session->time[i].milliseconds = 0;
@@ -108,19 +108,22 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 finishFlag)
                 int32 mins = session->time[p].minutes;
                 int32 secs = session->time[p].seconds;
                 int32 ms   = session->time[p].milliseconds;
-                int32 time = ms + 100 * (secs + 60 * mins);
-                times[p]   = time;
+                times[p]   = ms + 100 * (secs + 60 * mins);
 
                 if (session->rings[p] > winnerRings)
                     winnerRings = session->rings[p];
+
                 if (session->totalRings[p] > winnerTotalRings)
                     winnerTotalRings = session->totalRings[p];
+
                 if (session->score[p] > winnerScore)
                     winnerScore = session->score[p];
+
                 if (session->items[p] > winnerItems)
                     winnerItems = session->items[p];
-                if (time < winnerTime)
-                    winnerTime = time;
+
+                if (times[p] < winnerTime)
+                    winnerTime = times[p];
             }
 
             int32 scores[4];
@@ -129,17 +132,24 @@ void CompetitionSession_DeriveWinner(int32 playerID, int32 finishFlag)
             for (int32 p = 0; p < session->playerCount; ++p) {
                 if (session->finishState[p] == FINISHFLAG_FINISHED) {
                     int32 score = 0;
+
                     if (session->rings[p] == winnerRings)
                         score++;
+
                     if (session->totalRings[p] == winnerTotalRings)
                         ++score;
+
                     if (session->score[p] == winnerScore)
                         ++score;
+
                     if (times[p] == winnerTime)
                         ++score;
+
                     if (session->items[p] == winnerItems)
                         ++score;
+
                     LogHelpers_Print("player %d => score %d", p, score);
+
                     scores[p] = score;
                     if (score > winner)
                         winner = score;

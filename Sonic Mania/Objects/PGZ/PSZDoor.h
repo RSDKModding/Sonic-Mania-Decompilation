@@ -8,7 +8,13 @@ typedef enum {
     PSZDOOR_ORIENATION_U,
     PSZDOOR_ORIENATION_L,
     PSZDOOR_ORIENATION_R,
-}PSZDoorOrientations;
+} PSZDoorOrientations;
+
+typedef enum {
+    PSZDOOR_AUTO_NONE,
+    PSZDOOR_AUTO_LEFT,
+    PSZDOOR_AUTO_RIGHT,
+} PSZDoorAutomaticIDs;
 
 // Object Class
 struct ObjectPSZDoor {
@@ -30,7 +36,7 @@ struct EntityPSZDoor {
     bool32 shouldMove;
     Vector2 doorPos;
     Vector2 offset;
-    Vector2 startPos; //its set once and never used
+    Vector2 startPos; // its set once and never used
     Vector2 targetPos;
     Animator doorAnimator;
     Animator cogAnimator;
@@ -44,7 +50,7 @@ void PSZDoor_Update(void);
 void PSZDoor_LateUpdate(void);
 void PSZDoor_StaticUpdate(void);
 void PSZDoor_Draw(void);
-void PSZDoor_Create(void* data);
+void PSZDoor_Create(void *data);
 void PSZDoor_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void PSZDoor_EditorDraw(void);
@@ -55,4 +61,4 @@ void PSZDoor_Serialize(void);
 // Extra Entity Functions
 int32 PSZDoor_GetRemainingDistance(void);
 
-#endif //!OBJ_PSZDOOR_H
+#endif //! OBJ_PSZDOOR_H

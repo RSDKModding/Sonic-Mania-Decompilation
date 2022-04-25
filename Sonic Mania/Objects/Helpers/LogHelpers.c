@@ -39,13 +39,6 @@ void LogHelpers_Print(const char *message, ...)
     }
 }
 
-void LogHelpers_PrintString(TextInfo *text)
-{
-    char buffer[0x100];
-    RSDK.GetCString(buffer, text);
-    LogHelpers_Print(buffer);
-}
-
 #if RETRO_INCLUDE_EDITOR
 void LogHelpers_EditorDraw(void) {}
 

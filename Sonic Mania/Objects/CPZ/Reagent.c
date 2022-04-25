@@ -39,11 +39,7 @@ void Reagent_Create(void *data)
         self->updateRange.y = 0x2000000;
         self->inkEffect     = INK_ALPHA;
         self->alpha         = 0xC0;
-#if RETRO_USE_PLUS
-        self->velocity.x = RSDK.RandSeeded(-0xC000, 0xC000, &Zone->randSeed);
-#else
-        self->velocity.x = RSDK.Rand(-0xC000, 0xC000);
-#endif
+        self->velocity.x    = ZONE_RAND(-0xC000, 0xC000);
         self->type  = voidToInt(data);
         self->state = Reagent_State_CheckPoolCollisions;
 
@@ -67,11 +63,7 @@ void Reagent_Create(void *data)
                 break;
         }
 
-#if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &self->animator, true, RSDK.RandSeeded(0, 2, &Zone->randSeed));
-#else
-        RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &self->animator, true, RSDK.Rand(0, 2));
-#endif
+        RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &self->animator, true, ZONE_RAND(0, 2));
     }
 }
 

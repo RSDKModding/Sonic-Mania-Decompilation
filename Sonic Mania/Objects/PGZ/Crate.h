@@ -20,6 +20,7 @@ struct ObjectCrate {
 // Entity Class
 struct EntityCrate {
     MANIA_PLATFORM_BASE
+
     bool32 ignoreItemBox;
 };
 

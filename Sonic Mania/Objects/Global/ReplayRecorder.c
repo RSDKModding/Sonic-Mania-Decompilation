@@ -296,8 +296,8 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
     ReplayRecorder->replayID    = 0;
     ReplayRecorder->replayRowID = -1;
 
-    int32 mins       = SceneInfo->minutes;
-    int32 secs       = SceneInfo->seconds;
+    int32 mins      = SceneInfo->minutes;
+    int32 secs      = SceneInfo->seconds;
     int32 millisecs = SceneInfo->milliseconds;
     LogHelpers_Print("Bout to create ReplayDB entry...");
 
@@ -942,9 +942,10 @@ void ReplayRecorder_ForceApplyFramePtr(EntityReplayRecorder *recorder, ReplayFra
         player->position.y = framePtr->position.y & 0xFFFF0000;
         player->velocity.x = framePtr->velocity.x & 0xFFFF0000;
         player->velocity.y = framePtr->velocity.y & 0xFFFF0000;
-        player->direction  = framePtr->dir;
+        player->direction  = framePtr->direction;
         player->rotation   = framePtr->rotation;
-        ReplayRecorder_SetGimmickState(recorder, (framePtr->flags & REPLAY_FLAG_GIMMICK) != 0);
+
+        ReplayRecorder_SetGimmickState(recorder, (framePtr->changedValues & REPLAY_CHANGED_GIMMICK) != 0);
         RSDK.SetSpriteAnimation(player->aniFrames, framePtr->anim, &player->animator, true, framePtr->frame);
         player->animator.speed = 0;
     }
@@ -954,27 +955,27 @@ void ReplayRecorder_ApplyFramePtr(EntityReplayRecorder *recorder, ReplayFrame *f
 {
     EntityPlayer *player = recorder->player;
     if (player) {
-        if (framePtr->flags & REPLAY_FLAG_POS) {
+        if (framePtr->changedValues & REPLAY_CHANGED_POS) {
             player->position.x = framePtr->position.x & 0xFFFF0000;
             player->position.y = framePtr->position.y & 0xFFFF0000;
         }
 
-        if (framePtr->flags & REPLAY_FLAG_VEL) {
+        if (framePtr->changedValues & REPLAY_CHANGED_VEL) {
             player->velocity.x = framePtr->velocity.y & 0xFFFF0000;
             player->velocity.y = framePtr->velocity.y & 0xFFFF0000;
         }
 
-        if (framePtr->flags & REPLAY_FLAG_ROT)
+        if (framePtr->changedValues & REPLAY_CHANGED_ROT)
             player->rotation = framePtr->rotation;
 
-        if (framePtr->flags & REPLAY_FLAG_DIR)
-            player->direction = framePtr->dir;
+        if (framePtr->changedValues & REPLAY_CHANGED_DIR)
+            player->direction = framePtr->direction;
 
-        ReplayRecorder_SetGimmickState(recorder, (framePtr->flags & REPLAY_FLAG_GIMMICK) != 0);
+        ReplayRecorder_SetGimmickState(recorder, (framePtr->changedValues & REPLAY_CHANGED_GIMMICK) != 0);
 
-        if (framePtr->flags & REPLAY_FLAG_ANIM)
+        if (framePtr->changedValues & REPLAY_CHANGED_ANIM)
             RSDK.SetSpriteAnimation(player->aniFrames, framePtr->anim, &player->animator, true, framePtr->frame);
-        else if (framePtr->flags & REPLAY_FLAG_FRAME)
+        else if (framePtr->changedValues & REPLAY_CHANGED_FRAME)
             RSDK.SetSpriteAnimation(player->aniFrames, player->animator.animationID, &player->animator, true, framePtr->frame);
 
         player->animator.speed = 0;
@@ -1050,8 +1051,8 @@ void ReplayRecorder_PlayBackInput(void)
         if (framePtr->info) {
             bool32 forceChange = framePtr->info == REPLAY_INFO_STATECHANGE || framePtr->info == REPLAY_INFO_PASSEDGATE;
 
-            setPos          = forceChange || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->flags & REPLAY_FLAG_POS));
-            bool32 setInput = forceChange || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->flags & REPLAY_FLAG_INPUT));
+            setPos          = forceChange || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->changedValues & REPLAY_CHANGED_POS));
+            bool32 setInput = forceChange || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->changedValues & REPLAY_CHANGED_INPUT));
             if (setInput) {
                 int32 inputs                                     = framePtr->inputs;
                 ControllerInfo[self->controllerID].keyUp.down    = (inputs & 0x01) != 0;
@@ -1237,7 +1238,7 @@ void ReplayRecorder_Late_Playback(void)
 
     if (!self->isGhostPlayback && framePtr->info) {
         if ((framePtr->info == REPLAY_INFO_STATECHANGE || framePtr->info == REPLAY_INFO_PASSEDGATE)
-            || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->flags & REPLAY_FLAG_POS))) {
+            || (framePtr->info == REPLAY_INFO_USEFLAGS && (framePtr->changedValues & REPLAY_CHANGED_POS))) {
             int32 distX = abs(player->position.x - framePtr->position.x);
             int32 distY = abs(player->position.y - framePtr->position.y);
             if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
@@ -1309,19 +1310,19 @@ void ReplayRecorder_Late_RecordFrames(void)
         // its flags for what values changed
 
         if (self->replayFrame == 0 || self->changeFlags > 0 || self->prevPlayerState != self->curPlayerState) {
-            frame.info       = self->changeFlags == 2 ? REPLAY_INFO_PASSEDGATE : REPLAY_INFO_STATECHANGE;
-            frame.flags      = REPLAY_FLAG_NONE;
-            frame.inputs     = inputState;
-            frame.dir        = player->direction;
-            frame.rotation   = player->rotation;
-            frame.position.x = player->position.x;
-            frame.position.y = player->position.y;
-            frame.velocity.x = player->velocity.x;
-            frame.velocity.y = player->velocity.y;
-            frame.anim       = self->animID;
-            frame.frame      = self->frameID;
+            frame.info          = self->changeFlags == 2 ? REPLAY_INFO_PASSEDGATE : REPLAY_INFO_STATECHANGE;
+            frame.changedValues = REPLAY_CHANGED_NONE;
+            frame.inputs        = inputState;
+            frame.direction     = player->direction;
+            frame.rotation      = player->rotation;
+            frame.position.x    = player->position.x;
+            frame.position.y    = player->position.y;
+            frame.velocity.x    = player->velocity.x;
+            frame.velocity.y    = player->velocity.y;
+            frame.anim          = self->animID;
+            frame.frame         = self->frameID;
             if (isGimmickState)
-                frame.flags = REPLAY_FLAG_GIMMICK;
+                frame.changedValues = REPLAY_CHANGED_GIMMICK;
 
             self->changeFlags = 0;
         }
@@ -1329,22 +1330,22 @@ void ReplayRecorder_Late_RecordFrames(void)
             int32 changedVals = 0;
             if (inputState != self->storedInputs) {
                 frame.inputs = inputState;
-                changedVals  = REPLAY_FLAG_INPUT;
+                changedVals  = REPLAY_CHANGED_INPUT;
             }
 
             if (player->direction != self->storedDirection) {
-                frame.dir = player->direction;
-                changedVals |= REPLAY_FLAG_DIR;
+                frame.direction = player->direction;
+                changedVals |= REPLAY_CHANGED_DIR;
             }
 
             if (player->position.x != self->storedPos.x || player->position.y != self->storedPos.y) {
-                changedVals |= REPLAY_FLAG_POS;
+                changedVals |= REPLAY_CHANGED_POS;
                 frame.position.x = player->position.x;
                 frame.position.y = player->position.y;
             }
 
             if (player->velocity.x != self->storedVel.x || player->velocity.y != self->storedVel.y) {
-                changedVals |= REPLAY_FLAG_VEL;
+                changedVals |= REPLAY_CHANGED_VEL;
                 frame.velocity.x = player->velocity.x;
                 frame.velocity.y = player->velocity.y;
             }
@@ -1352,27 +1353,27 @@ void ReplayRecorder_Late_RecordFrames(void)
             // what ??? ??? ???
             // this is code from mania
             if (player->groundVel != self->storedRotation) {
-                changedVals |= REPLAY_FLAG_ROT;
+                changedVals |= REPLAY_CHANGED_ROT;
                 frame.rotation = player->rotation;
             }
 
             if (animator->animationID != self->storedAnim) {
-                changedVals |= (REPLAY_FLAG_ANIM | REPLAY_FLAG_FRAME);
+                changedVals |= (REPLAY_CHANGED_ANIM | REPLAY_CHANGED_FRAME);
                 frame.anim  = self->animID;
                 frame.frame = self->frameID;
             }
 
             if (animator->frameID != self->storedFrame) {
-                changedVals |= REPLAY_FLAG_FRAME;
+                changedVals |= REPLAY_CHANGED_FRAME;
                 frame.frame = self->frameID;
             }
 
             if (isGimmickState)
-                changedVals |= REPLAY_FLAG_GIMMICK;
+                changedVals |= REPLAY_CHANGED_GIMMICK;
 
             if (changedVals) {
-                frame.info  = REPLAY_INFO_USEFLAGS;
-                frame.flags = changedVals;
+                frame.info          = REPLAY_INFO_USEFLAGS;
+                frame.changedValues = changedVals;
             }
             else {
                 frame.info = REPLAY_INFO_NONE;

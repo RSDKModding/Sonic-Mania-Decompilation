@@ -12,6 +12,7 @@ ObjectPaperRoller *PaperRoller;
 void PaperRoller_Update(void)
 {
     RSDK_THIS(PaperRoller);
+
     RSDK.ProcessAnimation(&self->rollerAnimator);
 
     int32 startX  = self->position.x - (RSDK.Cos256(self->angle) << 7) * self->length;
@@ -31,7 +32,7 @@ void PaperRoller_Update(void)
     self->position.y = endY;
     PaperRoller_HandleRollerCollisions();
 
-    // print 
+    // print
     self->position.x = centerX;
     self->position.y = centerY;
     PaperRoller_HandlePrintCollisions();
@@ -43,6 +44,7 @@ void PaperRoller_Update(void)
 
     if (self->divotAngle < 0)
         self->divotAngle += 0x100;
+
     self->divotAngle &= 0xFF;
 }
 
@@ -69,15 +71,8 @@ void PaperRoller_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
-    if ((RSDK.Cos256(self->angle) << 8) * self->length >= 0)
-        self->updateRange.x += (RSDK.Cos256(self->angle) << 8) * self->length;
-    else
-        self->updateRange.x += -((RSDK.Cos256(self->angle) << 8) * self->length);
-
-    if ((RSDK.Sin256(self->angle) << 8) * self->length >= 0)
-        self->updateRange.y += (RSDK.Sin256(self->angle) << 8) * self->length;
-    else
-        self->updateRange.y += -((RSDK.Sin256(self->angle) << 8) * self->length);
+    self->updateRange.x += abs((RSDK.Cos256(self->angle) << 8) * self->length);
+    self->updateRange.y += abs((RSDK.Sin256(self->angle) << 8) * self->length);
 
     if (self->length > 256)
         self->length = 256;
@@ -86,46 +81,48 @@ void PaperRoller_Create(void *data)
     self->lastJumpTimer[1] = 0x7FFF;
     self->lastJumpTimer[2] = 0x7FFF;
     self->lastJumpTimer[3] = 0x7FFF;
-    self->hitbox.left      = -24;
-    self->hitbox.top       = -24;
-    self->hitbox.right     = 24;
-    self->hitbox.bottom    = 24;
+
+    self->hitbox.left   = -24;
+    self->hitbox.top    = -24;
+    self->hitbox.right  = 24;
+    self->hitbox.bottom = 24;
+
     RSDK.SetSpriteAnimation(PaperRoller->aniFrames, 0, &self->rollerAnimator, true, 0);
     RSDK.SetSpriteAnimation(PaperRoller->aniFrames, 1, &self->divotAnimator, true, 0);
 }
 
 void PaperRoller_StageLoad(void)
 {
-    uint32 colors[]       = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
+
     PaperRoller->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PaperRoller.bin", SCOPE_STAGE);
+
+    color colors[] = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
     for (int32 i = 0; i < 0x40; ++i) PaperRoller->colors[i] = colors[i & 3];
+
     PaperRoller->sfxPaper = RSDK.GetSfx("PSZ/Paper.wav");
 }
 
 void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 endY, int32 offsetX, int32 offsetY, int32 deformX, int32 deformY,
-                                  int32 len, uint32 color)
+                                  int32 len, uint32 *color)
 {
     RSDK_THIS(PaperRoller);
 
-    int32 count = (self->length / 4) + (self->length % 4 > 0);
+    int32 count = (self->length / 4) + ((self->length % 4) > 0);
     if (count) {
         int32 negAngle = -(uint8)(self->angle);
 
-        int32 currentX  = startX;
-        int32 currentY  = startY;
-        int32 moveX = (endX - startX) / count;
-        int32 moveY = (endY - startY) / count;
+        int32 currentX = startX;
+        int32 currentY = startY;
+        int32 moveX    = (endX - startX) / count;
+        int32 moveY    = (endY - startY) / count;
 
         for (int32 i = 0; i < count; ++i) {
-            int32 colorID = 0;
-            if (self->direction)
-                colorID = len % count;
-            else
-                colorID = count - len % count - 1;
-            uint32 lineClr = PaperRoller->colors[(Zone->timer + colorID) % count];
+            int32 colorID = self->direction ? (len % count) : (count - len % count - 1);
+
+            uint32 lineColor = color ? *color : PaperRoller->colors[(Zone->timer + colorID) % count];
 
             if (!deformY) {
-                RSDK.DrawLine(offsetX + currentX, offsetY + currentY, offsetX + (currentX + moveX), offsetY + (currentY + moveY), color ? color : lineClr, 127,
+                RSDK.DrawLine(offsetX + currentX, offsetY + currentY, offsetX + (currentX + moveX), offsetY + (currentY + moveY), lineColor, 0x7F,
                               INK_NONE, false);
             }
             else {
@@ -138,18 +135,13 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 int32 lenY    = 0;
 
                 if (angValX >= deformX) {
-                    int32 length = (self->length << 15) - deformX;
-                    if (length < 0)
-                        length = deformX - (self->length << 15);
+                    int32 length = abs((self->length << 15) - deformX);
+
                     if (length >> 16 > 0)
                         lenY = (deformY >> 8) * ((length + deformX - angValX) >> 8) / (length >> 16);
                 }
                 else {
-                    int32 length = 0;
-                    if ((self->length << 15) + deformX >= 0)
-                        length = (self->length << 15) + deformX;
-                    else
-                        length = -(deformX + (self->length << 15));
+                    int32 length = length = abs(deformX + (self->length << 15));
 
                     if (length >> 16 > 0)
                         lenY = (deformY >> 8) * (((self->length << 15) + angValX) >> 8) / (length >> 16);
@@ -169,19 +161,13 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
 
                 lenY = 0;
                 if (angValX >= deformX) {
-                    int32 length = (self->length << 15) - deformX;
-                    if (length < 0)
-                        length = deformX - (self->length << 15);
+                    int32 length = abs((self->length << 15) - deformX);
 
                     if (length >> 16 > 0)
                         lenY = (deformY >> 8) * ((length + deformX - angValX) >> 8) / (length >> 16);
                 }
                 else {
-                    int32 length = 0;
-                    if ((self->length << 15) + deformX >= 0)
-                        length = (self->length << 15) + deformX;
-                    else
-                        length = -(deformX + (self->length << 15));
+                    int32 length = abs((self->length << 15) + deformX);
 
                     if (length >> 16 > 0)
                         lenY = (deformY >> 8) * (((self->length << 15) + angValX) >> 8) / (length >> 16);
@@ -191,9 +177,10 @@ void PaperRoller_DrawDeformedLine(int32 startX, int32 startY, int32 endX, int32 
                 distY          = (lenY + angValY) >> 8;
                 int32 offsetX2 = self->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
                 int32 offsetY2 = self->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
-                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, color ? color : lineClr, 0x7F,
-                              INK_NONE, false);
+
+                RSDK.DrawLine(offsetX + offsetX1, offsetY + offsetY1, offsetX + offsetX2, offsetY + offsetY2, lineColor, 0x7F, INK_NONE, false);
             }
+
             ++len;
 
             currentX += moveX;
@@ -222,8 +209,8 @@ void PaperRoller_DrawPaperLines(void)
     int32 endX2   = x1 + 0x1800 * RSDK.Cos256(self->angle + 64);
     int32 endY2   = y1 + 0x1800 * RSDK.Sin256(self->angle + 64);
 
-    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, 0, 0, self->deformPosTop.x, self->deformPosTop.y, 0, 0x000000);
-    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, 0, 0, self->deformPosBottom.x, self->deformPosBottom.y, len, 0x000000);
+    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, 0, 0, self->deformPosTop.x, self->deformPosTop.y, 0, NULL);
+    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, 0, 0, self->deformPosBottom.x, self->deformPosBottom.y, len, NULL);
 
     int32 angle = self->angle + 32;
     if (angle < 0)
@@ -248,20 +235,22 @@ void PaperRoller_DrawPaperLines(void)
             offsetX2 = -0x10000;
             break;
     }
-    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y, 0, 0x000000);
-    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y, len, 0x000000);
+    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y, 0, NULL);
+    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y, len, NULL);
 
+    color color = 0xD0B898;
     offsetX1 <<= 1;
     offsetY1 <<= 1;
     offsetX2 <<= 1;
     offsetY2 <<= 1;
-    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y, 0, 0xD0B898);
-    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y, len, 0xD0B898);
+    PaperRoller_DrawDeformedLine(startX1, startY1, endX1, endY1, offsetX1, offsetY1, self->deformPosTop.x, self->deformPosTop.y, 0, &color);
+    PaperRoller_DrawDeformedLine(startX2, startY2, endX2, endY2, offsetX2, offsetY2, self->deformPosBottom.x, self->deformPosBottom.y, len, &color);
 }
 
 void PaperRoller_DrawRollers(void)
 {
     RSDK_THIS(PaperRoller);
+
     Vector2 rollerPos;
     Vector2 divotPos;
 
@@ -310,27 +299,23 @@ void PaperRoller_HandleRollerCollisions(void)
                 RSDK.PlaySfx(Player->sfxRelease, false, 255);
                 int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
-                int32 ang = 0;
-                if (self->direction == FLIP_NONE)
-                    ang = angle + 64;
-                else
-                    ang = angle - 64;
+                int32 ang = angle + (self->direction == FLIP_NONE ? 64 : -64);
 
-                player->position.x = self->position.x;
-                player->position.y = self->position.y;
-                player->position.x += 0x2800 * RSDK.Cos256(angle);
-                player->position.y += 0x2800 * RSDK.Sin256(angle);
+                player->position.x = self->position.x + 0x2800 * RSDK.Cos256(angle);
+                player->position.y = self->position.y + 0x2800 * RSDK.Sin256(angle);
                 player->velocity.x = RSDK.Cos256(ang) << 11;
                 player->velocity.y = RSDK.Sin256(ang) << 11;
                 player->state      = Player_State_Air;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
-                player->nextAirState        = StateMachine_None;
-                player->nextGroundState     = StateMachine_None;
-                player->onGround            = false;
-                player->groundVel           = 0;
-                player->tileCollisions      = true;
-                player->applyJumpCap        = false;
-                player->jumpAbilityState    = 0;
+
+                player->nextAirState     = StateMachine_None;
+                player->nextGroundState  = StateMachine_None;
+                player->onGround         = false;
+                player->groundVel        = 0;
+                player->tileCollisions   = true;
+                player->applyJumpCap     = false;
+                player->jumpAbilityState = 0;
+
                 self->playerTimer[playerID] = 10;
             }
         }
@@ -343,6 +328,7 @@ void PaperRoller_HandleRollerCollisions(void)
 void PaperRoller_HandlePrintCollisions(void)
 {
     RSDK_THIS(PaperRoller);
+
     bool32 hasDeformedTop    = false;
     bool32 hasDeformedBottom = false;
 
@@ -355,18 +341,20 @@ void PaperRoller_HandlePrintCollisions(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
+
         if (player->jumpPress)
             self->lastJumpTimer[playerID] = 0;
         else
             ++self->lastJumpTimer[playerID];
 
-        int32 distX = (player->position.x - self->position.x) >> 8;
-        int32 distY = (player->position.y - self->position.y) >> 8;
-        int32 playerX  = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle) + self->position.x;
-        int32 playerY  = distY * RSDK.Cos256(self->angle) - distX * RSDK.Sin256(self->angle) + self->position.y;
+        int32 distX   = (player->position.x - self->position.x) >> 8;
+        int32 distY   = (player->position.y - self->position.y) >> 8;
+        int32 playerX = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle) + self->position.x;
+        int32 playerY = distY * RSDK.Cos256(self->angle) - distX * RSDK.Sin256(self->angle) + self->position.y;
 
         int32 deformX = playerX - self->position.x;
         int32 defY    = playerY - self->position.y;
+
         if (abs(deformX) <= self->length << 15 && abs(defY) <= 0x280000) {
             int32 deformY = 0;
             if (defY < 0) {
@@ -388,19 +376,19 @@ void PaperRoller_HandlePrintCollisions(void)
                     Zone_RotateOnPivot(&playerVel, &pivotPos, self->angle);
                     int32 angle = RSDK.ATan2(playerVel.x, -playerVel.y);
 
-                    int32 force = 6;
-                    if (player->jumpHold)
-                        force = 12;
+                    int32 force = player->jumpHold ? 12 : 6;
 
                     playerVel.x = force * (RSDK.Cos256(angle) << 8);
                     playerVel.y = force * (RSDK.Sin256(angle) << 8);
                     if (abs(playerVel.x) < 0x10000)
                         playerVel.x += ((2 * (self->direction == FLIP_NONE) - 1) << 16);
+
                     Zone_RotateOnPivot(&playerVel, &pivotPos, negAngle);
                     player->velocity = playerVel;
 
                     player->state = Player_State_Air;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
                     player->onGround         = false;
@@ -409,6 +397,7 @@ void PaperRoller_HandlePrintCollisions(void)
                     player->applyJumpCap     = false;
                     player->jumpAbilityState = 0;
                     RSDK.PlaySfx(PaperRoller->sfxPaper, false, 0xFF);
+
                     deformY = 0x100000;
                 }
 
@@ -443,19 +432,19 @@ void PaperRoller_HandlePrintCollisions(void)
                     Zone_RotateOnPivot(&playerVel, &pivotPos, self->angle);
 
                     int32 angle = RSDK.ATan2(playerVel.x, -playerVel.y);
-                    int32 force = 6;
-                    if (player->jumpHold)
-                        force = 12;
+                    int32 force = player->jumpHold ? 12 : 6;
 
                     playerVel.x = force * (RSDK.Cos256(angle) << 8);
                     playerVel.y = force * (RSDK.Sin256(angle) << 8);
                     if ((self->direction == FLIP_NONE && playerVel.x > -0x10000) || (self->direction == FLIP_X && playerVel.x < 0x10000))
                         playerVel.x += ((2 * (self->direction != FLIP_NONE) - 1) << 18);
+
                     Zone_RotateOnPivot(&playerVel, &pivotPos, negAngle);
                     player->velocity = playerVel;
 
                     player->state = Player_State_Air;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
                     player->onGround         = false;
@@ -464,6 +453,7 @@ void PaperRoller_HandlePrintCollisions(void)
                     player->applyJumpCap     = false;
                     player->jumpAbilityState = 0;
                     RSDK.PlaySfx(PaperRoller->sfxPaper, false, 0xFF);
+
                     deformY = -0x100000;
                 }
 
@@ -485,9 +475,9 @@ void PaperRoller_HandlePrintCollisions(void)
 void PaperRoller_EditorDraw(void)
 {
     RSDK_THIS(PaperRoller);
+
     self->drawOrder     = Zone->objectDrawLow;
-    self->startPos.x    = self->position.x;
-    self->startPos.y    = self->position.y;
+    self->startPos      = self->position;
     self->visible       = true;
     self->drawFX        = FX_NONE;
     self->updateRange.x = 0x800000;
@@ -495,15 +485,8 @@ void PaperRoller_EditorDraw(void)
 
     int32 len = self->length;
 
-    if ((RSDK.Cos256(self->angle) << 8) * self->length >= 0)
-        self->updateRange.x += (RSDK.Cos256(self->angle) << 8) * self->length;
-    else
-        self->updateRange.x += -((RSDK.Cos256(self->angle) << 8) * self->length);
-
-    if ((RSDK.Sin256(self->angle) << 8) * self->length >= 0)
-        self->updateRange.y += (RSDK.Sin256(self->angle) << 8) * self->length;
-    else
-        self->updateRange.y += -((RSDK.Sin256(self->angle) << 8) * self->length);
+    self->updateRange.x += abs((RSDK.Cos256(self->angle) << 8) * self->length);
+    self->updateRange.y += abs((RSDK.Sin256(self->angle) << 8) * self->length);
 
     if (self->length > 256)
         self->length = 256;
@@ -522,8 +505,8 @@ void PaperRoller_EditorLoad(void)
     PaperRoller_StageLoad();
 
     RSDK_ACTIVE_VAR(PaperRoller, direction);
-    RSDK_ENUM_VAR("Left", FLIP_NONE);
-    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

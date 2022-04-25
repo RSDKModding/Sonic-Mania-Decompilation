@@ -118,7 +118,7 @@ inline void SetScreenSize(byte screenID, uint16 width, uint16 height)
     if (screenID < SCREEN_MAX) {
         int screenHeight     = height & 0xFFF0;
         ScreenInfo *screen   = &screens[screenID];
-        screen->pitch        = width; //(width + 15) & 0xFFFFFFF0;
+        screen->pitch        = (width + 15) & 0xFFFFFFF0;
         screen->center.x     = width >> 1;
         screen->size.x       = width;
         screen->size.y       = screenHeight;

@@ -96,7 +96,7 @@ bool32 InitRenderDevice()
         SetScreenSize(s, pixWidth, SCREEN_YSIZE);
 
         // screens[s].frameBuffer = new ushort[screens[s].size.x * screens[s].size.y];
-        memset(screens[s].frameBuffer, 0, (screens[s].size.x * screens[s].size.y) * sizeof(uint16));
+        memset(screens[s].frameBuffer, 0, (screens[s].pitch * screens[s].size.y) * sizeof(uint16));
     }
 
     int size  = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
@@ -255,10 +255,16 @@ void FlipScreen()
             SDL_RenderClear(engine.renderer);
 
             int pitch      = 0;
-            ushort *pixels = NULL;
+            uint16 *pixels = NULL;
             for (int s = 0; s < engine.screenCount; ++s) {
                 SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
-                memcpy(pixels, screens[s].frameBuffer, pitch * SCREEN_YSIZE);
+
+                uint16 *frameBufferPtr = screens[s].frameBuffer;
+                for (int y = 0; y < SCREEN_YSIZE; ++y) {
+                    memcpy(pixels, frameBufferPtr, screens[s].size.x * sizeof(uint16));
+                    frameBufferPtr += screens[s].pitch;
+                    pixels += pitch / sizeof(uint16);
+                }
                 SDL_UnlockTexture(engine.screenBuffer[s]);
 
                 SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, &destScreenPos[s]);

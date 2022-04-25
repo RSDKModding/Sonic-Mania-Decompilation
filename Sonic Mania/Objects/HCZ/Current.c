@@ -122,11 +122,7 @@ void Current_Create(void *data)
                 self->drawFX  = FX_SCALE | FX_FLIP;
                 self->scale.x = 0x400;
                 self->scale.y = 0x100;
-#if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.RandSeeded(0, 4, &Zone->randSeed));
-#else
-                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 4));
-#endif
+                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, ZONE_RAND(0, 4));
             }
             else {
                 RSDK.SetSpriteAnimation(Water->aniFrames, 5, &self->animator, true, 0);
@@ -247,19 +243,15 @@ Vector2 Current_GetBubbleSpawnPosHorizontal(uint8 right)
     if (screenY < minY)
         minY = screenY;
 
-    int32 max = (minY - maxY) >> 20;
-    if (!max)
-        max = 1;
+    int32 randMax = (minY - maxY) >> 20;
+    if (!randMax)
+        randMax = 1;
 
     bubblePos.x = x;
-    if (max <= 0)
+    if (randMax <= 0)
         bubblePos.y = maxY;
     else
-#if RETRO_USE_PLUS
-        bubblePos.y = maxY + (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20);
-#else
-        bubblePos.y = maxY + (RSDK.Rand(0, max) << 20);
-#endif
+        bubblePos.y = maxY + (ZONE_RAND(0, randMax) << 20);
     return bubblePos;
 }
 

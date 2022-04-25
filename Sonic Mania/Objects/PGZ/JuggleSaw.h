@@ -3,15 +3,15 @@
 
 #include "SonicMania.h"
 
-typedef enum { JSAW_NO_SAW = 0, JSAW_HAS_SAW = 1, JSAW_AWAITING_SAW = 2 } JuggleSawMode;
+typedef enum { JUGGLESAW_NO_SAW = 0, JUGGLESAW_HAS_SAW = 1, JUGGLESAW_AWAITING_SAW = 2 } JuggleSawMode;
 
-#define JuggleSaw_MaxFriends (8)
+#define JUGGLESAW_MAX_FRIENDS (8)
 
 // Object Class
 struct ObjectJuggleSaw {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
-    Hitbox hitboxFriend;
+    Hitbox hitboxFriendRange;
     Hitbox hitboxSaw;
     Hitbox hitboxGrabV;
     Hitbox hitboxGrabH;
@@ -29,11 +29,11 @@ struct EntityJuggleSaw {
     uint32 sawSpeed;
     bool32 hasSaw;
     uint16 setID;
-    Entity *friends[JuggleSaw_MaxFriends];
+    EntityJuggleSaw *friends[JUGGLESAW_MAX_FRIENDS];
     uint8 friendCount;
     uint8 sawTimer;
-    Vector2 spawnPos;
-    uint8 spawnDir;
+    Vector2 startPos;
+    uint8 startDir;
     Animator animator;
 };
 
@@ -45,7 +45,7 @@ void JuggleSaw_Update(void);
 void JuggleSaw_LateUpdate(void);
 void JuggleSaw_StaticUpdate(void);
 void JuggleSaw_Draw(void);
-void JuggleSaw_Create(void* data);
+void JuggleSaw_Create(void *data);
 void JuggleSaw_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void JuggleSaw_EditorDraw(void);
@@ -67,4 +67,4 @@ void JuggleSaw_StateCrab_ThrowSaw(void);
 void JuggleSaw_StateSaw_Handle(void);
 void JuggleSaw_StateSaw_Debris(void);
 
-#endif //!OBJ_JUGGLESAW_H
+#endif //! OBJ_JUGGLESAW_H

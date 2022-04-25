@@ -15,7 +15,7 @@ void Soundboard_LateUpdate(void) {}
 
 void Soundboard_StaticUpdate(void)
 {
-    for (int32 s = 0; s < maxVal(Soundboard->sfxCount, Soundboard_SFXLimit); ++s) {
+    for (int32 s = 0; s < maxVal(Soundboard->sfxCount, SOUNDBOARD_SFX_COUNT); ++s) {
         bool32 shouldStopSfx = true;
 
         if (Soundboard->sfxCheckCallback[s] && SceneInfo->state == ENGINESTATE_REGULAR) {
@@ -72,7 +72,7 @@ void Soundboard_StageLoad(void)
     Soundboard->active   = ACTIVE_ALWAYS;
     Soundboard->sfxCount = 0;
 
-    for (int32 i = 0; i < Soundboard_SFXLimit; ++i) {
+    for (int32 i = 0; i < SOUNDBOARD_SFX_COUNT; ++i) {
         Soundboard->sfxList[i]            = 0;
         Soundboard->sfxLoopPoint[i]       = 0;
         Soundboard->sfxCheckCallback[i]   = NULL;
@@ -87,7 +87,7 @@ uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCa
 {
     if (!Soundboard)
         return -1;
-    if (Soundboard->sfxCount >= Soundboard_SFXLimit)
+    if (Soundboard->sfxCount >= SOUNDBOARD_SFX_COUNT)
         return -1;
 
     int32 sfxID = Soundboard->sfxCount;

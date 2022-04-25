@@ -7,9 +7,9 @@
 struct ObjectSP500MkII {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitboxButton;
-    Hitbox hitboxBody;
     Hitbox hitboxSolid;
+    Hitbox hitboxButton;
+    Hitbox hitboxPrinter;
 };
 
 // Entity Class
@@ -27,9 +27,9 @@ struct EntitySP500MkII {
     bool32 buttonDown;
     bool32 isActive;
     uint8 activePlayers;
-    int32 printDistance;
-    Vector2 pos2;
-    Vector2 pos;
+    int32 buttonPos;
+    Vector2 printerPosition;
+    Vector2 startPos;
     Vector2 printPos;
     Vector2 printMoveOffset;
     int32 timer;
@@ -58,9 +58,10 @@ void SP500MkII_DrawPrinter(void);
 void SP500MkII_DrawRails(void);
 
 void SP500MkII_CheckPlayerCollisions(void);
+
 void SP500MkII_State_Setup(void);
-void SP500MkII_State_CheckActivated(void);
-void SP500MkII_State_PrintX(void);
-void SP500MkII_State_PrintY(void);
+void SP500MkII_State_AwaitActivation(void);
+void SP500MkII_State_PrintRow(void);
+void SP500MkII_State_NextPrintRow(void);
 
 #endif //! OBJ_SP500MKII_H

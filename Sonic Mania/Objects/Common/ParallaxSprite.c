@@ -125,17 +125,12 @@ void ParallaxSprite_Create(void *data)
         case PARALLAXSPRITE_ATTR_SHIFT:
             self->parallaxFactor.x >>= 8;
             self->parallaxFactor.y >>= 8;
-            self->sprX = RSDK.GetFrame(ParallaxSprite->aniFrames, self->aniID, 1)->sprX;
-#if RETRO_USE_PLUS
-            self->timerSpeed = RSDK.RandSeeded(0, 2, &Zone->randSeed);
-            self->xSpeed     = RSDK.RandSeeded(0, 128, &Zone->randSeed);
-#else
-            self->timerSpeed = RSDK.Rand(0, 2);
-            self->xSpeed     = RSDK.Rand(0, 128);
-#endif
-            self->inkEffect = INK_MASKED;
-            self->visible   = true;
-            self->state     = NULL;
+            self->sprX       = RSDK.GetFrame(ParallaxSprite->aniFrames, self->aniID, 1)->sprX;
+            self->timerSpeed = ZONE_RAND(0, 2);
+            self->xSpeed     = ZONE_RAND(0, 128);
+            self->inkEffect  = INK_MASKED;
+            self->visible    = true;
+            self->state      = NULL;
             break;
     }
 

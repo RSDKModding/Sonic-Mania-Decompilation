@@ -240,13 +240,9 @@ void LRZConveyor_DrawDeformedLine(int32 startY, int32 startX, int32 endX, int32 
         currentX += (endX - startY) / count;
         currentY += (endY - startX) / count;
 
-        uint32 *lineColor = NULL;
-        if (color) 
-            lineColor = color;
-        else 
-            lineColor = &LRZConveyor->lineColors[(colorID % count) & 0x3F];
+        uint32 lineColor = color ? *color : LRZConveyor->lineColors[(colorID % count) & 0x3F];
+        RSDK.DrawLine(currentX + offsetX, currentY + offsetY, currentX + offsetX, currentY + offsetY, lineColor, 0x7F, INK_NONE, false);
 
-        RSDK.DrawLine(currentX + offsetX, currentY + offsetY, currentX + offsetX, currentY + offsetY, *lineColor, 0x7F, INK_NONE, false);
         ++len;
     }
 }

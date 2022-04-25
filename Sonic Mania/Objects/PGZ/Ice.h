@@ -39,7 +39,7 @@ typedef enum {
     ICEANI_RAYLEFT,
     ICEANI_RAYRIGHT,
     ICEANI_RAYSHAKE
-}IceAni;
+} IceAni;
 #else
 typedef enum {
     ICEANI_ICEBLOCK,
@@ -120,12 +120,12 @@ struct EntityIce {
     uint8 animationID;
     Animator blockAnimator;
     Animator contentsAnimator;
-    Animator contentsAltAnimator;
+    Animator altContentsAnimator;
     Animator glintAnimator;
     EntityPlayer *playerPtr;
     Vector2 playerMoveOffset;
     Vector2 contentsOffset;
-    int32 destroyDelay;
+    int32 glintTimer;
     Hitbox hitboxBlock;
     Hitbox hitboxFallCheck;
     Hitbox hitboxPlayerBlockCheck;
@@ -154,10 +154,10 @@ void Ice_FreezePlayer(EntityPlayer *player);
 bool32 Ice_CheckPlayerBlockSmashH(void);
 bool32 Ice_CheckPlayerBlockSmashV(void);
 void Ice_State_FrozenPlayer(void);
-void Ice_ShatterGenerator(int32 count, int32 xr, int32 yr, int32 velX, int32 velY, int32 canBreak);
+void Ice_ShatterGenerator(int32 count, int32 sizeX, int32 sizeY, int32 velX, int32 velY, int32 canBreak);
 void Ice_FullShatter(EntityPlayer *player, int32 velX, int32 velY);
 void Ice_BreakPlayerBlock(EntityPlayer *player);
-Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);
+EntityItemBox *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);
 void Ice_TimeOverCB(void);
 
 void Ice_UpdateBlockGravity(void);

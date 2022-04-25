@@ -142,7 +142,7 @@ void Competition_ResetOptions(void)
     session->matchCount               = 0;
     session->stageIndex               = 0;
 
-    for (int32 i = 0; i < Competition_StageCount; ++i) {
+    for (int32 i = 0; i < COMPETITION_STAGE_COUNT; ++i) {
         session->completedStages[i] = false;
         session->matchWinner[i]     = 0;
     }

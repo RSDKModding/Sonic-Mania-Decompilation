@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-#define Dragonfly_SpineCount (6)
+#define DRAGONFLY_SPINE_COUNT (6)
 
 // Object Class
 struct ObjectDragonfly {
@@ -20,8 +20,8 @@ struct EntityDragonfly {
     uint8 dir;
     uint8 dist;
     uint8 speed;
-    Vector2 positions[Dragonfly_SpineCount];
-    uint8 directions[Dragonfly_SpineCount];
+    Vector2 positions[DRAGONFLY_SPINE_COUNT];
+    uint8 directions[DRAGONFLY_SPINE_COUNT];
     Vector2 startPos;
     Animator animator;
     Animator wingAnimator;
@@ -36,7 +36,7 @@ void Dragonfly_Update(void);
 void Dragonfly_LateUpdate(void);
 void Dragonfly_StaticUpdate(void);
 void Dragonfly_Draw(void);
-void Dragonfly_Create(void* data);
+void Dragonfly_Create(void *data);
 void Dragonfly_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Dragonfly_EditorDraw(void);
@@ -54,4 +54,4 @@ void Dragonfly_State_Setup(void);
 void Dragonfly_State_Move(void);
 void Dragonfly_State_Debris(void);
 
-#endif //!OBJ_DRAGONFLY_H
+#endif //! OBJ_DRAGONFLY_H

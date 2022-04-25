@@ -5,12 +5,12 @@
 
 // Object Class
 struct ObjectGameProgress {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityGameProgress {
-    uint8 padding[0x56]; //aka sizeof(Entity) for pre-plus
+    uint8 padding[0x56]; // aka sizeof(Entity) for pre-plus
     uint8 medals[32];
     bool32 allGoldMedals;
     bool32 allSilverMedals;
@@ -42,7 +42,7 @@ void GameProgress_EditorLoad(void);
 #endif
 void GameProgress_Serialize(void);
 
-//Extra Entity Events
+// Extra Entity Events
 int32 GameProgress_GetNotifStringID(int32 type);
 void GameProgress_ShuffleBSSID(void);
 EntityGameProgress *GameProgress_GetGameProgress(void);
@@ -63,4 +63,4 @@ int32 GameProgress_CountUnreadNotifs(void);
 int32 GameProgress_GetNextNotif(void);
 bool32 GameProgress_CheckUnlock(uint8 id);
 
-#endif //!OBJ_GAMEPROGRESS_H
+#endif //! OBJ_GAMEPROGRESS_H

@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TURNTABLE_SMALL,
+    TURNTABLE_LARGE,
+} TurntableTypes;
+
 // Object Class
 struct ObjectTurntable {
     RSDK_OBJECT
@@ -33,7 +38,7 @@ void Turntable_Update(void);
 void Turntable_LateUpdate(void);
 void Turntable_StaticUpdate(void);
 void Turntable_Draw(void);
-void Turntable_Create(void* data);
+void Turntable_Create(void *data);
 void Turntable_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Turntable_EditorDraw(void);
@@ -44,5 +49,4 @@ void Turntable_Serialize(void);
 // Extra Entity Functions
 void Turntable_SetupSize(void);
 
-
-#endif //!OBJ_TURNTABLE_H
+#endif //! OBJ_TURNTABLE_H

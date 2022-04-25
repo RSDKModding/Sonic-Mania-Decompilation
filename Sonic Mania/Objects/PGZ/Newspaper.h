@@ -9,7 +9,7 @@ typedef enum {
     NEWSPAPER_BLUE_FG,
     NEWSPAPER_WHITE_BG,
     NEWSPAPER_BLUE_BG,
-}NewspaperTypes;
+} NewspaperTypes;
 #endif
 
 // Object Class
@@ -63,7 +63,7 @@ void Newspaper_Update(void);
 void Newspaper_LateUpdate(void);
 void Newspaper_StaticUpdate(void);
 void Newspaper_Draw(void);
-void Newspaper_Create(void* data);
+void Newspaper_Create(void *data);
 void Newspaper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Newspaper_EditorDraw(void);
@@ -76,4 +76,4 @@ void Newspaper_Serialize(void);
 void Newspaper_HandleInteractions(void);
 #endif
 
-#endif //!OBJ_NEWSPAPER_H
+#endif //! OBJ_NEWSPAPER_H

@@ -29,9 +29,9 @@ typedef struct {
 
 typedef struct {
     uint8 info;
-    uint8 flags;
+    uint8 changedValues;
     uint8 inputs;
-    uint8 dir;
+    uint8 direction;
     Vector2 position;
     Vector2 velocity;
     int32 rotation;
@@ -54,16 +54,16 @@ typedef enum {
 } ReplayFrameInfoTypes;
 
 typedef enum {
-    REPLAY_FLAG_NONE    = 0,
-    REPLAY_FLAG_INPUT   = 1 << 0,
-    REPLAY_FLAG_POS     = 1 << 1,
-    REPLAY_FLAG_VEL     = 1 << 2,
-    REPLAY_FLAG_GIMMICK = 1 << 3,
-    REPLAY_FLAG_DIR     = 1 << 4,
-    REPLAY_FLAG_ROT     = 1 << 5,
-    REPLAY_FLAG_ANIM    = 1 << 6,
-    REPLAY_FLAG_FRAME   = 1 << 7,
-} ReplayFrameFlagTypes;
+    REPLAY_CHANGED_NONE    = 0 << 0,
+    REPLAY_CHANGED_INPUT   = 1 << 0,
+    REPLAY_CHANGED_POS     = 1 << 1,
+    REPLAY_CHANGED_VEL     = 1 << 2,
+    REPLAY_CHANGED_GIMMICK = 1 << 3,
+    REPLAY_CHANGED_DIR     = 1 << 4,
+    REPLAY_CHANGED_ROT     = 1 << 5,
+    REPLAY_CHANGED_ANIM    = 1 << 6,
+    REPLAY_CHANGED_FRAME   = 1 << 7,
+} ReplayFrameChangeTypes;
 
 // Object Class
 struct ObjectReplayRecorder {

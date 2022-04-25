@@ -26,7 +26,9 @@ void Acetone_StaticUpdate(void) {}
 void Acetone_Draw(void)
 {
     RSDK_THIS(Acetone);
+
     RSDK.DrawSprite(&self->dispenseAnimator, NULL, false);
+
     if (self->isActive)
         Acetone_DrawGustFX();
 }
@@ -34,29 +36,35 @@ void Acetone_Draw(void)
 void Acetone_Create(void *data)
 {
     RSDK_THIS(Acetone);
-    self->active          = ACTIVE_BOUNDS;
-    self->visible         = true;
-    self->drawFX          = FX_FLIP;
-    self->drawOrder       = Zone->playerDrawLow + 1;
-    self->updateRange.x   = 0x100000;
-    self->updateRange.y   = 0x100000;
+
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->drawOrder     = Zone->playerDrawLow + 1;
+    self->updateRange.x = 0x100000;
+    self->updateRange.y = 0x100000;
+
     self->hitbox.left     = -14;
     self->hitbox.right    = 15;
     self->maxGustCount[0] = 2;
     self->maxGustCount[1] = 2;
     self->maxGustCount[2] = 3;
     self->maxGustCount[3] = 3;
+
     Acetone_HandleGustCount();
     Acetone_HandleGustPos();
+
     RSDK.SetSpriteAnimation(Acetone->aniFrames, 0, &self->dispenseAnimator, true, 0);
     RSDK.SetSpriteAnimation(Acetone->aniFrames, 1, &self->gustAnimator, true, 0);
-    self->state = Acetone_State_IntervalWait;
+
+    self->state = Acetone_State_AwaitInterval;
 }
 
 void Acetone_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
         Acetone->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Acetone.bin", SCOPE_STAGE);
+
     Acetone->sfxFrostThrower = RSDK.GetSfx("PSZ/FrostThrower.wav");
     Acetone->sfxFreeze       = RSDK.GetSfx("PSZ/Freeze.wav");
 }
@@ -76,6 +84,7 @@ void Acetone_DrawGustFX(void)
             drawPos.y = self->position.y + self->gustPos[pos + p].y;
             RSDK.DrawSprite(&self->gustAnimator, &drawPos, false);
         }
+
         pos += 3;
     }
 }
@@ -92,6 +101,7 @@ void Acetone_CheckPlayerCollisions(void)
                 // This palette starts at index 2, instead of index 64 like usual
                 // To fix this up to work as "intended", simply replace the "2"s with "64"
                 case ID_SONIC: RSDK.CopyPalette(6, 2, 0, 2, 6); break;
+
                 case ID_TAILS: RSDK.CopyPalette(6, 70, 0, 70, 6); break;
                 case ID_KNUCKLES:
                     RSDK.CopyPalette(6, 80, 0, 80, 6);
@@ -102,6 +112,7 @@ void Acetone_CheckPlayerCollisions(void)
                     // case ID_MIGHTY: RSDK.CopyPalette(6, 96, 0, 96, 6); break;
                     // case ID_RAY: RSDK.CopyPalette(6, 113, 0, 113, 6); break;
             }
+
             Ink->playerColors[RSDK.GetEntityID(player)] = 0;
         }
     }
@@ -113,6 +124,7 @@ void Acetone_HandleGustCount(void)
 
     for (int32 i = 0; i < 4; ++i) {
         self->gustCount[i] = self->maxGustCount[i];
+
         if (self->maxGustCount[i] > 1) {
             if (RSDK.Rand(0, 10) <= 6)
                 self->gustCount[i] = RSDK.Rand(1, self->maxGustCount[i]);
@@ -129,18 +141,21 @@ void Acetone_HandleGustPos(void)
     int32 yMax[] = { 22, 45, 62, 78 };
     int32 xMin[] = { -3, -5, -7, -9 };
     int32 xMax[] = { 3, 5, 7, 9 };
+
     for (int32 i = 0; i < 4; ++i) {
         for (int32 p = 0; p < self->gustCount[i]; ++p) {
             self->gustPos[pos + p].x = RSDK.Rand(xMin[i], xMax[i]) << 16;
             self->gustPos[pos + p].y = RSDK.Rand(yMin[i], yMax[i]) << 16;
         }
+
         pos += 3;
     }
 }
 
-void Acetone_State_IntervalWait(void)
+void Acetone_State_AwaitInterval(void)
 {
     RSDK_THIS(Acetone);
+
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         self->active   = ACTIVE_NORMAL;
         self->timer    = 0;
@@ -153,6 +168,7 @@ void Acetone_State_IntervalWait(void)
 void Acetone_State_Dispensing(void)
 {
     RSDK_THIS(Acetone);
+
     self->hitbox.top = 0;
     if (self->timer >= 20)
         self->hitbox.bottom = 80;
@@ -203,8 +219,10 @@ void Acetone_State_Dispensing(void)
 void Acetone_State_StopDispensing(void)
 {
     RSDK_THIS(Acetone);
+
     self->hitbox.top    = 4 * self->timer;
     self->hitbox.bottom = 80;
+
     Acetone_CheckPlayerCollisions();
 
     if (self->timer > 8)
@@ -245,13 +263,21 @@ void Acetone_State_StopDispensing(void)
     if (self->timer++ >= 20) {
         self->active   = ACTIVE_BOUNDS;
         self->isActive = false;
-        self->state    = Acetone_State_IntervalWait;
+        self->state    = Acetone_State_AwaitInterval;
         self->timer    = 0;
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Acetone_EditorDraw(void) { Acetone_Draw(); }
+void Acetone_EditorDraw(void)
+{
+    RSDK_THIS(Acetone);
+
+    RSDK.SetSpriteAnimation(Acetone->aniFrames, 0, &self->dispenseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Acetone->aniFrames, 1, &self->gustAnimator, true, 0);
+
+    Acetone_Draw();
+}
 
 void Acetone_EditorLoad(void) { Acetone->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Acetone.bin", SCOPE_STAGE); }
 #endif

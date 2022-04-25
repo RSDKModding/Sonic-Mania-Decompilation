@@ -10,10 +10,15 @@
 ObjectOptions *Options;
 
 void Options_Update(void) {}
+
 void Options_LateUpdate(void) {}
+
 void Options_StaticUpdate(void) {}
+
 void Options_Draw(void) {}
+
 void Options_Create(void *data) {}
+
 void Options_StageLoad(void)
 {
 #if !RETRO_USE_PLUS
@@ -22,7 +27,8 @@ void Options_StageLoad(void)
         Options_Reload();
     }
     else {
-        EntityOptions *options   = (EntityOptions *)globals->optionsRAM;
+        EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
         options->vSync           = false;
         options->windowed        = false;
         options->windowBorder    = false;
@@ -33,17 +39,21 @@ void Options_StageLoad(void)
 
 void Options_Reload(void)
 {
-    EntityOptions *options    = (EntityOptions *)globals->optionsRAM;
-    options->screenShader     = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
-    options->volMusic         = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
-    options->volSfx           = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
-    options->language         = RSDK.GetSettingsValue(SETTINGS_LANGUAGE);
+    EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
     options->overrideLanguage = true;
-    options->vSync            = RSDK.GetSettingsValue(SETTINGS_VSYNC);
-    options->windowBorder     = RSDK.GetSettingsValue(SETTINGS_BORDERED);
-    options->windowed         = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
-    options->tripleBuffering  = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
+
+    options->screenShader    = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
+    options->volMusic        = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
+    options->volSfx          = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
+    options->language        = RSDK.GetSettingsValue(SETTINGS_LANGUAGE);
+    options->vSync           = RSDK.GetSettingsValue(SETTINGS_VSYNC);
+    options->windowBorder    = RSDK.GetSettingsValue(SETTINGS_BORDERED);
+    options->windowed        = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
+    options->tripleBuffering = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
+
     Options_GetWinSize();
+
     LogHelpers_Print("optionsPtr->screenShader = %d", options->screenShader);
     LogHelpers_Print("optionsPtr->volMusic = %d", options->volMusic);
     LogHelpers_Print("optionsPtr->volSfx = %d", options->volSfx);
@@ -59,22 +69,22 @@ void Options_Reload(void)
 void Options_GetWinSize(void)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    int32 windowed           = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
+    int32 windowed         = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
+
     if (!windowed) {
         options->windowSize = 4;
     }
     else {
         int32 width = RSDK.GetSettingsValue(SETTINGS_WINDOW_WIDTH);
-        if (width > WIDE_SCR_XSIZE) {
-            if (width > (WIDE_SCR_XSIZE * 2)) {
-                options->windowSize = (width > (WIDE_SCR_XSIZE * 3)) + 2;
-            }
-            else {
-                options->windowSize = 1;
-            }
+
+        if (width <= WIDE_SCR_XSIZE) {
+            options->windowSize = 0;
+        }
+        else if (width <= WIDE_SCR_XSIZE * 2) {
+            options->windowSize = 1;
         }
         else {
-            options->windowSize = 0;
+            options->windowSize = (width > (WIDE_SCR_XSIZE * 3)) + 2;
         }
     }
 }
@@ -117,6 +127,7 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
             if (globals->optionsLoaded == STATUS_OK) {
                 Options->saveEntityPtr = SceneInfo->entity;
                 Options->saveCallback  = callback;
+
 #if RETRO_USE_PLUS
                 API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, false);
 #else
@@ -128,6 +139,7 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
                 if (callback)
                     callback(false);
             }
+
             return;
         }
         else {
@@ -139,6 +151,7 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
             Options_Reload();
         }
     }
+
     if (callback)
         callback(true);
 }
@@ -146,6 +159,7 @@ void Options_SaveOptionsBin(void (*callback)(bool32 success))
 void Options_SetLanguage(int32 language)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
+
     if (language >= 0) {
         options->language         = language;
         options->overrideLanguage = true;
@@ -157,45 +171,42 @@ void Options_SetLanguage(int32 language)
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV)
         RSDK.SetSettingsValue(SETTINGS_LANGUAGE, language);
+
     Options->changed = true;
 }
 
 void Options_LoadValuesFromSettings(EntityOptions *options)
 {
-    if (options->overrideLanguage) {
-        Localization->language = options->language;
-    }
-    else {
-        options->language = sku_language;
-    }
+    Localization->language = options->overrideLanguage ? options->language : sku_language;
 
-    if (!options->overrideShader) {
+    if (!options->overrideShader)
         options->screenShader = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
-    }
-    if (!options->overrideMusicVol) {
+
+    if (!options->overrideMusicVol)
         options->volMusic = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
-    }
-    if (!options->overrideSfxVol) {
+
+    if (!options->overrideSfxVol)
         options->volSfx = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
-    }
 }
 
 void Options_LoadOptionsCallback(int32 statusCode)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    bool32 success          = false;
+    bool32 success         = false;
     if (statusCode == STATUS_OK || statusCode == STATUS_NOTFOUND) {
-        success                 = true;
+        success                = true;
         globals->optionsLoaded = STATUS_OK;
+
         LogHelpers_Print("dataPtr.language = %d", options->language);
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
         Options_LoadValuesFromSettings((EntityOptions *)globals->optionsRAM);
+
         RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
         RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
         RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
     }
     else {
-        success                 = false;
+        success                = false;
         globals->optionsLoaded = STATUS_ERROR;
     }
 
@@ -228,6 +239,8 @@ void Options_SaveOptionsCallback(int32 statusCode)
 
 #if RETRO_INCLUDE_EDITOR
 void Options_EditorDraw(void) {}
+
 void Options_EditorLoad(void) {}
 #endif
+
 void Options_Serialize(void) {}

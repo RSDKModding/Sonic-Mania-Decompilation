@@ -10,10 +10,15 @@
 ObjectGameProgress *GameProgress;
 
 void GameProgress_Update(void) {}
+
 void GameProgress_LateUpdate(void) {}
+
 void GameProgress_StaticUpdate(void) {}
+
 void GameProgress_Draw(void) {}
+
 void GameProgress_Create(void *data) {}
+
 void GameProgress_StageLoad(void) {}
 
 EntityGameProgress *GameProgress_GetGameProgress(void) { return (EntityGameProgress *)&globals->saveRAM[0x900]; }
@@ -36,7 +41,8 @@ int32 GameProgress_GetNotifStringID(int32 type)
 void GameProgress_ShuffleBSSID(void)
 {
     EntityGameProgress *progress = GameProgress_GetGameProgress();
-    int32 startID                = globals->blueSpheresID;
+
+    int32 startID = globals->blueSpheresID;
     if (progress) {
         while (true) {
             if (globals->blueSpheresInit) {
@@ -53,7 +59,7 @@ void GameProgress_ShuffleBSSID(void)
 
             bool32 rotatedBSS = false;
             if (progress->silverMedalCount < 32)
-                rotatedBSS = !progress->medals[globals->blueSpheresID];
+                rotatedBSS = progress->medals[globals->blueSpheresID] == 0;
             else
                 rotatedBSS = progress->medals[globals->blueSpheresID] < 2;
 
@@ -80,7 +86,6 @@ void GameProgress_ShuffleBSSID(void)
 
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
 {
-    // 0xFFFEDB5C = saveRAM[0x900]
     if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
@@ -100,6 +105,7 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
     for (int32 i = 0; i < 32; ++i) {
         if (i < 7)
             emeraldsGotten += progress->emeraldObtained[i] == 1;
+
         if (i < ZONE_ERZ)
             completeZones += progress->zoneCleared[i] == 1;
 
@@ -150,6 +156,7 @@ void GameProgress_ClearBSSSave(void)
         LogHelpers_Print("WARNING GameProgress Attempted to clear BSS before loading SaveGame file");
         return;
     }
+
     EntityGameProgress *progress = GameProgress_GetGameProgress();
     progress->allGoldMedals      = false;
     progress->allSilverMedals    = false;
@@ -163,6 +170,7 @@ void GameProgress_UnlockAllMedals(void)
         LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
         return;
     }
+
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     progress->allSpecialCleared   = true;
@@ -251,6 +259,7 @@ bool32 GameProgress_CheckZoneClear(void)
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
     }
+
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     for (int32 z = 0; z < ZONE_COUNT_SAVEFILE; ++z) {
@@ -341,6 +350,7 @@ void GameProgress_PrintSaveProgress(void)
         else
             LogHelpers_Print("Emerald %d => FALSE", e);
     }
+
     if (progress->allEmeraldsObtained)
         LogHelpers_Print("ALL EMERALDS!\n");
     else
@@ -391,10 +401,10 @@ int32 GameProgress_CountUnreadNotifs(void)
         for (int32 i = 0; i < 9; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
-            if (!unlocked && notif) {
+            if (!unlocked && notif)
                 unreadCount++;
-            }
         }
+
         return unreadCount;
     }
 }

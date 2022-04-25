@@ -31,8 +31,10 @@ void ParticleHelpers_SetupFallingParticles(int32 x, int32 y)
         debris->gravityStrength = 0x3800;
         debris->velocity.y      = 0;
         debris->velocity.x      = 0x30 * ((spawnX - x) >> 8);
+
         if (debris->position.x < x)
             debris->direction = FLIP_X;
+
         CPZ1Intro_Particle_CB(debris);
     }
 }
@@ -40,21 +42,18 @@ void ParticleHelpers_SetupFallingParticles(int32 x, int32 y)
 void ParticleHelpers_SetupParticleFX(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX,
                                      int32 maxY)
 {
-#if RETRO_USE_PLUS
-    int32 x = RSDK.RandSeeded(-(maxX >> 1), maxX >> 1, &Zone->randSeed) + xOffset;
-    int32 y = RSDK.RandSeeded(-(maxY >> 1), maxY >> 1, &Zone->randSeed) + yOffset;
-#else
-    int32 x = RSDK.Rand(-(maxX >> 1), maxX >> 1) + xOffset;
-    int32 y = RSDK.Rand(-(maxY >> 1), maxY >> 1) + yOffset;
-#endif
+    int32 x              = ZONE_RAND(-(maxX >> 1), maxX >> 1) + xOffset;
+    int32 y              = ZONE_RAND(-(maxY >> 1), maxY >> 1) + yOffset;
     EntityDebris *debris = CREATE_ENTITY(Debris, debrisState, x, y);
 
     debris->drawOrder       = Zone->objectDrawHigh;
     debris->gravityStrength = 0x3800;
     debris->velocity.x      = ((x - xOffset) >> 8) * (speed >> 8);
     debris->velocity.y      = ((y - yOffset) >> 8) * (speed >> 8);
+
     if (debris->position.x < xOffset)
         debris->direction = FLIP_X;
+
     if (callback)
         callback(debris);
 }

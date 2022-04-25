@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+// Macro to reduce ifdefs needed when calling RandSeeded with Zone->randSeed, ensures easy pre-plus compatibility
+#if RETRO_USE_PLUS
+#define ZONE_RAND(min, max) RSDK.RandSeeded(min, max, &Zone->randSeed)
+#else
+#define ZONE_RAND(min, max) RSDK.Rand(min, max)
+#endif
+
 #define Zone_AddVSSwapCallback(callback)                                                                                                             \
     if (Zone->vsSwapCBCount < 0x10) {                                                                                                                \
         Zone->vsSwapCB[Zone->vsSwapCBCount] = callback;                                                                                              \

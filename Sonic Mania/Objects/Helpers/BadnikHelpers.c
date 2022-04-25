@@ -29,13 +29,12 @@ int BadnikHelpers_Oscillate(int origin, int speed, int power)
     return ((RSDK.Sin256(self->angle) << power) + origin) & 0xFFFF0000;
 }
 
-
 void BadnikHelpers_HandleExplode(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder)
 {
     RSDK_THIS_GEN(); // generic type
 
-    int x                                                                                   = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
-    int y                                                                                   = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
+    int32 x = self->position.x + (RSDK.Rand(xMin, xMax) << 16);
+    int32 y = self->position.y + (RSDK.Rand(yMin, yMax) << 16);
     CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = drawOrder;
 }
 
@@ -43,8 +42,8 @@ void BadnikHelpers_HandleExplode16(int xMin, int xMax, int yMin, int yMax, uint8
 {
     RSDK_THIS_GEN(); // generic type
 
-    int x                                                                                   = self->position.x + RSDK.Rand(xMin, xMax);
-    int y                                                                                   = self->position.y + RSDK.Rand(yMin, yMax);
+    int x                                                                                            = self->position.x + RSDK.Rand(xMin, xMax);
+    int y                                                                                            = self->position.y + RSDK.Rand(yMin, yMax);
     CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = drawOrder;
 }
 

@@ -13,7 +13,7 @@ typedef enum {
 // Object Class
 struct ObjectDoorTrigger {
     RSDK_OBJECT
-    Hitbox hitboxes[2];
+    Hitbox hitboxBulb[2];
     uint16 aniFrames;
     uint16 sfxShatter;
 };
@@ -35,7 +35,7 @@ void DoorTrigger_Update(void);
 void DoorTrigger_LateUpdate(void);
 void DoorTrigger_StaticUpdate(void);
 void DoorTrigger_Draw(void);
-void DoorTrigger_Create(void* data);
+void DoorTrigger_Create(void *data);
 void DoorTrigger_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void DoorTrigger_EditorDraw(void);
@@ -45,5 +45,4 @@ void DoorTrigger_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_DOORTRIGGER_H
+#endif //! OBJ_DOORTRIGGER_H

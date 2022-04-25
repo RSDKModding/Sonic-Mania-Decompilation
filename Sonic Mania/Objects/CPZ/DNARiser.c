@@ -235,22 +235,12 @@ void DNARiser_State_HelixRise(void)
                 if (!self->sfxTimer) {
                     int32 sfxID = 0;
                     if (!self->lastSfxID) {
-                        while (sfxID == self->lastSfxID) {
-#if RETRO_USE_PLUS
-                            sfxID = RSDK.RandSeeded(0, 5, &Zone->randSeed);
-#else
-                            sfxID = RSDK.Rand(0, 5);
-#endif
-                        }
+                        while (sfxID == self->lastSfxID) sfxID = ZONE_RAND(0, 5);
                     }
 
                     RSDK.PlaySfx(DNARiser->sfxTiny[sfxID], false, 255);
                     self->lastSfxID = sfxID;
-#if RETRO_USE_PLUS
-                    self->sfxTimer = RSDK.RandSeeded(2, 8, &Zone->randSeed);
-#else
-                    self->sfxTimer = RSDK.Rand(2, 8);
-#endif
+                    self->sfxTimer  = ZONE_RAND(2, 8);
                 }
 
                 EntityDNARiser *child = CREATE_ENTITY(DNARiser, self, self->startPos.x, self->startPos.y - (self->helixPos << 18));

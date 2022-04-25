@@ -396,7 +396,7 @@ void UILeaderboard_DrawRank(int32 id)
         }
 
         int32 min, sec, ms;
-        TimeAttackData_GetTimeFromValue(self->times[id], &min, &sec, &ms);
+        TimeAttackData_GetUnpackedTime(self->times[id], &min, &sec, &ms);
         drawPos.y -= 0x40000;
         UILeaderboard_DrawTime(min, sec, ms, drawPos.x, drawPos.y);
     }

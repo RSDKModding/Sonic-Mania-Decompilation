@@ -200,13 +200,10 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
         int32 y           = rexon->position.y;
         rexon->position.x = rexon->positions[0].x;
         rexon->position.y = rexon->positions[0].y;
-#if RETRO_USE_PLUS
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), rexon->position.x,
-                      rexon->position.y);
-#else
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
-#endif
+
+        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), rexon->position.x, rexon->position.y)->drawOrder = Zone->objectDrawHigh;
+
         RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
         rexon->position.x = x;
         rexon->position.y = y;

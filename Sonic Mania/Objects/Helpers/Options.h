@@ -49,7 +49,7 @@ void Options_EditorLoad(void);
 #endif
 void Options_Serialize(void);
 
-//Funcs
+// Funcs
 void Options_Reload(void);
 void Options_GetWinSize(void);
 void Options_LoadCallback(bool32 success);
@@ -60,4 +60,4 @@ void Options_LoadValuesFromSettings(EntityOptions *options);
 void Options_LoadOptionsCallback(int32 statusCode);
 void Options_SaveOptionsCallback(int32 statusCode);
 
-#endif //!OBJ_OPTIONS_H
+#endif //! OBJ_OPTIONS_H

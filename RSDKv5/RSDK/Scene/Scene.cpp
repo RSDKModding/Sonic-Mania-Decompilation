@@ -880,6 +880,7 @@ void ProcessParallax(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int32 pixelWidth            = TILE_SIZE * layer->xsize;
     int32 pixelHeight           = TILE_SIZE * layer->ysize;
     ScanlineInfo *scanlinePtr = scanlines;
@@ -927,10 +928,10 @@ void ProcessParallax(TileLayer *layer)
             deformationData = &layer->deformationDataW[(posY + (uint16)layer->deformationOffsetW) & 0x1FF];
             for (int32 i = currentScreen->waterDrawPos; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
-                if (layer->scrollInfo[*lineScrollPtr].deform) {
+                if (layer->scrollInfo[*lineScrollPtr].deform) 
                     scanlinePtr->position.x += *deformationData << 0x10;
-                }
                 deformationData++;
+
                 scanlinePtr->position.y = posY++;
                 scanlinePtr->position.y <<= 0x10;
                 scanlinePtr->deform.x = 0x10000;
@@ -1153,7 +1154,7 @@ void DrawLayerHScroll(TileLayer *layer)
         int32 cnt        = TILE_SIZE - ((x >> 0x10) & 0xF);
         int32 cntX       = (x >> 16) & 0xF;
         int32 cntY       = TILE_SIZE * ((y >> 0x10) & 0xF);
-        int32 lineRemain = currentScreen->size.x;
+        int32 lineRemain = currentScreen->pitch;
 
         int32 tx         = (x >> 20);
         uint16 *layout = &layer->layout[tx + ((y >> 20) << layer->widthShift)];
@@ -1477,7 +1478,7 @@ void DrawLayerBasic(TileLayer *layer)
         int32 cnt        = TILE_SIZE - ((x >> 0x10) & 0xF);
         int32 cntX       = (x >> 16) & 0xF;
         int32 cntY       = TILE_SIZE * ((y >> 0x10) & 0xF);
-        int32 lineRemain = currentScreen->size.x;
+        int32 lineRemain = currentScreen->pitch;
 
         int32 tx         = (x >> 20);
         uint16 *layout = &layer->layout[tx + ((y >> 20) << layer->widthShift)];

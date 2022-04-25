@@ -1381,7 +1381,7 @@ void MenuSetup_VS_StartMatch(void)
     globals->medalMods  = 0;
 
     globals->playerID = ID_NONE;
-    for (int32 i = 0; i < competition_PlayerCount; ++i) globals->playerID |= session->playerID[i] << (8 * i);
+    for (int32 i = 0; i < COMPETITION_PLAYER_COUNT; ++i) globals->playerID |= session->playerID[i] << (8 * i);
     globals->itemMode = session->itemMode;
     RSDK.LoadScene();
 }
@@ -1438,7 +1438,7 @@ void MenuSetup_VS_Round_ProcessButtonCB(void)
         bool32 toCompTotal = false;
 
         int32 activePlayers = 0;
-        for (int32 p = 0; p < competition_PlayerCount; ++p) {
+        for (int32 p = 0; p < COMPETITION_PLAYER_COUNT; ++p) {
             if (session->lives[p] > 0)
                 activePlayers++;
 
@@ -1487,7 +1487,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     uint32 bestTime       = 0xFFFFFFFF;
     uint32 times[PLAYER_MAX];
 
-    for (int32 p = 0; p < competition_PlayerCount; ++p) {
+    for (int32 p = 0; p < COMPETITION_PLAYER_COUNT; ++p) {
         if (session->rings[p] > bestRings)
             bestRings = session->rings[p];
 
@@ -1509,7 +1509,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
     int32 winnerCount = 0;
     int32 match       = session->matchID - 1;
 
-    for (int32 p = 0; p < competition_PlayerCount; ++p) {
+    for (int32 p = 0; p < COMPETITION_PLAYER_COUNT; ++p) {
         EntityUIVsResults *results = (EntityUIVsResults *)roundControl->buttons[p];
 
         results->isWinner = session->matchWinner[match] & (1 << p);
@@ -1560,7 +1560,7 @@ void MenuSetup_VS_Round_MenuSetupCB(void)
 
     if (winnerCount == 1) {
         int32 winner = -1;
-        for (int32 p = 0; p < competition_PlayerCount; ++p) {
+        for (int32 p = 0; p < COMPETITION_PLAYER_COUNT; ++p) {
             if ((1 << p) & session->matchWinner[match]) {
                 winner = p;
                 break;

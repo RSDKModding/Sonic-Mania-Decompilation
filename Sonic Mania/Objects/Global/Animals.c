@@ -51,13 +51,7 @@ void Animals_Create(void *data)
 #endif
         type = voidToInt(data);
 
-    if (!self->type &&
-#if RETRO_USE_PLUS
-        RSDK.RandSeeded(0, 256, &Zone->randSeed) == 21
-#else
-        RSDK.Rand(0, 256) == 21
-#endif
-    ) {
+    if (!self->type && ZONE_RAND(0, 256) == 21) {
         type                      = ANIMAL_POCKY;
         self->velocity.y          = -0x40000;
         self->type                = type - 1;
@@ -146,13 +140,7 @@ void Animals_CheckPlayerPos(void)
             break;
         }
 
-        case ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS:
-#if RETRO_USE_PLUS
-            self->direction = RSDK.RandSeeded(0, 2, &Zone->randSeed);
-#else
-            self->direction = RSDK.Rand(0, 2);
-#endif
-            break;
+        case ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS: self->direction = ZONE_RAND(0, 2); break;
     }
 
     if (!self->direction)

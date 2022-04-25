@@ -5,12 +5,12 @@
 
 // Object Class
 struct ObjectMathHelpers {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
 struct EntityMathHelpers {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Entity
@@ -21,7 +21,7 @@ void MathHelpers_Update(void);
 void MathHelpers_LateUpdate(void);
 void MathHelpers_StaticUpdate(void);
 void MathHelpers_Draw(void);
-void MathHelpers_Create(void* data);
+void MathHelpers_Create(void *data);
 void MathHelpers_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MathHelpers_EditorDraw(void);
@@ -55,4 +55,4 @@ int32 MathHelpers_CheckPositionOverlap(int32 otherX1, int32 otherY1, int32 other
 int32 MathHelpers_GetEdgeDistance(int32 distance, int32 radius);
 bool32 MathHelpers_ConstrainToBox(Vector2 *pos, int32 x, int32 y, Vector2 boxPos, Hitbox hitbox);
 
-#endif //!OBJ_MATHHELPERS_H
+#endif //! OBJ_MATHHELPERS_H

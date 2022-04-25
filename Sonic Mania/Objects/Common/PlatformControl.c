@@ -108,7 +108,7 @@ void PlatformControl_Update(void)
         if (self->setActive) {
             for (int32 c = 0; c < self->childCount; ++c) {
                 EntityPlatform *platform = RSDK_GET_ENTITY(platformSlot, Platform);
-                if (platform->state == Platform_State_WaitForControl)
+                if (platform->state == Platform_State_AwaitControlCommand)
                     platform->state = Platform_State_Controlled;
 
                 if (platform->state == Platform_State_ActivateControlOnStood) {
@@ -134,7 +134,7 @@ void PlatformControl_Update(void)
             EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
             if (platform->state == Platform_State_Controlled) {
                 platform->speed -= startNodeSlot;
-                platform->state  = Platform_State_WaitForControl;
+                platform->state  = Platform_State_AwaitControlCommand;
                 platform->active = ACTIVE_BOUNDS;
             }
             slot += platform->childCount + 1;

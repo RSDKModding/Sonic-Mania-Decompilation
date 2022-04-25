@@ -160,13 +160,9 @@ void SSZ2Setup_GenericTriggerCB_DestroyHotaruMKII(void)
     foreach_active(HotaruMKII, hotaru)
     {
         if (!hotaru->type) {
-#if RETRO_USE_PLUS
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), hotaru->position.x,
-                          hotaru->position.y);
-#else
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
-#endif
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[ZONE_RAND(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->objectDrawHigh;
+
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(hotaru);
         }

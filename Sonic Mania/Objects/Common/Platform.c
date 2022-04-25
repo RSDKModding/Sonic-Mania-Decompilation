@@ -196,7 +196,7 @@ void Platform_Create(void *data)
         case PLATFORM_CONT_ACTIVATER:
             self->active = ACTIVE_BOUNDS;
             if (self->type == PLATFORM_CONTROLLED)
-                self->state = Platform_State_WaitForControl;
+                self->state = Platform_State_AwaitControlCommand;
             else
                 self->state = Platform_State_ActivateControlOnStood;
             self->updateRange.x = 0x800000;
@@ -473,7 +473,7 @@ void Platform_StageLoad(void)
     }
 }
 
-void Platform_State_WaitForControl(void)
+void Platform_State_AwaitControlCommand(void)
 {
     RSDK_THIS(Platform);
 
@@ -2826,7 +2826,7 @@ void Platform_EditorDraw(void)
             if (!child)
                 continue;
 
-            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xFFFF00, INK_NONE, 0xFF);
+            DrawHelpers_DrawArrow(self->position.x, self->position.y, child->position.x, child->position.y, 0xE0E0E0, INK_NONE, 0xFF);
         }
 
         RSDK_DRAWING_OVERLAY(false);

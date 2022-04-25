@@ -194,7 +194,7 @@ void ActClear_Draw(void)
     drawPos.y += 0xE0000;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) { // Draw Best Time
-        TimeAttackData_GetTimeFromValue(self->time, &minsPtr, &secsPtr, &millisecsPtr);
+        TimeAttackData_GetUnpackedTime(self->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
         drawPos.y -= 0xE0000;
         if (!self->isNewRecord || (self->isNewRecord && (Zone->timer & 8)))

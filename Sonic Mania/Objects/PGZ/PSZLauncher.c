@@ -12,6 +12,7 @@ ObjectPSZLauncher *PSZLauncher;
 void PSZLauncher_Update(void)
 {
     RSDK_THIS(PSZLauncher);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,17 +23,21 @@ void PSZLauncher_StaticUpdate(void) {}
 void PSZLauncher_Draw(void)
 {
     RSDK_THIS(PSZLauncher);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PSZLauncher_Create(void *data)
 {
     RSDK_THIS(PSZLauncher);
+
     self->visible   = true;
     self->drawOrder = Zone->objectDrawHigh - 1;
     self->drawFX    = FX_FLIP;
+
     if (SceneInfo->inEditor && !self->power)
         self->power = 10;
+
     self->active        = ACTIVE_BOUNDS;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
@@ -43,10 +48,10 @@ void PSZLauncher_StageLoad(void)
 {
     PSZLauncher->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZLauncher.bin", SCOPE_STAGE);
 
-    PSZLauncher->hitbox.left   = -32;
-    PSZLauncher->hitbox.top    = 0;
-    PSZLauncher->hitbox.right  = 32;
-    PSZLauncher->hitbox.bottom = 1;
+    PSZLauncher->hitboxLaunch.left   = -32;
+    PSZLauncher->hitboxLaunch.top    = 0;
+    PSZLauncher->hitboxLaunch.right  = 32;
+    PSZLauncher->hitboxLaunch.bottom = 1;
 
     DEBUGMODE_ADD_OBJ(PSZLauncher);
 }
@@ -54,6 +59,7 @@ void PSZLauncher_StageLoad(void)
 void PSZLauncher_DebugSpawn(void)
 {
     RSDK_THIS(PSZLauncher);
+
     EntityPSZLauncher *launcher = CREATE_ENTITY(PSZLauncher, NULL, self->position.x, self->position.y);
     launcher->direction         = self->direction;
 }
@@ -67,10 +73,13 @@ void PSZLauncher_DebugDraw(void)
 void PSZLauncher_State_Setup(void)
 {
     RSDK_THIS(PSZLauncher);
+
     RSDK.SetSpriteAnimation(PSZLauncher->aniFrames, 0, &self->animator, true, 0);
     self->stoodPlayers  = 0;
     self->activePlayers = 0;
-    self->state         = PSZLauncher_State_Active;
+
+    self->state = PSZLauncher_State_Active;
+
     PSZLauncher_HandlePlayerCollisions();
     PSZLauncher_HandlePlayerInteractions();
 }
@@ -79,25 +88,25 @@ void PSZLauncher_HandlePlayerCollisions(void)
 {
     RSDK_THIS(PSZLauncher);
 
-    Hitbox hitbox;
-    hitbox.left   = -32;
-    hitbox.right  = 0;
-    hitbox.bottom = 0;
+    Hitbox hitboxStand;
+    hitboxStand.left   = -32;
+    hitboxStand.right  = 0;
+    hitboxStand.bottom = 0;
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
 
-        int32 pos = 31 - clampVal(abs(player->position.x - self->position.x) >> 16, 0, 31);
+        int32 standPos = 31 - clampVal(abs(player->position.x - self->position.x) >> 16, 0, 31);
         if ((self->direction == FLIP_NONE && player->position.x > self->position.x)
             || (self->direction == FLIP_X && player->position.x < self->position.x))
-            pos = 31;
+            standPos = 31;
 
-        hitbox.top = -PSZLauncher->heights[pos];
+        hitboxStand.top = -PSZLauncher->heightTable[standPos];
         if ((1 << playerID) & self->stoodPlayers)
             player->position.y += 0x10000;
 
-        if (Player_CheckCollisionPlatform(player, self, &hitbox)) {
-            self->stoodPlayers |= (1 << playerID);
+        if (Player_CheckCollisionPlatform(player, self, &hitboxStand)) {
+            self->stoodPlayers |= 1 << playerID;
             player->position.y &= 0xFFFF0000;
         }
         else {
@@ -113,21 +122,25 @@ void PSZLauncher_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (Player_CheckCollisionTouch(player, self, &PSZLauncher->hitbox)) {
+
+        if (Player_CheckCollisionTouch(player, self, &PSZLauncher->hitboxLaunch)) {
             if (!((1 << playerID) & self->activePlayers) && !((1 << playerID) & self->stoodPlayers) && player->velocity.y <= 0) {
-                self->activePlayers |= (1 << playerID);
+                self->activePlayers |= 1 << playerID;
                 player->velocity.y = -0x10000 * self->power;
                 player->velocity.x = 0;
+
                 if (self->direction)
                     player->position.x = self->position.x - 0x100000;
                 else
                     player->position.x = self->position.x + 0x100000;
+
                 player->applyJumpCap     = false;
                 player->jumpAbilityState = 0;
                 player->collisionMode    = 0;
                 player->groundVel        = 0;
                 player->state            = Player_State_Air;
                 player->onGround         = false;
+
                 RSDK.PlaySfx(Player->sfxRelease, false, 255);
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             }
@@ -158,8 +171,8 @@ void PSZLauncher_EditorLoad(void)
     PSZLauncher->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PSZLauncher.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(PSZLauncher, direction);
-    RSDK_ENUM_VAR("Up", FLIP_NONE);
-    RSDK_ENUM_VAR("Down", FLIP_X);
+    RSDK_ENUM_VAR("Left", FLIP_NONE);
+    RSDK_ENUM_VAR("Right", FLIP_X);
 }
 #endif
 

@@ -5,36 +5,36 @@
 
 // Object Class
 struct ObjectPress {
-	RSDK_OBJECT
+    RSDK_OBJECT
     uint16 aniFrames;
-	Hitbox hitbox;
-	uint16 sfxImpact;
-	uint16 sfxPress;
+    Hitbox hitbox;
+    uint16 sfxImpact;
+    uint16 sfxPress;
 #if RETRO_USE_PLUS
-	bool32 canSuper;
+    bool32 canSuper;
 #endif
 };
 
 // Entity Class
 struct EntityPress {
-	RSDK_ENTITY
-	StateMachine(state);
-	uint16 size;
-	uint32 speed;
-	int32 offTop;
-	int32 offBottom;
-	int32 topOffset;
-	uint32 threads;
-	int32 height;
-	int32 timerStart;
-	int32 timer;
-	Vector2 drawPos;
-	uint16 threadSprY;
-	uint8 onRoof;
-	uint8 onFloor;
-	Animator crusherAnimator;
-	Animator threadAnimator;
-	Animator bumperAnimator;
+    RSDK_ENTITY
+    StateMachine(state);
+    uint16 size;
+    uint32 speed;
+    int32 offTop;
+    int32 offBottom;
+    int32 topOffset;
+    uint32 threads;
+    int32 height;
+    int32 timerStart;
+    int32 timer;
+    Vector2 drawPos;
+    uint16 threadSprY;
+    uint8 stoodPlayersRoof;
+    uint8 stoodPlayersFloor;
+    Animator crusherAnimator;
+    Animator threadAnimator;
+    Animator bumperAnimator;
 };
 
 // Object Struct
@@ -45,7 +45,7 @@ void Press_Update(void);
 void Press_LateUpdate(void);
 void Press_StaticUpdate(void);
 void Press_Draw(void);
-void Press_Create(void* data);
+void Press_Create(void *data);
 void Press_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Press_EditorDraw(void);
@@ -62,4 +62,4 @@ void Press_HandleMovement(void);
 void Press_State_HandleCrates(void);
 void Press_DrawHandle(void);
 
-#endif //!OBJ_PRESS_H
+#endif //! OBJ_PRESS_H

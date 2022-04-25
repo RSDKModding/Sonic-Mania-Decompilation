@@ -37,15 +37,9 @@ void ChemBubble_Create(void *data)
         self->drawOrder = Zone->objectDrawHigh - 2;
         self->startPos  = self->position;
 
-#if RETRO_USE_PLUS
-        self->velocity.y = RSDK.RandSeeded(-0x20000, 0, &Zone->randSeed);
-        self->angleShift = RSDK.RandSeeded(12, 16, &Zone->randSeed);
-        self->amplitude  = RSDK.RandSeeded(9, 10, &Zone->randSeed);
-#else
-        self->velocity.y = RSDK.Rand(-0x20000, 0);
-        self->angleShift = RSDK.Rand(12, 16);
-        self->amplitude  = RSDK.Rand(9, 10);
-#endif
+        self->velocity.y = ZONE_RAND(-0x20000, 0);
+        self->angleShift = ZONE_RAND(12, 16);
+        self->amplitude  = ZONE_RAND(9, 10);
 
         RSDK.SetSpriteAnimation(ChemBubble->aniFrames, RSDK.Rand(1, 3), &self->animator, true, 0);
         self->drawFX = FX_SCALE;

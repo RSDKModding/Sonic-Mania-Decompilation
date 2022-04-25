@@ -30,6 +30,7 @@ bool32 PlayerHelpers_CheckAct1(void)
         || RSDK.CheckStageFolder("TMZ1")) {
         return true;
     }
+
     return false;
 }
 bool32 PlayerHelpers_CheckAct2(void)
@@ -40,6 +41,7 @@ bool32 PlayerHelpers_CheckAct2(void)
         || RSDK.CheckStageFolder("LRZ3") || (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1) || RSDK.CheckStageFolder("TMZ2")) {
         return true;
     }
+
     return false;
 }
 bool32 PlayerHelpers_CheckIntro(void)
@@ -81,6 +83,7 @@ bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 px = 0;
     int32 py = 0;
+
     if (Player) {
         foreach_all(Player, player)
         {
@@ -90,6 +93,7 @@ bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
             }
         }
     }
+
     return px >= x1 && px <= x2 && py >= y1 && py <= y2;
 }
 
