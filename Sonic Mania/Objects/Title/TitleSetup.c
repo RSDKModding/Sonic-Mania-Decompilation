@@ -12,7 +12,9 @@ ObjectTitleSetup *TitleSetup;
 void TitleSetup_Update(void)
 {
     RSDK_THIS(TitleSetup);
+
     StateMachine_Run(self->state);
+
     ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
@@ -23,14 +25,17 @@ void TitleSetup_StaticUpdate(void) {}
 void TitleSetup_Draw(void)
 {
     RSDK_THIS(TitleSetup);
+
     StateMachine_Run(self->stateDraw);
 }
 
 void TitleSetup_Create(void *data)
 {
     RSDK_THIS(TitleSetup);
+
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(TitleSetup->aniFrames, 0, &self->animator, true, 0);
+
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
         self->drawOrder = 12;
@@ -38,8 +43,8 @@ void TitleSetup_Create(void *data)
         self->state     = TitleSetup_State_Wait;
         self->stateDraw = TitleSetup_Draw_FadeBlack;
         self->timer     = 1024;
-        self->drawPos.x = 0x1000000;
-        self->drawPos.y = 0x6C0000;
+        self->drawPos.x = 256 << 16;
+        self->drawPos.y = 108 << 16;
     }
 }
 
@@ -48,47 +53,50 @@ void TitleSetup_StageLoad(void)
     TextInfo presence;
     Localization_GetString(&presence, STR_RPC_TITLE);
     API_SetRichPresence(PRESENCE_TITLE, &presence);
-#if RETRO_USE_PLUS
-    API.SetNoSave(false);
-#else
-    globals->noSave = false;
-#endif
+
+    API_SetNoSave(false);
+
     globals->blueSpheresInit = false;
     TimeAttackData_Clear();
+
+    API_ClearPrerollErrors();
 #if RETRO_USE_PLUS
-    API.ClearPrerollErrors();
     API.ClearSaveStatus();
-#else
-    APICallback_ClearPrerollErrors();
 #endif
+
     globals->saveLoaded = false;
-    memset(globals->saveRAM, 0, 0x10000);
+    memset(globals->saveRAM, 0, sizeof(globals->saveRAM));
+
     globals->optionsLoaded = false;
-    memset(globals->optionsRAM, 0, 0x200);
+    memset(globals->optionsRAM, 0, sizeof(globals->optionsRAM));
+
 #if RETRO_USE_PLUS
     API.ClearUserDB(globals->replayTableID);
     API.ClearUserDB(globals->taTableID);
+
     globals->replayTableID     = (uint16)-1;
     globals->replayTableLoaded = STATUS_NONE;
     globals->taTableID         = (uint16)-1;
     globals->taTableLoaded     = STATUS_NONE;
 #endif
-    TitleSetup->aniFrames     = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
+
+    TitleSetup->aniFrames = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
+
     TitleSetup->sfxMenuBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     TitleSetup->sfxMenuAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     TitleSetup->sfxRing       = RSDK.GetSfx("Global/Ring.wav");
+
     RSDK.ResetEntitySlot(0, TitleSetup->objectID, NULL);
 }
 
+#if RETRO_USE_PLUS
 void TitleSetup_HandleCheatInputs(void)
 {
     uint8 keyState = 0;
-    if (ControllerInfo->keyUp.press || AnalogStickInfoL->keyUp.press) {
+    if (ControllerInfo->keyUp.press || AnalogStickInfoL->keyUp.press)
         keyState = 1;
-    }
-    if (ControllerInfo->keyDown.press || AnalogStickInfoL->keyDown.press) {
+    if (ControllerInfo->keyDown.press || AnalogStickInfoL->keyDown.press)
         keyState = 2;
-    }
 
     if (keyState) {
         TitleSetup->cheatCode[0] = TitleSetup->cheatCode[1];
@@ -105,16 +113,17 @@ void TitleSetup_HandleCheatInputs(void)
 void TitleSetup_CheckCheatCode(void)
 {
     TitleSetup_HandleCheatInputs();
+
     if (TitleSetup->cheatCode[0] == 1 && TitleSetup->cheatCode[1] == 1 && TitleSetup->cheatCode[2] == 2 && TitleSetup->cheatCode[3] == 2
         && TitleSetup->cheatCode[4] == 1 && TitleSetup->cheatCode[5] == 1 && TitleSetup->cheatCode[6] == 1 && TitleSetup->cheatCode[7] == 1) {
-#if RETRO_USE_PLUS
         if (!globals->superSecret) {
             RSDK.PlaySfx(TitleSetup->sfxRing, false, 255);
             globals->superSecret = true;
         }
-#endif
     }
 }
+#endif
+
 bool32 TitleSetup_IntroCallback(void)
 {
     if (ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyStart.press) {
@@ -127,12 +136,14 @@ bool32 TitleSetup_IntroCallback(void)
         return true;
     }
 #endif
+
     return false;
 }
 
 void TitleSetup_State_Wait(void)
 {
     RSDK_THIS(TitleSetup);
+
     if (self->timer <= -0x400) {
         self->timer     = 0;
         self->state     = TitleSetup_State_AnimateUntilFlash;
@@ -147,7 +158,9 @@ void TitleSetup_State_Wait(void)
 void TitleSetup_State_AnimateUntilFlash(void)
 {
     RSDK_THIS(TitleSetup);
+
     RSDK.ProcessAnimation(&self->animator);
+
     if (self->animator.frameID == 31) {
         foreach_all(TitleLogo, titleLogo)
         {
@@ -161,6 +174,7 @@ void TitleSetup_State_AnimateUntilFlash(void)
                 }
             }
         }
+
         self->state = TitleSetup_State_FlashIn;
     }
 }
@@ -184,6 +198,7 @@ void TitleSetup_State_FlashIn(void)
                 titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
             }
+
             if (titleLogo->type == TITLELOGO_RIBBON) {
                 titleLogo->showRibbonCenter = true;
                 RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 2, &titleLogo->mainAnimator, true, 0);
@@ -206,9 +221,14 @@ void TitleSetup_State_FlashIn(void)
 void TitleSetup_State_WaitForSonic(void)
 {
     RSDK_THIS(TitleSetup);
+
+#if RETRO_USE_PLUS
     TitleSetup_CheckCheatCode();
+#endif
+
     if (self->timer <= 0) {
         self->stateDraw = StateMachine_None;
+
 #if RETRO_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
             self->state = TitleSetup_State_SetupPlusLogo;
@@ -224,16 +244,19 @@ void TitleSetup_State_WaitForSonic(void)
 void TitleSetup_State_SetupLogo(void)
 {
     RSDK_THIS(TitleSetup);
+
 #if RETRO_USE_PLUS
     if (self->timer < 120)
         TitleSetup_CheckCheatCode();
 #endif
+
     if (++self->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type == TITLELOGO_PRESSSTART) {
                 titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
+
 #if RETRO_USE_PLUS
                 Entity *store     = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)titleLogo;
@@ -242,6 +265,7 @@ void TitleSetup_State_SetupLogo(void)
 #endif
             }
         }
+
         self->timer = 0;
         self->state = TitleSetup_State_WaitForEnter;
     }
@@ -250,8 +274,10 @@ void TitleSetup_State_SetupLogo(void)
 void TitleSetup_State_SetupPlusLogo(void)
 {
     RSDK_THIS(TitleSetup);
+
     if (self->timer < 120)
         TitleSetup_CheckCheatCode();
+
     if (++self->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
@@ -262,9 +288,12 @@ void TitleSetup_State_SetupPlusLogo(void)
                     titleLogo->velocity.y = -0x30000;
                     titleLogo->timer      = 2;
                     titleLogo->state      = TitleLogo_State_HandleSetup;
+
                     RSDK.PlaySfx(TitleLogo->sfxPlus, false, 255);
                     break;
+
                 case TITLELOGO_PRESSSTART: titleLogo->position.y += 0x80000; break;
+
                 case TITLELOGO_PLUS:
                     titleLogo->active  = ACTIVE_NORMAL;
                     titleLogo->visible = true;
@@ -272,6 +301,7 @@ void TitleSetup_State_SetupPlusLogo(void)
                     titleLogo->position.y -= 0x40000;
                     titleLogo->state = TitleLogo_State_HandleSetup;
                     break;
+
                 default: break;
             }
         }
@@ -286,20 +316,26 @@ void TitleSetup_State_SetupPlusLogo(void)
 void TitleSetup_State_WaitForEnter(void)
 {
     RSDK_THIS(TitleSetup);
+
     bool32 anyButton = ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyC.press || ControllerInfo->keyX.press
                        || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
                        || ControllerInfo->keySelect.press;
+
     bool32 anyClick = (!TouchInfo->count && self->touched) || Unknown_anyPress;
     self->touched   = TouchInfo->count > 0;
+
     if (anyClick || anyButton) {
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, false, 0xFF);
-        self->timer           = 0;
+        self->timer = 0;
+
         const char *nextScene = "Menu";
+        // Switch 1.0 dev level select cheat (Skips all the funky API setup stuff the menu does, so it was known for causin a bunch of issues)
 #if RETRO_GAMEVER == VER_100
         if (ControllerInfo->keyA.down && (ControllerInfo->keyX.down || ControllerInfo->keyC.down))
             nextScene = "Level Select";
 #endif
         RSDK.SetScene("Presentation", nextScene);
+
 #if RETRO_USE_PLUS
         int32 id = API_MostRecentActiveControllerID(0, 0, 5);
 #else
@@ -307,6 +343,7 @@ void TitleSetup_State_WaitForEnter(void)
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
+
         RSDK.StopChannel(Music->channelID);
         self->state     = TitleSetup_State_FadeToMenu;
         self->stateDraw = TitleSetup_Draw_FadeBlack;
@@ -321,29 +358,30 @@ void TitleSetup_State_WaitForEnter(void)
 void TitleSetup_State_FadeToMenu(void)
 {
     RSDK_THIS(TitleSetup);
-    if (self->timer >= 1024) {
+
+    if (self->timer >= 1024)
         RSDK.LoadScene();
-    }
-    else {
+    else
         self->timer += 8;
-    }
 }
 
 void TitleSetup_State_FadeToVideo(void)
 {
     RSDK_THIS(TitleSetup);
+
     if (self->timer >= 1024) {
         RSDK.LoadScene();
         RSDK.StopChannel(Music->channelID);
-        if (TitleSetup->altMusic) {
+
+        if (TitleSetup->useAltIntroMusic) {
             RSDK.PlayStream("IntroTee.ogg", Music->channelID, 0, 0, false);
             RSDK.LoadVideo("Mania.ogv", 1.8, TitleSetup_IntroCallback);
-            TitleSetup->altMusic = 0;
+            TitleSetup->useAltIntroMusic = false;
         }
         else {
             RSDK.PlayStream("IntroHP.ogg", Music->channelID, 0, 0, false);
             RSDK.LoadVideo("Mania.ogv", 0, TitleSetup_IntroCallback);
-            TitleSetup->altMusic = true;
+            TitleSetup->useAltIntroMusic = true;
         }
     }
     else {

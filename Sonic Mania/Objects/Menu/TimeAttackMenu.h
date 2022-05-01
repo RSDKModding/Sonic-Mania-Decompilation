@@ -60,7 +60,7 @@ void TimeAttackMenu_DeleteReplayActionCB(void);
 void TimeAttackMenu_ConfirmDeleteReplay_Yes_CB(void);
 void TimeAttackMenu_DeleteReplayCB(bool32 success);
 void TimeAttackMenu_MenuUpdateCB_LB(void);
-void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act, bool32 isEncore, bool32 noRows, void (*callback)(void));
+void TimeAttackMenu_SetupLeaderboards(int32 zoneID, int32 characterID, int32 act, bool32 isEncore, bool32 isUser, void (*callback)(void));
 void TimeAttackMenu_ReplayCarousel_ActionCB(void);
 void TimeAttackMenu_WatchReplay(int32 row, bool32 showGhost);
 void TimeAttackMenu_ReplayLoad_CB(bool32 success);
@@ -84,16 +84,16 @@ bool32 TimeAttackMenu_BackPressCB_ZoneSel(void);
 void TimeAttackMenu_YPressCB_Details(void);
 void TimeAttackMenu_ResetTimes_YesCB(void);
 void TimeAttackMenu_XPressCB_Details(void);
-void TimeAttackMenu_Replays_ActionCB(void);
+void TimeAttackMenu_TAZoneModule_ActionCB(void);
 void TimeAttackMenu_RankButton_ActionCB(void);
 void TimeAttackMenu_MenuSetupCB_Details(void);
-void TimeAttackMenu_Replays_ChoiceChangeCB(void);
+void TimeAttackMenu_TAZoneModule_ChoiceChangeCB(void);
 void TimeAttackMenu_CharButton_ActionCB(void);
 void TimeAttackMenu_TransitionToDetailsCB(void);
 bool32 TimeAttackMenu_LeaderboardsBackPressCB(void);
 void TimeAttackMenu_YPressCB_LB(void);
 void TimeAttackMenu_State_SetupLeaderboards(void);
-void TimeAttackMenu_SetupLeaderboardsCarousel(void *c);
+void TimeAttackMenu_SetupLeaderboardsCarousel(EntityUICarousel *carousel);
 
 #endif
 

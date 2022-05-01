@@ -18,7 +18,7 @@ typedef enum {
 #endif
     CONTPLR_ANI_IDLE_AI,
     CONTPLR_ANI_ICON,
-}ContinuePlayerAniIDs;
+} ContinuePlayerAniIDs;
 
 // Object Class
 struct ObjectContinuePlayer {
@@ -51,7 +51,7 @@ void ContinuePlayer_Update(void);
 void ContinuePlayer_LateUpdate(void);
 void ContinuePlayer_StaticUpdate(void);
 void ContinuePlayer_Draw(void);
-void ContinuePlayer_Create(void* data);
+void ContinuePlayer_Create(void *data);
 void ContinuePlayer_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void ContinuePlayer_EditorDraw(void);
@@ -61,8 +61,9 @@ void ContinuePlayer_Serialize(void);
 
 // Extra Entity Functions
 void ContinuePlayer_HandleDashAnim(void);
+
 void ContinuePlayer_State_Idle(void);
 void ContinuePlayer_State_ChargeDash(void);
 void ContinuePlayer_State_DashRelease(void);
 
-#endif //!OBJ_CONTINUEPLAYER_H
+#endif //! OBJ_CONTINUEPLAYER_H

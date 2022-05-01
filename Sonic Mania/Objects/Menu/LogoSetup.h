@@ -26,7 +26,7 @@ void LogoSetup_Update(void);
 void LogoSetup_LateUpdate(void);
 void LogoSetup_StaticUpdate(void);
 void LogoSetup_Draw(void);
-void LogoSetup_Create(void* data);
+void LogoSetup_Create(void *data);
 void LogoSetup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void LogoSetup_EditorDraw(void);
@@ -42,4 +42,4 @@ void LogoSetup_State_FadeToNextLogos(void);
 void LogoSetup_State_NextLogos(void);
 void LogoSetup_Draw_Fade(void);
 
-#endif //!OBJ_LOGOSETUP_H
+#endif //! OBJ_LOGOSETUP_H

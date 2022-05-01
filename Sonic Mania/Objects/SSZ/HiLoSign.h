@@ -35,7 +35,7 @@ void HiLoSign_Update(void);
 void HiLoSign_LateUpdate(void);
 void HiLoSign_StaticUpdate(void);
 void HiLoSign_Draw(void);
-void HiLoSign_Create(void* data);
+void HiLoSign_Create(void *data);
 void HiLoSign_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HiLoSign_EditorDraw(void);
@@ -53,4 +53,4 @@ void HiLoSign_State_FinishSpinAdjust(void);
 void HiLoSign_Draw_Horizontal(void);
 void HiLoSign_Draw_Vertical(void);
 
-#endif //!OBJ_HILOSIGN_H
+#endif //! OBJ_HILOSIGN_H

@@ -25,6 +25,7 @@ void ManiaModeMenu_StageLoad(void) {}
 void ManiaModeMenu_Initialize(void)
 {
     LogHelpers_Print("ManiaModeMenu_Initialize()");
+
     MainMenu_Initialize();
     UISubHeading_Initialize();
     TimeAttackMenu_Initialize();
@@ -52,7 +53,8 @@ bool32 ManiaModeMenu_InitAPI(void)
         }
         else if (storageStatus != STATUS_CONTINUE) {
             int32 saveStatus = API.GetSaveStatus();
-            if (!checkNoSave && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
+
+            if (!API_GetNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
                 if (saveStatus != STATUS_CONTINUE) {
                     if (saveStatus != STATUS_FORBIDDEN) {
                         DialogRunner_PromptSavePreference(storageStatus);
@@ -62,6 +64,7 @@ bool32 ManiaModeMenu_InitAPI(void)
                         RSDK.LoadScene();
                     }
                 }
+
                 return false;
             }
 
@@ -70,6 +73,7 @@ bool32 ManiaModeMenu_InitAPI(void)
                 Options_LoadOptionsBin();
                 SaveGame_LoadFile();
                 ReplayRecorder_LoadReplayDB(NULL);
+
                 MenuSetup->initializedSaves = true;
             }
 
@@ -78,7 +82,8 @@ bool32 ManiaModeMenu_InitAPI(void)
 
             if (globals->optionsLoaded == STATUS_OK && globals->saveLoaded == STATUS_OK && globals->replayTableLoaded == STATUS_OK
                 && globals->taTableLoaded == STATUS_OK) {
-                if (!checkNoSave && DialogRunner_NotifyAutosave())
+
+                if (!API_GetNoSave() && DialogRunner_NotifyAutosave())
                     return false;
 
                 UIWaitSpinner_FinishWait();
@@ -89,7 +94,7 @@ bool32 ManiaModeMenu_InitAPI(void)
                 return true;
             }
 
-            if (checkNoSave) {
+            if (API_GetNoSave()) {
                 UIWaitSpinner_FinishWait();
                 return true;
             }
@@ -97,6 +102,7 @@ bool32 ManiaModeMenu_InitAPI(void)
                 if (globals->optionsLoaded == STATUS_ERROR || globals->saveLoaded == STATUS_ERROR || globals->replayTableLoaded == STATUS_ERROR
                     || globals->taTableLoaded == STATUS_ERROR) {
                     int32 status = API.GetSaveStatus();
+
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {
                             RSDK.SetScene("Presentation", "Title Screen");
@@ -110,6 +116,7 @@ bool32 ManiaModeMenu_InitAPI(void)
             }
         }
     }
+
     return false;
 }
 
@@ -117,6 +124,7 @@ void ManiaModeMenu_InitLocalization(bool32 success)
 {
     if (success) {
         Localization->loaded = false;
+
         Localization_LoadStrings();
         UIWidgets_ApplyLanguage();
         UIHeading_LoadSprites();
@@ -126,7 +134,8 @@ void ManiaModeMenu_InitLocalization(bool32 success)
 int32 ManiaModeMenu_GetActiveMenu(void)
 {
     EntityUIControl *control = UIControl_GetUIControl();
-    if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl || control == OptionsMenu->optionsControl
+
+    if (control == MainMenu->menuControl || control == ExtrasMenu->extrasControl || control == OptionsMenu->optionsControl
         || control == OptionsMenu->videoControl || control == OptionsMenu->soundControl || control == OptionsMenu->dataOptionsControl
         || control == OptionsMenu->controlsControl_Windows || control == OptionsMenu->controlsControl_KB
         || control == OptionsMenu->controlsControl_PS4 || control == OptionsMenu->controlsControl_XB1 || control == OptionsMenu->controlsControl_NX
@@ -134,6 +143,7 @@ int32 ManiaModeMenu_GetActiveMenu(void)
         || control == OptionsMenu->controlsControl_NXPro) {
         return MAINMENU_MAIN;
     }
+
     if (control == TimeAttackMenu->timeAttackControl || control == TimeAttackMenu->timeAttackControl_Legacy
         || control == TimeAttackMenu->taZoneSelControl || control == TimeAttackMenu->taDetailsControl
         || control == TimeAttackMenu->leaderboardsControl || control == TimeAttackMenu->replaysControl
@@ -157,8 +167,9 @@ int32 ManiaModeMenu_GetActiveMenu(void)
 void ManiaModeMenu_ChangeMenuTrack(void)
 {
     int32 trackID = 0;
+
     switch (ManiaModeMenu_GetActiveMenu()) {
-        default: 
+        default:
         case MAINMENU_MAIN: trackID = 0; break;
         case MAINMENU_TIMEATTACK: trackID = 1; break;
         case MAINMENU_COMPETITION: trackID = 2; break;
@@ -173,24 +184,28 @@ void ManiaModeMenu_ChangeMenuTrack(void)
         Music_TransitionTrack(trackID, 0.12);
 }
 
-int32 ManiaModeMenu_StartReturnToTitle(void)
+void ManiaModeMenu_StartReturnToTitle(void)
 {
     EntityUIControl *control = UIControl_GetUIControl();
     if (control)
         control->state = StateMachine_None;
+
     Music_FadeOut(0.05);
     MenuSetup_StartTransition(ManiaModeMenu_ReturnToTitle, 32);
-    return 1;
 }
 
 void ManiaModeMenu_SetBGColors(void)
 {
     switch (ManiaModeMenu_GetActiveMenu()) {
         case MAINMENU_MAIN: UIBackground->activeColors = UIBackground->bgColors; break;
+
         case MAINMENU_TIMEATTACK:
         case MAINMENU_COMPETITION: UIBackground->activeColors = &UIBackground->bgColors[3]; break;
+
         case MAINMENU_SAVESELECT: UIBackground->activeColors = &UIBackground->bgColors[6]; break;
+
         case MAINMENU_SAVESELECT_ENCORE: UIBackground->activeColors = &UIBackground->bgColors[15]; break;
+
         default: break;
     }
 }
@@ -198,6 +213,7 @@ void ManiaModeMenu_SetBGColors(void)
 void ManiaModeMenu_ReturnToTitle(void)
 {
     TimeAttackData_Clear();
+
     RSDK.SetScene("Presentation", "Title Screen");
     RSDK.LoadScene();
 }
@@ -205,6 +221,7 @@ void ManiaModeMenu_ReturnToTitle(void)
 void ManiaModeMenu_State_HandleTransition(void)
 {
     RSDK_THIS(MenuSetup);
+
     self->fadeTimer = clampVal(self->timer << ((self->fadeShift & 0xFF) - 1), 0, 0x200);
 }
 
@@ -213,15 +230,16 @@ void ManiaModeMenu_HandleUnlocks(void)
     MainMenu_HandleUnlocks();
     UISubHeading_HandleUnlocks();
     TimeAttackMenu_HandleUnlocks();
-    int32 activeCount     = CompetitionMenu_HandleUnlocks();
+
+    int32 maxRounds            = CompetitionMenu_HandleUnlocks();
     EntityUIControl *compRules = CompetitionMenu->compRulesControl;
-    EntityUIButton *button     = UIButton_GetChoicePtr(compRules->buttons[1], compRules->buttons[1]->selection);
-    if (button) {
-        button->choiceCount = activeCount;
-        if (button->align < activeCount)
-            activeCount = button->align;
-        button->align = activeCount;
+
+    EntityUIVsRoundPicker *vsRoundPicker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(compRules->buttons[1], compRules->buttons[1]->selection);
+    if (vsRoundPicker) {
+        vsRoundPicker->maxVal = maxRounds;
+        vsRoundPicker->val    = minVal(vsRoundPicker->val, maxRounds);
     }
+
     OptionsMenu_HandleUnlocks();
     ExtrasMenu_HandleUnlocks();
 }
@@ -239,6 +257,7 @@ void ManiaModeMenu_SetupActions(void)
 void ManiaModeMenu_HandleMenuReturn(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+
     char buffer[0x100];
     memset(buffer, 0, 0x100);
     if (strcmp(param->menuTag, "") == 0)
@@ -248,6 +267,7 @@ void ManiaModeMenu_HandleMenuReturn(void)
     {
         if (strcmp(param->menuTag, "") != 0) {
             RSDK.GetCString(buffer, &control->tag);
+
             if (strcmp((const char *)buffer, param->menuTag) != 0) {
                 UIControl_SetInactiveMenu(control);
             }
@@ -264,6 +284,7 @@ void ManiaModeMenu_HandleMenuReturn(void)
     TimeAttackMenu_HandleMenuReturn();
     CompetitionMenu_HandleMenuReturn();
     OptionsMenu_HandleMenuReturn();
+
     if (param->puyoSelection == PUYO_SELECTION_VS_2P) {
         EntityUIControl *extras = ExtrasMenu->extrasControl;
         UIButton_SetChoiceSelection(extras->buttons[1], 1);

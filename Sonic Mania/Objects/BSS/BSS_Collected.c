@@ -12,8 +12,9 @@ ObjectBSS_Collected *BSS_Collected;
 void BSS_Collected_Update(void)
 {
     RSDK_THIS(BSS_Collected);
+
     EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
-    int32 fieldPos           = self->position.y + (BSS_PLAYFIELD_W * self->position.x);
+    int32 fieldPos         = self->position.y + (BSS_PLAYFIELD_W * self->position.x);
 
     switch (self->type) {
         case BSS_COLLECTED_RING:
@@ -30,6 +31,7 @@ void BSS_Collected_Update(void)
             if (BSS_Setup->sphereCount <= 0) {
                 if (BSS_Setup->playField[fieldPos] == BSS_BLUE_STOOD)
                     BSS_Setup->playField[fieldPos] = BSS_SPHERE_RED;
+
                 destroyEntity(self);
             }
             else {
@@ -43,6 +45,7 @@ void BSS_Collected_Update(void)
                 if (setup->globeTimer > 32 && setup->globeTimer < 224) {
                     if (BSS_Setup->playField[fieldPos] == BSS_BLUE_STOOD)
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_RED;
+
                     destroyEntity(self);
                 }
             }
@@ -59,6 +62,7 @@ void BSS_Collected_Update(void)
             if (setup->state == BSS_Setup_State_HandleStage && --self->timer <= 0) {
                 if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_GREEN_STOOD)
                     BSS_Setup->playField[fieldPos] = BSS_SPHERE_BLUE;
+
                 destroyEntity(self);
             }
             break;
@@ -68,6 +72,7 @@ void BSS_Collected_Update(void)
                 if (setup->playerPos.x != self->position.x || setup->playerPos.y != self->position.y) {
                     if (BSS_Setup->playField[fieldPos] == BSS_SPHERE_PINK_STOOD)
                         BSS_Setup->playField[fieldPos] = BSS_SPHERE_PINK;
+
                     destroyEntity(self);
                 }
             }
@@ -86,6 +91,7 @@ void BSS_Collected_Draw(void) {}
 void BSS_Collected_Create(void *data)
 {
     RSDK_THIS(BSS_Collected);
+
     if (!SceneInfo->inEditor) {
         self->active = ACTIVE_NORMAL;
         self->type   = voidToInt(data);

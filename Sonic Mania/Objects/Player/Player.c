@@ -6106,7 +6106,7 @@ void Player_JumpAbility_Sonic(void)
                             self->velocity.x       = self->direction == FLIP_X ? -0x80000 : 0x80000;
                             self->velocity.y       = 0;
                             RSDK.SetSpriteAnimation(Shield->aniFrames, 2, &shield->shieldAnimator, true, 0);
-                            shield->state     = Shield_State_Fire;
+                            shield->state     = Shield_State_FireDash;
                             shield->direction = self->direction;
                             if (self->camera && !Zone->autoScrollSpeed) {
                                 self->scrollDelay   = 15;
@@ -6118,7 +6118,7 @@ void Player_JumpAbility_Sonic(void)
                         case SHIELD_LIGHTNING:
                             self->jumpAbilityState = 0;
                             self->velocity.y       = self->invertGravity ? 0x58000 : -0x58000;
-                            shield->state = Shield_State_Lightning;
+                            shield->state = Shield_State_LightningJump;
                             RSDK.PlaySfx(Shield->sfxLightningJump, false, 255);
                             break;
 

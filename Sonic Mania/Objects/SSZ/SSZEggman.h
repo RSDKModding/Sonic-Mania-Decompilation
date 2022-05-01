@@ -33,7 +33,7 @@ void SSZEggman_Update(void);
 void SSZEggman_LateUpdate(void);
 void SSZEggman_StaticUpdate(void);
 void SSZEggman_Draw(void);
-void SSZEggman_Create(void* data);
+void SSZEggman_Create(void *data);
 void SSZEggman_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SSZEggman_EditorDraw(void);
@@ -49,4 +49,4 @@ void SSZEggman_State_WatchMetalTransform(void);
 void SSZEggman_State_FlyAway(void);
 #endif
 
-#endif //!OBJ_SSZEGGMAN_H
+#endif //! OBJ_SSZEGGMAN_H

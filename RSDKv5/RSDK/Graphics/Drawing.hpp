@@ -73,6 +73,23 @@ struct DrawList {
     int32 layerCount;
 };
 
+struct float4f {
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
+struct float2f {
+    float u;
+    float v;
+};
+
+struct RenderVertex {
+    float4f pos;
+    float2f tex;
+};
+
 extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];
 
@@ -90,10 +107,12 @@ extern ScreenInfo *currentScreen;
 
 extern uint8 startVertex_2P[2];
 extern uint8 startVertex_3P[3];
+extern RenderVertex vertexBuffer[60];
 
 bool32 InitRenderDevice();
 void FlipScreen();
 void ReleaseRenderDevice();
+void InitScreenVertices();
 void UpdateWindow();
 void SetImageTexture(int width, int height, byte *imagePixels);
 
@@ -101,16 +120,17 @@ void GenerateBlendLookupTable();
 
 void InitSystemSurfaces();
 
-void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text);
+void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, char *text);
 void GetWindowSize(int *width, int *height);
 
-inline void SetScreenSplitVerticies(sbyte p2_1, sbyte p2_2, sbyte p3_1, sbyte p3_2, sbyte p3_3)
+inline void SetScreenRenderVertices(sbyte startVert2P_S1, sbyte startVert2P_S2, sbyte startVert3P_S1, sbyte startVert3P_S2, sbyte startVert3P_S3)
 {
-    startVertex_2P[0] = p2_1;
-    startVertex_2P[1] = p2_2;
-    startVertex_3P[0] = p3_1;
-    startVertex_3P[1] = p3_2;
-    startVertex_3P[2] = p3_3;
+    startVertex_2P[0] = startVert2P_S1;
+    startVertex_2P[1] = startVert2P_S2;
+
+    startVertex_3P[0] = startVert3P_S1;
+    startVertex_3P[1] = startVert3P_S2;
+    startVertex_3P[2] = startVert3P_S3;
 }
 
 inline void SetScreenSize(byte screenID, uint16 width, uint16 height)

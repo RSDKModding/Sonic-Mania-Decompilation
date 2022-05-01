@@ -34,7 +34,7 @@ void CompetitionMenu_Update(void);
 void CompetitionMenu_LateUpdate(void);
 void CompetitionMenu_StaticUpdate(void);
 void CompetitionMenu_Draw(void);
-void CompetitionMenu_Create(void* data);
+void CompetitionMenu_Create(void *data);
 void CompetitionMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void CompetitionMenu_EditorDraw(void);
@@ -49,11 +49,11 @@ void CompetitionMenu_HandleMenuReturn(void);
 int32 CompetitionMenu_HandleUnlocks(void);
 void CompetitionMenu_HandleStartCompPrompt(void);
 int32 CompetitionMenu_GetReadyPlayerCount(void);
-int32 CompetitionMenu_GetActivePlayerCount(void);
+int32 CompetitionMenu_GetTotalPlayerCount(void);
 void CompetitionMenu_ResetControllerAssignments(void);
 void CompetitionMenu_SetupSplitScreenChoices(int32 playerCount);
 void CompetitionMenu_SetupSplitScreen(int32 mode);
-void CompetitionMenu_SetupResultsUI(void *control);
+void CompetitionMenu_SetupResultsUI(EntityUIControl *roundControl);
 void CompetitionMenu_GotoCompRules(void);
 void CompetitionMenu_GotoCompZones(void);
 void CompetitionMenu_VS_ProcessInputCB(void);
@@ -76,4 +76,4 @@ bool32 CompetitionMenu_CompZones_BackPressCB(void);
 void CompetitionMenu_GotoPuyoVS(void);
 #endif
 
-#endif //!OBJ_COMPETITIONMENU_H
+#endif //! OBJ_COMPETITIONMENU_H

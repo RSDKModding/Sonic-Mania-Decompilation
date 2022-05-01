@@ -30,7 +30,7 @@ void UIUsernamePopup_Update(void);
 void UIUsernamePopup_LateUpdate(void);
 void UIUsernamePopup_StaticUpdate(void);
 void UIUsernamePopup_Draw(void);
-void UIUsernamePopup_Create(void* data);
+void UIUsernamePopup_Create(void *data);
 void UIUsernamePopup_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIUsernamePopup_EditorDraw(void);
@@ -48,4 +48,4 @@ void UIUsernamePopup_State_Appear(void);
 void UIUsernamePopup_State_Shown(void);
 void UIUsernamePopup_State_Disappear(void);
 
-#endif //!OBJ_UIUSERNAMEPOPUP_H
+#endif //! OBJ_UIUSERNAMEPOPUP_H

@@ -230,7 +230,24 @@ void SpeedBooster_State_SSZBullet(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SpeedBooster_EditorDraw(void) { SpeedBooster_Draw(); }
+void SpeedBooster_EditorDraw(void)
+{
+    RSDK_THIS(SpeedBooster);
+
+    self->visible = true;
+    self->drawPos       = self->position;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+
+    self->active        = ACTIVE_BOUNDS;
+    if (!self->speed)
+        self->speed = RSDK.CheckStageFolder("CPZ") ? 10 : 16;
+    self->groundVel = self->speed << 16;
+
+    RSDK.SetSpriteAnimation(SpeedBooster->aniFrames, 0, &self->animator, true, 0);
+
+    SpeedBooster_Draw();
+}
 
 void SpeedBooster_EditorLoad(void)
 {

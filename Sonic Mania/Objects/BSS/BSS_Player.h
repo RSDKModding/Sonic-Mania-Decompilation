@@ -44,7 +44,7 @@ void BSS_Player_Update(void);
 void BSS_Player_LateUpdate(void);
 void BSS_Player_StaticUpdate(void);
 void BSS_Player_Draw(void);
-void BSS_Player_Create(void* data);
+void BSS_Player_Create(void *data);
 void BSS_Player_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BSS_Player_EditorDraw(void);
@@ -56,4 +56,4 @@ void BSS_Player_Serialize(void);
 void BSS_Player_ProcessP1Input(void);
 void BSS_Player_ProcessP2Input(void);
 
-#endif //!OBJ_BSS_PLAYER_H
+#endif //! OBJ_BSS_PLAYER_H

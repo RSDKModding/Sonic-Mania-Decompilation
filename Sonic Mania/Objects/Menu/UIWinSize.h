@@ -40,7 +40,7 @@ void UIWinSize_Update(void);
 void UIWinSize_LateUpdate(void);
 void UIWinSize_StaticUpdate(void);
 void UIWinSize_Draw(void);
-void UIWinSize_Create(void* data);
+void UIWinSize_Create(void *data);
 void UIWinSize_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIWinSize_EditorDraw(void);
@@ -60,4 +60,4 @@ void UIWinSize_SetChoiceInactive(EntityUIWinSize *entity);
 void UIWinSize_State_HandleButtonLeave(void);
 void UIWinSize_State_HandleButtonEnter(void);
 
-#endif //!OBJ_UIWINSIZE_H
+#endif //! OBJ_UIWINSIZE_H

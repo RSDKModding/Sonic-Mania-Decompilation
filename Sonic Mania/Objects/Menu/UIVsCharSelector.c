@@ -14,6 +14,7 @@ void UIVsCharSelector_Update(void)
     RSDK_THIS(UIVsCharSelector);
 
     self->prevSelected = self->isSelected;
+
     if (self->textFrames != UIWidgets->textFrames || self->prevFrameID != self->frameID) {
         UIVsCharSelector_SetupText();
         self->textFrames  = UIWidgets->textFrames;
@@ -25,6 +26,7 @@ void UIVsCharSelector_Update(void)
     if (self->isSelected) {
         self->triBounceVelocity -= 0x600;
         self->triBounceOffset += self->triBounceVelocity;
+
         if (self->triBounceOffset <= 0x10000 && self->triBounceVelocity < 0) {
             self->triBounceOffset   = 0x10000;
             self->triBounceVelocity = 0;
@@ -32,6 +34,7 @@ void UIVsCharSelector_Update(void)
 
         self->playerBounceVelocity -= 0x1800;
         self->playerBounceOffset += self->playerBounceVelocity;
+
         if (self->playerBounceOffset <= 0x8000 && self->playerBounceVelocity < 0) {
             self->playerBounceOffset   = 0x8000;
             self->playerBounceVelocity = 0;
@@ -40,12 +43,14 @@ void UIVsCharSelector_Update(void)
     else if (self->state != UIVsCharSelector_State_Selected) {
         if (self->triBounceOffset > 0) {
             self->triBounceOffset -= 0x2000;
+
             if (self->triBounceOffset < 0)
                 self->triBounceOffset = 0;
         }
 
         if (self->playerBounceOffset > 0) {
             self->playerBounceOffset -= 0x2000;
+
             if (self->playerBounceOffset < 0)
                 self->playerBounceOffset = 0;
         }
@@ -74,7 +79,9 @@ void UIVsCharSelector_StaticUpdate(void) {}
 void UIVsCharSelector_Draw(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y - 0x2D0000, 0x600000, 0x600000, 0xFFFFFF, 127, INK_BLEND, false);
+
+    RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y - 0x2D0000, 0x600000, 0x600000, 0xFFFFFF, 0x7F, INK_BLEND, false);
+
     UIVsCharSelector_DrawBG();
     UIVsCharSelector_DrawOutline();
     UIVsCharSelector_DrawPlayer();
@@ -83,16 +90,20 @@ void UIVsCharSelector_Draw(void)
 void UIVsCharSelector_Create(void *data)
 {
     RSDK_THIS(UIVsCharSelector);
-    self->frameID         = self->playerID;
-    self->active          = ACTIVE_BOUNDS;
-    self->drawOrder       = 2;
-    self->visible         = true;
-    self->drawFX          = FX_FLIP;
-    self->updateRange.x   = 0x800000;
-    self->updateRange.y   = 0x300000;
+
+    self->frameID       = self->playerID;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = 2;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+
     self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
     self->state           = UIVsCharSelector_State_CharSelect;
+
     UIVsCharSelector_SetupText();
+
     self->textFrames = UIWidgets->textFrames;
 }
 
@@ -101,6 +112,7 @@ void UIVsCharSelector_StageLoad(void) { UIVsCharSelector->aniFrames = RSDK.LoadS
 void UIVsCharSelector_SetupText(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->playerIDAnimator, true, self->playerID + 8);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 12, &self->waitingAnimator, true, 7);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 8, &self->playerNameAnimator, true, self->frameID);
@@ -109,8 +121,10 @@ void UIVsCharSelector_SetupText(void)
 void UIVsCharSelector_DrawOutline(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     if (!SceneInfo->inEditor)
         UIWidgets_DrawRectOutline_Blended(self->position.x + 0x30000, self->position.y + 0x30000, 96, 96);
+
     if (self->isSelected)
         UIWidgets_DrawRectOutline_Flash(self->position.x, self->position.y, 96, 96);
     else
@@ -120,6 +134,7 @@ void UIVsCharSelector_DrawOutline(void)
 void UIVsCharSelector_DrawBG(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     UIWidgets_DrawRightTriangle(self->position.x - 0x2D0000, self->position.y - 0x2D0000, (self->triBounceOffset >> 11), 232, 40, 88);
     UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-64 * self->triBounceOffset) >> 16, 96, 160, 176);
     UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-44 * self->triBounceOffset) >> 16, 88, 112, 224);
@@ -128,8 +143,8 @@ void UIVsCharSelector_DrawBG(void)
 void UIVsCharSelector_DrawPlayer(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x - 0x2D0000;
     drawPos.y = self->position.y + 0x180000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
@@ -139,8 +154,8 @@ void UIVsCharSelector_DrawPlayer(void)
     drawPos.y = self->position.y - 0x2D0000;
     RSDK.DrawSprite(&self->edgeAnimator, &drawPos, false);
 
-    drawPos.y += 0x80000;
     drawPos.x -= 0xA0000;
+    drawPos.y += 0x80000;
     RSDK.DrawSprite(&self->playerIDAnimator, &drawPos, false);
 
     if (self->state == UIVsCharSelector_State_WaitingForPlayer) {
@@ -153,9 +168,10 @@ void UIVsCharSelector_DrawPlayer(void)
     else if (self->state != UIVsCharSelector_State_Selected || !(self->timer & 2)) {
         int32 frameID = self->frameID;
 #if RETRO_USE_PLUS
-        if (self->frameID > UICHARBUTTON_KNUX)
+        if (self->frameID >= UICHARBUTTON_MIGHTY)
             frameID++;
 #endif
+
         RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 1, &self->playerAnimator, true, frameID);
         RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 2, &self->shadowAnimator, true, frameID);
         drawPos.x = self->position.x;
@@ -176,6 +192,7 @@ void UIVsCharSelector_DrawPlayer(void)
     if (!self->ready && self->state != UIVsCharSelector_State_WaitingForPlayer) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x200000;
+
         if (RSDK.Sin256(2 * UIControl->timer) < 0)
             UIWidgets_DrawLeftRightArrows(drawPos.x, drawPos.y, (-RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11);
         else
@@ -186,22 +203,28 @@ void UIVsCharSelector_DrawPlayer(void)
 void UIVsCharSelector_ProcessButtonCB(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     if (parent->active == ACTIVE_ALWAYS) {
         int32 storedFrame = self->frameID;
         int32 inc         = 1;
+
         if (UIControl->leftPress[self->playerID]) {
+            inc = -1;
             --self->frameID;
-            inc                        = -1;
+
             self->playerBounceOffset   = 0;
             self->playerBounceVelocity = 0x8000;
+
             RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         }
         else if (UIControl->rightPress[self->playerID]) {
             ++self->frameID;
+
             self->playerBounceOffset   = 0;
             self->playerBounceVelocity = 0x8000;
+
             RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         }
 
@@ -212,16 +235,12 @@ void UIVsCharSelector_ProcessButtonCB(void)
 #endif
         max++;
 
-        while (self->frameID < 0) {
-            self->frameID += max;
-        }
-
-        while (self->frameID >= max) {
-            self->frameID -= max;
-        }
+        while (self->frameID < 0) self->frameID += max;
+        while (self->frameID >= max) self->frameID -= max;
 
 #if RETRO_GAMEVER != VER_100
         int32 activePlayers = 0;
+
         for (int32 i = 0; i < parent->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)parent->buttons[i];
             if (button->state == UIVsCharSelector_State_Selected || button->processButtonCB == UIVsCharSelector_ProcessButtonCB_CharSelected)
@@ -231,10 +250,13 @@ void UIVsCharSelector_ProcessButtonCB(void)
         int32 frame = self->frameID;
         while ((1 << frame) & activePlayers) {
             frame += inc;
+
             if (frame < 0)
                 frame += max;
+
             if (frame >= max)
                 frame -= max;
+
             self->frameID = frame;
         }
 
@@ -252,11 +274,13 @@ void UIVsCharSelector_ProcessButtonCB(void)
             pressed = ControllerInfo[self->playerID + 1].keyB.press;
         else
             pressed = ControllerInfo[self->playerID + 1].keyA.press;
+
         if (pressed) {
             self->timer           = 0;
             self->state           = UIVsCharSelector_State_Selected;
             self->processButtonCB = StateMachine_None;
             self->ready           = true;
+
             RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         }
         else if (!self->isSelected && !self->ready) {
@@ -269,6 +293,7 @@ void UIVsCharSelector_ProcessButtonCB(void)
 void UIVsCharSelector_ProcessButtonCB_CharSelected(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     if (parent->active == ACTIVE_ALWAYS) {
@@ -279,9 +304,11 @@ void UIVsCharSelector_ProcessButtonCB_CharSelected(void)
             pressed = ControllerInfo[self->playerID + 1].keyB.press;
         else
             pressed = ControllerInfo[self->playerID + 1].keyA.press;
+
         if (pressed) {
             self->timer = 0;
             UIVsCharSelector_State_ResetState();
+
             self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
             self->ready           = false;
         }
@@ -297,6 +324,7 @@ void UIVsCharSelector_State_ResetState(void)
 #else
     self->state = UIVsCharSelector_State_CharSelect;
 #endif
+
     if (!self->isSelected) {
         self->triBounceVelocity    = 0x4000;
         self->playerBounceOffset   = 0;
@@ -323,6 +351,7 @@ void UIVsCharSelector_State_CharSelect(void)
 void UIVsCharSelector_State_WaitingForPlayer(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     self->processButtonCB = StateMachine_None;
@@ -332,6 +361,7 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
 #if RETRO_USE_PLUS
     self->ready    = false;
     int32 assigned = RSDK.GetAssignedControllerID(id);
+
     if (parent->active == ACTIVE_ALWAYS) {
         if (!id || (!assigned && id != CONT_AUTOASSIGN)) {
             API_AssignControllerID(self->playerID + 1, CONT_AUTOASSIGN);
@@ -355,6 +385,7 @@ void UIVsCharSelector_State_WaitingForPlayer(void)
 void UIVsCharSelector_State_HandlePlayerJoin(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     self->isSelected = true;
@@ -382,10 +413,12 @@ void UIVsCharSelector_State_Selected(void)
 
     if (self->timer >= 30) {
         if (self->parent->active == ACTIVE_ALWAYS) {
-            self->isSelected      = false;
-            self->timer           = 0;
+            self->isSelected = false;
+            self->timer      = 0;
+
             self->state           = UIVsCharSelector_State_CharSelect;
             self->processButtonCB = UIVsCharSelector_ProcessButtonCB_CharSelected;
+
             StateMachine_Run(self->actionCB);
         }
     }
@@ -402,6 +435,7 @@ void UIVsCharSelector_State_Selected(void)
                 default: break;
             }
         }
+
         ++self->timer;
     }
 }
@@ -410,6 +444,7 @@ void UIVsCharSelector_State_Selected(void)
 void UIVsCharSelector_EditorDraw(void)
 {
     RSDK_THIS(UIVsCharSelector);
+
     self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
 
     UIVsCharSelector_Draw();

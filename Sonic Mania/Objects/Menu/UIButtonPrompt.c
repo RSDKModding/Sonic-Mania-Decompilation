@@ -19,6 +19,7 @@ void UIButtonPrompt_Update(void)
         textChanged      = true;
         self->textSprite = UIWidgets->textFrames;
     }
+
     if (self->scale.x == 0x200 && self->scaleMax == 0x200 && self->scaleSpeed)
         self->scaleSpeed = 0;
 
@@ -36,6 +37,7 @@ void UIButtonPrompt_Update(void)
         if (self->scale.x > self->scaleMax)
             self->scale.x = self->scaleMax;
     }
+
     self->scale.y = self->scale.x;
 
     if (self->prevPrompt != self->promptID) {
@@ -62,26 +64,33 @@ void UIButtonPrompt_Update(void)
 void UIButtonPrompt_LateUpdate(void)
 {
     RSDK_THIS(UIButtonPrompt);
+
     EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control && self->headingAnchor) {
+
         EntityUIHeading *heading = (EntityUIHeading *)control->heading;
         if (heading) {
             switch (self->headingAnchor) {
-                default: break;
-                case 1:
+                default:
+                case UIBUTTONPROMPT_ANCHOR_NONE: break;
+
+                case UIBUTTONPROMPT_ANCHOR_TOPLEFT:
                     self->position.x = heading->position.x - 0xBC0000;
                     self->position.y = heading->position.y - 0x80000;
                     break;
-                case 2:
-                    self->position.x = 0x7C0000 + heading->position.x;
+
+                case UIBUTTONPROMPT_ANCHOR_TOPRIGHT:
+                    self->position.x = heading->position.x + 0x7C0000;
                     self->position.y = heading->position.y - 0x80000;
                     break;
-                case 3:
-                    self->position.x = 0x7C0000 + heading->position.x;
+
+                case UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT:
+                    self->position.x = heading->position.x + 0x7C0000;
                     self->position.y = heading->position.y + 0x100000;
                     break;
-                case 4:
-                    self->position.x = (heading->position.x - 0xBC0000);
+
+                case UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT:
+                    self->position.x = heading->position.x - 0xBC0000;
                     self->position.y = heading->position.y + 0x100000;
                     break;
             }
@@ -92,6 +101,7 @@ void UIButtonPrompt_LateUpdate(void)
 void UIButtonPrompt_StaticUpdate(void)
 {
     UIButtonPrompt->type = UIButtonPrompt_GetGamepadType();
+
 #if RETRO_USE_PLUS
     int32 id = API_MostRecentActiveControllerID(0, 0, 0);
 #else
@@ -100,16 +110,15 @@ void UIButtonPrompt_StaticUpdate(void)
     int32 gamepadType = API_GetControllerType(id);
     int32 deviceType  = (gamepadType >> 8) & 0xFF;
 
-    if (deviceType == DEVICE_TYPE_KEYBOARD)
-        UIButtonPrompt->inputID = gamepadType & 0xFF;
-    else
-        UIButtonPrompt->inputID = CONT_P1;
+    UIButtonPrompt->inputID = deviceType == DEVICE_TYPE_KEYBOARD ? (gamepadType & 0xFF) : CONT_P1;
 }
 
 void UIButtonPrompt_Draw(void)
 {
     RSDK_THIS(UIButtonPrompt);
+
     UIButtonPrompt_SetButtonSprites();
+
     RSDK.DrawSprite(&self->decorAnimator, NULL, false);
 
     self->drawFX = FX_SCALE;
@@ -123,6 +132,7 @@ void UIButtonPrompt_Draw(void)
 void UIButtonPrompt_Create(void *data)
 {
     RSDK_THIS(UIButtonPrompt);
+
     if (!SceneInfo->inEditor) {
         self->startPos      = self->position;
         self->visible       = true;
@@ -136,12 +146,15 @@ void UIButtonPrompt_Create(void *data)
         self->updateRange.x = 0x2000000;
         self->updateRange.y = 0x800000;
         self->textVisible   = true;
+
         RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->decorAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->promptAnimator, true, self->promptID);
+
         UIButtonPrompt_SetButtonSprites();
+
         self->textSprite  = UIWidgets->textFrames;
         self->state       = UIButtonPrompt_State_CheckIfSelected;
-        self->parent      = 0;
+        self->parent      = NULL;
         self->touchSize.x = 0x580000;
         self->touchSize.y = 0x100000;
         self->touchPos.x  = 0x200000;
@@ -150,22 +163,24 @@ void UIButtonPrompt_Create(void *data)
 
 void UIButtonPrompt_StageLoad(void)
 {
-    UIButtonPrompt->type      = UIBUTTONPROMPT_KEYBOARD;
-    UIButtonPrompt->inputID   = CONT_P1;
+    UIButtonPrompt->type    = UIBUTTONPROMPT_KEYBOARD;
+    UIButtonPrompt->inputID = CONT_P1;
+
     UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
 }
 
 int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 {
     switch (button) {
-        case 0: return ControllerInfo[input].keyA.keyMap;
-        case 1: return ControllerInfo[input].keyB.keyMap;
-        case 2: return ControllerInfo[input].keyX.keyMap;
-        case 3: return ControllerInfo[input].keyY.keyMap;
-        case 4: return ControllerInfo[input].keyStart.keyMap;
-        case 5: return ControllerInfo[input].keySelect.keyMap;
+        case UIBUTTONPROMPT_BUTTON_A: return ControllerInfo[input].keyA.keyMap;
+        case UIBUTTONPROMPT_BUTTON_B: return ControllerInfo[input].keyB.keyMap;
+        case UIBUTTONPROMPT_BUTTON_X: return ControllerInfo[input].keyX.keyMap;
+        case UIBUTTONPROMPT_BUTTON_Y: return ControllerInfo[input].keyY.keyMap;
+        case UIBUTTONPROMPT_BUTTON_START: return ControllerInfo[input].keyStart.keyMap;
+        case UIBUTTONPROMPT_BUTTON_SELECT: return ControllerInfo[input].keySelect.keyMap;
         default: break;
     }
+
     return 0;
 }
 
@@ -360,6 +375,7 @@ bool32 UIButtonPrompt_CheckTouch(void)
             self->touched = false;
         }
     }
+
     return false;
 }
 
@@ -387,9 +403,11 @@ void UIButtonPrompt_State_Selected(void)
         self->timer       = 0;
         self->textVisible = true;
         self->state       = UIButtonPrompt_State_CheckIfSelected;
-        int32 buttonID    = self->buttonID;
+
+        int32 buttonID = self->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
+
         UIControl_ClearInputs(buttonID);
     }
     self->textVisible = !((self->timer >> 1) & 1);
@@ -408,13 +426,32 @@ void UIButtonPrompt_EditorDraw(void)
     self->textVisible   = true;
     RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->decorAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, 0, &self->promptAnimator, true, self->promptID);
+
     UIButtonPrompt_SetButtonSprites();
     self->textSprite = UIWidgets->textFrames;
 
     UIButtonPrompt_Draw();
 }
 
-void UIButtonPrompt_EditorLoad(void) { UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE); }
+void UIButtonPrompt_EditorLoad(void)
+{
+    UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(UIButtonPrompt, buttonID);
+    RSDK_ENUM_VAR("A", UIBUTTONPROMPT_BUTTON_A);
+    RSDK_ENUM_VAR("B", UIBUTTONPROMPT_BUTTON_B);
+    RSDK_ENUM_VAR("X", UIBUTTONPROMPT_BUTTON_X);
+    RSDK_ENUM_VAR("Y", UIBUTTONPROMPT_BUTTON_Y);
+    RSDK_ENUM_VAR("Start", UIBUTTONPROMPT_BUTTON_START);
+    RSDK_ENUM_VAR("Select", UIBUTTONPROMPT_BUTTON_SELECT);
+
+    RSDK_ACTIVE_VAR(UIButtonPrompt, headingAnchor);
+    RSDK_ENUM_VAR("None", UIBUTTONPROMPT_ANCHOR_NONE);
+    RSDK_ENUM_VAR("Top-Left", UIBUTTONPROMPT_ANCHOR_TOPLEFT);
+    RSDK_ENUM_VAR("Top-Right", UIBUTTONPROMPT_ANCHOR_TOPRIGHT);
+    RSDK_ENUM_VAR("Bottom-Right", UIBUTTONPROMPT_ANCHOR_BOTTOMRIGHT);
+    RSDK_ENUM_VAR("Bottom-Left", UIBUTTONPROMPT_ANCHOR_BOTTOMLEFT);
+}
 #endif
 
 void UIButtonPrompt_Serialize(void)

@@ -30,7 +30,7 @@ void UIShifter_Update(void);
 void UIShifter_LateUpdate(void);
 void UIShifter_StaticUpdate(void);
 void UIShifter_Draw(void);
-void UIShifter_Create(void* data);
+void UIShifter_Create(void *data);
 void UIShifter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIShifter_EditorDraw(void);
@@ -42,4 +42,4 @@ void UIShifter_Serialize(void);
 void UIShifter_HandleShift(void);
 #endif
 
-#endif //!OBJ_UISHIFTER_H
+#endif //! OBJ_UISHIFTER_H

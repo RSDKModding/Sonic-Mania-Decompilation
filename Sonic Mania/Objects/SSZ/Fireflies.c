@@ -12,6 +12,7 @@ ObjectFireflies *Fireflies;
 void Fireflies_Update(void)
 {
     RSDK_THIS(Fireflies);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,12 +23,14 @@ void Fireflies_StaticUpdate(void) {}
 void Fireflies_Draw(void)
 {
     RSDK_THIS(Fireflies);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Fireflies_Create(void *data)
 {
     RSDK_THIS(Fireflies);
+
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_NORMAL;
         self->drawOrder     = Zone->objectDrawLow;
@@ -55,6 +58,7 @@ void Fireflies_State_Spawner(void)
 
     if (self->timer <= 0) {
         self->timer = 1;
+
         if (Fireflies->activeFireflyCount < 48) {
             Vector2 startPos, points[1];
 
@@ -64,7 +68,7 @@ void Fireflies_State_Spawner(void)
             int32 w                = ZONE_RAND(-screen->width, screen->width);
             int32 h                = ZONE_RAND(-screen->height, screen->height);
 
-            startPos.x = x + (w << 16);
+            startPos.x     = x + (w << 16);
             startPos.y     = y + (h << 16);
             bool32 isLarge = ZONE_RAND(0, 10) > 7;
 
@@ -77,25 +81,6 @@ void Fireflies_State_Spawner(void)
             fireflies->updateRange.y = 0x800000;
             fireflies->active        = ACTIVE_NORMAL;
             fireflies->points[0]     = startPos;
-            
-            int32 amplitude     = ZONE_RAND(32, 128);
-            int32 angle         = ZONE_RAND(0, 511);
-            int32 midPosX = startPos.x + amplitude * (RSDK.Cos512(angle) << 7);
-            int32 midPosY = startPos.y + amplitude * (RSDK.Sin512(angle) << 7);
-
-            // TODO: ???
-            amplitude              = ZONE_RAND(32, 64);
-            angle                  = ZONE_RAND(0, 511);
-            fireflies->points[1].x = midPosX;
-            fireflies->points[1].y = midPosY;
-
-            amplitude              = ZONE_RAND(32, 64);
-            angle                  = ZONE_RAND(0, 511);
-            fireflies->points[2].x = midPosX + amplitude * (RSDK.Cos512(angle) << 7);
-            fireflies->points[2].y = midPosY + amplitude * (RSDK.Sin512(angle) << 7);
-
-            fireflies->points[3].x = midPosX;
-            fireflies->points[3].y = midPosY;
 
             ++Fireflies->activeFireflyCount;
 
@@ -136,10 +121,11 @@ void Fireflies_State_Firefly(void)
     int32 percent  = (self->timer << 16) / self->duration;
     self->position = MathHelpers_GetBezierPoint(percent, self->points[0].x, self->points[0].y, self->points[1].x, self->points[1].y,
                                                 self->points[2].x, self->points[2].y, self->points[3].x, self->points[3].y);
+
     if (!percent)
         self->position = self->points[0];
 
-    if (self->timer < self->duration - 8) {
+    if (self->timer + 8 < self->duration) {
         if (self->alpha < 0x100)
             self->alpha += 0x20;
     }
@@ -160,7 +146,9 @@ void Fireflies_State_Firefly(void)
 void Fireflies_EditorDraw(void)
 {
     RSDK_THIS(Fireflies);
+
     self->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(Fireflies->aniFrames, 5, &self->animator, true, 0);
 
     Fireflies_Draw();
 }

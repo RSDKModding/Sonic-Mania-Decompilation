@@ -12,6 +12,7 @@ ObjectUIText *UIText;
 void UIText_Update(void)
 {
     RSDK_THIS(UIText);
+
     if (self->animator.animationID != self->highlighted + self->listID) {
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteAnimation(UIText->aniFrames, self->highlighted + self->listID, &self->animator, true, 0);
@@ -27,28 +28,30 @@ void UIText_StaticUpdate(void) {}
 void UIText_Draw(void)
 {
     RSDK_THIS(UIText);
+
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
 
-    uint16 spr = -1;
-    if (!UIWidgets || UIText->aniFrames)
-        spr = UIText->aniFrames;
-    else
-        spr = UIWidgets->uiFrames;
-    int32 width = RSDK.GetStringWidth(spr, self->listID, &self->text, 0, self->text.length, 0);
-    if (self->align == ALIGN_RIGHT) {
-        drawPos.x -= width << 15;
+    uint16 frames = (!UIWidgets || UIText->aniFrames) ? UIText->aniFrames : UIWidgets->uiFrames;
+
+    int32 width = RSDK.GetStringWidth(frames, self->listID, &self->text, 0, self->text.length, 0);
+    switch (self->align) {
+        default:
+        case UITEXT_ALIGN_LEFT: break;
+
+        case UITEXT_ALIGN_CENTER: drawPos.x -= width << 15; break;
+
+        case UITEXT_ALIGN_RIGHT: drawPos.x -= width << 16; break;
     }
-    if (self->align == ALIGN_CENTER) {
-        drawPos.x -= width << 16;
-    }
-    RSDK.DrawText(&self->animator, &drawPos, &self->text, 0, 0, ALIGN_LEFT, 0, 0, NULL, false);
+
+    RSDK.DrawText(&self->animator, &drawPos, &self->text, 0, 0, ALIGN_LEFT, 0, NULL, NULL, false);
 }
 
 void UIText_Create(void *data)
 {
     RSDK_THIS(UIText);
+
     if (!UIWidgets || UIText->aniFrames)
         RSDK.SetSpriteAnimation(UIText->aniFrames, self->listID, &self->animator, true, 0);
     else
@@ -58,8 +61,10 @@ void UIText_Create(void *data)
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->drawOrder = 2;
+
         if (!self->text.text)
             RSDK.SetText(&self->text, "UNTITLED", false);
+
         if (!UIWidgets || UIText->aniFrames)
             RSDK.SetSpriteString(UIText->aniFrames, self->listID, &self->text);
         else
@@ -73,15 +78,42 @@ void UIText_StageLoad(void) {}
 void UIText_EditorDraw(void)
 {
     RSDK_THIS(UIText);
-    if (!UIWidgets || UIText->aniFrames)
-        RSDK.SetSpriteAnimation(UIText->aniFrames, self->highlighted + self->listID, &self->animator, true, 0);
-    else
-        RSDK.SetSpriteAnimation(UIWidgets->uiFrames, self->listID, &self->animator, true, 0);
 
-    RSDK.DrawSprite(&self->animator, NULL, false);
+    uint16 frames = (!UIWidgets || UIText->aniFrames) ? UIText->aniFrames : UIWidgets->uiFrames;
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteAnimation(frames, self->highlighted + self->listID, &self->animator, true, 0);
+    else
+        RSDK.SetSpriteAnimation(frames, self->listID, &self->animator, true, 0);
+    RSDK.SetSpriteString(frames, self->listID, &self->text);
+
+
+    Vector2 drawPos;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+
+    int32 width = RSDK.GetStringWidth(frames, self->listID, &self->text, 0, self->text.length, 0);
+    switch (self->align) {
+        default:
+        case UITEXT_ALIGN_LEFT: break;
+
+        case UITEXT_ALIGN_CENTER: drawPos.x -= width << 15; break;
+
+        case UITEXT_ALIGN_RIGHT: drawPos.x -= width << 16; break;
+    }
+
+    RSDK.DrawText(&self->animator, &drawPos, &self->text, 0, 0, ALIGN_LEFT, 0, NULL, NULL, false);
 }
 
-void UIText_EditorLoad(void) {}
+void UIText_EditorLoad(void)
+{
+    if (!UIText->aniFrames)
+        UIText->aniFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(UIText, align);
+    RSDK_ENUM_VAR("Left", UITEXT_ALIGN_LEFT);
+    RSDK_ENUM_VAR("Center", UITEXT_ALIGN_CENTER);
+    RSDK_ENUM_VAR("Right", UITEXT_ALIGN_RIGHT);
+}
 #endif
 
 void UIText_Serialize(void)

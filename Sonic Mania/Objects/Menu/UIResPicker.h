@@ -11,7 +11,7 @@ struct ObjectUIResPicker {
 
 // Entity Class
 struct EntityUIResPicker {
-	MANIA_UI_ITEM_BASE
+    MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
     int32 arrowWidth;
@@ -42,7 +42,7 @@ void UIResPicker_Update(void);
 void UIResPicker_LateUpdate(void);
 void UIResPicker_StaticUpdate(void);
 void UIResPicker_Draw(void);
-void UIResPicker_Create(void* data);
+void UIResPicker_Create(void *data);
 void UIResPicker_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIResPicker_EditorDraw(void);
@@ -62,4 +62,4 @@ void UIResPicker_SetChoiceInactive(EntityUIResPicker *entity);
 void UIResPicker_State_HandleButtonLeave(void);
 void UIResPicker_State_HandleButtonEnter(void);
 
-#endif //!OBJ_UIRESPICKER_H
+#endif //! OBJ_UIRESPICKER_H

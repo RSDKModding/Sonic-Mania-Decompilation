@@ -7,7 +7,7 @@ typedef enum {
     HOTARUMKII_MAIN,
     HOTARUMKII_FLASH,
     HOTARUMKII_LASER,
-}HotaruMKIITypes;
+} HotaruMKIITypes;
 
 // Object Class
 struct ObjectHotaruMKII {
@@ -55,7 +55,7 @@ void HotaruMKII_Update(void);
 void HotaruMKII_LateUpdate(void);
 void HotaruMKII_StaticUpdate(void);
 void HotaruMKII_Draw(void);
-void HotaruMKII_Create(void* data);
+void HotaruMKII_Create(void *data);
 void HotaruMKII_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void HotaruMKII_EditorDraw(void);
@@ -84,4 +84,4 @@ void HotaruMKII_State_Flash(void);
 void HotaruMKII_State_Laser(void);
 void HotaruMKII_State_LaserStrike(void);
 
-#endif //!OBJ_HOTARUMKII_H
+#endif //! OBJ_HOTARUMKII_H

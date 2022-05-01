@@ -13,44 +13,43 @@ void SDashWheel_Update(void)
 {
     RSDK_THIS(SDashWheel);
 
-    Hitbox hitbox;
-    hitbox.left           = -32;
-    hitbox.right          = 32;
+    Hitbox hitboxSolid;
+    hitboxSolid.left  = -32;
+    hitboxSolid.right = 32;
+
     self->down            = false;
     self->currentlyActive = false;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &SDashWheel->hitbox) && player->animator.animationID == ANI_SPINDASH) {
+        if (Player_CheckCollisionTouch(player, self, &SDashWheel->hitboxWheel) && player->animator.animationID == ANI_SPINDASH) {
             if (!self->wasActivated) {
                 self->toggled ^= true;
                 self->currentlyActive = true;
                 RSDK.PlaySfx(SDashWheel->sfxBumper, false, 255);
             }
+
             self->wasActivated = true;
             self->down         = true;
             self->activated    = true;
             self->cooldown     = 60;
-            if (player->direction == FLIP_NONE)
-                self->rotateOffset = -32;
-            else
-                self->rotateOffset = 32;
+            self->rotateOffset = player->direction == FLIP_NONE ? -32 : 32;
         }
-        int32 dist = minVal(abs(self->position.x - player->position.x) >> 16, 31);
 
-        hitbox.top    = SDashWheel->heightArray[dist] - 36;
-        hitbox.bottom = -4 - hitbox.top;
-        if (Player_CheckCollisionBox(player, self, &hitbox) == C_TOP) {
+        int32 stoodPos = minVal(abs(self->position.x - player->position.x) >> 16, 31);
+
+        hitboxSolid.top    = SDashWheel->heightTable[stoodPos] - 36;
+        hitboxSolid.bottom = -4 - hitboxSolid.top;
+        if (Player_CheckCollisionBox(player, self, &hitboxSolid) == C_TOP) {
             player->position.y += 0x40000;
+
             if (player->animator.animationID == ANI_SPINDASH || self->cooldown > 0) {
                 RSDK.PlaySfx(SDashWheel->sfxBumper, false, 255);
-                if (player->animator.animationID == ANI_SPINDASH) {
-                    self->cooldown = 60;
 
-                    if (player->direction == FLIP_NONE)
-                        self->rotateOffset = -32;
-                    else
-                        self->rotateOffset = 32;
+                if (player->animator.animationID == ANI_SPINDASH) {
+                    self->cooldown     = 60;
+                    self->rotateOffset = player->direction == FLIP_NONE ? -32 : 32;
+
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 }
 
@@ -68,11 +67,13 @@ void SDashWheel_Update(void)
 
     if (self->cooldown > 0) {
         self->cooldown--;
+
         if (!self->cooldown) {
             RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->shineAnimator, true, 0);
         }
         else {
             self->rotation = (self->rotation + self->rotateOffset) & 0xFF;
+
             RSDK.ProcessAnimation(&self->shineAnimator);
         }
     }
@@ -85,6 +86,7 @@ void SDashWheel_StaticUpdate(void) {}
 void SDashWheel_Draw(void)
 {
     RSDK_THIS(SDashWheel);
+
     RSDK.DrawSprite(&self->mainAnimator, NULL, false);
     RSDK.DrawSprite(&self->knobAnimator, NULL, false);
     RSDK.DrawSprite(&self->shineAnimator, NULL, false);
@@ -100,31 +102,32 @@ void SDashWheel_Create(void *data)
         self->drawFX        = FX_ROTATE | FX_FLIP;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &self->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->shineAnimator, true, 0);
         RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->knobAnimator, true, 0);
-        if (RSDK.GetFrameID(&self->mainAnimator)) // ideally use 'h'
-            self->drawOrder = Zone->objectDrawHigh;
-        else
-            self->drawOrder = Zone->objectDrawLow;
+
+        // ideally use 'h' (for "high")
+        self->drawOrder = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
     }
 }
 
 void SDashWheel_StageLoad(void)
 {
-    SDashWheel->aniFrames     = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE);
+    SDashWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE);
 
-    SDashWheel->hitbox.top    = -33;
-    SDashWheel->hitbox.left   = -33;
-    SDashWheel->hitbox.right  = 33;
-    SDashWheel->hitbox.bottom = 0;
+    SDashWheel->hitboxWheel.top    = -33;
+    SDashWheel->hitboxWheel.left   = -33;
+    SDashWheel->hitboxWheel.right  = 33;
+    SDashWheel->hitboxWheel.bottom = 0;
 
-    SDashWheel->sfxBumper     = RSDK.GetSfx("Stage/Bumper3.wav");
+    SDashWheel->sfxBumper = RSDK.GetSfx("Stage/Bumper3.wav");
+
     if (RSDK.CheckStageFolder("SSZ1"))
-        Soundboard_LoadSFX("SSZ1/MGZDoor.wav", true, SDashWheel_CheckCB, SDashWheel_UpdateCB);
+        Soundboard_LoadSFX("SSZ1/MGZDoor.wav", true, SDashWheel_CheckCB_SfxMGZDoor, SDashWheel_UpdateCB_SfxMGZDoor);
 }
 
-bool32 SDashWheel_CheckCB(void)
+bool32 SDashWheel_CheckCB_SfxMGZDoor(void)
 {
     int32 count = 0;
     foreach_active(PlatformControl, control)
@@ -132,10 +135,11 @@ bool32 SDashWheel_CheckCB(void)
         if (control->taggedButton && control->isActive && control->speed > 0)
             ++count;
     }
+
     return count > 0;
 }
 
-void SDashWheel_UpdateCB(int32 sfx)
+void SDashWheel_UpdateCB_SfxMGZDoor(int32 sfx)
 {
     if (!(Soundboard->sfxPlayingTimer[sfx] % 6))
         Camera_ShakeScreen(0, 0, 2);
@@ -147,12 +151,11 @@ void SDashWheel_EditorDraw(void)
     RSDK_THIS(SDashWheel);
 
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &self->mainAnimator, false, 0);
-    RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->shineAnimator, false, 0);
+    RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &self->shineAnimator, false, 1);
     RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &self->knobAnimator, false, 0);
-    if (RSDK.GetFrameID(&self->mainAnimator)) // ideally use 'h'
-        self->drawOrder = Zone->objectDrawHigh;
-    else
-        self->drawOrder = Zone->objectDrawLow;
+
+    // ideally use 'h' (for "high")
+    self->drawOrder = RSDK.GetFrameID(&self->mainAnimator) ? Zone->objectDrawHigh : Zone->objectDrawLow;
 
     SDashWheel_Draw();
 }
@@ -162,8 +165,8 @@ void SDashWheel_EditorLoad(void)
     SDashWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(SDashWheel, direction);
-    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
-    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

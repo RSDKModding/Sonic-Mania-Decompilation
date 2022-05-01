@@ -338,7 +338,6 @@ struct RetroEngine {
     SDL_Texture *screenBuffer[SCREEN_MAX];
 
     SDL_Texture *imageTexture = nullptr;
-    SDL_Texture *videoBuffer  = nullptr;
 
     SDL_DisplayMode *displays = nullptr;
     int32 displayCount        = 0;

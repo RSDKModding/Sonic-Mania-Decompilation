@@ -12,6 +12,7 @@ ObjectUIUsernamePopup *UIUsernamePopup;
 void UIUsernamePopup_Update(void)
 {
     RSDK_THIS(UIUsernamePopup);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void UIUsernamePopup_StaticUpdate(void) {}
 void UIUsernamePopup_Draw(void)
 {
     RSDK_THIS(UIUsernamePopup);
+
     if (self->isVisible)
         UIUsernamePopup_DrawSprites();
 }
@@ -29,6 +31,7 @@ void UIUsernamePopup_Draw(void)
 void UIUsernamePopup_Create(void *data)
 {
     RSDK_THIS(UIUsernamePopup);
+
     self->active    = ACTIVE_ALWAYS;
     self->drawOrder = 13;
     self->drawPos.x = 0;
@@ -65,8 +68,8 @@ void UIUsernamePopup_ShowPopup(void)
 void UIUsernamePopup_DrawSprites(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->drawPos.x + self->size.y + (ScreenInfo->position.x << 16) + (self->size.x >> 1);
     drawPos.y = self->drawPos.y + (ScreenInfo->centerY << 16) - (self->size.y >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, self->size.x >> 16, self->size.y >> 16, self->size.y >> 16, 0x10, 0x7C, 0x10);
@@ -80,6 +83,7 @@ void UIUsernamePopup_DrawSprites(void)
 void UIUsernamePopup_State_Setup(void)
 {
     RSDK_THIS(UIUsernamePopup);
+
     self->isVisible = false;
     self->timer     = 0;
 }
@@ -110,6 +114,7 @@ void UIUsernamePopup_State_Appear(void)
 void UIUsernamePopup_State_Shown(void)
 {
     RSDK_THIS(UIUsernamePopup);
+
     if (self->timer >= 180) {
         self->timer = 0;
         self->state = UIUsernamePopup_State_Disappear;
@@ -122,6 +127,7 @@ void UIUsernamePopup_State_Shown(void)
 void UIUsernamePopup_State_Disappear(void)
 {
     RSDK_THIS(UIUsernamePopup);
+
     if (self->timer >= 8) {
         self->drawPos.y = self->size.y;
         self->timer     = 0;
@@ -138,7 +144,18 @@ void UIUsernamePopup_State_Disappear(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIUsernamePopup_EditorDraw(void) {}
+void UIUsernamePopup_EditorDraw(void)
+{
+    RSDK_THIS(UIUsernamePopup);
+
+    self->drawOrder = 13;
+    self->drawPos.x = 0;
+    self->drawPos.y = 0;
+    self->size.x    = 0;
+    self->size.y    = 0x180000;
+
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, self->size.x >> 16, self->size.y >> 16, self->size.y >> 16, 0x10, 0x7C, 0x10);
+}
 
 void UIUsernamePopup_EditorLoad(void) {}
 #endif

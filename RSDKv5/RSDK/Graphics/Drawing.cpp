@@ -14,8 +14,77 @@ ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[CAMERA_MAX];
 ScreenInfo *currentScreen = NULL;
 
-uint8 startVertex_2P[2];
-uint8 startVertex_3P[3];
+uint8 startVertex_2P[2] = { 18, 24 };
+uint8 startVertex_3P[3] = { 30, 36, 12 };
+
+RenderVertex vertexBuffer[60];
+
+#if RETRO_USING_SDL2
+// clang-format off
+SDL_Color vertexColorBuffer[60] = {
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+    { 0xFF, 0xFF, 0xFF, 0xFF },
+};
+// clang-format on
+#endif
 
 char drawGroupNames[0x10][0x10] = {
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
@@ -125,6 +194,8 @@ bool32 InitRenderDevice()
     SDL_RenderSetLogicalSize(engine.renderer, pixWidth, SCREEN_YSIZE);
     SDL_SetRenderDrawBlendMode(engine.renderer, SDL_BLENDMODE_BLEND);
 
+    InitScreenVertices();
+
     for (int s = 0; s < SCREEN_MAX; ++s) {
         engine.screenBuffer[s] =
             SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
@@ -181,153 +252,105 @@ void FlipScreen()
 
     float dimAmount = engine.dimMax * engine.dimPercent;
 
-    switch (sceneInfo.state) {
-        default: {
+    
 #if RETRO_USING_SDL2
-            SDL_Rect destScreenPos[SCREEN_MAX];
 
-            switch (engine.screenCount) {
-                default: break;
+    int pitch      = 0;
+    uint16 *pixels = NULL;
+    for (int s = 0; s < engine.screenCount; ++s) {
+        SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
 
-                case 1:
-                    destScreenPos[0].x = 0;
-                    destScreenPos[0].y = 0;
-                    destScreenPos[0].w = pixWidth;
-                    destScreenPos[0].h = SCREEN_YSIZE;
-                    break;
+        uint16 *frameBufferPtr = screens[s].frameBuffer;
+        for (int y = 0; y < SCREEN_YSIZE; ++y) {
+            memcpy(pixels, frameBufferPtr, screens[s].size.x * sizeof(uint16));
+            frameBufferPtr += screens[s].pitch;
+            pixels += pitch / sizeof(uint16);
+        }
+        SDL_UnlockTexture(engine.screenBuffer[s]);
+    }
 
-                case 2:
-                    destScreenPos[0].x = (pixWidth / 4);
-                    destScreenPos[0].y = 0;
-                    destScreenPos[0].w = pixWidth / 2;
-                    destScreenPos[0].h = SCREEN_YSIZE / 2;
+    // Clear the screen. This is needed to keep the
+    // pillarboxes in fullscreen from displaying garbage data.
+    SDL_RenderClear(engine.renderer);
 
-                    destScreenPos[1].x = (pixWidth / 4);
-                    destScreenPos[1].y = SCREEN_YSIZE / 2;
-                    destScreenPos[1].w = pixWidth / 2;
-                    destScreenPos[1].h = SCREEN_YSIZE / 2;
-                    break;
+    int32 startVert = 0;
+    switch (engine.screenCount) {
+        default:
+        case 0:
+            startVert = 54;
+            SDL_RenderGeometryRaw(engine.renderer, engine.imageTexture, &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
+            break;
+
+        case 1:
+            startVert = 0;
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
+            break;
+
+        case 2:
+            startVert = startVertex_2P[0];
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
+
+            startVert = startVertex_2P[1];
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
+            break;
 
 #if RETRO_REV02
-                case 3:
-                    destScreenPos[0].x = 0;
-                    destScreenPos[0].y = 0;
-                    destScreenPos[0].w = pixWidth / 2;
-                    destScreenPos[0].h = SCREEN_YSIZE / 2;
+        case 3:
+            startVert = startVertex_3P[0];
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
 
-                    destScreenPos[1].x = pixWidth / 2;
-                    destScreenPos[1].y = 0;
-                    destScreenPos[1].w = pixWidth / 2;
-                    destScreenPos[1].h = SCREEN_YSIZE / 2;
+            startVert = startVertex_3P[1];
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
 
-                    destScreenPos[2].x = (pixWidth / 4);
-                    destScreenPos[2].y = SCREEN_YSIZE / 2;
-                    destScreenPos[2].w = pixWidth / 2;
-                    destScreenPos[2].h = SCREEN_YSIZE / 2;
-                    break;
-
-                case 4:
-                    destScreenPos[0].x = 0;
-                    destScreenPos[0].y = 0;
-                    destScreenPos[0].w = pixWidth / 2;
-                    destScreenPos[0].h = SCREEN_YSIZE / 2;
-
-                    destScreenPos[1].x = pixWidth / 2;
-                    destScreenPos[1].y = 0;
-                    destScreenPos[1].w = pixWidth / 2;
-                    destScreenPos[1].h = SCREEN_YSIZE / 2;
-
-                    destScreenPos[2].x = 0;
-                    destScreenPos[2].y = SCREEN_YSIZE / 2;
-                    destScreenPos[2].w = pixWidth / 2;
-                    destScreenPos[2].h = SCREEN_YSIZE / 2;
-
-                    destScreenPos[3].x = pixWidth / 2;
-                    destScreenPos[3].y = SCREEN_YSIZE / 2;
-                    destScreenPos[3].w = pixWidth / 2;
-                    destScreenPos[3].h = SCREEN_YSIZE / 2;
-                    break;
-#endif
-            }
-
-            // Clear the screen. This is needed to keep the
-            // pillarboxes in fullscreen from displaying garbage data.
-            SDL_RenderClear(engine.renderer);
-
-            int pitch      = 0;
-            uint16 *pixels = NULL;
-            for (int s = 0; s < engine.screenCount; ++s) {
-                SDL_LockTexture(engine.screenBuffer[s], NULL, (void **)&pixels, &pitch);
-
-                uint16 *frameBufferPtr = screens[s].frameBuffer;
-                for (int y = 0; y < SCREEN_YSIZE; ++y) {
-                    memcpy(pixels, frameBufferPtr, screens[s].size.x * sizeof(uint16));
-                    frameBufferPtr += screens[s].pitch;
-                    pixels += pitch / sizeof(uint16);
-                }
-                SDL_UnlockTexture(engine.screenBuffer[s]);
-
-                SDL_RenderCopy(engine.renderer, engine.screenBuffer[s], NULL, &destScreenPos[s]);
-            }
-
-            SDL_SetRenderTarget(engine.renderer, NULL);
-            SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
-            if (dimAmount < 1.0)
-                SDL_RenderFillRect(engine.renderer, NULL);
-            // no change here
-            SDL_RenderPresent(engine.renderer);
-#endif
+            startVert = startVertex_3P[2];
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
             break;
-        }
 
-        case ENGINESTATE_SHOWPNG: {
-#if RETRO_USING_SDL2
-            SDL_Rect destScreenPos;
-            destScreenPos.x = 0;
-            destScreenPos.y = 0;
-            destScreenPos.w = pixWidth;
-            destScreenPos.h = SCREEN_YSIZE;
+        case 4:
+            startVert = 30;
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[0], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
 
-            // Clear the screen. This is needed to keep the
-            // pillarboxes in fullscreen from displaying garbage data.
-            SDL_RenderClear(engine.renderer);
+            startVert = 36;
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[1], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
 
-            SDL_RenderCopy(engine.renderer, engine.imageTexture, NULL, &destScreenPos);
+            startVert = 42;
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[2], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
 
-            SDL_SetRenderTarget(engine.renderer, NULL);
-            SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
-            if (dimAmount < 1.0)
-                SDL_RenderFillRect(engine.renderer, NULL);
-            // no change here
-            SDL_RenderPresent(engine.renderer);
-#endif
+            startVert = 48;
+            SDL_RenderGeometryRaw(engine.renderer, engine.screenBuffer[3], &vertexBuffer[startVert].pos.x, sizeof(RenderVertex),
+                                  &vertexColorBuffer[startVert], sizeof(SDL_Color), &vertexBuffer[startVert].tex.u, sizeof(RenderVertex), 6, NULL, 0,
+                                  0);
             break;
-        }
-
-        case ENGINESTATE_VIDEOPLAYBACK: {
-#if RETRO_USING_SDL2
-            SDL_Rect destScreenPos;
-            destScreenPos.x = 0;
-            destScreenPos.y = 0;
-            destScreenPos.w = pixWidth;
-            destScreenPos.h = SCREEN_YSIZE;
-
-            // Clear the screen. This is needed to keep the
-            // pillarboxes in fullscreen from displaying garbage data.
-            SDL_RenderClear(engine.renderer);
-
-            SDL_RenderCopy(engine.renderer, engine.videoBuffer, NULL, &destScreenPos);
-
-            SDL_SetRenderTarget(engine.renderer, NULL);
-            SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
-            if (dimAmount < 1.0)
-                SDL_RenderFillRect(engine.renderer, NULL);
-            // no change here
-            SDL_RenderPresent(engine.renderer);
 #endif
-            break;
-        }
     }
+
+    SDL_SetRenderTarget(engine.renderer, NULL);
+    SDL_SetRenderDrawColor(engine.renderer, 0, 0, 0, 0xFF - (dimAmount * 0xFF));
+    if (dimAmount < 1.0)
+        SDL_RenderFillRect(engine.renderer, NULL);
+    // no change here
+    SDL_RenderPresent(engine.renderer);
+#endif
 
 #if RETRO_USING_SDL2
     SDL_ShowWindow(engine.window);
@@ -361,6 +384,122 @@ void ReleaseRenderDevice()
     if (engine.window)
         SDL_DestroyWindow(engine.window);
 #endif
+}
+
+
+#define NORMALIZE(val, minVal, maxVal) ((float)(val) - (float)(minVal)) / ((float)(maxVal) - (float)(minVal))
+void InitScreenVertices()
+{
+// clang-format off
+RenderVertex vertBuffer[60] = {
+    // 1 Screen (0)
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+
+    // ??? (6)
+    { { -0.5,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -0.5,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  0.5,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+
+    // ??? (12)
+    { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { { -0.5, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  0.5, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -0.5,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  0.5,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  0.5, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // ??? (18)
+    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // ??? (24)
+    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // 4 Screens (Top-Left) (30)
+    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  0.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  0.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  0.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { {  0.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // 4 Screens (Top-Right) (36)
+    { {  0.0,  0.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { {  0.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // 4 Screens (Bottom-Left) (42)
+    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  0.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  0.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  0.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { {  0.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // 4 Screens (Bottom-Right) (48)
+    { {  0.0, -1.0,  1.0,  1.0 }, {  0.0,  0.9375 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { {  0.0,  0.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  1.0,  0.0,  1.0,  1.0 }, {  0.625,  0.0 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  0.625,  0.9375 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+
+    // Image/Video (54)
+    { { -1.0, -1.0,  1.0,  1.0 }, {  0.0,  1.0 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } },
+    { { -1.0,  1.0,  1.0,  1.0 }, {  0.0,  0.0 } },
+    { {  1.0,  1.0,  1.0,  1.0 }, {  1.0,  0.0 } },
+    { {  1.0, -1.0,  1.0,  1.0 }, {  1.0,  1.0 } }
+};
+// clang-format on
+
+#if RETRO_USING_SDL2
+    for (int v = 0; v < 60; ++v) {
+        RenderVertex *vertex = &vertBuffer[v];
+        vertex->pos.x        = NORMALIZE(vertex->pos.x, -1.0, 1.0) * pixWidth;
+        vertex->pos.y        = (1.0 - NORMALIZE(vertex->pos.y, -1.0, 1.0)) * SCREEN_YSIZE;
+
+        if (vertex->tex.u)
+            vertex->tex.u = screens[0].size.x * (1.0 / pixWidth);
+
+        if (vertex->tex.v)
+            vertex->tex.v = screens[0].size.y * (1.0 / SCREEN_YSIZE);
+    }
+#else
+    float x                    = 0.5 / (float)engine.windowWidth;
+    float y                    = 0.5 / (float)engine.windowHeight;
+    for (int v = 0; v < 60; ++v) {
+        RenderVertex *vertex = &vertBuffer[v];
+        vertex->pos.x        = vertex->pos.x - x;
+        vertex->pos.y        = vertex->pos.y + y;
+
+        vertex->tex.u = screens[0].size.x * (1.0 / pixWidth);
+        vertex->tex.v = screens[0].size.y * (1.0 / SCREEN_YSIZE);
+    }
+#endif
+
+    memcpy(vertexBuffer, vertBuffer, sizeof(vertBuffer));
 }
 
 void UpdateWindow()
@@ -438,13 +577,16 @@ void SetImageTexture(int width, int height, byte *imagePixels)
     if (engine.imageTexture)
         SDL_DestroyTexture(engine.imageTexture);
 
-    engine.imageTexture = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+    int32 format        = imagePixels ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_YV12;
+    engine.imageTexture = SDL_CreateTexture(engine.renderer, format, SDL_TEXTUREACCESS_STREAMING, width, height);
 
-    int pitch = 0;
-    byte *pixels;
-    SDL_LockTexture(engine.imageTexture, NULL, (void **)&pixels, &pitch);
-    memcpy(pixels, imagePixels, pitch * height);
-    SDL_UnlockTexture(engine.imageTexture);
+    if (imagePixels) {
+        int pitch = 0;
+        byte *pixels;
+        SDL_LockTexture(engine.imageTexture, NULL, (void **)&pixels, &pitch);
+        memcpy(pixels, imagePixels, pitch * height);
+        SDL_UnlockTexture(engine.imageTexture);
+    }
 #endif
 }
 
@@ -490,7 +632,7 @@ void InitSystemSurfaces()
 #endif
 }
 
-void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, TextInfo *text)
+void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, char *text)
 {
     if (!displayID)
         return;
@@ -538,7 +680,6 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, T
         if (text) {
             char buffer[0x20];
             sprintf(buffer, "%ix%i @%iHz", engine.displays[d].w, engine.displays[d].h, engine.displays[d].refresh_rate);
-            SetText(text, buffer, 0);
         }
     }
     else {
@@ -552,7 +693,7 @@ void GetDisplayInfo(int *displayID, int *width, int *height, int *refreshRate, T
             *refreshRate = 0;
 
         if (text)
-            SetText(text, (char *)"DEFAULT", 0);
+            sprintf(text, "%s", "DEFAULT");
     }
 }
 

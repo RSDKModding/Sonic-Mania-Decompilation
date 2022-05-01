@@ -8,7 +8,7 @@
 struct ObjectOptionsMenu {
     RSDK_OBJECT
     EntityUIControl *optionsControl;
-    EntityUIButtonPrompt *prompt;
+    EntityUIButtonPrompt *helpPrompt;
     EntityUIControl *videoControl;
     EntityUIControl *videoControl_Windows;
     EntityUIControl *soundControl;
@@ -24,12 +24,12 @@ struct ObjectOptionsMenu {
     EntityUIControl *languageControl;
     EntityUIControl *languageControl_Legacy;
     EntityUIDiorama *diorama;
-    EntityUIInfoLabel *label;
+    EntityUIInfoLabel *selectDataToEraseLabel;
 };
 
 // Entity Class
 struct EntityOptionsMenu {
-	RSDK_ENTITY
+    RSDK_ENTITY
 };
 
 // Object Struct
@@ -40,7 +40,7 @@ void OptionsMenu_Update(void);
 void OptionsMenu_LateUpdate(void);
 void OptionsMenu_StaticUpdate(void);
 void OptionsMenu_Draw(void);
-void OptionsMenu_Create(void* data);
+void OptionsMenu_Create(void *data);
 void OptionsMenu_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void OptionsMenu_EditorDraw(void);
@@ -101,4 +101,4 @@ void OptionsMenu_EraseAllButton_ActionCB(void);
 
 #endif
 
-#endif //!OBJ_OPTIONSMENU_H
+#endif //! OBJ_OPTIONSMENU_H

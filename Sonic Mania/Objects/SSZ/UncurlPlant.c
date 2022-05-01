@@ -47,6 +47,7 @@ void UncurlPlant_Update(void)
     self->stoodNodeID   = -1;
     self->uncurlMode    = 0;
     UncurlPlant_CalculateDrawPositions();
+
     foreach_active(Player, player)
     {
         int32 angle  = 0;
@@ -58,7 +59,7 @@ void UncurlPlant_Update(void)
 
             self->position.x = self->nodePositions[n].x;
             self->position.y = self->nodePositions[n].y;
-            if (Player_CheckCollisionPlatform(player, self, &UncurlPlant->hitbox)) {
+            if (Player_CheckCollisionPlatform(player, self, &UncurlPlant->hitboxNode)) {
                 player->position.y += 0x40000;
                 self->stood = true;
                 if (nodeID > self->stoodNodeID) {
@@ -134,10 +135,10 @@ void UncurlPlant_StageLoad(void)
 {
     UncurlPlant->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Plants.bin", SCOPE_STAGE);
 
-    UncurlPlant->hitbox.left   = -8;
-    UncurlPlant->hitbox.top    = -12;
-    UncurlPlant->hitbox.right  = 8;
-    UncurlPlant->hitbox.bottom = 8;
+    UncurlPlant->hitboxNode.left   = -8;
+    UncurlPlant->hitboxNode.top    = -12;
+    UncurlPlant->hitboxNode.right  = 8;
+    UncurlPlant->hitboxNode.bottom = 8;
 }
 
 void UncurlPlant_CalculateDrawPositions(void)
@@ -147,6 +148,7 @@ void UncurlPlant_CalculateDrawPositions(void)
     int32 angle              = self->nodeAngles[0];
     self->drawPositions[0].x = self->position.x;
     self->drawPositions[0].y = self->position.y;
+
     if (self->direction == FLIP_NONE) {
         for (int32 i = 1; i < UncurlPlant_NodeCount; ++i) {
             angle += self->nodeAngles[i];
@@ -170,6 +172,7 @@ void UncurlPlant_CalculatePositions(void)
     int32 angle              = UncurlPlant->targetNodeAnglesStood[0];
     self->nodePositions[0].x = self->position.x;
     self->nodePositions[0].y = self->position.y;
+
     if (self->direction == FLIP_NONE) {
         for (int32 i = 1; i < UncurlPlant_NodeCount; ++i) {
             angle += UncurlPlant->targetNodeAnglesStood[i];
@@ -190,6 +193,7 @@ void UncurlPlant_CalculatePositions(void)
 void UncurlPlant_EditorDraw(void)
 {
     RSDK_THIS(UncurlPlant);
+
     RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &self->nodeAnimator, false, 0);
     UncurlPlant_CalculateDrawPositions();
 

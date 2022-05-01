@@ -7,9 +7,9 @@
 // Object Class
 struct ObjectMainMenu {
     RSDK_OBJECT
-    EntityUIControl *menuControlPtr;
-    EntityUIButtonPrompt *promptPtr;
-    EntityUIDiorama *dioramaPtr;
+    EntityUIControl *menuControl;
+    EntityUIButtonPrompt *confirmPrompt;
+    EntityUIDiorama *diorama;
 };
 
 // Entity Class
@@ -35,14 +35,14 @@ void MainMenu_Serialize(void);
 
 // Extra Entity Functions
 void MainMenu_Initialize(void);
-bool32 MainMenu_ReturnToTitleOption(void);
+bool32 MainMenu_BackPressCB_ReturnToTitle(void);
 void MainMenu_ExitGame(void);
 void MainMenu_ExitButton_ActionCB(void);
 void MainMenu_StartExitGame(void);
 void MainMenu_MenuButton_ActionCB(void);
 
 #if RETRO_USE_EGS
-int32 MainMenu_BuyPlusDialogCB(void)
+void MainMenu_BuyPlusDialogCB(void)
 #endif
 
 void MainMenu_HandleUnlocks(void);

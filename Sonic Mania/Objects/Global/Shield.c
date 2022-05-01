@@ -164,7 +164,7 @@ void Shield_State_BubbleBounced(void)
     }
 }
 
-void Shield_State_Fire(void)
+void Shield_State_FireDash(void)
 {
     RSDK_THIS(Shield);
 
@@ -178,7 +178,7 @@ void Shield_State_Fire(void)
     }
 }
 
-void Shield_State_Lightning(void)
+void Shield_State_LightningJump(void)
 {
     RSDK_THIS(Shield);
 

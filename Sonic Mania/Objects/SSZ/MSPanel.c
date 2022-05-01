@@ -12,6 +12,7 @@ ObjectMSPanel *MSPanel;
 void MSPanel_Update(void)
 {
     RSDK_THIS(MSPanel);
+
     StateMachine_Run(self->state);
 }
 
@@ -26,8 +27,10 @@ void MSPanel_Draw(void)
     if (MetalSonic->invincibilityTimerPanel & 1) {
         RSDK.CopyPalette(2, 32, 0, 32, 16);
         RSDK.CopyPalette(2, 160, 0, 160, 16);
+
         RSDK.DrawSprite(&self->cablesAnimator, NULL, false);
         RSDK.DrawSprite(&self->panelAnimator, NULL, false);
+
         RSDK.CopyPalette(1, 32, 0, 32, 16);
         RSDK.CopyPalette(1, 160, 0, 160, 16);
     }
@@ -46,8 +49,10 @@ void MSPanel_Create(void *data)
         self->visible       = true;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
+
         RSDK.SetSpriteAnimation(MSPanel->aniFrames, 1, &self->panelAnimator, true, 0);
         RSDK.SetSpriteAnimation(MSPanel->aniFrames, 0, &self->cablesAnimator, true, 0);
+
         self->state     = MSPanel_State_SetupPanel;
         self->drawOrder = Zone->objectDrawLow;
     }
@@ -60,6 +65,7 @@ void MSPanel_State_SetupPanel(void)
     RSDK_THIS(MSPanel);
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+
     if (player1->position.x > self->position.x && player1->position.y < self->position.y + 0xE80000) {
 
         foreach_active(MetalSonic, metal)
@@ -71,6 +77,7 @@ void MSPanel_State_SetupPanel(void)
                 metal->targetPos = self->position;
                 metal->targetPos.y += 0x240000;
                 metal->timer = 0;
+
                 RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &metal->metalSonicAnimator, false, 0);
                 RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &metal->boosterAnimator, false, 0);
                 self->state = StateMachine_None;
@@ -82,6 +89,7 @@ void MSPanel_State_SetupPanel(void)
 void MSPanel_State_Active(void)
 {
     RSDK_THIS(MSPanel);
+
     RSDK.ProcessAnimation(&self->panelAnimator);
 }
 
@@ -91,6 +99,7 @@ void MSPanel_State_Explode(void)
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(MetalSonic->sfxExplosion2, false, 255);
+
         if (!(Zone->timer & 4)) {
             int32 x = self->position.x + RSDK.Rand(-0x300000, 0x300000);
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x400000);
@@ -107,6 +116,7 @@ void MSPanel_State_Rumbling(void)
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(MetalSonic->sfxExplosion2, false, 255);
+
         if (!(Zone->timer & 4)) {
             int32 x                    = self->position.x + RSDK.Rand(-0x600000, 0x600000);
             int32 y                    = self->position.y + RSDK.Rand(-0x200000, 0x600000);

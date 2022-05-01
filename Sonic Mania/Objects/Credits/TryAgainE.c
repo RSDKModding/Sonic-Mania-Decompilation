@@ -158,12 +158,12 @@ void TryAgainE_State_Stinger(void)
     if (++self->timer == 1) {
         foreach_all(TAEmerald, emerald)
         {
-            emerald->startPos.x = self->position.x;
-            emerald->startPos.y = self->position.y;
-            emerald->position.x = emerald->startPos.x;
-            emerald->position.y = emerald->startPos.y;
-            emerald->startPos.y += 0x100000;
-            emerald->position.y = emerald->startPos.y;
+            emerald->originPos.x = self->position.x;
+            emerald->originPos.y = self->position.y;
+            emerald->position.x = emerald->originPos.x;
+            emerald->position.y = emerald->originPos.y;
+            emerald->originPos.y += 0x100000;
+            emerald->position.y = emerald->originPos.y;
             emerald->position.x += 0x480000;
             emerald->angle  = 0;
             emerald->drawFX = FX_ROTATE;

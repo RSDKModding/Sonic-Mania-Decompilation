@@ -11,7 +11,7 @@ struct ObjectUIVsRoundPicker {
 
 // Entity Class
 struct EntityUIVsRoundPicker {
-	MANIA_UI_ITEM_BASE
+    MANIA_UI_ITEM_BASE
     Vector2 size;
     int32 align;
     int32 arrowWidth;
@@ -41,7 +41,7 @@ void UIVsRoundPicker_Update(void);
 void UIVsRoundPicker_LateUpdate(void);
 void UIVsRoundPicker_StaticUpdate(void);
 void UIVsRoundPicker_Draw(void);
-void UIVsRoundPicker_Create(void* data);
+void UIVsRoundPicker_Create(void *data);
 void UIVsRoundPicker_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIVsRoundPicker_EditorDraw(void);
@@ -62,4 +62,4 @@ void UIVsRoundPicker_SetChoiceInactive(EntityUIVsRoundPicker *entity);
 void UIVsRoundPicker_State_HandleButtonLeave(void);
 void UIVsRoundPicker_State_HandleButtonEnter(void);
 
-#endif //!OBJ_UIVSROUNDPICKER_H
+#endif //! OBJ_UIVSROUNDPICKER_H

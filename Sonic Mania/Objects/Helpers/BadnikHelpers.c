@@ -21,12 +21,12 @@ void BadnikHelpers_Create(void *data) {}
 
 void BadnikHelpers_StageLoad(void) {}
 
-int BadnikHelpers_Oscillate(int origin, int speed, int power)
+int BadnikHelpers_Oscillate(int origin, int speed, int amplitude)
 {
     RSDK_THIS_GEN(); // generic type
 
     self->angle = (self->angle + speed) & 0xFF;
-    return ((RSDK.Sin256(self->angle) << power) + origin) & 0xFFFF0000;
+    return ((RSDK.Sin256(self->angle) << amplitude) + origin) & 0xFFFF0000;
 }
 
 void BadnikHelpers_HandleExplode(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder)

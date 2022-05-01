@@ -32,7 +32,7 @@ void MSHologram_Update(void);
 void MSHologram_LateUpdate(void);
 void MSHologram_StaticUpdate(void);
 void MSHologram_Draw(void);
-void MSHologram_Create(void* data);
+void MSHologram_Create(void *data);
 void MSHologram_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSHologram_EditorDraw(void);
@@ -45,4 +45,4 @@ void MSHologram_State_CheckPlayerCollisions(void);
 void MSHologram_State_Explode(void);
 void MSHologram_State_Destroyed(void);
 
-#endif //!OBJ_MSHOLOGRAM_H
+#endif //! OBJ_MSHOLOGRAM_H

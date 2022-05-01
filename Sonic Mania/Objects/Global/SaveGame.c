@@ -175,7 +175,7 @@ void SaveGame_LoadFile(void)
 }
 void SaveGame_SaveFile(void (*callback)(bool32 success))
 {
-    if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
+    if (API_GetNoSave() || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
             callback(false);
     }

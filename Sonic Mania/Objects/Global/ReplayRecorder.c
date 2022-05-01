@@ -1418,7 +1418,7 @@ void ReplayRecorder_LoadReplayDB(void (*callback)(bool32 success))
 
 void ReplayRecorder_SaveReplayDB(void (*callback)(bool32 success))
 {
-    if (checkNoSave || globals->replayTableID == (uint16)-1 || globals->replayTableLoaded != STATUS_OK) {
+    if (API_GetNoSave() || globals->replayTableID == (uint16)-1 || globals->replayTableLoaded != STATUS_OK) {
         if (callback)
             callback(false);
     }

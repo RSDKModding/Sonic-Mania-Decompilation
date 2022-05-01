@@ -12,6 +12,7 @@ ObjectFlowerPod *FlowerPod;
 void FlowerPod_Update(void)
 {
     RSDK_THIS(FlowerPod);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void FlowerPod_StaticUpdate(void) {}
 void FlowerPod_Draw(void)
 {
     RSDK_THIS(FlowerPod);
+
     RSDK.DrawSprite(&self->podAnimator, NULL, false);
     RSDK.DrawSprite(&self->stemAnimator, NULL, false);
 }
@@ -29,7 +31,8 @@ void FlowerPod_Draw(void)
 void FlowerPod_Create(void *data)
 {
     RSDK_THIS(FlowerPod);
-    if (SceneInfo->inEditor != true) {
+
+    if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
         self->visible       = true;
         self->drawFX        = FX_FLIP;
@@ -56,13 +59,13 @@ void FlowerPod_StageLoad(void)
     if (RSDK.CheckStageFolder("SSZ1"))
         FlowerPod->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/FlowerPod.bin", SCOPE_STAGE);
 
-    FlowerPod->hitbox.top    = -36;
-    FlowerPod->hitbox.left   = -32;
-    FlowerPod->hitbox.right  = 32;
-    FlowerPod->hitbox.bottom = 0;
+    FlowerPod->hitboxPod.top    = -36;
+    FlowerPod->hitboxPod.left   = -32;
+    FlowerPod->hitboxPod.right  = 32;
+    FlowerPod->hitboxPod.bottom = 0;
 
-    FlowerPod->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
-    FlowerPod->sfxTwinkle    = RSDK.GetSfx("Global/Twinkle.wav");
+    FlowerPod->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    FlowerPod->sfxTwinkle   = RSDK.GetSfx("Global/Twinkle.wav");
 }
 
 void FlowerPod_SpawnSeeds(void)
@@ -73,8 +76,8 @@ void FlowerPod_SpawnSeeds(void)
         EntityFlowerPod *seed = CREATE_ENTITY(FlowerPod, intToVoid(true), self->position.x, self->position.y);
         seed->isPermanent     = true;
         seed->velocity.x      = v;
-        seed->drawOrder       = Zone->objectDrawLow;
         seed->velocity.y      = -0x30000;
+        seed->drawOrder       = Zone->objectDrawLow;
     }
 }
 
@@ -86,7 +89,7 @@ void FlowerPod_State_Pod(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckAttacking(player, self) && Player_CheckBadnikTouch(player, self, &FlowerPod->hitbox))
+        if (Player_CheckAttacking(player, self) && Player_CheckBadnikTouch(player, self, &FlowerPod->hitboxPod))
             self->state = FlowerPod_State_Exploding;
     }
 }
@@ -110,6 +113,7 @@ void FlowerPod_State_Exploding(void)
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 2, &self->podAnimator, true, 0);
         self->state = 0;
         RSDK.PlaySfx(FlowerPod->sfxTwinkle, false, 255);
+
         FlowerPod_SpawnSeeds();
         self->timer = 48;
         self->state = FlowerPod_State_Destroyed;
@@ -136,6 +140,7 @@ void FlowerPod_State_SeedFall(void)
     self->velocity.y += 0x1C00;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
+
     self->rotation = 2 * RSDK.ATan2(self->velocity.x, self->velocity.y);
 
     if (RSDK.ObjectTileCollision(self, Zone->collisionLayers, CMODE_FLOOR, 0, 0, 0, true)) {
@@ -144,6 +149,7 @@ void FlowerPod_State_SeedFall(void)
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 4, &self->stemAnimator, true, 0);
         self->state = FlowerPod_State_SpawnBeanstalk;
     }
+
     RSDK.ProcessAnimation(&self->stemAnimator);
 }
 
@@ -152,27 +158,28 @@ void FlowerPod_State_SpawnBeanstalk(void)
     RSDK_THIS(FlowerPod);
 
     if (self->timer <= 15) {
-        Hitbox hitbox;
-        hitbox.left   = -4;
-        hitbox.top    = -4;
-        hitbox.right  = 4;
-        hitbox.bottom = 4;
+        Hitbox hitboxSeed;
+        hitboxSeed.left   = -4;
+        hitboxSeed.top    = -4;
+        hitboxSeed.right  = 4;
+        hitboxSeed.bottom = 4;
         foreach_active(Beanstalk, beanstalk)
         {
-            if (!beanstalk->type && RSDK.CheckObjectCollisionTouchBox(beanstalk, &Beanstalk->hitboxSeed, self, &hitbox)) {
+            if (!beanstalk->type && RSDK.CheckObjectCollisionTouchBox(beanstalk, &Beanstalk->hitboxSeed, self, &hitboxSeed))
                 beanstalk->startGrowth = true;
-            }
         }
+
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 5, &self->podAnimator, true, 0);
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 6, &self->stemAnimator, true, 0);
+
         self->startPos = self->position;
         self->state    = FlowerPod_State_FlowerGrow;
-        RSDK.ProcessAnimation(&self->stemAnimator);
     }
     else {
         self->timer--;
-        RSDK.ProcessAnimation(&self->stemAnimator);
     }
+
+    RSDK.ProcessAnimation(&self->stemAnimator);
 }
 
 void FlowerPod_State_FlowerGrow(void)
@@ -187,8 +194,7 @@ void FlowerPod_State_FlowerGrow(void)
         self->position.y -= 0x40000;
     }
 
-    RSDK.ProcessAnimation(&self->stemAnimator);
-    RSDK.ProcessAnimation(&self->podAnimator);
+    FlowerPod_State_Flower();
 }
 
 void FlowerPod_State_Flower(void)
@@ -203,6 +209,7 @@ void FlowerPod_State_Flower(void)
 void FlowerPod_EditorDraw(void)
 {
     RSDK_THIS(FlowerPod);
+
     RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 0, &self->stemAnimator, false, 0);
     RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 1, &self->podAnimator, false, 0);
 

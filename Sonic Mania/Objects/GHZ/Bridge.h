@@ -45,7 +45,7 @@ void Bridge_Serialize(void);
 
 // Extra Entity Functions
 void Bridge_Burn(int32 offset);
-bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 noVarUpdates, bool32 isPlayer);
+bool32 Bridge_HandleCollisions(void *e, EntityBridge *self, Hitbox *entityHitbox, bool32 updateVars, bool32 isPlayer);
 
 
 #endif //!OBJ_BRIDGE_H

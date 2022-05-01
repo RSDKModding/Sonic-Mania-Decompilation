@@ -176,21 +176,24 @@ void PlatformControl_Create(void *data)
         self->taggedButton         = NULL;
         EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
         if (self->buttonTag > 0) {
+            bool32 foundButton = false;
             if (Button) {
                 foreach_all(Button, button)
                 {
                     if (button->tag == self->buttonTag) {
                         taggedButton = button;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
             }
 
-            if (SDashWheel && !taggedButton) {
+            if (SDashWheel && !foundButton) {
                 foreach_all(SDashWheel, wheel)
                 {
                     if (wheel->tag == self->buttonTag) {
                         taggedButton = (EntityButton *)wheel;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -201,6 +204,7 @@ void PlatformControl_Create(void *data)
                 {
                     if (chain->tag == self->buttonTag) {
                         taggedButton = (EntityButton *)chain;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -269,25 +273,28 @@ void PlatformControl_EditorDraw(void)
     self->updateRange.y = 0x800000;
 
     if (showGizmos()) {
+
         self->taggedButton         = NULL;
         EntityButton *taggedButton = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
-
         if (self->buttonTag > 0) {
+            bool32 foundButton = false;
             if (Button) {
                 foreach_all(Button, button)
                 {
                     if (button->tag == self->buttonTag) {
                         taggedButton = button;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
             }
 
-            if (SDashWheel && !taggedButton) {
+            if (SDashWheel && !foundButton) {
                 foreach_all(SDashWheel, wheel)
                 {
                     if (wheel->tag == self->buttonTag) {
                         taggedButton = (EntityButton *)wheel;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }
@@ -298,6 +305,7 @@ void PlatformControl_EditorDraw(void)
                 {
                     if (chain->tag == self->buttonTag) {
                         taggedButton = (EntityButton *)chain;
+                        foundButton  = true;
                         foreach_break;
                     }
                 }

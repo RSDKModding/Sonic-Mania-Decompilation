@@ -125,10 +125,10 @@ int32 ProcessVideo() {
                 const Uint8 *v = u + (half_w * (videoFrameData->height / 2));
 
 #if RETRO_USING_SDL2
-                SDL_UpdateYUVTexture(engine.videoBuffer, NULL, y, videoFrameData->width, u, half_w, v, half_w);
+                SDL_UpdateYUVTexture(engine.imageTexture, NULL, y, videoFrameData->width, u, half_w, v, half_w);
 #endif
 #if RETRO_USING_SDL1
-                uint *videoFrameBuffer = (uint *)Engine.videoBuffer->pixels;
+                uint *videoFrameBuffer = (uint *)Engine.imageTexture->pixels;
                 memcpy(videoFrameBuffer, videoFrameData->pixels, videoFrameData->xsize * videoFrameData->ysize * sizeof(uint));
 #endif
 
@@ -166,14 +166,9 @@ void StopVideoPlayback()
 
 void SetupVideoBuffer(int32 width, int32 height)
 {
-#if RETRO_USING_SDL1
-    engine.videoBuffer = SDL_CreateRGBSurface(0, xsize, ysize, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-#endif
-#if RETRO_USING_SDL2
-    engine.videoBuffer = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);
-#endif
+    SetImageTexture(width, height, NULL);
 
-    if (!engine.videoBuffer)
+    if (!engine.imageTexture)
         PrintLog(PRINT_ERROR, "Failed to create video buffer!");
 }
 
@@ -181,11 +176,11 @@ void CloseVideoBuffer()
 {
     if (videoPlaying) {
 #if RETRO_USING_SDL1
-        SDL_FreeSurface(engine.videoBuffer);
+        SDL_FreeSurface(engine.imageTexture);
 #endif
 #if RETRO_USING_SDL2
-        SDL_DestroyTexture(engine.videoBuffer);
+        SDL_DestroyTexture(engine.imageTexture);
 #endif
-        engine.videoBuffer = nullptr;
+        engine.imageTexture = nullptr;
     }
 }

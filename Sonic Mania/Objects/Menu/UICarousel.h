@@ -21,16 +21,16 @@ struct EntityUICarousel {
     int32 unused2;
     int32 unused3;
     Entity *unused4;
-    int32 unused;
+    int32 unused5;
     int32 scrollOffset;
     int32 virtualIndex;
-    int32 unused5;
+    int32 unused6;
     Vector2 startPos;
     int32 buttonID;
     int32 minOffset;
     int32 maxOffset;
     Vector2 offset;
-    Entity *parent;
+    EntityUIControl *parent;
 };
 
 // Object Struct

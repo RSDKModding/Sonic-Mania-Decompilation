@@ -11,9 +11,13 @@
 #define API_GetConfirmButtonFlip         API.GetConfirmButtonFlip
 #define API_UnlockAchievement            API.UnlockAchievement
 #define API_SetRichPresence              API.SetRichPresence
+#define API_LaunchManual                 API.LaunchManual
 #define API_LoadUserFile                 API.LoadUserFile
 #define API_SaveUserFile                 API.SaveUserFile
+#define API_GetNoSave()                  API.GetNoSave()
+#define API_SetNoSave(status)            API.SetNoSave(status)
 #define API_GetUserAuthStatus            API.GetUserAuthStatus
+#define API_ClearPrerollErrors           API.ClearPrerollErrors
 #define API_ControllerIDForInputID       RSDK.ControllerIDForInputID
 #define API_AssignControllerID           RSDK.AssignControllerID
 #define API_InputIDIsDisconnected        RSDK.InputIDIsDisconnected
@@ -30,9 +34,13 @@
 #define API_GetConfirmButtonFlip         APICallback_GetConfirmButtonFlip
 #define API_UnlockAchievement            APICallback_UnlockAchievement
 #define API_SetRichPresence              APICallback_SetRichPresence
+#define API_LaunchManual                 APICallback_LaunchManual
 #define API_LoadUserFile                 APICallback_LoadUserFile
 #define API_SaveUserFile                 APICallback_SaveUserFile
+#define API_GetNoSave()                  globals->noSave
+#define API_SetNoSave(status)            globals->noSave = status
 #define API_GetUserAuthStatus            APICallback_GetUserAuthStatus
+#define API_ClearPrerollErrors           APICallback_ClearPrerollErrors
 #define API_ControllerIDForInputID       APICallback_ControllerIDForInputID
 #define API_AssignControllerID           APICallback_AssignControllerID
 #define API_InputIDIsDisconnected        APICallback_InputIDIsDisconnected

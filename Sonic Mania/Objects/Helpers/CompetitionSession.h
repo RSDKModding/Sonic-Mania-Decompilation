@@ -16,6 +16,16 @@ typedef enum {
     FINISHFLAG_FINISHED,
 } vsFinishFlags;
 
+typedef enum {
+    VS_BORDER_NONE,
+    VS_BORDER_BOTTOMRIGHT,
+    VS_BORDER_BOTTOM,
+    VS_BORDER_BOTTOMLEFT,
+    VS_BORDER_TOPRIGHT,
+    VS_BORDER_TOP,
+    VS_BORDER_TOPLEFT,
+} vsScreenBorderTypes;
+
 // created so I can easily set up times in an array
 typedef struct {
     int32 minutes;
@@ -54,7 +64,7 @@ struct EntityCompetitionSession {
     int32 wins[PLAYER_MAX];
     int32 lives[PLAYER_MAX];
 #if RETRO_USE_PLUS
-    int32 splitScreenMode[SCREEN_MAX];
+    int32 screenBorderType[SCREEN_MAX];
     int32 displayMode;
     int32 controllerIDs[PLAYER_MAX];
     int32 prevMatchID;

@@ -1,23 +1,23 @@
 #ifndef SCENE3D_H
 #define SCENE3D_H
 
-#define SCENE3D_MAX (0x20)
-#define MODEL_MAX   (0x100)
+#define SCENE3D_MAX      (0x20)
+#define MODEL_MAX        (0x100)
 #define SCENE3D_VERT_MAX (0x4000)
 
 enum Scene3DDrawTypes {
-    S3D_FLATCLR_WIREFRAME               = 0x0,
-    S3D_FLATCLR                         = 0x1,
-    S3D_UNKNOWN_2                       = 0x2,
-    S3D_UNKNOWN_3                       = 0x3,
-    S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
-    S3D_FLATCLR_SHADED                  = 0x5,
-    S3D_FLATCLR_SHADED_BLENDED          = 0x6,
-    S3D_FLATCLR_SCREEN_WIREFRAME        = 0x7,
-    S3D_FLATCLR_SCREEN                  = 0x8,
-    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME = 0x9,
-    S3D_FLATCLR_SHADED_SCREEN           = 0xA,
-    S3D_FLATCLR_SHADED_BLENDED_SCREEN   = 0xB,
+    S3D_FLATCLR_WIREFRAME,
+    S3D_FLATCLR,
+    S3D_UNUSED_1,
+    S3D_UNUSED_2,
+    S3D_FLATCLR_SHADED_WIREFRAME,
+    S3D_FLATCLR_SHADED,
+    S3D_FLATCLR_SHADED_BLENDED,
+    S3D_FLATCLR_SCREEN_WIREFRAME,
+    S3D_FLATCLR_SCREEN,
+    S3D_FLATCLR_SHADED_SCREEN_WIREFRAME,
+    S3D_FLATCLR_SHADED_SCREEN,
+    S3D_FLATCLR_SHADED_BLENDED_SCREEN,
 };
 
 struct ScanEdge {
@@ -112,25 +112,27 @@ extern ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
 void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2);
 void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2);
 
-void setIdentityMatrix(Matrix *matrix);
-void matrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
-void matrixTranslateXYZ(Matrix *Matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
-void matrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ);
-void matrixRotateX(Matrix *matrix, int16 angle);
-void matrixRotateY(Matrix *matrix, int16 angle);
-void matrixRotateZ(Matrix *matrix, int16 angle);
-void matrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ);
-void matrixInverse(Matrix *dest, Matrix *matrix);
-void matrixCopy(Matrix *matDst, Matrix *matSrc);
+void SetIdentityMatrix(Matrix *matrix);
+void MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
+void MatrixTranslateXYZ(Matrix *Matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
+void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ);
+void MatrixRotateX(Matrix *matrix, int16 angle);
+void MatrixRotateY(Matrix *matrix, int16 angle);
+void MatrixRotateZ(Matrix *matrix, int16 angle);
+void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ);
+void MatrixInverse(Matrix *dest, Matrix *matrix);
+void MatrixCopy(Matrix *matDst, Matrix *matSrc);
 
 uint16 LoadMesh(const char *filepath, Scopes scope);
 uint16 Create3DScene(const char *name, uint16 faceCnt, Scopes scope);
 inline void Prepare3DScene(uint16 sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
-        Scene3D *scn     = &scene3DList[sceneID];
+        Scene3D *scn = &scene3DList[sceneID];
+
         scn->vertexCount = 0;
         scn->faceCount   = 0;
+
         memset(scn->vertices, 0, sizeof(Scene3DVertex) * scn->vertLimit);
         memset(scn->normals, 0, sizeof(Scene3DVertex) * scn->vertLimit);
         memset(scn->faceVertCounts, 0, sizeof(uint8) * scn->vertLimit);
@@ -142,21 +144,24 @@ inline void SetMeshAnimation(uint16 model, RSDK::Animator *animator, int16 speed
 {
     if (model >= MODEL_MAX) {
         if (animator)
-            animator->frames = 0;
+            animator->frames = NULL;
+
         return;
     }
+
     if (!animator)
         return;
 
     if (animator->animationID == model && !forceApply)
         return;
+
     animator->frames          = (RSDK::SpriteFrame *)1;
-    animator->timer  = 0;
+    animator->timer           = 0;
     animator->frameID         = frameID;
     animator->frameCount      = modelList[model].frameCount;
-    animator->speed  = speed;
+    animator->speed           = speed;
     animator->prevAnimationID = animator->animationID;
-    animator->frameDuration      = 0x100;
+    animator->frameDuration   = 0x100;
     animator->loopIndex       = loopIndex;
     animator->animationID     = model;
 }
@@ -172,7 +177,7 @@ inline void SetDiffuseColor(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 inline void SetDiffuseIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 {
     if (sceneID < SCENE3D_MAX) {
-        Scene3D *scn  = &scene3DList[sceneID];
+        Scene3D *scn           = &scene3DList[sceneID];
         scn->diffuseIntensityX = x;
         scn->diffuseIntensityY = y;
         scn->diffuseIntensityZ = z;
@@ -181,7 +186,7 @@ inline void SetDiffuseIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 inline void SetSpecularIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 {
     if (sceneID < SCENE3D_MAX) {
-        Scene3D *scn   = &scene3DList[sceneID];
+        Scene3D *scn            = &scene3DList[sceneID];
         scn->specularIntensityX = x;
         scn->specularIntensityY = y;
         scn->specularIntensityZ = z;

@@ -26,15 +26,15 @@ EntityGameProgress *GameProgress_GetGameProgress(void) { return (EntityGameProgr
 int32 GameProgress_GetNotifStringID(int32 type)
 {
     switch (type) {
-        case 0: return STR_TAUNLOCKED; break;
-        case 1: return STR_COMPUNLOCKED; break;
-        case 2: return STR_PEELOUTUNLOCKED; break;
-        case 3: return STR_INSTASHIELDUNLOCKED; break;
-        case 4: return STR_ANDKNUXUNLOCKED; break;
-        case 5: return STR_DEBUGMODEUNLOCKED; break;
-        case 6: return STR_MBMUNLOCKED; break;
-        case 7: return STR_DAGARDENUNLOCKED; break;
-        case 8: return STR_BLUESPHERESUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_TIMEATTACK: return STR_TAUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_COMPETITION: return STR_COMPUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_PEELOUT: return STR_PEELOUTUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_INSTASHIELD: return STR_INSTASHIELDUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_ANDKNUX: return STR_ANDKNUXUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_DEBUGMODE: return STR_DEBUGMODEUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_MEANBEAN: return STR_MBMUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_DAGARDEN: return STR_DAGARDENUNLOCKED; break;
+        case GAMEPROGRESS_UNLOCK_BLUESPHERES: return STR_BLUESPHERESUNLOCKED; break;
         default: return STR_FEATUREUNIMPLIMENTED; break;
     }
 }
@@ -86,7 +86,7 @@ void GameProgress_ShuffleBSSID(void)
 
 bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
     }
@@ -125,7 +125,7 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
 
 void GameProgress_TrackGameProgress(void (*callback)(bool32 success))
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to track progress before loading SaveGame file");
     }
     else {
@@ -152,7 +152,7 @@ void GameProgress_TrackGameProgress(void (*callback)(bool32 success))
 }
 void GameProgress_ClearBSSSave(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to clear BSS before loading SaveGame file");
         return;
     }
@@ -166,7 +166,7 @@ void GameProgress_ClearBSSSave(void)
 }
 void GameProgress_UnlockAllMedals(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
         return;
     }
@@ -194,7 +194,7 @@ void GameProgress_UnlockAllMedals(void)
 
 void GameProgress_UnlockAll(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
     }
     else {
@@ -205,7 +205,7 @@ void GameProgress_UnlockAll(void)
 
 void GameProgress_ClearProgress(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to clear all before loading SaveGame file");
         return;
     }
@@ -238,7 +238,7 @@ void GameProgress_ClearProgress(void)
 }
 void GameProgress_MarkZoneCompleted(int32 zoneID)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to mark completed zone before loading SaveGame file");
         return;
     }
@@ -255,7 +255,7 @@ void GameProgress_MarkZoneCompleted(int32 zoneID)
 }
 bool32 GameProgress_CheckZoneClear(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
         return false;
     }
@@ -273,7 +273,7 @@ bool32 GameProgress_CheckZoneClear(void)
 }
 void GameProgress_GiveEmerald(int32 emeraldID)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get emerald before loading SaveGame file");
         return;
     }
@@ -291,7 +291,7 @@ void GameProgress_GiveEmerald(int32 emeraldID)
 }
 void GameProgress_GiveMedal(uint8 medalID, uint8 type)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get medallion before loading SaveGame file");
         return;
     }
@@ -324,7 +324,7 @@ void GameProgress_GiveMedal(uint8 medalID, uint8 type)
 }
 void GameProgress_GiveEnding(uint8 ending)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get game ending before loading SaveGame file");
     }
 
@@ -334,7 +334,7 @@ void GameProgress_GiveEnding(uint8 ending)
 }
 void GameProgress_PrintSaveProgress(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to dump before loading SaveGame file");
         return;
     }
@@ -391,7 +391,7 @@ void GameProgress_PrintSaveProgress(void)
 }
 int32 GameProgress_CountUnreadNotifs(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to count unread notifs before loading SaveGame file");
         return 0;
     }
@@ -401,6 +401,7 @@ int32 GameProgress_CountUnreadNotifs(void)
         for (int32 i = 0; i < 9; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
+
             if (!unlocked && notif)
                 unreadCount++;
         }
@@ -410,7 +411,7 @@ int32 GameProgress_CountUnreadNotifs(void)
 }
 int32 GameProgress_GetNextNotif(void)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get next unread notif before loading SaveGame file");
         return -1;
     }
@@ -419,9 +420,9 @@ int32 GameProgress_GetNextNotif(void)
         for (int32 i = 0; i < 9; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
-            if (!unlocked && notif) {
+
+            if (!unlocked && notif)
                 return i;
-            }
         }
     }
 
@@ -429,22 +430,22 @@ int32 GameProgress_GetNextNotif(void)
 }
 bool32 GameProgress_CheckUnlock(uint8 id)
 {
-    if (SceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to check unlock before loading SaveGame file");
         return false;
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
         switch (id) {
-            case 0:
-            case 1: return progress->zoneCleared[0] == 1;
-            case 2: return progress->silverMedalCount >= 1;
-            case 3: return progress->silverMedalCount >= 6;
-            case 4: return progress->silverMedalCount >= 11;
-            case 5: return progress->silverMedalCount >= 16;
-            case 6: return progress->silverMedalCount >= 21;
-            case 7: return progress->silverMedalCount >= 26;
-            case 8: return progress->silverMedalCount >= 32;
+            case GAMEPROGRESS_UNLOCK_TIMEATTACK:
+            case GAMEPROGRESS_UNLOCK_COMPETITION: return progress->zoneCleared[0] == 1;
+            case GAMEPROGRESS_UNLOCK_PEELOUT: return progress->silverMedalCount >= 1;
+            case GAMEPROGRESS_UNLOCK_INSTASHIELD: return progress->silverMedalCount >= 6;
+            case GAMEPROGRESS_UNLOCK_ANDKNUX: return progress->silverMedalCount >= 11;
+            case GAMEPROGRESS_UNLOCK_DEBUGMODE: return progress->silverMedalCount >= 16;
+            case GAMEPROGRESS_UNLOCK_MEANBEAN: return progress->silverMedalCount >= 21;
+            case GAMEPROGRESS_UNLOCK_DAGARDEN: return progress->silverMedalCount >= 26;
+            case GAMEPROGRESS_UNLOCK_BLUESPHERES: return progress->silverMedalCount >= 32;
             default: return false;
         }
     }

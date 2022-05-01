@@ -16,11 +16,7 @@ void HiLoSign_Update(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &HiLoSign->spinHitbox[self->type])) {
-            int32 velocity = 0;
-            if (self->type & HILOSIGN_V)
-                velocity = player->velocity.x;
-            else
-                velocity = player->velocity.y;
+            int32 velocity = (self->type & HILOSIGN_V) ? player->velocity.x : player->velocity.y;
 
             int32 speed = abs((velocity >> 7) + (velocity >> 6));
             if (speed > self->spinSpeed && speed >= 0xC00) {
@@ -31,6 +27,7 @@ void HiLoSign_Update(void)
             }
         }
     }
+
     StateMachine_Run(self->state);
 }
 
@@ -41,6 +38,7 @@ void HiLoSign_StaticUpdate(void) {}
 void HiLoSign_Draw(void)
 {
     RSDK_THIS(HiLoSign);
+
     StateMachine_Run(self->stateDraw);
 }
 
@@ -51,6 +49,7 @@ void HiLoSign_Create(void *data)
     if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(HiLoSign->aniFrames, 0, &self->faceAnimator, true, 0);
         RSDK.SetSpriteAnimation(HiLoSign->aniFrames, 1, &self->sidesAnimator, true, 0);
+
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
@@ -87,12 +86,14 @@ void HiLoSign_StageLoad(void)
     HiLoSign->spinHitbox[HILOSIGN_V].bottom = 24;
 
     HiLoSign->sfxSignPost = RSDK.GetSfx("Global/SignPost.wav");
+
     DEBUGMODE_ADD_OBJ(HiLoSign);
 }
 
 void HiLoSign_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(HiLoSign, NULL, self->position.x, self->position.y);
 }
 
@@ -118,9 +119,11 @@ void HiLoSign_State_Spinning(void)
                 if ((self->angle & 0xFFFF) < 0x4000)
                     self->direction ^= FLIP_X;
             }
-            else if ((self->angle & 0xFFFF) > 0xC000) {
-                self->direction = FLIP_X;
+            else {
+                if ((self->angle & 0xFFFF) > 0xC000)
+                    self->direction = FLIP_X;
             }
+
             self->spinSpeed = 0;
             self->state     = HiLoSign_State_FinishSpinAdjust;
         }
@@ -145,18 +148,20 @@ void HiLoSign_State_FinishSpinAdjust(void)
         self->spinSpeed = 0;
         self->state     = HiLoSign_State_Spinning;
     }
+
     self->rotation = (self->angle >> 8) & 0x1FF;
 }
 
 void HiLoSign_Draw_Horizontal(void)
 {
     RSDK_THIS(HiLoSign);
-    Vector2 drawPos;
 
-    drawPos.x     = self->position.x;
+    Vector2 drawPos;
+    drawPos.x = self->position.x;
+
     self->drawFX  = FX_SCALE;
     self->scale.y = abs(RSDK.Cos512(self->rotation)) + 1;
-    int scaleY    = abs(RSDK.Sin512(self->rotation)) + 1;
+    int32 scaleY  = abs(RSDK.Sin512(self->rotation)) + 1;
 
     switch (self->rotation >> 7) {
         case 0:
@@ -172,8 +177,10 @@ void HiLoSign_Draw_Horizontal(void)
             RSDK.DrawSprite(&self->faceAnimator, &drawPos, false);
             drawPos.y += (scaleY + 4 * (self->scale.y - 16)) << 9;
             break;
+
         default: break;
     }
+
     self->scale.y = scaleY;
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
 }
@@ -181,12 +188,13 @@ void HiLoSign_Draw_Horizontal(void)
 void HiLoSign_Draw_Vertical(void)
 {
     RSDK_THIS(HiLoSign);
-    Vector2 drawPos;
 
-    drawPos.y     = self->position.y;
+    Vector2 drawPos;
+    drawPos.y = self->position.y;
+
     self->drawFX  = FX_SCALE;
     self->scale.x = abs(RSDK.Cos512(self->rotation)) + 1;
-    int scaleX    = abs(RSDK.Sin512(self->rotation)) + 1;
+    int32 scaleX  = abs(RSDK.Sin512(self->rotation)) + 1;
 
     switch (self->rotation >> 7) {
         case 0:
@@ -202,10 +210,11 @@ void HiLoSign_Draw_Vertical(void)
             RSDK.DrawSprite(&self->faceAnimator, &drawPos, false);
             drawPos.x += ((scaleX - 64) << 9) + 0xF00 * self->scale.x;
             break;
+
         default: break;
     }
-    self->scale.x = scaleX;
 
+    self->scale.x = scaleX;
     RSDK.DrawSprite(&self->sidesAnimator, &drawPos, false);
 }
 
@@ -213,7 +222,9 @@ void HiLoSign_Draw_Vertical(void)
 void HiLoSign_EditorDraw(void)
 {
     RSDK_THIS(HiLoSign);
+
     RSDK.SetSpriteAnimation(HiLoSign->aniFrames, 0, &self->faceAnimator, true, 0);
+
     RSDK.DrawSprite(&self->faceAnimator, NULL, false);
 }
 

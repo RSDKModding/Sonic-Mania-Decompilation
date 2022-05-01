@@ -3,6 +3,22 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UIHEADING_MAINMENU,
+    UIHEADING_MANIAMODE,
+    UIHEADING_TIMEATTACK,
+    UIHEADING_COMPETITION,
+    UIHEADING_RESULTS,
+    UIHEADING_OPTIONS,
+    UIHEADING_EXTRAS,
+    UIHEADING_LEADERBOARDS,
+    UIHEADING_SECRETS,
+    UIHEADING_PLAYERSEL,
+    UIHEADING_ZONESEL,
+    UIHEADING_REPLAYS,
+    UIHEADING_ENCOREMODE,
+} UIHeadingIDs;
+
 // Object Class
 struct ObjectUIHeading {
     RSDK_OBJECT
@@ -29,7 +45,7 @@ void UIHeading_Update(void);
 void UIHeading_LateUpdate(void);
 void UIHeading_StaticUpdate(void);
 void UIHeading_Draw(void);
-void UIHeading_Create(void* data);
+void UIHeading_Create(void *data);
 void UIHeading_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIHeading_EditorDraw(void);
@@ -40,4 +56,4 @@ void UIHeading_Serialize(void);
 // Extra Entity Functions
 void UIHeading_LoadSprites(void);
 
-#endif //!OBJ_UIHEADING_H
+#endif //! OBJ_UIHEADING_H

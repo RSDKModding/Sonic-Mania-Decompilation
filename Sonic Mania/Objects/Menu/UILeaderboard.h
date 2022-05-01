@@ -14,13 +14,13 @@ struct EntityUILeaderboard {
     MANIA_UI_ITEM_BASE
     int32 unused;
     LeaderboardEntry *leaderboardEntry;
-    TextInfo text1[5];
+    TextInfo unusedText[5];
     TextInfo rankText[5];
     TextInfo nameText[5];
     int32 times[5];
     int32 ranks[5];
-    int32 isUser[5];
-    uint8 playerID;
+    bool32 isUser[5];
+    uint8 characterID;
     uint8 zoneID;
     uint8 actID;
     int32 zoneIconSprX;
@@ -58,7 +58,7 @@ void UILeaderboard_Update(void);
 void UILeaderboard_LateUpdate(void);
 void UILeaderboard_StaticUpdate(void);
 void UILeaderboard_Draw(void);
-void UILeaderboard_Create(void* data);
+void UILeaderboard_Create(void *data);
 void UILeaderboard_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UILeaderboard_EditorDraw(void);
@@ -67,10 +67,10 @@ void UILeaderboard_EditorLoad(void);
 void UILeaderboard_Serialize(void);
 
 // Extra Entity Functions
-void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity);
-#if !RETRO_USE_PLUS 
+void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *leaderboard);
+#if !RETRO_USE_PLUS
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard);
-void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 player, uint8 zone, uint8 act);
+void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 character, uint8 zone, uint8 act);
 #endif
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity);
 
@@ -86,4 +86,4 @@ void UILeaderboard_State_Selected(void);
 
 void UILeaderboard_ProcessButtonCB(void);
 
-#endif //!OBJ_UILEADERBOARD_H
+#endif //! OBJ_UILEADERBOARD_H

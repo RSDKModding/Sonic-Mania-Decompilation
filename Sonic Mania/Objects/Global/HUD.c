@@ -367,37 +367,59 @@ void HUD_Draw(void)
         // Draw Competition Borders
 #if RETRO_USE_PLUS
         switch (HUD->screenBorderType[SceneInfo->currentScreenID]) {
-            case 1:
+            default:
+            case VS_BORDER_NONE: break;
+
+            case VS_BORDER_BOTTOMRIGHT:
+                // Along right edge
                 RSDK.DrawRect(ScreenInfo->width - 1, 0, 1, ScreenInfo->height, 0x000000, 0xFF, INK_NONE, true);
+                // Along bottom edge
                 RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
-            case 2: RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true); break;
-
-            case 3:
-                RSDK.DrawRect(0, 0, 1, ScreenInfo[1].height, 0, 255, INK_NONE, true);
-                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true);
+            case VS_BORDER_BOTTOM:
+                // Along bottom edge
+                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true); 
                 break;
 
-            case 4:
-                RSDK.DrawRect(ScreenInfo->width - 1, 0, 1, ScreenInfo->height, 0x000000, 0xFF, INK_NONE, true);
-                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 255, INK_NONE, true);
-                break;
-
-            case 5: RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true); break;
-
-            case 6:
+            case VS_BORDER_BOTTOMLEFT:
+                // Along left edge (on screen 2)
                 RSDK.DrawRect(0, 0, 1, ScreenInfo[1].height, 0x000000, 0xFF, INK_NONE, true);
+                // Along bottom edge
+                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true);
+                break;
+
+            case VS_BORDER_TOPRIGHT:
+                // Along right edge
+                RSDK.DrawRect(ScreenInfo->width - 1, 0, 1, ScreenInfo->height, 0x000000, 0xFF, INK_NONE, true);
+                // Along top edge (on screen 2 or 3)
                 RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true);
                 break;
 
-            default: break;
+            case VS_BORDER_TOP:
+                // Along top edge (on screen 2)
+                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                break;
+
+            case VS_BORDER_TOPLEFT:
+                // Along left edge (on screen 3 or 4)
+                RSDK.DrawRect(0, 0, 1, ScreenInfo[1].height, 0x000000, 0xFF, INK_NONE, true);
+                // Along top edge (on screen 3 or 4)
+                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true);
+                break;
+
         }
 #else
         switch (SceneInfo->currentScreenID) {
-            case 0: RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true); break;
+            case 0:
+                // Along right edge (on screen 1)
+                RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                break;
 
-            case 1: RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true); break;
+            case 1:
+                // Along left edge (on screen 2)
+                RSDK.DrawRect(0, 0, ScreenInfo[1].width, 1, 0x000000, 0xFF, INK_NONE, true); 
+                break;
 
             default: break;
         }
@@ -448,10 +470,7 @@ void HUD_Create(void *data)
         RSDK.SetSpriteAnimation(HUD->aniFrames, 9, &self->hyperNumbersAnimator, true, 0);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 2, &self->lifeIconAnimator, true, 0);
 #if RETRO_USE_PLUS
-        if (globals->gameMode == MODE_ENCORE)
-            RSDK.SetSpriteAnimation(HUD->aniFrames, 13, &self->playerIDAnimator, true, 0);
-        else
-            RSDK.SetSpriteAnimation(HUD->aniFrames, 8, &self->playerIDAnimator, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, globals->gameMode == MODE_ENCORE ? 13 : 8, &self->playerIDAnimator, true, 0);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 10, &self->thumbsUpIconAnimator, true, 2);
         RSDK.SetSpriteAnimation(HUD->aniFrames, 10, &self->replayClapAnimator, true, 1);
 #else
@@ -484,10 +503,10 @@ void HUD_StageLoad(void)
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
-        HUD->screenBorderType[0] = session->splitScreenMode[0];
-        HUD->screenBorderType[1] = session->splitScreenMode[1];
-        HUD->screenBorderType[2] = session->splitScreenMode[2];
-        HUD->screenBorderType[3] = session->splitScreenMode[3];
+        HUD->screenBorderType[0] = session->screenBorderType[0];
+        HUD->screenBorderType[1] = session->screenBorderType[1];
+        HUD->screenBorderType[2] = session->screenBorderType[2];
+        HUD->screenBorderType[3] = session->screenBorderType[3];
     }
 #endif
 }

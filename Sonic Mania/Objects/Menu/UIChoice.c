@@ -12,14 +12,17 @@ ObjectUIChoice *UIChoice;
 void UIChoice_Update(void)
 {
     RSDK_THIS(UIChoice);
+
     EntityUIButton *parent = (EntityUIButton *)self->parent;
     bool32 disabled        = self->disabled;
-    self->touchPosSizeS.x  = self->size.x;
-    self->touchPosSizeS.y  = self->size.y;
-    self->touchPosOffsetS.y    = 0;
-    self->touchPosSizeS.x  = (self->touchPosSizeS.x + 3 * self->size.y) >> 1;
-    self->touchPosSizeS.y  = self->size.y + 0x60000;
-    self->touchPosOffsetS.x    = -(self->touchPosSizeS.x >> 1);
+
+    self->touchPosSizeS.x   = self->size.x;
+    self->touchPosSizeS.y   = self->size.y;
+    self->touchPosOffsetS.y = 0;
+    self->touchPosSizeS.x   = (self->touchPosSizeS.x + 3 * self->size.y) >> 1;
+    self->touchPosSizeS.y   = self->size.y + 0x60000;
+    self->touchPosOffsetS.x = -(self->touchPosSizeS.x >> 1);
+
     if (parent && (disabled || parent->disabled))
         disabled = true;
 
@@ -28,19 +31,18 @@ void UIChoice_Update(void)
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, 7, &self->labelAnimator, true, 0);
         else
             RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
+
         self->aniFrames  = UIWidgets->textFrames;
         self->isDisabled = disabled;
     }
 
     StateMachine_Run(self->state);
 
-    if (parent) {
-        if (parent->state == UIButton_State_HandleButtonLeave) {
-            self->textBounceOffset   = 0;
-            self->buttonBounceOffset = 0;
-            self->isSelected         = false;
-            self->state              = UIChoice_State_HandleButtonLeave;
-        }
+    if (parent && parent->state == UIButton_State_HandleButtonLeave) {
+        self->textBounceOffset   = 0;
+        self->buttonBounceOffset = 0;
+        self->isSelected         = false;
+        self->state              = UIChoice_State_HandleButtonLeave;
     }
 }
 
@@ -51,16 +53,17 @@ void UIChoice_StaticUpdate(void) {}
 void UIChoice_Draw(void)
 {
     RSDK_THIS(UIChoice);
-    Vector2 drawPos;
 
-    int32 size = self->size.y + self->size.x;
-    drawPos.x  = self->position.x;
-    drawPos.y  = self->position.y;
+    Vector2 drawPos;
+    int32 size = (self->size.x + self->size.y) >> 16;
+
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
     drawPos.x -= self->buttonBounceOffset;
     drawPos.y -= self->buttonBounceOffset;
-    size >>= 16;
 #if RETRO_USE_PLUS
-    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColor >> 16) & 0xFF, (UIWidgets->buttonColor >> 8) & 0xFF, (UIWidgets->buttonColor) & 0xFF);
+    UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, (UIWidgets->buttonColor >> 16) & 0xFF,
+                                (UIWidgets->buttonColor >> 8) & 0xFF, (UIWidgets->buttonColor) & 0xFF);
 #else
     UIWidgets_DrawParallelogram(drawPos.x, drawPos.y, size, self->size.y >> 16, self->bgEdgeSize, 0xF0, 0xF0, 0xF0);
 #endif
@@ -98,12 +101,12 @@ void UIChoice_Draw(void)
         drawPos.y += self->buttonBounceOffset;
 
         switch (self->align) {
-            case 0: drawPos.x += -0x60000 - (self->size.x >> 1); break;
+            case UIBUTTON_ALIGN_LEFT: drawPos.x += -0x60000 - (self->size.x >> 1); break;
 
             default:
-            case 1: break;
+            case UIBUTTON_ALIGN_CENTER: break;
 
-            case 2: drawPos.x += (self->size.x >> 1) - 0x60000; break;
+            case UIBUTTON_ALIGN_RIGHT: drawPos.x += (self->size.x >> 1) - 0x60000; break;
         }
 
         if (self->auxIcon)
@@ -117,6 +120,7 @@ void UIChoice_Draw(void)
 void UIChoice_Create(void *data)
 {
     RSDK_THIS(UIChoice);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = 2;
@@ -126,9 +130,11 @@ void UIChoice_Create(void *data)
         self->bgEdgeSize    = self->size.y >> 16;
         self->size.y        = abs(self->size.y);
         self->textVisible   = true;
-        self->touchCB       = UIChoice_CheckTouch;
-        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
+
+        self->touchCB = UIChoice_CheckTouch;
+
         self->aniFrames = UIWidgets->textFrames;
+        RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
         RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->iconAnimator, true, self->auxFrameID);
         RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->leftArrowAnimator, true, 0);
         RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->rightArrowAnimator, true, 1);
@@ -137,53 +143,56 @@ void UIChoice_Create(void *data)
 
 void UIChoice_StageLoad(void) { UIChoice->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-void UIChoice_SetChoiceActive(EntityUIChoice *entity)
+void UIChoice_SetChoiceActive(EntityUIChoice *choice)
 {
-    if (entity) {
-        EntityUIButton *parent = (EntityUIButton *)entity->parent;
-        entity->active         = ACTIVE_BOUNDS;
+    if (choice) {
+        EntityUIButton *parent = (EntityUIButton *)choice->parent;
+
+        choice->active = ACTIVE_BOUNDS;
         if (!parent->disabled)
-            entity->visible = true;
-        entity->textBounceOffset     = 0;
-        entity->buttonBounceOffset   = 0;
-        entity->textBounceVelocity   = -0x20000;
-        entity->buttonBounceVelocity = -0x20000;
-        entity->isSelected           = true;
-        entity->state                = UIChoice_State_HandleButtonEnter;
+            choice->visible = true;
+
+        choice->textBounceOffset     = 0;
+        choice->buttonBounceOffset   = 0;
+        choice->textBounceVelocity   = -0x20000;
+        choice->buttonBounceVelocity = -0x20000;
+        choice->isSelected           = true;
+        choice->state                = UIChoice_State_HandleButtonEnter;
     }
 }
 
-void UIChoice_SetChoiceInactive(EntityUIChoice *entity)
+void UIChoice_SetChoiceInactive(EntityUIChoice *choice)
 {
-    if (entity) {
-        entity->textBounceOffset   = 0;
-        entity->buttonBounceOffset = 0;
-        entity->isSelected         = false;
-        entity->state              = UIChoice_State_HandleButtonLeave;
+    if (choice) {
+        choice->textBounceOffset   = 0;
+        choice->buttonBounceOffset = 0;
+        choice->isSelected         = false;
+        choice->state              = UIChoice_State_HandleButtonLeave;
     }
 }
 
 void UIChoice_TouchedCB_Left(void)
 {
     RSDK_THIS(UIChoice);
+
     EntityUIButton *parent = (EntityUIButton *)self->parent;
     int32 id               = parent->selection;
-    EntityUIButton *ent    = NULL;
+    EntityUIButton *choice = NULL;
 
     do {
         if (--id < 0) {
-            do
-                id += parent->choiceCount;
-            while (id < 0);
+            while (id < 0) id += parent->choiceCount;
         }
+
         if (parent->choiceCount > 0) {
-            Entity *ent = RSDK.GetEntityByID(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent));
-            if (ent->objectID == UIChoice->objectID || ent->objectID == UIVsRoundPicker->objectID || ent->objectID == UIResPicker->objectID
-                || ent->objectID == UIWinSize->objectID)
+            choice = RSDK_GET_ENTITY(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent), UIButton);
+            if (choice->objectID == UIChoice->objectID || choice->objectID == UIVsRoundPicker->objectID || choice->objectID == UIResPicker->objectID
+                || choice->objectID == UIWinSize->objectID)
                 continue;
         }
-        ent = 0;
-    } while ((ent && ent->disabled) && id != parent->selection);
+
+        choice = 0;
+    } while ((choice && choice->disabled) && id != parent->selection);
 
     if (id != parent->selection) {
         UIButton_SetChoiceSelectionWithCB(parent, id);
@@ -194,19 +203,24 @@ void UIChoice_TouchedCB_Left(void)
 void UIChoice_TouchedCB_Right(void)
 {
     RSDK_THIS(UIChoice);
+
     EntityUIButton *parent = (EntityUIButton *)self->parent;
     int32 id               = parent->selection;
-    EntityUIButton *ent    = NULL;
+    EntityUIButton *choice = NULL;
+
     do {
         id = (id + 1) % parent->choiceCount;
+
         if (parent->choiceCount > 0) {
-            Entity *ent = RSDK.GetEntityByID(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent));
-            if (ent->objectID == UIChoice->objectID || ent->objectID == UIVsRoundPicker->objectID || ent->objectID == UIResPicker->objectID
-                || ent->objectID == UIWinSize->objectID)
+            choice = RSDK_GET_ENTITY(id % parent->choiceCount - parent->choiceCount + RSDK.GetEntityID(parent), UIButton);
+
+            if (choice->objectID == UIChoice->objectID || choice->objectID == UIVsRoundPicker->objectID || choice->objectID == UIResPicker->objectID
+                || choice->objectID == UIWinSize->objectID)
                 continue;
         }
-        ent = NULL;
-    } while ((ent && ent->disabled) && id != parent->selection);
+
+        choice = NULL;
+    } while ((choice && choice->disabled) && id != parent->selection);
 
     if (id != parent->selection) {
         UIButton_SetChoiceSelectionWithCB(parent, id);
@@ -216,11 +230,12 @@ void UIChoice_TouchedCB_Right(void)
 
 bool32 UIChoice_CheckTouch(void)
 {
+    RSDK_THIS(UIChoice);
+
     void (*callbacks[2])(void);
     Vector2 touchStart[2];
     Vector2 touchEnd[2];
 
-    RSDK_THIS(UIChoice);
     callbacks[0] = UIChoice_TouchedCB_Left;
     callbacks[1] = UIChoice_TouchedCB_Right;
 
@@ -239,6 +254,7 @@ bool32 UIChoice_CheckTouch(void)
         if (TouchInfo->count) {
             int32 sizeX = touchStart[i].x >> 1;
             int32 sizeY = touchStart[i].y >> 1;
+
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f);
                 int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f);
@@ -257,6 +273,7 @@ bool32 UIChoice_CheckTouch(void)
     }
 
     self->touchPressed = pressed;
+
     return pressed;
 }
 
@@ -267,18 +284,20 @@ void UIChoice_State_HandleButtonLeave(void)
     if (self->textBounceOffset) {
         int32 offset = -(self->textBounceOffset / abs(self->textBounceOffset));
         self->textBounceOffset += offset << 15;
-        if (offset < 0 && self->textBounceOffset < 0) 
+
+        if (offset < 0 && self->textBounceOffset < 0)
             self->textBounceOffset = 0;
-        else if (offset > 0 && self->textBounceOffset > 0) 
+        else if (offset > 0 && self->textBounceOffset > 0)
             self->textBounceOffset = 0;
     }
 
     if (self->buttonBounceOffset) {
         int32 offset = -(self->buttonBounceOffset / abs(self->buttonBounceOffset));
         self->buttonBounceOffset += offset << 16;
-        if (offset < 0 && self->buttonBounceOffset < 0) 
+
+        if (offset < 0 && self->buttonBounceOffset < 0)
             self->buttonBounceOffset = 0;
-        else if (offset > 0 && self->buttonBounceOffset > 0) 
+        else if (offset > 0 && self->buttonBounceOffset > 0)
             self->buttonBounceOffset = 0;
     }
 }
@@ -286,8 +305,10 @@ void UIChoice_State_HandleButtonLeave(void)
 void UIChoice_State_HandleButtonEnter(void)
 {
     RSDK_THIS(UIChoice);
+
     self->textBounceVelocity += 0x4000;
     self->textBounceOffset += self->textBounceVelocity;
+
     if (self->textBounceOffset >= 0 && self->textBounceVelocity > 0) {
         self->textBounceOffset   = 0;
         self->textBounceVelocity = 0;
@@ -295,6 +316,7 @@ void UIChoice_State_HandleButtonEnter(void)
 
     self->buttonBounceVelocity += 0x4800;
     self->buttonBounceOffset += self->buttonBounceVelocity;
+
     if (self->buttonBounceOffset >= -0x20000 && self->buttonBounceVelocity > 0) {
         self->buttonBounceOffset   = -0x20000;
         self->buttonBounceVelocity = 0;
@@ -306,7 +328,7 @@ void UIChoice_EditorDraw(void)
 {
     RSDK_THIS(UIChoice);
 
-    int sizeY = self->size.y;
+    int32 sizeY = self->size.y;
 
     self->drawOrder     = 2;
     self->updateRange.x = 0x800000;
@@ -314,18 +336,31 @@ void UIChoice_EditorDraw(void)
     self->bgEdgeSize    = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
     self->textVisible   = true;
+    self->aniFrames     = UIWidgets->textFrames;
+
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->labelAnimator, true, self->frameID);
-    self->aniFrames = UIWidgets->textFrames;
     RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->iconAnimator, true, self->auxFrameID);
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->leftArrowAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &self->rightArrowAnimator, true, 1);
+
+    self->isSelected = showGizmos();
+    // Crash prevention
+    self->parent = (Entity *)self;
 
     UIChoice_Draw();
 
     self->size.y = sizeY;
 }
 
-void UIChoice_EditorLoad(void) { UIChoice->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
+void UIChoice_EditorLoad(void)
+{
+    UIChoice->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(UIChoice, align);
+    RSDK_ENUM_VAR("Left", UIBUTTON_ALIGN_LEFT);
+    RSDK_ENUM_VAR("Center", UIBUTTON_ALIGN_CENTER);
+    RSDK_ENUM_VAR("Right", UIBUTTON_ALIGN_RIGHT);
+}
 #endif
 
 void UIChoice_Serialize(void)

@@ -245,14 +245,14 @@ typedef struct {
     void (*AppendText)(TextInfo *info, const char *text);
     void (*LoadStrings)(TextInfo *dst, const char *path, int32);
     bool32 (*SplitStringList)(TextInfo *list, TextInfo *strings, int32 start, int32 end);
-    void (*GetCString)(char *text, TextInfo *info);
+    void (*GetCString)(char *dest, TextInfo *info);
     bool32 (*StringCompare)(TextInfo *strA, TextInfo *strB, bool32 exactMatch);
     void (*GetDisplayInfo)(int32 *displayID, int32 *width, int32 *height, int32 *refreshRate, char *text);
     void (*GetWindowSize)(int32 *width, int32 *height);
     int32 (*SetScreenSize)(uint8 screenID, uint16 width, uint16 height);
     void (*SetClipBounds)(uint8 screenID, int32 x1, int32 y1, int32 x2, int32 y2);
 #if RETRO_USE_PLUS
-    void (*SetScreenSplitVerticies)(int8 p2_1, int8 p2_2, int8 p3_1, int8 p3_2, int8 p3_3);
+    void (*SetScreenRenderVertices)(int8 startVert2P_S1, int8 startVert2P_S2, int8 startVert3P_S1, int8 startVert3P_S2, int8 startVert3P_S3);
 #endif
     int16 (*LoadSpriteSheet)(const char *path, Scopes scope);
 #if RETRO_USE_PLUS

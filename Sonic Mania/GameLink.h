@@ -605,8 +605,8 @@ typedef enum {
 typedef enum {
     S3D_FLATCLR_WIREFRAME               = 0x0,
     S3D_FLATCLR                         = 0x1,
-    S3D_UNKNOWN_2                       = 0x2,
-    S3D_UNKNOWN_3                       = 0x3,
+    S3D_UNUSED_1                       = 0x2,
+    S3D_UNUSED_2                       = 0x3,
     S3D_FLATCLR_SHADED_WIREFRAME        = 0x4,
     S3D_FLATCLR_SHADED                  = 0x5,
     S3D_FLATCLR_SHADED_BLENDED          = 0x6,
@@ -667,6 +667,7 @@ typedef enum {
     STATUS_NOTFOUND  = 404,
     STATUS_ERROR     = 500,
     STATUS_NOWIFI    = 503,
+    STATUS_TIMEOUT   = 504,
     STATUS_CORRUPT   = 505,
     STATUS_NOSPACE   = 506,
 } StatusCodes;

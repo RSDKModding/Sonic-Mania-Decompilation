@@ -31,7 +31,7 @@ void BadnikHelpers_Serialize(void);
 
 // Extra Entity Functions
 // Handles oscillations
-int BadnikHelpers_Oscillate(int origin, int speed, int power);
+int BadnikHelpers_Oscillate(int origin, int speed, int amplitude);
 
 // Handles Boss Explosions
 void BadnikHelpers_HandleExplode(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder);

@@ -28,7 +28,7 @@ void MSFactory_Update(void);
 void MSFactory_LateUpdate(void);
 void MSFactory_StaticUpdate(void);
 void MSFactory_Draw(void);
-void MSFactory_Create(void* data);
+void MSFactory_Create(void *data);
 void MSFactory_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSFactory_EditorDraw(void);
@@ -43,4 +43,4 @@ void MSFactory_State_OpeningDoor(void);
 void MSFactory_State_CreateSilverSonic(void);
 void MSFactory_State_CloseDoor(void);
 
-#endif //!OBJ_MSFACTORY_H
+#endif //! OBJ_MSFACTORY_H

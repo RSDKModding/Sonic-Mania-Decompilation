@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+#define UICONTROL_BUTTON_COUNT (64)
+#if RETRO_USE_PLUS
+#define UICONTROL_PROMPT_COUNT (4)
+#endif
+
 // Object Class
 struct ObjectUIControl {
     RSDK_OBJECT
@@ -72,24 +77,33 @@ struct EntityUIControl {
 #endif
     bool32 hasStoredButton;
     bool32 selectionDisabled;
+#if RETRO_USE_PLUS
     bool32 menuWasSetup;
+#endif
     int32 backoutTimer;
     int32 storedButtonID;
     int32 lastButtonID;
-    Entity *heading;
-    Entity *shifter;
+    EntityUIHeading *heading;
+    EntityUIShifter *shifter;
 #if RETRO_USE_PLUS
     EntityUICarousel *carousel;
 #endif
-    EntityUIButtonPrompt *prompts[4];
-    EntityUIButton *buttons[64];
+    EntityUIButtonPrompt *prompts[UICONTROL_PROMPT_COUNT];
+#if RETRO_USE_PLUS
+    EntityUIButton *buttons[UICONTROL_BUTTON_COUNT];
+#endif
     bool32 (*backPressCB)(void);
     void (*processButtonInputCB)(void);
     void (*menuSetupCB)(void);
     void (*menuUpdateCB)(void);
     void (*yPressCB)(void);
     void (*xPressCB)(void);
-    Animator animator;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
+    int32 unused7;
 };
 
 // Object Struct
@@ -127,7 +141,7 @@ void UIControl_HandleMenuChange(TextInfo *info);
 void UIControl_HandleMenuLoseFocus(EntityUIControl *parent);
 void UIControl_ReturnToParentMenu(void);
 
-void UIControl_ClearInputs(char id);
+void UIControl_ClearInputs(uint8 id);
 void UIControl_SetTargetPos(EntityUIControl *entity, int32 x, int32 y);
 void UIControl_HandlePosition(void);
 void UIControl_ProcessInputs(void);

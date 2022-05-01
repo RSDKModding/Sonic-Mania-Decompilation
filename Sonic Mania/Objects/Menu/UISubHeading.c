@@ -32,19 +32,24 @@ void UISubHeading_Draw(void)
     RSDK_THIS(UISubHeading);
     Vector2 drawPos;
 
-    int32 size = self->size.y + self->size.x;
+    int32 size = (self->size.x + self->size.y) >> 16;
     drawPos.x  = self->position.x;
     drawPos.y  = self->position.y;
-    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size >> 16, self->size.y, self->shiftedY, 0x00, 0x00, 0x00);
+    UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 16, self->bgEdgeSize, 0x00, 0x00, 0x00);
 
     drawPos = self->position;
-    if (!self->align) {
-        drawPos.x += -0x60000 - (self->size.x >> 1);
+    switch (self->align) {
+        case UIBUTTON_ALIGN_LEFT: drawPos.x += -0x60000 - (self->size.x >> 1); break;
+
+        default:
+        case UIBUTTON_ALIGN_CENTER: break;
+
+        case UIBUTTON_ALIGN_RIGHT:
+            drawPos.x -= 0x60000;
+            drawPos.x += self->size.x >> 1;
+            break;
     }
-    else if (self->align == 2) {
-        drawPos.x -= 0x60000;
-        drawPos.x += self->size.x >> 1;
-    }
+
     drawPos.x += self->offset;
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
@@ -52,6 +57,7 @@ void UISubHeading_Draw(void)
 void UISubHeading_Create(void *data)
 {
     RSDK_THIS(UISubHeading);
+
     if (!SceneInfo->inEditor) {
         self->offset <<= 16;
         self->visible       = true;
@@ -59,8 +65,9 @@ void UISubHeading_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x400000;
-        self->shiftedY      = self->size.y >> 16;
+        self->bgEdgeSize    = self->size.y >> 16;
         self->size.y        = abs(self->size.y);
+
         RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator, true, self->frameID);
         self->textFrames = UIWidgets->textFrames;
     }
@@ -104,27 +111,26 @@ void UISubHeading_Initialize(void)
 
 void UISubHeading_HandleUnlocks(void)
 {
-    EntityUIControl *control = ManiaModeMenu->secretsMenu;
-    EntityUIButton *button   = control->buttons[1];
-    button->disabled         = !GameProgress_CheckUnlock(5) && globals->superSecret;
-    if (button->disabled)
-        UIButton_ManageChoices(button);
+    EntityUIControl *control  = ManiaModeMenu->secretsMenu;
+    EntityUIButton *debugMode = control->buttons[1];
+    debugMode->disabled       = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_DEBUGMODE) && globals->superSecret;
+    if (debugMode->disabled)
+        UIButton_ManageChoices(debugMode);
 
-    button                  = control->buttons[2];
-    EntityUIButton *option1 = UIButton_GetChoicePtr(button, 1);
-    EntityUIButton *option2 = UIButton_GetChoicePtr(button, 2);
-    int32 unlock            = GameProgress_CheckUnlock(2);
-    button->disabled        = !unlock;
-    if (button->disabled)
-        UIButton_ManageChoices(button);
-    option1->disabled = !GameProgress_CheckUnlock(2);
-    option2->disabled = !GameProgress_CheckUnlock(3);
+    EntityUIButton *sonicAbility      = control->buttons[2];
+    EntityUIButton *peeloutChoice     = UIButton_GetChoicePtr(debugMode, 1);
+    EntityUIButton *instaShieldChoice = UIButton_GetChoicePtr(debugMode, 2);
+    sonicAbility->disabled            = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_PEELOUT);
+    if (sonicAbility->disabled)
+        UIButton_ManageChoices(sonicAbility);
 
-    button           = control->buttons[3];
-    unlock           = GameProgress_CheckUnlock(4);
-    button->disabled = !unlock;
-    if (button->disabled)
-        UIButton_ManageChoices(button);
+    peeloutChoice->disabled     = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_PEELOUT);
+    instaShieldChoice->disabled = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_INSTASHIELD);
+
+    EntityUIButton *andKnux = control->buttons[3];
+    andKnux->disabled       = !GameProgress_CheckUnlock(GAMEPROGRESS_UNLOCK_ANDKNUX);
+    if (andKnux->disabled)
+        UIButton_ManageChoices(andKnux);
 }
 
 void UISubHeading_SetupActions(void)
@@ -175,14 +181,11 @@ void UISubHeading_HandleMenuReturn(int32 slot)
     UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & getMod(MEDAL_NOTIMEOVER)) != 0);
     UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & getMod(MEDAL_ANDKNUCKLES)) != 0);
 
-    int32 medals = saveGame->medalMods;
-    if (medals & getMod(MEDAL_NODROPDASH)) {
-        if (medals & getMod(MEDAL_PEELOUT)) {
+    if (saveGame->medalMods & getMod(MEDAL_NODROPDASH)) {
+        if (saveGame->medalMods & getMod(MEDAL_PEELOUT))
             UIButton_SetChoiceSelection(control->buttons[2], 1);
-        }
-        else if (medals & getMod(MEDAL_INSTASHIELD)) {
+        else if (saveGame->medalMods & getMod(MEDAL_INSTASHIELD))
             UIButton_SetChoiceSelection(control->buttons[2], 2);
-        }
     }
     else {
         UIButton_SetChoiceSelection(control->buttons[2], 0);
@@ -223,6 +226,7 @@ int32 UISubHeading_GetMedalMods(void)
 void UISubHeading_SaveFileCB(bool32 success)
 {
     UIWaitSpinner_FinishWait();
+
     RSDK.LoadScene();
 }
 
@@ -230,6 +234,7 @@ void UISubHeading_SecretsTransitionCB(void)
 {
     EntityUIControl *control = ManiaModeMenu->saveSelectMenu;
     control->childHasFocus   = true;
+
     UIControl_MatchMenuTag("Secrets");
 }
 
@@ -238,6 +243,7 @@ void UISubHeading_LeaveSecretsMenu(void)
     EntityUIControl *control = ManiaModeMenu->saveSelectMenu;
     if (ManiaModeMenu->inSecretsMenu) {
         EntityUISaveSlot *slot = (EntityUISaveSlot *)control->buttons[control->lastButtonID];
+
         UISubHeading_HandleMenuReturn(slot->slotID);
         ManiaModeMenu->inSecretsMenu = false;
     }
@@ -246,11 +252,13 @@ void UISubHeading_LeaveSecretsMenu(void)
 void UISubHeading_SaveSel_MenuUpdateCB(void)
 {
     RSDK_THIS(UIControl);
+
     if (self->active == ACTIVE_ALWAYS) {
         EntityUIButtonPrompt *prompt = ManiaModeMenu->delSavePrompt;
-        if (self == ManiaModeMenu->encoreSaveSelect)
-            prompt = ManiaModeMenu->delSavePrompt_Encore;
 
+        if (self == ManiaModeMenu->encoreSaveSelect) {
+            prompt = ManiaModeMenu->delSavePrompt_Encore;
+        }
         else if (self->lastButtonID != ManiaModeMenu->saveSelLastButtonID) {
             UISubHeading_LeaveSecretsMenu();
             ManiaModeMenu->saveSelLastButtonID = self->lastButtonID;
@@ -260,6 +268,7 @@ void UISubHeading_SaveSel_MenuUpdateCB(void)
         bool32 showPrompt    = false;
         for (int32 i = 0; i < self->buttonCount; ++i) {
             showPrompt |= self->buttons[i]->state == UISaveSlot_State_Selected;
+
             if (self->lastButtonID >= 0) {
                 if (self->buttons[i] == self->buttons[self->lastButtonID]) {
                     EntityUISaveSlot *slot = (EntityUISaveSlot *)self->buttons[self->lastButtonID];
@@ -284,11 +293,13 @@ void UISubHeading_SaveSel_MenuUpdateCB(void)
 void UISubHeading_SaveSel_YPressCB(void)
 {
     EntityUIControl *control = ManiaModeMenu->saveSelectMenu;
+
     if (control->active == ACTIVE_ALWAYS) {
         if (!ManiaModeMenu->inSecretsMenu) {
             UISubHeading_HandleMenuReturn(((EntityUISaveSlot *)control->buttons[control->buttonID])->slotID);
             ManiaModeMenu->inSecretsMenu = true;
         }
+
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
 
@@ -299,11 +310,13 @@ void UISubHeading_SaveSel_YPressCB(void)
 void UISubHeading_SaveButton_ActionCB(void)
 {
     RSDK_THIS(UISaveSlot);
+
     EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
     TimeAttackData_Clear();
+
     RSDK.GetCString(param->menuTag, &control->tag);
     param->menuSelection = control->lastButtonID;
     param->replayID      = 0;
@@ -311,6 +324,11 @@ void UISubHeading_SaveButton_ActionCB(void)
 
     bool32 loadingSave = false;
     if (self->type) {
+        // Bug Details(?):
+        // sizeof(globals->noSaveSlot) and sizeof(saveData) is 4096 (sizeof(int32) * 0x400)
+        // but the memset size is only 1024 (sizeof(uint8) * 0x400)
+        // so only about 1/4th of the save slot is cleared, though nothin uses the extra space so it's not a big deal
+
         memset(globals->noSaveSlot, 0, 0x400);
         globals->continues  = 0;
         globals->saveSlotID = NO_SAVE_SLOT;
@@ -318,12 +336,17 @@ void UISubHeading_SaveButton_ActionCB(void)
     else {
         globals->saveSlotID = self->slotID;
         globals->medalMods  = 0;
+
         if (self->isNewSave) {
             int32 *saveData = SaveGame_GetDataPtr(self->slotID % 8, self->encoreMode);
+
+            // Bug Details(?):
+            // see above
 
             memset(saveData, 0, 0x400);
             if (globals->gameMode != MODE_ENCORE)
                 saveRAM->saveState = 1;
+
             saveRAM->characterID   = self->frameID;
             saveRAM->zoneID        = 0;
             saveRAM->lives         = 3;
@@ -339,6 +362,7 @@ void UISubHeading_SaveButton_ActionCB(void)
                 saveRAM->score                 = 0;
                 saveRAM->score1UP              = 500000;
             }
+
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
         }
@@ -351,8 +375,9 @@ void UISubHeading_SaveButton_ActionCB(void)
     else {
         globals->medalMods = UISubHeading_GetMedalMods();
         saveRAM->medalMods = globals->medalMods;
+
         switch (self->frameID) {
-            case 0:
+            case 0: // Sonic & Tails
             case 1: globals->playerID = ID_SONIC; break;
             case 2: globals->playerID = ID_TAILS; break;
             case 3: globals->playerID = ID_KNUCKLES; break;
@@ -361,15 +386,13 @@ void UISubHeading_SaveButton_ActionCB(void)
             default: break;
         }
 
-        if ((globals->medalMods & getMod(MEDAL_ANDKNUCKLES))) {
+        if ((globals->medalMods & getMod(MEDAL_ANDKNUCKLES)))
             globals->playerID |= ID_KNUCKLES_ASSIST;
-        }
-        else if (!self->frameID) {
+        else if (!self->frameID)
             globals->playerID |= ID_TAILS_ASSIST;
-        }
     }
 
-    if (self->type == 1 || self->isNewSave) {
+    if (self->type == UISAVESLOT_NOSAVE || self->isNewSave) {
         if (self->encoreMode) {
             globals->playerID          = ID_SONIC;
             globals->stock             = 0;
@@ -378,7 +401,8 @@ void UISubHeading_SaveButton_ActionCB(void)
             globals->suppressTitlecard = true;
             RSDK.SetScene("Cutscenes", "Angel Island Zone Encore");
         }
-        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down)) && self->type == 1) {
+        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down))
+                 && self->type == UISAVESLOT_NOSAVE) {
             RSDK.SetScene("Presentation", "Level Select");
         }
         else {
@@ -411,10 +435,11 @@ void UISubHeading_EditorDraw(void)
 
     if (self->offset < 0x10000)
         self->offset <<= 16;
+
     self->drawOrder     = 2;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x400000;
-    self->shiftedY      = self->size.y >> 16;
+    self->bgEdgeSize    = self->size.y >> 16;
     self->size.y        = abs(self->size.y);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->animator, true, self->frameID);
     self->textFrames = UIWidgets->textFrames;
@@ -422,7 +447,13 @@ void UISubHeading_EditorDraw(void)
     UISubHeading_Draw();
 }
 
-void UISubHeading_EditorLoad(void) {}
+void UISubHeading_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(UISubHeading, align);
+    RSDK_ENUM_VAR("Left", UIBUTTON_ALIGN_LEFT);
+    RSDK_ENUM_VAR("Center", UIBUTTON_ALIGN_CENTER);
+    RSDK_ENUM_VAR("Right", UIBUTTON_ALIGN_RIGHT);
+}
 #endif
 
 void UISubHeading_Serialize(void)

@@ -4,6 +4,7 @@
 namespace RSDK
 {
 #define STORAGE_ENTRY_COUNT (0x1000)
+#define STORAGE_HEADER_SIZE (sizeof(DataStorageHeader) / sizeof(int32))
 
 enum StorageDataSets {
     DATASET_STG = 0,
@@ -15,13 +16,21 @@ enum StorageDataSets {
 };
 
 struct DataStorage {
-    int32 *memPtr;
+    int32 *memoryTable;
     uint32 usedStorage;
     uint32 storageLimit;
-    int32 **startPtrs1[STORAGE_ENTRY_COUNT];
-    int32 *startPtrs2[STORAGE_ENTRY_COUNT];
-    uint32 rowCount;
-    uint32 unknown;
+    int32 **dataEntries[STORAGE_ENTRY_COUNT]; // pointer to the actual variable
+    int32 *storageEntries[STORAGE_ENTRY_COUNT]; // pointer to the storage in "memoryTable"
+    uint32 entryCount;
+    uint32 clearCount;
+};
+
+struct DataStorageHeader {
+    bool32 active;
+    int32 setID;
+    int32 dataOffset;
+    int32 dataSize;
+    // there are "dataSize" int32's following this header, but they are omitted from the struct cuz they don't need to be here
 };
 
 template <typename T> class List

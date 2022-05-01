@@ -26,10 +26,11 @@ void UIButtonLabel_StaticUpdate(void) {}
 void UIButtonLabel_Draw(void)
 {
     RSDK_THIS(UIButtonLabel);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
+
     RSDK.DrawSprite(&self->frameAnimator, &drawPos, false);
     RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 }
@@ -37,14 +38,17 @@ void UIButtonLabel_Draw(void)
 void UIButtonLabel_Create(void *data)
 {
     RSDK_THIS(UIButtonLabel);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = 2;
     self->visible       = true;
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
+
     RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->frameAnimator, true, self->type);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
+
     self->textSprite = UIWidgets->textFrames;
 }
 
@@ -59,8 +63,10 @@ void UIButtonLabel_EditorDraw(void)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x300000;
+
     RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->frameAnimator, true, self->type);
     RSDK.SetSpriteAnimation(UIWidgets->textFrames, self->listID, &self->textAnimator, true, self->frameID);
+
     self->textSprite = UIWidgets->textFrames;
 
     UIButtonLabel_Draw();

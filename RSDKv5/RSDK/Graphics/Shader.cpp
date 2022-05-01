@@ -2,17 +2,19 @@
 
 using namespace RSDK;
 
-int shaderCount = 0;
+#define RSDK_DIRECTX_SDKVER 32
+
+int32 shaderCount = 0;
 ShaderEntry shaderList[SHADER_MAX];
 
 bool InitShaders()
 {
-    //dword_83C71C = (int)Direct3DCreate9(0x20u);
-    //if (!dword_83C71C)
+    // dx9Context = Direct3DCreate9(RSDK_DIRECTX_SDKVER);
+    // if (!dx9Context)
     //    return false;
 
-    //Engine_Unknown185();
-    //if (!Engine_Unknown186())
+    // Engine_GetDisplays();
+    // if (!Engine_InitRenderDevices())
     //    return false;
 
     if (!ReloadShaders())
@@ -25,8 +27,9 @@ bool InitShaders()
     return true;
 }
 
-bool ReloadShaders() {
-    int maxShaders = 1;
+bool ReloadShaders()
+{
+    int32 maxShaders = 1;
     if (engine.shaderSupport) {
         LoadShader("None", false);
         LoadShader("Clean", true);
@@ -39,14 +42,9 @@ bool ReloadShaders() {
         maxShaders = shaderCount;
     }
     else {
-        for (int i = 0; i < SHADER_MAX; ++i) {
-            shaderList[i].linear = true;
-        }
+        for (int32 i = 0; i < SHADER_MAX; ++i) shaderList[i].linear = true;
 
-        if (!engine.isWindowed)
-            shaderList[0].linear = true;
-        else
-            shaderList[0].linear = false;
+        shaderList[0].linear = !engine.isWindowed ? true : false;
     }
 
     if (engine.shaderID >= maxShaders)
@@ -55,33 +53,35 @@ bool ReloadShaders() {
     return true;
 }
 
-void LoadShader(const char* fileName, bool32 linear) {
+void LoadShader(const char *fileName, bool32 linear)
+{
     char buffer[0x100];
     FileInfo info;
 
-    for (int i = 0; i < shaderCount; ++i) {
-        if (strcmp(shaderList[i].name, fileName) == 0) {
+    for (int32 i = 0; i < shaderCount; ++i) {
+        if (strcmp(shaderList[i].name, fileName) == 0)
             return;
-        }
     }
 
     if (shaderCount == SHADER_MAX)
         return;
 
-    ShaderEntry *shader            = &shaderList[shaderCount];
-    shader->linear        = linear;
+    ShaderEntry *shader = &shaderList[shaderCount];
+    shader->linear      = linear;
     sprintf(shader->name, "%s", fileName);
 
-    const char *csoPath = "Dummy"; //nothing will ever be in "Data/Shaders/Dummy" so it works out to never load anthing
+    const char *csoPath = "Dummy"; // nothing should ever be in "Data/Shaders/Dummy" so it works out to never load anything
     const char *ext_v   = "bin";
     const char *ext_f   = "bin";
+
 #if RETRO_USING_DIRECTX9
-    csoPath = "CSO-DX9"; //windows
+    csoPath = "CSO-DX9"; // windows
     ext_v   = "vso";
     ext_f   = "fso";
 #endif
+
 #if RETRO_USING_DIRECTX11
-    csoPath = "CSO-DX11"; //xbox one
+    csoPath = "CSO-DX11"; // xbox one
     ext_v   = "vso";
     ext_f   = "fso";
 #endif
@@ -96,9 +96,9 @@ void LoadShader(const char* fileName, bool32 linear) {
 
         // now compile it LOL
 #if RETRO_USING_DIRECTX9
-        //if (dx9Device->lpVtbl->CreateVertexShader(dx9Device, (int *)fileData, &shader->vertexShaderObject) >= 0) {
+        // if (dx9Device->lpVtbl->CreateVertexShader(dx9Device, (int32 *)fileData, &shader->vertexShaderObject) >= 0) {
         //}
-        //else {
+        // else {
         //    fileData = NULL;
         //    return;
         //}
@@ -118,12 +118,12 @@ void LoadShader(const char* fileName, bool32 linear) {
         ReadBytes(&info, fileData, info.fileSize);
         CloseFile(&info);
 
-        //now compile it LOL
+        // now compile it LOL
 #if RETRO_USING_DIRECTX9
-        //if (dx9Device->lpVtbl->CreatePixelShader(dx9Device, (int *)fileData, &shader->pixelShaderObject) >= 0) {
+        // if (dx9Device->lpVtbl->CreatePixelShader(dx9Device, (int32 *)fileData, &shader->pixelShaderObject) >= 0) {
         //
         //}
-        //else {
+        // else {
         //    fileData = NULL;
         //    return;
         //}

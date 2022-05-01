@@ -35,7 +35,9 @@ void MonarchPlans_Draw(void)
     RSDK_THIS(MonarchPlans);
 
     RSDK.Prepare3DScene(MonarchPlans->sceneIndex);
+
     RSDK.AddModelTo3DScene(MonarchPlans->meshIndex, MonarchPlans->sceneIndex, S3D_FLATCLR_WIREFRAME, &self->matWorld, &self->matNormal, 0x609090);
+
     RSDK.Draw3DScene(MonarchPlans->sceneIndex);
 }
 
@@ -57,10 +59,16 @@ void MonarchPlans_Create(void *data)
 
 void MonarchPlans_StageLoad(void)
 {
-    MonarchPlans->aniFrames  = RSDK.LoadSpriteAnimation("Global/MonarchPlans.bin", SCOPE_STAGE);
+    // ???
+    // what the...?
+    // don't even have the slightest of clues as to what this was
+    // why is it in Data/Sprites/Global/ ???
+    MonarchPlans->aniFrames = RSDK.LoadSpriteAnimation("Global/MonarchPlans.bin", SCOPE_STAGE);
+
     MonarchPlans->meshIndex  = RSDK.LoadMesh("SSZ/MonarchPlans.bin", SCOPE_STAGE);
     MonarchPlans->sceneIndex = RSDK.Create3DScene("View:MonarchPlans", 0x2000, SCOPE_STAGE);
 
+    // ???
     MonarchPlans->hitbox.left   = -24;
     MonarchPlans->hitbox.top    = -24;
     MonarchPlans->hitbox.right  = 24;

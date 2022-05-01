@@ -8,7 +8,7 @@ struct ObjectUIWaitSpinner {
     RSDK_OBJECT
     uint16 aniFrames;
     int32 timer;
-    Entity *activeSpinner;
+    EntityUIWaitSpinner *activeSpinner;
 };
 
 // Entity Class
@@ -28,7 +28,7 @@ void UIWaitSpinner_Update(void);
 void UIWaitSpinner_LateUpdate(void);
 void UIWaitSpinner_StaticUpdate(void);
 void UIWaitSpinner_Draw(void);
-void UIWaitSpinner_Create(void* data);
+void UIWaitSpinner_Create(void *data);
 void UIWaitSpinner_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIWaitSpinner_EditorDraw(void);
@@ -42,4 +42,4 @@ void UIWaitSpinner_FinishWait(void);
 void UIWaitSpinner_State_Wait(void);
 void UIWaitSpinner_State_WaitAndDestroy(void);
 
-#endif //!OBJ_UIWAITSPINNER_H
+#endif //! OBJ_UIWAITSPINNER_H

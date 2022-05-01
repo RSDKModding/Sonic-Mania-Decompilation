@@ -78,6 +78,18 @@ typedef enum { DLC_PLUS } GameDLC;
     Animator animator;                                                                                                                               \
     int32 childCount;
 
+#define MANIA_BUTTON_BASE                                                                                                                            \
+    RSDK_ENTITY                                                                                                                                      \
+    int32 type;                                                                                                                                      \
+    bool32 walkOnto;                                                                                                                                 \
+    uint8 tag;                                                                                                                                       \
+    bool32 down;                                                                                                                                     \
+    bool32 toggled;                                                                                                                                  \
+    bool32 currentlyActive;                                                                                                                          \
+    bool32 activated;                                                                                                                                \
+    bool32 wasActivated;                                                                                                                             \
+    int32 pressPos;
+
 #define MANIA_UI_ITEM_BASE                                                                                                                           \
     RSDK_ENTITY                                                                                                                                      \
     StateMachine(state);                                                                                                                             \

@@ -79,15 +79,18 @@ void APICallback_StageLoad(void)
 void APICallback_SetRichPresence(int32 id, TextInfo *msg)
 {
     if (globals->presenceID != id) {
-        // RSDK.PrependText(&message, id + '.');
+        char buffer[0x40];
+        RSDK.GetCString(buffer, msg);
+
         if (APICallback->SetRichPresence) {
             LogHelpers_Print("API SetRichPresence(%d)", id);
-            LogHelpers_PrintString(msg);
+            LogHelpers_Print("%s", buffer);
+
             APICallback->SetRichPresence(id, msg);
         }
         else {
             LogHelpers_Print("EMPTY SetRichPresence(%d)", id);
-            LogHelpers_PrintString(msg);
+            LogHelpers_Print("%s", buffer);
         }
     }
 }
@@ -126,7 +129,7 @@ void APICallback_SetNoSaveDisabled(void)
 
 void APICallback_SaveUserFile(const char *name, void *buffer, int32 size, void (*callback)(int32))
 {
-    if (globals->noSave) {
+    if (API_GetNoSave()) {
         LogHelpers_Print("SaveUserFile(%s, %X, %d, %X) failing due to noSave", name, buffer, size, callback);
         callback(false);
     }
@@ -280,7 +283,7 @@ void APICallback_PromptSavePreference_CB(void)
 
 void APICallback_PromptSavePreference(int32 status)
 {
-    if (globals->noSave) {
+    if (API_GetNoSave()) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
         return;
     }
@@ -299,7 +302,7 @@ void APICallback_PromptSavePreference(int32 status)
 
 void APICallback_LoadUserFile(const char *name, void *buffer, int32 size, void (*callback)(int32))
 {
-    if (globals->noSave) {
+    if (API_GetNoSave()) {
         LogHelpers_Print("LoadUserFile(%s, %X, %d, %X) loading 0's due to noSave", name, buffer, size, callback);
         memset(buffer, 0, size);
         callback(false);
@@ -469,7 +472,7 @@ int32 APICallback_GetStorageStatus(void)
 
 int32 APICallback_GetSaveStatus(void)
 {
-    if (globals->noSave)
+    if (API_GetNoSave())
         return STATUS_OK;
 
     if (APICallback->activeEntity)
@@ -799,7 +802,7 @@ void APICallback_TrackGameProgressCB(bool32 success) { UIWaitSpinner_FinishWait(
 
 void APICallback_GetNextNotif(void)
 {
-    if (SceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API_GetNoSave() || globals->saveLoaded != STATUS_OK) {
         return;
     }
     else {

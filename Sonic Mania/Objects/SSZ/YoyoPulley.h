@@ -7,7 +7,7 @@
 struct ObjectYoyoPulley {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxHandle;
 };
 
 // Entity Class
@@ -35,7 +35,7 @@ void YoyoPulley_Update(void);
 void YoyoPulley_LateUpdate(void);
 void YoyoPulley_StaticUpdate(void);
 void YoyoPulley_Draw(void);
-void YoyoPulley_Create(void* data);
+void YoyoPulley_Create(void *data);
 void YoyoPulley_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void YoyoPulley_EditorDraw(void);
@@ -48,4 +48,4 @@ void YoyoPulley_UpdateHandlePos(void);
 void YoyoPulley_DrawSprites(void);
 int32 YoyoPulley_GetLength(void);
 
-#endif //!OBJ_YOYOPULLEY_H
+#endif //! OBJ_YOYOPULLEY_H

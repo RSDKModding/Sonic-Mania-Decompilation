@@ -7,7 +7,7 @@
 struct ObjectMSOrb {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxOrb;
 };
 
 // Entity Class
@@ -28,7 +28,7 @@ void MSOrb_Update(void);
 void MSOrb_LateUpdate(void);
 void MSOrb_StaticUpdate(void);
 void MSOrb_Draw(void);
-void MSOrb_Create(void* data);
+void MSOrb_Create(void *data);
 void MSOrb_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void MSOrb_EditorDraw(void);
@@ -41,4 +41,4 @@ void MSOrb_CheckPlayerCollisions(void);
 void MSOrb_State_Orb(void);
 void MSOrb_Draw_Orb(void);
 
-#endif //!OBJ_MSORB_H
+#endif //! OBJ_MSORB_H

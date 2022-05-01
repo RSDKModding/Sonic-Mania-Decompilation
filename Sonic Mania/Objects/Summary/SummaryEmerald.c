@@ -19,17 +19,20 @@ void SummaryEmerald_StaticUpdate(void) {}
 void SummaryEmerald_Draw(void)
 {
     RSDK_THIS(SummaryEmerald);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void SummaryEmerald_Create(void *data)
 {
     RSDK_THIS(SummaryEmerald);
+
     self->active        = ACTIVE_NORMAL;
     self->drawOrder     = 3;
     self->visible       = true;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
+
     if (!SceneInfo->inEditor) {
         if ((1 << self->emeraldID) & SaveGame->saveRAM->chaosEmeralds)
             RSDK.SetSpriteAnimation(SummaryEmerald->aniFrames, 0, &self->animator, true, self->emeraldID % 7);
@@ -41,9 +44,28 @@ void SummaryEmerald_Create(void *data)
 void SummaryEmerald_StageLoad(void) { SummaryEmerald->aniFrames = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void SummaryEmerald_EditorDraw(void) {}
+void SummaryEmerald_EditorDraw(void)
+{
+    RSDK_THIS(SummaryEmerald);
 
-void SummaryEmerald_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(SummaryEmerald->aniFrames, 0, &self->animator, true, self->emeraldID % 7);
+
+    SummaryEmerald_Draw();
+}
+
+void SummaryEmerald_EditorLoad(void)
+{
+    SummaryEmerald->aniFrames = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(SummaryEmerald, emeraldID);
+    RSDK_ENUM_VAR("Green", CHAOSEMERALD_GREEN);
+    RSDK_ENUM_VAR("Yellow", CHAOSEMERALD_YELLOW);
+    RSDK_ENUM_VAR("Blue", CHAOSEMERALD_BLUE);
+    RSDK_ENUM_VAR("Purple", CHAOSEMERALD_PURPLE);
+    RSDK_ENUM_VAR("Gray", CHAOSEMERALD_GRAY);
+    RSDK_ENUM_VAR("Cyan", CHAOSEMERALD_CYAN);
+    RSDK_ENUM_VAR("Red", CHAOSEMERALD_RED);
+}
 #endif
 
 void SummaryEmerald_Serialize(void) { RSDK_EDITABLE_VAR(SummaryEmerald, VAR_ENUM, emeraldID); }

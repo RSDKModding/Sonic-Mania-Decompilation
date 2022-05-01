@@ -25,7 +25,7 @@ void BSS_HUD_Update(void);
 void BSS_HUD_LateUpdate(void);
 void BSS_HUD_StaticUpdate(void);
 void BSS_HUD_Draw(void);
-void BSS_HUD_Create(void* data);
+void BSS_HUD_Create(void *data);
 void BSS_HUD_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void BSS_HUD_EditorDraw(void);
@@ -36,4 +36,4 @@ void BSS_HUD_Serialize(void);
 // Extra Entity Functions
 void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos);
 
-#endif //!OBJ_BSS_HUD_H
+#endif //! OBJ_BSS_HUD_H

@@ -12,7 +12,9 @@ ObjectLogoSetup *LogoSetup;
 void LogoSetup_Update(void)
 {
     RSDK_THIS(LogoSetup);
+
     StateMachine_Run(self->state);
+
     ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
@@ -23,22 +25,21 @@ void LogoSetup_StaticUpdate(void) {}
 void LogoSetup_Draw(void)
 {
     RSDK_THIS(LogoSetup);
+
     StateMachine_Run(self->stateDraw);
 }
 
 void LogoSetup_Create(void *data)
 {
     RSDK_THIS(LogoSetup);
+
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_ALWAYS;
         self->visible   = true;
         self->drawOrder = 12;
+        self->state     = sku_region == REGION_JP ? LogoSetup_State_CESAScreen : LogoSetup_State_ShowLogos;
         self->stateDraw = LogoSetup_Draw_Fade;
-        if (sku_region == REGION_JP)
-            self->state = LogoSetup_State_CESAScreen;
-        else
-            self->state = LogoSetup_State_ShowLogos;
-        self->timer = 1024;
+        self->timer     = 1024;
     }
 }
 
@@ -47,6 +48,10 @@ void LogoSetup_StageLoad(void)
     LogoSetup->sfxSega = RSDK.GetSfx("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, LogoSetup->objectID, NULL);
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
+
+    // What... is this for...?
+    // LogoSetup is never in any other stages besides category 0, scene 0 (Logos) so this should never be used...
+    // However it was even updated for plus which means it has to have been some sort of dev/debug feature
 
     if (SceneInfo->listPos >= 3) {
         switch (SceneInfo->listPos) {
@@ -68,6 +73,7 @@ bool32 LogoSetup_ImageCallback(void)
         && (ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyStart.press || LogoSetup->timer >= 300)) {
         return true;
     }
+
     LogoSetup->timer++;
     return false;
 }
@@ -75,12 +81,14 @@ bool32 LogoSetup_ImageCallback(void)
 void LogoSetup_State_CESAScreen(void)
 {
     RSDK_THIS(LogoSetup);
+
     LogoSetup->timer = 0;
 #if RETRO_USE_PLUS
     RSDK.LoadImage("CESA.png", 60.0, 2.0, LogoSetup_ImageCallback);
 #else
     RSDK.LoadImage("CESA.tga", 60.0, 2.0, LogoSetup_ImageCallback);
 #endif
+
     self->timer = 1024;
     self->state = LogoSetup_State_ShowLogos;
 }
@@ -88,9 +96,11 @@ void LogoSetup_State_CESAScreen(void)
 void LogoSetup_State_ShowLogos(void)
 {
     RSDK_THIS(LogoSetup);
+
     if (self->timer <= 0) {
         if (!ScreenInfo->position.y)
             RSDK.PlaySfx(LogoSetup->sfxSega, false, 0xFF);
+
         self->timer     = 0;
         self->state     = LogoSetup_State_FadeToNextLogos;
         self->stateDraw = StateMachine_None;
@@ -103,6 +113,7 @@ void LogoSetup_State_ShowLogos(void)
 void LogoSetup_State_FadeToNextLogos(void)
 {
     RSDK_THIS(LogoSetup);
+
     if (++self->timer > 120 || (self->timer > 30 && ControllerInfo->keyStart.press)) {
         self->timer     = 0;
         self->state     = LogoSetup_State_NextLogos;
@@ -113,6 +124,7 @@ void LogoSetup_State_FadeToNextLogos(void)
 void LogoSetup_State_NextLogos(void)
 {
     RSDK_THIS(LogoSetup);
+
     if (self->timer >= 1024) {
         if (ScreenInfo->position.y >= SCREEN_YSIZE) {
             ++SceneInfo->listPos;
@@ -133,6 +145,7 @@ void LogoSetup_State_NextLogos(void)
 void LogoSetup_Draw_Fade(void)
 {
     RSDK_THIS(LogoSetup);
+
     RSDK.FillScreen(0, self->timer, self->timer - 0x80, self->timer - 0x100);
 }
 

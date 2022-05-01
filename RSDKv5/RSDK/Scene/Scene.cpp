@@ -811,7 +811,7 @@ void LoadStageGIF(char *filepath)
     RSDK::ImageGIF tileset;
 
     if (tileset.Load(filepath, true) && tileset.width == TILE_SIZE && tileset.height <= 0x400 * TILE_SIZE) {
-        tileset.dataPtr = tilesetGFXData;
+        tileset.pixels = tilesetGFXData;
         tileset.Load(NULL, false);
 
         for (int32 r = 0; r < 0x10; ++r) {
@@ -860,7 +860,7 @@ void LoadStageGIF(char *filepath)
 
         tileset.palette = NULL;
         tileset.decoder = NULL;
-        tileset.dataPtr = NULL;
+        tileset.pixels = NULL;
     }
 }
 

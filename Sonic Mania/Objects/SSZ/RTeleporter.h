@@ -7,7 +7,7 @@
 struct ObjectRTeleporter {
     RSDK_OBJECT
     uint16 aniFrames;
-    Hitbox hitbox;
+    Hitbox hitboxTeleporter;
     uint16 unused1;
     uint16 unused2;
     uint16 unused3;
@@ -34,7 +34,7 @@ void RTeleporter_Update(void);
 void RTeleporter_LateUpdate(void);
 void RTeleporter_StaticUpdate(void);
 void RTeleporter_Draw(void);
-void RTeleporter_Create(void* data);
+void RTeleporter_Create(void *data);
 void RTeleporter_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void RTeleporter_EditorDraw(void);
@@ -50,4 +50,4 @@ void RTeleporter_Draw_Active(void);
 void RTeleporter_Draw_Exploding(void);
 void RTeleporter_Draw_Destroyed(void);
 
-#endif //!OBJ_RTELEPORTER_H
+#endif //! OBJ_RTELEPORTER_H

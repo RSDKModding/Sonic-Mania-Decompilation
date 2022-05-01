@@ -27,14 +27,18 @@ void EggTower_Draw(void)
     RSDK.MatrixTranslateXYZ(&self->matWorld, (ScreenInfo->position.x + ScreenInfo->centerX) << 16, y, 0, false);
     RSDK.MatrixRotateY(&self->matTemp, (self->rotationX + ScreenInfo->position.x) / -6);
     RSDK.MatrixMultiply(&self->matWorld, &self->matTemp, &self->matWorld);
+
     RSDK.Prepare3DScene(EggTower->sceneIndex);
+
     RSDK.AddModelTo3DScene(EggTower->modelIndex, EggTower->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matWorld, NULL, 0x000000);
+
     RSDK.Draw3DScene(EggTower->sceneIndex);
 }
 
 void EggTower_Create(void *data)
 {
     RSDK_THIS(EggTower);
+
     if (!SceneInfo->inEditor) {
         self->visible       = true;
         self->drawOrder     = 1;
@@ -49,7 +53,8 @@ void EggTower_StageLoad(void)
 {
     EggTower->modelIndex = RSDK.LoadMesh("SSZ/EggTower.bin", SCOPE_STAGE);
     EggTower->sceneIndex = RSDK.Create3DScene("View:EggTower", 0x2000, SCOPE_STAGE);
-    RSDK.SetDiffuseColor(EggTower->sceneIndex, 192, 192, 192);
+
+    RSDK.SetDiffuseColor(EggTower->sceneIndex, 0xC0, 0xC0, 0xC0);
     RSDK.SetDiffuseIntensity(EggTower->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(EggTower->sceneIndex, 16, 16, 16);
 }

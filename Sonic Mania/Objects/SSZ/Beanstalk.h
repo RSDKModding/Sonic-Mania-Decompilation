@@ -8,7 +8,7 @@ typedef enum {
     BEANSTALK_NODE,
     BEANSTALK_PLATFORM,
     BEANSTALK_CHOMPER,
-}BeanstalkTypes;
+} BeanstalkTypes;
 
 // Object Class
 struct ObjectBeanstalk {
@@ -60,7 +60,7 @@ void Beanstalk_Update(void);
 void Beanstalk_LateUpdate(void);
 void Beanstalk_StaticUpdate(void);
 void Beanstalk_Draw(void);
-void Beanstalk_Create(void* data);
+void Beanstalk_Create(void *data);
 void Beanstalk_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Beanstalk_EditorDraw(void);
@@ -74,7 +74,7 @@ int32 Beanstalk_GetRemainingDistance(void);
 int32 Beanstalk_GetBezierInc(void);
 
 void Beanstalk_DrawNodes(void);
-void Beanstalk_DrawFillerNodes(void);
+void Beanstalk_DrawCreationNode(void);
 
 void Beanstalk_HandleNodeMovement(void);
 void Beanstalk_HandleNodeAppear(void);
@@ -91,4 +91,4 @@ void Beanstalk_State_Node(void);
 void Beanstalk_State_Platform(void);
 void Beanstalk_State_Chomper(void);
 
-#endif //!OBJ_BEANSTALK_H
+#endif //! OBJ_BEANSTALK_H

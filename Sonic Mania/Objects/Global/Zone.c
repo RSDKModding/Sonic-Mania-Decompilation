@@ -174,6 +174,7 @@ void Zone_StaticUpdate(void)
 #if RETRO_USE_PLUS
     // Handle times for the summary screen
     int32 zone = Zone_GetZoneID();
+
     if (zone >= ZONE_AIZ)
         zone = ZONE_AIZ;
     else if (zone == ZONE_INVALID)

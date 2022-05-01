@@ -17,6 +17,7 @@ void UIWidgets_StaticUpdate(void)
 {
     ++UIWidgets->timer;
     UIWidgets->timer &= 0x7FFF;
+
 #if RETRO_USE_PLUS
     UIWidgets->buttonColor = UIWidgets->buttonColors[(UIWidgets->timer >> 1) & 0xF];
 #endif
@@ -28,15 +29,18 @@ void UIWidgets_Create(void *data) {}
 
 void UIWidgets_StageLoad(void)
 {
-    UIWidgets->active   = ACTIVE_ALWAYS;
+    UIWidgets->active = ACTIVE_ALWAYS;
+
     UIWidgets->uiFrames = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
     UIWidgets->saveSelFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+
     UIWidgets_ApplyLanguage();
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 1, &UIWidgets->frameAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &UIWidgets->arrowsAnimator, true, 0);
+
     UIWidgets->sfxBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
     UIWidgets->sfxAccept = RSDK.GetSfx("Global/MenuAccept.wav");
     UIWidgets->sfxWarp   = RSDK.GetSfx("Global/SpecialWarp.wav");
@@ -67,6 +71,7 @@ void UIWidgets_StageLoad(void)
 void UIWidgets_ApplyLanguage(void)
 {
     LogHelpers_Print("Apply Language %d", Localization->language);
+
     switch (Localization->language) {
         case LANGUAGE_EN: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); break;
         case LANGUAGE_FR: UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextFR.bin", SCOPE_STAGE); break;
@@ -105,8 +110,8 @@ void UIWidgets_DrawRectOutline_Blended(int32 x, int32 y, int32 width, int32 heig
 }
 void UIWidgets_DrawRectOutline_Flash(int32 x, int32 y, int32 width, int32 height)
 {
-    int32 w       = width << 16 >> 1;
-    int32 h       = height << 16 >> 1;
+    int32 w     = width << 16 >> 1;
+    int32 h     = height << 16 >> 1;
     color color = RSDK.GetPaletteEntry(3, (UIWidgets->timer >> 1) & 0xF);
 
     RSDK.DrawRect(x - w, y - h, width << 16, 0x30000, color, 0xFF, INK_NONE, false);
@@ -136,7 +141,8 @@ void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 
         }
 
         if (SceneInfo->inEditor) {
-            color clr = blue | (green << 8) | (red << 16);
+            color clr = (blue << 0) | (green << 8) | (red << 16);
+
             RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, clr, 0xFF, INK_NONE, false);
             RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 0xFF, INK_NONE, false);
             RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 0xFF, INK_NONE, false);
@@ -150,6 +156,7 @@ void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 
             verts[1].y -= sy;
             verts[2].x -= sx;
             verts[2].y -= sy;
+
             RSDK.DrawQuad(verts, 3, red, green, blue, 0xFF, INK_NONE);
         }
     }
@@ -165,6 +172,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeM
         verts[1].y = y;
         verts[2].x = x;
         verts[2].y = y;
+
         if (sizeMode == 1) {
             verts[0].x = x - (size << 16);
             verts[1].x = x + (size << 16);
@@ -186,6 +194,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 sizeM
             verts[0].y -= sy;
             verts[1].x -= sx;
             verts[2].y -= sy;
+
             RSDK.DrawQuad(verts, 3, red, green, blue, 0xFF, ink);
         }
     }
@@ -213,7 +222,8 @@ void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, in
     }
 
     if (SceneInfo->inEditor) {
-        color clr = blue | (green << 8) | (red << 16);
+        color clr = (blue << 0) | (green << 8) | (red << 16);
+
         RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, clr, 0xFF, INK_NONE, false);
         RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 0xFF, INK_NONE, false);
         RSDK.DrawLine(verts[2].x, verts[2].y, verts[3].x, verts[3].y, clr, 0xFF, INK_NONE, false);
@@ -230,18 +240,20 @@ void UIWidgets_DrawParallelogram(int32 x, int32 y, int32 width, int32 height, in
         verts[1].x -= sx;
         verts[2].x -= sx;
         verts[3].x -= sx;
+
         RSDK.DrawQuad(verts, 4, red, green, blue, 0xFF, INK_NONE);
     }
 }
 void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist)
 {
     Vector2 drawPos;
+    drawPos.x = x;
+    drawPos.y = y;
 
-    drawPos.x                         = x;
-    drawPos.y                         = y;
     UIWidgets->arrowsAnimator.frameID = 2;
     drawPos.y -= arrowDist << 15;
     RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
+
     UIWidgets->arrowsAnimator.frameID = 3;
     drawPos.y += arrowDist << 16;
     RSDK.DrawSprite(&UIWidgets->arrowsAnimator, &drawPos, false);
@@ -266,10 +278,11 @@ Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, color leftColor, color right
     UIWidgets_DrawRightTriangle(x, y, 13, (leftColor >> 16) & 0xFF, (leftColor >> 8) & 0xFF, leftColor & 0xFF);
     UIWidgets_DrawRightTriangle(x + 0xE0000, y + 0xC0000, -13, (rightColor >> 16) & 0xFF, (rightColor >> 8) & 0xFF, rightColor & 0xFF);
 
-    Vector2 result;
-    result.x = x + 0xE0000;
-    result.y = y;
-    return result;
+    Vector2 newPos;
+    newPos.x = x + 0xE0000;
+    newPos.y = y;
+
+    return newPos;
 }
 
 #if RETRO_USE_PLUS
@@ -288,21 +301,20 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
 
     RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 9, &arrowsAnimator, true, 9);
     RSDK.DrawSprite(&arrowsAnimator, &drawPos, false);
+
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
     if (minutes) {
-        if (minutes != 99 || seconds != 99 || milliseconds != 99) {
+        if (minutes != 99 || seconds != 99 || milliseconds != 99)
             sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
-        }
-        else {
+        else
             sprintf(strBuf, "<<:<<;<<");
-        }
-    }
-    else if (!seconds && !milliseconds) {
-        sprintf(strBuf, "<<:<<;<<");
     }
     else {
-        sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
+        if (!seconds && !milliseconds)
+            sprintf(strBuf, "<<:<<;<<");
+        else
+            sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
     }
 
     for (int32 i = 0; i < 8; ++i) {
@@ -311,6 +323,7 @@ void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 mi
 
         RSDK.SetSpriteAnimation(UIWidgets->saveSelFrames, 8, &animator, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&animator, &drawPos, false);
+
         drawPos.x += 0x80000;
     }
 }
@@ -327,8 +340,10 @@ void UIWidgets_EditorLoad(void)
 #endif
     UIWidgets->fontFrames = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
     UIWidgets->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 1, &UIWidgets->frameAnimator, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiFrames, 2, &UIWidgets->arrowsAnimator, true, 0);
+
 #if RETRO_USE_PLUS
     UIWidgets->buttonColor = 0xF0F0F0;
 #endif

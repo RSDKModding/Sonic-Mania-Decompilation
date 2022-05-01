@@ -13,9 +13,12 @@ ObjectE3MenuSetup *E3MenuSetup = NULL;
 void E3MenuSetup_Update(void)
 {
     RSDK_THIS(E3MenuSetup);
+
     StateMachine_Run(self->state);
+
     if (self->timer >= self->delay) {
-        StateMachine_Run(self->stateDelay);
+        StateMachine_Run(self->callback);
+
         destroyEntity(self);
     }
     else {
@@ -36,12 +39,14 @@ void E3MenuSetup_StaticUpdate(void)
 void E3MenuSetup_Draw(void)
 {
     RSDK_THIS(E3MenuSetup);
+
     RSDK.FillScreen(self->fadeColor, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 }
 
 void E3MenuSetup_Create(void *data)
 {
     RSDK_THIS(E3MenuSetup);
+
     self->active    = ACTIVE_NORMAL;
     self->visible   = true;
     self->drawOrder = 14;
@@ -53,16 +58,18 @@ void E3MenuSetup_SetupUI(void)
 {
     TextInfo info;
     INIT_TEXTINFO(info);
+
     foreach_all(UIControl, control)
     {
         RSDK.PrependText(&info, "Char Select");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            E3MenuSetup->charSelControl = (Entity *)control;
+            E3MenuSetup->charSelControl = control;
 
         RSDK.PrependText(&info, "Zone");
         if (RSDK.StringCompare(&info, &control->tag, false))
-            E3MenuSetup->zoneControl = (Entity *)control;
+            E3MenuSetup->zoneControl = control;
     }
+
     E3MenuSetup_SetupButtons();
 }
 
@@ -70,7 +77,7 @@ void E3MenuSetup_SetupButtons(void)
 {
     foreach_all(UICharButton, button)
     {
-        if (button->parent == E3MenuSetup->charSelControl) {
+        if (button->parent == (Entity *)E3MenuSetup->charSelControl) {
             switch (button->characterID) {
                 case 0: button->actionCB = E3MenuSetup_ActionCB_Sonic; break;
                 case 1: button->actionCB = E3MenuSetup_ActionCB_Tails; break;
@@ -82,28 +89,33 @@ void E3MenuSetup_SetupButtons(void)
     int32 id = 0;
     foreach_all(UITAZoneModule, module)
     {
-        module->actionCB = E3MenuSetup_ZoneSelect_ActionCB;
-        if (!id) { // GHZ
+        module->actionCB = E3MenuSetup_ActionCB_ZoneSelect;
+
+        if (id == 0) { // GHZ2
             module->zoneID = 0;
-            module->actID = 1;
+            module->actID  = 1;
         }
-        else if (id == 1) { // MSZ
+        else if (id == 1) { // MSZ2
             module->zoneID = 7;
-            module->actID = 1;
+            module->actID  = 1;
         }
+        ++id;
     }
 }
 
-void E3MenuSetup_Delay_LoadScene(void)
+void E3MenuSetup_Callback_LoadScene(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
+    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityUIControl *control = E3MenuSetup->zoneControl;
+
     globals->gameMode  = MODE_NOSAVE;
     globals->medalMods = 0;
     RSDK.SetScene("Mania Mode", "");
+
     EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->buttonID];
     param->zoneID                = module->zoneID;
     param->actID                 = module->actID;
+
     SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
     switch (param->characterID) {
         default: break;
@@ -111,29 +123,34 @@ void E3MenuSetup_Delay_LoadScene(void)
         case 2: globals->playerID = ID_TAILS; break;
         case 3: globals->playerID = ID_KNUCKLES; break;
     }
+
     RSDK.LoadScene();
 }
 
-void E3MenuSetup_ZoneSelect_ActionCB(void)
+void E3MenuSetup_ActionCB_ZoneSelect(void)
 {
-    EntityE3MenuSetup *entity = CREATE_ENTITY(E3MenuSetup, NULL, 0xFFF00000, 0xFFF00000);
-    entity->fadeColor        = 0x000000;
-    entity->delay             = 32;
-    entity->fadeSpeed         = 5;
-    entity->state             = E3MenuSetup_State_FadeOut;
-    entity->stateDelay        = E3MenuSetup_Delay_LoadScene;
+    EntityE3MenuSetup *entity = CREATE_ENTITY(E3MenuSetup, NULL, 0xFFF0 << 16, 0xFFF0 << 16);
+
+    entity->fadeColor = 0x000000;
+    entity->delay     = 32;
+    entity->fadeSpeed = 5;
+    entity->state     = E3MenuSetup_State_FadeOut;
+    entity->callback  = E3MenuSetup_Callback_LoadScene;
 }
 
 // Sonic Sel
 void E3MenuSetup_ActionCB_Sonic(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+
     TimeAttackData_Clear();
     param->characterID = 1;
-    EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
+
+    EntityUIControl *control = E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         control->buttons[i]->animator.animationID = 1;
     }
+
     UIControl_MatchMenuTag("Zones");
 }
 
@@ -141,12 +158,15 @@ void E3MenuSetup_ActionCB_Sonic(void)
 void E3MenuSetup_ActionCB_Tails(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+
     TimeAttackData_Clear();
     param->characterID = 2;
-    EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
+
+    EntityUIControl *control = E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         control->buttons[i]->animator.animationID = 2;
     }
+
     UIControl_MatchMenuTag("Zones");
 }
 
@@ -154,24 +174,30 @@ void E3MenuSetup_ActionCB_Tails(void)
 void E3MenuSetup_ActionCB_Knux(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
+
     TimeAttackData_Clear();
     param->characterID = 3;
-    EntityUIControl *control        = (EntityUIControl *)E3MenuSetup->zoneControl;
+
+    EntityUIControl *control = E3MenuSetup->zoneControl;
     for (int32 i = 0; i < control->buttonCount; ++i) {
         control->buttons[i]->animator.animationID = 3;
     }
+
     UIControl_MatchMenuTag("Zones");
 }
 
 void E3MenuSetup_State_FadeOut(void)
 {
     RSDK_THIS(E3MenuSetup);
+
     self->fadeTimer = clampVal(self->timer << (self->fadeSpeed - 1), 0, 0x200);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void E3MenuSetup_EditorDraw(void) {}
 
 void E3MenuSetup_EditorLoad(void) {}
+#endif
 
 void E3MenuSetup_Serialize(void) {}
 #endif

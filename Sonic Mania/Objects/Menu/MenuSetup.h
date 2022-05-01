@@ -71,7 +71,7 @@ struct ObjectMenuSetup {
 struct EntityMenuSetup {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateDelay);
+    StateMachine(callback);
     int32 timer;
     int32 delay;
     int32 fadeShift;
@@ -112,8 +112,8 @@ void MenuSetup_MenuButton_ActionCB(void);
 void MenuSetup_StartTransitionLB(void (*callback)(void), int32 delay);
 
 //Main Menu
-bool32 MenuSetup_ReturnToTitleOption(void);
-int32 MenuSetup_StartReturnToTitle(void);
+bool32 MenuSetup_BackPressCB_ReturnToTitle(void);
+void MenuSetup_StartReturnToTitle(void);
 void MenuSetup_ReturnToTitle(void);
 void MenuSetup_ExitGame(void);
 void MenuSetup_ExitGame_ActionCB(void);
@@ -151,7 +151,7 @@ void MenuSetup_VS_RulesButton_ActionCB(void);
 void MenuSetup_VS_OpenCompTotal(void);
 void MenuSetup_VS_Round_ProcessButtonCB(void);
 void MenuSetup_VS_Round_MenuSetupCB(void);
-void MenuSetup_VS_OpenCompetition(void);
+void MenuSetup_VS_GotoCompetition(void);
 void MenuSetup_VS_Total_ProcessButtonCB(void);
 void MenuSetup_VS_Total_MenuSetupCB(void);
 void MenuSetup_VS_Total_MenuUpdateCB(void);

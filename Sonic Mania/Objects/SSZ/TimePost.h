@@ -38,7 +38,7 @@ void TimePost_Update(void);
 void TimePost_LateUpdate(void);
 void TimePost_StaticUpdate(void);
 void TimePost_Draw(void);
-void TimePost_Create(void* data);
+void TimePost_Create(void *data);
 void TimePost_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TimePost_EditorDraw(void);
@@ -54,7 +54,7 @@ void TimePost_HandleTimeSparkles(void);
 
 void TimePost_State_Setup(void);
 void TimePost_State_CheckPlayerCollisions(void);
-void TimePost_State_Spin(void);
+void TimePost_State_Spinning(void);
 void TimePost_State_FinishedSpin(void);
 
-#endif //!OBJ_TIMEPOST_H
+#endif //! OBJ_TIMEPOST_H

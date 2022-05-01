@@ -6,7 +6,13 @@
 typedef enum {
     HOTARU_GOOD,
     HOTARU_BAD,
-}HotaruQualities;
+} HotaruQualities;
+
+typedef enum {
+    HOTARU_ATTACK_IDLE,
+    HOTARU_ATTACK_CHARGING,
+    HOTARU_ATTACK_ATTACKING,
+} HotaruAttackStates;
 
 // Object Class
 struct ObjectHotaru {
@@ -55,7 +61,7 @@ void Hotaru_Update(void);
 void Hotaru_LateUpdate(void);
 void Hotaru_StaticUpdate(void);
 void Hotaru_Draw(void);
-void Hotaru_Create(void* data);
+void Hotaru_Create(void *data);
 void Hotaru_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Hotaru_EditorDraw(void);
@@ -79,4 +85,4 @@ void Hotaru_State_Charging(void);
 void Hotaru_State_Attacking(void);
 void Hotaru_State_FinishedAttacking(void);
 
-#endif //!OBJ_HOTARU_H
+#endif //! OBJ_HOTARU_H

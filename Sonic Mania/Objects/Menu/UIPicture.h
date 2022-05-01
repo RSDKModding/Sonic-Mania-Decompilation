@@ -28,7 +28,7 @@ void UIPicture_Update(void);
 void UIPicture_LateUpdate(void);
 void UIPicture_StaticUpdate(void);
 void UIPicture_Draw(void);
-void UIPicture_Create(void* data);
+void UIPicture_Create(void *data);
 void UIPicture_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIPicture_EditorDraw(void);
@@ -38,5 +38,4 @@ void UIPicture_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_UIPICTURE_H
+#endif //! OBJ_UIPICTURE_H

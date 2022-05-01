@@ -12,7 +12,7 @@ struct ObjectTitleEggman {
 
 // Entity Class
 struct EntityTitleEggman {
-	RSDK_ENTITY
+    RSDK_ENTITY
     StateMachine(state);
     int32 timer;
     Vector2 originPos;
@@ -30,7 +30,7 @@ void TitleEggman_Update(void);
 void TitleEggman_LateUpdate(void);
 void TitleEggman_StaticUpdate(void);
 void TitleEggman_Draw(void);
-void TitleEggman_Create(void* data);
+void TitleEggman_Create(void *data);
 void TitleEggman_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TitleEggman_EditorDraw(void);
@@ -44,4 +44,4 @@ void TitleEggman_State_Wait(void);
 void TitleEggman_State_Move(void);
 #endif
 
-#endif //!OBJ_TITLEEGGMAN_H
+#endif //! OBJ_TITLEEGGMAN_H

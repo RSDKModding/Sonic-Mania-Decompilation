@@ -1181,9 +1181,6 @@
     <ClInclude Include="Objects\Menu\OptionsMenu.h">
       <Filter>Sources\Objects\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Menu\TAEmerald.h">
-      <Filter>Sources\Objects\Menu</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Menu\ThanksSetup.h">
       <Filter>Sources\Objects\Menu</Filter>
     </ClInclude>
@@ -1948,6 +1945,9 @@
     </ClInclude>
     <ClInclude Include="Objects\Player\PlayerProbe.h">
       <Filter>Sources\Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Menu\TAEmerald.h">
+      <Filter>Sources\Objects\Credits</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3022,9 +3022,6 @@
     <ClCompile Include="Objects\Menu\OptionsMenu.c">
       <Filter>Sources\Objects\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Menu\TAEmerald.c">
-      <Filter>Sources\Objects\Menu</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Menu\ThanksSetup.c">
       <Filter>Sources\Objects\Menu</Filter>
     </ClCompile>
@@ -3783,6 +3780,9 @@
     </ClCompile>
     <ClCompile Include="Objects\Player\PlayerProbe.c">
       <Filter>Sources\Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Menu\TAEmerald.c">
+      <Filter>Sources\Objects\Credits</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

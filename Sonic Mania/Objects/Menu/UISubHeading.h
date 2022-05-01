@@ -22,7 +22,7 @@ struct EntityUISubHeading {
     int32 frameID;
     int32 align;
     int32 offset;
-    int32 shiftedY;
+    int32 bgEdgeSize;
     int32 storedListID;
     int32 storedFrameID;
     Animator animator;

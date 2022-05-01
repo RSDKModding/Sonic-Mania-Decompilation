@@ -68,6 +68,16 @@ void TilePlatform_EditorDraw(void)
     RSDK_THIS(TilePlatform);
 
     DrawHelpers_DrawRectOutline(self->position.x, self->position.y, self->size.x, self->size.y, 0xFFFF00);
+
+    if (showGizmos()) {
+        RSDK_DRAWING_OVERLAY(true);
+
+        DrawHelpers_DrawRectOutline(self->targetPos.x, self->targetPos.y, self->size.x, self->size.y, 0xFFFF00);
+
+        DrawHelpers_DrawArrow(self->targetPos.x, self->targetPos.y, self->position.x, self->position.y, 0xFFFF00, INK_NONE, 0xFF);
+
+        RSDK_DRAWING_OVERLAY(false);
+    }
 }
 
 void TilePlatform_EditorLoad(void)

@@ -20,12 +20,12 @@ struct EntityUIRankButton {
     LeaderboardEntry *prevLeaderboardEntry;
     int32 prevLeaderboardEntryStatus;
     Vector2 popoverPos;
-    bool32 hasChanged; //never actually set to true, but who knows!
+    bool32 hasChanged; // never actually set to true, but who knows!
     int32 rank;
     int32 score;
     int32 replayID;
     Vector2 size;
-    int32 bgEdgeSize; //just a guess but maybe its right, its unused anyways
+    int32 bgEdgeSize; // just a guess but maybe its right, its unused anyways
     int32 textBounceOffset;
     int32 buttonBounceOffset;
     int32 textBounceVelocity;
@@ -51,7 +51,7 @@ void UIRankButton_Update(void);
 void UIRankButton_LateUpdate(void);
 void UIRankButton_StaticUpdate(void);
 void UIRankButton_Draw(void);
-void UIRankButton_Create(void* data);
+void UIRankButton_Create(void *data);
 void UIRankButton_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UIRankButton_EditorDraw(void);
@@ -80,5 +80,4 @@ void UIRankButton_State_Selected(void);
 
 #endif
 
-
-#endif //!OBJ_UIRANKBUTTON_H
+#endif //! OBJ_UIRANKBUTTON_H

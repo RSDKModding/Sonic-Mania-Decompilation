@@ -12,7 +12,9 @@ ObjectSilverSonic *SilverSonic;
 void SilverSonic_Update(void)
 {
     RSDK_THIS(SilverSonic);
+
     RSDK.ProcessAnimation(&self->animator);
+
     self->outerBox = RSDK.GetHitbox(&self->animator, 0);
     self->innerBox = RSDK.GetHitbox(&self->animator, 1);
 
@@ -34,6 +36,7 @@ void SilverSonic_Update(void)
     }
 
     RSDK.ProcessTileCollisions(self, self->outerBox, self->innerBox);
+
     StateMachine_Run(self->state);
 }
 
@@ -44,12 +47,14 @@ void SilverSonic_StaticUpdate(void) {}
 void SilverSonic_Draw(void)
 {
     RSDK_THIS(SilverSonic);
+
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void SilverSonic_Create(void *data)
 {
     RSDK_THIS(SilverSonic);
+
     if (!SceneInfo->inEditor) {
         self->active          = ACTIVE_BOUNDS;
         self->visible         = true;
@@ -59,14 +64,17 @@ void SilverSonic_Create(void *data)
         self->velocity.y      = 0x10000;
         self->tileCollisions  = true;
         RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_IDLE, &self->animator, true, 0);
-        self->drawFX     = FX_FLIP;
-        self->inkEffect  = INK_ALPHA;
-        self->state      = SilverSonic_State_Appear;
+
+        self->drawFX    = FX_FLIP;
+        self->inkEffect = INK_ALPHA;
+        self->state     = SilverSonic_State_Appear;
+
         self->attackType = RSDK.Rand(0, 3);
         if (self->attackType == 2)
-            self->attackType = 1;
+            self->attackType = SSONIC_ATTACK_ROLL;
         self->attackRepeatCount = 1;
-        self->drawOrder         = Zone->objectDrawLow;
+
+        self->drawOrder = Zone->objectDrawLow;
     }
 }
 
@@ -93,13 +101,13 @@ void SilverSonic_HandleNextAttack(void)
     switch (self->attackType) {
         default: break;
 
-        case 0: // Arm Extend -> Boost
+        case SSONIC_ATTACK_BOOST: // Arm Extend -> Boost
             RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_ARMATTACK, &self->animator, false, 0);
             self->state = SilverSonic_State_ArmAttack;
             RSDK.PlaySfx(SilverSonic->sfxArm, false, 255);
             break;
 
-        case 1: // Spindash -> Roll/Jump
+        case SSONIC_ATTACK_ROLL: // Spindash -> Roll/Jump
             RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_CROUCH, &self->animator, false, 0);
             self->state = SilverSonic_State_Crouch;
             break;
@@ -120,11 +128,14 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
                 int32 x = self->position.x;
                 int32 y = self->position.y;
                 RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
-                self->position.x = x;
-                self->position.y = y;
-                self->velocity.y = -0x10000;
-                self->attackType = 2;
-                self->state      = MSBomb_State_SilverSonicExplode;
+
+                EntityMSBomb *bomb = (EntityMSBomb *)self;
+                bomb->position.x   = x;
+                bomb->position.y   = y;
+
+                bomb->velocity.y = -0x10000;
+                bomb->timer      = 2;
+                bomb->state      = MSBomb_State_SilverSonicExplode;
             }
 #else
             Player_CheckBadnikBreak(player, self, true);
@@ -152,12 +163,14 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
                             self->groundVel    = (-0xC0 * self->groundVel) >> 8;
                         }
                         else {
-                            self->onGround     = false;
-                            self->velocity.x   = (288 * player->velocity.x) >> 8;
-                            self->velocity.y   = -abs((0xC0 * player->velocity.x) >> 8);
+                            self->onGround   = false;
+                            self->velocity.x = (288 * player->velocity.x) >> 8;
+                            self->velocity.y = -abs((0xC0 * player->velocity.x) >> 8);
+
                             player->velocity.x = (-0xC0 * player->velocity.x) >> 8;
                             player->groundVel  = player->velocity.x;
-                            self->timer        = 0;
+
+                            self->timer = 0;
                             RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_JUMP, &self->animator, false, 0);
                             self->state = SilverSonic_State_RollRebound;
                         }
@@ -167,16 +180,19 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
                             player->groundVel  = self->velocity.x;
                             player->velocity.x = self->velocity.x;
                             player->velocity.y = self->velocity.y;
-                            int32 angle        = RSDK.ATan2(self->position.x - player->position.x, self->position.y - player->position.y);
-                            self->velocity.x   = RSDK.Cos256(angle) << 10;
-                            self->velocity.y   = RSDK.Sin256(angle) << 10;
+
+                            int32 angle      = RSDK.ATan2(self->position.x - player->position.x, self->position.y - player->position.y);
+                            self->velocity.x = RSDK.Cos256(angle) << 10;
+                            self->velocity.y = RSDK.Sin256(angle) << 10;
                         }
                         else {
-                            self->velocity.x   = player->velocity.x;
-                            self->velocity.y   = -abs(player->velocity.y);
+                            self->velocity.x = player->velocity.x;
+                            self->velocity.y = -abs(player->velocity.y);
+
                             player->velocity.x = (-0xC0 * player->velocity.x) >> 8;
                             player->groundVel  = player->velocity.x;
-                            self->timer        = 0;
+
+                            self->timer = 0;
                             RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_JUMP, &self->animator, false, 0);
                             self->state = SilverSonic_State_RollRebound;
                         }
@@ -186,6 +202,7 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
                         player->state = Player_State_KnuxGlideDrop;
                     }
+
                     self->invincibilityTimer = 8;
                     RSDK.PlaySfx(SilverSonic->sfxRebound, false, 255);
                 }
@@ -213,11 +230,14 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                     int32 x = self->position.x;
                     int32 y = self->position.y;
                     RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
-                    self->position.x = x;
-                    self->position.y = y;
-                    self->velocity.y = -0x10000;
-                    self->attackType = 2;
-                    self->state      = MSBomb_State_SilverSonicExplode;
+
+                    EntityMSBomb *bomb = (EntityMSBomb *)self;
+                    bomb->position.x   = x;
+                    bomb->position.y   = y;
+
+                    bomb->velocity.y = -0x10000;
+                    bomb->timer      = 2;
+                    bomb->state      = MSBomb_State_SilverSonicExplode;
                 }
             }
             else {
@@ -228,11 +248,14 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                     int32 x = self->position.x;
                     int32 y = self->position.y;
                     RSDK.ResetEntityPtr(self, MSBomb->objectID, NULL);
-                    self->position.x = x;
-                    self->position.y = y;
-                    self->velocity.y = -0x10000;
-                    self->attackType = 2;
-                    self->state      = MSBomb_State_SilverSonicExplode;
+
+                    EntityMSBomb *bomb = (EntityMSBomb *)self;
+                    bomb->position.x   = x;
+                    bomb->position.y   = y;
+
+                    bomb->velocity.y = -0x10000;
+                    bomb->timer      = 2;
+                    bomb->state      = MSBomb_State_SilverSonicExplode;
                 }
             }
 #else
@@ -277,6 +300,7 @@ void SilverSonic_State_FinishedAttack(void)
         self->timer = 0;
         SilverSonic_HandleNextAttack();
     }
+
     SilverSonic_CheckPlayerCollisions_Badnik();
 }
 
@@ -299,6 +323,7 @@ void SilverSonic_State_Crouch(void)
     if (++self->timer == 30) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_SPINDASH, &self->animator, false, 0);
+
         self->state = SilverSonic_State_Spindash;
         RSDK.PlaySfx(SilverSonic->sfxDash, false, 255);
     }
@@ -311,10 +336,7 @@ void SilverSonic_State_Spindash(void)
     if (++self->timer == 60) {
         self->timer = 0;
         RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_JUMP, &self->animator, false, 0);
-        if (self->direction)
-            self->velocity.x = -0x80000;
-        else
-            self->velocity.x = 0x80000;
+        self->velocity.x = self->direction ? -0x80000 : 0x80000;
 
         if (Zone->timer & 2) {
             self->groundVel = self->velocity.x;
@@ -328,6 +350,7 @@ void SilverSonic_State_Spindash(void)
             RSDK.PlaySfx(SilverSonic->sfxJump, false, 255);
         }
     }
+
     SilverSonic_CheckPlayerCollisions_Ball();
 }
 
@@ -351,6 +374,7 @@ void SilverSonic_State_Roll(void)
         self->velocity.y = -0x68000;
         self->position.x = Zone->playerBoundsR[0] - 0x180000;
     }
+
     SilverSonic_CheckPlayerCollisions_Ball();
 }
 
@@ -359,6 +383,7 @@ void SilverSonic_State_RollJump(void)
     RSDK_THIS(SilverSonic);
 
     self->velocity.y += 0x3800;
+
     if (self->position.x < Zone->playerBoundsL[0] + 0x180000) {
         self->velocity.x = 0;
         self->position.x = Zone->playerBoundsL[0] + 0x180000;
@@ -383,6 +408,7 @@ void SilverSonic_State_RollRebound(void)
     RSDK_THIS(SilverSonic);
 
     self->velocity.y += 0x1800;
+
     if (self->position.x < Zone->playerBoundsL[0] + 0x180000) {
         if (self->velocity.x < 0) {
             self->direction  = FLIP_NONE;
@@ -415,18 +441,21 @@ void SilverSonic_State_RollRebound(void)
     foreach_active(MetalSonic, metal)
     {
         if (RSDK.CheckObjectCollisionTouchBox(metal, metal->outerBox, self, self->outerBox)) {
-            self->velocity.x                    = 0;
-            self->velocity.y                    = 0;
-            self->state                         = SilverSonic_State_Explode;
+            self->velocity.x = 0;
+            self->velocity.y = 0;
+            self->state      = SilverSonic_State_Explode;
+
             MetalSonic->invincibilityTimerPanel = 32;
             Camera_ShakeScreen(0, -4, 1);
             metal->health -= RETRO_USE_PLUS ? 2 : 1;
+
             if (metal->health <= 0) {
                 metal->timer = 0;
                 metal->state = MetalSonic_State_PanelExplosion;
             }
         }
     }
+
     SilverSonic_CheckPlayerCollisions_Ball();
 }
 
@@ -436,11 +465,14 @@ void SilverSonic_State_BoostReady(void)
 
     if (self->animator.frameID == self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_BOOST, &self->animator, false, 0);
+
         self->velocity.y = -0x30000;
         self->onGround   = false;
         self->state      = SilverSonic_State_Boost_Air;
+
         RSDK.PlaySfx(SilverSonic->sfxJump, false, 255);
     }
+
     SilverSonic_CheckPlayerCollisions_Badnik();
 }
 
@@ -449,11 +481,9 @@ void SilverSonic_State_Boost_Air(void)
     RSDK_THIS(SilverSonic);
 
     if (self->onGround) {
-        self->state = SilverSonic_State_Boost_Ground;
-        if (self->direction == FLIP_NONE)
-            self->groundVel = 0x60000;
-        else
-            self->groundVel = -0x60000;
+        self->state     = SilverSonic_State_Boost_Ground;
+        self->groundVel = self->direction == FLIP_NONE ? 0x60000 : -0x60000;
+
         RSDK.PlaySfx(SilverSonic->sfxBoost, false, 255);
     }
     else {
@@ -477,6 +507,7 @@ void SilverSonic_State_Boost_Ground(void)
         self->velocity.y = -0x30000;
         self->onGround   = false;
         RSDK.SetSpriteAnimation(SilverSonic->aniFrames, SSONIC_ANI_IDLE, &self->animator, false, 0);
+
         self->state = SilverSonic_State_FinishedBoost;
     }
 
@@ -491,11 +522,13 @@ void SilverSonic_State_FinishedBoost(void)
         self->state = SilverSonic_State_FinishedAttack;
     }
     else {
-        int32 vel = self->velocity.y;
+        int32 prevVelY = self->velocity.y;
         self->velocity.y += 0x2800;
-        if (self->velocity.y > 0 && vel <= 0)
+
+        if (self->velocity.y > 0 && prevVelY <= 0)
             self->direction = self->position.x > Zone->playerBoundsL[0] + 0x800000;
     }
+
     SilverSonic_CheckPlayerCollisions_Badnik();
 }
 
@@ -505,6 +538,7 @@ void SilverSonic_State_Explode(void)
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(MetalSonic->sfxExplosion2, false, 255);
+
         if (Zone->timer & 4) {
             int32 x = self->position.x + RSDK.Rand(-0x100000, 0x100000);
             int32 y = self->position.y + RSDK.Rand(-0x100000, 0x100000);

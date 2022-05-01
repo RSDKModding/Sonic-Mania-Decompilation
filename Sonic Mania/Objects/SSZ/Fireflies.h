@@ -33,7 +33,7 @@ void Fireflies_Update(void);
 void Fireflies_LateUpdate(void);
 void Fireflies_StaticUpdate(void);
 void Fireflies_Draw(void);
-void Fireflies_Create(void* data);
+void Fireflies_Create(void *data);
 void Fireflies_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Fireflies_EditorDraw(void);
@@ -45,4 +45,4 @@ void Fireflies_Serialize(void);
 void Fireflies_State_Spawner(void);
 void Fireflies_State_Firefly(void);
 
-#endif //!OBJ_FIREFLIES_H
+#endif //! OBJ_FIREFLIES_H

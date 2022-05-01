@@ -19,13 +19,16 @@ void SSZ2Setup_StaticUpdate(void)
         foreach_active(Player, player)
         {
             Hitbox *hitbox = Player_GetHitbox(player);
-            uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+
+            uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == (uint16)-1)
                 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 
-            if (RSDK.GetTileFlags(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
-                EntityDebris *debris =
-                    CREATE_ENTITY(Debris, Debris_State_Move, player->position.x, player->position.y + (hitbox->bottom << 16));
+            if (RSDK.GetTileFlags(tile, player->collisionPlane) != SSZ2_TFLAGS_NORMAL && (abs(player->groundVel) > 0x80000 && player->onGround)) {
+                int32 x              = player->position.x;
+                int32 y              = player->position.y + (hitbox->bottom << 16);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
+
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = player->velocity.x < 0;
@@ -33,6 +36,7 @@ void SSZ2Setup_StaticUpdate(void)
                 debris->position.x = player->position.x;
                 debris->position.y = player->position.y + (hitbox->bottom << 16);
                 debris->timer      = 30;
+
                 RSDK.PlaySfx(SSZ2Setup->sfxSpark, false, 255);
                 SSZ2Setup->sparkTimer = 3;
             }
@@ -49,23 +53,28 @@ void SSZ2Setup_Create(void *data) {}
 
 void SSZ2Setup_StageLoad(void)
 {
-    SSZ2Setup->sfxSpark     = RSDK.GetSfx("SSZ2/Spark.wav");
+    SSZ2Setup->sfxSpark = RSDK.GetSfx("SSZ2/Spark.wav");
+
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
-    SSZ2Setup->towerID      = RSDK.GetSceneLayerID("Tower");
+
+    SSZ2Setup->towerID = RSDK.GetSceneLayerID("Tower");
     if (SSZ2Setup->towerID < LAYER_COUNT) {
         SSZ2Setup->towerLayer                   = RSDK.GetSceneLayer(SSZ2Setup->towerID);
         SSZ2Setup->towerLayer->scanlineCallback = SSZ2Setup_TowerScanlineCB;
+
         RSDK.SetDrawLayerProperties(1, false, SSZ2Setup_TowerDrawLayerCB);
+
         RSDK.SetLimitedFade(3, 0, 4, 96, 0, 256);
         if (globals->suppressTitlecard >= true) {
             SaveGame_LoadPlayerState();
             Zone_StartFadeIn(10, 0x000000);
         }
+
         CREATE_ENTITY(SSZ3Cutscene, intToVoid(false), 0, 0);
 
 #if RETRO_USE_PLUS
-        Zone->stageFinishCallback = SSZ2Setup_StageFinishCallback;
+        Zone->stageFinishCallback = SSZ2Setup_StageFinishCB;
 #endif
     }
 
@@ -80,12 +89,13 @@ void SSZ2Setup_StageLoad(void)
 }
 
 #if RETRO_USE_PLUS
-void SSZ2Setup_StageFinishCallback(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
+void SSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
 #endif
 
 void SSZ2Setup_TowerDrawLayerCB(void)
 {
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
@@ -96,25 +106,25 @@ void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines)
     RSDK.SetActivePalette(3, 0, ScreenInfo->height);
 
     ScanlineInfo *scanlinePtr = &scanlines[ScreenInfo->centerX - 64];
-    int32 x1                    = scanlinePtr->position.x;
-    int32 offset                = 0x10000;
+    int32 x1                  = scanlinePtr->position.x;
+    int32 offset              = 0x10000;
     for (int32 i = 2; i - 2 < 80;) {
         scanlinePtr -= 5;
         scanlinePtr[5].position.x = x1 & 0x1FFFFFF;
 
-        int32 x2                    = x1 - offset;
+        int32 x2                  = x1 - offset;
         offset                    = (i - 2) * (i - 2) + offset;
         scanlinePtr[4].position.x = x2 & 0x1FFFFFF;
 
-        int32 x3                    = x2 - offset;
+        int32 x3                  = x2 - offset;
         offset                    = (i - 1) * (i - 1) + offset;
         scanlinePtr[3].position.x = x3 & 0x1FFFFFF;
 
-        int32 x4                    = x3 - offset;
+        int32 x4                  = x3 - offset;
         offset                    = i * i + offset;
         scanlinePtr[2].position.x = x4 & 0x1FFFFFF;
 
-        int32 x5                    = x4 - offset;
+        int32 x5                  = x4 - offset;
         offset                    = (i + 1) * (i + 1) + offset;
         scanlinePtr[1].position.x = x5 & 0x1FFFFFF;
 
@@ -132,19 +142,19 @@ void SSZ2Setup_TowerScanlineCB(ScanlineInfo *scanlines)
         scanlinePtr += 5;
         scanlinePtr[-5].position.x = x1 & 0x1FFFFFF;
 
-        int32 x2                     = x1 + offset;
+        int32 x2                   = x1 + offset;
         offset                     = (i - 2) * (i - 2) + offset;
         scanlinePtr[-4].position.x = x2 & 0x1FFFFFF;
 
-        int32 x3                     = x2 + offset;
+        int32 x3                   = x2 + offset;
         offset                     = (i - 1) * (i - 1) + offset;
         scanlinePtr[-3].position.x = x3 & 0x1FFFFFF;
 
-        int32 x4                     = x3 + offset;
+        int32 x4                   = x3 + offset;
         offset                     = i * i + offset;
         scanlinePtr[-2].position.x = x4 & 0x1FFFFFF;
 
-        int32 x5                     = x4 + offset;
+        int32 x5                   = x4 + offset;
         offset                     = (i + 1) * (i + 1) + offset;
         scanlinePtr[-1].position.x = x5 & 0x1FFFFFF;
 
@@ -186,9 +196,10 @@ void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void)
     if (isMainGameMode()) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->stateInput) {
-            player1->stateInput      = StateMachine_None;
-            player1->left            = false;
-            player1->right           = true;
+            player1->stateInput = StateMachine_None;
+            player1->left       = false;
+            player1->right      = true;
+
             Zone->cameraBoundsR[0] = ScreenInfo->centerX + (self->position.x >> 16);
             Zone->cameraBoundsR[1] = ScreenInfo->centerX + (self->position.x >> 16);
 #if RETRO_USE_PLUS
@@ -196,11 +207,12 @@ void SSZ2Setup_GenericTriggerCB_SSZ2BTransition(void)
             Zone->cameraBoundsR[3] = ScreenInfo->centerX + (self->position.x >> 16);
 #endif
 
-            for (int32 i = 0; i < Player->playerCount; ++i) StarPost->postIDs[i] = 0;
+            for (int32 p = 0; p < Player->playerCount; ++p) StarPost->postIDs[p] = 0;
 
             SaveGame_SavePlayerState();
             globals->suppressAutoMusic = true;
             globals->suppressTitlecard = true;
+
             ++SceneInfo->listPos;
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");

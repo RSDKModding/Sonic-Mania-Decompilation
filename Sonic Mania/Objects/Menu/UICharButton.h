@@ -11,7 +11,7 @@ typedef enum {
     UICHARBUTTON_MIGHTY,
     UICHARBUTTON_RAY,
 #endif
-}UICharButtonCharacterIDs;
+} UICharButtonCharacterIDs;
 
 // Object Class
 struct ObjectUICharButton {
@@ -42,7 +42,7 @@ void UICharButton_Update(void);
 void UICharButton_LateUpdate(void);
 void UICharButton_StaticUpdate(void);
 void UICharButton_Draw(void);
-void UICharButton_Create(void* data);
+void UICharButton_Create(void *data);
 void UICharButton_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UICharButton_EditorDraw(void);
@@ -65,4 +65,4 @@ void UICharButton_State_HandleButtonLeave(void);
 void UICharButton_State_HandleButtonEnter(void);
 void UICharButton_State_Selected(void);
 
-#endif //!OBJ_UICHARBUTTON_H
+#endif //! OBJ_UICHARBUTTON_H

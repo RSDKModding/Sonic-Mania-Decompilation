@@ -119,11 +119,11 @@ void PlayerProbe_Print(EntityPlayer *player)
 void PlayerProbe_DrawSprites(void)
 {
     RSDK_THIS(PlayerProbe);
+
     Vector2 drawPos;
 
     drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.y -= self->size << 19;
+    drawPos.y = self->position.y - (self->size << 19);
     Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     for (int32 i = 0; i < self->size; ++i) {
@@ -159,12 +159,10 @@ void PlayerProbe_EditorDraw(void)
 
     self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
     self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
-    self->visible       = false;
-    self->drawOrder     = Zone->objectDrawLow;
-    self->activePlayers = 0;
-    self->negAngle      = (uint8) - (self->angle & 0xFF);
+    self->visible       = true;
+    self->drawOrder     = Zone ? Zone->objectDrawLow : 2;
 
-    PlayerProbe_Draw();
+    PlayerProbe_DrawSprites();
 }
 
 void PlayerProbe_EditorLoad(void)
@@ -172,8 +170,8 @@ void PlayerProbe_EditorLoad(void)
     PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(PlayerProbe, direction);
-    RSDK_ENUM_VAR("Left", FLIP_NONE);
-    RSDK_ENUM_VAR("Right", FLIP_X);
+    RSDK_ENUM_VAR("Right", FLIP_NONE);
+    RSDK_ENUM_VAR("Left", FLIP_X);
 }
 #endif
 

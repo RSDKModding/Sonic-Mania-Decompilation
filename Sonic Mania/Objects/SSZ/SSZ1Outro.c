@@ -12,12 +12,15 @@ ObjectSSZ1Outro *SSZ1Outro;
 void SSZ1Outro_Update(void)
 {
     RSDK_THIS(SSZ1Outro);
+
     if (!self->activated) {
         self->activated = true;
+
 #if RETRO_USE_PLUS
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 #endif
+
         CutsceneSeq_StartSequence(self, SSZ1Outro_Cutscene_TimeWarpRunway, SSZ1Outro_Cutscene_TimeWarp, StateMachine_None);
     }
 }
@@ -61,14 +64,18 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
 
         Zone->cameraBoundsR[0]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[0] = false;
+
         Zone->cameraBoundsR[1]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[1] = false;
+
         Zone->cameraBoundsR[2]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[2] = false;
+
         Zone->cameraBoundsR[3]      = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[3] = false;
 
         CutsceneSeq_LockAllPlayerControl();
+
         player1->state      = Player_State_Ground;
         player1->stateInput = StateMachine_None;
         if (player2->objectID == Player->objectID) {
@@ -78,15 +85,19 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
     }
 
     player1->right = true;
+
     if (player1->position.x < SSZ1Outro->teleporter->position.x || !player1->onGround) {
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
+
         if (player1->groundVel > 0x40000)
             player1->groundVel = 0x40000;
+
         player1->groundVel = player1->groundVel;
 
         if (player1->velocity.x > 0x40000)
             player1->velocity.x = 0x40000;
+
         player1->velocity.x = player1->velocity.x;
     }
 
@@ -114,19 +125,22 @@ bool32 SSZ1Outro_Cutscene_TimeWarpRunway(EntityCutsceneSeq *host)
     else if (player1->position.x >= SSZ1Outro->teleporter->position.x - 0xC80000) {
         player1->jumpPress = true;
         player1->jumpHold  = true;
-        host->values[0]    = 1;
+        host->values[0]    = true;
     }
+
     return player1->position.x >= self->position.x + (self->hitbox.right << 16);
 }
 bool32 SSZ1Outro_Cutscene_TimeWarp(EntityCutsceneSeq *host)
 {
     if (host->timer == 10)
         SSZ1Outro->fxFade->state = FXFade_State_FadeIn;
+
     if (SSZ1Outro->fxFade->timer == 512) {
         RSDK.SetScene("Cutscenes", "SSZ Time Warp");
         RSDK.LoadScene();
         return true;
     }
+
     return false;
 }
 
@@ -134,6 +148,7 @@ void SSZ1Outro_DestroyHotaru(EntityHotaruMKII *hotaru)
 {
     CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->objectDrawHigh;
+
     RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
     destroyEntity(hotaru);
 }
@@ -151,6 +166,7 @@ void SSZ1Outro_DestroyLeftoverHotarus(void)
 void SSZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(SSZ1Outro);
+
     CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 

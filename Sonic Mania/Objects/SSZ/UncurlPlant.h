@@ -8,7 +8,7 @@
 // Object Class
 struct ObjectUncurlPlant {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxNode;
     TABLE(int32 startingNodeAngles[8], { 0x00, 0x10, 0x40, 0x60, 0x70, 0x90, 0xA0, 0xC0 });
     TABLE(int32 targetNodeAnglesReleased[8], { 0x00, -0x08, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40 });
     TABLE(int32 targetNodeAnglesStood[8], { 0x00, -0x18, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08 });
@@ -40,7 +40,7 @@ void UncurlPlant_Update(void);
 void UncurlPlant_LateUpdate(void);
 void UncurlPlant_StaticUpdate(void);
 void UncurlPlant_Draw(void);
-void UncurlPlant_Create(void* data);
+void UncurlPlant_Create(void *data);
 void UncurlPlant_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void UncurlPlant_EditorDraw(void);
@@ -52,4 +52,4 @@ void UncurlPlant_Serialize(void);
 void UncurlPlant_CalculateDrawPositions(void);
 void UncurlPlant_CalculatePositions(void);
 
-#endif //!OBJ_UNCURLPLANT_H
+#endif //! OBJ_UNCURLPLANT_H

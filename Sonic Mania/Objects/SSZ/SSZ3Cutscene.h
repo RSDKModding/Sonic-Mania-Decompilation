@@ -5,7 +5,7 @@
 
 // Object Class
 struct ObjectSSZ3Cutscene {
-	RSDK_OBJECT
+    RSDK_OBJECT
 };
 
 // Entity Class
@@ -27,7 +27,7 @@ void SSZ3Cutscene_Update(void);
 void SSZ3Cutscene_LateUpdate(void);
 void SSZ3Cutscene_StaticUpdate(void);
 void SSZ3Cutscene_Draw(void);
-void SSZ3Cutscene_Create(void* data);
+void SSZ3Cutscene_Create(void *data);
 void SSZ3Cutscene_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void SSZ3Cutscene_EditorDraw(void);
@@ -51,4 +51,4 @@ bool32 SSZ3Cutscene_CutsceneOutro_RubyWarp(EntityCutsceneSeq *host);
 bool32 SSZ3Cutscene_CutsceneOutro_LoadHCZ1(EntityCutsceneSeq *host);
 #endif
 
-#endif //!OBJ_SSZ3CUTSCENE_H
+#endif //! OBJ_SSZ3CUTSCENE_H

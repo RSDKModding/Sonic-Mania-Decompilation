@@ -209,6 +209,9 @@ void TimeAttackData_LoadTimeAttackDB_CB(int32 statusCode)
         TimeAttackData_ResetTimeAttackDB();
     }
 
+    // Bug Details:
+    // Due to how options work, this is called after the db is loaded, but before the result is assigned to globals->taTableID
+    // meaning that globals->taTableID will be 0xFFFF initially, even if the tabel id was loaded and returned successfully
     LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
 
     if (TimeAttackData->loadCallback) {
@@ -233,7 +236,7 @@ void TimeAttackData_ResetTimeAttackDB(void)
     }
     else {
         globals->taTableLoaded = STATUS_OK;
-        if (!checkNoSave && globals->saveLoaded == STATUS_OK) {
+        if (!API_GetNoSave() && globals->saveLoaded == STATUS_OK) {
             TimeAttackData_MigrateLegacySaves();
         }
     }

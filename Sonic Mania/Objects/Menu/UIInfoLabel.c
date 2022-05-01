@@ -20,6 +20,7 @@ void UIInfoLabel_Draw(void) { UIInfoLabel_DrawSprites(); }
 void UIInfoLabel_Create(void *data)
 {
     RSDK_THIS(UIInfoLabel);
+
     self->active        = ACTIVE_BOUNDS;
     self->drawOrder     = 2;
     self->visible       = true;
@@ -60,11 +61,12 @@ void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
 void UIInfoLabel_DrawSprites(void)
 {
     RSDK_THIS(UIInfoLabel);
-    Vector2 drawPos;
 
+    Vector2 drawPos;
     int32 size = (self->size.y + self->size.x) >> 16;
+
     UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 0x10, self->width, 0xF0, 0xF0, 0xF0);
-    
+
     UIWidgets_DrawParallelogram(self->position.x, self->position.y, size, self->size.y >> 0x10, self->width, 0x00, 0x00, 0x00);
 
     drawPos.x = self->position.x;
@@ -82,15 +84,9 @@ void UIInfoLabel_DrawSprites(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIInfoLabel_EditorDraw(void)
-{
-    RSDK_THIS(UIInfoLabel);
-    RSDK.SetSpriteAnimation(UIWidgets->fontFrames, 0, &self->textAnimator, true, 0);
+void UIInfoLabel_EditorDraw(void) { UIInfoLabel_DrawSprites(); }
 
-    UIInfoLabel_DrawSprites();
-}
-
-void UIInfoLabel_EditorLoad(void) {}
+void UIInfoLabel_EditorLoad(void) { UIInfoLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE); }
 #endif
 
 void UIInfoLabel_Serialize(void)

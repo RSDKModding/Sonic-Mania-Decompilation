@@ -12,6 +12,7 @@ ObjectUITransition *UITransition;
 void UITransition_Update(void)
 {
     RSDK_THIS(UITransition);
+
     StateMachine_Run(self->state);
 }
 
@@ -22,6 +23,7 @@ void UITransition_StaticUpdate(void) {}
 void UITransition_Draw(void)
 {
     RSDK_THIS(UITransition);
+
     if (self->isTransitioning)
         UITransition_DrawShapes();
 }
@@ -29,6 +31,7 @@ void UITransition_Draw(void)
 void UITransition_Create(void *data)
 {
     RSDK_THIS(UITransition);
+
     self->active       = ACTIVE_ALWAYS;
     self->drawOrder    = 13;
     self->drawPos[0].x = 0;
@@ -37,8 +40,9 @@ void UITransition_Create(void *data)
     self->drawPos[1].y = 0;
     self->drawPos[2].x = 0;
     self->drawPos[2].y = 0;
-    self->visible      = true;
-    self->state        = UITransition_State_Setup;
+
+    self->visible = true;
+    self->state   = UITransition_State_Setup;
 }
 
 void UITransition_StageLoad(void)
@@ -49,6 +53,7 @@ void UITransition_StageLoad(void)
 void UITransition_StartTransition(void (*callback)(void), int32 delay)
 {
     EntityUITransition *transition = (EntityUITransition *)UITransition->activeTransition;
+
     if (transition->state == UITransition_State_Setup && !UIDialog->activeDialog) {
         transition->state      = UITransition_State_TransitionIn;
         transition->timer      = 0;
@@ -65,12 +70,14 @@ void UITransition_StartTransition(void (*callback)(void), int32 delay)
 void UITransition_MatchNewTag(void)
 {
     UIControl_MatchMenuTag(UITransition->newTag);
+
     UITransition->newTag = NULL;
 }
 
 void UITransition_SetNewTag(const char *text)
 {
     EntityUITransition *transition = (EntityUITransition *)UITransition->activeTransition;
+
     if (transition->state == UITransition_State_Setup) {
         if (!UIDialog->activeDialog) {
             UITransition->newTag = (char *)text;
@@ -82,6 +89,7 @@ void UITransition_SetNewTag(const char *text)
 void UITransition_DrawShapes(void)
 {
     RSDK_THIS(UITransition);
+
     Vector2 positions[3];
     uint32 colors[3];
 
@@ -99,13 +107,15 @@ void UITransition_DrawShapes(void)
     positions[2].y      = screenCenterY + self->drawPos[2].y;
 
     for (int32 i = 0; i < 3; ++i) {
-        UIWidgets_DrawParallelogram(positions[i].x, positions[i].y, 0, SCREEN_YSIZE, SCREEN_YSIZE, (colors[i] >> 16) & 0xFF, (colors[i] >> 8) & 0xFF, colors[i] & 0xFF);
+        UIWidgets_DrawParallelogram(positions[i].x, positions[i].y, 0, SCREEN_YSIZE, SCREEN_YSIZE, (colors[i] >> 16) & 0xFF, (colors[i] >> 8) & 0xFF,
+                                    colors[i] & 0xFF);
     }
 }
 
 void UITransition_State_Setup(void)
 {
     RSDK_THIS(UITransition);
+
     self->isTransitioning = false;
     self->timer           = 0;
 }
@@ -116,7 +126,7 @@ void UITransition_State_TransitionIn(void)
 
     if (self->timer < self->delay)
         self->isTransitioning = false;
-    
+
     if (self->timer > self->delay + 16) {
         self->drawPos[0].y = 0;
         self->drawPos[1].x = 0;
@@ -129,7 +139,8 @@ void UITransition_State_TransitionIn(void)
     }
     else {
         self->isTransitioning = true;
-        int32 remain          = self->timer - self->delay;
+
+        int32 remain = self->timer - self->delay;
         if (!remain)
             RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
 
@@ -185,6 +196,7 @@ void UITransition_State_TransitionIn(void)
             self->drawPos[2].x = 0xF00000;
             self->drawPos[2].y = -0xF00000;
         }
+
         ++self->timer;
     }
 }
@@ -195,17 +207,19 @@ void UITransition_State_TransitionOut(void)
 
     if (self->timer >= 1) {
         if (self->timer > 16) {
-            self->timer              = 0;
-            self->isTransitioning    = false;
-            self->drawPos[0].x       = -0xF00000;
-            self->drawPos[0].y       = 0xF00000;
-            self->drawPos[1].x       = 0xF00000;
-            self->drawPos[1].y       = -0xF00000;
-            self->drawPos[2].x       = -0xF00000;
-            self->drawPos[2].y       = 0xF00000;
+            self->timer           = 0;
+            self->isTransitioning = false;
+            self->drawPos[0].x    = -0xF00000;
+            self->drawPos[0].y    = 0xF00000;
+            self->drawPos[1].x    = 0xF00000;
+            self->drawPos[1].y    = -0xF00000;
+            self->drawPos[2].x    = -0xF00000;
+            self->drawPos[2].y    = 0xF00000;
+
             EntityUIControl *control = UIControl_GetUIControl();
             if (control)
                 control->selectionDisabled = false;
+
             self->state = UITransition_State_Setup;
         }
         else {
@@ -263,12 +277,14 @@ void UITransition_State_TransitionOut(void)
                 self->drawPos[2].x = 0;
                 self->drawPos[2].y = 0;
             }
+
             ++self->timer;
         }
     }
     else {
         self->isTransitioning                       = true;
         UIControl_GetUIControl()->selectionDisabled = false;
+
         if (self->callback && !UIDialog->activeDialog) {
             Entity *storeEntity = SceneInfo->entity;
             SceneInfo->entity   = self->prevEntity;
@@ -276,6 +292,7 @@ void UITransition_State_TransitionOut(void)
             self->callback    = StateMachine_None;
             SceneInfo->entity = storeEntity;
         }
+
         if (MenuSetup) {
 #if RETRO_USE_PLUS
             ManiaModeMenu_ChangeMenuTrack();
@@ -285,6 +302,7 @@ void UITransition_State_TransitionOut(void)
             MenuSetup_SetBGColors();
 #endif
         }
+
         EntityUIControl *control   = UIControl_GetUIControl();
         control->selectionDisabled = true;
         ++self->timer;

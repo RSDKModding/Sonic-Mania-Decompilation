@@ -94,7 +94,7 @@ void ImageTrail_Draw(void)
 
     //int32 alpha[3] = { 0xA0 * self->baseAlpha >> 8, self->baseAlpha >> 1, 0x60 * self->baseAlpha >> 8 };
     int32 alpha = 0x60 * self->baseAlpha >> 8;
-    int32 inc      = 0x40 / (ImageTrail_TrackCount / 3);
+    int32 inc   = 0x40 / (ImageTrail_TrackCount / 3);
 
     for (int32 i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
         int32 id = (i * 3) - (i - 1);
