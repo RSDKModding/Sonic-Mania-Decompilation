@@ -325,8 +325,6 @@ inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buff
     uLongf complen = cSize;
     uLongf destLen = size;
 
-    ReadBytes(info, cBuffer, (int32)complen);
-
     uncompress(*buffer, &destLen, *cBuffer, complen);
     *cBuffer = NULL;
     return (int32)destLen;

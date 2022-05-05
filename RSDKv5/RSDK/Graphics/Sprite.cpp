@@ -833,7 +833,7 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 #if RETRO_REV02
     if (image.Load(buffer, false)) {
         if (image.width == 1024 && image.height == 512)
-            SetImageTexture(image.width, image.height, image.pixels);
+            RenderDevice::SetupImageTexture(image.width, image.height, image.pixels);
 
         engine.displayTime             = displayLength;
         RenderDevice::lastShaderID     = RSDK::gameSettings.shaderID;
@@ -853,7 +853,7 @@ bool32 RSDK::LoadImage(const char *filename, double displayLength, double speed,
 #elif !RETRO_REV02
     if (image.Load(buffer, true)) {
         if (image.width == 1024 && image.height == 512)
-            SetImageTexture(image.width, image.height, image.dataPtr);
+            SetupImageTexture(image.width, image.height, image.dataPtr);
 
         engine.displayTime    = displayLength;
         engine.prevShaderID   = engine.shaderID;

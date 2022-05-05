@@ -170,6 +170,10 @@ enum GameRegions {
 #include <XAudio2.h>
 
 #include <Xinput.h>
+
+
+#undef LoadImage
+
 #endif
 
 #if RETRO_USING_SDL2

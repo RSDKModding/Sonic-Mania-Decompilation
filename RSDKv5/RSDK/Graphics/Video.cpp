@@ -174,7 +174,7 @@ void StopVideoPlayback()
 
 void SetupVideoBuffer(int32 width, int32 height)
 {
-    SetImageTexture(width, height, NULL);
+    RenderDevice::SetupImageTexture(width, height, NULL);
 
     if (!RenderDevice::imageTexture)
         PrintLog(PRINT_ERROR, "Failed to create video buffer!");

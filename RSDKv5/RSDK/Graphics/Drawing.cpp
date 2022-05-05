@@ -2339,22 +2339,56 @@ void UpdateGameWindow()
     RenderDevice::RefreshWindow();
 }
 
-void SetImageTexture(int width, int height, byte *imagePixels)
+void RenderDevice::SetupImageTexture(int32 width, int32 height, uint8 *imagePixels)
 {
+#if RETRO_USING_DIRECTX9
+    if (!imagePixels)
+        return;
+
+    RenderDevice::dx9Device->SetTexture(0, NULL);
+
+    D3DLOCKED_RECT rect;
+    if (imageTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD) == 0) {
+        DWORD *pixels = (DWORD *)rect.pBits;
+        int32 pitch   = (rect.Pitch >> 2) - width;
+
+        uint32 *imagePixels32 = (uint32 *)imagePixels;
+        for (int32 y = 0; y < height; ++y) {
+            for (int32 x = 0; x < width; ++x) {
+                *pixels++ = *imagePixels32++;
+            }
+
+            pixels += pitch;
+        }
+
+        imageTexture->UnlockRect(0);
+    }
+#endif
+
 #if RETRO_USING_SDL2
-    // if (RenderDevice::imageTexture)
-    //     SDL_DestroyTexture(RenderDevice::imageTexture);
-    //
-    // int32 format        = imagePixels ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_YV12;
-    // RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, format, SDL_TEXTUREACCESS_STREAMING, width, height);
-    //
-    // if (imagePixels) {
-    //     int pitch = 0;
-    //     byte *pixels;
-    //     SDL_LockTexture(RenderDevice::imageTexture, NULL, (void **)&pixels, &pitch);
-    //     memcpy(pixels, imagePixels, pitch * height);
-    //     SDL_UnlockTexture(RenderDevice::imageTexture);
-    // }
+    if (RenderDevice::imageTexture)
+        SDL_DestroyTexture(RenderDevice::imageTexture);
+
+    int32 format               = imagePixels ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_YV12;
+    RenderDevice::imageTexture = SDL_CreateTexture(RenderDevice::renderer, format, SDL_TEXTUREACCESS_STREAMING, width, height);
+
+    if (imagePixels) {
+        int texPitch   = 0;
+        uint32 *pixels = NULL;
+        SDL_LockTexture(RenderDevice::imageTexture, NULL, (void **)&pixels, &texPitch);
+
+        int32 pitch    = (texPitch >> 2) - width;
+        uint32 *imagePixels32 = (uint32 *)imagePixels;
+        for (int32 y = 0; y < height; ++y) {
+            for (int32 x = 0; x < width; ++x) {
+                *pixels++ = *imagePixels32++;
+            }
+
+            pixels += pitch;
+        }
+
+        SDL_UnlockTexture(RenderDevice::imageTexture);
+    }
 #endif
 }
 

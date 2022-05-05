@@ -140,6 +140,7 @@ public:
     static void Release(bool isRefresh);
 
     static void RefreshWindow();
+    static void SetupImageTexture(int32 width, int32 height, uint8 *imagePixels);
 
     static bool ProcessEvents();
 
@@ -263,7 +264,6 @@ extern int32 shaderCount;
 extern ShaderEntry shaderList[SHADER_MAX];
 
 void UpdateGameWindow();
-void SetImageTexture(int width, int height, byte *imagePixels);
 
 void GenerateBlendLookupTable();
 
